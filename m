@@ -1,52 +1,52 @@
-Return-Path: <dmaengine+bounces-6560-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6562-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A5E3B5A265
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:25:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B58FB5A279
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:26:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F92058608F
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:25:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F40EE327BC7
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:26:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15662323F5D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EDCE3294E8;
 	Tue, 16 Sep 2025 20:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcl4xDz1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WF/U+ils"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20052F2609;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF41305E26;
 	Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758054325; cv=none; b=ZuJVVdA02XnSRs/XcSxid9YyohkzIEPddS6P5lmflk/s82xEUGwdwF9SWiXvvsckD3WnbJVjbJWuzWXbbxCdMeF8Sa708HBo4pEKhnhVCSorLmN5f7Qv2zA9qjb+ya8rqB4/kk9Y9Q0tWGANoCFV0AmNNcG80Jxpy9xTHGDkASs=
+	t=1758054325; cv=none; b=kTG14+IviuuETdivTQSatk5tJyQjA42zJACgZSPr8qxnbniWSPY8deta9OFtchjIEvOHIEQd1M3RTUWcvTg+4B/Wfl64SWkBkfGa4vg7XmupYNLTRpkpYIJ3mzX7ahuPjP4deLx5YV5xKKw7mzYDPc2nCed8aL8RMYqTCuL67Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758054325; c=relaxed/simple;
-	bh=xub1/tI9O5DTgQhmhRBbs4Xjsw6qwKviTq2SxNAQ5VM=;
+	bh=PGC9RLyvUYb11AvcYKFthsR2RXxFjvbJW7ULzcMM1n4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NsL0MCf22rMVTiPGo4ko8QBuAhKaUu+ZX8i1vtvfbe3Jy5rBp7rzs23aphXPYVL/ewmAgvohYcXlDdDpURGyHZ8ceLtI+EN6bpQvlhYtUby2J5a0Vk2ZP7/JTVQ+TxGId2WOJ//KbhLzT8nS4HoLi3fEs56EEWQNeM0iaKvBanU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcl4xDz1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 25CB5C4CEFF;
+	 In-Reply-To:To:Cc; b=pxxy1qXt3BWtQ/Xx6KR8hZo1En4AQoyoRA1aox8HrEusnN/f91f1XpSU07o7fM0yXtX49379XsZDaN9SO887JUC6ofqKf63mRtU5/uGrriHegwdgR7HQU8/40PpUbTPggkyR2nfCeCI9YAH4gIXjt4vDYwtjhvFOekhbEHNqibc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WF/U+ils; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 31796C19422;
 	Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1758054325;
-	bh=xub1/tI9O5DTgQhmhRBbs4Xjsw6qwKviTq2SxNAQ5VM=;
+	bh=PGC9RLyvUYb11AvcYKFthsR2RXxFjvbJW7ULzcMM1n4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=fcl4xDz1ZHp5+J8K8HjCWy3jmZaXLcIIwdfJFBIleSSBefPR3RHy+ZQxUO0sRA6fe
-	 fF4AW4NFW0VxJy6l1lYy0EM7Z/t5WqXyDlchlqYcVavBi0dvxncUhgtGTeMdFRVUyp
-	 KdUcPPHpjmmMz8UksyEbyFWty4ehkw05D1s22im+BUA191x0KwOXkd+S66zF5qPd27
-	 eQVEw1E0m7NY2hU8517TDEpLUUWKLyJv7NivdyTFGD5gJ+kSXgdNEeaM/p/fSdQsKi
-	 RMrReUg5FWlBW/WdHLdXLoRPYWLogCrGj8QDpo0ohoa0OVFRyT28akLURoTMJJMdUk
-	 x0EZCWfQ0uLFg==
+	b=WF/U+ilsuMpWThSrx1H0QFkgdZaMVWBGJlBSSTATkfxZT6q0ZKb4HEFTUEJ8bf3nk
+	 /k4vNhDzDpvL5piUH2exVhGXwpg+s+v9RNTKpicxPJd0y9eU3E78Bg3z2zRLns9qc+
+	 9WSeaaXRF3arHwwhkyaEtB+r9wVDxgtL/iQYNJtCx2Ryhcy4NG3OKtbaFjbA/qW56I
+	 so2OsPiqAPCn8xTAVqSBmuYU8dBFkHegK9FLvgeyX3VFjxSB78VL4MI7oZHBpfiyKR
+	 3kuLWgcwvQJyZbL0BTXDZSjIghucFTYPeSVBE+dIsOVQriJdJ7oqnKUmV9S4bY87Jf
+	 xREiIfqhBD1fQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F37CAC592;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216E8CAC5A0;
 	Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
 From: Dang Huynh via B4 Relay <devnull+dang.huynh.mainlining.org@kernel.org>
-Date: Wed, 17 Sep 2025 03:25:00 +0700
-Subject: [PATCH 03/25] dt-bindings: gpio: rda: Make interrupts optional
+Date: Wed, 17 Sep 2025 03:25:01 +0700
+Subject: [PATCH 04/25] rtc: Add timestamp for the end of 2127
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250917-rda8810pl-drivers-v1-3-9ca9184ca977@mainlining.org>
+Message-Id: <20250917-rda8810pl-drivers-v1-4-9ca9184ca977@mainlining.org>
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 In-Reply-To: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 To: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -76,11 +76,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org, 
  linux-mmc@vger.kernel.org, Dang Huynh <dang.huynh@mainlining.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=767;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=913;
  i=dang.huynh@mainlining.org; s=20250917; h=from:subject:message-id;
- bh=Ifgj24X3WuB4jA0+A119cFjcjAjN444atKSTzNtV5QI=;
- b=w5Dv0+XyivOW8fKisHFtboYipMhkeJG5JlSdgVYg9JCFW0dK+AUye0klaEHuhYZkbKF8yFV3d
- bbnf7sXd5NlDsF+1JmkU6i+0CfwfvX/taK6GSxR2IwyVaLwjD6ceHsT
+ bh=DzZHdJKZCRZsyIe84ay5pJ/2Z/eJ/DpBDRNQR5GG0kc=;
+ b=TXUPCWPqfcmGpwTVgoZ/csRKglLlNBEzrYFxRh7ZQ//BPu6xMzaihEwxcAVhhtA00DbneF6R7
+ Kv5Wv87ejuhBJCzOJ67wnp3h9v8C3HAnCIfUnZpMcrApewJyPWho9WA
 X-Developer-Key: i=dang.huynh@mainlining.org; a=ed25519;
  pk=RyzH4CL4YU/ItXYUurA51EVBidfx4lIy8/E4EKRJCUk=
 X-Endpoint-Received: by B4 Relay for dang.huynh@mainlining.org/20250917
@@ -90,26 +90,25 @@ Reply-To: dang.huynh@mainlining.org
 
 From: Dang Huynh <dang.huynh@mainlining.org>
 
-The GPIO controller from the modem does not have an interrupt.
+Some RTC (like MT2712 and RDA Micro) can handle until the end of
+the year 2127.
 
 Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
 ---
- Documentation/devicetree/bindings/gpio/gpio-rda.yaml | 3 ---
- 1 file changed, 3 deletions(-)
+ include/linux/rtc.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-rda.yaml b/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
-index 6ece555f074f84b396537917d7149d4061724dcc..dbb73b4d33ed39aa65024376b1af0c4e2fb896db 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-rda.yaml
-@@ -41,9 +41,6 @@ required:
-   - gpio-controller
-   - "#gpio-cells"
-   - ngpios
--  - interrupt-controller
--  - "#interrupt-cells"
--  - interrupts
- 
- additionalProperties: false
+diff --git a/include/linux/rtc.h b/include/linux/rtc.h
+index 95da051fb155dab4c8ec72ccae7b8e12a117a7f1..ec5828ccc7449388da2ab8bc757030e6795ace30 100644
+--- a/include/linux/rtc.h
++++ b/include/linux/rtc.h
+@@ -175,6 +175,7 @@ struct rtc_device {
+ #define RTC_TIMESTAMP_END_2063		2966371199LL /* 2063-12-31 23:59:59 */
+ #define RTC_TIMESTAMP_END_2079		3471292799LL /* 2079-12-31 23:59:59 */
+ #define RTC_TIMESTAMP_END_2099		4102444799LL /* 2099-12-31 23:59:59 */
++#define RTC_TIMESTAMP_END_2127		4985971199LL /* 2127-12-31 23:59:59 */
+ #define RTC_TIMESTAMP_END_2199		7258118399LL /* 2199-12-31 23:59:59 */
+ #define RTC_TIMESTAMP_END_9999		253402300799LL /* 9999-12-31 23:59:59 */
  
 
 -- 

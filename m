@@ -1,52 +1,52 @@
-Return-Path: <dmaengine+bounces-6568-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6579-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5838B5A2DA
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:27:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EFA8B5A2F8
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:28:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3BF5327EC6
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:27:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 257DB1C05158
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:28:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB0C6353354;
-	Tue, 16 Sep 2025 20:25:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CEBC33089E;
+	Tue, 16 Sep 2025 20:25:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hf7kCTiO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TqjJmG2A"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D89323F55;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714F432B49D;
 	Tue, 16 Sep 2025 20:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758054326; cv=none; b=nYwxg36+U1SMLUIO3Mrof3SdC0Mzdx6ZbebavWr8NRKC+563u1TUeHFi3XioSDbyuYTUN+WbSkqzcgQB5Y59UALW68u3i5LJw8T+2TnsM+yFJaEyapIyd8SwJhIdZrcjoiT/vOw1TdEmlUxJrwn0ycR8e9tAYw61OkstslP4NAU=
+	t=1758054326; cv=none; b=KhnFjeKDOZOl4W/Mm/VwolAXJvmdaO8ANVBK/cnj+i+ng3fhMCkEtKN9HWBtqiJjgMwOiuJMLHFSv7gzkxA9doaCg18uNciBlaZOuXTdYqG4+A3TaKKh1gWbsO//XQdqSM5LpyLO023dYb51zOmnISvCAUDAeu9LcQ/Y19QLy8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758054326; c=relaxed/simple;
-	bh=Czlyuawt5NCDFtRIIQsXB+M6g7mpoAg3GuJazRPrBeI=;
+	bh=EegadZyE2ka3lqNPNKWfrSgt+VjG3SDvPe99w5hVinc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qSbqwDn4saIo0Cfi48RVcHJffkQNcYGlPwrj3sE4r8gclMzaMM96SSQmnPwbeFJZnhFhfDOluXYXTQ1GPOwMT489H69zJEyiYz/bSzv9XcuakcnROoUAyK9ecoD5Hq7EfPR8ZfOCOywy0thrI3Lr448HL8F/tQbDTxmGRG9X4CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hf7kCTiO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B5992C4CEF7;
+	 In-Reply-To:To:Cc; b=hKOMUkGlmPXVfj9/+wJF06OdLomHvQwpltA/jwpuL86gzXAnFdRoz0+2b7cKk368oGJEFLfZ5QjeTjqE+/l6vC5O2r85DJ6OOj4zRiHkWHN2VvKPL8ivYeLPFXmhU62hR4BI3nACXYPoDftM74IbG4cfmnS9Nld0T/jmQpkLfvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TqjJmG2A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C537FC2BCC6;
 	Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1758054325;
-	bh=Czlyuawt5NCDFtRIIQsXB+M6g7mpoAg3GuJazRPrBeI=;
+	bh=EegadZyE2ka3lqNPNKWfrSgt+VjG3SDvPe99w5hVinc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Hf7kCTiORGTrm++NtElPg+BLvT/tPCYisK3L/uNUGqwouBOJH5KqTtG77kVaKuPlv
-	 wZJ1tVfBM+oD739xcpDYDCm0BfU/eDAXJtAwN6cHwz9XToI3Pi4NvC01sA9V6vN6Sy
-	 Hjav5hHyCHxfiBa5chtv4H0ACWzUGO9z9TWLBzYUW2h35Oh+c+1csTW9nEDhF8LQ5K
-	 6o8xc0/nkiRGA5ZEIldbknzWtd5+v/Kx7snPjIgIPGEp8KcQEJeHds/KUDKRF1xvRd
-	 UI8qqvf17+peTy8L8rjLkGAdBlmYwPHtCP01ycoS8dOCdVzmK/J4uB3WwIH8VY+3OL
-	 3Byo5FzCSJn6Q==
+	b=TqjJmG2A2cB8ngo4ajZYfJfPMOULRsF5fOoBAUEkiwgNY4F+FZ8BLxj7ewB+GWcz0
+	 nCkyo4BZtNjh80Z1IoBu2Y5ocJGUGVMU0DqkV0nMKQGm/rUmk0yVMrYCbpXue27U6Z
+	 oktZfW0Qg1zrv3ndCM3+dY+9U+RyBpYOGU1iRPem8jfqa7hCKxFVY54M9u7h6xheDX
+	 dlvUQBNj8nUtlBaTWbIdhOtUBnlxn75aAGQFpCJYHW1BnnxYVFJ++IBJfPRvxLvGs+
+	 IfmyJ/v9X67Ke2B79rvjVMcyoDKN1kp8N61hTJOC+szpM94zN1FmGX11jZSi+GODFL
+	 xEU2XYSFcDWKg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA26DCAC592;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B989BCAC59F;
 	Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
 From: Dang Huynh via B4 Relay <devnull+dang.huynh.mainlining.org@kernel.org>
-Date: Wed, 17 Sep 2025 03:25:10 +0700
-Subject: [PATCH 13/25] dts: unisoc: orangepi: Disable UART with no users
+Date: Wed, 17 Sep 2025 03:25:11 +0700
+Subject: [PATCH 14/25] dt-bindings: power: reset: Add RDA Micro Modem Reset
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250917-rda8810pl-drivers-v1-13-9ca9184ca977@mainlining.org>
+Message-Id: <20250917-rda8810pl-drivers-v1-14-9ca9184ca977@mainlining.org>
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 In-Reply-To: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 To: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -76,11 +76,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org, 
  linux-mmc@vger.kernel.org, Dang Huynh <dang.huynh@mainlining.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=1477;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=1439;
  i=dang.huynh@mainlining.org; s=20250917; h=from:subject:message-id;
- bh=XPO5kEJS5ocnBL76vZ0w5j7Lye5wuRkS9bNnKxmO9oo=;
- b=2zBM9XKo6rOYbZUNQpD9eFH0E5hNGPLBqV3M7IJCdwPx3vmKRrOd+pPLTcttmUftfCu1MJTme
- +esbSs3Nw5mA0QSS7+wm41hH4xrahHriqA1Ce8uMeTupFJtX3yQzKCr
+ bh=Qx3A0YEz2hiOBr1X7Hx7B2Yur/VncHTnIWLD5/fTYjI=;
+ b=ZgRTCdZsa4zMPNeOMmGFLo6ICngX1GwmdnktW4A702PqmzxT6psP5W8kdNHEKlVW88+WFP8Gv
+ ElMMuGq68W5A4Nx++rKEmZFCTm3eK1x3SrQ1TYSmUBZhC4BLDLaBhGC
 X-Developer-Key: i=dang.huynh@mainlining.org; a=ed25519;
  pk=RyzH4CL4YU/ItXYUurA51EVBidfx4lIy8/E4EKRJCUk=
 X-Endpoint-Received: by B4 Relay for dang.huynh@mainlining.org/20250917
@@ -90,56 +90,55 @@ Reply-To: dang.huynh@mainlining.org
 
 From: Dang Huynh <dang.huynh@mainlining.org>
 
-By default, we should keep unused peripherals disabled.
+Add documentation describing the RDA Micro modem reset controller
 
 Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
 ---
- arch/arm/boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts | 10 ----------
- arch/arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts    | 10 ----------
- 2 files changed, 20 deletions(-)
+ .../bindings/power/reset/rda,md-reset.yaml         | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts b/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts
-index 98e34248ae80b1fcd673ff01fe045db412d5bcc9..46ccb9ad510c0df142b845d6fc5633b69c2298dd 100644
---- a/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts
-+++ b/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts
-@@ -34,16 +34,6 @@ uart_clk: uart-clk {
- 	};
- };
- 
--&uart1 {
--	status = "okay";
--	clocks = <&uart_clk>;
--};
--
--&uart2 {
--	status = "okay";
--	clocks = <&uart_clk>;
--};
--
- &uart3 {
- 	status = "okay";
- 	clocks = <&uart_clk>;
-diff --git a/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts b/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts
-index 728f76931b995fdfc036b586f899b15a7f07528b..a1d61ef138d12bb3ecb4b24513cc1a7dfbac3107 100644
---- a/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts
-+++ b/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts
-@@ -34,16 +34,6 @@ uart_clk: uart-clk {
- 	};
- };
- 
--&uart1 {
--	status = "okay";
--	clocks = <&uart_clk>;
--};
--
--&uart2 {
--	status = "okay";
--	clocks = <&uart_clk>;
--};
--
- &uart3 {
- 	status = "okay";
- 	clocks = <&uart_clk>;
+diff --git a/Documentation/devicetree/bindings/power/reset/rda,md-reset.yaml b/Documentation/devicetree/bindings/power/reset/rda,md-reset.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..6d09bc8ee6b257aec9d2c4738d285490044003ea
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/rda,md-reset.yaml
+@@ -0,0 +1,36 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/reset/rda,md-reset.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: RDA Micro Modem Reset
++
++maintainers:
++  - Dang Huynh <dang.huynh@mainlining.org>
++
++description:
++  The modem has a reset register that can be used to fully reset the board.
++
++  To do that, a magic value needs to be written to unprotect the register,
++  then the soft reset register can be used.
++
++properties:
++  compatible:
++    const: rda,md-reset
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    reset-controller@1a00000 {
++      compatible = "rda,md-reset";
++      reg = <0x1a00000 0x4>;
++    };
 
 -- 
 2.51.0

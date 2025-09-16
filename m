@@ -1,52 +1,53 @@
-Return-Path: <dmaengine+bounces-6574-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6577-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 558E8B5A2B3
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:27:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 837CBB5A2E0
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:28:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D9AF7B3D08
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92781327BFF
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:28:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57A2232E2DB;
-	Tue, 16 Sep 2025 20:25:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C18833087A;
+	Tue, 16 Sep 2025 20:25:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/zXKcbU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ma/CpcuB"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30134323F7F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FF5329517;
 	Tue, 16 Sep 2025 20:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758054326; cv=none; b=IL5xNR+e4IE9hDsyag+W9OMsli5LZduqYJoj6QDL9I2dYct+c2lvwWLAJgGaHKEN/fFiMjNzuOZcqrCj9+/eT0atVDsTxl13Or9iMmvfb7i4flDUctWOwfVwN3SiBjvhDAlN7Zuie+uETA8MH31xTesvh0eTmu018aYA53Yf5T0=
+	t=1758054326; cv=none; b=rT86lOI6LpYAFLunUy/1d1GKTcwGRfFa2GINpbyyt1w5H2fZCmW45ZQD8EDZ2O47jEyrpUUpONsJofax6P0rVA2tC9VNEa0odr2zxXaBr0PuYFSju1PZcaem8G+BY5NuNTchhxZV3S1o6Yaw3soFsyRXDkDAkPbs4nmIEyTL5EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758054326; c=relaxed/simple;
-	bh=Pnv5+FFv2iFRwSYEkairmz1Zl0wNKr5bOgIcKGaNzuQ=;
+	bh=4w6w5DvzwFyRo2J5VW1szw6dNb6N2JHLDo922TOLKcY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PROsETQdDEP/ZTBRtzgQxE8vKjoDrEwIYbwAbC/wsRhPanfs8t2fBDXCc7QTfxZwvuIdG9NoKFLTEsT6fSEJAhpZuULnt7yg9p8+SqR2sPpLfTAE2j2cwgvbVUdYCgrTzFy3zz6m7vrFcyxZpWoFPeUZ5gcijdDwpEbNgW9R2H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q/zXKcbU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E01F1C2BCAF;
-	Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=u1hwfgYEklAeFrJpd7p3n3LG0m006FMmPVOC9oz/lqqP2l6d6JGg1rs+DqQlKwOfiMwdJcXSWcZATwbWyKKjIx1w59PvREE/WcBbZFOcqKhKQd/SkSbxObSx66EVfInyVNhenJfKw8GoGE0WbqtIxpBvOhlYUEsBq+0lD2pCh6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ma/CpcuB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 06C12C4CEFF;
+	Tue, 16 Sep 2025 20:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1758054326;
-	bh=Pnv5+FFv2iFRwSYEkairmz1Zl0wNKr5bOgIcKGaNzuQ=;
+	bh=4w6w5DvzwFyRo2J5VW1szw6dNb6N2JHLDo922TOLKcY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=q/zXKcbUevPgRlaTCib4V5P98tSX76eBivNWx8aALG6g89LwXwdkOWDEtegJwP8o5
-	 tGfCaRb0U5ehZav9v3RBQ8a3F6v00Zil3B+e5QxFJvA8wxp+9zezYEkgBIZjHSFy//
-	 WxzBFP3wIRZUpqfzQKWHq+MlptIZIQ81WW5jbFBOVoSZjKEtC+FpicXBwVQxmgklOq
-	 r+7BVAXDyZa04CezBiVjDhAW0IVidoO2vqy+5dFINzxuez83g05w7TunPbBDZX8V5G
-	 r9Yfyj6s/+FbjdJgO011hEw30hU/ez+Uj//nbHpf6OAIgZsP8W12J3E5bp1cAKDK+f
-	 eGUK2k4pZiWYQ==
+	b=Ma/CpcuBYVrPPjn8B5wDIMdK5MXsxC8Lgs9ueMxl7S9NVceWGjbSNc7QoFAQv10rw
+	 ur8thkyVEuWGBCwwlKeyC5KZgjl9wxNhj3R6IwTEvmVNsQZyNMyoU8MQZmRpPCksfw
+	 u05SWxcjEx103cFljCepFq6Kvns6i73kSrEQ3jWll+9HbQOi99pXQOCatoK5wv1uI2
+	 O9m/FAv5Fbzdw36thgv1deL2EunYU468a9Aoqyj3a+vDSTZOqGF7BayMtXkucCkP4o
+	 fKED/ROmSfgdNe/+KuXzbSxjjUCmBMUByFUbEtRoX8gYqQxoH06n2UWVySlp2i9PnT
+	 OvlQZq5LjZY2Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D625FCAC592;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FA4CAC5A0;
 	Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
 From: Dang Huynh via B4 Relay <devnull+dang.huynh.mainlining.org@kernel.org>
-Date: Wed, 17 Sep 2025 03:25:13 +0700
-Subject: [PATCH 16/25] dts: unisoc: rda8810pl: Enable modem reset
+Date: Wed, 17 Sep 2025 03:25:14 +0700
+Subject: [PATCH 17/25] drivers: gpio: rda: Make direction register
+ unreadable
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250917-rda8810pl-drivers-v1-16-9ca9184ca977@mainlining.org>
+Message-Id: <20250917-rda8810pl-drivers-v1-17-9ca9184ca977@mainlining.org>
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 In-Reply-To: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 To: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -76,11 +77,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org, 
  linux-mmc@vger.kernel.org, Dang Huynh <dang.huynh@mainlining.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=793;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=890;
  i=dang.huynh@mainlining.org; s=20250917; h=from:subject:message-id;
- bh=u8ofUfZnyL6AGUSAsraDhXZ8KtNj+jiTPktMzMifzHg=;
- b=fWZT1Fx32Hx9ZahhNzlPhngPS7qH4nNWfABkCpfT5wJanor1eQSweXur3kGePA0KRJvMK5TAB
- H8UQagjuGEgAjgojs4svCTAlHhh0Ir2INO/LHEgYgExeaecrkrYKpEG
+ bh=Ej4sfxzJ/Gsg0f6d9t0Id5MGonhTVkngeFDG/IpOGqc=;
+ b=7/dQ+zSEH7UofRPjo+bKlBs6ViTT+WuJvSx4Gecx+bo6BYwM3Re5lMQKArpXET7WxhoCPOvfe
+ Rk52QJ6IW9cA55W805ijHTkhu0687ofj0g1SAA1xQxJl5AhXuzcWLTL
 X-Developer-Key: i=dang.huynh@mainlining.org; a=ed25519;
  pk=RyzH4CL4YU/ItXYUurA51EVBidfx4lIy8/E4EKRJCUk=
 X-Endpoint-Received: by B4 Relay for dang.huynh@mainlining.org/20250917
@@ -90,29 +91,27 @@ Reply-To: dang.huynh@mainlining.org
 
 From: Dang Huynh <dang.huynh@mainlining.org>
 
-This allows us to reboot the board from the OS.
+The register doesn't like to be read, this causes the SD Card
+Card Detect GPIO to misbehaves in the OS.
 
 Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
 ---
- arch/arm/boot/dts/unisoc/rda8810pl.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpio/gpio-rda.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/unisoc/rda8810pl.dtsi b/arch/arm/boot/dts/unisoc/rda8810pl.dtsi
-index 299b29e4df6e0a04c5769a568eba73ed1684a9e5..e90ae7845de7b79e55e9cd339a82313b423e0252 100644
---- a/arch/arm/boot/dts/unisoc/rda8810pl.dtsi
-+++ b/arch/arm/boot/dts/unisoc/rda8810pl.dtsi
-@@ -98,6 +98,11 @@ modem@10000000 {
- 		#size-cells = <1>;
- 		ranges = <0x0 0x10000000 0xfffffff>;
+diff --git a/drivers/gpio/gpio-rda.c b/drivers/gpio/gpio-rda.c
+index b4db8553a2371ae407fdb7e681d0f82c4d9f74b7..56aaa9f33d29469dfb1bf86ed7b63c54b413c89c 100644
+--- a/drivers/gpio/gpio-rda.c
++++ b/drivers/gpio/gpio-rda.c
+@@ -245,7 +245,7 @@ static int rda_gpio_probe(struct platform_device *pdev)
+ 		.clr = rda_gpio->base + RDA_GPIO_CLR,
+ 		.dirout = rda_gpio->base + RDA_GPIO_OEN_SET_OUT,
+ 		.dirin = rda_gpio->base + RDA_GPIO_OEN_SET_IN,
+-		.flags = BGPIOF_READ_OUTPUT_REG_SET,
++		.flags = BGPIOF_READ_OUTPUT_REG_SET | BGPIOF_UNREADABLE_REG_DIR,
+ 	};
  
-+		reset-controller@1a00000 {
-+			compatible = "rda,md-reset";
-+			reg = <0x1a00000 0x4>;
-+		};
-+
- 		rtc@1a06000 {
- 			compatible = "rda,8810pl-rtc";
- 			reg = <0x1a06000 0x1000>;
+ 	ret = gpio_generic_chip_init(&rda_gpio->chip, &config);
 
 -- 
 2.51.0

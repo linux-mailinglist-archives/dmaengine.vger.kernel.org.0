@@ -1,52 +1,52 @@
-Return-Path: <dmaengine+bounces-6581-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6582-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3DCDB5A2FD
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:28:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 39CAEB5A301
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:28:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 98332328192
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:28:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 544E03282A3
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:28:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFCA23324FB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7FAD33250C;
 	Tue, 16 Sep 2025 20:25:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PN8jXzDi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V20q9Xo0"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A723B34AAEA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E613705BF;
 	Tue, 16 Sep 2025 20:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758054326; cv=none; b=t4IEB2jwEPStCz9DA9iY5NE4xyAH4uw/KDZ+8i6t41mb306FXV/jJ9iA6SMlSMpRNsgtYHjG/14VLeuBTvD22Vh/UhYZqvzJ9HkwLzEhRqhAIRam+whT4i2ISpBLczqh2DU2d8r1EABPsm+AtdPDWVOQ/7wLmJBbU4TYak2WpDM=
+	t=1758054326; cv=none; b=MyCAsV6gUL+PIc3010s3xoDl8Qa+eRlZTVFjcxot1LrXKXH477LcfRycTJkh8A1ckg0N6O51wzJaKGC3ZXmFINWZPcj7aRoUpO4QA+wu/BGBIBHe8ZC3h65LtQxLaYjQBbkDBay6CIlvOQH4hDr3IPogNvPQaBIywCfHXOVQTxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758054326; c=relaxed/simple;
-	bh=egTQGUBp0zFp2qNCGSUCro/O1z1FHKCYNAt7sLfWf4g=;
+	bh=D+uWf9FTrNZ5XT1lEEynxKDh80jQlO2m6fXZN2h5Ado=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=r1Dt8btQG13DijgjcMMmo21zj9V+nfGeW5EEyQMn2pChCDri2GJPSUT4hETwJqanfV3oK1tMvIYQlnQEXGgApQkD4KgxS3B/KEtFqc1kffkLCrbjWHotIp/z7Coo85l80cXkHbW5mSSHVlNS4vrZd08YWnBPMsciMak9eVzgVYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PN8jXzDi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 71FE2C4AF4D;
+	 In-Reply-To:To:Cc; b=MSyw3juPPeGYt/yYZNAXNWfCH2cNBmsD2xp8U/MMtwslsCpbgTls0+zt6MGz/hyjMY+PWB/idZuQ0Vf4OmdYzHzPL/mMQCmNMy4keT8qmBbTweOsjqyDO5PhlaY7Ls7l8Id9ZFYczIedsetBtA52iUOg+fED8UoLtmtuGx6Qr7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V20q9Xo0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 83E3EC16AAE;
 	Tue, 16 Sep 2025 20:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1758054326;
-	bh=egTQGUBp0zFp2qNCGSUCro/O1z1FHKCYNAt7sLfWf4g=;
+	bh=D+uWf9FTrNZ5XT1lEEynxKDh80jQlO2m6fXZN2h5Ado=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=PN8jXzDiDi9RozSEc6nSjwEzFHkYUrxdOnlOCyBKdZRd3FeqaHOj7f9TSeGhDbDPQ
-	 Bh+pruy+oFlyn8G66wx9fSMwzO3BB+TsMB1T/9ciN9wjtWYhURBu5oJ/ncynx4l4up
-	 GTXS36TSR0vmOTjHOo+AMpbGkL42nXNg5hK1n9q9mIc5qwtlQlHbpqUWPLThUsix5w
-	 MF5bqD6KbunnstwbY91QvngVbXPdwSBbTjFMBCf64FdwFNunRQMBm5M9If9iZmMPmr
-	 FBoeEHUqRWxzic7nngnRXOFUyf3NKkh5Y+HraPxrIF/9jR5Kre2Rs7pbkdgfhpDA5n
-	 5aZBo5+WDL+9w==
+	b=V20q9Xo0lEzJgC99QAWvPWoDp0uogcKMcJnek1L79qqlUGGQ261tuwpDhAOgLsEHm
+	 +/tF95jnMFPm2QpOSoV67ZI5lFw8xviG0H5ygJTmY/jIc0ayFm4qy1Smb92PdWOs3o
+	 ugJ9YsmRmOHAua+SedbO9iv1k+pAu9lHK1bAuIuFvLrPn0i8Ksix1FFXfUpJTH7ZPD
+	 aMe21cQVNlTDpyTi9OT/pOOrdJ1zjAZ+7hhWfI/pJhnP8GcjDuS33zNyDIjA8tDN8N
+	 wZGfAIbRYlpZ26df4gGH5HWGXsJ+uF3r8TxCMPNtqr8VEUk3KspQoASsUrTCH2Xs3J
+	 c+Csr1N5RV1QA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D2BCAC5A0;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FF1CAC598;
 	Tue, 16 Sep 2025 20:25:26 +0000 (UTC)
 From: Dang Huynh via B4 Relay <devnull+dang.huynh.mainlining.org@kernel.org>
-Date: Wed, 17 Sep 2025 03:25:21 +0700
-Subject: [PATCH 24/25] dts: unisoc: orangepi-2g: Enable SD Card
+Date: Wed, 17 Sep 2025 03:25:22 +0700
+Subject: [PATCH 25/25] dts: unisoc: orangepi-i96: Enable SD Card
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250917-rda8810pl-drivers-v1-24-9ca9184ca977@mainlining.org>
+Message-Id: <20250917-rda8810pl-drivers-v1-25-9ca9184ca977@mainlining.org>
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 In-Reply-To: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 To: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -76,11 +76,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org, 
  linux-mmc@vger.kernel.org, Dang Huynh <dang.huynh@mainlining.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=1448;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=1432;
  i=dang.huynh@mainlining.org; s=20250917; h=from:subject:message-id;
- bh=iqvLAp/eBqg4tchfSTl6yDHm7EVu5zj7yTK/oizm9Es=;
- b=QXCXdxinmO64Z8OEcHD6iLAWXpR3hIxrGFI6QsUVZCxUpj/VSQLgKvdaeJIkNysS7nwTiLnj9
- xsF1lHezVDzAWUeqcnf8tySkrThcdRIcADq/RFZ6wAUb/o0O+FlLD6O
+ bh=qcvVxoXavmL/qbncOuYL4/AA9pp1j7YRntSv1snSw4A=;
+ b=TmsiEoRuyNtRCinPmNRJPzsRLAOD+OfUVej7sM4TKuiv/lAlcCXOZO2yuj/YlaqpZKI2qoRoe
+ gli9x6SUlcyCqeLBNQVNnFpfLrzGx9+fwjvYNgu+FokiMeRoJphyvZF
 X-Developer-Key: i=dang.huynh@mainlining.org; a=ed25519;
  pk=RyzH4CL4YU/ItXYUurA51EVBidfx4lIy8/E4EKRJCUk=
 X-Endpoint-Received: by B4 Relay for dang.huynh@mainlining.org/20250917
@@ -91,17 +91,17 @@ Reply-To: dang.huynh@mainlining.org
 From: Dang Huynh <dang.huynh@mainlining.org>
 
 Since we have a SDMMC controller, we can use the SD card slot on the
-Orange Pi 2G-IOT.
+Orange Pi i96.
 
 Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
 ---
- .../boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts    | 20 ++++++++++++++++++++
+ arch/arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts | 20 ++++++++++++++++++++
  1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts b/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts
-index 46ccb9ad510c0df142b845d6fc5633b69c2298dd..f6b1a1485645f5714cdf14447cbee50e28e3c076 100644
---- a/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts
-+++ b/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts
+diff --git a/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts b/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts
+index a1d61ef138d12bb3ecb4b24513cc1a7dfbac3107..fbb7b5be62051627e80d940cb5e5ccff9047c13c 100644
+--- a/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts
++++ b/arch/arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts
 @@ -6,6 +6,7 @@
  
  /dts-v1/;

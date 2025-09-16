@@ -1,53 +1,52 @@
-Return-Path: <dmaengine+bounces-6577-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6576-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 837CBB5A2E0
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:28:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47083B5A2D5
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 22:27:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92781327BFF
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:28:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 338E058623A
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 20:27:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C18833087A;
-	Tue, 16 Sep 2025 20:25:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6A8E32F48A;
+	Tue, 16 Sep 2025 20:25:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ma/CpcuB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAEBA1y1"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FF5329517;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466A93294F8;
 	Tue, 16 Sep 2025 20:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758054326; cv=none; b=rT86lOI6LpYAFLunUy/1d1GKTcwGRfFa2GINpbyyt1w5H2fZCmW45ZQD8EDZ2O47jEyrpUUpONsJofax6P0rVA2tC9VNEa0odr2zxXaBr0PuYFSju1PZcaem8G+BY5NuNTchhxZV3S1o6Yaw3soFsyRXDkDAkPbs4nmIEyTL5EM=
+	t=1758054326; cv=none; b=WiXkg02pcQirYjETBI1ITRBYyQ3iEHDGHUurD65N++xxEEKYZH//M2/Hy/GpvHIiU7WlIb3acBqf7wIU5Vqv39IdOCw72jfbjAaW4KmnD/FFh7RZndh4UCLGTrNUXQCcBTNmGUwupq2i3QuEX1vAotLa3KntOKJ8kPcxVRRSVvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758054326; c=relaxed/simple;
-	bh=4w6w5DvzwFyRo2J5VW1szw6dNb6N2JHLDo922TOLKcY=;
+	bh=B44iCTmbdkKyp2fHglpeuA0FgGRACa5ozdrUyEJewhg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=u1hwfgYEklAeFrJpd7p3n3LG0m006FMmPVOC9oz/lqqP2l6d6JGg1rs+DqQlKwOfiMwdJcXSWcZATwbWyKKjIx1w59PvREE/WcBbZFOcqKhKQd/SkSbxObSx66EVfInyVNhenJfKw8GoGE0WbqtIxpBvOhlYUEsBq+0lD2pCh6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ma/CpcuB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 06C12C4CEFF;
+	 In-Reply-To:To:Cc; b=XuEYNpXK7zK/j1FCtwSn5vFVQexyeaypmCZ8p1edvz4DYDUXLM1N6xqIUat/+6JFvO8L//HmMrPCwVhFnjh7SAqxgM0OiGS0GXSCAqo9eQD6v4nKAB9zjAbtbdP2ZqjdqBmIUTAZfEiF3ZTCBRoFDpXhhPR364dTx7/tQTkRynE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAEBA1y1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0A674C4AF09;
 	Tue, 16 Sep 2025 20:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1758054326;
-	bh=4w6w5DvzwFyRo2J5VW1szw6dNb6N2JHLDo922TOLKcY=;
+	bh=B44iCTmbdkKyp2fHglpeuA0FgGRACa5ozdrUyEJewhg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Ma/CpcuBYVrPPjn8B5wDIMdK5MXsxC8Lgs9ueMxl7S9NVceWGjbSNc7QoFAQv10rw
-	 ur8thkyVEuWGBCwwlKeyC5KZgjl9wxNhj3R6IwTEvmVNsQZyNMyoU8MQZmRpPCksfw
-	 u05SWxcjEx103cFljCepFq6Kvns6i73kSrEQ3jWll+9HbQOi99pXQOCatoK5wv1uI2
-	 O9m/FAv5Fbzdw36thgv1deL2EunYU468a9Aoqyj3a+vDSTZOqGF7BayMtXkucCkP4o
-	 fKED/ROmSfgdNe/+KuXzbSxjjUCmBMUByFUbEtRoX8gYqQxoH06n2UWVySlp2i9PnT
-	 OvlQZq5LjZY2Q==
+	b=NAEBA1y1K4tD/khRpZK6HkipNJr1YfntYnA1W8a1MzEjPiEZDlIUbUrvu6Vu+pe0p
+	 dE4zzG04EM+hdn+JeTZRE7swY4dzT+d3zaZlfXt1w080wMyHCp0vmyNmcQfp1EpRk4
+	 +M5cgboJT5xIC7A1o9d3niTws0pIR9ymJ32HRLpSvJHNUrZoq77nijq2oVbdqcCnFX
+	 18h9UHBn499TLmGp8F2huiSkDw3kNFZHs2OGD4zQ9TR7ELKLZlLg2bYtnrgFtG4mkE
+	 PjuOKrBP49md3posUyZxios2JUQ0yCVcmx4UwALtpQvdrA7nF/kp1Haj/rVzLgd/N6
+	 8HwSnuIEXZLzw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FA4CAC5A0;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DD7CAC59F;
 	Tue, 16 Sep 2025 20:25:25 +0000 (UTC)
 From: Dang Huynh via B4 Relay <devnull+dang.huynh.mainlining.org@kernel.org>
-Date: Wed, 17 Sep 2025 03:25:14 +0700
-Subject: [PATCH 17/25] drivers: gpio: rda: Make direction register
- unreadable
+Date: Wed, 17 Sep 2025 03:25:15 +0700
+Subject: [PATCH 18/25] dt-bindings: dma: Add RDA IFC DMA
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250917-rda8810pl-drivers-v1-17-9ca9184ca977@mainlining.org>
+Message-Id: <20250917-rda8810pl-drivers-v1-18-9ca9184ca977@mainlining.org>
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 In-Reply-To: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
 To: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -77,11 +76,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org, 
  linux-mmc@vger.kernel.org, Dang Huynh <dang.huynh@mainlining.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=890;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758054322; l=2537;
  i=dang.huynh@mainlining.org; s=20250917; h=from:subject:message-id;
- bh=Ej4sfxzJ/Gsg0f6d9t0Id5MGonhTVkngeFDG/IpOGqc=;
- b=7/dQ+zSEH7UofRPjo+bKlBs6ViTT+WuJvSx4Gecx+bo6BYwM3Re5lMQKArpXET7WxhoCPOvfe
- Rk52QJ6IW9cA55W805ijHTkhu0687ofj0g1SAA1xQxJl5AhXuzcWLTL
+ bh=QY6MPTi+ZEpXp5sbdSrBjaqgS0Xhdu1ZPCH1WF+g14Y=;
+ b=f+73zCYT5uq1k6ilgLXi33C+NRy7J+fTOa4N/swr6XCdLJaXbG/yOKqpUhJI3D/PqTqY8XU0k
+ QkM4vE+PJ/5Cn0iUPmzJgeqVeko3jz25IKQyFfbLa/CoguJ6psdmMSc
 X-Developer-Key: i=dang.huynh@mainlining.org; a=ed25519;
  pk=RyzH4CL4YU/ItXYUurA51EVBidfx4lIy8/E4EKRJCUk=
 X-Endpoint-Received: by B4 Relay for dang.huynh@mainlining.org/20250917
@@ -91,27 +90,97 @@ Reply-To: dang.huynh@mainlining.org
 
 From: Dang Huynh <dang.huynh@mainlining.org>
 
-The register doesn't like to be read, this causes the SD Card
-Card Detect GPIO to misbehaves in the OS.
+The Intelligent Flow Controller (IFC) is a scatter/gather DMA
+controller.
 
 Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
 ---
- drivers/gpio/gpio-rda.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/dma/rda,ifc.yaml | 42 ++++++++++++++++++++++
+ include/dt-bindings/dma/rda-ifc.h                  | 28 +++++++++++++++
+ 2 files changed, 70 insertions(+)
 
-diff --git a/drivers/gpio/gpio-rda.c b/drivers/gpio/gpio-rda.c
-index b4db8553a2371ae407fdb7e681d0f82c4d9f74b7..56aaa9f33d29469dfb1bf86ed7b63c54b413c89c 100644
---- a/drivers/gpio/gpio-rda.c
-+++ b/drivers/gpio/gpio-rda.c
-@@ -245,7 +245,7 @@ static int rda_gpio_probe(struct platform_device *pdev)
- 		.clr = rda_gpio->base + RDA_GPIO_CLR,
- 		.dirout = rda_gpio->base + RDA_GPIO_OEN_SET_OUT,
- 		.dirin = rda_gpio->base + RDA_GPIO_OEN_SET_IN,
--		.flags = BGPIOF_READ_OUTPUT_REG_SET,
-+		.flags = BGPIOF_READ_OUTPUT_REG_SET | BGPIOF_UNREADABLE_REG_DIR,
- 	};
- 
- 	ret = gpio_generic_chip_init(&rda_gpio->chip, &config);
+diff --git a/Documentation/devicetree/bindings/dma/rda,ifc.yaml b/Documentation/devicetree/bindings/dma/rda,ifc.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..3bb5932e8ff9404e3980eaef607efceb6d883bda
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/rda,ifc.yaml
+@@ -0,0 +1,42 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/rda,ifc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: RDA Intelligent Flow Controller (IFC)
++
++maintainers:
++  - Dang Huynh <dang.huynh@mainlining.org>
++
++description: |
++  RDA IFC is a DMA controller, it only supports scatter/gather lists.
++
++allOf:
++  - $ref: dma-controller.yaml#
++
++properties:
++  compatible:
++    const: rda,8810pl-ifc
++
++  reg:
++    maxItems: 1
++
++  "#dma-cells":
++    const: 1
++    description:
++      The cell corresponding to DMA request ID
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    ifc: dma-controller@f0000 {
++      compatible = "rda,8810pl-ifc";
++      reg = <0xf0000 0x1000>;
++      #dma-cells = <1>;
++    };
+diff --git a/include/dt-bindings/dma/rda-ifc.h b/include/dt-bindings/dma/rda-ifc.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..e075fe26158e834d1ae87b6dce61e41fb931add3
+--- /dev/null
++++ b/include/dt-bindings/dma/rda-ifc.h
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause */
++
++#ifndef __DT_BINDINGS_DMA_RDA_IFC_H__
++#define __DT_BINDINGS_DMA_RDA_IFC_H__
++
++#define IFC_UART1_TX 0
++#define IFC_UART1_RX 1
++#define IFC_UART2_TX 2
++#define IFC_UART2_RX 3
++#define IFC_SPI1_TX 4
++#define IFC_SPI1_RX 5
++#define IFC_SPI2_TX 6
++#define IFC_SPI2_RX 7
++#define IFC_SPI3_TX 8
++#define IFC_SPI3_RX 9
++#define IFC_SDMMC1_TX 10
++#define IFC_SDMMC1_RX 11
++#define IFC_SDMMC2_TX 12
++#define IFC_SDMMC2_RX 13
++#define IFC_SDMMC3_TX 14
++#define IFC_SDMMC3_RX 15
++#define IFC_NFSC_TX 16
++#define IFC_NFSC_RX 17
++#define IFC_UART3_TX 18
++#define IFC_UART3_RX 19
++#define IFC_NO_REQUEST 20
++
++#endif /* __DT_BINDINGS_DMA_RDA_IFC_H__ */
 
 -- 
 2.51.0

@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-6589-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6590-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5833CB7DA3F
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:32:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FC8CB7DA08
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:32:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D9971C005EA
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 00:41:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E869E188C510
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 00:42:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85B481F4C89;
-	Wed, 17 Sep 2025 00:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EB731E885A;
+	Wed, 17 Sep 2025 00:41:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPgR2AIE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2XTIt58"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEF21898F8;
-	Wed, 17 Sep 2025 00:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002AC20B22;
+	Wed, 17 Sep 2025 00:41:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758069630; cv=none; b=gdHYWUNbKSi7DIp/b0djqjTUpEgIOif24VHD9yy2BMw6wmhzBxdaPxsKR3QN+Quq+EgaNQS9DLevmtcvMugwZYR+3IpEbkXnRjiqCd+RqL43D720lqlf6wZYMJuzBaJoTQQPdNdDXK9IMa7oE9Df/LqU0deMH3xW/Dh5lwruvS0=
+	t=1758069718; cv=none; b=TKrvN3EBURhuHfXa27yt3IShuQN8TMQtPYNNonkRbcAz6KbALHhUersgP+j+9gZ3OM32IAaRs7oFzloOt65IXvYmv/NX5DBOh58vG9zYxy/w7oCudqBvUI+AkUyKENrYYnVJcf0+kvtcUNqfS3Fld3BKTLlDwphsjmGW2WTJlg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758069630; c=relaxed/simple;
-	bh=zYlm+snaTYk5+EgxGCwKwJdiU83j+q1WnPgi8RKku64=;
+	s=arc-20240116; t=1758069718; c=relaxed/simple;
+	bh=KrAohhpjRtkz5KJfrqqO1Lmok9J5C3yh16lfG9uAz3I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qUwexXxvn9Z4d465baFDb9NVAtII2CChV6NAvl+A9+Bk0KcuCHrGwfaOC2CmSCkA/fwBAzKkxxvdZP7bEiUtmEO0ioSn2u2B0nIdT1R+qgJR6GTegQLMhBLtI3RLV4fwoPx/9Hal3aSvLceImxpVm442SrudMFxljSqpCpeKOxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPgR2AIE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D21D1C4CEEB;
-	Wed, 17 Sep 2025 00:40:25 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=p1FR1MQUoZ7U7VM8fwhuG4L/8rbu2B3Y6SthVw9K6H8jvn0vfZvXZYQtv3vFgXBkxXir0oMKdQDBxKzqVOVar74adKhTqWqoLcTrQYIDmhb4BNxUTvXlK5XIzWcVArEJY1Y+lXfGgCGs69v9/uYksKhCH1lUG2iqP12PCR3iikU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2XTIt58; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE0F6C4CEEB;
+	Wed, 17 Sep 2025 00:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758069629;
-	bh=zYlm+snaTYk5+EgxGCwKwJdiU83j+q1WnPgi8RKku64=;
+	s=k20201202; t=1758069717;
+	bh=KrAohhpjRtkz5KJfrqqO1Lmok9J5C3yh16lfG9uAz3I=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CPgR2AIEdCcqtyZHo64KFzRLiWXTpoFWNf9trVlgNb/xLFf6XeK/u0w5JlyB94ABK
-	 30iE3w7YqH7ZmQZo9zUn7yrHllVA9oU7Im4tjR2RCGjkr0fZ3G+Up/tqaEe0IvvC5w
-	 RqOWBkcr6lrmLYt9gBrxE1KMvXekGnxDWIQL1zC706uFcAuBUbaajnEov0mA+rwC/g
-	 ZQdazTUYgpt2PZ3BR1F41LpWsnny+VBgor1bj+vUMBRedpWweEjfmcChtisFyvZXAV
-	 Km0nMiOE2nxpKrkhkEfLDbkgEA4TiY9VDoXMG++YMFMtBEIco6aso4zADEOPNzQDz4
-	 yqkKShiZNytaQ==
-Message-ID: <988776f8-eed4-48b6-aadb-d110e84ad2a4@kernel.org>
-Date: Wed, 17 Sep 2025 09:40:24 +0900
+	b=G2XTIt58KH5FatByf/yE7to+twRwPtEml5k0XiBgPFh0OFPOayH/z73K/RIe6U556
+	 7pdv+0h1ZLDH9B7EK1sPt1tEOtQevVXbNubh6QSu02KnqZJNLTEyp68Sy/g4InRUSp
+	 Az1ogJ5ZNIvCSdlea7HMXAo7pqzm3X5vJwdsR7r9g04vkissg3oQk52NHLgQEtiOle
+	 S3plvzId1UExdIb4RWndvF9Q4HsbJYo2RZo9bm06DshTQme/bPsaZm4QYN8dicxBlf
+	 9rh0tkeiv4nfTJKu0XGD4DoFSfbT32cT6/7gQRt0H6fY0XktFCsEwJAsDeg6TuE4oE
+	 AjtnZwlapM19g==
+Message-ID: <7dcc85d0-7912-42c7-812e-a6d36aee4445@kernel.org>
+Date: Wed, 17 Sep 2025 09:41:52 +0900
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/25] ARM: dts: unisoc: rda8810pl: Enable Real-Time Clock
+Subject: Re: [PATCH 11/25] dts: unisoc: rda8810pl: Enable clock/reset driver
 To: dang.huynh@mainlining.org, Manivannan Sadhasivam <mani@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
@@ -68,7 +68,7 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org,
  linux-mmc@vger.kernel.org
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
- <20250917-rda8810pl-drivers-v1-7-9ca9184ca977@mainlining.org>
+ <20250917-rda8810pl-drivers-v1-11-9ca9184ca977@mainlining.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -114,21 +114,32 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250917-rda8810pl-drivers-v1-7-9ca9184ca977@mainlining.org>
+In-Reply-To: <20250917-rda8810pl-drivers-v1-11-9ca9184ca977@mainlining.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 17/09/2025 22:25, Dang Huynh via B4 Relay wrote:
 > From: Dang Huynh <dang.huynh@mainlining.org>
 > 
-> The RDA8810PL has built-in RTC.
+> Enable RDA8810PL Clock and Reset driver so we can use it for various
+> subsystems.
 > 
 > Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
+
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+
+You use random prefixes... This is "ARM: dts:" and the drivers ARE NOT
+"drivers:".
+
+
 > ---
-
-DTS  cannot be in the middle of patchset. Please stop creating this fake
-dependencies.
-
+>  arch/arm/boot/dts/unisoc/rda8810pl.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
 Best regards,
 Krzysztof
 

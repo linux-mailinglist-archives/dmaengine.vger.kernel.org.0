@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-6591-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6592-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 004AAB7DB29
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:33:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DA32B7D9E0
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:32:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B835327250
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 00:43:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C084E1BC48C7
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 00:44:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA1312153D8;
-	Wed, 17 Sep 2025 00:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CA331F1517;
+	Wed, 17 Sep 2025 00:44:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u7tiI+yJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9uCP59B"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76E01FCF41;
-	Wed, 17 Sep 2025 00:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3BAA945;
+	Wed, 17 Sep 2025 00:44:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758069792; cv=none; b=AkcwIghmw1BRFk3JAyBvGlAodxGq6y3CwZxiiQBxFy5XJMnDf0SiCoEl0bD1+ULliQajr8X4RXtj5mM59mkM8JhZHZrvrkngo51/0Rw1rPPZ17+4nuy3DwVUe8l8ebPM6FyYdzFqObMup47tQG9gGvBp6kCVZr7Y9KG+Z0BjJPA=
+	t=1758069863; cv=none; b=LlTF8b1JxbgPrrSjuxk5Kw3jZDMnZMjT3JmJuoOuBgisdS9BdIPROf9Aw4lS7XXDutUc7P0HppaS5o6lRovc+nrv1oKf9afYZQ37ogcHXhTnLeiCZiTs5U5i1XkWbKclTZxdJXxq+2s/akdsST4mSM0bOXXpyrBaTNJgLtZ8Soo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758069792; c=relaxed/simple;
-	bh=urrfAhMmJ6Kb44KmW9Nxz3cezw7izNitJ3wa7v9K97Y=;
+	s=arc-20240116; t=1758069863; c=relaxed/simple;
+	bh=wezAt7/QBNVz5FhXr+xXCeeHGzr3dwLqmrlGuDUCP2w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EIvmzGCe7AnuTP9kHPqQ2co8Om0W92M2uIP7ST69812oLv7ap5opGL1Xr8zJSyifegrys10gqDlqp4ACxBl56I7zau/EoGTYyFqKvrrehFZpvyEnitSsJF3SebhN32K6rH8sIXZkcr0pIyJ+0RXDdMLa1dj8m2q1QljGF1+cOB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u7tiI+yJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35FD7C4CEEB;
-	Wed, 17 Sep 2025 00:43:07 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=OiwP5YNW0PPA+NcyqJCXPOLOpDKQvZAWmb0mXx+W8ftfvX1x2sAnTTeS5Drs7Vmz2fRF3Pvzx9b5ITK8vNrSWKwx+smRFBx4eYcpXxX4HxoHF9gI7/fc8eU77asX7SWyncWBw4jHAPyOYmsCYNPe81SmRULwqkBCIZ8KCVrwdaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9uCP59B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD228C4CEEB;
+	Wed, 17 Sep 2025 00:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758069792;
-	bh=urrfAhMmJ6Kb44KmW9Nxz3cezw7izNitJ3wa7v9K97Y=;
+	s=k20201202; t=1758069862;
+	bh=wezAt7/QBNVz5FhXr+xXCeeHGzr3dwLqmrlGuDUCP2w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=u7tiI+yJ5vXDuuZpEd58bRVhwUKvd+vkdWn6eFrbnu9sidFirWqjY8vtV37x2rQy3
-	 sxnp1xdAdMX/ZNLQDlz+48/WaJZ9H3KIscwlR025r+O1LqyiQGCsFoG7068ozhyQkO
-	 ZpZ8SWL2DSSiXgAAnFYXmXMCHKGEsOop1iW5gTB4f/0sdsaW/PtKBTNZe1m8mE/Zjj
-	 lqPAZ/TIgvESg9RWGE8fCRVwqrgcXlptw9a6NADOuwl0LI/MejswHFlyIL5jYC6+zQ
-	 BZ4u4qIfexcHzZyzbzjS4a7jbuN/IR+cyUzX0tJ4RtCzOlksNxizaKwA6oD631m/90
-	 T9RFMrKnmv4ig==
-Message-ID: <8e1f4728-1ba6-4db7-8e04-a8dde165ca72@kernel.org>
-Date: Wed, 17 Sep 2025 09:43:05 +0900
+	b=C9uCP59B6lL9L5ajLZcP2darKySkB6LaVldH40vcWkxln4iAGjyQJ6A9wreVHgzpz
+	 uJJ5ggrJseGQwWMt7ZA5cQYQVZd+jB5Y7odmKDbTa5DTdGqkrdqGqT5kzisUersm95
+	 8dU/fOy+Lfvq6Ap1rcka7+1yekqpcUF08eA7jX3t/lhn81qEuDNc8qgLJXs0Vclcb9
+	 wYZlH2WSLo9xWhwv7G1fdQ/utKiDcVeBK+GdsDoMEO4c1jLvMM2prxDjREoB98FAIz
+	 4niy5wAfssIolxq6xYGWI50SnRX60t1BGuKgTmHF6kB3rh7GJ8QIjTqJJYgLWbsJeg
+	 grt0eVdxY9T9w==
+Message-ID: <d8235814-ab3a-4f04-b4ee-c237bbcf530f@kernel.org>
+Date: Wed, 17 Sep 2025 09:44:16 +0900
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/25] dt-bindings: clock: Add RDA Micro RDA8810PL
- clock/reset controller
+Subject: Re: [PATCH 14/25] dt-bindings: power: reset: Add RDA Micro Modem
+ Reset
 To: dang.huynh@mainlining.org, Manivannan Sadhasivam <mani@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
@@ -69,7 +69,7 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org,
  linux-mmc@vger.kernel.org
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
- <20250917-rda8810pl-drivers-v1-9-9ca9184ca977@mainlining.org>
+ <20250917-rda8810pl-drivers-v1-14-9ca9184ca977@mainlining.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -115,129 +115,52 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250917-rda8810pl-drivers-v1-9-9ca9184ca977@mainlining.org>
+In-Reply-To: <20250917-rda8810pl-drivers-v1-14-9ca9184ca977@mainlining.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 17/09/2025 22:25, Dang Huynh via B4 Relay wrote:
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#clock-cells"
-
-Use consistent quotes, either ' or "
-
-> +  - "#reset-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rda,8810pl-apclk.h>
-> +
-> +    ap_syscon: syscon@0 {
-> +      compatible = "rda,8810pl-apsyscon", "syscon";
-> +      reg = <0x0 0x1000>;
-> +      #clock-cells = <1>;
-> +      #reset-cells = <1>;
-> +    };
-> diff --git a/include/dt-bindings/clock/rda,8810pl-apclk.h b/include/dt-bindings/clock/rda,8810pl-apclk.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..372358e72436a28c0775519f49626c9c5f4c6046
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/rda,8810pl-apclk.h
-> @@ -0,0 +1,79 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
-> +
-> +#ifndef _DT_BINDINGS_CLK_RDA8810_H_
-> +#define _DT_BINDINGS_CLK_RDA8810_H_
-> +
-> +/* soc clocks */
-> +#define CLK_CPU 0
-> +#define CLK_BUS 1
-> +#define CLK_MEM 2
-> +
-> +#define CLK_USB 3
-> +#define CLK_AXI 4
-> +#define CLK_GCG 5
-> +#define CLK_AHB1 6
-> +#define CLK_APB1 7
-> +#define CLK_APB2 8
-> +
-> +#define CLK_GPU 9
-> +#define CLK_VPU 10
-> +#define CLK_VOC 11
-> +#define CLK_SFLSH 12
-> +
-> +#define CLK_UART1 13
-> +#define CLK_UART2 14
-> +#define CLK_UART3 15
-> +
-> +#define CLK_VOC2 16
-> +#define CLK_EMMC 17
-> +
-> +#define CLK_COUNT (CLK_EMMC + 1)
-
-Drop, not a binding.
-
-> +
-> +/* resets */
-> +#define RST_CPU 0
-
-
-Missing indentation before the values, everywhere.
-
-> +
-> +#define RST_AXI_VOC 1
-> +#define RST_AXI_DMA 2
-> +#define RST_AXI_CONNECT 3
-> +#define RST_AXI_VPU 4
-> +
-> +#define RST_GCG_GOUDA 5
-> +#define RST_GCG_CAMERA 6
-> +#define RST_GCG_LCDC 7
-> +
-> +#define RST_AHB1_USBC 8
-> +#define RST_AHB1_SPIFLASH 9
-> +
-> +#define RST_APB1_TIMER 10
-> +#define RST_APB1_KEYPAD 11
-> +#define RST_APB1_GPIO 12
-> +#define RST_APB1_PWM 13
-> +#define RST_APB1_AIF 14
-> +#define RST_APB1_AUIFC 15
-> +#define RST_APB1_I2C1 16
-> +#define RST_APB1_I2C2 17
-> +#define RST_APB1_I2C3 18
-> +#define RST_APB1_COMREGS 19
-> +#define RST_APB1_DMC 20
-> +#define RST_APB1_DDRPHY_P 21
-> +
-> +#define RST_APB2_IFC 22
-> +#define RST_APB2_UART1 23
-> +#define RST_APB2_UART2 24
-> +#define RST_APB2_UART3 25
-> +#define RST_APB2_SPI1 26
-> +#define RST_APB2_SPI2 27
-> +#define RST_APB2_SPI3 28
-> +#define RST_APB2_SDMMC1 29
-> +#define RST_APB2_SDMMC2 30
-> +#define RST_APB2_SDMMC3 31
-> +#define RST_APB2_NAND 32
-> +
-> +#define RST_MEM_GPU 33
-> +#define RST_MEM_VPU 34
-> +#define RST_MEM_DMC 35
-> +#define RST_MEM_DDRPHY_P 36
-> +
-> +#define RST_COUNT (RST_MEM_DDRPHY_P + 1)
-
-Drop, not a binding.
-
-> +
-> +#endif /* _DT_BINDINGS_CLK_RDA8810_H_ */
+> From: Dang Huynh <dang.huynh@mainlining.org>
 > 
+> Add documentation describing the RDA Micro modem reset controller
+> 
+> Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
+> ---
+>  .../bindings/power/reset/rda,md-reset.yaml         | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/reset/rda,md-reset.yaml b/Documentation/devicetree/bindings/power/reset/rda,md-reset.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..6d09bc8ee6b257aec9d2c4738d285490044003ea
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/rda,md-reset.yaml
+> @@ -0,0 +1,36 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/reset/rda,md-reset.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: RDA Micro Modem Reset
+
+What Modem? RDA created only one modem? Still wouldn't it have some
+model number?
+
+> +
+> +maintainers:
+> +  - Dang Huynh <dang.huynh@mainlining.org>
+> +
+> +description:
+> +  The modem has a reset register that can be used to fully reset the board.
+> +
+> +  To do that, a magic value needs to be written to unprotect the register,
+> +  then the soft reset register can be used.
+> +
+> +properties:
+> +  compatible:
+> +    const: rda,md-reset
+
+Missing SoC compatible. Every SoC block needs one.
 
 
 Best regards,

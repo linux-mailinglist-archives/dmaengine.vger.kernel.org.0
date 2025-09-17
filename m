@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-6590-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6591-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FC8CB7DA08
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:32:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 004AAB7DB29
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:33:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E869E188C510
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 00:42:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B835327250
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 00:43:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EB731E885A;
-	Wed, 17 Sep 2025 00:41:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA1312153D8;
+	Wed, 17 Sep 2025 00:43:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2XTIt58"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u7tiI+yJ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002AC20B22;
-	Wed, 17 Sep 2025 00:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76E01FCF41;
+	Wed, 17 Sep 2025 00:43:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758069718; cv=none; b=TKrvN3EBURhuHfXa27yt3IShuQN8TMQtPYNNonkRbcAz6KbALHhUersgP+j+9gZ3OM32IAaRs7oFzloOt65IXvYmv/NX5DBOh58vG9zYxy/w7oCudqBvUI+AkUyKENrYYnVJcf0+kvtcUNqfS3Fld3BKTLlDwphsjmGW2WTJlg0=
+	t=1758069792; cv=none; b=AkcwIghmw1BRFk3JAyBvGlAodxGq6y3CwZxiiQBxFy5XJMnDf0SiCoEl0bD1+ULliQajr8X4RXtj5mM59mkM8JhZHZrvrkngo51/0Rw1rPPZ17+4nuy3DwVUe8l8ebPM6FyYdzFqObMup47tQG9gGvBp6kCVZr7Y9KG+Z0BjJPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758069718; c=relaxed/simple;
-	bh=KrAohhpjRtkz5KJfrqqO1Lmok9J5C3yh16lfG9uAz3I=;
+	s=arc-20240116; t=1758069792; c=relaxed/simple;
+	bh=urrfAhMmJ6Kb44KmW9Nxz3cezw7izNitJ3wa7v9K97Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p1FR1MQUoZ7U7VM8fwhuG4L/8rbu2B3Y6SthVw9K6H8jvn0vfZvXZYQtv3vFgXBkxXir0oMKdQDBxKzqVOVar74adKhTqWqoLcTrQYIDmhb4BNxUTvXlK5XIzWcVArEJY1Y+lXfGgCGs69v9/uYksKhCH1lUG2iqP12PCR3iikU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2XTIt58; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE0F6C4CEEB;
-	Wed, 17 Sep 2025 00:41:53 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=EIvmzGCe7AnuTP9kHPqQ2co8Om0W92M2uIP7ST69812oLv7ap5opGL1Xr8zJSyifegrys10gqDlqp4ACxBl56I7zau/EoGTYyFqKvrrehFZpvyEnitSsJF3SebhN32K6rH8sIXZkcr0pIyJ+0RXDdMLa1dj8m2q1QljGF1+cOB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u7tiI+yJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35FD7C4CEEB;
+	Wed, 17 Sep 2025 00:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758069717;
-	bh=KrAohhpjRtkz5KJfrqqO1Lmok9J5C3yh16lfG9uAz3I=;
+	s=k20201202; t=1758069792;
+	bh=urrfAhMmJ6Kb44KmW9Nxz3cezw7izNitJ3wa7v9K97Y=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G2XTIt58KH5FatByf/yE7to+twRwPtEml5k0XiBgPFh0OFPOayH/z73K/RIe6U556
-	 7pdv+0h1ZLDH9B7EK1sPt1tEOtQevVXbNubh6QSu02KnqZJNLTEyp68Sy/g4InRUSp
-	 Az1ogJ5ZNIvCSdlea7HMXAo7pqzm3X5vJwdsR7r9g04vkissg3oQk52NHLgQEtiOle
-	 S3plvzId1UExdIb4RWndvF9Q4HsbJYo2RZo9bm06DshTQme/bPsaZm4QYN8dicxBlf
-	 9rh0tkeiv4nfTJKu0XGD4DoFSfbT32cT6/7gQRt0H6fY0XktFCsEwJAsDeg6TuE4oE
-	 AjtnZwlapM19g==
-Message-ID: <7dcc85d0-7912-42c7-812e-a6d36aee4445@kernel.org>
-Date: Wed, 17 Sep 2025 09:41:52 +0900
+	b=u7tiI+yJ5vXDuuZpEd58bRVhwUKvd+vkdWn6eFrbnu9sidFirWqjY8vtV37x2rQy3
+	 sxnp1xdAdMX/ZNLQDlz+48/WaJZ9H3KIscwlR025r+O1LqyiQGCsFoG7068ozhyQkO
+	 ZpZ8SWL2DSSiXgAAnFYXmXMCHKGEsOop1iW5gTB4f/0sdsaW/PtKBTNZe1m8mE/Zjj
+	 lqPAZ/TIgvESg9RWGE8fCRVwqrgcXlptw9a6NADOuwl0LI/MejswHFlyIL5jYC6+zQ
+	 BZ4u4qIfexcHzZyzbzjS4a7jbuN/IR+cyUzX0tJ4RtCzOlksNxizaKwA6oD631m/90
+	 T9RFMrKnmv4ig==
+Message-ID: <8e1f4728-1ba6-4db7-8e04-a8dde165ca72@kernel.org>
+Date: Wed, 17 Sep 2025 09:43:05 +0900
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/25] dts: unisoc: rda8810pl: Enable clock/reset driver
+Subject: Re: [PATCH 09/25] dt-bindings: clock: Add RDA Micro RDA8810PL
+ clock/reset controller
 To: dang.huynh@mainlining.org, Manivannan Sadhasivam <mani@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
@@ -68,7 +69,7 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org,
  linux-mmc@vger.kernel.org
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
- <20250917-rda8810pl-drivers-v1-11-9ca9184ca977@mainlining.org>
+ <20250917-rda8810pl-drivers-v1-9-9ca9184ca977@mainlining.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -114,32 +115,131 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250917-rda8810pl-drivers-v1-11-9ca9184ca977@mainlining.org>
+In-Reply-To: <20250917-rda8810pl-drivers-v1-9-9ca9184ca977@mainlining.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 17/09/2025 22:25, Dang Huynh via B4 Relay wrote:
-> From: Dang Huynh <dang.huynh@mainlining.org>
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#clock-cells"
+
+Use consistent quotes, either ' or "
+
+> +  - "#reset-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/rda,8810pl-apclk.h>
+> +
+> +    ap_syscon: syscon@0 {
+> +      compatible = "rda,8810pl-apsyscon", "syscon";
+> +      reg = <0x0 0x1000>;
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +    };
+> diff --git a/include/dt-bindings/clock/rda,8810pl-apclk.h b/include/dt-bindings/clock/rda,8810pl-apclk.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..372358e72436a28c0775519f49626c9c5f4c6046
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/rda,8810pl-apclk.h
+> @@ -0,0 +1,79 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
+> +
+> +#ifndef _DT_BINDINGS_CLK_RDA8810_H_
+> +#define _DT_BINDINGS_CLK_RDA8810_H_
+> +
+> +/* soc clocks */
+> +#define CLK_CPU 0
+> +#define CLK_BUS 1
+> +#define CLK_MEM 2
+> +
+> +#define CLK_USB 3
+> +#define CLK_AXI 4
+> +#define CLK_GCG 5
+> +#define CLK_AHB1 6
+> +#define CLK_APB1 7
+> +#define CLK_APB2 8
+> +
+> +#define CLK_GPU 9
+> +#define CLK_VPU 10
+> +#define CLK_VOC 11
+> +#define CLK_SFLSH 12
+> +
+> +#define CLK_UART1 13
+> +#define CLK_UART2 14
+> +#define CLK_UART3 15
+> +
+> +#define CLK_VOC2 16
+> +#define CLK_EMMC 17
+> +
+> +#define CLK_COUNT (CLK_EMMC + 1)
+
+Drop, not a binding.
+
+> +
+> +/* resets */
+> +#define RST_CPU 0
+
+
+Missing indentation before the values, everywhere.
+
+> +
+> +#define RST_AXI_VOC 1
+> +#define RST_AXI_DMA 2
+> +#define RST_AXI_CONNECT 3
+> +#define RST_AXI_VPU 4
+> +
+> +#define RST_GCG_GOUDA 5
+> +#define RST_GCG_CAMERA 6
+> +#define RST_GCG_LCDC 7
+> +
+> +#define RST_AHB1_USBC 8
+> +#define RST_AHB1_SPIFLASH 9
+> +
+> +#define RST_APB1_TIMER 10
+> +#define RST_APB1_KEYPAD 11
+> +#define RST_APB1_GPIO 12
+> +#define RST_APB1_PWM 13
+> +#define RST_APB1_AIF 14
+> +#define RST_APB1_AUIFC 15
+> +#define RST_APB1_I2C1 16
+> +#define RST_APB1_I2C2 17
+> +#define RST_APB1_I2C3 18
+> +#define RST_APB1_COMREGS 19
+> +#define RST_APB1_DMC 20
+> +#define RST_APB1_DDRPHY_P 21
+> +
+> +#define RST_APB2_IFC 22
+> +#define RST_APB2_UART1 23
+> +#define RST_APB2_UART2 24
+> +#define RST_APB2_UART3 25
+> +#define RST_APB2_SPI1 26
+> +#define RST_APB2_SPI2 27
+> +#define RST_APB2_SPI3 28
+> +#define RST_APB2_SDMMC1 29
+> +#define RST_APB2_SDMMC2 30
+> +#define RST_APB2_SDMMC3 31
+> +#define RST_APB2_NAND 32
+> +
+> +#define RST_MEM_GPU 33
+> +#define RST_MEM_VPU 34
+> +#define RST_MEM_DMC 35
+> +#define RST_MEM_DDRPHY_P 36
+> +
+> +#define RST_COUNT (RST_MEM_DDRPHY_P + 1)
+
+Drop, not a binding.
+
+> +
+> +#endif /* _DT_BINDINGS_CLK_RDA8810_H_ */
 > 
-> Enable RDA8810PL Clock and Reset driver so we can use it for various
-> subsystems.
-> 
-> Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
-
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
-
-You use random prefixes... This is "ARM: dts:" and the drivers ARE NOT
-"drivers:".
 
 
-> ---
->  arch/arm/boot/dts/unisoc/rda8810pl.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
 Best regards,
 Krzysztof
 

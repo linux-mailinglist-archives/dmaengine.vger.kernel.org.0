@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-6593-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6594-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DD3EB7DCC6
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:34:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 71E79B7DD03
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:34:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67C861BC66D0
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 00:46:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9657F1BC6B80
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 00:47:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6B23225397;
-	Wed, 17 Sep 2025 00:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C39671A5BBE;
+	Wed, 17 Sep 2025 00:46:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HxEIAE7s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aXhloplC"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7EB21B19D;
-	Wed, 17 Sep 2025 00:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A599258A;
+	Wed, 17 Sep 2025 00:46:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758069925; cv=none; b=aM6v7PCgep2334qP5m3jHXQMZERZNpkVBWJXBiCjOSnPFsscZLlwaqBWBFOScUmnfdytzCmnYwSqFrGGYaEITIZv9DrRj0eSbaN/xzgwAUXQgK1sRl4lVCHlXdP7FKFvLFTlht5BXA89XnWD1ijvQjAez8Rs0W2iFubrL/4tUAc=
+	t=1758070009; cv=none; b=WnYl6EclUNC2O/t3JOfDu0TOkz7o30KxdAylEFsyQ5MGgzPDDi09Q7NNmeMf8oJinQA9C2ECL6mqP3dW+x71P35xIwjMQLZPnRaNpEQ+L2CFGSjhN0U1CsISettV0K8pTnCuOaRDlpZsJ8Di0SdEG3pQCOU9HdXgCU1uGhdE+N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758069925; c=relaxed/simple;
-	bh=eig1Nc4T6kQm+qPLepNb0d+UGF7Pmx+Hs1Ul9DTNrJQ=;
+	s=arc-20240116; t=1758070009; c=relaxed/simple;
+	bh=tPMWIXdFGqvCblFzVyq0bp+xpx55GvJsOMABeauy6EQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pTiLaBB+JCMEIDwQO/+KmxxkwsjbJ8HHFdljcxJi5XLk24OZk3JBdDSro7wy/yBiUkfIaXbvD4cUlntIubNqvsMfe4bFYNXpiR32juMUrDoXIdvoSzNrL6dhHbd3Cf+Ww0/LrnbMphxAc1q83ZavJYLkwjd/5XGvjkE73ivSm0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HxEIAE7s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CECEAC4CEEB;
-	Wed, 17 Sep 2025 00:45:20 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=NNyEu+YTmB1X9wClb9sm429EZ9NvMlofH1clKNi6fw0XFi6TBStkN5mFG4F+xqmyKBwKiLflLkdbvFFAfNiI/V5F5EYsDp/zmvgKdK5GqmCIOs6ZVysqF1ermbyFkPkcQ8yXPDrxVvTjNlqzdfJAMQ3OSba4JEYsBRHsjf55BO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aXhloplC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 988C1C4CEEB;
+	Wed, 17 Sep 2025 00:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758069925;
-	bh=eig1Nc4T6kQm+qPLepNb0d+UGF7Pmx+Hs1Ul9DTNrJQ=;
+	s=k20201202; t=1758070008;
+	bh=tPMWIXdFGqvCblFzVyq0bp+xpx55GvJsOMABeauy6EQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HxEIAE7sXFAKuioPdHlpoIfXJrZqxUGvEfrTl6TB/NN1/JNzvmpit3Um/N0LpY18z
-	 fFYro3Hgji8YtlIJjo5KUfXj4WIe/9mv2R+cyeEuffqgZX6huIkZs5TExE/zSX8WQB
-	 0V/Iy/iYoRjM017ZYVOGKO4hJ7ohS3sP0TxJxM8DVBCubSoX+sK5aZmQXHly7bZqui
-	 xelPz/7bmxzALt3jVklQYU4jxRo1Y/ZRoRb3lwZdKG/c4jzqXXLet34iy31L6UEFJk
-	 aEjoZHpUNvSl5PSO/UfphVerBQb0TUiJNJgHwu37ujZGqwY9n5Df+t11sKjOAF+fne
-	 rmKamQyDcXgeg==
-Message-ID: <8e2a796d-0c7e-44de-990b-572479bf1e89@kernel.org>
-Date: Wed, 17 Sep 2025 09:45:19 +0900
+	b=aXhloplCdtDFcyTT8hzsolf4MekZIJNbtxqq+aBkWXgMbOfDMLkIVdL+jWDGQKflc
+	 3XItqWmud7lz0uFcyNgL4g73gWEJxjEBcyVbIe/smFm0AIE2oswkqqf8bDqm0XLMlC
+	 GgfVNrpHLSp2Jn41VSCxpBgi/Ttuj/tJhH2KxAtLe5McdnS8LnP0BSXe/1mTLhvhqs
+	 MU6dFISWPxpl9jrBCiGw3Qq0BLMyD9d9X+y7C9iOPKW17UBsJ3QjYpWwHL5SfTuzoO
+	 W165Tc8woV3t/7aCALkoOHGB+MVC08IY7ODAH0RyBHnIlpq0KyCCX46RIK8Cmnv1Wi
+	 K1MQvGz6oVBew==
+Message-ID: <6227ba2e-5d16-4577-ab68-4a6aee13ea03@kernel.org>
+Date: Wed, 17 Sep 2025 09:46:42 +0900
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 15/25] power: reset: Add basic power reset driver for
- RDA8810PL
+Subject: Re: [PATCH 16/25] dts: unisoc: rda8810pl: Enable modem reset
 To: dang.huynh@mainlining.org, Manivannan Sadhasivam <mani@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
@@ -69,7 +68,7 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org,
  linux-mmc@vger.kernel.org
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
- <20250917-rda8810pl-drivers-v1-15-9ca9184ca977@mainlining.org>
+ <20250917-rda8810pl-drivers-v1-16-9ca9184ca977@mainlining.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -115,150 +114,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250917-rda8810pl-drivers-v1-15-9ca9184ca977@mainlining.org>
+In-Reply-To: <20250917-rda8810pl-drivers-v1-16-9ca9184ca977@mainlining.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 17/09/2025 22:25, Dang Huynh via B4 Relay wrote:
 > From: Dang Huynh <dang.huynh@mainlining.org>
 > 
-> This basic driver can only reboot, powering off requires the modem
-> firmware which we don't have yet.
+> This allows us to reboot the board from the OS.
 > 
 > Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
 > ---
->  MAINTAINERS                      |  6 +++++
->  drivers/power/reset/Kconfig      |  9 +++++++
->  drivers/power/reset/Makefile     |  1 +
->  drivers/power/reset/rda-reboot.c | 58 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 74 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cbe2ab8af6dcd40dd1456d9df55673dace3c87b2..5ec24d8657bffb55c160947a930980e428c6a6b7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -21399,6 +21399,12 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/clock/rda,8810pl-apsyscon.yaml
->  F:	drivers/clk/rda/clk-rda8810.c
->  
-> +RDA MICRO MODEM RESET DRIVER
-> +M:	Dang Huynh <dang.huynh@mainlining.org>
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/power/reset/rda,md-reset.yaml
-> +F:	drivers/power/reset/rda-reboot.c
-> +
->  RDA MICRO REAL TIME CLOCK DRIVER
->  M:	Dang Huynh <dang.huynh@mainlining.org>
->  S:	Maintained
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index 77ea3129c70806929f3c248667db42f05f5f1d27..de9b1afb94d14a5d23286ddb302af4107d649c12 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -205,6 +205,15 @@ config POWER_RESET_QNAP
->  
->  	  Say Y if you have a QNAP NAS.
->  
-> +config POWER_RESET_RDA
-> +	bool "RDA Micro Reset Driver"
-> +	depends on ARCH_RDA
+>  arch/arm/boot/dts/unisoc/rda8810pl.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-|| COMPILE_TEST
-everywhere, for all your drivers.
-
-> +	help
-> +	  This driver supports soft resetting RDA Micro boards by writing
-> +	  magic values to the modem register.
-> +
-> +	  Say Y if you have a board with RDA Micro SoC.
-> +
->  config POWER_RESET_REGULATOR
->  	bool "Regulator subsystem power-off driver"
->  	depends on OF && REGULATOR
-> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> index b7c2b5940be9971548a5527384d1931abff11c4c..14371230410dad2852489160f4fc23d8fd087d6e 100644
-> --- a/drivers/power/reset/Makefile
-> +++ b/drivers/power/reset/Makefile
-> @@ -22,6 +22,7 @@ obj-$(CONFIG_POWER_RESET_ODROID_GO_ULTRA_POWEROFF) += odroid-go-ultra-poweroff.o
->  obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) += piix4-poweroff.o
->  obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
->  obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
-> +obj-$(CONFIG_POWER_RESET_RDA) += rda-reboot.o
->  obj-$(CONFIG_POWER_RESET_REGULATOR) += regulator-poweroff.o
->  obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
->  obj-$(CONFIG_POWER_RESET_ST) += st-poweroff.o
-> diff --git a/drivers/power/reset/rda-reboot.c b/drivers/power/reset/rda-reboot.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..d87b063ba67d847f8e869e50a6c01427b2866889
-> --- /dev/null
-> +++ b/drivers/power/reset/rda-reboot.c
-> @@ -0,0 +1,58 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2025, Dang Huynh <dang.huynh@mainlining.org>
-> + *
-> + * Based on drivers/power/reset/msm-poweroff.c:
-> + * Copyright (c) 2013, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/reboot.h>
-> +#include <linux/pm.h>
-> +#include <linux/mfd/syscon.h>
-> +
-> +static void __iomem *rda_md_sysctrl;
-
-No, no singletons.
-
-> +
-> +static int do_rda_reboot(struct sys_off_data *data)
-> +{
-> +	/* unprotect md registers */
-> +	writel(0x00A50001, rda_md_sysctrl);
-> +
-> +	/* reset all */
-> +	writel(0x80000000, rda_md_sysctrl + 4);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int rda_reboot_probe(struct platform_device *pdev)
-> +{
-> +	rda_md_sysctrl = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(rda_md_sysctrl))
-> +		return PTR_ERR(rda_md_sysctrl);
-> +
-> +	devm_register_sys_off_handler(&pdev->dev, SYS_OFF_MODE_RESTART,
-> +				      128, do_rda_reboot, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_rda_reboot_match[] = {
-> +	{ .compatible = "rda,md-reset", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, of_rda_reboot_match);
-> +
-> +static struct platform_driver rda_reboot_driver = {
-> +	.probe = rda_reboot_probe,
-> +	.driver = {
-> +		.name = "rda-reboot",
-> +		.of_match_table = of_match_ptr(of_rda_reboot_match),
-
-
-Drop of_match_ptr, you have warnings here.
-
-> +	},
-> +};
-> +builtin_platform_driver(rda_reboot_driver);
-> 
-
+Please don't do patch per one node. Add logical chunks, but not that
+detailed. There are no dependencies here, so way you organize patches
+and split them is just confusing.
 
 Best regards,
 Krzysztof

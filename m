@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-6587-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6588-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DACDB7F30B
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 15:23:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BBD5B7D5C0
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:26:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 94C447A272E
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Sep 2025 23:59:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C02E14E4A86
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 00:39:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC62419E7F9;
-	Wed, 17 Sep 2025 00:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC051D5ABA;
+	Wed, 17 Sep 2025 00:39:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UlHy8TZh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AD1Rhqwa"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF5610F1;
-	Wed, 17 Sep 2025 00:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1A82AD3D;
+	Wed, 17 Sep 2025 00:39:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758067255; cv=none; b=UoDMEOI2edCFgkJTvmfEav/fPPEPD6CGI6gMD/eLNPmQcK3OltfbL2sbyuPf+9lOOw4g4pGVJUa+65HC936iga9WMuGUKOevLzG1o3FT6Em0YVdgJkevxbxNF1U5hwc3hl8n2djKaYgrZX65M7OZ71xZkSfPTJ+CHMxgLzHCbGY=
+	t=1758069585; cv=none; b=s8MY+OcjT8eXfl2r93MO2sjXB1+oQFmMaNQdbbbFn3sLG1/lOQ3QJX6UhoT2obvpbDwf6SniZMSrVmCU6eJCHreeYHQhTmL+F+C7SFIZc+ssf8e+NiDgQ5rvNGU+8gheylB9Zx+4OpUvUjZrRM4xCJE7TE+PF9OfVqigXbh6xq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758067255; c=relaxed/simple;
-	bh=ke9zmmhKs5eb5v+Alg5/XjhaLlirlLoeVZXpSuibMM8=;
+	s=arc-20240116; t=1758069585; c=relaxed/simple;
+	bh=XpRGQVUfwE9GUgDDvrO1cy+4ECpglMkc+D0wvz7ix6s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MSIUlZMpLmjkdLIXRnNP/vTxuWhQYGsvvd7/4Iq8ovDX+TnbAPiBLe+6pjfrRkWwgU8weuoxYZbnq/6cGFhBHX4qL4RVh72tLw0660s5sMDqG3H5lJq/o2W67098BFTKQRmYuSsbkJaQnMG4vyCpQk7kWdudl3ML4nOvkCgv0Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UlHy8TZh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA362C4CEEB;
-	Wed, 17 Sep 2025 00:00:49 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=DCFBSEGZccMfRjqk/P1QEPBBqu6lu0KYOCdWGK0VSTacJdHR3FGxWxFgU36kaHxUiuZCBU0jh15sYRyFFuNNLcnDMfmOG+QmxdcNOvISgHM6DIl29drBGHja8gIccCKSrkvHO+B1E7CXvrcZ8yTtYBj07Re4S82jrLLnGcgLYYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AD1Rhqwa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 041E2C4CEEB;
+	Wed, 17 Sep 2025 00:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758067255;
-	bh=ke9zmmhKs5eb5v+Alg5/XjhaLlirlLoeVZXpSuibMM8=;
+	s=k20201202; t=1758069584;
+	bh=XpRGQVUfwE9GUgDDvrO1cy+4ECpglMkc+D0wvz7ix6s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UlHy8TZhlJV57BFKSbW5+rOp3Es6ZL9g1CiUvHbGF+8iP91AcPlsQt85/baStMxC5
-	 Uxhjk5MNwG48opHIfX/mcN7HvDoy39NRIZa+JSEKGg0TrJmFDE8+xt498TLeJA1/Zd
-	 7cUUtfwPNRIS2jwGgExYxhL06VehJTXXzUFuo2OKWHofLCGLAjIO7+9kiBIAjsY5zx
-	 Qv6j4UkQdJsGDgF/9WJciW0u0A4psyAhPZ0Va9uHbbv33P4ZcjzbAl1/+tKn/oLsx3
-	 eosExh7i6QSE0k+pxPKmvz/0sDTnnafIe9kY5Tz2YHsgJX5aJLt9nNVUGydWpXDNjM
-	 sYCPNmgIb9YdQ==
-Message-ID: <689d2f80-40e8-49c4-8aca-7a5d21e62b0c@kernel.org>
-Date: Wed, 17 Sep 2025 09:00:48 +0900
+	b=AD1RhqwaAcQYtyubAHOk/fK+A7EG5PyIL6bNRGmpdqGRCWle8tEtjEz7MzEcFs0x2
+	 0upZTB0ugEMx7pQjUUNh9mbNaQGyMispWMSI/Pi9TseaqC1dKO57Pl1f/5k0N+3+QL
+	 g3EyM8D2d/kYjXlbycFCGjqmzwoBiu4dK5EXJmwsZe/lp9N/jiDYSzJFjz5N+rxWmF
+	 AXRBQw+zJEGGadTnDN6uBVuffHrMorRQYL8WG+MVR0cib8QkB7A9z88wYl0FF0KUED
+	 E0qfCGEvvu9x9rmwiWKqRBvAKlkOb8BWUNcXR0L0BpRzudrWn3+EjRJ38tSrnFkrWj
+	 f8GtLcKj01qTQ==
+Message-ID: <577804ea-b2dc-4cb0-9773-415ac3699fab@kernel.org>
+Date: Wed, 17 Sep 2025 09:39:38 +0900
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 21/25] dt-bindings: mmc: Add RDA SDMMC controller
+Subject: Re: [PATCH 01/25] ARM: dts: unisoc: rda8810pl: Add label to GPIO
+ nodes
 To: dang.huynh@mainlining.org, Manivannan Sadhasivam <mani@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
@@ -68,7 +69,7 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org,
  linux-mmc@vger.kernel.org
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
- <20250917-rda8810pl-drivers-v1-21-9ca9184ca977@mainlining.org>
+ <20250917-rda8810pl-drivers-v1-1-9ca9184ca977@mainlining.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -114,128 +115,25 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250917-rda8810pl-drivers-v1-21-9ca9184ca977@mainlining.org>
+In-Reply-To: <20250917-rda8810pl-drivers-v1-1-9ca9184ca977@mainlining.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 17/09/2025 22:25, Dang Huynh via B4 Relay wrote:
+On 17/09/2025 22:24, Dang Huynh via B4 Relay wrote:
 > From: Dang Huynh <dang.huynh@mainlining.org>
 > 
-> Add documentation describing the SD/MMC controller in RDA Micro
-> RDA8810PL SoC.
+> So we can add devices to these GPIO nodes for each board.
+
+No, it's pointless. Squash it with the user.
+
+Also, way you organized patchset is just making things complicated. DTS
+cannot be split all over it, like put randomly at the beginning, middle
+and at the end.
+
+Read DT submitting patches and maintainer soc rules.
+
 > 
-> Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
-> ---
->  Documentation/devicetree/bindings/mmc/rda,mmc.yaml | 91 ++++++++++++++++++++++
->  1 file changed, 91 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/rda,mmc.yaml b/Documentation/devicetree/bindings/mmc/rda,mmc.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..dfdd9c6d3044061c342519e35e39c7751874bb03
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/rda,mmc.yaml
 
-filename based on compatible.
-
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/rda,mmc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: RDA Micro SD/MMC Controller
-> +
-> +allOf:
-> +  - $ref: mmc-controller.yaml
-> +
-> +maintainers:
-> +  - Dang Huynh <dang.huynh@mainlining.org>
-> +
-> +properties:
-> +  compatible:
-> +    const: rda,8810pl-mmc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: apb
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    minItems: 2
-
-Drop
-
-> +    maxItems: 2
-> +
-> +  dma-names:
-> +    items:
-> +      - const: tx
-> +      - const: rx
-> +
-> +  rda,mclk-adj:
-> +    $ref: /schemas/types.yaml#/definitions/uint8
-> +    description:
-> +      Some board need MCLK to be adjusted for the card to work.
-> +      If not present, MCLK will be handled by an external PCLK.
-
-Adjusted for what? What is the value exactly? Where is the MCLK located?
-
-> +    minimum: 0
-> +    maximum: 255
-> +
-> +  rda,mclk-inv:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Some board need MCLK to be inverted for the card to work.
-> +      If not present, MCLK is not inverted.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - dmas
-> +  - dma-names
-> +  - vmmc-supply
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/clock/rda,8810pl-apclk.h>
-> +    #include <dt-bindings/dma/rda-ifc.h>
-> +    mmc1: mmc@20950000 {
-
-Drop unused label.
-
-> +      compatible = "rda,8810pl-mmc";
-> +      reg = <0x20950000 0x1000>;
-> +      interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&ap_syscon CLK_APB2>;
-> +      clock-names = "apb";
-> +      resets = <&ap_syscon RST_APB2_SDMMC1>;
-> +      dmas = <&ifc IFC_SDMMC1_TX>, <&ifc IFC_SDMMC1_RX>;
-> +      dma-names = "tx", "rx";
-> +      vmmc-supply = <&vdd_sdmmc>;
-> +      rda,mclk-adj = /bits/ 8 <1>;
-> +      rda,mclk-inv;
-> +      status = "disabled";
-Cannot be disabled.
 
 Best regards,
 Krzysztof

@@ -1,164 +1,306 @@
-Return-Path: <dmaengine+bounces-6598-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6599-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF735B7D8B9
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:30:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D921BB7C7E0
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:04:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 277C13AAB17
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 10:03:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C73681C01E17
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 11:59:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B04F430C341;
-	Wed, 17 Sep 2025 10:03:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3C4D369992;
+	Wed, 17 Sep 2025 11:59:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9Y0nfAD"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lc+UMWzk"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012029.outbound.protection.outlook.com [52.101.53.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675CB302770;
-	Wed, 17 Sep 2025 10:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758103417; cv=none; b=ITsH/XO89vfX3AkL+3b79qtHV4Uw9Lfl/dtkI/1fctr5x7yOs8hPKeGL40aunsKeZPZ0UT767Ooz/owdNOzEoP3R6qn82j7M/lR3DBS+f1YmN3yXx9jFu6mKQ0WPxCXxgfTLKLhoR/sfARTpjGi2tPy53l32TuZIogsPIC1V53o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758103417; c=relaxed/simple;
-	bh=nNlilHjh09UBY7rPl6XW3+rKwLzxl/XA9okrB109O1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NJDcS00zmTTRoXhU0aCTXg8f1UnMpCzcesaPTYA4tJ6s9fq/17MX2YbSjZUK7NC1ZqKYPJaPXK1K7kalAjVGbASJ5/vzqgVOrvAE/ilQRzuGedv0a8X13gqpbGyrvVjadw52lwy1mSd/iOqi6ufDyQWA6L+0jsaUIVcdBaO5kTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9Y0nfAD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 429F6C4CEF0;
-	Wed, 17 Sep 2025 10:03:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758103417;
-	bh=nNlilHjh09UBY7rPl6XW3+rKwLzxl/XA9okrB109O1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B9Y0nfADZvNHly1cC+7nuDT0d/oTq9ziRK04kv1w1BF/BHhB5Xn0fiBbI0/UEecCV
-	 Jgfp0Qr3MqeK4/IlBzjJBUmHnx5pt1iVtl+Of1wkezd6WDc+IA/jvJ55WlzYfsS8nU
-	 GlOvOEc5T+rMEM1daFnDSK5IiYY4xJjJYth9BdXysxjB3CLYozkCtQecbSEQIlO86I
-	 TlfVla0IwqYaoS6wTPwZxzKj9uyGujA4XWYEuhUot/r6Hdefu7hbiz2HhoSqrPqgNf
-	 yf5mgQmqWgUVN5yPotT6+fV64FGqGLfxWPfsp136Spi+UEUH80ZpjCppqgefz6djDH
-	 z9q04unFly53w==
-Date: Wed, 17 Sep 2025 15:33:22 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: dang.huynh@mainlining.org
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Sebastian Reichel <sre@kernel.org>, Vinod Koul <vkoul@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: Re: [PATCH 00/25] RDA8810PL Clock, RTC and MMC driver
-Message-ID: <lnfervvwctvemjdmyue2aohlsqpfd5gsuzjho3u6mtdtewl4vr@saqnionh72am>
-References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D24B2D0283;
+	Wed, 17 Sep 2025 11:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.29
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758110356; cv=fail; b=nSU9/3/hVGbq6JlemoeJFU+JfQaD8yU73DTcOTsnBC6AHcPglJ+6axkeOrUS2Tj0J7UUqTgeP597dYIY3wrZSF7C6PFOcSuE/aJfTILYOQYDpKQMuaC4MfaTLyTQ3F8EUaMw2oY6uWZ3j/8PPE8gj3lXj1MjhOA+iWrHhLGreUk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758110356; c=relaxed/simple;
+	bh=2Xc72jGmgtlLaNUELkfc5wtt5MoUqqangfmPHnghNG4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rmcRy/BfDSCY9BtQlE+mesyd1G+ylq9/Km3D2pgef7iZzXBQWvS3cUxU9SQUl7YbbSkRIhKWrbf/z8RZsHy2M0CEu9n7W7XuY3ytn+aAMl0MThuYpn285vxW31eZRYmL2a84Qr7WkmydvIPElFSzvx7hDfQWtEMzim0MqiRDbcM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lc+UMWzk; arc=fail smtp.client-ip=52.101.53.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EG1NtBmvY1kIJJeX2+9qTl4e0PsGncIQ3+Nth/UQEghFvMuorwfQts3ssIivxw+vG9eQIwG87QXIP/9GqdIsVI8NTdfbq2XuS9utubJ9sG4RGMbDLYd7Cy4T6JVzr7ylaH1V4PZsrPL4BDvhhG5QFQC6rHtwdExug2p2X5hPE2jez4MTOW2uyVNoKQxTP9EK81w/UiKSlReY44d0th/szciOhsUsQL+fWeiuOg1dgVS8ElzCQkkSUn+SXwtkVn1tDIuaorJD1IfqrVlY25krkfU9CAy35k9WueZLRpLife/yMdi8EXPDILaRhb5/pNzks9ooAlTVVQf5FtCeyUA8bA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rrnfZHoHY5UAB7LIICZWFvp2ft/kuBuCtf8bClb2ZPQ=;
+ b=X7SJ220ZzP7BaL0RmoGIaoFKoE2XyXHhbtMUCTmfbkOKg7G5w+/oMdhMsVyP7vpvzA25QGtv5vijRlnSf3hazw8nYQcxAf3JtRkogmEt5291MBgwIvtZUOjnyBA4V3qQNchfBPA1aht1p6eUk092a8T2dM2W5vIocgqcx+oQxNEzUVHAbCb9wD7m/4tUCLy02cptZY5RdiwCc+SsyTtP4JK6dfa83A8I81ImcNkFOoQs2FDTBXShBKHpMSJN5bPZW3Lpv1Oj2lq2ttv8p7FJuC1UpmcxehCf4lYwvUM6/xv26MYCdXkua1szaItV8kapTa/IuhInn0uqQvTmJI8tXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rrnfZHoHY5UAB7LIICZWFvp2ft/kuBuCtf8bClb2ZPQ=;
+ b=lc+UMWzkV8kw5u+yw1Ce+aTLTBYLA5OrlyaJoFlVD6O9H3HuhkP/Qk2vVz+4ODSeStN7A9JmSFNw1WJzgiNV6R6JUqAy4lo2/eOA0g20DOipN18AhqY+yxHlQ1eqjqwGBSFjVb2gB5TGmu0L7htM3AiblguFZugt06M+0mMyPss=
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com (2603:10b6:806:331::16)
+ by PH8PR12MB6985.namprd12.prod.outlook.com (2603:10b6:510:1bc::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.13; Wed, 17 Sep
+ 2025 11:59:09 +0000
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::a160:b30e:1d9c:eaea]) by SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::a160:b30e:1d9c:eaea%7]) with mapi id 15.20.9137.012; Wed, 17 Sep 2025
+ 11:59:09 +0000
+From: "Verma, Devendra" <Devendra.Verma@amd.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "mani@kernel.org"
+	<mani@kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
+ Michal" <michal.simek@amd.com>
+Subject: RE: [PATCH v2 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
+Thread-Topic: [PATCH v2 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
+Thread-Index: AQHcJxsoxoxxNDmQwEmag7lZInAHGrSXQMhA
+Date: Wed, 17 Sep 2025 11:59:09 +0000
+Message-ID:
+ <SA1PR12MB8120DB05E469F3645F3C18A09517A@SA1PR12MB8120.namprd12.prod.outlook.com>
+References: <20250916104320.9473-2-devendra.verma@amd.com>
+ <20250916150405.GA1796861@bhelgaas>
+In-Reply-To: <20250916150405.GA1796861@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-09-17T11:37:50.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB8120:EE_|PH8PR12MB6985:EE_
+x-ms-office365-filtering-correlation-id: 463f2557-4210-41b3-d282-08ddf5e19c2d
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700021;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?XcYBZr2IHW10OqGf5P2pDspyZCrEnGFa1uR0SzU7wsxqvferg3einB/CWI9g?=
+ =?us-ascii?Q?fsa5phk1pdhA6h6DANoJji4A+gCiRmWCVmAyueWodQCPHUeylzMRYlTgXIxS?=
+ =?us-ascii?Q?XBs5kOKJBMumUyGulBNPoVMCp7VRIMrOih/gnNstHycYhJfbzdbIteKFnN3h?=
+ =?us-ascii?Q?ThupMYLGPilCeBD8BfAu6+TgCfnIt/UK41FV9GUwrqe2r2xwqF246v2ev82v?=
+ =?us-ascii?Q?6VzDpKH/Yx/WNkVC6XO3EpFoBJ7HntL+kal6lVSdJGAN/W+cmucVsoufzD9I?=
+ =?us-ascii?Q?4gdu/Ues50XCoU8xlr+hCGF0npjemautIXpQlA1WmpnMzFexmbdg8C2aYMWG?=
+ =?us-ascii?Q?5nmSLSxlliiClXZhak88+AiDQsF5C2cQ3zkgSj9BR6YrON50H2AsUw917gsD?=
+ =?us-ascii?Q?vI0jMVAbUc6tCbGEZPuC/bXIzqcYd7C7SsgcZVBmYDWu1skbY+SwgW3ew3dj?=
+ =?us-ascii?Q?wZbuVfcLcmj4jPb4q9JVVuwwCYZvANxIFMC0RpE3gBgY1H9ptwhMAmNC4mQP?=
+ =?us-ascii?Q?LPc2rL/ZKiKxnU+4035xmiquqa3uB041fPgQtrgYbmNwTY23eeHtj2hipO4u?=
+ =?us-ascii?Q?MQUxUPcUVBe5/gSMd1rklmQvzpHFi3csKeeBApevUOs8hbluImVHGBsHWGNs?=
+ =?us-ascii?Q?gbD2qQVOzPplkMEJfKs7UpseZsjOPXImVTT98r1ThK1UfhT8ay+B6cvU8IL4?=
+ =?us-ascii?Q?vf5t/Mz+SkvOnr7nDxtSeRCB60yBiEM2rK7Uq4qlvlPs3YaXVFcckChF+bSz?=
+ =?us-ascii?Q?sUqa2UYbuTpndQF7bWhcK6ydt+zApbOFJRFdDqz10mrpNXD3BcWw+J8tObBv?=
+ =?us-ascii?Q?sn6kiVPzuk9S4bVypVc+KZNuYuF3xMLOlOeHuqEEry6CilezqmWQNdJOwXUC?=
+ =?us-ascii?Q?04BlEYRxkQUCRhFJEGGThwXn7/6k0HKnkhgaHjy/AZTx+a9ukFmd2r0gaMEj?=
+ =?us-ascii?Q?VCVg7hs8ITWHRnKQ5gc8ilfBL8moMrDwXslb+wyF0U5aOR3Y8jSfWuRI2yow?=
+ =?us-ascii?Q?YB1mJEdXciIsTSYwXR22HRvWPQwwxwWq34eoxSUczuHbINeMlmRsmx9B82/D?=
+ =?us-ascii?Q?1WGGaVRfqpk6ySzt0wE6szrbnGjH5OOUEp55WhEW+yWiQ4CNA0vyJd6ssjd1?=
+ =?us-ascii?Q?6/XAY7btMlTQCtM/vrWUTgsqD9XGqKSDbwo9dxCFhQlJfRxtt4C1m12CxWYQ?=
+ =?us-ascii?Q?esR7a82lphgyq/ss6afTtHrBeLo2/EjSeqkm5V7zDJosnQCs3oI/ZHYqdX6/?=
+ =?us-ascii?Q?QPDwuRFddJIvnKfbv7Xd542jqYEM4tPLAL7gbplHYRL5nALw01n1iSUY4nBo?=
+ =?us-ascii?Q?/vLshmPR0iA9h91BR9LGUs/i30vFL0jNl0ZrefgWKlFeHX8Q89cFPoBfncot?=
+ =?us-ascii?Q?hHgIV5mMx3P3gxktqFOoq7vRJ4nbgc8oThMbSEUso1bHu3uG5lM1uDOg6RZj?=
+ =?us-ascii?Q?DmHtKU4feE51xACmyrFYlfEg151QI4/Ma/hgCDMjqkorQsERlyRJ+w=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8120.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?IOcZfm4E4MlX3jZWGLjrBja3xVVyMtDU/ckHKYWXmuKQbDmFSDYwvaVhxwe0?=
+ =?us-ascii?Q?yw0vp0Wx5Wj5hy2yuFWhYi63drbg5xFFJkzI1AsrKvmpex8L0nIC/+dRI4yf?=
+ =?us-ascii?Q?jm6XZgx3Vi1srSkZUcGKyOrZzrF967F1RwcVF5mdUBec5d68SIujUj/xZI4D?=
+ =?us-ascii?Q?YkDR6QSezndTOg5KsrA9fo6p5BKwq75vhRqlqT+JzOgV8qgXUdyc8yUGq7+L?=
+ =?us-ascii?Q?PD97pbzTsv8Bk2vRRI1C83qDGzjI8agy1l55q9U7QpI9o0FtjHVWqIonvtud?=
+ =?us-ascii?Q?xR/fCXhecZsbRWk8p+8SAHnmFAAXiGfVB3n4FkikhPoPv+/pTFS10JSIAnD6?=
+ =?us-ascii?Q?t27x8fOBTFp+JYu/YzPEdTvfjPylcQvYXyk1t/oF2VeS0FovneMZkacWDM07?=
+ =?us-ascii?Q?LxLfflWNyZJvG7oJCkFaeW4fH+hu87ZtW8mX9juTO7xYP75RYmgbsXUdyRSI?=
+ =?us-ascii?Q?IMiSoN2rqEXWIgO10PAfR5Tc11iZlGXRpo+xc6oIKHqbsIlXL5TfC6DoUUu/?=
+ =?us-ascii?Q?7VDsqg5TdEdgCFDo1WID6LtdJqeJtO6bEQox+8j+9WnNKs7V8RWhwyXnWDe1?=
+ =?us-ascii?Q?4WZPIn3WVxy4jS/X+gKhyb79ocXHabIYa5ttKUETXkAsuxe62N+L5xSryPew?=
+ =?us-ascii?Q?VhAbkSEXA+MEmENddoeMCdkbJdICLp+DzYeG/SLC3fpPweZRRq0p1qut9Vul?=
+ =?us-ascii?Q?kreGFnjZTFBfz7eILW2KgNIMHDxqY3TQF4JT/+mVIRQ9eCnPL7lsBrouJXWN?=
+ =?us-ascii?Q?qfAezVmaPEV3MGRzMzKLrGvLHT8yCfLDAGzJa/Z1mDEQ6nbdxI8KRxHIIyqe?=
+ =?us-ascii?Q?XI5MbRAHOBDq0/qOtnpFHUUC51q6ui1dllRPVbaXBXWTpmrcyWlj5d//+N+v?=
+ =?us-ascii?Q?9fHbmmLJhlmESzQoSf7+GwWZoPtDH6dBfBaJZiOI33LxCIKpLXOXIfuvKD3K?=
+ =?us-ascii?Q?4RZfMeuFPg/qlQwAT5Vy4mqGqBCtHOqO26o2A6oaRQaMnPG2OJaZ2e9BYabr?=
+ =?us-ascii?Q?K8TLooizxNHUCXU1TrMvZtrkKcH2J4foYJE2tlvCm8q8si0BOPnwob/K4v5B?=
+ =?us-ascii?Q?kZ8+VPisaNJc+Ie8/tiJsZZfB2NJXjkiaTH1c0USskKTk6QEcWjP0UsOAhdV?=
+ =?us-ascii?Q?FBNiCGaq4tcUSlKMBcH733UXn7f9/WfAN5y/rzMZw2104SS2ISc+Z77LPGfn?=
+ =?us-ascii?Q?38gov2Fe1VHOybb1lMrDAGlJ1fmsW8kNlHPQ8f5QHHcB+txw238cAzDLB0OA?=
+ =?us-ascii?Q?hXlB4ec0XIK5+a+THsQAe38EzcwxGADY+NRoFawalVgCP6W41MsnG2fvO6mW?=
+ =?us-ascii?Q?2JJhr0OPlIYPDBKm9393zYZNlshdzuGo3mTP11IexkpV0SRCh1F/YJzRu3oR?=
+ =?us-ascii?Q?CMRjLWNf8dxmAltU7EFbOX3CfcLEgLEuvwvAQZuqHZ1tgxYhyWWag2NbnpS0?=
+ =?us-ascii?Q?HBspDvhjc885pD4c+JPo9mCjEoi9peTfz0qczlnzUzHW9011fRtq4Lm8DBtu?=
+ =?us-ascii?Q?xbAZbjILl4oTXz1gooRunK+wCT7Rl9Tih2XX4savgBdwEAt0xnpiO1r633Gp?=
+ =?us-ascii?Q?HW7t8cSCT9EmbZOLAZg=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8120.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 463f2557-4210-41b3-d282-08ddf5e19c2d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2025 11:59:09.2770
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: h15n33EJpbLodQxbMrSZfovkrVme1+vFFF9SgTdHYYCZDUF1sjqwnQsmI1uFoMbqh5uh3a8nVBfxVE1j5XIwBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6985
 
-On Wed, Sep 17, 2025 at 03:24:57AM GMT, Dang Huynh via B4 Relay wrote:
-> This patch series aims to add support for Clock/Reset, Real-Time Clock and
-> SDMMC on the RDA Micro RDA8810PL platform.
-> 
-> It also adds Intelligent Flow Controller (IOW, a DMA controller) which is
-> important for working with this MMC IP.
-> 
-> Tested on the Orange Pi 2G-IOT.
-> 
+[AMD Official Use Only - AMD Internal Distribution Only]
 
-Thanks for work! Is it possible to split this patchset logically to ease
-reviewing and also merging? It currently touches different subsystems and has 25
-patches.
+Thanks Bjorn for reviews.
 
-You could easily split this into different series adding Clock/Reset, RTC, IFC,
-SDMMC and other misc patches in one series.
+Regards,
+Devendra
 
-- Mani
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Tuesday, September 16, 2025 20:34
+> To: Verma, Devendra <Devendra.Verma@amd.com>
+> Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> Subject: Re: [PATCH v2 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint
+> Support
+>
+> Caution: This message originated from an External Source. Use proper caut=
+ion
+> when opening attachments, clicking links, or responding.
+>
+>
+> On Tue, Sep 16, 2025 at 04:13:18PM +0530, Devendra K Verma wrote:
+> > AMD MDB PCIe endpoint support. For AMD specific support added the
+> > following
+> >   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
+> >   - AMD MDB specific driver data
+> >   - AMD MDB specific VSEC capability to retrieve the device DDR
+> >     base address.
+>
+> > +/* Synopsys */
+> >  #define DW_PCIE_VSEC_DMA_ID                  0x6
+> >  #define DW_PCIE_VSEC_DMA_BAR                 GENMASK(10, 8)
+> >  #define DW_PCIE_VSEC_DMA_MAP                 GENMASK(2, 0)
+> >  #define DW_PCIE_VSEC_DMA_WR_CH                       GENMASK(9, 0)
+> >  #define DW_PCIE_VSEC_DMA_RD_CH                       GENMASK(25, 16)
+> >
+> > +/* AMD MDB specific defines */
+> > +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID               0x6
+> > +#define DW_PCIE_XILINX_MDB_VSEC_ID           0x20
+> > +#define PCI_DEVICE_ID_AMD_MDB_B054           0xb054
+> > +#define DW_PCIE_AMD_MDB_INVALID_ADDR         (~0ULL)
+>
+> > @@ -120,9 +213,22 @@ static void dw_edma_pcie_get_vsec_dma_data(struct
+> pci_dev *pdev,
+> >       u32 val, map;
+> >       u16 vsec;
+> >       u64 off;
+> > +     u16 vendor =3D pdev->vendor;
+> > +     int cap;
+> >
+> > -     vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
+> > -                                     DW_PCIE_VSEC_DMA_ID);
+> > +     /*
+> > +      * Synopsys and AMD (Xilinx) use the same VSEC ID for the purpose
+> > +      * of map, channel counts, etc.
+> > +      */
+> > +     if (vendor !=3D PCI_VENDOR_ID_SYNOPSYS ||
+> > +         vendor !=3D PCI_VENDOR_ID_XILINX)
+> > +             return;
+> > +
+> > +     cap =3D DW_PCIE_VSEC_DMA_ID;
+> > +     if (vendor =3D=3D PCI_VENDOR_ID_XILINX)
+> > +             cap =3D DW_PCIE_XILINX_MDB_VSEC_ID;
+> > +
+> > +     vsec =3D pci_find_vsec_capability(pdev, vendor, cap);
+>
+> This looks correct, so it's OK as-is.  But it does require more analysis =
+to verify than it
+> would if you did it like this:
+>
+>   vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
+>                                   DW_PCIE_SYNOPSYS_VSEC_DMA_ID);
+>   if (!vsec) {
+>     vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+>                                     DW_PCIE_XILINX_VSEC_DMA_ID);
+>     if (!vsec)
+>       return;
+>   }
+>
+> This way it's obvious from the pci_find_vsec_capability() calls themselve=
+s (and could
+> potentially be checked by coccinelle, etc) that we're using the Vendor ID=
+ and VSEC
+> ID correctly.
+>
 
-> Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
-> ---
-> Dang Huynh (25):
->       ARM: dts: unisoc: rda8810pl: Add label to GPIO nodes
->       drivers: gpio: rda: Make IRQ optional
->       dt-bindings: gpio: rda: Make interrupts optional
->       rtc: Add timestamp for the end of 2127
->       dt-bindings: rtc: Add RDA Micro RDA8810PL RTC
->       rtc: Add driver for RDA Micro SoC
->       ARM: dts: unisoc: rda8810pl: Enable Real-Time Clock
->       ARM: dts: unisoc: rda8810pl: Enable ARM PMU
->       dt-bindings: clock: Add RDA Micro RDA8810PL clock/reset controller
->       drivers: clk: Add Clock and Reset Driver for RDA Micro RDA8810PL SoC
->       dts: unisoc: rda8810pl: Enable clock/reset driver
->       dts: unisoc: rda8810pl: Add OPP for CPU and define L2 cache
->       dts: unisoc: orangepi: Disable UART with no users
->       dt-bindings: power: reset: Add RDA Micro Modem Reset
->       power: reset: Add basic power reset driver for RDA8810PL
->       dts: unisoc: rda8810pl: Enable modem reset
->       drivers: gpio: rda: Make direction register unreadable
->       dt-bindings: dma: Add RDA IFC DMA
->       dmaengine: Add RDA IFC driver
->       dts: unisoc: rda8810pl: Enable IFC
->       dt-bindings: mmc: Add RDA SDMMC controller
->       mmc: host: Add RDA Micro SD/MMC driver
->       dts: unisoc: rda8810pl: Add SDMMC controllers
->       dts: unisoc: orangepi-2g: Enable SD Card
->       dts: unisoc: orangepi-i96: Enable SD Card
-> 
->  .../bindings/clock/rda,8810pl-apsyscon.yaml        |  44 ++
->  Documentation/devicetree/bindings/dma/rda,ifc.yaml |  42 +
->  .../devicetree/bindings/gpio/gpio-rda.yaml         |   3 -
->  Documentation/devicetree/bindings/mmc/rda,mmc.yaml |  91 +++
->  .../bindings/power/reset/rda,md-reset.yaml         |  36 +
->  .../devicetree/bindings/rtc/rda,8810pl-rtc.yaml    |  30 +
->  MAINTAINERS                                        |  30 +
->  .../boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts  |  24 +-
->  .../arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts |  24 +-
->  arch/arm/boot/dts/unisoc/rda8810pl.dtsi            | 115 ++-
->  drivers/clk/Kconfig                                |   1 +
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/rda/Kconfig                            |  14 +
->  drivers/clk/rda/Makefile                           |   2 +
->  drivers/clk/rda/clk-rda8810.c                      | 770 +++++++++++++++++++
->  drivers/dma/Kconfig                                |  10 +
->  drivers/dma/Makefile                               |   1 +
->  drivers/dma/rda-ifc.c                              | 450 +++++++++++
->  drivers/gpio/gpio-rda.c                            |   4 +-
->  drivers/mmc/host/Kconfig                           |  12 +
->  drivers/mmc/host/Makefile                          |   1 +
->  drivers/mmc/host/rda-mmc.c                         | 853 +++++++++++++++++++++
->  drivers/power/reset/Kconfig                        |   9 +
->  drivers/power/reset/Makefile                       |   1 +
->  drivers/power/reset/rda-reboot.c                   |  58 ++
->  drivers/rtc/Kconfig                                |  11 +
->  drivers/rtc/Makefile                               |   1 +
->  drivers/rtc/rtc-rda.c                              | 356 +++++++++
->  include/dt-bindings/clock/rda,8810pl-apclk.h       |  79 ++
->  include/dt-bindings/dma/rda-ifc.h                  |  28 +
->  include/linux/rtc.h                                |   1 +
->  31 files changed, 3079 insertions(+), 23 deletions(-)
-> ---
-> base-commit: 590b221ed4256fd6c34d3dea77aa5bd6e741bbc1
-> change-id: 20250916-rda8810pl-drivers-9a5271452635
-> 
-> Best regards,
-> -- 
-> Dang Huynh <dang.huynh@mainlining.org>
-> 
-> 
+Instead of the above format, a clear assignment to vendor and cap would be =
+good enough.
+Reason for this is, if a third vendor comes and supports the same VSEC=3D0x=
+6 id with similar
+capabilities then it looks bulky to put another clause as given above. Inst=
+ead of this a cleaner
+approach would be to have a single pci_find_vsec_capability() and clear ass=
+ignment to vendor
+and cap variables to make it look cleaner. Eg:
+switch (pdev->vendor) {
+case PCI_VENDOR_ID_XILINX:
+        vendor =3D pdev->vendor;
+        cap =3D DW_PCIE_XILINX_MDB_VSEC_DMA_ID;
+case PCI_VENDOR_ID_SYNOPSYS:
+        ...
+default:
+        return;
+}
+vsec =3D pci_find_vsec_capability(pdev, vendor, cap);
 
--- 
-மணிவண்ணன் சதாசிவம்
+Please let me know your thoughts on this.
+
+> > +     /* AMD specific VSEC capability */
+>
+> This should say "Xilinx specific VSEC capability" because the Vendor ID i=
+n the
+> device is PCI_VENDOR_ID_XILINX.  We shouldn't have to look up the corpora=
+te
+> ownership history and figure out that AMD acquired Xilinx.  That's not re=
+levant in this
+> context.
+>
+
+Sure, thanks for this clarification.
+
+> > +     vsec =3D pci_find_vsec_capability(pdev, vendor,
+> > +                                     DW_PCIE_XILINX_MDB_VSEC_ID);
+>
+> But this one is wrong.  We do know that the device Vendor ID is either
+> PCI_VENDOR_ID_SYNOPSYS or PCI_VENDOR_ID_XILINX from above, but we
+> *don't* know what VSEC ID 0x20 means for Synopsys devices.
+>
+> We only know what VSEC ID 0x20 means for Xilinx devices.  So this has to =
+be:
+>
+>   vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+>                                   DW_PCIE_XILINX_MDB_VSEC_ID);
+>
+
+Sure, this will be addressed.
+
+> Bjorn
 

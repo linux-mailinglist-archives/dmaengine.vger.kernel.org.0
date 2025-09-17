@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-6594-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6595-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71E79B7DD03
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:34:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A763B7DCB7
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:34:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9657F1BC6B80
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 00:47:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15B4C1BC7337
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 00:48:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C39671A5BBE;
-	Wed, 17 Sep 2025 00:46:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D91EB1DF99A;
+	Wed, 17 Sep 2025 00:48:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aXhloplC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0t/livV"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A599258A;
-	Wed, 17 Sep 2025 00:46:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988613C38;
+	Wed, 17 Sep 2025 00:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758070009; cv=none; b=WnYl6EclUNC2O/t3JOfDu0TOkz7o30KxdAylEFsyQ5MGgzPDDi09Q7NNmeMf8oJinQA9C2ECL6mqP3dW+x71P35xIwjMQLZPnRaNpEQ+L2CFGSjhN0U1CsISettV0K8pTnCuOaRDlpZsJ8Di0SdEG3pQCOU9HdXgCU1uGhdE+N0=
+	t=1758070095; cv=none; b=eHp75BNQ0ZlRrN5eg2HnLjSZd+DTb/2LJpC2lFk5Npk0PhwRK/+DavIrhlXHIAeAc3kBlsV6xedJZKFIfjcRQ9oisgAHMjfN/yC76WxUW8NPxwqHr18iReo55Aw6J0lBc8cGIPNz1ZqYuCsqrOrk9qZu4InSAt3Tpaz1XF3z1PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758070009; c=relaxed/simple;
-	bh=tPMWIXdFGqvCblFzVyq0bp+xpx55GvJsOMABeauy6EQ=;
+	s=arc-20240116; t=1758070095; c=relaxed/simple;
+	bh=vRAIdXOKpdVJ8Lf99sSrDe0C/XqGhJEXcMlToVAczkw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NNyEu+YTmB1X9wClb9sm429EZ9NvMlofH1clKNi6fw0XFi6TBStkN5mFG4F+xqmyKBwKiLflLkdbvFFAfNiI/V5F5EYsDp/zmvgKdK5GqmCIOs6ZVysqF1ermbyFkPkcQ8yXPDrxVvTjNlqzdfJAMQ3OSba4JEYsBRHsjf55BO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aXhloplC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 988C1C4CEEB;
-	Wed, 17 Sep 2025 00:46:43 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=mHWwqjYjYeSJcqCkcsAlhMtNTUxt2peMaCxtZn3AmG07jgw8/HogOM0GP8nanbNbk0N289IsvHDy1bj41YsmdYr8KvD0GoyH1Bk8gLYACQwKB/wdb3bxJP12cf6MGIkRXtKdsx2jmoyzCd5S83P0UDNG1EranWb/Twc3gPAe7b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0t/livV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E2B4C4CEEB;
+	Wed, 17 Sep 2025 00:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758070008;
-	bh=tPMWIXdFGqvCblFzVyq0bp+xpx55GvJsOMABeauy6EQ=;
+	s=k20201202; t=1758070093;
+	bh=vRAIdXOKpdVJ8Lf99sSrDe0C/XqGhJEXcMlToVAczkw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aXhloplCdtDFcyTT8hzsolf4MekZIJNbtxqq+aBkWXgMbOfDMLkIVdL+jWDGQKflc
-	 3XItqWmud7lz0uFcyNgL4g73gWEJxjEBcyVbIe/smFm0AIE2oswkqqf8bDqm0XLMlC
-	 GgfVNrpHLSp2Jn41VSCxpBgi/Ttuj/tJhH2KxAtLe5McdnS8LnP0BSXe/1mTLhvhqs
-	 MU6dFISWPxpl9jrBCiGw3Qq0BLMyD9d9X+y7C9iOPKW17UBsJ3QjYpWwHL5SfTuzoO
-	 W165Tc8woV3t/7aCALkoOHGB+MVC08IY7ODAH0RyBHnIlpq0KyCCX46RIK8Cmnv1Wi
-	 K1MQvGz6oVBew==
-Message-ID: <6227ba2e-5d16-4577-ab68-4a6aee13ea03@kernel.org>
-Date: Wed, 17 Sep 2025 09:46:42 +0900
+	b=K0t/livV7JVeClOD327d/qqH+7bPLmtwCtUAJNyAbwUbdBxrXnNKuIqZ+AwNdd2BV
+	 cQA3K4NJbV7X8PX/wvADs8uoeeOhoZE7q9OazCNkWER+VCC1//CMSVaZxONa2lXbpR
+	 pX428vSOZrA9aUEjFRQmxrfYu0a90uAtjUQYNQhyalHdhpbjxPMeRmZWbydFr6qMlp
+	 v5nfn4927S1ISQ7YbXS7oRU3TSJ0MbdgFYdMqnzG9owOAt/yFvPQgmt8J+EIz6DkY+
+	 Biz2db5mCyl/NN16pk+LfwEsDc4qrnnNfcInhj9lZxmItZjv7gDRjn57U/aCdjrOtM
+	 1uxvsDOVHOLoA==
+Message-ID: <d2f4d539-ebd2-4871-ba76-74b38dd41395@kernel.org>
+Date: Wed, 17 Sep 2025 09:48:06 +0900
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 16/25] dts: unisoc: rda8810pl: Enable modem reset
+Subject: Re: [PATCH 22/25] mmc: host: Add RDA Micro SD/MMC driver
 To: dang.huynh@mainlining.org, Manivannan Sadhasivam <mani@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
@@ -68,7 +68,7 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-hardening@vger.kernel.org,
  linux-mmc@vger.kernel.org
 References: <20250917-rda8810pl-drivers-v1-0-9ca9184ca977@mainlining.org>
- <20250917-rda8810pl-drivers-v1-16-9ca9184ca977@mainlining.org>
+ <20250917-rda8810pl-drivers-v1-22-9ca9184ca977@mainlining.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -114,23 +114,94 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250917-rda8810pl-drivers-v1-16-9ca9184ca977@mainlining.org>
+In-Reply-To: <20250917-rda8810pl-drivers-v1-22-9ca9184ca977@mainlining.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 17/09/2025 22:25, Dang Huynh via B4 Relay wrote:
 > From: Dang Huynh <dang.huynh@mainlining.org>
 > 
-> This allows us to reboot the board from the OS.
+> RDA Micro RDA8810PL includes an SD/MMC controller. This controller
+> supports SD/SDIO/MMC interface.
 > 
 > Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
 > ---
->  arch/arm/boot/dts/unisoc/rda8810pl.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
+>  MAINTAINERS                |   6 +
+>  drivers/mmc/host/Kconfig   |  12 +
+>  drivers/mmc/host/Makefile  |   1 +
+>  drivers/mmc/host/rda-mmc.c | 853 +++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 872 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 91be43782f4ba8aacb629002d357a66704f10b2b..33e04ce35dcc4cbadd715ec9199f2453237b8002 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -21417,6 +21417,12 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/rtc/rda,8810pl-rtc.yaml
+>  F:	drivers/rtc/rtc-rda.c
+>  
+> +RDA MICRO SECURE DIGITAL AND MULTIMEDIA CARD DRIVER
+> +M:	Dang Huynh <dang.huynh@mainlining.org>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/mmc/rda,mmc.yaml
+> +F:	drivers/mmc/host/rda-mmc.c
+> +
+>  RDACM20 Camera Sensor
+>  M:	Jacopo Mondi <jacopo+renesas@jmondi.org>
+>  M:	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 4afa0130779d97ca9d1c0ed2102b0babdedcaeeb..352a6eb4e30793b7311c7877c238a7fe31121123 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -1040,6 +1040,18 @@ config MMC_MTK
+>  	  This is needed if support for any SD/SDIO/MMC devices is required.
+>  	  If unsure, say N.
+>  
+> +config MMC_RDA
+> +	tristate "RDA Micro SD/MMC Card Interface support"
+> +	depends on ARCH_RDA
 
-Please don't do patch per one node. Add logical chunks, but not that
-detailed. There are no dependencies here, so way you organize patches
-and split them is just confusing.
+Missing compile test
+
+> +	depends on COMMON_CLK
+> +	depends on HAS_DMA
+> +	help
+> +	  This selects the RDA Micro Secure digital and Multimedia card interface. The
+> +	  controller supports SD/SDIO/MMC interface.
+> +	  If you have a board with RDA SoC and it uses this interface, say Y or M here.
+> +
+> +	  If unsure, say N.
+
+
+...
+
+> +};
+> +MODULE_DEVICE_TABLE(of, rda_mmc_dt_ids);
+> +
+> +static struct platform_driver rda_mmc_driver = {
+> +	.probe		= rda_mmc_probe,
+> +	.remove		= rda_mmc_remove,
+> +	.driver		= {
+> +		.name	= "rda-mmc",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +		.of_match_table = rda_mmc_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(rda_mmc_driver);
+> +
+> +MODULE_AUTHOR("Dang Huynh <dang.huynh@mainlining.org>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("MMC/SD driver for RDA platform");
+> +MODULE_ALIAS("platform:rda-mmc");
+
+You should not need MODULE_ALIAS() in normal cases. If you need it,
+usually it means your device ID table is wrong (e.g. misses either
+entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
+for incomplete ID table.
+
+
+> 
+
 
 Best regards,
 Krzysztof

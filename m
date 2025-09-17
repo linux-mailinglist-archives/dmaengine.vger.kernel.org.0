@@ -1,149 +1,151 @@
-Return-Path: <dmaengine+bounces-6599-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6600-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D921BB7C7E0
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:04:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6730EB7C6A2
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 14:01:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C73681C01E17
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 11:59:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2085D4642CC
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Sep 2025 12:01:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3C4D369992;
-	Wed, 17 Sep 2025 11:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF4432E7BA0;
+	Wed, 17 Sep 2025 12:01:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lc+UMWzk"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tYzZSWOe"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012029.outbound.protection.outlook.com [52.101.53.29])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012064.outbound.protection.outlook.com [40.93.195.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D24B2D0283;
-	Wed, 17 Sep 2025 11:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2114F1B394F;
+	Wed, 17 Sep 2025 12:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758110356; cv=fail; b=nSU9/3/hVGbq6JlemoeJFU+JfQaD8yU73DTcOTsnBC6AHcPglJ+6axkeOrUS2Tj0J7UUqTgeP597dYIY3wrZSF7C6PFOcSuE/aJfTILYOQYDpKQMuaC4MfaTLyTQ3F8EUaMw2oY6uWZ3j/8PPE8gj3lXj1MjhOA+iWrHhLGreUk=
+	t=1758110467; cv=fail; b=N8FiROs7B8Ew0ZnWGr/y3lKETTTm4QKjSTTgPyDtGMTcQACBYhBvNxGSWhL6vOUSYfxh2bIsba6aJGgNCM7lesyTu0YmlP7KwFYJOo3ZaXlhA8GJt1TenDZBpZlt7SvG3zHB/1Tai+tTh0i+vKl8Da71LXsLtZ4lrTcpcv44lws=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758110356; c=relaxed/simple;
-	bh=2Xc72jGmgtlLaNUELkfc5wtt5MoUqqangfmPHnghNG4=;
+	s=arc-20240116; t=1758110467; c=relaxed/simple;
+	bh=6mShy36ppp/X9NUbdAjNhvS8FhAyfLyXLg8KNCQD8gE=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rmcRy/BfDSCY9BtQlE+mesyd1G+ylq9/Km3D2pgef7iZzXBQWvS3cUxU9SQUl7YbbSkRIhKWrbf/z8RZsHy2M0CEu9n7W7XuY3ytn+aAMl0MThuYpn285vxW31eZRYmL2a84Qr7WkmydvIPElFSzvx7hDfQWtEMzim0MqiRDbcM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lc+UMWzk; arc=fail smtp.client-ip=52.101.53.29
+	 Content-Type:MIME-Version; b=arK3oxvNGUH5cZMuyODoWGNiI+Z58z4sKPNQPciMLLLrLU7V1Mr7reYPHTbl+hepJLgpVRI4d1T9CebmogipwnzKMGjNkr6A5uYIpN5EYARRqvNP6q1TD8FMDy4fNKuRMwzBtb0vTNYS8TzND181ohCC7KMfsHA9dk0xQ/3LPws=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tYzZSWOe; arc=fail smtp.client-ip=40.93.195.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EG1NtBmvY1kIJJeX2+9qTl4e0PsGncIQ3+Nth/UQEghFvMuorwfQts3ssIivxw+vG9eQIwG87QXIP/9GqdIsVI8NTdfbq2XuS9utubJ9sG4RGMbDLYd7Cy4T6JVzr7ylaH1V4PZsrPL4BDvhhG5QFQC6rHtwdExug2p2X5hPE2jez4MTOW2uyVNoKQxTP9EK81w/UiKSlReY44d0th/szciOhsUsQL+fWeiuOg1dgVS8ElzCQkkSUn+SXwtkVn1tDIuaorJD1IfqrVlY25krkfU9CAy35k9WueZLRpLife/yMdi8EXPDILaRhb5/pNzks9ooAlTVVQf5FtCeyUA8bA==
+ b=RRnph0b1npazuKKNwpDPR5A/zl+6kTUnie7B5x0RAlspZWKijB4k3mRXH6MngnJk2ElnRWfPIlZxuO4Z13V+Vq/kfKpZpWmBpXpge97DDkMD5vd6BnyDtzAwmXbX5l6cKlaRVktliuTNIgMNFt/SIp/FQhWc3NTK9MgGnTX+XSiYaOJWpyICuM8Dwy8haso3Q826gPEEfdcoJh7bJl05Nx5KQ4RNohQ9Fm1aDxVSa2q4Hm2fhHmk9y5IWKgpse27nQQgXTn/T5wmFhmGHH8P3tRtaFnijPVsNfUM1mkQUsqa5/uoWJjlha9yNF74t77EsAiyUHuKxrTHZpVkyJnJHA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rrnfZHoHY5UAB7LIICZWFvp2ft/kuBuCtf8bClb2ZPQ=;
- b=X7SJ220ZzP7BaL0RmoGIaoFKoE2XyXHhbtMUCTmfbkOKg7G5w+/oMdhMsVyP7vpvzA25QGtv5vijRlnSf3hazw8nYQcxAf3JtRkogmEt5291MBgwIvtZUOjnyBA4V3qQNchfBPA1aht1p6eUk092a8T2dM2W5vIocgqcx+oQxNEzUVHAbCb9wD7m/4tUCLy02cptZY5RdiwCc+SsyTtP4JK6dfa83A8I81ImcNkFOoQs2FDTBXShBKHpMSJN5bPZW3Lpv1Oj2lq2ttv8p7FJuC1UpmcxehCf4lYwvUM6/xv26MYCdXkua1szaItV8kapTa/IuhInn0uqQvTmJI8tXA==
+ bh=Jt+3U2m1rIzubRxypQN4dKczZGV3n45EzaVaWW6aUKU=;
+ b=kFqZF0Wky9yP0JtQVgpi/vkhCd7eGB/MqN+zAFgRKBP+sk/0mySTOhWFTq9Yde1QhSFegGyWfwnrMr/bvR0bs+cepKfdDiVH+GqBE0wkIwieAPC/NaNdAC0f59DyeEoCwSAIS0Ll7hhuXwGRpN1iYh1CpqqinaHIIoyyr/2o3Rfbm6n9/r+viGx8WDZpztNJtqMu14TYzeu3rXswH0NozdxsP3lL28rd7kAJEwuYhGSlawGpfa2XsYCmX9mEzVh3BB9R3Oavpk7Nm8h3hSq5SME/ehrZnUjDN9JuNR0RFapU9YA9noiFh8j0D/scDivmBMwIKkQa1BLMsD8XDZIzMw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rrnfZHoHY5UAB7LIICZWFvp2ft/kuBuCtf8bClb2ZPQ=;
- b=lc+UMWzkV8kw5u+yw1Ce+aTLTBYLA5OrlyaJoFlVD6O9H3HuhkP/Qk2vVz+4ODSeStN7A9JmSFNw1WJzgiNV6R6JUqAy4lo2/eOA0g20DOipN18AhqY+yxHlQ1eqjqwGBSFjVb2gB5TGmu0L7htM3AiblguFZugt06M+0mMyPss=
+ bh=Jt+3U2m1rIzubRxypQN4dKczZGV3n45EzaVaWW6aUKU=;
+ b=tYzZSWOeUBCmIDoZmHd8c4sz3gUm3ju7byKu4lvT8YdpAydMPDF1uXr7PC1NmN7sC4xxyxPzUR/+k0Y7F98Z/vG6OIF84RdOXGIwIW1VPQ5iD/jRgrCwqhCQnjzTTMwU91TgdTSwJJC9+JV4Oq0+0QmO8y8W8gMfIAjPEV56RdM=
 Received: from SA1PR12MB8120.namprd12.prod.outlook.com (2603:10b6:806:331::16)
  by PH8PR12MB6985.namprd12.prod.outlook.com (2603:10b6:510:1bc::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.13; Wed, 17 Sep
- 2025 11:59:09 +0000
+ 2025 12:01:03 +0000
 Received: from SA1PR12MB8120.namprd12.prod.outlook.com
  ([fe80::a160:b30e:1d9c:eaea]) by SA1PR12MB8120.namprd12.prod.outlook.com
  ([fe80::a160:b30e:1d9c:eaea%7]) with mapi id 15.20.9137.012; Wed, 17 Sep 2025
- 11:59:09 +0000
+ 12:01:03 +0000
 From: "Verma, Devendra" <Devendra.Verma@amd.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>, ALOK TIWARI <alok.a.tiwari@oracle.com>
 CC: "bhelgaas@google.com" <bhelgaas@google.com>, "mani@kernel.org"
 	<mani@kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>,
 	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
 	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
  Michal" <michal.simek@amd.com>
-Subject: RE: [PATCH v2 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
-Thread-Topic: [PATCH v2 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
-Thread-Index: AQHcJxsoxoxxNDmQwEmag7lZInAHGrSXQMhA
-Date: Wed, 17 Sep 2025 11:59:09 +0000
+Subject: RE: [External] : [PATCH v2 1/2] dmaengine: dw-edma: Add AMD MDB
+ Endpoint Support
+Thread-Topic: [External] : [PATCH v2 1/2] dmaengine: dw-edma: Add AMD MDB
+ Endpoint Support
+Thread-Index: AQHcJviALuus3IFKp0WCOQ+SPn3pb7SV6MAAgAFeViA=
+Date: Wed, 17 Sep 2025 12:01:03 +0000
 Message-ID:
- <SA1PR12MB8120DB05E469F3645F3C18A09517A@SA1PR12MB8120.namprd12.prod.outlook.com>
-References: <20250916104320.9473-2-devendra.verma@amd.com>
- <20250916150405.GA1796861@bhelgaas>
-In-Reply-To: <20250916150405.GA1796861@bhelgaas>
+ <SA1PR12MB8120268B790E1FCF8CD185479517A@SA1PR12MB8120.namprd12.prod.outlook.com>
+References: <17dbecb3-6261-4df4-a2ee-e55a398c732b@oracle.com>
+ <20250916150532.GA1797586@bhelgaas>
+In-Reply-To: <20250916150532.GA1797586@bhelgaas>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-09-17T11:37:50.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-09-17T11:59:26.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
  Internal Distribution
  Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SA1PR12MB8120:EE_|PH8PR12MB6985:EE_
-x-ms-office365-filtering-correlation-id: 463f2557-4210-41b3-d282-08ddf5e19c2d
+x-ms-office365-filtering-correlation-id: a837981d-3f59-4c76-3390-08ddf5e1e00e
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700021;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?XcYBZr2IHW10OqGf5P2pDspyZCrEnGFa1uR0SzU7wsxqvferg3einB/CWI9g?=
- =?us-ascii?Q?fsa5phk1pdhA6h6DANoJji4A+gCiRmWCVmAyueWodQCPHUeylzMRYlTgXIxS?=
- =?us-ascii?Q?XBs5kOKJBMumUyGulBNPoVMCp7VRIMrOih/gnNstHycYhJfbzdbIteKFnN3h?=
- =?us-ascii?Q?ThupMYLGPilCeBD8BfAu6+TgCfnIt/UK41FV9GUwrqe2r2xwqF246v2ev82v?=
- =?us-ascii?Q?6VzDpKH/Yx/WNkVC6XO3EpFoBJ7HntL+kal6lVSdJGAN/W+cmucVsoufzD9I?=
- =?us-ascii?Q?4gdu/Ues50XCoU8xlr+hCGF0npjemautIXpQlA1WmpnMzFexmbdg8C2aYMWG?=
- =?us-ascii?Q?5nmSLSxlliiClXZhak88+AiDQsF5C2cQ3zkgSj9BR6YrON50H2AsUw917gsD?=
- =?us-ascii?Q?vI0jMVAbUc6tCbGEZPuC/bXIzqcYd7C7SsgcZVBmYDWu1skbY+SwgW3ew3dj?=
- =?us-ascii?Q?wZbuVfcLcmj4jPb4q9JVVuwwCYZvANxIFMC0RpE3gBgY1H9ptwhMAmNC4mQP?=
- =?us-ascii?Q?LPc2rL/ZKiKxnU+4035xmiquqa3uB041fPgQtrgYbmNwTY23eeHtj2hipO4u?=
- =?us-ascii?Q?MQUxUPcUVBe5/gSMd1rklmQvzpHFi3csKeeBApevUOs8hbluImVHGBsHWGNs?=
- =?us-ascii?Q?gbD2qQVOzPplkMEJfKs7UpseZsjOPXImVTT98r1ThK1UfhT8ay+B6cvU8IL4?=
- =?us-ascii?Q?vf5t/Mz+SkvOnr7nDxtSeRCB60yBiEM2rK7Uq4qlvlPs3YaXVFcckChF+bSz?=
- =?us-ascii?Q?sUqa2UYbuTpndQF7bWhcK6ydt+zApbOFJRFdDqz10mrpNXD3BcWw+J8tObBv?=
- =?us-ascii?Q?sn6kiVPzuk9S4bVypVc+KZNuYuF3xMLOlOeHuqEEry6CilezqmWQNdJOwXUC?=
- =?us-ascii?Q?04BlEYRxkQUCRhFJEGGThwXn7/6k0HKnkhgaHjy/AZTx+a9ukFmd2r0gaMEj?=
- =?us-ascii?Q?VCVg7hs8ITWHRnKQ5gc8ilfBL8moMrDwXslb+wyF0U5aOR3Y8jSfWuRI2yow?=
- =?us-ascii?Q?YB1mJEdXciIsTSYwXR22HRvWPQwwxwWq34eoxSUczuHbINeMlmRsmx9B82/D?=
- =?us-ascii?Q?1WGGaVRfqpk6ySzt0wE6szrbnGjH5OOUEp55WhEW+yWiQ4CNA0vyJd6ssjd1?=
- =?us-ascii?Q?6/XAY7btMlTQCtM/vrWUTgsqD9XGqKSDbwo9dxCFhQlJfRxtt4C1m12CxWYQ?=
- =?us-ascii?Q?esR7a82lphgyq/ss6afTtHrBeLo2/EjSeqkm5V7zDJosnQCs3oI/ZHYqdX6/?=
- =?us-ascii?Q?QPDwuRFddJIvnKfbv7Xd542jqYEM4tPLAL7gbplHYRL5nALw01n1iSUY4nBo?=
- =?us-ascii?Q?/vLshmPR0iA9h91BR9LGUs/i30vFL0jNl0ZrefgWKlFeHX8Q89cFPoBfncot?=
- =?us-ascii?Q?hHgIV5mMx3P3gxktqFOoq7vRJ4nbgc8oThMbSEUso1bHu3uG5lM1uDOg6RZj?=
- =?us-ascii?Q?DmHtKU4feE51xACmyrFYlfEg151QI4/Ma/hgCDMjqkorQsERlyRJ+w=3D=3D?=
+ =?us-ascii?Q?OD1W2/UHwAlMbyd8yCPwNY6XrNju6J3p9y8sBDrJDhgQ9gpOx7OV4ywXBNom?=
+ =?us-ascii?Q?czPDbzGi1zZp6pX4veR4CIF0YdTzgQ+AWGEeMiuSr8A291zsPXhV2g7rTfv6?=
+ =?us-ascii?Q?8LYt/bPBr5bVjp6U/Ok1udrGCFL4vxTAMIrHS0ST5aW4kOCG/kkQ5wj2usAi?=
+ =?us-ascii?Q?iBLiXRYRtdOxtby2RRa3D2Z05xfr5hkmOPIdN3atT/dUnKgoykOVb+x+ABIT?=
+ =?us-ascii?Q?p/JZcNSosSdWAixhR+k0x/Enc4pytFtHoqNKZGlVdE3rDPIwdmaTEM2NZjUW?=
+ =?us-ascii?Q?UNcYiU3AemxlX+zuVoDtt7K6ArwdWcOnYQL76GVrONx5kdFjdBXBwbs88T+H?=
+ =?us-ascii?Q?aC4GAVdeAmSHuxLBFPkF0dCzeBDyao1Jc10veSXVFc8uWgmBlMzchwRhS9EO?=
+ =?us-ascii?Q?zjrmIAs+1wCWajCL3YiTm0mIeaeS+nwM2l7fjA+aTHdBaYlFTxUWnXP8M7OX?=
+ =?us-ascii?Q?rdStFy+rgmLnO9aVBIxHoyyFWNoLaVMzcDUg9zo67EYMVoCAkGrMu90O90se?=
+ =?us-ascii?Q?/HlJSnQa/gV8SbhVcaL6VA+qfdf46xbxx66EohRi0Rvqqag1Ac//KHZj2siF?=
+ =?us-ascii?Q?st/bg/Z1ezExDfCoIwD260C19damFEVYSTLje8ebpluGBDAyM1yLu/O9n6YP?=
+ =?us-ascii?Q?VJAKqqgQzeOfG33Xp+Vmt6UDfRxJu46SZYvtUkQu0ArwkecbyddhCkDkgRZh?=
+ =?us-ascii?Q?Twa7Tu9pETFVLp7dbpxPkwo2AvtEmvVVS9niNcj7P4btNvZugjpr17r4aNwF?=
+ =?us-ascii?Q?wkapawnqE68ctW9dsnmj3Z9bxwhti2rVVaqUVfqheyNhaqr/8dZZJCaIFJwT?=
+ =?us-ascii?Q?hx4EIZas6uA64pmcvAdu0q1PyamngZN5V/yQfsNkl7mhPDVzWbdAsunN/Ylt?=
+ =?us-ascii?Q?gVd5WGSR/7UnA8og/Tww3TwPkeqDJgJk72CMg5pt6OWBj5jxPAb8sew4DJjQ?=
+ =?us-ascii?Q?HLAFSPnyu0KNihU/IVtWZlTL3LBFKI92haHV5c0Gl/v1cE+ppEu5+yg/6U1f?=
+ =?us-ascii?Q?/yi3hD6nfub+VO3LNIZKvFZttzpnuRlBeKNcHoO9j/dWwlW0uFnI94T3NMWs?=
+ =?us-ascii?Q?xkQuHnTZQ1WdnDdZVw2KWVJQmfuWircz6RLEhbQJ17UenBB5rD3UsSslacIn?=
+ =?us-ascii?Q?VzoRs5oJ1PHiezLVy6sA9ixRdKIv0hQHv4aVFnom7gAMISqAznrygKN2CYCN?=
+ =?us-ascii?Q?/GxcHDqSZ7STmHXaOJIANZfGfvFIhvPq56Tbsnk/m/R6nxkBBjF7jguLGz4y?=
+ =?us-ascii?Q?q2AlpH55xypJYmHG/ZMKqt/0pxQIuA9egkNwKfxLJL53+jNgh1aco2cDw4R2?=
+ =?us-ascii?Q?1A/qhq5eZ3kNrM+hd1BXPdEp9lhuXeq+sTNAUuR5aa0r+SZ2trDZZjDCp3JM?=
+ =?us-ascii?Q?sVJeHEkUYNEV+CG76TMSP6GBFFym199RjF9lW9S+xkrRtRdIB8w85MM2A3LX?=
+ =?us-ascii?Q?Tq73Kq8Szi+eyqjcnD2PcMcvWGwaBnvTCAGRUcdoEPpKMD/l0fqO+Q=3D=3D?=
 x-forefront-antispam-report:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8120.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700021);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?IOcZfm4E4MlX3jZWGLjrBja3xVVyMtDU/ckHKYWXmuKQbDmFSDYwvaVhxwe0?=
- =?us-ascii?Q?yw0vp0Wx5Wj5hy2yuFWhYi63drbg5xFFJkzI1AsrKvmpex8L0nIC/+dRI4yf?=
- =?us-ascii?Q?jm6XZgx3Vi1srSkZUcGKyOrZzrF967F1RwcVF5mdUBec5d68SIujUj/xZI4D?=
- =?us-ascii?Q?YkDR6QSezndTOg5KsrA9fo6p5BKwq75vhRqlqT+JzOgV8qgXUdyc8yUGq7+L?=
- =?us-ascii?Q?PD97pbzTsv8Bk2vRRI1C83qDGzjI8agy1l55q9U7QpI9o0FtjHVWqIonvtud?=
- =?us-ascii?Q?xR/fCXhecZsbRWk8p+8SAHnmFAAXiGfVB3n4FkikhPoPv+/pTFS10JSIAnD6?=
- =?us-ascii?Q?t27x8fOBTFp+JYu/YzPEdTvfjPylcQvYXyk1t/oF2VeS0FovneMZkacWDM07?=
- =?us-ascii?Q?LxLfflWNyZJvG7oJCkFaeW4fH+hu87ZtW8mX9juTO7xYP75RYmgbsXUdyRSI?=
- =?us-ascii?Q?IMiSoN2rqEXWIgO10PAfR5Tc11iZlGXRpo+xc6oIKHqbsIlXL5TfC6DoUUu/?=
- =?us-ascii?Q?7VDsqg5TdEdgCFDo1WID6LtdJqeJtO6bEQox+8j+9WnNKs7V8RWhwyXnWDe1?=
- =?us-ascii?Q?4WZPIn3WVxy4jS/X+gKhyb79ocXHabIYa5ttKUETXkAsuxe62N+L5xSryPew?=
- =?us-ascii?Q?VhAbkSEXA+MEmENddoeMCdkbJdICLp+DzYeG/SLC3fpPweZRRq0p1qut9Vul?=
- =?us-ascii?Q?kreGFnjZTFBfz7eILW2KgNIMHDxqY3TQF4JT/+mVIRQ9eCnPL7lsBrouJXWN?=
- =?us-ascii?Q?qfAezVmaPEV3MGRzMzKLrGvLHT8yCfLDAGzJa/Z1mDEQ6nbdxI8KRxHIIyqe?=
- =?us-ascii?Q?XI5MbRAHOBDq0/qOtnpFHUUC51q6ui1dllRPVbaXBXWTpmrcyWlj5d//+N+v?=
- =?us-ascii?Q?9fHbmmLJhlmESzQoSf7+GwWZoPtDH6dBfBaJZiOI33LxCIKpLXOXIfuvKD3K?=
- =?us-ascii?Q?4RZfMeuFPg/qlQwAT5Vy4mqGqBCtHOqO26o2A6oaRQaMnPG2OJaZ2e9BYabr?=
- =?us-ascii?Q?K8TLooizxNHUCXU1TrMvZtrkKcH2J4foYJE2tlvCm8q8si0BOPnwob/K4v5B?=
- =?us-ascii?Q?kZ8+VPisaNJc+Ie8/tiJsZZfB2NJXjkiaTH1c0USskKTk6QEcWjP0UsOAhdV?=
- =?us-ascii?Q?FBNiCGaq4tcUSlKMBcH733UXn7f9/WfAN5y/rzMZw2104SS2ISc+Z77LPGfn?=
- =?us-ascii?Q?38gov2Fe1VHOybb1lMrDAGlJ1fmsW8kNlHPQ8f5QHHcB+txw238cAzDLB0OA?=
- =?us-ascii?Q?hXlB4ec0XIK5+a+THsQAe38EzcwxGADY+NRoFawalVgCP6W41MsnG2fvO6mW?=
- =?us-ascii?Q?2JJhr0OPlIYPDBKm9393zYZNlshdzuGo3mTP11IexkpV0SRCh1F/YJzRu3oR?=
- =?us-ascii?Q?CMRjLWNf8dxmAltU7EFbOX3CfcLEgLEuvwvAQZuqHZ1tgxYhyWWag2NbnpS0?=
- =?us-ascii?Q?HBspDvhjc885pD4c+JPo9mCjEoi9peTfz0qczlnzUzHW9011fRtq4Lm8DBtu?=
- =?us-ascii?Q?xbAZbjILl4oTXz1gooRunK+wCT7Rl9Tih2XX4savgBdwEAt0xnpiO1r633Gp?=
- =?us-ascii?Q?HW7t8cSCT9EmbZOLAZg=3D?=
+ =?us-ascii?Q?cT77n7NVF9FVB/LGSADDYoX+HYPr2pSkAO1Mo2iuQOniXBPnNklmrcmFtBQx?=
+ =?us-ascii?Q?cjsTpd218nBAHuzXqTYbto+rhhv7TBIhwNbqzAzoUEuVhxxwWbJLG+BQqfET?=
+ =?us-ascii?Q?BBCInFt6dq6E40hynd8Wg2i48PVfdd58fVESRQNMMp8gPb770eBgNoRiqVvY?=
+ =?us-ascii?Q?mdYHuNr3pA3130pc20oV4nb5KYMcITYCsHlhQLCgXvbSMKxzSyiAWVxcD+sn?=
+ =?us-ascii?Q?j1z+wyzEsemK4/QRD0oNKq4Kw5w1mhtH57itEqsj1KR86Lb6KHPJb7ENAvxN?=
+ =?us-ascii?Q?GW8BIrIlw3xKMfOWTdMinbv8tGcsZx3aqY5oRjabCNzj3fGrIiYzHkXIKo9P?=
+ =?us-ascii?Q?3eh+PenO4EQxOV5ZYQifFFJYkO50UGBoRudNAkls03vztnSElmO9SZiVSI/v?=
+ =?us-ascii?Q?86DO4qVM/UCDTInOoY19Mu+ZtNIl4v0KkSOrY2FaKkLzoOZBSM3gzylW83OC?=
+ =?us-ascii?Q?2Wogwj5PIIopAl5VosWor1wRgRindESrcHQs4z0kDQlaeiA9YyeHHlIlxCgp?=
+ =?us-ascii?Q?KxORwiA7uxo3Qu8Z62zcoSDlAMk9g9plCG2GQCktznTZANYwd6zJcchomPoD?=
+ =?us-ascii?Q?6GSt5tamt02SpXlbAmehItUs8sIfZkH/mUyPCBIiYy8N/rreb+zw5GniaYKA?=
+ =?us-ascii?Q?tmh98kcUl2MKnTw/uDrEkvHLznTDKcr82soxtKucUwwkIjybWgY9jJcIEjAN?=
+ =?us-ascii?Q?8/YD15+5+vd9M9OkcTaVvDBE830hHMr3v4pgeX6EKDmINrGEMEQ5mLP2fOwp?=
+ =?us-ascii?Q?gzpqhiHaJXUBEjdfD1NkJ8E4RGftAI7uRAqsA/woKeLSBkvs2c1SbSVKRUD7?=
+ =?us-ascii?Q?2WU3xp2OROG5ms2WheZggeYheLm7OT48b7ykhSUVN7KS6wSj4h6S2K8JWLc4?=
+ =?us-ascii?Q?6+33/3QmGWm725Ct+73DVviv1Ed0Naaj8s9UdnkTzGV4JpY5uYhYPoY93vAs?=
+ =?us-ascii?Q?ZNxFsgWgxjKU/bi2OVFq+lY5U3XDE1Jgetp7JUHSi53+bdnum+HH5FtXJfuE?=
+ =?us-ascii?Q?ejyzdBNXQ73Sf9ismHhv9pe7Ge+afikaKMNFS+LIp6VjPbo6mDHp8DAg1/79?=
+ =?us-ascii?Q?zQ8c1TfBKOUdHy637PD85J4FBK1yfDUGI5AyCQm0oLSK0Emi1Z7NWZn+uBmS?=
+ =?us-ascii?Q?4fS4suStJ8yCOfFsRDYy0k630/iJ2w+ejNKnEHStPld+e+y10TUj23EKSi0c?=
+ =?us-ascii?Q?1D5kpJkkXgOpwIU35ln8WLaICdG6Fa7rJwMdR7zLxhBN8VYVwqrubetzPcs0?=
+ =?us-ascii?Q?GqVso5ZXU+L4zSfhbToVHxZFnknlyGbp3qZo3GirFhBk5cnHTTb/s8etoQjn?=
+ =?us-ascii?Q?PJLVhv8i5kw3XyT4Ys7plsLn8I2x6wWSnRJU+T3xUHgbBKIa+nE1bNLZBU6W?=
+ =?us-ascii?Q?3O5uOoQNO0RO69K/VXu5a3WG2a1moNcKqMot9NrOSVp2Z03akEU8SrDzPQlm?=
+ =?us-ascii?Q?uslwipOlxDJLBklYoXJzUDrYCnZdlihmWFexO0nmx16wE3iLmL7pkOS4gchq?=
+ =?us-ascii?Q?w23lkkfSryOBz/CRus6783TggXkFal1HNr7M0kCKCw4rwjc6A9CP9BVtJK5d?=
+ =?us-ascii?Q?PI9PZBpSMENYdKrIbNA=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -155,152 +157,71 @@ MIME-Version: 1.0
 X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8120.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 463f2557-4210-41b3-d282-08ddf5e19c2d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2025 11:59:09.2770
+X-MS-Exchange-CrossTenant-Network-Message-Id: a837981d-3f59-4c76-3390-08ddf5e1e00e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2025 12:01:03.1448
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: h15n33EJpbLodQxbMrSZfovkrVme1+vFFF9SgTdHYYCZDUF1sjqwnQsmI1uFoMbqh5uh3a8nVBfxVE1j5XIwBQ==
+X-MS-Exchange-CrossTenant-userprincipalname: RETasqEf28T/AJqZITn/7sK6qiutxtmj7SyKoAM5qaFa8yd+zvrXDKiHOJB2CA5+ebXH9l05dshrzaKeusbwbg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6985
 
 [AMD Official Use Only - AMD Internal Distribution Only]
 
-Thanks Bjorn for reviews.
-
-Regards,
-Devendra
-
 > -----Original Message-----
 > From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: Tuesday, September 16, 2025 20:34
-> To: Verma, Devendra <Devendra.Verma@amd.com>
-> Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
-> dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
-> Subject: Re: [PATCH v2 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint
-> Support
+> Sent: Tuesday, September 16, 2025 20:36
+> To: ALOK TIWARI <alok.a.tiwari@oracle.com>
+> Cc: Verma, Devendra <Devendra.Verma@amd.com>; bhelgaas@google.com;
+> mani@kernel.org; vkoul@kernel.org; dmaengine@vger.kernel.org; linux-
+> pci@vger.kernel.org; linux-kernel@vger.kernel.org; Simek, Michal
+> <michal.simek@amd.com>
+> Subject: Re: [External] : [PATCH v2 1/2] dmaengine: dw-edma: Add AMD MDB
+> Endpoint Support
 >
 > Caution: This message originated from an External Source. Use proper caut=
 ion
 > when opening attachments, clicking links, or responding.
 >
 >
-> On Tue, Sep 16, 2025 at 04:13:18PM +0530, Devendra K Verma wrote:
-> > AMD MDB PCIe endpoint support. For AMD specific support added the
-> > following
-> >   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
-> >   - AMD MDB specific driver data
-> >   - AMD MDB specific VSEC capability to retrieve the device DDR
-> >     base address.
->
-> > +/* Synopsys */
-> >  #define DW_PCIE_VSEC_DMA_ID                  0x6
-> >  #define DW_PCIE_VSEC_DMA_BAR                 GENMASK(10, 8)
-> >  #define DW_PCIE_VSEC_DMA_MAP                 GENMASK(2, 0)
-> >  #define DW_PCIE_VSEC_DMA_WR_CH                       GENMASK(9, 0)
-> >  #define DW_PCIE_VSEC_DMA_RD_CH                       GENMASK(25, 16)
+> On Tue, Sep 16, 2025 at 04:25:49PM +0530, ALOK TIWARI wrote:
 > >
-> > +/* AMD MDB specific defines */
-> > +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID               0x6
-> > +#define DW_PCIE_XILINX_MDB_VSEC_ID           0x20
-> > +#define PCI_DEVICE_ID_AMD_MDB_B054           0xb054
-> > +#define DW_PCIE_AMD_MDB_INVALID_ADDR         (~0ULL)
->
-> > @@ -120,9 +213,22 @@ static void dw_edma_pcie_get_vsec_dma_data(struct
-> pci_dev *pdev,
-> >       u32 val, map;
-> >       u16 vsec;
-> >       u64 off;
-> > +     u16 vendor =3D pdev->vendor;
-> > +     int cap;
 > >
-> > -     vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
-> > -                                     DW_PCIE_VSEC_DMA_ID);
-> > +     /*
-> > +      * Synopsys and AMD (Xilinx) use the same VSEC ID for the purpose
-> > +      * of map, channel counts, etc.
-> > +      */
-> > +     if (vendor !=3D PCI_VENDOR_ID_SYNOPSYS ||
-> > +         vendor !=3D PCI_VENDOR_ID_XILINX)
-> > +             return;
-> > +
-> > +     cap =3D DW_PCIE_VSEC_DMA_ID;
-> > +     if (vendor =3D=3D PCI_VENDOR_ID_XILINX)
-> > +             cap =3D DW_PCIE_XILINX_MDB_VSEC_ID;
-> > +
-> > +     vsec =3D pci_find_vsec_capability(pdev, vendor, cap);
+> > On 9/16/2025 4:13 PM, Devendra K Verma wrote:
+> > > +   /*
+> > > +    * Synopsys and AMD (Xilinx) use the same VSEC ID for the purpose
+> > > +    * of map, channel counts, etc.
+> > > +    */
+> > > +   if (vendor !=3D PCI_VENDOR_ID_SYNOPSYS ||
+> > > +       vendor !=3D PCI_VENDOR_ID_XILINX)
+> > > +           return;
+> >
+> > if, vendor =3D=3D PCI_VENDOR_ID_XILINX condition will true
+> >
+> > should not be if (vendor !=3D PCI_VENDOR_ID_SYNOPSYS && vendor !=3D
+> > PCI_VENDOR_ID_XILINX) ?
 >
-> This looks correct, so it's OK as-is.  But it does require more analysis =
-to verify than it
-> would if you did it like this:
+> Good catch, I mistakenly said this part was correct, but you're right; it=
+'s obviously
+> broken.
 >
->   vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
->                                   DW_PCIE_SYNOPSYS_VSEC_DMA_ID);
->   if (!vsec) {
->     vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
->                                     DW_PCIE_XILINX_VSEC_DMA_ID);
->     if (!vsec)
->       return;
->   }
+> The alternate structure I suggested would avoid this problem.
 >
-> This way it's obvious from the pci_find_vsec_capability() calls themselve=
-s (and could
-> potentially be checked by coccinelle, etc) that we're using the Vendor ID=
- and VSEC
-> ID correctly.
->
+> > > +
+> > > +   cap =3D DW_PCIE_VSEC_DMA_ID;
+> > > +   if (vendor =3D=3D PCI_VENDOR_ID_XILINX)
+> > > +           cap =3D DW_PCIE_XILINX_MDB_VSEC_ID;
+> > > +
+> > > +   vsec =3D pci_find_vsec_capability(pdev, vendor, cap);
+> > >     if (!vsec)
+> >
+> >
+> > Thanks,
+> > Alok
 
-Instead of the above format, a clear assignment to vendor and cap would be =
-good enough.
-Reason for this is, if a third vendor comes and supports the same VSEC=3D0x=
-6 id with similar
-capabilities then it looks bulky to put another clause as given above. Inst=
-ead of this a cleaner
-approach would be to have a single pci_find_vsec_capability() and clear ass=
-ignment to vendor
-and cap variables to make it look cleaner. Eg:
-switch (pdev->vendor) {
-case PCI_VENDOR_ID_XILINX:
-        vendor =3D pdev->vendor;
-        cap =3D DW_PCIE_XILINX_MDB_VSEC_DMA_ID;
-case PCI_VENDOR_ID_SYNOPSYS:
-        ...
-default:
-        return;
-}
-vsec =3D pci_find_vsec_capability(pdev, vendor, cap);
+Thanks for noticing it, this was quickly corrected and updated in v3 of the=
+ same patch.
 
-Please let me know your thoughts on this.
-
-> > +     /* AMD specific VSEC capability */
->
-> This should say "Xilinx specific VSEC capability" because the Vendor ID i=
-n the
-> device is PCI_VENDOR_ID_XILINX.  We shouldn't have to look up the corpora=
-te
-> ownership history and figure out that AMD acquired Xilinx.  That's not re=
-levant in this
-> context.
->
-
-Sure, thanks for this clarification.
-
-> > +     vsec =3D pci_find_vsec_capability(pdev, vendor,
-> > +                                     DW_PCIE_XILINX_MDB_VSEC_ID);
->
-> But this one is wrong.  We do know that the device Vendor ID is either
-> PCI_VENDOR_ID_SYNOPSYS or PCI_VENDOR_ID_XILINX from above, but we
-> *don't* know what VSEC ID 0x20 means for Synopsys devices.
->
-> We only know what VSEC ID 0x20 means for Xilinx devices.  So this has to =
-be:
->
->   vsec =3D pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
->                                   DW_PCIE_XILINX_MDB_VSEC_ID);
->
-
-Sure, this will be addressed.
-
-> Bjorn
+Regards,
+Devendra
 

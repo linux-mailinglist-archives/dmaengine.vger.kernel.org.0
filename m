@@ -1,52 +1,52 @@
-Return-Path: <dmaengine+bounces-6648-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6649-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48674B86896
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Sep 2025 20:50:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 504FFB86899
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Sep 2025 20:50:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5B211C83307
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Sep 2025 18:50:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E836622EB5
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Sep 2025 18:50:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8B7E2D9796;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1E982DAFAE;
 	Thu, 18 Sep 2025 18:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+G1lq5e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YauvTm6a"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD2F2D7DE5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3DD2D8767;
 	Thu, 18 Sep 2025 18:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758221398; cv=none; b=csdl7mu3Z3z11j+7mfHfuE1AAImtNfVjhAbudOzk44Ki5W1ml2CiM6ZBv/MalbRd+yzwcmr+05DqOo223RpGJatVrrsQava0B0UZIQ25vQbM2sL5IJTF0fuIYYhDnjJU+wQv+xDDf36UHiSJR+hBLddssLOjMVdW/h5IWNQ7mIw=
+	t=1758221398; cv=none; b=PWIV3XQvskw/tTMMoc/Of2xc+Xo9MYfINjMOQYtmc8a/nlL0AoBRnmqOBEBxtzHhebGwgvQXbUtMYH/HwH43mIdlamBswIX1mH0Xta2luv0G20TLkll1qGnSZhEztvz01s6luVogDyblfK6WarqsawAgFKIcOcB8bE7pBDxOVGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1758221398; c=relaxed/simple;
-	bh=KkndGZ2cFeTM19fVBhPaNoLbiQh6UVaVfyXkJUdBXsk=;
+	bh=xFZzw0dxkId4PpzWi4rCIk0ujR41JrlCk231RXGFPjY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RD5f5Ea8xKqw+giVxfDZ2mZqFNkhwMikdNNW0jc41PZjhVrZqY0Zelj4WHLKasY4b2Z0frO+YfB+OZLaNkwHPc0vtie9S3FLWJENz2VYlAAGCpD/bYdMlRyU6PPxUNMmIgvJ9wrfRdw84STwIwYcCwKhGnb9rIbKdgMs5e57fhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+G1lq5e; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 17B7DC4AF13;
+	 In-Reply-To:To:Cc; b=ahXMbyAuh5DgtPi7tJSt9n9XzF3TEKAozr7+V99Av30tdst3KU2O+DHkPa7yC4C3lhtTwBee2ntKLkiK7Nvbz2m0TNag8qCm1rydQoJaCroCZdX9fv2nGPTceiH1TPD00oPg05dHCqs7hMlnlZkbP7j7P+XOOOGuHbTub031b0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YauvTm6a; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 26CE1C19422;
 	Thu, 18 Sep 2025 18:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1758221398;
-	bh=KkndGZ2cFeTM19fVBhPaNoLbiQh6UVaVfyXkJUdBXsk=;
+	bh=xFZzw0dxkId4PpzWi4rCIk0ujR41JrlCk231RXGFPjY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=q+G1lq5eX76T2uqv5/HptLwuHYisvdH2xVJ/ZCMJJY6xr2aJTQXo9pEOxrZnnjCIS
-	 4Jcyw/H5/f1UeJ0rIJ+Isukjgkqa6HA7uhIjZIn3KtTAJk8CS/F4A32JKiKo2NEBSj
-	 NjEjRSWTo/j1UwN6t5HQhkjaXOwZtYrFJrO186EFXZ8UeYsCKYC52J9VGlbkrnLrM9
-	 R1myopw6va0UYQlS1Aiiun+qE8l3JmQ3vz41yX+kjaWgjBbtd+/4ZCXsMNCfBYdtCh
-	 nG5Y1pYE8wXAmoaASW2Xp+nMDEYtmrAMLaXpt9fjKXmapvLMRRqfWQhXKAMTWv9FHN
-	 T7PiVg/UCQfWQ==
+	b=YauvTm6aF85Rf2LnVgDHgqBJ8NYqPiAc/R+nTvtZFu0rxjVNHIazKwd5d3gGv0cu4
+	 7Bi8nThF/VZmTZfDKJJIYIG9okGui02mQ0GcDfIfTOdThWAFVzo8Lbwlt+ozcGAAYi
+	 J8ToHTT2PE9TwbTX441/VaxVY77yVY7FuvL3W9ZmkuxsJ2W3otNn6r1ilyvWs3KC4S
+	 Bn1AfAPGFmI6cHEE35u2F07KP/320MoekbWNfiSXgCNj/QMb4QQk0dgJul6Uwf1Hxz
+	 6RP5FBz05/3Eijz1AEtGowJys/7ZaEz4qSJI+qwOG7Cw2avpsAqSjMEFA5OAuzvAV0
+	 AYl3fLnfSG6PQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F57CCAC59A;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E980CAC5A9;
 	Thu, 18 Sep 2025 18:49:58 +0000 (UTC)
 From: Dang Huynh via B4 Relay <devnull+dang.huynh.mainlining.org@kernel.org>
-Date: Fri, 19 Sep 2025 01:48:44 +0700
-Subject: [PATCH 04/10] dt-bindings: mmc: Add RDA SDMMC controller
+Date: Fri, 19 Sep 2025 01:48:45 +0700
+Subject: [PATCH 05/10] gpio: rda: Make IRQ optional
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250919-rda8810pl-mmc-v1-4-d4f08a05ba4d@mainlining.org>
+Message-Id: <20250919-rda8810pl-mmc-v1-5-d4f08a05ba4d@mainlining.org>
 References: <20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org>
 In-Reply-To: <20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org>
 To: Manivannan Sadhasivam <mani@kernel.org>, 
@@ -74,11 +74,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-unisoc@lists.infradead.org,
  dmaengine@vger.kernel.org, linux-mmc@vger.kernel.org, 
  linux-hardening@vger.kernel.org, Dang Huynh <dang.huynh@mainlining.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758221395; l=2667;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758221395; l=961;
  i=dang.huynh@mainlining.org; s=20250917; h=from:subject:message-id;
- bh=AsSx2jfyiIl9tD1PzUkU8B/80/dNLISAbs6T475/JWo=;
- b=m1jZ5iiJdDLR2oNGhbZc1KvGaZ/RhK/lM0bAsauM7cx684WiuGLwZlK4HFh7moDg6YJ4FQU+R
- ttMceldPwaYBD+EGfHCFOX0uBSgU42qv2H8yNPUABQPx0Skg+RH4jnz
+ bh=MpdOunzwRix8r+I6dz4W5XzomAmmpf9+SZqztmWlQWc=;
+ b=gcu6tm5gzmZ+ZMKsRV7i/uxjKVCVaCUgL333lVwfm3e0f8wM4biBdYwyH2e1IKu/7nMS5khcs
+ Tc0z4jijgshB0EsAQMfMy7L+Jji9rFMHcG7B3mt7gpRIFlwxVXF0BM1
 X-Developer-Key: i=dang.huynh@mainlining.org; a=ed25519;
  pk=RyzH4CL4YU/ItXYUurA51EVBidfx4lIy8/E4EKRJCUk=
 X-Endpoint-Received: by B4 Relay for dang.huynh@mainlining.org/20250917
@@ -88,112 +88,31 @@ Reply-To: dang.huynh@mainlining.org
 
 From: Dang Huynh <dang.huynh@mainlining.org>
 
-Add documentation describing the SD/MMC controller in RDA Micro
-RDA8810PL SoC.
+Not all GPIO have IRQ. When we use this driver with
+GPIOC (handled by modem) we get:
+
+rda-gpio 11a08000.gpioc: error -ENXIO: IRQ index 0 not found
+
+Let's mark IRQ as optional so this error doesn't show up.
 
 Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
 ---
- Documentation/devicetree/bindings/mmc/rda,mmc.yaml | 92 ++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
+ drivers/gpio/gpio-rda.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/rda,mmc.yaml b/Documentation/devicetree/bindings/mmc/rda,mmc.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..f3cda38abd66023ca9bc94d1c29df5ae9e211e7c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/rda,mmc.yaml
-@@ -0,0 +1,92 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/rda,mmc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: RDA Micro SD/MMC Controller
-+
-+allOf:
-+  - $ref: mmc-controller.yaml
-+
-+maintainers:
-+  - Dang Huynh <dang.huynh@mainlining.org>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - rda,8810pl-mmc
-+      - const: rda,mmc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: mclk
-+
-+  resets:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 2
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+  rda,mclk-adj:
-+    $ref: /schemas/types.yaml#/definitions/uint8
-+    description:
-+      Some board need MCLK output to be delayed for the card to work.
-+      If not present, MCLK output is not delayed.
-+    minimum: 0
-+    maximum: 255
-+
-+  rda,mclk-inv:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      Some board need MCLK to be inverted for the card to work.
-+      If not present, MCLK is not inverted.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - resets
-+  - dmas
-+  - dma-names
-+  - vmmc-supply
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/clock/rda,8810pl-apclk.h>
-+    #include <dt-bindings/dma/rda-ifc.h>
-+    mmc@20950000 {
-+      compatible = "rda,8810pl-mmc", "rda,mmc";
-+      reg = <0x20950000 0x1000>;
-+      interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&ap_syscon CLK_APB2>;
-+      clock-names = "mclk";
-+      resets = <&ap_syscon RST_APB2_SDMMC1>;
-+      dmas = <&ifc IFC_SDMMC1_TX>, <&ifc IFC_SDMMC1_RX>;
-+      dma-names = "tx", "rx";
-+      vmmc-supply = <&vdd_sdmmc>;
-+      rda,mclk-adj = /bits/ 8 <1>;
-+      rda,mclk-inv;
-+    };
-+
-+...
+diff --git a/drivers/gpio/gpio-rda.c b/drivers/gpio/gpio-rda.c
+index fb479d13eb01a49218ad4229e7d4f70f096f5a2e..7d20dbbb6ec41149a1dbf4d9ef9ac86449773c35 100644
+--- a/drivers/gpio/gpio-rda.c
++++ b/drivers/gpio/gpio-rda.c
+@@ -229,7 +229,7 @@ static int rda_gpio_probe(struct platform_device *pdev)
+ 	 * RDA8810PL, GPIOC doesn't support interrupt. So we must handle
+ 	 * those also.
+ 	 */
+-	rda_gpio->irq = platform_get_irq(pdev, 0);
++	rda_gpio->irq = platform_get_irq_optional(pdev, 0);
+ 
+ 	rda_gpio->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(rda_gpio->base))
 
 -- 
 2.51.0

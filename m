@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-6657-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6658-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4B36B87F2D
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Sep 2025 07:57:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C53E1B87F3B
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Sep 2025 07:58:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 523661C8381E
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Sep 2025 05:57:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8EB335808B9
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Sep 2025 05:58:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A4B1284686;
-	Fri, 19 Sep 2025 05:57:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0F5628488D;
+	Fri, 19 Sep 2025 05:58:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="L8bAx6LC"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZinNULJY"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F67D248F51;
-	Fri, 19 Sep 2025 05:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220AD2153D2;
+	Fri, 19 Sep 2025 05:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758261440; cv=none; b=e0nN7RNZve8gAMVvg7VRE8q9I80jAB8OB4ViCeQMQ1Oxq/K3tF2ZKBQn4wuxLR0AehXf55YuLf8L/+3ZUjdhvN4zM55/Jy4+xXnO8v/h9fMMEQ/GRKsFc2xWNNpJlRk7chi+PwrJKzz55obtxbenECXKUo2QQpkFBUU6DkWUrSM=
+	t=1758261506; cv=none; b=YHNZe6+BvHbEMo63UxOahl7FtmmsczBgXvsKuJQT/n2JEcfWSoXtiLpI5YCP2jUOmqcp8v9jATC0Oc+5jOjX7sZP0waPYFQTtaT1o9RZj1jZYTYrUZQdfxmBcxgo1f04c/QPOHQCNGQ8tOoP/h6H4nDcQvcjwyg2V4xTjUHTsPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758261440; c=relaxed/simple;
-	bh=3/neqeoz3dR36pzmXn8NzzsA7fMzfe5HS4/BkxssVOE=;
+	s=arc-20240116; t=1758261506; c=relaxed/simple;
+	bh=3JacfOF5n6w44tOIChktkhdrySqZuFs4Zmio87E0RxE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=k//G2eBZB2IAVRQOy+hvTLFhE5YD2OfL6rhkY6XGNozipHkELoWAa/2S6MZAPcV3NJLuAKUPH9pqLo5pXgCEOdrLnj3fIDCDOSfJXscR0BLB3peInXdlmSbLSOEYSvYLuTO3cZcV6WHfxg90zzNMmSOIsTtytHQqoIKlvin97bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=L8bAx6LC; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:Content-Type; b=kzpJop7iyfKhBAoNLQzvRu4E72Bg+IQC8784pvGUOTa/GSib0zT2mNs/5AK2MrzEceEYsrXZWMwP7PVTIuP8JwTi9gOri5AU5X6bPirEpOok+ydGbfjNk3JruhAiWW0SZ3vZP15cSFhr83my0yRJXX16oy41wMZ9B0SxF3NKh3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZinNULJY; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58IIV1V9029614;
-	Fri, 19 Sep 2025 05:57:03 GMT
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58ILmHJX027120;
+	Fri, 19 Sep 2025 05:58:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4TwweCMeQcFLfszimtHQ88ugV7vqgQWjFSaEotoMWe8=; b=L8bAx6LCjF5TfmDX
-	VlDS03RB1EDCXAh9INq/LEWMvppl/ly+T9nACY0vuuFUl8kB3ywqtLTERnT86pjj
-	AuGF0cvD4aMc7XtOOCfdUi5jxzaMOquXyzFc9gLbCJ68GCimC4IyLvnVXoPDEonb
-	SQ9+1MvU+GPU0Pz9HEjMtGjMnu9v3dAOqS5zRiAM4vnDxhusQXF5s5VNbuqSGBQ4
-	yyyezETvgN2Cz+lI4ugDjN43E3q/AMMKTip4DAyDhU0M3lL/fo9W4EAuPHGRkFWR
-	w9fkqv/FeDsD5Uq9XCcJhSbDJfVf9JrNMk3AWXp5/qs8avW5+jBmyWnDc2e+2JNh
-	YkMMMw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 497fy11510-1
+	5Z7z3c1VcYxS18wLiborKeuJVzl25GW11t6vVaqHxsU=; b=ZinNULJYABoRrcIj
+	Gelze+ehO+1s0/0o9Ksl7sZdX8WruAKlN2EvlBXBY2SZSc9exyj13B2E0PTYF0l3
+	LkFjsrNPmXnAnfn9nOlO+W1JQq/a44GYTRNGU17jY2ASvbNnH0QMLLlGohnxHAzt
+	3jDQBIgfIZlbWLoBluI5UKpr3NTnPRvcFG9KiCu9qJUIZ7LRVjsNXApZzrXRIxoF
+	xyD6cjEA+jHTobyVk5/hhWfzkeKhLOWbEHk9g2rjGJVbtOf8LKi3U9F9mqLEf6c6
+	NXwmZI6oDvax/K/P3DhBVeW7PxS1L34nQW9BCJIA1lnS7Z6XANaGMBDV55AudVPM
+	kcVvBA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 497v1jf6g3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Sep 2025 05:57:03 +0000 (GMT)
+	Fri, 19 Sep 2025 05:58:09 +0000 (GMT)
 Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 58J5v29a019999
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 58J5w8i3029375
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Sep 2025 05:57:02 GMT
+	Fri, 19 Sep 2025 05:58:08 GMT
 Received: from [10.50.44.58] (10.80.80.8) by nasanex01a.na.qualcomm.com
  (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.24; Thu, 18 Sep
- 2025 22:56:58 -0700
-Message-ID: <2394e63f-1df7-764e-5489-3567065707a1@quicinc.com>
-Date: Fri, 19 Sep 2025 11:26:55 +0530
+ 2025 22:58:04 -0700
+Message-ID: <984ed1c5-6971-0922-3712-ddf401e8f568@quicinc.com>
+Date: Fri, 19 Sep 2025 11:28:01 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,8 +66,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH 3/9] dma: qcom: bam_dma: Fix command element mask field
- for BAM v1.6.0+
+Subject: Re: [PATCH 8/9] arm64: dts: qcom: ipq5424: Remove eMMC support
 Content-Language: en-US
 To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <broonie@kernel.org>,
         <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
@@ -77,112 +76,59 @@ To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <broonie@kernel.org>,
         <dmaengine@vger.kernel.org>
 CC: <quic_varada@quicinc.com>
 References: <20250918094017.3844338-1-quic_mdalam@quicinc.com>
- <20250918094017.3844338-4-quic_mdalam@quicinc.com>
- <c5d5c026-3240-4828-b9b3-455f057fb041@oss.qualcomm.com>
+ <20250918094017.3844338-9-quic_mdalam@quicinc.com>
+ <3c42a3b0-b8b3-4c37-963a-e9cec2d3d025@oss.qualcomm.com>
 From: Md Sadre Alam <quic_mdalam@quicinc.com>
-In-Reply-To: <c5d5c026-3240-4828-b9b3-455f057fb041@oss.qualcomm.com>
+In-Reply-To: <3c42a3b0-b8b3-4c37-963a-e9cec2d3d025@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01a.na.qualcomm.com (10.52.223.231)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 9-JoQtRTpVI2r9Lokjbnkcuo1rVxbeXP
-X-Authority-Analysis: v=2.4 cv=btZMBFai c=1 sm=1 tr=0 ts=68ccf0af cx=c_pps
+X-Proofpoint-ORIG-GUID: KvMdk-zDhPOqgKWHyLOKM7t84_v9s484
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE3MDExMCBTYWx0ZWRfX6boss5DiqsE+
+ tsaL+Fv3c1hXT6RsMOyZdKReRvTu++JcAwuLUV8QUEaI1QwSP5u86AbUn5TubtQl5Y/QO1RMwtA
+ hsX7tWXicGC10ElZ5Lx70tApEQj4rTrnCf3lgenycxhcVoQL5rLuykpp0eaq49fB1Q6tMNnt753
+ qr6ds7G48GF4kEp2RwpnwCNZ3TaBiBSXNWF3X3D08KHqe3+2E1ksU+tcDRXCA9paPWzhrfJsn2Z
+ a1sBEu8TSwFKTf2P8mvFeep7p4eQCph7S1QFGjkCWWa+QXPfWEy3yk87GLhn4q5QdOEOdCnFApg
+ T7PBDMj3B2pZLKDfFa74GMmuwoUCen40y1Xryhfeu44Y55HIzRgf+RSbCh4OAPf00a2FRvyMTeI
+ 3i015pdW
+X-Authority-Analysis: v=2.4 cv=AeqxH2XG c=1 sm=1 tr=0 ts=68ccf0f1 cx=c_pps
  a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10
- a=5kgzbmhzmrmLAAh7KT4A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 9-JoQtRTpVI2r9Lokjbnkcuo1rVxbeXP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDIwMiBTYWx0ZWRfX/mqX81BMEqt0
- Cs5dlwt2twmVv4t+yOqcvpQJW2h0WGhvrwqbB1XdQot8riYhvfansLefqMFKDQS3ycwqIS6wEB7
- bwLKfNguC+f/sPx7teDNXLzz0Aadunq5+tMnrMC5SXb3nJ5gx6OZ822IPyTBpHhTSwOU0m3hST6
- wI3Y/JJ8VSWVvfb0uTHP12W9TL58R0Y+ejwD9ccVozLY1CZe9w/VbciNFx4sbHHoRQfK+2yZxX4
- LbQDIOnSct/IwSl6uQ9+5FCA+fgZggXFXgdo3Gu25BPbWWRJjItP5l9HKSeBxM1Z5nOxSwmjy8/
- BaTFnvNMHEmkdh8R5cQQQ1D/R9C4lQMmdwhQN8AZ1LXIFGWd8pPZhDfF20MF6k5UbXEtx38imj8
- l1/If817
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=COk6AnOGAAAA:8
+ a=AmzfQV_qY4rmN1R1o4MA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: KvMdk-zDhPOqgKWHyLOKM7t84_v9s484
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-09-18_03,2025-09-19_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 priorityscore=1501 impostorscore=0 clxscore=1015 malwarescore=0
- spamscore=0 adultscore=0 phishscore=0 suspectscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2509160202
+ malwarescore=0 spamscore=0 phishscore=0 suspectscore=0 adultscore=0
+ impostorscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509170110
 
 
 
-On 9/18/2025 3:57 PM, Konrad Dybcio wrote:
+On 9/18/2025 6:16 PM, Konrad Dybcio wrote:
 > On 9/18/25 11:40 AM, Md Sadre Alam wrote:
->> BAM version 1.6.0 and later changed the behavior of the mask field in
->> command elements for read operations. In newer BAM versions, the mask
->> field for read commands contains the upper 4 bits of the destination
->> address to support 36-bit addressing, while for write commands it
->> continues to function as a traditional write mask.
+>> Remove eMMC support from the IPQ5424 RDP466 board configuration to
+>> resolve GPIO pin conflicts with SPI NAND interface.
+>>
+>> The IPQ5424 RDP466 board is designed with NOR + NAND as the default boot
+>> mode configuration. The eMMC controller and SPI NAND controller share
+>> the same GPIO pins, creating a hardware conflict:
+>>
+>> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+>> ---
 > 
-> So the hardware can read from higher addresses but not write to them?
-No,
-Write Operations: Can target any 32-bit address in the peripheral 
-address space (up to 4GB)
-
-Read Operations: Can read from any 32-bit peripheral address and
-place the data into 36-bit memory addresses (up to 64GB) starting
-from BAM v1.6.0
+> The subject should contain the board name, i.e.:
 > 
-> Plus, you didn't explain what the mask register does on BAM <1.6.0.
-> If it really masks the address, all reads will now point to 0x0
-The mask field never masks addresses in any BAM version. Here's the 
-complete specification:
+> arm64: dts: qcom: ipq5424-rdp466: xxx
+Ok, will add in next revision.
+> 
+> same for patch 9
+ok
 
-BAM Command Element Structure
 
-Write Command Elements (All BAM Versions):
-
-| Field  | Bits  | Description                                         |
-|--------|-------|-----------------------------------------------------|
-| 1st DW | 31:24 | Command (must be 0 for write)                       |
-|        | 23:0  | Address - target address in peripheral              |
-|-----------------------------------------------------------------------
-| 2nd DW | 31:0  | Data - the data to be written                       |
-------------------------------------------------------------------------
-| 3rd DW | 31:0  | Mask - 32-bit mask defining which bits to modify    |
------------------------------------------------------------------------
-| 4th DW | 31:0  | Reserved                                            |
-------------------------------------------------------------------------
-
-Read Command Elements (BAM < v1.6.0):
-
-| Field  | Bits  | Description                                         |
-|--------|-------|-----------------------------------------------------|
-| 1st DW | 31:24 | Command (must be 1 for read)                        |
-|        | 23:0  | Address - source address in peripheral              |
-------------------------------------------------------------------------
-| 2nd DW | 31:0  | Destination - memory address to write read-data     |
-------------------------------------------------------------------------
-| 3rd DW | 31:0  | Reserved (IGNORED by hardware)                      |
-------------------------------------------------------------------------
-| 4th DW | 31:0  | Reserved                                            |
-------------------------------------------------------------------------
-
-Read Command Elements (BAM >= v1.6.0):
-
-| Field  | Bits  | Description                                         |
-|--------|-------|-----------------------------------------------------|
-| 1st DW | 31:24 | Command (must be 1 for read)                        |
-|        | 23:0  | Address - source address in peripheral              |
-------------------------------------------------------------------------
-| 2nd DW | 31:0  | Destination - 32 LSBs of 36-bit destination addr    |
-------------------------------------------------------------------------
-| 3rd DW | 31:4  | Reserved                                            |
-|        | 3:0   | Destination Address 4 MSBs (bits 35:32)             |
-------------------------------------------------------------------------
-| 4th DW | 31:0  | Reserved                                            |
-------------------------------------------------------------------------
-
-For Read Commands:
-- BAM < v1.6.0: 3rd Dword completely ignored by hardware
-- BAM >= v1.6.0: 3rd Dword[3:0] contains upper 4 bits of destination
-address
-
-Thanks,
-Alam.
 

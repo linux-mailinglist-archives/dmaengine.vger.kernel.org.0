@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-6670-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6671-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AE49B8DF16
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Sep 2025 18:12:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1371B8E1B8
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Sep 2025 19:28:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 52CD3189C6F7
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Sep 2025 16:12:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8713A3AE8E4
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Sep 2025 17:28:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2C3E2765EA;
-	Sun, 21 Sep 2025 16:08:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 951CA26B2CE;
+	Sun, 21 Sep 2025 17:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9VA4+Ov"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rOYQNGMq"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48053275B15;
-	Sun, 21 Sep 2025 16:08:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5834E18EB0;
+	Sun, 21 Sep 2025 17:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758470923; cv=none; b=XPZUOraAUtJWu+rAcss5RuL8XTCy3wV9Q8EO9bZtfDcZl7Xb+eG9XwyNJaHNlh5D+jvlmvTQWtYWu5NpiuPH0wOS7xyEtWwrwk0w6KlnFVuracks1Ac/qy5kGLzNxCVwv6XYRNY9TrOrEwVhyXDwHO5lR05ygSz2H4To6W6WXik=
+	t=1758475705; cv=none; b=soiyGGZIUrhEfJC16kLHapW3e5N62fiUiReq5oG13YRh6afjMWikWGxGYfUVDpiLp0oXtzz58M9xoy5LhcuT60ThCOU+Z7X77rRBWw+wg+9rdkmFQodHlK8/nOu6E1cr/Nq5deqjNvmRg/4u6lO2RVS0nGWcVIdeN9ZumiqGcUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758470923; c=relaxed/simple;
-	bh=WAbk4PWWXEXWUyECLBWj+jZRHQjNujjT1F6/7IR7Wkc=;
+	s=arc-20240116; t=1758475705; c=relaxed/simple;
+	bh=Y6OyRC8OGepucwPmVPz8/FQHQQPr31PG9hXtFpeOmaw=;
 	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=Bw914eV9xNhY0DbIO7dYgnjKMbsASZAsHUNYOahoQlICDghZNAFOPK1SI7NQZtA5qFhtgX0MY3rqlYAFjoPNl6De8l+N1gsBpeMVRc3siWjKtD6Inlm9PDF5M1ih4vaZQrhOLQCY23U8+3eHN/zwKqTUE3oXvCkFzsQQ9j0tGy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9VA4+Ov; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F8CDC4CEE7;
-	Sun, 21 Sep 2025 16:08:42 +0000 (UTC)
+	 To:Date:Message-ID; b=Tpix3gWOJBbv8GLdwYcngHoYQ1hkG9p2BoyxrFeWEAzec3BoGTaPruOhnMNQs+psrdWRGuTqi23hEKQBIvwf//zLdZZGgoob70hvjy+SnKXzOP3bKSj6/n+1D8J3NIPfI1C5dQ0N0jOSMWaLNA/dmydy5tOSE6TJr2iFfRK6FZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rOYQNGMq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4779C4CEE7;
+	Sun, 21 Sep 2025 17:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758470922;
-	bh=WAbk4PWWXEXWUyECLBWj+jZRHQjNujjT1F6/7IR7Wkc=;
+	s=k20201202; t=1758475704;
+	bh=Y6OyRC8OGepucwPmVPz8/FQHQQPr31PG9hXtFpeOmaw=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=k9VA4+OvtF9WMxvlQ8gfo6xoYVgPhME93HuDeyjVf3VJQKg5L51KazbJGvnQm02j3
-	 GEWkqrPtWUqFxr15WM4BpVIZ9dGHMDnsux1aleg52r5KyYv+LHxTGl3b169Cwpso2A
-	 yUbcEIYwho2ZjYgeMp0c05LtDAyQHhYgWuVOQykRCV8P/ZAO0A2xrsHUFcZ1ZYVztd
-	 hVuGVTIdguTJgiGej5woK5cjYGCQTRMU+ddYcO0s3teIMgUWENJJnMWoMVmgI+Xo//
-	 WXIz1Ll5H7P+4YaCUMRhwXoBllRaGg+2qQdNCRdAyyrY7rJGZ0a5/DxMDhjkybdc75
-	 H1Hi9m6Bn3eAQ==
+	b=rOYQNGMquh9OWSN3UTmPtZ+0v9OeRM33ySEUj3+3H51CcaaVxyhzTUntAK1g4gGQH
+	 ZS7hCzCrCoQY0pC9TxVc5cFNWASi7ZByo+3UATC6fUebH635fNI13yjaed4MhY3Ogb
+	 Xi7O4rvMLZbzBLaYss6nQ0CL4aGg8soSI7499vnSGby+INaT4k1mZZapzy1jPlmaeg
+	 LkRTab9X3Eb1AsRD3HKd6iLIYktg1uv+qzFpmLRt+c3eXBboKiFc6pWcRP4siw425T
+	 HuWTRBzU8ddPAgukP6FH1qiRXNZGK5BShMFBbSeI5kmXCE22BYPcpfrjL3pAFavfPz
+	 2NB0GEV8pJOFw==
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -49,32 +49,63 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250828-dt-apple-t6020-v1-26-507ba4c4b98e@jannau.net>
-References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net> <20250828-dt-apple-t6020-v1-26-507ba4c4b98e@jannau.net>
-Subject: Re: [PATCH 26/37] dt-bindings: clock: apple,nco: Add t6020-nco compatible
+In-Reply-To: <20250627-dev-axi-clkgen-limits-v7-0-e4f3b1f76189@analog.com>
+References: <20250627-dev-axi-clkgen-limits-v7-0-e4f3b1f76189@analog.com>
+Subject: Re: [PATCH RESEND v7 0/7] clk: clk-axi-clkgen: improvements and some fixes
 From: Stephen Boyd <sboyd@kernel.org>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-bluetooth@vger.kernel.org, linux-wireless@vger.kernel.org, linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org, dmaengine@vger.kernel.org, linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, linux-nvme@lists.infradead.org, Janne Grunau <j@jannau.net>
-To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Andi Shyti <andi.shyti@kernel.org>, Christoph Hellwig <hch@lst.de>, Conor Dooley <conor+dt@kernel.org>, David Airlie <airlied@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Hector Martin <marcan@marcan.st>, Janne Grunau <j@jannau.net>, Jaroslav Kysela <perex@perex.cz>, Jassi Brar <jassisinghbrar@gmail.com>, Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>, Johannes Berg <johannes@sipsolutions.net>, Keith Busch <kbusch@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Marc Zyngier <maz@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Mark Brown <broonie@kernel.org>, Mark Kettenis <kettenis@openbsd.org>, Martin =?utf-8?q?Povi=C5=A1er?= <povik+lin@cutebit.org>, Maxime Ripard <mripard@kernel.org>, Michael Turquette <
- mturquette@baylibre.com>, Neal Gompa <neal@gompa.dev>, Rafael J. Wysocki <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Sagi Grimberg <sagi@grimberg.me>, Sasha Finkelstein <fnkl.kernel@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sven Peter <sven@kernel.org>, Takashi Iwai <tiwai@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Thomas Zimmermann <tzimmermann@suse.de>, Ulf Hansson <ulf.hansson@linaro.org>, Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Vinod Koul <vkoul@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Will Deacon <will@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, van Spriel <arend@broadcom.com>
-Date: Sun, 21 Sep 2025 09:08:41 -0700
-Message-ID: <175847092150.4354.4054733553683969208@lazor>
+Cc: Michael Turquette <mturquette@baylibre.com>, Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, Vinod Koul <vkoul@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Trevor Gamblin <tgamblin@baylibre.com>, Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Xu Yilun <yilun.xu@linux.intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Nuno =?utf-8?q?S=C3=A1?= via B4 Relay <devnull+nuno.sa.analog.com@kernel.org>, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-fpga@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, nuno.sa@analog.com
+Date: Sun, 21 Sep 2025 10:28:23 -0700
+Message-ID: <175847570323.4354.7019519707280531872@lazor>
 User-Agent: alot/0.11
 
-Quoting Janne Grunau (2025-08-28 07:01:45)
-> After discussion with the devicetree maintainers we agreed to not extend
-> lists with the generic compatible "apple,nco" anymore [1]. Use
-> "apple,t8103-nco" as base compatible as it is the SoC the driver and
-> bindings were written for.
->=20
-> The block found on Apple's M2 Pro/Max/Ultra SoCs is compatible with
-> "apple,t8103-nco" so add its per-SoC compatible with the former as
-> fallback used by the existing driver.
->=20
-> [1]: https://lore.kernel.org/asahi/12ab93b7-1fc2-4ce0-926e-c8141cfe81bf@k=
-ernel.org/
->=20
-> Signed-off-by: Janne Grunau <j@jannau.net>
+Quoting Nuno S=C3=A1 via B4 Relay (2025-06-27 07:59:09)
+> This series starts with a small fix and then a bunch of small
+> improvements. The main change though is to allow detecting of
+> struct axi_clkgen_limits during probe().
 > ---
+> Changes in v7:
+>  - Just include new tags.
+>=20
+> - Link to v6: https://lore.kernel.org/r/20250519-dev-axi-clkgen-limits-v6=
+-0-bc4b3b61d1d4@analog.com
+> - Link to v5: https://lore.kernel.org/r/20250512-dev-axi-clkgen-limits-v5=
+-0-a86b9a368e05@analog.com
+> - Link to v4: https://lore.kernel.org/r/20250505-dev-axi-clkgen-limits-v4=
+-0-3ad5124e19e1@analog.com
+> - Link to v3: https://lore.kernel.org/r/20250421-dev-axi-clkgen-limits-v3=
+-0-4203b4fed2c9@analog.com
+> - Link to v2: https://lore.kernel.org/r/20250313-dev-axi-clkgen-limits-v2=
+-0-173ae2ad6311@analog.com
+> - Link to v1: https://lore.kernel.org/r/20250219-dev-axi-clkgen-limits-v1=
+-0-26f7ef14cd9c@analog.com
+>=20
+> ---
+> Nuno S=C3=A1 (7):
+>       clk: clk-axi-clkgen: fix fpfd_max frequency for zynq
+>       clk: clk-axi-clkgen: make sure to include mod_devicetable.h
+>       include: linux: move adi-axi-common.h out of fpga
+>       include: adi-axi-common: add new helper macros
+>       clk: clk-axi-clkgen: detect axi_clkgen_limits at runtime
+>       clk: clk-axi-clkgen move to min/max()
+>       clk: clk-axi-clkgen: fix coding style issues
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+What is the merge strategy for this series?
+
+>=20
+>=20
+>  drivers/clk/clk-axi-clkgen.c        | 159 +++++++++++++++++++++++++-----=
+------
+>  drivers/dma/dma-axi-dmac.c          |   2 +-
+>  drivers/hwmon/axi-fan-control.c     |   2 +-
+>  drivers/iio/adc/adi-axi-adc.c       |   3 +-
+>  drivers/iio/dac/adi-axi-dac.c       |   2 +-
+>  drivers/pwm/pwm-axi-pwmgen.c        |   2 +-
+>  drivers/spi/spi-axi-spi-engine.c    |   2 +-
+>  include/linux/adi-axi-common.h      |  56 +++++++++++++
+>  include/linux/fpga/adi-axi-common.h |  23 ------
+>  9 files changed, 174 insertions(+), 77 deletions(-)
+> ---
+> base-commit: 82f69876ef45ad66c0b114b786c7c6ac0f6a4580
+> change-id: 20250218-dev-axi-clkgen-limits-63fb0c5ec38b
 

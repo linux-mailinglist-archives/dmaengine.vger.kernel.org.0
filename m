@@ -1,121 +1,76 @@
-Return-Path: <dmaengine+bounces-6668-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6669-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48764B8D99E
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Sep 2025 13:04:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC55FB8DEFE
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Sep 2025 18:12:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 364DA189B302
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Sep 2025 11:04:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 03C537B08D9
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Sep 2025 16:10:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C495025A35D;
-	Sun, 21 Sep 2025 11:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D800E26E70D;
+	Sun, 21 Sep 2025 16:08:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t56+27g4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TZO+l66m"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6A423B60A;
-	Sun, 21 Sep 2025 11:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7883E211A09;
+	Sun, 21 Sep 2025 16:08:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758452649; cv=none; b=qTbD9dQg18JwrvDDn9ULqw2nMBHZutwg229N4XlCwU0iaw62L1js2L7xPGpBrwGmgCJ5bS0g5RcrUePWn/YLduZ5CBujDQl1Q/Y7w/rLMazjkIZ9GwhQB49LMTbEm2aAbv9OJ93fpvSL+OS1lcClJOya7GgmyGi7tjSF9f/OjFg=
+	t=1758470915; cv=none; b=TUR4mQ25/crnJCRFRxYThsb+kw+DRuOscwQm6m34iaGdWZP05Ta/k0RpAfLrzw91Moe3PuEexV6GKJFB2FcmbRqpEkMgNqGCnq7kMcsdjLqYGDOqyKgCqWfe5Fg9X9ktsDQKGxzlxlC1IPNUQCOVaAbPSmGW+VtBPFyojqpftok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758452649; c=relaxed/simple;
-	bh=ulSPXBA1u1faRv4/f8arTi2w78WVoq/znuBQRkfs6Zo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hEFYnp7DUgJNPYmG/yPMjbCT2Q9cHPVZq1oWqzBqXPixhGijedXLoy+0rxwY0atQ+jLE9qEdk6PeWEbbx3C0er/Y8IwyayGUNAG3fpSsGqzwUPk1z53mmO4UfNKOR4MNosKPFrbPApsOWDSxg1RSKrhEmX2/OBlUbUq+sFWrmIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t56+27g4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2A950C116D0;
-	Sun, 21 Sep 2025 11:04:09 +0000 (UTC)
+	s=arc-20240116; t=1758470915; c=relaxed/simple;
+	bh=bjgVhndVUFUWDh9Kli3/1k8OQLzpscDz8f8evH9FF0I=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=SUBbS1jSwfyriM91Lz5Wzgg24GvQD0V5daITiu14nox10ibNV/2TRlr4ncBG/UEnAqH9XSEGMJR1AfNqV1+esyrqR7IIjAagFGmsC3EzYK5xmduuRQFU5kFePf/eNPl3MuW6jWDadsDAI4tumV0hdZzW8I5ICvDf+XlH023yrZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TZO+l66m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEED8C4CEE7;
+	Sun, 21 Sep 2025 16:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758452649;
-	bh=ulSPXBA1u1faRv4/f8arTi2w78WVoq/znuBQRkfs6Zo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=t56+27g4EaW8nnlv1PZ3Su58UPdFiDAuie2uyPMxsjoXMsAHjpTucLIK9bOBDIqh+
-	 hOPhXrFJXSbC0efVuWfAWR7eXSVgn67VtYEq4GaYEOdqqVSc8c1TlF9PpvtqJjpJMc
-	 49cqXUyZX9RNUC/qsFCCRLZZQJFyzxUPu2DV0EemhUDp8T9fjmCvMfoip0kyF63n1c
-	 iGGIXaXAE6vsAA7nrSz2sLhAN48GmTAXyvdWHH6u+VR/UOIK8DxcfxBKpAKeWmPSx8
-	 A+5+VOKGv0ND8GwvuonbgB6E2H4ASAWv/YpmuljOY06Kr/bP7jPZTlQWlUJmHpPF/I
-	 y9/Ti4RN2hUVQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C82ACAC5A8;
-	Sun, 21 Sep 2025 11:04:09 +0000 (UTC)
-From: Max Shevchenko via B4 Relay <devnull+wctrl.proton.me@kernel.org>
-Date: Sun, 21 Sep 2025 14:03:42 +0300
-Subject: [PATCH 3/3] arm64: dts: mediatek: mt6795: drop mediatek,dma-33bits
- property
+	s=k20201202; t=1758470915;
+	bh=bjgVhndVUFUWDh9Kli3/1k8OQLzpscDz8f8evH9FF0I=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=TZO+l66md5y3YCmXc+ANR/7ZQQnj+9xH3xUYAKm16jr1VgmO7nbmA17BrgK/cp/1I
+	 ErAp9eU0l0ULWifGJSR8G6K31HdIhbPHRzPZCzoYVkURF0xm+t9Lp0IEZSKtUhv5To
+	 NZu/9IYg7jMI23EOHyqP+9Yf1aKiJVOzv4il1R+7W1e64H8azKP5cKmPz00VBgcjHS
+	 PM9ECn8MePHnkI7w4wRHfNxe5xMJ2h3rKfz6GeQ9giQ6ATo5gVf/vbqE+0BUftKaap
+	 6gENrL80OHsZU6jBLMOv2yTsyFq8PwSbbvOqjz6w5EsEXkHMQfXyVbT4c+pXfINbKa
+	 C6DAc9QudVGqg==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250921-uart-apdma-v1-3-107543c7102c@proton.me>
-References: <20250921-uart-apdma-v1-0-107543c7102c@proton.me>
-In-Reply-To: <20250921-uart-apdma-v1-0-107543c7102c@proton.me>
-To: Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Long Cheng <long.cheng@mediatek.com>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Max Shevchenko <wctrl@proton.me>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758452646; l=1089;
- i=wctrl@proton.me; s=20250603; h=from:subject:message-id;
- bh=efNh38U+hbw7SE9tyV1qJBxX+aihILQofpcGc0kC/ts=;
- b=P2Den4CzqXR4nni1RZlcgJUrU+BdnDEx6nZid1RneZyCMn5h8Mysh1cY8Rig6oOMQpbLsXBdS
- golrZUGOoSGA2ZCKjBqltNqDh1rkr621J5L7bYeinB8Sw0aZmqZIF3B
-X-Developer-Key: i=wctrl@proton.me; a=ed25519;
- pk=JXUx3mL/OrnRvbK57HXgugBjEBKq4QgDKJqp7BALm74=
-X-Endpoint-Received: by B4 Relay for wctrl@proton.me/20250603 with
- auth_id=421
-X-Original-From: Max Shevchenko <wctrl@proton.me>
-Reply-To: wctrl@proton.me
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250828-dt-apple-t6020-v1-25-507ba4c4b98e@jannau.net>
+References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net> <20250828-dt-apple-t6020-v1-25-507ba4c4b98e@jannau.net>
+Subject: Re: [PATCH 25/37] clk: clk-apple-nco: Add "apple,t8103-nco" compatible
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-bluetooth@vger.kernel.org, linux-wireless@vger.kernel.org, linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org, dmaengine@vger.kernel.org, linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, linux-nvme@lists.infradead.org, Janne Grunau <j@jannau.net>
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Andi Shyti <andi.shyti@kernel.org>, Christoph Hellwig <hch@lst.de>, Conor Dooley <conor+dt@kernel.org>, David Airlie <airlied@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Hector Martin <marcan@marcan.st>, Janne Grunau <j@jannau.net>, Jaroslav Kysela <perex@perex.cz>, Jassi Brar <jassisinghbrar@gmail.com>, Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>, Johannes Berg <johannes@sipsolutions.net>, Keith Busch <kbusch@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Marc Zyngier <maz@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Mark Brown <broonie@kernel.org>, Mark Kettenis <kettenis@openbsd.org>, Martin =?utf-8?q?Povi=C5=A1er?= <povik+lin@cutebit.org>, Maxime Ripard <mripard@kernel.org>, Michael Turquette <
+ mturquette@baylibre.com>, Neal Gompa <neal@gompa.dev>, Rafael J. Wysocki <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Sagi Grimberg <sagi@grimberg.me>, Sasha Finkelstein <fnkl.kernel@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sven Peter <sven@kernel.org>, Takashi Iwai <tiwai@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Thomas Zimmermann <tzimmermann@suse.de>, Ulf Hansson <ulf.hansson@linaro.org>, Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Vinod Koul <vkoul@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Will Deacon <will@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, van Spriel <arend@broadcom.com>
+Date: Sun, 21 Sep 2025 09:08:33 -0700
+Message-ID: <175847091343.4354.2623772725149192827@lazor>
+User-Agent: alot/0.11
 
-From: Max Shevchenko <wctrl@proton.me>
+Quoting Janne Grunau (2025-08-28 07:01:44)
+> After discussion with the devicetree maintainers we agreed to not extend
+> lists with the generic compatible "apple,nco" anymore [1]. Use
+> "apple,t8103-nco" as base compatible as it is the SoC the driver and
+> bindings were written for.
+>=20
+> [1]: https://lore.kernel.org/asahi/12ab93b7-1fc2-4ce0-926e-c8141cfe81bf@k=
+ernel.org/
+>=20
+> Signed-off-by: Janne Grunau <j@jannau.net>
+> ---
 
-Drop the mediatek,dma-33bits property and use compatible for the
-platform data instead.
-
-Signed-off-by: Max Shevchenko <wctrl@proton.me>
----
- arch/arm64/boot/dts/mediatek/mt6795.dtsi | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt6795.dtsi b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-index e5e269a660b11b0e94da1a1cf362ff0839f0dabf..5123316b21285cf589c0c616c0a12420f0b1ef19 100644
---- a/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-@@ -547,8 +547,7 @@ uart1: serial@11003000 {
- 		};
- 
- 		apdma: dma-controller@11000380 {
--			compatible = "mediatek,mt6795-uart-dma",
--				     "mediatek,mt6577-uart-dma";
-+			compatible = "mediatek,mt6795-uart-dma";
- 			reg = <0 0x11000380 0 0x60>,
- 			      <0 0x11000400 0 0x60>,
- 			      <0 0x11000480 0 0x60>,
-@@ -568,7 +567,6 @@ apdma: dma-controller@11000380 {
- 			dma-requests = <8>;
- 			clocks = <&pericfg CLK_PERI_AP_DMA>;
- 			clock-names = "apdma";
--			mediatek,dma-33bits;
- 			#dma-cells = <1>;
- 		};
- 
-
--- 
-2.51.0
-
-
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 

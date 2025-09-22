@@ -1,250 +1,172 @@
-Return-Path: <dmaengine+bounces-6673-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6674-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB4F5B90402
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Sep 2025 12:48:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8380CB919FB
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Sep 2025 16:17:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8146D1882369
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Sep 2025 10:46:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFBB316F561
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Sep 2025 14:17:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DAEA302CB1;
-	Mon, 22 Sep 2025 10:42:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 192FE1E834E;
+	Mon, 22 Sep 2025 14:17:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gH2nDDxr"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FJtRL/ii"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A682472B1;
-	Mon, 22 Sep 2025 10:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE171DD0C7
+	for <dmaengine@vger.kernel.org>; Mon, 22 Sep 2025 14:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758537757; cv=none; b=kJJwrN7AoLn5vMsKD9YpE/Y2hQMPkY1BWqIUs2fTK9rwpTprbM/0Sg0GIj9b1ZJ6XsFHvglSVKTXS+2fOZejfmqA3waOov3TLTe8UE4uzK2qnUTu0X7lmGEGy0peOGvwTk5cvBmsyZOJZRsID66qiN2zuTCTPelKUdXr3ZZ4/68=
+	t=1758550643; cv=none; b=gDwivJOM3TPUtTTZFn3N0tFTSzg9LSxJsyVKeO7XrBtuk0JfEWe5xU+3eIVKjdiox8xucedgbt5uwi1ufLBFf33G7WJZYPzec5vFehas6lzZgwHNeMDo/uBUuATEjC9fESWVc3Bh63DqpeAb+kVey0+xgfBNt0pbIr9qqX3d4Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758537757; c=relaxed/simple;
-	bh=Ih1cqIyFne9UJCmMiU/r1H207xbYTp3gU6PQi6WJ/js=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hdIQqmXhyF6Hxb7QWVbLgD5sJLGu2ETSRyFeAgWEoYeWhsLuPKfJJ1LEV+8p1lmtprlaVHOj6SSiQE608s1kN6uy0WxpS8TJtCcw+9a17CCDlyuoyvNp77/Ab6KayAeFpWx2sTSba9blRTgJtWD4RkbdxGASKg6/vPwSjf8J2QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gH2nDDxr; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1758537753;
-	bh=Ih1cqIyFne9UJCmMiU/r1H207xbYTp3gU6PQi6WJ/js=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gH2nDDxrMAvWyOHVpMLA6hKcjMOujozkD4zDZWlMdKphN0qhDkEz4blZqpQX/mEq9
-	 +O0GZLWMnm9OqJqAzao1t3U0a9VmK2bQFx6ULM7xpgR37XcxtyeSmUtgN8BBB7jcnD
-	 foZ4n7AXc/FW4oVoTyJ5RJUqK7nU5e0vsF3cfu3R+6gU1hgH0jUzZ3kZrmjPWVsNoK
-	 KQ/rms4AJz+3Y5W2wAgNRUQDI9zFeXANCft9o7CrY5CXxjY/5PGktYG678qKG5UadN
-	 O6GEnl6yc/J51h02W6ePQyZX++Azsn8rpwIYMDgI0xGgS+TECp8yZdrn9cL0BJzFP6
-	 wfFxIk4t1iuDg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id D0D0217E0125;
-	Mon, 22 Sep 2025 12:42:32 +0200 (CEST)
-Message-ID: <e4a6feaf-a9cd-4092-a083-c356a7d954b2@collabora.com>
-Date: Mon, 22 Sep 2025 12:42:32 +0200
+	s=arc-20240116; t=1758550643; c=relaxed/simple;
+	bh=fWzzdjlL6Qeihn+o/itxjEqN74qvQQO38r2QqurBj94=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QSiadhx5UzgW413bh99l61BnhtA1lgaiN/hdxMRiCsCA4lXJeY7j3LpW/Prwq44nFnyt0YVWdUkfu8oHQFqlQE6b4Qi2PBuZ5YQGgRqKfDeCwhL1IsIbZBwZxmm0oCcRgy6wcxYbWRIEnToPIyQXTGt8ChR+wUbt2OcQdWGudRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FJtRL/ii; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-36a6a3974fdso14311131fa.0
+        for <dmaengine@vger.kernel.org>; Mon, 22 Sep 2025 07:17:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1758550638; x=1759155438; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D42mDx7XES4dJT5DCpqob2SIIqhWq10lpNC2IIru3f8=;
+        b=FJtRL/iilefnLtGJ8RHt8JgsdkR9Bwv5jp5h9u6hOudyZ6LPBr9JRFkLYvaXS5n/Pj
+         3eN6Slc2BXlzCDaaPKfYUf5kPD8EA8rodgkufNy8SWMmZi14ttFzIAHz7CnvDpQbeG9P
+         CltohY2KfFtz68kLonVt6XNO6gjd8lrIw9B9vlGk4wwxZvnWInWWjtBaC40wPJK9CDOh
+         QnNLP1EwDbHlXAfEEI8M6895VghrF9762JOwmVEvQqjx+nH9TOnut8S28f/AwfvZjytS
+         2Wn1dHe5v0Lq10jRdpBiKL4t3iN1tecmmm8LUqjTucWDL/g9rbqyOm3rXyuCvHdO41fa
+         xh2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758550638; x=1759155438;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D42mDx7XES4dJT5DCpqob2SIIqhWq10lpNC2IIru3f8=;
+        b=QIAtU8QSRL3O6fGXiQE8Ig87PVU/ZHk/LAVPDh8iw08p+EJ3erVlcbm+kXrfJGZuxn
+         otq5QfQpVZW6GPcRIktjHna1FAnTx+gpsUXAWs2guKb9BGrr6E6bUXET4lFeQVv2Ww+K
+         2A9arW63/OOAcp18yAGjPi97xoF4e0V3qpRKJr4N+zjCx6UB6KUKuovM/7UlZ4PBX4j0
+         x8oOnP2/SEBeVCWyKfV7CGzDHt2iDA/gbR1SrkrQBaQGfnM4mz9H9GDtaPvmYexDw9q/
+         KH4BtfTv0cSMm2HvT3FYLxxJ7BnT3idWMBJY3MidMN7CQcZ0RE+cQ/zFpolb99Jf9yMr
+         aI6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUcY9XAcaxhu7xURn/XRjfuULLSseBozYhYGdtYYJTt1VmQ/Ci08OrYKKmf/tYadjgoBxoN8fBrgVs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx28LOZx2OlbXJ1OuCRa4fXrVgdSUDzBkcEkYw4CoqpEcw4Meau
+	fsv1MW7oXIT01AsqFCGU8qBTPU12kW1DW/zskwOPcvWx6XkTjbMIpQR/oofHs7cmspsV956FYDP
+	X0oRDqV2581Jhk/EdgCp9idICq4CcB8TA9p9+vINi0g==
+X-Gm-Gg: ASbGncvniz8swWemkEM04B8hm4Co72UfGCn4vNJWlQDClJi82rmFCJ5VSVytExRhATt
+	+KwMeEAoMX7I24PNqVMYyPglx94MdaaZPbIyoNU1sDAuBRhX48/FyXvwfs9AQc80Fd+C5TINadO
+	CtFC324EE2SUk81oS3QkzR2+NU1EolXXh6awrWeZ6neo9QhCvRg2iyGSUlQGPeKynrQiRxGVP6o
+	sA0I65FqipsfuRkOM7yB0+FJHnwpCjuY7gL1Q==
+X-Google-Smtp-Source: AGHT+IGS2AjVg06y9Gl4ZoVygRe0txj+WZLEO+s0iRtEWqABbE+tNtV+p0mvb++GTiupjPDEskTHy6Yf/wVmcolsOo4=
+X-Received: by 2002:a2e:be07:0:b0:36a:97e5:c4a5 with SMTP id
+ 38308e7fff4ca-36a97e5c8d3mr17177811fa.39.1758550638057; Mon, 22 Sep 2025
+ 07:17:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dmaengine: mediatek: mtk-uart-apdma: support more
- than 33 bits for DMA bitmask
-To: wctrl@proton.me, Sean Wang <sean.wang@mediatek.com>,
- Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Long Cheng <long.cheng@mediatek.com>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250921-uart-apdma-v1-0-107543c7102c@proton.me>
- <20250921-uart-apdma-v1-2-107543c7102c@proton.me>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250921-uart-apdma-v1-2-107543c7102c@proton.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org>
+In-Reply-To: <20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 22 Sep 2025 16:17:05 +0200
+X-Gm-Features: AS18NWBBtPPpfa65LcAbGVqvkVRIVUyroOGhaWLkgkmXpHaSdWCO_RUkKb2djeo
+Message-ID: <CAMRc=Mc4hO1LDumxAfkB1W6miTJXR1NUVAKBVarkwiF2yGvSLA@mail.gmail.com>
+Subject: Re: [PATCH 00/10] RDA8810PL SD/MMC support
+To: dang.huynh@mainlining.org
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-unisoc@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Il 21/09/25 13:03, Max Shevchenko via B4 Relay ha scritto:
-> From: Max Shevchenko <wctrl@proton.me>
-> 
-> Drop mediatek,dma-33bits property and introduce a platform data with
-> field representing DMA bitmask.
-> 
-> The reference SoCs were taken from the downstream kernel (6.6) for
-> the MT6991 SoC.
-> 
+On Thu, Sep 18, 2025 at 8:49=E2=80=AFPM Dang Huynh via B4 Relay
+<devnull+dang.huynh.mainlining.org@kernel.org> wrote:
+>
+> This patch series aims to add SDMMC driver and various drivers required
+> for SDMMC controller to function.
+>
+> This also fixed a bug where all the GPIO switched from INPUT to OUTPUT
+> after the GPIO driver probed or by reading the GPIO debugfs.
+>
+> This patch series is a split from [1] to ease the maintainers.
+>
 
-That's a good idea - but it doesn't work like that.
+This is still targeting at least 4 subsystems and isn't making the
+merging any easier. Are there any build-time dependencies here? If
+not, then split it further into small chunks targeting individual
+subsystems and the relevant ARM SoC tree.
 
-The VFF_4G_SUPPORT register really is called {RX,TX}_VFF_ADDR2 - and on all of
-the newer SoCs that support more than 33 bits, this register holds the upper
-X bits of the TX/RX addr, where X is (dma_bits - 32) meaning that, for example,
-for MT6985 X=(36-32) -> X=4.
+Bartosz
 
-The downstream driver does have a reference implementation for this - and there
-is no simpler way around it: you either implement it all, or you don't.
-
-Simply put: with your code, you're not supporting more than 33 bits, because even
-though you're setting the dma mask, you're never correctly using the hardware (as
-in, you're never programming the additional registers to make use of that).
-
-
-> Signed-off-by: Max Shevchenko <wctrl@proton.me>
+> Tested on Orange Pi 2G-IOT using a Buildroot environment.
+>
+> [1]: https://lore.kernel.org/all/20250917-rda8810pl-drivers-v1-0-9ca9184c=
+a977@mainlining.org/
+>
+> Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
 > ---
->   drivers/dma/mediatek/mtk-uart-apdma.c | 47 +++++++++++++++++++++++++----------
->   1 file changed, 34 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/dma/mediatek/mtk-uart-apdma.c b/drivers/dma/mediatek/mtk-uart-apdma.c
-> index 08e15177427b94246951d38a2a1d76875c1e452e..68dd3a4ee0d88fd508870a5de24ae67505023495 100644
-> --- a/drivers/dma/mediatek/mtk-uart-apdma.c
-> +++ b/drivers/dma/mediatek/mtk-uart-apdma.c
-> @@ -42,6 +42,7 @@
->   #define VFF_EN_CLR_B		0
->   #define VFF_INT_EN_CLR_B	0
->   #define VFF_4G_SUPPORT_CLR_B	0
-> +#define VFF_ORI_ADDR_BITS_NUM	32
->   
->   /*
->    * interrupt trigger level for tx
-> @@ -74,10 +75,14 @@
->   #define VFF_DEBUG_STATUS	0x50
->   #define VFF_4G_SUPPORT		0x54
->   
-> +struct mtk_uart_apdma_data {
-> +	unsigned int dma_bits;
-> +};
-> +
->   struct mtk_uart_apdmadev {
->   	struct dma_device ddev;
->   	struct clk *clk;
-> -	bool support_33bits;
-> +	unsigned int support_bits;
-
-You don't really need to carry support_bits... there's no real usage of that
-information across the code, if not at probe time.
-
-bool support_extended_addr; /* rename to your liking */
-
->   	unsigned int dma_requests;
->   };
->   
-> @@ -148,7 +153,7 @@ static void mtk_uart_apdma_start_tx(struct mtk_chan *c)
->   		mtk_uart_apdma_write(c, VFF_WPT, 0);
->   		mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_TX_INT_CLR_B);
->   
-> -		if (mtkd->support_33bits)
-> +		if (mtkd->support_bits > VFF_ORI_ADDR_BITS_NUM)
-
-if (mtkd->support_extended_addr)
-	mtk_uart_apdma_write(c, VFF_4G_SUPPORT, upper_32_bits(d->addr);
-
-... do the same for RX and you should be 99.9% done :-)
-
-
-
->   			mtk_uart_apdma_write(c, VFF_4G_SUPPORT, VFF_4G_EN_B);
->   	}
->   
-> @@ -191,7 +196,7 @@ static void mtk_uart_apdma_start_rx(struct mtk_chan *c)
->   		mtk_uart_apdma_write(c, VFF_RPT, 0);
->   		mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_RX_INT_CLR_B);
->   
-> -		if (mtkd->support_33bits)
-> +		if (mtkd->support_bits > VFF_ORI_ADDR_BITS_NUM)
->   			mtk_uart_apdma_write(c, VFF_4G_SUPPORT, VFF_4G_EN_B);
->   	}
->   
-> @@ -297,7 +302,7 @@ static int mtk_uart_apdma_alloc_chan_resources(struct dma_chan *chan)
->   		goto err_pm;
->   	}
->   
-> -	if (mtkd->support_33bits)
-> +	if (mtkd->support_bits > VFF_ORI_ADDR_BITS_NUM)
->   		mtk_uart_apdma_write(c, VFF_4G_SUPPORT, VFF_4G_SUPPORT_CLR_B);
->   
->   err_pm:
-> @@ -467,8 +472,27 @@ static void mtk_uart_apdma_free(struct mtk_uart_apdmadev *mtkd)
->   	}
->   }
->   
-> +static const struct mtk_uart_apdma_data mt6577_data = {
-> +	.dma_bits = 32
-> +};
-> +
-> +static const struct mtk_uart_apdma_data mt6795_data = {
-> +	.dma_bits = 33
-> +};
-> +
-> +static const struct mtk_uart_apdma_data mt6779_data = {
-> +	.dma_bits = 34
-> +};
-> +
-> +static const struct mtk_uart_apdma_data mt6985_data = {
-> +	.dma_bits = 35
-> +};
-> +
->   static const struct of_device_id mtk_uart_apdma_match[] = {
-> -	{ .compatible = "mediatek,mt6577-uart-dma", },
-> +	{ .compatible = "mediatek,mt6577-uart-dma", .data = &mt6577_data },
-
-What about doing, instead...
-
-{ .compatible = "mediatek,mt6577-uart-dma", .data = (void *)32 },
-
-> +	{ .compatible = "mediatek,mt6795-uart-dma", .data = &mt6795_data },
-> +	{ .compatible = "mediatek,mt6779-uart-dma", .data = &mt6779_data },
-> +	{ .compatible = "mediatek,mt6985-uart-dma", .data = &mt6985_data },
->   	{ /* sentinel */ },
->   };
->   MODULE_DEVICE_TABLE(of, mtk_uart_apdma_match);
-> @@ -477,7 +501,8 @@ static int mtk_uart_apdma_probe(struct platform_device *pdev)
->   {
->   	struct device_node *np = pdev->dev.of_node;
->   	struct mtk_uart_apdmadev *mtkd;
-> -	int bit_mask = 32, rc;
-> +	const struct mtk_uart_apdma_data *data;
-> +	int rc;
->   	struct mtk_chan *c;
->   	unsigned int i;
->   
-> @@ -492,13 +517,9 @@ static int mtk_uart_apdma_probe(struct platform_device *pdev)
->   		return rc;
->   	}
->   
-> -	if (of_property_read_bool(np, "mediatek,dma-33bits"))
-> -		mtkd->support_33bits = true;
-> -
-> -	if (mtkd->support_33bits)
-> -		bit_mask = 33;
-> -
-> -	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(bit_mask));
-> +	data = of_device_get_match_data(&pdev->dev);
-> +	mtkd->support_bits = data->dma_bits;
-
-...and there you just get that single number you need, store it locally, then you
-can do
-
-mtkd->support_extended_addr = apdma_num_bits > 32;
-
-> +	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(data->dma_bits));
->   	if (rc)
->   		return rc;
->   
-
-
-Cheers,
-Angelo
-
-
+> Dang Huynh (10):
+>       dt-bindings: gpio: rda: Make interrupts optional
+>       dt-bindings: clock: Add RDA Micro RDA8810PL clock/reset controller
+>       dt-bindings: dma: Add RDA IFC DMA
+>       dt-bindings: mmc: Add RDA SDMMC controller
+>       gpio: rda: Make IRQ optional
+>       gpio: rda: Make direction register unreadable
+>       clk: Add Clock and Reset Driver for RDA Micro RDA8810PL SoC
+>       dmaengine: Add RDA IFC driver
+>       mmc: host: Add RDA Micro SD/MMC driver
+>       ARM: dts: unisoc: rda8810pl: Add SDMMC controllers
+>
+>  .../bindings/clock/rda,8810pl-apsyscon.yaml        |  43 ++
+>  Documentation/devicetree/bindings/dma/rda,ifc.yaml |  45 ++
+>  .../devicetree/bindings/gpio/gpio-rda.yaml         |   3 -
+>  Documentation/devicetree/bindings/mmc/rda,mmc.yaml |  92 +++
+>  MAINTAINERS                                        |  18 +
+>  .../boot/dts/unisoc/rda8810pl-orangepi-2g-iot.dts  |  20 +
+>  .../arm/boot/dts/unisoc/rda8810pl-orangepi-i96.dts |  20 +
+>  arch/arm/boot/dts/unisoc/rda8810pl.dtsi            |  47 +-
+>  drivers/clk/Kconfig                                |   1 +
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/rda/Kconfig                            |  14 +
+>  drivers/clk/rda/Makefile                           |   2 +
+>  drivers/clk/rda/clk-rda8810.c                      | 769 +++++++++++++++=
+++++
+>  drivers/dma/Kconfig                                |  10 +
+>  drivers/dma/Makefile                               |   1 +
+>  drivers/dma/rda-ifc.c                              | 450 +++++++++++
+>  drivers/gpio/gpio-rda.c                            |   4 +-
+>  drivers/mmc/host/Kconfig                           |  12 +
+>  drivers/mmc/host/Makefile                          |   1 +
+>  drivers/mmc/host/rda-mmc.c                         | 853 +++++++++++++++=
+++++++
+>  include/dt-bindings/clock/rda,8810pl-apclk.h       |  70 ++
+>  include/dt-bindings/dma/rda-ifc.h                  |  28 +
+>  22 files changed, 2495 insertions(+), 9 deletions(-)
+> ---
+> base-commit: ae2d20002576d2893ecaff25db3d7ef9190ac0b6
+> change-id: 20250918-rda8810pl-mmc-3f33b83c313d
+>
+> Best regards,
+> --
+> Dang Huynh <dang.huynh@mainlining.org>
+>
+>
 

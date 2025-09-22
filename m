@@ -1,47 +1,47 @@
-Return-Path: <dmaengine+bounces-6682-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6683-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BC5FB928C4
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Sep 2025 20:07:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 011A9B928DE
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Sep 2025 20:08:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6BFB9189976A
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Sep 2025 18:07:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B5ED2440C44
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Sep 2025 18:08:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A359C317702;
-	Mon, 22 Sep 2025 18:07:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BE3331771E;
+	Mon, 22 Sep 2025 18:08:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkkCzNfQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpGqUY9t"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6619F2848AC;
-	Mon, 22 Sep 2025 18:07:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BED3316910;
+	Mon, 22 Sep 2025 18:08:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758564447; cv=none; b=oTaEfDhRxybahYk/Mzl1qoYOlPiM33zGyuAvU59VITSmkW3iyFpas44wPGPAdwOFNGLHDDttQl7vFEngDtJI7HRCszB8BzRBt0Q587c9CMnxcIxviejDAqE4IaaYN/1ky6Jd0Vvxal6LmhnMmLgju9yjj1SfDH73qJwRWftP5qI=
+	t=1758564535; cv=none; b=BFsy/cHilADKPeELA87xZBSH1vvmGnxEbHyZ1PWROjEWs9g7VLGRym9qfJDM1eY7fiXb4rRFMcgAbRnYoZKYYVPazgTuqj96cgy76ZEHvtlCn8t/yVA3E2g1wZLUUPG/F7M8SIVtS5f8cgiei1PDUnpElUN8k1kXlst8WiVagg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758564447; c=relaxed/simple;
-	bh=uvFzp2Q14YjjdsHkQgT7CFuazmFvDLyKCqHiCKbWrcE=;
+	s=arc-20240116; t=1758564535; c=relaxed/simple;
+	bh=ZpBXykY5GNJ3iTwM8KdwNbZCQ0CzTVwUOQGlFr5Uj8A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j3eWK953FwzgB48BnTMMcoF+2fMk7+zDdZdcc/RJolnZ9/rVwCSegmc1ujcz+v7Hh5qcGJzWCvmI5Y6g4GHCrDhaVYqeQQ7lAw3H40m8LhcrYRwL6QFKPax5Eq4pnsSv/fTCTzoAHikCa66I0N2kOtZybOlD4JZ+3zkP9+GANDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkkCzNfQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD3BC4CEF0;
-	Mon, 22 Sep 2025 18:07:24 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=F5/ueVxNMpkNU0HvTmgHd46WpmZ7+1iBpO0IkzzdJ6S0/YkKK4RjRlH1lWshRt7ePLuOGsMxMOC4QlCby+5xTDMJvVs3VIn/lbaJb3GilI9HnA+ViegJgHhelMJCQZ9fsKumiIxFeLdPZdQsvGonSmWOE6fZyVbpZ2L6sToV4O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpGqUY9t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C2CBC4CEF0;
+	Mon, 22 Sep 2025 18:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758564444;
-	bh=uvFzp2Q14YjjdsHkQgT7CFuazmFvDLyKCqHiCKbWrcE=;
+	s=k20201202; t=1758564534;
+	bh=ZpBXykY5GNJ3iTwM8KdwNbZCQ0CzTVwUOQGlFr5Uj8A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AkkCzNfQlFnNHoT0PW4A22QavOcXGiyeLD9hFyfqgJ8lFo6UfGrKnHUJylulMERvX
-	 UodvRMGEnuH64H6MsefEB+0TkuJtBBkEr10LNkA9OlO5PQSlJkkKnryRJcKY6LLI8O
-	 8xz3KqsD7DGUuOuI5WzfpLn6ZcLlVuHQA5D/dLYV5e09f2scM3b6Ba4YEjzfckzJBK
-	 /Zn5l3LqyWkTUEV2YnZxSMpf7NOJPhfD/DQ0DAaFxYYWJLA+i0F6fKw/ZGF5AMrvjA
-	 0s0HF+1CYjXZsHOHE2J6PyCg10ax0ZWXIlfoWmVlkFf95TMD/IByeWE6jWwn/TINMi
-	 g0wad6B7rqGCQ==
-Date: Mon, 22 Sep 2025 13:07:23 -0500
+	b=NpGqUY9tAbHoS6O0fQsM5SICqWep8YqbeQ/cpjWS5o+s1i5vw/RlUISCLYPFuN1ZT
+	 31S4Wsp+nkJ9R8+PHa4jgkgdwv6xWTMHF291bFtTiXnrJIs1zx42Gng9V9+4YIhskr
+	 SYD9a4e6G+O2GAoMwFkw/NU7ge/Mw13apT+h1VWATEhMLfA19CR67v5UoNTftM00FP
+	 Jpebm4E8zknwP6qq7N96XHpDDwbSUYdOtbwKH0Z3NTG/53V6uxBO2w+mRBAGhteQwO
+	 bDTVYH3M1Rb1vh2Fa55Fev3q2xUjxuDgQuXuRAyj2ThNXyZ7diOTkQZqsp56tQgljJ
+	 4X66QCUQ8sxRw==
+Date: Mon, 22 Sep 2025 13:08:51 -0500
 From: Rob Herring <robh@kernel.org>
 To: Dang Huynh <dang.huynh@mainlining.org>
 Cc: Manivannan Sadhasivam <mani@kernel.org>,
@@ -60,7 +60,7 @@ Cc: Manivannan Sadhasivam <mani@kernel.org>,
 	linux-clk@vger.kernel.org, dmaengine@vger.kernel.org,
 	linux-mmc@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH 03/10] dt-bindings: dma: Add RDA IFC DMA
-Message-ID: <20250922180723.GA547468-robh@kernel.org>
+Message-ID: <20250922180851.GB547468-robh@kernel.org>
 References: <20250919-rda8810pl-mmc-v1-0-d4f08a05ba4d@mainlining.org>
  <20250919-rda8810pl-mmc-v1-3-d4f08a05ba4d@mainlining.org>
 Precedence: bulk
@@ -101,9 +101,6 @@ On Fri, Sep 19, 2025 at 01:48:43AM +0700, Dang Huynh wrote:
 > +  - Dang Huynh <dang.huynh@mainlining.org>
 > +
 > +description: |
-
-Don't need '|'.
-
 > +  RDA IFC is a DMA controller, it only supports scatter/gather lists.
 > +
 > +allOf:
@@ -115,63 +112,9 @@ Don't need '|'.
 > +      - enum:
 > +          - rda,8810pl-ifc
 > +      - const: rda,ifc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#dma-cells":
-> +    const: 1
-> +    description:
-> +      The cell corresponding to DMA request ID
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    dma-controller@f0000 {
-> +      compatible = "rda,8810pl-ifc", "rda,ifc";
-> +      reg = <0xf0000 0x1000>;
-> +      #dma-cells = <1>;
-> +    };
-> diff --git a/include/dt-bindings/dma/rda-ifc.h b/include/dt-bindings/dma/rda-ifc.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..af4bae0542aa71690351e2406d0945a61eff72c1
-> --- /dev/null
-> +++ b/include/dt-bindings/dma/rda-ifc.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause */
-> +
-> +#ifndef __DT_BINDINGS_DMA_RDA_IFC_H__
-> +#define __DT_BINDINGS_DMA_RDA_IFC_H__
-> +
-> +#define IFC_UART1_TX		0
-> +#define IFC_UART1_RX		1
-> +#define IFC_UART2_TX		2
-> +#define IFC_UART2_RX		3
-> +#define IFC_SPI1_TX		4
-> +#define IFC_SPI1_RX		5
-> +#define IFC_SPI2_TX		6
-> +#define IFC_SPI2_RX		7
-> +#define IFC_SPI3_TX		8
-> +#define IFC_SPI3_RX		9
-> +#define IFC_SDMMC1_TX		10
-> +#define IFC_SDMMC1_RX		11
-> +#define IFC_SDMMC2_TX		12
-> +#define IFC_SDMMC2_RX		13
-> +#define IFC_SDMMC3_TX		14
-> +#define IFC_SDMMC3_RX		15
-> +#define IFC_NFSC_TX		16
-> +#define IFC_NFSC_RX		17
-> +#define IFC_UART3_TX		18
-> +#define IFC_UART3_RX		19
-> +#define IFC_NO_REQUEST		20
 
-These numbers are defined by the h/w (like IRQ numbers)? If so, drop the 
-header. We don't do headers for h/w numbers.
+Also, drop. Generic compatibles are rarely useful. If the next chip has 
+the same block, then 'rda,8810pl-ifc' can be the fallback compatible.
 
 Rob
 

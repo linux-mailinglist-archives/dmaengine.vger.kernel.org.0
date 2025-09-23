@@ -1,131 +1,153 @@
-Return-Path: <dmaengine+bounces-6694-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6698-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33871B94F9A
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Sep 2025 10:23:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E993B95CEF
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Sep 2025 14:18:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B50D77A96F6
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Sep 2025 08:21:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 040DC163C60
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Sep 2025 12:18:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E82FE3195F5;
-	Tue, 23 Sep 2025 08:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48825313D48;
+	Tue, 23 Sep 2025 12:18:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ezFa9o7j"
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="OLUTESS1"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-106104.protonmail.ch (mail-106104.protonmail.ch [79.135.106.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E082E11D2
-	for <dmaengine@vger.kernel.org>; Tue, 23 Sep 2025 08:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFF119258E
+	for <dmaengine@vger.kernel.org>; Tue, 23 Sep 2025 12:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758615788; cv=none; b=NwJaXWe72siS5/LwXbMd38KE4aq++DZjgVmboTnRRZwblDjpdWuM7CWkfGMh33DYxFLASzFlUF5fXfheGmIVQgqYyfYGW3m5fdNHLw3bVwutJe8nEyh8UC4Zi2N0Mhgb4GOscdUBHKyzExtbmGlD46eqlcm5t3VX/rhxQsHsbno=
+	t=1758629890; cv=none; b=Zoh4KLBLO8QgANXEE9osF13Mmc8oaUo5XBQHirHyg4jOZYrlDZQzYyUt+19xu0/FA4tyTAuD31jZ4zE2GBqBh9sUE43V0onOK5n54XFheOqSEVMnOw1Y3WPqPygJJ4ZEfKc1JNBZrt108nudwfN7tZKaVQaUSdf2LNS7Ry01RTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758615788; c=relaxed/simple;
-	bh=Ojg302LjjrjyeKM57SZiT2oHotJm5xiKOP4QkJMIGWg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BeUzu0s2Ktt3H0v/GZq8KP0bp/HcL0XOgyjrVct4y8h/lq1JEF36H4MxI0+q4px5YEILOWAkH3QkqjdPrZNAHaecIpneEqXbwBRX0MkHErw3LsfEKz0Vs5VHFeCm32zKZ6aVAnE57Kk/7n7MUKzQroKtHjMcv3JiLPgpefaLoo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ezFa9o7j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9D010C19422;
-	Tue, 23 Sep 2025 08:23:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758615788;
-	bh=Ojg302LjjrjyeKM57SZiT2oHotJm5xiKOP4QkJMIGWg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ezFa9o7jdbgAgiJlzuT+z6ZTEs9vYDjVX2rcxslvSieQpBMwxNtq9gWqLDVipAbqa
-	 ssoPSh3VfWuWJiZUArvJzVc8eYRYSlQg0XYfjModKAeKUK9a4Wv2QuFZMvqq8ijPTg
-	 uE+0cpUlECY+jm5KPrUOYJPsAo9yh/YIaQAS0oGf/MBkORKkjR6z3F7ByO33JeSqHV
-	 yHXG/+HwFp3798d8YgCZcElgRdjGTHMYE19EA7JPJEyQOBCu0qepqJCfnj+guKoONz
-	 efN0VkRHMH/gw38/41gqe66wJmYq4+RqtKFg/imuW4n0mj10px6wLdDrICUM/65wQd
-	 p7H+k3sFh4h/Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A0CCAC5B1;
-	Tue, 23 Sep 2025 08:23:08 +0000 (UTC)
-From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Tue, 23 Sep 2025 09:23:38 +0100
-Subject: [PATCH RESEND 4/4] dma: dma-axi-dmac: simplify axi_dmac_parse_dt()
+	s=arc-20240116; t=1758629890; c=relaxed/simple;
+	bh=fgbwTeN4mBqznS0b5v+G7eAnKEwgbBFcZpWyDDDQBEA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GbZiBOKhw37qlaYWEoNlmIBoBMaQ+QX9SyIym3/SzR3smOidTPQgqb0gbRgz8NprUEpxFMk+TsRzKJwHhZKVzWzTD8slVIVfUYlEZdB9ZsgvAU0dmT5id8Y5mfm965p3A4EIqHQstosgjYWnEDofqYThE87Igm0xHGGq7K2qfU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=OLUTESS1; arc=none smtp.client-ip=79.135.106.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1758629879; x=1758889079;
+	bh=fgbwTeN4mBqznS0b5v+G7eAnKEwgbBFcZpWyDDDQBEA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=OLUTESS1EIxO5wu69Pkg4FbXF0V50+VJj0phn3kui/Cp1rvKW3llyCRylXo3fQsuf
+	 zcYc+UTZovXCAxdJpPBfMYqjK6oRL/v8DVbbL03AfIBK7vjyytYzaF0MNyMEe9Ghp7
+	 MfjMIVJCsIH/SHVOFrttuZINLZ/GoJPzZfq2qAws+3zu4MVrhN+uWTV8gB0ELCMTTT
+	 V7kOD+bnYMP1nqb1xkgRtgWIWhAbT0OoY3JBZFps+1dv4vOhJcWi7/yVoDPJuZQijT
+	 hIE4grV89D6Wk7Vm/AY1E4hKhKD2bVS9muXjrdVq6k/AjLlMCgs7G9LieiJ0Fm27Z1
+	 27E6xIiNet1ug==
+Date: Tue, 23 Sep 2025 12:17:45 +0000
+To: Rob Herring <robh@kernel.org>
+From: Max Shevchenko <wctrl@proton.me>
+Cc: "sean.wang@mediatek.com" <sean.wang@mediatek.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>, "long.cheng@mediatek.com" <long.cheng@mediatek.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: dma: mediatek,uart-dma: drop mediatek,dma-33bits property
+Message-ID: <OqrpnP1RyPRyuNfMPA0kXp64iZ1Q5a0ZDMKXz4xmzcg9U7s9SvEvuo1jmiNAwTCgCibt0r1EafrFMwj-ML0ByUC1nsh5ZVbsY1pfOF7pzq8=@proton.me>
+In-Reply-To: <20250922204756.GA1294776-robh@kernel.org>
+References: <20250921-uart-apdma-v1-0-107543c7102c@proton.me> <20250921-uart-apdma-v1-1-107543c7102c@proton.me> <20250922204756.GA1294776-robh@kernel.org>
+Feedback-ID: 131238559:user:proton
+X-Pm-Message-ID: ea64799d345eab79b1e8b6edd13a26df9a410340
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250923-b4-dev-axi-dmac-fixes-v1-4-5896dcbbd909@analog.com>
-References: <20250923-b4-dev-axi-dmac-fixes-v1-0-5896dcbbd909@analog.com>
-In-Reply-To: <20250923-b4-dev-axi-dmac-fixes-v1-0-5896dcbbd909@analog.com>
-To: dmaengine@vger.kernel.org
-Cc: Vinod Koul <vkoul@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
- Paul Cercueil <paul@crapouillou.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758615815; l=1551;
- i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=hayjasLpAzSq1oaB+SvL2m79XKZRO2+rkHfQN8vJhbc=;
- b=4KiTy5skybaGEWX43S32z18MNp+wOpIqF8trWBBVvNISWPM/6Wmn9Ss5A905dkNh8NwUHkBq3
- vbfn/tfC2DODkzmEwIBLejLwtpMSN36gQ8cbhRlzMVqCaFkM29dIJ30
-X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
- pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
-X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
- auth_id=100
-X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-Reply-To: nuno.sa@analog.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Nuno Sá <nuno.sa@analog.com>
+On Monday, September 22nd, 2025 at 11:47 PM, Rob Herring <robh@kernel.org> =
+wrote:
 
-Simplify axi_dmac_parse_dt() by using the cleanup device_node class for
-automatically releasing the of_node reference when going out of scope.
-
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
----
- drivers/dma/dma-axi-dmac.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 15c569449a28493bd00e9b320ed83aa2a13144e2..045e9b9a90df562073c078835584a23f26d47350 100644
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/adi-axi-common.h>
- #include <linux/bitfield.h>
-+#include <linux/cleanup.h>
- #include <linux/clk.h>
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
-@@ -927,22 +928,18 @@ static int axi_dmac_parse_chan_dt(struct device_node *of_chan,
- 
- static int axi_dmac_parse_dt(struct device *dev, struct axi_dmac *dmac)
- {
--	struct device_node *of_channels, *of_chan;
- 	int ret;
- 
--	of_channels = of_get_child_by_name(dev->of_node, "adi,channels");
-+	struct device_node *of_channels __free(device_node) = of_get_child_by_name(dev->of_node,
-+										   "adi,channels");
- 	if (of_channels == NULL)
- 		return -ENODEV;
- 
--	for_each_child_of_node(of_channels, of_chan) {
-+	for_each_child_of_node_scoped(of_channels, of_chan) {
- 		ret = axi_dmac_parse_chan_dt(of_chan, &dmac->chan);
--		if (ret) {
--			of_node_put(of_chan);
--			of_node_put(of_channels);
-+		if (ret)
- 			return -EINVAL;
--		}
- 	}
--	of_node_put(of_channels);
- 
- 	return 0;
- }
-
--- 
-2.51.0
+> On Sun, Sep 21, 2025 at 02:03:40PM +0300, Max Shevchenko wrote:
+>=20
+> > Many newer SoCs support more than 33 bits for DMA.
+> > Drop the property in order to switch to the platform data.
+> >=20
+> > The reference SoCs were taken from the downstream kernel (6.6) for
+> > the MT6991 SoC.
+> >=20
+> > Signed-off-by: Max Shevchenko wctrl@proton.me
+> > ---
+> > Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml | 11 ++++-=
+------
+> > 1 file changed, 4 insertions(+), 7 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/dma/mediatek,uart-dma.ya=
+ml b/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
+> > index dab468a88942d694525aa391f695c44d192f0c42..9dfdfe81af7edbe3540e4b7=
+57547a5d5e6ae810c 100644
+> > --- a/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
+> > +++ b/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
+> > @@ -22,12 +22,14 @@ properties:
+> > - items:
+> > - enum:
+> > - mediatek,mt2712-uart-dma
+> > - - mediatek,mt6795-uart-dma
+> > - mediatek,mt8365-uart-dma
+> > - mediatek,mt8516-uart-dma
+> > - const: mediatek,mt6577-uart-dma
+> > - enum:
+> > - - mediatek,mt6577-uart-dma
+> > + - mediatek,mt6577-uart-dma # 32 bits
+> > + - mediatek,mt6795-uart-dma # 33 bits
+>=20
+>=20
+> Unless all existing s/w supported mediatek,mt6795-uart-dma, you just
+> broke this platform which was relying on the fallback compatible.
+>=20
 
 
+As of v6.17-rc6 and linux-next 20250922, the only user of the
+mediatek,mt6795-uart-dma compatible is the MT6795 itself, which also
+uses the mediatek,dma-33bits property. The second patch makes driver
+to set the DMA bitmask based on the compatible.
+Therefore I don't think it breaks the platform.
+
+> > + - mediatek,mt6779-uart-dma # 34 bits
+> > + - mediatek,mt6985-uart-dma # 35 bits
+> >=20
+> > reg:
+> > minItems: 1
+> > @@ -56,10 +58,6 @@ properties:
+> > Number of virtual channels of the UART APDMA controller
+> > maximum: 16
+> >=20
+> > - mediatek,dma-33bits:
+> > - type: boolean
+> > - description: Enable 33-bits UART APDMA support
+>=20
+>=20
+> If this is in use, you need to mark it 'deprecated' instead.
+>=20
+
+
+The same question here, third patch removes this property from its
+sole user. Does it actually need to be marked as deprecated and
+not deleted?
+
+> > -
+> > required:
+> > - compatible
+> > - reg
+> > @@ -116,7 +114,6 @@ examples:
+> > dma-requests =3D <12>;
+> > clocks =3D <&pericfg CLK_PERI_AP_DMA>;
+> > clock-names =3D "apdma";
+> > - mediatek,dma-33bits;
+> > #dma-cells =3D <1>;
+> > };
+> > };
+> >=20
+> > --
+> > 2.51.0
+
+Sincerely,
+Max
 

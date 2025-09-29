@@ -1,83 +1,83 @@
-Return-Path: <dmaengine+bounces-6724-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6726-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BBA4BA8F30
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Sep 2025 13:02:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64D2FBA8F47
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Sep 2025 13:02:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C50A3B7FC7
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Sep 2025 11:02:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9CA717C694
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Sep 2025 11:02:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA2BB2FF64B;
-	Mon, 29 Sep 2025 11:02:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C77A92FFF9C;
+	Mon, 29 Sep 2025 11:02:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OpLgZ2Xs"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YPYgSgFB"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011066.outbound.protection.outlook.com [40.93.194.66])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011049.outbound.protection.outlook.com [40.107.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BA72FF167;
-	Mon, 29 Sep 2025 11:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9E52FFF80;
+	Mon, 29 Sep 2025 11:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759143740; cv=fail; b=dvGCsDy17bQSE8EUaL23piBzepvV8TZp0Pm58jzZTeGCadpq3xNOhdgFyAOazadtfWzAV/awUkwd5sdiqJuMUWLNStzKNvNOhdmO4UcLsu8jzCg+LEpcPatvN0p1/638xgEFfRyndSazmszQaMH2Xwtc5CAvJZbTQ/dNr1o+y1Y=
+	t=1759143748; cv=fail; b=tb0uJvS9gCxsFwgrJMy0JKTm/NLQp2WX/s9QIuc5NtoIIfqVcHsf28585EeRmY90FhS7MCCPqf50lRuuPM6Jry6r+BBpzMYKq+ZRvj01NNAlZO4vwOxPzuehpNx0EpC0U3ml7R003Ut8fOVrUYwDzAigNFA5SNu4FsZw1bCEEmo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759143740; c=relaxed/simple;
-	bh=Dd/YOFuDW3KdjOgQowX4Ci9xx/kV9M3FDNIyZebZ1oY=;
+	s=arc-20240116; t=1759143748; c=relaxed/simple;
+	bh=+78eOdCTp7uqfv3xbb6VySS0nTYP7PIwRB6+tHGsU58=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V9PORkkCUlYVLs+MAT0LjKuEzjaRqC8NTvGo5YL0jCCUZubja0qNE/Ycr32lD0CuRQCV//cqTprmIVtPM9Xk8EiMVKeCrluGBRxw/nmeasBHNLI6nQxS+n1jrPRAPSChHxXbV/QPqvKGaHTY30uJqg5oj0L0u/jilRnt1raSqNI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OpLgZ2Xs; arc=fail smtp.client-ip=40.93.194.66
+	 MIME-Version:Content-Type; b=tmFDm3m/RNAF0qXTkXu7c6xpLK010BU3jwon3BW3MpjQOAMoT8+eeF1XsXEM1+H1Xh//ubATxUfMJvkqgOEacyG+jkKogyBm6rT+4mulrbpFtCGUo8X0/I1KfftbHIb7u+KI30mmUdgqCTSOwAPH4Fp+jvKflrjV438yu0obJrI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YPYgSgFB; arc=fail smtp.client-ip=40.107.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KHnSn0bpx2nJf4RPnzsLSywPNCfqThnJZjIsBheM/2QDbVK3fzDWPTa5/FJS4aKlOo9oz0B3bdRlcOC9GLk7ToLwA8uHyiSyYlfmlfgiaP8D20WYE0ihfICwV/iFb3oaPWuqAIhLhQDWdXNXwNfdCBYNFi28nx1U8uumwR2j6EHw0Nv4rTLhibJIBvPiTTZXcNGvGXdI/I+gLesqpBvR06aS1oGzxd6l9GKMk5+cj6QDgSRlP+CquErl2y6i/w2YMj8CwSJX37O7jqgebe3szm9Y7RcnL2jjO2Vhc3hyCRGt22YIAGYXYP6R0+WTuxrdvSquRIBlM+AteT0bg+VaFQ==
+ b=doxVAkkm2eaJIRwR4BWognLbrxurgoqIdbz3A1gfWbjZPzJabF7/WRDECRrX2T5sXpsi8C2cWIJecwje1c3H3y/JFEOgIIhSSqnT+sytjdIOWk5WR6VkMxjKF9kNP8XuWQJBDH6/0ur6P/C985aZrXX3eLSiq6J46vNQnl6EOlPN0emjcVheiBe+p9vUHfBZHLl/EBEGrJXJ6XgLRezNXNmO+Un7wogdJ3GtNHXT0SuajUwJe6667xzCaHu0S5QZigGI1PEo/ezG/KGPNlMaL3ylEjXV57MMY//It6FIDv3zWXi/9HtsnRwEwVcB9l7lHFEGz5G2qNJT0zbno3hXtw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tWGVPNfS9IMTd6xfqC4cyYiTStTlAu+Zk1w56inDiL0=;
- b=alSK5lv0SXz0+HMtCS9Q/6I7GPC7eo7J5wZ0fm9DX8S5Tb5ZdPGJq3vHxRPZzfyM9+Ct7ryhXkbcaiCS0kaYB9qpXVpJ3LdQipBE/lXn1Kv0XlhbE6kAksHfQPTjJSytp1vpYIN3JUHlS1iP0BycITLjj+MLjboVDgyTdpVGpnmR/p18JQAG3svo/ZLyfbc/3DvuuQOhhQvds9yG/FH03SeIZ2Q2eToHvNhDeNS+iBGX6QsIb2pJ4rpNzxLGumApIeULVQIJHPan+VKpvlOoJOuWrroEwb4Caf4csW+j/dYARUPW0tt1yb2EYkSL4H/RHsjTYgTx5OPgYwwBZRLA9Q==
+ bh=jb79vdBkOaCXJXCWGEig3ehFtAUhwOpt6CJ3ulTSq8E=;
+ b=igHMEpIlwmcJPFgNc0IyRxPkSMfQo97BaYsM2FOCznmEa73fV2Xzf4G6V4VygMICV8Fe4Ofdw5sOS5E9o8VpJDinw9PLDMVNFoxchedQysPY0gwUVkqBlTibdpraVFHuoon+LR+VjO25B98TioW2sCrmpul49pdQ3zUbg+s9bA0fBjgEGbPcXrwPDV43XTZhYqP8Esrze7OlMlWPoiMm4FwrDebyqMZsOkekG+H7UJ/4ny2UHBfICF8lxikEZTZTHghqpvqwUcn4zsvAZao7WTbb6FunepFNouuaypqAxZGq3sLn8psA4swEbjN8Z01f3NNIconsOIkUOBD7550wJg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ 216.228.118.233) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tWGVPNfS9IMTd6xfqC4cyYiTStTlAu+Zk1w56inDiL0=;
- b=OpLgZ2XsCq2CJDlLZTboZJrRXrhWwc/YmrAhSvCryzvVTcN1i1A49dZO7SIOQaO54NoHkFForiqe/YMqdoOvWmSZqnQ3tTfl7WpOYJj5LLGq/+7WH7wDs9zbpLixmb9oOe00kL0Ydsns0+YAMCvX3LShqmpMMlc+oA6DvR9aPVnwgNyi8OeMWjWbs1gshVNbwlxL6GKZBsfSWzDAjdjYCCEZ+ZyYrfIVnB4ET5Ly2sIqBS2QTxFtZouX8JJHteaa2X8BoyZfoHWOtKkumz7K/mS595RgMmG/CoMNQv5GwcURuLjoORLVuoJti0Z1ezfx6SD0pwWqr7vqFr/v9aarmQ==
-Received: from DS7PR05CA0014.namprd05.prod.outlook.com (2603:10b6:5:3b9::19)
- by SJ5PPFCD5E2E1DE.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::9a2) with
+ bh=jb79vdBkOaCXJXCWGEig3ehFtAUhwOpt6CJ3ulTSq8E=;
+ b=YPYgSgFBhLBPKYIrLaR9RQx5hmyjFclEaN95H4P3harwpIaw8MbjbNhcedbHfv57mTHwoSxeFGFrqqi3WnGSIeZbw6VSed1bthZXGiBDgAIz6+nUPyW+Uz4doyufBFqvCkQYOHan2qjLZrckPfiNkW2qh+MH+P8UEjs93LGCkgbCtv1cnXyGdCeb9d00r/Y6SnW1IyGfEAePZK5BLcY8oZAVHLSmQy4B696XLK+xXH5bMo0Av3Twm5hxWJxwwZXLZ/WGJNimzbWUPYYk2hmHgSFncn5QYqq/MM5NqmDAoQmgbCZ/wV017i4aY46+MDSYucLpGaAxbVoiQK88VHGKiA==
+Received: from MW4PR03CA0199.namprd03.prod.outlook.com (2603:10b6:303:b8::24)
+ by IA0PR12MB7721.namprd12.prod.outlook.com (2603:10b6:208:433::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.19; Mon, 29 Sep
- 2025 11:02:13 +0000
-Received: from DS3PEPF000099D4.namprd04.prod.outlook.com
- (2603:10b6:5:3b9:cafe::97) by DS7PR05CA0014.outlook.office365.com
- (2603:10b6:5:3b9::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9182.10 via Frontend Transport; Mon,
- 29 Sep 2025 11:02:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.17; Mon, 29 Sep
+ 2025 11:02:24 +0000
+Received: from CO1PEPF000044FA.namprd21.prod.outlook.com
+ (2603:10b6:303:b8:cafe::6a) by MW4PR03CA0199.outlook.office365.com
+ (2603:10b6:303:b8::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9160.17 via Frontend Transport; Mon,
+ 29 Sep 2025 11:02:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- DS3PEPF000099D4.mail.protection.outlook.com (10.167.17.5) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9160.9 via Frontend Transport; Mon, 29 Sep 2025 11:02:13 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CO1PEPF000044FA.mail.protection.outlook.com (10.167.241.200) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9203.1 via Frontend Transport; Mon, 29 Sep 2025 11:02:23 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 29 Sep
- 2025 04:02:04 -0700
+ 2025 04:02:09 -0700
 Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Mon, 29 Sep 2025 04:02:03 -0700
+ 15.2.2562.20; Mon, 29 Sep 2025 04:02:09 -0700
 Received: from sheetal.nvidia.com (10.127.8.13) by mail.nvidia.com
  (10.126.190.182) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
- Transport; Mon, 29 Sep 2025 04:01:59 -0700
+ Transport; Mon, 29 Sep 2025 04:02:05 -0700
 From: "Sheetal ." <sheetal@nvidia.com>
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, "Krzysztof
  Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "Thierry
@@ -89,9 +89,9 @@ CC: Jonathan Hunter <jonathanh@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
 	<linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-sound@vger.kernel.org>,
 	sheetal <sheetal@nvidia.com>
-Subject: [PATCH V2 2/4] dt-bindings: sound: Update ADMAIF bindings for tegra264
-Date: Mon, 29 Sep 2025 16:29:28 +0530
-Message-ID: <20250929105930.1767294-3-sheetal@nvidia.com>
+Subject: [PATCH V2 3/4] dt-bindings: interrupt-controller: arm,gic: Add tegra264-agic
+Date: Mon, 29 Sep 2025 16:29:29 +0530
+Message-ID: <20250929105930.1767294-4-sheetal@nvidia.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250929105930.1767294-1-sheetal@nvidia.com>
 References: <20250929105930.1767294-1-sheetal@nvidia.com>
@@ -106,181 +106,76 @@ Content-Type: text/plain
 X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D4:EE_|SJ5PPFCD5E2E1DE:EE_
-X-MS-Office365-Filtering-Correlation-Id: 427c25e7-1e05-4e5f-9675-08ddff47a51a
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044FA:EE_|IA0PR12MB7721:EE_
+X-MS-Office365-Filtering-Correlation-Id: c694b446-e0ba-4c28-a75f-08ddff47ab30
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|82310400026|1800799024|36860700013;
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?JCdyiP9T+n/70U6MAwGbiKZvDG1hxZ5vxejGJtmDPVlMsfweEU5rusWwsIxq?=
- =?us-ascii?Q?/vuyKM9y/XpS6OWfuiP3/Za4geAZWThPLzIgcuEwy7wDMGXXkz70rh8vQjc7?=
- =?us-ascii?Q?skXKIb7c1pNRukN1+rtmZ4EsO4lqYRhGQn2DIBOacwioHoAopPEL/S8ss17a?=
- =?us-ascii?Q?QnT1LcvuMuseM2KDOzxPQRESo0KxJMqlgU7xo9FQIlnyrc5zXsw89oGd/9LH?=
- =?us-ascii?Q?eyI/bclgAw047xHTGcbzNdRmWI6cwT8rIGfzOpWMC7sMfRGBsZdeF0xPP+ZT?=
- =?us-ascii?Q?FCMxOFcFtXsEtPdnrXVX/7P2qabz/dSyFLFTVO3ce1QsItZXIQoe29GKOkms?=
- =?us-ascii?Q?ju+Wk03c/6jDbo/FsSD6pwO4HU8PhCAkgxpR30K81rNmgYxS1OUbolTAlBY4?=
- =?us-ascii?Q?tSx5wsg34neo6wIjUfentVM6HEsso4J9p/iO7CY/4RNqL/j8Ga8zUmtTtF6z?=
- =?us-ascii?Q?Uag7jcGWmqiXkCYlrQ4v5ngFGMiaIJPVkc0hpjLRcaAcpSN1Kp/zOeiPqh3i?=
- =?us-ascii?Q?FoLmLmt6NFwxNet7kDU6+p0uutsmn418Sf4iMLBjkCoCOS0opt4YlRWOhTHq?=
- =?us-ascii?Q?bdk8rfFn6IOmfXebYIIe5yTPfxNtTnnFlFsZwfWhmvqvEGqkquULW/nmJ8a1?=
- =?us-ascii?Q?Xy2hD6P3U/Fm7Ad6rCvnbP04cYGu4qjxl1Ow9LWZ1/va1Q0biC5xOlB+HkN9?=
- =?us-ascii?Q?b7AoVan5zBVIsq0qwqkMtyKsbkNqYhELdB3fx5Br4+ycZ7YMSgIOCs2iv34R?=
- =?us-ascii?Q?ciGNGz/8QwqVioiU3nAx252/Lx+zSYTgPC4mQy7Q0REjkEVgD03t/8WB4jjj?=
- =?us-ascii?Q?jSbVZIf7651URt1BYEuNA+9gOks2cOlrKmCCABqucjDAxt0n6m7BNEFGElcz?=
- =?us-ascii?Q?CGUg5fQ234MRbzri+6ec7NdGTUHHLKTdoLDUhyzZjlgSMGwwPytMan2Z/iCO?=
- =?us-ascii?Q?Ql++XfFS0pjCAyKW2esRNbJfb3JW7HtzkIe0FWJp2q0dLWxt4/09Ov7FhKmf?=
- =?us-ascii?Q?IbQA8vcpaPym9ZOMbbQcoilMaGhQ/aHZ73PWybEIMwm/4aye+Zs7ur88Exr2?=
- =?us-ascii?Q?MxV/NQIlsM87xKXIvYZY86xGZtgTBIffY9hKM2gov/ILZgPJWBwjdo1Lc/OL?=
- =?us-ascii?Q?rxsIZXzFgYVzisW8GQcmUgXQjC1hZkZIAGkefCZlkAbXLk+KKOvlKByX37eG?=
- =?us-ascii?Q?/2cchSvdGjHjaJgu5fsZnxGkJyPNWTfY9wVTV7pQ5WymXR8FMn9vO5LfuRDy?=
- =?us-ascii?Q?Hx6KD3duMGsxDV6TmXMypjvI3EA2u8jWOATrhIk03LccutIDrR6cz714Dabx?=
- =?us-ascii?Q?rmc+bb8zviE2eHXp2xjWzaQYTP2NBuZwn8qXdhf4FLhN/QIjXxBKFMQOBdRl?=
- =?us-ascii?Q?255O7iXAuzaNTKo0ZGtfqaU4PEsIkOo2Dfa/KRGy2OM1bEiEAe8dr12/r61V?=
- =?us-ascii?Q?mr0wCkevk6BaMjeXGCj3cS5RRmbBjN3TUENjvD9zl4ou/+MQ8GuFDvY1kw+5?=
- =?us-ascii?Q?/luyNVa4+LP+v1Ga2A3TO7AXNkNLpStAq7AJUnEXsD+w7R6et2EKtAlPc4V6?=
- =?us-ascii?Q?ED0aNJGtS5NvOcAc4Sk=3D?=
+	=?us-ascii?Q?r9N9SRJK1aG1ftg06F2FEPkQCqJCnB+YPESQGdQX38Hsb9BgPpqT5po/6Aq8?=
+ =?us-ascii?Q?YY4j9YGiWM3zHrxEBgT44htMuCZv92D8drSmkZ5zSEsgGQrQt3UIiiJvGud3?=
+ =?us-ascii?Q?ziqpEU3y/L+K1nQw3KMcjqbAs6njqWkSIcl1k7Xiae6rKo3OJpI55JSKUdiq?=
+ =?us-ascii?Q?pWaqfwMQGWXjnjxfA6UaJEm0AbuABvvHj3rvC1wKDMudL7/rJVl+opOZth5a?=
+ =?us-ascii?Q?0pc0ZSFV2IGxXJUFKdYjuEShVblZ4eeM+0tiuJvRZyc3MI3iaXRYpUkgqR6G?=
+ =?us-ascii?Q?GZr74tVUJxllILKfgtKKRMfKa/wxLtcJbBw4txuTlGZmnsPvzkptWwV1ugzT?=
+ =?us-ascii?Q?wIde6+SwI+3lngAIKuG+6jfST4J0AsI/m9kgAlGYPgyydbppdGJ+cQyN6222?=
+ =?us-ascii?Q?8c4boH1hWGps9CynDjsVMrOzT9skMPXCpQsKtUxSn4JHlCgbkMAW8xhzMAbJ?=
+ =?us-ascii?Q?A/RybXVjFmSs0AEcXB2VJlSzBnnn5Fqw+40EColVxQgTjWVGOFTSl39DiWEz?=
+ =?us-ascii?Q?+NYsEHZzjpr9DgoPDC3Chlg8iCwGd0v7Z9m6wesrCUdEpkyg5PtH5BjXVDMS?=
+ =?us-ascii?Q?ML2vIoYqA8OxeADBhc4QxOil9VCCDId7ttA2JodMeLO5pzkNlQy8cjqmkSex?=
+ =?us-ascii?Q?uMAMy+WuuGylTmqO/0MZgUy+Yj7cmY8mOntTKsT4Pw1KwXLuc/9uqzqbNRf4?=
+ =?us-ascii?Q?dw46Ka71VXR4FglBVyU5sOXkqRsD7zg5bx2TmsIU+pFLU2alT4A4CrgIUP7g?=
+ =?us-ascii?Q?drC0SL2L7sO6e1EnJtK3aBBFFkzv4oDgrYmNs0ajyYEutXDHN5Uz6NSJsMtm?=
+ =?us-ascii?Q?5TkUTcb0AgmlrsZ19Me9MwVDMTJhRMtK8o7CDpXFBeD++ybgoMwD7HqzUvPN?=
+ =?us-ascii?Q?tQvAMrbxVUPLTC7SbEngCK6kB8sRJZ4L6/H7LymHMxo+rwrf2IH2MBGruG2P?=
+ =?us-ascii?Q?qcX5i/mdgarnihu3BzQ0ALLJk5gAQNBjNwvEqKiyO8L8GPm/1Msp3P1H2LgU?=
+ =?us-ascii?Q?+RO8iJqXlCPLeZUhSmhi1X5I4YzDSMyRgUaaiXjSQ+rkM0BklurQyQ912ewV?=
+ =?us-ascii?Q?1VoT2uI2QRkXoDLMn2fHZzup+PD+1A0ZFc5TEzfiX482bwG0fapMkFKBBSFI?=
+ =?us-ascii?Q?XwZfu70FaNoq9nZRouA7kP6I4ZVbKznDtOf+yJbfDiOOa+85pf7Hzfx7Pdm9?=
+ =?us-ascii?Q?oEuZ6OmwuLhh0KI6/hiTODe5NBxXWZhNaemFR95PPTXQYq1Mp/+nW7SBCTZn?=
+ =?us-ascii?Q?2JAo5Uj5Bn3/fd/67ITCiB/1eHBoA4XscIeTBwdKuvqrJS2NywDg/v29JoVk?=
+ =?us-ascii?Q?Um0mP1lhd9FsbSNuDk6X4WrwtG/rXIL2/ajW3YBXBu4I0odz70vNnnzBP2RV?=
+ =?us-ascii?Q?qivhotbWQs0ClR1FP8VJ7cx0WbVhg1zm/uBssUfnKIMrCPvYjP7V4sktJxqV?=
+ =?us-ascii?Q?U4CL+Nadh49+tXNnQ+Ri+pIwEWXUou/EtxstTyJRpBfkvwcope1uWwagP69V?=
+ =?us-ascii?Q?esgjEeD9Rg4ozbH84xjavQYAmzoZ3QY9xNKtJOSPffSH/i/92CyKNs5MPV+1?=
+ =?us-ascii?Q?u1sTSY3Y1QQpcR550Cc=3D?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(7416014)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2025 11:02:13.2828
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2025 11:02:23.5323
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 427c25e7-1e05-4e5f-9675-08ddff47a51a
+X-MS-Exchange-CrossTenant-Network-Message-Id: c694b446-e0ba-4c28-a75f-08ddff47ab30
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D4.namprd04.prod.outlook.com
+	CO1PEPF000044FA.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFCD5E2E1DE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7721
 
 From: sheetal <sheetal@nvidia.com>
 
-Update the ADMAIF bindings as tegra264 supports 64 channels, which includes
-32 RX and 32 TX channels.
+Add nvidia,tegra264-agic to the arm,gic binding for tegra264 audio
+interrupt controller support.
 
 Signed-off-by: sheetal <sheetal@nvidia.com>
 ---
- .../sound/nvidia,tegra210-admaif.yaml         | 106 +++++++++++-------
- 1 file changed, 66 insertions(+), 40 deletions(-)
+ .../devicetree/bindings/interrupt-controller/arm,gic.yaml        | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
-index b32f33214ba6..2ce4049f94ac 100644
---- a/Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
-+++ b/Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
-@@ -67,46 +67,72 @@ properties:
-         $ref: audio-graph-port.yaml#
-         unevaluatedProperties: false
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
+index 7173c4b5a228..ee4c77dac201 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
+@@ -59,6 +59,7 @@ properties:
+                   - nvidia,tegra186-agic
+                   - nvidia,tegra194-agic
+                   - nvidia,tegra234-agic
++                  - nvidia,tegra264-agic
+               - const: nvidia,tegra210-agic
  
--if:
--  properties:
--    compatible:
--      contains:
--        const: nvidia,tegra210-admaif
--
--then:
--  properties:
--    dmas:
--      description:
--        DMA channel specifiers, equally divided for Tx and Rx.
--      minItems: 1
--      maxItems: 20
--    dma-names:
--      items:
--        pattern: "^[rt]x(10|[1-9])$"
--      description:
--        Should be "rx1", "rx2" ... "rx10" for DMA Rx channel
--        Should be "tx1", "tx2" ... "tx10" for DMA Tx channel
--      minItems: 1
--      maxItems: 20
--    interconnects: false
--    interconnect-names: false
--    iommus: false
--
--else:
--  properties:
--    dmas:
--      description:
--        DMA channel specifiers, equally divided for Tx and Rx.
--      minItems: 1
--      maxItems: 40
--    dma-names:
--      items:
--        pattern: "^[rt]x(1[0-9]|[1-9]|20)$"
--      description:
--        Should be "rx1", "rx2" ... "rx20" for DMA Rx channel
--        Should be "tx1", "tx2" ... "tx20" for DMA Tx channel
--      minItems: 1
--      maxItems: 40
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: nvidia,tegra210-admaif
-+    then:
-+      properties:
-+        dmas:
-+          description:
-+            DMA channel specifiers, equally divided for Tx and Rx.
-+          minItems: 1
-+          maxItems: 20
-+        dma-names:
-+          items:
-+            pattern: "^[rt]x(10|[1-9])$"
-+          description:
-+            Should be "rx1", "rx2" ... "rx10" for DMA Rx channel
-+            Should be "tx1", "tx2" ... "tx10" for DMA Tx channel
-+          minItems: 1
-+          maxItems: 20
-+        interconnects: false
-+        interconnect-names: false
-+        iommus: false
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: nvidia,tegra186-admaif
-+    then:
-+      properties:
-+        dmas:
-+          description:
-+            DMA channel specifiers, equally divided for Tx and Rx.
-+          minItems: 1
-+          maxItems: 40
-+        dma-names:
-+          items:
-+            pattern: "^[rt]x(1[0-9]|[1-9]|20)$"
-+          description:
-+            Should be "rx1", "rx2" ... "rx20" for DMA Rx channel
-+            Should be "tx1", "tx2" ... "tx20" for DMA Tx channel
-+          minItems: 1
-+          maxItems: 40
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: nvidia,tegra264-admaif
-+    then:
-+      properties:
-+        dmas:
-+          description:
-+            DMA channel specifiers, equally divided for Tx and Rx.
-+          minItems: 1
-+          maxItems: 64
-+        dma-names:
-+          items:
-+            pattern: "^[rt]x(3[0-2]|[1-2][0-9]|[1-9])$"
-+          description:
-+            Should be "rx1", "rx2" ... "rx32" for DMA Rx channel
-+            Should be "tx1", "tx2" ... "tx32" for DMA Tx channel
-+          minItems: 1
-+          maxItems: 64
- 
- required:
-   - compatible
+   interrupt-controller: true
 -- 
 2.34.1
 

@@ -1,175 +1,146 @@
-Return-Path: <dmaengine+bounces-6734-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6735-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55616BAEA9D
-	for <lists+dmaengine@lfdr.de>; Wed, 01 Oct 2025 00:10:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A6F1BAEF20
+	for <lists+dmaengine@lfdr.de>; Wed, 01 Oct 2025 03:22:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72ABF165423
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Sep 2025 22:10:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC0A03AA921
+	for <lists+dmaengine@lfdr.de>; Wed,  1 Oct 2025 01:22:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 185C01D5AC6;
-	Tue, 30 Sep 2025 22:10:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EBC01E5B88;
+	Wed,  1 Oct 2025 01:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TPNh/vzO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MN1r5omD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CB619C540;
-	Tue, 30 Sep 2025 22:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DCE6BFCE;
+	Wed,  1 Oct 2025 01:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759270208; cv=none; b=KURdkUqdMMXfrzH9WRBghTiYDzwtL2uByEMnqFHh4mPlmWV2iCjW/2vlaeIc+XQ7gdL1PuihqM5u7RpWVviQohYP9XWr6JNpY4qQGZmFiX+aEN6gQK29/ofQZezeMXw9MP1m6apcYki3mUzbI/chApHrjzQ/TYMGFEiU6tL/hys=
+	t=1759281734; cv=none; b=U6R/9OvW2Q0hmuqmYt99RStw6ZdTPhI4hodo7g6IXoeMgSBNG5/xH6COd/t1v4lqdiPVtA+DWYOflGA9YCHoz4XbZq6tNjb26GO9ugiUGyaF1KTYD4OPOT36VsCdz80H1lFWUQyLMq/7fTWs0EXTPmH01tPTohjtUEJ8WG/CFgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759270208; c=relaxed/simple;
-	bh=hMd/AM3ewIb0jj5ghCyFKoP7KwuS14FKJyK/ph0ODyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R76PwpEvwWzpp2VLsNTLJ+XlGoDg2FYzLCHC2IxSKQ+zvZsQJd+lgmPCRTKC2z8GnT6ndm7kBubewDwzsUlm+DE436STZbR0xISszSDEkQTH1MSX+l1uc2sdTQBskdjOxe/8LhCWgskbRUpN1Pv+jaaGHBqA2mMS2lUOPblK+ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TPNh/vzO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6719BC4CEF7;
-	Tue, 30 Sep 2025 22:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759270207;
-	bh=hMd/AM3ewIb0jj5ghCyFKoP7KwuS14FKJyK/ph0ODyM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TPNh/vzOa3u/0div8i87Dy9LaaSnw20oVgnYVKRcud+Zud4VcP9sdUT86mvKLNaSX
-	 4hAApTJERCXEwxyMUHksxymNDRP4jpQlEa1yLP9f1nLujyT+hadzblmndZVvy4p/rN
-	 kOvmUxDy/rtBUz2UkbWzN91Jesm1MVMAi+AKlbwZDWllnPORuKW0YFM6lCesag4T+R
-	 ktUTXq0voYdslGUv0vH5HEgr967cRvQ7H6pJ+xvbq+nzn+hE5n4JxEQ6kyutWDpaKH
-	 yYySGG4kJxBv0Sgb1y64k4KJ/MGp+Ijc6HtSg8ejVMd3/U/YpesfI3fgqa4fwUEJCP
-	 TEoo88EOFh0mw==
-Date: Tue, 30 Sep 2025 15:10:01 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Guodong Xu <guodong@riscstar.com>, Vinod Koul <vkoul@kernel.org>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, Yixun Lan <dlan@gentoo.org>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev, elder@riscstar.com,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] dmaengine: mmp_pdma: fix DMA mask handling
-Message-ID: <20250930221001.GA66006@ax162>
-References: <20250918-mmp-pdma-simplify-dma-addressing-v1-1-5c2be2b85696@riscstar.com>
+	s=arc-20240116; t=1759281734; c=relaxed/simple;
+	bh=OyNjSbgCqVsBK4Ng0rOYgBV4mISzj8PYKPHxDBfBgUQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aYvKeke3v6QNxVCIkKUWjvjgan3QnOgpPg98sUSKmYCaOuuY9dOF3ToXia+gPd42kHd/1Lp5xvPGJ7Stq68CKGBBzI2vbYBOa2m8Z4mdK9hl3nlUS2RZVqE2yuqMpQzrD8oOMXy55AGW7azMsrbDPaPFOYOvDh+iNX88xdWUFQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MN1r5omD; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759281730; x=1790817730;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OyNjSbgCqVsBK4Ng0rOYgBV4mISzj8PYKPHxDBfBgUQ=;
+  b=MN1r5omDBUBiin+4vfgqCuAv4TS35iTYYXX/rGGlFdcssYzVc9rTRVlT
+   BQ9oCYaqMquYY9UKCO+e7hRbxQhI2MDAlpm0FFC0xSz0xbHUduT/8zqgB
+   zoiou+bqs5xAQ+GukarXaJh6nZa/0yIoWbIHEztDhMAc4KeGOzDYNvVBm
+   U+lzN6xVMTHNkfiGK1xtsAWoCohPX+CKrBTr6BDH9niy3ZuXBdTg5tSd2
+   azvzJ7k0QMlKSPTG5G/aZLKvxi3LuK2GM0rATd3lUScsIpvWIBh9qllip
+   OW6svj/CkTTyy6qPEF2jb3gBjO/6JIZ7ArkXHBzYYb9Y+66La8ttQR0OI
+   g==;
+X-CSE-ConnectionGUID: VceX6HK+TY+0RgjQqBMMPw==
+X-CSE-MsgGUID: 3rk1SkXcTU+kDQfjt0XZpA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="61465160"
+X-IronPort-AV: E=Sophos;i="6.18,305,1751266800"; 
+   d="scan'208";a="61465160"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 18:22:09 -0700
+X-CSE-ConnectionGUID: piTOZ66gQvSIrrWX4+y8oQ==
+X-CSE-MsgGUID: p4QtadcVS/+rUn5IkfnDiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,305,1751266800"; 
+   d="scan'208";a="183853801"
+Received: from vcostago-desk1.jf.intel.com ([10.88.27.140])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2025 18:22:08 -0700
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: dmaengine@vger.kernel.org
+Cc: dave.jiang@intel.com,
+	vkoul@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Subject: [PATCH v1] dmaengine: idxd: drain ATS translations when disabling WQ
+Date: Tue, 30 Sep 2025 18:22:26 -0700
+Message-ID: <20251001012226.1664994-1-vinicius.gomes@intel.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250918-mmp-pdma-simplify-dma-addressing-v1-1-5c2be2b85696@riscstar.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 18, 2025 at 10:27:27PM +0800, Guodong Xu wrote:
-> The driver's existing logic for setting the DMA mask for "marvell,pdma-1.0"
-> was flawed. It incorrectly relied on pdev->dev->coherent_dma_mask instead
-> of declaring the hardware's fixed addressing capability. A cleaner and
-> more correct approach is to define the mask directly based on the hardware
-> limitations.
-> 
-> The MMP/PXA PDMA controller is a 32-bit DMA engine. This is supported by
-> datasheets and various dtsi files for PXA25x, PXA27x, PXA3xx, and MMP2,
-> all of which are 32-bit systems.
-> 
-> This patch simplifies the driver's logic by replacing the 'u64 dma_mask'
-> field with a simpler 'u32 dma_width' to store the addressing capability
-> in bits. The complex if/else block in probe() is then replaced with a
-> single, clear call to dma_set_mask_and_coherent(). This sets a fixed
-> 32-bit DMA mask for "marvell,pdma-1.0" and a 64-bit mask for
-> "spacemit,k1-pdma," matching each device's hardware capabilities.
-> 
-> Finally, this change also works around a specific build error encountered
-> with clang-20 on x86_64 allyesconfig. The shift-count-overflow error is
-> caused by a known clang compiler issue where the DMA_BIT_MASK(n) macro's
-> ternary operator is not correctly evaluated in static initializers. By
-> moving the macro's evaluation into the probe() function, the driver avoids
-> this compiler bug.
-> 
-> Fixes: 5cfe585d8624 ("dmaengine: mmp_pdma: Add SpacemiT K1 PDMA support with 64-bit addressing")
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Closes: https://lore.kernel.org/lkml/CA+G9fYsPcMfW-e_0_TRqu4cnwqOqYF3aJOeKUYk6Z4qRStdFvg@mail.gmail.com
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Guodong Xu <guodong@riscstar.com>
+From: Nikhil Rao <nikhil.rao@intel.com>
 
-Tested-by: Nathan Chancellor <nathan@kernel.org> # build
+There's an errata[1], for the Disable WQ command that it
+does not guaranteee that address translations are drained. If WQ
+configuration is updated, pending address translations can use an
+updated WQ configuration, resulting an invalid translation response
+that is cached in the device translation cache.
 
-It would be great if this could be picked up before the 6.18 DMA pull
-request so that I do not have to patch our CI to avoid this issue.
+Replace the Disable WQ command with a Drain WQ command followed by a
+Reset WQ command, this guarantees that all ATS translations are
+drained from the device before changing WQ configuration.
 
->  drivers/dma/mmp_pdma.c | 20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/dma/mmp_pdma.c b/drivers/dma/mmp_pdma.c
-> index d07229a748868b8115892c63c54c16130d88e326..86661eb3cde1ff6d6d8f02b6f0d4142878b5a890 100644
-> --- a/drivers/dma/mmp_pdma.c
-> +++ b/drivers/dma/mmp_pdma.c
-> @@ -152,8 +152,8 @@ struct mmp_pdma_phy {
->   *
->   * Controller Configuration:
->   * @run_bits:   Control bits in DCSR register for channel start/stop
-> - * @dma_mask:   DMA addressing capability of controller. 0 to use OF/platform
-> - *              settings, or explicit mask like DMA_BIT_MASK(32/64)
-> + * @dma_width:  DMA addressing width in bits (32 or 64). Determines the
-> + *              DMA mask capability of the controller hardware.
->   */
->  struct mmp_pdma_ops {
->  	/* Hardware Register Operations */
-> @@ -173,7 +173,7 @@ struct mmp_pdma_ops {
->  
->  	/* Controller Configuration */
->  	u32 run_bits;
-> -	u64 dma_mask;
-> +	u32 dma_width;
->  };
->  
->  struct mmp_pdma_device {
-> @@ -1172,7 +1172,7 @@ static const struct mmp_pdma_ops marvell_pdma_v1_ops = {
->  	.get_desc_src_addr = get_desc_src_addr_32,
->  	.get_desc_dst_addr = get_desc_dst_addr_32,
->  	.run_bits = (DCSR_RUN),
-> -	.dma_mask = 0,			/* let OF/platform set DMA mask */
-> +	.dma_width = 32,
->  };
->  
->  static const struct mmp_pdma_ops spacemit_k1_pdma_ops = {
-> @@ -1185,7 +1185,7 @@ static const struct mmp_pdma_ops spacemit_k1_pdma_ops = {
->  	.get_desc_src_addr = get_desc_src_addr_64,
->  	.get_desc_dst_addr = get_desc_dst_addr_64,
->  	.run_bits = (DCSR_RUN | DCSR_LPAEEN),
-> -	.dma_mask = DMA_BIT_MASK(64),	/* force 64-bit DMA addr capability */
-> +	.dma_width = 64,
->  };
->  
->  static const struct of_device_id mmp_pdma_dt_ids[] = {
-> @@ -1314,13 +1314,9 @@ static int mmp_pdma_probe(struct platform_device *op)
->  	pdev->device.directions = BIT(DMA_MEM_TO_DEV) | BIT(DMA_DEV_TO_MEM);
->  	pdev->device.residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
->  
-> -	/* Set DMA mask based on ops->dma_mask, or OF/platform */
-> -	if (pdev->ops->dma_mask)
-> -		dma_set_mask(pdev->dev, pdev->ops->dma_mask);
-> -	else if (pdev->dev->coherent_dma_mask)
-> -		dma_set_mask(pdev->dev, pdev->dev->coherent_dma_mask);
-> -	else
-> -		dma_set_mask(pdev->dev, DMA_BIT_MASK(64));
-> +	/* Set DMA mask based on controller hardware capabilities */
-> +	dma_set_mask_and_coherent(pdev->dev,
-> +				  DMA_BIT_MASK(pdev->ops->dma_width));
->  
->  	ret = dma_async_device_register(&pdev->device);
->  	if (ret) {
-> 
-> ---
-> base-commit: cc0bacac6de7763a038550cf43cb94634d8be9cd
-> change-id: 20250904-mmp-pdma-simplify-dma-addressing-f6aef03e07c3
-> 
-> Best regards,
-> -- 
-> Guodong Xu <guodong@riscstar.com>
-> 
+[1] https://cdrdv2.intel.com/v1/dl/getcontent/843306 ("Intel DSA May
+Cause Invalid Translation Caching")
+
+Signed-off-by: Nikhil Rao <nikhil.rao@intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+---
+ drivers/dma/idxd/device.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 5cf419fe6b46..c2cdf41b6e57 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -16,6 +16,7 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
+ 			  u32 *status);
+ static void idxd_device_wqs_clear_state(struct idxd_device *idxd);
+ static void idxd_wq_disable_cleanup(struct idxd_wq *wq);
++static int idxd_wq_config_write(struct idxd_wq *wq);
+ 
+ /* Interrupt control bits */
+ void idxd_unmask_error_interrupts(struct idxd_device *idxd)
+@@ -215,14 +216,28 @@ int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
+ 		return 0;
+ 	}
+ 
++	/*
++	 * Disable WQ does not drain address translations, if WQ attributes are
++	 * changed before translations are drained, pending translations can
++	 * be issued using updated WQ attibutes, resulting in invalid
++	 * translations being cached in the device translation cache.
++	 *
++	 * To make sure pending translations are drained before WQ
++	 * attributes are changed, we use a WQ Drain followed by WQ Reset and
++	 * then restore the WQ configuration.
++	 */
++	idxd_wq_drain(wq);
++
+ 	operand = BIT(wq->id % 16) | ((wq->id / 16) << 16);
+-	idxd_cmd_exec(idxd, IDXD_CMD_DISABLE_WQ, operand, &status);
++	idxd_cmd_exec(idxd, IDXD_CMD_RESET_WQ, operand, &status);
+ 
+ 	if (status != IDXD_CMDSTS_SUCCESS) {
+-		dev_dbg(dev, "WQ disable failed: %#x\n", status);
++		dev_dbg(dev, "WQ reset failed: %#x\n", status);
+ 		return -ENXIO;
+ 	}
+ 
++	idxd_wq_config_write(wq);
++
+ 	if (reset_config)
+ 		idxd_wq_disable_cleanup(wq);
+ 	clear_bit(wq->id, idxd->wq_enable_map);
+-- 
+2.51.0
+
 

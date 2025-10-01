@@ -1,339 +1,152 @@
-Return-Path: <dmaengine+bounces-6740-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6741-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67AEFBB004C
-	for <lists+dmaengine@lfdr.de>; Wed, 01 Oct 2025 12:31:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E215BB11F9
+	for <lists+dmaengine@lfdr.de>; Wed, 01 Oct 2025 17:42:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED73C1940018
-	for <lists+dmaengine@lfdr.de>; Wed,  1 Oct 2025 10:32:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8DEC189348E
+	for <lists+dmaengine@lfdr.de>; Wed,  1 Oct 2025 15:42:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 634E51A3165;
-	Wed,  1 Oct 2025 10:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1008C20468E;
+	Wed,  1 Oct 2025 15:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D89cEK9/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06E13770B
-	for <dmaengine@vger.kernel.org>; Wed,  1 Oct 2025 10:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C90F1FCCF8;
+	Wed,  1 Oct 2025 15:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759314697; cv=none; b=kw7c3f5c2Z/L9rL0TdI5OP5dt0BIp4IspcILdwG4garLJIxlkoU/JROPmlaRu2l7/AajlAWIJ2GVEGWtoInBHdiyTuIt1asXO4CPg0HL4GSE6xhDXz9G6rHvoWfyfnavd7WIpvqzDOWderEdGiyJsXdTq7+V6Bd+SVeWZ1uCfxo=
+	t=1759333332; cv=none; b=Ha//UPqWcIccwcxVUm2Q56jOJcLRzcoU5A2kUBnpfBOfmgrJogShZBBzPvFreLO7TB0bssWXOGUf0RnBhh+J7md52CX+S96W/odKYRnD3aKOoCLU2dipy7ehhLF6aUvCfCQRlvKEtqVlo1NQbEQ2tO6diyz2CUFxsBc+IqQZQg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759314697; c=relaxed/simple;
-	bh=lC/Ht4lvxcJknyKTTGWMSHnCmys4XvWIrjmrB/eWvvE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tQf4jOj4NijDGTasT6448nI1odlPLZYx+mssYTbZTTa3QfMPXb7JxNASyQl8+V9TaJ9CCZrZHWGX5ll0HdU1sxKFvkrLR0sf9JWf6hVjpCdo9qACDEZJwx53Ih3RW/+VAuUOaMnbW8xVQJJLm9+CYcUYOn2o8nL3iQZ7ySHk2Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1v3u7C-0003Zd-Bw; Wed, 01 Oct 2025 12:31:18 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1v3u7C-001OfZ-08;
-	Wed, 01 Oct 2025 12:31:18 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1v3u7B-006UDM-31;
-	Wed, 01 Oct 2025 12:31:17 +0200
-Date: Wed, 1 Oct 2025 12:31:17 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Jiada Wang <jiada_wang@mentor.com>, dmaengine@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] dmaengine: imx-sdma: fix spba-bus handling for
- i.MX8M
-Message-ID: <20251001103117.zpwyxnqret5sjwq6@pengutronix.de>
-References: <20250911-v6-16-topic-sdma-v2-0-d315f56343b5@pengutronix.de>
- <20250911-v6-16-topic-sdma-v2-2-d315f56343b5@pengutronix.de>
- <aMQ53pZQD4tj+GvN@lizhi-Precision-Tower-5810>
- <20250912152748.gn66fmmrqyqlqdrb@pengutronix.de>
- <aMRRECxBqzRqGYwf@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1759333332; c=relaxed/simple;
+	bh=5LgfWDLXbU3+ZSJ+d2bp+2xL5GUQjmcurD5GvPXYjOk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TiUucL0YbKZzfAwOExQFAPXW9dL1Kz6EaeKHkO7PsYRzrLU/JTbCFchJFJDFRvaFqkWDvMUNYzPNLg1R4dQnNjb7hyfzfa75phwqkYMfEKAxZgqwdU0NX9e5gToMTxV2Cc2neDliuPJ/xGKmtxT6269p+zl4OWPQhJPUOxomb68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D89cEK9/; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759333330; x=1790869330;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5LgfWDLXbU3+ZSJ+d2bp+2xL5GUQjmcurD5GvPXYjOk=;
+  b=D89cEK9/FjxrcrGxtq59M6QzPNUDSaSL0L6g55Qn2+RghJt5ZlrWgTG0
+   0UHJG7A4+jT8mcI7eG8b6qJ2i2b0Gd9w/x9QTEVm01IePavqEGG5Pyra7
+   SOY1mTy8kYiOnOW9Q8R+UUJ5uWTUd5tlgPfSfHMHUBWZDxDEDi3UOIWMK
+   4lUN0jk+Pe08ydmW2vCGsruE9CTcxST9Cv6BdxJHnurj67pkhq2yvrgC9
+   jHI082yqbjr/AeKPr+0sqW82As7TYrAkBX22GdyyDNGMZJKkkfkfKaAhI
+   6hA76zl3oaZc5dCeewGfWd29bttA6wJej6wFWert78Ej+wOsIMM5wDZq/
+   w==;
+X-CSE-ConnectionGUID: e5Sybbs1TlGUdABCzfsmlA==
+X-CSE-MsgGUID: 6gds1fCUQbmJxHG4PNpD5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="60648067"
+X-IronPort-AV: E=Sophos;i="6.18,307,1751266800"; 
+   d="scan'208";a="60648067"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2025 08:42:06 -0700
+X-CSE-ConnectionGUID: /Fxn0tAsSRGjTZSibRpw8g==
+X-CSE-MsgGUID: xTz3/MZ5TSG7ykeCg6zfrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,307,1751266800"; 
+   d="scan'208";a="183998916"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.125.109.218]) ([10.125.109.218])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2025 08:42:05 -0700
+Message-ID: <e89ea10b-edb5-4e37-8eef-0fb99fc5b19f@intel.com>
+Date: Wed, 1 Oct 2025 08:42:04 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aMRRECxBqzRqGYwf@lizhi-Precision-Tower-5810>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] dmaengine: idxd: drain ATS translations when disabling
+ WQ
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, dmaengine@vger.kernel.org
+Cc: vkoul@kernel.org, linux-kernel@vger.kernel.org
+References: <20251001012226.1664994-1-vinicius.gomes@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20251001012226.1664994-1-vinicius.gomes@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 25-09-12, Frank Li wrote:
-> On Fri, Sep 12, 2025 at 05:27:48PM +0200, Marco Felsch wrote:
-> > On 25-09-12, Frank Li wrote:
-> > > On Thu, Sep 11, 2025 at 11:56:43PM +0200, Marco Felsch wrote:
-> > > > Starting with i.MX8M* devices there are multiple spba-busses so we can't
-> > > > just search the whole DT for the first spba-bus match and take it.
-> > > > Instead we need to check for each device to which bus it belongs and
-> > > > setup the spba_{start,end}_addr accordingly per sdma_channel.
-> > > >
-> > > > While on it, don't ignore errors from of_address_to_resource() if they
-> > > > are valid.
-> > > >
-> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > >
-> > > I think the below method should be better.
-> > >
-> > > of_translate_address(per_address) == OF_BAD_ADDR to check if belong spba-bus
-> >
-> > The SDMA engine doesn't have to be part of the SPBA bus, please see the
-> > i.MX8MM for example.
+
+
+On 9/30/25 6:22 PM, Vinicius Costa Gomes wrote:
+> From: Nikhil Rao <nikhil.rao@intel.com>
 > 
-> which one, can you point me?
-
-The imx8mm.dtsi, e.g. the SDMA2 [1] is not part of the SPBA bus but
-serves as DMA for devices within the SPBA bus [2].
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/freescale/imx8mm.dtsi?h=v6.17#n525
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/freescale/imx8mm.dtsi?h=v6.17#n305
-
-> spba_bus = of_get_parent(chan->slave->of_node);
+> There's an errata[1], for the Disable WQ command that it
+> does not guaranteee that address translations are drained. If WQ
+> configuration is updated, pending address translations can use an
+> updated WQ configuration, resulting an invalid translation response
+> that is cached in the device translation cache.
 > 
-> Actaully you get dma consumers' spba-bus, not dmaengine one.
-
-I know that and this is intended because the dmaengine is not part of
-the SPBA bus. There was only one SPBA bus but this changed with the
-i.MX8M* SoCs and the driver is not aware of this (as explained within
-the commit message).
-
-That beeing said, the dmaegine was never part of the SPBA bus, e.g. see
-the imx6qdl.dtsi. There only one SDMA engine exists which is not part of
-the SPBA bus but it serves as DMA engine for devices within the SPBA
-bus:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/nxp/imx/imx6qdl.dtsi?h=v6.17#n932
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/nxp/imx/imx6qdl.dtsi?h=v6.17#n299
-
-The driver logic only worked because there was only one SPBA bus.
-
-> And I also confused
+> Replace the Disable WQ command with a Drain WQ command followed by a
+> Reset WQ command, this guarantees that all ATS translations are
+> drained from the device before changing WQ configuration.
 > 
->  +	if (sdmac->per_address2 >= sdmac->spba_start_addr &&
->  +			sdmac->per_address2 <= sdmac->spba_end_addr)
->   		sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_SP;
+> [1] https://cdrdv2.intel.com/v1/dl/getcontent/843306 ("Intel DSA May
+> Cause Invalid Translation Caching")
 > 
->  -	if (sdmac->per_address >= sdma->spba_start_addr &&
->  -			sdmac->per_address <= sdma->spba_end_addr)
->  +	if (sdmac->per_address >= sdmac->spba_start_addr &&
->  +			sdmac->per_address <= sdmac->spba_end_addr)
->   		sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_DP;
+> Signed-off-by: Nikhil Rao <nikhil.rao@intel.com>
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/dma/idxd/device.c | 19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
 > 
-> what's purpsoe of this code, check if dma target address in spba_bus ?
+> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+> index 5cf419fe6b46..c2cdf41b6e57 100644
+> --- a/drivers/dma/idxd/device.c
+> +++ b/drivers/dma/idxd/device.c
+> @@ -16,6 +16,7 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
+>  			  u32 *status);
+>  static void idxd_device_wqs_clear_state(struct idxd_device *idxd);
+>  static void idxd_wq_disable_cleanup(struct idxd_wq *wq);
+> +static int idxd_wq_config_write(struct idxd_wq *wq);
+>  
+>  /* Interrupt control bits */
+>  void idxd_unmask_error_interrupts(struct idxd_device *idxd)
+> @@ -215,14 +216,28 @@ int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
+>  		return 0;
+>  	}
+>  
+> +	/*
+> +	 * Disable WQ does not drain address translations, if WQ attributes are
+> +	 * changed before translations are drained, pending translations can
+> +	 * be issued using updated WQ attibutes, resulting in invalid
+> +	 * translations being cached in the device translation cache.
+> +	 *
+> +	 * To make sure pending translations are drained before WQ
+> +	 * attributes are changed, we use a WQ Drain followed by WQ Reset and
+> +	 * then restore the WQ configuration.
+> +	 */
+> +	idxd_wq_drain(wq);
+> +
+>  	operand = BIT(wq->id % 16) | ((wq->id / 16) << 16);
+> -	idxd_cmd_exec(idxd, IDXD_CMD_DISABLE_WQ, operand, &status);
+> +	idxd_cmd_exec(idxd, IDXD_CMD_RESET_WQ, operand, &status);
+>  
+>  	if (status != IDXD_CMDSTS_SUCCESS) {
+> -		dev_dbg(dev, "WQ disable failed: %#x\n", status);
+> +		dev_dbg(dev, "WQ reset failed: %#x\n", status);
+>  		return -ENXIO;
+>  	}
+>  
+> +	idxd_wq_config_write(wq);
+> +
+>  	if (reset_config)
+>  		idxd_wq_disable_cleanup(wq);
+>  	clear_bit(wq->id, idxd->wq_enable_map);
 
-I didn't add this code, just adapted it. But yes somehow the address is
-checked.
-
-> And only here use spba_start_addr!
-
-Again I didn't added the code. I just fixed it for multi SPBA bus SoCs.
-
-Regards,
-  Marco
-
-
-> 
-> Frank
-> 
-> >
-> > Regards,
-> >   Marco
-> >
-> > > aips3: bus@30800000 {
-> > > 	...
-> > >         ranges = <0x30800000 0x30800000 0x400000>,
-> > >                  <0x8000000 0x8000000 0x10000000>;
-> > >
-> > >                         spba1: spba-bus@30800000 {
-> > >                                 compatible = "fsl,spba-bus", "simple-bus";
-> > >                                 #address-cells = <1>;
-> > >                                 #size-cells = <1>;
-> > >                                 reg = <0x30800000 0x100000>;
-> > >                                 ranges;
-> > >
-> > > 				...
-> > > 				sdma1:
-> > >
-> > > };
-> > >
-> > > of_translate_address() will 1:1 map at spba-bus@30800000 spba1.
-> > > then
-> > > reach ranges = <0x30800000 0x30800000 0x400000> of aips3
-> > >
-> > > if per_address is not in this range, it should return OF_BAD_ADDR. So
-> > > needn't parse reg of bus@30800000 at all.
-> > >
-> > > Frank
-> > >
-> > > > ---
-> > > >  drivers/dma/imx-sdma.c | 58 ++++++++++++++++++++++++++++++++++----------------
-> > > >  1 file changed, 40 insertions(+), 18 deletions(-)
-> > > >
-> > > > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> > > > index 3ecb917214b1268b148a29df697b780bc462afa4..56daaeb7df03986850c9c74273d0816700581dc0 100644
-> > > > --- a/drivers/dma/imx-sdma.c
-> > > > +++ b/drivers/dma/imx-sdma.c
-> > > > @@ -429,6 +429,8 @@ struct sdma_desc {
-> > > >   * @event_mask:		event mask used in p_2_p script
-> > > >   * @watermark_level:	value for gReg[7], some script will extend it from
-> > > >   *			basic watermark such as p_2_p
-> > > > + * @spba_start_addr:	SDMA controller SPBA bus start address
-> > > > + * @spba_end_addr:	SDMA controller SPBA bus end address
-> > > >   * @shp_addr:		value for gReg[6]
-> > > >   * @per_addr:		value for gReg[2]
-> > > >   * @status:		status of dma channel
-> > > > @@ -461,6 +463,8 @@ struct sdma_channel {
-> > > >  	dma_addr_t			per_address, per_address2;
-> > > >  	unsigned long			event_mask[2];
-> > > >  	unsigned long			watermark_level;
-> > > > +	u32				spba_start_addr;
-> > > > +	u32				spba_end_addr;
-> > > >  	u32				shp_addr, per_addr;
-> > > >  	enum dma_status			status;
-> > > >  	struct imx_dma_data		data;
-> > > > @@ -534,8 +538,6 @@ struct sdma_engine {
-> > > >  	u32				script_number;
-> > > >  	struct sdma_script_start_addrs	*script_addrs;
-> > > >  	const struct sdma_driver_data	*drvdata;
-> > > > -	u32				spba_start_addr;
-> > > > -	u32				spba_end_addr;
-> > > >  	unsigned int			irq;
-> > > >  	dma_addr_t			bd0_phys;
-> > > >  	struct sdma_buffer_descriptor	*bd0;
-> > > > @@ -1236,8 +1238,6 @@ static void sdma_channel_synchronize(struct dma_chan *chan)
-> > > >
-> > > >  static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
-> > > >  {
-> > > > -	struct sdma_engine *sdma = sdmac->sdma;
-> > > > -
-> > > >  	int lwml = sdmac->watermark_level & SDMA_WATERMARK_LEVEL_LWML;
-> > > >  	int hwml = (sdmac->watermark_level & SDMA_WATERMARK_LEVEL_HWML) >> 16;
-> > > >
-> > > > @@ -1263,12 +1263,12 @@ static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
-> > > >  		swap(sdmac->event_mask[0], sdmac->event_mask[1]);
-> > > >  	}
-> > > >
-> > > > -	if (sdmac->per_address2 >= sdma->spba_start_addr &&
-> > > > -			sdmac->per_address2 <= sdma->spba_end_addr)
-> > > > +	if (sdmac->per_address2 >= sdmac->spba_start_addr &&
-> > > > +			sdmac->per_address2 <= sdmac->spba_end_addr)
-> > > >  		sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_SP;
-> > > >
-> > > > -	if (sdmac->per_address >= sdma->spba_start_addr &&
-> > > > -			sdmac->per_address <= sdma->spba_end_addr)
-> > > > +	if (sdmac->per_address >= sdmac->spba_start_addr &&
-> > > > +			sdmac->per_address <= sdmac->spba_end_addr)
-> > > >  		sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_DP;
-> > > >
-> > > >  	sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_CONT;
-> > > > @@ -1447,6 +1447,31 @@ static void sdma_desc_free(struct virt_dma_desc *vd)
-> > > >  	kfree(desc);
-> > > >  }
-> > > >
-> > > > +static int sdma_config_spba_slave(struct dma_chan *chan)
-> > > > +{
-> > > > +	struct sdma_channel *sdmac = to_sdma_chan(chan);
-> > > > +	struct device_node *spba_bus;
-> > > > +	struct resource spba_res;
-> > > > +	int ret;
-> > > > +
-> > > > +	spba_bus = of_get_parent(chan->slave->of_node);
-> > > > +	/* Device doesn't belong to the spba-bus */
-> > > > +	if (!of_device_is_compatible(spba_bus, "fsl,spba-bus"))
-> > > > +		return 0;
-> > > > +
-> > > > +	ret = of_address_to_resource(spba_bus, 0, &spba_res);
-> > > > +	of_node_put(spba_bus);
-> > > > +	if (ret) {
-> > > > +		dev_err(sdmac->sdma->dev, "Failed to get spba-bus resources\n");
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	sdmac->spba_start_addr = spba_res.start;
-> > > > +	sdmac->spba_end_addr = spba_res.end;
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  static int sdma_alloc_chan_resources(struct dma_chan *chan)
-> > > >  {
-> > > >  	struct sdma_channel *sdmac = to_sdma_chan(chan);
-> > > > @@ -1527,6 +1552,8 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
-> > > >
-> > > >  	sdmac->event_id0 = 0;
-> > > >  	sdmac->event_id1 = 0;
-> > > > +	sdmac->spba_start_addr = 0;
-> > > > +	sdmac->spba_end_addr = 0;
-> > > >
-> > > >  	sdma_set_channel_priority(sdmac, 0);
-> > > >
-> > > > @@ -1837,6 +1864,7 @@ static int sdma_config(struct dma_chan *chan,
-> > > >  {
-> > > >  	struct sdma_channel *sdmac = to_sdma_chan(chan);
-> > > >  	struct sdma_engine *sdma = sdmac->sdma;
-> > > > +	int ret;
-> > > >
-> > > >  	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
-> > > >
-> > > > @@ -1867,6 +1895,10 @@ static int sdma_config(struct dma_chan *chan,
-> > > >  		sdma_event_enable(sdmac, sdmac->event_id1);
-> > > >  	}
-> > > >
-> > > > +	ret = sdma_config_spba_slave(chan);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > >  	return 0;
-> > > >  }
-> > > >
-> > > > @@ -2235,11 +2267,9 @@ static struct dma_chan *sdma_xlate(struct of_phandle_args *dma_spec,
-> > > >  static int sdma_probe(struct platform_device *pdev)
-> > > >  {
-> > > >  	struct device_node *np = pdev->dev.of_node;
-> > > > -	struct device_node *spba_bus;
-> > > >  	const char *fw_name;
-> > > >  	int ret;
-> > > >  	int irq;
-> > > > -	struct resource spba_res;
-> > > >  	int i;
-> > > >  	struct sdma_engine *sdma;
-> > > >  	s32 *saddr_arr;
-> > > > @@ -2375,14 +2405,6 @@ static int sdma_probe(struct platform_device *pdev)
-> > > >  			dev_err(&pdev->dev, "failed to register controller\n");
-> > > >  			goto err_register;
-> > > >  		}
-> > > > -
-> > > > -		spba_bus = of_find_compatible_node(NULL, NULL, "fsl,spba-bus");
-> > > > -		ret = of_address_to_resource(spba_bus, 0, &spba_res);
-> > > > -		if (!ret) {
-> > > > -			sdma->spba_start_addr = spba_res.start;
-> > > > -			sdma->spba_end_addr = spba_res.end;
-> > > > -		}
-> > > > -		of_node_put(spba_bus);
-> > > >  	}
-> > > >
-> > > >  	/*
-> > > >
-> > > > --
-> > > > 2.47.3
-> > > >
-> > >
-> 
 

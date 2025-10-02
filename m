@@ -1,152 +1,127 @@
-Return-Path: <dmaengine+bounces-6741-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6742-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E215BB11F9
-	for <lists+dmaengine@lfdr.de>; Wed, 01 Oct 2025 17:42:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C9E1BB3EEA
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Oct 2025 14:47:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8DEC189348E
-	for <lists+dmaengine@lfdr.de>; Wed,  1 Oct 2025 15:42:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B38593AACB4
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Oct 2025 12:47:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1008C20468E;
-	Wed,  1 Oct 2025 15:42:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B38C229CE1;
+	Thu,  2 Oct 2025 12:47:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D89cEK9/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i8dLD5dw"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C90F1FCCF8;
-	Wed,  1 Oct 2025 15:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9492D46CC
+	for <dmaengine@vger.kernel.org>; Thu,  2 Oct 2025 12:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759333332; cv=none; b=Ha//UPqWcIccwcxVUm2Q56jOJcLRzcoU5A2kUBnpfBOfmgrJogShZBBzPvFreLO7TB0bssWXOGUf0RnBhh+J7md52CX+S96W/odKYRnD3aKOoCLU2dipy7ehhLF6aUvCfCQRlvKEtqVlo1NQbEQ2tO6diyz2CUFxsBc+IqQZQg0=
+	t=1759409264; cv=none; b=RCJ/KRHopilTYp+w2EF7dz1mxfVAvHidoFuB56TjieXs4z6E2a+DQM5Fhy1VpeMQMaxgP8RFTtuVb55RkB1bRJnJYLVkk+6Bl2+6q2SL9eF9GGCM5yRRkAZix+/8AZ6pfGJvrZOB0Y4gn/10ZVFnhwwFTBmO4alysTkDyDh/n1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759333332; c=relaxed/simple;
-	bh=5LgfWDLXbU3+ZSJ+d2bp+2xL5GUQjmcurD5GvPXYjOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TiUucL0YbKZzfAwOExQFAPXW9dL1Kz6EaeKHkO7PsYRzrLU/JTbCFchJFJDFRvaFqkWDvMUNYzPNLg1R4dQnNjb7hyfzfa75phwqkYMfEKAxZgqwdU0NX9e5gToMTxV2Cc2neDliuPJ/xGKmtxT6269p+zl4OWPQhJPUOxomb68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D89cEK9/; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759333330; x=1790869330;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5LgfWDLXbU3+ZSJ+d2bp+2xL5GUQjmcurD5GvPXYjOk=;
-  b=D89cEK9/FjxrcrGxtq59M6QzPNUDSaSL0L6g55Qn2+RghJt5ZlrWgTG0
-   0UHJG7A4+jT8mcI7eG8b6qJ2i2b0Gd9w/x9QTEVm01IePavqEGG5Pyra7
-   SOY1mTy8kYiOnOW9Q8R+UUJ5uWTUd5tlgPfSfHMHUBWZDxDEDi3UOIWMK
-   4lUN0jk+Pe08ydmW2vCGsruE9CTcxST9Cv6BdxJHnurj67pkhq2yvrgC9
-   jHI082yqbjr/AeKPr+0sqW82As7TYrAkBX22GdyyDNGMZJKkkfkfKaAhI
-   6hA76zl3oaZc5dCeewGfWd29bttA6wJej6wFWert78Ej+wOsIMM5wDZq/
-   w==;
-X-CSE-ConnectionGUID: e5Sybbs1TlGUdABCzfsmlA==
-X-CSE-MsgGUID: 6gds1fCUQbmJxHG4PNpD5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11569"; a="60648067"
-X-IronPort-AV: E=Sophos;i="6.18,307,1751266800"; 
-   d="scan'208";a="60648067"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2025 08:42:06 -0700
-X-CSE-ConnectionGUID: /Fxn0tAsSRGjTZSibRpw8g==
-X-CSE-MsgGUID: xTz3/MZ5TSG7ykeCg6zfrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,307,1751266800"; 
-   d="scan'208";a="183998916"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.125.109.218]) ([10.125.109.218])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2025 08:42:05 -0700
-Message-ID: <e89ea10b-edb5-4e37-8eef-0fb99fc5b19f@intel.com>
-Date: Wed, 1 Oct 2025 08:42:04 -0700
+	s=arc-20240116; t=1759409264; c=relaxed/simple;
+	bh=hyCU+EM5MVqp2Ncmpf7/x1Fq6EYDnoCdRL4dsEkWNw0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qp7TbcWIcg6qAfP9hpxrqJuJ+iW5hGtPwPjk9BuigM7AbTG/KmZ4lFPvA9iyrhqWAaVQnQyz3eRcF0Mr8hAPI4a5IoHwc2UNTuzm6r9EbjLItxE2eVeINhoMnVadooQ6ieBOA2e4sWjSSfoQIbofslrQFLB5Xl12I/p7GvW+5To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i8dLD5dw; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-46e2e6a708fso6479305e9.0
+        for <dmaengine@vger.kernel.org>; Thu, 02 Oct 2025 05:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1759409261; x=1760014061; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ET4ihU5LqsfIrlbYUc19Lai41MLJqMKOlTXkrUOUnQU=;
+        b=i8dLD5dwe8nGG09ze/WTvKMjI872cwhtOzII5+iJ0WGFP835a339ZhY16vJlcN1Uka
+         CmuD7KGrOF0VLOEaLakxYahtl8rxCyF9DS83WSxaaqcr6q23YzuDdNWPbCILkFsMsz1u
+         Fblm6DJHKQAzIaszN5CS4oKjI7YR+fZa7p3DczDTXRKh4uRfa3ZXQb5dkNfpgE2mWCTa
+         sbO1AqTSO7rtZS4N0hPq8yahRC9frX+SlhK9WDjGKDJto/+8X6mmTgTwuWzAeafC4A8D
+         bRM5sJ3yxrC3uATMo/l/y1DAvTNV7z/yJQN1IQKDEUJCvC7FzJ2f1WBIoX06v43Ny5bo
+         w13g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759409261; x=1760014061;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ET4ihU5LqsfIrlbYUc19Lai41MLJqMKOlTXkrUOUnQU=;
+        b=lfSAL/A6Bwrdc4myk9O+altudntETgFJuKsNzcI/Oy5Fc0fgaUQJ4O8sn6Mg5rWK2/
+         mKJsXVfZX92yucCiLATZpp+WDFkI5DpRTm7OHW0yTmMmLDlshCGcS1NbHv1bbX6ql9YK
+         5FErY8MDZA4Kpcq930+6ZxwmasmTqqKKH1uTu/Faprg+aT1MPEDIgtABMVRxbT1LYqDr
+         YB+oAiKuvmqSnXl+Z7ZdwBrcA2eJsBAwgi2s1cIiZBoThsn0KZFZvFd6/O/j6V2jmP5u
+         l59gKnC0X7QMl1ckXI08uaCrWZvRiDDoP+SKFi1LYKL1gJVqGXmIuReW/E58l+uSj89F
+         p/dg==
+X-Gm-Message-State: AOJu0YzRclTCmqKaubnsOkhqVm6H+C8G5sdjqvIBs81f1oa5UH52Fmbc
+	b8VP47uHMP718hkqUr/Xon6naOIpr+DZxk9Qof6UAzF6JbvWfTqnW3wy
+X-Gm-Gg: ASbGncsi1FQOhpieDQ8bqWXKz80v11i/WuOZyXuvAPjNjSSUgJ3Jn/JdF0ms/i8RLQx
+	ZDbQboQ09N8+WQJnHy06dYf5nKwlnQVos01HufMUjfjUklW20M+YXIusoKiU48IvKmxRiBoeLJW
+	VEAK+ebUSJdeMZpfrmQSObQuS1uftmELGF6+M3q+5HmxGEqoXUIqy8iUNFce5w7SsEY6VsO+K4w
+	Fb+NaAxeYfwval/ooCE3wmKXmJBomYLP0ZBIwng1VC15O4EJYMkIhmLpflYQLDF/ZXwkh3EVUVR
+	WmVKlcN3UkKW7hLCdPjvzi6tLIg+JTGpFSn82zF8VVBBS/O2Kc+YEgfmXOqKNZa2rBOIEu3jjSV
+	aWe0o+4QuYVCxihPKDw7ILMUmZurusQCXAsgXldz6jpig7ILI90raqCoJkg4e4Trq7FP+ex1C5i
+	n6j3KDzsFk684/XaE=
+X-Google-Smtp-Source: AGHT+IG14FNYlyj1SOve2+lpdu6yCG10mUv6KZ7dieXzI0BdMzJSkDE4fwEUuAUNod2k7Ird6LY+WA==
+X-Received: by 2002:a05:600c:314a:b0:46e:21c8:ad37 with SMTP id 5b1f17b1804b1-46e61285328mr58217715e9.25.1759409261152;
+        Thu, 02 Oct 2025 05:47:41 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:607d:d8e6:591c:c858])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e6917a731sm34541085e9.3.2025.10.02.05.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Oct 2025 05:47:40 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] dmaengine: sh: Kconfig: Drop ARCH_R7S72100/ARCH_RZG2L dependency
+Date: Thu,  2 Oct 2025 13:47:35 +0100
+Message-ID: <20251002124735.149042-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] dmaengine: idxd: drain ATS translations when disabling
- WQ
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, dmaengine@vger.kernel.org
-Cc: vkoul@kernel.org, linux-kernel@vger.kernel.org
-References: <20251001012226.1664994-1-vinicius.gomes@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20251001012226.1664994-1-vinicius.gomes@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+The RZ DMA controller is used across multiple Renesas SoCs, not only
+RZ/A1 (R7S72100) and RZ/G2L. Limiting the build to these SoCs prevents
+enabling the driver on newer platforms such as RZ/V2H(P) and RZ/V2N.
 
-On 9/30/25 6:22 PM, Vinicius Costa Gomes wrote:
-> From: Nikhil Rao <nikhil.rao@intel.com>
-> 
-> There's an errata[1], for the Disable WQ command that it
-> does not guaranteee that address translations are drained. If WQ
-> configuration is updated, pending address translations can use an
-> updated WQ configuration, resulting an invalid translation response
-> that is cached in the device translation cache.
-> 
-> Replace the Disable WQ command with a Drain WQ command followed by a
-> Reset WQ command, this guarantees that all ATS translations are
-> drained from the device before changing WQ configuration.
-> 
-> [1] https://cdrdv2.intel.com/v1/dl/getcontent/843306 ("Intel DSA May
-> Cause Invalid Translation Caching")
-> 
-> Signed-off-by: Nikhil Rao <nikhil.rao@intel.com>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Replace the ARCH_R7S72100 || ARCH_RZG2L dependency with ARCH_RENESAS so
+the driver can be built for all Renesas SoCs.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/dma/idxd/device.c | 19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-> index 5cf419fe6b46..c2cdf41b6e57 100644
-> --- a/drivers/dma/idxd/device.c
-> +++ b/drivers/dma/idxd/device.c
-> @@ -16,6 +16,7 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
->  			  u32 *status);
->  static void idxd_device_wqs_clear_state(struct idxd_device *idxd);
->  static void idxd_wq_disable_cleanup(struct idxd_wq *wq);
-> +static int idxd_wq_config_write(struct idxd_wq *wq);
->  
->  /* Interrupt control bits */
->  void idxd_unmask_error_interrupts(struct idxd_device *idxd)
-> @@ -215,14 +216,28 @@ int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
->  		return 0;
->  	}
->  
-> +	/*
-> +	 * Disable WQ does not drain address translations, if WQ attributes are
-> +	 * changed before translations are drained, pending translations can
-> +	 * be issued using updated WQ attibutes, resulting in invalid
-> +	 * translations being cached in the device translation cache.
-> +	 *
-> +	 * To make sure pending translations are drained before WQ
-> +	 * attributes are changed, we use a WQ Drain followed by WQ Reset and
-> +	 * then restore the WQ configuration.
-> +	 */
-> +	idxd_wq_drain(wq);
-> +
->  	operand = BIT(wq->id % 16) | ((wq->id / 16) << 16);
-> -	idxd_cmd_exec(idxd, IDXD_CMD_DISABLE_WQ, operand, &status);
-> +	idxd_cmd_exec(idxd, IDXD_CMD_RESET_WQ, operand, &status);
->  
->  	if (status != IDXD_CMDSTS_SUCCESS) {
-> -		dev_dbg(dev, "WQ disable failed: %#x\n", status);
-> +		dev_dbg(dev, "WQ reset failed: %#x\n", status);
->  		return -ENXIO;
->  	}
->  
-> +	idxd_wq_config_write(wq);
-> +
->  	if (reset_config)
->  		idxd_wq_disable_cleanup(wq);
->  	clear_bit(wq->id, idxd->wq_enable_map);
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/dma/sh/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/sh/Kconfig b/drivers/dma/sh/Kconfig
+index 8184d475a49a..a16c7e83bd14 100644
+--- a/drivers/dma/sh/Kconfig
++++ b/drivers/dma/sh/Kconfig
+@@ -50,7 +50,7 @@ config RENESAS_USB_DMAC
+ 
+ config RZ_DMAC
+ 	tristate "Renesas RZ DMA Controller"
+-	depends on ARCH_R7S72100 || ARCH_RZG2L || COMPILE_TEST
++	depends on ARCH_RENESAS || COMPILE_TEST
+ 	select RENESAS_DMA
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+-- 
+2.51.0
 
 

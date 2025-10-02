@@ -1,127 +1,116 @@
-Return-Path: <dmaengine+bounces-6742-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6743-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C9E1BB3EEA
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Oct 2025 14:47:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7188BB3F92
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Oct 2025 15:02:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B38593AACB4
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Oct 2025 12:47:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64DBC17F53E
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Oct 2025 13:02:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B38C229CE1;
-	Thu,  2 Oct 2025 12:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i8dLD5dw"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C863081B7;
+	Thu,  2 Oct 2025 13:02:18 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9492D46CC
-	for <dmaengine@vger.kernel.org>; Thu,  2 Oct 2025 12:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB5F283C93
+	for <dmaengine@vger.kernel.org>; Thu,  2 Oct 2025 13:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759409264; cv=none; b=RCJ/KRHopilTYp+w2EF7dz1mxfVAvHidoFuB56TjieXs4z6E2a+DQM5Fhy1VpeMQMaxgP8RFTtuVb55RkB1bRJnJYLVkk+6Bl2+6q2SL9eF9GGCM5yRRkAZix+/8AZ6pfGJvrZOB0Y4gn/10ZVFnhwwFTBmO4alysTkDyDh/n1o=
+	t=1759410138; cv=none; b=KNFjZhtV+X367rKYP0zxx4le2IlRBLzZygL7qGbDgZSMddHr3Lzjqpr7iGkbJNzOsBClS4vPk74VgV/Sk/9wLIjONYx6wESOIrFMbWKpAIGVIKtEXj9PPaim1y/YG16Zmdi/VDZKDvmVg8JFU1XvaRVHJpbGS4Ac7P9xKSaaAvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759409264; c=relaxed/simple;
-	bh=hyCU+EM5MVqp2Ncmpf7/x1Fq6EYDnoCdRL4dsEkWNw0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qp7TbcWIcg6qAfP9hpxrqJuJ+iW5hGtPwPjk9BuigM7AbTG/KmZ4lFPvA9iyrhqWAaVQnQyz3eRcF0Mr8hAPI4a5IoHwc2UNTuzm6r9EbjLItxE2eVeINhoMnVadooQ6ieBOA2e4sWjSSfoQIbofslrQFLB5Xl12I/p7GvW+5To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i8dLD5dw; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1759410138; c=relaxed/simple;
+	bh=UA6tTZXqaCOK2NigC5FAobaKNdJkRhWjZa2mAx2vxXk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oYfGGKebhHVfL+39Vjp7GdyHaW2sw0xGEOe50YzSiUZRS3h+LqiwODQ3UaBDmTpdIVaeDXR5Qy3NRMazMgPHd64svh1ohYM84/I2113PttDA+D4ZiGvGhje33m+tcXd3cSCVWpiH3khcwn1QbxJWVkd9EyZfb0NB09GmHuYwHvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-46e2e6a708fso6479305e9.0
-        for <dmaengine@vger.kernel.org>; Thu, 02 Oct 2025 05:47:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759409261; x=1760014061; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ET4ihU5LqsfIrlbYUc19Lai41MLJqMKOlTXkrUOUnQU=;
-        b=i8dLD5dwe8nGG09ze/WTvKMjI872cwhtOzII5+iJ0WGFP835a339ZhY16vJlcN1Uka
-         CmuD7KGrOF0VLOEaLakxYahtl8rxCyF9DS83WSxaaqcr6q23YzuDdNWPbCILkFsMsz1u
-         Fblm6DJHKQAzIaszN5CS4oKjI7YR+fZa7p3DczDTXRKh4uRfa3ZXQb5dkNfpgE2mWCTa
-         sbO1AqTSO7rtZS4N0hPq8yahRC9frX+SlhK9WDjGKDJto/+8X6mmTgTwuWzAeafC4A8D
-         bRM5sJ3yxrC3uATMo/l/y1DAvTNV7z/yJQN1IQKDEUJCvC7FzJ2f1WBIoX06v43Ny5bo
-         w13g==
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7a9a2b27c44so604588a34.0
+        for <dmaengine@vger.kernel.org>; Thu, 02 Oct 2025 06:02:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759409261; x=1760014061;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1759410133; x=1760014933;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ET4ihU5LqsfIrlbYUc19Lai41MLJqMKOlTXkrUOUnQU=;
-        b=lfSAL/A6Bwrdc4myk9O+altudntETgFJuKsNzcI/Oy5Fc0fgaUQJ4O8sn6Mg5rWK2/
-         mKJsXVfZX92yucCiLATZpp+WDFkI5DpRTm7OHW0yTmMmLDlshCGcS1NbHv1bbX6ql9YK
-         5FErY8MDZA4Kpcq930+6ZxwmasmTqqKKH1uTu/Faprg+aT1MPEDIgtABMVRxbT1LYqDr
-         YB+oAiKuvmqSnXl+Z7ZdwBrcA2eJsBAwgi2s1cIiZBoThsn0KZFZvFd6/O/j6V2jmP5u
-         l59gKnC0X7QMl1ckXI08uaCrWZvRiDDoP+SKFi1LYKL1gJVqGXmIuReW/E58l+uSj89F
-         p/dg==
-X-Gm-Message-State: AOJu0YzRclTCmqKaubnsOkhqVm6H+C8G5sdjqvIBs81f1oa5UH52Fmbc
-	b8VP47uHMP718hkqUr/Xon6naOIpr+DZxk9Qof6UAzF6JbvWfTqnW3wy
-X-Gm-Gg: ASbGncsi1FQOhpieDQ8bqWXKz80v11i/WuOZyXuvAPjNjSSUgJ3Jn/JdF0ms/i8RLQx
-	ZDbQboQ09N8+WQJnHy06dYf5nKwlnQVos01HufMUjfjUklW20M+YXIusoKiU48IvKmxRiBoeLJW
-	VEAK+ebUSJdeMZpfrmQSObQuS1uftmELGF6+M3q+5HmxGEqoXUIqy8iUNFce5w7SsEY6VsO+K4w
-	Fb+NaAxeYfwval/ooCE3wmKXmJBomYLP0ZBIwng1VC15O4EJYMkIhmLpflYQLDF/ZXwkh3EVUVR
-	WmVKlcN3UkKW7hLCdPjvzi6tLIg+JTGpFSn82zF8VVBBS/O2Kc+YEgfmXOqKNZa2rBOIEu3jjSV
-	aWe0o+4QuYVCxihPKDw7ILMUmZurusQCXAsgXldz6jpig7ILI90raqCoJkg4e4Trq7FP+ex1C5i
-	n6j3KDzsFk684/XaE=
-X-Google-Smtp-Source: AGHT+IG14FNYlyj1SOve2+lpdu6yCG10mUv6KZ7dieXzI0BdMzJSkDE4fwEUuAUNod2k7Ird6LY+WA==
-X-Received: by 2002:a05:600c:314a:b0:46e:21c8:ad37 with SMTP id 5b1f17b1804b1-46e61285328mr58217715e9.25.1759409261152;
-        Thu, 02 Oct 2025 05:47:41 -0700 (PDT)
-Received: from iku.example.org ([2a06:5906:61b:2d00:607d:d8e6:591c:c858])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e6917a731sm34541085e9.3.2025.10.02.05.47.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 05:47:40 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] dmaengine: sh: Kconfig: Drop ARCH_R7S72100/ARCH_RZG2L dependency
-Date: Thu,  2 Oct 2025 13:47:35 +0100
-Message-ID: <20251002124735.149042-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.51.0
+        bh=x3dE+UYXSAYSMrP4rWfQs9LXTI5k4tbEHLzxqaY9yVY=;
+        b=cXaJ1fEC968T59IOFVVXNS0XDmMiRuoUk6/jy3yU88/DQeo3qQNgwOTg8bA5yoxXnH
+         QdTIGrJT9bOhhBbujmSDevDzccXFFdggvE8diV/E+s1ARixbMhypbM0QnMiLld3nIZQk
+         /0mS6C1FPAvGw/4+Iveho0PCwxmH6hQlZK2BEddpRzsBTTJxaTjLGotAZQxeQxzSrPDV
+         WHtGkeDlbQtj3tTKxE1sy48S4Zxo6bU/z5iCslLGIddPGO3GKbfb79gZaM+eHAZHkRUm
+         snowvddFdURrPIv5XPg2vKfUdjPY2QxtifSsOACSIag3T6sY5ONMUKnBjNN6cnkK8ZpQ
+         fSFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqs7pNLon48efIhLywCrRlbukb5KeRMsX6xoz58kpyF2czFJEeso8oksYFhJPpB48rSha72Iw595o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza1zb+Kl8Y+rzM/jAjvX2pZK2OV+2k146Lf3U1vLmpevzfoOGQ
+	5lU5DmKE5uuBTXzHuKwfqCxwJ73BgHC7QZWPcyfOoAZwCT0JFMfkEgqkPohqmng5gR4=
+X-Gm-Gg: ASbGncsjhXzClTOj2JKdKuiR2tetoAFesn2MPQVzbhm4KYMWOKbG/EG7KTEoL5189yQ
+	4uQlp1tYgi3B9by2Wm57UQauac7akOd0/NHZ7iwIAgxWUXxMeJ8Y1jBF2+FzNCPELLGZLJM833W
+	v+XmCPFfCrQ7UZNj1/gCuH+QrwVE8kbz+DP3nDOnzeWPCNcww2/jyQhX5jQ/eirw3Odw+kmY+Tj
+	o8dixIx067NhXS5Vx4gtRs5oFohgrzwgeIZGeeZnJZUq9liv6/LFPYZChqDBwaClTUJNP+D9Hur
+	34PGqufGKWF7gSuH8SboSYlIoRYMDVvSi2qoIrs3uDSdCXJV8G9oUGb9fAX2uYreiLW+ORrMNfX
+	091An9grN3xnvzGrT6V4hpYE06zPipCIVAUqckIAf3syIaCzC6ZVb/yiJoIiEbY6MA9lr8buBmi
+	8lDNsdSEPhDB61ml0iL973QFE=
+X-Google-Smtp-Source: AGHT+IGNWuw4hq/ftA5a2GuIjAf5Ndq3Nmwgvoqk3rDvvTB7BbKi+ssiBKqg+/dWdAnSL1UfzhZaMg==
+X-Received: by 2002:a05:6830:d0e:b0:756:f259:2d42 with SMTP id 46e09a7af769-7bf2c763319mr2377655a34.12.1759410133117;
+        Thu, 02 Oct 2025 06:02:13 -0700 (PDT)
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7bf435eddc0sm617869a34.28.2025.10.02.06.02.12
+        for <dmaengine@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Oct 2025 06:02:12 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-43f9eb204baso1247980b6e.0
+        for <dmaengine@vger.kernel.org>; Thu, 02 Oct 2025 06:02:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUN0ArGMTP7D8BpCIz6dJ1bv+O8Pr6JQjdjgEBTZvMYj2juJkpmrLbjH4GXnT2zKoKXRCtoxwINc+4=@vger.kernel.org
+X-Received: by 2002:a05:6122:e017:10b0:54a:76f6:99e6 with SMTP id
+ 71dfb90a1353d-5523c01a219mr1048867e0c.2.1759409829773; Thu, 02 Oct 2025
+ 05:57:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251002124735.149042-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20251002124735.149042-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 2 Oct 2025 14:56:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXA0fWwO_5bBud5FE-Kwp-7zU_rb9rVPcuZojaNJT=tkA@mail.gmail.com>
+X-Gm-Features: AS18NWCCYsMv_0f38WPVlVfiPUyz1ABU_-4NHROasZoc_Eb-IAFzQ63J2o9bB7g
+Message-ID: <CAMuHMdXA0fWwO_5bBud5FE-Kwp-7zU_rb9rVPcuZojaNJT=tkA@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: sh: Kconfig: Drop ARCH_R7S72100/ARCH_RZG2L dependency
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, 2 Oct 2025 at 14:47, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> The RZ DMA controller is used across multiple Renesas SoCs, not only
+> RZ/A1 (R7S72100) and RZ/G2L. Limiting the build to these SoCs prevents
+> enabling the driver on newer platforms such as RZ/V2H(P) and RZ/V2N.
+>
+> Replace the ARCH_R7S72100 || ARCH_RZG2L dependency with ARCH_RENESAS so
+> the driver can be built for all Renesas SoCs.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-The RZ DMA controller is used across multiple Renesas SoCs, not only
-RZ/A1 (R7S72100) and RZ/G2L. Limiting the build to these SoCs prevents
-enabling the driver on newer platforms such as RZ/V2H(P) and RZ/V2N.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Replace the ARCH_R7S72100 || ARCH_RZG2L dependency with ARCH_RENESAS so
-the driver can be built for all Renesas SoCs.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/dma/sh/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+                        Geert
 
-diff --git a/drivers/dma/sh/Kconfig b/drivers/dma/sh/Kconfig
-index 8184d475a49a..a16c7e83bd14 100644
---- a/drivers/dma/sh/Kconfig
-+++ b/drivers/dma/sh/Kconfig
-@@ -50,7 +50,7 @@ config RENESAS_USB_DMAC
- 
- config RZ_DMAC
- 	tristate "Renesas RZ DMA Controller"
--	depends on ARCH_R7S72100 || ARCH_RZG2L || COMPILE_TEST
-+	depends on ARCH_RENESAS || COMPILE_TEST
- 	select RENESAS_DMA
- 	select DMA_VIRTUAL_CHANNELS
- 	help
 -- 
-2.51.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 

@@ -1,148 +1,131 @@
-Return-Path: <dmaengine+bounces-6767-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6768-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEF6CBBDA39
-	for <lists+dmaengine@lfdr.de>; Mon, 06 Oct 2025 12:13:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F62BBBE0F5
+	for <lists+dmaengine@lfdr.de>; Mon, 06 Oct 2025 14:41:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8B10189683D
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Oct 2025 10:14:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 116EA1891F60
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Oct 2025 12:41:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA61822172C;
-	Mon,  6 Oct 2025 10:13:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCEBC27A919;
+	Mon,  6 Oct 2025 12:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="U1YWadyo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y9+U7GdH"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542292046BA;
-	Mon,  6 Oct 2025 10:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343DD27FB1E
+	for <dmaengine@vger.kernel.org>; Mon,  6 Oct 2025 12:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759745620; cv=none; b=qlbmNUaKFmoxSdFxopZ/MLcl6ysfXoFOlxtjnod7DANsBZQDOf7dWAccUbCP3yBVyi+9ZTcoFOyqsXAAK/Otx6xFNzgccZFhjsQlRIt/d82GRAQQy5iDR6xx3XoY+lL3p/PL4XKP2vILUwkeE61k0AOPDFlY0N6fZjiLKCkySSQ=
+	t=1759754474; cv=none; b=JBCyldg4tRjLvNmLLk06KF5+76Wiou2ivWlJdD4a5zCgYbltWobqfp3tR4zwvdc/jH1+J6N7eGbPkEpmAGqLG9i/I8BxRnHP3HeKJ1gFEJauSJilx0aiCmntEZX6wwmfJXbtWpdVDC9gxSU0e0A4GonAXYWdzYivaFd75ygvmV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759745620; c=relaxed/simple;
-	bh=PHbc21kaTsr/iK9wGPsPvZQ0ScdAEYoydb2YAlePOy0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
-	 References:In-Reply-To; b=LXH+iTK1vohIYKvwOnmraHyigfZScBLL9m7r4TM/H4YdN55fK4W09wVRZFfxVDuXXUibr+7rvsfRsMcR4kBMLeCcJxOXByL9BUZgMi6wL72jSOVUbar+xJqA5yKJSgwaC1Jnv5kjL9L+3LL0l2x36BC8tQKSiTrqbYktifBhrDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=U1YWadyo; arc=none smtp.client-ip=195.201.215.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=folker-schwesinger.de; s=default2212; h=In-Reply-To:References:Subject:To:
-	From:Cc:Message-Id:Date:Content-Type:Content-Transfer-Encoding:Mime-Version:
-	Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=M2+AdvJEarXyjOc4kgwr0OGK2UDYTIAIMd4EPnbaUnk=; b=U1YWadyoifm7mM0YGP+poyHkVT
-	CQzuj1ezWhJjFCvgKBX1PwHo868THq65o/dt6vLLvzRFg2k6Jn6tDtGPDi9Tby22L4H0ckzeOGtsA
-	i5Kd6FAj9HxgLJbEl6aRrXZuEe6eHkYk3yXKFCWhl03Ohq0frjynbbsSvf5ziD0FyDxA6wYshycOD
-	AQxfENVX39WT8yQK9d4Ob2Zc9jpk3AdH8u1MU9bfO8xHMdAxNTWBJubJLwiG8mveJre2JAmn9vtZ+
-	crg7vQFCJ7cKctWs5RGjOPfg3IMbL/p+DS2rer5t2erLusdoVmlpmDU6RufiywivdEr1EC66Ev8gY
-	Sm0alTnQ==;
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1v5i2V-000C3T-0E;
-	Mon, 06 Oct 2025 12:01:55 +0200
-Received: from localhost ([127.0.0.1])
-	by sslproxy05.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1v5i2U-000EoX-1D;
-	Mon, 06 Oct 2025 12:01:54 +0200
+	s=arc-20240116; t=1759754474; c=relaxed/simple;
+	bh=1q+VIFZwiIkYLeXafY/FJdneXiBfYWG4ku3gvwDgztM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UIQ9RcCN0lUfPw8bku67AT2FrTAG1OpGDC5t9zyI8Tp2LlpYpkz50m92iPUOeLfkTa8iOQYUkj2vYUCjPDK5YlgGNl9jrdoR++eJAtKzPEhYXclkzJF+HdMKDtl6Z2kY+6JRJrza4wXNKkhCQg3abiiiLdAqnrs21kmwp5dLdac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y9+U7GdH; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-27ee41e0798so73746985ad.1
+        for <dmaengine@vger.kernel.org>; Mon, 06 Oct 2025 05:41:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1759754471; x=1760359271; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1q+VIFZwiIkYLeXafY/FJdneXiBfYWG4ku3gvwDgztM=;
+        b=Y9+U7GdHVxlxRcbLWgxFnJhZWjv0WuHwhBR1aJ5YyAcHU6lgYg8sy45faBEexJm6LT
+         Sq99XY3WqRecXZ55MDt/PYIGkKgEzUkq3eluEd2aHRDCfzQrXhuKRaIsCJqx7jnAGe8d
+         temHYUkj6XZ/Ix9bzJaaeY973feecNInSJ/4icGgRlx9UocHnrfQIpPaaE5Fedtbhqgj
+         fZDp2hEvSaddKWIF3PJo4xFI3eJvt67d/BQM0w+HVmxGkpjQqlqGsSDt6pOieypeVleV
+         F6bgM+8BlasNmovR2EZPlTgSx3s8qr8GWVQH+z4SJYkxijDRw+9A1kuz9y9F9F0btEVn
+         qK/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759754471; x=1760359271;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1q+VIFZwiIkYLeXafY/FJdneXiBfYWG4ku3gvwDgztM=;
+        b=KDOS919aVsqMyKqIoheX2HhLTuHE3x7sW6MXjFyRuN1pp9RNCV5zjBUSnCFcmYg0PZ
+         O0kekN6EZJv2el3du1h6GUjZwy722M009xmgUcKnACqGRpF1MUHI72OTSk8kLoTI51v0
+         DiLUTVVjNg3EUp3qNwdtnxL+IFgXM9joULb6YCL/MZK58L3BC3A/MqHIviq/cEd/2DZ5
+         0ND8bG/7cM+ox9cnONhuVxHtUgKuE8Fx1hNGp9CUW9h9nGGuE6eWKJ+sWKEPJlRcRzYu
+         RFhHWXbDS8ka6v1tiI32KuJ8WQ4+7ZSW+ecvTuTq+PlWybUogxYH3xXhUup9EQXTL0fJ
+         7knw==
+X-Forwarded-Encrypted: i=1; AJvYcCVeKW5VfElWaeH+UagpqdGLLxo252etga8iBouk+DR9P/5DRHuaCfPdPtE0voj+5WN+zLFhfT+4eq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk/9Pq+/PkxB3r/G1PSacBIcOAD3G6KViBR66LpfUngTg0bDr9
+	sAea6mF0NUX7y08tQiEtabaroGRkzlxFb6OPnAC/1dMohxPfpMoL2I1MdTqTr/sY3HTt4H4+wql
+	YTF3X5wjbMolbjnql8BCpTgGR/GwKqfdRShTAZtGz0w==
+X-Gm-Gg: ASbGncvNiHiBZSw63NVjRfWTl67Xb/xjiPOH5KH7O4B6XKTtnsCyZZ0Mflb+qdMb9De
+	QqjpFMzW+vmubg6RJFJ2qtns71O83ieRanptv3k822pC0Yxk8ZHf8hM04V1M7tiaYQoJFJXQI82
+	0hc4ao9n9UCGuTs7zTR0jc0HSnBqwmPd3S/+RJh9GgyXLPRph7Eepi14aJHYB3aoprI/IsHyuCq
+	JWpsLUenKgk7pwGcidxC1lwQS5VJ2erhycxMj/3Qn9s5ahKvCmwi+w+qcSK/OKuzTgkj7FU8r0X
+	PS8e7lc5pwD54dgJRpeDmPjp
+X-Google-Smtp-Source: AGHT+IGsLKBTasVAqEZ4v4KXBEfDfTM9A9ENdzksSzZ7BVLlJItKpXfKx4hZJPWcb6hfrOA5/IrXwYs5mVLZOS99Jts=
+X-Received: by 2002:a17:903:238a:b0:28e:873d:91 with SMTP id
+ d9443c01a7336-28e9a6563f0mr137927955ad.29.1759754471396; Mon, 06 Oct 2025
+ 05:41:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 06 Oct 2025 10:01:54 +0000
-Message-Id: <DDB5IDDEOVBT.NHJF03FYW2BN@folker-schwesinger.de>
-Cc: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>
-From: "Folker Schwesinger" <dev@folker-schwesinger.de>
-To: "Suraj Gupta" <suraj.gupta2@amd.com>, <vkoul@kernel.org>,
- <radhey.shyam.pandey@amd.com>, <michal.simek@amd.com>
-Subject: Re: [PATCH V2 1/3] dmaengine: xilinx_dma: Fix channel idle state
- management in AXIDMA and MCDMA interrupt handlers
-X-Mailer: aerc 0.21.0-9-ga57e783008e9
-References: <20251003061910.471575-1-suraj.gupta2@amd.com>
- <20251003061910.471575-2-suraj.gupta2@amd.com>
-In-Reply-To: <20251003061910.471575-2-suraj.gupta2@amd.com>
-X-Virus-Scanned: Clear (ClamAV 1.0.9/27780/Thu Oct  2 04:58:32 2025)
+MIME-Version: 1.0
+References: <20250918-mmp-pdma-simplify-dma-addressing-v1-1-5c2be2b85696@riscstar.com>
+In-Reply-To: <20250918-mmp-pdma-simplify-dma-addressing-v1-1-5c2be2b85696@riscstar.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 6 Oct 2025 18:11:00 +0530
+X-Gm-Features: AS18NWASLNw80j6ptJPPHIfrc8HYOqH-1LzEniT9J7aBBeWXoMD5tLZ1N6aS2Wg
+Message-ID: <CA+G9fYsTz6WTetGeWn=NX0fyX_j6qRR9XA_ETmJiYWDfCwyHWg@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: mmp_pdma: fix DMA mask handling
+To: Guodong Xu <guodong@riscstar.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Yixun Lan <dlan@gentoo.org>, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, elder@riscstar.com, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri Oct 3, 2025 at 8:19 AM CEST, Suraj Gupta wrote:
-> Fix a race condition in AXIDMA and MCDMA irq handlers where the channel
-> could be incorrectly marked as idle and attempt spurious transfers when
-> descriptors are still being processed.
+On Thu, 18 Sept 2025 at 19:57, Guodong Xu <guodong@riscstar.com> wrote:
 >
-> The issue occurs when:
-> 1. Multiple descriptors are queued and active.
-> 2. An interrupt fires after completing some descriptors.
-> 3. xilinx_dma_complete_descriptor() moves completed descriptors to
-> done_list.
-> 4. Channel is marked idle and start_transfer() is called even though
->    active_list still contains unprocessed descriptors.
-> 5. This leads to premature transfer attempts and potential descriptor
->    corruption or missed completions.
+> The driver's existing logic for setting the DMA mask for "marvell,pdma-1.0"
+> was flawed. It incorrectly relied on pdev->dev->coherent_dma_mask instead
+> of declaring the hardware's fixed addressing capability. A cleaner and
+> more correct approach is to define the mask directly based on the hardware
+> limitations.
 >
-> Only mark the channel as idle and start new transfers when the active lis=
-t
-> is actually empty, ensuring proper channel state management and avoiding
-> spurious transfer attempts.
+> The MMP/PXA PDMA controller is a 32-bit DMA engine. This is supported by
+> datasheets and various dtsi files for PXA25x, PXA27x, PXA3xx, and MMP2,
+> all of which are 32-bit systems.
 >
-> Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
-> Co-developed-by: Srinivas Neeli <srinivas.neeli@amd.com>
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@amd.com>
-> Fixes: c0bba3a99f07 ("dmaengine: vdma: Add Support for Xilinx AXI Direct =
-Memory Access Engine")
-
-For the AXIDMA code paths:
-
-Tested-by: Folker Schwesinger <dev@folker-schwesinger.de>
-
-> ---
->  drivers/dma/xilinx/xilinx_dma.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+> This patch simplifies the driver's logic by replacing the 'u64 dma_mask'
+> field with a simpler 'u32 dma_width' to store the addressing capability
+> in bits. The complex if/else block in probe() is then replaced with a
+> single, clear call to dma_set_mask_and_coherent(). This sets a fixed
+> 32-bit DMA mask for "marvell,pdma-1.0" and a 64-bit mask for
+> "spacemit,k1-pdma," matching each device's hardware capabilities.
 >
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_=
-dma.c
-> index fabff602065f..53b82ddad007 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -1857,8 +1857,10 @@ static irqreturn_t xilinx_mcdma_irq_handler(int ir=
-q, void *data)
->  	if (status & XILINX_MCDMA_IRQ_IOC_MASK) {
->  		spin_lock(&chan->lock);
->  		xilinx_dma_complete_descriptor(chan);
-> -		chan->idle =3D true;
-> -		chan->start_transfer(chan);
-> +		if (list_empty(&chan->active_list)) {
-> +			chan->idle =3D true;
-> +			chan->start_transfer(chan);
-> +		}
->  		spin_unlock(&chan->lock);
->  	}
-> =20
-> @@ -1914,8 +1916,10 @@ static irqreturn_t xilinx_dma_irq_handler(int irq,=
- void *data)
->  		      XILINX_DMA_DMASR_DLY_CNT_IRQ)) {
->  		spin_lock(&chan->lock);
->  		xilinx_dma_complete_descriptor(chan);
-> -		chan->idle =3D true;
-> -		chan->start_transfer(chan);
-> +		if (list_empty(&chan->active_list)) {
-> +			chan->idle =3D true;
-> +			chan->start_transfer(chan);
-> +		}
->  		spin_unlock(&chan->lock);
->  	}
-> =20
+> Finally, this change also works around a specific build error encountered
+> with clang-20 on x86_64 allyesconfig. The shift-count-overflow error is
+> caused by a known clang compiler issue where the DMA_BIT_MASK(n) macro's
+> ternary operator is not correctly evaluated in static initializers. By
+> moving the macro's evaluation into the probe() function, the driver avoids
+> this compiler bug.
+>
+> Fixes: 5cfe585d8624 ("dmaengine: mmp_pdma: Add SpacemiT K1 PDMA support with 64-bit addressing")
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Closes: https://lore.kernel.org/lkml/CA+G9fYsPcMfW-e_0_TRqu4cnwqOqYF3aJOeKUYk6Z4qRStdFvg@mail.gmail.com
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Guodong Xu <guodong@riscstar.com>
 
+Patch applied on top of Linux next-20251003 tag and build test pass.
+
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+
+- Naresh
 

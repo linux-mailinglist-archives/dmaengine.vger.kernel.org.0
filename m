@@ -1,202 +1,140 @@
-Return-Path: <dmaengine+bounces-6772-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6773-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0129BBC15FF
-	for <lists+dmaengine@lfdr.de>; Tue, 07 Oct 2025 14:35:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9AACBC1B9E
+	for <lists+dmaengine@lfdr.de>; Tue, 07 Oct 2025 16:27:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E0AF5189D18B
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Oct 2025 12:35:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BAF6A189FCE7
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Oct 2025 14:27:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6870F2DF12C;
-	Tue,  7 Oct 2025 12:34:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 875F62DC77E;
+	Tue,  7 Oct 2025 14:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qi0DyxJs"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADAC2D94B8;
-	Tue,  7 Oct 2025 12:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A884374EA;
+	Tue,  7 Oct 2025 14:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759840496; cv=none; b=T9/z3eQYs/jN5YT/BaElQwl28uU1Vo0V81jOsdet5q6i5QsqrZ+/tsKC8nw2gOJj97A5FnqFXw1BKAUloq6Pi0vtVZYVZonUeJBo/Al3qvSrBsuQGqKKIl+B1gTzP90aLdc/BXWa1Y/Hy2witlZotLtu4l3LT0tXIsogGLkx+RQ=
+	t=1759847239; cv=none; b=EQzucie1TIb7WL8dgaAMyehGDKM7O8UIsu/WApXbYFQFNwN4RttVa4s6fkgXY+pQ9Fb1IP1mvbkHTs1HBSTtcI5L2H0dirocSGqqpQYS284R2yiSirqttxpmBO+UeP9hAkRlOWwZ+OWPgwNMU/vF0AbajeMO1thURehc6Y0XSaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759840496; c=relaxed/simple;
-	bh=DWZcXv4LGKuHQYrqbAmttjXhAkTF8/LAO+/rgtkGZWg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jKlzAi0Nm9p1mQHsZmzYeuE2uMvWLYvdht+D+MyRfvBv3OxiuMYqo0mBkz1L+1U+hqXYjsjtz0sbofMBIA0+krpz4nykx5qTmI6cw1dwcaSXdfECoZYqhRZc/6e+qrdrYUTMv2k1J4SwETLxgPjKUHkQ9PLnAXJQ6SEsXi0FK1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 597CX1bh055627
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Oct 2025 20:33:01 +0800 (+08)
-	(envelope-from cl634@andestech.com)
-Received: from swlinux02 (10.0.15.183) by ATCPCS31.andestech.com (10.0.1.89)
- with Microsoft SMTP Server id 14.3.498.0; Tue, 7 Oct 2025 20:33:01 +0800
-Date: Tue, 7 Oct 2025 20:33:01 +0800
-From: CL Wang <cl634@andestech.com>
-To: Conor Dooley <conor@kernel.org>
-CC: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <tim609@andestech.com>, <cl634@andestech.com>
-Subject: Re: [PATCH V1 1/2] dt-bindings: dmaengine: Add support for
- ATCDMAC300 DMA engine
-Message-ID: <aOUIfaZY7-eUYoOS@swlinux02>
-References: <20251002131659.973955-1-cl634@andestech.com>
- <20251002131659.973955-2-cl634@andestech.com>
- <20251002-absolute-spinning-f899e75b2c4a@spud>
+	s=arc-20240116; t=1759847239; c=relaxed/simple;
+	bh=fupViCAz8iND5iRZgk/y8oRp+GEBBSN2aVYMkxYZGys=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aj7S/ann/KyPKM2ia8nKuyg5pw7OIqv6mUh4RhvVrx3IlikD2Z8aTglOwedFhaXxRdwPFTzPWa688yiqkz9Fy0w7cxZLfKIwMDt5p1n9eIolA3qkPVFPnqzzamKQZDRJrcwhXIBuUgvq54mOILe61YOroMVf77LDFbx3cSPs5V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qi0DyxJs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8D40C4CEF9;
+	Tue,  7 Oct 2025 14:27:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759847238;
+	bh=fupViCAz8iND5iRZgk/y8oRp+GEBBSN2aVYMkxYZGys=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Qi0DyxJs0kaAjnfZ4eH7x7ua8DAPq2HX4/l18oVa+Uw93NxeFze+9nz+LKCwSjK3r
+	 jktmARiINYEU2xh/F3+HeeQlqdBRa8XOGXof3YqnuIxNjNE6HD5SE50ykBYEm2B4Td
+	 yVYf+3XYgRM8ijAGeMia6fcGoKWlS4O8i6Sp9hvK6q3KdV8UcRVvvyG1sec8QQQu4K
+	 bJ6GmRJ4s8OF51N9z0gviUOk8Z+hOq8g/N8Iw2I6BOHtzE57/UcIp0cvKxK/LXuFhz
+	 ctzSeoX52eSOk7sIvggUpdKQaPRg1m/iX7UH9Vjj7owN6sGgZN8c0NxRmSF15CCEPz
+	 KHz25D8kRW2lw==
+Message-ID: <734de17e-a712-4eb5-96fa-b7e75f86d880@kernel.org>
+Date: Tue, 7 Oct 2025 23:27:12 +0900
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251002-absolute-spinning-f899e75b2c4a@spud>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 597CX1bh055627
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1 1/2] dt-bindings: dmaengine: Add support for ATCDMAC300
+ DMA engine
+To: CL Wang <cl634@andestech.com>, Conor Dooley <conor@kernel.org>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, tim609@andestech.com
+References: <20251002131659.973955-1-cl634@andestech.com>
+ <20251002131659.973955-2-cl634@andestech.com>
+ <20251002-absolute-spinning-f899e75b2c4a@spud> <aOUIfaZY7-eUYoOS@swlinux02>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aOUIfaZY7-eUYoOS@swlinux02>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Conor,
-
-Thanks for your review.
-
-Yes, the DMA driver supports the Qilai platform. I have updated the DTS binding as shown below.  
-Could you please take a look and let me know if anything still needs to be adjusted?
-
- properties:
-   compatible:
--    const: andestech,atcdmac300
-+    oneOf:
-+      - items:
-+          - enum:
-+              - andestech,qilai-dma
-+          - const: andestech,atcdmac300
-+      - const: andestech,atcdmac300
-...
-         dma-controller@f0c00000 {
--            compatible = "andestech,atcdmac300";
-+            compatible = "andestech,qilai-dma", "andestech,atcdmac300";
-
-Thank you again for your feedback.
-
-Best regards,  
-CL
-
-On Thu, Oct 02, 2025 at 07:40:35PM +0100, Conor Dooley wrote:
-> [EXTERNAL MAIL]
-
-> Date: Thu, 2 Oct 2025 19:40:35 +0100
-> From: Conor Dooley <conor@kernel.org>
-> To: CL Wang <cl634@andestech.com>
-> Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, robh@kernel.org,
->  krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
->  linux-kernel@vger.kernel.org, tim609@andestech.com
-> Subject: Re: [PATCH V1 1/2] dt-bindings: dmaengine: Add support for
->  ATCDMAC300 DMA engine
+On 07/10/2025 21:33, CL Wang wrote:
+> Hi Conor,
 > 
-> On Thu, Oct 02, 2025 at 09:16:58PM +0800, CL Wang wrote:
-> > Document devicetree bindings for Andes ATCDMAC300 DMA engine
-> > 
-> > Signed-off-by: CL Wang <cl634@andestech.com>
-> > ---
-> >  .../bindings/dma/andestech,atcdmac300.yaml    | 51 +++++++++++++++++++
-> >  MAINTAINERS                                   |  6 +++
-> >  2 files changed, 57 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/andestech,atcdmac300.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/andestech,atcdmac300.yaml b/Documentation/devicetree/bindings/dma/andestech,atcdmac300.yaml
-> > new file mode 100644
-> > index 000000000000..769694616517
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/andestech,atcdmac300.yaml
-> > @@ -0,0 +1,51 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/dma/andestech,atcdmac300.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Andes ATCDMAC300 DMA Controller
-> > +
-> > +maintainers:
-> > +  - CL Wang <cl634@andestech.com>
-> > +
-> > +allOf:
-> > +  - $ref: dma-controller.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: andestech,atcdmac300
+> Thanks for your review.
 > 
-> "atcdmac300" sounds like the name of an IP block. What platforms are
-> actually using this? They should have platform-specific compatibles, for
-> example, "andestech,qilai-dma" if that's the platform where this is
-> supported.
+> Yes, the DMA driver supports the Qilai platform. I have updated the DTS binding as shown below.  
+> Could you please take a look and let me know if anything still needs to be adjusted?
 > 
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  "#dma-cells":
-> > +    const: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - "#dma-cells"
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    soc {
-> > +        #address-cells = <2>;
-> > +        #size-cells = <2>;
-> > +
-> > +        dma-controller@f0c00000 {
-> > +            compatible = "andestech,atcdmac300";
-> > +            reg = <0x0 0xf0c00000 0x0 0x1000>;
-> > +            interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> > +            #dma-cells = <1>;
-> > +        };
-> > +    };
-> > +...
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index fe168477caa4..dd3272cdadd6 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -1778,6 +1778,12 @@ S:	Supported
-> >  F:	drivers/clk/analogbits/*
-> >  F:	include/linux/clk/analogbits*
-> >  
-> > +ANDES DMA DRIVER
-> > +M:	CL Wang <cl634@andestech.com>
-> > +S:	Supported
-> > +F:	Documentation/devicetree/bindings/dma/andestech,atcdmac300.yaml
-> > +F:	drivers/dma/atcdmac300*
-> > +
-> >  ANDROID DRIVERS
-> >  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >  M:	Arve Hjønnevåg <arve@android.com>
-> > -- 
-> > 2.34.1
-> > 
+>  properties:
+>    compatible:
+> -    const: andestech,atcdmac300
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - andestech,qilai-dma
+> +          - const: andestech,atcdmac300
+> +      - const: andestech,atcdmac300
+> ...
+>          dma-controller@f0c00000 {
+> -            compatible = "andestech,atcdmac300";
+> +            compatible = "andestech,qilai-dma", "andestech,atcdmac300";
 
+What is "atcdmac300" then? Usually the recommendation is to go only with
+soc-based compatibles, not IP blocks. See also:
 
+https://elixir.bootlin.com/linux/v6.17.1/source/Documentation/devicetree/bindings/writing-bindings.rst#L42
 
+Best regards,
+Krzysztof
 

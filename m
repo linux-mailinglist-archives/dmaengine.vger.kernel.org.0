@@ -1,146 +1,131 @@
-Return-Path: <dmaengine+bounces-6790-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6791-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECE2EBC4D26
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Oct 2025 14:33:23 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67B7ABC53D2
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Oct 2025 15:37:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 276ED3ADBAC
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Oct 2025 12:33:20 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BA4944F8F36
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Oct 2025 13:37:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D44246BB6;
-	Wed,  8 Oct 2025 12:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OwWibGsX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C1F5285C83;
+	Wed,  8 Oct 2025 13:37:21 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE38242935
-	for <dmaengine@vger.kernel.org>; Wed,  8 Oct 2025 12:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74ED134BA44;
+	Wed,  8 Oct 2025 13:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759926796; cv=none; b=akTxRs313NbwGuZT0bpXtmf9Ny5NWPg5UabcapJ1XsiuYu/mpoFnB/NQxWYsmPv7M3NtO3tFjtlpgCXOahILC876tvRYWGHqynFXgGh5r/ryAP4LH9T6P7aqPFFrV92VdvwZclJorQezVjqUjqXkioRn6FU4PSx/V5L0xfXxVMI=
+	t=1759930641; cv=none; b=MkySk+ty+H3zGktCEAhBuqj7bMmNpgZJ+0FWr+F6RbjcCVyjzqtMYorwSD6cwLoEG+WXmRjD+oQWj/IF4bqUkHNucRp+4pAaR3duo/7CUHTm/5PoWToBFEQruoB/sGY2+lamSI3WGMKwXEOwUKJ0/xxnMmLtJxbC6y9rqTU5/zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759926796; c=relaxed/simple;
-	bh=//8t1NhDDv3aZbpcl1yQGBSqtJZBajxd+nNDjr8+aZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XGIhBE4QpUStasYuTKVnlAJ39cvCunyee+qw39fcjPyPTsZduy0FXsHwMc+5ScTW13mqw7QdUzym4qaKwRkqLeEZyzFw/tMCmOyAK6aonxDMbLy0eb8Ixl07G5T7h0IOvqKoaarjZIZTAys+Mt3aE0t5lr5eZDwzZEEOSPK9bsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OwWibGsX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59890aEM002321
-	for <dmaengine@vger.kernel.org>; Wed, 8 Oct 2025 12:33:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Z6wfZSf95CHgtI1KREXLOgXa2xinD3Ro5IOxdVOqt1o=; b=OwWibGsXastOCWwr
-	cudCgCHYC3kFVxy/+gifKXtSuRoJA12pH6krQQ/9vpIXomveUt8DRhn4APEXzvLk
-	/PjS8JG/Y9rHRb6Zo2AKnO3FStOc4wtM0hk0LkczeluGOkwKBc83qJ3F4OC0y1Sw
-	1wZBz9HejLtzAyp72fBgzF3kbYFBH2BlLevmJgdfXH3KhIdU0K7+EUGkDr1ZlNro
-	qgZXCpyGb3RenY1eURE67+op9heoga2pHXrtJkaBPj07IanynFy4Ofc0i9ILfbKU
-	uJDL42//AcZJx77rVT7ISV9NAJbQSVnZurZSkzSSihW3XPF71TIaGRZ+DZvwejfo
-	2XnlAA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49jrxnask9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Wed, 08 Oct 2025 12:33:14 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8572f379832so183528385a.3
-        for <dmaengine@vger.kernel.org>; Wed, 08 Oct 2025 05:33:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759926793; x=1760531593;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z6wfZSf95CHgtI1KREXLOgXa2xinD3Ro5IOxdVOqt1o=;
-        b=Gj6xqZ27qOuDRe/PVCQig57MqcwGvkSqSWxYNzkG7gpPHPpcF0+OIZpTklkkIXFEQZ
-         cq/n966yYlgDzPo/SHexvI2JZSjbZARIbmB9XawYQHoz/lMyN4yigi+KyBLsyGRDwE2q
-         UpVbL7ri3BiQPtiYsbO7Qm1PoqnkuQpwJnWSc+DKR/uwlcZGqdN9WVT41nHYrLP01c6Y
-         DFVuQ2O9I3+EpKueAsI3GpqK1Pp0UIznl/wzRzuvPJgigyZpbtnJDnyvogUQTV/Fglf+
-         naAOdWtE6EsjxR35PIv7Z9bhStqdI3bFtMnViv2vRCLt5lcq8m56ge1K5+9no2PQKgur
-         aBpg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+s5TLeSQ3sIHV+7zCADCIPpuVlfv0cEbS+ZYh9m19+FMivLd+xurDFALfkN/Y9tUxopQHhP9x6Jo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2fQr5qScNYWXJkm+x0b/Ww1+W43tBFOEYQGPKlfMHy6zXpF15
-	OSOvaxO4z+jkMfYmgKIe+863R8Dy/v0G2saBT/xGvgcK6F1pFdLotLKQTf8rlZ6wRkQ7VnBWx72
-	fodNg6jww1JYm6tQYffyKNjOm2m3OvkYIQuTXRwlaS4DKPfelO/UdDLrlhOO3YD4=
-X-Gm-Gg: ASbGnctA0WtAvOitorzlXHbVbUrUcibue6N2WPqqqV3oMC7b2U6Z0cGDSpkpmUHZwHW
-	EVcpxtxUQOzEE9WEfM/H/Pa3ZmIDUferdR9XFmJX5zFl3YHPZXt6lMGydG9MKEkP02xop6W9uXr
-	6Aa5KBsXyLaWYe61QWg9KglB2DHW66ryEFSAFsGJ5Jzzsn2QhnFXla7yY/N0mdKBLgKsdupPwZX
-	SUlM7YAWLuOXVhcu6VcPi2A40HdCcbSkLoEXaDqJT5jQmKSYiQd+B0yvCCerH2Yn4mLWUDk4afh
-	tQKTggfdCb7xz0fLiJveM7bzU6+Z6JHfsgU/zMj+CJs9RpEXR+TqSG1kzq/3zKSCo04GEqY//TG
-	bY+TljDwKbbXt0GWR5JeAR9oulpE=
-X-Received: by 2002:a05:620a:4456:b0:85e:429b:b5ae with SMTP id af79cd13be357-88354304602mr338461685a.12.1759926793210;
-        Wed, 08 Oct 2025 05:33:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFAq5uquGqZ+wqlPlamUADJJRHAYrFogaML2CeN1PWbZyjBahtgdInWklh6rUXYPttev4j0qQ==
-X-Received: by 2002:a05:620a:4456:b0:85e:429b:b5ae with SMTP id af79cd13be357-88354304602mr338458985a.12.1759926792743;
-        Wed, 08 Oct 2025 05:33:12 -0700 (PDT)
-Received: from [192.168.149.223] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b4869b57f0asm1648527866b.77.2025.10.08.05.33.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Oct 2025 05:33:12 -0700 (PDT)
-Message-ID: <24544f3e-f9c3-4650-a300-a786ef589be5@oss.qualcomm.com>
-Date: Wed, 8 Oct 2025 14:33:09 +0200
+	s=arc-20240116; t=1759930641; c=relaxed/simple;
+	bh=2++gi+3fbP2waS3+p89+F+/Sm7MsrHb0KRMpSa7Niw0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pEnrdvFQKHg/lMQKCOLw7xYox5ejB6dkaf62FIlyVFXvSAAhKIIm2E6FlsFBX6HN7EsEMbwcaf6qlSvDhFSbff6Up0D3K8+jg6VkE4hHiYxCNDwhmf08LaXq2Ntu8Z6dJcTfOBrMXA4wQtRE06b0QymhT6kauowOc/Pz1GQVA2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
+	by Atcsqr.andestech.com with ESMTPS id 598DZFiu019619
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 8 Oct 2025 21:35:15 +0800 (+08)
+	(envelope-from cl634@andestech.com)
+Received: from swlinux02 (10.0.15.183) by ATCPCS31.andestech.com (10.0.1.89)
+ with Microsoft SMTP Server id 14.3.498.0; Wed, 8 Oct 2025 21:35:15 +0800
+Date: Wed, 8 Oct 2025 21:35:15 +0800
+From: CL Wang <cl634@andestech.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+	<gg@swlinux02.smtp.subspace.kernel.org>
+CC: Conor Dooley <conor@kernel.org>, <vkoul@kernel.org>,
+        <dmaengine@vger.kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <tim609@andestech.com>,
+        <cl634@andestech.com>
+Subject: Re: [PATCH V1 1/2] dt-bindings: dmaengine: Add support for
+ ATCDMAC300 DMA engine
+Message-ID: <aOZokztqpHHX0JPq@swlinux02>
+References: <20251002131659.973955-1-cl634@andestech.com>
+ <20251002131659.973955-2-cl634@andestech.com>
+ <20251002-absolute-spinning-f899e75b2c4a@spud>
+ <aOUIfaZY7-eUYoOS@swlinux02>
+ <734de17e-a712-4eb5-96fa-b7e75f86d880@kernel.org>
+ <aOXW7HUMeOyABuUG@swlinux02>
+ <dcd14886-f2cc-41ec-8bb5-9cb5ed50c452@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: ipq5332: Enable QPIC SPI NAND
- support
-To: Md Sadre Alam <quic_mdalam@quicinc.com>, broonie@kernel.org,
-        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-        andersson@kernel.org, konradybcio@kernel.org, vkoul@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Cc: quic_varada@quicinc.com
-References: <20251008090413.458791-1-quic_mdalam@quicinc.com>
- <20251008090413.458791-8-quic_mdalam@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20251008090413.458791-8-quic_mdalam@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA0MDAwMSBTYWx0ZWRfX3iTwuaD9/goV
- MlRqeUEbKhXXtb73xc4dJDYBRUx2xELPpGkbfR+9ILWLjyhu7fk1vbmbSJuWTX5TG8ZwY4jXGvx
- 0zYe/pCUukZHnJXUWfPPr8HC33lzwj2JvWLSrAObpGnKF7ZToAIxzYyqCj51eiMql6RYE7kqwRp
- bKbV5oO0JAyAEBbL5uHBvmt4PuiIDM84h8InpDpJu4u+DqsUbH6oM4ELH0ukoLmy+ZX6xzRRTON
- 9EkDzTa/K/jTKJSEMSR96QRzUrSu59Nl7J/t0VZ1XC2utwLlx1LHMMFUkF6TI8Rvs+3hH0HQpxr
- 5h3GmIpb8DWLOZyH8serpAGB9OkKrX+XYAe87w9055yNPez9IukgGfB/aYCqnqZtWFghB27UgtI
- 5uR5B51nL8LCZRF1l1RVjo4WhvHOMg==
-X-Proofpoint-GUID: JvYwEvkS-nS9lfmcEviKpupb29SJuz9F
-X-Proofpoint-ORIG-GUID: JvYwEvkS-nS9lfmcEviKpupb29SJuz9F
-X-Authority-Analysis: v=2.4 cv=EqnfbCcA c=1 sm=1 tr=0 ts=68e65a0a cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
- a=Swz0U_bwno74A2bXjT8A:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-08_04,2025-10-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 suspectscore=0 bulkscore=0 impostorscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2510040001
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dcd14886-f2cc-41ec-8bb5-9cb5ed50c452@kernel.org>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 598DZFiu019619
 
-On 10/8/25 11:04 AM, Md Sadre Alam wrote:
-> Enable QPIC SPI NAND flash controller support on the IPQ5332 reference
-> design platform.
+Hi Krzysztof,
+
+Thanks for the clarification, and sorry for the earlier confusion.
+
+To elaborate on the rationale:
+"andestech,atcdmac300" is the IP core name of the DMA controller, which serves
+as a generic fallback compatible shared across multiple Andes SoCs.
+
+Primary compatible (SoC-specific):
+andestech,qilai-dma refers to the DMA controller instance implemented on the
+Qilai SoC, following the SoC-specific recommendation.
+
+Fallback compatible (IP-core specific):
+andestech,atcdmac300 represents the reusable IP block used across different
+Andes SoCs that share the same register map and programming model.
+
+Keeping andestech,atcdmac300 as a fallback helps avoid code duplication and
+allows a single driver to support future SoCs using the same hardware IP.
+
+This approach follows the DeviceTree binding guideline:
+
+“DO use a SoC-specific compatible for all SoC devices, followed by a fallback
+if appropriate. SoC-specific compatibles are also preferred for the fallbacks.”
+— Documentation/devicetree/bindings/writing-bindings.rst, line 42
+
+Please let me know if this aligns with your expectation.
+
+Best regards,
+CL
+
+On Wed, Oct 08, 2025 at 05:04:53PM +0900, Krzysztof Kozlowski wrote:
+> [EXTERNAL MAIL]
 > 
-> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
-> ---
-
-subject: ipq5332 -> ipq5332-rdp-common:
-
-with that:
-
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Konrad
+> On 08/10/2025 12:13, CL Wang wrote:
+> > Hi Krzysztof,
+> >
+> > Thank you for pointing this out.
+> >
+> > "ATCDMAC300" is the IP block name of the DMA controller used in Andes SoC.
+> > According to your suggestion, I have updated the binding to use SoC-specific
+> > compatibles with "andestech,atcdmac300" as a fallback, as shown below:
+> >
+> > -  const: andestech,atcdmac300
+> > +  items:
+> > +    - enum:
+> > +        - andestech,qilai-dma
+> > +    - const: andestech,atcdmac300
+> > ...
+> >    dma-controller@f0c00000 {
+> > -      compatible = "andestech,atcdmac300";
+> > +      compatible = "andestech,qilai-dma", "andestech,atcdmac300";
+> 
+> That's exactly the same code as you pasted before. Please do not repeat
+> the same as argument to my comment.
+> 
+> Best regards,
+> Krzysztof
 

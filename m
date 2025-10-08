@@ -1,183 +1,164 @@
-Return-Path: <dmaengine+bounces-6784-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6786-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A09DBC41DA
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Oct 2025 11:07:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF3B8BC493E
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Oct 2025 13:36:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 95A0E4F96E3
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Oct 2025 09:06:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4C0F18824BF
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Oct 2025 11:36:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 593752F549B;
-	Wed,  8 Oct 2025 09:05:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEEC52EB878;
+	Wed,  8 Oct 2025 11:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V+fOwSP5"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pQOFmVmO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB81A2F291D;
-	Wed,  8 Oct 2025 09:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2979925B1CE
+	for <dmaengine@vger.kernel.org>; Wed,  8 Oct 2025 11:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759914322; cv=none; b=TTxj4JDH4wis/RPjJoDuOjxe7M9KDOLMCK37+fEr7+YAPwa8+g+VjASaBafhfUVW9KxQCAtCK2Xk+F84nYmWorhXYxNEp3gIA7FyAC/JSPvotrUatspLKGquerihxIUWJ1/mWI1yVQh0oOSDrdKSRqPNnmC3yudp0lskJr0cT60=
+	t=1759923360; cv=none; b=mg8KKZGJTIYlwT+QzkR2yE0Ogbh70lX/djKCD2VaPqXNVfuxAQNEWtaDRkOaRM9Ub9IslIlw30SueVfpJEM4qy6cB9tdXrveV8ybuj6w3vGZqfvzAbIMf3+bIX9G9naT5C7HY27F9Q0XuQGtpJ8xjcOWUnYFXgYPxFzns9yezLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759914322; c=relaxed/simple;
-	bh=zG2SFgAnMTvX66JU4U3aOYt1Khpl+xBXFVeSii48E0U=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iGvGH+EGhaozZkN/w8qf7bF7cU6rL7uW1XmoZbrskyd/Zokq+/X4QiI5T0C2MkH7BaVY/uyxoY80A/Bz6LNLlEeF7W6cyR6SIkE0hwh2r4c9ixs+Ir3p9g1qoUkmuYjEy1QaYjBXzpquR9d8V9la1RrLw/7awJjmha6N/tuffLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V+fOwSP5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59890NNj009328;
-	Wed, 8 Oct 2025 09:05:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	s=arc-20240116; t=1759923360; c=relaxed/simple;
+	bh=5Y1g8IlsAUsUyZg4rL9NNl2CE/y+DiX7jrFayofh7Go=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FTKX1dfvCdQVgNmfN9mrlWoQBDBSHh4V/on26ZDGiMfsxSH+YQ3Ikp+cDCL95tkP8UkIN1YX0ngXe7fZcW6GHjaE393vUwsbzzaw9j4H+eC5A9X/aRo8UQFQgUGcQa4eIDF2zxT2gT3JOkGFZU5TWoS3FIEz0ycsqtKDS57kKHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pQOFmVmO; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59890PmY011898
+	for <dmaengine@vger.kernel.org>; Wed, 8 Oct 2025 11:35:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Ya5YD8J5ZfX8Sq9ehJaERVblUtQVWIBl5djuMxZL1Kk=; b=V+fOwSP5DosBlZOA
-	5YGUaC/GyFnDY3KwPhW+Z/folGaIDxq2ZCDDv4aPNbeDDDDlnRBgEBGJC1jCvPSi
-	5yrvSQipG3R/bKCNV9z5ssS6rAi6n6MXcY2ITX3yk4lhY5V1TRup5bgIZ1BFMfct
-	W282U/kKTn1JMsgaxcemReKgLaIPhR5W5qeROodaynEVYmtWpKmwxsYeEq/2UX/o
-	HjthsS5buBoXKHVedGX1MbrVL7Y+lUKYvj3b603kvvHJeHGyBHYZgQ4ngKWkxusl
-	p63G7gPKbJLgrdZlF6wFMACN6+zUWK1CwRY7/e5+HtLqxQ0ZhzhohwcwrW4/yj9D
-	Ifb2Gw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49junu9vym-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 Oct 2025 09:05:17 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 59895F1S011846
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 8 Oct 2025 09:05:15 GMT
-Received: from hu-mdalam-blr.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.24; Wed, 8 Oct 2025 02:05:10 -0700
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-To: <broonie@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <vkoul@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>
-CC: <quic_varada@quicinc.com>, <quic_mdalam@quicinc.com>
-Subject: [PATCH v2 9/9] arm64: dts: qcom: ipq5332-rdp442: Remove eMMC support
-Date: Wed, 8 Oct 2025 14:34:13 +0530
-Message-ID: <20251008090413.458791-10-quic_mdalam@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251008090413.458791-1-quic_mdalam@quicinc.com>
-References: <20251008090413.458791-1-quic_mdalam@quicinc.com>
+	UcxtLcFi/NHIwxXXVTKMaEEjGDe7tRYGlHaZ/t/nCmw=; b=pQOFmVmO4VUYyJUR
+	WsJp1Alph3OVUyni6JKCB8fp03H/V6aPEbFeV7wwvucNFgmZYHRXgg3qM8DaCZ+g
+	Iw9dqWVVJz7Ea5BUNina3v7Cmc8/wupTeEJU2d9SpJ4AWcyrgSpn6LNzLx9x0QYY
+	BhPtQTEfy3Z+pkxhLt03iZIWi2bMfsqZsVYeHb/C+Kr1i4zfZd1LMrBSZ2bzinLy
+	ugIFRORtuZ2Ylct0NjedOlXc04Z/qccVTwkysrSOwgRfbfYxkJSw5OpK6Vzm6CN3
+	cx54w1U+gU0o3ZgxL5gXGCQys3tlN1Yk6V7wWZekmEBn9dTsKgYzUgZZy2jlJzKy
+	sWVwoA==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49mnkpw3n4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Wed, 08 Oct 2025 11:35:58 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-85db8cb38ccso217445585a.0
+        for <dmaengine@vger.kernel.org>; Wed, 08 Oct 2025 04:35:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759923357; x=1760528157;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UcxtLcFi/NHIwxXXVTKMaEEjGDe7tRYGlHaZ/t/nCmw=;
+        b=ZbSoTrGPcFKRxAk1+Oain8VRa2852rllyEkxtL+2BnLWepB49DscLIGEu/3RNepicb
+         c8Xywm5Qk3OEAuu9YMaQvcsYk4jlXk6LFZL7uYHAay8vl2UDQN16dIfAj3IWt1jXpUGk
+         FaL8MPA58A83YAzPQnqjJCX/ZAeC+UNwhYgt/y/PShMIr607vSyim7RMxw1qYXHii9+1
+         uTCuhEZYnlwY8QuuY9qZp3wHvs6CCK869J++mGmsG9T8nZJLbdkdfOSNQO2dNVdlIdFm
+         7eRZMBp0om3psMBUy2Lf+u4bT9AZRhLq1JQZLYBesxBT9dOVfq80T8f+/wUGG9WF3+FH
+         QL5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXZ/mAeyfj6pPv43/yrae69ks7NuCET+7WH4nzTOlsj/kMSBOHair0s9B+2r0SitC3Q32mn2sj9KPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytP+dNKOMte+SioeiDi1t+8vib4pWKxR7QIFrLiTpSIcMTRB/W
+	yPng6GKgfynIeRRIGOtZtKziwCmPs1a0qm8aOoAWLHcFMHrOwBREJ2dTUGe+t8KJLmDf2EMfYzQ
+	GjxR5Wykt+UecEUZZqg+js8xm3eO4h+WCn8yWzVzHVp6jS14SZs09UltHWXqStxY=
+X-Gm-Gg: ASbGncuFjIG4oPR+t39ZYHVp/hzh/j4gBvBVuLv34v2167mTqSCjsumkzzhj8/67wDF
+	hYt9M+PMBty8bzVdGdGqwtM2CHTKR8cepNPXyUNK+4omuQAzXcD1sqhayfx8HQ1Jca7RD9fUEjn
+	L8AVzG/tGwTFUoNXrzM+3pJTIRz6VhjvVdyKItL0RdsyMJuvgmTgGuzkfVMbAAOZ9d0HCHxBkcr
+	gXkl70C040rWLZIYjbYCwqP72vq1obKhr0lqNeZfZRnM0mr8BJOUqRvuEZ/1WCBFQH/mP3c/Rbn
+	O+fTUJXkMhX0gq9N3xzLOv8m2c3T5pdhIOaoUD31tj04iRCW8mpWOHglPPuFxom7D22T0br8Wux
+	NhjhQdvv8hHc1NiN2k/W3MwAoJz4=
+X-Received: by 2002:a05:620a:17a7:b0:812:81c6:266c with SMTP id af79cd13be357-8835420965cmr273036985a.9.1759923356958;
+        Wed, 08 Oct 2025 04:35:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEt/p9KWaL1e9SZdVmnvmGbbEbWOxiPEBK7bXd20TZj+ydCuPVXuNpIcjVWSXqwKTr1FFN+RA==
+X-Received: by 2002:a05:620a:17a7:b0:812:81c6:266c with SMTP id af79cd13be357-8835420965cmr273034785a.9.1759923356368;
+        Wed, 08 Oct 2025 04:35:56 -0700 (PDT)
+Received: from [192.168.149.223] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b486970b0c7sm1705829566b.57.2025.10.08.04.35.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Oct 2025 04:35:55 -0700 (PDT)
+Message-ID: <aa06df81-e594-469a-85ee-9dd1e192e2f4@oss.qualcomm.com>
+Date: Wed, 8 Oct 2025 13:35:53 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Kraq27VDwgEbpSjrNyordR9aADVuwCjK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA0MDAyMyBTYWx0ZWRfX+JVdjiAOsGT1
- 4ZGI/4H1Dk5MG2R5+gyw85a7kvF+ZcYpKdQBZ22/amd+/ab5odLg5y4u8CM5PjR1Agg2FsnVFZe
- 2OEqOQ/6lsd6hPGGmMmBzC5DiTwvk/8q5/chLQvMXzXcnbTmnPtCEwXnMPSgJes79HyKQgFiv1g
- 6zLJhgminLkds/MbyJye0QnhfobuY/ewJya8/kQ2Nw5AbBV/e3/GcwDnsit01NLFHon1Cv4w67s
- vhSDJOeJuhy3ONfUH1Zdf19hwwtPmwvCQw907r0lcyZjIhSv3wUcLNt/fBTnT0IQNHjnwVEFY/x
- ToQI1ClV9mUQ3GeCwRl6Y7FiUcHF6PVQWcX6F8KF072XNbFp4W1sSl0umMx2cwMRE7mYu+UVtr9
- QJ+zPqUlzIczYNkg48JHR5OYGKDxCQ==
-X-Authority-Analysis: v=2.4 cv=CbIFJbrl c=1 sm=1 tr=0 ts=68e6294d cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=x6icFKpwvdMA:10 a=COk6AnOGAAAA:8 a=fuWxvNZPvO_ztXA3lyEA:9
- a=TjNXssC_j7lpFel5tvFf:22 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-GUID: Kraq27VDwgEbpSjrNyordR9aADVuwCjK
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/9] dma: qcom: bam_dma: Fix command element mask field
+ for BAM v1.6.0+
+To: Md Sadre Alam <quic_mdalam@quicinc.com>, broonie@kernel.org,
+        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        andersson@kernel.org, konradybcio@kernel.org, vkoul@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org
+Cc: quic_varada@quicinc.com
+References: <20250918094017.3844338-1-quic_mdalam@quicinc.com>
+ <20250918094017.3844338-4-quic_mdalam@quicinc.com>
+ <c5d5c026-3240-4828-b9b3-455f057fb041@oss.qualcomm.com>
+ <2394e63f-1df7-764e-5489-3567065707a1@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <2394e63f-1df7-764e-5489-3567065707a1@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: VsMwFuR5bblZSV3NP9_QGL295q5_TiCD
+X-Proofpoint-ORIG-GUID: VsMwFuR5bblZSV3NP9_QGL295q5_TiCD
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA2MDE2OCBTYWx0ZWRfX9L4sm90NjOEQ
+ trBWV0loMIjiWx+KctKspOS9JfhOUDCyzsrHZZsmFUzeZ3lOQmhUFxu8Am47759BYv+eChJnA/6
+ UZHwwARHJ/ZmN/YYd3ktLMbO12J3/DD9TRT6wtQJf3D62ozxcryNo4CFudX3gnp3lZ9ybkLDSeS
+ uDTF1Scj4jcIcJev2ngF9kn1OopL/p5fZNhgiFVLcromm7SMSjhePmWHMP+C+XPBjuFOgfI0aFq
+ iEmf2aXOeZ+22L1dZ2T1i92vY13XOvxPIEHl6cBgBRfOieWD3kGO11sbrpvRJgRyPGKbOgAY846
+ IKDIBC/SoSW+gcPQYKfgIUKwvizOPeTl/AM5pQbWl0hOmMHYfGZ9LDlWDRxZe72ac1w6QDuchqD
+ TZUUtysDLtIRFnQOVXV5evglmGuocw==
+X-Authority-Analysis: v=2.4 cv=BuCQAIX5 c=1 sm=1 tr=0 ts=68e64c9e cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=W9ArKkagtRzJc8iw_qMA:9
+ a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-08_02,2025-10-06_01,2025-03-28_01
+ definitions=2025-10-08_03,2025-10-06_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 malwarescore=0 clxscore=1015 adultscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 phishscore=0 impostorscore=0 bulkscore=0
+ impostorscore=0 bulkscore=0 adultscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 clxscore=1015 spamscore=0 suspectscore=0 malwarescore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2510040023
+ reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2510060168
 
-Remove eMMC support from the IPQ5332 RDP442 board configuration to
-align with the board's default NOR+NAND boot mode design.
+On 9/19/25 7:56 AM, Md Sadre Alam wrote:
+> 
+> 
+> On 9/18/2025 3:57 PM, Konrad Dybcio wrote:
+>> On 9/18/25 11:40 AM, Md Sadre Alam wrote:
+>>> BAM version 1.6.0 and later changed the behavior of the mask field in
+>>> command elements for read operations. In newer BAM versions, the mask
+>>> field for read commands contains the upper 4 bits of the destination
+>>> address to support 36-bit addressing, while for write commands it
+>>> continues to function as a traditional write mask.
+>>
+>> So the hardware can read from higher addresses but not write to them?
+> No,
+> Write Operations: Can target any 32-bit address in the peripheral address space (up to 4GB)
+> 
+> Read Operations: Can read from any 32-bit peripheral address and
+> place the data into 36-bit memory addresses (up to 64GB) starting
+> from BAM v1.6.0
 
-The IPQ5332 RDP442 board is designed with NOR+NAND as the default boot
-mode configuration. The eMMC and SPI NAND interface share
-same GPIO
+OK I misread your commit message
 
-Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
----
+[...]
 
-Change in [v2]
+> For Read Commands:
+> - BAM < v1.6.0: 3rd Dword completely ignored by hardware
+> - BAM >= v1.6.0: 3rd Dword[3:0] contains upper 4 bits of destination
+> address
 
-* updated board name commit message header
+This is important to point out. With that, the change looks sane indeed
 
-Change in [v1]
-
-* Removed eMMC node
-
- arch/arm64/boot/dts/qcom/ipq5332-rdp442.dts | 34 ---------------------
- 1 file changed, 34 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq5332-rdp442.dts b/arch/arm64/boot/dts/qcom/ipq5332-rdp442.dts
-index ed8a54eb95c0..6e2abde9ed89 100644
---- a/arch/arm64/boot/dts/qcom/ipq5332-rdp442.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5332-rdp442.dts
-@@ -35,17 +35,6 @@ flash@0 {
- 	};
- };
- 
--&sdhc {
--	bus-width = <4>;
--	max-frequency = <192000000>;
--	mmc-ddr-1_8v;
--	mmc-hs200-1_8v;
--	non-removable;
--	pinctrl-0 = <&sdc_default_state>;
--	pinctrl-names = "default";
--	status = "okay";
--};
--
- &tlmm {
- 	i2c_1_pins: i2c-1-state {
- 		pins = "gpio29", "gpio30";
-@@ -54,29 +43,6 @@ i2c_1_pins: i2c-1-state {
- 		bias-pull-up;
- 	};
- 
--	sdc_default_state: sdc-default-state {
--		clk-pins {
--			pins = "gpio13";
--			function = "sdc_clk";
--			drive-strength = <8>;
--			bias-disable;
--		};
--
--		cmd-pins {
--			pins = "gpio12";
--			function = "sdc_cmd";
--			drive-strength = <8>;
--			bias-pull-up;
--		};
--
--		data-pins {
--			pins = "gpio8", "gpio9", "gpio10", "gpio11";
--			function = "sdc_data";
--			drive-strength = <8>;
--			bias-pull-up;
--		};
--	};
--
- 	spi_0_data_clk_pins: spi-0-data-clk-state {
- 		pins = "gpio14", "gpio15", "gpio16";
- 		function = "blsp0_spi";
--- 
-2.34.1
-
+Konrad
 

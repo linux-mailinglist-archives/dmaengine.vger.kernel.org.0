@@ -1,45 +1,46 @@
-Return-Path: <dmaengine+bounces-6795-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6796-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 360F2BCC023
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Oct 2025 10:00:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B595BCC4DC
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Oct 2025 11:19:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D65A035443D
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Oct 2025 08:00:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 563721A65C90
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Oct 2025 09:19:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8694727A10C;
-	Fri, 10 Oct 2025 07:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E242258EE2;
+	Fri, 10 Oct 2025 09:18:37 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-m4920.qiye.163.com (mail-m4920.qiye.163.com [45.254.49.20])
+Received: from mail-m3297.qiye.163.com (mail-m3297.qiye.163.com [220.197.32.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BAD27A46E;
-	Fri, 10 Oct 2025 07:59:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D705D1F4C99;
+	Fri, 10 Oct 2025 09:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760083189; cv=none; b=ELcgNScY/Rx71GVA7ejevlFiTIzi7UePla30/xZv9HeB+kul0J5GgNEdLA+fY6a9CJzcetODdrWVAXMx44+MWXeJ4F2hsnRYWtO2Q4rqlkn8ppeyhhgYhEEkyMZyRYqGBgkqtf2zOHZbjy4BtTnvpyEJ4G2pvHvtflC9sRXPpKU=
+	t=1760087917; cv=none; b=pAy5btswWo4N82fFRANPg+IhuzzyP7zYeISgAVwaedC1r9S30FOrNA+DHY0VlYIXDYY/uJrGcRzH89Ggaglp5mdiu5LP5Hn2zwcYf5rw7Nxl+8A4zGt1tCoMlhzQE2FSsiN3R0lOw7m2vtfq0i0ipkx+JzNTpaAv4ckvcp0VAfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760083189; c=relaxed/simple;
-	bh=MN+Yppi2MH3IyKntEzmv4Swty8t0gZaFEGtWKwbjoV0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CuzM2twzX3AHzSoQ0H2mWwlbrELijrWYrvFtzLNF7HO0TJ6JFHj6gfWiUPSm0foNO6n/INlrsAGka1tjELKWqPQPP30hptMOaOj/oXAW1Z8jd7DtfDmNwcUfXHj82c49ppbyDB8tsVVxc0sZ8AWJAAvOR1eyyzDxZ6WmKabXBoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.254.49.20
+	s=arc-20240116; t=1760087917; c=relaxed/simple;
+	bh=7ZH+y4GwW0ll9Chc7h2vRwCsuxsE0d4guvxwRLiqQAc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OVYonzHEoVRVSrJvbk8ICrYVQSIuykjwmYCcy+p/Aba+QMfxzlSEj5r/zMxunevhnWUerM5RgdAdrwW2hzc97CSEPKfJrYB+rOyJoKlm245VxHKfG4lr13xIhGtlsDfE/Ao58A9o7aOG1zSsnAckz0FzqqNMP16Zdm+golJReis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=220.197.32.97
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
 Received: from localhost.localdomain (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1153be9f4;
-	Fri, 10 Oct 2025 15:54:23 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1154d67e2;
+	Fri, 10 Oct 2025 17:03:07 +0800 (GMT+08:00)
 From: Zhen Ni <zhen.ni@easystack.cn>
-To: Eugeniy.Paltsev@synopsys.com,
+To: Frank.Li@nxp.com,
 	vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org,
+Cc: imx@lists.linux.dev,
+	dmaengine@vger.kernel.org,
 	Zhen Ni <zhen.ni@easystack.cn>,
 	stable@vger.kernel.org
-Subject: [PATCH] dma: dw-axi-dmac: Release the clock resources
-Date: Fri, 10 Oct 2025 15:54:14 +0800
-Message-Id: <20251010075414.204804-1-zhen.ni@easystack.cn>
+Subject: [PATCH] dmaengine: fsl-edma: Fix clk leak on alloc_chan_resources failure
+Date: Fri, 10 Oct 2025 17:02:57 +0800
+Message-Id: <20251010090257.212694-1-zhen.ni@easystack.cn>
 X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -48,42 +49,40 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a99cd1d25120229kunm9668a1e69c4806
+X-HM-Tid: 0a99cd5c11d40229kunmb4490e2b9daa55
 X-HM-MType: 1
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaGRhNVh0YTU1JGh0ZGBhCHVYVFAkWGhdVGRETFh
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZT09LVk1MGh4eSxgfGU5KGVYVFAkWGhdVGRETFh
 	oSFyQUDg9ZV1kYEgtZQVlJSkNVQk9VSkpDVUJLWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
 	VKQktLWQY+
 
-In axi_dma_resume(), if clk_prepare_enable(chip->core_clk) fails,
-chip->cfgr_clk remains enabled and is not disabled. This could lead
-to resource leaks and inconsistent state during error handling.
+When fsl_edma_alloc_chan_resources() fails after clk_prepare_enable(),
+the error paths only free IRQs and destroy the TCD pool, but forget to
+call clk_disable_unprepare(). This causes the channel clock to remain
+enabled, leaking power and resources.
 
-Ensure that cfgr_clk is properly disabled.
+Fix it by disabling the channel clock in the error unwind path.
 
-Fixes: 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")
+Fixes: d8d4355861d8 ("dmaengine: fsl-edma: add i.MX8ULP edma support")
 Cc: stable@vger.kernel.org
 Signed-off-by: Zhen Ni <zhen.ni@easystack.cn>
 ---
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/fsl-edma-common.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index b23536645ff7..ab70dbe54f46 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -1334,8 +1334,10 @@ static int axi_dma_resume(struct axi_dma_chip *chip)
- 		return ret;
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index 4976d7dde080..bd673f08f610 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -852,6 +852,8 @@ int fsl_edma_alloc_chan_resources(struct dma_chan *chan)
+ 		free_irq(fsl_chan->txirq, fsl_chan);
+ err_txirq:
+ 	dma_pool_destroy(fsl_chan->tcd_pool);
++	if (fsl_edma_drvflags(fsl_chan) & FSL_EDMA_DRV_HAS_CHCLK)
++		clk_disable_unprepare(fsl_chan->clk);
  
- 	ret = clk_prepare_enable(chip->core_clk);
--	if (ret < 0)
-+	if (ret < 0) {
-+		clk_disable_unprepare(chip->cfgr_clk);
- 		return ret;
-+	}
- 
- 	axi_dma_enable(chip);
- 	axi_dma_irq_enable(chip);
+ 	return ret;
+ }
 -- 
 2.20.1
 

@@ -1,50 +1,86 @@
-Return-Path: <dmaengine+bounces-6798-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6799-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A1B6BCF080
-	for <lists+dmaengine@lfdr.de>; Sat, 11 Oct 2025 08:35:59 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0328BBD00DC
+	for <lists+dmaengine@lfdr.de>; Sun, 12 Oct 2025 12:00:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECA2B3A9A9F
-	for <lists+dmaengine@lfdr.de>; Sat, 11 Oct 2025 06:35:57 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 52C304E16CF
+	for <lists+dmaengine@lfdr.de>; Sun, 12 Oct 2025 10:00:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83C81213E6A;
-	Sat, 11 Oct 2025 06:35:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8972D35965;
+	Sun, 12 Oct 2025 10:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVmhnU/w"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-m3290.qiye.163.com (mail-m3290.qiye.163.com [220.197.32.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A601EDA1E;
-	Sat, 11 Oct 2025 06:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB2F21B196
+	for <dmaengine@vger.kernel.org>; Sun, 12 Oct 2025 10:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760164556; cv=none; b=bp+j9wFSfP9px8lVkgxGGVlMFkqzj7rMhtAh5mFU9nBySvn7n/BU2hw7uKi42sDLxM7oIpqi/mnIMM14a678xPbpfaOlzDb1aSXF+ukbLjGMPLRCW4xyGEY9lLMwo3hbXK9rFYoNfHeXReUHvCdCP6IMOUi1lVOgxL9XeGmyzHk=
+	t=1760263224; cv=none; b=qSUTJDLsBBeeJQVX1xu00e8M6k4c8BOzKDIn4oIyNgvgfUGh+QqEObseK4nGkwk1mEAACBEPnfkWDSZnEzmBLGg3sThQXtxHeuNFY7uJe+1wLz2shi90PyPTRTMYLScqpT9LY4u/XfLaUn1wu3+9G3y27DAhG69rziJW+NcuIvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760164556; c=relaxed/simple;
-	bh=FAYzIYzjI7raN5Ez/3fb9mpfl27NtpBUIy9iShZZGYo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ajLyYW9cNydBepvmGbM71VWIgD/JWS12Nuh+H4beDHZgupOWqA7RzWlfohkbn2xE5jGe3j76DHNHbtpehkcAdcraXJglrGKli6qPyVDp4aFIxp1CO4+6T/HHWBCzEZZRf22RxSh2Cmyl0Ukz3GgiLOk3zLRJMww3BwGNADonpGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=220.197.32.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from localhost.localdomain (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 115c4daf0;
-	Sat, 11 Oct 2025 11:06:29 +0800 (GMT+08:00)
-From: Zhen Ni <zhen.ni@easystack.cn>
-To: Frank.Li@nxp.com,
-	vkoul@kernel.org
-Cc: imx@lists.linux.dev,
+	s=arc-20240116; t=1760263224; c=relaxed/simple;
+	bh=It7Eaj5J84HbEM6VAsTq3su8JCb3geSlP9Uww5PYuFY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=czenycbMM+lCQ3IAkOSMmDao/GzBeeVZVo4u0KHLfkcQaD9KSTu8lcp1Fdf7u51jwy5oAy00rI/SiK+hKsmEmdb60VSPxv916+PuDSE1HyodmHraVZcaGHcF4My9ZFgU9Lbo7TtxX3g3D6j0WTY007WU7JnsBx6WofKbX+AAjEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DVmhnU/w; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-57b8fc6097fso3896597e87.1
+        for <dmaengine@vger.kernel.org>; Sun, 12 Oct 2025 03:00:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760263221; x=1760868021; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BN1tqWOn9gDFeGRfAyg/XCO1Cw8y5MQy41++mkAI8Kg=;
+        b=DVmhnU/wkNS6Sv0yU8/hi6itdTRc1FXj8oaW0nt8t1vw0B5oMOXzOg/h8uv5xGIKLW
+         4W28EuJe+afRl7chPW3bgc0j8JV5aJn07P6Lx2GfpaL+uIOnrekVKt6DK7VeZdjg95IW
+         c1ymDCH7oF0jbMYQoNhzVI5UNvZHeegXO/YIgnnQxmrIWVwAzKVqMPCunT4cJmXDvb1o
+         d7dv7O+mK2M5QP3oS76wkaMl1ZYO4KHUSGUGku1WkLXtkbpuEQJtne9W5B1pC4EcL6le
+         R66swZ8u01TujgY9A0V6UHJ2d21KnTj/HGW6S+3PEox6ZnjPE8DmjMxCNV6qGRwZUmMU
+         0agA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760263221; x=1760868021;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BN1tqWOn9gDFeGRfAyg/XCO1Cw8y5MQy41++mkAI8Kg=;
+        b=pioJijLxMDLnHnvqV7akYPrCbRkQMTqq3yeg5uRsadHYYA93+2EaKEBXJuUt0xYDEQ
+         thxUi+j5/4vJo3g4PE7ZDMwanJUqzgY0G/nGiQzO/+kM0WVohY7KD9/LnRBjofgxsoOQ
+         36DPG1sKJrCn+Z0Yl6W6KjQGvfpOe+Ebyl2hxDR1UUbeD2Hhp49UpC+HF+V9E6APtfE9
+         mp5LaJJeMytduEzMdHN3O2mcOfJ/+GVW9q5z1wH7/MWwwZbc9A/9EH0Fwtm3F5IviSqp
+         Jn3Q2/QueYgljNZ+Jt9AsKwbMJ8Z/wlyxuzeai1RGAHBnMUrZPZaHAX7PHYNdyMqEAW4
+         s6fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV362LNbRWDrq7o+FLAafAjNRoDG+Hulb5wdO64t0Njl1nJ8w97BrjXA75IOWhK7QG1ugTgG7v/CI8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yynl+LczoB+mqI2w+9UvFYMnzMxMYLytzlEfOS1F24eCZw1VBXC
+	bEZDfnMvVCkq6q/XXxfkyNn2bysNU4ZgV+EOQgiZLn87O5NHbsTSIum1
+X-Gm-Gg: ASbGncuzEXvnaxj8/t4UHXy1ls2fpRSEFuqLzV4JuQJg/RETpd3qqnXMoNf9F5ssAcm
+	B+vUn7amFBCcW+gw++HsCgrTANHCcmNDExN/61DJVFdIdUprhhjCGG+oMU0UzKmsxZHdxwucMTD
+	VXXSFEp7UduHc50k1CluGDGdoobtMnLphKFJemo76abkAALzgtb193HAu5gQwFXJ8cAe3Bo6ts+
+	DrkDhBqGYJr7Lk6h2zp/YAyJJYAYn+79JcOVJKBU55iKTPJNvUdXaYuRx4nwcjnHnZ5ddzu5srm
+	QrflINtpnDn+6GyAuDNX3fg/oW7rVrtqDd7+VYBqNZCdnefZ4iF4qLB7grUUDXtZnnLYgUS3scT
+	52SauPsqy50tJQ46zl0tRQOWeykfEcwluxACiKEjBvw==
+X-Google-Smtp-Source: AGHT+IG9vD6QkFl0LzgYmbvJIzmaxqTeBr5K7c4g7TX/qTzXTdCa1UKjqjX6yBXopM8xIQDRpj0hpw==
+X-Received: by 2002:a05:6512:61b1:b0:586:2e4b:22c5 with SMTP id 2adb3069b0e04-5906de87eecmr4743503e87.56.1760263220536;
+        Sun, 12 Oct 2025 03:00:20 -0700 (PDT)
+Received: from NB-6746.. ([94.25.228.43])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59088585860sm2823882e87.128.2025.10.12.03.00.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Oct 2025 03:00:20 -0700 (PDT)
+From: Artem Shimko <a.shimko.dev@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	Vinod Koul <vkoul@kernel.org>
+Cc: a.shimko.dev@gmail.com,
 	dmaengine@vger.kernel.org,
-	Zhen Ni <zhen.ni@easystack.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] dmaengine: fsl-edma: Fix clk leak on alloc_chan_resources failure
-Date: Sat, 11 Oct 2025 11:06:20 +0800
-Message-Id: <20251011030620.315732-1-zhen.ni@easystack.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20251010090257.212694-1-zhen.ni@easystack.cn>
-References: <20251010090257.212694-1-zhen.ni@easystack.cn>
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 0/2] dmaengine: dw-axi-dmac: PM cleanup and reset control support
+Date: Sun, 12 Oct 2025 12:59:58 +0300
+Message-ID: <20251012100002.2959213-1-a.shimko.dev@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -52,57 +88,31 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a99d13bec130229kunm7f66ab3a97c69
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSRgaVh5JHh9CTkgdGk1ISlYVFAkWGhdVGRETFh
-	oSFyQUDg9ZV1kYEgtZQVlJSkNVQk9VSkpDVUJLWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
-	VKQktLWQY+
 
-When fsl_edma_alloc_chan_resources() fails after clk_prepare_enable(),
-the error paths only free IRQs and destroy the TCD pool, but forget to
-call clk_disable_unprepare(). This causes the channel clock to remain
-enabled, leaking power and resources. Since clk_disable_unprepare() is
-safe to call with a NULL clk, the FSL_EDMA_DRV_HAS_CHCLK check is
-reduntante.
+Hello maintainers and reviewers,
 
-Fix it by disabling the channel clock in the error unwind path.
-Also clean up similar redundant checks in the driver for consistency.
+This patch series improves the dw-axi-dmac driver in two areas:
 
-Fixes: d8d4355861d8 ("dmaengine: fsl-edma: add i.MX8ULP edma support")
-Cc: stable@vger.kernel.org
-Suggested-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Zhen Ni <zhen.ni@easystack.cn>
----
-Changes in v2:
-- Remove FSL_EDMA_DRV_HAS_CHCLK check
----
- drivers/dma/fsl-edma-common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Patch 1 simplifies the power management code by using modern kernel
+macros and removing redundant wrapper functions, making the code more
+maintainable and aligned with current kernel practices.
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index 4976d7dde080..3007d5b7db55 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -852,6 +852,7 @@ int fsl_edma_alloc_chan_resources(struct dma_chan *chan)
- 		free_irq(fsl_chan->txirq, fsl_chan);
- err_txirq:
- 	dma_pool_destroy(fsl_chan->tcd_pool);
-+	clk_disable_unprepare(fsl_chan->clk);
- 
- 	return ret;
- }
-@@ -883,8 +884,7 @@ void fsl_edma_free_chan_resources(struct dma_chan *chan)
- 	fsl_chan->is_sw = false;
- 	fsl_chan->srcid = 0;
- 	fsl_chan->is_remote = false;
--	if (fsl_edma_drvflags(fsl_chan) & FSL_EDMA_DRV_HAS_CHCLK)
--		clk_disable_unprepare(fsl_chan->clk);
-+	clk_disable_unprepare(fsl_chan->clk);
- }
- 
- void fsl_edma_cleanup_vchan(struct dma_device *dmadev)
+Patch 2 adds proper reset control support to ensure reliable
+initialization and power management, handling resets during probe,
+remove, and suspend/resume operations.
+
+Best regards,
+Artem Shimko
+
+Artem Shimko (2):
+  dmaengine: dw-axi-dmac: simplify PM functions and use modern macros
+  dmaengine: dw-axi-dmac: add reset control support
+
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 72 +++++++++----------
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  2 +
+ 2 files changed, 37 insertions(+), 37 deletions(-)
+
 -- 
-2.20.1
+2.43.0
 
 

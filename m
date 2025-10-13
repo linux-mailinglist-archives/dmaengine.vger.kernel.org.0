@@ -1,167 +1,205 @@
-Return-Path: <dmaengine+bounces-6814-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6815-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9294BD1FD1
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 10:19:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2723FBD21EF
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 10:41:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 026091898DC2
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 08:19:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF0D83BFD70
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 08:41:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AD4E2F49E0;
-	Mon, 13 Oct 2025 08:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="V6L3jrBT"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05E0C2DC340;
+	Mon, 13 Oct 2025 08:41:56 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624232F28F0
-	for <dmaengine@vger.kernel.org>; Mon, 13 Oct 2025 08:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AF52264CB
+	for <dmaengine@vger.kernel.org>; Mon, 13 Oct 2025 08:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760343552; cv=none; b=T8WO6hPEaZSg0IJt7/6nJ+xzgqe91xIM674rxWEOyXLTrhMv5auEdaSunuH347+TeKoA/orsqUBNWalJQP+PDJt1hNDzqh0vGykB11C6UbUSok/7orwPWBhpK7a9QZYzfJUm/OEC5gVPUFf7ro9lmZ6KapqTQ8ugUbjxHJvIXwY=
+	t=1760344915; cv=none; b=tMQ21TTeD/sFmorBUAaLU0rxTgsULw8wWGa0MOJof2kacwWee6yBrN+D19F8zK4GdkblX21JUVsOGc8Gul8gzUmLyHQ1HVoJ+JgOaKhms4gVtA+/KMYM4Joo94ZO1Un6QvhbFgS3wAb31ICHH/vrlTeaJ/HmVW+IaCT61as9oF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760343552; c=relaxed/simple;
-	bh=l71zOi8Iii2rT5j9IBt2SrlxYshazF9y0u6uvVNTzAk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DuNWx28HOkUHf0EzFtjHc9LzA9KcOo7+e2dQhcYc+NfCiwLlj7hIWTPWk1esSk59KJq7FDN/TwAKZR5Kee5CINwlqWl/qpF6hkAfIgjrmy8zJQvGxRNjKXf7AFoRB1nugRSTO0+6xWbHwZP9BHKjAaZr1SpzYQROf/NeB5kfVdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=V6L3jrBT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59D2nEBr011036
-	for <dmaengine@vger.kernel.org>; Mon, 13 Oct 2025 08:19:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	CnjUTiX3FGPPzQybFpvUaFsk3SaXgmCmOsQbRYEOBOo=; b=V6L3jrBTbTvHHEKo
-	qD5U4eFHTxnbpsqXc4cOpzkuMCTQ5epNY9DjJjkGLJL1qr6r0S4OFd5EdlW4yKCJ
-	WAgbjSG5zqOQzCbAlZaLfx2fgKrZnyWU+pe1FW+xPMm7zYUVcOgdInhv2VqIb1YE
-	/8spKAq0l2LlOD9R/8xSGLcz+mrsa40WnUDOPuUFFaQf3Ot9tdR7CKRQMlJm9mEn
-	F1LJmDAFnsYKeaU2FFa4xBj5MdtSGdU9dDsVNnLbD8CdNcWqDqVuiSzP0gCs0uuZ
-	bJhuaktE8ndnYcXHi0xu6Klfu6NXf7VeX39SjgEj+cfOzKXJfxzJcj7ggFw+6AUZ
-	TM5Rlg==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49qg0bur2f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Mon, 13 Oct 2025 08:19:08 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8643fb24cafso182567785a.1
-        for <dmaengine@vger.kernel.org>; Mon, 13 Oct 2025 01:19:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760343547; x=1760948347;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CnjUTiX3FGPPzQybFpvUaFsk3SaXgmCmOsQbRYEOBOo=;
-        b=d2S8u43eGdc5IybWhouTEzXkYg3kU0vKYShsRE/PJsCWvkkLq4uuic9mrJZxtK5iUY
-         v6+tSUIAgkctUsTps38WMFCaRyp5egbkzFny4cchbxo5p6hCy90rS5eU0YFRGwFgB5a/
-         9igozeTq4CLLGVwPgt761t45cUrDYjd/g2+J6/headEmv3giyEVtWkuOA3t5lXDKZCoN
-         ktBnIhQAD456FRuV33yq6zDaDGKeFe4kjt3MsdWN+GFtZ79rrpEDE8O4bFD425rmxoA/
-         VnUuPI9SQstkaSu9GfsTb3KH+uKaVKeVQ8/B+R2m2HMlp3q6WOq24uf4hIwAhai62NX9
-         d2nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBVEHreoQxbeh3m7A40jt8haIUZIZeJybB0koFIRXQLN5J1i8kad1XmUCIIGbF8o0v5hkmT5OjV5E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPPEmdK9mFRDQN6INceYkTlNDpGaD+F+ue/Dq2F6QqEGWJ/N8W
-	pO5bkSatKJmsAXKI+6TgsAtgibMiFP+CMBOx6qvKfxFhnCVDtbCULUyhWfibPKBuN41ua2wccgy
-	4xqf5sk0GoR7hk9sfD8O6yWcPFVH/q/5k1wkrTDGkIPu/fAxXyPhjPSOb94EbXiM=
-X-Gm-Gg: ASbGnctndnX+A+CZNi3QnynHC6uxHThhpA21AS7wFxJp4hTQ05zCsopNqg74dpZD9TP
-	LUEnqoCb7Wmgd5hIK+frLRzl8b8cLfHR3WBtD/sjSAg6YOms361pdIdpM5ZXXEP0bJqof7TzJCe
-	Wqcl9sNh8YTL/rWjmbPF9bhlX+4QobEx44aM0C0o4GkNKRFO3gMKPY/RUt+JG5Hi8Qk4ERM8NBu
-	RJ8kWOxrqrUvazmC1IavUYtiZBgWj+CHnVBtmghAj7wdGRzSFmL5igdZKMKdPJWoox25kajJOiI
-	o+KnkZVguBb76TgcGMV2vbTuAKOmGQMbFGuLcFDgAfX1x1axxREE+luIrx8VwfZZseb8/eoYPVr
-	V5r9nzaZSn2vEsetJ0PBGIg==
-X-Received: by 2002:a05:620a:711c:b0:85f:a278:78bf with SMTP id af79cd13be357-8834ff909f1mr2008313385a.3.1760343547279;
-        Mon, 13 Oct 2025 01:19:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG4znKrO6qzvVeWk9uZKKfQVBsm8qhDDyjnyj9kOQFewTkZRDPaivS5qv0Ack9eGJHz4piu7Q==
-X-Received: by 2002:a05:620a:711c:b0:85f:a278:78bf with SMTP id af79cd13be357-8834ff909f1mr2008311885a.3.1760343546780;
-        Mon, 13 Oct 2025 01:19:06 -0700 (PDT)
-Received: from [192.168.149.223] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b55d67d5c2bsm873147966b.37.2025.10.13.01.19.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Oct 2025 01:19:06 -0700 (PDT)
-Message-ID: <01122bf2-7f8c-4d93-9557-c625b4eac631@oss.qualcomm.com>
-Date: Mon, 13 Oct 2025 10:19:03 +0200
+	s=arc-20240116; t=1760344915; c=relaxed/simple;
+	bh=UEFOSh0xRz8cYbaVE1rSJZQXECRmazCUfCdPoIpjvgE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GCIp5ajOvMqNCvEMXyCgpwgAxFUEzAzXH2TsatsVfBJZM3kkUjoFBQ33N6bKtQJF3D0DjXUsqItOuYquZyEwilzMbq59Fr8UedK9b5+5fZLLaaYa2+PNlC1ZfkQ7l8B2FEizJZiry8/JkM9F0KCKm79nq5mJdmb45fRG0XwCUDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1v8E7n-0004vn-1X; Mon, 13 Oct 2025 10:41:47 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1v8E7m-003M6K-0Q;
+	Mon, 13 Oct 2025 10:41:46 +0200
+Received: from pza by lupine with local (Exim 4.98.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1v8E7m-000000004e4-0FhD;
+	Mon, 13 Oct 2025 10:41:46 +0200
+Message-ID: <bf59e192acc06c88f122578e40ee64e1cafe8152.camel@pengutronix.de>
+Subject: Re: [PATCH 2/2] dmaengine: dw-axi-dmac: add reset control support
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Artem Shimko <a.shimko.dev@gmail.com>, Eugeniy Paltsev
+	 <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 13 Oct 2025 10:41:45 +0200
+In-Reply-To: <20251012100002.2959213-3-a.shimko.dev@gmail.com>
+References: <20251012100002.2959213-1-a.shimko.dev@gmail.com>
+	 <20251012100002.2959213-3-a.shimko.dev@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/9] arm64: dts: qcom: ipq5424: Add QPIC SPI NAND
- controller support
-To: Md Sadre Alam <quic_mdalam@quicinc.com>, broonie@kernel.org,
-        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-        andersson@kernel.org, konradybcio@kernel.org, vkoul@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Cc: quic_varada@quicinc.com
-References: <20251008090413.458791-1-quic_mdalam@quicinc.com>
- <20251008090413.458791-5-quic_mdalam@quicinc.com>
- <c7848ee9-dc00-48c1-a9b9-a0650238e3a1@oss.qualcomm.com>
- <911ee444-25a9-a645-d14f-72fc239e5eb7@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <911ee444-25a9-a645-d14f-72fc239e5eb7@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: P-f1VjI2GqUNgWGO1xSHoERAeWHe_SJ6
-X-Proofpoint-ORIG-GUID: P-f1VjI2GqUNgWGO1xSHoERAeWHe_SJ6
-X-Authority-Analysis: v=2.4 cv=eaIwvrEH c=1 sm=1 tr=0 ts=68ecb5fc cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=COk6AnOGAAAA:8 a=OlpJZY4RW8OWQeam8GsA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDExMDAyMiBTYWx0ZWRfX/JgR8L5Vy94o
- Je16W3W/3VWzqRnxKsMGvRGmWHEsDNQ9oGusnG8fhbraP60HkpywXY+kZ6//EazGzKjrqwODncZ
- keNxZUtfcBbZQz3H/NYT3FUN2zQKioThU4ug/KtZ600Qaxj60l6RYgyPAY+hu54rawaX3OUt9u2
- GlNmtdV+PxXE+qTJYKH+ewtwMb3fWm0P2IHcS1HhAO6KuTY2D5YHwiQJEHS3lDYaWxcEG5elEZp
- XtXTDuikbdbj0mWlzmZyIczD9AeXysAppwvUiGJ3g5bBGnmQTpezz/OtkmvP6IIiczewXfQ0ZF7
- mCeyNuZmslIFQ9N/zWtyL5u+x4qeiAXOL3NGbkdcFwyp4gw7d+IaXrJ4xJPSbrRoleubkVtUrX3
- KjXbWvOHBYF1QOUaqiDGBKOq/MxRfQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-13_03,2025-10-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 priorityscore=1501 spamscore=0 impostorscore=0 phishscore=0
- adultscore=0 lowpriorityscore=0 clxscore=1015 suspectscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510020000 definitions=main-2510110022
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 
-On 10/13/25 8:10 AM, Md Sadre Alam wrote:
-> 
-> 
-> On 10/8/2025 6:00 PM, Konrad Dybcio wrote:
->> On 10/8/25 11:04 AM, Md Sadre Alam wrote:
->>> Add device tree nodes for QPIC SPI NAND flash controller support
->>> on IPQ5424 SoC.
->>>
->>> The IPQ5424 SoC includes a QPIC controller that supports SPI NAND flash
->>> devices with hardware ECC capabilities and DMA support through BAM
->>> (Bus Access Manager).
->>>
->>> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
->>> ---
+On So, 2025-10-12 at 13:00 +0300, Artem Shimko wrote:
+> Add proper reset control handling to the AXI DMA driver to ensure
+> reliable initialization and power management. The driver now manages
+> resets during probe, remove, and system suspend/resume operations.
+>=20
+> The implementation stores reset control in the chip structure and adds
+> reset assert/deassert calls at the appropriate points: resets are
+> deasserted during probe after clock acquisition, asserted during remove
+> and error cleanup, and properly managed during suspend/resume cycles.
+> Additionally, proper error handling is implemented for reset control
+> operations to ensure robust behavior.
+>=20
+> This ensures the controller is properly reset during power transitions
+> and prevents potential issues with incomplete initialization.
+>=20
+> Signed-off-by: Artem Shimko <a.shimko.dev@gmail.com>
+> ---
+>  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 41 ++++++++++++-------
+>  drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  2 +
+>  2 files changed, 28 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma=
+/dw-axi-dmac/dw-axi-dmac-platform.c
+> index 8b7cf3baf5d3..3f4dd2178498 100644
+> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> @@ -1321,6 +1321,9 @@ static int axi_dma_suspend(struct device *dev)
+>  	axi_dma_irq_disable(chip);
+>  	axi_dma_disable(chip);
+> =20
+> +	if (chip->has_resets)
+> +		reset_control_assert(chip->resets);
 
-[...]
+reset_control_assert/deassert() handle NULL pointers, so you could drop
+the chip->has_resets flag and just
 
->>
->>> +            dmas = <&qpic_bam 0>,
->>> +                   <&qpic_bam 1>,
->>> +                   <&qpic_bam 2>;
->>> +            dma-names = "tx", "rx", "cmd";
->>> +            status = "disabled";
->>
->> Is there anything preventing us from enabling both these nodes by
->> default on all boards (maybe secure configuration or required
->> regulators)?
-> We can't enable NAND by default in the common DTSI because the GPIOs are shared between eMMC and NAND.The decision to enable NAND must be made at the board-specific level, depending on the flash type used on that
-> particular board or RDP.Enabling it globally could lead to conflicts on platforms where eMMC is present.
+	reset_control_assert(chip->resets);
 
-Right, thanks
+unconditionally.
 
-Konrad
+> +
+>  	clk_disable_unprepare(chip->core_clk);
+>  	clk_disable_unprepare(chip->cfgr_clk);
+> =20
+> @@ -1340,6 +1343,9 @@ static int axi_dma_resume(struct device *dev)
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> +	if (chip->has_resets)
+> +		reset_control_deassert(chip->resets);
+> +
+
+Same as above.
+
+>  	axi_dma_enable(chip);
+>  	axi_dma_irq_enable(chip);
+> =20
+> @@ -1455,7 +1461,6 @@ static int dw_probe(struct platform_device *pdev)
+>  	struct axi_dma_chip *chip;
+>  	struct dw_axi_dma *dw;
+>  	struct dw_axi_dma_hcfg *hdata;
+> -	struct reset_control *resets;
+>  	unsigned int flags;
+>  	u32 i;
+>  	int ret;
+> @@ -1487,16 +1492,6 @@ static int dw_probe(struct platform_device *pdev)
+>  			return PTR_ERR(chip->apb_regs);
+>  	}
+> =20
+> -	if (flags & AXI_DMA_FLAG_HAS_RESETS) {
+> -		resets =3D devm_reset_control_array_get_exclusive(&pdev->dev);
+> -		if (IS_ERR(resets))
+> -			return PTR_ERR(resets);
+> -
+> -		ret =3D reset_control_deassert(resets);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+>  	chip->dw->hdata->use_cfg2 =3D !!(flags & AXI_DMA_FLAG_USE_CFG2);
+> =20
+>  	chip->core_clk =3D devm_clk_get(chip->dev, "core-clk");
+> @@ -1507,18 +1502,31 @@ static int dw_probe(struct platform_device *pdev)
+>  	if (IS_ERR(chip->cfgr_clk))
+>  		return PTR_ERR(chip->cfgr_clk);
+> =20
+> +	chip->has_resets =3D !!(flags & AXI_DMA_FLAG_HAS_RESETS);
+> +	if (chip->has_resets) {
+> +		chip->resets =3D devm_reset_control_array_get_exclusive(&pdev->dev);
+> +		if (IS_ERR(chip->resets))
+> +			return PTR_ERR(chip->resets);
+> +
+> +		ret =3D reset_control_deassert(chip->resets);
+> +		if (ret)
+> +			return dev_err_probe(&pdev->dev, ret, "Failed to deassert resets\n");
+> +	}
+> +
+
+Why is this moved down here?
+
+>  	ret =3D parse_device_properties(chip);
+>  	if (ret)
+> -		return ret;
+> +		goto err_exit;
+> =20
+>  	dw->chan =3D devm_kcalloc(chip->dev, hdata->nr_channels,
+>  				sizeof(*dw->chan), GFP_KERNEL);
+> -	if (!dw->chan)
+> -		return -ENOMEM;
+> +	if (!dw->chan) {
+> +		ret =3D -ENOMEM;
+> +		goto err_exit;
+> +	}
+> =20
+>  	ret =3D axi_req_irqs(pdev, chip);
+>  	if (ret)
+> -		return ret;
+> +		goto err_exit;
+> =20
+>  	INIT_LIST_HEAD(&dw->dma.channels);
+>  	for (i =3D 0; i < hdata->nr_channels; i++) {
+> @@ -1605,6 +1613,9 @@ static int dw_probe(struct platform_device *pdev)
+> =20
+>  err_pm_disable:
+>  	pm_runtime_disable(chip->dev);
+> +err_exit:
+> +	if (chip->has_resets)
+> +		reset_control_assert(chip->resets);
+
+If it is ok to keep the module in reset, shouldn't the reset control be
+asserted on device remove() as well?
+
+regards
+Philipp
 

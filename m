@@ -1,123 +1,195 @@
-Return-Path: <dmaengine+bounces-6826-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6827-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 257B5BD607E
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 22:08:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66A23BD65BA
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 23:30:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D00018A4013
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 20:08:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1666A3BB673
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 21:30:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE922DCBF3;
-	Mon, 13 Oct 2025 20:08:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 108B921FF30;
+	Mon, 13 Oct 2025 21:30:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+M4Alen"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aIrSUIuo"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8852DA743
-	for <dmaengine@vger.kernel.org>; Mon, 13 Oct 2025 20:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8936134BD;
+	Mon, 13 Oct 2025 21:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760386094; cv=none; b=PdGCA5Cur8ELywZyre5cLGehrHm/4pBrzeBgq9tswXtuDvmk6uCgemI71IIpER72EY5F5iKQXEOalkVoaUuUgCKEUe3d89tYjxiALSbezCXYLIbQMbXzq7SguuKKTJbLEF9qpYARRK2lZCc7tGoyT8UWQUcuKZnXPNOiZfaIKvY=
+	t=1760391046; cv=none; b=u8KoBHSCeaA2JnEsGnMMVzXl7KBBmaHSHI9p89SpSERbjggfAkiWmP2N/uFYYaX9GcAyBoqMZBRFmDmaPmYTMH1PozPbgFEPT8/ro30SUL3fifGlMgYhJq+clhDI7bUshH3ckH7j+9yZeGiUEunmb+Fhog9T8cSgv7XA17rY2Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760386094; c=relaxed/simple;
-	bh=f6YCfiZPgf7T9da3PF433sgpNomzWHgHCTzG6Kev77s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GtNTn8qvir5Hnj0jKzH1YGuP3gqPT63LGy2Numq81mMuObH2zsflKkqG332Zt2x78/jc1FgXjyLPDdtSvRoiXDnKs3bTlzZsIbQfRh2500L9c2m0FiRGixcYUQfYTEsmHVY68hrCjn+W8KC2DgfBcWc1xqu4f4QsH8X/qpifvg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+M4Alen; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b403bb7843eso990208166b.3
-        for <dmaengine@vger.kernel.org>; Mon, 13 Oct 2025 13:08:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760386091; x=1760990891; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f6YCfiZPgf7T9da3PF433sgpNomzWHgHCTzG6Kev77s=;
-        b=P+M4AlenvDBYl66gEuJKbC66DjRlVBhZ7xRZBMxWg8+1DtuSVff0vUi7qTgMjilaI2
-         un0IoFj/gijG/XS0AWPP8dFcqOkIlEbMfRm23o0WqTRyrPC1TB0bHQky19lITzx/OpIw
-         ej0CKLpWp9A6qke6rLzCa9liJUhwvI4st2Qr00wFzsL6SH9Q9H6CdCwHrTNUxG+rx4fP
-         0cygwbu3YLaiHfSEYdVFEpyjGW9nXmSxPvenD8UH6ULjcS1U0v9ycVLdnKOnld3FgWN/
-         s4LzIFn+BVyhZRsOiqjzlSEeh7Hp1YvErr8UDQkRB7Gwc/BK6h9Sj6U2SIfN5CeaQUUC
-         Sl6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760386091; x=1760990891;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f6YCfiZPgf7T9da3PF433sgpNomzWHgHCTzG6Kev77s=;
-        b=jH8rSFCXj7nszwHKQs2o3rQnvXeMJ6rH8LRcUTmV7VawVQXaHUz5mcuM6gZhLOphLY
-         WIFUQofvladlbsto+Ixv81RdChJ95wx80Z8nEvVkcuKDQWRD91cPg+693WxTEa4E1N7C
-         xjcSe8X8A2MMDEpDX6A4icoqQRbNUjTZG7iZhaXpRVsVWab+UB89WMF0zoHRWv+9DOlw
-         sIzEvw/MLVre39r2HdarxZVKt9ozJraNqWIGhQkv3MYMs8ZKTMHNYwaytYu6nrBul1qG
-         9D1fgQ+tMrwZTruOM1Q1ohsLhvjG0AqF58NwUt8lWk4gaxQUBkixRff6Pnq/Dk6gP6rX
-         dpJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcbcSQCSyanzmQj1HP4nxDHJIQwq5jvcTxHgCvp3XTeB25uGZFyFGB5l1RVXyB0jSF4qfLqIXoxf0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5FE2i20GN7gNbZSVb0xLUdkKeLJu7PKCZy212PahjfAJQ+3hx
-	g80ubgthnPaZrtuL1JDJWeO/rG4Fb5RWhGHHCYUiTcWYE28LL7wpu5qbSpm7vUaMiZCMME9/QDG
-	Lh0RXnOha7slUMjVDX+RDr4kYCEfwKdQ=
-X-Gm-Gg: ASbGncuIkoajPrLJ8YqylX2eijHwMk9DbwH/mKTXu4pecUQOC3bvvhKZnkRV5LxeTx0
-	YQXZ5HMqpDEKWnCO++ix+O33bys9nGXLETMBTTX6pDXgYF79+LNaCzi/e0gNJDpjwuC2Tt/xhBI
-	iB4vmsnozvM/MlMFGGU7t3zUCIPoup0Ag5IPcN7D6mwJSWcsuu0B9MnIR4Seb7XVEpALV2NL6fi
-	aaPlsICydmwQIdc4gvcOjLmZSLX+elXJe2Y4F8aIA==
-X-Google-Smtp-Source: AGHT+IGaOBiDAnkUof21+aHq5NOWhRzhwOoz/nzsettYzFgLEx+7+Ty6orvQvellFLzzr1bdUXMUgkNJat1TukbLgbU=
-X-Received: by 2002:a17:907:26c8:b0:b3d:30d8:b8a0 with SMTP id
- a640c23a62f3a-b50ac5d1de5mr2440916766b.52.1760386091019; Mon, 13 Oct 2025
- 13:08:11 -0700 (PDT)
+	s=arc-20240116; t=1760391046; c=relaxed/simple;
+	bh=UXRYA9OeTpRlGCWOSO+dL5y9CcocBocJ6aM8A6/dmE8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XezzFIsheFuMmkE/eSeVQ3WsEACAJ6WMeqxgpRz+9S8zDWHjynGtVjZ77+z7p01dC2IBwF61LNBSkurnJOdbE2jZpfhmsHWJ5lxUL8+bQWwZ3iVickio98UFPtlqGFcQgcBWGTDGK9/HBcwPpBa9p18UuLTP/8lXZm0JcuLNYNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aIrSUIuo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A5D3C4CEE7;
+	Mon, 13 Oct 2025 21:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760391045;
+	bh=UXRYA9OeTpRlGCWOSO+dL5y9CcocBocJ6aM8A6/dmE8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aIrSUIuoRlOnmFKmaS40AJfKwtu0dHdNg8b1UvYq2CtV+D/SiFnpSGY5UnTK6e53H
+	 R4mBxcGz2CwaBB/epzuxayWPZJV8zqzDLD8q0kwlQrIafUpwApSo1SW9OxgE4vCREw
+	 nt/Qu+iN/FDhiQi9/NnRPGjvqEj9gfTNmSokBg2+jC7cB6YSWX5UzWCWlav4nIyGA/
+	 SZXBj95H/6Z71XaBa5wCmpMttXCYGMGV69XU0E5/VtuHJhbcyYOeT3EKntHJ7Tj/9l
+	 5bg54weZR9cqrl90fOUw5Irbobq3/Mf5JtUiHKP8lxsk+TS6p8VML3+TWzybOjG4ko
+	 VDOEk17CA0gBQ==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Khuong Dinh <khuong@os.amperecomputing.com>
+Cc: dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: dma: Convert apm,xgene-storm-dma to DT schema
+Date: Mon, 13 Oct 2025 16:30:35 -0500
+Message-ID: <20251013213037.684981-1-robh@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251012100002.2959213-1-a.shimko.dev@gmail.com>
- <20251012100002.2959213-3-a.shimko.dev@gmail.com> <bf59e192acc06c88f122578e40ee64e1cafe8152.camel@pengutronix.de>
- <CAOPX745BVB4oVUxz0ZYRRs3_KWT6Y6cGrMdc26v49U66+u0ReA@mail.gmail.com> <06e7f7f23fb264e9db39441698b33c048d8192e3.camel@pengutronix.de>
-In-Reply-To: <06e7f7f23fb264e9db39441698b33c048d8192e3.camel@pengutronix.de>
-From: Artem Shimko <a.shimko.dev@gmail.com>
-Date: Mon, 13 Oct 2025 23:08:00 +0300
-X-Gm-Features: AS18NWCzd5nZy964L2prlJcgE13LQIh9M4J6dP4_QQwOGLFh6mQxszugWLdKR_8
-Message-ID: <CAOPX746fn30c9zVk1Wrsgy86zccEHRGuhraUoS=qsFz11QSeWA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dmaengine: dw-axi-dmac: add reset control support
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>, 
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Philipp,
+Convert APM X-Gene Storm DMA binding to DT schema format. It's a
+straight-forward conversion.
 
-On Mon, Oct 13, 2025 at 6:41=E2=80=AFPM Philipp Zabel <p.zabel@pengutronix.=
-de> wrote:
->
-> On Mo, 2025-10-13 at 17:56 +0300, Artem Shimko wrote:
->
-> [...]
-> > dw_remove() has axi_dma_suspend() function, which is where the reset as=
-sertion
-> > occurs via reset_control_assert().
->
-> It looks to me like dw_remove() is now missing a deassert before
-> accessing registers, in case the device is removed while runtime
-> suspended.
->
-> regards
-> Philipp
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../bindings/dma/apm,xgene-storm-dma.yaml     | 59 +++++++++++++++++++
+ .../devicetree/bindings/dma/apm-xgene-dma.txt | 47 ---------------
+ 2 files changed, 59 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/apm,xgene-storm-dma.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
 
-oh, I see, it looks like we have to insert reset_control_deassert(chip->res=
-ets);
-just after clk_prepare_enable(chip->cfgr_clk);...
+diff --git a/Documentation/devicetree/bindings/dma/apm,xgene-storm-dma.yaml b/Documentation/devicetree/bindings/dma/apm,xgene-storm-dma.yaml
+new file mode 100644
+index 000000000000..9ca5f7848785
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/apm,xgene-storm-dma.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/apm,xgene-storm-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: APM X-Gene Storm SoC DMA
++
++maintainers:
++  - Khuong Dinh <khuong@os.amperecomputing.com>
++
++properties:
++  compatible:
++    const: apm,xgene-storm-dma
++
++  reg:
++    items:
++      - description: DMA control and status registers
++      - description: Descriptor ring control and status registers
++      - description: Descriptor ring command registers
++      - description: SoC efuse registers
++
++  interrupts:
++    items:
++      - description: DMA error reporting interrupt
++      - description: DMA channel 0 completion interrupt
++      - description: DMA channel 1 completion interrupt
++      - description: DMA channel 2 completion interrupt
++      - description: DMA channel 3 completion interrupt
++
++  clocks:
++    maxItems: 1
++
++  dma-coherent: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    dma@1f270000 {
++        compatible = "apm,xgene-storm-dma";
++        reg = <0x1f270000 0x10000>,
++              <0x1f200000 0x10000>,
++              <0x1b000000 0x400000>,
++              <0x1054a000 0x100>;
++        interrupts = <0x0 0x82 0x4>,
++                    <0x0 0xb8 0x4>,
++                    <0x0 0xb9 0x4>,
++                    <0x0 0xba 0x4>,
++                    <0x0 0xbb 0x4>;
++        dma-coherent;
++        clocks = <&dmaclk 0>;
++    };
+diff --git a/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+deleted file mode 100644
+index c53e0b08032f..000000000000
+--- a/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-Applied Micro X-Gene SoC DMA nodes
+-
+-DMA nodes are defined to describe on-chip DMA interfaces in
+-APM X-Gene SoC.
+-
+-Required properties for DMA interfaces:
+-- compatible: Should be "apm,xgene-dma".
+-- device_type: set to "dma".
+-- reg: Address and length of the register set for the device.
+-  It contains the information of registers in the following order:
+-  1st - DMA control and status register address space.
+-  2nd - Descriptor ring control and status register address space.
+-  3rd - Descriptor ring command register address space.
+-  4th - Soc efuse register address space.
+-- interrupts: DMA has 5 interrupts sources. 1st interrupt is
+-  DMA error reporting interrupt. 2nd, 3rd, 4th and 5th interrupts
+-  are completion interrupts for each DMA channels.
+-- clocks: Reference to the clock entry.
+-
+-Optional properties:
+-- dma-coherent : Present if dma operations are coherent
+-
+-Example:
+-	dmaclk: dmaclk@1f27c000 {
+-		compatible = "apm,xgene-device-clock";
+-		#clock-cells = <1>;
+-		clocks = <&socplldiv2 0>;
+-		reg = <0x0 0x1f27c000 0x0 0x1000>;
+-		reg-names = "csr-reg";
+-		clock-output-names = "dmaclk";
+-	};
+-
+-	dma: dma@1f270000 {
+-			compatible = "apm,xgene-storm-dma";
+-			device_type = "dma";
+-			reg = <0x0 0x1f270000 0x0 0x10000>,
+-			      <0x0 0x1f200000 0x0 0x10000>,
+-			      <0x0 0x1b000000 0x0 0x400000>,
+-			      <0x0 0x1054a000 0x0 0x100>;
+-			interrupts = <0x0 0x82 0x4>,
+-				     <0x0 0xb8 0x4>,
+-				     <0x0 0xb9 0x4>,
+-				     <0x0 0xba 0x4>,
+-				     <0x0 0xbb 0x4>;
+-			dma-coherent;
+-			clocks = <&dmaclk 0>;
+-	};
+-- 
+2.51.0
 
-You're absolutely right!
-
-Just realized I may have been too quick with v2. Will wait for more
-feedback and send v3.
-
-Best regards,
-Artem Shimko
 

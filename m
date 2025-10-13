@@ -1,121 +1,127 @@
-Return-Path: <dmaengine+bounces-6817-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6818-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B013BD40E8
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 17:22:03 +0200 (CEST)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92118BD4003
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 17:18:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 451FB4226AB
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 15:13:35 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 33DB034E375
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 15:18:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B4E62FD7A5;
-	Mon, 13 Oct 2025 14:56:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FF4430BF76;
+	Mon, 13 Oct 2025 15:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jm4LZ0lc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5KZpWXS"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFD330DEB6
-	for <dmaengine@vger.kernel.org>; Mon, 13 Oct 2025 14:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A96D219E8
+	for <dmaengine@vger.kernel.org>; Mon, 13 Oct 2025 15:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760367408; cv=none; b=sU5kybFFMZtKPh37HR2cLmCnIE+5bcEvaBUuZioV2zK3l4z01FuWTcHXpvMlmLtpwqRCrQ+udeZw786Zs2SocyQyh9xfvdNVl4P+Q9oJ6phmsUR90bSvVJ1wW0ULtf/DSO8c9+CPXXv0lz5lPBLIRnMbuBgnB+sIxLKvQMePbZY=
+	t=1760367789; cv=none; b=VY+B9cd15jwxzk/LTXb8vMUmZe6Lj09cWTgEcHD1+7mnKRkR0ZMVDxgtot14u9xoOXYzm7DG98DB5K9HP8hh9nlhxxrTvr6kpAOIfnonZJ1PRRl3CvQQUzBGRHEyspw1hvl0gZLyXkq+i/jxhq2ntl0xoVmqoUNnyYid5EQNgys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760367408; c=relaxed/simple;
-	bh=AehrbhclTtoUDRENr/Bm8ZihfIN/oseRDAuymqWxuE0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nleNb+WEjy19QSl4Zi75PPfzRf1uVpSV7WZwzifD9oNEtYlAOEPSKjIlmy+1PCjqCvYR1jD5S9OHxxLRt/gADBfiHATahioMXC5Kfq9xAc5GOTs0UCMtayVYDMeq4xmiaDerLYSKqY99s/+3yMyfdirmR3FXOtbyvSZns5Te0gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jm4LZ0lc; arc=none smtp.client-ip=209.85.218.51
+	s=arc-20240116; t=1760367789; c=relaxed/simple;
+	bh=yxmfbmFqBjhJPcGSJQ70GYxCJxcNkC5IerAsMJRG7zQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rB0yr0eZF2fFx4zUIRl1kjsSkNwT1g1+SrSWkq6xO6rPkYJcn0SvCegbKXPGq2r5FpWVuVJc+qKNAmRidCtVxYo8mSn0RMzOttnwKgrMENEoQow3ltyQCbrreRAmgQITmGc9xaVShBxYaURAveT2tWQdMnh7zNcJDlAuhZl1hug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F5KZpWXS; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b3b27b50090so802848166b.0
-        for <dmaengine@vger.kernel.org>; Mon, 13 Oct 2025 07:56:46 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b4c89df6145so718196666b.3
+        for <dmaengine@vger.kernel.org>; Mon, 13 Oct 2025 08:03:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760367405; x=1760972205; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4aiSy7SPQKxnXOFRglf0lpkGWBCc1QdWRr3Gsnj2XNY=;
-        b=Jm4LZ0lcQYdJ9ZHsG/wCiTD6Pfh4EIP1BhafH61PTSBE/1vudWTeMWI/6dq0xMgfe7
-         qRk4PnXUIpeKgPtAgXn1w4qx8tdPaH74ppZ/G6XmUPjXrPSOpTteeCd6M+XGVMA8l+s6
-         KzL6MLH9o/VU9qCOB3u5vn9xGCR2U87yUJHnnM8FxW5fR/U3zCK0qfscxII/BkJ+OI5p
-         gUfZT0B/r3JQ+jqBsb4vvHgHN9F9kj4bAcoJ7rBBrgonqMO1QQ8yzPnWQrORLpyoQQqi
-         oqgT1KtKcdLyZBr2k7TLqib5ki+78a00ixoKWijIKtwt+e7yT6fH9TDk2bP3GQPE3X87
-         I9XA==
+        d=gmail.com; s=20230601; t=1760367786; x=1760972586; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hz2YlG98H4CyxP20y5sm8rq4XvWnKRXPRfDLzFVO22c=;
+        b=F5KZpWXSGiX0dtO5yLdxUx0cBShqBsXgLx7cFSrFGj1xcKY/GGOy8UE9/jEhQLETeP
+         BD8yGEuMYb56trEHQjg6/Syrv+8MMayy7JZqpr/y/zNom2KqH/2W5LWYmVe0UBag5ybE
+         TcTaWKpHRQ6neaUyJm59eRuxTqnDOeA1+Rkr1Ym7gL4+59BMBNpSy4A9It5gSMs5Hquh
+         gtgxcCms1M2fl7C2Zf/rTZya8HN5Z8PLlwVyM8KNMkIYtwyM7G+gXZ5MXJ6CrxvFos9y
+         375LzgOETrzV4P700Ba2HNlG7yXKfG7WpcjbgCrKg/JfPZr6M7dm7xSFUZPvtzkVQiPs
+         Hu5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760367405; x=1760972205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4aiSy7SPQKxnXOFRglf0lpkGWBCc1QdWRr3Gsnj2XNY=;
-        b=K4TKIVfqW2XRPheP0Q/4hmQj8tiEaOfeodoq924lBXwBV0Gepj54QCtmxBoesNCmZx
-         ytiS/sHNgZv2ZlUrrc7rg23SfhZxHclwaGmpAHsl+sTBcHfP/F4XjHEP3i94INiNIpI8
-         xkL1I0Fj42lWxEkB912rQfe+wAl5MnqMUO5Nfg0TmZHUfPF1nOXTK2V5TSk1eDGWN70w
-         sg8Yrs6BOyMM1Hei5TQpOQt37GU2CltiEgTKtHDgAwAdUpC02dtRizQeW1o7WGdVOp9u
-         ePldJHKby7vraO0ih+WukUAF5A7pQrIosb5euzJTT0h6r0VyfuWr+vuu16R8RAGWtwuG
-         p02w==
-X-Forwarded-Encrypted: i=1; AJvYcCVRR7dDetBkzZnNQ75FPpAeS++Sqxv44+fvslViqfFkAzy8Z89O+S7AHf2Iuvc5+me2DKGtoxg/+jw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1V/fRQX7YNsiuXEfZnq1jU3DPrv8XdR6HMhwlreqoWS8mnDfo
-	rFWQyYmt1udAVotCys1ZcEUbwWQnlr3f21cjE9eLlSetkBOC3EO6wJFmFvy3OT4UBuvNfS6pTgG
-	Kd1uS5qx2d2LrAcXnzScADBQZWy1vs8LpPBCL
-X-Gm-Gg: ASbGncv3jpICZwmr8oX90RROL8+nLgeGpLlkd9NIryFhJE5g0vl3UNGB6YYXaUudcTQ
-	a/pnSNACRE0l4nK+d/7PoAZWcPioM0VFIb7ccjJwXHPdh2iUxl9WxVSYi1r5HQVvfecbkBjKWpn
-	gnRcctwmoEgAzhmN9P69s0hnJlU2xWCLQZeZMzPapKHQwMrijMRPFPTC4SGnwUB7nfEN9puLXy9
-	Pdu9Pc/Sg/xH+aM7WcXw4fNWfuqwh8=
-X-Google-Smtp-Source: AGHT+IEn4BipHFdFQpty90yZnHdtDve94da1wmgcnb4VcuDQTWpdAlFenmdB0falhANu5gpidPUxD2j+WgGCDLtnHLE=
-X-Received: by 2002:a17:907:6d1f:b0:b41:6ab2:bc69 with SMTP id
- a640c23a62f3a-b50aaa97cf5mr2140703066b.22.1760367404418; Mon, 13 Oct 2025
- 07:56:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760367786; x=1760972586;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hz2YlG98H4CyxP20y5sm8rq4XvWnKRXPRfDLzFVO22c=;
+        b=G6MWwMYPDY3RkjNwBR+fiZUoa/osaBvhwSKbviOq9T+8dOo3ihmb5MJW+/tPerwGrX
+         pouX3gNt7jfcSPtSQfhg33c554KmlpO3vzJ0E8H2HhsbKRTfEYmb6UFuV34IJutAKLes
+         Eppa3K+QSQKyrs9bqFeNOEN5vizDdvbSdvmCHlOzkZV4kKdn+gjiGSyrHF2xluLMDArv
+         3FPtdzyDvRpg5roouG6ByzCQYJ4JtE4YPHU/Cz2wBhnuavzc804KNILjbXF6SRz9Ibrd
+         92TPTvnS72n/lWuCIzLbWzkxJp3t3OG3HOXsda8p7j6oADlumE55AqrJv0kCzHprrNmy
+         fwow==
+X-Forwarded-Encrypted: i=1; AJvYcCVbP6IpJxW2hRCdgiXSXatmSC++vBr8Nvll+OwcVo7hgv9LHtkdTecDBZCNUES2FCQBvqt/gzyLjEE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNTG8C7LIo1zljffZtbsWKQ9k2LcdzUGjVFm8DMbz0uNO9OFAV
+	vi2xa582VODaJ5ZCMrXfmYCI8TmaxmBkiTIG01PM7QlTQThRnXg/obGs
+X-Gm-Gg: ASbGnctruGREgma/oQ04Bhg9xBjlj+1vjSC2ulXKn2ae0pGhDyHM+EZBIFZZ3SyT9ux
+	UBZHEAMBwiObBTujStsqOlkeyPYpd97AsWzIHHOallVo5jTOfNKNe5/RyQCVNpnBbz19fwZjKFZ
+	jwEeSl9vKXxWOpad65jBro9fjhmq97xkmlDlspKFlxVO5Q0Qq2HPLuxCk9YfHGMeD8j7B9Q0aU3
+	sOXUL//aRMqHFbOp5wdA5chne5DzpihA5o50WP4f3mfuunwpPy8qJ1lZLy5YNVz18jza/KDZGTL
+	h96os16OM4HyYBMpikcfg2Wl8XZPZv3bgXk5pjNJzgI8QVIIOBqBN5Sd97su8iBTqMRatpzAG1C
+	CMHBnteb2pttmLXuPhAPkx/oIby+LJWIxdQiUd5G8hRzWqQc9SdE/uQZUiNs7kdFRrqLtfJWjVA
+	==
+X-Google-Smtp-Source: AGHT+IHyoP91IrU6Tkmbf3ko8vntpz06pZXNHtLm+QHSlxS7L0YQX7eZaI3fQOREDGaGd1ZiF+to1A==
+X-Received: by 2002:a17:906:4550:b0:b50:b539:8be6 with SMTP id a640c23a62f3a-b50b539915dmr2017845266b.43.1760367786225;
+        Mon, 13 Oct 2025 08:03:06 -0700 (PDT)
+Received: from NB-6746.corp.yadro.com ([188.243.183.84])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b55d8c129c4sm957903866b.41.2025.10.13.08.03.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Oct 2025 08:03:05 -0700 (PDT)
+From: Artem Shimko <a.shimko.dev@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Artem Shimko <a.shimko.dev@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v2 0/2] dmaengine: dw-axi-dmac: PM cleanup and reset control support
+Date: Mon, 13 Oct 2025 18:02:31 +0300
+Message-ID: <20251013150234.3200627-1-a.shimko.dev@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251012100002.2959213-1-a.shimko.dev@gmail.com>
- <20251012100002.2959213-3-a.shimko.dev@gmail.com> <bf59e192acc06c88f122578e40ee64e1cafe8152.camel@pengutronix.de>
-In-Reply-To: <bf59e192acc06c88f122578e40ee64e1cafe8152.camel@pengutronix.de>
-From: Artem Shimko <a.shimko.dev@gmail.com>
-Date: Mon, 13 Oct 2025 17:56:33 +0300
-X-Gm-Features: AS18NWAykio0w701fbhEeHmzQJfNFnnKmOciJx4yZvvqyOgcP50A65S9gxbvyXk
-Message-ID: <CAOPX745BVB4oVUxz0ZYRRs3_KWT6Y6cGrMdc26v49U66+u0ReA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dmaengine: dw-axi-dmac: add reset control support
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>, 
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Philipp,
+This patch series improves the dw-axi-dmac driver in two areas:
 
-On Mon, Oct 13, 2025 at 11:41=E2=80=AFAM Philipp Zabel <p.zabel@pengutronix=
-.de> wrote:
-> reset_control_assert/deassert() handle NULL pointers, so you could drop
-> the chip->has_resets flag and just
->
->         reset_control_assert(chip->resets);
->
-> unconditionally.
+Patch 1 simplifies the power management code by using modern kernel
+macros and removing redundant wrapper functions, making the code more
+maintainable and aligned with current kernel practices.
 
-Thanks, I'll fix that
+Patch 2 adds proper reset control support to ensure reliable
+initialization and power management, handling resets during probe,
+remove, and suspend/resume operations.
 
-> Why is this moved down here?
+ChangeLog:
+  v1:
+    * https://lore.kernel.org/all/20251012100002.2959213-1-a.shimko.dev@gmail.com/T/#t
+  v2:
+    * Remove has_resets flag and use reset_control_assert/deassert() unconditionally,
+    as these functions handle NULL pointers internally
+    * Replace devm_reset_control_array_get_exclusive() with
+    devm_reset_control_array_get_optional_exclusive() to handle platforms
+    without reset controls gracefully
+    * Simplify error handling by removing redundant flag checks
+    * Remove has_resets field from struct axi_dma_chip as it's no longer needed
 
-Reset operations typically require clock signals to be available. By
-moving reset after clock
-acquisition (devm_clk_get), we ensure that the clock is ready to
-operate when reset is performed.
+Artem Shimko (2):
+  dmaengine: dw-axi-dmac: simplify PM functions and use modern macros
+  dmaengine: dw-axi-dmac: add reset control support
 
-> If it is ok to keep the module in reset, shouldn't the reset control be
-> asserted on device remove() as well?
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 66 ++++++++-----------
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  1 +
+ 2 files changed, 30 insertions(+), 37 deletions(-)
 
-dw_remove() has axi_dma_suspend() function, which is where the reset assert=
-ion
-occurs via reset_control_assert().
+-- 
+2.43.0
 
-Best regards,
-Artem Shimko
 

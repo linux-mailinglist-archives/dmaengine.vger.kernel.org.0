@@ -1,57 +1,50 @@
-Return-Path: <dmaengine+bounces-6827-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6828-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66A23BD65BA
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 23:30:50 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C63E6BD71E6
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Oct 2025 04:43:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1666A3BB673
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Oct 2025 21:30:49 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E11554F751C
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Oct 2025 02:43:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 108B921FF30;
-	Mon, 13 Oct 2025 21:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aIrSUIuo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9683305E0D;
+	Tue, 14 Oct 2025 02:42:59 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m15597.qiye.163.com (mail-m15597.qiye.163.com [101.71.155.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8936134BD;
-	Mon, 13 Oct 2025 21:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24D6306D49;
+	Tue, 14 Oct 2025 02:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760391046; cv=none; b=u8KoBHSCeaA2JnEsGnMMVzXl7KBBmaHSHI9p89SpSERbjggfAkiWmP2N/uFYYaX9GcAyBoqMZBRFmDmaPmYTMH1PozPbgFEPT8/ro30SUL3fifGlMgYhJq+clhDI7bUshH3ckH7j+9yZeGiUEunmb+Fhog9T8cSgv7XA17rY2Pg=
+	t=1760409779; cv=none; b=HbrwJlBQAHnPAI5J01dS3/4Vr6RswDJJcy/vUgkrTc5FjytPLYjBXXLOYXlzU6Hdidu7nKNJjhzcfhKfKVFA58FvEbm+GN08zu+dRjlhfHkAdFlwJf6+lUoDHdbBPiQ+1Z2CpsvEPx4IdD1Ip5GGGk2H9N+eP50UndJZb1tsmAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760391046; c=relaxed/simple;
-	bh=UXRYA9OeTpRlGCWOSO+dL5y9CcocBocJ6aM8A6/dmE8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XezzFIsheFuMmkE/eSeVQ3WsEACAJ6WMeqxgpRz+9S8zDWHjynGtVjZ77+z7p01dC2IBwF61LNBSkurnJOdbE2jZpfhmsHWJ5lxUL8+bQWwZ3iVickio98UFPtlqGFcQgcBWGTDGK9/HBcwPpBa9p18UuLTP/8lXZm0JcuLNYNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aIrSUIuo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A5D3C4CEE7;
-	Mon, 13 Oct 2025 21:30:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760391045;
-	bh=UXRYA9OeTpRlGCWOSO+dL5y9CcocBocJ6aM8A6/dmE8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aIrSUIuoRlOnmFKmaS40AJfKwtu0dHdNg8b1UvYq2CtV+D/SiFnpSGY5UnTK6e53H
-	 R4mBxcGz2CwaBB/epzuxayWPZJV8zqzDLD8q0kwlQrIafUpwApSo1SW9OxgE4vCREw
-	 nt/Qu+iN/FDhiQi9/NnRPGjvqEj9gfTNmSokBg2+jC7cB6YSWX5UzWCWlav4nIyGA/
-	 SZXBj95H/6Z71XaBa5wCmpMttXCYGMGV69XU0E5/VtuHJhbcyYOeT3EKntHJ7Tj/9l
-	 5bg54weZR9cqrl90fOUw5Irbobq3/Mf5JtUiHKP8lxsk+TS6p8VML3+TWzybOjG4ko
-	 VDOEk17CA0gBQ==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Khuong Dinh <khuong@os.amperecomputing.com>
-Cc: dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: dma: Convert apm,xgene-storm-dma to DT schema
-Date: Mon, 13 Oct 2025 16:30:35 -0500
-Message-ID: <20251013213037.684981-1-robh@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1760409779; c=relaxed/simple;
+	bh=L9Y3eF1geh2+BQ/4saZ/aUi4gJsi0xAL+hVTnEBiCSA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QZe7Lv3zo2ErsDhzKxP81m3UFpKtRH3UwKzMw80vVzq2RpWByqdj/BjDs42NSrF/i8WaOFWMnFAuvHDRi7LX81u6XbJDJamlA0xQrX8c21DZEt4swb62etQObVzBOHfezAH7ksBkaMKn2wRgAmLsJNPukNctmy7McqIj0N2iy5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=101.71.155.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
+Received: from localhost.localdomain (unknown [218.94.118.90])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 117e7b8a4;
+	Tue, 14 Oct 2025 10:37:38 +0800 (GMT+08:00)
+From: Zhen Ni <zhen.ni@easystack.cn>
+To: Frank.Li@nxp.com,
+	vkoul@kernel.org
+Cc: imx@lists.linux.dev,
+	dmaengine@vger.kernel.org,
+	Zhen Ni <zhen.ni@easystack.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] dmaengine: fsl-edma: Fix clk leak on alloc_chan_resources failure
+Date: Tue, 14 Oct 2025 10:37:28 +0800
+Message-Id: <20251014023728.749845-1-zhen.ni@easystack.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20251011030620.315732-1-zhen.ni@easystack.cn>
+References: <20251011030620.315732-1-zhen.ni@easystack.cn>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -59,137 +52,46 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a99e09496740229kunm914d1350367853
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQx1MVh0eHkhKTRgeHU1PGFYVFAkWGhdVGRETFh
+	oSFyQUDg9ZV1kYEgtZQVlJSkNVQk9VSkpDVUJLWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
+	VKQktLWQY+
 
-Convert APM X-Gene Storm DMA binding to DT schema format. It's a
-straight-forward conversion.
+When fsl_edma_alloc_chan_resources() fails after clk_prepare_enable(),
+the error paths only free IRQs and destroy the TCD pool, but forget to
+call clk_disable_unprepare(). This causes the channel clock to remain
+enabled, leaking power and resources.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Fix it by disabling the channel clock in the error unwind path.
+
+Fixes: d8d4355861d8 ("dmaengine: fsl-edma: add i.MX8ULP edma support")
+Cc: stable@vger.kernel.org
+Suggested-by: Frank Li <Frank.Li@nxp.com>
+Signed-off-by: Zhen Ni <zhen.ni@easystack.cn>
 ---
- .../bindings/dma/apm,xgene-storm-dma.yaml     | 59 +++++++++++++++++++
- .../devicetree/bindings/dma/apm-xgene-dma.txt | 47 ---------------
- 2 files changed, 59 insertions(+), 47 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/apm,xgene-storm-dma.yaml
- delete mode 100644 Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+Changes in v2:
+- Remove FSL_EDMA_DRV_HAS_CHCLK check
+Changes in v3:
+- Remove cleanup
+---
+ drivers/dma/fsl-edma-common.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/apm,xgene-storm-dma.yaml b/Documentation/devicetree/bindings/dma/apm,xgene-storm-dma.yaml
-new file mode 100644
-index 000000000000..9ca5f7848785
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/apm,xgene-storm-dma.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/apm,xgene-storm-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: APM X-Gene Storm SoC DMA
-+
-+maintainers:
-+  - Khuong Dinh <khuong@os.amperecomputing.com>
-+
-+properties:
-+  compatible:
-+    const: apm,xgene-storm-dma
-+
-+  reg:
-+    items:
-+      - description: DMA control and status registers
-+      - description: Descriptor ring control and status registers
-+      - description: Descriptor ring command registers
-+      - description: SoC efuse registers
-+
-+  interrupts:
-+    items:
-+      - description: DMA error reporting interrupt
-+      - description: DMA channel 0 completion interrupt
-+      - description: DMA channel 1 completion interrupt
-+      - description: DMA channel 2 completion interrupt
-+      - description: DMA channel 3 completion interrupt
-+
-+  clocks:
-+    maxItems: 1
-+
-+  dma-coherent: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    dma@1f270000 {
-+        compatible = "apm,xgene-storm-dma";
-+        reg = <0x1f270000 0x10000>,
-+              <0x1f200000 0x10000>,
-+              <0x1b000000 0x400000>,
-+              <0x1054a000 0x100>;
-+        interrupts = <0x0 0x82 0x4>,
-+                    <0x0 0xb8 0x4>,
-+                    <0x0 0xb9 0x4>,
-+                    <0x0 0xba 0x4>,
-+                    <0x0 0xbb 0x4>;
-+        dma-coherent;
-+        clocks = <&dmaclk 0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
-deleted file mode 100644
-index c53e0b08032f..000000000000
---- a/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--Applied Micro X-Gene SoC DMA nodes
--
--DMA nodes are defined to describe on-chip DMA interfaces in
--APM X-Gene SoC.
--
--Required properties for DMA interfaces:
--- compatible: Should be "apm,xgene-dma".
--- device_type: set to "dma".
--- reg: Address and length of the register set for the device.
--  It contains the information of registers in the following order:
--  1st - DMA control and status register address space.
--  2nd - Descriptor ring control and status register address space.
--  3rd - Descriptor ring command register address space.
--  4th - Soc efuse register address space.
--- interrupts: DMA has 5 interrupts sources. 1st interrupt is
--  DMA error reporting interrupt. 2nd, 3rd, 4th and 5th interrupts
--  are completion interrupts for each DMA channels.
--- clocks: Reference to the clock entry.
--
--Optional properties:
--- dma-coherent : Present if dma operations are coherent
--
--Example:
--	dmaclk: dmaclk@1f27c000 {
--		compatible = "apm,xgene-device-clock";
--		#clock-cells = <1>;
--		clocks = <&socplldiv2 0>;
--		reg = <0x0 0x1f27c000 0x0 0x1000>;
--		reg-names = "csr-reg";
--		clock-output-names = "dmaclk";
--	};
--
--	dma: dma@1f270000 {
--			compatible = "apm,xgene-storm-dma";
--			device_type = "dma";
--			reg = <0x0 0x1f270000 0x0 0x10000>,
--			      <0x0 0x1f200000 0x0 0x10000>,
--			      <0x0 0x1b000000 0x0 0x400000>,
--			      <0x0 0x1054a000 0x0 0x100>;
--			interrupts = <0x0 0x82 0x4>,
--				     <0x0 0xb8 0x4>,
--				     <0x0 0xb9 0x4>,
--				     <0x0 0xba 0x4>,
--				     <0x0 0xbb 0x4>;
--			dma-coherent;
--			clocks = <&dmaclk 0>;
--	};
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index 4976d7dde080..11655dcc4d6c 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -852,6 +852,7 @@ int fsl_edma_alloc_chan_resources(struct dma_chan *chan)
+ 		free_irq(fsl_chan->txirq, fsl_chan);
+ err_txirq:
+ 	dma_pool_destroy(fsl_chan->tcd_pool);
++	clk_disable_unprepare(fsl_chan->clk);
+ 
+ 	return ret;
+ }
 -- 
-2.51.0
+2.20.1
 
 

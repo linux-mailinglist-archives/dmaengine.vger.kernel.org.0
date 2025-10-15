@@ -1,379 +1,230 @@
-Return-Path: <dmaengine+bounces-6852-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6854-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE9C7BDB232
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Oct 2025 21:55:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C9DEBDBE40
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Oct 2025 02:14:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 828FB3AB37B
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Oct 2025 19:55:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2745B3C3206
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Oct 2025 00:14:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3823E30146C;
-	Tue, 14 Oct 2025 19:55:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC075151991;
+	Wed, 15 Oct 2025 00:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="GWRCfHeG"
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="biDehQ5g"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010048.outbound.protection.outlook.com [52.101.61.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708AB2D5419
-	for <dmaengine@vger.kernel.org>; Tue, 14 Oct 2025 19:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760471740; cv=none; b=CDheeoX2se2M/qXZBlep7C8USONiaDTajzKwqTs+MswyWhICBOHDaQmNl28LoeF+05KrOTENQsq7GbK1NaGqAl8hGz5/o/jAoBYcLGHSV6AUIQnc1r2dD5lxf8cW5xQoXULJh+mBcWfLpK2roU+jYinAKqAN5GUuyUNhNNarPjE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760471740; c=relaxed/simple;
-	bh=RYX5FweT3GD2kMb3Eti+DCcPmZfAWHc7Lk3sz3mAsKk=;
-	h=From:To:Cc:Date:Message-ID:In-Reply-To:References:MIME-Version:
-	 Subject; b=C1HXrKT/z4WNEDKCnhrHBGlxwnaZa8mJCaE8pfugtlHSzxYRCFlKm3I7/UGprKYz79oAHtv4d++yIgY1SZEBa2HlatEdbxHsEbQA0H/SaxywRvEELfLTYn4lEJWTjGrNCzHB5b6LhQQ8Cg5+cO643umWtvhocQGcAe2Dc8Dta2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=GWRCfHeG; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Cc:To:From:content-disposition;
-	bh=EYcOseFZHA040eNN1/VCtGWddCzz9vPJ0BwhnaqGUgU=; b=GWRCfHeGUrfDXFTLQU3o7qmsNW
-	7YkpHdo/UCZOf6WP6+HMdk9ERRCgZfa7B3I3LaZSsk3ltAWxyHwIxSDaPDBdNewwCAtURXc8vLQOO
-	wj/fVLLTpea21mu5Ql2uOUSsRKsa+AnZgMqYp26vKDLDNuvr2J+8axPsb3G+EwTJ9FCjg+8kdX5yG
-	oYwn8LyRdh1jJNavSoYE4BviiJv5FwppegjfgTUgujEMxOKHp/gcs3YzaGjDbE99WCSzMk1tctFEa
-	1lWqtUKo+z1LdOHupS76sEeVYIefLAeJiTvsJ7/PkH5yTtA7mU90Q7g10XdibbjrP7OCkQgPxgCIH
-	2k/WHV3w==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-	by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <gunthorp@deltatee.com>)
-	id 1v8kbn-0000000CcEm-2H0D;
-	Tue, 14 Oct 2025 13:22:57 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.98.2)
-	(envelope-from <gunthorp@deltatee.com>)
-	id 1v8kbc-000000001FR-1QBh;
-	Tue, 14 Oct 2025 13:22:44 -0600
-From: Logan Gunthorpe <logang@deltatee.com>
-To: dmaengine@vger.kernel.org,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Kelvin Cao <kelvin.cao@microchip.com>,
-	George Ge <George.Ge@microchip.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-	George Ge <george.ge@microchip.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Logan Gunthorpe <logang@deltatee.com>
-Date: Tue, 14 Oct 2025 13:22:39 -0600
-Message-ID: <20251014192239.4770-4-logang@deltatee.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251014192239.4770-1-logang@deltatee.com>
-References: <20251014192239.4770-1-logang@deltatee.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC51B136672;
+	Wed, 15 Oct 2025 00:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760487232; cv=fail; b=LYiQFXjYT7RRKaJ1prs5ERYCiz/QvfvNBIqb+Rzej/20Pj3ihXr1A8YSXV1dPQVNmc2g9ETpL0Zc45OPFzZoWzS8RnkPGD+enbwh77AnQbknplsIB4Jkx8tQbTWZwz2Z71poWTMXo+NhTUoQWGSEdLIxrjog3YsxMXotiKm/ec4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760487232; c=relaxed/simple;
+	bh=97tkk9OmQoXizOuxPgEphGBRQgUoCzuaeXoLlbLFaWw=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=V1xDTVkYj/eA+Adoc/HFOx7rKMahHtQRY0ppywnwnS0y9GcRU1NSAx28nGXM42Oy+A1VRdibY2/aEd7+HxsMTfQ2uEIvSPy9CVscm/MAeycUNRHOdWz3CvcTj9aeW2AvTnsj3RzdyfbGhqP6GVabIYlfDwecImXpFcrUtCDqeiI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=biDehQ5g; arc=fail smtp.client-ip=52.101.61.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XI2CmjU+fhPVQYxHBXDIHkbNj7wivOEHc4wmocsmbq3M8zJJBi9uJjHWLJYzP7cg3rAqLQqgU1vYH4ZjoLua1/ykk4KKM+0xOQNAxrItSIKnl3BhQljmZHwcyjWx/d3OQ2+M+gOpt356LR0xcNuCvc/qFueX6LIwY9Qd/DkVIi0ABan6CTVu0rq9BAACn5AJF82cwdd6zSaAMF5SZWKXxaWBy7eirlAaS55V84+XwJFTgBswdtXVG69fS4odRNCMoJ3X2z7cXF7/rCXfPcWt+vfX8JFq7OgYYNyuOsAL2BPKs3+bid8QPLqzOQzHiAG8TZ66lTyuHSQ/m6dcH0UOMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JvoazLV5J4TEZmK5+WQw+H6HKSf1cCX8FpgumH6O5PA=;
+ b=YZP8rxlcjtzIrnO1DaiSAI/0pT/MrEAhV9VEjDaePxeBNFRWeETsBF/HSJxMIrit1b0ntgJRk3rWG/mmSlA4GD07Z0f0Dt8FHjLGUXxrLnwTcuDFp0YnmymspsjVVmDCK2C+hzPyipGYVjgWyNRmcmGHHW6h2eHRA/ozT/Pfyxc245JO+ioqTFnEQXBM8KWL/mz7SyvYTBupuQWuOzWxvn+tdr8Lr+w8vEiZ0w0IThIvzU5njk2mDkqSbSg15EGgRuN/vfan0QeTNNFMiOLHcZefV0QVWuDAvOXHlL86n5Fbu2sLLyGhfawWi0mugOEplQRmTAjvLvyeR3p0KNXeHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JvoazLV5J4TEZmK5+WQw+H6HKSf1cCX8FpgumH6O5PA=;
+ b=biDehQ5gK2EW4zZnIEaOHNerkS2qnhwNNJhqpfpazdKqy6GPMO8ZysLs+okiuZokYYE5xwWZnwudzrRxoQY5BF0rm+O0R8gBdAID+DpoDaO6wdfYeG0za0y6k8o3jOqnLEvQyUpnJLoHx12SzcUO0uA3u3HBeHf2jtUPYXlcdBpfeY7L4d961cwbQsok5wKAC2imVd1aeMBO0Mf/qefmxJfE2vMSc46YVU1NskYiVhAWdaOVUKnRe5Z1DLMkzbLduEst/ASI/ugVlpGqvZAM0E0IIe9gm3mOWoeVCp/SkA87pmGu+xggUEXX/sDz8bkqm+C8Fti+fnEo04oT99LjOg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from MN2PR03MB4927.namprd03.prod.outlook.com (2603:10b6:208:1a8::8)
+ by BN9PR03MB6041.namprd03.prod.outlook.com (2603:10b6:408:136::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.11; Wed, 15 Oct
+ 2025 00:13:48 +0000
+Received: from MN2PR03MB4927.namprd03.prod.outlook.com
+ ([fe80::bfcb:80f5:254c:c419]) by MN2PR03MB4927.namprd03.prod.outlook.com
+ ([fe80::bfcb:80f5:254c:c419%5]) with mapi id 15.20.9228.009; Wed, 15 Oct 2025
+ 00:13:47 +0000
+From: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list),
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Niravkumar L Rabara <niravkumar.l.rabara@intel.com>,
+	linux-mtd@lists.infradead.org (open list:CADENCE NAND DRIVER),
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Khairul Anuar Romli <khairul.anuar.romli@altera.com>,
+	Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
+Subject: [PATCH v3 0/3] Add iommu supports
+Date: Wed, 15 Oct 2025 08:13:36 +0800
+Message-Id: <cover.1760486497.git.khairul.anuar.romli@altera.com>
+X-Mailer: git-send-email 2.35.3
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BY5PR16CA0001.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::14) To MN2PR03MB4927.namprd03.prod.outlook.com
+ (2603:10b6:208:1a8::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: dmaengine@vger.kernel.org, vkoul@kernel.org, hch@infradead.org, christophe.jaillet@wanadoo.fr, kelvin.cao@microchip.com, George.Ge@microchip.com, george.ge@microchip.com, hch@lst.de, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Level: 
-Subject: [PATCH 3/3] dmaengine: switchtec-dma: Implement descriptor submission
-X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR03MB4927:EE_|BN9PR03MB6041:EE_
+X-MS-Office365-Filtering-Correlation-Id: ecf2da77-0e21-472f-2817-08de0b7fb5d2
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Mi9WVmswUmgvcStkV3JpMW5MeWtUeldtZDBrQTRONjdkb1ZIQjZsVllDS1pU?=
+ =?utf-8?B?a29qVjBYSHR1TG42blNLS1l5bEtDcVlTbllSeUtDa1FIeVIxQm50OXUzTmh2?=
+ =?utf-8?B?NXNlOStrK2hsd3E3S3BxaEYzWEIrMXVHK2xnZnJVMTZmelNwQll2SWNBU0VC?=
+ =?utf-8?B?ZXFlK2RnbktPQW94WnJuUG9CUVVSZEZ6ZFd1VTgxZEMzM3FOQ3lCMFB3NzVD?=
+ =?utf-8?B?aFlEWGNLbCs3SVBKRGFJTzNuakc4SkVzdjF4bEFwYVZtRlo2UEZiNDFhTTV1?=
+ =?utf-8?B?WDNRTWJUWVRjRklCYk8wcGdPelVYSXpReDdDSWpZeVNmZDZ4MTlGSGdLR2JC?=
+ =?utf-8?B?d1o4ZjljVjEzVVJMN0RGRkZZZW4vVU9WR044UmxWYmE2dnRRMjBncmZldG51?=
+ =?utf-8?B?R1grSE5DN1lrSTBYMExYcURFeG5yRFMvRnh3RkhiL1BHUTBPR0xUbis2aU1l?=
+ =?utf-8?B?SWZ4S2ZNejZmTWNGMFloOUdZY1V5c3haSFhrTFF2Sm85eWdsY2o5YzlJUWs0?=
+ =?utf-8?B?VjlGRnlwUXNaNURzanc5bHBIWlVWSFFYNWdmdDBXY1lSbVlIVlNVZWRDN3kr?=
+ =?utf-8?B?RFhpQkV1V1NpNXhnVDcvNHRLcjJqR1Zzend6b3lrN0hIYnFNNWhzVko5bU9W?=
+ =?utf-8?B?WTlLYk5XSU41Tit3TkhEOTJSMEhaQUpUUEplVCswdndtUllzZlltZlJxQW1j?=
+ =?utf-8?B?WktXd2JTK1RRelBRemYxSVRhbnIrRytFQXB5TVN1elNWY0FaOTJueGU1YkFI?=
+ =?utf-8?B?a3NPcFFGL0hnano5MHNVWFZQZlFQd0NFTHFvdFlrckFWTHpnZGlEcVZBMUxP?=
+ =?utf-8?B?aVBJaFdkeGs5aVcwNUFES2Njd2JRUVZlT2R4VVNBeGoxV2w5WEh2RE44dGJl?=
+ =?utf-8?B?MlhBUy9MVmR3WFNZZ0g0MWFLNjVUM3I4VkMwSHZZRWZGNmJ2YWNKOXZ5d2hD?=
+ =?utf-8?B?cHNLVkZGOXl3Q2hQcnVXNWNPWkZjcXBLOGJWeklEbUM5djZjaWplU256S0RM?=
+ =?utf-8?B?bktid2prbmdVYXRuVTBVOVVHc3duSEcvb0lwemNPNmJEL3BsU3NSZ3ZDUVRs?=
+ =?utf-8?B?Qkozb1ZhZGhmSURWdTIrVUZJa1lpTyttTDhmdnNWYVVUNDhlRm80ekgyT08x?=
+ =?utf-8?B?bXh0MUREZG5oaE1zSzR0YjBXbnZQUitLM21GdlNHclg2QlF0QjRLYTdLMkxU?=
+ =?utf-8?B?OUlZaUZhNitaSzFXUHVEY0JCdStRZFE0Zyt0NE4yYjhZQ21CQXgxc1dqcTBU?=
+ =?utf-8?B?bFc5eE9Bc3E4TThhY3NFOTFvRlo3bmVqMzJqdG00WW5nZWtaQlZ4ek5ER0RX?=
+ =?utf-8?B?a0NsNkxmTk1rdm1xK3p3alZzRDM2R1NJbVZuQU5TemVkNE9ZeURmd0ZpRSth?=
+ =?utf-8?B?Z0FBSWlmUnpTRE03SXpOSnhUMHZ2QzVrS0hXOGNZQWIwQVFKVllnbHdJZ2hY?=
+ =?utf-8?B?T0FxQUdJMm84TjhCTjBvOVVSQXlaVXlzZGdEWVI1NVU5UU02NXo2VzVkK0pC?=
+ =?utf-8?B?ZVoxbk1jVjBOM0JRV2dTTDlyVEdMcmtuKzBTc0ROMHVDamh4YnM4TWY3Vytl?=
+ =?utf-8?B?YjNtZU5jcU5GRFdPZDNZbTNFTkY5M0V1UENNMk5SdVp3ZXlXS0RuOWcxS3E1?=
+ =?utf-8?B?MFFvdlFUY3hQeGJSTjlOQktYOHBub1p0ZDc4ZDY1a0l4NGVHVUJLTEdFS0Q1?=
+ =?utf-8?B?by9IbmlmRmV0S0lGQWVZcmZIRERVNFdQMkgyaUg3WGdVMWZ3d2kxWFZ1MVlX?=
+ =?utf-8?B?YTRDNVR6OHljbWtaZmpxS3ZhcGhWRmh2UFcwMGdmbDJCaXZ0ZktTQ3BkSGJX?=
+ =?utf-8?B?K0hoeVM0cnVsejUzNUMwclpFTFI2Q01ZdTcrZGhoK00wdzA4RWlzbkx3WDVw?=
+ =?utf-8?B?RFcwT0EvUEI2aHREQlB0Z1JqZzl0YzhhckhSbXljRzB1ZGV0ZElISzNTUnNV?=
+ =?utf-8?B?ejBiK0hnN3U0ZHcvOU5uOEpjblNIUkJVdmlyOXc3U3RBcGQzKzE2bnlRekF4?=
+ =?utf-8?Q?CCNoCOENJdE+LNSIXhCZ/JDf4RGJh8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR03MB4927.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N05uV2FOQlM3YzE0NlNya2pGWVc0RUNiejFRdm5GQURVYUxhUFFSV3ArVFdj?=
+ =?utf-8?B?NnJxNWsyUVJwQVFldFo2TzVvNUpCTy80ajhEUlV6RFdRWHRCK2xqWjhIV0tU?=
+ =?utf-8?B?V2JHNUhOV3RSUndpbXpIVWF4eFBJUHc2RmY0N3FlMHhIZUFtV3piNFhVMk16?=
+ =?utf-8?B?TVVuNmNFWEF3TnNFYU9veDdLQzdhekFzdnFZRmdmeG85RFNXazIrWUYwT0ZY?=
+ =?utf-8?B?d0VqcUxrRWlSMWJMUHZsZ3BsalVaaThZcWxwQkNXV09sYllnejdQUEVYUDVn?=
+ =?utf-8?B?S0RQV1Z3czkyMnBkL09iL1dMZ0FTYlVmZlc2VTVaajVNbHhFZnBnTW84QmVM?=
+ =?utf-8?B?RlUzbHZ1aVdmL2N4ZVg0Ti85OFNLbGUyV0VLdFR0ZkRsb0tVY0IzcU00RlNY?=
+ =?utf-8?B?UXhad1FNV2swdGxkK0dsdHhaQUY1UWdWRVN0aXE1UWUzSjArMkRUQlJBelY4?=
+ =?utf-8?B?YjRrUE00MHF6bmRuWUZ5NXJhNTlDeElWcnk1ZlZURGI4UXhLVWtUWWIveWxK?=
+ =?utf-8?B?ZWloVHdxOGs1RVlUMWJBS2FUOWZJTVFMdHRVREZwWHZSQW1WUC9vNUdmN1JB?=
+ =?utf-8?B?WkIvOWI2QVdmd3JZbU1BZFFkYTV3N1hhZ2FqaksrQ25tZ0V3SHJwenU2NzRh?=
+ =?utf-8?B?ajFZUmRzNUpGK1hlMjNqS2kxYjlNaXYwMFNYR0xGUkZxemVnS3JWdFR3Mksx?=
+ =?utf-8?B?ZjdMcWxUSWVwMkZuckpYa1JNZ1kzb3JDaHRJaGFVdVpFRWo4eVNldGpWRFFV?=
+ =?utf-8?B?VEx6bUlvZDV2LzZkTHl5QWJ1Z2ZhbjJWSDhRd0VJalBwb2RJN0gxQ0pUSHVO?=
+ =?utf-8?B?MHRlTHkyUk5taGJSem1TR0I5L1ZSSWFFbFVGQnVSRXZDZjVYR2U0NHp1Zk80?=
+ =?utf-8?B?Zjh2dDB6dUNTMWVRdjR1dUorYXZRMmlnMXdDSU1TM2tQc0k4cWlTZy9pQlVR?=
+ =?utf-8?B?aGVrdFlQS0RydGJ3b0gwWlR5YUs5UVJDK1hhZEtEbCtMa2dZK3dndFhzZnc3?=
+ =?utf-8?B?WU9qZFRvYm4yL2JQK1lJblJlQklYY0FPMGl5K0FyczQwSXZHdEppZ081MjNN?=
+ =?utf-8?B?U2Y5cENSTVNpWjc4LzZ1RTlWbTh2blZTYmtpMFZ3bHY1TWJ1Z3ZPTVRobTdX?=
+ =?utf-8?B?aXVYM1B3TWc2M25xVS9xbXVlNHNBVkFjcUtUK2NOc3Z4RHR2R3BnUDhwdTVz?=
+ =?utf-8?B?ejljaURrdkNFVVBscWpaNHlBNy9XYmowTnEvaVdRcXFNT3YyZ01IclQ0akpP?=
+ =?utf-8?B?M0NKTUg0KzBuSjZKVlZpdE8rNzRVZnVibGlEWGoyN2JhVWlhRUszVUNlK3pW?=
+ =?utf-8?B?UFEvRCtVQXI5L3FZWnpTUGVPUEJzS1R6eHBDc0c5amYzSnV2emNtZWU0MGFk?=
+ =?utf-8?B?SDJiV1FpT1NlREZFL2xMNEM2NUJObmdta3BKeS9oMFh6djFBZUcxd3JabXlk?=
+ =?utf-8?B?VlVpYlZUaGRuUWVrQ1B6V0hjQnBrU1Z6YmNnTHNMNzlZaWhHSml1dUx3TC9N?=
+ =?utf-8?B?RkNXTlV6N0ZVVTZKVTNGVU9sODdVaHhCUWNPWE5LMmRJZ1RJNlRlcHliTkJs?=
+ =?utf-8?B?Q1BjUmFLK0xCdjFLdWlMVitHRmhBcUc4THpwZ3hWTHVrTExMZHZQTWpzWjcv?=
+ =?utf-8?B?OERYVXJBcTIxbzBGUXdjak5QU2hhS203UDRsWDZhYjRFTmFDcTFVV0JJeGtw?=
+ =?utf-8?B?YTZoeXYrZmpqSWRuZTdrN003RDhPUmd5TE9yVnNNa0xEck9JM3pGNUltM2FC?=
+ =?utf-8?B?c1VtZjNCZ09lcHVsK09xS3ZrekZMSnh4bGo4cklBRGh0cDY5aWtnV1pwOUF5?=
+ =?utf-8?B?eUZBaWhDU0lKZEgrSkZ4RmRRSHFuWFJTcUh1Y0NkZE1GNktLYUxZV2pXRnRt?=
+ =?utf-8?B?ZzBmWkFHTTNkd0hIVS9EbG9zV2hxaS9VM2ZQWEJsN3pyeDhQYWwwb2VLR3Zn?=
+ =?utf-8?B?SDIxREtsem5yZmM1Yk9BaDlWZmovNU1QUThBb3VCd1I3WXFjeS9kR0xvblVE?=
+ =?utf-8?B?d3phazd6T0NJNmgyUTgrTzhyN056ZndNT0xzRUU0aUNTVTNValN5NWtIemcy?=
+ =?utf-8?B?SndGd3pUS1Z3VUR4V0VDdllYN1hYNmRpeTFobXhNdEF3NTI1Y3llSWxLQXFL?=
+ =?utf-8?B?Q1dQR2dlODNHRmVmVUxqQlBEdy8reUQ3V2pJVVE5cTgzODR6SUYwRWhNWFdS?=
+ =?utf-8?B?N3c9PQ==?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecf2da77-0e21-472f-2817-08de0b7fb5d2
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR03MB4927.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2025 00:13:47.8383
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dulaP5N7KRs5UOhHVNvxKO1CwBAz3kDk9BNtrSLjjpyivKd/7euEoEsEbUAgK0FVbfpgkV1F+UwCvtBV67mE9EMlWv01/L5dCRzxQ7DAI4I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR03MB6041
 
-From: Kelvin Cao <kelvin.cao@microchip.com>
+This patch series adds IOMMU support for the Agilex5 platform by:
 
-On prep, a spin lock is taken and the next entry in the circular buffer
-is filled. On submit, the spin lock just needs to be released as the
-requests are already pending.
+- Updating the device tree bindings for:
+  - Cadence HP NAND controller (`cdns,hp-nfc`)
+  - Synopsys DesignWare AXI DMA controller (`snps,dw-axi-dmac`)
+  to accept the `iommus` property.
 
-When switchtec_dma_issue_pending() is called, the sq_tail register
-is written to indicate there are new jobs for the dma engine to start
-on.
+- Adding the SMMU (System Memory Management Unit) node to the Agilex5
+  device tree and wiring up the IOMMU properties to the supported
+  peripherals:
+  - NAND controller
+  - DMA controller
+  - SPI controller
 
-Pause and resume operations are implemented by writing to a control
-register.
+The Agilex5 SoC includes an ARM SMMU v3 with dedicated Translation Buffer
+Units (TBUs) for peripherals. These allow for hardware-enforced DMA
+address translation and memory isolation using the IOMMU framework.
 
-Signed-off-by: Kelvin Cao <kelvin.cao@microchip.com>
-Co-developed-by: George Ge <george.ge@microchip.com>
-Signed-off-by: George Ge <george.ge@microchip.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Enabling IOMMU support ensures proper integration of these devices in
+virtualized or secure environments, and aligns the platform with ARM’s
+architectural requirements.
+
 ---
- drivers/dma/switchtec_dma.c | 221 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 221 insertions(+)
+Changes in v3:
+	- Refined commit messages with detailed hardware descriptions.
+	- Clarified which peripherals are covered in the DT changes.
+Changes in v2:
+	- Add more description in the commit message body to clarify
+	  device required for this changes.
+---
+Khairul Anuar Romli (3):
+  dt-bindings: mtd: cdns,hp-nfc: Add iommu property
+  dt-bindings: dma: snps,dw-axi-dmac: Add iommu property
+  arm64: dts: socfpga: agilex5: Add SMMU nodes
 
-diff --git a/drivers/dma/switchtec_dma.c b/drivers/dma/switchtec_dma.c
-index 648eabc0f5da..9f95f8887dd2 100644
---- a/drivers/dma/switchtec_dma.c
-+++ b/drivers/dma/switchtec_dma.c
-@@ -33,6 +33,8 @@ MODULE_AUTHOR("Kelvin Cao");
- #define SWITCHTEC_REG_SE_BUF_CNT	0x98
- #define SWITCHTEC_REG_SE_BUF_BASE	0x9a
- 
-+#define SWITCHTEC_DESC_MAX_SIZE		0x100000
-+
- #define SWITCHTEC_CHAN_CTRL_PAUSE	BIT(0)
- #define SWITCHTEC_CHAN_CTRL_HALT	BIT(1)
- #define SWITCHTEC_CHAN_CTRL_RESET	BIT(2)
-@@ -194,6 +196,11 @@ struct switchtec_dma_hw_se_desc {
- 	__le16 sfid;
- };
- 
-+#define SWITCHTEC_SE_DFM		BIT(5)
-+#define SWITCHTEC_SE_LIOF		BIT(6)
-+#define SWITCHTEC_SE_BRR		BIT(7)
-+#define SWITCHTEC_SE_CID_MASK		GENMASK(15, 0)
-+
- #define SWITCHTEC_CE_SC_LEN_ERR		BIT(0)
- #define SWITCHTEC_CE_SC_UR		BIT(1)
- #define SWITCHTEC_CE_SC_CA		BIT(2)
-@@ -231,6 +238,8 @@ struct switchtec_dma_desc {
- 	bool completed;
- };
- 
-+#define SWITCHTEC_INVALID_HFID 0xffff
-+
- #define SWITCHTEC_DMA_SQ_SIZE	SZ_32K
- #define SWITCHTEC_DMA_CQ_SIZE	SZ_32K
- 
-@@ -603,6 +612,210 @@ static void switchtec_dma_synchronize(struct dma_chan *chan)
- 	spin_unlock_bh(&swdma_chan->complete_lock);
- }
- 
-+static struct dma_async_tx_descriptor *
-+switchtec_dma_prep_desc(struct dma_chan *c, u16 dst_fid, dma_addr_t dma_dst,
-+			u16 src_fid, dma_addr_t dma_src, u64 data,
-+			size_t len, unsigned long flags)
-+	__acquires(swdma_chan->submit_lock)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(c, struct switchtec_dma_chan, dma_chan);
-+	struct switchtec_dma_desc *desc;
-+	int head, tail;
-+
-+	spin_lock_bh(&swdma_chan->submit_lock);
-+
-+	if (!swdma_chan->ring_active)
-+		goto err_unlock;
-+
-+	tail = READ_ONCE(swdma_chan->tail);
-+	head = swdma_chan->head;
-+
-+	if (!CIRC_SPACE(head, tail, SWITCHTEC_DMA_RING_SIZE))
-+		goto err_unlock;
-+
-+	desc = swdma_chan->desc_ring[head];
-+
-+	if (src_fid != SWITCHTEC_INVALID_HFID &&
-+	    dst_fid != SWITCHTEC_INVALID_HFID)
-+		desc->hw->ctrl |= SWITCHTEC_SE_DFM;
-+
-+	if (flags & DMA_PREP_INTERRUPT)
-+		desc->hw->ctrl |= SWITCHTEC_SE_LIOF;
-+
-+	if (flags & DMA_PREP_FENCE)
-+		desc->hw->ctrl |= SWITCHTEC_SE_BRR;
-+
-+	desc->txd.flags = flags;
-+
-+	desc->completed = false;
-+	desc->hw->opc = SWITCHTEC_DMA_OPC_MEMCPY;
-+	desc->hw->addr_lo = cpu_to_le32(lower_32_bits(dma_src));
-+	desc->hw->addr_hi = cpu_to_le32(upper_32_bits(dma_src));
-+	desc->hw->daddr_lo = cpu_to_le32(lower_32_bits(dma_dst));
-+	desc->hw->daddr_hi = cpu_to_le32(upper_32_bits(dma_dst));
-+	desc->hw->byte_cnt = cpu_to_le32(len);
-+	desc->hw->tlp_setting = 0;
-+	desc->hw->dfid = cpu_to_le16(dst_fid);
-+	desc->hw->sfid = cpu_to_le16(src_fid);
-+	swdma_chan->cid &= SWITCHTEC_SE_CID_MASK;
-+	desc->hw->cid = cpu_to_le16(swdma_chan->cid++);
-+	desc->orig_size = len;
-+
-+	head++;
-+	head &= SWITCHTEC_DMA_RING_SIZE - 1;
-+
-+	/*
-+	 * Ensure the desc updates are visible before updating the head index
-+	 */
-+	smp_store_release(&swdma_chan->head, head);
-+
-+	/* return with the lock held, it will be released in tx_submit */
-+
-+	return &desc->txd;
-+
-+err_unlock:
-+	/*
-+	 * Keep sparse happy by restoring an even lock count on
-+	 * this lock.
-+	 */
-+	__acquire(swdma_chan->submit_lock);
-+
-+	spin_unlock_bh(&swdma_chan->submit_lock);
-+	return NULL;
-+}
-+
-+static struct dma_async_tx_descriptor *
-+switchtec_dma_prep_memcpy(struct dma_chan *c, dma_addr_t dma_dst,
-+			  dma_addr_t dma_src, size_t len, unsigned long flags)
-+	__acquires(swdma_chan->submit_lock)
-+{
-+	if (len > SWITCHTEC_DESC_MAX_SIZE) {
-+		/*
-+		 * Keep sparse happy by restoring an even lock count on
-+		 * this lock.
-+		 */
-+		__acquire(swdma_chan->submit_lock);
-+		return NULL;
-+	}
-+
-+	return switchtec_dma_prep_desc(c, SWITCHTEC_INVALID_HFID, dma_dst,
-+				       SWITCHTEC_INVALID_HFID, dma_src, 0, len,
-+				       flags);
-+}
-+
-+static dma_cookie_t
-+switchtec_dma_tx_submit(struct dma_async_tx_descriptor *desc)
-+	__releases(swdma_chan->submit_lock)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(desc->chan, struct switchtec_dma_chan, dma_chan);
-+	dma_cookie_t cookie;
-+
-+	cookie = dma_cookie_assign(desc);
-+
-+	spin_unlock_bh(&swdma_chan->submit_lock);
-+
-+	return cookie;
-+}
-+
-+static enum dma_status switchtec_dma_tx_status(struct dma_chan *chan,
-+		dma_cookie_t cookie, struct dma_tx_state *txstate)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(chan, struct switchtec_dma_chan, dma_chan);
-+	enum dma_status ret;
-+
-+	ret = dma_cookie_status(chan, cookie, txstate);
-+	if (ret == DMA_COMPLETE)
-+		return ret;
-+
-+	switchtec_dma_cleanup_completed(swdma_chan);
-+
-+	return dma_cookie_status(chan, cookie, txstate);
-+}
-+
-+static void switchtec_dma_issue_pending(struct dma_chan *chan)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(chan, struct switchtec_dma_chan, dma_chan);
-+	struct switchtec_dma_dev *swdma_dev = swdma_chan->swdma_dev;
-+
-+	/*
-+	 * Ensure the desc updates are visible before starting the
-+	 * DMA engine.
-+	 */
-+	wmb();
-+
-+	/*
-+	 * The sq_tail register is actually for the head of the
-+	 * submisssion queue. Chip has the opposite define of head/tail
-+	 * to the Linux kernel.
-+	 */
-+
-+	rcu_read_lock();
-+	if (!rcu_dereference(swdma_dev->pdev)) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+
-+	spin_lock_bh(&swdma_chan->submit_lock);
-+	writew(swdma_chan->head, &swdma_chan->mmio_chan_hw->sq_tail);
-+	spin_unlock_bh(&swdma_chan->submit_lock);
-+
-+	rcu_read_unlock();
-+}
-+
-+static int switchtec_dma_pause(struct dma_chan *chan)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(chan, struct switchtec_dma_chan, dma_chan);
-+	struct chan_hw_regs __iomem *chan_hw = swdma_chan->mmio_chan_hw;
-+	struct pci_dev *pdev;
-+	int ret;
-+
-+	rcu_read_lock();
-+	pdev = rcu_dereference(swdma_chan->swdma_dev->pdev);
-+	if (!pdev) {
-+		ret = -ENODEV;
-+		goto unlock_and_exit;
-+	}
-+
-+	spin_lock(&swdma_chan->hw_ctrl_lock);
-+	writeb(SWITCHTEC_CHAN_CTRL_PAUSE, &chan_hw->ctrl);
-+	ret = wait_for_chan_status(chan_hw, SWITCHTEC_CHAN_STS_PAUSED, true);
-+	spin_unlock(&swdma_chan->hw_ctrl_lock);
-+
-+unlock_and_exit:
-+	rcu_read_unlock();
-+	return ret;
-+}
-+
-+static int switchtec_dma_resume(struct dma_chan *chan)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(chan, struct switchtec_dma_chan, dma_chan);
-+	struct chan_hw_regs __iomem *chan_hw = swdma_chan->mmio_chan_hw;
-+	struct pci_dev *pdev;
-+	int ret;
-+
-+	rcu_read_lock();
-+	pdev = rcu_dereference(swdma_chan->swdma_dev->pdev);
-+	if (!pdev) {
-+		ret = -ENODEV;
-+		goto unlock_and_exit;
-+	}
-+
-+	spin_lock(&swdma_chan->hw_ctrl_lock);
-+	writeb(0, &chan_hw->ctrl);
-+	ret = wait_for_chan_status(chan_hw, SWITCHTEC_CHAN_STS_PAUSED, false);
-+	spin_unlock(&swdma_chan->hw_ctrl_lock);
-+
-+unlock_and_exit:
-+	rcu_read_unlock();
-+	return ret;
-+}
-+
- static void switchtec_dma_desc_task(unsigned long data)
- {
- 	struct switchtec_dma_chan *swdma_chan = (void *)data;
-@@ -733,6 +946,7 @@ static int switchtec_dma_alloc_desc(struct switchtec_dma_chan *swdma_chan)
- 		}
- 
- 		dma_async_tx_descriptor_init(&desc->txd, &swdma_chan->dma_chan);
-+		desc->txd.tx_submit = switchtec_dma_tx_submit;
- 		desc->hw = &swdma_chan->hw_sq[i];
- 		desc->completed = true;
- 
-@@ -1064,10 +1278,17 @@ static int switchtec_dma_create(struct pci_dev *pdev)
- 
- 	dma = &swdma_dev->dma_dev;
- 	dma->copy_align = DMAENGINE_ALIGN_8_BYTES;
-+	dma_cap_set(DMA_MEMCPY, dma->cap_mask);
-+	dma_cap_set(DMA_PRIVATE, dma->cap_mask);
- 	dma->dev = get_device(&pdev->dev);
- 
- 	dma->device_alloc_chan_resources = switchtec_dma_alloc_chan_resources;
- 	dma->device_free_chan_resources = switchtec_dma_free_chan_resources;
-+	dma->device_prep_dma_memcpy = switchtec_dma_prep_memcpy;
-+	dma->device_tx_status = switchtec_dma_tx_status;
-+	dma->device_issue_pending = switchtec_dma_issue_pending;
-+	dma->device_pause = switchtec_dma_pause;
-+	dma->device_resume = switchtec_dma_resume;
- 	dma->device_terminate_all = switchtec_dma_terminate_all;
- 	dma->device_synchronize = switchtec_dma_synchronize;
- 	dma->device_release = switchtec_dma_release;
+ .../bindings/dma/snps,dw-axi-dmac.yaml           |  3 +++
+ .../devicetree/bindings/mtd/cdns,hp-nfc.yaml     |  3 +++
+ arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi   | 16 ++++++++++++++++
+ 3 files changed, 22 insertions(+)
+
 -- 
-2.47.3
+2.35.3
 
 

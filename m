@@ -1,59 +1,63 @@
-Return-Path: <dmaengine+bounces-6858-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6859-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEEDBBDDDE0
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Oct 2025 11:51:19 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 925ECBDFA16
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Oct 2025 18:22:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2875519C0FF3
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Oct 2025 09:51:30 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5A4404EE83F
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Oct 2025 16:22:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1F0B31B12D;
-	Wed, 15 Oct 2025 09:50:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 546F83375A5;
+	Wed, 15 Oct 2025 16:22:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a32v3isP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JuqpDqa1"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E4731A804;
-	Wed, 15 Oct 2025 09:50:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C45D202F71;
+	Wed, 15 Oct 2025 16:22:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760521830; cv=none; b=I5x4Si56PwIMMY+UCEDpfKrlA83j0nmqBNprE7z3SXKXX/aSYSKcTe9BWniZzR+yS4AtlTloctbW85GHl9clsQMnTJ17FSyNQqrEjb1Exrh7twP+tfi0pnoh92kLkzY+IPCUOB7S00DLPycDDuG42iZjdbixAdMpG0oPen6VQqg=
+	t=1760545332; cv=none; b=i9Ymlh9y+vHpkD+WKNFR6ns4fOCqKEYP+OIykcf4g7Jfw5RYpbd2FYl8g4WtMw+QgS5q/p+95UsYPQxwqYzZzxMeDteAnTe9Y5Lp/ZDf9UpdbF8iJkWhWZcsTQEkPRdXLj+A5TJmVzznw17zbJnITZCTe2Kn6wY0gQ1J8zUKu3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760521830; c=relaxed/simple;
-	bh=DAQ97XxkDaOBHjNynMId/gOsAuupI3l3Tc49SMZfcaY=;
+	s=arc-20240116; t=1760545332; c=relaxed/simple;
+	bh=m5yz6FAGECP9+hJqdl/rehdUmr+YvIiUg5swfLlBFGk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jXezrzD14sz69KNCX3rUTROLtfu/Cvb9TgX9Q6ge5Td1M+oXM0pPlZyKrwLXBmioisNdUkCtG1JHLKWHDQfjd1KQiXsnxIdeHOFaBAt1FOX40acwqcoJUrZqRsi5QdRy5/GGUruty2Ip6pLcs17lNpTgeM42++UjBZs2XX+xATc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a32v3isP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1504EC4CEF8;
-	Wed, 15 Oct 2025 09:50:27 +0000 (UTC)
+	 MIME-Version:Content-Type; b=CSvCgqjo5raeKdpK+QY0TDRFEVZ3yZZ6WRDDk2K865+Wd4VzK6TdP3X5JlA971IoKv4JOeQEP0PmMtrbeaeOGTU9IeAt1rDG6AX9KaDXVG4Oq9IK6yhN2xm+hRMQagQrsXovVRdvnMFRWKpX9jRS2RkPj2H/DgIWvLWs7ug1UDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JuqpDqa1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D9C1C4CEF9;
+	Wed, 15 Oct 2025 16:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760521830;
-	bh=DAQ97XxkDaOBHjNynMId/gOsAuupI3l3Tc49SMZfcaY=;
+	s=k20201202; t=1760545330;
+	bh=m5yz6FAGECP9+hJqdl/rehdUmr+YvIiUg5swfLlBFGk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=a32v3isPJ1uRLrGg7wRW5KoB/X11+APeu4LxPqFyijyED4caYHtlWUGCNBgbK/ux4
-	 Kon+P5NcE5oyqaIdH5o1yFgIMuVuHAa3hAAm4VQDbf0Kur1mOHuRt5DL2GD+64TVvX
-	 TEbH7zMhdnoMNDC+HpEK4ifnaeVk+ukcprVWgxcKt1lD2Jwd9lj5EL/zchNvVMcrEQ
-	 8zSTRErAW/aY9bvTw/K8/uu1eC737Q9n2Zb2b3r7HlnRoX306ijdcT2sB1Y7/VG6yi
-	 Wbr9lruIl9ffAiO/vfsxCBVclpF5xk6HX5AuNar1uFQMMaT18UewL+RTL47FbHheBG
-	 DCWlj8aJd1+5w==
+	b=JuqpDqa1YOpi244K0gRdbMaFRQVKXJFoxEajxUXv4EOncI+NW2gCfk6C6742EorfY
+	 cHWVCgqZ+VehNMHDpgqcrg+YsZ8wvPLEtd8kpVQqJXwNN5RlTzeS1g1PCFgEcH+icC
+	 PWH6v4b1CHP21kyfdHL6+Zeyiq0ElrjtEnBCxhZgzeDKYd4jKKuEa87Nrot6kchddH
+	 gIBee+jSI6kiDRyJVhnZmU8NrwPlqXtUezcSyTgTXy+0cOmIc1pFj6SxDSq2pdG3bw
+	 44Q8/16bVwfAyd4Zy+R27pZ6rdx/fZg3KfvPOeDY4NbvAO1GGUS4kb0CpnyJbzSJSC
+	 oAS6zTG7kSgJQ==
 From: Mark Brown <broonie@kernel.org>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- andersson@kernel.org, konradybcio@kernel.org, vkoul@kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- dmaengine@vger.kernel.org, Md Sadre Alam <quic_mdalam@quicinc.com>
-Cc: quic_varada@quicinc.com
-In-Reply-To: <20251008090413.458791-1-quic_mdalam@quicinc.com>
-References: <20251008090413.458791-1-quic_mdalam@quicinc.com>
-Subject: Re: (subset) [PATCH v2 0/9] Add QPIC SPI NAND support for IPQ5424
- and IPQ5332 platforms
-Message-Id: <176052182781.20973.15827273241958819780.b4-ty@kernel.org>
-Date: Wed, 15 Oct 2025 10:50:27 +0100
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, Marc Zyngier <maz@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, 
+ "Sheetal ." <sheetal@nvidia.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, 
+ Sameer Pujar <spujar@nvidia.com>, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sound@vger.kernel.org
+In-Reply-To: <20250929105930.1767294-1-sheetal@nvidia.com>
+References: <20250929105930.1767294-1-sheetal@nvidia.com>
+Subject: Re: (subset) [PATCH V2 0/4] Add tegra264 audio device tree support
+Message-Id: <176054532703.196625.10143802503112850077.b4-ty@kernel.org>
+Date: Wed, 15 Oct 2025 17:22:07 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -62,33 +66,30 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-96507
+X-Mailer: b4 0.15-dev-2a268
 
-On Wed, 08 Oct 2025 14:34:04 +0530, Md Sadre Alam wrote:
-> v2:
->  * Added Reviewed-by tag
->  * Added Acked-by tag
->  * Updated board name in commit message header
->  * Added \n before status
-> 
-> v1:
->  * Added support for spi nand for IPQ5424 and IPQ5332
->  * Updated bam_prep_ce_le32() to set the mask field conditionally based
->    on command
->  * Removed eMMC node for IPQ5424 and IPQ5332
+On Mon, 29 Sep 2025 16:29:26 +0530, Sheetal . wrote:
+> Add device tree support for tegra264 audio subsystem including:
+> - Binding update for
+>   - 64-channel ADMA controller
+>   - 32 RX/TX ADMAIF channels
+>   - tegra264-agic binding for arm,gic
+> - Add device tree nodes for
+>   - APE subsystem (ACONNECT, AGIC, ADMA, AHUB and children (ADMAIF, I2S,
+>     DMIC, DSPK, MVC, SFC, ASRC, AMX, ADX, OPE and Mixer) nodes
+>   - HDA controller
+>   - sound
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
 Thanks!
 
-[1/9] spi: dt-bindings: spi-qpic-snand: Add IPQ5424 compatible
-      commit: 454cd43a283f7697297c52981c7a499a16725656
-[2/9] spi: dt-bindings: spi-qpic-snand: Add IPQ5332 compatible
-      commit: 4412ab501677606436e5c49e41151a1e6eac7ac0
+[2/4] dt-bindings: sound: Update ADMAIF bindings for tegra264
+      commit: 4d410ba9aa275e7990a270f63ce436990ace1bea
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during

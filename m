@@ -1,123 +1,107 @@
-Return-Path: <dmaengine+bounces-6860-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6861-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F414BE3308
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Oct 2025 13:53:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 485B1BE34D4
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Oct 2025 14:17:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29B17480012
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Oct 2025 11:52:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0382C4825FC
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Oct 2025 12:17:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FDE431CA5E;
-	Thu, 16 Oct 2025 11:52:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4278231C567;
+	Thu, 16 Oct 2025 12:17:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8M+ypII"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PeDtq8Av"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C5231AF34
-	for <dmaengine@vger.kernel.org>; Thu, 16 Oct 2025 11:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0968C2E1F03;
+	Thu, 16 Oct 2025 12:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760615554; cv=none; b=CU+CaZX9ecYg602TXFSJwXnb8TX2xPpl6Dhtnf2h5iNKrgSRO4l2l+BxA41sWks5RG/yE4WpPASEQTvd76OaXOhOhsKTMVaktvzuF7rm0ZUPVdiZHdR1GJFfV0w4g7ij2a+tuZ9TEC444enLnlTRNjodEu+5/SfyfzqCz5K5vP0=
+	t=1760617057; cv=none; b=smBMlRu47AqTf2Rtm6IAslnuNHmMkCLIRrCfXqzpyej6UmaVRPGTUTKoeVhqW0uhBh+rGQzC0cNZB+vwxbsKgZo24Yq30suMY9ZCDmFaY7xZNZkyKtRgdEOMSwN7OqFbKoJkNdu3QtK5GvCWeNLrcAO/mr5DXti5e9dwWARnyik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760615554; c=relaxed/simple;
-	bh=mC+9tDBrABDE/IJ+3G93YVagmcCQSUndMoDjtVKH8do=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TZxWIr82Xaa2PaFI31UZpRslEUInGxVHGIBh1WZSxd2XtgD4wW/RqKUj0BsPNhNaC/Bh2vcC9CEJkYR6N7B9V+XqL4Cui9tTnU8GlrMeVGybPWfNFTNWoMXzMJBKJD0Tesg/gEIvfkxtmgDfWGelVeCrBOz3OfdCz7YDIKFDe00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M8M+ypII; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-651c646b857so48566eaf.0
-        for <dmaengine@vger.kernel.org>; Thu, 16 Oct 2025 04:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760615551; x=1761220351; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mC+9tDBrABDE/IJ+3G93YVagmcCQSUndMoDjtVKH8do=;
-        b=M8M+ypIItBI7oRThWFl4sOdAJoXP6jcdl+tQ9PtmRACAEJprF9ihfA2WRBjumA02M8
-         XhI8WpisQIPABUk93jne2TcGkjnnCUyK+0V82itEbTEUgHMSy/6bVnZvr8ggvG4W7AWy
-         9wjxuRjKkgzmW/OSczTylqNDZpqMHW3IQCaxMMOR7PYZ+7HbhAWLWZ5Bapfefb3Aw8qv
-         4ycVv9GWWFlnfj1vHiiCrPN7QMPUUCXuScAHx9ZG/FSYwFVju1oGS1sp5/eg8qBprCqQ
-         gXrbTGNTZkwy6oytA9gYElOhy39qOso2y/6mhLcXn1TI+5wU55xDPmPH6o74+X0z3ZvJ
-         kKig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760615551; x=1761220351;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mC+9tDBrABDE/IJ+3G93YVagmcCQSUndMoDjtVKH8do=;
-        b=UM4abc3WGj+0Y0LpMCEfNQeVUckpCoE8kPyUM+df4Z93kEgt5cGIsuGaGkQWQbpO0K
-         zDaY85RRzXGTGtVo7w+JEPgD0NiZMbQwsDc95w+W2WNg5WL5nrraBi+s01ko7TXi62jE
-         fW6qiHm6UJtuUtcopI09YS+twYvSHMpwkUdz2M6sDN4nV/EnNKV3XiZE+4Zxm5gdPmEE
-         o5R19UqVKSQkI79RwMmk7j20VWdoq6AeoaSb5W2xmv/mFi8u2XpQYh4reImJLPze6Yw0
-         sgwNYrcjsIgR6Nt+jgTda8o+ZoR44xb6zyjPvvWgty+XZ1OOAqaLS8RuVlV1M4eLiev2
-         iJ8w==
-X-Forwarded-Encrypted: i=1; AJvYcCV65N5EAF0B3LtvbcoPhksC9hMnHyxJ6TZ73dLbSqs+KpWOPAl3RMn/UTY8Sm8w79D5Na/s8EnmwMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLeZH1b8PIYFa7ErrG8fctkZbMNYeCff3IoHXs34WjihrmIWT2
-	/9TBRcqdnvyBwqJf8VGFnPmYa0ij7IBdQrT09MhV0V8beu9RJ0MJ+mLT/mzrIcLwg8IyV2af/FI
-	Dj42qk/kPKspXFoUi6Z5dlq0aH+5H6wH93w==
-X-Gm-Gg: ASbGnctVcejALwGhgipyXuT0G/a7pDh3f2+E23PXf4i05QfHNAaRI/RsvyTvrM9TiZ9
-	I7eoCAgcrmMzu8n80j9LRaKVDurGU4cfMHhBKFiv7Q+Lpo6bZsE24nUC855Yi0vIH/0FTurgvOA
-	qUrU9kJo46VCFI4gGeSHY8KiXxMVy1+7QmtfMyJfuRx/vLszr7YSLsQ6jwYySz03DYRxLgfDIm6
-	yUW1jR+5WXyy5Z/D1pIPhCZT4xrtdhiq2Gn8H5cmQgLtDW79A5bjMx3i7BSNQ==
-X-Google-Smtp-Source: AGHT+IFauwwQS3WETtyLhzy44iD48OMfA608HyRDHXmXr5xDQLt9tlht985FKph/VCC9SYR1RyZpln3F5+TQqJplHjM=
-X-Received: by 2002:a05:6871:81da:20b0:3c9:7398:51c0 with SMTP id
- 586e51a60fabf-3c97398642fmr902024fac.31.1760615550975; Thu, 16 Oct 2025
- 04:52:30 -0700 (PDT)
+	s=arc-20240116; t=1760617057; c=relaxed/simple;
+	bh=eQNULmO/I7j0ha8Tji2AaF8Xy3xc/zj3lBAQqeAkCIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pzfBQEdIcmegkrwJj7ITiEhPlPKmI3zitz0Fy38oSUlDGpoC1HK1psXrRtkqgro8Uj0IIVLuB1puhMXLGdoZMKKZemtFd4Qs00S6fh1hYUUPUdzX/g4sLUvbfDELMihLSfQHU6TiCTmq1nhg9X7r9FnRO94e0hyJ0UnsNBSZC2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PeDtq8Av; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EAADC4CEF1;
+	Thu, 16 Oct 2025 12:17:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760617056;
+	bh=eQNULmO/I7j0ha8Tji2AaF8Xy3xc/zj3lBAQqeAkCIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PeDtq8AvGvCVglA9M2ikmOI8PO7aHO6yBJh163Uchzxz4Uq+PU36AxAthB06gDWp4
+	 ogSnU2uEB59c8utILPaiIRLM2mi9zkrdMW0cKNcNTGF/FnT9TKTuuMyHT8mDvqIQF0
+	 JOQNlk8Mesh7Y35c3Y0EHKMZGPThyZ4IBxMmbuUnSRi4d72eIZ5pDpLancV3u9aGqa
+	 vn5Fz2r8VwlMQIfntJTLz+OB0a5atD+6wqYnv36UurfHnBOV2WmAyfcm2qyaJiJv23
+	 yutrDRgmvgav2ASShM6A84/0M+coXLU4nVOwEMuU2JIy5tCkWWEfOED5+XR0BcxE4B
+	 EnydCU7HpxiLQ==
+Date: Thu, 16 Oct 2025 17:47:32 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Jyothi Kumar Seerapu <jyothi.seerapu@oss.qualcomm.com>,
+	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+	Viken Dadhaniya <quic_vdadhani@quicinc.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, quic_vtanuku@quicinc.com
+Subject: Re: [PATCH v8 2/2] i2c: i2c-qcom-geni: Add Block event interrupt
+ support
+Message-ID: <aPDiXIMcdM-Gm_J3@vaman>
+References: <20250925120035.2844283-1-jyothi.seerapu@oss.qualcomm.com>
+ <20250925120035.2844283-3-jyothi.seerapu@oss.qualcomm.com>
+ <3lgris6k6ewqjdcfmmovygstqrqjx2jidtr3hb3v47gpgadkka@wlua7qpd7ahf>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251013185645.yhrtn64mwpfom7ut@wrangler>
-In-Reply-To: <20251013185645.yhrtn64mwpfom7ut@wrangler>
-From: Karim Manaouil <kmanaouil.dev@gmail.com>
-Date: Thu, 16 Oct 2025 12:52:19 +0100
-X-Gm-Features: AS18NWB3B3V_JmGbFkguEBUx1ZHqqCPVgptVO3r8ni_Q_BkPMq6dhfTbp54BDYA
-Message-ID: <CA+uifjMUQS+nkaDqGnm77tLG38k9ZYi-mcF2eqpOKHnaF2Nvhw@mail.gmail.com>
-Subject: Re: Which amd cpu families support ptdma and ae4dma?
-To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Cc: Raju Rangoju <Raju.Rangoju@amd.com>, Nathan Lynch <nathan.lynch@amd.com>, 
-	Sanjay R Mehta <sanju.mehta@amd.com>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3lgris6k6ewqjdcfmmovygstqrqjx2jidtr3hb3v47gpgadkka@wlua7qpd7ahf>
 
-Hey guys,
+On 03-10-25, 20:50, Andi Shyti wrote:
+> On Thu, Sep 25, 2025 at 05:30:35PM +0530, Jyothi Kumar Seerapu wrote:
+> > From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+> > 
+> > The I2C driver gets an interrupt upon transfer completion.
+> > When handling multiple messages in a single transfer, this
+> > results in N interrupts for N messages, leading to significant
+> > software interrupt latency.
+> > 
+> > To mitigate this latency, utilize Block Event Interrupt (BEI)
+> > mechanism. Enabling BEI instructs the hardware to prevent interrupt
+> > generation and BEI is disabled when an interrupt is necessary.
+> > 
+> > Large I2C transfer can be divided into chunks of messages internally.
+> > Interrupts are not expected for the messages for which BEI bit set,
+> > only the last message triggers an interrupt, indicating the completion of
+> > N messages. This BEI mechanism enhances overall transfer efficiency.
+> > 
+> > BEI optimizations are currently implemented for I2C write transfers only,
+> > as there is no use case for multiple I2C read messages in a single transfer
+> > at this time.
+> > 
+> > Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
+> 
+> Because this series is touching multiple subsystems, I'm going to
+> ack it:
+> 
+> Acked-by: Andi Shyti <andi.shyti@kernel.org>
+> 
+> We are waiting for someone from DMA to ack it (Vinod or Sinan).
 
-Just a gentle reminder. Much appreciated!
+Thanks, I will pick it with your ack
 
-Thanks
-
-On Mon, Oct 13, 2025 at 7:56=E2=80=AFPM Karim Manaouil <kmanaouil.dev@gmail=
-.com> wrote:
->
-> Hi folks,
->
-> I have a dual AMD EPYC 9224 on a Gigabyte MZ73-LM0 server motherboard. I
-> am trying to use ptdma or ae4dma to prototype a memory management
-> related patch, but it doesn't seem like any of those engines exist on my
-> CPU. I loaded ae4dma but /sys/class/dma and /sys/kernel/debug/dmaengine
-> are empty and I can't see anyting on dmsg.
->
-> I cannot find any documentation whatsover online on those engines.
->
-> Could you please tell me which classes of amd cpus support those
-> engines? Is there a chance I have it, but I'm missing something?
->
-> I am on Linux v6.17. I also tried to check with lspci. It doesn't seem
-> to report anything related to ptdma or ae4dma.
->
-> Any info will be much appreciated!
->
-> Thanks
->
-> --
-> ~karim
+-- 
+~Vinod
 

@@ -1,118 +1,105 @@
-Return-Path: <dmaengine+bounces-6875-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6876-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3048EBE7E38
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Oct 2025 11:50:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0309BE7E9E
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Oct 2025 11:56:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9249F543BCC
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Oct 2025 09:47:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92CB9427EC3
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Oct 2025 09:56:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4138B770FE;
-	Fri, 17 Oct 2025 09:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45DD12D661D;
+	Fri, 17 Oct 2025 09:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0MaXotk"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA662D663E
-	for <dmaengine@vger.kernel.org>; Fri, 17 Oct 2025 09:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757592DAFDE
+	for <dmaengine@vger.kernel.org>; Fri, 17 Oct 2025 09:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760694477; cv=none; b=hTaP+w4zZWDRIhsMBquwG03rmS77+Vgpy9NTpuuwDkkaDiE1VuBlP6gAyXIl/Jb9jqXQvVIaFqDGT2BTfMeggCWRkfSRKSsn3oV4/HTcmG6ZJFd+h2f7gHfNDqoEtZCI38guf/i9j/Q01533uN1lEsY3NhaQK7eAAg3vbnbehY8=
+	t=1760694987; cv=none; b=L16gEcIYHfvHOfEtTCO/L0BJncQIlOBIImEF6rTzHrE8y/7LyRXyFI7LbQlbnqKDKF3aJH9hBdvhWKcq+pQiEH1e7pxd8badS932RwWXWXb6+gGbag/aT0P3dl3TYqS3abR6Dm9PLmM2DIz4izBJhI9MDau9jOLW85lRSY1rsao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760694477; c=relaxed/simple;
-	bh=IMHtirtYD8ubB7ZLiMwBPLrpMJH5hqnDQ5dn5NPj7vY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qsARdVrrNw92643T5SZFZS/3WOy2QDE8IFBXA+qK1f4VPvzJnO+lQL/8B/awR5bzzzZy+BQo3hiv1XpsqJkJmnsVT45SSTayNSQ1YFHINH/FOBjaIndSr595Tybrwb4O8TNaRqR/KRI26UGPyaJSbcIoIvvphXOFatuhTpkQkg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1v9h3v-0007Ts-Lz; Fri, 17 Oct 2025 11:47:51 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1v9h3u-0042NW-31;
-	Fri, 17 Oct 2025 11:47:50 +0200
-Received: from pza by lupine with local (Exim 4.98.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1v9h3u-000000003i0-3dx5;
-	Fri, 17 Oct 2025 11:47:50 +0200
-Message-ID: <9f7514c69d11a0377283fe52fa6e7558b75c7ad3.camel@pengutronix.de>
-Subject: Re: [PATCH v3 2/2] dmaengine: dw-axi-dmac: add reset control support
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Artem Shimko <a.shimko.dev@gmail.com>, Eugeniy Paltsev
-	 <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 17 Oct 2025 11:47:50 +0200
-In-Reply-To: <20251016154627.175796-3-a.shimko.dev@gmail.com>
-References: <20251016154627.175796-1-a.shimko.dev@gmail.com>
-	 <20251016154627.175796-3-a.shimko.dev@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	s=arc-20240116; t=1760694987; c=relaxed/simple;
+	bh=rEcdNUhnQkS0I5XtW1CoPlxA7VWZfIMER4FzkAPDWao=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BMTU4ao+0ncqBQ8MeBTQfORCS5ZZOATLwMaX3UyOf9fUZZF1atEX59rV5U3AJEsvn1E9aJGDzWRevl+qiYxZ6tR8MP82EIySqMZVLsllwSbZYlnjTEU28wFdE6r4NyoF0dSjtYCcBRZp/RM4MUwMENotVt3Nf7MCKN/If+86T5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R0MaXotk; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b4c89df6145so298859266b.3
+        for <dmaengine@vger.kernel.org>; Fri, 17 Oct 2025 02:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760694984; x=1761299784; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rEcdNUhnQkS0I5XtW1CoPlxA7VWZfIMER4FzkAPDWao=;
+        b=R0MaXotkaH4RqT7DXAH8f5PqEsHPR9BlgXGPi7NK+yWcJRykEc3x9+dWtc5TiiGAiI
+         +Kio0+vg0scTDpNcGoX5SZ23KWMIeik6AWwbHx073MeJub+u7PZwa6d/4Lp0USz7Z6x1
+         /Ydl3xpJWPCK3P9uIdFl69a4llTW0CLvUQ36G+twIOTqPA3hF4JxLAdM36hDpfp4ZPaj
+         mtrcXNExS3Rjrc5DpHTABwu5V+bq4UhGW5VPXQxW/9bn1gbdYZf0lTO3a2HcnqY5NlTs
+         R6QgL0mjbC3P6fzddzu889EzmzeymDPLQTdBZGLWp7JG6oe5Mxw60VdMa9SM8GYYKMMR
+         DHEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760694984; x=1761299784;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rEcdNUhnQkS0I5XtW1CoPlxA7VWZfIMER4FzkAPDWao=;
+        b=LbkYEYo7ABMsYz2AYSmmWnFNULUV+Ah3CxOpACnciiEk22haoiQCN682lygwiy9iuB
+         x9ziV/69npWhH2A+DpIXmGeqf21gom5Og1gcaHFX0S+3VYxRJcMLGL3qLm7mjwIfiiAh
+         57ekXIC62pQLQ6cy9XvAeXosRyzbhZOg110C+4kukaP1uPUbykYID47yp+34ec9bqWFe
+         RPY263WkyW61Fhvywv1CTxjKXpUvvFPl/PoaqdVL56iqvcrg0ZqHDwcc1+sZpdCwQ/X1
+         erE3TyPDFrtJIfLlxswuH+ctvu1XOKmYYwhkpclIBdeFprRe63Oz8WCCqci63MtZeoJA
+         0X+A==
+X-Forwarded-Encrypted: i=1; AJvYcCW9dspkfOp8VwR1Uzs6pD8VzRxFud1+oC3M7ZJZyADQR35mWnbI04g1v8OXGvbbJpNcZNwcsOS87SU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQxDjhLkpgNixG9mRA/dyDVYchF004NeaSPLXeQ9BN151UJadh
+	My5/0pwEUC1SdS7IGpOC3p7UKBS9hx0DYqavYq4P3eX1l0Yn4OWNn25G5ZZXUpkHe+oJ5kVylq5
+	onE03ZXXzja64keAUwkjYfADReSoLwpmfDOQuIFCndQ==
+X-Gm-Gg: ASbGncs0e7wD3UHu01NU0UTN5VLSN5S9DhlhL54IwNiTYS33vvOhfKd0hkEmoecSF8l
+	iGmBDMqS+oUkx/YDB5yCxa3KL7tumgSG21XhFbU+1gEyq8Z8x55jOlP3eh1SuyLm75EEyfTWDmq
+	wvReW0HQtzEN/9qy1KxtE64Batc6VsolJPZ06jAJs8YnToEzXia6VYTmjxyWrukb5VGu6adzKYu
+	hBmTxbI/X/oqRk3JkSBLPGWwoWldbyFoXEetZr6L+UjP8JucyO3+C98HtyRNA==
+X-Google-Smtp-Source: AGHT+IHIBlLRTla75tbE4L9E1Bgzv5ZIwU4LRrpc2fLmL3EQ7rdSBDBBup9/WYitkzPac2rLYX5kvHc3YpAzwllbvVg=
+X-Received: by 2002:a17:907:e8c:b0:b3d:30d8:b897 with SMTP id
+ a640c23a62f3a-b6473241ed1mr303420866b.14.1760694983682; Fri, 17 Oct 2025
+ 02:56:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+References: <20251016154627.175796-1-a.shimko.dev@gmail.com>
+ <20251016154627.175796-3-a.shimko.dev@gmail.com> <9f7514c69d11a0377283fe52fa6e7558b75c7ad3.camel@pengutronix.de>
+In-Reply-To: <9f7514c69d11a0377283fe52fa6e7558b75c7ad3.camel@pengutronix.de>
+From: Artem Shimko <a.shimko.dev@gmail.com>
+Date: Fri, 17 Oct 2025 12:56:12 +0300
+X-Gm-Features: AS18NWBZMgvV7iogriyKPktuHwUDFbOQg9VA_DBN6dz8aE_cOJK2Sq_4nt-x6Cc
+Message-ID: <CAOPX744yyWgZqkQaUfOf=GwQCS6MrAExP5s3Upnw-oO7inBChA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] dmaengine: dw-axi-dmac: add reset control support
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>, 
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Do, 2025-10-16 at 18:46 +0300, Artem Shimko wrote:
-> Add proper reset control handling to the AXI DMA driver to ensure
-> reliable initialization and power management. The driver now manages
-> resets during probe, remove, and system suspend/resume operations.
->=20
-> The implementation stores reset control in the chip structure and adds
-> reset assert/deassert calls at the appropriate points: resets are
-> deasserted during probe after clock acquisition, asserted during remove
-> and error cleanup, and properly managed during suspend/resume cycles.
-> Additionally, proper error handling is implemented for reset control
-> operations to ensure robust behavior.
->=20
-> This ensures the controller is properly reset during power transitions
-> and prevents potential issues with incomplete initialization.
->=20
-> Signed-off-by: Artem Shimko <a.shimko.dev@gmail.com>
-> ---
->  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 42 ++++++++++++-------
->  drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  1 +
->  2 files changed, 27 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma=
-/dw-axi-dmac/dw-axi-dmac-platform.c
-> index 8b7cf3baf5d3..ac23e1a5e218 100644
-> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> @@ -1321,6 +1321,8 @@ static int axi_dma_suspend(struct device *dev)
->  	axi_dma_irq_disable(chip);
->  	axi_dma_disable(chip);
-> =20
-> +	reset_control_assert(chip->resets);
-> +
->  	clk_disable_unprepare(chip->core_clk);
->  	clk_disable_unprepare(chip->cfgr_clk);
-> =20
-> @@ -1340,6 +1342,8 @@ static int axi_dma_resume(struct device *dev)
->  	if (ret < 0)
->  		return ret;
-> =20
-> +	reset_control_deassert(chip->resets);
-> +
+On Fri, Oct 17, 2025 at 12:47=E2=80=AFPM Philipp Zabel <p.zabel@pengutronix=
+.de> wrote:
+> Missing error handling, or at least inconsistent with the deassert
+> turing dw_probe().
+Hi Philipp,
 
-Missing error handling, or at least inconsistent with the deassert
-turing dw_probe().
+Thank you!
 
-regards
-Philipp
+It seemed to me that these checks are not necessary in the future, I
+don=E2=80=99t know why it seemed that way to me, I=E2=80=99ll fix it.
+
+Regards,
+Artem
 

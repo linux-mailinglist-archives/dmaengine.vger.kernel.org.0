@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-6899-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6896-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id E903FBF2A1E
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Oct 2025 19:12:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0B74BF2A5A
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Oct 2025 19:13:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E81B84EDB32
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Oct 2025 17:12:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2CAB1189F885
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Oct 2025 17:12:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CA1C33372B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569F3333451;
 	Mon, 20 Oct 2025 17:11:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSEnPIoh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhSYF2x1"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34553333434;
-	Mon, 20 Oct 2025 17:11:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1814033342D;
+	Mon, 20 Oct 2025 17:11:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760980283; cv=none; b=WsDRUfoHv/nO7ng7UiGTTIpqLo2KQOot0iGEcw66/2041+lmRDlEFbCQEauTqpYoUjR6tLMSB76m4xk0cgJqXxLt/POOGoNrpKp7oRC26LG5RlnXomWoBDS9UK6j6RwEBxxao7vpfOPi/vC162nyYDkz5I1Z3u9l9OHsh5zLh+0=
+	t=1760980283; cv=none; b=DIdPmD10y+L32kMT1lFSlzmH9FYYmpFmcZbxr73QpqO6xUb9l5e03qxMzXPbEa/3/jiih4pWB2T0Ka0dqKdFcPdu5WJAD0/Ak4ECwZQKf46vwmPCSX48i5obGr627e/TZWjyEt4RbbmauDNgN9YLKgqRYD4hrmdwGAJVnBCTG9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1760980283; c=relaxed/simple;
-	bh=DgO/6s23HKe1T0jTyCsYw+u/wOfS3lW2Y2hvszSMnJM=;
+	bh=JAXFSTXHoi2lWkQbmUxgDURhf5LRyBjzq6/sRld0KGE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lt4QU4v4tXglBZXdZusJlyyrZMbIYB16eiDLATfS7BzQhMRVWJAuaWLft90soCIro7yG93DT3c2f3tFwPSpilAklSW6NfwJoucEg7qs1b10xzp1b8mp2o3OhkBmEMWv/auMbRO/4tyek1FmLOLPB6KqvEwYQo8L2mhktqX6cRVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSEnPIoh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD3C4C2BC86;
+	 MIME-Version; b=Wtb84kPl9jCOhDokoYyxoHAU6LxrCi2BNKOWY4bkochz3RHtH70hq105xsla7ru0h3I9edEPxFHY1WEZfrQh7hxfOvKOcaPsmHlPV241x6F36VryL1XL51XiSsINaLnMknT9FkR+Mq2pte41HyibxRv9ilXCy98sxC90xWhNBcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhSYF2x1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF48C2BCB1;
 	Mon, 20 Oct 2025 17:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1760980282;
-	bh=DgO/6s23HKe1T0jTyCsYw+u/wOfS3lW2Y2hvszSMnJM=;
+	bh=JAXFSTXHoi2lWkQbmUxgDURhf5LRyBjzq6/sRld0KGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QSEnPIohF37wfJmmGhUvzPGg+MuBGgtVAEMgt9nAUiAoBxrLCPMejbRItaDmliCiA
-	 Q/7GkHNyA4K4CWwbFBBQYLDtY7jDfhUMI91zGcQTeDEMj0XA3B2L7+ul+lAcAVmw0i
-	 jHgL8FolkHsEemQu+GNtvQGRtpgd0Vciwh4CAKFjoSwowjYpRbII7fxZgOTEry6WGd
-	 ZX/qXI7nC/DUoU+oJjsHuCE1IRXAXZwQ+BlQF6W06Heny0x2fIqDuRojAOdlAXFNce
-	 pJjf6FSzv6sRTA0uwKLeWbvPgh7AbqGYkEgQMDzncjxuo+meIf9DrNxFN5FOR9FZkb
-	 6/Zc/BO4VKzbA==
+	b=qhSYF2x18gezxn8W9SgUF6hy6rUHBaXOg6ph2VjiEAx29wvX5U5Oa05T2lw7reI/n
+	 kn1ZTDIbFT7UvV0xitDjxSv1SiFcBxxt2I6sNK6SG1hil/wKHdXC5b8ZYPeeV6Wost
+	 cNvEU/VSA9UkcIsVT9MXgnSHiEhV6/+q3iExPXSj/YcNmzsO8CyXwxC+LJiJj+CnYh
+	 24H2ACtsEv10HLPnZDIBB17J91hBsKeZwhaMdg5FwDgPXkvKZiIrSiu2RxVlLoMo2T
+	 dTamHu9JEDL6WzK7OshtVzyzAdA4KY/Gwa7pD7e8XbD3TC3vy/PqcSSFsGu6JBL9h5
+	 6V+cb5GCVcHOQ==
 Received: by wens.tw (Postfix, from userid 1000)
-	id 7039A5FF03; Tue, 21 Oct 2025 01:11:18 +0800 (CST)
+	id 770105FEC6; Tue, 21 Oct 2025 01:11:18 +0800 (CST)
 From: Chen-Yu Tsai <wens@kernel.org>
 To: Chen-Yu Tsai <wens@kernel.org>,
 	Jernej Skrabec <jernej@kernel.org>,
@@ -60,9 +60,9 @@ Cc: linux-sunxi@lists.linux.dev,
 	devicetree@vger.kernel.org,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 09/11] arm64: dts: allwinner: a523: Add device nodes for I2S controllers
-Date: Tue, 21 Oct 2025 01:10:55 +0800
-Message-ID: <20251020171059.2786070-10-wens@kernel.org>
+Subject: [PATCH 10/11] arm64: dts: allwinner: a523: Add I2S2 pins on PI pin group
+Date: Tue, 21 Oct 2025 01:10:56 +0800
+Message-ID: <20251020171059.2786070-11-wens@kernel.org>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20251020171059.2786070-1-wens@kernel.org>
 References: <20251020171059.2786070-1-wens@kernel.org>
@@ -74,84 +74,36 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The A523 family of SoCs have four I2S controllers capable of both
-playback and capture. The user manual also implies that I2S2 also
-outputs to the eDP interface controller.
+The Radxa Cubie A5E exposes I2S2 through the PI pin group on the 40-pin
+GPIO header.
 
-Add device nodes for all of them.
+Add a pinmux setting for it so potential users can directly reference
+it.
 
 Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
 ---
- .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-index 33f991dbd00b..eea9ce83783c 100644
+index eea9ce83783c..cebd8e16e845 100644
 --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-@@ -818,6 +818,62 @@ mcu_ccu: clock-controller@7102000 {
- 			#reset-cells = <1>;
- 		};
+@@ -145,6 +145,14 @@ pio: pinctrl@2000000 {
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
  
-+		i2s0: i2s@7112000 {
-+			compatible = "allwinner,sun55i-a523-i2s",
-+				     "allwinner,sun50i-r329-i2s";
-+			reg = <0x07112000 0x1000>;
-+			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mcu_ccu CLK_BUS_MCU_I2S0>, <&mcu_ccu CLK_MCU_I2S0>;
-+			clock-names = "apb", "mod";
-+			resets = <&mcu_ccu RST_BUS_MCU_I2S0>;
-+			dmas = <&mcu_dma 3>, <&mcu_dma 3>;
-+			dma-names = "rx", "tx";
-+			#sound-dai-cells = <0>;
-+			status = "disabled";
-+		};
++			/omit-if-no-ref/
++			i2s2_pi_pins: i2s2-pi-pins {
++				pins = "PI2", "PI3", "PI4", "PI5";
++				allwinner,pinmux = <5>;
++				function = "i2s2";
++				bias-disable;
++			};
 +
-+		i2s1: i2s@7113000 {
-+			compatible = "allwinner,sun55i-a523-i2s",
-+				     "allwinner,sun50i-r329-i2s";
-+			reg = <0x07113000 0x1000>;
-+			interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mcu_ccu CLK_BUS_MCU_I2S1>, <&mcu_ccu CLK_MCU_I2S1>;
-+			clock-names = "apb", "mod";
-+			resets = <&mcu_ccu RST_BUS_MCU_I2S1>;
-+			dmas = <&mcu_dma 4>, <&mcu_dma 4>;
-+			dma-names = "rx", "tx";
-+			#sound-dai-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2s2: i2s@7114000 {
-+			compatible = "allwinner,sun55i-a523-i2s",
-+				     "allwinner,sun50i-r329-i2s";
-+			reg = <0x07114000 0x1000>;
-+			interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mcu_ccu CLK_BUS_MCU_I2S2>, <&mcu_ccu CLK_MCU_I2S2>;
-+			clock-names = "apb", "mod";
-+			resets = <&mcu_ccu RST_BUS_MCU_I2S2>;
-+			dmas = <&mcu_dma 5>, <&mcu_dma 5>;
-+			dma-names = "rx", "tx";
-+			#sound-dai-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2s3: i2s@7115000 {
-+			compatible = "allwinner,sun55i-a523-i2s",
-+				     "allwinner,sun50i-r329-i2s";
-+			reg = <0x07115000 0x1000>;
-+			interrupts = <GIC_SPI 195 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mcu_ccu CLK_BUS_MCU_I2S3>, <&mcu_ccu CLK_MCU_I2S3>;
-+			clock-names = "apb", "mod";
-+			resets = <&mcu_ccu RST_BUS_MCU_I2S3>;
-+			dmas = <&mcu_dma 6>, <&mcu_dma 6>;
-+			dma-names = "rx", "tx";
-+			#sound-dai-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		spdif: spdif@7116000 {
- 			compatible = "allwinner,sun55i-a523-spdif";
- 			reg = <0x07116000 0x400>;
+ 			mmc0_pins: mmc0-pins {
+ 				pins = "PF0" ,"PF1", "PF2", "PF3", "PF4", "PF5";
+ 				allwinner,pinmux = <2>;
 -- 
 2.47.3
 

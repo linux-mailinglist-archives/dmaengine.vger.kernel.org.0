@@ -1,122 +1,135 @@
-Return-Path: <dmaengine+bounces-6918-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6919-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F254BF8EA5
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Oct 2025 23:14:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67A04BF92BF
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Oct 2025 01:03:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E26453AD7A5
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Oct 2025 21:14:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4522F18A507E
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Oct 2025 23:04:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97234286897;
-	Tue, 21 Oct 2025 21:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6402A29BDAA;
+	Tue, 21 Oct 2025 23:03:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BaR7OxGX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BTg+WKrJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1874A27FD5D;
-	Tue, 21 Oct 2025 21:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A70626E16C;
+	Tue, 21 Oct 2025 23:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761081282; cv=none; b=NK9pRNlrULbLrf4bfz9eFLcC9NhSfVqKjBQgD9BCqEy45uvyE4oTOIA2PYPebUzaqXvAijbwgLRSaVd+B+WTGFYKxPzAbYqm9GhqPFk0Hy2CtoafBJV5MznKFo1sSKi0y28S24BEbLEPtVqM7Qw/xGzJ6I2OuWdnSvMG+kg9tsg=
+	t=1761087814; cv=none; b=XUbhJDUL3PCogXy8dbjlh5NdSX2z6OjYUF2AO2zfSH8YFDMaR4eFUw30pO4A8hpq+SbvJlznhWkBcKTiUvbj1XWIsE4Ra8SBsX7WTxBnQvEg2JG7dSynBTzfnUKzrQoFsUxJW0ZpWe5bjAGnGyqZtRTov4c1aWPrbClZupTCZGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761081282; c=relaxed/simple;
-	bh=YQidWeBQThI4lFjuPpKQQPtrlVPDUTen2IXLFencNZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aw9791Z8X+2/ZSRyvAJ+vqEB9A9BSLmsYM9rEdhW2L8GiqiSzd6hKlVYoDmXLnP+ijgr7ivBb4kViIj/WIwU/pWs7vC/+AEWxByvxzrhFb3VvZxmH0rJ2DyeBOJGbYWYAzN8nfRJ/E1c91qmOf+4AnTx3rTnx9f0xSX3kYQSR14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BaR7OxGX; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1761087814; c=relaxed/simple;
+	bh=C/VXpXyD5xYmbyweOkwGSG3TxuOt6FRlz87CLofjwpU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ac+enw9DY7f/+xrpFt11vInqDVeBXPzCVfeH6sZjtEfleXZIoI1mD66EvIc+qFPafxwEfLWtLFwteX3POM0sQsNAblc7etmjOu6PUBVyANsqBBy6UoDndg86YGqM0ZqCU2xLKLGohDOQnF1TGRpJvaBHJ21M61VAjZ2wjqhABqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BTg+WKrJ; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761081281; x=1792617281;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YQidWeBQThI4lFjuPpKQQPtrlVPDUTen2IXLFencNZg=;
-  b=BaR7OxGXHHT/mVpNv2Y6U7cCO/dPAjk3r001s6swgow+40dalA++6tsl
-   R0g2lv/uNRVnVAznmgsGTDU5vZM/UcgGm0GXbgjnJ33WvWmDoMUzx7hIQ
-   rKhR0gfVhyw5dRWhUB48AgqBwkXVQTqViB1/wsPe3aysSY+2KjWSY3ptV
-   aOhTg0AYzztcQ/r5YeTf4AXzpIQrC19PnkBoI6QOt0XCtR7P535XV8NNL
-   znVzIwQTgau3E49SvoMeHXEshkAy2Eew22waCCcbV+s7P+DPPCiqMVy24
-   5uFLRQEwyNCJkjeV89NUZnvTkkp84xYtk1VhGM+0o9kFIF/bjyc4hfoCh
-   g==;
-X-CSE-ConnectionGUID: G6Zgw3joRQCDOPp24MfpdQ==
-X-CSE-MsgGUID: MI38fL+bS6uI2Jk3XgGoUQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="67055832"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="67055832"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 14:14:40 -0700
-X-CSE-ConnectionGUID: GNdgFLJ0Ta2cVivOZcsn6A==
-X-CSE-MsgGUID: N2vP9ISWSX2pfQevM9jjTA==
+  t=1761087812; x=1792623812;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=C/VXpXyD5xYmbyweOkwGSG3TxuOt6FRlz87CLofjwpU=;
+  b=BTg+WKrJAKV3UM09Y7MINT9qeM2r0zM9X20goWrMbozy4zMR8RrWPoQx
+   8IUgosbApxQF/P+pNZMDccvNVaByUGIWs3RhiXFR8H7ZUBmtFX2DXd/kx
+   Z5fCHAyw4qsNt/zaHdwGL75aAi2iN2WbyrFpVjbxUsJfhk42Nlv1ETzkN
+   M43b1yZhoxQxA9166iWG9XF5LuQmV0TDHNazC3v8oATvR6lonSMzvkDDV
+   5htO2u/JzlENYkM55gX15YbtXfq2E88EgBbaqQ6Cm6TH4CY3XkpovwpTF
+   K4Nw79ixDRseJF0poa35FLbzXi7cpXUgx/MWE6cymssbtD6oKBZNz3miP
+   w==;
+X-CSE-ConnectionGUID: /xW6RAaPQzSRHSUyw5eUbg==
+X-CSE-MsgGUID: O9x8cgnYS/GaHFt1l7SR/w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="88694605"
+X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
+   d="scan'208";a="88694605"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 16:03:32 -0700
+X-CSE-ConnectionGUID: a8L80ArDQmeXyH0LjoMaeg==
+X-CSE-MsgGUID: 8C4BkJt9S82p37pJRy+pLw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
-   d="scan'208";a="187959834"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 21 Oct 2025 14:14:35 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vBJgf-000Bm5-1n;
-	Tue, 21 Oct 2025 21:14:33 +0000
-Date: Wed, 22 Oct 2025 05:14:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej@kernel.org>,
-	Samuel Holland <samuel@sholland.org>,
-	Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-sunxi@lists.linux.dev,
-	linux-sound@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/11] [EXAMPLE] arm64: dts: allwinner: a527-cubie-a5e:
- Enable I2S and SPDIF output
-Message-ID: <202510220453.UbrhVlRH-lkp@intel.com>
-References: <20251020171059.2786070-12-wens@kernel.org>
+X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
+   d="scan'208";a="214658756"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.108.186]) ([10.125.108.186])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 16:03:31 -0700
+Message-ID: <c7a454f4-c471-49d5-ac35-5375a45a6610@intel.com>
+Date: Tue, 21 Oct 2025 16:03:30 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251020171059.2786070-12-wens@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/10] dmaengine: idxd: Fix lockdep warnings when
+ calling idxd_device_config()
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+ Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+ Fenghua Yu <fenghua.yu@intel.com>, Dan Williams <dan.j.williams@intel.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250821-idxd-fix-flr-on-kernel-queues-v3-v2-0-595d48fa065c@intel.com>
+ <20250821-idxd-fix-flr-on-kernel-queues-v3-v2-1-595d48fa065c@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250821-idxd-fix-flr-on-kernel-queues-v3-v2-1-595d48fa065c@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Chen-Yu,
+On 8/21/25 15:59, Vinicius Costa Gomes wrote:
+> Move the check for IDXD_FLAG_CONFIGURABLE and the locking to "inside"
+> idxd_device_config(), as this is common to all callers, and the one
+> that wasn't holding the lock was an error (that was causing the
+> lockdep warning).
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on sunxi/sunxi/for-next]
-[also build test ERROR on broonie-sound/for-next vkoul-dmaengine/next linus/master v6.18-rc2 next-20251021]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Chen-Yu-Tsai/dt-bindings-dma-allwinner-sun50i-a64-dma-Add-compatibles-for-A523/20251021-011340
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git sunxi/for-next
-patch link:    https://lore.kernel.org/r/20251020171059.2786070-12-wens%40kernel.org
-patch subject: [PATCH 11/11] [EXAMPLE] arm64: dts: allwinner: a527-cubie-a5e: Enable I2S and SPDIF output
-config: arm64-defconfig (https://download.01.org/0day-ci/archive/20251022/202510220453.UbrhVlRH-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251022/202510220453.UbrhVlRH-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202510220453.UbrhVlRH-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   also defined at arch/arm64/boot/dts/allwinner/sun55i-a527-cubie-a5e.dts:393.8-397.3
->> ERROR: Input tree has errors, aborting (use -f to force output)
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+What is "the lockdep error"? I don't see any details about an error in
+the changelog here or the cover letter?
 

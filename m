@@ -1,215 +1,122 @@
-Return-Path: <dmaengine+bounces-6914-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6915-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28058BF48B4
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Oct 2025 05:51:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D2A2BF691A
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Oct 2025 14:56:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DE7F34E9D34
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Oct 2025 03:51:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7D4F407079
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Oct 2025 12:56:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E69AE21019C;
-	Tue, 21 Oct 2025 03:51:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 958E6333727;
+	Tue, 21 Oct 2025 12:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVgViDMk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RxsK1kQM"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13221DE3DB
-	for <dmaengine@vger.kernel.org>; Tue, 21 Oct 2025 03:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34E62F2619;
+	Tue, 21 Oct 2025 12:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761018663; cv=none; b=TOTfH6Pn8uqHsOXu/jP2fI9ZMA9i8DjaVA9a/3S/C+HrqepB8PP8miDdoCJTGzOCI/obSgcFyj30ycLKoZRaNTUDlY/tkf433umm6yspmwf4ysUUhLpiKt1n1BGaC0QHrYAhk2NQ5UovoevsDfADySrg9J4Iawb24QkU7mLELTw=
+	t=1761051374; cv=none; b=birP8lmglh9IvqXx6Dg13D8kZEphRrh0rQNu7oyZOI9puKymD+MT9zP7Vide2L+gcANjZCp9Ore6NfU03DS31LKutG9xYE/TFJLN4AIhNHZ6FkZFdwbtLc1+VFOGXq1filFqmrceskqMmfRsDwSAJ6ljB8eOviMvu1gg8Fy5loY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761018663; c=relaxed/simple;
-	bh=aJyeINSKb1G3tVPbGfkA5Oqt5hmeaylrgY+aIoalhhg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MhaodKrDNe5OAiCPIfLUAO+I6W7hYf2z6ELkG+CVr/tT5UgXvhGModyX1PrjX8kGklI6MrU/CcX0X49RR6InaRpMEw2eat1upu5qHiZ+/162Vnx9K2goYc4VaV8p2ISvqlYRm47VSHNB/mUYr33NnWo5/A6TgrlN3I5c4qfA6VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVgViDMk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70892C116C6
-	for <dmaengine@vger.kernel.org>; Tue, 21 Oct 2025 03:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761018663;
-	bh=aJyeINSKb1G3tVPbGfkA5Oqt5hmeaylrgY+aIoalhhg=;
-	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
-	b=HVgViDMkKZyvApVhmfWv3KaZ8/4va6fCYtgkcHLXNQ7NMfudTTrSY5nHZ4EadmT/9
-	 XwBmth48HLf8nsMOU5qd0efJHOyRa89Y9z72n1dfnMt4DLM/8gqMn9Pix024YQu4RX
-	 5KPKEsfohJLWL9nLdcYixumNDgSRT722sxa8fLY0i83WAIgo7ePG7FZ9F/ir2iRYmy
-	 cG4swh7viqYBG+yUcLIN5Yx6x+seEABCcMcQHdbG3l8Cjx+xJkOlrKMaz/SkjIOfk/
-	 tqjmJKrP7t3jKNYeBUtXjkngniGzDxyiS7POP002wvICcSY2sRx9XWGtYEvfl3Lp+u
-	 yWPkTkLyxh/8A==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-36a6a3974fdso54819221fa.0
-        for <dmaengine@vger.kernel.org>; Mon, 20 Oct 2025 20:51:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXY9Hq5127GqybLGH/Q92DjZBAK5+EQ3wVr7x6Cc3EAzIIVN88dXEtyfa7OMDEOxhQ/vVmKjoZfR78=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoeBvX0GKSuWbCEA/20gqwqGhLFooE/M3mr+47Gb+4IC7m2G7N
-	p0HpPqf0cyBijVRJf+daoTSK3AVeoxu0bQDPkylMYv2165AV8pQJkCkbszPgehnz4UCXjP/DkXb
-	uSQrXNS9jPc0AjwGrOl+y65IVXNj9xtY=
-X-Google-Smtp-Source: AGHT+IG8vasmm5hWdGe7KBlLp5chhcRp+eBr/myvEiV96lMVwrmDdir100cF1onLwBZjh0GCzdDPuKXAZ1yS7H+1U/g=
-X-Received: by 2002:a2e:bc81:0:b0:372:9e15:8970 with SMTP id
- 38308e7fff4ca-37797a0ca11mr52596901fa.23.1761018661756; Mon, 20 Oct 2025
- 20:51:01 -0700 (PDT)
+	s=arc-20240116; t=1761051374; c=relaxed/simple;
+	bh=+CO+/an1hiocjSGMGzZYAKHx4UcThwwf4NGM2r5oRxc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cFg8EJM7MBdJqQn6CpzvHMZioBo2JthXAwS53JBpb0C8M+U/OhEhgYTu7DCZkoYruv4ffG6mTk2OT1K6JQkhPbQz0NI/iwOzHSCf9Wi9QW+FNjQrsL6Wt4I/bYLgsP0mc/9FB6HMbpRMFRgxnqAdDs8snPvvcSvvz/bPs6c7/N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RxsK1kQM; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761051373; x=1792587373;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+CO+/an1hiocjSGMGzZYAKHx4UcThwwf4NGM2r5oRxc=;
+  b=RxsK1kQMpNNwkTSt8tnwbuqfdOt8sseF4XYKpkt6nUa4sh9MDbJDIDmP
+   8aK60dAnuU5jnKd1SvkcrkJLGCAZGF9fAdYu2ug1iI4CMhu/1hg8SN2Kx
+   zm1dHgZnH7HmwpXpXY/z7U1DIZt53XsiSJvh+U6tZ9UMWSe81Rs74hXsd
+   cMcII6FLEuNsdDBMARJrlfBljkWsjF2866SQkfX59AV4mxC16DCdouGQ5
+   wkpauo6zy/z8D5tsqUvLEw/i9NmFpQKgUm+gSDIY0D2i829goM1rWaclp
+   GuDCwMTZyM9EXZ79jgkhBHRcc6CxN75hBmqL4B2XkckyV5Fm/Nw12M9sG
+   g==;
+X-CSE-ConnectionGUID: ZiJEx3DmTMK+kAbMXBxPCg==
+X-CSE-MsgGUID: pUlZgJ3qQMuBqUojy/Ap5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62205843"
+X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
+   d="scan'208";a="62205843"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 05:56:12 -0700
+X-CSE-ConnectionGUID: BxovcXqjQZemzDJ3BcibFQ==
+X-CSE-MsgGUID: qYr8i8VcSOqS+siN1Hg8+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,245,1754982000"; 
+   d="scan'208";a="183443263"
+Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 21 Oct 2025 05:56:08 -0700
+Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vBBuI-000App-0T;
+	Tue, 21 Oct 2025 12:56:06 +0000
+Date: Tue, 21 Oct 2025 20:55:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej@kernel.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-sunxi@lists.linux.dev,
+	linux-sound@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/11] ASoC: sun4i-spdif: Support SPDIF output on A523
+ family
+Message-ID: <202510212039.XiolKgXp-lkp@intel.com>
+References: <20251020171059.2786070-5-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251020171059.2786070-1-wens@kernel.org> <20251020171059.2786070-5-wens@kernel.org>
- <13867454.uLZWGnKmhe@jernej-laptop>
-In-Reply-To: <13867454.uLZWGnKmhe@jernej-laptop>
-Reply-To: wens@kernel.org
-From: Chen-Yu Tsai <wens@kernel.org>
-Date: Tue, 21 Oct 2025 11:50:48 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65+U2L8=HM6DimzVw=saK6rbR4Bzg7Nwz0Jyq6UXJkf=g@mail.gmail.com>
-X-Gm-Features: AS18NWBDmVKtQm8S428O1qs2kjY6UgewUb3LycjUD4uEQoxwe6OCMS4j1ARdxWY
-Message-ID: <CAGb2v65+U2L8=HM6DimzVw=saK6rbR4Bzg7Nwz0Jyq6UXJkf=g@mail.gmail.com>
-Subject: Re: [PATCH 04/11] ASoC: sun4i-spdif: Support SPDIF output on A523 family
-To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Cc: Jernej Skrabec <jernej@kernel.org>, Samuel Holland <samuel@sholland.org>, 
-	Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	linux-sunxi@lists.linux.dev, linux-sound@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	devicetree@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251020171059.2786070-5-wens@kernel.org>
 
-On Tue, Oct 21, 2025 at 1:49=E2=80=AFAM Jernej =C5=A0krabec <jernej.skrabec=
-@gmail.com> wrote:
->
-> Hi,
->
-> Dne ponedeljek, 20. oktober 2025 ob 19:10:50 Srednjeevropski poletni =C4=
-=8Das je Chen-Yu Tsai napisal(a):
-> > The TX side of the SPDIF block on the A523 is almost the same the
-> > previous generations, the only difference being that it has separate
-> > module clock inputs for the TX and RX side.
-> >
-> > Since this driver currently only supports TX, add support for a
-> > different clock name so that TX and RX clocks can be separated
-> > if RX support is ever added. Then add support for the A523.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
-> > ---
-> >  sound/soc/sunxi/sun4i-spdif.c | 28 +++++++++++++++++++++++++---
-> >  1 file changed, 25 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/sound/soc/sunxi/sun4i-spdif.c b/sound/soc/sunxi/sun4i-spdi=
-f.c
-> > index 34e5bd94e9af..6a58dc4311de 100644
-> > --- a/sound/soc/sunxi/sun4i-spdif.c
-> > +++ b/sound/soc/sunxi/sun4i-spdif.c
-> > @@ -177,6 +177,7 @@ struct sun4i_spdif_quirks {
-> >       bool has_reset;
-> >       unsigned int val_fctl_ftx;
-> >       unsigned int mclk_multiplier;
-> > +     const char *tx_clk_name;
-> >  };
-> >
-> >  struct sun4i_spdif_dev {
-> > @@ -323,6 +324,7 @@ static int sun4i_spdif_hw_params(struct snd_pcm_sub=
-stream *substream,
-> >       }
-> >       mclk *=3D host->quirks->mclk_multiplier;
-> >
-> > +     dev_info(&pdev->dev, "Setting SPDIF clock rate to %u\n", mclk);
-> >       ret =3D clk_set_rate(host->spdif_clk, mclk);
-> >       if (ret < 0) {
-> >               dev_err(&pdev->dev,
-> > @@ -542,7 +544,6 @@ static struct snd_soc_dai_driver sun4i_spdif_dai =
-=3D {
-> >               .formats =3D SUN4I_FORMATS,
-> >       },
-> >       .ops =3D &sun4i_spdif_dai_ops,
-> > -     .name =3D "spdif",
->
-> Why this change?
+Hi Chen-Yu,
 
-Now that you mention it, this looks bogus to me as well. I'll drop it.
+kernel test robot noticed the following build warnings:
 
-> >  };
-> >
-> >  static const struct sun4i_spdif_quirks sun4i_a10_spdif_quirks =3D {
-> > @@ -572,6 +573,14 @@ static const struct sun4i_spdif_quirks sun50i_h6_s=
-pdif_quirks =3D {
-> >       .mclk_multiplier =3D 1,
-> >  };
-> >
-> > +static const struct sun4i_spdif_quirks sun55i_a523_spdif_quirks =3D {
-> > +     .reg_dac_txdata =3D SUN8I_SPDIF_TXFIFO,
-> > +     .val_fctl_ftx   =3D SUN50I_H6_SPDIF_FCTL_FTX,
-> > +     .has_reset      =3D true,
-> > +     .mclk_multiplier =3D 1,
-> > +     .tx_clk_name    =3D "tx",
-> > +};
-> > +
-> >  static const struct of_device_id sun4i_spdif_of_match[] =3D {
-> >       {
-> >               .compatible =3D "allwinner,sun4i-a10-spdif",
-> > @@ -594,6 +603,15 @@ static const struct of_device_id sun4i_spdif_of_ma=
-tch[] =3D {
-> >               /* Essentially the same as the H6, but without RX */
-> >               .data =3D &sun50i_h6_spdif_quirks,
-> >       },
-> > +     {
-> > +             .compatible =3D "allwinner,sun55i-a523-spdif",
-> > +             /*
-> > +              * Almost the same as H6, but has split the TX and RX clo=
-cks,
-> > +              * has a separate reset bit for the RX side, and has some
-> > +              * expanded features for the RX side.
-> > +              */
-> > +             .data =3D &sun55i_a523_spdif_quirks,
-> > +     },
-> >       { /* sentinel */ }
-> >  };
-> >  MODULE_DEVICE_TABLE(of, sun4i_spdif_of_match);
-> > @@ -635,6 +653,7 @@ static int sun4i_spdif_probe(struct platform_device=
- *pdev)
-> >       const struct sun4i_spdif_quirks *quirks;
-> >       int ret;
-> >       void __iomem *base;
-> > +     const char *tx_clk_name =3D "spdif";
->
-> Reverse tree?
+[auto build test WARNING on sunxi/sunxi/for-next]
+[also build test WARNING on broonie-sound/for-next vkoul-dmaengine/next linus/master v6.18-rc2 next-20251021]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I think that only applies to the network tree.
+url:    https://github.com/intel-lab-lkp/linux/commits/Chen-Yu-Tsai/dt-bindings-dma-allwinner-sun50i-a64-dma-Add-compatibles-for-A523/20251021-011340
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git sunxi/for-next
+patch link:    https://lore.kernel.org/r/20251020171059.2786070-5-wens%40kernel.org
+patch subject: [PATCH 04/11] ASoC: sun4i-spdif: Support SPDIF output on A523 family
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20251021/202510212039.XiolKgXp-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 754ebc6ebb9fb9fbee7aef33478c74ea74949853)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251021/202510212039.XiolKgXp-lkp@intel.com/reproduce)
 
-> Otherwise it looks good.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202510212039.XiolKgXp-lkp@intel.com/
 
-Thanks!
+All warnings (new ones prefixed by >>):
 
-ChenYu
+   Warning: sound/soc/sunxi/sun4i-spdif.c:180 struct member 'mclk_multiplier' not described in 'sun4i_spdif_quirks'
+>> Warning: sound/soc/sunxi/sun4i-spdif.c:180 struct member 'tx_clk_name' not described in 'sun4i_spdif_quirks'
 
-> Best regards,
-> Jernej
->
-> >
-> >       dev_dbg(&pdev->dev, "Entered %s\n", __func__);
-> >
-> > @@ -671,9 +690,12 @@ static int sun4i_spdif_probe(struct platform_devic=
-e *pdev)
-> >               return PTR_ERR(host->apb_clk);
-> >       }
-> >
-> > -     host->spdif_clk =3D devm_clk_get(&pdev->dev, "spdif");
-> > +     if (quirks->tx_clk_name)
-> > +             tx_clk_name =3D quirks->tx_clk_name;
-> > +     host->spdif_clk =3D devm_clk_get(&pdev->dev, tx_clk_name);
-> >       if (IS_ERR(host->spdif_clk)) {
-> > -             dev_err(&pdev->dev, "failed to get a spdif clock.\n");
-> > +             dev_err(&pdev->dev, "failed to get the \"%s\" clock.\n",
-> > +                     tx_clk_name);
-> >               return PTR_ERR(host->spdif_clk);
-> >       }
-> >
-> >
->
->
->
->
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

@@ -1,90 +1,90 @@
-Return-Path: <dmaengine+bounces-6972-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6973-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8B54C035C9
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Oct 2025 22:22:05 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F853C035CF
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Oct 2025 22:22:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D48ED1A02216
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Oct 2025 20:22:28 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id DA2CD504F5B
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Oct 2025 20:22:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3615E2566FC;
-	Thu, 23 Oct 2025 20:21:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CA072D027F;
+	Thu, 23 Oct 2025 20:21:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0Lc56hL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6TFqteg"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E91D2C15BB
-	for <dmaengine@vger.kernel.org>; Thu, 23 Oct 2025 20:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3532C2349
+	for <dmaengine@vger.kernel.org>; Thu, 23 Oct 2025 20:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761250913; cv=none; b=IqBA6kOX8Xh+g6neBbKhl7rfxXs0IO04R1sVfuiONzzqbvd54dMknqO0ogWOYq1pdMXZA1X3KsLiDOrP1Zcz0BmKsOyhkvK8XjLtRlTqxIlSImgWkTg9GjzfvYHH4BkppsH1A9hL4J5dnb7djD99Mq0owEt2OwPhhlcxo1bS1go=
+	t=1761250915; cv=none; b=YEHwJpIWPRGkpNidcb2pdlo0Rd9IKSNrB71GyabHnT2wy4+DfB02GfETA6Mft4gJvSJX1soCORmuzDvYPJxikBwQmkfN5/V7zDxVtHlf0/BhFvqFVjvS9yNTIuk95re1/2Yp9OSwdYWKHkSdygEBWrdo+nQrAZaCJBcklVlRl7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761250913; c=relaxed/simple;
-	bh=OzK0aYW2LWITX9fdd4z7rDbgFG5oDHlyFtFytqntWLc=;
+	s=arc-20240116; t=1761250915; c=relaxed/simple;
+	bh=ZshlhFU+130KpNZl7SbxKIZLMlFg+UY+PEn/qv5bpYQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B6cHUqpr951IQfKLEVfWtuTMgT7u1Do2i79hAomQ7IoSOiGof8vUvq+9EDSiHy7J2mgxvVEb7VFB5nL+94Wim2cpeB/8YOvIxTPOL5zm47WwDjtxV9EsdfXXg4funIb/x5HUQDd3JprQ3RJLIwjpDM1otPao8C1MsK7Jz7kQPyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F0Lc56hL; arc=none smtp.client-ip=209.85.167.53
+	 MIME-Version; b=sV3jdTG33AJ0dnSJriKvmGIeQLU4VOFb6EMHKzPLmwqXIwSSNcvFtGuvtpWunNNVaPiGV0NLImaDls2YjloDj7WwyQ750g/st3uzY577fIftL55XgpK3oPLwl+lQrMBMQsY4I02pI23xPXW5aR9nsD5ACe+0AqmzEDteeliIR1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k6TFqteg; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-591ea9ccfc2so1647599e87.1
-        for <dmaengine@vger.kernel.org>; Thu, 23 Oct 2025 13:21:51 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-592eead6f94so1479173e87.0
+        for <dmaengine@vger.kernel.org>; Thu, 23 Oct 2025 13:21:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761250910; x=1761855710; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1761250911; x=1761855711; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KXSMFjXcnbUgtoA/eC/AHIzf0ylAZ7zJ33rVYw0AFyk=;
-        b=F0Lc56hLrJkKqAYfTs21ey38dcsd5hzIEooON+hazK9yoaj3qqp3QAK6SLcptdjR5k
-         nPNIBrZ90OYnLsZSFcToUOct1jqmq2Q66oD4loBcQIvJmWqJJIfJRSZUa98vvwzFIVh+
-         Luu6HLQ7n0sB3kBl1b8qYauaQZoZJKS98awrvKX02YzOUS717nW5IHhxZePT36VmRopc
-         mVawB0qDcGlFZdU04NFN/O0QcpJ+6CPCzUmlHcEwsEhBwYD7fz2mRjui6XF15H9DRK9I
-         4sUAvl/JCAa/j9GQTIS2yuSYAgFsIXRIK/tfFPbKqhdEwJT8onzSJFGvjEPOGEBZaGRc
-         cRPA==
+        bh=JQXoHBuAfOI4QMAsJ0wqP6b/BYbUIIdTmKEZ+WCDuV0=;
+        b=k6TFqtegl6mewOFWDXQNIr/FB8MnoWzfonAzFW/ZzWwhj7NIkJGyh5gQ4ECQWPpdvW
+         qdUv1e6zgBWkt9rjztq4Lg8ZvMO49laxcUKcRt336w8Rbs5z4NRFFOXKzbdGSb3sZpcZ
+         u8N/rYzfWc3XekffYNC6k74R2HXQUdZnFOWFcrRM7eonD7ouKdCdpVst8brN6pDYwoyk
+         3byhNXX1GucCEf4j2QBN8cQM9HUdDTRlnEBPqc4BO96Js6ejCM/We1Z6CwQzp7MxH9Lv
+         rsPJjdtLUeMsJ845Z5xmlEE1Je+bEFuBKiu/98rHxJ4ZM7j/R653Fw09RPXp5B1iAy7x
+         g/ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761250910; x=1761855710;
+        d=1e100.net; s=20230601; t=1761250911; x=1761855711;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KXSMFjXcnbUgtoA/eC/AHIzf0ylAZ7zJ33rVYw0AFyk=;
-        b=TTAREDL8HmTF3WKMq84lm3vNFZRdd8HG47H4DMlBfKppuO+vpLNUjRbi7cuPPHmXEi
-         di1vfRDLcNTSiXz2KjNUPg3z71OkwXmjefzAGJvkcImJK6GxcUGsQEd+X6HhF4PJG/5n
-         L6IlE+faXsdT1ZDoqryYHDxJstEGz6/dcdme9jCXmYWMcQT7eQ7DuNmY6m3RRnPXUWlm
-         50QUDwXHrn1NZfQOBifVW7nop7Sri8SsA7OnmNSHoV0xpzqiy52io30N8cAZidoukhLY
-         zvJ7UOvK2gJKZkIIA/g1TjFvPNCb5NDWH6nBGCSkWTEtYYdjobgHuoUbWegg7t2Q/aTk
-         lPlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWm9n3Pazmi5X834nlyCNvn9S4xiKXPcIWS/6hMe47waG8YmlS5UkQZQGnmnbNAvrAdK2rrlWNXEOM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMuDs6R3ltmVZwbJvZIWWp+XsW3Ntpmc6nMpO2FPpLesITFsOf
-	1qhNb6lKO4ZwD1JsHsMdqKofJuawVtKayxLO1I+nK7FlnEN/jOnyLQdu
-X-Gm-Gg: ASbGncvTb/v1xOpIw+U7l8zKMQKG0G0ZQVXVfI9fmqnBK7MwC62XlSaHFQ8wcbKrM/b
-	fy64GJqHrvV5BvaFQZSoBeal1N3KyjkLXFaTF8opw28p2tOVgjuo29Nngy20LkW2wK3ZCnK+6Le
-	ywDIFHCl93r+NCWx0RDk6gx9EYH/V1ETPczu6jnnYK9TO0rDtDXTLR6WQhoFf0BbExj0D1nUmMq
-	yX3dzWmCcijMuDh66gYb4KNu6LUSSQtVqFzZs/1z7LZiLPG0B0b1AOowjNmIuToe1oMiPrY+o8H
-	trecHS2iaOy2Bg+ttxN3ooNaXQ5X6Z8iFPeuX3ZhmVNr6tdrP+v5CFL9vcCqsI3YucwLXUqjvDe
-	1EWzw5KeeyXJWE9ZFvmrBu4uNzHVz1SIsCDojuVSq8khtS9j95qQwpOPGrrcxCt5iiw8IEJkCCa
-	aKso5cX+iB+ml5RLCx8pMTIHKmVrMk
-X-Google-Smtp-Source: AGHT+IGhJsm2NpnPxILDX/uu4WQpKiT5lGc6J2i4hbTtY+u/Vz/nCFDqIfrcf/Qu4VuDtoOnYneSxw==
-X-Received: by 2002:a05:6512:3e06:b0:58b:75:8fc6 with SMTP id 2adb3069b0e04-592fc12a69emr45480e87.19.1761250909270;
-        Thu, 23 Oct 2025 13:21:49 -0700 (PDT)
+        bh=JQXoHBuAfOI4QMAsJ0wqP6b/BYbUIIdTmKEZ+WCDuV0=;
+        b=B+ZEC99M++CKnORCjCYk66lXGfQ7oQCiehr5SNemnET6fiOr3silVVwcFsBesTAHLZ
+         lYYVr/tX8zv9cYmN+igFBdr+jMPaXZm1mUc5h1rV6M3OLxO7xb2dgn8hlEID6k14Ga3h
+         l33v/mIxlScxTpC9nZxRMlrkPrnUm5felFZUR2vJHr/VEXmRebXlNVUCiqOW4dfQO4D0
+         Zn7tHhwbNmfEoob5p93I7LJWOD/DhbFdGxELDBTN5LTl/kaaSqISjbE5Y7zkSF6a7sY6
+         gtdMpOzrMqOQFhWgF3ar0dO58YCwRcrc1IVVClqCRfAwu2urNdif/tGxbJLsvZWUMeX4
+         ghmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTc+iWvI78/LOfsSprmbZpcsb0L8M5ptCl6YYAapMl17Y2xTjTlrlg+5NyCuXpIO5XgI9AX/dLMwM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0NnEAOd1iRTWWVLrodl7zWLfOQuPu6YlrSVfS2XKCeAsG/NRa
+	qdK6TsI8k4OlQUXQVoXAvhugmLWEKLBnOdpfA1DaM/I1nW86UXK71Qty
+X-Gm-Gg: ASbGnctaeH8Bngj9mNg+B+b6uAihreXaTa4yFXVz04yNtlvLk62mlUxGRYfoGdLd8U3
+	46FNH3L/zw2HrrFUtngtTMGfLSeE47vq8PtW1cJRdb+87hzfmFITnjwVYxtlLB/+xggqNDZkYoM
+	wWoapjf/5vi5tUu7qumlTypvIcF2vOZRRMOaVMjf1Ju0BMS1PDT7ziwZXxCSulB1zCOGNrSU4qS
+	juSVRq6bXxQtjriEwHzOyBRkZTsM+GybwB0Q6Wo5qv1XWTVCKPJhQoeYYgChR59e/1DaITsxYeF
+	9S8gESaBs6Sbo23gClFFHlEMkmrwJWZ1I4Slb6o1Yiyc2nJbZuKq6hMWJS/a3EKU2QaS5mL4Bf6
+	Agzk5glLpL7Rx5RWfPdFiVeFahCt8e8bnKL8PQ+XjG2WZ9UXDImklMfwbzN4U7eyVRcWhimwz7V
+	ZCsd1qvMM0DY/CA7j6LMv7Jj6Kjn//
+X-Google-Smtp-Source: AGHT+IH/VHEFuO9PkUk4ZVAC793jcjVlbvfbJgFsOQrIqPJh2C4ri8F60HTj5mCSD/KGfO1spzuq5Q==
+X-Received: by 2002:a05:6512:1546:20b0:592:ed2d:4cc4 with SMTP id 2adb3069b0e04-592ed2d4e6amr2305088e87.16.1761250911196;
+        Thu, 23 Oct 2025 13:21:51 -0700 (PDT)
 Received: from NB-6746.corp.yadro.com ([188.243.183.84])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-592f4d2cf30sm977522e87.97.2025.10.23.13.21.48
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-592f4d2cf30sm977522e87.97.2025.10.23.13.21.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Oct 2025 13:21:48 -0700 (PDT)
+        Thu, 23 Oct 2025 13:21:50 -0700 (PDT)
 From: Artem Shimko <a.shimko.dev@gmail.com>
 To: Vinod Koul <vkoul@kernel.org>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: p.zabel@pengutronix.de,
-	dan.carpenter@linaro.org,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: dan.carpenter@linaro.org,
 	a.shimko.dev@gmail.com,
 	linux-kernel@vger.kernel.org,
 	dmaengine@vger.kernel.org
-Subject: [PATCH v5 1/3] dmaengine: dw-axi-dmac: simplify PM functions and use modern macros
-Date: Thu, 23 Oct 2025 23:21:31 +0300
-Message-ID: <20251023202134.1291034-2-a.shimko.dev@gmail.com>
+Subject: [PATCH v5 2/3] dmaengine: dw-axi-dmac: add reset control support
+Date: Thu, 23 Oct 2025 23:21:32 +0300
+Message-ID: <20251023202134.1291034-3-a.shimko.dev@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251023202134.1291034-1-a.shimko.dev@gmail.com>
 References: <20251023202134.1291034-1-a.shimko.dev@gmail.com>
@@ -96,109 +96,174 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Simplify the power management code by removing redundant wrapper functions
-and using modern kernel PM macros. This reduces code duplication and
-improves maintainability.
+Add proper reset control handling to the AXI DMA driver to ensure
+reliable initialization and power management. The driver now manages
+resets during probe, remove, and system suspend/resume operations.
 
-The changes convert the suspend/resume functions to take device pointer
-directly instead of the chip structure, allowing removal of the runtime
-PM wrapper functions. The manual PM ops definition is replaced with
-DEFINE_RUNTIME_DEV_PM_OPS() macro and pm_ptr() is used for the platform
-driver. Probe and remove functions are updated to call PM functions with
-device pointer.
+The implementation stores reset control in the chip structure and adds
+reset assert/deassert calls at the appropriate points: resets are
+deasserted during probe after clock acquisition, asserted during remove
+and error cleanup, and properly managed during suspend/resume cycles.
+Additionally, proper error handling is implemented for reset control
+operations to ensure robust behavior.
+
+This ensures the controller is properly reset during power transitions
+and prevents potential issues with incomplete initialization.
 
 Signed-off-by: Artem Shimko <a.shimko.dev@gmail.com>
 ---
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 31 ++++++-------------
- 1 file changed, 9 insertions(+), 22 deletions(-)
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 59 +++++++++++++------
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  1 +
+ 2 files changed, 43 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index b23536645ff7..8b7cf3baf5d3 100644
+index 8b7cf3baf5d3..1496c52f47a6 100644
 --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
 +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -1314,8 +1314,10 @@ static int dma_chan_resume(struct dma_chan *dchan)
- 	return 0;
- }
+@@ -1316,11 +1316,16 @@ static int dma_chan_resume(struct dma_chan *dchan)
  
--static int axi_dma_suspend(struct axi_dma_chip *chip)
-+static int axi_dma_suspend(struct device *dev)
+ static int axi_dma_suspend(struct device *dev)
  {
-+	struct axi_dma_chip *chip = dev_get_drvdata(dev);
-+
++	int ret;
+ 	struct axi_dma_chip *chip = dev_get_drvdata(dev);
+ 
  	axi_dma_irq_disable(chip);
  	axi_dma_disable(chip);
  
-@@ -1325,9 +1327,10 @@ static int axi_dma_suspend(struct axi_dma_chip *chip)
- 	return 0;
- }
++	ret = reset_control_assert(chip->resets);
++	if (ret)
++		dev_warn(dev, "Failed to assert resets, but continuing suspend\n");
++
+ 	clk_disable_unprepare(chip->core_clk);
+ 	clk_disable_unprepare(chip->cfgr_clk);
  
--static int axi_dma_resume(struct axi_dma_chip *chip)
-+static int axi_dma_resume(struct device *dev)
- {
- 	int ret;
-+	struct axi_dma_chip *chip = dev_get_drvdata(dev);
+@@ -1338,12 +1343,23 @@ static int axi_dma_resume(struct device *dev)
  
- 	ret = clk_prepare_enable(chip->cfgr_clk);
+ 	ret = clk_prepare_enable(chip->core_clk);
  	if (ret < 0)
-@@ -1343,20 +1346,6 @@ static int axi_dma_resume(struct axi_dma_chip *chip)
+-		return ret;
++		goto cfgr_clk_disable;
++
++	ret = reset_control_deassert(chip->resets);
++	if (ret)
++		goto core_clk_disable;
+ 
+ 	axi_dma_enable(chip);
+ 	axi_dma_irq_enable(chip);
+ 
  	return 0;
++
++core_clk_disable:
++	clk_disable_unprepare(chip->core_clk);
++cfgr_clk_disable:
++	clk_disable_unprepare(chip->cfgr_clk);
++
++	return ret;
  }
  
--static int __maybe_unused axi_dma_runtime_suspend(struct device *dev)
--{
--	struct axi_dma_chip *chip = dev_get_drvdata(dev);
--
--	return axi_dma_suspend(chip);
--}
--
--static int __maybe_unused axi_dma_runtime_resume(struct device *dev)
--{
--	struct axi_dma_chip *chip = dev_get_drvdata(dev);
--
--	return axi_dma_resume(chip);
--}
--
  static struct dma_chan *dw_axi_dma_of_xlate(struct of_phandle_args *dma_spec,
- 					    struct of_dma *ofdma)
- {
-@@ -1590,7 +1579,7 @@ static int dw_probe(struct platform_device *pdev)
- 	 * driver to work also without Runtime PM.
- 	 */
- 	pm_runtime_get_noresume(chip->dev);
--	ret = axi_dma_resume(chip);
-+	ret = axi_dma_resume(chip->dev);
- 	if (ret < 0)
- 		goto err_pm_disable;
- 
-@@ -1638,7 +1627,7 @@ static void dw_remove(struct platform_device *pdev)
- 	axi_dma_disable(chip);
- 
- 	pm_runtime_disable(chip->dev);
--	axi_dma_suspend(chip);
-+	axi_dma_suspend(chip->dev);
- 
- 	for (i = 0; i < DMAC_MAX_CHANNELS; i++)
- 		if (chip->irq[i] > 0)
-@@ -1653,9 +1642,7 @@ static void dw_remove(struct platform_device *pdev)
+@@ -1455,7 +1471,6 @@ static int dw_probe(struct platform_device *pdev)
+ 	struct axi_dma_chip *chip;
+ 	struct dw_axi_dma *dw;
+ 	struct dw_axi_dma_hcfg *hdata;
+-	struct reset_control *resets;
+ 	unsigned int flags;
+ 	u32 i;
+ 	int ret;
+@@ -1487,16 +1502,6 @@ static int dw_probe(struct platform_device *pdev)
+ 			return PTR_ERR(chip->apb_regs);
  	}
+ 
+-	if (flags & AXI_DMA_FLAG_HAS_RESETS) {
+-		resets = devm_reset_control_array_get_exclusive(&pdev->dev);
+-		if (IS_ERR(resets))
+-			return PTR_ERR(resets);
+-
+-		ret = reset_control_deassert(resets);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	chip->dw->hdata->use_cfg2 = !!(flags & AXI_DMA_FLAG_USE_CFG2);
+ 
+ 	chip->core_clk = devm_clk_get(chip->dev, "core-clk");
+@@ -1507,18 +1512,28 @@ static int dw_probe(struct platform_device *pdev)
+ 	if (IS_ERR(chip->cfgr_clk))
+ 		return PTR_ERR(chip->cfgr_clk);
+ 
++	chip->resets = devm_reset_control_array_get_optional_exclusive(&pdev->dev);
++	if (IS_ERR(chip->resets))
++		return PTR_ERR(chip->resets);
++
++	ret = reset_control_deassert(chip->resets);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "Failed to deassert resets\n");
++
+ 	ret = parse_device_properties(chip);
+ 	if (ret)
+-		return ret;
++		goto err_exit;
+ 
+ 	dw->chan = devm_kcalloc(chip->dev, hdata->nr_channels,
+ 				sizeof(*dw->chan), GFP_KERNEL);
+-	if (!dw->chan)
+-		return -ENOMEM;
++	if (!dw->chan) {
++		ret = -ENOMEM;
++		goto err_exit;
++	}
+ 
+ 	ret = axi_req_irqs(pdev, chip);
+ 	if (ret)
+-		return ret;
++		goto err_exit;
+ 
+ 	INIT_LIST_HEAD(&dw->dma.channels);
+ 	for (i = 0; i < hdata->nr_channels; i++) {
+@@ -1605,20 +1620,30 @@ static int dw_probe(struct platform_device *pdev)
+ 
+ err_pm_disable:
+ 	pm_runtime_disable(chip->dev);
++err_exit:
++	reset_control_assert(chip->resets);
+ 
+ 	return ret;
  }
  
--static const struct dev_pm_ops dw_axi_dma_pm_ops = {
--	SET_RUNTIME_PM_OPS(axi_dma_runtime_suspend, axi_dma_runtime_resume, NULL)
--};
-+static DEFINE_RUNTIME_DEV_PM_OPS(dw_axi_dma_pm_ops, axi_dma_suspend, axi_dma_resume, NULL);
+ static void dw_remove(struct platform_device *pdev)
+ {
++	int ret;
+ 	struct axi_dma_chip *chip = platform_get_drvdata(pdev);
+ 	struct dw_axi_dma *dw = chip->dw;
+ 	struct axi_dma_chan *chan, *_chan;
+ 	u32 i;
  
- static const struct of_device_id dw_dma_of_id_table[] = {
- 	{
-@@ -1680,7 +1667,7 @@ static struct platform_driver dw_driver = {
- 	.driver = {
- 		.name	= KBUILD_MODNAME,
- 		.of_match_table = dw_dma_of_id_table,
--		.pm = &dw_axi_dma_pm_ops,
-+		.pm = pm_ptr(&dw_axi_dma_pm_ops),
- 	},
+-	/* Enable clk before accessing to registers */
++	/*
++	 * The peripheral must be clocked and out of reset
++	 * before its registers can be accessed.
++	 */
+ 	clk_prepare_enable(chip->cfgr_clk);
+ 	clk_prepare_enable(chip->core_clk);
++	ret = reset_control_deassert(chip->resets);
++	if (ret)
++		dev_err(&pdev->dev, "Failed to deassert resets\n");
++
+ 	axi_dma_irq_disable(chip);
+ 	for (i = 0; i < dw->hdata->nr_channels; i++) {
+ 		axi_chan_disable(&chip->dw->chan[i]);
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+index b842e6a8d90d..c74affb9f344 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+@@ -71,6 +71,7 @@ struct axi_dma_chip {
+ 	struct clk		*core_clk;
+ 	struct clk		*cfgr_clk;
+ 	struct dw_axi_dma	*dw;
++	struct reset_control	*resets;
  };
- module_platform_driver(dw_driver);
+ 
+ /* LLI == Linked List Item */
 -- 
 2.43.0
 

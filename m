@@ -1,153 +1,166 @@
-Return-Path: <dmaengine+bounces-6988-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6989-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5BC9C084AB
-	for <lists+dmaengine@lfdr.de>; Sat, 25 Oct 2025 01:24:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59784C09303
+	for <lists+dmaengine@lfdr.de>; Sat, 25 Oct 2025 18:10:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 476EA1B21518
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Oct 2025 23:24:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 617F53B6EFD
+	for <lists+dmaengine@lfdr.de>; Sat, 25 Oct 2025 16:10:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7325230C370;
-	Fri, 24 Oct 2025 23:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6091D303A1C;
+	Sat, 25 Oct 2025 16:09:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="jUTlBQ2h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcywdgQb"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3E92F5A22;
-	Fri, 24 Oct 2025 23:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761348269; cv=pass; b=tESIZXI3rYe74n1MlkmYxetEG3LosKmeN3UR1hdQDjz99Tbz9srsmGVoDx8Wt4YvF1W87bGfcvNavQPxn7Nj7P9kXzzJ6n6TRvefIAhbizE8PqujlDCJzBPDyifyWVTwv1CLlkT+FvgpXTXTWHecJR+SB7Zsfo10l0t51+fECNY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761348269; c=relaxed/simple;
-	bh=NQ0CrT99S0HB3iA81tiE1fKOXNruYRsIn5L3vGBZdtI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R8JSdoh30zTpkv6DtPR9UqjoEILC8+z0s+1Ndj9y9flFG9S6SiV2d8jrt6hAqlx98mamkkU772V9SXHMqb6FLq9Q8oF2I6f1yTOpM0T8cJsnr2EL37uclg12YjC5zQnpg1dIRbZ+1QTDUVK5x58ziodwvrPG+7DKkUIVgQ0ROQc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=jUTlBQ2h; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1761348264; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=E7jo3eFGtMbYc4umajgAJrDaAAeoH78FvXSvtwIPzMd+KALm6TW6J/PZo3Gl8IAj7J4S4JOqDkVaqCJ4DpyxUkL/D7r/nDZxCDXQIylw9m80ZHFV7ZnmYl6fN+yD1hWHfO07oqL+vl1wjfMlpqfazjWlj918MvnuxIHK7Hk60jc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1761348264; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=TolhaGIsyaj1gVoV8dHb9QimZIX1Tzw1zXYiEcETqjM=; 
-	b=ERHFHpBMKqE6LtNxoI7EvA9o2mCsVLRI6J1+/qPThd+k1qt+nO9OwZhbx5E81USsXE7RyOCW1GyB5isp3iLRSkJC/p6ufY9tyScGPtH6liK71Qdq4msBQsSye0JsA4aNBjxrfKHSyGI+LcIwBsP7dWSDg8vI9r+LX3h+vlO9w2c=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761348264;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=TolhaGIsyaj1gVoV8dHb9QimZIX1Tzw1zXYiEcETqjM=;
-	b=jUTlBQ2h6Tuak+aNMb2CNTnEQ4BDpyDVgaRRROiBpKRCvZOPLn1o5LGy8JyX0l9X
-	sOXFCDgYktIsDNXusx7tmsAjPkY6Gy0P2EcQplSNWKOk61O5CR3GNBKVdk6o+/41U8c
-	rO3cD7tc7lCrL45EbJ0fyWmdAPtKKmAhIvpw6Ir4=
-Received: by mx.zohomail.com with SMTPS id 1761348261746725.1283250784594;
-	Fri, 24 Oct 2025 16:24:21 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 476FE181935; Sat, 25 Oct 2025 01:24:06 +0200 (CEST)
-Date: Sat, 25 Oct 2025 01:24:06 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Guenter Roeck <linux@roeck-us.net>, 
-	Andi Shyti <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Georgi Djakov <djakov@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel <joro@8bytes.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-media@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, linux-pwm@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
-Message-ID: <god73pukywwznfyym7tym6m5k6fn3u7hwzj5gwhrxytt7oinfv@pokb4aos7pp6>
-References: <20251023143957.2899600-1-robh@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AF5205AB6;
+	Sat, 25 Oct 2025 16:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761408575; cv=none; b=YjQro6N/EUICSSfv20s4WL/tCHIHfNvAqwoC0NU8U7XrmCyZm3KCHeAskoSOAxNFIh1yCRLlXOxoYboGaD0OiOknyuWZ7+CoUMq4r3GVqgZGCFPEh4dFTTiOczR89jzYo5HmiTJMgaPcNnkCQ/j/Vsu+qc3eYqDxkBPo/jhl7Q4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761408575; c=relaxed/simple;
+	bh=hP89qQmKZjwi7eCg302zpn3HWNE+6yuy0IrCw0HhMNk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=agoxdffmAt/V8UHSbaqSVquaxaktHQSQEvNYr0YEgBexECVj6ORv9r8yqODk9IvQZGc6meWuPu4p++Rx/fCYW5PUVLKlfXegKaTGOQdVM5B+67SL0j4fsYLUX6YR0Xj4GhfgeCI2rcLzSyYMhAJIud8G0/X79IXUc4CNn0OamY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcywdgQb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 321BBC4CEF5;
+	Sat, 25 Oct 2025 16:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761408575;
+	bh=hP89qQmKZjwi7eCg302zpn3HWNE+6yuy0IrCw0HhMNk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IcywdgQb6wtAydOACSGZHT/caOCVouixacZ1CkQFfSo5IX76qtT6CZNor8beBLFVY
+	 AW1fFNYSvSNK9tjSFXIYjco9oQ/Sr2hLZ6HkVnOjPjF9vrwSFlKYw2NIkun+Ow248z
+	 FPmCjUQo+KsF/S2VVqWhU2Qkt2py4OWA/iHkrCIAfLQip5i04MJ2QHvCi4nvlWXm51
+	 BmKyM+TUsFhGBe4EMCQZuhaKE7iCXNb9Jroq2hCdHsfPHpO/RHSpvBkcbZIpmU2DHa
+	 wvy2MRsGjSeB0LOtOKf5Wp/6kc7NlYsUSe1uUZTbjp3r2QBft4pdi8+f/kcdKPnNp4
+	 HzVcF3aZvHmFA==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.17] dmaengine: idxd: Add a new IAA device ID for Wildcat Lake family platforms
+Date: Sat, 25 Oct 2025 11:54:02 -0400
+Message-ID: <20251025160905.3857885-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251025160905.3857885-1-sashal@kernel.org>
+References: <20251025160905.3857885-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4uianbie6i5kbvu2"
-Content-Disposition: inline
-In-Reply-To: <20251023143957.2899600-1-robh@kernel.org>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.3/261.330.82
-X-ZohoMailClient: External
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.17.5
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+From: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
 
---4uianbie6i5kbvu2
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
-MIME-Version: 1.0
+[ Upstream commit c937969a503ebf45e0bebafee4122db22b0091bd ]
 
-Hi,
+A new IAA device ID, 0xfd2d, is introduced across all Wildcat Lake
+family platforms. Add the device ID to the IDXD driver.
 
-On Thu, Oct 23, 2025 at 09:37:56AM -0500, Rob Herring (Arm) wrote:
-> Generally at most 1 blank line is the standard style for DT schema
-> files. Remove the few cases with more than 1 so that the yamllint check
-> for this can be enabled.
->=20
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../devicetree/bindings/power/supply/mt6360_charger.yaml     | 1 -
->  .../bindings/power/supply/stericsson,ab8500-charger.yaml     | 1 -
+Signed-off-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/20250801215936.188555-1-vinicius.gomes@intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+LLM Generated explanations, may be completely bogus:
 
--- Sebastian
+YES
 
---4uianbie6i5kbvu2
-Content-Type: application/pgp-signature; name="signature.asc"
+- User impact: This enables the IDXD (IAA/IAX) driver to bind to Wildcat
+  Lake (WCL) IAA devices (PCI ID 0xfd2d). Without it, systems with this
+  hardware won’t get driver support, which is a practical user-visible
+  gap for those platforms.
+- Change scope: Extremely small and contained. It only adds one PCI
+  device ID constant and one table entry to match that ID to the
+  existing IAA/IAX driver flow.
+  - `drivers/dma/idxd/registers.h`: Adds `#define
+    PCI_DEVICE_ID_INTEL_IAA_WCL 0xfd2d`, introducing the new PCI ID
+    without altering any logic.
+  - `drivers/dma/idxd/init.c`: Adds `{ PCI_DEVICE_DATA(INTEL, IAA_WCL,
+    &idxd_driver_data[IDXD_TYPE_IAX]) },` to `idxd_pci_tbl[]`, mapping
+    the new device ID to the already-existing IAA/IAX handling path
+    (`IDXD_TYPE_IAX`).
+- No architectural changes: The driver’s behavior, register handling,
+  and completion record layouts are unchanged. The new entry reuses the
+  same `idxd_driver_data[IDXD_TYPE_IAX]` path, which already sets
+  `cr_status_off`, `cr_result_off`, and `.load_device_defaults =
+  idxd_load_iaa_device_defaults` for IAA devices (see
+  `drivers/dma/idxd/init.c` context around `idxd_driver_data[]`). This
+  indicates the new device is expected to be compatible with the
+  existing IAA v1.0 programming model.
+- Minimal regression risk: The only effect is that the driver now binds
+  to devices reporting PCI ID 0xfd2d. No code paths for existing
+  supported devices change; IRQ/MSI-X setup and all other logic remain
+  untouched (the surrounding `idxd_setup_interrupts()` code is unchanged
+  in `drivers/dma/idxd/init.c`).
+- No side effects beyond enablement: No new kernel APIs, no user-visible
+  ABI changes, no feature additions beyond recognizing new hardware.
+- Stable policy fit: Even though the commit message doesn’t explicitly
+  Cc stable or carry a Fixes tag, adding a PCI ID to support a
+  compatible device is a common, low-risk backport to stable trees and
+  often accepted to support shipping hardware.
+- Preconditions for backport: The target stable series must already
+  include the IDXD IAA/IAX support path (e.g., existing `IDXD_TYPE_IAX`
+  infrastructure, IAA default loader, and related completion record
+  definitions). If those are present (as implied by existing entries
+  like `IAA_DMR` and `IAA_PTL` in `drivers/dma/idxd/init.c`), this is a
+  clean, standalone enablement.
 
------BEGIN PGP SIGNATURE-----
+Conclusion: This is a classic, low-risk enablement-only change; it
+should be backported to stable so that WCL IAA hardware works out of the
+box.
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmj8CpEACgkQ2O7X88g7
-+pqEIQ//WxlORWTU9xe37JxSV9323KQXYJPU3wtmtK4U8OlNGoVKu9XeR3w5pitG
-uy2cIzo80EdVMKsq5GKcONqwht31w9+RJaWZmytnll9Wbe3eiW3Lu6Ymx2zopgcW
-OoRuaiPPQUqGdgt7+VKgNt+4kH1sX/ur8z/Zd1rUrK9Xkks09pdqcZ/wpjm6KlQw
-e7x03OaDQ5h17Cg56SgH7NwoYjoUXDuSEKoZDx4wv5DQWh171Ez0/tWvYwYxM7+a
-Pxqt+zTDC1hdh6j1CaiOuwNb7pbdfcOWS7WZC8BPHNYW3eqFk5OQg+tZwEgoK9zV
-GLO0FrPPimJLgL2mfnq5FP0SzYU7FNgJD6gD/qKPzjsQlFLnwn69QCH/nTA9J/ZT
-ajcxgv6FLs3R3CGRptDBEUPOXez3dJeMeaN7hNeoswZNAe9uw1irXmedEzxLDO7S
-8WDVz6MvUAXOdXEcI+pUvuYfGWPwuJHspOgPuOwzO2sqg212V3sScOGcATq2BTDD
-mpc8LtRdKoZ3vUS9cVLRxtqLo8YB5roCBg0HEOexrwJayA074TSteqXhF2LH7LOW
-IcSZ37y+8QgWjTO2aXsiLJjoK2PsOLnvKzBRD5aeLhMd4H1Lw1xCxi75ut/fJPUY
-MLaS7WMtq7TVMRxBrjz8kaiR4opj84mVIXbVgoiISYooEKbbdic=
-=pPcb
------END PGP SIGNATURE-----
+ drivers/dma/idxd/init.c      | 2 ++
+ drivers/dma/idxd/registers.h | 1 +
+ 2 files changed, 3 insertions(+)
 
---4uianbie6i5kbvu2--
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 8c4725ad1f648..2acc34b3daff8 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -80,6 +80,8 @@ static struct pci_device_id idxd_pci_tbl[] = {
+ 	{ PCI_DEVICE_DATA(INTEL, IAA_DMR, &idxd_driver_data[IDXD_TYPE_IAX]) },
+ 	/* IAA PTL platforms */
+ 	{ PCI_DEVICE_DATA(INTEL, IAA_PTL, &idxd_driver_data[IDXD_TYPE_IAX]) },
++	/* IAA WCL platforms */
++	{ PCI_DEVICE_DATA(INTEL, IAA_WCL, &idxd_driver_data[IDXD_TYPE_IAX]) },
+ 	{ 0, }
+ };
+ MODULE_DEVICE_TABLE(pci, idxd_pci_tbl);
+diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
+index 9c1c546fe443e..0d84bd7a680b7 100644
+--- a/drivers/dma/idxd/registers.h
++++ b/drivers/dma/idxd/registers.h
+@@ -10,6 +10,7 @@
+ #define PCI_DEVICE_ID_INTEL_DSA_DMR	0x1212
+ #define PCI_DEVICE_ID_INTEL_IAA_DMR	0x1216
+ #define PCI_DEVICE_ID_INTEL_IAA_PTL	0xb02d
++#define PCI_DEVICE_ID_INTEL_IAA_WCL	0xfd2d
+ 
+ #define DEVICE_VERSION_1		0x100
+ #define DEVICE_VERSION_2		0x200
+-- 
+2.51.0
+
 

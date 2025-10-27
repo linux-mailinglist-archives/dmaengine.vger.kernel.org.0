@@ -1,79 +1,79 @@
-Return-Path: <dmaengine+bounces-7013-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7014-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C393C0FCFD
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 18:57:00 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04649C0FD0C
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 18:58:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 88BE5188EB6D
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 17:57:24 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7C84835021E
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 17:58:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 626323164DB;
-	Mon, 27 Oct 2025 17:56:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06D253161B3;
+	Mon, 27 Oct 2025 17:58:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IS5CI5rQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5dMn04R"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F250314B80
-	for <dmaengine@vger.kernel.org>; Mon, 27 Oct 2025 17:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC353191C0
+	for <dmaengine@vger.kernel.org>; Mon, 27 Oct 2025 17:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761587814; cv=none; b=J/fTxQdflbf94swImX0SiyzwF7yqOOK/I5AiZ18wdpfDW/uxsVFBFt+rNFOozrQsu7cvWflkt2e36eD/cgbqt4DaL/FuWIPRqptst6IwehKdsCa8FJNQL4LiPUO6CwiFtStGjZ+cdYfyZWIWKbi9+QJAjevKq9o+AWK6wpoNV1Q=
+	t=1761587925; cv=none; b=LX0HeZGXz7ps6FKVJ36WDiicMPvqq+t7hTam2IFCdQZpDpEudrD+ZoE6rGjKrrPR5t+4FEDX0i2jN+K0PsQoaq7+OnxXaaM2ru4gcEbQrxg5jhrXB7AoophsIGHB8E9LRFPFfL2CYREznIVlrgzEV0/6cJy+HGCowdAgbcghWDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761587814; c=relaxed/simple;
-	bh=SCIPeksxx2uDarfAhuXFCN/oVVLcwA7r7uPbkIEyGqU=;
+	s=arc-20240116; t=1761587925; c=relaxed/simple;
+	bh=lrLZa5alrgHzC1J99K289oAUToN5br+ZIZn9l5DB14I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I76Hyt57PLHsyXebhAvy/VgYggsPUXBwF7kz4A0Vye5Rt6beBkGKOKzDex2GAR9bYXF9QylV/nxcqC8xT9GnmfVo3O5kh216K8B8n3Nldcr6rDIv4ZsrYr0tqvKjEvD21NugT1ljudMFGyJtZxefAVPSGOSP4lntlICAh5JjyBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IS5CI5rQ; arc=none smtp.client-ip=209.85.128.48
+	 MIME-Version:Content-Type; b=Pfu2FBiDWC6fLCdstQyy+uhGUDCBkltTR0F5NIxuLswxRD//iml21ErIDIVVKcyUiTTj6UsqUfFmmMurSqL5P3Pgpilsfcv1gXSPu2puFUmSwSaIL4iiHUUcssjgzCXhj8DFwk9o2n22+Jt2ZORGlMbKJ68oldRrDTzOafMvxd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b5dMn04R; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-47114a40161so56085905e9.3
-        for <dmaengine@vger.kernel.org>; Mon, 27 Oct 2025 10:56:52 -0700 (PDT)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3ecdf2b1751so3476976f8f.0
+        for <dmaengine@vger.kernel.org>; Mon, 27 Oct 2025 10:58:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761587811; x=1762192611; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1761587923; x=1762192723; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SCIPeksxx2uDarfAhuXFCN/oVVLcwA7r7uPbkIEyGqU=;
-        b=IS5CI5rQdF27eg/WCpXgLI2Zyv+9BcInRCb9Eu9VOCfKCHxPuKzd3ul3LeVDp2Rz25
-         gv5lDFoGKy+UukPfyev+KGMqnFRw8ZBsw49dGyuiQERap0Ekw2dz9pzDLupUR5pqeAfG
-         tsJloMnfa2Bi7Mo3FtfHqxVSuOLOVuePsGJzdqNtmAQT28TIyIJ1uddZevmBbmJDzSUx
-         KIFizCr2A6Axgcwcj3YBPoyk7AUqNr4zLmghZ827LJZ7qi+z9A6hUVc1akUwjUFQ+Qu/
-         JUhawW2kDFauJuWErOZ9Ho2AYfzYlK3l7gmMQYL9r/QAbDv9ycriWM3IWUOQ9O7tZind
-         H8gQ==
+        bh=lrLZa5alrgHzC1J99K289oAUToN5br+ZIZn9l5DB14I=;
+        b=b5dMn04RsBnItqzMCrb5hnhZy7S5RbR+b34HZ83ocRWHgAEC+41JFR/XB9gGdXfhOX
+         AEy5dHe3CpmqPWYAgEgp0XIQeIxawt1YD8j9ObNaAUgkN3kj46zrjZFzuGKGz3Y/LxYd
+         QiL6xQ/8/epQfyOZPzu/5eFO4BhrmoRE+nOqooYLV3lLQrJBMpedGZHDyGCF49BuTo+p
+         xQhOmLbKmtWl9p/JnsxUHeO+NRKpI2GZvDsho5pqpVjW6X9OvTKtgA6dpYMO9OjnSiSL
+         EW/edlUyJLao0lgmcVIoziB0HYEPyN75dIvuePvJPwahmVPokHxRYM3kj1dgB00w8wCS
+         iwYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761587811; x=1762192611;
+        d=1e100.net; s=20230601; t=1761587923; x=1762192723;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SCIPeksxx2uDarfAhuXFCN/oVVLcwA7r7uPbkIEyGqU=;
-        b=GWu3WMNy8joGZTVRVz89V01WHzdBVWcw5bUYURu9re4oTv37RY4BiD7/DbJMLSd82I
-         NAhFl8pSMNWFsCPSdsp7pGDpwNQ5dyTSF/EZUWTCzPdmScPjOh/eQfUSoYU53zVCxHXF
-         7UsxQwGDB9jh9nUX6UJ3JHwbShOJ0frlEhKSn648NDjdHo2mVXQEL5xPbZPL+VzO5yH0
-         3E4Ck5COFBwrondeMAJNo+GDZv1VpmMRo8GkLAdFJ5nCSrL0G9pubZiIliElb9KmeY5h
-         E2hyBexwnHZx5lc2k1C+141zy8/jYkQyMFLF+4U6IwPjfaslsT+f3zwR3aZbfPo+oYar
-         pvNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOMDjVDIeP+7CIlpwRwXT7Elot3JbHw+fHRveULUIHrPvxlIfAooNKK7Y5F+ZzpsBrnz826wFil94=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7OLpD7uQKjqfGJZ7F2WDOwlGBOafHm1XPro91GQDcbF00JWRI
-	BnmKUp+91VAqCj074Brv7UvpX7N3jwRcP9KP5TR3/2FUUYbUmJnbgAuI
-X-Gm-Gg: ASbGncvSiyXRfA/DMsD4XNw0sFkF0CWdLbCfKu2LBqsQrlvb39iC8t0oGcUNSjK85le
-	+eX2NFo6GErhsPNe/1aXXvOVyLpvyje9A+hBw+dzn9JqskZdWJcw68SI5wsoSBQyQHyL0xwTWlX
-	8QieGodl9gvh3wFtG95ZOhToSmA4d3iCk7+MyAGsJZGZfkBmVLwMTGevC3t5N/3Z8GrD0PwRfav
-	z2rSOWgXfcMJrOdgvFdE9+rZVmarHKLQ4VvlfBeklSNj02e4zfbbMxSlPc9FIGcWEzgByKFLo4c
-	AV0hL1GnO220pXk6MRNwfCgJkX1R7V9b+qeSluri3pD0ANa0ugxc2TmuuRIFEoNT5KUO65vQ7Ru
-	pZCh3RZf9ErMm3+2ALV94C2b0P6d4uV1PLv7BicXUvBOKb6MdT5BkAmX84mrrh8m0bqDv/UjlRi
-	zUvM8U0RB8/LExRy3IZ+EBz8GTPsOQMsYvovLc9AyxLtCuFZdXhnyEUm6YDQ==
-X-Google-Smtp-Source: AGHT+IEihm/mMfPTi4flOTdp91sIkNaqwi2a8InYOu2pJ2ai1utyKQHaHYaafUG+/91FRnDBC8gdGw==
-X-Received: by 2002:a05:600c:64c4:b0:46e:1abc:1811 with SMTP id 5b1f17b1804b1-47717e512bamr4754785e9.27.1761587810623;
-        Mon, 27 Oct 2025 10:56:50 -0700 (PDT)
+        bh=lrLZa5alrgHzC1J99K289oAUToN5br+ZIZn9l5DB14I=;
+        b=JCBE7IJecBRSCiqDjnJ9cw2WKY3EPvWQb7qT8uOKc8Kz2Pon7Lr3eZ7g5rFt3F/v+l
+         RB4+8Uo4sGW7Biby6zUjzzyVzSpr0zbSH8JfGLyZ3fE0IYHFDE8ajjvUHIHDH5Z76q2m
+         6s7/U5DRJyUX/jGOSXRXr3EcA/gNY8pz1sOOdsjE+HwsvisLbHHCWQ8qJjODbajlZd7A
+         0kkQ12r4lWQxTZ1E1Yn+8ALPnmEhLBuf5JG/wN5dIefJTirZfEIxvItGX0gHHdekGiwM
+         PsXxP6omnzgrwT6YwG1JBPLO4Ys6Cak+OFQK4sifnMeAdwURIHj6Qb57/1s38P8pWFWl
+         0X0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVOuSDoTCFrspNm/q4LixsViWLXCNWGyapoEOkzau7oyY5doo0WHhcBSeUlekKwool+Zq2uuxbsyHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxneIGZZutwVqwm8+0VTpSY/bFpuCAcc7o7v1o5RWHsDAnFZZUv
+	a7CKB+8dX4XQ8WrkoKsELU/XgCnJqyYmF8A5NayCPqoy7aAqLEH3QzjV
+X-Gm-Gg: ASbGncuVuhQwwHC+OOLXomTfRPA7UoPxynH8PuJq+52eX36kzVG1mYj7JdcWxAOz4dU
+	xsIMCYqvvrdRDSLsNwwr89ZoAwf2v5bvKdnTtl05xTD9OQuEbYpAsVh0+pHrINKcEDWn4dsRlmX
+	JHwbm02LUOj8p/04w7stJjGk+GEJriv3qX0B50XbRGjJR4Li2wijnw4zkxIMw6KbW7VJtb6j3Wm
+	ZO8KsdwhXXsGNNVigWjBcofdYNJhIVdzpVK3rPdUW7EWfzTX1BWjJM4WWMAq16JPDqs0XMRNOKE
+	L+gqG/yA1HtXyjZRTvJenissZ0K5gtkG6TYqHGjw5xl5B4vOOt1PlpAkms9I7GcLsZfjNLdHAoj
+	e4AAwNZIINYrnxDZ1gz6nI1eHbQwh3h7n+RkXt8hPtDiiRWpZ9uuU5i4i7fQ0v1JRQGQEhr9+B1
+	oBDohmtqUB4dpsZ8E5cH3S2EsAW5OshO8mo0g8OuJGOMYSACUqGOADBn8rioGYuQJwe8mN
+X-Google-Smtp-Source: AGHT+IEEbY/WNAlAvL+pz8s7XDkjY8oak1WE3FbbRf2JSc/Ve9J9gkYo1nnN4xz8/yWauuSoOfnmDA==
+X-Received: by 2002:a05:6000:2287:b0:401:5ad1:682 with SMTP id ffacd0b85a97d-429a7e59dbemr594649f8f.14.1761587922569;
+        Mon, 27 Oct 2025 10:58:42 -0700 (PDT)
 Received: from jernej-laptop.localnet (178-79-73-218.dynamic.telemach.net. [178.79.73.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475dd4cc596sm152270065e9.15.2025.10.27.10.56.49
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952df3c7sm15264123f8f.40.2025.10.27.10.58.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Oct 2025 10:56:50 -0700 (PDT)
+        Mon, 27 Oct 2025 10:58:42 -0700 (PDT)
 From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
 To: Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej@kernel.org>,
  Samuel Holland <samuel@sholland.org>, Mark Brown <broonie@kernel.org>,
@@ -84,13 +84,14 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
  linux-kernel@vger.kernel.org
 Subject:
- Re: [PATCH v2 04/10] ASoC: sun4i-spdif: Support SPDIF output on A523 family
-Date: Mon, 27 Oct 2025 18:56:49 +0100
-Message-ID: <6204310.lOV4Wx5bFT@jernej-laptop>
-In-Reply-To: <20251027125655.793277-5-wens@kernel.org>
+ Re: [PATCH v2 09/10] arm64: dts: allwinner: a523: Add SPDIF TX pin on PB and
+ PI pins
+Date: Mon, 27 Oct 2025 18:58:41 +0100
+Message-ID: <4686611.LvFx2qVVIh@jernej-laptop>
+In-Reply-To: <20251027125655.793277-10-wens@kernel.org>
 References:
  <20251027125655.793277-1-wens@kernel.org>
- <20251027125655.793277-5-wens@kernel.org>
+ <20251027125655.793277-10-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -100,19 +101,25 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-Dne ponedeljek, 27. oktober 2025 ob 13:56:45 Srednjeevropski standardni =C4=
+Dne ponedeljek, 27. oktober 2025 ob 13:56:50 Srednjeevropski standardni =C4=
 =8Das je Chen-Yu Tsai napisal(a):
-> The TX side of the SPDIF block on the A523 is almost the same the
-> previous generations, the only difference being that it has separate
-> module clock inputs for the TX and RX side.
+> The SPDIF TX (called OWA OUT in the datasheet) is available on three
+> pins. Of those, the PH pin is unlikely to be used since it conflicts
+> with the first Ethernet controller.
 >=20
-> Since this driver currently only supports TX, add support for a
-> different clock name so that TX and RX clocks can be separated
-> if RX support is ever added. Then add support for the A523.
+> The Radxa Cubie A5E exposes SPDIF TX through the PI pin group on the
+> 40-pin GPIO header.
+>=20
+> The Orange Pi 4A exposes SPDIF TX through both the PB and PI pin
+> groups on the 40-pin GPIO header. The PB pin alternatively would be
+> used for I2S0 though.
+>=20
+> Add pinmux settings for both options so potential users can directly
+> reference either one.
 >=20
 > Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
 
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
 Best regards,
 Jernej

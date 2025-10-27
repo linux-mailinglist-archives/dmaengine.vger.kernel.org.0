@@ -1,294 +1,156 @@
-Return-Path: <dmaengine+bounces-6998-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-6999-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id A68ABC0DA89
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 13:47:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD338C0DCA8
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 14:04:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2C61634DB64
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 12:47:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5AB953B402A
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 12:58:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30A2922D792;
-	Mon, 27 Oct 2025 12:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C044242D99;
+	Mon, 27 Oct 2025 12:57:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bjpk+ApT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZT4zYMCs"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E902264AD;
-	Mon, 27 Oct 2025 12:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB79924397A;
+	Mon, 27 Oct 2025 12:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761569231; cv=none; b=IL6MW/zLqTIrVDwSZSk1UDOsSdAYvfV57KgefWLBR5s9ts3qacbeMya2Y+NE5zo5R3O3poFbyfYZXrl41XjUzqNf4PFqZutbJFCfp07mk9ImU2EqYQ1LMhkxAcXtqxGZhHklfHgedIsNROeUfT62rDzKb89esDBp/g9/shmn7HI=
+	t=1761569820; cv=none; b=Al5FnptjUqhrGYT841Q4FhscJO1zUQ5LuvH2APRO4vMKO5odxqzb+t5GkY5RwRPNM53k1SjxIO4gcYCxdfyGsn8F6sqbibfOSXQip3M/gi1emVesij/Huy1YsJ3D9D9xKrRpZJKC6P8PN5wZCPvoYkAvMikoqmWU5d0p0VHJefY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761569231; c=relaxed/simple;
-	bh=49jdBAX78hnKEgcNrSPzlw9AgaPRGLdbgtmHRvfTsDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lq4R8/Sc63wPoS3wA/rkRMn6WkRPMtkIoJpDwZbOZEQxWah2ViyzYNoO1GfOlgRsxScfu/ABVjs0TAsGZNPVLP/gK3GTagAQa2YojtIQYibuCHDSUtsqXxQ5wfWX6hWM0Vbh8Y8E1lswJsTy9cb6Gd1At+WSPSfRIHzExNwWCfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bjpk+ApT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55653C4CEF1;
-	Mon, 27 Oct 2025 12:47:08 +0000 (UTC)
+	s=arc-20240116; t=1761569820; c=relaxed/simple;
+	bh=jc28/M+RNzFr0Zbyp//cvE+46yBuDnf2OXIpuegk+vs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aXfS161cGdBBXU6EAhaoPQ5Y74Rcf/0H1nexW2Bq3t4NLRU6dl6ShySL04lr4JkKcsoO4ZOSLa7+CEP20Dt8wfKiKye+WQYrAZbcT3+NAe2uEvUKwmyjp7KyZtMKVFIdcPb2ooT+NGoloTH/HggFOEh+a9kIzMdtCDo4UXVVDmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZT4zYMCs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C2E6C4CEF1;
+	Mon, 27 Oct 2025 12:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761569230;
-	bh=49jdBAX78hnKEgcNrSPzlw9AgaPRGLdbgtmHRvfTsDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bjpk+ApT7kRYYhkyyJGMRJ7UqVqfsesSte8DsViSJ1VXC0SPK4mjQJm5lJlkmJsyo
-	 j5mWa3gd6Y4ejTbKDyxqQCRD0/QUMTns0ExSyugFGaF7mEhxVlWA6UFoLUa5D+O2HR
-	 f48qPdSF493fu/oujbw5NPAyHK1J7VrSAdPwUl16vWepx7pvoh5PIWb06JtNzUwh8f
-	 yFTPDIZHvgiEhJnhLmdWKlmqQ6LiZHkl8yM7zJukCrx4stXrFKLFlmcqIJ8ZrPQIDU
-	 PcVivVYZ14OB+gAiedVPQ2wFycmQC0CQkI45L0jxDofbf+0QQ6YY9piRDnuwEDQbjn
-	 G6bIfNwNquWsw==
-Date: Mon, 27 Oct 2025 18:17:01 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Devendra K Verma <devendra.verma@amd.com>
-Cc: bhelgaas@google.com, vkoul@kernel.org, dmaengine@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@amd.com
-Subject: Re: [PATCH RESEND v4 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint
- Support
-Message-ID: <xnfxu5xvfypxih3qvcxwge75vok3hu7wjlvu4twqfwigjpubmu@kblc3w5vritg>
-References: <20251014121635.47914-1-devendra.verma@amd.com>
- <20251014121635.47914-2-devendra.verma@amd.com>
+	s=k20201202; t=1761569819;
+	bh=jc28/M+RNzFr0Zbyp//cvE+46yBuDnf2OXIpuegk+vs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZT4zYMCsCgCJWd9fI+KJCO2uu0gxjzCv+pZgMdoPtPMf5cR3GCV8+zN2STgSIPD3z
+	 A5mucLn4z4Qd74SiZ1MydHMX+QXknZBCSkcoV+DLAjYSL1AYA+4G50ugM2sz00CjAw
+	 v1M6ffWPotRBMZH9+NiNubGym6fPdUXEoNDkoCE+C+ytJT9ljyf6wRNMiZE+J8oT6+
+	 sYuRxYI+9E4E8CPwxVtkCrIMH8fhG+XzIOcYeTDc17jwzLrTgU5ScbmXt1ck/psm+b
+	 wjVEPu0IKGcIU+4FXxE1UJowNlO5sY+6a8bbEQJazcQNEPa6Yq/Gvl4RSvOCwBwsc3
+	 Mz6eC0pGT5Byg==
+Received: by wens.tw (Postfix, from userid 1000)
+	id 6215D5FE2C; Mon, 27 Oct 2025 20:56:57 +0800 (CST)
+From: Chen-Yu Tsai <wens@kernel.org>
+To: Chen-Yu Tsai <wens@kernel.org>,
+	Jernej Skrabec <jernej@kernel.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Mark Brown <broonie@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-sunxi@lists.linux.dev,
+	linux-sound@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/10] allwinner: a523: Enable I2S and SPDIF TX
+Date: Mon, 27 Oct 2025 20:56:41 +0800
+Message-ID: <20251027125655.793277-1-wens@kernel.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251014121635.47914-2-devendra.verma@amd.com>
 
-On Tue, Oct 14, 2025 at 05:46:33PM +0530, Devendra K Verma wrote:
-> AMD MDB PCIe endpoint support. For AMD specific support
-> added the following
->   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
->   - AMD MDB specific driver data
->   - AMD MDB specific VSEC capability to retrieve the device DDR
->     base address.
-> 
-> Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
-> ---
-> Changes in v4:
-> Configured 8 read and 8 write channels for Xilinx vendor
-> Added checks to validate vendor ID for vendor
-> specific vsec id.
-> Added Xilinx specific vendor id for vsec specific to Xilinx
-> Added the LL and data region offsets, size as input params to
-> function dw_edma_set_chan_region_offset().
-> Moved the LL and data region offsets assignment to function
-> for Xilinx specific case.
-> Corrected comments.
-> 
-> Changes in v3:
-> Corrected a typo when assigning AMD (Xilinx) vsec id macro
-> and condition check.
-> 
-> Changes in v2:
-> Reverted the devmem_phys_off type to u64.
-> Renamed the function appropriately to suit the
-> functionality for setting the LL & data region offsets.
-> 
-> Changes in v1:
-> Removed the pci device id from pci_ids.h file.
-> Added the vendor id macro as per the suggested method.
-> Changed the type of the newly added devmem_phys_off variable.
-> Added to logic to assign offsets for LL and data region blocks
-> in case more number of channels are enabled than given in
-> amd_mdb_data struct.
-> ---
->  drivers/dma/dw-edma/dw-edma-pcie.c | 130 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 128 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 3371e0a7..b26a55e 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -17,12 +17,23 @@
->  
->  #include "dw-edma-core.h"
->  
-> +/* Synopsys */
->  #define DW_PCIE_VSEC_DMA_ID			0x6
->  #define DW_PCIE_VSEC_DMA_BAR			GENMASK(10, 8)
->  #define DW_PCIE_VSEC_DMA_MAP			GENMASK(2, 0)
->  #define DW_PCIE_VSEC_DMA_WR_CH			GENMASK(9, 0)
->  #define DW_PCIE_VSEC_DMA_RD_CH			GENMASK(25, 16)
->  
-> +/* AMD MDB (Xilinx) specific defines */
-> +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID		0x6
-> +#define DW_PCIE_XILINX_MDB_VSEC_ID		0x20
-> +#define PCI_DEVICE_ID_AMD_MDB_B054		0xb054
-> +#define DW_PCIE_AMD_MDB_INVALID_ADDR		(~0ULL)
-> +#define DW_PCIE_XILINX_LL_OFF_GAP		0x200000
-> +#define DW_PCIE_XILINX_LL_SIZE			0x800
-> +#define DW_PCIE_XILINX_DT_OFF_GAP		0x100000
-> +#define DW_PCIE_XILINX_DT_SIZE			0x800
-> +
->  #define DW_BLOCK(a, b, c) \
->  	{ \
->  		.bar = a, \
-> @@ -50,6 +61,7 @@ struct dw_edma_pcie_data {
->  	u8				irqs;
->  	u16				wr_ch_cnt;
->  	u16				rd_ch_cnt;
-> +	u64				devmem_phys_off;
->  };
->  
->  static const struct dw_edma_pcie_data snps_edda_data = {
-> @@ -90,6 +102,64 @@ struct dw_edma_pcie_data {
->  	.rd_ch_cnt			= 2,
->  };
->  
-> +static const struct dw_edma_pcie_data amd_mdb_data = {
-> +	/* MDB registers location */
-> +	.rg.bar				= BAR_0,
-> +	.rg.off				= 0x00001000,	/*  4 Kbytes */
-> +	.rg.sz				= 0x00002000,	/*  8 Kbytes */
-> +
-> +	/* Other */
-> +	.mf				= EDMA_MF_HDMA_NATIVE,
-> +	.irqs				= 1,
-> +	.wr_ch_cnt			= 8,
-> +	.rd_ch_cnt			= 8,
-> +};
-> +
-> +static void dw_edma_set_chan_region_offset(struct dw_edma_pcie_data *pdata,
-> +					   enum pci_barno bar, off_t start_off,
-> +					   off_t ll_off_gap, size_t ll_size,
-> +					   off_t dt_off_gap, size_t dt_size)
-> +{
-> +	u16 i;
-> +	off_t off;
-> +	u16 wr_ch = pdata->wr_ch_cnt;
-> +	u16 rd_ch = pdata->rd_ch_cnt;
+Hi folks,
 
-Reverse Xmas order please.
+This is v2 of my Allwinner A523 family I2S and SPDIF enablement series.
 
-> +
-> +	off = start_off;
-> +
-> +	/* Write channel LL region */
-> +	for (i = 0; i < wr_ch; i++) {
-> +		pdata->ll_wr[i].bar = bar;
-> +		pdata->ll_wr[i].off = off;
-> +		pdata->ll_wr[i].sz = ll_size;
-> +		off += ll_off_gap;
-> +	}
-> +
-> +	/* Read channel LL region */
-> +	for (i = 0; i < rd_ch; i++) {
-> +		pdata->ll_rd[i].bar = bar;
-> +		pdata->ll_rd[i].off = off;
-> +		pdata->ll_rd[i].sz = ll_size;
-> +		off += ll_off_gap;
-> +	}
-> +
-> +	/* Write channel data region */
-> +	for (i = 0; i < wr_ch; i++) {
-> +		pdata->dt_wr[i].bar = bar;
-> +		pdata->dt_wr[i].off = off;
-> +		pdata->dt_wr[i].sz = dt_size;
-> +		off += dt_off_gap;
-> +	}
-> +
-> +	/* Read channel data region */
-> +	for (i = 0; i < rd_ch; i++) {
-> +		pdata->dt_rd[i].bar = bar;
-> +		pdata->dt_rd[i].off = off;
-> +		pdata->dt_rd[i].sz = dt_size;
-> +		off += dt_off_gap;
-> +	}
-> +}
-> +
->  static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
->  {
->  	return pci_irq_vector(to_pci_dev(dev), nr);
-> @@ -120,9 +190,24 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
->  	u32 val, map;
->  	u16 vsec;
->  	u64 off;
-> +	int cap;
->  
-> -	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_SYNOPSYS,
-> -					DW_PCIE_VSEC_DMA_ID);
-> +	/*
-> +	 * Synopsys and AMD (Xilinx) use the same VSEC ID for the purpose
-> +	 * of map, channel counts, etc.
-> +	 */
-> +	switch (pdev->vendor) {
-> +	case PCI_VENDOR_ID_SYNOPSYS:
-> +		cap = DW_PCIE_VSEC_DMA_ID;
-> +		break;
-> +	case PCI_VENDOR_ID_XILINX:
-> +		cap = DW_PCIE_XILINX_MDB_VSEC_DMA_ID;
-> +		break;
-> +	default:
-> +		return;
-> +	}
-> +
-> +	vsec = pci_find_vsec_capability(pdev, pdev->vendor, cap);
->  	if (!vsec)
->  		return;
->  
-> @@ -155,6 +240,24 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
->  	off <<= 32;
->  	off |= val;
->  	pdata->rg.off = off;
-> +
-> +	/* Xilinx specific VSEC capability */
-> +	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
-> +					DW_PCIE_XILINX_MDB_VSEC_ID);
-> +	if (!vsec)
-> +		return;
-> +
-> +	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
-> +	if (PCI_VNDR_HEADER_ID(val) != 0x20 ||
-> +	    PCI_VNDR_HEADER_REV(val) != 0x1)
+Changes since v1:
+- Collected tags
+- Dropped clk patches that were merged
+- Added patch for SPDIF pinmux settings that was missing in v1
+- Dropped bogus change to DAI name in SPDIF driver
+- Dropped clk rate message in SPDIF driver
+- Switched my email to kernel.org one
 
-Can you have definitions for these header and rev IDs?
+This series enables the SPDIF and I2S hardware found on the Allwinner
+A523/A527/T527 family SoCs. These SoCs have one SPDIF interface and
+four I2S interfaces. All of them are capable of both playback and
+capture, however the SPDIF driver only supports playback.
 
-> +		return;
-> +
-> +	pci_read_config_dword(pdev, vsec + 0xc, &val);
-> +	off = val;
-> +	pci_read_config_dword(pdev, vsec + 0x8, &val);
+The series is organized by subsystem, so each maintainer can find the
+patches they need to take.
 
-Same of these offsets as well.
+Patch 1 adds SoC/hardware specific compatibles for the two DMA
+controllers in the A523 SoC.
 
-> +	off <<= 32;
-> +	off |= val;
-> +	pdata->devmem_phys_off = off;
->  }
->  
->  static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> @@ -179,6 +282,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	}
->  
->  	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
-> +	vsec_data->devmem_phys_off = DW_PCIE_AMD_MDB_INVALID_ADDR;
->  
->  	/*
->  	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
-> @@ -186,6 +290,26 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	 */
->  	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
->  
-> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX) {
-> +		/*
-> +		 * There is no valid address found for the LL memory
-> +		 * space on the device side.
-> +		 */
-> +		if (vsec_data->devmem_phys_off == DW_PCIE_AMD_MDB_INVALID_ADDR)
-> +			return -EINVAL;
+Patch 2 adds an SoC specific compatible for the I2S interface
+controllers in the A523 SoC.
 
--ENOMEM
+Patch 3 adds an SoC specific compatible for the SPDIF interface
+controller in the A523 SoC.
 
-- Mani
+Patch 4 adds driver support for the SPDIF interface.
+
+Patch 5 adds devices nodes for the DMA controllers.
+
+Patch 6 adds a devices node for the SPDIF interface controller.
+
+Patch 7 adds device nodes for the I2S interface controllers.
+
+Patch 8 adds one set of pinmux settings for I2S2.
+
+Patch 9 adds pinmux settings for SPDIF.
+
+Patch 10 is what I used to test the changes, and serves as an example
+for how to use these new interfaces.
+
+
+Patch 1 can go through the dmaengine tree, or I can take it through the
+sunxi tree.
+
+Patches 2 through 4 should go through the ASoC tree.
+
+The rest, except the example, will go through the sunxi tree.
+
+
+Please take a look.
+
+
+Thanks
+ChenYu
+
+
+Chen-Yu Tsai (10):
+  dt-bindings: dma: allwinner,sun50i-a64-dma: Add compatibles for A523
+  ASoC: dt-bindings: allwinner,sun4i-a10-i2s: Add compatible for A523
+  ASoC: dt-bindings: allwinner,sun4i-a10-spdif: Add compatible for A523
+  ASoC: sun4i-spdif: Support SPDIF output on A523 family
+  arm64: dts: allwinner: a523: Add DMA controller device nodes
+  arm64: dts: allwinner: a523: Add device node for SPDIF block
+  arm64: dts: allwinner: a523: Add device nodes for I2S controllers
+  arm64: dts: allwinner: a523: Add I2S2 pins on PI pin group
+  arm64: dts: allwinner: a523: Add SPDIF TX pin on PB and PI pins
+  [EXAMPLE] arm64: dts: allwinner: a527-cubie-a5e: Enable I2S and SPDIF
+    output
+
+ .../dma/allwinner,sun50i-a64-dma.yaml         |   5 +-
+ .../sound/allwinner,sun4i-a10-i2s.yaml        |   4 +-
+ .../sound/allwinner,sun4i-a10-spdif.yaml      |  44 +++++-
+ .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 149 ++++++++++++++++++
+ .../dts/allwinner/sun55i-a527-cubie-a5e.dts   |  52 ++++++
+ sound/soc/sunxi/sun4i-spdif.c                 |  26 ++-
+ 6 files changed, 270 insertions(+), 10 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.47.3
+
 

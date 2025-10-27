@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-7002-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7007-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FABEC0DCB4
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 14:04:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73D9BC0DC9F
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 14:03:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 651483B5117
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 12:58:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F4A719C1EC5
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Oct 2025 13:00:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D30326056D;
-	Mon, 27 Oct 2025 12:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 920692D876C;
+	Mon, 27 Oct 2025 12:57:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/brPLd2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qg0MZF86"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5365925C838;
-	Mon, 27 Oct 2025 12:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDB22C375E;
+	Mon, 27 Oct 2025 12:57:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761569820; cv=none; b=tXJrDHQqd76M5DxLUiKNyXguZC08ouHlcP1rtKOKX1z4zuKimA1fuIzPpBMDN/oO4qWVjxlKyyj29cpT6djx+P8UgJ6effC9AtbBdDAohwkvGzqCKX5LW1xE857Mt9jxHQlR0lLQhFuZOJEdecvoOF/tMFYBbp136SVhKreXsQQ=
+	t=1761569822; cv=none; b=uCvZ2cVffR1dHr3xTGrQo7XFHV9dssYK6bDc3ou8nQHj0WG0i3DyohZx4yiV4JLBsKUXuGYJA67xZZDkjbzZcw8y18oElJytlmIQIMWWGKJXxtLtLiZp0mC3xT70TzSDqH51mzAz1Q/k258PyYlkdV3BUL1uSrEi0oh9xjV3E7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761569820; c=relaxed/simple;
-	bh=tZng3pvLf5NVIYjrv5Cdlkb3kjII1JMSXNhC/Cdf7Og=;
+	s=arc-20240116; t=1761569822; c=relaxed/simple;
+	bh=ojezu/Uo+J/jAdJIMpppL/LYPdk+yEgDql0KTa8tpLY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Tal9yfGAaSgWkcWy3b5Crzyo5vyuiqAHzU+iOlnaTEpa+ryAxgIGRyvAjFMS9/kyF8O8S3gCQRw8k7yOYQz6OpoPynCmDYMldh4JMQxvE3A1f9NFYJtdkYeWMkQNh/C9Bn3QZWAGGCMmNkKxjCO/hipmL4iwR8z847wwbpCpfWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/brPLd2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5F34C16AAE;
-	Mon, 27 Oct 2025 12:56:59 +0000 (UTC)
+	 MIME-Version; b=gcoPBIm/908P2SI5lA+AYcAhmEdfvf9LxoTaJPeEH9FgFnb9o+SBAHCNx3LJnosSE96sbLGDt5f4P9Nr3cDU30Bd+4GRfOFBe2hZOqrq5CUYUOwZ6UTdDCcopn5jAMew3vh7X9+jn3TSUlGS66oY3Djxy6bglM67FjDCBofM+Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qg0MZF86; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE238C2BCAF;
+	Mon, 27 Oct 2025 12:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761569819;
-	bh=tZng3pvLf5NVIYjrv5Cdlkb3kjII1JMSXNhC/Cdf7Og=;
+	s=k20201202; t=1761569822;
+	bh=ojezu/Uo+J/jAdJIMpppL/LYPdk+yEgDql0KTa8tpLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W/brPLd27LQxkag5GvBdnPPh7bFVokQlJWK6AREvtkOXp7m0Ter+XyZTQafVICWIL
-	 XNX5HD29gmuENvJOFkRAgzO8W8T5Wx7bBHckFOOaw0cU+f2qwGBMWKLmuxrmJOQ+DZ
-	 IhcY1MQaGv+x7kE6ys2jMpKouNNg/GOKrYDpWWQqVc6YN9pFkGke5Hs4+Hn9Gqwj+g
-	 1gCSFNx7NPhZ3+vZFRHiuw1KOTbP+8JdtiXQgxe0zCCsuZ0YRx1cnoGkBWlz252F7q
-	 zuciNLynCA+ngLHjDc9AKQa5SdAeUEZq5kbHMhur97m7r4LaqVUYRE6CTowG1o/QiK
-	 uY7FEv03zbb9g==
+	b=qg0MZF86i4vHoRckQjlkDFV5bPrs3QDJSL2A9/3OY1IGg5jIiM9/gdlkeXeNcL3Rl
+	 mQOl8sNE44ENaSnQYXf7Z2OLHb21+6XH7Y3Gnb73lPdKC5Ls18135AKkstxdUh2wjZ
+	 FBX9vwtDrO5bCWnFOqhoekD4k2PIgQjENgtiSpFlnUQHqJ78L8sOeoZwryi2jiAbLX
+	 iwCaLAPPKT7jTzkv/Xa0cygTc3lAQ8FHPMCcwD4R3k0NXJxw7igG9OVoJ3MS3Pqs0h
+	 fk6EBlAhndWAy0Ug3f11LupepS9nQFX9S0tsq9PrObIKXrjVq8idNusltjb4xnwrUN
+	 xtgNDCwMI/FKw==
 Received: by wens.tw (Postfix, from userid 1000)
-	id 8455C5FEEE; Mon, 27 Oct 2025 20:56:57 +0800 (CST)
+	id BBDE85FFCF; Mon, 27 Oct 2025 20:56:57 +0800 (CST)
 From: Chen-Yu Tsai <wens@kernel.org>
 To: Chen-Yu Tsai <wens@kernel.org>,
 	Jernej Skrabec <jernej@kernel.org>,
@@ -57,11 +57,10 @@ Cc: Rob Herring <robh@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v2 03/10] ASoC: dt-bindings: allwinner,sun4i-a10-spdif: Add compatible for A523
-Date: Mon, 27 Oct 2025 20:56:44 +0800
-Message-ID: <20251027125655.793277-4-wens@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 09/10] arm64: dts: allwinner: a523: Add SPDIF TX pin on PB and PI pins
+Date: Mon, 27 Oct 2025 20:56:50 +0800
+Message-ID: <20251027125655.793277-10-wens@kernel.org>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20251027125655.793277-1-wens@kernel.org>
 References: <20251027125655.793277-1-wens@kernel.org>
@@ -73,99 +72,53 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The SPDIF hardware block in the A523 SoC has the same layout as the
-H616 for the transmitter side. However unlike previous generations,
-the hardware block now takes separate module clocks for the TX and RX
-sides. This presumably allows the hardware to send and receive audio
-streams at different sample rates. The new hardware also gained RX
-insertion detection, and some extra information registers.
+The SPDIF TX (called OWA OUT in the datasheet) is available on three
+pins. Of those, the PH pin is unlikely to be used since it conflicts
+with the first Ethernet controller.
 
-Add a new compatible for it without any fallbacks.
+The Radxa Cubie A5E exposes SPDIF TX through the PI pin group on the
+40-pin GPIO header.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+The Orange Pi 4A exposes SPDIF TX through both the PB and PI pin
+groups on the 40-pin GPIO header. The PB pin alternatively would be
+used for I2S0 though.
+
+Add pinmux settings for both options so potential users can directly
+reference either one.
+
 Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
 ---
- .../sound/allwinner,sun4i-a10-spdif.yaml      | 44 ++++++++++++++++---
- 1 file changed, 38 insertions(+), 6 deletions(-)
+Changes since v1:
+- New patch; missing from v1 causing dts to not compile
+---
+ arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-index aa32dc950e72..1d089ba70f45 100644
---- a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
-@@ -23,6 +23,7 @@ properties:
-       - const: allwinner,sun8i-h3-spdif
-       - const: allwinner,sun50i-h6-spdif
-       - const: allwinner,sun50i-h616-spdif
-+      - const: allwinner,sun55i-a523-spdif
-       - items:
-           - const: allwinner,sun8i-a83t-spdif
-           - const: allwinner,sun8i-h3-spdif
-@@ -37,14 +38,12 @@ properties:
-     maxItems: 1
+diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+index cebd8e16e845..42dab01e3f56 100644
+--- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+@@ -200,6 +200,20 @@ rgmii1_pins: rgmii1-pins {
+ 				bias-disable;
+ 			};
  
-   clocks:
--    items:
--      - description: Bus Clock
--      - description: Module Clock
-+    minItems: 2
-+    maxItems: 3
- 
-   clock-names:
--    items:
--      - const: apb
--      - const: spdif
-+    minItems: 2
-+    maxItems: 3
- 
-   # Even though it only applies to subschemas under the conditionals,
-   # not listing them here will trigger a warning because of the
-@@ -65,6 +64,7 @@ allOf:
-               - allwinner,sun8i-h3-spdif
-               - allwinner,sun50i-h6-spdif
-               - allwinner,sun50i-h616-spdif
-+              - allwinner,sun55i-a523-spdif
- 
-     then:
-       required:
-@@ -98,6 +98,38 @@ allOf:
-             - const: rx
-             - const: tx
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - allwinner,sun55i-a523-spdif
++			/omit-if-no-ref/
++			spdif_out_pb_pin: spdif-pb-pin {
++				pins = "PB8";
++				function = "spdif";
++				allwinner,pinmux = <2>;
++			};
 +
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: Bus Clock
-+            - description: TX Clock
-+            - description: RX Clock
++			/omit-if-no-ref/
++			spdif_out_pi_pin: spdif-pi-pin {
++				pins = "PI10";
++				function = "spdif";
++				allwinner,pinmux = <2>;
++			};
 +
-+        clock-names:
-+          items:
-+            - const: apb
-+            - const: tx
-+            - const: rx
-+    else:
-+      properties:
-+        clocks:
-+          items:
-+            - description: Bus Clock
-+            - description: Module Clock
-+
-+        clock-names:
-+          items:
-+            - const: apb
-+            - const: spdif
-+
- required:
-   - "#sound-dai-cells"
-   - compatible
+ 			uart0_pb_pins: uart0-pb-pins {
+ 				pins = "PB9", "PB10";
+ 				allwinner,pinmux = <2>;
 -- 
 2.47.3
 

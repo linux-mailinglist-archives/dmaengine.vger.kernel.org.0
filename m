@@ -1,151 +1,156 @@
-Return-Path: <dmaengine+bounces-7040-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7041-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC500C202D3
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Oct 2025 14:11:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA88AC21EE8
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Oct 2025 20:25:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 57FFC3B221E
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Oct 2025 13:09:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 830391886B2B
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Oct 2025 19:25:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02A1433C50B;
-	Thu, 30 Oct 2025 13:09:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2177F2E8B9C;
+	Thu, 30 Oct 2025 19:24:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jS1gYyNu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7qfsxbO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD382EB86D
-	for <dmaengine@vger.kernel.org>; Thu, 30 Oct 2025 13:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1A42E7167
+	for <dmaengine@vger.kernel.org>; Thu, 30 Oct 2025 19:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761829784; cv=none; b=TX7aGePRUaiSRw6EVi4R79CPyWz8uqvNhjAtCVObNcjYkXNzNdwuD0EWrSiDtc2ni/ddziXKJS8ElhncWReNcxUwIHreQj0GhWFI9jIQZAjZFQ0c2eVUR/utIGd8K8gk5S865YnUmaljPLmSPo/+kXRlrOoCkNB7CwHEYXrCkio=
+	t=1761852283; cv=none; b=FrR53yuNNwn9VsPXOrHDNtR/fA3w2mFaPUzxjUUBvu5DDHevluBhRS8sZ4QvSu+UVZT3UkRXBoxbFOPMz/3OU5azacJKwWLgGl5ykTAjmjYHQ184EDcvbQEZwm+2MgcKPNzip/R3rUH1MLe66JnyJPXV4uk8uxmSgmByEWfDCOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761829784; c=relaxed/simple;
-	bh=plJUa7lFoTCGcsfOcpff0Mmv8iijDqb9eglwUue1zUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QCLLpq0lchi2IO1hJkR84BD8Lmt4ElaBycRe/XtWHB9tD0jxZKGP6ins7McspYFeRnbrf9Ytp9e4Ali36B6gUsXN19ButSldP89UOx8wGVgH8MsoLn74gO3SeIFtAc8B/e9hj6GTHQ49dDGx9kzke5e8p4iuPOMlaUBo5F1nDdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jS1gYyNu; arc=none smtp.client-ip=209.85.221.43
+	s=arc-20240116; t=1761852283; c=relaxed/simple;
+	bh=ElrXgu5/6xmif6tI7ecktlmvL8AO7hOZe+lhNKfz7Nk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qsJmQl/dP6cFPJnR2CgzxY41AGD4pxf9F+DYajZi22ax8mkZ6pH9Xx6vIcKq5EC/2qNw7zP12HW5zqEzF8BQifOl4qQVrJZZYoVSCzUd7vV4wSh9yLsCOXgly9JMRKqlfW7d7KwGF1zV3mc5Y00LtnMLgYHAdLtBIEZFP3kT6A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B7qfsxbO; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3ece0e4c5faso1057343f8f.1
-        for <dmaengine@vger.kernel.org>; Thu, 30 Oct 2025 06:09:42 -0700 (PDT)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b6d5c59f2b6so366244966b.2
+        for <dmaengine@vger.kernel.org>; Thu, 30 Oct 2025 12:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761829781; x=1762434581; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2FvrWgtYM1o1H3GtR4yRdUrofDJ3VZExWe4rEvgf3XU=;
-        b=jS1gYyNu1dhNyr7TrmrQC3YxaNzV/ACi7UqJs4TAkzRp2qcSXwdL3beFw0rCsnyabg
-         CYBGGDy0FcZzUkibSNNztC4vjV1b6khmSSoDGSg9dluNwu75J+NxNPFucRqCEZjGAEeB
-         mGG+6rIoDj+3tUPkmxl3SGsnLePoX8Vd+9sNjrJ2Dm0AyxcMsgHXRKHSlHpB9c8T/ua1
-         MrWXktOGoL/ynxarz6tjDnM3FQQ6XRIQV9l54Jb5hFDKBCm/30aGbmmPP6TKeW5qvyqm
-         tC8qHGlECpgQJSOAnRv2xqKXFJtXqLofuhTk2tMJwCtL1D9FG0lq1rn2wyPkjv+sLC7Q
-         GpDw==
+        d=gmail.com; s=20230601; t=1761852279; x=1762457079; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qzCB8jIK8FF50evWPCp3i6KvsKUySMbzRnMGfOqE7VU=;
+        b=B7qfsxbOlRmXNS+NAYWCKiuuUwDiaBm5u0bIsx05QP/t+SrapLrhI+MMw64W2AjFEJ
+         6OGs6m3KougM3+imFScRH+fb6xgyefAlW4GiaQanIKfNGbNCkw7hXHOOsIWzQfet3l1j
+         bm3YkYpdGYWcqmWRGSGcNYeWCaz2c5xxkydjQNxNUV42QNbjefqqn6MQWmYWLjlERFg1
+         TdmSw0eCqRxR5hKN772dSZQxPH8ih98oELTY4gQLFmR2UCv3yHPAM6XFsne7tNChvSBr
+         wdZry0KgIb5nlPVH3+c/MrDGmNNZDLI84f6JMuZ2TXG3nk0rn0+7iKVsFMmAZc5LyteB
+         /bdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761829781; x=1762434581;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2FvrWgtYM1o1H3GtR4yRdUrofDJ3VZExWe4rEvgf3XU=;
-        b=lKuOWfW4hl1wavgHYqA5jvUCR0L4Miu7emN5NQLmOMKNOFgx6h/g1cYgNr+mD3rR1h
-         5hZh691HMBY6VDqdyVamUlytLIqfWpHoHTXCTjZ2gmkRbjnI1WSZiEqtT/d9EdrB/TF2
-         V/VQ80sLB+T6k2T33HdM/l4fyMQT2UJNLidhSIxKaPyT/25ox6fegF5pnx5ml9LNvOdO
-         i6KihhYC5+n0hCNS20RRYjUe/W0IKp7SRGEM9g5JFwZN8g+W6QE3eKAbLKq2B8bvtJDi
-         k7cNhaNhYPRyIUtmsfCrIym6DRunBwZHL/TsDOQvJT02trVUtASnA6bTRRgSdiF70sSu
-         vCdQ==
-X-Gm-Message-State: AOJu0YzYr1szszCvVdihkp+dzhx0fxkPi/bjz4hoT/cnv1bWI0vnxLv7
-	9d5mVBMvyN1kOEqZSV4NPbVfzbypQvQ/CVkb1PyI4CS/r4HO0HzPey+Q
-X-Gm-Gg: ASbGncvMAhTGMHCStkxreqVumTEm41eK3vhI+oBTR0tVmNSs0QlNSYMPLnzQ0JaGr+z
-	/6YlZrlwcCT/ndeJjhKppbVjIu/oZIsRLcR1thV8z9kMR5dnGXjj9GE1wTpPujpWcj1ssDwAw50
-	8umrGfFNnuSXwrSv10xVuZ684SVOc05PLkFVwYyi3ZNFq3+brmf12OJcZb0LAjd+d6dgboxNmqK
-	a669ZWZ+ktDDWIVXKxzs8BeTH5g/cG8NRPV/hvDOuSsXF+KcibA/Q74yjnhRAjurVdSBnCjmbtl
-	xtU1EDelG0osSsQfHLewgVIX5pxsRS5zivC3NvHdqo1FSBB9lTO7ZZNjOVJ1JSJiAWva4JmG9VI
-	RnSWpiBKwpeMVtbXNIlF1tvKefc2lSnVBSXI8jWpIXEQPztOkiX3SweypEGCmxrOGaEa4Xdi6cL
-	M340gmI0FehDJgxHfDiHHJfkSO7Q8KrG8LlIep8fEOFSUIVfiA+93qqH4Tj446za4WB5JKAm3NN
-	xXWcyhooZBrXdHdJPMmmikiA026IRzBWqylSNCdxFmn1nU=
-X-Google-Smtp-Source: AGHT+IHt0qZj97JBfhSm3bU2Z3jejv68CgVJx0PCPzKZeY8wdWN+4MGQv4dUD3at1v6e8mwpzpu6rQ==
-X-Received: by 2002:a5d:5f96:0:b0:429:8d0a:8108 with SMTP id ffacd0b85a97d-429b4c8a0acmr2867282f8f.24.1761829780332;
-        Thu, 30 Oct 2025 06:09:40 -0700 (PDT)
-Received: from ?IPV6:2a02:8440:750a:26fd:c3f7:5627:ab4b:232f? (2a02-8440-750a-26fd-c3f7-5627-ab4b-232f.rev.sfr.net. [2a02:8440:750a:26fd:c3f7:5627:ab4b:232f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952ca979sm33491156f8f.14.2025.10.30.06.09.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Oct 2025 06:09:39 -0700 (PDT)
-Message-ID: <287da4e3-0a28-42a3-8f59-7e41dde4d20c@gmail.com>
-Date: Thu, 30 Oct 2025 14:09:38 +0100
+        d=1e100.net; s=20230601; t=1761852279; x=1762457079;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qzCB8jIK8FF50evWPCp3i6KvsKUySMbzRnMGfOqE7VU=;
+        b=EbPduvv1k/DeRKdI5+OmogyfKLTaVr6wUzEoLSi2seKQvtHRXmuqRqSX+U4uT/B+hf
+         8zhGl5jzaZ2cG8y9Oljy6gGSgJR5kwHkiiYBF1CXdnecUzoRHSmMplc46Mdqv2niF/e9
+         agoZKz+TJKEpqJAeYwPXCsVmaGhmOjCcUdAeeXYm6k/kxYzit4TlkEj/a9mjFogMb8R8
+         MNu6kfCnY1K51eMUCmSbKdWIgsWcghEGahcR50hGS3n7Vn7nrlCr2TygKAIPhUcKR7bY
+         cwn7u9iJRTnUQ/ZuEHX3XL0svDCrEIYAXRHXt4bsbbbbc2XtFzDD3aM+X60RAxWxjqnP
+         H2LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXXTNZO4iW9Ii1l61vxACoHsOehSnzEjrNZFM6dtppWm9IOm+LEqLkLYZQo7Vnx30NrPyEp8849YaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAelM2hllupEyrIH9ywcq8mU10MxZL8FPLVZONYB0HJclUoDyV
+	a69eR71ukLi8Ab+Z1FEvV54Ku0pkPh/f3lRHF8KP0r1ooPlSuG9zUhRs
+X-Gm-Gg: ASbGncseU6IX7S7zj0tZqynBmc1fmr+AousrgPykyUJqGZ6iGQOm8cOe10WalgOL95I
+	5XnIhZGK3malE3CAwqzqgrNgyo0h4acUgBWnOb6z/vQoV8Tp3jzzxCh7cVtJ1BebIdgc4hC5AFo
+	Ue0Fiu41SrylXWPIx8iCqZhun1mohvGO++KnJzdyv0ZS4rgr5yeLqUWLUYO7U/Bfa3kaDsaLH56
+	31Agr1FuQKoRU0hz72Se0omSUMcJ1xTI83cLPgcG6KlsfEi1L4uvuFC9PjBJMK1zg6BIbMekFkN
+	e1BX10VFBjPkgLkq8yTWcTC8xklsO85qaUNMB5pXCb7aOENFBYAvGoTUMw9xgxswko9js53QQbz
+	Azx4yhn7G1ZtG5EQVZLgWOUG1x98XcvRSpLI1wGR09p5TAtLCYYL+GqdtrG6YPgsAyXfjkflrnq
+	XPf1cKHG6MTlSRmCtd6D8B+h9KlArgm7IvuGlkU8kFTi6H6CknXCZJ+Hqcse/YtBtqU8OROms7Z
+	g==
+X-Google-Smtp-Source: AGHT+IHAE2zfsvxg+WnKGQngg9O6/M2cc0o7OkY6Hhcq5Dlt181nXlixhzrIiYnYnVNrtbX+aXzOuA==
+X-Received: by 2002:a17:906:fe41:b0:b3d:73e1:d809 with SMTP id a640c23a62f3a-b707061fd71mr80792866b.48.1761852278602;
+        Thu, 30 Oct 2025 12:24:38 -0700 (PDT)
+Received: from orome (p200300e41f274600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f27:4600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b6d85445e81sm1827260866b.64.2025.10.30.12.24.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Oct 2025 12:24:37 -0700 (PDT)
+Date: Thu, 30 Oct 2025 20:24:35 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: "Sheetal ." <sheetal@nvidia.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Sameer Pujar <spujar@nvidia.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH V2 4/4] arm64: tegra: Add tegra264 audio support
+Message-ID: <zxcety2tqsv6p5p2rqaa3e4un44m2loo4zm5goeansuf5zdly6@jqeg2hm5rmcz>
+References: <20250929105930.1767294-1-sheetal@nvidia.com>
+ <20250929105930.1767294-5-sheetal@nvidia.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: stm32-mdma: initialize m2m_hw_period and ccr
- to fix warnings
-To: Amelie Delaunay <amelie.delaunay@foss.st.com>,
- Vinod Koul <vkoul@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: dmaengine@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-References: <20251030-mdma_warnings_fix-v1-1-987f67c75794@foss.st.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>
-In-Reply-To: <20251030-mdma_warnings_fix-v1-1-987f67c75794@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="istw733rho4drg3w"
+Content-Disposition: inline
+In-Reply-To: <20250929105930.1767294-5-sheetal@nvidia.com>
 
-On 10/30/25 13:26, Amelie Delaunay wrote:
-> From: Clément Le Goffic <clement.legoffic@foss.st.com>
-> 
-> m2m_hw_period is initialized only when chan_config->m2m_hw is true. This
-> triggers a warning:
-> ‘m2m_hw_period’ may be used uninitialized [-Wmaybe-uninitialized]
-> Although m2m_hw_period is only used when chan_config->m2m_hw is true and
-> ignored otherwise, initialize it unconditionally to 0.
-> 
-> ccr is initialized by stm32_mdma_set_xfer_param() when the sg list is not
-> empty. This triggers a warning:
-> ‘ccr’ may be used uninitialized [-Wmaybe-uninitialized]
-> Indeed, it could be used uninitialized if the sg list is empty. Initialize
-> it to 0.
-> 
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+
+--istw733rho4drg3w
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH V2 4/4] arm64: tegra: Add tegra264 audio support
+MIME-Version: 1.0
+
+On Mon, Sep 29, 2025 at 04:29:30PM +0530, Sheetal . wrote:
+> From: sheetal <sheetal@nvidia.com>
+>=20
+> - Add the audio devices for the tegra264 SoC in the tegra264.dtsi file,
+>   which includes sound, HDA and APE(Audio Processing Engine) subsystem
+>   nodes.
+>   APE subsystem includes,
+>    - I/O interfaces such as I2S, DMIC and DSPK (all the available
+>      instances).
+>    - HW accelerators such as ASRC, OPE, MVC, SFC, AMX, ADX and Mixer (all
+>      the available instances).
+>    - ADMA controller and Interrupt controllers.
+>=20
+> - Enable the audio nodes in tegra264-p3971.dtsi platform DT file.
+>=20
+> Signed-off-by: sheetal <sheetal@nvidia.com>
 > ---
->   drivers/dma/stm32/stm32-mdma.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/stm32/stm32-mdma.c b/drivers/dma/stm32/stm32-mdma.c
-> index 080c1c725216..b87d41b234df 100644
-> --- a/drivers/dma/stm32/stm32-mdma.c
-> +++ b/drivers/dma/stm32/stm32-mdma.c
-> @@ -731,7 +731,7 @@ static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
->   	struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
->   	struct scatterlist *sg;
->   	dma_addr_t src_addr, dst_addr;
-> -	u32 m2m_hw_period, ccr, ctcr, ctbr;
-> +	u32 m2m_hw_period = 0, ccr = 0, ctcr, ctbr;
->   	int i, ret = 0;
->   
->   	if (chan_config->m2m_hw)
-> 
-> ---
-> base-commit: 398035178503bf662281bbffb4bebce1460a4bc5
-> change-id: 20251030-mdma_warnings_fix-df4b3d1405ed
-> 
-> Best regards,
+>  .../arm64/boot/dts/nvidia/tegra264-p3971.dtsi |  106 +
+>  arch/arm64/boot/dts/nvidia/tegra264.dtsi      | 3190 +++++++++++++++++
+>  2 files changed, 3296 insertions(+)
 
-Hi Amélie,
+Applied, thanks.
 
-Thank you for upstreaming this patch.
-You can add my reviewed-by tag:
+Thierry
 
-Reviewed-by: Clément Le Goffic <legoffic.clement@gmail.com>
+--istw733rho4drg3w
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Best regards,
-Clément
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmkDu3MACgkQ3SOs138+
+s6H7xg//eVts+nMHcP4RRSRZowrB9Hev9Ui98kXJyEnnlm0YVJ1AYLz7kUIHXMVk
+gwdifz6s85sfO+nufj469hlCm877zZwW+gO2gTwF3t7hh0mZ6tRVT0qqgI9phsM9
+IkBFhAlmqFZeznEUhYQ0RktdN1h0RW0nWhG7fzyUMLS9RltTMHCDgbl8ckXoTLBn
+9i1coz/Zm3puDLiPDE/LsmASeYXhtaB5bbkNLlbdN7yrrWOSEJMXTFbllErAv37b
+Ycaa7gyZJviyjOO0/245sg4QO+PHcPFdBbxtV4CaON96uSdlIWqAcQUZKUvAKPMO
+4OJ2pKTo7VIMzvXmkcqpbPWySOrFj2sfLTb3jQX+W7KTv2R9n9HxkANbJ0rQn7+z
+rr4xzQFVfsTd2LP6Mr84wStmyDdlXF9+kwVnH/F7tKT3ZAj3bL93Q77W1tPduHwz
+qlRLtQgCVX0KuTb7Tezs1IXbxgaetulHzWRa8ayIYhb9gNf7gZi3C0PUSPP7BtWF
+p7cMVV7yq0bqRZ2q+PanKUvNUzNS4zJJoAuMHGtXdR6pedUq+T3SHoqdmxmRo2bO
+5gTYoHd18rOs2+43CqRmgfHmqm+Ei4k4pJSVmIIQMKGbzHvn2Y3uPgugI4GUPP2P
+KxhijmcU+KzqlklSQ/xNrTdLYyoLiOWdCi/AFzSbRoc0TsfT+oU=
+=sxTn
+-----END PGP SIGNATURE-----
+
+--istw733rho4drg3w--
 

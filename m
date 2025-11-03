@@ -1,59 +1,46 @@
-Return-Path: <dmaengine+bounces-7044-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7045-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5916C285FB
-	for <lists+dmaengine@lfdr.de>; Sat, 01 Nov 2025 20:15:33 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97F54C2A545
+	for <lists+dmaengine@lfdr.de>; Mon, 03 Nov 2025 08:30:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 514563AAD69
-	for <lists+dmaengine@lfdr.de>; Sat,  1 Nov 2025 19:15:32 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 43D62348734
+	for <lists+dmaengine@lfdr.de>; Mon,  3 Nov 2025 07:30:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30720231856;
-	Sat,  1 Nov 2025 19:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RmhL4ukw"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CBA62BEC57;
+	Mon,  3 Nov 2025 07:30:40 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B2B19E968;
-	Sat,  1 Nov 2025 19:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD652BE037;
+	Mon,  3 Nov 2025 07:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762024528; cv=none; b=Rci87vTqJsl7sw06B1ea5MLQR32iX8LTkq+qhCIBUfsIVxbA2ZBYLFtO0/2eci7AQTluhOYzkCiMufcX2ohmXmQbuYnSJv8ALR+DbTTV4ghsQweiOocUIb0P7Zue1/nAEJXcB1T9lt+HmvYco5CQJMwCJg65p+yZVnLaeIndAOk=
+	t=1762155040; cv=none; b=jmvrLEYWvFg2mz6LgtI6xseG4hB/dfH7Br+zGKvBFHoxWqkwieTlgRiQ4TG9OXXkHtWfNJFuX1nkvqnQiFEG+Ei4/9Zl0reqpWeGViB98Yecdr0L/wNGPodC7q14Ax4vdEdC5Rl8DtQRpW1U6yXwaiBL8QHf3dg/fKOuNTVVxH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762024528; c=relaxed/simple;
-	bh=s/AqBrEen82BZTUt+zB9upJzobIHtkqVuoA2vuL0q2c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fEDOCy6kmxKP+9baK8bI4qNYOEoTy5uHvPAoEgOJwFYzZfDUTZhVpzCV4b/7rUNQ25lx1WIGcuhcg8cxbfSzi4qnLKRJal8L5RiKbBoDCy3XsS5clT9NHIQ9y0CDw7O6tTpoLnxjO5baGKTuzKjrw9sBcZh3QN4c0BPujHeYsXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RmhL4ukw; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=tNGV47VDfbMJ51xZMzm7j+Z/u6TJ+M3By0xD4ZK0YuM=; b=RmhL4ukwFjhLrKiImQToohbkx/
-	OcdhG6LzM62hRqwb3r/7XHZrNeJ3kDGQt60rJrSxYz12k+DhKptD03idKMc3KYfYa6Rrd7WAyMJQx
-	PquWF6PZDEzb98pV2rDhVBgOZ1m6Do5byL8Q/I/86jlnUWODXf6KKYPawZRkA2lXs8T+8xF8t9mUP
-	1a3Y8tW27Snn3+7asA5wGyRxZTpOOVVmb7/49cJYs73/wIO+4Kcu2ZmCmNHUcoF9NNxwkXXzb548O
-	Vn8iZEhigKeAihevdKaPkEziYJD0tHqV8FTSu5Ycxxq7GfrOrKbLV56fRhKx4nxbZF9AGoF3QJJKk
-	yXGnFs6A==;
-Received: from [50.53.43.113] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vFH4O-000000082TU-2yph;
-	Sat, 01 Nov 2025 19:15:25 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	dmaengine@vger.kernel.org
-Subject: [PATCH] dmaengine: dw_edma: correct kernel-doc warnings in <linux/dma/edma.h>
-Date: Sat,  1 Nov 2025 12:15:24 -0700
-Message-ID: <20251101191524.1991135-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.51.1
+	s=arc-20240116; t=1762155040; c=relaxed/simple;
+	bh=yJpL0X0Cx00LFwvb4W5OA82y01xbuW8m07wo0UlQaJY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nq3xwuCRe/YsozcvINdjAAt6njMvvHLmy5GXuCj+AEYsNlkqDQ2Bl9EXGJ8sh35zCkqEe0DLlPSgmBIdIoyGs+0hz7JznaJBlzGOP6bkJlwiUaw6MLPFkhKx14yTqgj8P7oKL+3f5wbhmSzq4LnPUzTsGcLrVqHXZxcLeFBdmR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from DESKTOP-L0HPE2S (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowABXwvAXWghpYKwzAQ--.23123S2;
+	Mon, 03 Nov 2025 15:30:32 +0800 (CST)
+From: Haotian Zhang <vulab@iscas.ac.cn>
+To: peter.ujfalusi@gmail.com,
+	vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Haotian Zhang <vulab@iscas.ac.cn>
+Subject: [PATCH] omap-dma: fix dma_pool resource leak in error paths
+Date: Mon,  3 Nov 2025 15:30:18 +0800
+Message-ID: <20251103073018.643-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.50.1.windows.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,79 +48,61 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowABXwvAXWghpYKwzAQ--.23123S2
+X-Coremail-Antispam: 1UD129KBjvJXoWruryrGw15tr18KFWUGF1xXwb_yoW8JF4Upa
+	nrG343K3yjqrW7K3yDJa1Y9FW3KF4aq3yav39rJwn3u348ZryfXFy5XasrCa1DArWrGF1f
+	tFWDta4ruFZxJF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvv14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
+	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+	IFyTuYvjfU1T5dDUUUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ8PA2kIR2EHygABsB
 
-Use the correct enum name in its kernel-doc heading.
-Add ending ':' to struct member names.
-Drop the @id: kernel-doc entry since there is no struct member named 'id'.
+The dma_pool created by dma_pool_create() is not destroyed when
+dma_async_device_register() or of_dma_controller_register() fails,
+causing a resource leak in the probe error paths.
 
-edma.h:46: warning: expecting prototype for struct dw_edma_core_ops.
- Prototype was for struct dw_edma_plat_ops instead
-Warning: edma.h:101 struct member 'ops' not described in 'dw_edma_chip'
-Warning: edma.h:101 struct member 'flags' not described in 'dw_edma_chip'
-Warning: edma.h:101 struct member 'reg_base' not described
- in 'dw_edma_chip'
-Warning: edma.h:101 struct member 'll_wr_cnt' not described
- in 'dw_edma_chip'
-Warning: edma.h:101 struct member 'll_rd_cnt' not described
- in 'dw_edma_chip'
-Warning: edma.h:101 struct member 'll_region_wr' not described
- in 'dw_edma_chip'
-Warning: edma.h:101 struct member 'll_region_rd' not described
- in 'dw_edma_chip'
-Warning: edma.h:101 struct member 'dt_region_wr' not described
- in 'dw_edma_chip'
-Warning: edma.h:101 struct member 'dt_region_rd' not described
- in 'dw_edma_chip'
-Warning: edma.h:101 struct member 'mf' not described in 'dw_edma_chip'
+Add dma_pool_destroy() in both error paths to properly release the
+allocated dma_pool resource.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Fixes: 7bedaa553760 ("dmaengine: add OMAP DMA engine driver")
+Signed-off-by: Haotian Zhang <vulab@iscas.ac.cn>
 ---
-Cc: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
----
- include/linux/dma/edma.h |   24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ drivers/dma/ti/omap-dma.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- linux-next-20251031.orig/include/linux/dma/edma.h
-+++ linux-next-20251031/include/linux/dma/edma.h
-@@ -27,7 +27,7 @@ struct dw_edma_region {
- };
- 
- /**
-- * struct dw_edma_core_ops - platform-specific eDMA methods
-+ * struct dw_edma_plat_ops - platform-specific eDMA methods
-  * @irq_vector:		Get IRQ number of the passed eDMA channel. Note the
-  *			method accepts the channel id in the end-to-end
-  *			numbering with the eDMA write channels being placed
-@@ -63,19 +63,17 @@ enum dw_edma_chip_flags {
- /**
-  * struct dw_edma_chip - representation of DesignWare eDMA controller hardware
-  * @dev:		 struct device of the eDMA controller
-- * @id:			 instance ID
-  * @nr_irqs:		 total number of DMA IRQs
-- * @ops			 DMA channel to IRQ number mapping
-- * @flags		 dw_edma_chip_flags
-- * @reg_base		 DMA register base address
-- * @ll_wr_cnt		 DMA write link list count
-- * @ll_rd_cnt		 DMA read link list count
-- * @rg_region		 DMA register region
-- * @ll_region_wr	 DMA descriptor link list memory for write channel
-- * @ll_region_rd	 DMA descriptor link list memory for read channel
-- * @dt_region_wr	 DMA data memory for write channel
-- * @dt_region_rd	 DMA data memory for read channel
-- * @mf			 DMA register map format
-+ * @ops:		 DMA channel to IRQ number mapping
-+ * @flags:		 dw_edma_chip_flags
-+ * @reg_base:		 DMA register base address
-+ * @ll_wr_cnt:		 DMA write link list count
-+ * @ll_rd_cnt:		 DMA read link list count
-+ * @ll_region_wr:	 DMA descriptor link list memory for write channel
-+ * @ll_region_rd:	 DMA descriptor link list memory for read channel
-+ * @dt_region_wr:	 DMA data memory for write channel
-+ * @dt_region_rd:	 DMA data memory for read channel
-+ * @mf:			 DMA register map format
-  * @dw:			 struct dw_edma that is filled by dw_edma_probe()
-  */
- struct dw_edma_chip {
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index 8c023c6e623a..73ed4b794630 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -1808,6 +1808,8 @@ static int omap_dma_probe(struct platform_device *pdev)
+ 	if (rc) {
+ 		pr_warn("OMAP-DMA: failed to register slave DMA engine device: %d\n",
+ 			rc);
++		if (od->ll123_supported)
++			dma_pool_destroy(od->desc_pool);
+ 		omap_dma_free(od);
+ 		return rc;
+ 	}
+@@ -1823,6 +1825,8 @@ static int omap_dma_probe(struct platform_device *pdev)
+ 		if (rc) {
+ 			pr_warn("OMAP-DMA: failed to register DMA controller\n");
+ 			dma_async_device_unregister(&od->ddev);
++			if (od->ll123_supported)
++				dma_pool_destroy(od->desc_pool);
+ 			omap_dma_free(od);
+ 		}
+ 	}
+-- 
+2.50.1.windows.1
+
 

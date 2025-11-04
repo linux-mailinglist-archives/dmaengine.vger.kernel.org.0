@@ -1,159 +1,104 @@
-Return-Path: <dmaengine+bounces-7051-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7052-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E006C2E921
-	for <lists+dmaengine@lfdr.de>; Tue, 04 Nov 2025 01:20:11 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82C44C32068
+	for <lists+dmaengine@lfdr.de>; Tue, 04 Nov 2025 17:23:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id AD87134C3A3
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Nov 2025 00:20:10 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C7B304F3A8B
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Nov 2025 16:21:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAFD65D8F0;
-	Tue,  4 Nov 2025 00:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 677F4330B13;
+	Tue,  4 Nov 2025 16:21:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C18q6xfM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oahc3jZx"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FE529405;
-	Tue,  4 Nov 2025 00:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7B52248BE;
+	Tue,  4 Nov 2025 16:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762215606; cv=none; b=W8sHKtI4rTLkDdIig1w4pyaup0bnq7HbabBhtb32b/JGnSvBCo+pR6n9jgrd7qZrZBs+wOSs/LuH04FLcV3nA3Sw1WAHW+fPFSyuB9oNwGclcJeYB1Kn6ZNaOPjvMNjtW7hAozLgK6WBjgv961op/3zxS3YVZDVFgD+2RuYrNIg=
+	t=1762273311; cv=none; b=CRj7vKQvqZbia7gPTeWBNSrMQY6rZ8ayv7lvZcJdeKXrEFUvYHKB6BbMy5Lo3wwklXD39hQT9qg0aTCVJiz0wGF4r1xrYyqJJ8jsnVW83WxQngD6ZW6VXGYm18PBGkWaRfBYnxl30SBMZtW5PnQ68TAnGldsqa3CRBs1eY5GFRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762215606; c=relaxed/simple;
-	bh=jQnwNYvNZfxrOldBcIBkcbxYnUzIgmI999p3q3jS52I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bwRJmVu9mb0sR43tFHmnKBJt47h9RravKRcyNbmzS7YXhMXUfxoFwk/scPxxJkDiM8HbWD+zGlRpba85EvEGo+XN/dZ+3Jp9s96iQRvqVis2GfthvCAT3VzAjrg8P2uNizu9YXfXptqbnaaCbyzOB1kNVO5fnlJqbZdCuEh8b6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C18q6xfM; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=jDMq68dxdxwO9VnU+wTiU39fko+A9829mDe4Pkx2XGw=; b=C18q6xfMESE3v8GOYybl9Gvxw7
-	CyqjqorcPkrCZzUbdQVow58u/40RSv/nFmaeo05TSv1yXkxJqZJCtU5Ol9fzkUl451AuBCPIuXhN2
-	akfolhhZdXsTrfaKybK+iRMnZVu+qvb+YO4RX43t0eVDSTYzSr2E5yUJipGp56QFq6E45v2eTQ3LP
-	ShdNaLHHz8rO2bNjW2xH7lMwdFTfKo+xpuPVRhII+VeeSDKM+DgjFCakBG/wsXwchIfT9vwvD/j5d
-	5auQhHJLyBUFlC4gXgQpQCgvGpAFnMbyUDlSZc5VkG1rrHa83BwWEVG6xRnJytRCtHOUa4i19dKgJ
-	7SBcqzBg==;
-Received: from [50.53.43.113] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vG4mH-0000000Aq0y-3yNL;
-	Tue, 04 Nov 2025 00:20:02 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Guennadi Liakhovetski <g.liakhovetski@gmx.de>,
-	Paul Mundt <lethal@linux-sh.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	dmaengine@vger.kernel.org,
-	linux-sh@vger.kernel.org
-Subject: [PATCH] dmaengine: shdma: correct most kernel-doc issues in shdma-base.h
-Date: Mon,  3 Nov 2025 16:20:01 -0800
-Message-ID: <20251104002001.445297-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.51.1
+	s=arc-20240116; t=1762273311; c=relaxed/simple;
+	bh=o7+zi7GXqBkQz18IsHHUAZB/ZiKichtFr8qpatSjrio=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kG0NJ8MpOoH8JNvMKWyuOlo0FTdjCZD6NFiLFcjhB2C+ozgi72GqvF9bhrp7P1jkdDY/QZSGF0s0zNJkuAXiw1vhAX3eIzbXD1d7iYxJ7Y8nu29bdlakskTX17b+H9YZ3HQmRPWxFRZF7P7qjQHB8yy/nRZGEKDTRDGxxNIpq20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oahc3jZx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D91B1C4CEF8;
+	Tue,  4 Nov 2025 16:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762273310;
+	bh=o7+zi7GXqBkQz18IsHHUAZB/ZiKichtFr8qpatSjrio=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=oahc3jZxo13ZrzFONDCrPCsVzlnKRpBtNcVtSsC3WQCnZXoS3Bqro7uYJkGyb2eQR
+	 7HC75blGRRDLgVK8yUcZ1p8G5Ao0hm2WodCtTEX7BYSlexad1NZ4kagFBaRODJ/m4D
+	 b/CqfBF2EbhQ6bXAKHRYUz7CkvCaU+uMdGpgbZwb/EMerN9I+uE9viduXH1A2D5Np5
+	 Cr1NLWs/V0Hu3gEnUjItVdzt+Q8wDrGbaTAOtF+R1y2dq1t5i9Md0ZCNljFbeXVgh7
+	 135EzkbHx1Zksaem9trTbjZd6DX4y3BMy54kGF72souslO6pxJDJPvvXlCDxtKQBkM
+	 4IP7xbVYdyUCw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FEBCCFA04;
+	Tue,  4 Nov 2025 16:21:50 +0000 (UTC)
+From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
+Subject: [PATCH RESEND 0/4] dma: dma-axi-dmac: fixes and improvements
+Date: Tue, 04 Nov 2025 16:22:24 +0000
+Message-Id: <20251104-axi-dmac-fixes-and-improvs-v1-0-3e6fd9328f72@analog.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAEAoCmkC/x2MMQqEMBAAvyJb34KJpvDqs71CS7FYkvVuC6NkQ
+ YTg3w2WAzOTQTkJK7yrDIkPUdliAfOqwP8p/hglFAZbW2dM3SKdgmElj4ucrEgxoKx72g5Fbig
+ 4Y6mxnYcy2BM/UuknGPqx/35gvq4biUob43QAAAA=
+X-Change-ID: 20251104-axi-dmac-fixes-and-improvs-e3ad512a329c
+To: Vinod Koul <vkoul@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Paul Cercueil <paul@crapouillou.net>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1762273345; l=799;
+ i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
+ bh=o7+zi7GXqBkQz18IsHHUAZB/ZiKichtFr8qpatSjrio=;
+ b=CP+rdy2Ry0Bg7k8FJBgMtRxfz4jFy8Qn7wAFi54kfHeJVq79GhUxjYsf/rGuxNEpaaLjQt/h2
+ 8RTjgXeyz/PBtG3L2SQ86aCjDsSerZZgCAu9v2W/eOcSw9vIpsNqlZW
+X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
+ pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
+X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
+ auth_id=100
+X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
+Reply-To: nuno.sa@analog.com
 
-Fix kernel-doc comments in include/linux/shdma-base.h to avoid
-most warnings:
+This series adds some fixes to the DMA core with respect with cyclic
+transfer and HW scatter gather.
 
-- prefix an enum name with "enum"
-- prefix enum values with '@'
-- prefix struct member names with '@'
+It also adds some improvements. Most notably for allowing bigger that
+32bits DMA masks so we do not have to rely on bounce buffers from
+swiotlb.
 
-shdma-base.h:28: warning: cannot understand function prototype:
- 'enum shdma_pm_state '
-Warning: shdma-base.h:103 struct member 'desc_completed' not described
- in 'shdma_ops'
-Warning: shdma-base.h:103 struct member 'halt_channel' not described
- in 'shdma_ops'
-Warning: shdma-base.h:103 struct member 'channel_busy' not described
- in 'shdma_ops'
-Warning: shdma-base.h:103 struct member 'slave_addr' not described
- in 'shdma_ops'
-Warning: shdma-base.h:103 struct member 'desc_setup' not described
- in 'shdma_ops'
-Warning: shdma-base.h:103 struct member 'set_slave' not described
- in 'shdma_ops'
-Warning: shdma-base.h:103 struct member 'setup_xfer' not described
- in 'shdma_ops'
-Warning: shdma-base.h:103 struct member 'start_xfer' not described
- in 'shdma_ops'
-Warning: shdma-base.h:103 struct member 'embedded_desc' not described
- in 'shdma_ops'
-Warning: shdma-base.h:103 struct member 'chan_irq' not described
- in 'shdma_ops'
-
-This one is not fixed: from 4f46f8ac80416:
-Warning: shdma-base.h:103 struct member 'get_partial' not described
- in 'shdma_ops'
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 ---
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Paul Mundt <lethal@linux-sh.org>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
-Cc: linux-sh@vger.kernel.org
----
- include/linux/shdma-base.h |   28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+Nuno Sá (4):
+      dma: dma-axi-dmac: fix SW cyclic transfers
+      dma: dma-axi-dmac: fix HW scatter-gather not looking at the queue
+      dma: dma-axi-dmac: support bigger than 32bits addresses
+      dma: dma-axi-dmac: simplify axi_dmac_parse_dt()
 
---- linux-next-20251103.orig/include/linux/shdma-base.h
-+++ linux-next-20251103/include/linux/shdma-base.h
-@@ -19,11 +19,11 @@
- #include <linux/types.h>
- 
- /**
-- * shdma_pm_state - DMA channel PM state
-- * SHDMA_PM_ESTABLISHED:	either idle or during data transfer
-- * SHDMA_PM_BUSY:		during the transfer preparation, when we have to
-+ * enum shdma_pm_state - DMA channel PM state
-+ * @SHDMA_PM_ESTABLISHED:	either idle or during data transfer
-+ * @SHDMA_PM_BUSY:		during the transfer preparation, when we have to
-  *				drop the lock temporarily
-- * SHDMA_PM_PENDING:	transfers pending
-+ * @SHDMA_PM_PENDING:	transfers pending
-  */
- enum shdma_pm_state {
- 	SHDMA_PM_ESTABLISHED,
-@@ -74,18 +74,18 @@ struct shdma_chan {
- 
- /**
-  * struct shdma_ops - simple DMA driver operations
-- * desc_completed:	return true, if this is the descriptor, that just has
-+ * @desc_completed:	return true, if this is the descriptor, that just has
-  *			completed (atomic)
-- * halt_channel:	stop DMA channel operation (atomic)
-- * channel_busy:	return true, if the channel is busy (atomic)
-- * slave_addr:		return slave DMA address
-- * desc_setup:		set up the hardware specific descriptor portion (atomic)
-- * set_slave:		bind channel to a slave
-- * setup_xfer:		configure channel hardware for operation (atomic)
-- * start_xfer:		start the DMA transfer (atomic)
-- * embedded_desc:	return Nth struct shdma_desc pointer from the
-+ * @halt_channel:	stop DMA channel operation (atomic)
-+ * @channel_busy:	return true, if the channel is busy (atomic)
-+ * @slave_addr:		return slave DMA address
-+ * @desc_setup:		set up the hardware specific descriptor portion (atomic)
-+ * @set_slave:		bind channel to a slave
-+ * @setup_xfer:		configure channel hardware for operation (atomic)
-+ * @start_xfer:		start the DMA transfer (atomic)
-+ * @embedded_desc:	return Nth struct shdma_desc pointer from the
-  *			descriptor array
-- * chan_irq:		process channel IRQ, return true if a transfer has
-+ * @chan_irq:		process channel IRQ, return true if a transfer has
-  *			completed (atomic)
-  */
- struct shdma_ops {
+ drivers/dma/dma-axi-dmac.c | 48 +++++++++++++++++++++++++++++++---------------
+ 1 file changed, 33 insertions(+), 15 deletions(-)
+---
+base-commit: 398035178503bf662281bbffb4bebce1460a4bc5
+change-id: 20251104-axi-dmac-fixes-and-improvs-e3ad512a329c
+--
+
+Thanks!
+- Nuno Sá
+
+
 

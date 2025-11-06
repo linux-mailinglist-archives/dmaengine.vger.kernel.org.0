@@ -1,83 +1,83 @@
-Return-Path: <dmaengine+bounces-7089-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7090-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64E09C3C2C2
-	for <lists+dmaengine@lfdr.de>; Thu, 06 Nov 2025 16:50:41 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCD42C3C250
+	for <lists+dmaengine@lfdr.de>; Thu, 06 Nov 2025 16:45:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4554D3B1BF1
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Nov 2025 15:45:44 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 49EA5351BBA
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Nov 2025 15:45:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42BE61E5205;
-	Thu,  6 Nov 2025 15:45:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A9C933DEC5;
+	Thu,  6 Nov 2025 15:45:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bcMBnse3"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LuMVblwO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D779334680
-	for <dmaengine@vger.kernel.org>; Thu,  6 Nov 2025 15:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E41330B37
+	for <dmaengine@vger.kernel.org>; Thu,  6 Nov 2025 15:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762443905; cv=none; b=V1Qh37kjfYBS68TMEeNtsiffe3sX/Z6uCF8vAx4iqHJ7RxpWT2qngqf9fcH+aaOSpuuhDuZ5vnRgQhMejWwgNMRxjMIi0NwY4jY9/JPfmWBP+LONobK9yKSAgObeJUpkTAdVwqMkXinou6TbvuQfLP6KRsIvXFxOYF6/kz1yIPQ=
+	t=1762443908; cv=none; b=lE1XhtUK7H839wgQovgojM1fJWXgWU9j2NRG7vwH/CXHbDFDYDB5Foc7Ie+DnzL1/VjjBKgD7RYDj/kk8LaEvJzaHqbBoXeEFB6B9belF3bWTJhjNNtaOZG11eQWEgfmDfZKhurnkhLcPNjWMxaeisKU/g9Zxry8RMj4+nHm8Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762443905; c=relaxed/simple;
-	bh=KMXtcGywPA0XXbonnk/C4InSA219MMkomUCla9TEJSE=;
+	s=arc-20240116; t=1762443908; c=relaxed/simple;
+	bh=ZWq7Pm27cK1DpvY/EMDI4nfic014qXdOnMiOukcqk+0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qbHxF6I1CLnL8HmeqnpCIis4jAtGHIWOmA6iCHwiB1mLeomSYKuMCE0eWC21Fk08oOjwO5awpV2jEt024Kg+dCP4HeyAC00TcJWrT/+Xh/4jxTdGEKZNfQlJrCVsDyayln/kKnkzC3e8m6Ue2BTTHwLIzSdXvR5V2bqQ70H6Evs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bcMBnse3; arc=none smtp.client-ip=209.85.128.53
+	 In-Reply-To:To:Cc; b=mTn431t6w41FxMK9kS8V/uDhDRr96cfAVlAiELHUJtcqr3sFJxFHwzw3Ms9KYxfsaro9m+FEFp+gG6ILZvht43k3oGM+EJgscOl7pTP7Vpo1rN1CkA64vpFdI5/FgMo/Q46iJGyD6XzHuXmU3TttoU1AcFngHyXzk6uxF0FsvPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LuMVblwO; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-477442b1de0so7778225e9.1
-        for <dmaengine@vger.kernel.org>; Thu, 06 Nov 2025 07:45:03 -0800 (PST)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47728f914a4so6861825e9.1
+        for <dmaengine@vger.kernel.org>; Thu, 06 Nov 2025 07:45:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762443902; x=1763048702; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1762443903; x=1763048703; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sbd9T49zUds3GM17Wvqrp3KhIc2FjSNyODbZEdWX+EA=;
-        b=bcMBnse3pQwe/Li0FKttYtNtYmwBk8XLSXNxOHwsq/ZUAN9lL74z79a7LWXPBSkUOu
-         de85+hcTTjtezeMHH2ar+Nz6ITsWeoQ+FWkJKLnJPiPGZMBiDipe9NyPwWBkjXJm2UML
-         EcMY+x6Or5uVQvyTq1ePhKPYiLgZwbwI/A8h6lUI7kLr64WB2UFLLUT0hBTgtVi1Irpq
-         aM289SDAWPn/XcudK0gISBhG1Sr0tJB3+oXTyohfuR+dl1sehXW4cBwQCvhkF/phVxvi
-         heBYPmj9WftFNJ8SeYYb6BLtkwyL2VPv3YhzR/zD2oNHjPB8sIHPh8cMIUttrujvg0O3
-         LyBQ==
+        bh=esEdcTh2LbyZ9Fgnuw95sR3yJENLiwNORj0la+mn6sE=;
+        b=LuMVblwOk4/RnFDvvuzNd5ulo5Kp/fNm8Y8FrAVDofmfTdHYS0ebNnUdCjNi7nMDs/
+         OBUQKKUdgDCI/eXAMWwdaPfMPn9DpqI0h1H3jtOMrAmy+9NJyV49xxcnWIiua977en7/
+         sDOkqXuT6aAZ5J3XkyinBbrcQEzxSGsZPEGr6Xoip1/7cqvuFlXt6/XMh34K4FksKcEA
+         MEsqKyZ8JCxgI+wEy6HXjXQhQLNMk8doMaUE6iVCHlA4MiqHjiuBINSSG9Bv02mysZMc
+         dvYOBIv5cZg87g30dewNgojvm0CXgnhRtADQcqxUrapLNsdj7/MtjZQElmGwRbguQnml
+         vVEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762443902; x=1763048702;
+        d=1e100.net; s=20230601; t=1762443903; x=1763048703;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sbd9T49zUds3GM17Wvqrp3KhIc2FjSNyODbZEdWX+EA=;
-        b=A2Bwpky6Dt58niGDmEt+0N6I2u9uKjoFHCPJri7pPXm92KXMRbiCiBiIgyt9Z1IMIG
-         rUl0W5y0KATa0ZHjZ1aCUxLm5vSbAogyu2KVEJt8ja1Hg7PLbPHHxXYFArZTaymFxz+M
-         K9qh643ZIBGXleH+aXUaNeQr66gxtc84CYLdXtqyYiivrzeq+a7GJp+Bcd3uUgWSR5PI
-         gMWWP0MJXPaKDPNwLo6RM6TNa4FUcTBQKgndA15nAmNnTDv133SaaHvQwrEfGv7mZn1T
-         tAsa18lCdy21h5X6eFTcmzNU/evQxlkLWeXsbCxhkiCvz0V5df4oOgzAuSuTXN9rDzPu
-         E27w==
-X-Forwarded-Encrypted: i=1; AJvYcCV7BAOH5oJKgmsjfIN1IGrjOphmwzuJAfBeMTrbZwbn0v8gfvlVwBG3XC96kkjnKPd4OGb1bTbzg7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBvl8qI9MUOxYrbECaMjbLE0/ygbN8MN1jqxYT3WiQgrzAgtn2
-	QfGXx+L+FtEotPeDvGmohpxeVctBgI1CEUNLlgOGG7t705XdiUshA6fXCeX++l5c4x5ucas8i4a
-	FBeKmtTg=
-X-Gm-Gg: ASbGncuDbubuzfHtFmp4u6pn49SqN4wHRMuqPdinUTx58iU5WZpUvZAaJsoqfUq0RLZ
-	9CNBNANkcII5hy7Olb6TGbU7c0EzwqA94lHl3MiG/u46HzxCpC/OPzUe+A/LP3EXl7DulUsTTBG
-	NsuKHnBLQ2lBM5E27do7xjHuPAdIBLF+J+N3VG2V/mP3lM6Ar+hxHqCF8PhTzN2/lACp15S5Ipf
-	YzqrbVeRNxUf3ybYvKmIR/P4D3DT/4dox91P6Ruj84CxsELIf1nZJsD6gRUbkFd78Y+m6GLYb/B
-	591MDp+E2b+5MlScExvt4/NxJEPLHmmb810dHs2yY7zgzw9/t+bS7iz0nLjHiXXWYcxIViV5uBO
-	8d1fikD60jhxLPRociAMs5SH3okpRi3gwFgoKFm5+e3QyzHmSJgWDezLU+JcNTFpVTtL9J53Bao
-	9tl6cDg+sqzZfAWY4=
-X-Google-Smtp-Source: AGHT+IFtov35GCVOXR/cS2r0f57fAWevPV2mc2aIOXdGAl6CDTHBexQAmH0Z6e5W7UJqLLDk8tfqlQ==
-X-Received: by 2002:a05:600c:348f:b0:46e:2801:84aa with SMTP id 5b1f17b1804b1-4775cd3bec8mr84554855e9.0.1762443901568;
-        Thu, 06 Nov 2025 07:45:01 -0800 (PST)
+        bh=esEdcTh2LbyZ9Fgnuw95sR3yJENLiwNORj0la+mn6sE=;
+        b=Q0sjo8sfPnZLa0LjXw6OtWEtxuNJLnQY5XWQ4o2f9zyVqIbnrN0LBdAEEbKzk1KA0n
+         2WOoFZhggPA2mGsUcu8qYdKZOfHNlV4isXlrbLnrGaqAu/XXYaCC89zSpWylNJWz0rAW
+         R2Y6d5yrGGenUOosiFSXBsNH2E3zDcf8ecHN5eXtoLLGM9pnGAj3USBrMPRtRIfVY0Kg
+         AU7S4FHp1CaQPISUat9MfdFJkU75y+3xb74cbu+5Savnq/beco9zbbrHWxuOLt04MuLg
+         x0pVN3P6Xs4FJBXQ9kB/9Ttq5LcB7IfcssFt8B+Cwe624AyRfmvHIhU2ME5JmJO+b0fa
+         PJ/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUWtGHdFyJTw02E2VKpenj9c4Bd3La9aeYtqIBtNXX649tiSwg09mukPJEA+gwX1L6F99+36Q1zwow=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLqnoj4wbgOjUc1mq2O3SbXPYWvFjK41rPttvHNCxlv/Rj6EBD
+	JOENqG+01mPWLsZuIUecI2ku8kKjPF08/sp/lK1JM724ynGBqZDb4WfIdOFosEOYsMI=
+X-Gm-Gg: ASbGncuH1fjsKP9CZt0fC3hpdxtK61gnw9HzTcAA5FTWm6B1f4lT8/o1lDHfMjpPJjA
+	kWjdcbiVnmjaG0/Z3lUTSN/HgpjfhYg3GqVIFe9DmiMGpCcoOQp51rUeoQQZgGrctZb2OJg8b0Z
+	M3f4I9HHsfRLdIF73tezkZU8KcDC8fbj0ZKjHdsMeS1jTFjR592IYHMCivkMfwbZeT064M75DF5
+	i9qffZwbgfQbm4mdP3L4yh2Vy2yWj/BGGtyhodnvLtkL4AeZjkF5A7UDbFhvPFhkWqsYuh51Syc
+	TTbSFnoyN12cw2fdkmIxVejl6NW2zT7NA0zkN7cchBi4TLZRGGbON01G0OldgxVP7Bw86juM2in
+	SJPXWBxchpk9hwnEhrlk4PebVolPhQ6AzsFXsNnY9hs4NA9guMrxt0hJrY/MH0HMzg7LTJI6tJp
+	pUXkBj
+X-Google-Smtp-Source: AGHT+IEhmTqYfdZXcR34f8oucO4sNMzMcglUrQpy+XWcCDtrKQdVYJjqpPhuV6/BnBrxb3O3h50pRA==
+X-Received: by 2002:a05:600c:46ce:b0:471:14af:c715 with SMTP id 5b1f17b1804b1-4775cd9c05emr66589085e9.3.1762443903419;
+        Thu, 06 Nov 2025 07:45:03 -0800 (PST)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:d9de:4038:a78:acab])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47763e66b1fsm20621705e9.1.2025.11.06.07.44.59
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47763e66b1fsm20621705e9.1.2025.11.06.07.45.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Nov 2025 07:44:59 -0800 (PST)
+        Thu, 06 Nov 2025 07:45:01 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 06 Nov 2025 16:44:51 +0100
-Subject: [PATCH 2/3] dmaengine: qcom: bam_dma: use lock guards
+Date: Thu, 06 Nov 2025 16:44:52 +0100
+Subject: [PATCH 3/3] dmaengine: qcom: bam_dma: convert tasklet to a
+ workqueue
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -86,7 +86,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251106-qcom-bam-dma-refactor-v1-2-0e2baaf3d81a@linaro.org>
+Message-Id: <20251106-qcom-bam-dma-refactor-v1-3-0e2baaf3d81a@linaro.org>
 References: <20251106-qcom-bam-dma-refactor-v1-0-0e2baaf3d81a@linaro.org>
 In-Reply-To: <20251106-qcom-bam-dma-refactor-v1-0-0e2baaf3d81a@linaro.org>
 To: Vinod Koul <vkoul@kernel.org>
@@ -94,296 +94,150 @@ Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9493;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3969;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=jVKoP2X4Ilas0P+Aru4xMP9CmE2OcT/z1vHvPmMV1IY=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBpDMJ3QxjixXJYDZtvzP0lI/Ab8pWxSPTwbk9l3
- boYrMwZy9uJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaQzCdwAKCRARpy6gFHHX
- ct3tEACy4NodtdxxVrv8D1R3dE+7+U9W8fFhuKuYrSk8woF7W9kGalbFZnntkUxP/KySQa//0qQ
- 8HoLpQC3W3UlwCw3fCHe3GxocCw8rxfvrA2tmRoo54qTPdcFYsmHQy/oCE9/Pf0lxQcEMgKdPi1
- a9rOSZunGa7SGGFDJnEMCGikAl/l59O7QCTHzNa7GABT1xNdMDjSylT8ICBfGmx9bYmifYimmse
- qRNlPxUvo/ZuIZHG8LBywbXER0lBjXnWFZXKsyFScEqRqEGzNKgP42DcOXIShOC8mF2ZaBlVGEH
- ywuALvHyVwOew4Ihl975+P1cwcHlUAuhGnf41CvEJPhFlTkf7+k0fubUfykR+4l9LbE5Ct7NtR1
- HpTMGMskua9l0tlbH05DG5XNLi9tIkHcBb7Aq0lLOLP4SUB7peNGeclfdEQTh/1lSSiycrXI13p
- xqgZLmO+8/QyVfxUwe8wRI1hlqSYtP/M2HFfn/wMyMhory1wb+VafKxb932FadIFbmfccfTKqkp
- Ls3/Zk2QUMZj/rtgLq9nJB2EyJKeFgyWYi1GCz2Ov2TryOa6Yh0V47Kuyqt6JzQR3SP4YmrpDh3
- X30MmR924dwNRzzUcFdEjsW26BzJ/NCv+cCsdTkR26hoXgKorCHnQ6mui8rGxeallsHTCmdZZFn
- n4gdfR42E8nfi+A==
+ bh=si4pCCUV8uwm3sY3u1lXmrBH/4Zfvei8bJceXOrOIWE=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBpDMJ3UfxwOakrKsFNxGyj8BtSpDAPTF7NZNotr
+ edMLaTHzJKJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaQzCdwAKCRARpy6gFHHX
+ cqTAEAChjL6VcpPC0zJqB1yMKMOSrYLQog0rwwZiC1Oui8df2pl3D9j2p+GPRjhF93EMzGzkCof
+ 7DP7fiVmCT0Okz7U5KY8JVvN+VIPTUbzLTnF3GFMsvRjHV4GZ8aU9EUmmEHzi6raKf0ve+PY0Yn
+ NBDj3uwtyFS4OgXhlierqbUjbPLCqzB0zR9e5jhNgS4jW9BkjnNt8Mm8jeEkFU4uHBRar0IUedc
+ S8LoYwuVfdkzkRNsshO58gNkhVhn6UnkuCgwBmqwGTMtiS6gdiHfIVQznzvhuU+zCUWxGO9rLg3
+ e2wpKh6HQNmJbcG2KqWCm5LYTWlWtC7wr+mPPDApuArqiVENpWCVkB3mY9t2u+fXgbv7rSnvQAm
+ yBUy0xjkl8RHoDkCAfEKN+xiC6W34w+rNp9SzltMkhlGzLO38Pz9ZYMU5rSCM0IseTIiWnttscF
+ dIJlPCS2EU6jugDEZZqfZwHg8oA1gaLVxoq3DvSjGERQVB+iu/MA4jApbT6+2hUGgqKo6AWVAjb
+ 00kGSDAkwEf7EarmDe9HFZ7seubicjCzCjeJz/CBoF6sl+KRezsMv/nhm1eZDv/2wWVxJZp2ZQ3
+ XCu2NyXc5TLZTHpZ4Lq/axxkH+EZwA10AbhBwE7gPeUzv9tygCCB6c5en6tWGoYSp8HhNb6Cg4x
+ H5jpNhLUBCKdX0A==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Simplify locking across the driver with lock guards from cleanup.h.
+There is nothing in the interrupt handling that requires us to run in
+atomic context so convert the tasklet to a workqueue.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/dma/qcom/bam_dma.c | 124 ++++++++++++++++++++-------------------------
- 1 file changed, 55 insertions(+), 69 deletions(-)
+ drivers/dma/qcom/bam_dma.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index 2f1f295d3e1ff910a5051c20dc09cb1e8077df82..bcd8de9a9a12621a36b49c31bff96f474468be06 100644
+index bcd8de9a9a12621a36b49c31bff96f474468be06..40ad4179177fb7a074776db05b834da012f6a35f 100644
 --- a/drivers/dma/qcom/bam_dma.c
 +++ b/drivers/dma/qcom/bam_dma.c
-@@ -24,6 +24,7 @@
-  */
+@@ -42,6 +42,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/scatterlist.h>
+ #include <linux/slab.h>
++#include <linux/workqueue.h>
  
- #include <linux/circ_buf.h>
-+#include <linux/cleanup.h>
- #include <linux/clk.h>
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
-@@ -570,7 +571,6 @@ static void bam_free_chan(struct dma_chan *chan)
- 	struct bam_chan *bchan = to_bam_chan(chan);
- 	struct bam_device *bdev = bchan->bdev;
- 	u32 val;
--	unsigned long flags;
- 	int ret;
+ #include "../dmaengine.h"
+ #include "../virt-dma.h"
+@@ -397,8 +398,8 @@ struct bam_device {
+ 	struct clk *bamclk;
+ 	int irq;
  
- 	ret = pm_runtime_get_sync(bdev->dev);
-@@ -584,9 +584,8 @@ static void bam_free_chan(struct dma_chan *chan)
- 		goto err;
- 	}
+-	/* dma start transaction tasklet */
+-	struct tasklet_struct task;
++	/* dma start transaction workqueue */
++	struct work_struct work;
+ };
  
--	spin_lock_irqsave(&bchan->vc.lock, flags);
--	bam_reset_channel(bchan);
--	spin_unlock_irqrestore(&bchan->vc.lock, flags);
-+	scoped_guard(spinlock_irqsave, &bchan->vc.lock)
-+		bam_reset_channel(bchan);
+ /**
+@@ -869,7 +870,7 @@ static u32 process_channel_irqs(struct bam_device *bdev)
+ 			/*
+ 			 * if complete, process cookie. Otherwise
+ 			 * push back to front of desc_issued so that
+-			 * it gets restarted by the tasklet
++			 * it gets restarted by the work queue.
+ 			 */
+ 			if (!async_desc->num_desc) {
+ 				vchan_cookie_complete(&async_desc->vd);
+@@ -899,9 +900,9 @@ static irqreturn_t bam_dma_irq(int irq, void *data)
  
- 	dma_free_wc(bdev->dev, BAM_DESC_FIFO_SIZE, bchan->fifo_virt,
- 		    bchan->fifo_phys);
-@@ -624,12 +623,11 @@ static int bam_slave_config(struct dma_chan *chan,
- 			    struct dma_slave_config *cfg)
- {
- 	struct bam_chan *bchan = to_bam_chan(chan);
--	unsigned long flag;
+ 	srcs |= process_channel_irqs(bdev);
  
--	spin_lock_irqsave(&bchan->vc.lock, flag);
-+	guard(spinlock_irqsave)(&bchan->vc.lock);
-+
- 	memcpy(&bchan->slave, cfg, sizeof(*cfg));
- 	bchan->reconfigure = 1;
--	spin_unlock_irqrestore(&bchan->vc.lock, flag);
- 
- 	return 0;
- }
-@@ -726,38 +724,37 @@ static int bam_dma_terminate_all(struct dma_chan *chan)
- {
- 	struct bam_chan *bchan = to_bam_chan(chan);
- 	struct bam_async_desc *async_desc, *tmp;
--	unsigned long flag;
- 	LIST_HEAD(head);
- 
- 	/* remove all transactions, including active transaction */
--	spin_lock_irqsave(&bchan->vc.lock, flag);
--	/*
--	 * If we have transactions queued, then some might be committed to the
--	 * hardware in the desc fifo.  The only way to reset the desc fifo is
--	 * to do a hardware reset (either by pipe or the entire block).
--	 * bam_chan_init_hw() will trigger a pipe reset, and also reinit the
--	 * pipe.  If the pipe is left disabled (default state after pipe reset)
--	 * and is accessed by a connected hardware engine, a fatal error in
--	 * the BAM will occur.  There is a small window where this could happen
--	 * with bam_chan_init_hw(), but it is assumed that the caller has
--	 * stopped activity on any attached hardware engine.  Make sure to do
--	 * this first so that the BAM hardware doesn't cause memory corruption
--	 * by accessing freed resources.
--	 */
--	if (!list_empty(&bchan->desc_list)) {
--		async_desc = list_first_entry(&bchan->desc_list,
--					      struct bam_async_desc, desc_node);
--		bam_chan_init_hw(bchan, async_desc->dir);
--	}
-+	scoped_guard(spinlock_irqsave, &bchan->vc.lock) {
-+		/*
-+		 * If we have transactions queued, then some might be committed to the
-+		 * hardware in the desc fifo.  The only way to reset the desc fifo is
-+		 * to do a hardware reset (either by pipe or the entire block).
-+		 * bam_chan_init_hw() will trigger a pipe reset, and also reinit the
-+		 * pipe.  If the pipe is left disabled (default state after pipe reset)
-+		 * and is accessed by a connected hardware engine, a fatal error in
-+		 * the BAM will occur.  There is a small window where this could happen
-+		 * with bam_chan_init_hw(), but it is assumed that the caller has
-+		 * stopped activity on any attached hardware engine.  Make sure to do
-+		 * this first so that the BAM hardware doesn't cause memory corruption
-+		 * by accessing freed resources.
-+		 */
-+		if (!list_empty(&bchan->desc_list)) {
-+			async_desc = list_first_entry(&bchan->desc_list,
-+						      struct bam_async_desc, desc_node);
-+			bam_chan_init_hw(bchan, async_desc->dir);
-+		}
- 
--	list_for_each_entry_safe(async_desc, tmp,
--				 &bchan->desc_list, desc_node) {
--		list_add(&async_desc->vd.node, &bchan->vc.desc_issued);
--		list_del(&async_desc->desc_node);
--	}
-+		list_for_each_entry_safe(async_desc, tmp,
-+					 &bchan->desc_list, desc_node) {
-+			list_add(&async_desc->vd.node, &bchan->vc.desc_issued);
-+			list_del(&async_desc->desc_node);
-+		}
- 
--	vchan_get_all_descriptors(&bchan->vc, &head);
--	spin_unlock_irqrestore(&bchan->vc.lock, flag);
-+		vchan_get_all_descriptors(&bchan->vc, &head);
-+	}
- 
- 	vchan_dma_desc_free_list(&bchan->vc, &head);
- 
-@@ -773,17 +770,16 @@ static int bam_pause(struct dma_chan *chan)
- {
- 	struct bam_chan *bchan = to_bam_chan(chan);
- 	struct bam_device *bdev = bchan->bdev;
--	unsigned long flag;
- 	int ret;
+-	/* kick off tasklet to start next dma transfer */
++	/* kick off the work queue to start next dma transfer */
+ 	if (srcs & P_IRQ)
+-		tasklet_schedule(&bdev->task);
++		schedule_work(&bdev->work);
  
  	ret = pm_runtime_get_sync(bdev->dev);
  	if (ret < 0)
- 		return ret;
- 
--	spin_lock_irqsave(&bchan->vc.lock, flag);
--	writel_relaxed(1, bam_addr(bdev, bchan->id, BAM_P_HALT));
--	bchan->paused = 1;
--	spin_unlock_irqrestore(&bchan->vc.lock, flag);
-+	scoped_guard(spinlock_irqsave, &bchan->vc.lock) {
-+		writel_relaxed(1, bam_addr(bdev, bchan->id, BAM_P_HALT));
-+		bchan->paused = 1;
-+	}
- 	pm_runtime_mark_last_busy(bdev->dev);
- 	pm_runtime_put_autosuspend(bdev->dev);
- 
-@@ -799,17 +795,16 @@ static int bam_resume(struct dma_chan *chan)
- {
- 	struct bam_chan *bchan = to_bam_chan(chan);
- 	struct bam_device *bdev = bchan->bdev;
--	unsigned long flag;
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(bdev->dev);
- 	if (ret < 0)
- 		return ret;
- 
--	spin_lock_irqsave(&bchan->vc.lock, flag);
--	writel_relaxed(0, bam_addr(bdev, bchan->id, BAM_P_HALT));
--	bchan->paused = 0;
--	spin_unlock_irqrestore(&bchan->vc.lock, flag);
-+	scoped_guard(spinlock_irqsave, &bchan->vc.lock) {
-+		writel_relaxed(0, bam_addr(bdev, bchan->id, BAM_P_HALT));
-+		bchan->paused = 0;
-+	}
- 	pm_runtime_mark_last_busy(bdev->dev);
- 	pm_runtime_put_autosuspend(bdev->dev);
- 
-@@ -826,7 +821,6 @@ static int bam_resume(struct dma_chan *chan)
- static u32 process_channel_irqs(struct bam_device *bdev)
- {
- 	u32 i, srcs, pipe_stts, offset, avail;
--	unsigned long flags;
- 	struct bam_async_desc *async_desc, *tmp;
- 
- 	srcs = readl_relaxed(bam_addr(bdev, 0, BAM_IRQ_SRCS_EE));
-@@ -846,7 +840,7 @@ static u32 process_channel_irqs(struct bam_device *bdev)
- 
- 		writel_relaxed(pipe_stts, bam_addr(bdev, i, BAM_P_IRQ_CLR));
- 
--		spin_lock_irqsave(&bchan->vc.lock, flags);
-+		guard(spinlock_irqsave)(&bchan->vc.lock);
- 
- 		offset = readl_relaxed(bam_addr(bdev, i, BAM_P_SW_OFSTS)) &
- 				       P_SW_OFSTS_MASK;
-@@ -885,8 +879,6 @@ static u32 process_channel_irqs(struct bam_device *bdev)
- 			}
- 			list_del(&async_desc->desc_node);
- 		}
--
--		spin_unlock_irqrestore(&bchan->vc.lock, flags);
- 	}
- 
- 	return srcs;
-@@ -950,7 +942,6 @@ static enum dma_status bam_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
- 	int ret;
- 	size_t residue = 0;
- 	unsigned int i;
--	unsigned long flags;
- 
- 	ret = dma_cookie_status(chan, cookie, txstate);
- 	if (ret == DMA_COMPLETE)
-@@ -959,23 +950,22 @@ static enum dma_status bam_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
- 	if (!txstate)
- 		return bchan->paused ? DMA_PAUSED : ret;
- 
--	spin_lock_irqsave(&bchan->vc.lock, flags);
--	vd = vchan_find_desc(&bchan->vc, cookie);
--	if (vd) {
--		residue = container_of(vd, struct bam_async_desc, vd)->length;
--	} else {
--		list_for_each_entry(async_desc, &bchan->desc_list, desc_node) {
--			if (async_desc->vd.tx.cookie != cookie)
--				continue;
-+	scoped_guard(spinlock_irqsave, &bchan->vc.lock) {
-+		vd = vchan_find_desc(&bchan->vc, cookie);
-+		if (vd) {
-+			residue = container_of(vd, struct bam_async_desc, vd)->length;
-+		} else {
-+			list_for_each_entry(async_desc, &bchan->desc_list, desc_node) {
-+				if (async_desc->vd.tx.cookie != cookie)
-+					continue;
- 
--			for (i = 0; i < async_desc->num_desc; i++)
--				residue += le16_to_cpu(
--						async_desc->curr_desc[i].size);
-+				for (i = 0; i < async_desc->num_desc; i++)
-+					residue += le16_to_cpu(
-+							async_desc->curr_desc[i].size);
-+			}
- 		}
- 	}
- 
--	spin_unlock_irqrestore(&bchan->vc.lock, flags);
--
- 	dma_set_residue(txstate, residue);
- 
- 	if (ret == DMA_IN_PROGRESS && bchan->paused)
-@@ -1116,17 +1106,16 @@ static void dma_tasklet(struct tasklet_struct *t)
- {
- 	struct bam_device *bdev = from_tasklet(bdev, t, task);
- 	struct bam_chan *bchan;
--	unsigned long flags;
- 	unsigned int i;
- 
- 	/* go through the channels and kick off transactions */
- 	for (i = 0; i < bdev->num_channels; i++) {
- 		bchan = &bdev->channels[i];
--		spin_lock_irqsave(&bchan->vc.lock, flags);
-+
-+		guard(spinlock_irqsave)(&bchan->vc.lock);
- 
- 		if (!list_empty(&bchan->vc.desc_issued) && !IS_BUSY(bchan))
- 			bam_start_dma(bchan);
--		spin_unlock_irqrestore(&bchan->vc.lock, flags);
- 	}
- 
- }
-@@ -1140,15 +1129,12 @@ static void dma_tasklet(struct tasklet_struct *t)
- static void bam_issue_pending(struct dma_chan *chan)
- {
- 	struct bam_chan *bchan = to_bam_chan(chan);
--	unsigned long flags;
- 
--	spin_lock_irqsave(&bchan->vc.lock, flags);
-+	guard(spinlock_irqsave)(&bchan->vc.lock);
- 
- 	/* if work pending and idle, start a transaction */
- 	if (vchan_issue_pending(&bchan->vc) && !IS_BUSY(bchan))
- 		bam_start_dma(bchan);
--
--	spin_unlock_irqrestore(&bchan->vc.lock, flags);
+@@ -1097,14 +1098,14 @@ static void bam_start_dma(struct bam_chan *bchan)
  }
  
  /**
+- * dma_tasklet - DMA IRQ tasklet
+- * @t: tasklet argument (bam controller structure)
++ * bam_dma_work() - DMA interrupt work queue callback
++ * @work: work queue struct embedded in the BAM controller device struct
+  *
+  * Sets up next DMA operation and then processes all completed transactions
+  */
+-static void dma_tasklet(struct tasklet_struct *t)
++static void bam_dma_work(struct work_struct *work)
+ {
+-	struct bam_device *bdev = from_tasklet(bdev, t, task);
++	struct bam_device *bdev = from_work(bdev, work, work);
+ 	struct bam_chan *bchan;
+ 	unsigned int i;
+ 
+@@ -1117,14 +1118,13 @@ static void dma_tasklet(struct tasklet_struct *t)
+ 		if (!list_empty(&bchan->vc.desc_issued) && !IS_BUSY(bchan))
+ 			bam_start_dma(bchan);
+ 	}
+-
+ }
+ 
+ /**
+  * bam_issue_pending - starts pending transactions
+  * @chan: dma channel
+  *
+- * Calls tasklet directly which in turn starts any pending transactions
++ * Calls work queue directly which in turn starts any pending transactions
+  */
+ static void bam_issue_pending(struct dma_chan *chan)
+ {
+@@ -1292,14 +1292,14 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_disable_clk;
+ 
+-	tasklet_setup(&bdev->task, dma_tasklet);
++	INIT_WORK(&bdev->work, bam_dma_work);
+ 
+ 	bdev->channels = devm_kcalloc(bdev->dev, bdev->num_channels,
+ 				sizeof(*bdev->channels), GFP_KERNEL);
+ 
+ 	if (!bdev->channels) {
+ 		ret = -ENOMEM;
+-		goto err_tasklet_kill;
++		goto err_workqueue_cancel;
+ 	}
+ 
+ 	/* allocate and initialize channels */
+@@ -1364,8 +1364,8 @@ static int bam_dma_probe(struct platform_device *pdev)
+ err_bam_channel_exit:
+ 	for (i = 0; i < bdev->num_channels; i++)
+ 		tasklet_kill(&bdev->channels[i].vc.task);
+-err_tasklet_kill:
+-	tasklet_kill(&bdev->task);
++err_workqueue_cancel:
++	cancel_work_sync(&bdev->work);
+ err_disable_clk:
+ 	clk_disable_unprepare(bdev->bamclk);
+ 
+@@ -1399,7 +1399,7 @@ static void bam_dma_remove(struct platform_device *pdev)
+ 			    bdev->channels[i].fifo_phys);
+ 	}
+ 
+-	tasklet_kill(&bdev->task);
++	cancel_work_sync(&bdev->work);
+ 
+ 	clk_disable_unprepare(bdev->bamclk);
+ }
 
 -- 
 2.51.0

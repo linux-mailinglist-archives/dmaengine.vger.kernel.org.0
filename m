@@ -1,95 +1,110 @@
-Return-Path: <dmaengine+bounces-7093-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7094-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 823E6C3E2BD
-	for <lists+dmaengine@lfdr.de>; Fri, 07 Nov 2025 02:56:27 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37DCEC3E9BC
+	for <lists+dmaengine@lfdr.de>; Fri, 07 Nov 2025 07:20:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2877518891C5
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Nov 2025 01:56:52 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 321CA4EA0EB
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Nov 2025 06:20:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C1FE2FB0B1;
-	Fri,  7 Nov 2025 01:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A91721D3DC;
+	Fri,  7 Nov 2025 06:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T+y+/CwW"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from cmccmta1.chinamobile.com (cmccmta4.chinamobile.com [111.22.67.137])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052C02F3C09;
-	Fri,  7 Nov 2025 01:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.137
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93082AD25;
+	Fri,  7 Nov 2025 06:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762480581; cv=none; b=DXE2a2IjZhQzEw8XiiTkEJRoUXq0fpqFLZOaQH5GXvj7ATmV9zr5lAgfi1fYIRIQWhPNUvtCM4Hh0IhtEOLPidvtP/HrnT8wVS8c8hqOqmWBOTa6fgoiU+8d86/fToyP/8jLdHZz0XAo4FHrM7g6E6KOOdSDinRFs7BRPO+s8OU=
+	t=1762496404; cv=none; b=k+RHi6t8OvjsIjFYQFSBJZrQPaw/hr9CeAgoMDocOvGRXdCGD9HY3okVvAufrd5QWe4cl4uMrNsUWNQbSISul4WzIZTjIduoxW7bqgvkLHNe2o0/XPUpLPjx64p2dZBqxnAauoCYFzUs5UTFUggxlUC7YHwAXO4A8sGsdXz5qnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762480581; c=relaxed/simple;
-	bh=Njn2wOVC38pXs9fDIj9fCvncVfrHySQHPD0eUGmG+Qw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nAbXX5XW7zsxcHQex8qe1IS0JM7Ctl2evgJVba5SPEOQ8b02javRWdGALVajSw3OYSdIrM7+xgIhvbK/ESPFpRFBXp4lFnUJq5gV2FFkjXegO79tZP9o6gbHNI9N0eog3S8RftNkw6UGQDlE3seHfyQnBMNW7iSVbCOKhhEqBCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app04-12004 (RichMail) with SMTP id 2ee4690d51b5605-456a7;
-	Fri, 07 Nov 2025 09:56:07 +0800 (CST)
-X-RM-TRANSID:2ee4690d51b5605-456a7
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from FHB-W5100149 (unknown[10.55.1.70])
-	by rmsmtp-syy-appsvr07-12007 (RichMail) with SMTP id 2ee7690d51b5b08-690b5;
-	Fri, 07 Nov 2025 09:56:07 +0800 (CST)
-X-RM-TRANSID:2ee7690d51b5b08-690b5
-From: Zhang Chujun <zhangchujun@cmss.chinamobile.com>
-To: skhan@linuxfoundation.org
-Cc: dmaengine@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	vkoul@kernel.org,
-	zhangchujun@cmss.chinamobile.com
-Subject: Re: [PATCH] dma_map_benchmark: fix incorrect array access in printf
-Date: Fri,  7 Nov 2025 09:55:51 +0800
-Message-ID: <20251107015604.2029-1-zhangchujun@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.50.1.windows.1
-In-Reply-To: <250fe2c8-eeef-4764-ad50-d5e5987fbd38@linuxfoundation.org>
-References: <250fe2c8-eeef-4764-ad50-d5e5987fbd38@linuxfoundation.org>
+	s=arc-20240116; t=1762496404; c=relaxed/simple;
+	bh=QK4tnVEnx0dnUu1VZrRPH5XHyZSuEa5wnts9WKB07xc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=trYwP7i5cXkFhc5QyLFKXnp3n/af0KkefdUrStdWNd0JrzS5yzcn5EC/NCs3wY4MBzNP+PxW4+Ous9lvpVEOd8JTelPGLUrXSoRCSm70jS7B3UctP+gLlzCPpclmEwwJgt4zt6x8wL/6BmJzgV0Ha/EZN00WzBd8rwff19v6DX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T+y+/CwW; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=cx/OeR/TpXmHZozLgJx6VvSjc4tPJLhnHkHJTi2lSbo=; b=T+y+/CwWjmHf+F0zKFUbi4yg0S
+	pOqOmPKpfXbvaGTKYWi0KY47yOEBYUKywOJpBvGz7l94PhtsE4inro+ZXGbNDIS/ObLv4iGARtDZT
+	PA3XwsvZ3HbMBk55wj8LvauK3bCqjydtgy/En9ZhIs7hU+E0YLPGJ9PCWgKQPJed3/m943DDcYbDR
+	cUHUL9H2RmlJ7XruSVjh1iD2dagE8FIf777IVhmZVfiDrQlQnhaItGshJJ3wN/RYxAYKhqXj1ySx1
+	ZTT/aQYmqdgQW9aj9R+Cgzp6Kwb46grGj2GYC+mQkH+1cVQYJQmiAWGEIzIY+jl3uOcfw3SWU2UbY
+	o1logx0g==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vHFpH-0000000GjAS-2VnY;
+	Fri, 07 Nov 2025 06:19:59 +0000
+Message-ID: <1f9aa097-27c2-49c0-b01c-cd0377143bb4@infradead.org>
+Date: Thu, 6 Nov 2025 22:19:58 -0800
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 01/11] dmaengine: Add DMA_PREP_LOCK/DMA_PREP_UNLOCK
+ flags
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Vinod Koul <vkoul@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Thara Gopinath <thara.gopinath@gmail.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ Udit Tiwari <quic_utiwari@quicinc.com>,
+ Daniel Perez-Zoghbi <dperezzo@quicinc.com>,
+ Md Sadre Alam <mdalam@qti.qualcomm.com>
+Cc: dmaengine@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-crypto@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20251106-qcom-qce-cmd-descr-v8-0-ecddca23ca26@linaro.org>
+ <20251106-qcom-qce-cmd-descr-v8-1-ecddca23ca26@linaro.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20251106-qcom-qce-cmd-descr-v8-1-ecddca23ca26@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 05, 2025 at 08:30:00PM +0800, Zhang Chujun wrote:
-> The printf statement attempts to print the DMA direction string using
-> the syntax 'dir[directions]', which is an invalid array access. The
-> variable 'dir' is an integer, and 'directions' is a char pointer array.
-> This incorrect syntax should be 'directions[dir]', using 'dir' as the
-> index into the 'directions' array. Fix this by correcting the array
-> access from 'dir[directions]' to 'directions[dir]'.
 
-Hi Shuah,
 
-Thanks for your patience.
+On 11/6/25 3:33 AM, Bartosz Golaszewski wrote:
+>  Documentation/driver-api/dmaengine/provider.rst | 9 +++++++++
+>  include/linux/dmaengine.h                       | 6 ++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+> index 1594598b331782e4dddcf992159c724111db9cf3..6428211405472dd1147e363f5786acc91d95ed43 100644
+> --- a/Documentation/driver-api/dmaengine/provider.rst
+> +++ b/Documentation/driver-api/dmaengine/provider.rst
+> @@ -630,6 +630,15 @@ DMA_CTRL_REUSE
+>    - This flag is only supported if the channel reports the DMA_LOAD_EOT
+>      capability.
+>  
+> +- DMA_PREP_LOCK
+> +
+> +  - If set, the DMA controller will be locked for the duration of the current
+> +    transaction.
+> +
+> +- DMA_PREP_UNLOCK
+> +
+> +  - If set, DMA will release he controller lock.
 
-I found this issue while carefully reading the code in
-`dma_map_benchmark.c`. The expression `dir[directions]` stood out because
-`dir` is an integer (enum or int), while `directions` is a string array —
-so using `dir` as the index into `directions` is the correct form.
-Although C allows `a[b]` and `b[a]` syntactically due to pointer arithmetic,
-in this context `dir[directions]` is logically wrong and would print an
-unexpected (likely garbage) string, since it treats the address of the
-string array as an array indexed by a small integer.
+                                the
 
-The compiler doesn’t warn because `dir[directions]` is technically valid
-C (equivalent to `*(directions + dir)`), but semantically it’s backwards
-and breaks the intended output.
+> +
+>  General Design Notes
 
-Sorry for sending the patch twice, I’ll make sure to follow the proper
-mailing list guidelines going forward.
-
-Best regards,
-Zhang Chujun
-
+-- 
+~Randy
 
 

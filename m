@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-7108-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7112-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CB47C45FAB
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 11:39:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0E8FC45FE7
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 11:40:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 482704E8F14
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 10:39:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A0C61892A49
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 10:39:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4964930595A;
-	Mon, 10 Nov 2025 10:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 716C930AABC;
+	Mon, 10 Nov 2025 10:38:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LbleuIHm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UYYxpLJ5"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DF2302169;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582873054C4;
 	Mon, 10 Nov 2025 10:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762771095; cv=none; b=srYisKZaWpzO+Ll4g62TQ7Sws5HfiV2Ji+BjWVXV7D+wIJhfjStUfbwLx6rAcTvMaNm/Mn6pUZvVRktFyBg0gtsKemYezouaQp/DUCJabX6hf6zGZ5aZoFjiLvGz/xKxiHQSVRcMtaUkMd1ao7VegxmCuoqAg/1I+Y28BNwqIgM=
+	t=1762771097; cv=none; b=aX8pEVUeRVJkadbzy2zj3Gy2O5/i0eU0cGDLD7ZHWaW7biIJpcCdKnv3xH+om+eyqdn9QM6irMhELePVZ/PV7pTKuZ5/1TkdA5A59XpmpSo6Qq7xwW7t6gSSfkcC1Md3Xg0e8FPongQPgeQ5Po8nSdfaHH1BknyfIP/eKQ+bwxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762771095; c=relaxed/simple;
-	bh=okEedZx1EnwftUj5MeqZGlbG2fo9V7Tn4+bnq/5DJvo=;
+	s=arc-20240116; t=1762771097; c=relaxed/simple;
+	bh=Ux3YDPxRIRJcqm5FybObKjKYtBEmPBVV9iloQuSAsH0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZE5nkU9CvVmZhSZDF8N4KeGsxRY2p0u3DNwFswUDJsiyTe91SyU5PzeYWSuZxmdqfCw7Dv2dIx2JvJtO5Om5duqR+3Fm83oKMLfjn05U5u7ZMrsXsbgym9hSpASW9/GeG49KQk7HvmUxXG/Jq2oK8WReo2enufIdY1AguzCpUVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LbleuIHm; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=rYMFYgmJwxQs/ZCWPOWPbxj2L41GbrxJ21kXMf1PRpkyL7Hcr9u2Bzn/fyhtq1RGJy2zAIMe0A7A1HyHPUMZYKsXXcdFo54IIEOY3awU0wNUB0rknmWExA81W7csCbT0KUFQ8tyXOxwDzTg2x8wos+UNeHoUguOnAkKwFh1oZ/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UYYxpLJ5; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762771093; x=1794307093;
+  t=1762771094; x=1794307094;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=okEedZx1EnwftUj5MeqZGlbG2fo9V7Tn4+bnq/5DJvo=;
-  b=LbleuIHmfAoO6Y1DY/3XlFegjue2+BY20DF0MQdV7pH9K5CAoxeXRrBl
-   /IVZsmSTWwP9mgDzDMw/PkdgEO0i4u+fZopZeYiipclxJ+v0/Ze7In78G
-   O9edAn9wIUaFZZa2/lyKZbgN9AvPg2Y/0PFaiUMx6YvLtep/ETy81rrAH
-   HRQ4dDh+e/ZIV+5rEjwl/jyn1YPgSy5XwUnzHOSTIZ40GzsCuHHsQCFiy
-   hd4aBPKoC6vjeW70dC+LIASt44prp/MdAX6bGBw+Q2kb6XIqVAfc+xBn5
-   QcBFrSLhoT2DP4jk59rGviBCqcxmTafYAYxcLOv4LisFB1M6OfMWWkId6
+  bh=Ux3YDPxRIRJcqm5FybObKjKYtBEmPBVV9iloQuSAsH0=;
+  b=UYYxpLJ56cjJ/DqX4ztgsk+o13Uz2IyO+S/5ARrv42OuNBGpCbGLnxUZ
+   jw8DCsQUmENCRnODEfbXc2eOZOp7rBlOYw+mLfr8q+AzYt8czjkEu1y3j
+   ItZodr/v9WGGIl+UvKaVdgtYPVH/o9pwy5iJ/ylY1sy4IRNvvejGhfhz0
+   upRvYL71dKyZn6GazYDlJqEgxESSXByOL5EybR8Mc0v+fPA78J617ApNW
+   ClAt03n8tmYt7PziFvOMBBY8F8pFDCDjBL7LmPqtko+l30enbnmMm+F2M
+   cypW4x0SY+ovs9V1qc4uoaDo7Uby4S6dPbk3i1u3IDQdnPjLKid1MRtsp
    w==;
-X-CSE-ConnectionGUID: lH3Oghl5T+Sc3muXRujU5Q==
-X-CSE-MsgGUID: o3z7JB12TIWDoWk2s5p5jg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="64859182"
+X-CSE-ConnectionGUID: JZQ/2rgQT1GszxIRsiUJDQ==
+X-CSE-MsgGUID: 2h3nOemkT+u+TdN52gviJQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="64907219"
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="64859182"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 02:38:13 -0800
-X-CSE-ConnectionGUID: 0FzUCnuZTWC9x35V0/Pj1g==
-X-CSE-MsgGUID: N7zDuTyBSiyQNna+/YVpVg==
+   d="scan'208";a="64907219"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 02:38:13 -0800
+X-CSE-ConnectionGUID: LIP04zOORreySQZMlK9cMg==
+X-CSE-MsgGUID: ybY7gYwFRaiOboFvVla2rg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="189361329"
+   d="scan'208";a="219369242"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa010.fm.intel.com with ESMTP; 10 Nov 2025 02:38:08 -0800
+  by fmviesa001.fm.intel.com with ESMTP; 10 Nov 2025 02:38:08 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 699E696; Mon, 10 Nov 2025 11:38:07 +0100 (CET)
+	id 6FA7397; Mon, 10 Nov 2025 11:38:07 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Stefan Wahren <wahrenst@gmx.net>,
@@ -87,9 +87,9 @@ Cc: Olivier Dautricourt <olivierdautricourt@gmail.com>,
 	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
 	Michal Simek <michal.simek@amd.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 01/13] scatterlist: introduce sg_nents_for_dma() helper
-Date: Mon, 10 Nov 2025 11:23:28 +0100
-Message-ID: <20251110103805.3562136-2-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 02/13] dmaengine: altera-msgdma: use sg_nents_for_dma() helper
+Date: Mon, 10 Nov 2025 11:23:29 +0100
+Message-ID: <20251110103805.3562136-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251110103805.3562136-1-andriy.shevchenko@linux.intel.com>
 References: <20251110103805.3562136-1-andriy.shevchenko@linux.intel.com>
@@ -101,65 +101,33 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Sometimes the user needs to split each entry on the mapped scatter list
-due to DMA length constrains. This helper returns a number of entities
-assuming that each of them is not bigger than supplied maximum length.
+Instead of open coded variant let's use recently introduced helper.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/scatterlist.h |  2 ++
- lib/scatterlist.c           | 25 +++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ drivers/dma/altera-msgdma.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-index 29f6ceb98d74..6de1a2434299 100644
---- a/include/linux/scatterlist.h
-+++ b/include/linux/scatterlist.h
-@@ -441,6 +441,8 @@ static inline void sg_init_marker(struct scatterlist *sgl,
+diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
+index a203fdd84950..48d2a0e638bb 100644
+--- a/drivers/dma/altera-msgdma.c
++++ b/drivers/dma/altera-msgdma.c
+@@ -396,13 +396,12 @@ msgdma_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
+ 	void *desc = NULL;
+ 	size_t len, avail;
+ 	dma_addr_t dma_dst, dma_src;
+-	u32 desc_cnt = 0, i;
+ 	struct scatterlist *sg;
++	u32 desc_cnt;
+ 	u32 stride;
+ 	unsigned long irqflags;
  
- int sg_nents(struct scatterlist *sg);
- int sg_nents_for_len(struct scatterlist *sg, u64 len);
-+int sg_nents_for_dma(struct scatterlist *sgl, unsigned int sglen, size_t len);
-+
- struct scatterlist *sg_last(struct scatterlist *s, unsigned int);
- void sg_init_table(struct scatterlist *, unsigned int);
- void sg_init_one(struct scatterlist *, const void *, unsigned int);
-diff --git a/lib/scatterlist.c b/lib/scatterlist.c
-index 4af1c8b0775a..4d1a010f863c 100644
---- a/lib/scatterlist.c
-+++ b/lib/scatterlist.c
-@@ -64,6 +64,31 @@ int sg_nents_for_len(struct scatterlist *sg, u64 len)
- }
- EXPORT_SYMBOL(sg_nents_for_len);
+-	for_each_sg(sgl, sg, sg_len, i)
+-		desc_cnt += DIV_ROUND_UP(sg_dma_len(sg), MSGDMA_MAX_TRANS_LEN);
++	desc_cnt = sg_nents_for_dma(sgl, sg_len, MSGDMA_MAX_TRANS_LEN);
  
-+/**
-+ * sg_nents_for_dma - return the count of DMA-capable entries in scatterlist
-+ * @sgl:	The scatterlist
-+ * @sglen:	The current number of entries
-+ * @len:	The maximum length of DMA-capable block
-+ *
-+ * Description:
-+ * Determines the number of entries in @sgl which would be permitted in
-+ * DMA-capable transfer if list had been split accordingly, taking into
-+ * account chaining as well.
-+ *
-+ * Returns:
-+ *   the number of sgl entries needed
-+ *
-+ **/
-+int sg_nents_for_dma(struct scatterlist *sgl, unsigned int sglen, size_t len)
-+{
-+	struct scatterlist *sg;
-+	int i, nents = 0;
-+
-+	for_each_sg(sgl, sg, sglen, i)
-+		nents += DIV_ROUND_UP(sg_dma_len(sg), len);
-+	return nents;
-+}
-+
- /**
-  * sg_last - return the last scatterlist entry in a list
-  * @sgl:	First entry in the scatterlist
+ 	spin_lock_irqsave(&mdev->lock, irqflags);
+ 	if (desc_cnt > mdev->desc_free_cnt) {
 -- 
 2.50.1
 

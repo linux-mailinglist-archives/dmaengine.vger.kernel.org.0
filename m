@@ -1,47 +1,47 @@
-Return-Path: <dmaengine+bounces-7127-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7128-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B91BC47888
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 16:28:36 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 254CEC4784A
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 16:26:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 827A93A9FB6
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 15:18:14 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id E94874F5815
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 15:19:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B66A316199;
-	Mon, 10 Nov 2025 15:17:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 870063128AB;
+	Mon, 10 Nov 2025 15:18:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQwMYm6Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMbris1l"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0990623A58B;
-	Mon, 10 Nov 2025 15:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B3D22FDEA;
+	Mon, 10 Nov 2025 15:18:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762787833; cv=none; b=hzag68pH7KtVyk/3pRyJoVRUg4zfv28ACsA754ZjCAXiqcXZzG0KubAMRkYC/swcruVi2Sh7vAULiVXB7LBHaHMYxqx29PqbmVSt2mQISoHwmmKzHWOWR/m3Wba4wiaI3GEkNKWF4+FnXah6dSURdk2ho9ErWd0vxpeUGjQPtNw=
+	t=1762787881; cv=none; b=C6DNfQB1gQWgeS8Az/AZbLvOxmExcehfXzf1/UKCWNd9/VB5bNjHWupNNj+YA/aa+NHFUdaoWVa66PXaFG/7OpuLhbaX3wdDj4jRm7BWfJcApCNv6TUy8zIHDBTdkG4zAZxVIEKh5BPLkglnRPSV99yu2LtKBc8+jHtoQLMhLdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762787833; c=relaxed/simple;
-	bh=4/NiTzMh9keqtirYL2aI8f4//oEtuSlc6IsakhE2XcQ=;
+	s=arc-20240116; t=1762787881; c=relaxed/simple;
+	bh=bXd9TtF3dk2wRq/oyzyztTa7C2oi3PkIcAOa05k8Tlc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pdsr4ii74y61qw8iqMQhYd3VCu+IAZ2xU4jcpM1ntZJufqIXTA79M+trcDjGEUn2gNyGDNM4fqAmUf/jVEUJwZiRKZpfV7TNySV3+f2I60b0H64HDhTXODGErsAHupfWlRByGvMe9v2siMXE2AIqvTKvJgTAAQfQyPBC1/CiVFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQwMYm6Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD586C4CEF5;
-	Mon, 10 Nov 2025 15:17:10 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=i2YY4gNnJPHCC01tJJeyqx02n1cgur6F66B3aWVp5QOMB8fjPbgsNqYBMSfPj2KNzp1tgmu6i3oIrW4V0SNEcb+7GpdFjLGLZoq61xMTX7yGE0nZ/o+qQ6qDboFwM2CsQeuuzIEXS6NiHwkQg6jpNXAEer4D99n78wLBqNTcX30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMbris1l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43FDBC4CEF5;
+	Mon, 10 Nov 2025 15:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762787832;
-	bh=4/NiTzMh9keqtirYL2aI8f4//oEtuSlc6IsakhE2XcQ=;
+	s=k20201202; t=1762787880;
+	bh=bXd9TtF3dk2wRq/oyzyztTa7C2oi3PkIcAOa05k8Tlc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NQwMYm6ZOfzM7bhvnvuyx+ZuRz17RKu2Y5151m9WX8YpLI6OYbRivm3JuCCbUqMP9
-	 2uRQXLpW20r7q8l0s+CJMeZxHoiQ766yKIWy5iMBCRx4EOCExgAOkT7lyk5eCDZlf3
-	 RXMhvH9OecPP8ofLFS/uAsWLYddglgxG0HOXC5anSxRxRrqxHOngzz3D/diMhyp/Zx
-	 4ZwNuj20U6w2ZoBFcKpIssKFkuM3DfeGUowdsydLOkrWz+USB0VlhkHttIGBcjkjCW
-	 m/gi7K4dmkgPmAvjCw/rUMLy+liIoKMR+CHey5/FqeoHI8BL6/LqtgnPNucQp1hb83
-	 7U7sgAj4OiJLA==
-Date: Mon, 10 Nov 2025 09:21:18 -0600
+	b=TMbris1lF1zUOR+rGlAjOMgRPn2kNYoJHRbnvYFQWaaIX14n+LHehqDy0FcnNZa5v
+	 hwc5SOnQDIhKdThiA/NIwcIbGGcIsksIDSVbZBNxyQr8VaaYKF9Zi9BFzHgKNlB67E
+	 vRNE7hp+l1PUBjxVkQ2B1Xg2oeOiaxcjHNl7XgxwZJhl3FoA0A5XJYNFareLSD+B13
+	 IZI+uziLiPWuqSoo8y0FZXBO6Ec2by7B5cDqiXUUrxYxRUV24bABkd1QnqWrO+6vwx
+	 Uosw+h6nEz+AAWMEzPQnBCCXb3zJGZU0GpcfGkIWB1DtbBARyGyE8Qz8vlENswZHZn
+	 ozHwZ7m8HVdUg==
+Date: Mon, 10 Nov 2025 09:22:06 -0600
 From: Bjorn Andersson <andersson@kernel.org>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Stefan Wahren <wahrenst@gmx.net>, Vinod Koul <vkoul@kernel.org>, 
@@ -57,11 +57,10 @@ Cc: Stefan Wahren <wahrenst@gmx.net>, Vinod Koul <vkoul@kernel.org>,
 	Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>, 
 	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>, Michal Simek <michal.simek@amd.com>, 
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 01/13] scatterlist: introduce sg_nents_for_dma() helper
-Message-ID: <jea2owcqtjeomlbwkfopt3ujsnakn4p3xeyqhh7s4kowf7k7dr@deyg5pky5udo>
+Subject: Re: [PATCH v2 00/13] dmaengine: introduce sg_nents_for_dma() and
+ convert users
+Message-ID: <h4twbib3pxrcmohckzg7d64moo5v5gjtdu3pz5wtroegdylcuh@7po5qbe3h2au>
 References: <20251110103805.3562136-1-andriy.shevchenko@linux.intel.com>
- <20251110103805.3562136-2-andriy.shevchenko@linux.intel.com>
- <waid6zxayuxacb6sntlxwgyjia3w25sfz2tzxxzb4tkqgmx63o@ndpztxeh6o32>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,90 +69,67 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <waid6zxayuxacb6sntlxwgyjia3w25sfz2tzxxzb4tkqgmx63o@ndpztxeh6o32>
+In-Reply-To: <20251110103805.3562136-1-andriy.shevchenko@linux.intel.com>
 
-On Mon, Nov 10, 2025 at 09:05:26AM -0600, Bjorn Andersson wrote:
-> On Mon, Nov 10, 2025 at 11:23:28AM +0100, Andy Shevchenko wrote:
-> > Sometimes the user needs to split each entry on the mapped scatter list
-> > due to DMA length constrains. This helper returns a number of entities
-> > assuming that each of them is not bigger than supplied maximum length.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  include/linux/scatterlist.h |  2 ++
-> >  lib/scatterlist.c           | 25 +++++++++++++++++++++++++
-> >  2 files changed, 27 insertions(+)
-> > 
-> > diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-> > index 29f6ceb98d74..6de1a2434299 100644
-> > --- a/include/linux/scatterlist.h
-> > +++ b/include/linux/scatterlist.h
-> > @@ -441,6 +441,8 @@ static inline void sg_init_marker(struct scatterlist *sgl,
-> >  
-> >  int sg_nents(struct scatterlist *sg);
-> >  int sg_nents_for_len(struct scatterlist *sg, u64 len);
-> > +int sg_nents_for_dma(struct scatterlist *sgl, unsigned int sglen, size_t len);
-> > +
-> >  struct scatterlist *sg_last(struct scatterlist *s, unsigned int);
-> >  void sg_init_table(struct scatterlist *, unsigned int);
-> >  void sg_init_one(struct scatterlist *, const void *, unsigned int);
-> > diff --git a/lib/scatterlist.c b/lib/scatterlist.c
-> > index 4af1c8b0775a..4d1a010f863c 100644
-> > --- a/lib/scatterlist.c
-> > +++ b/lib/scatterlist.c
-> > @@ -64,6 +64,31 @@ int sg_nents_for_len(struct scatterlist *sg, u64 len)
-> >  }
-> >  EXPORT_SYMBOL(sg_nents_for_len);
-> >  
-> > +/**
-> > + * sg_nents_for_dma - return the count of DMA-capable entries in scatterlist
-> > + * @sgl:	The scatterlist
-> > + * @sglen:	The current number of entries
-> > + * @len:	The maximum length of DMA-capable block
-> > + *
-> > + * Description:
-> > + * Determines the number of entries in @sgl which would be permitted in
-> > + * DMA-capable transfer if list had been split accordingly, taking into
-> > + * account chaining as well.
-> > + *
-> > + * Returns:
-> > + *   the number of sgl entries needed
-> > + *
-> > + **/
-> > +int sg_nents_for_dma(struct scatterlist *sgl, unsigned int sglen, size_t len)
+On Mon, Nov 10, 2025 at 11:23:27AM +0100, Andy Shevchenko wrote:
+> A handful of the DMAengine drivers use same routine to calculate the number of
+> SG entries needed for the given DMA transfer. Provide a common helper for them
+> and convert.
+> 
+> I left the new helper on SG level of API because brief grepping shows potential
+> candidates outside of DMA engine, e.g.:
+> 
+>   drivers/crypto/chelsio/chcr_algo.c:154:  nents += DIV_ROUND_UP(less, entlen);
+>   drivers/spi/spi-stm32.c:1495:  /* Count the number of entries needed */
+> 
 
-All but two clients store the value in an unsigned int. Changing the
-return type to unsigned int also signals that the function is just
-returning a count (no errors).
+Comment in patch 1, but for the rest.
+
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
 Regards,
 Bjorn
 
-> > +{
-> > +	struct scatterlist *sg;
-> > +	int i, nents = 0;
-> > +
-> > +	for_each_sg(sgl, sg, sglen, i)
-> > +		nents += DIV_ROUND_UP(sg_dma_len(sg), len);
-> > +	return nents;
-> > +}
+> Changelog v2:
+> - dropped outdated patches (only 9 years passed :-)
+> - rebased on top of the current kernel
+> - left API SG wide It might
 > 
-> We need an EXPORT_SYMBOL() here.
+> v1: https://patchwork.kernel.org/project/linux-dmaengine/patch/20161021173535.100245-1-andriy.shevchenko@linux.intel.com/
 > 
-> With that, this looks good to me.
+> Andy Shevchenko (13):
+>   scatterlist: introduce sg_nents_for_dma() helper
+>   dmaengine: altera-msgdma: use sg_nents_for_dma() helper
+>   dmaengine: axi-dmac: use sg_nents_for_dma() helper
+>   dmaengine: bcm2835-dma: use sg_nents_for_dma() helper
+>   dmaengine: dw-axi-dmac: use sg_nents_for_dma() helper
+>   dmaengine: k3dma: use sg_nents_for_dma() helper
+>   dmaengine: lgm: use sg_nents_for_dma() helper
+>   dmaengine: pxa-dma: use sg_nents_for_dma() helper
+>   dmaengine: qcom: adm: use sg_nents_for_dma() helper
+>   dmaengine: qcom: bam_dma: use sg_nents_for_dma() helper
+>   dmaengine: sa11x0: use sg_nents_for_dma() helper
+>   dmaengine: sh: use sg_nents_for_dma() helper
+>   dmaengine: xilinx: xdma: use sg_nents_for_dma() helper
 > 
-> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+>  drivers/dma/altera-msgdma.c                   |  5 ++--
+>  drivers/dma/bcm2835-dma.c                     | 19 +-------------
+>  drivers/dma/dma-axi-dmac.c                    |  5 +---
+>  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    |  6 ++---
+>  drivers/dma/k3dma.c                           |  9 ++-----
+>  drivers/dma/lgm/lgm-dma.c                     |  9 ++-----
+>  drivers/dma/pxa_dma.c                         |  5 ++--
+>  drivers/dma/qcom/bam_dma.c                    |  9 ++-----
+>  drivers/dma/qcom/qcom_adm.c                   |  9 +++----
+>  drivers/dma/sa11x0-dma.c                      |  6 ++---
+>  drivers/dma/sh/shdma-base.c                   |  5 ++--
+>  drivers/dma/xilinx/xdma.c                     |  6 ++---
+>  include/linux/scatterlist.h                   |  2 ++
+>  lib/scatterlist.c                             | 25 +++++++++++++++++++
+>  14 files changed, 51 insertions(+), 69 deletions(-)
 > 
-> Regards,
-> Bjorn
+> -- 
+> 2.50.1
 > 
-> > +
-> >  /**
-> >   * sg_last - return the last scatterlist entry in a list
-> >   * @sgl:	First entry in the scatterlist
-> > -- 
-> > 2.50.1
-> > 
-> > 
 > 
 

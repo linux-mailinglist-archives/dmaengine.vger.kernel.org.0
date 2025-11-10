@@ -1,76 +1,50 @@
-Return-Path: <dmaengine+bounces-7104-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7102-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A35A1C45750
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 09:54:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A14CEC45735
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 09:52:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 74B96188FB12
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 08:54:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 048A43AB770
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Nov 2025 08:52:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440652FD1D5;
-	Mon, 10 Nov 2025 08:53:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A9F52FD7B1;
+	Mon, 10 Nov 2025 08:52:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TbqrNStJ"
+	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="SEsYRy3t"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753ED254AFF;
-	Mon, 10 Nov 2025 08:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A21E248891;
+	Mon, 10 Nov 2025 08:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762764834; cv=none; b=LZwTgpGTpp1EOuIqAUST0chSfR+dfOQKZj3K9G+aPBfR7vxFbuKBjhmhhw8YE98f/Hruhu/hzDnjy7NbJgTGuL5d0LK6oBZ2trnnm6w5oI0YineQZAN7UF+XjN1Hu2J1pBtqGJduifmgpSXSE5F+zqzuQTqa2rpBQ0QebV7imtw=
+	t=1762764732; cv=none; b=KHLCLv3K5bMM57Zh+gQq18am2rG/cjk7O5pg0vLYSEsH76O3Aacs4yj95L6oXiq8dsewv9S/AAfpvcfz47tmcOX3Xpn+FgEq31ktay4+yqjEyS+Hd9uFN32LV2+AmZWrsWHZgj17aBlfMBaKUxy+/Va5W0wk/yv91pKKNtmAwbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762764834; c=relaxed/simple;
-	bh=H2Ut4C47TjTTWAEiAZB6fT+V+Bi06YVKL5a7Ju+hC+U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QvXzOsuK+nE95BQGT0JRqtV7O6whC78V2NNPg7TlMYJ5KtdYA7YsuEWj9QGf6og2ztB6vIiPumdvSSPar+VOQPQkO6uPfpZp5UeX4INSY7oXww0JXCrSU5+oDKI+HlPNl5M8zKVE0KWNBS0CJp7TJKpp3aRvAsdC1EYWno8fmMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TbqrNStJ; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762764832; x=1794300832;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=H2Ut4C47TjTTWAEiAZB6fT+V+Bi06YVKL5a7Ju+hC+U=;
-  b=TbqrNStJKBAG17ubxWqsCUFYljUjKDba5yJSh+lcSwHObgS33aCYIfVf
-   k9qj9/Xoi1ESugE9HRYKEH+v/scQRT8MDyww81rbfTG60Kj+k6ksxqRYB
-   eZLgxoAAkNmsOUfxhT5Ee60/vPUfegPD5SFw6bFE3rbo402QvkKjXVtmF
-   JS/7Zy50Rl/92fdOLB4CjFHduBcetgfo6ZEa1Xqc5T1If9zyCBPCnjUjo
-   noYwtVAi0v+BssOMqyORYg0XqWvL6kEmTDnZXywvb1UrPBNgr16IMhCLb
-   miKl7U20xxygjpIwaQFrDBGXTH6H8jmE6FVrjrBa2pAsz2rHyThnpaFWB
-   A==;
-X-CSE-ConnectionGUID: /lrjNrGAQTqFwOH7sxoenQ==
-X-CSE-MsgGUID: s3n+L3x9TXSrMyBOd2gJzA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="67417845"
-X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="67417845"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 00:53:52 -0800
-X-CSE-ConnectionGUID: J5AWogJfSsCj2ztNDCWb9A==
-X-CSE-MsgGUID: WjtjAC/mSKekqckoNB02QQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,293,1754982000"; 
-   d="scan'208";a="188458045"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa006.fm.intel.com with ESMTP; 10 Nov 2025 00:53:50 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 2DCC698; Mon, 10 Nov 2025 09:53:50 +0100 (CET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	s=arc-20240116; t=1762764732; c=relaxed/simple;
+	bh=K+XaybmtfpqHcjKaCkJr8J+VLm4wYXeR6iV5x1IR+HQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X/Gvpx6YIRYNmTq1iqTpmk8Af5g8+xw28q4qcOOolcU8itvcUWoV4OLiEOKyvusHvrf590Aj6oYqelkCUpIlICp/h3ewovMMHf4AtkOPva1I0b2BPsDsNXdfbCXeG8N9L+ml01zBnGa4YDGu0pckRUqnrWvVxhdtMttAlAdXd+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=SEsYRy3t; arc=none smtp.client-ip=45.254.49.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
+Received: from LAPTOP-N070L597.localdomain (unknown [223.112.146.162])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 29056feac;
+	Mon, 10 Nov 2025 16:52:01 +0800 (GMT+08:00)
+From: Zilin Guan <zilin@seu.edu.cn>
+To: keguang.zhang@gmail.com
+Cc: vkoul@kernel.org,
+	linux-mips@vger.kernel.org,
 	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 3/3] dmaengine: Sort headers alphabetically
-Date: Mon, 10 Nov 2025 09:47:45 +0100
-Message-ID: <20251110085349.3414507-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20251110085349.3414507-1-andriy.shevchenko@linux.intel.com>
-References: <20251110085349.3414507-1-andriy.shevchenko@linux.intel.com>
+	linux-kernel@vger.kernel.org,
+	jianhao.xu@seu.edu.cn,
+	Zilin Guan <zilin@seu.edu.cn>
+Subject: [PATCH] dmaengine: Loongson1: Fix memory leak in ls1x_dma_prep_dma_cyclic()
+Date: Mon, 10 Nov 2025 08:51:59 +0000
+Message-Id: <20251110085159.754528-1-zilin@seu.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -78,68 +52,48 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9a6cf70cca03a1kunm6f9f71c9a59337
+X-HM-MType: 10
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSkNCVhlOGRhITEhPT0lLTFYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJSUhVSkpJVUpPTVVKTUlZV1kWGg8SFR0UWUFZT0tIVUpLSUJDQ0xVSktLVU
+	tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=SEsYRy3t70QomWfnKUNX5YgGVIArj7EpAQYHNlAYLTj1Io55hjZYFyRRHCw3arKl81YBcSDxEmgUteCqvuawSlBur7Ji5HoEj3dBs7q8T8qCpHsIEaMmSu1FWjXc7f0ZVF4d467rQdyDZGAvMssDqyl1Mfh1q4T93tvbEO6dc3o=; s=default; c=relaxed/relaxed; d=seu.edu.cn; v=1;
+	bh=diZNDUepMPp6k3NXFNNQrzxv9BkBiMSl8tvoJAuqeyo=;
+	h=date:mime-version:subject:message-id:from;
 
-For better maintenance sort headers alphabetically.
+In ls1x_dma_prep_dma_cyclic(), a descriptor is allocated with
+ls1x_dma_alloc_desc(). If the subsequent allocation for the scatterlist
+fails, the function returns NULL without freeing the descriptor, which
+causes a memory leak.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fix this by calling ls1x_dma_free_desc() in the error path to ensure
+the descriptor is freed.
+
+Fixes: e06c432312148 ("dmaengine: Loongson1: Add Loongson-1 APB DMA driver")
+Signed-off-by: Zilin Guan <zilin@seu.edu.cn>
 ---
- drivers/dma/dmaengine.c | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ drivers/dma/loongson1-apb-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index e89280587d5d..5bc38424398b 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -31,29 +31,29 @@
+diff --git a/drivers/dma/loongson1-apb-dma.c b/drivers/dma/loongson1-apb-dma.c
+index 255fe7eca212..5ee829bc5c77 100644
+--- a/drivers/dma/loongson1-apb-dma.c
++++ b/drivers/dma/loongson1-apb-dma.c
+@@ -336,8 +336,10 @@ ls1x_dma_prep_dma_cyclic(struct dma_chan *dchan, dma_addr_t buf_addr,
+ 	/* allocate the scatterlist */
+ 	sg_len = buf_len / period_len;
+ 	sgl = kmalloc_array(sg_len, sizeof(*sgl), GFP_NOWAIT);
+-	if (!sgl)
++	if (!sgl) {
++		ls1x_dma_free_desc(&desc->vd);
+ 		return NULL;
++	}
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#include <linux/platform_device.h>
--#include <linux/dma-mapping.h>
--#include <linux/init.h>
--#include <linux/module.h>
--#include <linux/mm.h>
--#include <linux/device.h>
--#include <linux/dmaengine.h>
--#include <linux/hardirq.h>
--#include <linux/spinlock.h>
--#include <linux/of.h>
--#include <linux/property.h>
--#include <linux/percpu.h>
--#include <linux/rcupdate.h>
--#include <linux/mutex.h>
--#include <linux/jiffies.h>
--#include <linux/rculist.h>
--#include <linux/idr.h>
--#include <linux/slab.h>
- #include <linux/acpi.h>
- #include <linux/acpi_dma.h>
--#include <linux/of_dma.h>
-+#include <linux/device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/dmaengine.h>
-+#include <linux/hardirq.h>
-+#include <linux/idr.h>
-+#include <linux/init.h>
-+#include <linux/jiffies.h>
- #include <linux/mempool.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/numa.h>
-+#include <linux/of.h>
-+#include <linux/of_dma.h>
-+#include <linux/percpu.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/rculist.h>
-+#include <linux/rcupdate.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
- 
- #include "dmaengine.h"
- 
+ 	sg_init_table(sgl, sg_len);
+ 	for (i = 0; i < sg_len; ++i) {
 -- 
-2.50.1
+2.34.1
 
 

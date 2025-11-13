@@ -1,53 +1,53 @@
-Return-Path: <dmaengine+bounces-7149-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7150-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6BACC57649
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Nov 2025 13:27:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A694EC57616
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Nov 2025 13:25:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 260D04E82DF
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83CC83BD4E2
 	for <lists+dmaengine@lfdr.de>; Thu, 13 Nov 2025 12:23:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D08DD3502B7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECA22350A07;
 	Thu, 13 Nov 2025 12:22:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mhFkFB8w"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EJ3jZoDq"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA75734F24A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA80434F255;
 	Thu, 13 Nov 2025 12:22:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763036570; cv=none; b=REBL5K4VBRmOj/wdFRXMwIwUQF8/MMiAAlHHhnkSg39U14TWbKPkMwSVJ4uXCIVIpmoGCv6Nl5TAQgxs6glv257lNSEeDRJNyBH2elxmx2PXnRWc3pKZkQxEtx+ul+PWKM8mIOQzdI2vx/3wizpaHghyP56yAvZiZtA27KmQPvs=
+	t=1763036570; cv=none; b=sGYCZ60EunNXikLcpAfVrBevyHn+6Ni2c6aDqwTgWbcQLYFYAAk6oDhcQfH9kRGFt3GXa5LgnaEZMDpuj+8FSYXpI1A+JsZ4ZbrjOK2/D5ufCd7NBS0yfK2eWo3c1hi018ozyi9HnOXVpPfRwgvDd78Kwq1K1eew7AHxKq95Rek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763036570; c=relaxed/simple;
-	bh=k8+meZJQprbtExrsSpzTiYBLLVkN3FNkJSPN8CJTMSA=;
+	bh=f8YYs7Jtpjk+WCoX4FIuodOSedKrGO1EncRMDJxwpIg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ODPSS91x/+cOdVM614i96zONN6S6XlIXv/n0Toj27TwbTDfsEOYCCIWEjIsY4qLZ2AwzQyrTv+99FX7PlkyJhwFCEwMaHDGZw6u8Hht8sQwRDQdlXF2P1WbpXVsXdg4Uso2U4YGFbzna8MdPNVoUhvu1bOK0szsyr5LzVed2kQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mhFkFB8w; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=OUuVAOUSkYTF5YWB40uP0UK6X9cj+yDgdwRcRZgJ6VB3ghntmuPyi9NxbVRG5DYW8J06+wDIVJiiou8+5ltF1n84/Hx85ortmTo4NwCHBwUYXZLTD7QAg8rYyrmjf0IjdiMSRHmcwwqLIXXCxy+D5T42nGqKKcMkWcU+q9mlubo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EJ3jZoDq; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
 	s=mail; t=1763036561;
-	bh=k8+meZJQprbtExrsSpzTiYBLLVkN3FNkJSPN8CJTMSA=;
+	bh=f8YYs7Jtpjk+WCoX4FIuodOSedKrGO1EncRMDJxwpIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mhFkFB8wHB0rVMhJiyD/PKAF0WTYTQ2PpYbUPHeHsSQ6hsRDn1hKUfkQhNaICED86
-	 kdrdumJVSvl5q5BTsGFBbcQUh3+n7rAWJPnLzzKM4FD3mo/khOdcb3DMOrysHEXsWv
-	 9srCkHScQcbq1ho9N2DeMQJnZT03t/rZwmetD30tKYeqtTfgGwFeHNL9OJW7ET91bz
-	 fOszy+WD7QZNcCcwJIJ/1xfZV56tYdgl5/A+oP3bYzRGdRRAKu8kni1hvPBog2Aguc
-	 1NHCFZXHxgqbJMwq69bMZjtlOH7alMxX0YxzoHbT/+yDShWxwCIcYjPek5q7StqrIb
-	 jTW2hhWFQsWyQ==
+	b=EJ3jZoDq6ylhDglSq4WfGnX7ldDjDX1VjLcH77Zeh/aDi66YZZCRJhb3aRdWEoQLR
+	 teJKN5eqIeNBX1yC2pIt5PPlnQFUGiL7gxNgkXQ//Bcsp5siRdHExMlTO86yzT5+ih
+	 Nn9pAtloB3Sml3DdlNprkgYtf9aM9kdqEPkGjz40Yv9zruUZG1SAmwvDYMglxXEc7x
+	 +jh2V4K81zoYiVFPTWZUXHyAzsRarLRWuhOpJ40vLOdweVMyFH2DLboPF9EZzCIdMt
+	 sigq3NIk55kwo1bLmcwCuzSMzvxcmyVDrUzqwVGcPD86ZWD2SfnO/oeQ8fjlbbQbc6
+	 E5tILBREiZgVg==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9D20D17E13C1;
-	Thu, 13 Nov 2025 13:22:40 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4C56217E13DC;
+	Thu, 13 Nov 2025 13:22:41 +0100 (CET)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: dmaengine@vger.kernel.org
 Cc: sean.wang@mediatek.com,
@@ -63,9 +63,9 @@ Cc: sean.wang@mediatek.com,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kernel@collabora.com
-Subject: [PATCH 4/8] dmaengine: mediatek: uart-apdma: Get addressing bits from match data
-Date: Thu, 13 Nov 2025 13:22:25 +0100
-Message-ID: <20251113122229.23998-5-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH 5/8] dmaengine: mediatek: uart-apdma: Fix above 4G addressing TX/RX
+Date: Thu, 13 Nov 2025 13:22:26 +0100
+Message-ID: <20251113122229.23998-6-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20251113122229.23998-1-angelogioacchino.delregno@collabora.com>
 References: <20251113122229.23998-1-angelogioacchino.delregno@collabora.com>
@@ -77,66 +77,74 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The only SoC that declares mediatek,dma-33bits in its devicetree
-currently is MT6795, which obviously also declares a SoC-specific
-compatible string: in preparation for adding new SoCs with 34 bits
-addressing, replace the parsing of said vendor property with logic
-to get the number of addressing bits from platform data associated
-to compatible strings.
+The VFF_4G_SUPPORT register is named differently in datasheets,
+and its name is "VFF_ADDR2"; was this named correctly from the
+beginning it would've been clearer that there was a mistake in
+the programming sequence.
 
-While at it, also make the bit_mask variable unsigned and move the
-`int rc` declaration as last to beautify the code.
+This register is supposed to hold the high bits to support the
+DMA addressing above 4G (so, more than 32 bits) and not a bit
+to "enable" the support for VFF 4G.
 
-Thanks to the correct declaration of the APDMA node is in all of
-the MediaTek device trees that are currently upstream, this commit
-brings no functional differences.
+Fix the name of this register, and also fix its usage by writing
+the upper 32 bits of the dma_addr_t on it when the SoC supports
+such feature.
 
+Fixes: 9135408c3ace ("dmaengine: mediatek: Add MediaTek UART APDMA support")
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/dma/mediatek/mtk-uart-apdma.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/dma/mediatek/mtk-uart-apdma.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/dma/mediatek/mtk-uart-apdma.c b/drivers/dma/mediatek/mtk-uart-apdma.c
-index 08e15177427b..b906e59f4c6d 100644
+index b906e59f4c6d..2398b440b12a 100644
 --- a/drivers/dma/mediatek/mtk-uart-apdma.c
 +++ b/drivers/dma/mediatek/mtk-uart-apdma.c
-@@ -468,7 +468,8 @@ static void mtk_uart_apdma_free(struct mtk_uart_apdmadev *mtkd)
- }
+@@ -41,7 +41,7 @@
+ #define VFF_STOP_CLR_B		0
+ #define VFF_EN_CLR_B		0
+ #define VFF_INT_EN_CLR_B	0
+-#define VFF_4G_SUPPORT_CLR_B	0
++#define VFF_ADDR2_CLR_B		0
  
- static const struct of_device_id mtk_uart_apdma_match[] = {
--	{ .compatible = "mediatek,mt6577-uart-dma", },
-+	{ .compatible = "mediatek,mt6577-uart-dma", .data = (void *)32 },
-+	{ .compatible = "mediatek,mt6795-uart-dma", .data = (void *)33 },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, mtk_uart_apdma_match);
-@@ -477,9 +478,9 @@ static int mtk_uart_apdma_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mtk_uart_apdmadev *mtkd;
--	int bit_mask = 32, rc;
- 	struct mtk_chan *c;
--	unsigned int i;
-+	unsigned int bit_mask, i;
-+	int rc;
+ /*
+  * interrupt trigger level for tx
+@@ -72,7 +72,7 @@
+ /* TX: the buffer size SW can write. RX: the buffer size HW can write. */
+ #define VFF_LEFT_SIZE		0x40
+ #define VFF_DEBUG_STATUS	0x50
+-#define VFF_4G_SUPPORT		0x54
++#define VFF_ADDR2		0x54
  
- 	mtkd = devm_kzalloc(&pdev->dev, sizeof(*mtkd), GFP_KERNEL);
- 	if (!mtkd)
-@@ -492,12 +493,10 @@ static int mtk_uart_apdma_probe(struct platform_device *pdev)
- 		return rc;
+ struct mtk_uart_apdmadev {
+ 	struct dma_device ddev;
+@@ -149,7 +149,7 @@ static void mtk_uart_apdma_start_tx(struct mtk_chan *c)
+ 		mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_TX_INT_CLR_B);
+ 
+ 		if (mtkd->support_33bits)
+-			mtk_uart_apdma_write(c, VFF_4G_SUPPORT, VFF_4G_EN_B);
++			mtk_uart_apdma_write(c, VFF_ADDR2, upper_32_bits(d->addr));
  	}
  
--	if (of_property_read_bool(np, "mediatek,dma-33bits"))
-+	bit_mask = (unsigned int)(uintptr_t)of_device_get_match_data(&pdev->dev);
-+	if (bit_mask > 32)
- 		mtkd->support_33bits = true;
+ 	mtk_uart_apdma_write(c, VFF_EN, VFF_EN_B);
+@@ -192,7 +192,7 @@ static void mtk_uart_apdma_start_rx(struct mtk_chan *c)
+ 		mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_RX_INT_CLR_B);
  
--	if (mtkd->support_33bits)
--		bit_mask = 33;
--
- 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(bit_mask));
- 	if (rc)
- 		return rc;
+ 		if (mtkd->support_33bits)
+-			mtk_uart_apdma_write(c, VFF_4G_SUPPORT, VFF_4G_EN_B);
++			mtk_uart_apdma_write(c, VFF_ADDR2, upper_32_bits(d->addr));
+ 	}
+ 
+ 	mtk_uart_apdma_write(c, VFF_INT_EN, VFF_RX_INT_EN_B);
+@@ -298,7 +298,7 @@ static int mtk_uart_apdma_alloc_chan_resources(struct dma_chan *chan)
+ 	}
+ 
+ 	if (mtkd->support_33bits)
+-		mtk_uart_apdma_write(c, VFF_4G_SUPPORT, VFF_4G_SUPPORT_CLR_B);
++		mtk_uart_apdma_write(c, VFF_ADDR2, VFF_ADDR2_CLR_B);
+ 
+ err_pm:
+ 	pm_runtime_put_noidle(mtkd->ddev.dev);
 -- 
 2.51.1
 

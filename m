@@ -1,45 +1,46 @@
-Return-Path: <dmaengine+bounces-7179-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7180-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DE54C604BC
-	for <lists+dmaengine@lfdr.de>; Sat, 15 Nov 2025 13:21:33 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20D17C604DC
+	for <lists+dmaengine@lfdr.de>; Sat, 15 Nov 2025 13:22:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D2B084E2C39
-	for <lists+dmaengine@lfdr.de>; Sat, 15 Nov 2025 12:21:31 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 229D54E61FB
+	for <lists+dmaengine@lfdr.de>; Sat, 15 Nov 2025 12:21:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81124299A90;
-	Sat, 15 Nov 2025 12:21:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A51EC29B20D;
+	Sat, 15 Nov 2025 12:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qp5p5xX7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1+3VldC"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5273427B50C;
-	Sat, 15 Nov 2025 12:21:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756A423D288;
+	Sat, 15 Nov 2025 12:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763209289; cv=none; b=k08pyhTFE55xqWNxkNBt3ImKk/U3/qoAqkw2mzbp4GkWp7BTg2GbFe3vCq1odWXv2YLmfMz2TzJeLvPrOQlhSuZTSi03OcQ2ycNcWZhEXcHFlsuI2Gln9lSmDeV4tCqx9330eK45LqJwkb00yD6Oc36iY5Hf7RrgqAzWIs1zEtc=
+	t=1763209294; cv=none; b=Wl4oBf19uKw9ThX3wlgZaGHdxzNGGXW/jgzSlUCWNXoZMh+rk5h29O4UJZrjDSMzzta9iifcq8UKTbEZcNneEiI7bqQMOlifjmCJS/oiROFofvHKzlz7vgwkLsDW4OAcuS3mC2f9K52rEP1F3f3NLhpBM7T8CCPNApmNRxm6gME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763209289; c=relaxed/simple;
-	bh=CvW3RPjAQHRDOfHqugrlxCPi56fwvh2F4UBJhuXf3jY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oJBTQhEUA1QA8sJuLa1LaRmMtxVGDKb2pTfuNRiq+/Dyx8HhPV0et+DGjFQ6KSLw1pYWPcMAljHs6Eboc/LyUL7vQN/7obiz6Pv+AybhGBvmLuI+IXPg1SflasDXFpKZb6qzjsmwNdXCar/KidghOLzOPQtkc4MKHEKiB+FsH7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qp5p5xX7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 683ABC16AAE;
-	Sat, 15 Nov 2025 12:21:24 +0000 (UTC)
+	s=arc-20240116; t=1763209294; c=relaxed/simple;
+	bh=avO0zpLxyi3tvTmbM/WVmfIlk/427UKM8doZxyoj6Cg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GFNeXkvSfTZO8wgUQyaEXu4G7NKAfYifhwgosd5fuVEYRgAcNVaid+zQA1IKduYMkznuIq5hMoA3tb/awu/wjDMmYzaUZmDJPIIq57XYAjUurs2jD0rgLa42MJhPIDBuejJu3Tl2BEJDDzPuRjKbW57+l49cCOUeSttStWmL6tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K1+3VldC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72599C4CEF5;
+	Sat, 15 Nov 2025 12:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763209289;
-	bh=CvW3RPjAQHRDOfHqugrlxCPi56fwvh2F4UBJhuXf3jY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qp5p5xX7ENbuB1mPVuIYCFnQYSYEPZ5tpWjz30Y0M31mP4b20X/sC9/9ZCzECXwMN
-	 LDbhsstItv8lHknHCJvXhUcCiRgI2oX4W0rPhrIBFQo/6FWKmqmjRUzhHStlgSZTBn
-	 NFIxnDFkB4UJsXn3jdPl/pYr3gvX/tk02FY4t8j8NiGRCvhAlWePlAG2r+NYvB7guk
-	 FzxN7BQbuBeCnKcdDQPItEO9PCTqX+o0od9GC6xr2FFu080JYl86KdwFmMl1xVpms6
-	 3+C9e4H+4hzDhu3ibGRicQ/fsSc4yLa7tEP36hiAXFcBT6bkudn2Z2RzxhBUdHLDnE
-	 OjUplpuBVEnZA==
+	s=k20201202; t=1763209294;
+	bh=avO0zpLxyi3tvTmbM/WVmfIlk/427UKM8doZxyoj6Cg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=K1+3VldCGa52eZ/Zo9eHfml5HhFLEVqgR3n9XtEeu6QAjh3Am5hDmX4t+djYzeiHu
+	 mzDNoXpTh//8eVqq5dqIzbJLEwXXSmgiOtoQnANHt9m37XXdg5dcC0hqB298vmobjJ
+	 cXsizUghYcXIBNDtZ0WuQbjkybj3P9RGym/UcjQNJVbjzX5IngWDGIeOKYfaDUwwzT
+	 vOQ1gzwm66U/NvQDkl7Vx9oa8mUdcd3mROhtQXtoyjTZYBPfqQietdG2Q0oPMwlH2h
+	 wMH2knPzRBeTeKMpA50kGQDVPJR4c790AYNKlopkmkSaBWBMcjSwMES5Z6uV/YS2B8
+	 6CyS+nXy2LFqg==
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Jyri Sarha <jyri.sarha@iki.fi>,
 	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
@@ -64,10 +65,12 @@ To: Jyri Sarha <jyri.sarha@iki.fi>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mmc@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/3] dt-bindings: display/ti: Simplify dma-coherent property
-Date: Sat, 15 Nov 2025 13:21:21 +0100
-Message-ID: <20251115122120.35315-4-krzk@kernel.org>
+Subject: [PATCH 2/3] dt-bindings: dma: xilinx: Simplify dma-coherent property
+Date: Sat, 15 Nov 2025 13:21:22 +0100
+Message-ID: <20251115122120.35315-5-krzk@kernel.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20251115122120.35315-4-krzk@kernel.org>
+References: <20251115122120.35315-4-krzk@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -82,38 +85,23 @@ Simplify dma-coherent property to match common syntax.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 3 +--
- Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml    | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-index 361e9cae6896..38fcee91211e 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-@@ -84,8 +84,7 @@ properties:
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
+index b5399c65a731..2da86037ad79 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
++++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
+@@ -59,8 +59,7 @@ properties:
+   power-domains:
      maxItems: 1
-     description: phandle to the associated power domain
  
 -  dma-coherent:
--    type: boolean
+-    description: present if dma operations are coherent
 +  dma-coherent: true
  
-   ports:
-     $ref: /schemas/graph.yaml#/properties/ports
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-index fad7cba58d39..65ae8a1c3998 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-@@ -103,8 +103,7 @@ properties:
-     maxItems: 1
-     description: phandle to the associated power domain
- 
--  dma-coherent:
--    type: boolean
-+  dma-coherent: true
- 
-   ports:
-     $ref: /schemas/graph.yaml#/properties/ports
+ required:
+   - "#dma-cells"
 -- 
 2.48.1
 

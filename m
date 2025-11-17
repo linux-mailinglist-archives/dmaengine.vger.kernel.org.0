@@ -1,236 +1,156 @@
-Return-Path: <dmaengine+bounces-7199-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7200-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B450AC62B30
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 08:18:31 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96091C62E1F
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 09:25:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 37D4A347A1D
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 07:18:31 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4F3794E4286
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 08:25:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3A183191D3;
-	Mon, 17 Nov 2025 07:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0F94316182;
+	Mon, 17 Nov 2025 08:25:46 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023143.outbound.protection.outlook.com [52.101.127.143])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D242D97AA;
-	Mon, 17 Nov 2025 07:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.143
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763363905; cv=fail; b=IN4BqDIR09gOkz3alJ+Nc3k9FdrqXPGpNxXc9L5pfRgqBNn1vdKBmxkyKs/+Pm4CiFtMDqla4o7PRugM1kx+3JUeYC0TKZstYguv8nXl2+Q/LAVxTT6nsctUBR5WKzTYFYLcQZHGk9ydNGZWqqUsFlU+JwbL6lIHujOGCFWtkU8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763363905; c=relaxed/simple;
-	bh=B6t61dy9N5Qt44tf9v9biWNtkEABefQ65IletFx9bs8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uyEiM9pno7no7D+d7lgXz27UXxOUlWMfVZ1CnQHyCl4ETJ0qQe2S7tXEVVUqPEyasj1Nfr4rRs+jizmTEd7RrSdPZrauZkX8BxIZDCL8q3ICQY2LHD8aIbnD8nET6qJwOqgn69CenhrmqD2QvySMb29V4OT/R6XyIuAz2GPQJQQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.127.143
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XLmIJxDXg5JNVKZcqlq3gQShqmsxcocWys/YXmT+apCLSkwYDv22M6yorjG2O5OnIdPZhWOX5A/rHOClbSg5+W6T+zvwDmARZGIrnUelfmlIXrcswZXF3BbKZWqjt7808CyPLG3LgL98YsaSRYa0VAvdgBsIP5R0XLRcH1NwToLWsQ4cSglCVurcPMJiep7Vby0n1Oy/3skhfuicLYMt4PFGZdEI6BA9kTiOrkZUHsD82UBbIVGQbVl+zBi/iswXPEf00jNyONrrDWC7n6sYljhLOLogj1dWrH1Ji0f2vSPTUpja0HU1AhTpRuDtVpx3ILhSZaBmtzFblVsRnh4p4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d0ktfGK7Ciy7iym/Q/8bV5uPBFHvAA9iTyBd5PWTRIQ=;
- b=kuEKsdgM0TNLQ6ZLCpikL4II6Cg1NvQDDc7SaSMK++Ezt/RGre552znnY3NCTXERTbWRdML4OK8eeLyimT7UEhd89+6iBrk/owDJF9ZIytbZ709sq2KkntyV4uWXfRdgi76q1dYyhDebctp0wdqaaFyugm05B8zFz4t3u+H65R7OLJyrMseMhcMWNXSxS4jebE2aAv7G5qYjkoUV79DLRPjoQtwoKH6FFHNH10CFi2qnHtS5TYrpNJav2gYzAakQsC7m8QZrxu0p4Uw2NwACZocaHDKJb2CuJZ+LXaczOVYbbft3cyWQymtrNDNyzF+OQmKYp9LX86DZQcXZPP1+dQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SI2PR02CA0051.apcprd02.prod.outlook.com (2603:1096:4:196::10)
- by PUZPR06MB5651.apcprd06.prod.outlook.com (2603:1096:301:fc::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.20; Mon, 17 Nov
- 2025 07:18:17 +0000
-Received: from SG2PEPF000B66CF.apcprd03.prod.outlook.com
- (2603:1096:4:196:cafe::95) by SI2PR02CA0051.outlook.office365.com
- (2603:1096:4:196::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.21 via Frontend Transport; Mon,
- 17 Nov 2025 07:18:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG2PEPF000B66CF.mail.protection.outlook.com (10.167.240.23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9343.9 via Frontend Transport; Mon, 17 Nov 2025 07:18:15 +0000
-Received: from [172.20.96.43] (unknown [172.20.96.43])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id B43AB40A5BD5;
-	Mon, 17 Nov 2025 15:18:14 +0800 (CST)
-Message-ID: <7f1ce6c2-df20-48d6-99c7-411346b526a5@cixtech.com>
-Date: Mon, 17 Nov 2025 15:18:14 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDDE280328;
+	Mon, 17 Nov 2025 08:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763367946; cv=none; b=ms8r7FPrIxw+wqG1y0GAbSDTlsYOc5JxyQfhWu2GrMv9glRDvozhQJNR4+1wVRzpBEC8PtrgeX/LaGjP+7mxGmmG81AJG8UxykmmbBbFmlxEdZpfz61W3kleS1iE11TCrmVPqGdFM+K5De9azkP22y8J7xTNZZbGBL4jB8gA25U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763367946; c=relaxed/simple;
+	bh=A3TSK9J85pbNRB7/61xFX+IxlSgMX2hqlE7LuvPpJ9g=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=aJeGMGIw8n0VhrtTMpojSaDosUepOZGL991tHHSk3b5L3+Qc/ep6OhzkwXNfqXxMMreqiX333gkJopPz3whty0abD4EQh8lHmKoTKjTmOwXe7ozv491DDfaRcsA556EHXpxIubQUK41aqNONW8iTeSeQFW2gRnOUvX6ALM0TyQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [202.112.113.212])
+	by APP-01 (Coremail) with SMTP id qwCowADXa8v92xppHAUHAQ--.14111S2;
+	Mon, 17 Nov 2025 16:25:40 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: peter.ujfalusi@gmail.com,
+	vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] dmaengine: ti-dma-crossbar: Fix error handling in ti_am335x_xbar_route_allocate
+Date: Mon, 17 Nov 2025 16:25:32 +0800
+Message-Id: <20251117082532.918-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:qwCowADXa8v92xppHAUHAQ--.14111S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr4ktrWfGr18JrWxWF48JFb_yoW5XFyUpa
+	y8Ga4Yv395KF1Ig34rCw4UuFWakr4Fqa1agrWxC340kwnIqryjqrW5Ja40qr1Yyr97JF4D
+	XF17tr4rCFy7urUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lc7CjxVAaw2AFwI0_JF0_Jw1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMx
+	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjhF4tUUUUU==
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dma: arm-dma350: add support for shared interrupt
- mode
-To: Krzysztof Kozlowski <krzk@kernel.org>, peter.chen@cixtech.com,
- fugang.duan@cixtech.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, vkoul@kernel.org, ychuang3@nuvoton.com,
- schung@nuvoton.com, robin.murphy@arm.com
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- linux-arm-kernel@lists.infradead.org
-References: <20251117015943.2858-1-jun.guo@cixtech.com>
- <20251117015943.2858-3-jun.guo@cixtech.com>
- <eb9eae64-f414-4b04-9a10-4dd8a9088e96@kernel.org>
-Content-Language: en-US
-From: Jun Guo <jun.guo@cixtech.com>
-In-Reply-To: <eb9eae64-f414-4b04-9a10-4dd8a9088e96@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CF:EE_|PUZPR06MB5651:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0f5ff8e-7ff8-4109-f9ac-08de25a979ec
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NXpMK3pLUDhCUWtZRDZYVVQzcnd3WFN5bzVuM2g0anRtc3VyT3JlOWV0MFJN?=
- =?utf-8?B?MU1ZcGx5ODRjZjBmdFJKeUNnZzJ0bks0Q2xMeWRBZVZUcEZVWnp0eWthTXJW?=
- =?utf-8?B?Y2pHeVpIdjFhVWp3Y2NuaVdNaU1CbDgrMEs0dDl3bzVHaGhuZFV4eENNenFr?=
- =?utf-8?B?Y0xPSmNYV29DWllJWjFFS1U0QmtkdmhUV29PejJ6bDdST2V2Nzl4RWNKVFA1?=
- =?utf-8?B?bVdIRVU5L0d2UUFtWEppK0oxdXdWNFRpRjJCZU8yR1ZMaEhKTFNRNzV5QlBH?=
- =?utf-8?B?dlM4dHYwZFNJM2lCUnhGSzVuSTBQekdxK05wZk43SlpxNEpXamRjdVhKNmQr?=
- =?utf-8?B?MGY3ZUdUNUpjVHlDZ3FqR2t5L2I5N20xV0xXZWVpdzJJZTlYUXRIR25adlhE?=
- =?utf-8?B?Z2R3NzM4QWVLdlpkaG9HNjl1MEVSQ2UwTTFPaFo5c2diblFlaXdYOVNzejJ0?=
- =?utf-8?B?RFVGaFh5bXBIU3UyWWVYZG9WT2dBWFZISVBoYmZHczNaV3ovSXNJNlZhbG42?=
- =?utf-8?B?eU1DR0NncThiUm9kejhIU09vLzdmTjZNT3ZSN2ZxczQwa09JRUZIKzF4aFNj?=
- =?utf-8?B?UmNsN3VsYTlyNjAyR0REV25iVnNZT0l5L0tZMmxGMVgzK1lhQmd1UmJyTWlL?=
- =?utf-8?B?ZUtnenJzNWRmajZRMTRlVHIybFhOZU0xbDZnNVpRY1h3d1l2SVJQcmtZMGd2?=
- =?utf-8?B?UHRLaG90L1RCTDBrMXZaVmp6UExtS2hjYXFyaFBjQ2pYNWhDaGNpUWtqaVBR?=
- =?utf-8?B?SnVWSC93ZDkrV0wxNjdDZldBRERXczIwZEJvWE55VFNJbHgwU3Bja2haSDR3?=
- =?utf-8?B?RkQ1amx6Nm0xVlI2R3ZWOGRoWFI2QTM3Q0FGL3owWUJXYkhqNnJ6ZkgrQ2Zt?=
- =?utf-8?B?eTZEQjJKQkdHb2dDa1NiemhhbFdqVGp2Mi9sTHI1aXIyYVZxYWNGN1k0VXI3?=
- =?utf-8?B?UUdFRGZWa0wrdFZqSTNMRFB5b254b2xBUTNqNE1hVHJlMG1WUkZUSHJIekhx?=
- =?utf-8?B?M09rdEltVVZDVkJDWTNWZ250NTlWcUtlU1JoQUJUVXdKcUltU2pjMmFiblE1?=
- =?utf-8?B?KytzckxsUW1FcWlXVlhCNFQyZWhHTTY2Z3hvcTE5TDJmYmNHazFHKzJvKzNR?=
- =?utf-8?B?dGhjbForYjVWZmpMTzJkNnVJT0krS2lJanhuWm5UYnZkSHRHOWhVS3pVd0dF?=
- =?utf-8?B?Y3RDNk5FK1RQMGtTbFNmRHRkdTE4VUlhR3owNng3ZWc4a2NxbzJLVVFyejNK?=
- =?utf-8?B?ZHZHK1NHVitSZnFObzdNajQycWVGWHUwaUxIejg2WDhUb0xNQkFqN0tFbS81?=
- =?utf-8?B?UEhscVJlanVRaCs2SUc5bDVPUHRkWlozQm43cFAyeDdGWm9VYlI5N0t2K2V4?=
- =?utf-8?B?THlKcjNNSG1ZZXh5N2JoY2E4ZCtxdW91QXRjTDNtZkU2aWpsZkk4WU1oaWll?=
- =?utf-8?B?K0drSG4wOUNnNUZjbTNYcWtPVEVqQnpSWlVnWE9aaHJDcTZQM1c1QXBtR25n?=
- =?utf-8?B?QVZOQlRpRGg2aytPek1oUEMwTmNyNlJyZkExdkxTYWFESElPQlljVGJKS1FO?=
- =?utf-8?B?SzQwaS80ek82ZDhNVFJPVUhLQzJDWjRnRXQ0dXlrWUtIM3ZuQ05Sd1lZdFBk?=
- =?utf-8?B?RzhYWHRTWHo1RXdGcHQvVHh5Q0hDWnZRaUpqV1AyUjZYT1ZwMU5pb0FPQ3FD?=
- =?utf-8?B?ZzQ0bDZlWXlLNFVxVXcybDVBanNnSGlxTisydVdPY0QwbGFPeVZsQm9WUE1X?=
- =?utf-8?B?bzBsSThYempoc2lVeE9kQ3F6c2lQNVN5SjRtSkw0bmwzVkN1ZEhVRWI1ZHZr?=
- =?utf-8?B?cFpXc3EzdFlqK3lJbzA4amZTOFZEZWhPeW9ZeWRWQSs5SUQ3RnNSMG0wQWpV?=
- =?utf-8?B?QURLY2RLQ3oxVC94TjBIRWhwT1RLWi8wMlVpT295WHVoQ2E5ZzZBRjROZXZr?=
- =?utf-8?B?cmlmS3Y4UzBBOHp0ZWhKbDF3UUtUODZwYU53RWN2b3VUUG40RXJidHZkTGpp?=
- =?utf-8?B?VFljQ0RVMm5LMC9rRncwV1ZKc0dLVERlTTVMbHpQSUxtRktoUmtJTmZCS2pN?=
- =?utf-8?B?bFMyd24xcThLQ3ZMNHJmblNHTTArVjJ6OEhRZzJoVUUwQlBheHlkaWtKV3RF?=
- =?utf-8?Q?8VA5I0/DSBMy38bHG5bYHAhYR?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014)(921020);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2025 07:18:15.6767
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0f5ff8e-7ff8-4109-f9ac-08de25a979ec
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG2PEPF000B66CF.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5651
 
+ti_am335x_xbar_route_allocate() calls of_find_device_by_node() which
+increments the reference count of the platform device, but fails to
+call put_device() to decrement the reference count before returning.
+This could cause a reference count leak each time the function is
+called, preventing the platform device from being properly cleaned up
+and leading to memory leakage.
 
-On 11/17/2025 2:13 PM, Krzysztof Kozlowski wrote:
-> On 17/11/2025 02:59, Jun Guo wrote:
->> - The arm dma350 controller's hardware implementation varies: some
-> That's not a list. Look at git history to learn how to write expected
-> commit messages.
-> 
-Thank you. I will incorporate your feedback in the next version.>> 
-designs dedicate a separate interrupt line for each channel, while
->>   others have all channels sharing a single interrupt.This patch adds
->>   support for the hardware design where all DMA channels share a
->>   single interrupt.
->>
->> Signed-off-by: Jun Guo<jun.guo@cixtech.com>
->> ---
->>   drivers/dma/ar
-> 
-> 
->> @@ -526,7 +593,7 @@ static void d350_free_chan_resources(struct dma_chan *chan)
->>   static int d350_probe(struct platform_device *pdev)
->>   {
->>        struct device *dev = &pdev->dev;
->> -     struct d350 *dmac;
->> +     struct d350 *dmac = NULL;
->>        void __iomem *base;
->>        u32 reg;
->>        int ret, nchan, dw, aw, r, p;
->> @@ -556,6 +623,7 @@ static int d350_probe(struct platform_device *pdev)
->>                return -ENOMEM;
->>
->>        dmac->nchan = nchan;
->> +     dmac->base = base;
->>
->>        reg = readl_relaxed(base + DMAINFO + DMA_BUILDCFG1);
->>        dmac->nreq = FIELD_GET(DMA_CFG_NUM_TRIGGER_IN, reg);
->> @@ -582,6 +650,26 @@ static int d350_probe(struct platform_device *pdev)
->>        dmac->dma.device_issue_pending = d350_issue_pending;
->>        INIT_LIST_HEAD(&dmac->dma.channels);
->>
->> +     /* Cix Sky1 has a common host IRQ for all its channels. */
->> +     if (of_device_is_compatible(pdev->dev.of_node, "cix,sky1-dma-350")) {
-> No, see further
-> 
->> +             int host_irq = platform_get_irq(pdev, 0);
->> +
->> +             if (host_irq < 0)
->> +                     return dev_err_probe(dev, host_irq,
->> +                                          "Failed to get IRQ\n");
->> +
->> +             ret = devm_request_irq(&pdev->dev, host_irq, d350_global_irq,
->> +                                    IRQF_SHARED, DRIVER_NAME, dmac);
->> +             if (ret)
->> +                     return dev_err_probe(
->> +                             dev, ret,
->> +                             "Failed to request the combined IRQ %d\n",
->> +                             host_irq);
->> +
->> +             /* Combined Non-Secure Channel Interrupt Enable */
->> +             writel_relaxed(INTREN_ANYCHINTR_EN, dmac->base + DMANSECCTRL);
->> +     }
->> +
->>        /* Would be nice to have per-channel caps for this... */
->>        memset = true;
->>        for (int i = 0; i < nchan; i++) {
->> @@ -595,10 +683,16 @@ static int d350_probe(struct platform_device *pdev)
->>                        dev_warn(dev, "No command link support on channel %d\n", i);
->>                        continue;
->>                }
->> -             dch->irq = platform_get_irq(pdev, i);
->> -             if (dch->irq < 0)
->> -                     return dev_err_probe(dev, dch->irq,
->> -                                          "Failed to get IRQ for channel %d\n", i);
->> +
->> +             if (!of_device_is_compatible(pdev->dev.of_node,
->> +                                          "cix,sky1-dma-350")) {
-> No, use driver match data for that. Sprinkling compatibles everywhere
-> does not scale.
-> 
-> Also, this is in contrary with the binding, which did not say your
-> device has no interrupts.
-Ok, I'll rework the patch based on your feedback.
+Add proper put_device() calls in all exit paths to fix the reference
+count imbalance.
 
-Best regards,
-Jun
+Found by code review.
+
+Cc: stable@vger.kernel.org
+Fixes: 42dbdcc6bf96 ("dmaengine: ti-dma-crossbar: Add support for crossbar on AM33xx/AM43xx")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ drivers/dma/ti/dma-crossbar.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+index 7f17ee87a6dc..58bc515ec8b3 100644
+--- a/drivers/dma/ti/dma-crossbar.c
++++ b/drivers/dma/ti/dma-crossbar.c
+@@ -80,33 +80,40 @@ static void *ti_am335x_xbar_route_allocate(struct of_phandle_args *dma_spec,
+ 	struct platform_device *pdev = of_find_device_by_node(ofdma->of_node);
+ 	struct ti_am335x_xbar_data *xbar = platform_get_drvdata(pdev);
+ 	struct ti_am335x_xbar_map *map;
++	int ret;
+ 
+-	if (dma_spec->args_count != 3)
+-		return ERR_PTR(-EINVAL);
++	if (dma_spec->args_count != 3) {
++		ret = -EINVAL;
++		goto err_put_device;
++	}
+ 
+ 	if (dma_spec->args[2] >= xbar->xbar_events) {
+ 		dev_err(&pdev->dev, "Invalid XBAR event number: %d\n",
+ 			dma_spec->args[2]);
+-		return ERR_PTR(-EINVAL);
++		ret = -EINVAL;
++		goto err_put_device;
+ 	}
+ 
+ 	if (dma_spec->args[0] >= xbar->dma_requests) {
+ 		dev_err(&pdev->dev, "Invalid DMA request line number: %d\n",
+ 			dma_spec->args[0]);
+-		return ERR_PTR(-EINVAL);
++		ret = -EINVAL;
++		goto err_put_device;
+ 	}
+ 
+ 	/* The of_node_put() will be done in the core for the node */
+ 	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
+ 	if (!dma_spec->np) {
+ 		dev_err(&pdev->dev, "Can't get DMA master\n");
+-		return ERR_PTR(-EINVAL);
++		ret = -EINVAL;
++		goto err_put_device;
+ 	}
+ 
+ 	map = kzalloc(sizeof(*map), GFP_KERNEL);
+ 	if (!map) {
+ 		of_node_put(dma_spec->np);
+-		return ERR_PTR(-ENOMEM);
++		ret = -ENOMEM;
++		goto err_put_device;
+ 	}
+ 
+ 	map->dma_line = (u16)dma_spec->args[0];
+@@ -120,7 +127,12 @@ static void *ti_am335x_xbar_route_allocate(struct of_phandle_args *dma_spec,
+ 
+ 	ti_am335x_xbar_write(xbar->iomem, map->dma_line, map->mux_val);
+ 
++	put_device(&pdev->dev);
+ 	return map;
++
++err_put_device:
++	put_device(&pdev->dev);
++	return ERR_PTR(ret);
+ }
+ 
+ static const struct of_device_id ti_am335x_master_match[] __maybe_unused = {
+-- 
+2.17.1
 
 

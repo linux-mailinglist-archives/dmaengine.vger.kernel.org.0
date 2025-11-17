@@ -1,49 +1,49 @@
-Return-Path: <dmaengine+bounces-7216-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7218-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 248E1C65134
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 17:17:15 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57CD1C650F7
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 17:13:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D728C4EDF59
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 16:13:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTPS id F15C828C7A
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 16:13:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65DE82D027E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78A352D0620;
 	Mon, 17 Nov 2025 16:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cu1DHYUV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sXx6BYgO"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CC02C3252;
-	Mon, 17 Nov 2025 16:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3816F2C3255;
+	Mon, 17 Nov 2025 16:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763396005; cv=none; b=XSCM05R+eaybC6PJ5x0ykYhYU9i/Nslxi8dkydccd5CXWGLP4uXIF000//PZo8LtWpOYlrlgO/xc/GjpRd0rbeGq4G01WBeRgXkCLW3jwHn64CG5PiAkgsukorF9srvV3/Ml4SVpyxmkzNBG1y8SHH/y76gNJRGilt2Yf8C6pDA=
+	t=1763396005; cv=none; b=QvUFW7R8Mu/Hzt2IjlCdHoL6SgAY3loGU/Fc8bclpdfT56aTY2n6/bsDbpm15SWqEqszl1EEHHu2lIWCOO+/3D763AMO8nrWTBnbNag70b/wnkyGNpjJQPjSukTcckdJd95oSGhfhfLRwu3wT8oAr/yIeawQRvFkhY1slUjiJLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763396005; c=relaxed/simple;
-	bh=oJuF1iY88Mpi7VOqHbnjYrJMJU1Agh3Lfe9Wxf7yHvo=;
+	bh=VBdlt/U82+VSKcAFX8Y5c0YN3goi7irfhq7BlBASkaY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K/mT9nscgC3RVtOKKDsXuK7cEaou4rJv4bkhNX3nUGR7CAXX/OIJi1F6DKsyNKK7bT2FOZNykdU0pjxbD6jpudNXk547roW5JCXZ89/RoJgK0VwlpjN3CpABfeeXikUm2OeXUic6shqm8S0UHZzxPa79sMVRVLk9+1QkMIHRTZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cu1DHYUV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE7BAC2BC87;
+	 MIME-Version; b=u1HYESuQjQeynOy31aTwRKZpHGCIZXEoO9PmxyWhtiD1IcHdx0gN/A1DZG8O9bCjvBcNDsCjgP2T0LeDsMzojUB5ncs3ueDlSkgTaXmNPhIclt9fF5C27Q4icz3eNH4LSjgcRTSCAwz118McOONiIBvaYD1XukRUu1P9hTVI5FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sXx6BYgO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7ABAC19425;
 	Mon, 17 Nov 2025 16:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763396004;
-	bh=oJuF1iY88Mpi7VOqHbnjYrJMJU1Agh3Lfe9Wxf7yHvo=;
+	s=k20201202; t=1763396005;
+	bh=VBdlt/U82+VSKcAFX8Y5c0YN3goi7irfhq7BlBASkaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cu1DHYUVgtEm205Jb5mmzJC/SVEFZKltYM/QvaPgYkZXi5dZRxJuosZ+HRoQQLQzD
-	 g8BAIo1qP9bIMCIQ8eRoA8lPB5QVB8LJP9sRCX7o3zQsUP8FrGbA3EKL6GG8pfcCOQ
-	 98wjO4qYy/ahSzpc+N3H2a6q9LwgENkrfDb7iQARH5sOMau6WMjgpKKo6EX6TlKd9B
-	 bU4DHzAIpJW7YkSa9ccJ9WN+OjFjnltcSPUmWLZNws9DSbDmOiIhit5rlSa2H5r4p/
-	 OptEh5av8tplwBjFQr4XwqqG/XSaCuasYL4QNhXfrfILl53r354PReAiIKwqsE6EHg
-	 uoYez+6nZWcMg==
+	b=sXx6BYgO8wlWV+HuayrfP9NQyPgF1ynggGKCfEPzsPa0uMlExf8FO1qMTvriuNC3X
+	 Mou9CC8QbfBGNx7NnnlBaNaa059D6ktxowiGOMhY9HQ631O38fnhGm2LbDqBffyrSs
+	 b7VdUZY3wijCqcBcsbULbhQs6MPHylANLXn6X2iCpmD5K6TeNMO+zJlMAIyosYkstc
+	 4vJaCRVlUGZSDnaf8cJ75nxpPMOKMZWXJ9rfcdmGB3eF19WETT+gJ2wV0wPVe74lXM
+	 PkiWKsDNtSYuW4fcrAoFL9ZTTM810lxVFARAbckj8RIJsBLgI/5avfWp9T2QlrMXk1
+	 fmvHBCibiUQdA==
 Received: from johan by xi.lan with local (Exim 4.98.2)
 	(envelope-from <johan@kernel.org>)
-	id 1vL1r0-000000002ns-3UOf;
+	id 1vL1r0-000000002nv-3ukB;
 	Mon, 17 Nov 2025 17:13:22 +0100
 From: Johan Hovold <johan@kernel.org>
 To: Vinod Koul <vkoul@kernel.org>
@@ -62,9 +62,9 @@ Cc: Ludovic Desroches <ludovic.desroches@microchip.com>,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan@kernel.org>,
 	stable@vger.kernel.org
-Subject: [PATCH 06/15] dmaengine: lpc18xx-dmamux: fix device leak on route allocation
-Date: Mon, 17 Nov 2025 17:12:49 +0100
-Message-ID: <20251117161258.10679-8-johan@kernel.org>
+Subject: [PATCH 07/15] dmaengine: lpc32xx-dmamux: fix device leak on route allocation
+Date: Mon, 17 Nov 2025 17:12:50 +0100
+Message-ID: <20251117161258.10679-9-johan@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251117161258.10679-1-johan@kernel.org>
 References: <20251117161258.10679-1-johan@kernel.org>
@@ -82,22 +82,24 @@ platform device during route allocation.
 Note that holding a reference to a device does not prevent its driver
 data from going away so there is no point in keeping the reference.
 
-Fixes: e5f4ae84be74 ("dmaengine: add driver for lpc18xx dmamux")
-Cc: stable@vger.kernel.org	# 4.3
+Fixes: 5d318b595982 ("dmaengine: Add dma router for pl08x in LPC32XX SoC")
+Cc: stable@vger.kernel.org	# 6.12
+Cc: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/dma/lpc18xx-dmamux.c | 19 ++++++++++++++-----
+ drivers/dma/lpc32xx-dmamux.c | 19 ++++++++++++++-----
  1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/lpc18xx-dmamux.c b/drivers/dma/lpc18xx-dmamux.c
-index 2b6436f4b193..d3ff521951b8 100644
---- a/drivers/dma/lpc18xx-dmamux.c
-+++ b/drivers/dma/lpc18xx-dmamux.c
-@@ -57,30 +57,31 @@ static void *lpc18xx_dmamux_reserve(struct of_phandle_args *dma_spec,
- 	struct lpc18xx_dmamux_data *dmamux = platform_get_drvdata(pdev);
+diff --git a/drivers/dma/lpc32xx-dmamux.c b/drivers/dma/lpc32xx-dmamux.c
+index 351d7e23e615..33be714740dd 100644
+--- a/drivers/dma/lpc32xx-dmamux.c
++++ b/drivers/dma/lpc32xx-dmamux.c
+@@ -95,11 +95,12 @@ static void *lpc32xx_dmamux_reserve(struct of_phandle_args *dma_spec,
+ 	struct lpc32xx_dmamux_data *dmamux = platform_get_drvdata(pdev);
  	unsigned long flags;
- 	unsigned mux;
+ 	struct lpc32xx_dmamux *mux = NULL;
 +	int ret = -EINVAL;
+ 	int i;
  
  	if (dma_spec->args_count != 3) {
  		dev_err(&pdev->dev, "invalid number of dma mux args\n");
@@ -105,15 +107,16 @@ index 2b6436f4b193..d3ff521951b8 100644
 +		goto err_put_pdev;
  	}
  
- 	mux = dma_spec->args[0];
- 	if (mux >= dmamux->dma_master_requests) {
- 		dev_err(&pdev->dev, "invalid mux number: %d\n",
+ 	for (i = 0; i < ARRAY_SIZE(lpc32xx_muxes); i++) {
+@@ -111,20 +112,20 @@ static void *lpc32xx_dmamux_reserve(struct of_phandle_args *dma_spec,
+ 	if (!mux) {
+ 		dev_err(&pdev->dev, "invalid mux request number: %d\n",
  			dma_spec->args[0]);
 -		return ERR_PTR(-EINVAL);
 +		goto err_put_pdev;
  	}
  
- 	if (dma_spec->args[1] > LPC18XX_DMAMUX_MAX_VAL) {
+ 	if (dma_spec->args[2] > 1) {
  		dev_err(&pdev->dev, "invalid dma mux value: %d\n",
  			dma_spec->args[1]);
 -		return ERR_PTR(-EINVAL);
@@ -129,23 +132,23 @@ index 2b6436f4b193..d3ff521951b8 100644
  	}
  
  	spin_lock_irqsave(&dmamux->lock, flags);
-@@ -89,7 +90,8 @@ static void *lpc18xx_dmamux_reserve(struct of_phandle_args *dma_spec,
- 		dev_err(&pdev->dev, "dma request %u busy with %u.%u\n",
- 			mux, mux, dmamux->muxes[mux].value);
+@@ -133,7 +134,8 @@ static void *lpc32xx_dmamux_reserve(struct of_phandle_args *dma_spec,
+ 		dev_err(dev, "dma request signal %d busy, routed to %s\n",
+ 			mux->signal, mux->muxval ? mux->name_sel1 : mux->name_sel1);
  		of_node_put(dma_spec->np);
 -		return ERR_PTR(-EBUSY);
 +		ret = -EBUSY;
 +		goto err_put_pdev;
  	}
  
- 	dmamux->muxes[mux].busy = true;
-@@ -106,7 +108,14 @@ static void *lpc18xx_dmamux_reserve(struct of_phandle_args *dma_spec,
- 	dev_dbg(&pdev->dev, "mapping dmamux %u.%u to dma request %u\n", mux,
- 		dmamux->muxes[mux].value, mux);
+ 	mux->busy = true;
+@@ -148,7 +150,14 @@ static void *lpc32xx_dmamux_reserve(struct of_phandle_args *dma_spec,
+ 	dev_dbg(dev, "dma request signal %d routed to %s\n",
+ 		mux->signal, mux->muxval ? mux->name_sel1 : mux->name_sel1);
  
 +	put_device(&pdev->dev);
 +
- 	return &dmamux->muxes[mux];
+ 	return mux;
 +
 +err_put_pdev:
 +	put_device(&pdev->dev);
@@ -153,7 +156,7 @@ index 2b6436f4b193..d3ff521951b8 100644
 +	return ERR_PTR(ret);
  }
  
- static int lpc18xx_dmamux_probe(struct platform_device *pdev)
+ static int lpc32xx_dmamux_probe(struct platform_device *pdev)
 -- 
 2.51.0
 

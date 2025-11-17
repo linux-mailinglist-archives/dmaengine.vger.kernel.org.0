@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-7197-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7198-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E26BDC62AD2
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 08:11:47 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97015C62AEA
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 08:14:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 632874E68E7
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 07:11:22 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 124503445CE
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 07:13:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 388F8316191;
-	Mon, 17 Nov 2025 07:11:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0502C3176E0;
+	Mon, 17 Nov 2025 07:13:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W4siq8oI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzjQRk4f"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACAD22E004;
-	Mon, 17 Nov 2025 07:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C675A1A9F9F;
+	Mon, 17 Nov 2025 07:13:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763363478; cv=none; b=PDSi4SZXsK+V4QdFNP5y1QMAcRDXO2GbA914mrA1XyWtBU+FqIcb1Vq5MuUofX6wsxEDHFY9QisP2scy8BMFuNtfqlehBOOlaJV3HQBApQ+BfrbIQ82L4JdxpDcrStyNb7BlLXBz0cRLFILYF1eMdjB9m+DrGafgfdtzhSy2qOk=
+	t=1763363593; cv=none; b=RosBuzo8l1rZ2lShKv62+a1Ue451x3Hb3TEodh9obG3UvIgyhmgdLwZF5ejYX5LRY9U39CYxZXTZLqR9xOwveVfHFAgajTetZLBikk/Isq4Lv3X+0JXlwJ7KJw3X8mFrSxpZn3GR8RUFt3Yo/FAyXJZaxSULXv9zXqLKGt1KYAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763363478; c=relaxed/simple;
-	bh=J833T3cSgGVdo3N5aXKIgaPaWQ3FtV8Bjcv4hepLj8I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sFvzmhu1FNl3xcVMxTQB7wUpWwJnrRKbnLAX5m5UcLI7XF/nSY4fYt13BcuhHeficyxF/IhB+00BNR6wHlTAnkpfPrQFJM2EkOJ30pjSO7AvkzHITiN5oc3w1baxfmz6By0MLvPSoCt4KecBQ6NUUlNubQ8Y+wl/YNkV4e4K0/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W4siq8oI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E665C116B1;
-	Mon, 17 Nov 2025 07:11:14 +0000 (UTC)
+	s=arc-20240116; t=1763363593; c=relaxed/simple;
+	bh=gQAL1HVQqIDXQAwO5/2yL98G+63SyAz5plbmwfWpIeI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rE/Plz+A2uQAit+M9Q4jkZ0rvl+yE5jXIh1TzLefD9YxD8V0GqgWsXKNqBazBTrh5sMqX6V7vwrCSIPkBHlOHMJr63ygYl0BCC8lmKznwjNJj0ju+a1o8X9xcUtOTEAd2Qse8hlr3qinQFmW9tXefo1b8fU1yoKRwuzbE1QhrOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzjQRk4f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 186DDC19423;
+	Mon, 17 Nov 2025 07:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763363477;
-	bh=J833T3cSgGVdo3N5aXKIgaPaWQ3FtV8Bjcv4hepLj8I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W4siq8oIGB5PiMLK42LEkAaUpn77c5jgos4Ago7QrlsSUKasS46q240vVm942bVRV
-	 dCuTaiAdS8cXdrVHvGIDJFK8bf5Hj3d7evaeiJhtI92roadE1RPfB/KucKpNk3bmJp
-	 Pn/3pmxvVgXpvp6nULpZXWNxk03yr8yFlz5UOzNO6I1hxuy0X+i7N1rzHZRvVRPb3Y
-	 +FGUQRqhUCdq7HJy2iNyIZ4Ef/T1EazSMCoEPpYwJSPp+/caycYjO5BV5lg1nIOsQF
-	 LGRDlW9LipP9jMkdgm2FVz6wXupvj4IO6ZNpg5/WkD6JD1UtdmHJayUpbfjWc7aTK8
-	 0aaysPgMZYQyA==
-Message-ID: <024eb64f-74bd-4170-a6c1-09c4af647926@kernel.org>
-Date: Mon, 17 Nov 2025 08:11:12 +0100
+	s=k20201202; t=1763363593;
+	bh=gQAL1HVQqIDXQAwO5/2yL98G+63SyAz5plbmwfWpIeI=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=OzjQRk4fswXooFc7fP5wQOD4SnMr0vbHO9ORgeYWQGxSfmAhZRGXQFWVfccBIztvV
+	 O0P7z6KJwhg588GdQWuQRHzbk5CZ2/it7HfvdEwH1k2uYrF8u17f8Xle7co5+fZwa2
+	 60+sNLG1oik52MINpwHoiMOExz7Q+DoE31fJGDY/PXBKnHudlSUCme7qMeyaUJIqzb
+	 ikByORU4kLM0qoyakco2a+TqWnGNB8Q10M/QmJLyu0AX2MZJPj8Iw94IA0uVoMoGst
+	 +atL1sEnBTUEtUnCpH1YOsiJzGIrgXPtboHMyr1mx8S9ip8szSdCkJAxPqsIH4xkQX
+	 G7+BZQRZ+hPGg==
+Message-ID: <62b59d52-7107-4426-b922-812d343195db@kernel.org>
+Date: Mon, 17 Nov 2025 08:13:08 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -51,6 +51,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/3] dt-bindings: dma: arm-dma350: update DT binding docs
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Jun Guo <jun.guo@cixtech.com>, peter.chen@cixtech.com,
  fugang.duan@cixtech.com, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, vkoul@kernel.org, ychuang3@nuvoton.com,
@@ -62,7 +63,7 @@ References: <20251117015943.2858-1-jun.guo@cixtech.com>
  <20251117015943.2858-2-jun.guo@cixtech.com>
  <bfe6a067-704b-45c1-919e-6a7dfb08b984@kernel.org>
  <aea1429d-b67e-4c42-ad19-88d04f69467b@cixtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <024eb64f-74bd-4170-a6c1-09c4af647926@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -107,36 +108,41 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <aea1429d-b67e-4c42-ad19-88d04f69467b@cixtech.com>
+In-Reply-To: <024eb64f-74bd-4170-a6c1-09c4af647926@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 17/11/2025 08:07, Jun Guo wrote:
-> 
-> On 11/17/2025 2:11 PM, Krzysztof Kozlowski wrote:
->> On 17/11/2025 02:59, Jun Guo wrote:
->>> - Add new compatible strings to the DT binding documents to support
->> This is not a list.
+On 17/11/2025 08:11, Krzysztof Kozlowski wrote:
+> On 17/11/2025 08:07, Jun Guo wrote:
 >>
->> Also, subject is completely redundant. Everything is an update. Why are
->> you repeating DT binding docs?
->>
-> Thank you. I will incorporate your feedback in the next version.>>   cix 
-> sky1 SoC.
+>> On 11/17/2025 2:11 PM, Krzysztof Kozlowski wrote:
+>>> On 17/11/2025 02:59, Jun Guo wrote:
+>>>> - Add new compatible strings to the DT binding documents to support
+>>> This is not a list.
 >>>
->>> Signed-off-by: Jun Guo<jun.guo@cixtech.com>
->>> ---
->> You just broke all existing platforms. Please test your code properly.
-> The patch includes proper checks. Since this platform is the first user 
+>>> Also, subject is completely redundant. Everything is an update. Why are
+>>> you repeating DT binding docs?
+>>>
+>> Thank you. I will incorporate your feedback in the next version.>>   cix 
+>> sky1 SoC.
+>>>>
+>>>> Signed-off-by: Jun Guo<jun.guo@cixtech.com>
+>>>> ---
+>>> You just broke all existing platforms. Please test your code properly.
+>> The patch includes proper checks. Since this platform is the first user 
+> 
+> Nah, tests are here incomplete - look at the binding and DTS users...
+> nothing there, so you cannot test it.
+> 
+>> of the driver in the current codebase, the change won't affect other 
+>> platforms.
+> 
+> NAK, and you keep pushing... I just told you it will break everyone,
+> which is obvious from the diff.
 
-Nah, tests are here incomplete - look at the binding and DTS users...
-nothing there, so you cannot test it.
-
-> of the driver in the current codebase, the change won't affect other 
-> platforms.
-
-NAK, and you keep pushing... I just told you it will break everyone,
-which is obvious from the diff.
+But if that was intentional change of ABI, then could be fine, but you
+must provide in commit msg proper detailed rationale WHY you are
+changing ABI and WHAT is the ABI impact of that change.
 
 Best regards,
 Krzysztof

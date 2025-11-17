@@ -1,48 +1,48 @@
-Return-Path: <dmaengine+bounces-7188-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7189-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62E12C627BF
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 07:13:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D4FDC627C6
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 07:14:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BCFE3A6185
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 06:13:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 394643AE117
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 06:14:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3E8F30F812;
-	Mon, 17 Nov 2025 06:13:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C286530FF24;
+	Mon, 17 Nov 2025 06:14:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8v0/MGP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aVYt/JI5"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C568C28695;
-	Mon, 17 Nov 2025 06:13:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925F57083C;
+	Mon, 17 Nov 2025 06:14:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763360020; cv=none; b=Jq4msBMhtHfqG/CdpsTeTdiORYH3JgLX/c0h7qvjprfd+aWw0Nk41gWucrn5kE8HA35g+Fq0uznCRth4tDreZQufcqgie4mkwxYTiitk91AYMqTG4ZyN1/WTFn6+mR0nJ6uELZvH5dASj0aGcKtfh/89HNOBokqvZ6aUniSc6vk=
+	t=1763360079; cv=none; b=GCfKw8ykAQ9ulxO3BCdMSCKhTdB80iYTSZOaVOvIzNXobtx2iF+S+rbR42kDi0tU+IKu2lhUjjnXR43QmCNlGBWcBOUnUonYrYsNd4602MdogS8zMO6DVFxmy+SEVJxDJz5q5LH2WEn/mcnc940cTzt4i1LaYmvJBBXCnf6yCOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763360020; c=relaxed/simple;
-	bh=WozaX26Br/hJkf7juysZBW8xkHyrBSYtURe8aeOGYVA=;
+	s=arc-20240116; t=1763360079; c=relaxed/simple;
+	bh=rJ/pzmUNIrnYLhk/ngr/ynwyasLC+MsTsXaFcwzyF0s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hqyGrcbIq3rcmEPcj30HB28YntMaJkfGdiC5DiHuPOMFyWa6qO/yiVPQ6D6DZsWRPQFZCXfVMZc0Fb3yZ79Ny5asGWcz6NrhOZwKNYE8dfnpMq08DLhcva03OdVqVCwqDwyQ9Hoi3VV76z7WxtKjzbcdhhw4iHm+0W5Rdpjc69A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8v0/MGP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA842C19424;
-	Mon, 17 Nov 2025 06:13:36 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=WTTLbvv1fHEWAY8Cs6D+XnAHf4/eVrvYSszpErJKjtsLzGCnan4bCt0dA1xJAYP9FxSbS1Xquh1jLDqgaDY5qsgAltEOfnh2FE3yMc3GitP1JE5pEpYddsgxo53t8Sxdgt6t2OdpN6hBp9QE4aU5r7LpGQBzYo3UnuPRXdLPhAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aVYt/JI5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF609C19422;
+	Mon, 17 Nov 2025 06:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763360020;
-	bh=WozaX26Br/hJkf7juysZBW8xkHyrBSYtURe8aeOGYVA=;
+	s=k20201202; t=1763360079;
+	bh=rJ/pzmUNIrnYLhk/ngr/ynwyasLC+MsTsXaFcwzyF0s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=m8v0/MGPo4Y/cS0KZADeGDwcKNWrYxfH5C68XuEapIplOal5ymCTj2FW9qzpWIfXM
-	 0Q0vccmV92wGN26mvVPtVgcG+qwAgTKsC3VNlIvyEqSL8RSPxl4TaE9iC3fEOe8MA2
-	 KRRDbZGdm0WUNrk12SR6Vt2DT0+FAK7dNWflq4iJC6AqcV2bup3iqOvXgqfxxwZXaP
-	 1naVQRQm4DxXmCw8vZN4sf1B+u84z644O3ohcBZCH/6dE04RA3SPcX90fz8fRpSZD0
-	 SPFSGU3PKvNC2iehI/1KZJQb3L4JXQktSNum6Ggwz7IAkxBlKuhdr6dwoBiAEKzjG+
-	 lSI+wXju9+pyg==
-Message-ID: <eb9eae64-f414-4b04-9a10-4dd8a9088e96@kernel.org>
-Date: Mon, 17 Nov 2025 07:13:34 +0100
+	b=aVYt/JI5hDDnTVUzp0sH4Keq/e9UVlr85oruQy3gMxldrjHeDXKUOCa0iJR7x4TSP
+	 dPu65GcqLpMV56o2DCUs5Dzwr0Sj5c07N/XD6ybRyQ4YbfjHUeJax3FHZNRztz5fG9
+	 jaAwCdq/EpP2vNQ2telzJl2K/L+Y6ELXf//7429lmW6UXkThIFbBCCsF3OzIYkVeLk
+	 kENpQ8sOquh9Ov959jmCqIku1f30MwCq2pcRJaKujB4DbXFQXkRWSk9LrbK9xXi+y2
+	 v+65nG8k7NGXD3cW05ap8fWZ07QNw1h72tVKwWpYaO/2DC29oMX4X9p/dLjEA3hxtq
+	 U85kF72272lnw==
+Message-ID: <70fd6151-905b-40db-a392-df458deaf5a1@kernel.org>
+Date: Mon, 17 Nov 2025 07:14:34 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dma: arm-dma350: add support for shared interrupt
- mode
+Subject: Re: [PATCH 3/3] arm64: dts: cix: add DT nodes for DMA
 To: Jun Guo <jun.guo@cixtech.com>, peter.chen@cixtech.com,
  fugang.duan@cixtech.com, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, vkoul@kernel.org, ychuang3@nuvoton.com,
@@ -60,7 +59,7 @@ Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
  linux-arm-kernel@lists.infradead.org
 References: <20251117015943.2858-1-jun.guo@cixtech.com>
- <20251117015943.2858-3-jun.guo@cixtech.com>
+ <20251117015943.2858-4-jun.guo@cixtech.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -106,91 +105,20 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251117015943.2858-3-jun.guo@cixtech.com>
+In-Reply-To: <20251117015943.2858-4-jun.guo@cixtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 17/11/2025 02:59, Jun Guo wrote:
-> - The arm dma350 controller's hardware implementation varies: some
+> - Add the device tree node for the dma controller of the CIX SKY1 SoC.
 
-That's not a list. Look at git history to learn how to write expected
-commit messages.
+And here again...
 
->  designs dedicate a separate interrupt line for each channel, while
->  others have all channels sharing a single interrupt.This patch adds
->  support for the hardware design where all DMA channels share a
->  single interrupt.
 > 
 > Signed-off-by: Jun Guo <jun.guo@cixtech.com>
 > ---
->  drivers/dma/ar
-
-
-
-> @@ -526,7 +593,7 @@ static void d350_free_chan_resources(struct dma_chan *chan)
->  static int d350_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> -	struct d350 *dmac;
-> +	struct d350 *dmac = NULL;
->  	void __iomem *base;
->  	u32 reg;
->  	int ret, nchan, dw, aw, r, p;
-> @@ -556,6 +623,7 @@ static int d350_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	dmac->nchan = nchan;
-> +	dmac->base = base;
->  
->  	reg = readl_relaxed(base + DMAINFO + DMA_BUILDCFG1);
->  	dmac->nreq = FIELD_GET(DMA_CFG_NUM_TRIGGER_IN, reg);
-> @@ -582,6 +650,26 @@ static int d350_probe(struct platform_device *pdev)
->  	dmac->dma.device_issue_pending = d350_issue_pending;
->  	INIT_LIST_HEAD(&dmac->dma.channels);
->  
-> +	/* Cix Sky1 has a common host IRQ for all its channels. */
-> +	if (of_device_is_compatible(pdev->dev.of_node, "cix,sky1-dma-350")) {
-
-No, see further
-
-> +		int host_irq = platform_get_irq(pdev, 0);
-> +
-> +		if (host_irq < 0)
-> +			return dev_err_probe(dev, host_irq,
-> +					     "Failed to get IRQ\n");
-> +
-> +		ret = devm_request_irq(&pdev->dev, host_irq, d350_global_irq,
-> +				       IRQF_SHARED, DRIVER_NAME, dmac);
-> +		if (ret)
-> +			return dev_err_probe(
-> +				dev, ret,
-> +				"Failed to request the combined IRQ %d\n",
-> +				host_irq);
-> +
-> +		/* Combined Non-Secure Channel Interrupt Enable */
-> +		writel_relaxed(INTREN_ANYCHINTR_EN, dmac->base + DMANSECCTRL);
-> +	}
-> +
->  	/* Would be nice to have per-channel caps for this... */
->  	memset = true;
->  	for (int i = 0; i < nchan; i++) {
-> @@ -595,10 +683,16 @@ static int d350_probe(struct platform_device *pdev)
->  			dev_warn(dev, "No command link support on channel %d\n", i);
->  			continue;
->  		}
-> -		dch->irq = platform_get_irq(pdev, i);
-> -		if (dch->irq < 0)
-> -			return dev_err_probe(dev, dch->irq,
-> -					     "Failed to get IRQ for channel %d\n", i);
-> +
-> +		if (!of_device_is_compatible(pdev->dev.of_node,
-> +					     "cix,sky1-dma-350")) {
-
-No, use driver match data for that. Sprinkling compatibles everywhere
-does not scale.
-
-Also, this is in contrary with the binding, which did not say your
-device has no interrupts.
+>  arch/arm64/boot/dts/cix/sky1.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
 
 Best regards,

@@ -1,54 +1,55 @@
-Return-Path: <dmaengine+bounces-7184-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7185-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 627EFC620A8
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 02:59:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F904C620AB
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 03:00:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 6BC4A35D9DB
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 01:59:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 281563ACB79
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 01:59:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBF4A23ABB0;
-	Mon, 17 Nov 2025 01:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C4E9240604;
+	Mon, 17 Nov 2025 01:59:53 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022097.outbound.protection.outlook.com [52.101.126.97])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022129.outbound.protection.outlook.com [52.101.126.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC2F1FA272;
-	Mon, 17 Nov 2025 01:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC8B748F;
+	Mon, 17 Nov 2025 01:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.129
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763344792; cv=fail; b=nmHptXz1cAM9iztiPQwlwKOLpRbjnh7HTDeu827iH1k2CVdg7WYjFTma800uI0U/wqY4tgh4oMclicB5RfHMe3EgY7Lrj55CXYCG7a20WQ5nAZNKkRobSXsidFa5BUZBVOxmYAqCyns/l5+7vxErqAYSShGjOlLLJh+Vw4lBi5A=
+	t=1763344793; cv=fail; b=mwdkTT1N8oPv1CFVehptzc+09nt9ojv2RgStAZ39VsLU4ZCeiYxbtFsAXY+tQ9ZsE5KgiOlv2LYCkPy6L1fPe/hDb4F30+Wo6OwBynGMLlFqlrgA3Qw3XuSnKtuW3jPdx6UYwPe79ti0z01skdPC8egoO0Ps/0ErR/CqLMdKnos=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763344792; c=relaxed/simple;
-	bh=4iJmhO9rtjxtaVbnlKp6CC6mizQyz2vmxFeOXwolYLw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=YHNvd3oY9ZeUk4cVKvDMsWmrJ0v4xeIctMzv4IGuhLu0L7T/Fy1zSsiN9cn0+iI+arQAT6V0QrF03YKXKXCO6WzWFup55P8+RLjwqZ4xB1P0/ENax8cYyd/Na97NO91g3e4rUEihN0VIeVYeYFo3y3MfqU7zARMThE6uHbztIMc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.97
+	s=arc-20240116; t=1763344793; c=relaxed/simple;
+	bh=cGfHQ+U67SRA8Jlw2ji4JNBpbx+8W46jVdnLm56JC04=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rJuORj2NpkXWOIRhOOzYAM9sDuU/ZQeHYGNfFWs1HtRvUftkksL8Ibh9iMHbQsUbDuOQU2tMtGRD+KS4PyMuvtftmF57WWqqj2dWwO23K5bUsatDvNIwxFkGSmWGHbQZh18Us4Jgm0yfr3G84pGvIt98EC9NwrPZUB8Rb6N87sI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.129
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PC989Sh1wnnGbw2sExVDAL7GO6vEkxJQhF9UK1AwMiq/7q5ZJohRTMVs1X2yMdffN39Z04bSs/hDh9qNIpH0OCsajcpnxoaDdGDL1kN63YAwCE23ukRXNdWHZMhVnIjnj6Nne0K576h3B6ibJeNaB4K9NJKnUw2ZJEJ7guglCJXZdg07pQKqVmZHuHYPkS/IfWAPMiDzoBsjXmhzKkwNKM5SXMF0f9Zc390z3Y1dYDe64WWLnEuXzVvP/VRNXTqdqS57YfGfq8WVHTgPKlusmTefePs+QdSq0/+wOOR3nisoG0nL7H3wzdMyCCbotU+txJhJrIltMZqFzIiODkaFlw==
+ b=EKjuG85LFw1ZO/qiCcrpjyMYzotKqjODMUix8ZiyGMpQXaePv5Ncv6XZ34FCpDFK4yErpfWnLigYkQue2GmJZLpV4amgo4LTpXB7mpzEYriRZGgTCbyyrnR2i1qAEL0YWDcYTMd3UZfYEn0x0B0+g1C4yAfNhpaOyT9L7Q0At94f/BwjpE4Cgrve2BABOc+jiw+pKUkic61PDp0qjvqLRSlnrnXpPj6h2P/ZxxCUxjre0C0236Bfbfuhsc5kS/+LFAWyI+i6bd9rbUXpwwq0g7YkwKoZ/xbwRZTPcse8g8xPVhM5+fw51jUwAzfqHUTZXMbZf3vQ81/ZSgQYfszkag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k0Jnp8Tew0Wm2+7Bj11kGT0P+edv2iluYdvTgz7Jr88=;
- b=mV8ixYfs/y8b6d2XMLaJvrtc3707HTIeE3X9fJan4kASomx+u7fPaC6W81AMnXB8PY8Ly3CynRiwENfqR2liiWG6OZzlXNGeV0Q/uoSSFU4NQ5NEDX4P15X7fuU1kBXx24FP8sgPZpk+AyLByqvQb9LnJpGwjl72hNU3qIHeNqWFxqMOSccseQoBOxuLNtQwFEJOM30i6FjdUHOuh1G+DOXaIzCDkm9d+Qw58laPlNIJ3hVidFRSZRQleEhyauJ51ZjQmapaYDxOuZtxEU86pzmAfpaDJW1xmqeaWFwyHp/yAkNoL/H4py1znqwg4kal1WcTuFee91E43Mv9Ft3V1A==
+ bh=RyvjQbcc+pDIiNPbfH3b5Hi5uTaxLFkOnWvjTmAc/PU=;
+ b=WzyVpd6GmeooUpJ9K/sDnqnIm+pqSUxjsWUmhg8Htyr/k2wrdotFLGurglNJ7pCzPzHyIUUSJSVqbcQ1ibHQ2OC5op2lMbZBJoXRvM0apfE/bwUa74cvAPP2Fn0Z/XiTu1Sb1ZQx+3PdAEKrJ43bSuM12Ny+T9FE68qJBA94/THG9myICy8L8Zo4vTcl2zDa5T3S5xy3epJCHzxkClGEUw8fwZUzu63mw2KtrB8arPLSN0PEiWcrw3jgvqQR8RYOPdsXI13TFTYKm6UaNLt35IadqFGroOA5ShLtfH5AKPVYJxtTyx1kWi5lBzQx4+ia8uM4v7V6M1dxhs1CZKe1Nw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
  dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
  not signed); arc=none (0)
-Received: from SI1PR02CA0052.apcprd02.prod.outlook.com (2603:1096:4:1f5::20)
- by TYSPR06MB6469.apcprd06.prod.outlook.com (2603:1096:400:482::10) with
+Received: from SI2PR04CA0014.apcprd04.prod.outlook.com (2603:1096:4:197::18)
+ by SG2PR06MB5130.apcprd06.prod.outlook.com (2603:1096:4:1cd::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.21; Mon, 17 Nov
  2025 01:59:45 +0000
-Received: from SG2PEPF000B66CD.apcprd03.prod.outlook.com
- (2603:1096:4:1f5:cafe::55) by SI1PR02CA0052.outlook.office365.com
- (2603:1096:4:1f5::20) with Microsoft SMTP Server (version=TLS1_3,
+Received: from SG1PEPF000082E4.apcprd02.prod.outlook.com
+ (2603:1096:4:197:cafe::5a) by SI2PR04CA0014.outlook.office365.com
+ (2603:1096:4:197::18) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.21 via Frontend Transport; Mon,
- 17 Nov 2025 01:59:39 +0000
+ 17 Nov 2025 01:59:45 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
  smtp.mailfrom=cixtech.com; dkim=none (message not signed)
  header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
@@ -56,12 +57,12 @@ Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
  222.71.101.198 as permitted sender) receiver=protection.outlook.com;
  client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
 Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG2PEPF000B66CD.mail.protection.outlook.com (10.167.240.27) with Microsoft
+ SG1PEPF000082E4.mail.protection.outlook.com (10.167.240.7) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9343.9 via Frontend Transport; Mon, 17 Nov 2025 01:59:44 +0000
+ 15.20.9343.9 via Frontend Transport; Mon, 17 Nov 2025 01:59:45 +0000
 Received: from guoo-System-Product-Name.. (unknown [172.20.64.188])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id CDA9B41C0143;
-	Mon, 17 Nov 2025 09:59:43 +0800 (CST)
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 52FFE41C014A;
+	Mon, 17 Nov 2025 09:59:44 +0800 (CST)
 From: Jun Guo <jun.guo@cixtech.com>
 To: peter.chen@cixtech.com,
 	fugang.duan@cixtech.com,
@@ -78,10 +79,12 @@ Cc: dmaengine@vger.kernel.org,
 	cix-kernel-upstream@cixtech.com,
 	linux-arm-kernel@lists.infradead.org,
 	Jun Guo <jun.guo@cixtech.com>
-Subject: [PATCH 0/3] dmaengine: arm-dma350: add support for shared interrupt mode
-Date: Mon, 17 Nov 2025 09:59:40 +0800
-Message-Id: <20251117015943.2858-1-jun.guo@cixtech.com>
+Subject: [PATCH 1/3] dt-bindings: dma: arm-dma350: update DT binding docs
+Date: Mon, 17 Nov 2025 09:59:41 +0800
+Message-Id: <20251117015943.2858-2-jun.guo@cixtech.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20251117015943.2858-1-jun.guo@cixtech.com>
+References: <20251117015943.2858-1-jun.guo@cixtech.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -91,87 +94,80 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CD:EE_|TYSPR06MB6469:EE_
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E4:EE_|SG2PR06MB5130:EE_
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: c4f4b3e9-adf2-4a11-fb8a-08de257cfaf2
+X-MS-Office365-Filtering-Correlation-Id: b9620f29-caf5-414b-2ed2-08de257cfb4e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|36860700013|376014|1800799024;
+	BCL:0;ARA:13230040|82310400026|376014|7416014|36860700013|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZFIYyULzhceYqGp1GSTscazmrRxb0KfxYqw8bMCO/5timJpJGNW3412qRm+b?=
- =?us-ascii?Q?I/N1KhY3bjY4u83uyGGJfb++DEKfgD3qs0Xbh6wmSa0/UpfswsYAz+vrGIpf?=
- =?us-ascii?Q?TNl3ShnNfYYC7mUUOIKXawI8BLVONN+8zmKctH9vVf+D0VyCcuztKIa3GdRi?=
- =?us-ascii?Q?JQFY4lVk8Uk83ZAqBmVOGS+0EW1LBYkepaZxDyvh2wdVLGXD8mJjCPv1CcZX?=
- =?us-ascii?Q?WYj/3ti86u1Jbhqv1z8KEBTP5gEl3SIXgYOljmp0si473RxSDOklnjwcpwXV?=
- =?us-ascii?Q?Mr+xaYIeIVzJccs54s+CeIL4h/pdBNNzRwJD5FH8ZJDF0b9v81LBBW4qU6kq?=
- =?us-ascii?Q?H3D68iDnYkcgnGvWoAgQT0NxAhTwVM2gdmFtf5urf6hRUdL7L2Mv8wMyA9Nd?=
- =?us-ascii?Q?k1nfCFxRGJBq3rdfa87Zzx+4KblEzOFkNIuReKDin7lwmw+o6N4pbjkCb++e?=
- =?us-ascii?Q?rIhGjGBOhjS6zVFMNwF0qS8cqynAO/f5LjWQ2JaT4igjBdHNda0lyjZ5Ir07?=
- =?us-ascii?Q?CmAJXQqV/i20fLCrRGZ401DYVDF/a4oZc+8OpTmTUYnxfo/NEHfFTZKCIXP7?=
- =?us-ascii?Q?xKS6375ks8+FVAK9I95Z8jl3U908SldvOkMQBBGhm0DT4RWWD9PBS1DCDvU3?=
- =?us-ascii?Q?6i/lcra0TopzcM/nogtiioh3rInaGR5H276XYksNLXoUZGmT5wjjVxvxHweM?=
- =?us-ascii?Q?MSaaBEOASym7Fm63o0hzdrZRpB+FHL1SsZ9GDaflGmdo7yHZMuJ+wz2OYLHZ?=
- =?us-ascii?Q?wygh90yF7OpbLZZR6B9iAyjPaQ5/fEUghjKMEjpU2suF3jNObIF7/2sO4d+X?=
- =?us-ascii?Q?ap7UhEnHTC6OnsuLl8Eyj5y069hEFRHr1Z45Qy+w9dSmizgcBfv30TovJD+G?=
- =?us-ascii?Q?f9IAV3nxwCgv2bTYWJhS8SSsC0LHHXIaf4MTbFsnGP2QLlX+mSeCjjEc8Ky0?=
- =?us-ascii?Q?7xWQbfIDqOsu9qoqB55QN4SoaUM7rhvMZEqy106XCp6d3EY6Dl80xmeC0giF?=
- =?us-ascii?Q?7PtaWOHspvn/qbLI/DKhNsbC8yvPj8SWpRep+wx9SZFpbYh8oJ3YIsFUHyse?=
- =?us-ascii?Q?XUATg5A1QDQGm85BepyBQKsO8onW2Hv6z4o5ReD1AhI8Re9iObAnMP1xVGqL?=
- =?us-ascii?Q?A14m5oSHvB5bDNH6ra2ZuU44F3kbBzDKdwyiwD0ZNmsZ4qhMNpv9kvLyITtX?=
- =?us-ascii?Q?/pioWuYtX/macCUA1lzeJLzh90lKk5n2c2U3IDA29YVY4gBLYe5TfiiaWrlW?=
- =?us-ascii?Q?D3YHLSqJght6hMIVeeKJgv3DaxdU4v5tVbRknFETsveGbvBt5nvyz8dstWs4?=
- =?us-ascii?Q?4TY1YUUz94wyIL+Ua6edITHcZIHmhAHgOOdhEsgVV6/6Jb3Wc2ZAvuReUFwb?=
- =?us-ascii?Q?Tx9JE+YljT5QDas32PLhZCmwfGEwxDolmfkvx06YhUN+oFHMJSJpEdz20nl2?=
- =?us-ascii?Q?eQzRvBSbvlDClbQh/cKr2Xjj7IyhRz8YbAEj4j6wDFpNdG8j+hIYUyA6snyB?=
- =?us-ascii?Q?Mqe8Qq0xLfeqcURayTfyP/vGYB6RmHGPs+bwJ/FBoPJFv2qTXqREOnvFdA7S?=
- =?us-ascii?Q?Ultjct+tJFqo3p399u0=3D?=
+	=?us-ascii?Q?FDAshcoEG708YG849Q0UuCha6+wQCyTJBjpabStjWh7GcJhaGStyMJ0FVPsA?=
+ =?us-ascii?Q?BVLaWhOXRn4Uc6835sUKkBWs9Lbbg8l+Vhu15XbyEPadxlwDpplfFNpyjwa9?=
+ =?us-ascii?Q?EXJZyxbsrtk98g3EPhpyHafEyLEl9B/oaLnk20NpdSmC4TIwDvQ6a8Wn+/6z?=
+ =?us-ascii?Q?3MriG7wPOb+gp6VpyK2PlNfs3SHDVQmsuA7IRKHMH+2bT+c+jX+flQDEL7cl?=
+ =?us-ascii?Q?sF8ZdB3cqRH2dhzeKrHBqVV5WV9oOJe1Jtpc2ZRw93n4OJZBGIR/yJk652IU?=
+ =?us-ascii?Q?grKT9w8Ox2Op35kLLIChTTxnwyooj49Tndew4YY4pt0BA08FSfvF1LWCiqTu?=
+ =?us-ascii?Q?lLuQWD/Zi7Cb8RWD86c7x7YrlE5tcf/FEqpdPnDuaEhMyBseGEhM6ZUMwGIL?=
+ =?us-ascii?Q?5YIP3FXCCwwYub2tKi7//LEwbHsGTQ3SVM8IRZgUaCTXXyeMvhHQ+nAzm1N7?=
+ =?us-ascii?Q?KOqbliB8aWYT9KcgrXfuA3//1odv4TgFqQCcfMbsdT062Q260025h17MVLEv?=
+ =?us-ascii?Q?lSMTOm2gnmBcckiP31PR2MoeXai4ZPvGOuRb8N7LZ0sDTMYxmEQOk/EMxBCh?=
+ =?us-ascii?Q?oRzauD9Dm6JiAMwkDsKsvfgvgySV5RbHkYK75iY/N9M5W/tXQN7zSyU+vefB?=
+ =?us-ascii?Q?CsrjUYES7yhXVLJe/2Mqhd3hzFn0q04e9AGSP38RdaGO7NYIiSFh+Xs8IoFT?=
+ =?us-ascii?Q?QjIab4Y60Z1RDQZLBl233XJPTDDdpEUeuvliZsE5pibzaeAOLfbRnkjouOZd?=
+ =?us-ascii?Q?Mnsnf6s377/f9TC0O6CQAb7E1je0saqOZC+tKqYBj+M88NaR+c2mX0fPqbJM?=
+ =?us-ascii?Q?htGvDZGgtphrErAqm0tOcF7uq32ofUoinFCIpWxYZKDGptaAyYGWCD3y+zK1?=
+ =?us-ascii?Q?d+16hAJRvOXltQL38NrC1hWTJd6zvZCOFO1jdHBLRIgBQTlQMxKcM0YlGkt6?=
+ =?us-ascii?Q?t4pgb0FQ4VFE79R179BXH1C+IQL4Y5zmpEwN8yhwGQ5Dfqopa2+fQnFA7g+g?=
+ =?us-ascii?Q?sOQu8KSPxoNKrIbq7hFj83RblQfxdm2QjXMY3bOnbTjWrR2/5lpciBJ2t0Om?=
+ =?us-ascii?Q?8ylEBDhDEHMNTHbFTXkqWrDLF19EVLrMtcDG4aK6KwSvYv/YtjvPZrZDcMCV?=
+ =?us-ascii?Q?4Ji02ei6KbArt1YUYdqyj0YE47aiZhVMmNYK7cVMMel7aIUFPmdd52KdFkSB?=
+ =?us-ascii?Q?NTgAitHuNhEhXT+ySJl2BTbHj4hjYI6ayf+8b54P6l+6BHF8NPbqD61T6Jy/?=
+ =?us-ascii?Q?U3XEXtjX+VWkIyOjDTESZljH2JaqiFvnx6OyLTXRJbJ1CnpOMSeNZZBgGOzD?=
+ =?us-ascii?Q?3suTrJCFRAj/IbpEpFUJvUXjBm82wa5W/tmhaROkMCfzdqYREVZMybEQ55Vr?=
+ =?us-ascii?Q?hjUbAkMpQYVx+VjblaVi0u48zx0gDxK+pVjpvW1N/xSctJ6B8mn8P4Ijx1ni?=
+ =?us-ascii?Q?/pF6BQJtawnvv/q0RAbIjrMTIE8xfnghiWB9GzKwcWFOd29WNTd9UEtM/QQR?=
+ =?us-ascii?Q?Bz7qAP6cllbpH2P6v4TRSPcuxCUJVgeuqHVV1tlEnLCESrRgx6zAIuvhUZBb?=
+ =?us-ascii?Q?3Ho5wAgB85UVsQn8wCQ=3D?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1102;
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(36860700013)(1800799024);DIR:OUT;SFP:1102;
 X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2025 01:59:44.7934
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2025 01:59:45.3746
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4f4b3e9-adf2-4a11-fb8a-08de257cfaf2
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9620f29-caf5-414b-2ed2-08de257cfb4e
 X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SG2PEPF000B66CD.apcprd03.prod.outlook.com
+	SG1PEPF000082E4.apcprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB6469
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB5130
 
-The arm dma350 controller's hardware implementation varies: some
-designs dedicate a separate interrupt line for each channel, while
-others have all channels sharing a single interrupt.This patch adds
-support for the hardware design where all DMA channels share a
-single interrupt.
+- Add new compatible strings to the DT binding documents to support
+ cix sky1 SoC.
 
-This series introduces the following enhancements for arm dma350
-controller support on arm64 platforms:
+Signed-off-by: Jun Guo <jun.guo@cixtech.com>
+---
+ Documentation/devicetree/bindings/dma/arm,dma-350.yaml | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Patch 1: Add a compatible string "cix,sky1-dma-350" for the cix
-sky1 SoC.
-Patch 2: Implement support for the shared interrupt design of the DMA
-controller.
-Patch 3: add DT nodes for DMA.
-
-The patches have been tested on CIX SKY1 platform, the test steps are
-as follows:
-    % echo 2000 > /sys/module/dmatest/parameters/timeout
-    % echo 1 > /sys/module/dmatest/parameters/iterations
-    % echo " " > /sys/module/dmatest/parameters/channel
-    % echo 1 > /sys/module/dmatest/parameters/run
-
-Jun Guo (3):
-  dt-bindings: dma: arm-dma350: update DT binding docs
-  dma: arm-dma350: add support for shared interrupt mode
-  arm64: dts: cix: add DT nodes for DMA
-
- .../devicetree/bindings/dma/arm,dma-350.yaml  |   6 +-
- arch/arm64/boot/dts/cix/sky1.dtsi             |   7 ++
- drivers/dma/arm-dma350.c                      | 115 ++++++++++++++++--
- 3 files changed, 117 insertions(+), 11 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/dma/arm,dma-350.yaml b/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
+index 429f682f15d8..3baf1ba5523d 100644
+--- a/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
++++ b/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
+@@ -14,7 +14,11 @@ allOf:
+ 
+ properties:
+   compatible:
+-    const: arm,dma-350
++    oneOf:
++      - items:
++          - enum:
++              - cix,sky1-dma-350
++          - const: arm,dma-350
+ 
+   reg:
+     items:
 -- 
 2.34.1
 

@@ -1,107 +1,100 @@
-Return-Path: <dmaengine+bounces-7231-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7232-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3F10C65209
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 17:27:31 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87846C65231
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 17:29:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 43E024EAB96
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 16:19:10 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E24B63675EB
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 16:22:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C369E25B305;
-	Mon, 17 Nov 2025 16:19:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 155F4284889;
+	Mon, 17 Nov 2025 16:21:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLosKj1M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hlmX01o6"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975F628E5;
-	Mon, 17 Nov 2025 16:19:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B302C3255;
+	Mon, 17 Nov 2025 16:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763396347; cv=none; b=XXe7e/JJcHT+/ov4qxu+59rNUDi6o27WGVkvUNYS8CB8NuJ8FSjh/Qi57/2pa2vDOR/c6q6dvZtdMaUdBLOPhz0PiANxcB/3R9cBMv/HRNHl/gmmqwjUID+ZLdroW/n4x8/cQUAGQMtnysA5NmBm7iBTdnPppdLKyq6GMFZUPwg=
+	t=1763396508; cv=none; b=SlWI4VixCYw2ty73/zmY5GzsgFJkGqqq305LsCpcIdxOG0+OQwnUrwXXSDEbVgnnVu3uPXvnkfBOIdG+fS6F4yDXpQntge1VXjIv8tquAMBs8WNeDcCHRIU/d8WHCj7J8N0tD53MSPOToZZhN9XHcMMucOg/wvbmprgjHG7AX4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763396347; c=relaxed/simple;
-	bh=xqte167/CtIiIs1bxGMyVe2Cfffz/PRiyeDV54//dVY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kTC1k10iUJDjHWEojtwqX2nYjMToClXD/AkwrDbTx0u5p//9JV2c/icCI84pjgnaCPFnM2DG70YLxrNE+FmA7Np3+D775d4Vm2gezcYP5XpouRlyVPIqSnChcZpGX+1jWYi3Ffj2Ypi44tENumzbyBfHqqcWfqn+nAqmKY+RWl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLosKj1M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2D98C19425;
-	Mon, 17 Nov 2025 16:19:06 +0000 (UTC)
+	s=arc-20240116; t=1763396508; c=relaxed/simple;
+	bh=TiI83tCg5AKsktlTXAjyXY6utWvY4C8WcBuoUX5zOms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ocK4HsVXxypE/Ubrwb//NA1WKw7K6wVukwxGnKg1GU5bdbSZE4acb2pZhfP5TIPhOf5w5LjzXBMZAIuTfEMLGqlf/hpBgw1bOaIHrBTM6+d6+k98dq6Cu/iyQXBYN+Ei8A6tWVeOyWLUhc6vGcxsvx4mywtT/fRo2U/1n4TF4vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hlmX01o6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 862EFC19423;
+	Mon, 17 Nov 2025 16:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763396346;
-	bh=xqte167/CtIiIs1bxGMyVe2Cfffz/PRiyeDV54//dVY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hLosKj1M17ivpZE9x62WLnVcfiVgycjByqNR7bWdYjiRn9l8FclT2bw5XYwh3d0PC
-	 72xsRKvbMuosrZNuvrZ/i4YMKxAuCK7BDzXsDpDMygIq+JnvTtJCWDAHLMF+8Bi4GA
-	 d2wF2JeioodMesZQi+yDtMmV031gUL30HfZDXPbaX4mS1z0sjDQ95afrmaPqpxexj1
-	 6fdeAyFWVaoRrg7WEiZSZ8JUpyyUHjCr2uaIe548Fw60wBjPlmTnTA7ioI6sdra7rO
-	 nnoheHYmUGEso7Cr4UpqYX8gqFEiA93S41BA+G8lXUO3J9e+l9/JxESKpthluONCoX
-	 Mo/6HrFNInb8A==
+	s=k20201202; t=1763396507;
+	bh=TiI83tCg5AKsktlTXAjyXY6utWvY4C8WcBuoUX5zOms=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hlmX01o6zvfOF647eW/XjbKbtoiLEBORcvp36rZb1QULsMeVeRvCTx77FQee89Gbe
+	 KYaycnMLmyAqD5KW77ykDsjwGMdEKrIKp7Yg3ReULVWo7kbiOpGLJWxtTf8d0x9LNt
+	 ePeVQsdNo1Hu5DLkMdZqSzs6o+5zzEzbsQwWsYftqaVhI43BNBCfni2OBkDNLYVBJf
+	 Th6N7HATRehRRItHXLZFD2TEd3sCVWwRzdeyLJRtbEKVxYzayf5WU9gJkHwL3HZ+Lw
+	 Vtapxnh7oFdw4Oi4/cC5I99oWuPmsezKGQVMxbO45mTEIfiN46SgDpTSvcHQTdoKRi
+	 on+XVqBrvKK4g==
 Received: from johan by xi.lan with local (Exim 4.98.2)
 	(envelope-from <johan@kernel.org>)
-	id 1vL1wW-000000002vp-2cvb;
-	Mon, 17 Nov 2025 17:19:04 +0100
+	id 1vL1z7-000000002yZ-1cgg;
+	Mon, 17 Nov 2025 17:21:45 +0100
+Date: Mon, 17 Nov 2025 17:21:45 +0100
 From: Johan Hovold <johan@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>,
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Cc: dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan@kernel.org>
-Subject: [PATCH] dmaengine: ti: k3-udma: enable compile testing
-Date: Mon, 17 Nov 2025 17:18:51 +0100
-Message-ID: <20251117161851.11242-1-johan@kernel.org>
-X-Mailer: git-send-email 2.51.0
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	=?utf-8?Q?Am=C3=A9lie?= Delaunay <amelie.delaunay@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 05/15] dmaengine: idxd: fix device leaks on compat bind
+ and unbind
+Message-ID: <aRtLmTQIJqMdQWFm@hovoldconsulting.com>
+References: <20251117161258.10679-1-johan@kernel.org>
+ <20251117161258.10679-7-johan@kernel.org>
+ <867fa85c-8e7d-4b60-a354-630d4147c3ea@intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <867fa85c-8e7d-4b60-a354-630d4147c3ea@intel.com>
 
-There does not seem to be anything preventing the K3 UDMA drivers from
-being compile tested (on arm64 as one dependency depends on ARM64) so
-enable compile testing for wider build coverage.
+On Mon, Nov 17, 2025 at 09:18:39AM -0700, Dave Jiang wrote:
+> 
+> 
+> On 11/17/25 9:12 AM, Johan Hovold wrote:
+> > Make sure to drop the reference taken when looking up the idxd device as
+> > part of the compat bind and unbind sysfs interface.
+> > 
+> > Fixes: 6e7f3ee97bbe ("dmaengine: idxd: move dsa_drv support to compatible mode")
+> > Cc: stable@vger.kernel.org	# 5.15
+> > Cc: Dave Jiang <dave.jiang@intel.com>
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>> ---
 
-Note that the ring accelerator dependency can only be selected when
-"TI SOC drivers support" (SOC_TI) is enabled so select that option too.
+Thanks for reviewing.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/dma/ti/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Note that something happened here with the end of your tag. Hopefully
+Vinod can fix that up when applying.
 
-diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
-index dbf168146d35..cbc30ab62783 100644
---- a/drivers/dma/ti/Kconfig
-+++ b/drivers/dma/ti/Kconfig
-@@ -36,11 +36,12 @@ config DMA_OMAP
- 
- config TI_K3_UDMA
- 	tristate "Texas Instruments UDMA support"
--	depends on ARCH_K3
-+	depends on ARCH_K3 || COMPILE_TEST
- 	depends on TI_SCI_PROTOCOL
- 	depends on TI_SCI_INTA_IRQCHIP
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
-+	select SOC_TI
- 	select TI_K3_RINGACC
- 	select TI_K3_PSIL
-         help
-@@ -49,7 +50,7 @@ config TI_K3_UDMA
- 
- config TI_K3_UDMA_GLUE_LAYER
- 	tristate "Texas Instruments UDMA Glue layer for non DMAengine users"
--	depends on ARCH_K3
-+	depends on ARCH_K3 || COMPILE_TEST
- 	depends on TI_K3_UDMA
- 	help
- 	  Say y here to support the K3 NAVSS DMA glue interface
--- 
-2.51.0
-
+Johan
 

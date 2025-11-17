@@ -1,49 +1,49 @@
-Return-Path: <dmaengine+bounces-7224-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7223-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D374C650FD
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 17:13:58 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35209C6516A
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 17:18:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sea.lore.kernel.org (Postfix) with ESMTPS id CF66429005
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 16:13:55 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 3B03435A4A7
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Nov 2025 16:13:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF9242D29C2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6DAA29B78D;
 	Mon, 17 Nov 2025 16:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HPk9IpdM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjS8KJPJ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9B82D238A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A089C2D0C90;
 	Mon, 17 Nov 2025 16:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763396005; cv=none; b=VrykFwJ5+pOzAwJ/IKrnfZoczxjDPocVaaqOpnQ/AX0LIR9jaSYNKzBlj0MR8VUR5tGdr473aLeQiqB0sgBjbhao2vO/lE9nkOh1oIbAcqh3rXXiC6HMEsyNmOhxc18bUUk8KGDbzlwITg5sBrFzpEDfV9KnwVWvYVBSCgQ36cE=
+	t=1763396005; cv=none; b=Na8WVomDrkjc9+6NCndrTP2EJcxsM54gRtkcSi19LXGTzsRDGQ4HHaXapkJAJmgXZFWrOMWJbL8BMp6nwMZi8KZK7mpYl33bvx8r5zQEovkgSoCSexTjXSaC+K9uQ92+q03ZnAOrc+Fzjb4HiMXzcaQtA6IwSKQAUFAFcV4UoWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763396005; c=relaxed/simple;
-	bh=Z8NqhFEf8Fvku86AUBmfERbhqkjUKqdlmIojfDTnDYA=;
+	bh=d7H3wTk9NdknnpBJr/9afEsXCffQd73eDOt2Nt3ybZ4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rPwmn4p0A0oXe0H9DDOMGEfF147vHDVrGbYF93AVMrLe0LJiHgtUMP4IVx/EP0QtrchWoNCG8ZheWjeWHt8m4W6I9zlIM6byPr0doaZXcZvKsWSFuZT2kzPBaCWf8cQGeJ6X8gdLKoc2q5xIMLY+KiHJxwkCA71y1hNIhQLobF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HPk9IpdM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9572BC116B1;
+	 MIME-Version; b=CLMxMXmXwjhELd8SxbpCTPwfUljaIgbHs0IYaASDvRoRFuRw8MhQvkUaOG7bvFZs0c3ZLTVq+rG0fVKl5QcvMc9EvE0hKNSs/+/qE1CgOkA8MgXxILtTkFJxkTzXgenMJLNQgcmByrMc/J2tdEReWVmD6a9lScbDJQnza6IEznQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjS8KJPJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E7C8C19423;
 	Mon, 17 Nov 2025 16:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1763396005;
-	bh=Z8NqhFEf8Fvku86AUBmfERbhqkjUKqdlmIojfDTnDYA=;
+	bh=d7H3wTk9NdknnpBJr/9afEsXCffQd73eDOt2Nt3ybZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HPk9IpdMlLa6wmBnftfH+GgxTDFPHUV5Zr5zGHqUl++tUFPjYGk4T67AWyonAPVut
-	 wCj85L0v7BLOs/4K0RjQN+6S3png9QVoaRHQ+JHfY+o2/SZcoZ0qqKwDQDZLSdFxc3
-	 ostT9nRbAY+5YrTgPE2SrB7XZJtJLerrE3hCuOuvhSN/MNPvn9e0ChLHe+8LWQbaTU
-	 S4FnoU+e/rZexxP4fXpSp93G0W5oEyMsVVajvjskI/cl9hsFZ5KybsOZ6gdNjv7y4+
-	 zmkNv7TdmXg/WetF2Uvw9gUeoeGbs5OZ2FLcNAoHRnyyGsGwymx+axNWmgfg8XjflO
-	 bMPPKOFJhncKQ==
+	b=CjS8KJPJCByvMHTF4347x3gr8PW4ITg0Gu5RrU3h6d2rkE1NDRc0DJDew1jGM8ncU
+	 UvpoTBZf4S2iJSPunnodDJO1HDyvcgNqFdjWxB7I+6qTGZe0fW3bolp1FpkPnOga1X
+	 y3MeRd9i/tIDDBH0n/qzhakhFTqIVum7wMhXdTWBZwsAQ9NFz0ob+NtqFblDEjlEl1
+	 Sz/lWHdpnxihVwKRJluxNqPpx8C0tp7GRhc0+mm6jo/bE3OLtlkVAsNg+EUj9Hxvdf
+	 FaYGF10oHsRUr0pOAIYJjMLeGj2XTwJ0kSAZ6SwmZzOQAjK3GJvJqktipjSohsDMFN
+	 VQvd2XUbmXsYg==
 Received: from johan by xi.lan with local (Exim 4.98.2)
 	(envelope-from <johan@kernel.org>)
-	id 1vL1r1-000000002oE-21g6;
+	id 1vL1r1-000000002oH-2QU9;
 	Mon, 17 Nov 2025 17:13:23 +0100
 From: Johan Hovold <johan@kernel.org>
 To: Vinod Koul <vkoul@kernel.org>
@@ -60,12 +60,10 @@ Cc: Ludovic Desroches <ludovic.desroches@microchip.com>,
 	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan@kernel.org>,
-	stable@vger.kernel.org,
-	Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 13/15] dmaengine: ti: dma-crossbar: fix device leak on am335x route allocation
-Date: Mon, 17 Nov 2025 17:12:56 +0100
-Message-ID: <20251117161258.10679-15-johan@kernel.org>
+	Johan Hovold <johan@kernel.org>
+Subject: [PATCH 14/15] dmaengine: ti: dma-crossbar: clean up dra7x route allocation error paths
+Date: Mon, 17 Nov 2025 17:12:57 +0100
+Message-ID: <20251117161258.10679-16-johan@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251117161258.10679-1-johan@kernel.org>
 References: <20251117161258.10679-1-johan@kernel.org>
@@ -77,42 +75,29 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Make sure to drop the reference taken when looking up the crossbar
-platform device during am335x route allocation.
+Use a common exit path to drop the cross platform device reference on
+errors for consistency with am335x.
 
-Fixes: 42dbdcc6bf96 ("dmaengine: ti-dma-crossbar: Add support for crossbar on AM33xx/AM43xx")
-Cc: stable@vger.kernel.org	# 4.4
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/dma/ti/dma-crossbar.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/dma/ti/dma-crossbar.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
-index e52b0e139900..ff05b150ad37 100644
+index ff05b150ad37..e04077d542d2 100644
 --- a/drivers/dma/ti/dma-crossbar.c
 +++ b/drivers/dma/ti/dma-crossbar.c
-@@ -79,34 +79,35 @@ static void *ti_am335x_xbar_route_allocate(struct of_phandle_args *dma_spec,
+@@ -245,28 +245,26 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
  {
  	struct platform_device *pdev = of_find_device_by_node(ofdma->of_node);
- 	struct ti_am335x_xbar_data *xbar = platform_get_drvdata(pdev);
--	struct ti_am335x_xbar_map *map;
-+	struct ti_am335x_xbar_map *map = ERR_PTR(-EINVAL);
+ 	struct ti_dra7_xbar_data *xbar = platform_get_drvdata(pdev);
+-	struct ti_dra7_xbar_map *map;
++	struct ti_dra7_xbar_map *map = ERR_PTR(-EINVAL);
  
- 	if (dma_spec->args_count != 3)
--		return ERR_PTR(-EINVAL);
-+		goto out_put_pdev;
- 
- 	if (dma_spec->args[2] >= xbar->xbar_events) {
- 		dev_err(&pdev->dev, "Invalid XBAR event number: %d\n",
- 			dma_spec->args[2]);
--		return ERR_PTR(-EINVAL);
-+		goto out_put_pdev;
- 	}
- 
- 	if (dma_spec->args[0] >= xbar->dma_requests) {
- 		dev_err(&pdev->dev, "Invalid DMA request line number: %d\n",
+ 	if (dma_spec->args[0] >= xbar->xbar_requests) {
+ 		dev_err(&pdev->dev, "Invalid XBAR request number: %d\n",
  			dma_spec->args[0]);
+-		put_device(&pdev->dev);
 -		return ERR_PTR(-EINVAL);
 +		goto out_put_pdev;
  	}
@@ -121,6 +106,7 @@ index e52b0e139900..ff05b150ad37 100644
  	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
  	if (!dma_spec->np) {
  		dev_err(&pdev->dev, "Can't get DMA master\n");
+-		put_device(&pdev->dev);
 -		return ERR_PTR(-EINVAL);
 +		goto out_put_pdev;
  	}
@@ -128,22 +114,32 @@ index e52b0e139900..ff05b150ad37 100644
  	map = kzalloc(sizeof(*map), GFP_KERNEL);
  	if (!map) {
  		of_node_put(dma_spec->np);
+-		put_device(&pdev->dev);
 -		return ERR_PTR(-ENOMEM);
 +		map = ERR_PTR(-ENOMEM);
 +		goto out_put_pdev;
  	}
  
- 	map->dma_line = (u16)dma_spec->args[0];
-@@ -120,6 +121,9 @@ static void *ti_am335x_xbar_route_allocate(struct of_phandle_args *dma_spec,
+ 	mutex_lock(&xbar->mutex);
+@@ -277,8 +275,8 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+ 		dev_err(&pdev->dev, "Run out of free DMA requests\n");
+ 		kfree(map);
+ 		of_node_put(dma_spec->np);
+-		put_device(&pdev->dev);
+-		return ERR_PTR(-ENOMEM);
++		map = ERR_PTR(-ENOMEM);
++		goto out_put_pdev;
+ 	}
+ 	set_bit(map->xbar_out, xbar->dma_inuse);
+ 	mutex_unlock(&xbar->mutex);
+@@ -292,6 +290,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
  
- 	ti_am335x_xbar_write(xbar->iomem, map->dma_line, map->mux_val);
+ 	ti_dra7_xbar_write(xbar->iomem, map->xbar_out, map->xbar_in);
  
 +out_put_pdev:
-+	put_device(&pdev->dev);
-+
- 	return map;
- }
+ 	put_device(&pdev->dev);
  
+ 	return map;
 -- 
 2.51.0
 

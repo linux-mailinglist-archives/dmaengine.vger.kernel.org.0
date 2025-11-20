@@ -1,102 +1,92 @@
-Return-Path: <dmaengine+bounces-7268-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7269-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20B45C74601
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Nov 2025 14:56:07 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1209DC757F3
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Nov 2025 17:58:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 20D02344229
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Nov 2025 13:50:49 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8A2E44E1389
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Nov 2025 16:49:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5DCD334C32;
-	Thu, 20 Nov 2025 13:50:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57A5236A00F;
+	Thu, 20 Nov 2025 16:49:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d4SifthZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WqBjvFKQ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A624273D81;
-	Thu, 20 Nov 2025 13:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DED03644AD;
+	Thu, 20 Nov 2025 16:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763646643; cv=none; b=Wwa2YDTH9StocUmObG7hVchCO1o/zGeFLgMTKyiBhJg/aiIJA2ursB0GeX1e6KK1GiBiMlb5q+/4K5CObr8k3++4Zbtg4EiyHA+FQMC0w+I7dtiDFp+g045v5ge1HgkPhCOI77Y80yy2PtlTnsqjERrKoBPCydizDmEx/mL4Qn8=
+	t=1763657360; cv=none; b=dld4fH2hT8YN5CT4HXK7e/uH32I1UYbJz3Lel/Uw1hLQw/kAv5NDa3DypeDr9iUqV4GiznolMW3TcxNCdPrOvmcOia6qlxUSe+NSmJgzs0HqyewhvajRP+QKU/w6KbDaDR8mx6qc9pIAoGUzvYiuY8qUlgRtpV9wtplnXnw7+bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763646643; c=relaxed/simple;
-	bh=f6dzq/NIpjVQyLlGtUWbFmiK5tIV3dgFV6O+w3odjzw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qQIRnMUvJiIcNw2DM4TkpcCtynPyS9LbHX5TjqugeQsxOs88aUfKNXXy6UJOz8Klp98UCUrCWL/Isim96s/9MhlNyCuyoy8yYpTQC9YDfl/zRL8pbJ6ujob2IEJzClDm3a32AWowSHm2MLJaGHoyexy0K260nvs1Bo9OG71TKrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d4SifthZ; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763646642; x=1795182642;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=f6dzq/NIpjVQyLlGtUWbFmiK5tIV3dgFV6O+w3odjzw=;
-  b=d4SifthZR0Sbe4MBVzllO61f+94js9Bk+6o9dMvfkVaKO8D8xGzsbJ5Q
-   dE/wP3/ZZvx3HQgKLApf7Hds7bntSfDwimDfjeH69lXWbD8UEmXoKDjb/
-   qsx2MuRoDG/F7dFUUikd0xLZRuRL6Ywl11KCjYgpbslncbGmbyQvlbLbu
-   ACtxyJ25Q0TgmQ5ejWxe+qv2PfTvSDxKgB+lDU+nMnQjcT9lS34HNK2us
-   9wB+n6p4YbtrFEa6IpasgbsJqJBUpSBXL1T0h1wUicy/QtOAela6mcN9t
-   fRCrF/CDHqz6m+soNNjaopWMwKubE4ofjE876G5Nf+fQOhjbyZabCQCHG
-   g==;
-X-CSE-ConnectionGUID: sh6FBBzuSeu6v0uwk7sc7g==
-X-CSE-MsgGUID: 5WjdWEFrR3iTnpcfnKIqPQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="64907766"
-X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
-   d="scan'208";a="64907766"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 05:50:42 -0800
-X-CSE-ConnectionGUID: UGnnW5/OR+6m7Q/2XxaAwg==
-X-CSE-MsgGUID: lbhYApv0R2yNh57O1g0GFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
-   d="scan'208";a="195514119"
-Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.97])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 05:50:39 -0800
-Date: Thu, 20 Nov 2025 15:50:36 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Johan Hovold <johan@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Viresh Kumar <vireshk@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Jon Hunter <jonathanh@nvidia.com>, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/9] dmaengine: dw: drop unused module alias
-Message-ID: <aR8crOrJOu1EAbVe@smile.fi.intel.com>
-References: <20251120114524.8431-1-johan@kernel.org>
- <20251120114524.8431-3-johan@kernel.org>
+	s=arc-20240116; t=1763657360; c=relaxed/simple;
+	bh=dP/aO90JHgoqpHYU1iic8AxbAbLplWQN9Mbslc/6cws=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dDwRwiaD1C00c+sO2Z96m8189SBFz2L5xib/ou21DLPak5CjUnmfXF5sWM/nI5hq4bSBt8vARNXYWvytG8qjsTk0t5RwxxfCjbsRyKV/RFVxfhLoQ0Bxvh0RPHglrCrsuw8XCwcMhJwjUUqZ5j1rIIa6+AZ2+p4o0NFF71rFQRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WqBjvFKQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B182C4CEF1;
+	Thu, 20 Nov 2025 16:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763657360;
+	bh=dP/aO90JHgoqpHYU1iic8AxbAbLplWQN9Mbslc/6cws=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WqBjvFKQW7UGaWlcdXoTGO527lEwt6WfzYQ4GQCGKDNSXA2NQMo0vDwpYGZQwGIU+
+	 ck+9+OvZ2k4ruoxTKEheFA1SfKBiDNInqtWkpEJUa9r6tOBB0ORWBuXpQL1Sgi312J
+	 HuyGDaP3Y7NNlbKRHSLyF6doDxOGMsjwVtbVH0ft4ZI56Ra1zY8U+kcZxm7//Dm4tT
+	 zcmro799wSbKYoy33Ua39yewgmz04e2+0muR/M6jku6w98EtDXG7D9fSrawi9oKfx3
+	 KXVZnKPTa5dbIGaRu2DS8kBrKT8GMl2ExzYpY87a46HYDPVz/sodw0/tIpzGiprYqv
+	 gcOEvURQS21/w==
+Received: from johan by xi.lan with local (Exim 4.98.2)
+	(envelope-from <johan@kernel.org>)
+	id 1vM7qS-000000007I0-0kr2;
+	Thu, 20 Nov 2025 17:49:20 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan@kernel.org>
+Subject: [PATCH] dmaengine: st_fdma: drop unused module alias
+Date: Thu, 20 Nov 2025 17:49:07 +0100
+Message-ID: <20251120164907.28007-1-johan@kernel.org>
+X-Mailer: git-send-email 2.51.2
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251120114524.8431-3-johan@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 20, 2025 at 12:45:17PM +0100, Johan Hovold wrote:
-> The driver does not support anything but OF and ACPI probe since commit
-> b3757413b91e ("dmaengine: dw: platform: Use struct dw_dma_chip_pdata")
-> so drop the unused platform module alias along with the now unnecessary
-> driver name define.
+The driver has never supported anything but OF probe so drop the
+unused platform module alias.
 
-I think de facto it happened earlier, but whatever.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
 
-Thanks for the contribution to this driver!
+I apparently missed this one for my series posted earlier today:
 
+	https://lore.kernel.org/lkml/20251120114524.8431-1-johan@kernel.org/
+
+Johan
+
+
+ drivers/dma/st_fdma.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/dma/st_fdma.c b/drivers/dma/st_fdma.c
+index c65ee0c7bfbd..dc2ab7d16cf2 100644
+--- a/drivers/dma/st_fdma.c
++++ b/drivers/dma/st_fdma.c
+@@ -866,4 +866,3 @@ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("STMicroelectronics FDMA engine driver");
+ MODULE_AUTHOR("Ludovic.barre <Ludovic.barre@st.com>");
+ MODULE_AUTHOR("Peter Griffin <peter.griffin@linaro.org>");
+-MODULE_ALIAS("platform:" DRIVER_NAME);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.51.2
 
 

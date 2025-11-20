@@ -1,58 +1,90 @@
-Return-Path: <dmaengine+bounces-7270-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7271-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9ED86C75C23
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Nov 2025 18:43:01 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52C15C7609F
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Nov 2025 20:16:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5CEC735DF15
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Nov 2025 17:37:09 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 501D54E2E14
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Nov 2025 19:15:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CF3B36D4F8;
-	Thu, 20 Nov 2025 17:36:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B862D7DC5;
+	Thu, 20 Nov 2025 19:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3BbXSQw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HZ44JE1X"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A6C36D4F5;
-	Thu, 20 Nov 2025 17:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7840A2E8B96;
+	Thu, 20 Nov 2025 19:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763660171; cv=none; b=CvsXzJaJwl2q0eEASaDW4PRmY0KSh+gwlLtuCuLWirqRxE6hThAHiCjKxrpe/Bls4BRnukb+4lcbKXtdCPsMmHrAkMwqKlg2PP4xIJjCeCxM1VRSv1IYaum3SQoZ3pQsy2cDipIZJiaE982UQHQEXGIVEd43fj8QskIb4/pkZ9I=
+	t=1763666112; cv=none; b=kLkehraKWz6TcJe/XNvA5jOGsX7RvKFz+we0UBBjdnToRmlApNXKonvJhoL+m49Cl3eoPCBxxb9oeEWRAAUN1W4srLS2P5E1ddYnGu/D67LZWSwgt377CDG3/56eS3ibF0Si6TiMNj3tD4dKlqiQu/vn+LHGzLGeZN01MnIyxRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763660171; c=relaxed/simple;
-	bh=IrQAo8kxBFEzbPGINwZtmpudrkpNPX48K+pwx2p+eCY=;
+	s=arc-20240116; t=1763666112; c=relaxed/simple;
+	bh=GpSmpsR9NetbPJhQGjxFutnFsKHftqvhMSFwh84zcwA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IU3QlfZ7tec8AwgPZooBW1wK97uHC2tDVfk6B67Di1f6vTuvZHgXpJZlAjEIs+I8gHDZGc7+KTjCe4nwWCXJiHmhfIy1OBG/XNDlXcwED4k+BgomLT7wF0NVR6c4DWGIhIxn22514QCHjlyb0P0f4aAjQOJS+0sWD3JbKt+pbKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3BbXSQw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63CBCC4CEF1;
-	Thu, 20 Nov 2025 17:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763660170;
-	bh=IrQAo8kxBFEzbPGINwZtmpudrkpNPX48K+pwx2p+eCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D3BbXSQwnSmzTnta2rvo+HsOWUGNdZzTsQEFmCTVjcdrCRoREo2/i4h5nB5X0RDq2
-	 vQr4MH3OM8iVnWS9wmCZGpv24dTmGdzYFgU1mccdGO3ZkA2JTD9InimGuvfa0ac767
-	 mLZ3n6OikGo+kQkBntqFbgrP8N3hVCr31xs7vGYTfP+Jl4UuyIgNLC4MipbgAniH1s
-	 5hRPfxCv2v4r+OUiYSWUwY09yHTKf/SdcGvRkod/upSFPZEQTUlfPW+G321I7E5E90
-	 pjR5Ax8hytT9E+2DsdrOr3Wq0UomcjAjQnV2unb2k3CM9bQsqvM8o847mUGxf9ksHT
-	 n/OBNuExOdtOQ==
-Date: Thu, 20 Nov 2025 11:36:08 -0600
-From: Rob Herring <robh@kernel.org>
-To: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
-Cc: Dinh Nguyen <dinguyen@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: dma: snps,dw-axi-dmac: Add compatible
- string for Agilex5
-Message-ID: <20251120173608.GA1582568-robh@kernel.org>
-References: <cover.1763598785.git.khairul.anuar.romli@altera.com>
- <bd19d05233cb095c097f0274a9c13159af34543b.1763598785.git.khairul.anuar.romli@altera.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=uCLpOqyxeMofa7h4orxvZe7vdJJizuhJKliRXw5H5VUbH+z8Q5S6gJ2h8k4CCrK+6b2ecAWYdbD8qdISldRG9JqUOT6VxB0w97nEWwGR4rx8UeHefStb5dJbxpisVDKnBSbsZPYWXlRd3KEehLuec91Cp56Qvy8ED81g/JHxS5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HZ44JE1X; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763666110; x=1795202110;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GpSmpsR9NetbPJhQGjxFutnFsKHftqvhMSFwh84zcwA=;
+  b=HZ44JE1Xh5airIdPVCvxxBjnT6Ix2uvwXbQh6z0l+XQuibRKJV2VFEMS
+   QviMX1NeWkfNbjj2sPgjmOxzvDCIm4ZNDDoBARPlhcu3usRJVNytnxMPi
+   voCtIobJgzdzUydvK8SPbVOdX/4egAZ6zWBuUfLfYfy8SxKT8V/+/qDn/
+   Qz0DVbjBrpSfMdzBqvk/gQlaEOoTOoRVZwx3hPtiTtSpuBPCcmL3NpA+6
+   fCftNr/o6Pgqe0saMfhQm3gT4uFlHYgOxT7N6CzPsSVQjuzdS3baP+wZO
+   TSjmcEVDddYfg1FvTpTSyV4oaH7+Kf/z3+/CsQwXECPzvkxX6PdPDSG8Z
+   A==;
+X-CSE-ConnectionGUID: MFAEZHYxRKaFKD0gmO1BJA==
+X-CSE-MsgGUID: FZ5AXCa7Qn+byfDwg8M4PQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11619"; a="65838708"
+X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
+   d="scan'208";a="65838708"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 11:15:09 -0800
+X-CSE-ConnectionGUID: Lj2UXwM4QvSoozpG9EqitA==
+X-CSE-MsgGUID: JRP7KrHGShi83szIQwo8rg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,213,1758610800"; 
+   d="scan'208";a="191308310"
+Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.244.97])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2025 11:15:04 -0800
+Date: Thu, 20 Nov 2025 21:15:02 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>, Vinod Koul <vkoul@kernel.org>,
+	Thomas Andreatta <thomasandreatta2000@gmail.com>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Cc: Olivier Dautricourt <olivierdautricourt@gmail.com>,
+	Stefan Roese <sr@denx.de>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>,
+	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 00/13] dmaengine: introduce sg_nents_for_dma() and
+ convert users
+Message-ID: <aR9otpWZkPZrb9ug@smile.fi.intel.com>
+References: <20251113151603.3031717-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,55 +93,27 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bd19d05233cb095c097f0274a9c13159af34543b.1763598785.git.khairul.anuar.romli@altera.com>
+In-Reply-To: <20251113151603.3031717-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Nov 20, 2025 at 07:31:10PM +0800, Khairul Anuar Romli wrote:
-> The address bus on Agilex5 is limited to 40 bits. When SMMU is enable this
-> will cause address truncation and translation faults. Hence introducing
-> "altr,agilex5-axi-dma" to enable platform specific configuration to
-> configure the dma addressable bit mask.
+On Thu, Nov 13, 2025 at 04:12:56PM +0100, Andy Shevchenko wrote:
+> A handful of the DMAengine drivers use same routine to calculate the number of
+> SG entries needed for the given DMA transfer. Provide a common helper for them
+> and convert.
+> 
+> I left the new helper on SG level of API because brief grepping shows potential
+> candidates outside of DMA engine, e.g.:
+> 
+>   drivers/crypto/chelsio/chcr_algo.c:154:  nents += DIV_ROUND_UP(less, entlen);
+>   drivers/spi/spi-stm32.c:1495:  /* Count the number of entries needed */
 
-That's likely a bus limitation, not an IP limitation. So that should be 
-handled with dma-ranges.
+Vinod, what is your plan on the DMAengine patches? (Asking not only about this series)
+Please, tell if anything needs to be done from my side to help them being pulled.
 
-However, adding a specific compatible is perfectly fine.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> 
-> Add a fallback capability for the compatible property to allow driver to
-> probe and initialize with a newly added compatible string without requiring
-> additional entry in the driver.
-> 
-> Signed-off-by: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
-> ---
->  .../devicetree/bindings/dma/snps,dw-axi-dmac.yaml  | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> index a393a33c8908..db89ebf2b006 100644
-> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> @@ -17,11 +17,15 @@ allOf:
->  
->  properties:
->    compatible:
-> -    enum:
-> -      - snps,axi-dma-1.01a
-> -      - intel,kmb-axi-dma
-> -      - starfive,jh7110-axi-dma
-> -      - starfive,jh8100-axi-dma
-> +    oneOf:
-> +      - enum:
-> +          - snps,axi-dma-1.01a
-> +          - intel,kmb-axi-dma
-> +          - starfive,jh7110-axi-dma
-> +          - starfive,jh8100-axi-dma
-> +      - items:
-> +          - const: altr,agilex5-axi-dma
-> +          - const: snps,axi-dma-1.01a
->  
->    reg:
->      minItems: 1
-> -- 
-> 2.43.7
-> 
+
 

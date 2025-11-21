@@ -1,83 +1,82 @@
-Return-Path: <dmaengine+bounces-7275-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7276-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F6DFC77FF9
-	for <lists+dmaengine@lfdr.de>; Fri, 21 Nov 2025 09:52:39 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF3BCC77FFC
+	for <lists+dmaengine@lfdr.de>; Fri, 21 Nov 2025 09:52:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id C5C292B987
-	for <lists+dmaengine@lfdr.de>; Fri, 21 Nov 2025 08:52:15 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7C5CB34D880
+	for <lists+dmaengine@lfdr.de>; Fri, 21 Nov 2025 08:52:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A2AA2EA749;
-	Fri, 21 Nov 2025 08:52:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5470413777E;
+	Fri, 21 Nov 2025 08:52:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NBfs4G3l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RE/7bUWj"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842CA33BBB4
-	for <dmaengine@vger.kernel.org>; Fri, 21 Nov 2025 08:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213491A238C
+	for <dmaengine@vger.kernel.org>; Fri, 21 Nov 2025 08:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763715130; cv=none; b=QJnHGi6RRw5Yzm8y3Ru5pwtK39l+8Z+7KqOERVgeLgU/UeAHt08ZRLwDFx+9YFJudtt7Z0s1SFb1cajOGhYwA+/X6LDliE/LclAqYC+FkH+cLR4Iqg3Fs4k8sFCUsDOY4HG4fRzJwqCHzx81GXg3CF9obmW1M2HXin8eMNWReiA=
+	t=1763715159; cv=none; b=uoyeMsoJEemjdx/07NWv6daYNTfNcAy2JBForUDhj9XU7EFJRY4J4TCBFBvkOnLpPQci6nZ0CLYbp9wq2mcNXO89mkQ1YAkeQJFNyymDBHPBxUDJ3R4/Diwso/Co/JspYVmdq00QoE06sCNs1kcsSge1LGLG5f8zUtjnD3q9dWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763715130; c=relaxed/simple;
-	bh=xwkfU6OqSfZS/vCDQ0KI/KgXHuZGee8JRlFYylBTPKg=;
+	s=arc-20240116; t=1763715159; c=relaxed/simple;
+	bh=Loin32MHEc8zOgv3AhAhv54lMYJua0SWd3Mu62ufLL8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F6JGvLKqTMy5fGNG45YtZX2m3izEL/yfV0XUEL4AsV8i9WGES2u7fNG9XL6NO5ndiKxlehxchklGIlrfHhhCKKFI1FGBlTFkE3Lg8cOC/BU30O82gYz3b5jjEeCWF2jrB1XtrRzUrw4Ck3RDP3qBd0IqMJLWGb+8Fv5He06HLC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NBfs4G3l; arc=none smtp.client-ip=209.85.128.52
+	 In-Reply-To:Content-Type; b=ZKErCAuwd7sgYEZhxTzO3jPCERdRQB87xvho+03Rm4ew5ux6lzwlGwtkX9s3vICxmjf2EiloQQJxxL6J3kf4CvCl3RiEzEuza+St1Kpe91fsIaBM50HTTMHioK7wAk8DJ0XJ0nFHdFfWT3m3Cq8dleogzvE45uwG4cjpt22aYCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RE/7bUWj; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-47790b080e4so9554215e9.3
-        for <dmaengine@vger.kernel.org>; Fri, 21 Nov 2025 00:52:06 -0800 (PST)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-47796a837c7so11390995e9.0
+        for <dmaengine@vger.kernel.org>; Fri, 21 Nov 2025 00:52:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763715125; x=1764319925; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1763715155; x=1764319955; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uQD6IPCAAuAQSaBuKc7iCXVSBWn0b9pFdIhTL2DU8uw=;
-        b=NBfs4G3lwfZS+/foKQOcBu9ctP/8QJeNiHS3bnKZPYi3i4kVt6TboNTUto2+I8sV2d
-         Zw5Ycrawn2rFiE4SA33ERWoYlFnt3gKSSUU0rfnGEtKPSFBA9cJVj8dI4aJorQhQ6Iv2
-         DPbscpfabNRV6UF9hgWyHhy2IxjdSSKiesnCgVyPZz4oPaqOAEzovXgjDiC7DvdUM/W1
-         dOLvv4qV5hTdumfqivpOntvsTam7u3PiYW4XId/fuBGMHfxAOyYQ7aNyq6JLCmo8ohM9
-         GM3UuH2QqsX/YMXHv81JoXmLN9UK1hOrezdil2Nj2pWcNbBl7LjfsIlJjhIMTl5y/QRN
-         u0AA==
+        bh=009Kp7JLW19gzy0Kbdi9X3BDysqs7Ujtagl/qk1DBvg=;
+        b=RE/7bUWjKFc0e6bjyq8efl6qdayIxUmPVlPJ7laFsO3bu4phCs+S+npGkP33tHnPCH
+         SwVpiPvxz7DcTMiyw6Opg5BivvIProE+feFJ94sx1d8n3DZLnt2A/Txn/oFnrS2ruwhn
+         GP4hXicV2XdVs3V4QZ/+6FqmK/gYxV9vg9ZyD6AuA6Waiudb1WpCX9JvxwXXRGfUEwno
+         hNa55bdhkZIxNLu7wDp3WE3c/EN/LvZ559h/gAV3SNMvg+pM2bNUYGChuK7G0pkYQgR3
+         gJPO/ClrnSFd+azm1YY6TrjKs866mgQBFNPGnAWL9vrywhDrV9rZq8RgHxydeNe41avW
+         cubg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763715125; x=1764319925;
+        d=1e100.net; s=20230601; t=1763715155; x=1764319955;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uQD6IPCAAuAQSaBuKc7iCXVSBWn0b9pFdIhTL2DU8uw=;
-        b=RynsGklagXRrKMADHDlIkkXSBKV0jnQHMujfwaWqF/LgK7FP5HghCzJU07NsRk6cGS
-         0kHw0jRnJAxq8KVDSC4uoNPHDkUIsVsCHTxnagC70kU65f/VunSaQ3zq+PbUlMmPC9Wj
-         /aYMFMh39NZuhV6AdrzuZ3UQLobFpPgNEK0lyhI0xWIlFoj1x6zgNU7FHrxZyfxKYnSy
-         gJCEOxEqpgKQoSdWsP9rxSL5EQgtRYazlgzDzs0tezR+FaBEDO2aSpvJefpPOsS2t5bQ
-         Jp/rL+Hbn24wX9UlYyIbX+bv5pXv6jXBqB8Y/3Vyx3nJWCuCoRO0pvmfiqfy/dqps2Rm
-         UCjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhEl9OdtPR3CGoEzXJMCoxs6xRJmVgUrhoMsKlmV39/z1dM0dksgKqV7efw4/QuOqud935cLUIPBs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtqIFRW6S9ng8BeCWpNMj5evaqytspuV/hIb4lQe5w5SgGFbW3
-	kAIHufX/zkPREiMeuBJckYT8QjxehWvTp+65U56uOxsv+9/S5PuUM7rwQLhbfV8xAM8C2j6YjRC
-	uGcP431M=
-X-Gm-Gg: ASbGncuAosB5G70uYOtu80ZUf5IFKUMIj0rJM0+51FcGeSgo/oTQHYEEbe7OAyPtYrm
-	8c1/ITZ3jpzXWpNtVmIDD5PcyuLp5POYg5YD5P0Oow5DC0Bt1pM4r8p9+GxHJSiTFuRkBScWYNk
-	SYfOSP45dwAPf5ofCH0s2/YMTj6lTlbnmrIawGUGtwBrIVMvUuEGefXu+93hgO1OGnOVVxU/DLy
-	8XFGNhjJggJbzYbdsGfyWIAy1xO/W4UqirMLGu7yL4Y3lB0eWSJYhFwJaq9fV4ZP2vo1OzFEZNL
-	tW/NewLRq1PZwWjAUBuSJbhKQkukTMG9QRvLueaUFpjMbYS78hjyPfDyFMMfWKaN0O5/fWm97ES
-	lbfQthGW2wPo7lzyJu6+VUfg5zbFMzSs/L1FiDgNwYIBLKMO2mywmtpB9/q+ss94+4wezGQJHAT
-	GT5zs6BBhaQ8Iv+1F2F+NJ81mLyfPU
-X-Google-Smtp-Source: AGHT+IEinokPPaK0hYNLhqdwlX0uFESNUqrKrPuclcH1lbM4qDAV3Wx0cwOCGh0v5dfKc0oa55/cew==
-X-Received: by 2002:a05:600c:3588:b0:477:bcb:24cd with SMTP id 5b1f17b1804b1-477c11179ffmr14043965e9.22.1763715125067;
-        Fri, 21 Nov 2025 00:52:05 -0800 (PST)
+        bh=009Kp7JLW19gzy0Kbdi9X3BDysqs7Ujtagl/qk1DBvg=;
+        b=EtwF5x9yPuy/S7Gw9XqTna64s22PxG9BiIX+qswr/IaVaop6UmDsTBw2XeYdCAbyiC
+         dhPMyImNpZ4eiD7VXJ2X+2kPZr4+Ltwk7s5QGDthXKPbt82VLRk+7op/F7ff8WL1QMME
+         SGdir1sc1KUAGK6iEonU63E+Qtq6brTgcx1Km86oq6vkWPn3ervRieS2gfY4tR35k2Ih
+         j9XP8dRyYn77nsCkThpm5tqUDLwkc9f+do9fnUmq3DDC4munA8ysc4XOQWWlHzKq1sBv
+         m7l0YewaxCfJwnKnry/GtnGbLW07sSFmNy/P06HnngRCdI+rc2WvARZigvaKOpPeWpNU
+         IHng==
+X-Forwarded-Encrypted: i=1; AJvYcCX2kueAVaW35qS+tqHMOui1JcFDWF96EQZ4G995HwGX8+HHGyXXzFh/NN/n7D52zMNTKWCeVIKqtic=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCmjWbphOHnooKHbbX0DWunkAYuaIh7zSfeqmCBFc6unfTSSTg
+	tj09MRdZMogJ41mTpf8nx7jp5eo2IyRiAMJGkCKrihH3lK44dIMjwomwzcqC7TpC1lc=
+X-Gm-Gg: ASbGncuYFtb5jWDHRPKz3No5QPkJBSBhezyJfTNw2m+Yt0QR84PQlquSVxPq7aFiwpg
+	U4A9jroyxyvlg94ImpW+c0YYral7fQ25zsvuESkMBWvYBYw9DTcGoaiu23THrIDDThHIoNsIUOQ
+	yi2kBgvKKeJvL38BeRNUEecz7CglW7RKQhRekkZF+aSBJ6REOhaRyWRDkZfvRhffCOTb8bClkPd
+	Ry1Ika7TTCuQdcMaJ1ofjRMA0tRnGx/dnOUUbQ4ej3uoCOCRzofEIKJqLQNszlfVnxXTkSUAOV+
+	4wIzHUVwIy9Bo+mYSTXlA9U89l9M394mEVPYHIev0ZjJiPHmC3zO5OogaXBXM8bsLmE2sxThKdu
+	4CCApDk+X/wYiCbhZ3iFPt75/bBvyh7rDf6kOZJIlPIoNk82IjQCyEu08kiN/wYg5m7hSAiFkR2
+	sjUdoVH/Ph24objF03aA==
+X-Google-Smtp-Source: AGHT+IHHUafu+OUkKK50Le8mjsvU0/uci6SliRNf6HLCwNtTf8n2cBp38PJX5FeIrDkrXNgKHP3y7g==
+X-Received: by 2002:a05:600c:3146:b0:477:df7:b020 with SMTP id 5b1f17b1804b1-477c01b2211mr15198445e9.18.1763715155168;
+        Fri, 21 Nov 2025 00:52:35 -0800 (PST)
 Received: from [192.168.0.39] ([82.76.24.202])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fa3a81sm10032980f8f.26.2025.11.21.00.52.04
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7fd8d97sm9388669f8f.42.2025.11.21.00.52.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Nov 2025 00:52:04 -0800 (PST)
-Message-ID: <af7028da-34cc-42e5-8768-b6218ebae3f2@linaro.org>
-Date: Fri, 21 Nov 2025 10:52:03 +0200
+        Fri, 21 Nov 2025 00:52:34 -0800 (PST)
+Message-ID: <a837deb0-b353-4647-81ec-5f50aea5a0e3@linaro.org>
+Date: Fri, 21 Nov 2025 10:52:33 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -85,8 +84,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH dmaengine 1/2] dmaengine: at_hdmac: fix formats under
- 64-bit
+Subject: Re: [PATCH dmaengine 2/2] dmaengine: at_hdmac: add COMPILE_TEST
+ support
 To: Rosen Penev <rosenp@gmail.com>, dmaengine@vger.kernel.org
 Cc: Vinod Koul <vkoul@kernel.org>,
  Ludovic Desroches <ludovic.desroches@microchip.com>,
@@ -94,57 +93,39 @@ Cc: Vinod Koul <vkoul@kernel.org>,
  "moderated list:MICROCHIP AT91 DMA DRIVERS"
  <linux-arm-kernel@lists.infradead.org>
 References: <20251106022405.85604-1-rosenp@gmail.com>
- <20251106022405.85604-2-rosenp@gmail.com>
+ <20251106022405.85604-3-rosenp@gmail.com>
 Content-Language: en-US
 From: Eugen Hristev <eugen.hristev@linaro.org>
-In-Reply-To: <20251106022405.85604-2-rosenp@gmail.com>
+In-Reply-To: <20251106022405.85604-3-rosenp@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 11/6/25 04:24, Rosen Penev wrote:
-> size_t formats under 32-bit evaluate to the same thing and GCC does not
-> warn against it. Not the case with 64-bit.
+> Allows the buildbot to detect potential issues with the code on various
+> platforms.
 > 
 > Signed-off-by: Rosen Penev <rosenp@gmail.com>
 
 Reviewed-by: Eugen Hristev <eugen.hristev@linaro.org>
 
 > ---
->  drivers/dma/at_hdmac.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/dma/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-> index 2d147712cbc6..7d226453961f 100644
-> --- a/drivers/dma/at_hdmac.c
-> +++ b/drivers/dma/at_hdmac.c
-> @@ -887,7 +887,7 @@ atc_prep_dma_interleaved(struct dma_chan *chan,
->  	first = xt->sgl;
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 8cb36305be6d..243d3959ba79 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -102,7 +102,7 @@ config ARM_DMA350
 >  
->  	dev_info(chan2dev(chan),
-> -		 "%s: src=%pad, dest=%pad, numf=%d, frame_size=%d, flags=0x%lx\n",
-> +		 "%s: src=%pad, dest=%pad, numf=%zu, frame_size=%zu, flags=0x%lx\n",
->  		__func__, &xt->src_start, &xt->dst_start, xt->numf,
->  		xt->frame_size, flags);
->  
-> @@ -1174,7 +1174,7 @@ atc_prep_dma_memset_sg(struct dma_chan *chan,
->  	int			i;
->  	int			ret;
->  
-> -	dev_vdbg(chan2dev(chan), "%s: v0x%x l0x%zx f0x%lx\n", __func__,
-> +	dev_vdbg(chan2dev(chan), "%s: v0x%x l0x%x f0x%lx\n", __func__,
->  		 value, sg_len, flags);
->  
->  	if (unlikely(!sgl || !sg_len)) {
-> @@ -1503,7 +1503,7 @@ atc_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
->  	unsigned int		periods = buf_len / period_len;
->  	unsigned int		i;
->  
-> -	dev_vdbg(chan2dev(chan), "prep_dma_cyclic: %s buf@%pad - %d (%d/%d)\n",
-> +	dev_vdbg(chan2dev(chan), "prep_dma_cyclic: %s buf@%pad - %d (%zu/%zu)\n",
->  			direction == DMA_MEM_TO_DEV ? "TO DEVICE" : "FROM DEVICE",
->  			&buf_addr,
->  			periods, buf_len, period_len);
+>  config AT_HDMAC
+>  	tristate "Atmel AHB DMA support"
+> -	depends on ARCH_AT91
+> +	depends on ARCH_AT91 || COMPILE_TEST
+>  	select DMA_ENGINE
+>  	select DMA_VIRTUAL_CHANNELS
+>  	help
 
 

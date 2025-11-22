@@ -1,59 +1,57 @@
-Return-Path: <dmaengine+bounces-7294-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7295-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7258FC7CAF7
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Nov 2025 09:53:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0081C7CB27
+	for <lists+dmaengine@lfdr.de>; Sat, 22 Nov 2025 10:10:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 347D94E2872
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Nov 2025 08:53:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 639313A870C
+	for <lists+dmaengine@lfdr.de>; Sat, 22 Nov 2025 09:10:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80FFE27B34F;
-	Sat, 22 Nov 2025 08:53:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BAB1239E75;
+	Sat, 22 Nov 2025 09:10:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6J00KD/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKW+XDaU"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2FD27A12B
-	for <dmaengine@vger.kernel.org>; Sat, 22 Nov 2025 08:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC6538D;
+	Sat, 22 Nov 2025 09:10:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763801601; cv=none; b=t1TzIZQ8fUhjTp3OaVm6PYlujCExVvpGKsS25ebgQo4IPYYC6kECdhHBIl3sh7PTz+qhqtQkilZRu+JdI1w1OuEUQTGra4LODBnwvb13uhY+ZseiFVFp/VRZ/4pLHCfaY7AGpNm7fzx5GHUtTFm5vWP+Q8d5Cf5gbK9EH6Tz7V4=
+	t=1763802611; cv=none; b=Cd/wQhwHp1Ro9EcnBeDT3JEjJ/q0h7Fr+/KMlQvlepg++tu2Z9K9C5a3VfH0RA7SEMIWlD0h64W/SYrbZg3VMSN1iUZlgJ1/lq24XystgHLAp48iJ7rQzzEBVMelNOE1yI87Dii2IfOw0q2mEBx2AhwbPS92X/qdCPTKUJx79Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763801601; c=relaxed/simple;
-	bh=7XuzTzZkqcbDfkb415OyB9Xj+2m+TUzrFm98NtxSxTI=;
+	s=arc-20240116; t=1763802611; c=relaxed/simple;
+	bh=mKnLZC0ZGptlCt5ADyOBy/adTiKiRqlt0ecsMA/ZiFg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ITePyQzV4mSVd6eDeqIEbjE+PUDPGquAev+Fu17ahl9cAgwByZmYTj4EJes00eSpcLMdYBYbdE6bj+p/gdf3E9yedcqecFOQas3kiI5CGEAwVPw/OnH3zi5IrA/pmEhG/smwbafKJE9CBybZQXrnAiHZC6mO8cXRNJHW3v9lKcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6J00KD/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16E95C4CEF5;
-	Sat, 22 Nov 2025 08:53:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=DeEJPn2fzaXm821sMjW/cOoxxotpKYmrSDl5MPlYl8WukFFI2vbY4rNRUE5RZrpw2sKlU2/sxwXOxrVxgf8HshPVyJrag7F+ReQ0oeyh9xy/+tJjMRncw7KQtxxiD0DFfH619DyAwWyHZZBh9vNhue03GNsFDTkavMt7aRmYsjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tKW+XDaU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C833C4CEF5;
+	Sat, 22 Nov 2025 09:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763801600;
-	bh=7XuzTzZkqcbDfkb415OyB9Xj+2m+TUzrFm98NtxSxTI=;
+	s=k20201202; t=1763802608;
+	bh=mKnLZC0ZGptlCt5ADyOBy/adTiKiRqlt0ecsMA/ZiFg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E6J00KD/VWgbhEYwqFHtxRyoIZKezX+6OoGD+HdcnJFKw/MhgXobDui8R8XSTEbQU
-	 1ZH5a3ZDd9XikhKxmOyxyT4ckSwAF1RelpkpBP81Aqv/3pWUBs8/r2eXsQArpMVq/v
-	 3C1sE7ONPx0Mjgm7aZQuMqgESxhPHxey4SCgJSGuIMMrAZVbUtP7h+DFb05DdB41Xc
-	 iBhVSOFRcRCNra2eF71iaGEChMTWyyWqXO0dGaBsu5RrgyPIKYYDtqCM/pyPLJMBwC
-	 sUr33ZVteBf7Cr5v2osewwRR3wjPVTzYzSBJysCWVkMRSw1eUtIPF7dkZL7Aj4LanW
-	 16K0wjATvZMqg==
-Date: Sat, 22 Nov 2025 14:23:16 +0530
+	b=tKW+XDaU6Sx5e7uKABIr9GYnenWmFlsMCLQhcTQIrzYKLzwt+/GkwjTQHlseUo2SJ
+	 PhCbq//qrsGkAkGgAbCyocMV6DDAv8e6/eR2L2Q6yYpuV0Vog7fI3nvwKMQTw4847m
+	 PCYINEU4nKlZS2IJ+ZbGKQkPbCfQyQCkuL8RcTLz2enl6mFD7jZl8JlBV2rsBssPXl
+	 xwJkzgANWr1ZvG8PSDog0bfxvqkzCSTaJgMsjpUueyWXvoxNaUqfCCYyRQIR8x7dHh
+	 Wp5SCPJQNYCGAqJQbi3/ySVD0AULz71WP1sRvL3kuV2w/TnArwLnB2aVi8gZILC4MG
+	 t64c4mkEbAvGg==
+Date: Sat, 22 Nov 2025 14:40:04 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Logan Gunthorpe <logang@deltatee.com>
-Cc: dmaengine@vger.kernel.org, Kelvin Cao <kelvin.cao@microchip.com>,
-	George Ge <George.Ge@microchip.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-	Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 2/3] dmaengine: switchtec-dma: Implement hardware
- initialization and cleanup
-Message-ID: <aSF5_Go4bddAbx38@vaman>
-References: <20251014192239.4770-1-logang@deltatee.com>
- <20251014192239.4770-3-logang@deltatee.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 3/3] dmaengine: qcom: bam_dma: convert tasklet to a
+ workqueue
+Message-ID: <aSF97DVdACd7h-LI@vaman>
+References: <20251106-qcom-bam-dma-refactor-v1-0-0e2baaf3d81a@linaro.org>
+ <20251106-qcom-bam-dma-refactor-v1-3-0e2baaf3d81a@linaro.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -62,16 +60,21 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251014192239.4770-3-logang@deltatee.com>
+In-Reply-To: <20251106-qcom-bam-dma-refactor-v1-3-0e2baaf3d81a@linaro.org>
 
-On 14-10-25, 13:22, Logan Gunthorpe wrote:
-> From: Kelvin Cao <kelvin.cao@microchip.com>
+On 06-11-25, 16:44, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Initialize the hardware and create the dma channel queues.
+> There is nothing in the interrupt handling that requires us to run in
+> atomic context so convert the tasklet to a workqueue.
 
-This looks mostly okay. Any reason why virt-dma is not used in this
-driver?
+The reason dmaengine drivers use tasklets is higher priority to handle
+dma interrupts... This is by design for this subsystem.
 
+There was an attempt in past to do conversion away from tasklets [1]:
+We need something similar apprach here. I can queue up first two though
+
+1: https://lore.kernel.org/all/20240327160314.9982-1-apais@linux.microsoft.com/
 -- 
 ~Vinod
 

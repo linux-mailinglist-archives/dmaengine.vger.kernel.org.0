@@ -1,54 +1,54 @@
-Return-Path: <dmaengine+bounces-7326-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7327-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFEB2C80991
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Nov 2025 13:54:24 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42E6BC80952
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Nov 2025 13:51:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EFA324E6B3F
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Nov 2025 12:51:01 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 68B8A34441B
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Nov 2025 12:51:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE066302CD0;
-	Mon, 24 Nov 2025 12:50:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2104D30171E;
+	Mon, 24 Nov 2025 12:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="CJRdsx3Z"
+	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="UVOph1kT"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743B830148C;
-	Mon, 24 Nov 2025 12:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761A830101A;
+	Mon, 24 Nov 2025 12:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763988638; cv=none; b=C+uRbcH+VvGtC7ietV+mQp+KW91js/ZPbalARne2NLphuIB4Z+H756N3k0FAt+zgSSXzXO2p+Mpc1PhdKzWoMaflMOzP5sRCsuF1cA73N3cm0/JB4uA6ZRMlYlPTw+R8xtIAoQLYusdNleq3n/96j+8azDYHNWGtYAroPPuORFU=
+	t=1763988641; cv=none; b=keFTQPzKqna2zxmWTN6K9S84zgAs2AN9ZrR650LNKnI6gqfg6XZOtVuMFls8yPHClMrKg6xxS7JrKBPWXbR13YJ8gdzy0JwKt6FZOADHrOeTAjkpXrRc5o3uLagTULQm2Owzyfn4FPOOeJqjjBSUCOBNMNyvYnCCLoB26b3JZNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763988638; c=relaxed/simple;
-	bh=PxyHjH/UiLxDT0MWhbZ4dz/BirBhchQz9nA3F2FTYp8=;
+	s=arc-20240116; t=1763988641; c=relaxed/simple;
+	bh=8QaBSNeO5kdt+ln9LrPGqaa9zAB6if0CpaKn6ztCju4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sLe9CkB5tl9/HukKHmEjUpoz+1J3UDT26fmZdJczmYngPL1vPvJ4ecLxzhnviTpOqGEl4aFT+nhf8SqNPSOhbUJLZhIv6bpqXFvex7h80fDRTYFzAoNmp2idS0YNeIXloBBlSQxVpLHreOuzeeXi4ho0UOxxmMv9chvOm2VUR/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=pass smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=CJRdsx3Z; arc=none smtp.client-ip=217.70.183.199
+	 In-Reply-To:To:Cc; b=DiaRlugQaPcydbVLrP//p7ZAPulmecIGlMXHDma00d6m11yVkAcubAxtIS8hvsiAMUjRKiGL+7HUPW/kBRONRWIBkqYDX8MrfzOyE1iCw9ClYht0KcqKUpS7poV9L+lcNicmNDlnDpvZDyn+29oDoEg5B8f8Xw7RRWLbIH/Jw5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=pass smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=UVOph1kT; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yoseli.org
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 06413443ED;
-	Mon, 24 Nov 2025 12:50:27 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1D3D14439A;
+	Mon, 24 Nov 2025 12:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1763988628;
+	t=1763988630;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ozLzF+fWx01MoD9aQyXZjPvCyi55DbAMQ97yOxrC6OI=;
-	b=CJRdsx3ZnYjQiURA3jbjwk+GFY7Fqby0xLMgKfYfax6VlbU16WPGCIylgKt3AqWGgIxH5d
-	fQSfQd1YqYFKWf+zu8EqoMPFwAhXcPI5V7nLQQ5EvrMDv92lEsa48bG8UrYKjr/jaNrbQw
-	XeEf0eCZ9y1RuaOPkmCk6sW7xpQsnUVRBJUlt76NuKs8Xid7j3fmdaNAYuBX0+FCkAUQt1
-	DASdw6VulebrWxs78+gi2WBOhjOFGBaWjhaybbt0tGJ4Oh8gTpEGkckgU+AwQzzA3i3nU0
-	crVehfN91F+jEsZcez7QOWsXuwflJzBUZRs5XtP9tUm7RWgBqOfRdIgn1zxFVw==
+	bh=lJi0EEOLF66K6fXIemZGZRw8QFUtMWuNIXre435RcYA=;
+	b=UVOph1kTSpJbSVFk3tvG7/Hi5yqgtCk18z1xrAoyG7xcSsNDMsKu4EkGyoYILcs8x++c9z
+	vFa3PRRylRTat8PF+2VJgubk8UmW+MtyqU0h5ryeI1BF080ZMJgdKGscc4UJe/gI3tWdIS
+	nAmN01Z2apdSCnzRO+qaO512ELI0/Crg4aRmwR++fxxe5nHMutATjxvnASAZnMi1gQxZVb
+	gxReGkAi4Tn7XNavm04IKELQ4HBFqADmRdxXG1+rufkXg4eLojhlA52kYwrhUbid1WPau+
+	xUQLnL+x48Gtn92EdbrZYj6ohqsfq1vfTl2Xz+t5dzwnyemAbmxuQUa8Sorpeg==
 From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-Date: Mon, 24 Nov 2025 13:50:24 +0100
-Subject: [PATCH 3/7] dma: mcf-edma: Add per-channel IRQ naming for
- debugging
+Date: Mon, 24 Nov 2025 13:50:25 +0100
+Subject: [PATCH 4/7] dma: mcf-edma: Fix interrupt handler for 64 DMA
+ channels
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251124-dma-coldfire-v1-3-dc8f93185464@yoseli.org>
+Message-Id: <20251124-dma-coldfire-v1-4-dc8f93185464@yoseli.org>
 References: <20251124-dma-coldfire-v1-0-dc8f93185464@yoseli.org>
 In-Reply-To: <20251124-dma-coldfire-v1-0-dc8f93185464@yoseli.org>
 To: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>
@@ -66,11 +66,11 @@ Cc: Greg Ungerer <gerg@linux-m68k.org>, imx@lists.linux.dev,
  linux-kernel@vger.kernel.org, 
  Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1763988624; l=2436;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1763988624; l=1748;
  i=jeanmichel.hautbois@yoseli.org; s=20240925; h=from:subject:message-id;
- bh=PxyHjH/UiLxDT0MWhbZ4dz/BirBhchQz9nA3F2FTYp8=;
- b=bco11Z9osduN8tdyp+sOFgrSrlK9smZin/Ub2zzTWzUUv3LzWlg7qMttYwb7bjWil7DtHqtBh
- odXXRGQD2zlDML7pghxGGGgcQnRD73PgJT+tUSJKZcNOJ/xbgpOADJo
+ bh=8QaBSNeO5kdt+ln9LrPGqaa9zAB6if0CpaKn6ztCju4=;
+ b=nTQkhwNpZuZNtopipUrgh4Bamgu+noJJ30i88aDiz3p9k+OYlWp9HPOhWXG5PsswvIlTfQksb
+ t5Dhfp174RMBeCwkS7MqC/7mGBpqdjkyEwMh9HzD7jTeXuIb6kbL56I
 X-Developer-Key: i=jeanmichel.hautbois@yoseli.org; a=ed25519;
  pk=MsMTVmoV69wLIlSkHlFoACIMVNQFyvJzvsJSQsn/kq4=
 X-GND-State: clean
@@ -79,74 +79,53 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvfeekieegucetufdoteggode
  ghpthhtohepghgvrhhgsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopefhrhgrnhhkrdfnihesnhigphdrtghomhdprhgtphhtthhopehvkhhouhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehimhigsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqmheikehksehlihhsthhsrdhlihhnuhigqdhmieekkhdrohhrgh
 X-GND-Sasl: jeanmichel.hautbois@yoseli.org
 
-Add dynamic per-channel IRQ naming to make DMA interrupt identification
-easier in /proc/interrupts and debugging tools.
+Fix the DMA completion interrupt handler to properly handle all 64
+channels on MCF54418 ColdFire processors.
 
-Instead of all channels showing "eDMA", they now show:
-- "eDMA-0" through "eDMA-15" for channels 0-15
-- "eDMA-16" through "eDMA-55" for channels 16-55
-- "eDMA-tx-56" for the shared channel 56-63 interrupt
-- "eDMA-err" for the error interrupt
+The previous code used BIT(ch) to test interrupt status bits, which
+causes undefined behavior on 32-bit architectures when ch >= 32 because
+unsigned long is 32 bits and the shift would exceed the type width.
 
-This aids debugging DMA issues by making it clear which channel's
-interrupt is being serviced.
+Replace with bitmap_from_u64() and for_each_set_bit() which correctly
+handle 64-bit values on 32-bit systems by using a proper bitmap
+representation.
 
 Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
 ---
- drivers/dma/mcf-edma-main.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/dma/mcf-edma-main.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/dma/mcf-edma-main.c b/drivers/dma/mcf-edma-main.c
-index f95114829d8006fe4558169888ff38037d7610de..8a7c1787adb1f66f3b6729903635b072218afad1 100644
+index 8a7c1787adb1f66f3b6729903635b072218afad1..dd64f50f2b0a70a4664b03c7d6a23e74c9bcd7ae 100644
 --- a/drivers/dma/mcf-edma-main.c
 +++ b/drivers/dma/mcf-edma-main.c
-@@ -81,8 +81,12 @@ static int mcf_edma_irq_init(struct platform_device *pdev,
- 	if (!res)
- 		return -1;
+@@ -18,7 +18,8 @@ static irqreturn_t mcf_edma_tx_handler(int irq, void *dev_id)
+ {
+ 	struct fsl_edma_engine *mcf_edma = dev_id;
+ 	struct edma_regs *regs = &mcf_edma->regs;
+-	unsigned int ch;
++	unsigned long ch;
++	DECLARE_BITMAP(status_mask, 64);
+ 	u64 intmap;
  
--	for (ret = 0, i = res->start; i <= res->end; ++i)
--		ret |= request_irq(i, mcf_edma_tx_handler, 0, "eDMA", mcf_edma);
-+	for (ret = 0, i = res->start; i <= res->end; ++i) {
-+		char *irq_name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
-+						"eDMA-%d", i - res->start);
+ 	intmap = ioread32(regs->inth);
+@@ -27,11 +28,11 @@ static irqreturn_t mcf_edma_tx_handler(int irq, void *dev_id)
+ 	if (!intmap)
+ 		return IRQ_NONE;
+ 
+-	for (ch = 0; ch < mcf_edma->n_chans; ch++) {
+-		if (intmap & BIT(ch)) {
+-			iowrite8(EDMA_MASK_CH(ch), regs->cint);
+-			fsl_edma_tx_chan_handler(&mcf_edma->chans[ch]);
+-		}
++	bitmap_from_u64(status_mask, intmap);
 +
-+		ret |= request_irq(i, mcf_edma_tx_handler, 0, irq_name, mcf_edma);
-+	}
- 	if (ret)
- 		return ret;
- 
-@@ -91,15 +95,19 @@ static int mcf_edma_irq_init(struct platform_device *pdev,
- 	if (!res)
- 		return -1;
- 
--	for (ret = 0, i = res->start; i <= res->end; ++i)
--		ret |= request_irq(i, mcf_edma_tx_handler, 0, "eDMA", mcf_edma);
-+	for (ret = 0, i = res->start; i <= res->end; ++i) {
-+		char *irq_name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
-+						"eDMA-%d", 16 + i - res->start);
-+
-+		ret |= request_irq(i, mcf_edma_tx_handler, 0, irq_name, mcf_edma);
-+	}
- 	if (ret)
- 		return ret;
- 
- 	ret = platform_get_irq_byname(pdev, "edma-tx-56-63");
- 	if (ret != -ENXIO) {
- 		ret = request_irq(ret, mcf_edma_tx_handler,
--				  0, "eDMA", mcf_edma);
-+				  0, "eDMA-tx-56", mcf_edma);
- 		if (ret)
- 			return ret;
++	for_each_set_bit(ch, status_mask, mcf_edma->n_chans) {
++		iowrite8(EDMA_MASK_CH(ch), regs->cint);
++		fsl_edma_tx_chan_handler(&mcf_edma->chans[ch]);
  	}
-@@ -107,7 +115,7 @@ static int mcf_edma_irq_init(struct platform_device *pdev,
- 	ret = platform_get_irq_byname(pdev, "edma-err");
- 	if (ret != -ENXIO) {
- 		ret = request_irq(ret, mcf_edma_err_handler,
--				  0, "eDMA", mcf_edma);
-+				  0, "eDMA-err", mcf_edma);
- 		if (ret)
- 			return ret;
- 	}
+ 
+ 	return IRQ_HANDLED;
 
 -- 
 2.39.5

@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-7316-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7317-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 150CAC8066B
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Nov 2025 13:13:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29D38C806C8
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Nov 2025 13:16:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 852E03436AB
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Nov 2025 12:13:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3E263A8E03
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Nov 2025 12:13:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87E453016E2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 933DA3016F3;
 	Mon, 24 Nov 2025 12:12:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a8CuPq7n"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GzfNSGJ2"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E682FFDD6;
-	Mon, 24 Nov 2025 12:12:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CF23009DE;
+	Mon, 24 Nov 2025 12:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763986344; cv=none; b=eQr0H0hnUIPA6WLwbbaU73ia8EWRUpB9c0hF50Hg1YzSMnWLmDjOIVl+Ts5j6YLkmWQeRJOKaejH0zKaC9fLMpQu7SpC4Xf00wM6bk9YEhMNkDjqK+eDZ+m7ySMOmyLzijJ7pL5QYhR5WAKPp10jLKUhMsiCd2VGBEs05oKxrVI=
+	t=1763986345; cv=none; b=D8eZ5V6ryAOqwxqeKhjVSDGNNjh/W5GsRqsPAFza0yfE+IjwrlOPIGhVFs5EWPtGKuRMd8UxhSKR/UtPao6nHk42DIlb26JiG5ofWD0YDfptBEYOVD1k26LBzG3k83AYDXfkOVDxrYOnTSzLZRDd6LrPzdgmfwgzRwy450GFYLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763986344; c=relaxed/simple;
-	bh=noDJxCmlGW2l/RNKrw+Y3WhNwmbPyJ6mAjM7+Omfh0g=;
+	s=arc-20240116; t=1763986345; c=relaxed/simple;
+	bh=akryAXafWhZQlfplABSdwgarfhhYIf26xngrUAauxhA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EHF6u1HL/NphVMCSvpgD0Zmf9OCTQ5DRJaL6OEhPF5QxKqldh+hVthANtdhlIZb6YPHKBrIaFpZ8e1XleA9wt2eR4kEW3rgL3Mq5Dx2pRqQqJcL3bqzj5P+syPe8oBmoZmBQX+rH++L1HLUcuWXTiuUpnpLOPl+5Uj6vLzV0EyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a8CuPq7n; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version; b=B9PUHlm132C7+J6pRwMRnkMB/CKqn1cVOeT9qP8p2Ou9VGzSRzB69ijktVzgblUi3TJmyhROkvZ3sQ19mnN1nNRMZTqRbrJKrdZbp8J9Onv+YyozRlNwBUuVUvJycSluERv6aLh2xDiGRCGq3f4FkVjdCl5auLcbXgis1m2aqAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GzfNSGJ2; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763986341; x=1795522341;
+  t=1763986342; x=1795522342;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=noDJxCmlGW2l/RNKrw+Y3WhNwmbPyJ6mAjM7+Omfh0g=;
-  b=a8CuPq7nwnmL/ykXOaeg8J0CdV7saios3JLVlXRKfTtsqA/h8zRobH8N
-   rDGoljOdw6hVQl1wZGhHSCdoG6kwImGinOrvQr7uVRHzOIaPANd63VyZt
-   vzejbSlSGgH3WNDafgRw2nkYig8u4dK40mqCg/g+nVWEib0Tcd+7d5ymN
-   116yQxJft0/1cIeFsNGa/ZcPrHbFlm5BeHyeLQ/zQgkgpKkF95mE94EyY
-   HwDpoABgX4k1h4QgRjweDkr9VDWSIJvX0sOmJl2Z3Ybzi4MTphIvuL+p3
-   XuoAvHCUMlcOQsQ/ZnWmFPoiKbd7W44HCTwLk6DbFpKpeGrQ4ScWVwUtF
+  bh=akryAXafWhZQlfplABSdwgarfhhYIf26xngrUAauxhA=;
+  b=GzfNSGJ2E1pQxiu4EP2P8LI+5Oz0o34CO2vRKu3w0MCGr11VmxTR/hkS
+   a4u1Sj0DKtAL5A9cKZQeJiacR847MRvAIAHHLRs3NJyvmrJw2xgDDNHnw
+   CtbtMvupJ4W6FQfi96nkbiM+DaL5fLwQL5N6auPtbP4+bAijoQW1jEuOL
+   vOaVAMbTzzP5IhgOhmGxMqx/QZfeVcfAfYyAEa+f1sZgOl7KFSoD8AXPj
+   HjWhmqFiSPPb/qGphMpb9CJWESxVGCYgNuWNV75YfhEoZ4GYGwX68ta/Y
+   JDXjg+UYXteV4zMlhxYkGzs0VJ41UMJDzIHxbPdJPosfH0Q3Cog7qJG1f
    Q==;
-X-CSE-ConnectionGUID: o90D4kf/Qf2H8ZLCD0yTDg==
-X-CSE-MsgGUID: UTLaULJESh2ULfKJ6PN66w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11622"; a="69847604"
+X-CSE-ConnectionGUID: TinSauuCTAyfyRgDOysJHg==
+X-CSE-MsgGUID: 3/8d3062St+tRrBVtjGGwQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11622"; a="69847617"
 X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
-   d="scan'208";a="69847604"
+   d="scan'208";a="69847617"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
   by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 04:12:16 -0800
-X-CSE-ConnectionGUID: ul+nTSsMTxuky5teU59mmA==
-X-CSE-MsgGUID: Lw/TYoX5SQSD+IXZODL5KQ==
+X-CSE-ConnectionGUID: DwbDk/0CSIK5hVBMlgSbzQ==
+X-CSE-MsgGUID: 60dj4sW0Rx6N2jQllImwvg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,222,1758610800"; 
-   d="scan'208";a="222970345"
+   d="scan'208";a="222970346"
 Received: from black.igk.intel.com ([10.91.253.5])
   by orviesa002.jf.intel.com with ESMTP; 24 Nov 2025 04:12:10 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 6F30AA9; Mon, 24 Nov 2025 13:12:03 +0100 (CET)
+	id 73EFAAA; Mon, 24 Nov 2025 13:12:03 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -88,9 +88,9 @@ Cc: Olivier Dautricourt <olivierdautricourt@gmail.com>,
 	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
 	Michal Simek <michal.simek@amd.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v4 09/13] dmaengine: qcom: adm: use sg_nents_for_dma() helper
-Date: Mon, 24 Nov 2025 13:09:27 +0100
-Message-ID: <20251124121202.424072-10-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 10/13] dmaengine: qcom: bam_dma: use sg_nents_for_dma() helper
+Date: Mon, 24 Nov 2025 13:09:28 +0100
+Message-ID: <20251124121202.424072-11-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20251124121202.424072-1-andriy.shevchenko@linux.intel.com>
 References: <20251124121202.424072-1-andriy.shevchenko@linux.intel.com>
@@ -107,34 +107,38 @@ Instead of open coded variant let's use recently introduced helper.
 Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/dma/qcom/qcom_adm.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/dma/qcom/bam_dma.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/dma/qcom/qcom_adm.c b/drivers/dma/qcom/qcom_adm.c
-index e0f0c6f42c1f..aeb01b7087e2 100644
---- a/drivers/dma/qcom/qcom_adm.c
-+++ b/drivers/dma/qcom/qcom_adm.c
-@@ -390,16 +390,15 @@ static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index 2cf060174795..62b3921f0d11 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -655,22 +655,17 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
+ 	struct scatterlist *sg;
+ 	u32 i;
+ 	struct bam_desc_hw *desc;
+-	unsigned int num_alloc = 0;
+-
++	unsigned int num_alloc;
+ 
+ 	if (!is_slave_direction(direction)) {
+ 		dev_err(bdev->dev, "invalid dma direction\n");
+ 		return NULL;
  	}
  
- 	/* iterate through sgs and compute allocation size of structures */
--	for_each_sg(sgl, sg, sg_len, i) {
--		if (achan->slave.device_fc) {
-+	if (achan->slave.device_fc) {
-+		for_each_sg(sgl, sg, sg_len, i) {
- 			box_count += DIV_ROUND_UP(sg_dma_len(sg) / burst,
- 						  ADM_MAX_ROWS);
- 			if (sg_dma_len(sg) % burst)
- 				single_count++;
--		} else {
--			single_count += DIV_ROUND_UP(sg_dma_len(sg),
--						     ADM_MAX_XFER);
- 		}
-+	} else {
-+		single_count = sg_nents_for_dma(sgl, sg_len, ADM_MAX_XFER);
- 	}
+-	/* calculate number of required entries */
+-	for_each_sg(sgl, sg, sg_len, i)
+-		num_alloc += DIV_ROUND_UP(sg_dma_len(sg), BAM_FIFO_SIZE);
+-
+ 	/* allocate enough room to accommodate the number of entries */
++	num_alloc = sg_nents_for_dma(sgl, sg_len, BAM_FIFO_SIZE);
+ 	async_desc = kzalloc(struct_size(async_desc, desc, num_alloc),
+ 			     GFP_NOWAIT);
+-
+ 	if (!async_desc)
+ 		return NULL;
  
- 	async_desc = kzalloc(sizeof(*async_desc), GFP_NOWAIT);
 -- 
 2.50.1
 

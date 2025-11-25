@@ -1,61 +1,64 @@
-Return-Path: <dmaengine+bounces-7339-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7343-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4794AC83E1A
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Nov 2025 09:05:18 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41376C86CE4
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Nov 2025 20:26:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7C22A34D552
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Nov 2025 08:03:57 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 3EA3B4EB9C2
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Nov 2025 19:24:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAB462D63F6;
-	Tue, 25 Nov 2025 08:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7B7C33507C;
+	Tue, 25 Nov 2025 19:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="eF+x5kn4"
+	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="GUezjqQ+"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D092D6E5A;
-	Tue, 25 Nov 2025 08:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC0C333720;
+	Tue, 25 Nov 2025 19:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764057768; cv=none; b=P1QKWPkNBzl1n/DFA9dCFJDJ4nHcQtzqh3K8Z+PGU1tWJ3Jm1TedMQA6z8aimCfS9maRA92eARWHv9IyzE/A6lsPOzG50qeBzBJ/7xw1GEdUpB1crjjIdNnw19CVfxGrmBVDkmpUJO0klOrNILQjNDc8S8HbMY0Ftw5EssuXZmU=
+	t=1764098680; cv=none; b=LInj4Iz/TVzhllpu9UWOSkkGebBowv216tmQCAW0+D5bQYct6i1aMRDT6xuELxtqQ2dhwBW9oR8TaD4BGmOx4BNI+LtxA++Cd/WzKIQKCTa3dhlQ0xKRRUqmKPrdm26hZuG9Lo66k/nPlWJaFvd294sbG6B/ac9lYDH2JU0XjKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764057768; c=relaxed/simple;
-	bh=CD1JVdqtXIGAroJaFbdwj3Epr2vxLT0HRN8O1zlEfQc=;
+	s=arc-20240116; t=1764098680; c=relaxed/simple;
+	bh=skILgqLwPJIPZBjRnJ1qT8M+/RtwxZ0zzX+N5F2lnCQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mqN578EGUOQdXdUPETz8h9MDdvrcer5Mjzi3U0jzSG2HDeVWSwch0fybzEydsS5oMt7OOBQJYuBMr5o2wFJ9gLZLXHDboTsH92DnX/egP/zRtVhK0+x+YOeE/X1GiAdl/I237f4KuV4s4MRwZLYRb6NQ8lpDqfGypgXfGTKtv4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=pass smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=eF+x5kn4; arc=none smtp.client-ip=217.70.183.194
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZaAMdz5GGJbHfmwner31ToNCAYCi1dLzGdU1pcOKy0eDluZNE/HA5sVTGtQMLtdE+4RhOZkcBLEcvpedTKb+AZP956lntyQTzF30vrEo4FbykAuTdkTOC9UMrfVxVDR+wvmEqwGD0NykZriupvGmufjxe626x7GpVwnFcGqG6XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=pass smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=GUezjqQ+; arc=none smtp.client-ip=217.70.178.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yoseli.org
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 30E664438A;
-	Tue, 25 Nov 2025 08:02:37 +0000 (UTC)
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id C370B58AAB3;
+	Tue, 25 Nov 2025 08:18:39 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2E48144248;
+	Tue, 25 Nov 2025 08:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1764057758;
+	t=1764058711;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MoWndkx7e+UmCx3Hyadc2ePIsV1F+2M/5sK889nnkUE=;
-	b=eF+x5kn4Bz19wPZCq0SGBedVZbd9n4F4xU/K90iEC+buRU+T91zXQH+GAWq8hU5nAAELWj
-	v6MZm0y1QxnUg4rXhaXly0jXTujkXkA/8kRoTZgPYnDDjNDFAP7D8gp1DJXWIyjO8PkFrz
-	koT3FHLxjoVSTljKli5l9Y6mDPriL/zA2skOnFhxHwClCANUM885LMJaq9+38wkVv0fP68
-	eN6aMgu0MLs8f0RdGt/SMY2EmDRXYqNOauGIh6a8Sq2x+z+SPD9mF4iKcrV+TOdPLJnnXm
-	whE38bX14TIRPi8iH5m2pNJ1Cpl4JTNC6EQRdP1qiNgB+kO9QrWDlASfeheUEA==
-Date: Tue, 25 Nov 2025 09:02:36 +0100
+	bh=zw2+CWzU7xDkCoIMauSVlX0cXTI9az6uTp3PwEpASrw=;
+	b=GUezjqQ+p1uaYDNCAsk3Yic3CVVyBEwC52um1V28a4MXMxwKJLQrUDiF2Y1TRXld31tbwW
+	CEvt7x5GBhndIji+MKGjBAHppy3ynPJ3iCjrFZRINqoAssSMkRf1HwXn6j85fwKe42GoSU
+	Y3lbyoiqIknZIThYYoCvK53k6RWKV6JcQbaWNok4M6myHYxSfrLKKt6rjsypWE9pqMxe7S
+	j69l09Vh/jS3Evkj5kc+uAZNVfV4+z7mZf+bcw7byI5REFfk5QhhXyMEBtTW0X1mFm1tLQ
+	KRc95fpd3aeJ96m5Zde6bvkkDZseW93imEfKUCfCGZyVrpZTbKot4N4WUL7t3g==
+Date: Tue, 25 Nov 2025 09:18:30 +0100
 From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
 To: Frank Li <Frank.li@nxp.com>
 Cc: Vinod Koul <vkoul@kernel.org>, Greg Ungerer <gerg@linux-m68k.org>,
 	imx@lists.linux.dev, dmaengine@vger.kernel.org,
 	linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] dma: mcf-edma: Fix interrupt handler for 64 DMA
- channels
-Message-ID: <aSVinMNSTEQLZxRi@yoseli-yocto.yoseli.org>
+Subject: Re: [PATCH 1/7] dma: fsl-edma: Add write barrier after TCD
+ descriptor fill
+Message-ID: <aSVmVqRDhp3TRhKz@yoseli-yocto.yoseli.org>
 References: <20251124-dma-coldfire-v1-0-dc8f93185464@yoseli.org>
- <20251124-dma-coldfire-v1-4-dc8f93185464@yoseli.org>
- <aSSDItseEjQ0VMh6@lizhi-Precision-Tower-5810>
+ <20251124-dma-coldfire-v1-1-dc8f93185464@yoseli.org>
+ <aSSAfW9xLTRN5Fwk@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -64,77 +67,58 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aSSDItseEjQ0VMh6@lizhi-Precision-Tower-5810>
+In-Reply-To: <aSSAfW9xLTRN5Fwk@lizhi-Precision-Tower-5810>
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvgedtleegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdortddttddvnecuhfhrohhmpeflvggrnhdqofhitghhvghlucfjrghuthgsohhishcuoehjvggrnhhmihgthhgvlhdrhhgruhhtsghoihhsseihohhsvghlihdrohhrgheqnecuggftrfgrthhtvghrnhepffehhfdvieeuvdejteduhffgfefffeduveetgeekhfekledukeegjefhtdffgfffnecukfhppedvrgdtudemvgdtrgemudeileemjedugedtmeekvgdtugemkegrugdumegvvggvleemleehsgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemudeileemjedugedtmeekvgdtugemkegrugdumegvvggvleemleehsgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepjhgvrghnmhhitghhvghlrdhhrghuthgsohhisheshihoshgvlhhirdhorhhgpdhnsggprhgtphhtthhopeejpdhrtghpthhtohephfhrrghnkhdrlhhisehngihprdgtohhmpdhrtghpthhtohepvhhkohhulheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgvrhhgsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehimhigsehli
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvgedtleejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeflvggrnhdqofhitghhvghlucfjrghuthgsohhishcuoehjvggrnhhmihgthhgvlhdrhhgruhhtsghoihhsseihohhsvghlihdrohhrgheqnecuggftrfgrthhtvghrnhephefggefgtdduheelkeeuleejjeeijeeihfetieevueeftdeigeeuueefudevjeefnecukfhppedvrgdtudemvgdtrgemudeileemjedugedtmeekvgdtugemkegrugdumegvvggvleemleehsgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemudeileemjedugedtmeekvgdtugemkegrugdumegvvggvleemleehsgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepjhgvrghnmhhitghhvghlrdhhrghuthgsohhisheshihoshgvlhhirdhorhhgpdhnsggprhgtphhtthhopeejpdhrtghpthhtohephfhrrghnkhdrlhhisehngihprdgtohhmpdhrtghpthhtohepvhhkohhulheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgvrhhgsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehimhigsehli
  hhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepughmrggvnhhgihhnvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmieekkheslhhishhtshdrlhhinhhugidqmheikehkrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 X-GND-Sasl: jeanmichel.hautbois@yoseli.org
 
-Hi Frank,
-
-On Mon, Nov 24, 2025 at 11:09:06AM -0500, Frank Li wrote:
-> On Mon, Nov 24, 2025 at 01:50:25PM +0100, Jean-Michel Hautbois wrote:
-> > Fix the DMA completion interrupt handler to properly handle all 64
-> > channels on MCF54418 ColdFire processors.
-> >
-> > The previous code used BIT(ch) to test interrupt status bits, which
-> > causes undefined behavior on 32-bit architectures when ch >= 32 because
-> > unsigned long is 32 bits and the shift would exceed the type width.
-> >
-> > Replace with bitmap_from_u64() and for_each_set_bit() which correctly
-> > handle 64-bit values on 32-bit systems by using a proper bitmap
-> > representation.
+On Mon, Nov 24, 2025 at 10:57:49AM -0500, Frank Li wrote:
+> On Mon, Nov 24, 2025 at 01:50:22PM +0100, Jean-Michel Hautbois wrote:
+> > Add dma_wmb() barrier after filling TCD descriptors to ensure all
+> > descriptor writes are visible to the DMA engine before starting
+> > transfers. This prevents potential race conditions where the DMA
+> > hardware might read partially written descriptors.
 > >
 > > Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
 > > ---
-> >  drivers/dma/mcf-edma-main.c | 13 +++++++------
-> >  1 file changed, 7 insertions(+), 6 deletions(-)
+> >  drivers/dma/fsl-edma-common.c | 3 +++
+> >  1 file changed, 3 insertions(+)
 > >
-> > diff --git a/drivers/dma/mcf-edma-main.c b/drivers/dma/mcf-edma-main.c
-> > index 8a7c1787adb1f66f3b6729903635b072218afad1..dd64f50f2b0a70a4664b03c7d6a23e74c9bcd7ae 100644
-> > --- a/drivers/dma/mcf-edma-main.c
-> > +++ b/drivers/dma/mcf-edma-main.c
-> > @@ -18,7 +18,8 @@ static irqreturn_t mcf_edma_tx_handler(int irq, void *dev_id)
-> >  {
-> >  	struct fsl_edma_engine *mcf_edma = dev_id;
-> >  	struct edma_regs *regs = &mcf_edma->regs;
-> > -	unsigned int ch;
-> > +	unsigned long ch;
-> 
-> channel number max value is 63. unsigned int should be enough.
-
-Yes, indeed, it is enough. I changed to unsigned long because
-for_each_set_bit() calls find_next_bit which returns unsigned long. This
-only avoiding an implicit conversion. But I can remove this change if it
-does not make sense ?
-
-Thanks,
-JM
-
-> 
-> Frank
-> > +	DECLARE_BITMAP(status_mask, 64);
-> >  	u64 intmap;
+> > diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+> > index 4976d7dde08090d16277af4b9f784b9745485320..db36a6aafc910364d75ce6c5d334fd19d2120b6b 100644
+> > --- a/drivers/dma/fsl-edma-common.c
+> > +++ b/drivers/dma/fsl-edma-common.c
+> > @@ -553,6 +553,9 @@ void fsl_edma_fill_tcd(struct fsl_edma_chan *fsl_chan,
+> >  	fsl_edma_set_tcd_to_le(fsl_chan, tcd, csr, csr);
 > >
-> >  	intmap = ioread32(regs->inth);
-> > @@ -27,11 +28,11 @@ static irqreturn_t mcf_edma_tx_handler(int irq, void *dev_id)
-> >  	if (!intmap)
-> >  		return IRQ_NONE;
-> >
-> > -	for (ch = 0; ch < mcf_edma->n_chans; ch++) {
-> > -		if (intmap & BIT(ch)) {
-> > -			iowrite8(EDMA_MASK_CH(ch), regs->cint);
-> > -			fsl_edma_tx_chan_handler(&mcf_edma->chans[ch]);
-> > -		}
-> > +	bitmap_from_u64(status_mask, intmap);
+> >  	trace_edma_fill_tcd(fsl_chan, tcd);
 > > +
-> > +	for_each_set_bit(ch, status_mask, mcf_edma->n_chans) {
-> > +		iowrite8(EDMA_MASK_CH(ch), regs->cint);
-> > +		fsl_edma_tx_chan_handler(&mcf_edma->chans[ch]);
-> >  	}
+> > +	/* Ensure descriptor writes are visible to DMA engine */
+> > +	dma_wmb();
+> 
+> This is not necessary because there are writel() in
+> fsl_edma_issue_pending(), which will do memory barrier in writel().
+> 
+> currently, edma use vchan, descriptior have not dymantically to appending
+> to running queue. so writel() in fsl_edma_issue_pending() is enough.
+> 
+> Even though edma will support append to running queue in future, dma_wmd()
+> should be just before update csr.
+> 
+>  	dma_wmb();  // just before indicate TCD is ready to use.
+> 	fsl_edma_set_tcd_to_le(fsl_chan, tcd, csr, csr);
+> 
+
+Thanks for you detailed explanation, I will remove this commit from v2
+:-).
+
+JM
+> Frank
+> >  }
 > >
-> >  	return IRQ_HANDLED;
+> >  static struct fsl_edma_desc *fsl_edma_alloc_desc(struct fsl_edma_chan *fsl_chan,
 > >
 > > --
 > > 2.39.5

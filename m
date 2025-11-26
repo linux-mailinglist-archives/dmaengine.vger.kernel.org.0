@@ -1,60 +1,58 @@
-Return-Path: <dmaengine+bounces-7358-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7359-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 314E8C89079
-	for <lists+dmaengine@lfdr.de>; Wed, 26 Nov 2025 10:43:44 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFD93C891DE
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Nov 2025 10:53:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3C6D3B2F03
-	for <lists+dmaengine@lfdr.de>; Wed, 26 Nov 2025 09:43:42 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7BA07356529
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Nov 2025 09:51:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09F553164A9;
-	Wed, 26 Nov 2025 09:41:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34B5131D389;
+	Wed, 26 Nov 2025 09:49:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TH1bGdMA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4yV+1gs"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E763019AA;
-	Wed, 26 Nov 2025 09:41:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DE22FD1DC;
+	Wed, 26 Nov 2025 09:49:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764150065; cv=none; b=irzjN7KYfyNR4llT73h/wkU4btUoXNg3KOk4McNGiogjlLoBjmAi5G0VlJEiRC+n9r9SOIdhi+XRHKVg93hEKrzDbGPEmeCV5tV9iphV+FPHh4KPYnspEAMopRaMgnLASM0/FKbFSiG7NW2sJsavtz66JbRidCZYJLIOESmgDKE=
+	t=1764150594; cv=none; b=irezw/yixXRN6i05xo3A3g0bYuX2iU7bb4tKNJe8G0KzMLuC7duVDsO27qxNmOMAsXdJoCDliAKqMpdN7YehGHqYB8fUzGusXolztY3IEO389Dzw05w8GrEhGpi3LKnEdtwshFvnF5/SuP2GLPRayh/O4BaXxiNpzd6Agp9I39g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764150065; c=relaxed/simple;
-	bh=2A1+6ikQS2cFDqeaqbcWKjj8PkwHoghi5FBELNGe0aw=;
+	s=arc-20240116; t=1764150594; c=relaxed/simple;
+	bh=2VBNoZWHjBUiC+MXXkKX6rZM6nYUKb3iGPgNiGg8uWg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PAlkcL2vtf7LK7WmQ9iSd8AghIR5tlYM1JaXHvIwjmprIfN2qgquggqCy/uRiCca89pgxsYWzhRygYlAlxGsjdu7H1R8sse1gh4CNIC9EK8EY8jjVbukeBUxEaMuov9upj0nWYovW96XpL8oR+/IrboxHr4lOTCwXT58w3+njZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TH1bGdMA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A450EC113D0;
-	Wed, 26 Nov 2025 09:41:03 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qeycz5Vg9flPUJpVSe24Z6lWdUgcihGpxqHN/aSN7cvYl+OeyxX4JtXBJgGZcyHxpUmHjHMyGzL4EpNujZdIj4aMIPg465n3FIEbxvkvyf/OwMK7vtN1ZiplKGRazM6sFsuDuwI+HDk9QdRCw8SZQiirmf4/CdKKY/YRHIR7r7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4yV+1gs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D9A7C113D0;
+	Wed, 26 Nov 2025 09:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764150064;
-	bh=2A1+6ikQS2cFDqeaqbcWKjj8PkwHoghi5FBELNGe0aw=;
+	s=k20201202; t=1764150593;
+	bh=2VBNoZWHjBUiC+MXXkKX6rZM6nYUKb3iGPgNiGg8uWg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TH1bGdMACILrMX7gjEOo0oSzEZdkrQRdVCdJYv6T0aoNouFQv6xl6Rw8WQFO4gFpn
-	 iY59VdF34z58rowyvqP6Vsip/oVwAF6f8NwLWcgxdAdIvNYCGoUWvwm5OXRA4Ubaol
-	 hOcRK7MNsYzOv5G+Vr6LBH4VvfHwbbLBjps4/zi2OSp+55z5U1Uz416YTjze1bpkmu
-	 hm1Ey+aCR0wm+AnvoKF0IEijnODqIdaiwFbZLnQLzcKG+Ad+FjU5rl5mQdNJu9dEK3
-	 DHywWI68zkQlQMCkM+Vc9h0tf/uXtQbcw+w2WhbelVNO1Dcxie1qbaiF0MXMQ+MxuQ
-	 4bFJPHGjBVjRg==
-Date: Wed, 26 Nov 2025 10:41:01 +0100
+	b=Y4yV+1gsogmrLcxg2aKldZgYV9/oF6rR7FNxVs9g33BePTwTkp4zVlXvR+J5S7mCB
+	 V2epqRNc66jbLX48N6OjclpOL+dIaB3D84PCR5yh52c2vOZ1Fg0NGPBxAOCL2cLFYG
+	 pzNNoCGTFtOmGCKiDK6tGOs8Q3rQfReI4U8XiQ7lvs0g5PyWW4L3UtT1tX8tcHy0sT
+	 REUlUlXw0wk8mS9bOaVGzLMI3fsh5zP3K9O2YqNa7aGYA8jc5RVLCeeZ0UgLbS6/dq
+	 gW8cM3jmmQIQYw1UvY2wj3/FymahnqF+6rCqErMNqk2iBj7cNiC06hjeWXz+/5vO9v
+	 Ri1VhJkOfFKTQ==
+Date: Wed, 26 Nov 2025 10:49:51 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: "Romli, Khairul Anuar" <khairul.anuar.romli@altera.com>
-Cc: Rob Herring <robh@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: dma: snps,dw-axi-dmac: Add compatible
- string for Agilex5
-Message-ID: <20251126-frisky-puma-from-valhalla-e3ee05@kuoka>
-References: <cover.1763598785.git.khairul.anuar.romli@altera.com>
- <bd19d05233cb095c097f0274a9c13159af34543b.1763598785.git.khairul.anuar.romli@altera.com>
- <20251120173608.GA1582568-robh@kernel.org>
- <e049a03a-49e3-4b00-a3e8-7560f63fa61a@altera.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH] dt-bindings: dma: rz-dmac: Document RZ/V2N SoC support
+Message-ID: <20251126-quixotic-gecko-from-avalon-3d7617@kuoka>
+References: <20251125212621.267397-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -63,31 +61,20 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e049a03a-49e3-4b00-a3e8-7560f63fa61a@altera.com>
+In-Reply-To: <20251125212621.267397-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Wed, Nov 26, 2025 at 07:43:42AM +0000, Romli, Khairul Anuar wrote:
-> On 21/11/2025 1:36 am, Rob Herring wrote:
-> > On Thu, Nov 20, 2025 at 07:31:10PM +0800, Khairul Anuar Romli wrote:
-> >> The address bus on Agilex5 is limited to 40 bits. When SMMU is enable this
-> >> will cause address truncation and translation faults. Hence introducing
-> >> "altr,agilex5-axi-dma" to enable platform specific configuration to
-> >> configure the dma addressable bit mask.
-> > 
-> > That's likely a bus limitation, not an IP limitation. So that should be
-> > handled with dma-ranges.
-> > 
-> > However, adding a specific compatible is perfectly fine.
-> > 
-> Would it be okay if I rephrase and send the next version with a 
-> correction in the commit message body as your comment in this version?
+On Tue, Nov 25, 2025 at 09:26:21PM +0000, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> Document the DMA controller on the Renesas RZ/V2N SoC, which is
+> architecturally identical to the DMAC found on the RZ/V2H(P) SoC.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-Yes and your DTS patch might need changes - include proper dma-ranges.
-
-I also do not see how separate compatible without any driver change
-solved your case. That's a no-op patch from Linux driver point of view.
-
-See also submitting patches in DT dir about the process how patches are
-grouped together.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
 Best regards,
 Krzysztof

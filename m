@@ -1,62 +1,62 @@
-Return-Path: <dmaengine+bounces-7403-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7406-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2454C942E6
-	for <lists+dmaengine@lfdr.de>; Sat, 29 Nov 2025 17:10:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BC21C94310
+	for <lists+dmaengine@lfdr.de>; Sat, 29 Nov 2025 17:11:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9288F3ACFC8
-	for <lists+dmaengine@lfdr.de>; Sat, 29 Nov 2025 16:07:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBAAC3AE9FF
+	for <lists+dmaengine@lfdr.de>; Sat, 29 Nov 2025 16:08:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 905A8315D39;
-	Sat, 29 Nov 2025 16:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31E7731813F;
+	Sat, 29 Nov 2025 16:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="GIxLgv+2"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="fnPbNYGd"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010018.outbound.protection.outlook.com [52.101.229.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B438314D11;
-	Sat, 29 Nov 2025 16:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA39A315D4C;
+	Sat, 29 Nov 2025 16:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.18
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764432287; cv=fail; b=ixhcd4qz8yHNV1Q81WQDNj5DKfP+tRln3paQtMl34Rx13459DC/4wo16MmsPBXAd7cRIt2F0vWsGc8UTIx+6mAUrP9+7LzE31lST83L9YMgh8+WmqZvyV4Uv77Tancc+4fYu+1hkEjZNhrTT8xF5uEaEdGjfafJqu2ur2BsPNTM=
+	t=1764432292; cv=fail; b=RDPgot5g2Ls4CRRwP0ot4qhaOCGLbawTdFUa+bGNziYB0FvsUsFwEbulIAqkBXg8JCsMRGEjm5SsniDUzE6OMC3LfARPZ5nkozghsuXUXMO2izFuvSvLjfj63wUpPyRGDBDaY2ojRtz9lsGTjENwdcNojw3mWe0mAQiccSpXcGM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764432287; c=relaxed/simple;
-	bh=bvus/BBImr3OfC1fWlVTiXXWH/vUeMM8tbvZIkWb3dM=;
+	s=arc-20240116; t=1764432292; c=relaxed/simple;
+	bh=I19iD/o4y3DiaGWJ7gFfxgIQ/4ICX8IKSrD5CRD258s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sNpCFw0EXInbr8hFVeR91kOGRA8yNp12mXGVmbXvd4AgkEbh/Z0ZsBfe286Nuetk/RV1cME6GqMXQ6A+gIJlWPcZprnJxIiF7zLNeGgSjkXEGxuN5xB+YrYpEe8TI/nt2AKNdIRlmLBYsXXLx0mVIA4uXWEusOEEjrOinZFJwDg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=GIxLgv+2; arc=fail smtp.client-ip=52.101.229.18
+	 Content-Type:MIME-Version; b=iKM9I48i57OscVNE7Nosbixgqwb680NpD2vrgNncyj31XGR7Q1TcOCDvIEjgGx/xoz0sNqmne7ohvg2HR15Oz68086ImOnbP7dwPJtHMqmzxn0lf9nMWW77EoNkK6rv+oYdZ4y2eDGdqlDSgH4S8k8js5Y/nU4xd0X9AbSSwrNw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=fnPbNYGd; arc=fail smtp.client-ip=52.101.229.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MUFMj4AeImEtD05qBcmhaF5TSm4y15Z2o/zflUi6EVXEJSRwBkGLA4BdIqZHn+Wwp7BSRucU70lpd18T/gtbGss/Pq72Z0goKxdIem4WiyHdV83WJgYrdWHGq0fbpLaiDHfPWMqtkEaULnzDP35iZ46i61fzL+DdgnEDhzOzbyoPqvkPfZAeD9YslQbrF5JESjCr5qK7YXepKz9bjVpV7GKBAJPQOxzf9YkZnzBim41DnlAsxv11kRT7w/H65ouH39AxHwS88NH7xhY3oWtwtpuLaAp2BOQSM4ZTlOCyyRn07Q49e6dRtFr+RTlt1bOpFeZhf0fwF+pHCzTD+vUHUg==
+ b=VQLKiVY+1VICvAmFSeIvap+ia/FxHfAyYefYq9ZtECwbWaE8/c0xIbo/K4cyD8Ofq9Kpg9fd3tL7t4qcCCDgxRRTVGsgImZZoGRmx506dUUt9M/utjjiCnu3FDyeFAySoX5rjdHGP8NT4h+Lz1HfLmRPDHEIdPLtpf+lRdVMRN+gCLFyl+P/bqM2/mAa6zfn2wk1PR7lH4cs5Q6IlqQyyk+k3PxZH3tzWa47Deg79u9ttV5WI+M2eQgBsz6C+NvdpDmaCYcUMpMb3Z8BRTZ2cYeaVfSmFf/Sovqi/iO05OOLlNKHF2AQGSCGryVds1cCgSmB9EVgh12EyFm4mZ5OmA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TtMo5KNeQujYRPlY8vNusKK6qwhUuIeAE5QtnFZ8CeE=;
- b=dpkpWl65RVKJFZe1mdqM8fzOhUHAizb+p32EEY6CHmV7ox+ZoviqgytXUdLCB+nsbSIgIC86Qz2CKG3l85KHBplkiWXKypWl83IFQIKwD+813axWlhtpHDb2hAB66Jb2CoZNZRK1j8TOMS7TGlX/Xwyx8ryVLzHIe7fytNZr2UiwHciAnWQaubA63Gp2tfxJGB36BmvP680dJZbpbN/l4hf9s8kXVccBgzwVgcCUlyKWn9KsKAtW/Ibr5mggzFs5cGyKHkEMyXNCP7gOWC8NGvFncovx8nWRKudka9msUWqB2OgIdGGWLW8OB9q7GK4SGRIvIC319B9CWkjYZVTBkQ==
+ bh=RhXv08a+mGUKkcKLwXJMrhOWQrgcEBHn37JIjNku168=;
+ b=uhytGb+RAFiZ/3w6k3KGOwiOImA3uu7ARrlptpKHOx9QJf6XdjbGSr3W/epZmzV0XoI6i+Lac766Q8yRGGuW9pXVGE74oBTymd0m2zkpVOLr+aWVCV9TAwkwYUzfy8fanQ3iDoRZSMQPk+p7APHq6GiLz0pW/QFttDcsl9PbjU/jLawwKJEwbnC/FMx6xqVs21lxZHBMPPgLuAqrM1o7uEeZE3VGsuqHggQh7sKbPWYa/W3nX7vQ1ZgRa5QFdH4ge7yGTlPh2t3HbXg3KGG4nRmlLcqXKSPHKBVqUeT+mzHnhZ2Ull5rfzYZZn9pL1BF9cDxn1vWt03M/2WZY8darw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TtMo5KNeQujYRPlY8vNusKK6qwhUuIeAE5QtnFZ8CeE=;
- b=GIxLgv+2OK2DncH12+G1GcghlfxpPwgTkEXfpg1/B3AQe5ZFjRoNjMdOYWRovyGpHhfLRxjw7sYqHQ4Js31+n4s5plDTYCjC7PDMOHsnRs+Sxu/G4GvPhKWc4zV7glpuvu1oTK+aYc8Re0sAo1p1y1s8TnXKb6cjfgKWwxQLejg=
+ bh=RhXv08a+mGUKkcKLwXJMrhOWQrgcEBHn37JIjNku168=;
+ b=fnPbNYGdg/6Tx9H+jOaHt9HCNvLWEUQgOODNtD4js0cMUtiGrJQVdsaNXl1BodQRdZZz7qNiS+GuibepUW8RvnSIwK5XumIrRDoDpmcNSRfAyHzYsSjgdvmp8YadeF30hR3za1gz3wknGDU/TGIR9qY83s9BsGjs//GD1tOARC8=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=valinux.co.jp;
 Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:24c::11)
  by OS9P286MB4684.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:2fa::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Sat, 29 Nov
- 2025 16:04:38 +0000
+ 2025 16:04:39 +0000
 Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  ([fe80::fb7e:f4ed:a580:9d03]) by TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  ([fe80::fb7e:f4ed:a580:9d03%5]) with mapi id 15.20.9366.012; Sat, 29 Nov 2025
- 16:04:38 +0000
+ 16:04:39 +0000
 From: Koichiro Den <den@valinux.co.jp>
 To: ntb@lists.linux.dev,
 	linux-pci@vger.kernel.org,
@@ -84,16 +84,16 @@ Cc: mani@kernel.org,
 	arnd@arndb.de,
 	pstanner@redhat.com,
 	elfring@users.sourceforge.net
-Subject: [RFC PATCH v2 19/27] PCI: dwc: ep: Cache MSI outbound iATU mapping
-Date: Sun, 30 Nov 2025 01:03:57 +0900
-Message-ID: <20251129160405.2568284-20-den@valinux.co.jp>
+Subject: [RFC PATCH v2 20/27] NTB: ntb_transport: Introduce remote eDMA backed transport mode
+Date: Sun, 30 Nov 2025 01:03:58 +0900
+Message-ID: <20251129160405.2568284-21-den@valinux.co.jp>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20251129160405.2568284-1-den@valinux.co.jp>
 References: <20251129160405.2568284-1-den@valinux.co.jp>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TYCP286CA0098.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:2b4::19) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
+X-ClientProxiedBy: TY4P286CA0036.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:2b2::17) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:400:24c::11)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -103,206 +103,2354 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: TYWP286MB2697:EE_|OS9P286MB4684:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84139169-70ac-4086-e09a-08de2f60ff7a
+X-MS-Office365-Filtering-Correlation-Id: 688de064-4d82-41c1-2565-08de2f60fffc
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|376014|7416014|366016|10070799003|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5KidNLWwLWqbNVENaGa4IMl9MX4Jg8Y8whOe8VoQa6VJtSCBzgKaOyEnaIfn?=
- =?us-ascii?Q?drEWpEfu0bdzX86jIa4tUNxkKXKrbJSf99GnReR2qGLa8e19xelxRv8m5nlw?=
- =?us-ascii?Q?1F1gEJKhwqfjuRfB8moNdLFwDAf+LKvhGIwrf3EOPay2UOXr7UtAlv0q2ylo?=
- =?us-ascii?Q?vjg+bPV3HheV2r/QfwOi83p5WJ0SirXDplevUB6auo7I4jkMB/DjZ/fXQyQO?=
- =?us-ascii?Q?fa17YimErsd9FIh2OVtKP8Hkk6VLzXcGgPaGbABnXgze7pcS4IZl0j+Euogm?=
- =?us-ascii?Q?hHqGgoAzUxEvc3e/I4jIXyFTA+ZAN09+oqojmE67WjW0hL/EA7pu7QDH5Q47?=
- =?us-ascii?Q?eM1YdV5I78uinxscPvPLVjjtGkyp6gr2bU7DjphWgT39xJdclJsYlMjhFVZe?=
- =?us-ascii?Q?scFAoiQ57/eLhVzaHcXxG7cLhVZ3eDI2qegejwIQV2+8vR0EglL+bQUPaEtD?=
- =?us-ascii?Q?+3cCNKnRXISjBiB5tsMviHpqnQAcqH/vzF2zk87osfmWXaqT2UEp+mxfzPu6?=
- =?us-ascii?Q?UrfajZLr4U63YPLoPc9ngC6s+4Yk+InERAivQSoyXISE3XFtj4filcNNN2Jj?=
- =?us-ascii?Q?F5JwaXc0GPl6A9BcJN4LdGDigEQiKOOxxxDUbCCCItiHxdmXJQrk3vCOCqg7?=
- =?us-ascii?Q?tRhuiV1/I/s3zw0VMnnjEKkMiRi06SXpvTA20K+OQeH7nl8ryedBjeKHWtDZ?=
- =?us-ascii?Q?YGEPr5X5LfuTV7p2PL+YmxJTNO4WDwBxDb4RrbcCA+djkVm9UCiUDrEOpkAw?=
- =?us-ascii?Q?m7LR9kWGlTw9ebKTBdKtpXt9ZkCdCDAcZiijaEhpBJ57vp16Ofq9rmm577nT?=
- =?us-ascii?Q?QqcU7XwWME92PEq+DDhq2j/HDDBP/DnAVUTPWK20+fiPcSKKAeGtVYA324oK?=
- =?us-ascii?Q?dbPoh4lh6LLLwje9736y2QReFPOUtbq6f+t0SBwbeSWw5Wuwlw3CG9Sr3I4N?=
- =?us-ascii?Q?lgWjLEPA8ZzaENTDLg2YwIq63OydnRgQEn/Lg6tK5cLVxAEGYFtPMdrQ7Xzl?=
- =?us-ascii?Q?ZDlgYcm6YNeADgWOylul/k2URFJPEFFpXsW0gdJLObVnBtPwIxOVdMEP6WD+?=
- =?us-ascii?Q?AV7MwLzz7/DnXzHn/AEzP7SLsPythFW77tjn9Ai03YOlVH+HahtVeanPyWdl?=
- =?us-ascii?Q?OeWpkCg86fmkqgDQJXRS1qw4mnxqeSVhhZrTvRit+VneSMoLl5rux5uDfQT/?=
- =?us-ascii?Q?Xba0Jh+NHLcdv0Vbe9YKnPpVO9A8WvTl0WB//O6DdZ6tXeLTVSD2koOL7ju/?=
- =?us-ascii?Q?UEaxLpvnwMpbgcpcniMD33xnvUx/XXBH4HUEg7xZ7zzu1an7ZtZIrjgz+Jml?=
- =?us-ascii?Q?cgLbX3bgwnG2zsP9f4xZH412fqWiRzP5RaZFDY1n0z3sYYx37nr+2kjMHafa?=
- =?us-ascii?Q?DlkBi9FfgPAAx1RnHohxBlbnRivDUcDe17yMgASrttvv7z0wwoQaW57Ft6ch?=
- =?us-ascii?Q?a8/tb3ZTuB4CaLmIkHNJ9m6Q1FAm2W3k?=
+	=?us-ascii?Q?OwTP0r/LirdejY+LIRi3upPge309VfcAA/9V0a/jt/+/VJY2VkAQLE2A9bbK?=
+ =?us-ascii?Q?CueHMjML0FU8NumDigwNl27XvoWEqlIXjqVcOnv5wL315ZenRkMCASRPTLCZ?=
+ =?us-ascii?Q?VxRR51yF5fnI596GIzPnOtRPyxtFti0n5hbGiHjinS/AzadYCS/Ezjcw+xhQ?=
+ =?us-ascii?Q?D+PhSojgLDegmfpRUt1CuXSd3b5oA8d82g4plPr/gdh9WTFdzJqY1kfkmRzv?=
+ =?us-ascii?Q?l/NaFkTtA4rxUCsSbX7MapYadfcEtDCftjflR8Bu8waplP+6cocoLLLntRa9?=
+ =?us-ascii?Q?wD68l8nC10NGtt2y4YEPae3Afssr1sTNtJV6BOxkodzJUho8lcHOfKW4phjy?=
+ =?us-ascii?Q?hQxm1c6zAv7rn5IBTyGnrZIP9WUEkUDKzOqOkkmRBd3atUScDDtlM//F2BPr?=
+ =?us-ascii?Q?Ilz6WZXfKYOmmLBYL0c0NptvxwmFp8km6rk7RNKtlcglIp+dHXu2XBmXyEPN?=
+ =?us-ascii?Q?OuxHc2IQsZiw3+avktn7n2dszc7GEyeRJlapWIewolQH4yTfdvUIDDh9uSDF?=
+ =?us-ascii?Q?1vZ99A9PtX/awSrCbOahE53L1lhB4z/xHz+io48bGp+6aLl23L68GuJCLVMD?=
+ =?us-ascii?Q?4k7koyk6xveQldew+4kGaNgmbH7SxnAaAiWpXL4Cbaf9BFPWsqUFoGxgwdVP?=
+ =?us-ascii?Q?ddGTeCVle45KabcaT2Zq7vU9Q+CRfmeVS1IbzinGUXukjTz6xXDF4GjpLnHN?=
+ =?us-ascii?Q?ak32ZE2Yfo0dWSPu2dft7S7Vm6EPycaJ8m2NP+gbzmAHA/c0EBKamewltGce?=
+ =?us-ascii?Q?KypEXYXGOvl/qudH5lA/8lW4tMaWRhxrglBmqBNHMmyrkb4yf3vnclh4xkDV?=
+ =?us-ascii?Q?9kcAdeyPK8vBG1N+AJKVqMtbI3RdNtX/1DW+fWLKOOlINx4Lfi6Y0cfr8y7i?=
+ =?us-ascii?Q?pv4kvkCvisIfPVfC2B4JQ35ZdAFnhxayQfDS9YwFr13cX3Y65/sW8/5KH9n1?=
+ =?us-ascii?Q?XPvBWqa0bYUoX+mm2QZWKK6yuJOvI5U7YLZUrdYeV/vdW63bXl7O/0HmCXrZ?=
+ =?us-ascii?Q?FUeSQkCKD3AbS5NWrEjz2UwG2IqcflsYSN7k2nn2DUlSxW5Tv/4TrJ1v1Xkl?=
+ =?us-ascii?Q?GXcaCxHrGXbE11wke+GPOkN1Lj7JXoAeRLJ0N+7dkPIuSq/cx8jhP9qntlEw?=
+ =?us-ascii?Q?PnxWILA36qS1Zl/xYFm1p0F/VuyYWK5RlzCXdQCCMNYH0Va8EuaZuDqnkaTP?=
+ =?us-ascii?Q?NJ+q3ObLyefpZ+kGxOXpkeeKUur9Yf4m/mSeyWbWyn9yLjPAYS/pgTvw+5E6?=
+ =?us-ascii?Q?Oe7jeE2618ASMrpaiCfw97zXbUOHjGEwj8di+uvKZn8dhSZqEl9u030ePI56?=
+ =?us-ascii?Q?YqdB3iU+rPMozHeb/GXTidJ/wO+GNIZx229YmkucBHp+fngzwLBpRaQJlfd4?=
+ =?us-ascii?Q?QMMZRw6bj0MZXgbi9h6JsNv0vCgjD0VAGC7ggPOEP3eYDx1Fqgbn9kQs3ysQ?=
+ =?us-ascii?Q?YflgRwUQIs8qoTl4aTcJlcOTj9ZfVcGe?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(10070799003)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BPCPdm56q6rtpf7xq/mg8yq9kxHaX5vDTWcaKPT5w+khV9hz/vJArEDXEDoE?=
- =?us-ascii?Q?FvC4A/okQ7BtZgBViWhsuDedAW0h6z+AdIdqMk8WiGePpR+kJu57EGvzstdd?=
- =?us-ascii?Q?aE8zx0EY7VurV7uLhSoAxnkl1wXd5L5LeCxdSL/KMlTbC7yDBRs/9gAGXbv3?=
- =?us-ascii?Q?hf+IVTfaggO/6bTq1rovv+UxOHjVRYMO2W3IBHSPpOImZ3xvvquxiZwGeSeO?=
- =?us-ascii?Q?SxrsTuIrf0CvCxJtFCOf0yWp+daBAoLB/98dHIly792w3VUGsw22juJ8oUxR?=
- =?us-ascii?Q?FAPPEFGVeEkmOzzguzX/xkir6xPIbtY0K6g3FSFP30lDT3TyclAh7pEJsAbf?=
- =?us-ascii?Q?EBqCKXKDtnY8z0RiNYBtSM9Lo9AL1hNqIrmHVQjdsJuDTb0vVD6XAgbz/yiA?=
- =?us-ascii?Q?ymOILxa0qtt2RCMRKKHczcm6Sd6RHNgwB/4+BtQ3vhVgAmidtp8QVHglmXlC?=
- =?us-ascii?Q?5g6vm/i7Xi6UDRvBYsQfaLpCDWrp2lmcHw1snKKnE2F7Nz7J6i4IpL4LO5j1?=
- =?us-ascii?Q?afAd2oRuNnRIKuZZY17legslILuPPjZsvbVcnfYKccEa05uwIMtx1kt3RaKj?=
- =?us-ascii?Q?qwfn1iWZ9F3tcbkqB3GTYoTdggrbFs12oJR/HYrv2lkBKnD1xsTgXrD7Gacd?=
- =?us-ascii?Q?L9d68iJVJoBt29QXl+ZoWQuiIPdgPkeXt5Bd7RoFSiuDfUvjLsDgEhXSRreg?=
- =?us-ascii?Q?a46fkSSupF2rgxcTv/lE2ytyPMpvCJnaa691ubn+qVhBWMXb9qwQdxCpYBKP?=
- =?us-ascii?Q?+wWjUc4it2woB6w98KiV+nI0wgqz4z2gtOpnIEGFTvmHSBc6PomaPsvQpuEO?=
- =?us-ascii?Q?EAosekrjBRMi/JrZA1al6a7A3wqmCg+CJem+B5/t1+qXY6hN8zTBa67A3Ywq?=
- =?us-ascii?Q?PSoW1HseY+e025DAB03uQfkmoqLSxLEio9Trf7gsGNenIF5wjXFy5iP6v5/6?=
- =?us-ascii?Q?0UjKX6MYG6Bo3w6w6c7ibH0wQ26QZf3qNdOAuZC18UEPQsEgNI3Ma7bdZiQ/?=
- =?us-ascii?Q?lLKyrKW+U0c2T73xtJRuTnaT04mlLyxBlCzA0a/0f5xMarrzGoYu4yg6Xi2c?=
- =?us-ascii?Q?3/UBMeM40a7ZyVuOwoKGt4EKZrQXkp6+ThKc0EmiNwgmCNu3foMm2GTz6Ada?=
- =?us-ascii?Q?RsL7WUru065cNZPVIy/SCyyDZ9K4Ff5ZVociLs8O38ZbyaC+iIQeTYZYpO+d?=
- =?us-ascii?Q?QyjlU6/NvLVn1RmniQegbZm2btSWZkK45Mw/cglsoa4NgU4S+qpUf7Ux9+jx?=
- =?us-ascii?Q?gdqpcWNRRlFVKzurtRrVQyy7FGMdptr37/P2C/vzu78bsN/S/wV505uqbbKi?=
- =?us-ascii?Q?Q9+fgbXLwVfXEoGiGLCS/nFT9mMypbrk8IMc7ggOebmVTxvR3/6DoVxgmIiD?=
- =?us-ascii?Q?oecTo4cc7GJ0XpjMHm2IlpRqftPj4CWGaiOA8G+PwbRZzQ7hkn4MlTUnv//m?=
- =?us-ascii?Q?EazGeE4KrJrriPEkaW3EM9Mr1aWeBzwSpRH6r5e4lJOtaoI8WKbEM3j1n9o8?=
- =?us-ascii?Q?pGqik2XLVSxc6cPruipxS4qc4zX+om9O4lZoFfA4oJjaC9XD0bv5/rPECfcv?=
- =?us-ascii?Q?SrG8WF5K7Mnl0TcqkKnaj1LXAgY9iUMKkyya6umTZLo/f6PJpqzxmqHcf8p9?=
- =?us-ascii?Q?+16Ddd5z5UMw3dMQLPttpLQ=3D?=
+	=?us-ascii?Q?fq5rwSxKxL+OJkQBIKTvJXAd5LOdMEcJCuqiIvvXcwKpganp8FJrGiTNmasF?=
+ =?us-ascii?Q?WUUfZ4tD4420syXIYULikwsTnxCKyBXJX49ms+0y3dj7HPOsA50fXL6H/L2U?=
+ =?us-ascii?Q?uTpW+BUtzLzzR6j6d4vA3B3Tu9nEN2Ejwj8FTQSUfRLmAParOyslxXIuXgXE?=
+ =?us-ascii?Q?Vnqg+JvckGespYoWRmOSeT1pC/CECxtDDHsYyyOGT4ULlX2iOjFCw3CgRZ0A?=
+ =?us-ascii?Q?5D//SGCwR0mhYlRFvjKvzTQ0TjnfiUAjp1emr3GvSAeEHyZf8h0hVxPTgagL?=
+ =?us-ascii?Q?vlQ5E4zz0utFcTgIYJhFp7hK5FOe/TiylJ51ng4N8Enzzo8uZnR6Jpc6BOxb?=
+ =?us-ascii?Q?PbTU5gU2Wq8lZzOGskvBPG1aaJYcNeOKA1+e2pzBZHwNZB2rOb0cD02H/ykH?=
+ =?us-ascii?Q?HHbNx9lRdQ9JNbZqqvAXVnMNY5OW1/ZwI7E8Cf/ESb65p26azXP6ArpDEDGE?=
+ =?us-ascii?Q?zzdOCjDlDwadrzPDzaiQ6zsNlsPaSngBLPOStdAeaur5XKluxyOsQQBSal5Y?=
+ =?us-ascii?Q?R452P/hND6SRUHDnqrslXtERPzvasmREC0XLMQghQt8SSz58zb4jNVwAfu6H?=
+ =?us-ascii?Q?jEefYsZBh1OGUvQ4ltTfCL2cMPAdQ/l3DHd+ajH6KwDcOpFWvvjA4VeJL6V1?=
+ =?us-ascii?Q?tG9h+bozPmuq1K6vzvHfpc1jgANc1w/1UpDVmDxnMJw70EZe21gItAo/v/qh?=
+ =?us-ascii?Q?wXyKwzKk6gmDE4W4Z9NLG0xCGYh+IkvQZYUHMuB1HW8hTipcwbdxddJK6EWc?=
+ =?us-ascii?Q?oesydJ/BdnVU6lCALCu0v0fqc5W/SnD1u8M3U2CF/hM+DQBQI8ZnWFntSQUH?=
+ =?us-ascii?Q?52ajjPFXd1mjicUgFlmFLgLMpBSSHABgd6E+iEvVSirB4hVOY4p22SmWaWjP?=
+ =?us-ascii?Q?9Trq52bTg38lkALe3u512CeyYUTmGDoyAvxqCNL4dwe5z9FL3xUz0ygsIlhP?=
+ =?us-ascii?Q?Eb//rxG+37LVTpXDzrVOUDGGjXvx4x9a/mJCG5khu9Rr7YbDER8j51vGMVr9?=
+ =?us-ascii?Q?xvOSMkcY+THoDv/KocSBX6W2zPb2jwdihgHsR1LRg1a95lutCCemrMXuyfK/?=
+ =?us-ascii?Q?aHFaATW0c2rO/z/CaEKr1BOxzd67oVsc4w/6uGnKDcWRETEsdWLqANTJZWQR?=
+ =?us-ascii?Q?Pe0Z2S0hxKr94UV17tSp6TJ/BSP1FZXUUugswMZwcoZ/jrw0SDNi87HruD08?=
+ =?us-ascii?Q?p2KuzeLcoQoD9NgCMFRiIEuU20zQlT57TA8BmZ5nz5n3q0gS1JmsItNnIi1M?=
+ =?us-ascii?Q?4ogcbXCpLEDk9ECKlt3xGxgTwCQJ58EJVJix6T3Ba7NW4BmKMjNRH4RyFLWg?=
+ =?us-ascii?Q?U36S7UKyfAnYhpT35Af/n5xMRHFiYJvydCF3VWZUVWi0Mn9Me1l6rF1AZOh0?=
+ =?us-ascii?Q?eOK3hyzVcXCcad6uh9VHzhKuNlZzczzVMTGjgFlfv2w3QZHqkEbPMSjAKApQ?=
+ =?us-ascii?Q?nnJGxIhX2UgG0AzLRPGJCJyMgTfvv9oRNFtxti+xV3OaVCi3iKVshr/g6miR?=
+ =?us-ascii?Q?nxDP8TyHEopPK1vR73Fe0Jk60gLDTMyCbM/UttZN5gVCEK/z3hePSZMzqYI9?=
+ =?us-ascii?Q?wZPgKGeBk2vYIpBXjUjO2lFqeEG+ombT5NuO0DU2rYxA3kxZ2SiMR8YfEitz?=
+ =?us-ascii?Q?Xn03ZDBCxga7mOfHvba9o08=3D?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84139169-70ac-4086-e09a-08de2f60ff7a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 688de064-4d82-41c1-2565-08de2f60fffc
 X-MS-Exchange-CrossTenant-AuthSource: TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2025 16:04:38.3688
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2025 16:04:39.2324
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g7VuM4PVxCV7S5TSZ073DxqK2EVLHF+VL2vL6eNCsXVZK8sfIfg9nDYhH+z3vRqTSLBI/QjrwTzYQqqcInQRuQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 71RqGpLBlpapWHNNrfFgsJA/Ucu91nAYvDj0CvqDU3BIuSr7mNpkmUqiw7lmjfilNZC9XXR3HpFZBVE47rChuw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9P286MB4684
 
-dw_pcie_ep_raise_msi_irq() currently programs an outbound iATU window
-for the MSI target address on every interrupt and tears it down again
-via dw_pcie_ep_unmap_addr().
+Add a new transport backend that uses a remote DesignWare eDMA engine
+located on the NTB endpoint to move data between host and endpoint.
 
-On systems that heavily use the AXI bridge interface (for example when
-the integrated eDMA engine is active), this means the outbound iATU
-registers are updated while traffic is in flight. The DesignWare
-endpoint spec warns that updating iATU registers in this situation is
-not supported, and the behavior is undefined.
+In this mode:
 
-Under high MSI and eDMA load this pattern results in occasional bogus
-outbound transactions and IOMMU faults such as:
+  - The endpoint exposes a dedicated memory window that contains the
+    eDMA register block followed by a small control structure (struct
+    ntb_edma_info) and per-channel linked-list (LL) rings.
 
-  ipmmu-vmsa eed40000.iommu: Unhandled fault: status 0x00001502 iova 0xfe000000
+  - On the endpoint side, ntb_edma_setup_mws() allocates the control
+    structure and LL rings in endpoint memory, then programs an inbound
+    iATU region so that the host can access them via a peer MW.
 
-followed by the system becoming unresponsive. This is the actual output
-observed on Renesas R-Car S4, with its ipmmu_hc used with PCIe ch0.
+  - On the host side, ntb_edma_setup_peer() ioremaps the peer MW, reads
+    ntb_edma_info and configures a dw-edma DMA device to use the LL
+    rings provided by the endpoint.
 
-There is no need to reprogram the iATU region used for MSI on every
-interrupt. The host-provided MSI address is stable while MSI is enabled,
-and the endpoint driver already dedicates a scratch buffer for MSI
-generation.
+  - ntb_transport is extended with a new backend_ops implementation that
+    routes TX and RX enqueue/poll operations through the remote eDMA
+    rings while keeping the existing shared-memory backend intact.
 
-Cache the aligned MSI address and map size, program the outbound iATU
-once, and keep the window enabled. Subsequent interrupts only perform a
-write to the MSI scratch buffer, avoiding dynamic iATU reprogramming in
-the hot path and fixing the lockups seen under load.
+  - The host signals the endpoint via a dedicated DMA read channel.
+    'use_msi' module option is ignored when 'use_remote_edma=1'.
+
+The new mode is guarded by a Kconfig option (NTB_TRANSPORT_EDMA) and a
+module parameter (use_remote_edma). When disabled, the existing
+ntb_transport behaviour is unchanged.
 
 Signed-off-by: Koichiro Den <den@valinux.co.jp>
 ---
- .../pci/controller/dwc/pcie-designware-ep.c   | 48 ++++++++++++++++---
- drivers/pci/controller/dwc/pcie-designware.h  |  5 ++
- 2 files changed, 47 insertions(+), 6 deletions(-)
+ drivers/ntb/Kconfig                           |   11 +
+ drivers/ntb/Makefile                          |    3 +
+ drivers/ntb/ntb_edma.c                        |  628 ++++++++
+ drivers/ntb/ntb_edma.h                        |  128 ++
+ .../{ntb_transport.c => ntb_transport_core.c} | 1281 ++++++++++++++++-
+ 5 files changed, 2048 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/ntb/ntb_edma.c
+ create mode 100644 drivers/ntb/ntb_edma.h
+ rename drivers/ntb/{ntb_transport.c => ntb_transport_core.c} (65%)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 3780a9bd6f79..ef8ded34d9ab 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -778,6 +778,16 @@ static void dw_pcie_ep_stop(struct pci_epc *epc)
- 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+diff --git a/drivers/ntb/Kconfig b/drivers/ntb/Kconfig
+index df16c755b4da..db63f02bb116 100644
+--- a/drivers/ntb/Kconfig
++++ b/drivers/ntb/Kconfig
+@@ -37,4 +37,15 @@ config NTB_TRANSPORT
  
-+	/*
-+	 * Tear down the dedicated outbound window used for MSI
-+	 * generation. This avoids leaking an iATU window across
-+	 * endpoint stop/start cycles.
-+	 */
-+	if (ep->msi_iatu_mapped) {
-+		dw_pcie_ep_unmap_addr(epc, 0, 0, ep->msi_mem_phys);
-+		ep->msi_iatu_mapped = false;
-+	}
+ 	 If unsure, say N.
+ 
++config NTB_TRANSPORT_EDMA
++	bool "NTB Transport backed by remote eDMA"
++	depends on NTB_TRANSPORT
++	depends on PCI
++	select DMA_ENGINE
++	help
++	  Enable a transport backend that uses a remote DesignWare eDMA engine
++	  exposed through a dedicated NTB memory window. The host uses the
++	  endpoint's eDMA engine to move data in both directions.
++	  Say Y here if you intend to use the 'use_remote_edma' module parameter.
 +
- 	dw_pcie_stop_link(pci);
- }
+ endif # NTB
+diff --git a/drivers/ntb/Makefile b/drivers/ntb/Makefile
+index 3a6fa181ff99..51f0e1e3aec7 100644
+--- a/drivers/ntb/Makefile
++++ b/drivers/ntb/Makefile
+@@ -4,3 +4,6 @@ obj-$(CONFIG_NTB_TRANSPORT) += ntb_transport.o
  
-@@ -881,14 +891,37 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
- 
- 	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &map_size, &offset);
--	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
--				  map_size);
--	if (ret)
--		return ret;
- 
--	writel(msg_data | (interrupt_num - 1), ep->msi_mem + offset);
+ ntb-y			:= core.o
+ ntb-$(CONFIG_NTB_MSI)	+= msi.o
++
++ntb_transport-y					:= ntb_transport_core.o
++ntb_transport-$(CONFIG_NTB_TRANSPORT_EDMA)	+= ntb_edma.o
+diff --git a/drivers/ntb/ntb_edma.c b/drivers/ntb/ntb_edma.c
+new file mode 100644
+index 000000000000..cb35e0d56aa8
+--- /dev/null
++++ b/drivers/ntb/ntb_edma.c
+@@ -0,0 +1,628 @@
++// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
++
++#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/pci.h>
++#include <linux/ntb.h>
++#include <linux/io.h>
++#include <linux/iommu.h>
++#include <linux/dmaengine.h>
++#include <linux/pci-epc.h>
++#include <linux/dma/edma.h>
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++#include "ntb_edma.h"
++
++/*
++ * The interrupt register offsets below are taken from the DesignWare
++ * eDMA "unrolled" register map (EDMA_MF_EDMA_UNROLL). The remote eDMA
++ * backend currently only supports this layout.
++ */
++#define DMA_WRITE_INT_STATUS_OFF   0x4c
++#define DMA_WRITE_INT_MASK_OFF     0x54
++#define DMA_WRITE_INT_CLEAR_OFF    0x58
++#define DMA_READ_INT_STATUS_OFF    0xa0
++#define DMA_READ_INT_MASK_OFF      0xa8
++#define DMA_READ_INT_CLEAR_OFF     0xac
++
++#define NTB_EDMA_NOTIFY_MAX_QP		64
++
++static unsigned int edma_spi = 417; /* 0x1a1 */
++module_param(edma_spi, uint, 0644);
++MODULE_PARM_DESC(edma_spi, "SPI number used by remote eDMA interrupt (EP local)");
++
++static u64 edma_regs_phys = 0xe65d5000;
++module_param(edma_regs_phys, ullong, 0644);
++MODULE_PARM_DESC(edma_regs_phys, "Physical base address of local eDMA registers (EP)");
++
++static unsigned long edma_regs_size = 0x1200;
++module_param(edma_regs_size, ulong, 0644);
++MODULE_PARM_DESC(edma_regs_size, "Size of the local eDMA register space (EP)");
++
++struct ntb_edma_intr {
++	u32 db[NTB_EDMA_NOTIFY_MAX_QP];
++};
++
++struct ntb_edma_ctx {
++	void *ll_wr_virt[EDMA_WR_CH_NUM];
++	dma_addr_t ll_wr_phys[EDMA_WR_CH_NUM];
++	void *ll_rd_virt[EDMA_RD_CH_NUM + 1];
++	dma_addr_t ll_rd_phys[EDMA_RD_CH_NUM + 1];
++
++	struct ntb_edma_intr *intr_ep_virt;
++	dma_addr_t intr_ep_phys;
++	struct ntb_edma_intr *intr_rc_virt;
++	dma_addr_t intr_rc_phys;
++	u32 notify_qp_max;
++
++	bool initialized;
++};
++
++static struct ntb_edma_ctx edma_ctx;
++
++typedef void (*ntb_edma_interrupt_cb_t)(void *data, int qp_num);
++
++struct ntb_edma_interrupt {
++	int virq;
++	void __iomem *base;
++	ntb_edma_interrupt_cb_t cb;
++	void *data;
++};
++
++static struct ntb_edma_interrupt ntb_edma_intr;
++
++static int ntb_edma_map_spi_to_virq(struct device *dev, unsigned int spi)
++{
++	struct device_node *np = dev_of_node(dev);
++	struct device_node *parent;
++	struct irq_fwspec fwspec = { 0 };
++	int virq;
++
++	parent = of_irq_find_parent(np);
++	if (!parent)
++		return -ENODEV;
++
++	fwspec.fwnode      = of_fwnode_handle(parent);
++	fwspec.param_count = 3;
++	fwspec.param[0]    = GIC_SPI;
++	fwspec.param[1]    = spi;
++	fwspec.param[2]    = IRQ_TYPE_LEVEL_HIGH;
++
++	virq = irq_create_fwspec_mapping(&fwspec);
++	of_node_put(parent);
++	return (virq > 0) ? virq : -EINVAL;
++}
++
++static irqreturn_t ntb_edma_isr(int irq, void *data)
++{
++	struct ntb_edma_interrupt *v = data;
++	u32 mask = BIT(EDMA_RD_CH_NUM);
++	u32 i, val;
++
 +	/*
-+	 * Program the outbound iATU once and keep it enabled.
++	 * We do not ack interrupts here but instead we mask all local interrupt
++	 * sources except the read channel used for notification. This reduces
++	 * needless ISR invocations.
 +	 *
-+	 * The spec warns that updating iATU registers while there are
-+	 * operations in flight on the AXI bridge interface is not
-+	 * supported, so we avoid reprogramming the region on every MSI,
-+	 * specifically unmapping immediately after writel().
++	 * In theory we could configure LIE=1/RIE=0 only for the notification
++	 * transfer (keeping all other channels at LIE=1/RIE=1), but that would
++	 * require intrusive changes to the dw-edma core.
++	 *
++	 * Note: The host side may have already cleared the read interrupt used
++	 * for notification, so reading DMA_READ_INT_CLEAR_OFF is not a reliable
++	 * way to detect it. As a result, we cannot reliably tell which specific
++	 * channel triggered this interrupt. intr_ep_virt->db[i] teaches us
++	 * instead.
 +	 */
-+	if (!ep->msi_iatu_mapped) {
-+		ret = dw_pcie_ep_map_addr(epc, func_no, 0,
-+					  ep->msi_mem_phys, msg_addr,
-+					  map_size);
-+		if (ret)
-+			return ret;
- 
--	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->msi_mem_phys);
-+		ep->msi_iatu_mapped = true;
-+		ep->msi_msg_addr = msg_addr;
-+		ep->msi_map_size = map_size;
-+	} else if (WARN_ON_ONCE(ep->msi_msg_addr != msg_addr ||
-+				ep->msi_map_size != map_size)) {
-+		/*
-+		 * The host changed the MSI target address or the required
-+		 * mapping size. Reprogramming the iATU at runtime is unsafe
-+		 * on this controller, so bail out instead of trying to update
-+		 * the existing region.
-+		 */
-+		return -EINVAL;
++	iowrite32(~0x0, v->base + DMA_WRITE_INT_MASK_OFF);
++	iowrite32(~mask, v->base + DMA_READ_INT_MASK_OFF);
++
++	if (!v->cb || !edma_ctx.intr_ep_virt)
++		return IRQ_HANDLED;
++
++	for (i = 0; i < edma_ctx.notify_qp_max; i++) {
++		val = READ_ONCE(edma_ctx.intr_ep_virt->db[i]);
++		if (!val)
++			continue;
++
++		WRITE_ONCE(edma_ctx.intr_ep_virt->db[i], 0);
++		v->cb(v->data, i);
 +	}
 +
-+	writel(msg_data | (interrupt_num - 1), ep->msi_mem + offset);
- 
- 	return 0;
- }
-@@ -1268,6 +1301,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	INIT_LIST_HEAD(&ep->func_list);
- 	INIT_LIST_HEAD(&ep->ib_map_list);
- 	spin_lock_init(&ep->ib_map_lock);
-+	ep->msi_iatu_mapped = false;
-+	ep->msi_msg_addr = 0;
-+	ep->msi_map_size = 0;
- 
- 	epc = devm_pci_epc_create(dev, &epc_ops);
- 	if (IS_ERR(epc)) {
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 269a9fe0501f..1770a2318557 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -481,6 +481,11 @@ struct dw_pcie_ep {
- 	void __iomem		*msi_mem;
- 	phys_addr_t		msi_mem_phys;
- 	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
++	return IRQ_HANDLED;
++}
 +
-+	/* MSI outbound iATU state */
-+	bool			msi_iatu_mapped;
-+	u64			msi_msg_addr;
-+	size_t			msi_map_size;
++int ntb_edma_setup_isr(struct device *dev, struct device *epc_dev,
++		       ntb_edma_interrupt_cb_t cb, void *data)
++{
++	struct ntb_edma_interrupt *v = &ntb_edma_intr;
++	int virq = ntb_edma_map_spi_to_virq(epc_dev->parent, edma_spi);
++	int ret;
++
++	if (virq < 0) {
++		dev_err(dev, "failed to get virq (%d)\n", virq);
++		return virq;
++	}
++
++	v->virq = virq;
++	v->cb = cb;
++	v->data = data;
++	if (edma_regs_phys && !v->base)
++		v->base = devm_ioremap(dev, edma_regs_phys, edma_regs_size);
++	if (!v->base) {
++		dev_err(dev, "failed to setup v->base\n");
++		return -1;
++	}
++	ret = devm_request_irq(dev, v->virq, ntb_edma_isr, 0, "ntb-edma", v);
++	if (ret)
++		return ret;
++
++	if (v->base) {
++		iowrite32(0x0, v->base + DMA_WRITE_INT_MASK_OFF);
++		iowrite32(0x0, v->base + DMA_READ_INT_MASK_OFF);
++	}
++	return 0;
++}
++
++void ntb_edma_teardown_isr(struct device *dev)
++{
++	struct ntb_edma_interrupt *v = &ntb_edma_intr;
++
++	/* Mask all write/read interrupts so we don't get called again. */
++	if (v->base) {
++		iowrite32(~0x0, v->base + DMA_WRITE_INT_MASK_OFF);
++		iowrite32(~0x0, v->base + DMA_READ_INT_MASK_OFF);
++	}
++
++	if (v->virq > 0)
++		devm_free_irq(dev, v->virq, v);
++
++	if (v->base)
++		devm_iounmap(dev, v->base);
++
++	v->virq = 0;
++	v->cb = NULL;
++	v->data = NULL;
++}
++
++int ntb_edma_setup_mws(struct ntb_dev *ndev)
++{
++	const size_t info_bytes = PAGE_SIZE;
++	resource_size_t size_max, offset;
++	dma_addr_t intr_phys, info_phys;
++	u32 wr_done = 0, rd_done = 0;
++	struct ntb_edma_intr *intr;
++	struct ntb_edma_info *info;
++	int peer_mw, mw_index, rc;
++	struct iommu_domain *dom;
++	bool reg_mapped = false;
++	size_t ll_bytes, size;
++	struct pci_epc *epc;
++	struct device *dev;
++	unsigned long iova;
++	phys_addr_t phys;
++	u64 need;
++	u32 i;
++
++	/* +1 is for interruption */
++	ll_bytes = (EDMA_WR_CH_NUM + EDMA_RD_CH_NUM + 1) * DMA_LLP_MEM_SIZE;
++	need = EDMA_REG_SIZE + info_bytes + ll_bytes;
++
++	epc = ntb_get_pci_epc(ndev);
++	if (!epc)
++		return -ENODEV;
++	dev = epc->dev.parent;
++
++	if (edma_ctx.initialized)
++		return 0;
++
++	info = dma_alloc_coherent(dev, info_bytes, &info_phys, GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	memset(info, 0, info_bytes);
++	info->magic = NTB_EDMA_INFO_MAGIC;
++	info->wr_cnt = EDMA_WR_CH_NUM;
++	info->rd_cnt = EDMA_RD_CH_NUM + 1; /* +1 for interruption */
++	info->regs_phys = edma_regs_phys;
++	info->ll_stride = DMA_LLP_MEM_SIZE;
++
++	for (i = 0; i < EDMA_WR_CH_NUM; i++) {
++		edma_ctx.ll_wr_virt[i] = dma_alloc_attrs(dev, DMA_LLP_MEM_SIZE,
++							 &edma_ctx.ll_wr_phys[i],
++							 GFP_KERNEL,
++							 DMA_ATTR_FORCE_CONTIGUOUS);
++		if (!edma_ctx.ll_wr_virt[i]) {
++			rc = -ENOMEM;
++			goto err_free_ll;
++		}
++		wr_done++;
++		info->ll_wr_phys[i] = edma_ctx.ll_wr_phys[i];
++	}
++	for (i = 0; i < EDMA_RD_CH_NUM + 1; i++) {
++		edma_ctx.ll_rd_virt[i] = dma_alloc_attrs(dev, DMA_LLP_MEM_SIZE,
++							 &edma_ctx.ll_rd_phys[i],
++							 GFP_KERNEL,
++							 DMA_ATTR_FORCE_CONTIGUOUS);
++		if (!edma_ctx.ll_rd_virt[i]) {
++			rc = -ENOMEM;
++			goto err_free_ll;
++		}
++		rd_done++;
++		info->ll_rd_phys[i] = edma_ctx.ll_rd_phys[i];
++	}
++
++	/* For interruption */
++	edma_ctx.notify_qp_max = NTB_EDMA_NOTIFY_MAX_QP;
++	intr = dma_alloc_coherent(dev, sizeof(*intr), &intr_phys, GFP_KERNEL);
++	if (!intr) {
++		rc = -ENOMEM;
++		goto err_free_ll;
++	}
++	memset(intr, 0, sizeof(*intr));
++	edma_ctx.intr_ep_virt = intr;
++	edma_ctx.intr_ep_phys = intr_phys;
++	info->intr_dar_base = intr_phys;
++
++	peer_mw = ntb_peer_mw_count(ndev);
++	if (peer_mw <= 0) {
++		rc = -ENODEV;
++		goto err_free_ll;
++	}
++
++	mw_index = peer_mw - 1; /* last MW */
++
++	rc = ntb_mw_get_align(ndev, 0, mw_index, 0, NULL, &size_max,
++			      &offset);
++	if (rc)
++		goto err_free_ll;
++
++	if (size_max < need) {
++		rc = -ENOSPC;
++		goto err_free_ll;
++	}
++
++	/* Map register space (direct) */
++	dom = iommu_get_domain_for_dev(dev);
++	if (dom) {
++		phys = edma_regs_phys & PAGE_MASK;
++		size = PAGE_ALIGN(EDMA_REG_SIZE + edma_regs_phys - phys);
++		iova = phys;
++
++		rc = iommu_map(dom, iova, phys, EDMA_REG_SIZE,
++			       IOMMU_READ | IOMMU_WRITE | IOMMU_MMIO, GFP_KERNEL);
++		if (rc)
++			dev_err(&ndev->dev, "failed to create direct mapping for eDMA reg space\n");
++		reg_mapped = true;
++	}
++
++	rc = ntb_mw_set_trans(ndev, 0, mw_index, edma_regs_phys, EDMA_REG_SIZE, offset);
++	if (rc)
++		goto err_unmap_reg;
++
++	offset += EDMA_REG_SIZE;
++
++	/* Map ntb_edma_info */
++	rc = ntb_mw_set_trans(ndev, 0, mw_index, info_phys, info_bytes, offset);
++	if (rc)
++		goto err_clear_trans;
++	offset += info_bytes;
++
++	/* Map LL location */
++	for (i = 0; i < EDMA_WR_CH_NUM; i++) {
++		rc = ntb_mw_set_trans(ndev, 0, mw_index, edma_ctx.ll_wr_phys[i],
++				      DMA_LLP_MEM_SIZE, offset);
++		if (rc)
++			goto err_clear_trans;
++		offset += DMA_LLP_MEM_SIZE;
++	}
++	for (i = 0; i < EDMA_RD_CH_NUM + 1; i++) {
++		rc = ntb_mw_set_trans(ndev, 0, mw_index, edma_ctx.ll_rd_phys[i],
++				      DMA_LLP_MEM_SIZE, offset);
++		if (rc)
++			goto err_clear_trans;
++		offset += DMA_LLP_MEM_SIZE;
++	}
++	edma_ctx.initialized = true;
++
++	return 0;
++
++err_clear_trans:
++	/*
++	 * Tear down the NTB translation window used for the eDMA MW.
++	 * There is no sub-range clear API for ntb_mw_set_trans(), so we
++	 * unconditionally drop the whole mapping on error.
++	 */
++	ntb_mw_clear_trans(ndev, 0, mw_index);
++
++err_unmap_reg:
++	if (reg_mapped)
++		iommu_unmap(dom, iova, size);
++err_free_ll:
++	while (rd_done--)
++		dma_free_attrs(dev, DMA_LLP_MEM_SIZE,
++			       edma_ctx.ll_rd_virt[rd_done],
++			       edma_ctx.ll_rd_phys[rd_done],
++			       DMA_ATTR_FORCE_CONTIGUOUS);
++	while (wr_done--)
++		dma_free_attrs(dev, DMA_LLP_MEM_SIZE,
++			       edma_ctx.ll_wr_virt[wr_done],
++			       edma_ctx.ll_wr_phys[wr_done],
++			       DMA_ATTR_FORCE_CONTIGUOUS);
++	if (edma_ctx.intr_ep_virt)
++		dma_free_coherent(dev, sizeof(struct ntb_edma_intr),
++				  edma_ctx.intr_ep_virt,
++				  edma_ctx.intr_ep_phys);
++	dma_free_coherent(dev, info_bytes, info, info_phys);
++	return rc;
++}
++
++static int ntb_edma_irq_vector(struct device *dev, unsigned int nr)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++	int ret, nvec;
++
++	nvec = pci_msi_vec_count(pdev);
++	for (; nr < nvec; nr++) {
++		ret = pci_irq_vector(pdev, nr);
++		if (!irq_has_action(ret))
++			return ret;
++	}
++	return 0;
++}
++
++static const struct dw_edma_plat_ops ntb_edma_ops = {
++	.irq_vector     = ntb_edma_irq_vector,
++};
++
++int ntb_edma_setup_peer(struct ntb_dev *ndev)
++{
++	struct ntb_edma_info *info;
++	unsigned int wr_cnt, rd_cnt;
++	struct dw_edma_chip *chip;
++	void __iomem *edma_virt;
++	phys_addr_t edma_phys;
++	resource_size_t mw_size;
++	u64 off = EDMA_REG_SIZE;
++	int peer_mw, mw_index;
++	unsigned int i;
++	int ret;
++
++	peer_mw = ntb_peer_mw_count(ndev);
++	if (peer_mw <= 0)
++		return -ENODEV;
++
++	mw_index = peer_mw - 1; /* last MW */
++
++	ret = ntb_peer_mw_get_addr(ndev, mw_index, &edma_phys,
++				   &mw_size);
++	if (ret)
++		return -1;
++
++	edma_virt = ioremap(edma_phys, mw_size);
++
++	chip = devm_kzalloc(&ndev->dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip) {
++		ret = -ENOMEM;
++		return ret;
++	}
++
++	chip->dev = &ndev->pdev->dev;
++	chip->nr_irqs = 4;
++	chip->ops = &ntb_edma_ops;
++	chip->flags = 0;
++	chip->reg_base = edma_virt;
++	chip->mf = EDMA_MF_EDMA_UNROLL;
++
++	info = edma_virt + off;
++	if (info->magic != NTB_EDMA_INFO_MAGIC)
++		return -EINVAL;
++	wr_cnt = info->wr_cnt;
++	rd_cnt = info->rd_cnt;
++	chip->ll_wr_cnt = wr_cnt;
++	chip->ll_rd_cnt = rd_cnt;
++	off += PAGE_SIZE;
++
++	edma_ctx.notify_qp_max = NTB_EDMA_NOTIFY_MAX_QP;
++	edma_ctx.intr_ep_phys = info->intr_dar_base;
++	if (edma_ctx.intr_ep_phys) {
++		edma_ctx.intr_rc_virt =
++			dma_alloc_coherent(&ndev->pdev->dev,
++					   sizeof(struct ntb_edma_intr),
++					   &edma_ctx.intr_rc_phys,
++					   GFP_KERNEL);
++		if (!edma_ctx.intr_rc_virt)
++			return -ENOMEM;
++		memset(edma_ctx.intr_rc_virt, 0,
++		       sizeof(struct ntb_edma_intr));
++	}
++
++	for (i = 0; i < wr_cnt; i++) {
++		chip->ll_region_wr[i].vaddr.io = edma_virt + off;
++		chip->ll_region_wr[i].paddr = info->ll_wr_phys[i];
++		chip->ll_region_wr[i].sz = DMA_LLP_MEM_SIZE;
++		off += DMA_LLP_MEM_SIZE;
++	}
++	for (i = 0; i < rd_cnt; i++) {
++		chip->ll_region_rd[i].vaddr.io = edma_virt + off;
++		chip->ll_region_rd[i].paddr = info->ll_rd_phys[i];
++		chip->ll_region_rd[i].sz = DMA_LLP_MEM_SIZE;
++		off += DMA_LLP_MEM_SIZE;
++	}
++
++	if (!pci_dev_msi_enabled(ndev->pdev))
++		return -ENXIO;
++
++	ret = dw_edma_probe(chip);
++	if (ret) {
++		dev_err(&ndev->dev, "dw_edma_probe failed: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++struct ntb_edma_filter {
++	struct device *dma_dev;
++	u32 direction;
++};
++
++static bool ntb_edma_filter_fn(struct dma_chan *chan, void *arg)
++{
++	struct ntb_edma_filter *filter = arg;
++	u32 dir = filter->direction;
++	struct dma_slave_caps caps;
++	int ret;
++
++	if (chan->device->dev != filter->dma_dev)
++		return false;
++
++	ret = dma_get_slave_caps(chan, &caps);
++	if (ret < 0)
++		return false;
++
++	return !!(caps.directions & dir);
++}
++
++void ntb_edma_teardown_chans(struct ntb_edma_chans *edma)
++{
++	unsigned int i;
++
++	for (i = 0; i < edma->num_wr_chan; i++)
++		dma_release_channel(edma->wr_chan[i]);
++
++	for (i = 0; i < edma->num_rd_chan; i++)
++		dma_release_channel(edma->rd_chan[i]);
++
++	if (edma->intr_chan)
++		dma_release_channel(edma->intr_chan);
++}
++
++int ntb_edma_setup_chans(struct device *dma_dev, struct ntb_edma_chans *edma)
++{
++	struct ntb_edma_filter filter;
++	dma_cap_mask_t dma_mask;
++	unsigned int i;
++
++	dma_cap_zero(dma_mask);
++	dma_cap_set(DMA_SLAVE, dma_mask);
++
++	memset(edma, 0, sizeof(*edma));
++	edma->dev = dma_dev;
++
++	filter.dma_dev = dma_dev;
++	filter.direction = BIT(DMA_DEV_TO_MEM);
++	for (i = 0; i < EDMA_WR_CH_NUM; i++) {
++		edma->wr_chan[i] = dma_request_channel(dma_mask,
++						       ntb_edma_filter_fn,
++						       &filter);
++		if (!edma->wr_chan[i])
++			break;
++		edma->num_wr_chan++;
++	}
++
++	filter.direction = BIT(DMA_MEM_TO_DEV);
++	for (i = 0; i < EDMA_RD_CH_NUM; i++) {
++		edma->rd_chan[i] = dma_request_channel(dma_mask,
++						       ntb_edma_filter_fn,
++						       &filter);
++		if (!edma->rd_chan[i])
++			break;
++		edma->num_rd_chan++;
++	}
++
++	edma->intr_chan = dma_request_channel(dma_mask, ntb_edma_filter_fn,
++					      &filter);
++	if (!edma->intr_chan)
++		dev_warn(dma_dev,
++			 "Remote eDMA notify channel could not be allocated\n");
++
++	if (!edma->num_wr_chan || !edma->num_rd_chan) {
++		dev_warn(dma_dev, "Remote eDMA channels failed to initialize\n");
++		ntb_edma_teardown_chans(edma);
++		return -ENODEV;
++	}
++	return 0;
++}
++
++struct dma_chan *ntb_edma_pick_chan(struct ntb_edma_chans *edma,
++				    remote_edma_dir_t dir)
++{
++	unsigned int n, cur, idx;
++	struct dma_chan **chans;
++	atomic_t *cur_chan;
++
++	if (dir == REMOTE_EDMA_WRITE) {
++		n = edma->num_wr_chan;
++		chans = edma->wr_chan;
++		cur_chan = &edma->cur_wr_chan;
++	} else {
++		n = edma->num_rd_chan;
++		chans = edma->rd_chan;
++		cur_chan = &edma->cur_rd_chan;
++	}
++	if (WARN_ON_ONCE(!n))
++		return NULL;
++
++	/* Simple round-robin */
++	cur = (unsigned int)atomic_inc_return(cur_chan) - 1;
++	idx = cur % n;
++	return chans[idx];
++}
++
++int ntb_edma_notify_peer(struct ntb_edma_chans *edma, int qp_num)
++{
++	struct dma_async_tx_descriptor *txd;
++	struct dma_slave_config cfg;
++	struct scatterlist sgl;
++	dma_cookie_t cookie;
++	struct device *dev;
++
++	if (!edma || !edma->intr_chan)
++		return -ENXIO;
++
++	if (qp_num < 0 || qp_num >= edma_ctx.notify_qp_max)
++		return -EINVAL;
++
++	if (!edma_ctx.intr_rc_virt || !edma_ctx.intr_ep_phys)
++		return -EINVAL;
++
++	dev = edma->dev;
++	if (!dev)
++		return -ENODEV;
++
++	WRITE_ONCE(edma_ctx.intr_rc_virt->db[qp_num], 1);
++
++	/* Ensure store is visible before kicking the DMA transfer */
++	wmb();
++
++	sg_init_table(&sgl, 1);
++	sg_dma_address(&sgl) = edma_ctx.intr_rc_phys + qp_num * sizeof(u32);
++	sg_dma_len(&sgl) = sizeof(u32);
++
++	memset(&cfg, 0, sizeof(cfg));
++	cfg.dst_addr       = edma_ctx.intr_ep_phys + qp_num * sizeof(u32);
++	cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++	cfg.direction      = DMA_MEM_TO_DEV;
++
++	if (dmaengine_slave_config(edma->intr_chan, &cfg))
++		return -EINVAL;
++
++	txd = dmaengine_prep_slave_sg(edma->intr_chan, &sgl, 1,
++				      DMA_MEM_TO_DEV,
++				      DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
++	if (!txd)
++		return -ENOSPC;
++
++	cookie = dmaengine_submit(txd);
++	if (dma_submit_error(cookie))
++		return -ENOSPC;
++
++	dma_async_issue_pending(edma->intr_chan);
++	return 0;
++}
+diff --git a/drivers/ntb/ntb_edma.h b/drivers/ntb/ntb_edma.h
+new file mode 100644
+index 000000000000..da0451827edb
+--- /dev/null
++++ b/drivers/ntb/ntb_edma.h
+@@ -0,0 +1,128 @@
++/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
++#ifndef _NTB_EDMA_H_
++#define _NTB_EDMA_H_
++
++#include <linux/completion.h>
++#include <linux/device.h>
++#include <linux/interrupt.h>
++
++#define EDMA_REG_SIZE		SZ_64K
++#define DMA_LLP_MEM_SIZE	SZ_4K
++#define EDMA_WR_CH_NUM		4
++#define EDMA_RD_CH_NUM		4
++#define NTB_EDMA_MAX_CH		8
++
++#define NTB_EDMA_INFO_MAGIC	0x45444D41 /* "EDMA" */
++#define NTB_EDMA_INFO_OFF	EDMA_REG_SIZE
++
++#define NTB_EDMA_RING_ORDER	7
++#define NTB_EDMA_RING_ENTRIES	(1U << NTB_EDMA_RING_ORDER)
++#define NTB_EDMA_RING_MASK	(NTB_EDMA_RING_ENTRIES - 1)
++
++typedef void (*ntb_edma_interrupt_cb_t)(void *data, int qp_num);
++
++/*
++ * REMOTE_EDMA_EP:
++ *   Endpoint owns the eDMA engine and pushes descriptors into a shared MW.
++ *
++ * REMOTE_EDMA_RC:
++ *   Root Complex controls the endpoint eDMA through the shared MW and
++ *   drives reads/writes on behalf of the host.
++ */
++typedef enum {
++	REMOTE_EDMA_UNKNOWN,
++	REMOTE_EDMA_EP,
++	REMOTE_EDMA_RC,
++} remote_edma_mode_t;
++
++typedef enum {
++	REMOTE_EDMA_WRITE,
++	REMOTE_EDMA_READ,
++} remote_edma_dir_t;
++
++/*
++ * Layout of remote eDMA MW (EP local address space, RC sees via peer MW):
++ *
++ *  0 .. EDMA_REG_SIZE-1        : DesignWare eDMA registers
++ *  EDMA_REG_SIZE .. +PAGE_SIZE : struct ntb_edma_info (EP writes, RC reads)
++ *  +PAGE_SIZE ..               : LL ring buffers (EP allocates phys addresses,
++ *                                RC configures via dw_edma)
++ *
++ * ntb_edma_setup_mws() on EP:
++ *   - allocates ntb_edma_info and LLs in EP memory
++ *   - programs inbound iATU so that RC peer MW[n] points at this block
++ *
++ * ntb_edma_setup_peer() on RC:
++ *   - ioremaps peer MW[n]
++ *   - reads ntb_edma_info
++ *   - sets up dw_edma_chip ll_region_* from that info
++ */
++struct ntb_edma_info {
++	u32 magic;
++	u16 wr_cnt;
++	u16 rd_cnt;
++	u64 regs_phys;
++	u32 ll_stride;
++	u32 rsvd;
++	u64 ll_wr_phys[NTB_EDMA_MAX_CH];
++	u64 ll_rd_phys[NTB_EDMA_MAX_CH];
++
++	u64 intr_dar_base;
++} __packed;
++
++struct ll_dma_addrs {
++	dma_addr_t wr[EDMA_WR_CH_NUM];
++	dma_addr_t rd[EDMA_RD_CH_NUM];
++};
++
++struct ntb_edma_chans {
++	struct device *dev;
++
++	struct dma_chan *wr_chan[EDMA_WR_CH_NUM];
++	struct dma_chan *rd_chan[EDMA_RD_CH_NUM];
++	struct dma_chan *intr_chan;
++
++	unsigned int num_wr_chan;
++	unsigned int num_rd_chan;
++	atomic_t cur_wr_chan;
++	atomic_t cur_rd_chan;
++};
++
++static __always_inline u32 ntb_edma_ring_idx(u32 v)
++{
++	return v & NTB_EDMA_RING_MASK;
++}
++
++static __always_inline u32 ntb_edma_ring_used_entry(u32 head, u32 tail)
++{
++	if (head >= tail) {
++		WARN_ON_ONCE((head - tail) > (NTB_EDMA_RING_ENTRIES - 1));
++		return head - tail;
++	}
++
++	WARN_ON_ONCE((U32_MAX - tail + head + 1) > (NTB_EDMA_RING_ENTRIES - 1));
++	return U32_MAX - tail + head + 1;
++}
++
++static __always_inline u32 ntb_edma_ring_free_entry(u32 head, u32 tail)
++{
++	return NTB_EDMA_RING_ENTRIES - ntb_edma_ring_used_entry(head, tail) - 1;
++}
++
++static __always_inline bool ntb_edma_ring_full(u32 head, u32 tail)
++{
++	return ntb_edma_ring_free_entry(head, tail) == 0;
++}
++
++int ntb_edma_setup_isr(struct device *dev, struct device *epc_dev,
++		       ntb_edma_interrupt_cb_t cb, void *data);
++void ntb_edma_teardown_isr(struct device *dev);
++int ntb_edma_setup_mws(struct ntb_dev *ndev);
++int ntb_edma_setup_peer(struct ntb_dev *ndev);
++int ntb_edma_setup_chans(struct device *dma_dev, struct ntb_edma_chans *edma);
++struct dma_chan *ntb_edma_pick_chan(struct ntb_edma_chans *edma,
++				    remote_edma_dir_t dir);
++void ntb_edma_teardown_chans(struct ntb_edma_chans *edma);
++int ntb_edma_notify_peer(struct ntb_edma_chans *edma, int qp_num);
++
++#endif
+diff --git a/drivers/ntb/ntb_transport.c b/drivers/ntb/ntb_transport_core.c
+similarity index 65%
+rename from drivers/ntb/ntb_transport.c
+rename to drivers/ntb/ntb_transport_core.c
+index 907db6c93d4d..48d48921978d 100644
+--- a/drivers/ntb/ntb_transport.c
++++ b/drivers/ntb/ntb_transport_core.c
+@@ -47,6 +47,9 @@
+  * Contact Information:
+  * Jon Mason <jon.mason@intel.com>
+  */
++#include <linux/atomic.h>
++#include <linux/bug.h>
++#include <linux/compiler.h>
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/dmaengine.h>
+@@ -71,6 +74,8 @@
+ #define NTB_TRANSPORT_DESC	"Software Queue-Pair Transport over NTB"
+ #define NTB_TRANSPORT_MIN_SPADS (MW0_SZ_HIGH + 2)
+ 
++#define NTB_EDMA_MAX_POLL		32
++
+ MODULE_DESCRIPTION(NTB_TRANSPORT_DESC);
+ MODULE_VERSION(NTB_TRANSPORT_VER);
+ MODULE_LICENSE("Dual BSD/GPL");
+@@ -102,6 +107,13 @@ module_param(use_msi, bool, 0644);
+ MODULE_PARM_DESC(use_msi, "Use MSI interrupts instead of doorbells");
+ #endif
+ 
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++#include "ntb_edma.h"
++static bool use_remote_edma;
++module_param(use_remote_edma, bool, 0644);
++MODULE_PARM_DESC(use_remote_edma, "Use remote eDMA mode (when enabled, use_msi is ignored)");
++#endif
++
+ static struct dentry *nt_debugfs_dir;
+ 
+ /* Only two-ports NTB devices are supported */
+@@ -125,6 +137,14 @@ struct ntb_queue_entry {
+ 		struct ntb_payload_header __iomem *tx_hdr;
+ 		struct ntb_payload_header *rx_hdr;
+ 	};
++
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++	dma_addr_t addr;
++
++	/* Used by RC side only */
++	struct scatterlist sgl;
++	struct work_struct dma_work;
++#endif
  };
  
- struct dw_pcie_ops {
+ struct ntb_rx_info {
+@@ -202,6 +222,33 @@ struct ntb_transport_qp {
+ 	int msi_irq;
+ 	struct ntb_msi_desc msi_desc;
+ 	struct ntb_msi_desc peer_msi_desc;
++
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++	/*
++	 * For ensuring peer notification in non-atomic context.
++	 * ntb_peer_db_set might sleep or schedule.
++	 */
++	struct work_struct db_work;
++
++	/*
++	 * wr: remote eDMA write transfer (EP -> RC direction)
++	 * rd: remote eDMA read transfer (RC -> EP direction)
++	 */
++	u32 wr_cons;
++	u32 rd_cons;
++	u32 wr_prod;
++	u32 rd_prod;
++	u32 wr_issue;
++	u32 rd_issue;
++
++	spinlock_t ep_tx_lock;
++	spinlock_t ep_rx_lock;
++	spinlock_t rc_lock;
++
++	/* Completion work for read/write transfers. */
++	struct work_struct read_work;
++	struct work_struct write_work;
++#endif
+ };
+ 
+ struct ntb_transport_mw {
+@@ -249,6 +296,13 @@ struct ntb_transport_ctx {
+ 
+ 	/* Make sure workq of link event be executed serially */
+ 	struct mutex link_event_lock;
++
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++	remote_edma_mode_t remote_edma_mode;
++	struct device *dma_dev;
++	struct workqueue_struct *wq;
++	struct ntb_edma_chans edma;
++#endif
+ };
+ 
+ enum {
+@@ -262,6 +316,19 @@ struct ntb_payload_header {
+ 	unsigned int flags;
+ };
+ 
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++static void ntb_transport_edma_uninit(struct ntb_transport_ctx *nt);
++static int ntb_transport_edma_init(struct ntb_transport_ctx *nt,
++				   unsigned int *mw_count);
++static void ntb_transport_edma_init_queue(struct ntb_transport_ctx *nt,
++					  unsigned int qp_num);
++static void ntb_transport_edma_create_queue(struct ntb_transport_ctx *nt,
++					    struct ntb_transport_qp *qp);
++static int ntb_transport_edma_rc_init(struct ntb_transport_ctx *nt);
++static int ntb_transport_edma_ep_init(struct ntb_transport_ctx *nt);
++static void ntb_transport_edma_rc_dma_work(struct work_struct *work);
++#endif /* CONFIG_NTB_TRANSPORT_EDMA */
++
+ /*
+  * Return the device that should be used for DMA mapping.
+  *
+@@ -298,7 +365,7 @@ enum {
+ 	container_of((__drv), struct ntb_transport_client, driver)
+ 
+ #define QP_TO_MW(nt, qp)	((qp) % nt->mw_count)
+-#define NTB_QP_DEF_NUM_ENTRIES	100
++#define NTB_QP_DEF_NUM_ENTRIES	128
+ #define NTB_LINK_DOWN_TIMEOUT	10
+ 
+ static void ntb_transport_rxc_db(unsigned long data);
+@@ -1015,6 +1082,10 @@ static void ntb_transport_link_cleanup(struct ntb_transport_ctx *nt)
+ 	count = ntb_spad_count(nt->ndev);
+ 	for (i = 0; i < count; i++)
+ 		ntb_spad_write(nt->ndev, i, 0);
++
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++	ntb_edma_teardown_chans(&nt->edma);
++#endif
+ }
+ 
+ static void ntb_transport_link_cleanup_work(struct work_struct *work)
+@@ -1051,6 +1122,14 @@ static void ntb_transport_link_work(struct work_struct *work)
+ 
+ 	/* send the local info, in the opposite order of the way we read it */
+ 
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++	rc = ntb_transport_edma_ep_init(nt);
++	if (rc) {
++		dev_err(&pdev->dev, "Failed to init EP: %d\n", rc);
++		return;
++	}
++#endif
++
+ 	if (nt->use_msi) {
+ 		rc = ntb_msi_setup_mws(ndev);
+ 		if (rc) {
+@@ -1132,6 +1211,14 @@ static void ntb_transport_link_work(struct work_struct *work)
+ 
+ 	nt->link_is_up = true;
+ 
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++	rc = ntb_transport_edma_rc_init(nt);
++	if (rc) {
++		dev_err(&pdev->dev, "Failed to init RC: %d\n", rc);
++		goto out1;
++	}
++#endif
++
+ 	for (i = 0; i < nt->qp_count; i++) {
+ 		struct ntb_transport_qp *qp = &nt->qp_vec[i];
+ 
+@@ -1277,6 +1364,8 @@ static const struct ntb_transport_backend_ops default_backend_ops = {
+ 	.debugfs_stats_show = ntb_transport_default_debugfs_stats_show,
+ };
+ 
++static const struct ntb_transport_backend_ops edma_backend_ops;
++
+ static int ntb_transport_probe(struct ntb_client *self, struct ntb_dev *ndev)
+ {
+ 	struct ntb_transport_ctx *nt;
+@@ -1311,7 +1400,23 @@ static int ntb_transport_probe(struct ntb_client *self, struct ntb_dev *ndev)
+ 
+ 	nt->ndev = ndev;
+ 
+-	nt->backend_ops = default_backend_ops;
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++	if (use_remote_edma) {
++		rc = ntb_transport_edma_init(nt, &mw_count);
++		if (rc) {
++			nt->mw_count = 0;
++			goto err;
++		}
++		nt->backend_ops = edma_backend_ops;
++
++		/*
++		 * On remote eDMA mode, we reserve a read channel for Host->EP
++		 * interruption.
++		 */
++		use_msi = false;
++	} else
++#endif
++		nt->backend_ops = default_backend_ops;
+ 
+ 	/*
+ 	 * If we are using MSI, and have at least one extra memory window,
+@@ -1402,6 +1507,10 @@ static int ntb_transport_probe(struct ntb_client *self, struct ntb_dev *ndev)
+ 		rc = ntb_transport_init_queue(nt, i);
+ 		if (rc)
+ 			goto err2;
++
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++		ntb_transport_edma_init_queue(nt, i);
++#endif
+ 	}
+ 
+ 	INIT_DELAYED_WORK(&nt->link_work, ntb_transport_link_work);
+@@ -1433,6 +1542,9 @@ static int ntb_transport_probe(struct ntb_client *self, struct ntb_dev *ndev)
+ 	}
+ 	kfree(nt->mw_vec);
+ err:
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++	ntb_transport_edma_uninit(nt);
++#endif
+ 	kfree(nt);
+ 	return rc;
+ }
+@@ -2055,11 +2167,16 @@ ntb_transport_create_queue(void *data, struct device *client_dev,
+ 
+ 	nt->qp_bitmap_free &= ~qp_bit;
+ 
++	qp->qp_bit = qp_bit;
+ 	qp->cb_data = data;
+ 	qp->rx_handler = handlers->rx_handler;
+ 	qp->tx_handler = handlers->tx_handler;
+ 	qp->event_handler = handlers->event_handler;
+ 
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++	ntb_transport_edma_create_queue(nt, qp);
++#endif
++
+ 	dma_cap_zero(dma_mask);
+ 	dma_cap_set(DMA_MEMCPY, dma_mask);
+ 
+@@ -2105,6 +2222,9 @@ ntb_transport_create_queue(void *data, struct device *client_dev,
+ 			goto err1;
+ 
+ 		entry->qp = qp;
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++		INIT_WORK(&entry->dma_work, ntb_transport_edma_rc_dma_work);
++#endif
+ 		ntb_list_add(&qp->ntb_rx_q_lock, &entry->entry,
+ 			     &qp->rx_free_q);
+ 	}
+@@ -2156,8 +2276,8 @@ EXPORT_SYMBOL_GPL(ntb_transport_create_queue);
+  */
+ void ntb_transport_free_queue(struct ntb_transport_qp *qp)
+ {
+-	struct pci_dev *pdev;
+ 	struct ntb_queue_entry *entry;
++	struct pci_dev *pdev;
+ 	u64 qp_bit;
+ 
+ 	if (!qp)
+@@ -2208,6 +2328,10 @@ void ntb_transport_free_queue(struct ntb_transport_qp *qp)
+ 	tasklet_kill(&qp->rxc_db_work);
+ 
+ 	cancel_delayed_work_sync(&qp->link_work);
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++	cancel_work_sync(&qp->read_work);
++	cancel_work_sync(&qp->write_work);
++#endif
+ 
+ 	qp->cb_data = NULL;
+ 	qp->rx_handler = NULL;
+@@ -2346,6 +2470,1157 @@ int ntb_transport_tx_enqueue(struct ntb_transport_qp *qp, void *cb, void *data,
+ }
+ EXPORT_SYMBOL_GPL(ntb_transport_tx_enqueue);
+ 
++#ifdef CONFIG_NTB_TRANSPORT_EDMA
++/*
++ * Remote eDMA mode implementation
++ */
++struct ntb_edma_desc {
++	u32 len;
++	u32 flags;
++	u64 addr; /* DMA address */
++	u64 data;
++};
++
++struct ntb_edma_ring {
++	struct ntb_edma_desc desc[NTB_EDMA_RING_ENTRIES];
++	u32 head;
++	u32 tail;
++};
++
++#define NTB_EDMA_DESC_OFF(i)	((size_t)(i) * sizeof(struct ntb_edma_desc))
++
++#define __NTB_EDMA_CHECK_INDEX(_i)					\
++({									\
++	unsigned long __i = (unsigned long)(_i);			\
++	WARN_ONCE(__i >= (unsigned long)NTB_EDMA_RING_ENTRIES,		\
++		  "ntb_edma: index i=%lu >= ring_entries=%lu\n",	\
++		  __i, (unsigned long)NTB_EDMA_RING_ENTRIES);		\
++	__i;								\
++})
++
++#define NTB_EDMA_DESC_I(qp, i, n)					\
++({									\
++	typeof(qp) __qp = (qp);						\
++	unsigned long __i = __NTB_EDMA_CHECK_INDEX(i);			\
++	(struct ntb_edma_desc *)					\
++		((char *)(__qp)->rx_buff +				\
++		 (sizeof(struct ntb_edma_ring) * n) +			\
++		 NTB_EDMA_DESC_OFF(__i));				\
++})
++
++#define NTB_EDMA_DESC_O(qp, i, n)					\
++({									\
++	typeof(qp) __qp = (qp);						\
++	unsigned long __i = __NTB_EDMA_CHECK_INDEX(i);			\
++	(struct ntb_edma_desc __iomem *)				\
++		((char __iomem *)(__qp)->tx_mw +			\
++		 (sizeof(struct ntb_edma_ring) * n) +			\
++		 NTB_EDMA_DESC_OFF(__i));				\
++})
++
++#define NTB_EDMA_HEAD_I(qp, n) ((u32 *)((char *)qp->rx_buff +		\
++				(sizeof(struct ntb_edma_ring) * n) +	\
++				offsetof(struct ntb_edma_ring, head)))
++#define NTB_EDMA_HEAD_O(qp, n) ((u32 *)((char __iomem *)qp->tx_mw +	\
++				(sizeof(struct ntb_edma_ring) * n) +	\
++				offsetof(struct ntb_edma_ring, head)))
++#define NTB_EDMA_TAIL_I(qp, n) ((u32 *)((char *)qp->rx_buff +		\
++				(sizeof(struct ntb_edma_ring) * n) +	\
++				offsetof(struct ntb_edma_ring, tail)))
++#define NTB_EDMA_TAIL_O(qp, n) ((u32 *)((char __iomem *)qp->tx_mw +	\
++				(sizeof(struct ntb_edma_ring) * n) +	\
++				offsetof(struct ntb_edma_ring, tail)))
++
++/*
++ * Macro naming rule:
++ *   NTB_DESC_RD_EP_I (as an example)
++ *            ^^ ^^ ^
++ *            :  :  `-- I(n) or O(ut). In = Read, Out = Write.
++ *            :  `----- Who uses this macro.
++ *            `-------- DESC / HEAD / TAIL
++ *
++ * Read transfers (RC->EP):
++ *
++ *   EP view (outbound, written via NTB):
++ *       - descs: NTB_DESC_RD_EP_O(qp, i) / NTB_DESC_RD_EP_I(qp, i)
++ *           [ len ][ flags ][ addr ][ data ]
++ *           [ len ][ flags ][ addr ][ data ]
++ *           :
++ *           [ len ][ flags ][ addr ][ data ]
++ *       - head: NTB_HEAD_RD_EP_O(qp)
++ *       - tail: NTB_TAIL_RD_EP_I(qp)
++ *
++ *   RC view (inbound, local mapping):
++ *       - descs: NTB_DESC_RD_RC_I(qp, i) / NTB_DESC_RD_RC_O(qp, i)
++ *           [ len ][ flags ][ addr ][ data ]
++ *           [ len ][ flags ][ addr ][ data ]
++ *           :
++ *           [ len ][ flags ][ addr ][ data ]
++ *       - head: NTB_HEAD_RD_RC_I(qp)
++ *       - tail: NTB_TAIL_RD_RC_O(qp)
++ *
++ * Write transfers (EP -> RC) are analogous but use
++ * NTB_DESC_WR_{EP_O,RC_I}(), NTB_HEAD_WR_{EP_O,RC_I}(),
++ * and NTB_TAIL_WR_{EP_I,RC_O}().
++ */
++#define NTB_DESC_RD_EP_I(qp, i)	NTB_EDMA_DESC_I(qp, i, 0)
++#define NTB_DESC_RD_EP_O(qp, i)	NTB_EDMA_DESC_O(qp, i, 0)
++#define NTB_DESC_WR_EP_I(qp, i)	NTB_EDMA_DESC_I(qp, i, 1)
++#define NTB_DESC_WR_EP_O(qp, i)	NTB_EDMA_DESC_O(qp, i, 1)
++#define NTB_DESC_RD_RC_I(qp, i)	NTB_EDMA_DESC_I(qp, i, 0)
++#define NTB_DESC_RD_RC_O(qp, i)	NTB_EDMA_DESC_O(qp, i, 0)
++#define NTB_DESC_WR_RC_I(qp, i)	NTB_EDMA_DESC_I(qp, i, 1)
++#define NTB_DESC_WR_RC_O(qp, i)	NTB_EDMA_DESC_O(qp, i, 1)
++
++#define NTB_HEAD_RD_EP_O(qp)	NTB_EDMA_HEAD_O(qp, 0)
++#define NTB_HEAD_WR_EP_O(qp)	NTB_EDMA_HEAD_O(qp, 1)
++#define NTB_HEAD_RD_RC_I(qp)	NTB_EDMA_HEAD_I(qp, 0)
++#define NTB_HEAD_WR_RC_I(qp)	NTB_EDMA_HEAD_I(qp, 1)
++
++#define NTB_TAIL_RD_EP_I(qp)	NTB_EDMA_TAIL_I(qp, 0)
++#define NTB_TAIL_WR_EP_I(qp)	NTB_EDMA_TAIL_I(qp, 1)
++#define NTB_TAIL_RD_RC_O(qp)	NTB_EDMA_TAIL_O(qp, 0)
++#define NTB_TAIL_WR_RC_O(qp)	NTB_EDMA_TAIL_O(qp, 1)
++
++static inline bool ntb_qp_edma_is_rc(struct ntb_transport_qp *qp)
++{
++	return qp->transport->remote_edma_mode == REMOTE_EDMA_RC;
++}
++
++static inline bool ntb_qp_edma_is_ep(struct ntb_transport_qp *qp)
++{
++	return qp->transport->remote_edma_mode == REMOTE_EDMA_EP;
++}
++
++static inline bool ntb_qp_edma_enabled(struct ntb_transport_qp *qp)
++{
++	return ntb_qp_edma_is_rc(qp) || ntb_qp_edma_is_ep(qp);
++}
++
++static unsigned int ntb_transport_edma_tx_free_entry(struct ntb_transport_qp *qp)
++{
++	unsigned int head, tail;
++
++	if (ntb_qp_edma_is_ep(qp)) {
++		scoped_guard(spinlock_irqsave, &qp->ep_tx_lock) {
++			/* In this scope, only 'head' might proceed */
++			tail = READ_ONCE(qp->wr_cons);
++			head = READ_ONCE(qp->wr_prod);
++		}
++		return ntb_edma_ring_free_entry(head, tail);
++	}
++
++	scoped_guard(spinlock_irqsave, &qp->rc_lock) {
++		/* In this scope, only 'head' might proceed */
++		tail = READ_ONCE(qp->rd_issue);
++		head = READ_ONCE(*NTB_HEAD_RD_RC_I(qp));
++	}
++	/*
++	 * On RC side, 'used' amount indicates how much EP side
++	 * has refilled, which are available for us to use for TX.
++	 */
++	return ntb_edma_ring_used_entry(head, tail);
++}
++
++static void ntb_transport_edma_debugfs_stats_show(struct seq_file *s,
++						  struct ntb_transport_qp *qp)
++{
++	seq_printf(s, "rx_bytes - \t%llu\n", qp->rx_bytes);
++	seq_printf(s, "rx_pkts - \t%llu\n", qp->rx_pkts);
++	seq_printf(s, "rx_err_no_buf - %llu\n", qp->rx_err_no_buf);
++	seq_printf(s, "rx_buff - \t0x%p\n", qp->rx_buff);
++	seq_printf(s, "rx_max_entry - \t%u\n", qp->rx_max_entry);
++	seq_printf(s, "rx_alloc_entry - \t%u\n\n", qp->rx_alloc_entry);
++
++	seq_printf(s, "tx_bytes - \t%llu\n", qp->tx_bytes);
++	seq_printf(s, "tx_pkts - \t%llu\n", qp->tx_pkts);
++	seq_printf(s, "tx_ring_full - \t%llu\n", qp->tx_ring_full);
++	seq_printf(s, "tx_err_no_buf - %llu\n", qp->tx_err_no_buf);
++	seq_printf(s, "tx_mw - \t0x%p\n", qp->tx_mw);
++	seq_printf(s, "tx_max_entry - \t%u\n", qp->tx_max_entry);
++	seq_printf(s, "free tx - \t%u\n", ntb_transport_tx_free_entry(qp));
++	seq_putc(s, '\n');
++
++	seq_puts(s, "Using Remote eDMA - Yes\n");
++	seq_printf(s, "QP Link - \t%s\n", qp->link_is_up ? "Up" : "Down");
++}
++
++static void ntb_transport_edma_uninit(struct ntb_transport_ctx *nt)
++{
++	struct ntb_dev *ndev = nt->ndev;
++
++	if (nt->remote_edma_mode == REMOTE_EDMA_EP && ndev && ndev->pdev)
++		ntb_edma_teardown_isr(&ndev->pdev->dev);
++
++	if (nt->wq)
++		destroy_workqueue(nt->wq);
++	nt->wq = NULL;
++}
++
++static int ntb_transport_edma_init(struct ntb_transport_ctx *nt,
++				   unsigned int *mw_count)
++{
++	struct ntb_dev *ndev = nt->ndev;
++
++	/*
++	 * We need at least one MW for the transport plus one MW reserved
++	 * for the remote eDMA window (see ntb_edma_setup_mws/peer).
++	 */
++	if (*mw_count <= 1) {
++		dev_err(&ndev->dev,
++			"remote eDMA requires at least two MWS (have %u)\n",
++			*mw_count);
++		return -ENODEV;
++	}
++
++	nt->wq = alloc_workqueue("ntb-edma-wq", WQ_UNBOUND | WQ_SYSFS, 0);
++	if (!nt->wq) {
++		ntb_transport_edma_uninit(nt);
++		return -ENOMEM;
++	}
++
++	/* Reserve the last peer MW exclusively for the eDMA window. */
++	*mw_count -= 1;
++
++	return 0;
++}
++
++static void ntb_transport_edma_db_work(struct work_struct *work)
++{
++	struct ntb_transport_qp *qp =
++			container_of(work, struct ntb_transport_qp, db_work);
++
++	ntb_peer_db_set(qp->ndev, qp->qp_bit);
++}
++
++static void ntb_transport_edma_notify_peer(struct ntb_transport_qp *qp)
++{
++	if (ntb_qp_edma_is_rc(qp))
++		if (!ntb_edma_notify_peer(&qp->transport->edma, qp->qp_num))
++			return;
++
++	/*
++	 * Called from contexts that may be atomic. Since ntb_peer_db_set()
++	 * may sleep, delegate the actual doorbell write to a workqueue.
++	 */
++	queue_work(system_highpri_wq, &qp->db_work);
++}
++
++static void ntb_transport_edma_isr(void *data, int qp_num)
++{
++	struct ntb_transport_ctx *nt = data;
++	struct ntb_transport_qp *qp;
++
++	if (qp_num < 0 || qp_num >= nt->qp_count)
++		return;
++
++	qp = &nt->qp_vec[qp_num];
++	if (WARN_ON(!qp))
++		return;
++
++	queue_work(nt->wq, &qp->read_work);
++	queue_work(nt->wq, &qp->write_work);
++}
++
++static int ntb_transport_edma_rc_init(struct ntb_transport_ctx *nt)
++{
++	struct ntb_dev *ndev = nt->ndev;
++	struct pci_dev *pdev = ndev->pdev;
++	int rc;
++
++	if (!use_remote_edma || nt->remote_edma_mode != REMOTE_EDMA_UNKNOWN)
++		return 0;
++
++	rc = ntb_edma_setup_peer(ndev);
++	if (rc) {
++		dev_err(&pdev->dev, "Failed to enable remote eDMA: %d\n", rc);
++		return rc;
++	}
++
++	rc = ntb_edma_setup_chans(get_dma_dev(ndev), &nt->edma);
++	if (rc) {
++		dev_err(&pdev->dev, "Failed to setup eDMA channels: %d\n", rc);
++		return rc;
++	}
++
++	nt->remote_edma_mode = REMOTE_EDMA_RC;
++	return 0;
++}
++
++static int ntb_transport_edma_ep_init(struct ntb_transport_ctx *nt)
++{
++	struct ntb_dev *ndev = nt->ndev;
++	struct pci_dev *pdev = ndev->pdev;
++	struct pci_epc *epc;
++	int rc;
++
++	if (!use_remote_edma || nt->remote_edma_mode == REMOTE_EDMA_EP)
++		return 0;
++
++	/* Only EP side can return pci_epc */
++	epc = ntb_get_pci_epc(ndev);
++	if (!epc)
++		return 0;
++
++	rc = ntb_edma_setup_mws(ndev);
++	if (rc) {
++		dev_err(&pdev->dev,
++			"Failed to set up memory window for eDMA: %d\n", rc);
++		return rc;
++	}
++
++	rc = ntb_edma_setup_isr(&pdev->dev, &epc->dev, ntb_transport_edma_isr, nt);
++	if (rc) {
++		dev_err(&pdev->dev, "Failed to setup eDMA ISR (%d)\n", rc);
++		return rc;
++	}
++
++	nt->remote_edma_mode = REMOTE_EDMA_EP;
++	return 0;
++}
++
++static int ntb_transport_edma_setup_qp_mw(struct ntb_transport_ctx *nt,
++					  unsigned int qp_num)
++{
++	struct ntb_transport_qp *qp = &nt->qp_vec[qp_num];
++	struct ntb_dev *ndev = nt->ndev;
++	struct ntb_queue_entry *entry;
++	struct ntb_transport_mw *mw;
++	unsigned int mw_num, mw_count, qp_count;
++	unsigned int qp_offset, rx_info_offset;
++	unsigned int mw_size, mw_size_per_qp;
++	unsigned int num_qps_mw;
++	size_t edma_total;
++	unsigned int i;
++	int node;
++
++	mw_count = nt->mw_count;
++	qp_count = nt->qp_count;
++
++	mw_num = QP_TO_MW(nt, qp_num);
++	mw = &nt->mw_vec[mw_num];
++
++	if (!mw->virt_addr)
++		return -ENOMEM;
++
++	if (mw_num < qp_count % mw_count)
++		num_qps_mw = qp_count / mw_count + 1;
++	else
++		num_qps_mw = qp_count / mw_count;
++
++	mw_size = min(nt->mw_vec[mw_num].phys_size, mw->xlat_size);
++	if (max_mw_size && mw_size > max_mw_size)
++		mw_size = max_mw_size;
++
++	mw_size_per_qp = round_down((unsigned int)mw_size / num_qps_mw, SZ_64);
++	qp_offset = mw_size_per_qp * (qp_num / mw_count);
++	rx_info_offset = mw_size_per_qp - sizeof(struct ntb_rx_info);
++
++	qp->tx_mw_size = mw_size_per_qp;
++	qp->tx_mw = nt->mw_vec[mw_num].vbase + qp_offset;
++	if (!qp->tx_mw)
++		return -EINVAL;
++	qp->tx_mw_phys = nt->mw_vec[mw_num].phys_addr + qp_offset;
++	if (!qp->tx_mw_phys)
++		return -EINVAL;
++	qp->rx_info = qp->tx_mw + rx_info_offset;
++	qp->rx_buff = mw->virt_addr + qp_offset;
++	qp->remote_rx_info = qp->rx_buff + rx_info_offset;
++
++	/* Due to housekeeping, there must be at least 2 buffs */
++	qp->tx_max_frame = min(transport_mtu, mw_size_per_qp / 2);
++	qp->rx_max_frame = min(transport_mtu, mw_size_per_qp / 2);
++
++	/* In eDMA mode, decouple from MW sizing and force ring-sized entries */
++	edma_total = 2 * sizeof(struct ntb_edma_ring);
++	if (rx_info_offset < edma_total) {
++		dev_err(&ndev->dev, "Ring space requires %luB (>=%uB)\n",
++			edma_total, rx_info_offset);
++		return -EINVAL;
++	}
++	qp->tx_max_entry = NTB_EDMA_RING_ENTRIES;
++	qp->rx_max_entry = NTB_EDMA_RING_ENTRIES;
++
++	/*
++	 * Checking to see if we have more entries than the default.
++	 * We should add additional entries if that is the case so we
++	 * can be in sync with the transport frames.
++	 */
++	node = dev_to_node(&ndev->dev);
++	for (i = qp->rx_alloc_entry; i < qp->rx_max_entry; i++) {
++		entry = kzalloc_node(sizeof(*entry), GFP_KERNEL, node);
++		if (!entry)
++			return -ENOMEM;
++
++		entry->qp = qp;
++		INIT_WORK(&entry->dma_work, ntb_transport_edma_rc_dma_work);
++		ntb_list_add(&qp->ntb_rx_q_lock, &entry->entry,
++			     &qp->rx_free_q);
++		qp->rx_alloc_entry++;
++	}
++
++	memset(qp->rx_buff, 0, edma_total);
++
++	qp->rx_pkts = 0;
++	qp->tx_pkts = 0;
++
++	return 0;
++}
++
++static int ntb_transport_edma_ep_read_complete(struct ntb_transport_qp *qp)
++{
++	struct device *dma_dev = get_dma_dev(qp->ndev);
++	struct ntb_queue_entry *entry;
++	struct ntb_edma_desc *in;
++	unsigned int len;
++	u32 idx;
++
++	if (ntb_edma_ring_used_entry(READ_ONCE(*NTB_TAIL_RD_EP_I(qp)),
++				     qp->rd_cons) == 0)
++		return 0;
++
++	idx = ntb_edma_ring_idx(qp->rd_cons);
++	in = NTB_DESC_RD_EP_I(qp, idx);
++	if (!(in->flags & DESC_DONE_FLAG))
++		return 0;
++
++	in->flags = 0;
++	len = in->len; /* might be smaller than entry->len */
++
++	entry = (struct ntb_queue_entry *)(in->data);
++	if (WARN_ON(!entry))
++		return 0;
++
++	if (in->flags & LINK_DOWN_FLAG) {
++		ntb_qp_link_down(qp);
++		qp->rd_cons++;
++		ntb_list_add(&qp->ntb_rx_q_lock, &entry->entry, &qp->rx_free_q);
++		return 1;
++	}
++
++	dma_unmap_single(dma_dev, entry->addr, entry->len, DMA_FROM_DEVICE);
++
++	qp->rx_bytes += len;
++	qp->rx_pkts++;
++	qp->rd_cons++;
++
++	if (qp->rx_handler && qp->client_ready)
++		qp->rx_handler(qp, qp->cb_data, entry->cb_data, len);
++
++	ntb_list_add(&qp->ntb_rx_q_lock, &entry->entry, &qp->rx_free_q);
++	return 1;
++}
++
++static int ntb_transport_edma_ep_write_complete(struct ntb_transport_qp *qp)
++{
++	struct ntb_queue_entry *entry;
++	struct ntb_edma_desc *in;
++	u32 idx;
++
++	if (ntb_edma_ring_used_entry(READ_ONCE(*NTB_TAIL_WR_EP_I(qp)),
++				     qp->wr_cons) == 0)
++		return 0;
++
++	idx = ntb_edma_ring_idx(qp->wr_cons);
++	in = NTB_DESC_WR_EP_I(qp, idx);
++
++	entry = (struct ntb_queue_entry *)(in->data);
++	if (WARN_ON(!entry))
++		return 0;
++
++	qp->wr_cons++;
++
++	if (qp->tx_handler)
++		qp->tx_handler(qp, qp->cb_data, entry->cb_data, entry->len);
++
++	ntb_list_add(&qp->ntb_tx_free_q_lock, &entry->entry, &qp->tx_free_q);
++	return 1;
++}
++
++static void ntb_transport_edma_ep_read_work(struct work_struct *work)
++{
++	struct ntb_transport_qp *qp = container_of(
++				work, struct ntb_transport_qp, read_work);
++	unsigned int i;
++
++	for (i = 0; i < NTB_EDMA_MAX_POLL; i++) {
++		if (!ntb_transport_edma_ep_read_complete(qp))
++			break;
++	}
++
++	if (ntb_transport_edma_ep_read_complete(qp))
++		queue_work(qp->transport->wq, &qp->read_work);
++}
++
++static void ntb_transport_edma_ep_write_work(struct work_struct *work)
++{
++	struct ntb_transport_qp *qp = container_of(
++				work, struct ntb_transport_qp, write_work);
++	unsigned int i;
++
++	for (i = 0; i < NTB_EDMA_MAX_POLL; i++) {
++		if (!ntb_transport_edma_ep_write_complete(qp))
++			break;
++	}
++
++	if (ntb_transport_edma_ep_write_complete(qp))
++		queue_work(qp->transport->wq, &qp->write_work);
++}
++
++static void ntb_transport_edma_rc_write_complete_work(struct work_struct *work)
++{
++	struct ntb_transport_qp *qp = container_of(
++				work, struct ntb_transport_qp, write_work);
++	struct ntb_queue_entry *entry;
++	struct ntb_edma_desc *in;
++	unsigned int len;
++	void *cb_data;
++	u32 idx;
++
++	while (ntb_edma_ring_used_entry(READ_ONCE(qp->wr_issue),
++					qp->wr_cons) != 0) {
++		/* Paired with smp_wmb() in ntb_transport_edma_rc_poll() */
++		smp_rmb();
++
++		idx = ntb_edma_ring_idx(qp->wr_cons);
++		in = NTB_DESC_WR_RC_I(qp, idx);
++		entry = (struct ntb_queue_entry *)READ_ONCE(in->data);
++		if (!entry || !(entry->flags & DESC_DONE_FLAG))
++			break;
++
++		in->data = 0;
++
++		cb_data = entry->cb_data;
++		len = entry->len;
++
++		iowrite32(++qp->wr_cons, NTB_TAIL_WR_RC_O(qp));
++
++		if (unlikely(entry->flags & LINK_DOWN_FLAG)) {
++			ntb_qp_link_down(qp);
++			continue;
++		}
++
++		ntb_transport_edma_notify_peer(qp);
++
++		ntb_list_add(&qp->ntb_rx_q_lock, &entry->entry, &qp->rx_free_q);
++
++		if (qp->rx_handler && qp->client_ready)
++			qp->rx_handler(qp, qp->cb_data, cb_data, len);
++
++		/* stat updates */
++		qp->rx_bytes += len;
++		qp->rx_pkts++;
++	}
++}
++
++static void ntb_transport_edma_rc_write_cb(void *data,
++					   const struct dmaengine_result *res)
++{
++	struct ntb_queue_entry *entry = data;
++	struct ntb_transport_qp *qp = entry->qp;
++	struct ntb_transport_ctx *nt = qp->transport;
++	enum dmaengine_tx_result dma_err = res->result;
++	struct device *dma_dev = get_dma_dev(qp->ndev);
++
++	switch (dma_err) {
++	case DMA_TRANS_READ_FAILED:
++	case DMA_TRANS_WRITE_FAILED:
++	case DMA_TRANS_ABORTED:
++		entry->errors++;
++		entry->len = -EIO;
++		break;
++	case DMA_TRANS_NOERROR:
++	default:
++		break;
++	}
++	dma_unmap_sg(dma_dev, &entry->sgl, 1, DMA_FROM_DEVICE);
++	sg_dma_address(&entry->sgl) = 0;
++
++	entry->flags |= DESC_DONE_FLAG;
++
++	queue_work(nt->wq, &qp->write_work);
++}
++
++static void ntb_transport_edma_rc_read_complete_work(struct work_struct *work)
++{
++	struct ntb_transport_qp *qp = container_of(
++				work, struct ntb_transport_qp, read_work);
++	struct ntb_edma_desc *in, __iomem *out;
++	struct ntb_queue_entry *entry;
++	unsigned int len;
++	void *cb_data;
++	u32 idx;
++
++	while (ntb_edma_ring_used_entry(READ_ONCE(qp->rd_issue),
++					qp->rd_cons) != 0) {
++		/* Paired with smp_wmb() in ntb_transport_edma_rc_tx_enqueue() */
++		smp_rmb();
++
++		idx = ntb_edma_ring_idx(qp->rd_cons);
++		in = NTB_DESC_RD_RC_I(qp, idx);
++		entry = (struct ntb_queue_entry *)in->data;
++		if (!entry || !(entry->flags & DESC_DONE_FLAG))
++			break;
++
++		in->data = 0;
++
++		cb_data = entry->cb_data;
++		len = entry->len;
++
++		out = NTB_DESC_RD_RC_O(qp, idx);
++
++		WRITE_ONCE(qp->rd_cons, qp->rd_cons + 1);
++
++		/*
++		 * No need to add barrier in-between to enforce ordering here.
++		 * The other side proceeds only after both flags and tail are
++		 * updated.
++		 */
++		iowrite32(entry->flags, &out->flags);
++		iowrite32(qp->rd_cons, NTB_TAIL_RD_RC_O(qp));
++
++		ntb_transport_edma_notify_peer(qp);
++
++		ntb_list_add(&qp->ntb_tx_free_q_lock, &entry->entry,
++			     &qp->tx_free_q);
++
++		if (qp->tx_handler)
++			qp->tx_handler(qp, qp->cb_data, cb_data, len);
++
++		/* stat updates */
++		qp->tx_bytes += len;
++		qp->tx_pkts++;
++	}
++}
++
++static void ntb_transport_edma_rc_read_cb(void *data,
++					  const struct dmaengine_result *res)
++{
++	struct ntb_queue_entry *entry = data;
++	struct ntb_transport_qp *qp = entry->qp;
++	struct ntb_transport_ctx *nt = qp->transport;
++	struct device *dma_dev = get_dma_dev(qp->ndev);
++	enum dmaengine_tx_result dma_err = res->result;
++
++	switch (dma_err) {
++	case DMA_TRANS_READ_FAILED:
++	case DMA_TRANS_WRITE_FAILED:
++	case DMA_TRANS_ABORTED:
++		entry->errors++;
++		entry->len = -EIO;
++		break;
++	case DMA_TRANS_NOERROR:
++	default:
++		break;
++	}
++	dma_unmap_sg(dma_dev, &entry->sgl, 1, DMA_TO_DEVICE);
++	sg_dma_address(&entry->sgl) = 0;
++
++	entry->flags |= DESC_DONE_FLAG;
++
++	queue_work(nt->wq, &qp->read_work);
++}
++
++static int ntb_transport_edma_rc_write_start(struct device *d,
++					     struct dma_chan *chan, size_t len,
++					     dma_addr_t ep_src, void *rc_dst,
++					     struct ntb_queue_entry *entry)
++{
++	struct scatterlist *sgl = &entry->sgl;
++	struct dma_async_tx_descriptor *txd;
++	struct dma_slave_config cfg;
++	dma_cookie_t cookie;
++	int nents, rc;
++
++	if (!d)
++		return -ENODEV;
++
++	if (!chan)
++		return -ENXIO;
++
++	if (WARN_ON(!ep_src || !rc_dst))
++		return -EINVAL;
++
++	if (WARN_ON(sg_dma_address(sgl)))
++		return -EINVAL;
++
++	sg_init_one(sgl, rc_dst, len);
++	nents = dma_map_sg(d, sgl, 1, DMA_FROM_DEVICE);
++	if (nents <= 0)
++		return -EIO;
++
++	memset(&cfg, 0, sizeof(cfg));
++	cfg.src_addr       = ep_src;
++	cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++	cfg.direction      = DMA_DEV_TO_MEM;
++	rc = dmaengine_slave_config(chan, &cfg);
++	if (rc)
++		goto out_unmap;
++
++	txd = dmaengine_prep_slave_sg(chan, sgl, 1, DMA_DEV_TO_MEM,
++				      DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
++	if (!txd) {
++		rc = -EIO;
++		goto out_unmap;
++	}
++
++	txd->callback_result = ntb_transport_edma_rc_write_cb;
++	txd->callback_param = entry;
++
++	cookie = dmaengine_submit(txd);
++	if (dma_submit_error(cookie)) {
++		rc = -EIO;
++		goto out_unmap;
++	}
++	dma_async_issue_pending(chan);
++	return 0;
++out_unmap:
++	dma_unmap_sg(d, sgl, 1, DMA_FROM_DEVICE);
++	return rc;
++}
++
++static int ntb_transport_edma_rc_read_start(struct device *d,
++					    struct dma_chan *chan, size_t len,
++					    void *rc_src, dma_addr_t ep_dst,
++					    struct ntb_queue_entry *entry)
++{
++	struct scatterlist *sgl = &entry->sgl;
++	struct dma_async_tx_descriptor *txd;
++	struct dma_slave_config cfg;
++	dma_cookie_t cookie;
++	int nents, rc;
++
++	if (!d)
++		return -ENODEV;
++
++	if (!chan)
++		return -ENXIO;
++
++	if (WARN_ON(!rc_src || !ep_dst))
++		return -EINVAL;
++
++	if (WARN_ON(sg_dma_address(sgl)))
++		return -EINVAL;
++
++	sg_init_one(sgl, rc_src, len);
++	nents = dma_map_sg(d, sgl, 1, DMA_TO_DEVICE);
++	if (nents <= 0)
++		return -EIO;
++
++	memset(&cfg, 0, sizeof(cfg));
++	cfg.dst_addr       = ep_dst;
++	cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++	cfg.direction      = DMA_MEM_TO_DEV;
++	rc = dmaengine_slave_config(chan, &cfg);
++	if (rc)
++		goto out_unmap;
++
++	txd = dmaengine_prep_slave_sg(chan, sgl, 1, DMA_MEM_TO_DEV,
++				      DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
++	if (!txd) {
++		rc = -EIO;
++		goto out_unmap;
++	}
++
++	txd->callback_result = ntb_transport_edma_rc_read_cb;
++	txd->callback_param = entry;
++
++	cookie = dmaengine_submit(txd);
++	if (dma_submit_error(cookie)) {
++		rc = -EIO;
++		goto out_unmap;
++	}
++	dma_async_issue_pending(chan);
++	return 0;
++out_unmap:
++	dma_unmap_sg(d, sgl, 1, DMA_TO_DEVICE);
++	return rc;
++}
++
++static void ntb_transport_edma_rc_dma_work(struct work_struct *work)
++{
++	struct ntb_queue_entry *entry = container_of(
++				work, struct ntb_queue_entry, dma_work);
++	struct ntb_transport_qp *qp = entry->qp;
++	struct ntb_transport_ctx *nt = qp->transport;
++	struct device *dma_dev = get_dma_dev(qp->ndev);
++	struct dma_chan *chan;
++	int rc;
++
++	chan = ntb_edma_pick_chan(&nt->edma, REMOTE_EDMA_WRITE);
++	rc = ntb_transport_edma_rc_write_start(dma_dev, chan, entry->len,
++					       entry->addr, entry->buf, entry);
++	if (rc) {
++		entry->errors++;
++		entry->len = -EIO;
++		entry->flags |= DESC_DONE_FLAG;
++		queue_work(nt->wq, &qp->write_work);
++		return;
++	}
++}
++
++static void ntb_transport_edma_rc_poll(struct ntb_transport_qp *qp)
++{
++	struct ntb_transport_ctx *nt = qp->transport;
++	unsigned int budget = NTB_EDMA_MAX_POLL;
++	struct ntb_queue_entry *entry;
++	struct ntb_edma_desc *in;
++	dma_addr_t ep_src;
++	u32 len, idx;
++
++	while (budget--) {
++		if (ntb_edma_ring_used_entry(READ_ONCE(*NTB_HEAD_WR_RC_I(qp)),
++					     qp->wr_issue) == 0)
++			break;
++
++		idx = ntb_edma_ring_idx(qp->wr_issue);
++		in = NTB_DESC_WR_RC_I(qp, idx);
++
++		len = READ_ONCE(in->len);
++		ep_src = (dma_addr_t)READ_ONCE(in->addr);
++
++		/* Prepare 'entry' for write completion */
++		entry = ntb_list_rm(&qp->ntb_rx_q_lock, &qp->rx_pend_q);
++		if (!entry) {
++			qp->rx_err_no_buf++;
++			break;
++		}
++		if (WARN_ON(entry->flags & DESC_DONE_FLAG))
++			entry->flags &= ~DESC_DONE_FLAG;
++		entry->len = len; /* NB. entry->len can be <=0 */
++		entry->addr = ep_src;
++
++		/*
++		 * ntb_transport_edma_rc_write_complete_work() checks entry->flags
++		 * so it needs to be set before wr_issue++.
++		 */
++		in->data = (uintptr_t)entry;
++
++		/* Ensure in->data visible before wr_issue++ */
++		smp_wmb();
++
++		WRITE_ONCE(qp->wr_issue, qp->wr_issue + 1);
++
++		if (!len) {
++			entry->flags |= DESC_DONE_FLAG;
++			queue_work(nt->wq, &qp->write_work);
++			continue;
++		}
++
++		if (in->flags & LINK_DOWN_FLAG) {
++			dev_dbg(&qp->ndev->pdev->dev, "link down flag set\n");
++			entry->flags |= DESC_DONE_FLAG | LINK_DOWN_FLAG;
++			queue_work(nt->wq, &qp->write_work);
++			continue;
++		}
++
++		queue_work(nt->wq, &entry->dma_work);
++	}
++
++	if (!budget)
++		tasklet_schedule(&qp->rxc_db_work);
++}
++
++static int ntb_transport_edma_rc_tx_enqueue(struct ntb_transport_qp *qp,
++					    struct ntb_queue_entry *entry)
++{
++	struct device *dma_dev = get_dma_dev(qp->ndev);
++	struct ntb_transport_ctx *nt = qp->transport;
++	struct ntb_edma_desc *in, __iomem *out;
++	unsigned int len = entry->len;
++	struct dma_chan *chan;
++	u32 issue, idx, head;
++	dma_addr_t ep_dst;
++	int rc;
++
++	WARN_ON_ONCE(entry->flags & DESC_DONE_FLAG);
++
++	scoped_guard(spinlock_irqsave, &qp->rc_lock) {
++		head = READ_ONCE(*NTB_HEAD_RD_RC_I(qp));
++		issue = qp->rd_issue;
++		if (ntb_edma_ring_used_entry(head, issue) == 0) {
++			qp->tx_ring_full++;
++			return -ENOSPC;
++		}
++
++		/*
++		 * ntb_transport_edma_rc_read_complete_work() checks entry->flags
++		 * so it needs to be set before rd_issue++.
++		 */
++		idx = ntb_edma_ring_idx(issue);
++		in = NTB_DESC_RD_RC_I(qp, idx);
++		in->data = (uintptr_t)entry;
++
++		/* Make in->data visible before rd_issue++ */
++		smp_wmb();
++
++		WRITE_ONCE(qp->rd_issue, qp->rd_issue + 1);
++	}
++
++	/* Publish the final transfer length to the EP side */
++	out = NTB_DESC_RD_RC_O(qp, idx);
++	iowrite32(len, &out->len);
++	ioread32(&out->len);
++
++	if (unlikely(!len)) {
++		entry->flags |= DESC_DONE_FLAG;
++		queue_work(nt->wq, &qp->read_work);
++		return 0;
++	}
++
++	/* Paired with dma_wmb() in ntb_transport_edma_ep_rx_enqueue() */
++	dma_rmb();
++
++	/* kick remote eDMA read transfer */
++	ep_dst = (dma_addr_t)in->addr;
++	chan = ntb_edma_pick_chan(&nt->edma, REMOTE_EDMA_READ);
++	rc = ntb_transport_edma_rc_read_start(dma_dev, chan, len,
++					      entry->buf, ep_dst, entry);
++	if (rc) {
++		entry->errors++;
++		entry->len = -EIO;
++		entry->flags |= DESC_DONE_FLAG;
++		queue_work(nt->wq, &qp->read_work);
++	}
++	return 0;
++}
++
++static int ntb_transport_edma_ep_tx_enqueue(struct ntb_transport_qp *qp,
++					    struct ntb_queue_entry *entry)
++{
++	struct device *dma_dev = get_dma_dev(qp->ndev);
++	struct ntb_edma_desc *in, __iomem *out;
++	unsigned int len = entry->len;
++	dma_addr_t ep_src = 0;
++	u32 idx;
++	int rc;
++
++	if (likely(len)) {
++		ep_src = dma_map_single(dma_dev, entry->buf, len,
++					DMA_TO_DEVICE);
++		rc = dma_mapping_error(dma_dev, ep_src);
++		if (rc)
++			return rc;
++	}
++
++	scoped_guard(spinlock_irqsave, &qp->ep_tx_lock) {
++		if (ntb_edma_ring_full(qp->wr_prod, qp->wr_cons)) {
++			rc = -ENOSPC;
++			qp->tx_ring_full++;
++			goto out_unmap;
++		}
++
++		idx = ntb_edma_ring_idx(qp->wr_prod);
++		in  = NTB_DESC_WR_EP_I(qp, idx);
++		out = NTB_DESC_WR_EP_O(qp, idx);
++
++		WARN_ON(in->flags & DESC_DONE_FLAG);
++		WARN_ON(entry->flags & DESC_DONE_FLAG);
++		in->flags = 0;
++		in->data  = (uintptr_t)entry;
++		entry->addr  = ep_src;
++
++		iowrite32(len,          &out->len);
++		iowrite32(entry->flags, &out->flags);
++		iowrite64(ep_src,       &out->addr);
++		WRITE_ONCE(qp->wr_prod, qp->wr_prod + 1);
++
++		dma_wmb();
++		iowrite32(qp->wr_prod, NTB_HEAD_WR_EP_O(qp));
++
++		qp->tx_bytes += len;
++		qp->tx_pkts++;
++	}
++
++	ntb_transport_edma_notify_peer(qp);
++
++	return 0;
++out_unmap:
++	if (likely(len))
++		dma_unmap_single(dma_dev, ep_src, len, DMA_TO_DEVICE);
++	return rc;
++}
++
++static int ntb_transport_edma_tx_enqueue(struct ntb_transport_qp *qp,
++					 struct ntb_queue_entry *entry,
++					 void *cb, void *data, unsigned int len,
++					 unsigned int flags)
++{
++	struct device *dma_dev;
++
++	if (entry->addr) {
++		/* Deferred unmap */
++		dma_dev = get_dma_dev(qp->ndev);
++		dma_unmap_single(dma_dev, entry->addr, entry->len, DMA_TO_DEVICE);
++	}
++
++	entry->cb_data = cb;
++	entry->buf = data;
++	entry->len = len;
++	entry->flags = flags;
++	entry->errors = 0;
++	entry->addr = 0;
++
++	WARN_ON_ONCE(!ntb_qp_edma_enabled(qp));
++
++	if (ntb_qp_edma_is_ep(qp))
++		return ntb_transport_edma_ep_tx_enqueue(qp, entry);
++	else
++		return ntb_transport_edma_rc_tx_enqueue(qp, entry);
++}
++
++static int ntb_transport_edma_ep_rx_enqueue(struct ntb_transport_qp *qp,
++					    struct ntb_queue_entry *entry)
++{
++	struct device *dma_dev = get_dma_dev(qp->ndev);
++	struct ntb_edma_desc *in, __iomem *out;
++	unsigned int len = entry->len;
++	void *data = entry->buf;
++	dma_addr_t ep_dst;
++	u32 idx;
++	int rc;
++
++	ep_dst = dma_map_single(dma_dev, data, len, DMA_FROM_DEVICE);
++	rc = dma_mapping_error(dma_dev, ep_dst);
++	if (rc)
++		return rc;
++
++	scoped_guard(spinlock_bh, &qp->ep_rx_lock) {
++		if (ntb_edma_ring_full(READ_ONCE(qp->rd_prod),
++				       READ_ONCE(qp->rd_cons))) {
++			rc = -ENOSPC;
++			goto out_unmap;
++		}
++
++		idx = ntb_edma_ring_idx(qp->rd_prod);
++		in = NTB_DESC_RD_EP_I(qp, idx);
++		out = NTB_DESC_RD_EP_O(qp, idx);
++
++		iowrite32(len, &out->len);
++		iowrite64(ep_dst, &out->addr);
++
++		WARN_ON(in->flags & DESC_DONE_FLAG);
++		in->data = (uintptr_t)entry;
++		entry->addr = ep_dst;
++
++		/* Ensure len/addr are visible before the head update */
++		dma_wmb();
++
++		WRITE_ONCE(qp->rd_prod, qp->rd_prod + 1);
++		iowrite32(qp->rd_prod, NTB_HEAD_RD_EP_O(qp));
++	}
++	return 0;
++out_unmap:
++	dma_unmap_single(dma_dev, ep_dst, len, DMA_FROM_DEVICE);
++	return rc;
++}
++
++static int ntb_transport_edma_rx_enqueue(struct ntb_transport_qp *qp,
++					 struct ntb_queue_entry *entry)
++{
++	int rc;
++
++	/* The behaviour is the same as the default backend for RC side */
++	if (ntb_qp_edma_is_ep(qp)) {
++		rc = ntb_transport_edma_ep_rx_enqueue(qp, entry);
++		if (rc) {
++			ntb_list_add(&qp->ntb_rx_q_lock, &entry->entry,
++				     &qp->rx_free_q);
++			return rc;
++		}
++	}
++
++	ntb_list_add(&qp->ntb_rx_q_lock, &entry->entry, &qp->rx_pend_q);
++
++	if (qp->active)
++		tasklet_schedule(&qp->rxc_db_work);
++
++	return 0;
++}
++
++static void ntb_transport_edma_rx_poll(struct ntb_transport_qp *qp)
++{
++	struct ntb_transport_ctx *nt = qp->transport;
++
++	if (ntb_qp_edma_is_rc(qp))
++		ntb_transport_edma_rc_poll(qp);
++	else if (ntb_qp_edma_is_ep(qp)) {
++		/*
++		 * Make sure we poll the rings even if an eDMA interrupt is
++		 * cleared on the RC side earlier.
++		 */
++		queue_work(nt->wq, &qp->read_work);
++		queue_work(nt->wq, &qp->write_work);
++	} else
++		/* Unreachable */
++		WARN_ON_ONCE(1);
++}
++
++static void ntb_transport_edma_read_work(struct work_struct *work)
++{
++	struct ntb_transport_qp *qp = container_of(
++				work, struct ntb_transport_qp, read_work);
++
++	if (ntb_qp_edma_is_rc(qp))
++		ntb_transport_edma_rc_read_complete_work(work);
++	else if (ntb_qp_edma_is_ep(qp))
++		ntb_transport_edma_ep_read_work(work);
++	else
++		/* Unreachable */
++		WARN_ON_ONCE(1);
++}
++
++static void ntb_transport_edma_write_work(struct work_struct *work)
++{
++	struct ntb_transport_qp *qp = container_of(
++				work, struct ntb_transport_qp, write_work);
++
++	if (ntb_qp_edma_is_rc(qp))
++		ntb_transport_edma_rc_write_complete_work(work);
++	else if (ntb_qp_edma_is_ep(qp))
++		ntb_transport_edma_ep_write_work(work);
++	else
++		/* Unreachable */
++		WARN_ON_ONCE(1);
++}
++
++static void ntb_transport_edma_init_queue(struct ntb_transport_ctx *nt,
++					  unsigned int qp_num)
++{
++	struct ntb_transport_qp *qp = &nt->qp_vec[qp_num];
++
++	qp->wr_cons = 0;
++	qp->rd_cons = 0;
++	qp->wr_prod = 0;
++	qp->rd_prod = 0;
++	qp->wr_issue = 0;
++	qp->rd_issue = 0;
++
++	INIT_WORK(&qp->db_work, ntb_transport_edma_db_work);
++	INIT_WORK(&qp->read_work, ntb_transport_edma_read_work);
++	INIT_WORK(&qp->write_work, ntb_transport_edma_write_work);
++}
++
++static void ntb_transport_edma_create_queue(struct ntb_transport_ctx *nt,
++					    struct ntb_transport_qp *qp)
++{
++	spin_lock_init(&qp->ep_tx_lock);
++	spin_lock_init(&qp->ep_rx_lock);
++	spin_lock_init(&qp->rc_lock);
++}
++
++static const struct ntb_transport_backend_ops edma_backend_ops = {
++	.setup_qp_mw = ntb_transport_edma_setup_qp_mw,
++	.tx_free_entry = ntb_transport_edma_tx_free_entry,
++	.tx_enqueue = ntb_transport_edma_tx_enqueue,
++	.rx_enqueue = ntb_transport_edma_rx_enqueue,
++	.rx_poll = ntb_transport_edma_rx_poll,
++	.debugfs_stats_show = ntb_transport_edma_debugfs_stats_show,
++};
++#endif /* CONFIG_NTB_TRANSPORT_EDMA */
++
+ /**
+  * ntb_transport_link_up - Notify NTB transport of client readiness to use queue
+  * @qp: NTB transport layer queue to be enabled
 -- 
 2.48.1
 

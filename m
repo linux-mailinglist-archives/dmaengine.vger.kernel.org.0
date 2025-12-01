@@ -1,62 +1,62 @@
-Return-Path: <dmaengine+bounces-7442-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7443-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7D1BC9910B
-	for <lists+dmaengine@lfdr.de>; Mon, 01 Dec 2025 21:41:58 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75ABEC99144
+	for <lists+dmaengine@lfdr.de>; Mon, 01 Dec 2025 21:47:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 41C5E3446BB
-	for <lists+dmaengine@lfdr.de>; Mon,  1 Dec 2025 20:41:58 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2EC714E19A8
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Dec 2025 20:47:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D1B1258ED5;
-	Mon,  1 Dec 2025 20:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E37A32080C8;
+	Mon,  1 Dec 2025 20:47:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XY7iBdyD"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="WctjPnoe"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010029.outbound.protection.outlook.com [52.101.84.29])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011010.outbound.protection.outlook.com [40.107.130.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA6021257B;
-	Mon,  1 Dec 2025 20:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8880421B9C9;
+	Mon,  1 Dec 2025 20:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764621713; cv=fail; b=E4lqjCcAz7UilG7P7cVNacos68mMrHGBNYWU/WyrYzjEG7/IU1b8pTJy1N7YAQ1iwZDoyX6sn8dMPDvGaaFkao5s/rA7JaBZfNhLxCHxd267gCM0GNPDItZ3Bh0w4LbpdDnd4+M5K8Nu0NfmnUyN7piVL+N8gICRDchOvQiE4r8=
+	t=1764622071; cv=fail; b=kKUjco1wKuXvPy4IT1F0tiYYCW52jZdlSvXgIRLtvrokf7keZ5u0o5cHsDDzgTZjC2U/yplwXjbSvRIxc0Bzqdx1JeEufSe/5wfNNG9zEi2atEdbZfpoyYOaP+3IclHlkwYrLU6XlHOJH8Bf3DP5+irrAMpkWe3bG+G50dYto4s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764621713; c=relaxed/simple;
-	bh=2pJ9WyLIlWrk5C1oPR2ARM1LxwEDHQ6yeP4t2LVQhBY=;
+	s=arc-20240116; t=1764622071; c=relaxed/simple;
+	bh=O94nOBdXJWIrzyRkJ6G/N+cIWkWWA/SS+55GFitQed4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=H6ymh/solVJeQTm1ITAyzNqKJS+rNjMCzqOvYO5KIjWBvoD03O2lDCK7pxiCpUdrV1pKvU+mKfaSDx0jM4IhqY+3Fvwr4tezXOuMH8+HPHY8kzL+xNP5QHWRnscfyATSObE9Lm3KIIHOqUhO+BtNp36L6BTsJec9gvxXbUFAeTY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XY7iBdyD; arc=fail smtp.client-ip=52.101.84.29
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Qq8HZ4FayNw7k1a4f2OhL2P1Hiq6/WxxZHE6bFWp5q9EO3VT9ifC9+/E+Tu0Y6X1WEIhIG8/4JDHJjme26zEZNgAD/EiyFG4K8VkJGXGr6VIG250ip25pmON+BAn8HmEXm1z2xwTXWE9Jaxv8o/S+0QO/4vK1S7H1r0rRCs9VV4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=WctjPnoe; arc=fail smtp.client-ip=40.107.130.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=x63MZHmG5FhxC2p1yGxAXO6cUeV2XLPy+stRmrw2SfPiHXpP/WqMYE3SNJSyoebHZidY7Wbb7Tw01pfhZSRVRa5xsgqa4uOVYeR1fT3EUlv2M+MrjZTxQpvOF4R1+WVPNxeGA6DCLCffRdB5QSCM7aJY9bf2rnhA3f/tjikrwRQ0xSkrfJIkExRHv4HnT6GCjUbRb5KwSAIjRRM+IGdcz3Eyzk3oNM1v8+HaAWpcD7gCnvYRF95ITUBeB/2V1FxR9wN9qC6L09P3Ro972zeowi3gDJz/WdZIbCzOJnborVdyyNRBHz1OK7lrTOsItEHtVHvpclSEAHd8mEi9+5NxnA==
+ b=nYIEMaZVPOkEjEUJ9Vuq4AIKOMgrNbpUiOy+kK9KPvZFkj0ip4JsX2YASyhEAkprsA+qnQ7indaxZc8fWiTRmFtoMtjAMJ9GBw8XVi3+rZiCPrxXa6wgwPozgpLLMwHcUmqKimo4mZe1ZHap4OJo7w1P7dPMoCa8HE2MhFxsr7SEVT8uNQ6kuy8+lDC11lx9kq0kLq1Btm+PAm7obxaioldKCb+oZrl9+6eeQgqVSj3GNFwXxPKtFFL2LetAhK/tW3PkCDCOrAeaUHGgi+ZbJlZiEccwv1n6ev1suhkkrNxHNlTs8UtAEOQ2lDUaehYhyHrgWdcOiYLAYKVuIkh5eg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KEhRG08DxpyKmboJS62O4Lw+ph/FaWqbSV5FwU64roA=;
- b=boJx9YXNuOquMom+C6/AsevchiEshzXoDrMxaQdKhpaWUSDWQeLnMFrOhI0d5jmXvahcHcYiTQ4o8mjgaKlPVIthN0CuJRfxf7ggNHrRto/CfQmvipp7ezv6QPTBYsASRLEj6CL8kqIrpb6XFSU9gOVHCbkOnanXsc8OHfPQerid8lvecGTp4/qj5Z96SGy/sHN7Df4hGeLdKOlnC4vXdug37H5iheG9TUuG8cdrOoQQJ0pH8syS3JWPyCjOOreLduhM3hbRNwnybBeAipe25g9N6N0G3Em4NuNr8crxQK44XdTJRovd4priSa00+HgKGg7DW/r1ASyKLL8w+XZNQQ==
+ bh=booZ/rDu6moZ22icfAqWrAopUCxO9RgY8V1VyBTPiTY=;
+ b=XWi96XJ51bQfppq62tl3Vnx5YdB1MK3srcRdbKKyndWRE4nMZ5ZgVJjjBW+u+crMyXx/VAoOA/jreVKiCwpxU2j3z0ea2bzXHok54Uo4dIzCeg+PIZ596Yyhq5mqLpw4n3Hsiz1cgOAWMM3meAZdUMi3TMbZsol6kkRmeVOqJ+gkeyz8u+dwr9XYLEOus0qame5I+N0lGbme7fJSVKBtW/IP5Qh1VTzQw3miX+gGAqQ9y2CApR2GvC6Kln+qjSojRbtt5LHDBld2bltu0tePrXFJOVs0Lynwm1DDWpmu0qaVM2yDrZxVc+ZZULcrvBjrxA0bP6gZojAdajtbc7xrxg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KEhRG08DxpyKmboJS62O4Lw+ph/FaWqbSV5FwU64roA=;
- b=XY7iBdyDjsXgG4KH79V4yLajPhFOA7BtV1o6Fe9TcFCzy31aCuxwfFj/gbfgkhNg84y0nkD4Cn5xlRd44AqPGTruKSDCUncUS3pX0htGfgyJUumCGq+jf07Udb3VZOHzpuUQv/qd+bVvk+EecvD8+E+FcVJB60vLcZRA1HFFYAm4Tdhoe12+RcfsE5buwtbK70LiCjHw0P2lNtPvq1YW5gJShwiut6346ifX2tf/iZVDGotzWSbmtxnxWUtdKcwur4i9w6L5P3Fo5mMfJgRd6aya+DT838jt+cIEkGFldl6OJUyQp8NG8anRJ2QeCSt03ZdcfGxbcid3RjuGdqAPZg==
+ bh=booZ/rDu6moZ22icfAqWrAopUCxO9RgY8V1VyBTPiTY=;
+ b=WctjPnoed3AYnTdpKv3u1qTeuqCuQ2P41FDb8rlXjxFpTsUhVfJssyn/Idh7iUVOAywSrTEsADD6sWZxFeZJHIQGDsLS4lD1fFna0mwHAOlL7/aQzOQqL1mIvsWSZnSg0w5CF2C5g3AaNiZLSy7BFtmnVT0KF/gdzRJFNzKtts2eFpDwztKrmAhd94co+e8xs92bHvo3TF9qUnUtLWC/nJsJR0byxxWgj1gRRK8+IEAHBhh1wjFNtapARmWiZcwcZnpXa4ZNfefNvkS/ZwpQ7x3Ak9lfEbAsu7x5aKp3nCcP3D/aPN3aBDl69ngQXn2YAjczJOkg+yTdUOeA/J7GqA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
- by AS8PR04MB8325.eurprd04.prod.outlook.com (2603:10a6:20b:3f6::9) with
+ by DB9PR04MB8493.eurprd04.prod.outlook.com (2603:10a6:10:2c5::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Mon, 1 Dec
- 2025 20:41:47 +0000
+ 2025 20:47:44 +0000
 Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
  ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
  ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9366.012; Mon, 1 Dec 2025
- 20:41:47 +0000
-Date: Mon, 1 Dec 2025 15:41:38 -0500
+ 20:47:44 +0000
+Date: Mon, 1 Dec 2025 15:47:34 -0500
 From: Frank Li <Frank.li@nxp.com>
 To: Koichiro Den <den@valinux.co.jp>
 Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org,
@@ -69,16 +69,16 @@ Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org,
 	jingoohan1@gmail.com, lpieralisi@kernel.org, robh@kernel.org,
 	jbrunet@baylibre.com, fancer.lancer@gmail.com, arnd@arndb.de,
 	pstanner@redhat.com, elfring@users.sourceforge.net
-Subject: Re: [RFC PATCH v2 19/27] PCI: dwc: ep: Cache MSI outbound iATU
- mapping
-Message-ID: <aS39gkJS144og1d/@lizhi-Precision-Tower-5810>
+Subject: Re: [RFC PATCH v2 23/27] NTB: epf: Add per-SoC quirk to cap MRRS for
+ DWC eDMA (128B for R-Car)
+Message-ID: <aS3+5rw16xgMCuwE@lizhi-Precision-Tower-5810>
 References: <20251129160405.2568284-1-den@valinux.co.jp>
- <20251129160405.2568284-20-den@valinux.co.jp>
+ <20251129160405.2568284-24-den@valinux.co.jp>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251129160405.2568284-20-den@valinux.co.jp>
-X-ClientProxiedBy: PH5P220CA0002.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:34a::17) To DU2PR04MB8951.eurprd04.prod.outlook.com
+In-Reply-To: <20251129160405.2568284-24-den@valinux.co.jp>
+X-ClientProxiedBy: PH7PR17CA0032.namprd17.prod.outlook.com
+ (2603:10b6:510:323::22) To DU2PR04MB8951.eurprd04.prod.outlook.com
  (2603:10a6:10:2e2::22)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -87,219 +87,245 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|AS8PR04MB8325:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f96f054-f50c-472f-1402-08de311a0be9
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|DB9PR04MB8493:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8deb8687-fb03-4907-f773-08de311ae085
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|19092799006|376014|366016|1800799024|38350700014|7053199007;
+	BCL:0;ARA:13230040|366016|376014|7416014|52116014|19092799006|1800799024|7053199007|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kOo6um9ycJUroU6gucC/zlCxeHXh3FtxURsokyW4rGMghjtcMGiS2lxomK7Q?=
- =?us-ascii?Q?Ar44ZatoL5pI/PfZqwCzJs6QI8IhJ6yhkew5P1ysRrvElVb2zNpdhArUcgVa?=
- =?us-ascii?Q?QWeitzFXBo4xv1PGbnm2Z9rX0J2bv7OZjx9ZDOgPC6JNdZEFNAvI64DM9GGc?=
- =?us-ascii?Q?q3NcnMQ+jfN5S3q7tpKAycFR6B+uI8e4HjpSqCkr3kAZsrvckCJ+aMTvZ5i0?=
- =?us-ascii?Q?yBkNR1kj54br9q42eytopezPsCd7qAOjjyHTrvHajwva4Za22tWfJhRuJl3n?=
- =?us-ascii?Q?1bnne7igNACijUar/+Isi9NdSF9W3XxJnzpZS9VacETy7y83lH8ubojleqUx?=
- =?us-ascii?Q?Ldv4qsit0BnUSwlBEOLGYqg0nAN2GUka163NocIm6xoSItClFqKRiqCY24uG?=
- =?us-ascii?Q?XuXBPYHWXHMyadyxfiEU+/NwoCG9ishVgk911GSEDy1dmo2Vmq0vkwa+BdVa?=
- =?us-ascii?Q?hDrEmkEfPGhXOuiGqY2hzzGThiefZJSj1gCi3QBlB7MAv09+mmibvXCVL0SA?=
- =?us-ascii?Q?Pq351v9JNDqSgd3m2JtKiCMRGrrK19i9xTA8ZS0narEgOBPcJ3s6oR7d/4gU?=
- =?us-ascii?Q?4rrFdrruzA80sfZhxrVnT/Jtd5VtnRq37UsbQ//15xqh+6LLCYaZxUhD37WC?=
- =?us-ascii?Q?fUFCUJI9P/EtzKpRCdmeyDruihD83uVF8UTknKBEPKyK3992n/OsO8Zi3Gtq?=
- =?us-ascii?Q?hHn2bDe5A9Ou/C90bO47tYnxUMXTj3uGnryqSxuACU9sq44OFwczF8FcvrjR?=
- =?us-ascii?Q?AI+IBVJ5rp3KxxlKyJ2hkkXD6Gy+b2qKZBbcB1w1deVWZCBNZ5klEpgWdnz8?=
- =?us-ascii?Q?tlxUO0TEThXwsJOd1Qij19ZccJmv8oTmzis07x7DmWyNmYkZ9lPqTSBXe++5?=
- =?us-ascii?Q?H7cWByZDKA1HbaFnxWBpVf6T9g1uGTEoAHZILOVHYNRzbcSn58dkV06JYJ2F?=
- =?us-ascii?Q?EG3g7/TrUSIOnXJg3nt2H12eOOrJLe3TlB6HbU/MYiMDPuwjyyxUeUtiSzGl?=
- =?us-ascii?Q?5PuHau8UeysRz2WzYDyo//4+VeMbA7JqvM9qbn7OE4RiMOcpRzbPRTbGLbEG?=
- =?us-ascii?Q?Go6eupIGiuH+bmf8HLn9OsV1LCduHMRVYNs0+pf92wytFxEbtn80MNfh2VUo?=
- =?us-ascii?Q?p/SVsUvXHOZF9L80HxlFv5VLaSC5gQZWaSPVcAFLZ35RS0jTH0Mwi1KoVfXP?=
- =?us-ascii?Q?Jro+LB83z9/JOIrFDgJPIAdnth6ldmA5EdIj0IJz38uwSHfboYtHRt6ZQtP0?=
- =?us-ascii?Q?cLP37hpzsmyB+ig0DZ2kerpGYCia9tEC56GJlIrggJEHGFPiVB/A0J7p68cg?=
- =?us-ascii?Q?Gz1sKgH5mK9slhklR6U/XGRyG+EYvysRjjRAdE9/+NzJTQige/Z0iT+UkukG?=
- =?us-ascii?Q?tvTCN1DWM6W2QdOSWidlk953PVTsQvgKMORUPAdaGkgRTKtqg/SuB+ztM9A5?=
- =?us-ascii?Q?6qtnwuqSEsjyRKuNJWuN4WBql5i+zs3yPh81AVxXNNR8bMrknCk7NNd0geoW?=
- =?us-ascii?Q?e8MmaBkiGgAcKPNXayKjljZM1+E2uvvInidG?=
+	=?us-ascii?Q?b79AHSA2Bacy+uGOKUASPPlGjjPGjX3K0AGPBkGMKZAHTDL3irV1W7CKM+FU?=
+ =?us-ascii?Q?oKlLzV8+6eoHq1SeD0QShXSGefdcywkv/ZPDzNXoK+ejOEHqvGbaKozeSKAO?=
+ =?us-ascii?Q?RK6VuY8zLdiXmzknA2VE7gPZrv2stEI74cIHhetEa234j0BSg71TtkfnNr09?=
+ =?us-ascii?Q?6ikOhRsGG9kMuBob5qDDwNiTA7xS8j8Ln/rMZTrv6HlFLJITsLLHE8z0GowK?=
+ =?us-ascii?Q?VLLVcyjI7nThn6auwdEXBP/+/ImLTncWkmZhzXjnjKG/88kOlCEJLgGOeJZf?=
+ =?us-ascii?Q?F/PIdiObVGebYmMGxRZSDBGE8ys0zBDnPfcnswDcsTu0D6CFxjmOxVfLwYBG?=
+ =?us-ascii?Q?fGNwZmoBJpWGeFqEhhlZuuI7NqfwhQ1U8QuQIsSpBymHPXXRof/w7GAtlx9E?=
+ =?us-ascii?Q?iKCh4DwB99enpoV8f2i3P/cwBenmThdK/EYu0I3h9/xAb7zj5T51VJC4Ng3f?=
+ =?us-ascii?Q?WH6xIbyGZCjxuzULuMmz5rbZr3KP3hdH+EqIeQgY0YuYwVQf5S1WIsBmBM0Q?=
+ =?us-ascii?Q?Wlw5jeczcwDDvFYCmSW/cQYjHwRfzu47TuvBffBApb1uryPUGLVk0/dHBTlV?=
+ =?us-ascii?Q?RoZoJ+EcTwZryv2EeTqst6gc6gXWZdmLYYxJ1ks3/YbpghoHL4q2B0Utw81d?=
+ =?us-ascii?Q?6r09/JlFvEdKNUYrXt8aKOhWdcb3/In1Lp63vTYEURGMBLOF21vusErADhZ2?=
+ =?us-ascii?Q?fFjug+qMsWOIVR3ECIsILODtLwohZLvrE7q0CAyQqboZWliVWzoHsfYpbUxb?=
+ =?us-ascii?Q?Dai97oBUU0SwBLSQnLiVGSv5zXqE30UwqY4zSo0qsGYAfWS+ktKrxKbDun+o?=
+ =?us-ascii?Q?t6IHz1uWo88KtjNIgEhw3epETb8arBC9uMTG3vbzM07AZ3gLbwJFj1nIWx+/?=
+ =?us-ascii?Q?e1h2/Lf0aC8Q6U3LI05W9DEuTxnRvRvZ6frjDB9eRHk585UFRT2H+3McIOnj?=
+ =?us-ascii?Q?uWqthE7uAGMiEjuyLOS6t05umYQeuTwP3dDF1pvJ5N5byotY+Rc25Y2XECUd?=
+ =?us-ascii?Q?IxGZiKHc14wkuAVP7bTSgY3CEnW6uKE37tfRKEf1t2kf1OX/YtgRpLBVji5s?=
+ =?us-ascii?Q?EvYdkN/HGLAWriB0YC1JFySzTXc6y/BQ9MMpJSBJ7lcNGVD67CbCywcStYnm?=
+ =?us-ascii?Q?jQn5M6TuT0jtk/wgNxGDVruMyjUhWzBGYw2CC1eM4huhfWMh/vRa2q+1te1J?=
+ =?us-ascii?Q?YRajcd+950RhBnHZkBx0MdOH4knfyU+v3uTZhpCunu4Q4qZKOH8RMB9Sb5+W?=
+ =?us-ascii?Q?QcCETKBZvX8XVN5auV+RV23irVHA5gCQwiMjtweD8aNLD5LbsfJzF4ly87Vy?=
+ =?us-ascii?Q?IYBtrng3BOBe/UDVuaedHpnVBDnDozzS1kJRWVM+Ud2sEwfLhoVzsgwU1jqO?=
+ =?us-ascii?Q?80OxqGVNPDWKujXI0Gf4T1QG/k/GXXxlqQyFSZFOYR2zmUKyJGFXlpZ8iXmu?=
+ =?us-ascii?Q?og4XXESvQyiaaoc3FXymbiockbM/fxt4CDB81GAzutBW1k11tOVxyaF7stWR?=
+ =?us-ascii?Q?p8xLDCptr2FrXO3beZYS/qGOvkpZHT6DFiYn?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(19092799006)(376014)(366016)(1800799024)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(52116014)(19092799006)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0hSTXXcTAQuAeSwnakQYDPnDl9PZqEMY1x5PTktbT3ltTbyiLrPr6X9yjnB1?=
- =?us-ascii?Q?SL4jqdrjD8tjxf1iAyhuRIuq9dPy+m4LqL03A40STpoKLg2StbatUBGfXRsi?=
- =?us-ascii?Q?2wqz00NLWNn9kvFJhZ5ObQP8ikXFOC2u0eqJKlx0SXhdmqrGjU2LLOkIXw+T?=
- =?us-ascii?Q?va+fhTtxq7jTYlFuW6IfIxsOdja7WTaXgTnG5wzMnQRxtUjdlw60KlqaMYWy?=
- =?us-ascii?Q?gaTZsjWjJjRG4RkoFENbNXivKkci5lmSRnKAHDnu+tk+yFCW/gDo5fHhBT+X?=
- =?us-ascii?Q?fOpmuq/ld8+XWh3Z1CaXkgOy3/kj830A0I/KuqpnpCi0TVp3mlTsVcNZdhcJ?=
- =?us-ascii?Q?2jDJidTMt6DpFEQ0fIOLckDGmiys6XecVDMP/Bx5Q7qnR14d87/twH0LTAmB?=
- =?us-ascii?Q?1Arq167ZG1z9hfgDy8EZwL1phZVUQFaU4bCX7KVVjiY0R6ykRdtlrWR6DauO?=
- =?us-ascii?Q?30iP/+ixct+g2b6RWe2D7gzg5WA4QrvGi+tPx8vHp0MDZHyH0/r/TJdkfHZn?=
- =?us-ascii?Q?mWtZ5nkmYe/58eotPSDSjPYJLTj4HzVtLlmiCWZaaa2NQof/gkKq2UulnIac?=
- =?us-ascii?Q?B8hivy5VEZnPQOmGA+Wu3yMIUuu+Ed71JIzjnYKxGHyyHSBnh+eG09Bzp2Mw?=
- =?us-ascii?Q?LaBMVuKp8ySskZxVrR9/bUen0Wm5Zehh/kCeNJh8NQXtJsYauaFIj/Z02C0r?=
- =?us-ascii?Q?ZCZCPvzWhJEVRCfddim/E6ypfqz2cUm0RVeskVkjs1pjdZhp1Ii8rJMhlkJ6?=
- =?us-ascii?Q?V3iJbPZH8Ule4rgLtG9oD7/3RURfNnRYdzHNlqghDtm73cPeFYhYLu0DoIqH?=
- =?us-ascii?Q?twSgZI/r6iiMCmK2Trm+hhR7wI+XFTRWtK4E948okQIhEuxyvenhFdFbwoTz?=
- =?us-ascii?Q?WvFPdUr09VLwcMTB1LUS7sWRNm51xzyj/EDDCOWzxwF6eli+vPQAmPD6yS5p?=
- =?us-ascii?Q?YoYMPnjOQ3sCS6riRtXE0J0YFRcJHFhS33zO3GmdUNx8wsrqWsLFElPwjDvy?=
- =?us-ascii?Q?nh5eOawzuufk536GpQuRJHxJYfsBJYvk19SAiH69tkM8vxUvJpJljXglo/05?=
- =?us-ascii?Q?3B/zZ1OwGT9ctrz6rgapUm4pXivpZRDgc92Bgl9J0e3QDRULIZ2UtzYnuhP0?=
- =?us-ascii?Q?EwRj9XeTgDLjH1lZxDjxSf9hZV2IfUaE3jqQ3bCXaSzf65dtlzO3xjRuIlbR?=
- =?us-ascii?Q?Q6OkvjzolF3z03RMUC4z4S986PEquUkedVxQAv04afboznDp24buZqbHkK/H?=
- =?us-ascii?Q?dpS8ZClShzgxdRLVHdKD4Q38GlvAMczf07kSmIPntsqF6b6GW+UPetrkdudi?=
- =?us-ascii?Q?i2Y0JO9h3TGdQu+dIaVOc+mWd4kM8UpaxQ9zcr4qxB575eBljAN/NpYk0Bh8?=
- =?us-ascii?Q?ogz4f7N9ySeEQTj4JtayHOPYyi8inMbncQmrObhEZ+JygK57XaPAnR9SFtBa?=
- =?us-ascii?Q?P7ao1Pz/96joWooKNXQtLuvy092QgQX9CBT4MVC5RzblGKaoqGQCPeAelbJd?=
- =?us-ascii?Q?mNOXyi9DLB97nkPCAR4Jt5gHuDfv8nNda+n70QmbOcjS/+f9oTsYRlE323fk?=
- =?us-ascii?Q?LGD+QAAnRQJG2z66Y4W0IZdEGU7Lezr8w3gi7Zep?=
+	=?us-ascii?Q?GyoADMNvP0qJFNmwc1fnqQLXYJgsJzn8XdY9gfQnYiIIArRk8UVgj1ODXyj2?=
+ =?us-ascii?Q?BVysJxSh1vh22qQ1IY2a1N6S8CSkdaPuzCYadR0aMdLiUiQ3rm0wJ3SZFW6r?=
+ =?us-ascii?Q?b94g652ybmAnrAvlGThYgRR971WKLe06RKKoumZ5XFdEPCOMpwPuihoKMjLo?=
+ =?us-ascii?Q?2ffG9pHZBEOI6vx+arNcr+1kFPJQkKdZFQLSetkEGp7DQwNDvxvfZ9oSqyUw?=
+ =?us-ascii?Q?kasggNft3Dicp2S0fIBg9++fSte3TFgx93u3fhwrFD9/zaDOPiyc5kx0w+hM?=
+ =?us-ascii?Q?90mKy5DGBJDrqBRGJL0Vt/RSkNFB/jmSWIyOVlw4enRtl1qIMKB8bNPMoL+M?=
+ =?us-ascii?Q?zRlJryqIg+4qst36YJ8hyx+SPkrc7nQ1gPRh1tGWWRWg7Ogv8kwLIZxqLlch?=
+ =?us-ascii?Q?xPoBB2c+yc/TmKWDCeSVR/q+RsyEYQwz2Auz/UMluoFIad5D3IZg+IbHzWhk?=
+ =?us-ascii?Q?/xC8R9QqQmOR6YddDaxm+HuTULhSqJZy7JOwAKIIElQlRXqSf9b2CCwoqOrd?=
+ =?us-ascii?Q?4CL+3FI5i7WkvpFqvSllr/qJlDZc7wgVA5/7EsIEEIWB4G5mMzSQKEipbaEN?=
+ =?us-ascii?Q?4EA8DgZuvfKQJ6sOyYsvfsCSwUjJvy9pKP/Nb/Hq37Jz79a0TSCsorZ5gpkd?=
+ =?us-ascii?Q?dEQNYYppwHNKiVtMj7HWS0+rAwXGF/JdQ5elYBamFyRGMVcgUzVvHDJcIsy3?=
+ =?us-ascii?Q?TQdUbbBP4Eq9zlqCAJcU/jU/opxE7TpiHNMKyrqRbWX98M5osqz8t/o0C65S?=
+ =?us-ascii?Q?QVr5j+Zh1a9D0J9AUwHwhvAuHhby8jghOBE84re3ts3z/HvVIRcZk2pSqkzP?=
+ =?us-ascii?Q?PgEK7cAp2usPs0V2gebRQww28sfoNe8N4x3tq0rib4qSUSvbrqoVogYGvmFv?=
+ =?us-ascii?Q?Gm+3axiGmbmwzvH95P3RW3YRFVJui33O6a9fGAhjndsprIXdAiOcNQB9+/Sa?=
+ =?us-ascii?Q?9KyRTABpkMFZAsaX7U1BSOwN1o5b1ZeNBffiwWf8saTkS8XuEkk7VutKoNLc?=
+ =?us-ascii?Q?dcHHJsfWxJtqP5XE00zE3WntsbFlCk4y26o1p+o7V+/7WUy7vak7dyX+ZMJ5?=
+ =?us-ascii?Q?5aVQ2yrOMjH0PCDcpsbGDWPflf6TvqARF4dubQO2Gf3iVCR/Tviqdk99qSjv?=
+ =?us-ascii?Q?DwLqweMhHpdatSVgSefor1AFPALGxOvEtQyKJaMzou/FFankGA5uA8J1O8Ni?=
+ =?us-ascii?Q?+H29dCT12zy4EPwTSQIjklUlJnTA7unzEFwWFgOxHBBDO9/tG+ZUSCRcP9K3?=
+ =?us-ascii?Q?DE+pi5A4sOzbrdrnze17CPhj5N7wBD/0ooIoNEzBy458Q9GQYgTyiHfjetHE?=
+ =?us-ascii?Q?4hiF9RG8oedqJPzgFG5wQvtDOdtNQ5Au03KqVWzR3kWUOM4Hskg6a1jopyG9?=
+ =?us-ascii?Q?xw54TUPBwzd30B83Zi/yvWg/M5zryX5Xt9oug0jdH99vLH0PuKykpRhJL7Px?=
+ =?us-ascii?Q?CXNTlpcKr3K+xVjZ+rbXJQDXF1jzw4XcGUq6hue4jqkPG7IsO1laissAlsm0?=
+ =?us-ascii?Q?s8N8aFKapdF6U9/N+Qb4jUyY8534zOBbHDozd1LgO+oh+FuIKgK75O8sONi4?=
+ =?us-ascii?Q?dYTV9k6lH112floczra2LM7jXutl5bdtGKl1j2lz?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f96f054-f50c-472f-1402-08de311a0be9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8deb8687-fb03-4907-f773-08de311ae085
 X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 20:41:47.4521
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 20:47:44.0649
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jKICzqET7Gh4uI4eRRN5i5eYiq7OMskj+O6uWdB0LdDOOWDmsY3yVcXb5zwicswtPWUQWKItcjX7DD07sGPs8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8325
+X-MS-Exchange-CrossTenant-UserPrincipalName: fn3L0bqu5lXkrM74gHinB6nbA4MwlYRtt7LroAx4q5Q97pitHkqnWEuc8TbXdPZ0XHZQkZWs2rnkRib9201rLw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8493
 
-On Sun, Nov 30, 2025 at 01:03:57AM +0900, Koichiro Den wrote:
-> dw_pcie_ep_raise_msi_irq() currently programs an outbound iATU window
-> for the MSI target address on every interrupt and tears it down again
-> via dw_pcie_ep_unmap_addr().
+On Sun, Nov 30, 2025 at 01:04:01AM +0900, Koichiro Den wrote:
+> Some R-Car platforms using Synopsys DesignWare PCIe with the integrated
+> eDMA exhibit reproducible payload corruption in RC->EP remote DMA read
+> traffic whenever the endpoint issues 256-byte Memory Read (MRd) TLPs.
 >
-> On systems that heavily use the AXI bridge interface (for example when
-> the integrated eDMA engine is active), this means the outbound iATU
-> registers are updated while traffic is in flight. The DesignWare
-> endpoint spec warns that updating iATU registers in this situation is
-> not supported, and the behavior is undefined.
+> The eDMA injects multiple MRd requests of size less than or equal to
+> min(MRRS, MPS), so constraining the endpoint's MRd request size removes
+> 256-byte MRd TLPs and avoids the issue. This change adds a per-SoC knob
+> in the ntb_hw_epf driver and sets MRRS=128 on R-Car.
 >
-> Under high MSI and eDMA load this pattern results in occasional bogus
-> outbound transactions and IOMMU faults such as:
+> We intentionally do not change the endpoint's MPS. Per PCIe Base
+> Specification, MPS limits the payload size of TLPs with data transmitted
+> by the Function, while Max_Read_Request_Size limits the size of read
+> requests produced by the Function as a Requester. Limiting MRRS is
+> sufficient to constrain MRd Byte Count, while lowering MPS would also
+> throttle unrelated traffic (e.g. endpoint-originated Posted Writes and
+> Completions with Data) without being necessary for this fix.
 >
->   ipmmu-vmsa eed40000.iommu: Unhandled fault: status 0x00001502 iova 0xfe000000
->
-
-I agree needn't map/unmap MSI every time. But I think there should be
-logic problem behind this. IOMMU report error means page table already
-removed, but you still try to access it after that. You'd better find where
-access MSI memory after dw_pcie_ep_unmap_addr().
-
-dw_pcie_ep_unmap_addr() use writel(), which use dma_dmb() before change
-register, previous write should be completed before write ATU register.
-
-Frank
-
-> followed by the system becoming unresponsive. This is the actual output
-> observed on Renesas R-Car S4, with its ipmmu_hc used with PCIe ch0.
->
-> There is no need to reprogram the iATU region used for MSI on every
-> interrupt. The host-provided MSI address is stable while MSI is enabled,
-> and the endpoint driver already dedicates a scratch buffer for MSI
-> generation.
->
-> Cache the aligned MSI address and map size, program the outbound iATU
-> once, and keep the window enabled. Subsequent interrupts only perform a
-> write to the MSI scratch buffer, avoiding dynamic iATU reprogramming in
-> the hot path and fixing the lockups seen under load.
+> This quirk is scoped to the affected endpoint only and can be removed
+> once the underlying issue is resolved in the controller/IP.
 >
 > Signed-off-by: Koichiro Den <den@valinux.co.jp>
 > ---
->  .../pci/controller/dwc/pcie-designware-ep.c   | 48 ++++++++++++++++---
->  drivers/pci/controller/dwc/pcie-designware.h  |  5 ++
->  2 files changed, 47 insertions(+), 6 deletions(-)
+
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+
+>  drivers/ntb/hw/epf/ntb_hw_epf.c | 66 +++++++++++++++++++++++++++++----
+>  1 file changed, 58 insertions(+), 8 deletions(-)
 >
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 3780a9bd6f79..ef8ded34d9ab 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -778,6 +778,16 @@ static void dw_pcie_ep_stop(struct pci_epc *epc)
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
+> index d9811da90599..21eb26b2f7cc 100644
+> --- a/drivers/ntb/hw/epf/ntb_hw_epf.c
+> +++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
+> @@ -51,6 +51,12 @@
 >
-> +	/*
-> +	 * Tear down the dedicated outbound window used for MSI
-> +	 * generation. This avoids leaking an iATU window across
-> +	 * endpoint stop/start cycles.
-> +	 */
-> +	if (ep->msi_iatu_mapped) {
-> +		dw_pcie_ep_unmap_addr(epc, 0, 0, ep->msi_mem_phys);
-> +		ep->msi_iatu_mapped = false;
-> +	}
+>  #define NTB_EPF_COMMAND_TIMEOUT	1000 /* 1 Sec */
+>
+> +struct ntb_epf_soc_data {
+> +	const enum pci_barno *barno_map;
+> +	/* non-zero to override MRRS for this SoC */
+> +	int force_mrrs;
+> +};
 > +
->  	dw_pcie_stop_link(pci);
+>  enum epf_ntb_bar {
+>  	BAR_CONFIG,
+>  	BAR_PEER_SPAD,
+> @@ -594,11 +600,12 @@ static int ntb_epf_init_dev(struct ntb_epf_dev *ndev)
 >  }
 >
-> @@ -881,14 +891,37 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
+>  static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
+> -			    struct pci_dev *pdev)
+> +			    struct pci_dev *pdev,
+> +			    const struct ntb_epf_soc_data *soc)
+>  {
+>  	struct device *dev = ndev->dev;
+>  	size_t spad_sz, spad_off;
+> -	int ret;
+> +	int ret, cur;
 >
->  	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &map_size, &offset);
-> -	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
-> -				  map_size);
-> -	if (ret)
-> -		return ret;
+>  	pci_set_drvdata(pdev, ndev);
 >
-> -	writel(msg_data | (interrupt_num - 1), ep->msi_mem + offset);
-> +	/*
-> +	 * Program the outbound iATU once and keep it enabled.
-> +	 *
-> +	 * The spec warns that updating iATU registers while there are
-> +	 * operations in flight on the AXI bridge interface is not
-> +	 * supported, so we avoid reprogramming the region on every MSI,
-> +	 * specifically unmapping immediately after writel().
-> +	 */
-> +	if (!ep->msi_iatu_mapped) {
-> +		ret = dw_pcie_ep_map_addr(epc, func_no, 0,
-> +					  ep->msi_mem_phys, msg_addr,
-> +					  map_size);
+> @@ -616,6 +623,17 @@ static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
+>
+>  	pci_set_master(pdev);
+>
+> +	if (soc && pci_is_pcie(pdev) && soc->force_mrrs) {
+> +		cur = pcie_get_readrq(pdev);
+> +		ret = pcie_set_readrq(pdev, soc->force_mrrs);
 > +		if (ret)
-> +			return ret;
->
-> -	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->msi_mem_phys);
-> +		ep->msi_iatu_mapped = true;
-> +		ep->msi_msg_addr = msg_addr;
-> +		ep->msi_map_size = map_size;
-> +	} else if (WARN_ON_ONCE(ep->msi_msg_addr != msg_addr ||
-> +				ep->msi_map_size != map_size)) {
-> +		/*
-> +		 * The host changed the MSI target address or the required
-> +		 * mapping size. Reprogramming the iATU at runtime is unsafe
-> +		 * on this controller, so bail out instead of trying to update
-> +		 * the existing region.
-> +		 */
-> +		return -EINVAL;
+> +			dev_warn(&pdev->dev, "failed to set MRRS=%d: %d\n",
+> +				 soc->force_mrrs, ret);
+> +		else
+> +			dev_info(&pdev->dev, "capped MRRS: %d->%d for ntb-epf\n",
+> +				 cur, soc->force_mrrs);
 > +	}
 > +
-> +	writel(msg_data | (interrupt_num - 1), ep->msi_mem + offset);
+>  	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+>  	if (ret) {
+>  		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> @@ -690,6 +708,7 @@ static void ntb_epf_cleanup_isr(struct ntb_epf_dev *ndev)
+>  static int ntb_epf_pci_probe(struct pci_dev *pdev,
+>  			     const struct pci_device_id *id)
+>  {
+> +	const struct ntb_epf_soc_data *soc = (const void *)id->driver_data;
+>  	struct device *dev = &pdev->dev;
+>  	struct ntb_epf_dev *ndev;
+>  	int ret;
+> @@ -701,16 +720,16 @@ static int ntb_epf_pci_probe(struct pci_dev *pdev,
+>  	if (!ndev)
+>  		return -ENOMEM;
 >
->  	return 0;
->  }
-> @@ -1268,6 +1301,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	INIT_LIST_HEAD(&ep->func_list);
->  	INIT_LIST_HEAD(&ep->ib_map_list);
->  	spin_lock_init(&ep->ib_map_lock);
-> +	ep->msi_iatu_mapped = false;
-> +	ep->msi_msg_addr = 0;
-> +	ep->msi_map_size = 0;
+> -	ndev->barno_map = (const enum pci_barno *)id->driver_data;
+> -	if (!ndev->barno_map)
+> +	if (!soc || !soc->barno_map)
+>  		return -EINVAL;
 >
->  	epc = devm_pci_epc_create(dev, &epc_ops);
->  	if (IS_ERR(epc)) {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 269a9fe0501f..1770a2318557 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -481,6 +481,11 @@ struct dw_pcie_ep {
->  	void __iomem		*msi_mem;
->  	phys_addr_t		msi_mem_phys;
->  	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
-> +
-> +	/* MSI outbound iATU state */
-> +	bool			msi_iatu_mapped;
-> +	u64			msi_msg_addr;
-> +	size_t			msi_map_size;
+> +	ndev->barno_map = soc->barno_map;
+>  	ndev->dev = dev;
+>
+>  	ntb_epf_init_struct(ndev, pdev);
+>  	mutex_init(&ndev->cmd_lock);
+>
+> -	ret = ntb_epf_init_pci(ndev, pdev);
+> +	ret = ntb_epf_init_pci(ndev, pdev, soc);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to init PCI\n");
+>  		return ret;
+> @@ -778,21 +797,52 @@ static const enum pci_barno rcar_barno[NTB_BAR_NUM] = {
+>  	[BAR_MW4]	= NO_BAR,
 >  };
 >
->  struct dw_pcie_ops {
+> +static const struct ntb_epf_soc_data j721e_soc = {
+> +	.barno_map = j721e_map,
+> +};
+> +
+> +static const struct ntb_epf_soc_data mx8_soc = {
+> +	.barno_map = mx8_map,
+> +};
+> +
+> +static const struct ntb_epf_soc_data rcar_soc = {
+> +	.barno_map = rcar_barno,
+> +	/*
+> +	 * On some R-Car platforms using the Synopsys DWC PCIe + eDMA we
+> +	 * observe data corruption on RC->EP Remote DMA Read paths whenever
+> +	 * the EP issues large MRd requests. The corruption consistently
+> +	 * hits the tail of each 256-byte segment (e.g. offsets
+> +	 * 0x00E0..0x00FF within a 256B block, and again at 0x01E0..0x01FF
+> +	 * for larger transfers).
+> +	 *
+> +	 * The DMA injects multiple MRd requests of size less than or equal
+> +	 * to the min(MRRS, MPS) into the outbound request path. By
+> +	 * lowering MRRS to 128 we prevent 256B MRd TLPs from being
+> +	 * generated and avoid the issue on the affected hardware. We
+> +	 * intentionally keep MPS unchanged and scope this quirk to this
+> +	 * endpoint to avoid impacting unrelated devices.
+> +	 *
+> +	 * Remove this once the issue is resolved (maybe controller/IP
+> +	 * level) or a more preferable workaround becomes available.
+> +	 */
+> +	.force_mrrs = 128,
+> +};
+> +
+>  static const struct pci_device_id ntb_epf_pci_tbl[] = {
+>  	{
+>  		PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
+>  		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
+> -		.driver_data = (kernel_ulong_t)j721e_map,
+> +		.driver_data = (kernel_ulong_t)&j721e_soc,
+>  	},
+>  	{
+>  		PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x0809),
+>  		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
+> -		.driver_data = (kernel_ulong_t)mx8_map,
+> +		.driver_data = (kernel_ulong_t)&mx8_soc,
+>  	},
+>  	{
+>  		PCI_DEVICE(PCI_VENDOR_ID_RENESAS, 0x0030),
+>  		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
+> -		.driver_data = (kernel_ulong_t)rcar_barno,
+> +		.driver_data = (kernel_ulong_t)&rcar_soc,
+>  	},
+>  	{ },
+>  };
 > --
 > 2.48.1
 >

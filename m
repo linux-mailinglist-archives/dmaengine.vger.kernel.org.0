@@ -1,38 +1,39 @@
-Return-Path: <dmaengine+bounces-7423-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7424-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15CCAC9769B
-	for <lists+dmaengine@lfdr.de>; Mon, 01 Dec 2025 13:55:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 00980C976A4
+	for <lists+dmaengine@lfdr.de>; Mon, 01 Dec 2025 13:56:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6AF73A28C9
-	for <lists+dmaengine@lfdr.de>; Mon,  1 Dec 2025 12:50:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72E1D3A2571
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Dec 2025 12:50:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24EB730CDB5;
-	Mon,  1 Dec 2025 12:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C83EB30E0C2;
+	Mon,  1 Dec 2025 12:50:17 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E84DF30E0C6;
-	Mon,  1 Dec 2025 12:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75DD530DD2F;
+	Mon,  1 Dec 2025 12:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764593405; cv=none; b=I91unHWJ7Gqo+vS8LT7n/lhMp6vuxEUrwmLTjJ6vSfMFruQ14EQg7U/3AzCKhfGXPvmGsU1kK+TcqtXcXVtb60Ftix+6BbtToGe+0Xe5llEiEtva0VBVTeIBcczfAJR5E02gO4/rgCJDXqy7h1PKDfGCI4F2BXNh4snTN8NIjDs=
+	t=1764593417; cv=none; b=qYIb7TmCKruxapAn/GkkBHpcirMJ36UruIOIJqWVEpaGx5ui5zlkUyVgGrfkLNQki8I+xnE9tHwjx1g3hMrs80XrxOz1+o3e0KczNxS/6fmWSQq2/l9AhjY9I95oFDCan9JH3phSLwsN5Wc3PmhGosRKZ13THBu91FUjGUKoM6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764593405; c=relaxed/simple;
-	bh=IWMQypBnyQRwWjZg5iiIAxpqwL5I5qhysJPmHfxV9eE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WzuX7ARs6vL+EWQQR7+wAPQdrySlp1VlbCTJfip7CY34ACQs8cXBut18/DsF7toZefKZcsAbW2pu5wmZxoabiphFY7xyVUGrmuuSLTkRx/AYnqAvr68xIaHe+2hwPiMXcNEOsneLicA3q1NitBwN5/ya1TrYMLAw+Ns8KDWcGGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+	s=arc-20240116; t=1764593417; c=relaxed/simple;
+	bh=WhAJGCEAM/F7bLNFt0kKw1qhkRc+WVMYlcXR1S0/xnw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EGypcfD9SyZAsczXwJDkWuEprxxBv6neuVtpAPeqpszlOghcfn8q2Pwy844Bl7cDrk9THx0RS3NskI6KK1HuI3VOjL6FnCtfYgZLDzvALQxxumywhv5aCiNROMzHRzNellt0RSHbj9ONFsjf39Y1cq+NA90FWx7HkbKsVvs3KIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: x6vslG3dRKCV6a8BodWDPg==
-X-CSE-MsgGUID: I9J3KQGoRZKAw0juJq7HEg==
+X-CSE-ConnectionGUID: OPWaf4kaTA2c+leRWioepg==
+X-CSE-MsgGUID: RGLmopkhThaJ2d9iHxhS0A==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 01 Dec 2025 21:50:00 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 01 Dec 2025 21:50:14 +0900
 Received: from demon-pc.localdomain (unknown [10.226.93.83])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 01A1742100C2;
-	Mon,  1 Dec 2025 21:49:55 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 7869742100DB;
+	Mon,  1 Dec 2025 21:50:09 +0900 (JST)
 From: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -49,10 +50,12 @@ Cc: dmaengine@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2 0/6] Add DMA support for RZ/T2H and RZ/N2H
-Date: Mon,  1 Dec 2025 14:49:05 +0200
-Message-ID: <20251201124911.572395-1-cosmin-gabriel.tanislav.xa@renesas.com>
+Subject: [PATCH v2 1/6] dmaengine: sh: rz_dmac: make error interrupt optional
+Date: Mon,  1 Dec 2025 14:49:06 +0200
+Message-ID: <20251201124911.572395-2-cosmin-gabriel.tanislav.xa@renesas.com>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20251201124911.572395-1-cosmin-gabriel.tanislav.xa@renesas.com>
+References: <20251201124911.572395-1-cosmin-gabriel.tanislav.xa@renesas.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,33 +64,52 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Renesas RZ/T2H (R9A09G077) and RZ/N2H (R9A09G087) SoCs have three
-DMAC instances. Compared to the previously supported RZ/V2H, these SoCs
-are missing the error interrupt line and the reset lines, and they use
-a different ICU IP.
+The Renesas RZ/T2H (R9A09G077) and RZ/N2H (R9A09G087) SoCs do not have
+an error interrupt for the DMACs, and the current driver implementation
+does not make much use of it.
 
-This series depends on the ICU series [1].
+To prepare for adding support for these SoCs, do not error out if the
+error interrupt is missing.
 
-[1]: https://lore.kernel.org/lkml/20251201112933.488801-1-cosmin-gabriel.tanislav.xa@renesas.com/
+Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+---
 
 V2:
  * remove notes
 
-Cosmin Tanislav (6):
-  dmaengine: sh: rz_dmac: make error interrupt optional
-  dmaengine: sh: rz_dmac: make register_dma_req() chip-specific
-  dt-bindings: dma: renesas,rz-dmac: document RZ/{T2H,N2H}
-  dmaengine: sh: rz_dmac: add RZ/{T2H,N2H} support
-  arm64: dts: renesas: r9a09g077: add DMAC support
-  arm64: dts: renesas: r9a09g087: add DMAC support
+ drivers/dma/sh/rz-dmac.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
- .../bindings/dma/renesas,rz-dmac.yaml         | 100 ++++++++++++++----
- arch/arm64/boot/dts/renesas/r9a09g077.dtsi    |  90 ++++++++++++++++
- arch/arm64/boot/dts/renesas/r9a09g087.dtsi    |  90 ++++++++++++++++
- drivers/dma/sh/rz-dmac.c                      |  94 +++++++++-------
- 4 files changed, 317 insertions(+), 57 deletions(-)
-
+diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+index 38137e8d80b9..20a5c1766a58 100644
+--- a/drivers/dma/sh/rz-dmac.c
++++ b/drivers/dma/sh/rz-dmac.c
+@@ -954,16 +954,15 @@ static int rz_dmac_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Register interrupt handler for error */
+-	irq = platform_get_irq_byname(pdev, irqname);
+-	if (irq < 0)
+-		return irq;
+-
+-	ret = devm_request_irq(&pdev->dev, irq, rz_dmac_irq_handler, 0,
+-			       irqname, NULL);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to request IRQ %u (%d)\n",
+-			irq, ret);
+-		return ret;
++	irq = platform_get_irq_byname_optional(pdev, irqname);
++	if (irq > 0) {
++		ret = devm_request_irq(&pdev->dev, irq, rz_dmac_irq_handler, 0,
++				       irqname, NULL);
++		if (ret) {
++			dev_err(&pdev->dev, "failed to request IRQ %u (%d)\n",
++				irq, ret);
++			return ret;
++		}
+ 	}
+ 
+ 	/* Initialize the channels. */
 -- 
 2.52.0
-
 

@@ -1,217 +1,146 @@
-Return-Path: <dmaengine+bounces-7445-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7446-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EBD3C99374
-	for <lists+dmaengine@lfdr.de>; Mon, 01 Dec 2025 22:41:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DD32C993FF
+	for <lists+dmaengine@lfdr.de>; Mon, 01 Dec 2025 22:47:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBA913A520A
-	for <lists+dmaengine@lfdr.de>; Mon,  1 Dec 2025 21:41:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6049C3A5A5B
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Dec 2025 21:47:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98CD4283FCF;
-	Mon,  1 Dec 2025 21:41:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAB8C26ED4E;
+	Mon,  1 Dec 2025 21:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lCikXYcC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ItAke5uH"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012035.outbound.protection.outlook.com [52.101.66.35])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E572773EE;
-	Mon,  1 Dec 2025 21:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.35
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764625284; cv=fail; b=DDjpXOKsrqEy4fYBDUPZyuuD9elON1yLTNjwqA3RUb7yypZ7dzSW8/zxbI7SUVuKpSlu2/1uqONkG1mDpbBcWxUjDGZ9148C3PtTMT8BiuflSWiUfy3T2n+tCEy9R0FzlDodtN71Vz0Udut6+L3kjggfK7JgTmng8WuCA242NsY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764625284; c=relaxed/simple;
-	bh=6KvyO16205DSEn/fm/xO0lIyKfUwOrFrS0YXPxGinIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=RGpEaACdKqN7WZVJ8pOoDecoukonONfUnBZSvwLL2HRToUeMwvgx+SdCk5/hvum9vamAvEftkDHElW2df2a4nLeaKhHpbjycz81V71r/72SwQVcHj+2nL1FgVwjitLy39xlN4st/MNsVFAiHiUU7YU7sOGkS4JOpTWyJB2Z2OTU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lCikXYcC; arc=fail smtp.client-ip=52.101.66.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=anyi1Mjd8VIvveLvqpLSUe6hdNiRl+LC+69efWwqNqtuXEDwEc+Ok243lwyZvqoJ/OHcRNFqjR9zD8TndD3L3Z4nrCY22pMbFdVK2wkLQ0CYReub1MLE1XZeXhXNu71uU/dP7F7s1erZsLlgc6TivEW7HctsX4HWAjg7sYAsrokV7yddR+ZFrA0isqV8RWne9R5qFvAZDn6auv6zASfWnOMKg1jp/tcj2h3FfsTlD6RbnaUAZRCMWVSNuvfHBegXGL1BfLRmNlDn50DRa5c0IJ2PO2F26wBTtizBWD0u3wVrMP/DKjTtZvPAd4ElGi7xGJo04loHW0Xi14bQqkWVGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=io5c4L+J0fT5veZpnAvfX4i23GTgEJovRdH9cggOkaE=;
- b=YFoFCKJa9CSy4+eXLoYhmc6u9R4KlmMs9teurh38+KfmDhCgj9B3SfBWBbwQ2/dnTE+FhMJHSRVadRBF0kp4IbQQ910T9aLUad6989Pox9bBGGSXaDXt5uvsn6ORZe0SCN5GHmiV5Ji3buZN/lyf652ApV0/MNfRhAVamQMJaSuD6DQ1OHUDvvcOzHmasxlPsum74ut3SmLLPnBl56V4AWTXJrNqYUu2NG3Jt0eKWRQ+YQo34/i0NETGmfimU4VEU2e9G2O5uL1h+03UekryDpPoDpO+zUyWN61r2x1nChLJeQubD3QM8BgfHNdBcFU/U6jsBvWklZpT6eLIVE2SjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=io5c4L+J0fT5veZpnAvfX4i23GTgEJovRdH9cggOkaE=;
- b=lCikXYcCI0EIxWrAkZxHEme+Iy3jaW5P4kC0udTJ8Sx28Alr517TPxsEgHGmjd/mL0ZtkbfCsGJyAS9wGX4gldRFEzy2dJzMIF6+94nNri/xUFHKRwFREr0qCR8fv+oLxx4m7jwi7mf4xLIntPKktPnBmO3kCeVxH5KWuAxJspokYulTtyUt4LTwMweMxkgppeRsrIlJXEU/vutizFnjB7B5AUzN3Wv91l5U9uwKSZS524aFbL/G9/cCenBfmd4BImQsk7Jf7nMTQhlBXVhZ50O7I6PrRYtA8N0PJA73MBn+fXKpLDmIIWjcCB3I0hfEdXejDGWfQQ7XGL8tog5fHQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
- by DU4PR04MB10790.eurprd04.prod.outlook.com (2603:10a6:10:590::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Mon, 1 Dec
- 2025 21:41:17 +0000
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9366.012; Mon, 1 Dec 2025
- 21:41:16 +0000
-Date: Mon, 1 Dec 2025 16:41:05 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
-	bhelgaas@google.com, corbet@lwn.net, vkoul@kernel.org,
-	jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com,
-	Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
-	kurt.schwemmer@microsemi.com, logang@deltatee.com,
-	jingoohan1@gmail.com, lpieralisi@kernel.org, robh@kernel.org,
-	jbrunet@baylibre.com, fancer.lancer@gmail.com, arnd@arndb.de,
-	pstanner@redhat.com, elfring@users.sourceforge.net
-Subject: Re: [RFC PATCH v2 20/27] NTB: ntb_transport: Introduce remote eDMA
- backed transport mode
-Message-ID: <aS4Lcb+BjjCDeJRz@lizhi-Precision-Tower-5810>
-References: <20251129160405.2568284-1-den@valinux.co.jp>
- <20251129160405.2568284-21-den@valinux.co.jp>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251129160405.2568284-21-den@valinux.co.jp>
-X-ClientProxiedBy: SJ0PR03CA0208.namprd03.prod.outlook.com
- (2603:10b6:a03:2ef::33) To DU2PR04MB8951.eurprd04.prod.outlook.com
- (2603:10a6:10:2e2::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22FC1284662;
+	Mon,  1 Dec 2025 21:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1764625611; cv=none; b=iK6zo/67l+rF5nQbEEtib6UZulQX/F++ejAYpsNmx1d49pOnC9QgUguv6C5pAtDpS6W7EIFs65igcLlxa0nawmgw9jtoDAazrLkmJIB8sazWpsw1dtHEu6hC89lx0xPTjohD0LONHvaVREnq8JjQWvBkOZ/CR0SPiLbe1F8Vg7w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1764625611; c=relaxed/simple;
+	bh=vmR2gr0jtWvRpD65pCPgcnq3YMXOdctW3TNuAT3jCmg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l/vumbcwrFF7BSzi5LIRMXmLRtZKVVbgDN2Iko0UWWiKhGvm6i1wHsAG6gUz+GO7+A0I4Bu4PVAE/LEWaPkklq7SrnaHM3A8Xdu77pMFgonpUEXzxMgxtjvGoKqnJfnnfmWPHUWB+Sweyv3da0PSlK3F2jg9WJr1yTMONoKX68M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ItAke5uH; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764625607; x=1796161607;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vmR2gr0jtWvRpD65pCPgcnq3YMXOdctW3TNuAT3jCmg=;
+  b=ItAke5uH57CO8iT6TheXaqTA9LHOsgvLlkPYSqhm22kaiIBnypkz0pei
+   ha0mbcSNlyGOHc+LJNPnMyofUhTk6pYNv+1MrqRNConRYUKzBqM53zaMm
+   TIPvFY+2KlbwUu8a3JM0YIRgEyNghx7ecmoO3+fyBGKo7uLqoXsCFpZjQ
+   tZ7HEw+Z3BjPLvGxmCNN/urH4Q0CumOgkTPEu18RBieIs7BxeuSOIIkqM
+   zq3n7xZw98X+XTwKx1jbzGZZMRFYn/b59WlDRCdFytWBjunZDjhyvj1bg
+   8eXcv1RWJMvMmevd7MWXRFYPruy/j/7vhkTjlETZWKSttRjgD+JwGufHP
+   g==;
+X-CSE-ConnectionGUID: D5eJOc3yQUCJCKzTmyVC3Q==
+X-CSE-MsgGUID: fwHRHHKFRa+Wu06HWx4tzg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11630"; a="92055822"
+X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
+   d="scan'208";a="92055822"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 13:46:46 -0800
+X-CSE-ConnectionGUID: yzo/424JQeSXzy4akp9yOg==
+X-CSE-MsgGUID: Tms3OsgaStqjkZsBaZLojg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,241,1758610800"; 
+   d="scan'208";a="225161433"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.125.111.120]) ([10.125.111.120])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 13:46:43 -0800
+Message-ID: <c3478f9b-9f49-4953-b21f-28547ac90d63@intel.com>
+Date: Mon, 1 Dec 2025 14:46:41 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|DU4PR04MB10790:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0dd17df4-88a0-4932-3c43-08de31225b55
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|1800799024|52116014|376014|19092799006|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bBfTU/MhnnclLeLvukYkol5+o8uYMCIArKH6v15vHOfk4J5ybKkVcyK/Nil/?=
- =?us-ascii?Q?DjeGr1M3axekMMWSj2e7aYIQktiF2IalV5xCSms9vWXAbeOtG/fDwjCRjc1H?=
- =?us-ascii?Q?a2yEacMfdi+E56jsq+MuW4bYB0C0wOP89CaLnbAPkZxWevGpjd7DUCwyljGk?=
- =?us-ascii?Q?QeugEHto0tvy3DGzQiJIVtV6Y1RTEqOuk8nBuk38M7MEDb5693z9KNU5KvN8?=
- =?us-ascii?Q?5GTBxw17rzy7nAClSmgwMd/wflVJR4Me3DPsHaGUQYz6MPjdR+nqrpX27pHg?=
- =?us-ascii?Q?zHhRa+0oHpZjZhpxKvtD04qJEg3FqTtXcG1+YoW/8dqUsUEEgaGdBrl2QYEQ?=
- =?us-ascii?Q?ZEGafQ7Hy3vzYeOSU4h5BCRrgO9wu+S/5YTdcp54YZojSjQD9uDck1wZmNBu?=
- =?us-ascii?Q?uFBBZncsmcN5zEHX9AZXktdCifhJzRsfIxWw1L+76ubX3Zz7yTKAkAifrzOQ?=
- =?us-ascii?Q?dHEhQA4AL9vFm0RURqrDrq4B4PbEB4/R3/720XB2C4U8DUUyAVtS+tC6Reyb?=
- =?us-ascii?Q?e+k7iZ+pBcR8o667fb9EdsJMlSUeyMwJRKFrDd2qW9ISk2KkK2vy9kf4tm2f?=
- =?us-ascii?Q?6o5Wtzvwi+csQmC0C7Nxe9EHKp1aTiKWPoAK3vfazkQ2PK+p2qFO2tcmGSGl?=
- =?us-ascii?Q?nuiQ6fjZMFl3FPaupCOjlPRtoUBYLRFXAha5gx512PeNPQh0E2FrMu9+YqRn?=
- =?us-ascii?Q?k+WJ7nYGHTOaTZg/t7oXL4wZGG7faamDp62xKIVBU4uC/LCUP+3ZSY077ugd?=
- =?us-ascii?Q?KhNuPkZaSqjOvdVbkNXWfRrsVRL15H1YhGuFZtH3j1H34mOtnHKxUBxIILeu?=
- =?us-ascii?Q?mrNLq7UtPHmAFs1TUnPfaMxlPDQ+m8pEIYybBblGTTzAi6VowFzzsS1noxk9?=
- =?us-ascii?Q?PNK5LCJxDDdUYnfuc896cwwW/UdJr8K5yuyeXeM0yHhKKokV1/1MysaFOlNq?=
- =?us-ascii?Q?KU7KN2plGS0KrqN8OLr4wkZoo+wjWgbS1iyUnqZCMQHug9o9D8JlqE44admd?=
- =?us-ascii?Q?lPSkMKgMhhJ2gIXOqqz6KiXS0uPK7nyGIiF9g18LtDuqMzEJFCHGHPGYoHE7?=
- =?us-ascii?Q?QJN/6z5KXWfkCmGdHklpDhu4P59+y2ENiNWPwRqcVCHdux13VRfZ6QH4J3gr?=
- =?us-ascii?Q?gj5xOPtJluJhA7MMJBuXitOLCHFKlPQoYt0M68R6I6EGAkU0PSPuYpjl059B?=
- =?us-ascii?Q?W3rS8gEDVWya320rcM8+389J5FD2ThrTIUk8r02dafjsSc0j0xI75AXKKvav?=
- =?us-ascii?Q?NP4QP7uulLbSJkHjYMju5Wm6mfE+Ti+5LObtmpWGBbnyBIFDm5iym4OGO9Jv?=
- =?us-ascii?Q?ueYFEA15/7dk9/BbNKHzZMCIAfu/j2RJuKecygBJsQ8+EmzNOcOdNCteMhuM?=
- =?us-ascii?Q?JDRkWH0mMP/75eqC3SshD56ZdMaXPy4NDW7VM/1mNyaPwETz905Z8+ux64r6?=
- =?us-ascii?Q?ONo+NiK5TQxKhr6J25DKrIo4C5pIRtjG7taDUyV0Xv/bluaM8BQLxdIY7cz+?=
- =?us-ascii?Q?cU4Ohg2Fkg6xDrQZWParkf9Lez9XdwDAd17x?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(52116014)(376014)(19092799006)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?nUT6l2NpWA5ieTHKLxuHvHle0GHD034kiVEkUx8fExXYcJvqvec/UOVpvVAp?=
- =?us-ascii?Q?5GuTSmYhgj2Yin82Yt6PejsUM40U6OO4IHkY8n4S6hnvBshnvjC3jWSttUp8?=
- =?us-ascii?Q?/83SvurtYG6868hTo43Qi4/UMX5a72Wzumhub+EOLUDDPZzNBoEdR++62mjd?=
- =?us-ascii?Q?9hqmEt5SG6S++/urie/WEbTYSKF4Ulqy6zykDpVx46wRHpONr5dQbLAqMT/d?=
- =?us-ascii?Q?9/5V/lSKoi3WG27fr4HPyAnkQokgTQwbLdBiinhm7TyleIE+z9E/KiTCQTF8?=
- =?us-ascii?Q?tGJ9V+28ZwJY2+twvZJhPJb+8yX8wFT5YXvu237AT/I/GH9Py2OTaiaLDnTP?=
- =?us-ascii?Q?dTAUxfPsHL6t08raIpaQ2t4Z2z8LmFOsGT8gUyx7bxTUVFBRlHlcWzI9i3WB?=
- =?us-ascii?Q?EcD/OYp0BM5/ZFWqF/kJh6PPtd7pAJ9VFB8MwRptOsW0EFCBzY2LU322bGDw?=
- =?us-ascii?Q?NZMqguNEJTOAsSlIs636uPmMYXWnAsW0MUfoEjEtnGFqEfPnt7UH94MTZ7b+?=
- =?us-ascii?Q?wwKwpajwr9K+TvGSG3i+CqisnhDik3XO/LEHUA49cLhM+BZWmkdKFUxcZ091?=
- =?us-ascii?Q?ZWCuQugu0sGxIdvdGeCbuCntJmCrBPWzKmQMuNnbZekSJzA4lBF+ikel+DK8?=
- =?us-ascii?Q?6KPqzV+r0pKKvVsOsEuY5UpnZbQ1XCHUvP1cPg21vmAa5yAffYcVLRcH9yMq?=
- =?us-ascii?Q?fqbMvi4o0xzdvcofrXzVPT+V8CO4yvQGWnIwxiKhcpAXBBxOgZomPh1HpVyZ?=
- =?us-ascii?Q?zQPINdtz46GrvDxnAXYmgyN5RDFT8tWGlEQ5rnDIRlP/AYzgXHK8IKBkVjmO?=
- =?us-ascii?Q?y0Ga28nEFt4MbU80L8h1a/ED7ocmIUz0yS+uAZ91i4/weqJkTIvywEa30X0B?=
- =?us-ascii?Q?wEnrgAO1JgxFJuNpvUhi0sAPuMinUtx5+ZRx1yWdZxWA7nLwHi5qlPBoeXLJ?=
- =?us-ascii?Q?l1MlUKVVnDEvL2+Kqa0ZnJMaufClDdEynPEY/0EFkoc/OvSf56x2jLGWssTu?=
- =?us-ascii?Q?s9ymT4I5xWuYWLPA+S01uU9DearVQVPrISInw64yLGtE7vogC9EeJny2Sswc?=
- =?us-ascii?Q?0csUnnIRVuV7qg8hqCRHn3K8pCZoFi953HEH5WowpQ4L3741amN2uVscHn8V?=
- =?us-ascii?Q?92xXKVfwtSCagDySpVlfly/U1Z3cyjsuBBeh9uDMrQnGTPoIKuxgvMxx64i1?=
- =?us-ascii?Q?LXKJLroDQ6GuPwOuwReSQdjqpeIUr9AO7j9jJbI1oAM6LkeiQWiwO8VciP02?=
- =?us-ascii?Q?9d8hKczCM4O0EVDGaEJGjnhH8YXlj6bfmDM2olZLBzvzch0R0/ythmjsbEXp?=
- =?us-ascii?Q?huCJPLxH7cF1VmN+PEZEhAnW17L72C7uoMqkPDOD4j1efVWpKGKk2ks6tsL3?=
- =?us-ascii?Q?IuBmJHTI3G0plgz8ckJB2A/esGNyzbNjwzdgg0e1JKERl5dpQIO3MU5242nQ?=
- =?us-ascii?Q?GIeXM3j7L8Ld7P0K3G/7cXrfYV5Rb6XpN9Vg5fJLIqid8a3O9F2xnaIzL5nO?=
- =?us-ascii?Q?bjRlGpyvfEk5gbllqElvewdg9iKsgouzwqnRt+eM2Y4akzS/WHqDZ/SREZay?=
- =?us-ascii?Q?HIDraB30V7kHtic55XOsW6WxyDpHSt8QmdpAnihu?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0dd17df4-88a0-4932-3c43-08de31225b55
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2025 21:41:16.8496
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Y/cXTw944HuMc9RiJXjmgYm0NaUu0XG1IzxeXSspz+Gtm0rjvBTdKFCU8htyLe9Uzc2KJXmJc5LdYrUt9VhLeQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10790
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 20/27] NTB: ntb_transport: Introduce remote eDMA
+ backed transport mode
+To: Koichiro Den <den@valinux.co.jp>, ntb@lists.linux.dev,
+ linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Frank.Li@nxp.com
+Cc: mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
+ bhelgaas@google.com, corbet@lwn.net, vkoul@kernel.org, jdmason@kudzu.us,
+ allenbh@gmail.com, Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
+ kurt.schwemmer@microsemi.com, logang@deltatee.com, jingoohan1@gmail.com,
+ lpieralisi@kernel.org, robh@kernel.org, jbrunet@baylibre.com,
+ fancer.lancer@gmail.com, arnd@arndb.de, pstanner@redhat.com,
+ elfring@users.sourceforge.net
+References: <20251129160405.2568284-1-den@valinux.co.jp>
+ <20251129160405.2568284-21-den@valinux.co.jp>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20251129160405.2568284-21-den@valinux.co.jp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Nov 30, 2025 at 01:03:58AM +0900, Koichiro Den wrote:
+
+
+On 11/29/25 9:03 AM, Koichiro Den wrote:
 > Add a new transport backend that uses a remote DesignWare eDMA engine
 > located on the NTB endpoint to move data between host and endpoint.
->
+> 
 > In this mode:
->
+> 
 >   - The endpoint exposes a dedicated memory window that contains the
 >     eDMA register block followed by a small control structure (struct
 >     ntb_edma_info) and per-channel linked-list (LL) rings.
->
+> 
 >   - On the endpoint side, ntb_edma_setup_mws() allocates the control
 >     structure and LL rings in endpoint memory, then programs an inbound
 >     iATU region so that the host can access them via a peer MW.
->
+> 
 >   - On the host side, ntb_edma_setup_peer() ioremaps the peer MW, reads
 >     ntb_edma_info and configures a dw-edma DMA device to use the LL
 >     rings provided by the endpoint.
->
+> 
 >   - ntb_transport is extended with a new backend_ops implementation that
 >     routes TX and RX enqueue/poll operations through the remote eDMA
 >     rings while keeping the existing shared-memory backend intact.
->
+> 
 >   - The host signals the endpoint via a dedicated DMA read channel.
 >     'use_msi' module option is ignored when 'use_remote_edma=1'.
->
+> 
 > The new mode is guarded by a Kconfig option (NTB_TRANSPORT_EDMA) and a
 > module parameter (use_remote_edma). When disabled, the existing
 > ntb_transport behaviour is unchanged.
->
+> 
 > Signed-off-by: Koichiro Den <den@valinux.co.jp>
 > ---
 >  drivers/ntb/Kconfig                           |   11 +
 >  drivers/ntb/Makefile                          |    3 +
 >  drivers/ntb/ntb_edma.c                        |  628 ++++++++
 >  drivers/ntb/ntb_edma.h                        |  128 ++
+
+I briefly looked over the code. It feels like the EDMA bits should go in drivers/ntb/hw/ rather than drivers/ntb/ given it's pretty specific to the designware hardware. What sits in drivers/ntb should be generic APIs where a different vendor can utilize it and not having to adopt to designware hardware specifics. So maybe a bit more abstractions are needed?
+
 >  .../{ntb_transport.c => ntb_transport_core.c} | 1281 ++++++++++++++++-
 >  5 files changed, 2048 insertions(+), 3 deletions(-)
 >  create mode 100644 drivers/ntb/ntb_edma.c
 >  create mode 100644 drivers/ntb/ntb_edma.h
 >  rename drivers/ntb/{ntb_transport.c => ntb_transport_core.c} (65%)
->
+> 
 > diff --git a/drivers/ntb/Kconfig b/drivers/ntb/Kconfig
 > index df16c755b4da..db63f02bb116 100644
 > --- a/drivers/ntb/Kconfig
 > +++ b/drivers/ntb/Kconfig
 > @@ -37,4 +37,15 @@ config NTB_TRANSPORT
->
+>  
 >  	 If unsure, say N.
->
+>  
 > +config NTB_TRANSPORT_EDMA
 > +	bool "NTB Transport backed by remote eDMA"
 > +	depends on NTB_TRANSPORT
@@ -229,7 +158,7 @@ On Sun, Nov 30, 2025 at 01:03:58AM +0900, Koichiro Den wrote:
 > --- a/drivers/ntb/Makefile
 > +++ b/drivers/ntb/Makefile
 > @@ -4,3 +4,6 @@ obj-$(CONFIG_NTB_TRANSPORT) += ntb_transport.o
->
+>  
 >  ntb-y			:= core.o
 >  ntb-$(CONFIG_NTB_MSI)	+= msi.o
 > +
@@ -271,10 +200,6 @@ On Sun, Nov 30, 2025 at 01:03:58AM +0900, Koichiro Den wrote:
 > +#define DMA_READ_INT_STATUS_OFF    0xa0
 > +#define DMA_READ_INT_MASK_OFF      0xa8
 > +#define DMA_READ_INT_CLEAR_OFF     0xac
-
-Not sure why need access EDMA register because EMDA driver already export
-as dmaengine driver.
-
 > +
 > +#define NTB_EDMA_NOTIFY_MAX_QP		64
 > +
@@ -346,10 +271,6 @@ as dmaengine driver.
 > +
 > +static irqreturn_t ntb_edma_isr(int irq, void *data)
 > +{
-
-Not sue why dw_edma_interrupt_write/read() does work for your case. Suppose
-just register callback for dmeengine.
-
 > +	struct ntb_edma_interrupt *v = data;
 > +	u32 mask = BIT(EDMA_RD_CH_NUM);
 > +	u32 i, val;
@@ -387,7 +308,248 @@ just register callback for dmeengine.
 > +	return IRQ_HANDLED;
 > +}
 > +
-...
+> +int ntb_edma_setup_isr(struct device *dev, struct device *epc_dev,
+> +		       ntb_edma_interrupt_cb_t cb, void *data)
+> +{
+> +	struct ntb_edma_interrupt *v = &ntb_edma_intr;
+> +	int virq = ntb_edma_map_spi_to_virq(epc_dev->parent, edma_spi);
+> +	int ret;
+> +
+> +	if (virq < 0) {
+> +		dev_err(dev, "failed to get virq (%d)\n", virq);
+> +		return virq;
+> +	}
+> +
+> +	v->virq = virq;
+> +	v->cb = cb;
+> +	v->data = data;
+> +	if (edma_regs_phys && !v->base)
+> +		v->base = devm_ioremap(dev, edma_regs_phys, edma_regs_size);
+> +	if (!v->base) {
+> +		dev_err(dev, "failed to setup v->base\n");
+> +		return -1;
+> +	}
+> +	ret = devm_request_irq(dev, v->virq, ntb_edma_isr, 0, "ntb-edma", v);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (v->base) {
+> +		iowrite32(0x0, v->base + DMA_WRITE_INT_MASK_OFF);
+> +		iowrite32(0x0, v->base + DMA_READ_INT_MASK_OFF);
+> +	}
+> +	return 0;
+> +}
+> +
+> +void ntb_edma_teardown_isr(struct device *dev)
+> +{
+> +	struct ntb_edma_interrupt *v = &ntb_edma_intr;
+> +
+> +	/* Mask all write/read interrupts so we don't get called again. */
+> +	if (v->base) {
+> +		iowrite32(~0x0, v->base + DMA_WRITE_INT_MASK_OFF);
+> +		iowrite32(~0x0, v->base + DMA_READ_INT_MASK_OFF);
+> +	}
+> +
+> +	if (v->virq > 0)
+> +		devm_free_irq(dev, v->virq, v);
+> +
+> +	if (v->base)
+> +		devm_iounmap(dev, v->base);
+> +
+> +	v->virq = 0;
+> +	v->cb = NULL;
+> +	v->data = NULL;
+> +}
+> +
+> +int ntb_edma_setup_mws(struct ntb_dev *ndev)
+> +{
+> +	const size_t info_bytes = PAGE_SIZE;
+> +	resource_size_t size_max, offset;
+> +	dma_addr_t intr_phys, info_phys;
+> +	u32 wr_done = 0, rd_done = 0;
+> +	struct ntb_edma_intr *intr;
+> +	struct ntb_edma_info *info;
+> +	int peer_mw, mw_index, rc;
+> +	struct iommu_domain *dom;
+> +	bool reg_mapped = false;
+> +	size_t ll_bytes, size;
+> +	struct pci_epc *epc;
+> +	struct device *dev;
+> +	unsigned long iova;
+> +	phys_addr_t phys;
+> +	u64 need;
+> +	u32 i;
+> +
+> +	/* +1 is for interruption */
+> +	ll_bytes = (EDMA_WR_CH_NUM + EDMA_RD_CH_NUM + 1) * DMA_LLP_MEM_SIZE;
+> +	need = EDMA_REG_SIZE + info_bytes + ll_bytes;
+> +
+> +	epc = ntb_get_pci_epc(ndev);
+> +	if (!epc)
+> +		return -ENODEV;
+> +	dev = epc->dev.parent;
+> +
+> +	if (edma_ctx.initialized)
+> +		return 0;
+> +
+> +	info = dma_alloc_coherent(dev, info_bytes, &info_phys, GFP_KERNEL);
+> +	if (!info)
+> +		return -ENOMEM;
+> +
+> +	memset(info, 0, info_bytes);
+> +	info->magic = NTB_EDMA_INFO_MAGIC;
+> +	info->wr_cnt = EDMA_WR_CH_NUM;
+> +	info->rd_cnt = EDMA_RD_CH_NUM + 1; /* +1 for interruption */
+> +	info->regs_phys = edma_regs_phys;
+> +	info->ll_stride = DMA_LLP_MEM_SIZE;
+> +
+> +	for (i = 0; i < EDMA_WR_CH_NUM; i++) {
+> +		edma_ctx.ll_wr_virt[i] = dma_alloc_attrs(dev, DMA_LLP_MEM_SIZE,
+> +							 &edma_ctx.ll_wr_phys[i],
+> +							 GFP_KERNEL,
+> +							 DMA_ATTR_FORCE_CONTIGUOUS);
+> +		if (!edma_ctx.ll_wr_virt[i]) {
+> +			rc = -ENOMEM;
+> +			goto err_free_ll;
+> +		}
+> +		wr_done++;
+> +		info->ll_wr_phys[i] = edma_ctx.ll_wr_phys[i];
+> +	}
+> +	for (i = 0; i < EDMA_RD_CH_NUM + 1; i++) {
+> +		edma_ctx.ll_rd_virt[i] = dma_alloc_attrs(dev, DMA_LLP_MEM_SIZE,
+> +							 &edma_ctx.ll_rd_phys[i],
+> +							 GFP_KERNEL,
+> +							 DMA_ATTR_FORCE_CONTIGUOUS);
+> +		if (!edma_ctx.ll_rd_virt[i]) {
+> +			rc = -ENOMEM;
+> +			goto err_free_ll;
+> +		}
+> +		rd_done++;
+> +		info->ll_rd_phys[i] = edma_ctx.ll_rd_phys[i];
+> +	}
+> +
+> +	/* For interruption */
+> +	edma_ctx.notify_qp_max = NTB_EDMA_NOTIFY_MAX_QP;
+> +	intr = dma_alloc_coherent(dev, sizeof(*intr), &intr_phys, GFP_KERNEL);
+> +	if (!intr) {
+> +		rc = -ENOMEM;
+> +		goto err_free_ll;
+> +	}
+> +	memset(intr, 0, sizeof(*intr));
+> +	edma_ctx.intr_ep_virt = intr;
+> +	edma_ctx.intr_ep_phys = intr_phys;
+> +	info->intr_dar_base = intr_phys;
+> +
+> +	peer_mw = ntb_peer_mw_count(ndev);
+> +	if (peer_mw <= 0) {
+> +		rc = -ENODEV;
+> +		goto err_free_ll;
+> +	}
+> +
+> +	mw_index = peer_mw - 1; /* last MW */
+> +
+> +	rc = ntb_mw_get_align(ndev, 0, mw_index, 0, NULL, &size_max,
+> +			      &offset);
+> +	if (rc)
+> +		goto err_free_ll;
+> +
+> +	if (size_max < need) {
+> +		rc = -ENOSPC;
+> +		goto err_free_ll;
+> +	}
+> +
+> +	/* Map register space (direct) */
+> +	dom = iommu_get_domain_for_dev(dev);
+> +	if (dom) {
+> +		phys = edma_regs_phys & PAGE_MASK;
+> +		size = PAGE_ALIGN(EDMA_REG_SIZE + edma_regs_phys - phys);
+> +		iova = phys;
+> +
+> +		rc = iommu_map(dom, iova, phys, EDMA_REG_SIZE,
+> +			       IOMMU_READ | IOMMU_WRITE | IOMMU_MMIO, GFP_KERNEL);
+> +		if (rc)
+> +			dev_err(&ndev->dev, "failed to create direct mapping for eDMA reg space\n");
+> +		reg_mapped = true;
+> +	}
+> +
+> +	rc = ntb_mw_set_trans(ndev, 0, mw_index, edma_regs_phys, EDMA_REG_SIZE, offset);
+> +	if (rc)
+> +		goto err_unmap_reg;
+> +
+> +	offset += EDMA_REG_SIZE;
+> +
+> +	/* Map ntb_edma_info */
+> +	rc = ntb_mw_set_trans(ndev, 0, mw_index, info_phys, info_bytes, offset);
+> +	if (rc)
+> +		goto err_clear_trans;
+> +	offset += info_bytes;
+> +
+> +	/* Map LL location */
+> +	for (i = 0; i < EDMA_WR_CH_NUM; i++) {
+> +		rc = ntb_mw_set_trans(ndev, 0, mw_index, edma_ctx.ll_wr_phys[i],
+> +				      DMA_LLP_MEM_SIZE, offset);
+> +		if (rc)
+> +			goto err_clear_trans;
+> +		offset += DMA_LLP_MEM_SIZE;
+> +	}
+> +	for (i = 0; i < EDMA_RD_CH_NUM + 1; i++) {
+> +		rc = ntb_mw_set_trans(ndev, 0, mw_index, edma_ctx.ll_rd_phys[i],
+> +				      DMA_LLP_MEM_SIZE, offset);
+> +		if (rc)
+> +			goto err_clear_trans;
+> +		offset += DMA_LLP_MEM_SIZE;
+> +	}
+> +	edma_ctx.initialized = true;
+> +
+> +	return 0;
+> +
+> +err_clear_trans:
+> +	/*
+> +	 * Tear down the NTB translation window used for the eDMA MW.
+> +	 * There is no sub-range clear API for ntb_mw_set_trans(), so we
+> +	 * unconditionally drop the whole mapping on error.
+> +	 */
+> +	ntb_mw_clear_trans(ndev, 0, mw_index);
+> +
+> +err_unmap_reg:
+> +	if (reg_mapped)
+> +		iommu_unmap(dom, iova, size);
+> +err_free_ll:
+> +	while (rd_done--)
+> +		dma_free_attrs(dev, DMA_LLP_MEM_SIZE,
+> +			       edma_ctx.ll_rd_virt[rd_done],
+> +			       edma_ctx.ll_rd_phys[rd_done],
+> +			       DMA_ATTR_FORCE_CONTIGUOUS);
+> +	while (wr_done--)
+> +		dma_free_attrs(dev, DMA_LLP_MEM_SIZE,
+> +			       edma_ctx.ll_wr_virt[wr_done],
+> +			       edma_ctx.ll_wr_phys[wr_done],
+> +			       DMA_ATTR_FORCE_CONTIGUOUS);
+> +	if (edma_ctx.intr_ep_virt)
+> +		dma_free_coherent(dev, sizeof(struct ntb_edma_intr),
+> +				  edma_ctx.intr_ep_virt,
+> +				  edma_ctx.intr_ep_phys);
+> +	dma_free_coherent(dev, info_bytes, info, info_phys);
+> +	return rc;
+> +}
+> +
+> +static int ntb_edma_irq_vector(struct device *dev, unsigned int nr)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	int ret, nvec;
+> +
+> +	nvec = pci_msi_vec_count(pdev);
+> +	for (; nr < nvec; nr++) {
+> +		ret = pci_irq_vector(pdev, nr);
+> +		if (!irq_has_action(ret))
+> +			return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static const struct dw_edma_plat_ops ntb_edma_ops = {
+> +	.irq_vector     = ntb_edma_irq_vector,
+> +};
 > +
 > +int ntb_edma_setup_peer(struct ntb_dev *ndev)
 > +{
@@ -468,15 +630,6 @@ just register callback for dmeengine.
 > +		return -ENXIO;
 > +
 > +	ret = dw_edma_probe(chip);
-
-I think dw_edma_probe() should be in ntb_hw_epf.c, which provide DMA
-dma engine support.
-
-EP side, suppose default dwc controller driver already setup edma engine,
-so use correct filter function, you should get dma chan.
-
-Frank
-
 > +	if (ret) {
 > +		dev_err(&ndev->dev, "dw_edma_probe failed: %d\n", ret);
 > +		return ret;
@@ -799,7 +952,7 @@ Frank
 > @@ -71,6 +74,8 @@
 >  #define NTB_TRANSPORT_DESC	"Software Queue-Pair Transport over NTB"
 >  #define NTB_TRANSPORT_MIN_SPADS (MW0_SZ_HIGH + 2)
->
+>  
 > +#define NTB_EDMA_MAX_POLL		32
 > +
 >  MODULE_DESCRIPTION(NTB_TRANSPORT_DESC);
@@ -808,8 +961,11 @@ Frank
 > @@ -102,6 +107,13 @@ module_param(use_msi, bool, 0644);
 >  MODULE_PARM_DESC(use_msi, "Use MSI interrupts instead of doorbells");
 >  #endif
->
+>  
 > +#ifdef CONFIG_NTB_TRANSPORT_EDMA
+
+This is a comment throughout this patch. Doing ifdefs inside C source is pretty frowed upon in the kernel. The preferred way is to only have ifdefs in the header files. So please give this a bit more consideration and see if it can be done differently to address this.
+
 > +#include "ntb_edma.h"
 > +static bool use_remote_edma;
 > +module_param(use_remote_edma, bool, 0644);
@@ -817,7 +973,7 @@ Frank
 > +#endif
 > +
 >  static struct dentry *nt_debugfs_dir;
->
+>  
 >  /* Only two-ports NTB devices are supported */
 > @@ -125,6 +137,14 @@ struct ntb_queue_entry {
 >  		struct ntb_payload_header __iomem *tx_hdr;
@@ -832,7 +988,7 @@ Frank
 > +	struct work_struct dma_work;
 > +#endif
 >  };
->
+>  
 >  struct ntb_rx_info {
 > @@ -202,6 +222,33 @@ struct ntb_transport_qp {
 >  	int msi_irq;
@@ -865,11 +1021,16 @@ Frank
 > +	struct work_struct read_work;
 > +	struct work_struct write_work;
 > +#endif
+
+For something like this, maybe it needs its own struct instead of an ifdef chunk. Perhaps 'ntb_rx_info' can serve as a core data struct with EDMA having 'ntb_rx_info_edma' and embed 'ntb_rx_info'. 
+
+DJ
+
 >  };
->
+>  
 >  struct ntb_transport_mw {
 > @@ -249,6 +296,13 @@ struct ntb_transport_ctx {
->
+>  
 >  	/* Make sure workq of link event be executed serially */
 >  	struct mutex link_event_lock;
 > +
@@ -880,12 +1041,12 @@ Frank
 > +	struct ntb_edma_chans edma;
 > +#endif
 >  };
->
+>  
 >  enum {
 > @@ -262,6 +316,19 @@ struct ntb_payload_header {
 >  	unsigned int flags;
 >  };
->
+>  
 > +#ifdef CONFIG_NTB_TRANSPORT_EDMA
 > +static void ntb_transport_edma_uninit(struct ntb_transport_ctx *nt);
 > +static int ntb_transport_edma_init(struct ntb_transport_ctx *nt,
@@ -904,12 +1065,12 @@ Frank
 >   *
 > @@ -298,7 +365,7 @@ enum {
 >  	container_of((__drv), struct ntb_transport_client, driver)
->
+>  
 >  #define QP_TO_MW(nt, qp)	((qp) % nt->mw_count)
 > -#define NTB_QP_DEF_NUM_ENTRIES	100
 > +#define NTB_QP_DEF_NUM_ENTRIES	128
 >  #define NTB_LINK_DOWN_TIMEOUT	10
->
+>  
 >  static void ntb_transport_rxc_db(unsigned long data);
 > @@ -1015,6 +1082,10 @@ static void ntb_transport_link_cleanup(struct ntb_transport_ctx *nt)
 >  	count = ntb_spad_count(nt->ndev);
@@ -920,12 +1081,12 @@ Frank
 > +	ntb_edma_teardown_chans(&nt->edma);
 > +#endif
 >  }
->
+>  
 >  static void ntb_transport_link_cleanup_work(struct work_struct *work)
 > @@ -1051,6 +1122,14 @@ static void ntb_transport_link_work(struct work_struct *work)
->
+>  
 >  	/* send the local info, in the opposite order of the way we read it */
->
+>  
 > +#ifdef CONFIG_NTB_TRANSPORT_EDMA
 > +	rc = ntb_transport_edma_ep_init(nt);
 > +	if (rc) {
@@ -938,9 +1099,9 @@ Frank
 >  		rc = ntb_msi_setup_mws(ndev);
 >  		if (rc) {
 > @@ -1132,6 +1211,14 @@ static void ntb_transport_link_work(struct work_struct *work)
->
+>  
 >  	nt->link_is_up = true;
->
+>  
 > +#ifdef CONFIG_NTB_TRANSPORT_EDMA
 > +	rc = ntb_transport_edma_rc_init(nt);
 > +	if (rc) {
@@ -951,20 +1112,20 @@ Frank
 > +
 >  	for (i = 0; i < nt->qp_count; i++) {
 >  		struct ntb_transport_qp *qp = &nt->qp_vec[i];
->
+>  
 > @@ -1277,6 +1364,8 @@ static const struct ntb_transport_backend_ops default_backend_ops = {
 >  	.debugfs_stats_show = ntb_transport_default_debugfs_stats_show,
 >  };
->
+>  
 > +static const struct ntb_transport_backend_ops edma_backend_ops;
 > +
 >  static int ntb_transport_probe(struct ntb_client *self, struct ntb_dev *ndev)
 >  {
 >  	struct ntb_transport_ctx *nt;
 > @@ -1311,7 +1400,23 @@ static int ntb_transport_probe(struct ntb_client *self, struct ntb_dev *ndev)
->
+>  
 >  	nt->ndev = ndev;
->
+>  
 > -	nt->backend_ops = default_backend_ops;
 > +#ifdef CONFIG_NTB_TRANSPORT_EDMA
 > +	if (use_remote_edma) {
@@ -983,7 +1144,7 @@ Frank
 > +	} else
 > +#endif
 > +		nt->backend_ops = default_backend_ops;
->
+>  
 >  	/*
 >  	 * If we are using MSI, and have at least one extra memory window,
 > @@ -1402,6 +1507,10 @@ static int ntb_transport_probe(struct ntb_client *self, struct ntb_dev *ndev)
@@ -995,7 +1156,7 @@ Frank
 > +		ntb_transport_edma_init_queue(nt, i);
 > +#endif
 >  	}
->
+>  
 >  	INIT_DELAYED_WORK(&nt->link_work, ntb_transport_link_work);
 > @@ -1433,6 +1542,9 @@ static int ntb_transport_probe(struct ntb_client *self, struct ntb_dev *ndev)
 >  	}
@@ -1008,25 +1169,25 @@ Frank
 >  	return rc;
 >  }
 > @@ -2055,11 +2167,16 @@ ntb_transport_create_queue(void *data, struct device *client_dev,
->
+>  
 >  	nt->qp_bitmap_free &= ~qp_bit;
->
+>  
 > +	qp->qp_bit = qp_bit;
 >  	qp->cb_data = data;
 >  	qp->rx_handler = handlers->rx_handler;
 >  	qp->tx_handler = handlers->tx_handler;
 >  	qp->event_handler = handlers->event_handler;
->
+>  
 > +#ifdef CONFIG_NTB_TRANSPORT_EDMA
 > +	ntb_transport_edma_create_queue(nt, qp);
 > +#endif
 > +
 >  	dma_cap_zero(dma_mask);
 >  	dma_cap_set(DMA_MEMCPY, dma_mask);
->
+>  
 > @@ -2105,6 +2222,9 @@ ntb_transport_create_queue(void *data, struct device *client_dev,
 >  			goto err1;
->
+>  
 >  		entry->qp = qp;
 > +#ifdef CONFIG_NTB_TRANSPORT_EDMA
 > +		INIT_WORK(&entry->dma_work, ntb_transport_edma_rc_dma_work);
@@ -1042,23 +1203,23 @@ Frank
 >  	struct ntb_queue_entry *entry;
 > +	struct pci_dev *pdev;
 >  	u64 qp_bit;
->
+>  
 >  	if (!qp)
 > @@ -2208,6 +2328,10 @@ void ntb_transport_free_queue(struct ntb_transport_qp *qp)
 >  	tasklet_kill(&qp->rxc_db_work);
->
+>  
 >  	cancel_delayed_work_sync(&qp->link_work);
 > +#ifdef CONFIG_NTB_TRANSPORT_EDMA
 > +	cancel_work_sync(&qp->read_work);
 > +	cancel_work_sync(&qp->write_work);
 > +#endif
->
+>  
 >  	qp->cb_data = NULL;
 >  	qp->rx_handler = NULL;
 > @@ -2346,6 +2470,1157 @@ int ntb_transport_tx_enqueue(struct ntb_transport_qp *qp, void *cb, void *data,
 >  }
 >  EXPORT_SYMBOL_GPL(ntb_transport_tx_enqueue);
->
+>  
 > +#ifdef CONFIG_NTB_TRANSPORT_EDMA
 > +/*
 > + * Remote eDMA mode implementation
@@ -1241,7 +1402,7 @@ Frank
 > +	if (nt->remote_edma_mode == REMOTE_EDMA_EP && ndev && ndev->pdev)
 > +		ntb_edma_teardown_isr(&ndev->pdev->dev);
 > +
-/pr> +	if (nt->wq)
+> +	if (nt->wq)
 > +		destroy_workqueue(nt->wq);
 > +	nt->wq = NULL;
 > +}
@@ -2213,7 +2374,5 @@ Frank
 >  /**
 >   * ntb_transport_link_up - Notify NTB transport of client readiness to use queue
 >   * @qp: NTB transport layer queue to be enabled
-> --
-> 2.48.1
->
+
 

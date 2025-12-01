@@ -1,39 +1,39 @@
-Return-Path: <dmaengine+bounces-7425-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7426-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB7D7C976B9
-	for <lists+dmaengine@lfdr.de>; Mon, 01 Dec 2025 13:56:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0CE9C976CB
+	for <lists+dmaengine@lfdr.de>; Mon, 01 Dec 2025 13:56:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A41F3A3A5F
-	for <lists+dmaengine@lfdr.de>; Mon,  1 Dec 2025 12:50:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D5593A5631
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Dec 2025 12:50:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2D9430EF76;
-	Mon,  1 Dec 2025 12:50:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 492B630F547;
+	Mon,  1 Dec 2025 12:50:29 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27D0330EF7A;
-	Mon,  1 Dec 2025 12:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF1C630F944;
+	Mon,  1 Dec 2025 12:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764593424; cv=none; b=Y+zEieUxYH1dGNIJ/g93D/aANfkx1RrYOWXpff2QLYE6rmB0+TqH7ZyQB6tmxHbx05Jrd9NO90GrH5WprFpYhxQDAg6kh1kIa4B6kJrZp+2M75CGzpzOXzBS8mkb3iCZzAXre2Q39nLFePOVz5H5xRHz7E0tEm9O7xbE5suHa5g=
+	t=1764593429; cv=none; b=X9koJ25LgkysynmjvG8jbgAa7m/i8vijDWzCQdCRJUOssoVAfi+9j+3Umbbk18BSIqajOYx1kiCyY+XC/8J6lJ8sjBLut7QvnH3fT6ZgmR4fojf1AS2y2kVT8DdR2RawQ4W5JxyjvTszLxJClA/K7Bfhd73jecT+eHw2kc39f5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764593424; c=relaxed/simple;
-	bh=mnEQrLvSEJoecPOYVFEQuh3HOV/snTg0bVKjC5fkMFU=;
+	s=arc-20240116; t=1764593429; c=relaxed/simple;
+	bh=zFA7eNiL8YbxScfmf3fTKRUWq/qcgQoMV6XqiUB5gwM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g/nuZx43Z8AY2Om8dK++CWq83TcVVHNIrxeerFpRmUvvsAgA2R9y5NTUDj2y41BTxzULsOHlV4FtN34KostJ5afzzp7gcLzKk4hkQspCzjQLt3p5RLM0BHTX4U/yD98ChV6gTgrS/JleIsxn5AJbgjPAUgcrXCKAkoJ4cXlw3F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+	 MIME-Version; b=E1+bWzOYfmLzGKO/EmQA6im6GzcYvqssPHqTDjv4gObZ+SZKrBZqmOsay5kDjORo1n3gfwpz6OD39WRLDuEySW+f0Z4rU/1MyPhN3M1gitTu1YG7GmsghoRPJ7lf747Kj6CKfsrt1033n7R56dskJdr/ouAbFm4SCHD+fSI4Hew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: artisk8EQHyf6H68b3mBLg==
-X-CSE-MsgGUID: z1sNATn7QFaEFpwHgqjcQg==
+X-CSE-ConnectionGUID: /0Ce4U4uSQCd09pve3Ifow==
+X-CSE-MsgGUID: FqSOLICqT8ixMki8KGSDvA==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 01 Dec 2025 21:50:19 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 01 Dec 2025 21:50:25 +0900
 Received: from demon-pc.localdomain (unknown [10.226.93.83])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2FE7D42100E0;
-	Mon,  1 Dec 2025 21:50:14 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id E3D3142100DB;
+	Mon,  1 Dec 2025 21:50:20 +0900 (JST)
 From: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -50,9 +50,9 @@ Cc: dmaengine@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2 2/6] dmaengine: sh: rz_dmac: make register_dma_req() chip-specific
-Date: Mon,  1 Dec 2025 14:49:07 +0200
-Message-ID: <20251201124911.572395-3-cosmin-gabriel.tanislav.xa@renesas.com>
+Subject: [PATCH v2 3/6] dt-bindings: dma: renesas,rz-dmac: document RZ/{T2H,N2H}
+Date: Mon,  1 Dec 2025 14:49:08 +0200
+Message-ID: <20251201124911.572395-4-cosmin-gabriel.tanislav.xa@renesas.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251201124911.572395-1-cosmin-gabriel.tanislav.xa@renesas.com>
 References: <20251201124911.572395-1-cosmin-gabriel.tanislav.xa@renesas.com>
@@ -64,20 +64,13 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Renesas RZ/T2H (R9A09G077) and RZ/N2H (R9A09G087) SoCs use a
-completely different ICU unit compared to RZ/V2H, which requires a
-separate implementation.
+The Renesas RZ/T2H (R9A09G077) and RZ/N2H (R9A09G087) SoCs have three
+DMAC instances. Compared to the previously supported RZ/V2H, these SoCs
+are missing the error interrupt line and the reset lines, and they use
+a different ICU IP.
 
-To prepare for adding support for these SoCs, add a chip-specific
-structure and put a pointer to the rzv2h_icu_register_dma_req() function
-in the .register_dma_req field of the chip-specific structure to allow
-for other implementations. Do the same for the default request value,
-RZV2H_ICU_DMAC_REQ_NO_DEFAULT.
-
-While at it, factor out the logic that calls .register_dma_req() or
-rz_dmac_set_dmars_register() into a separate function to remove some
-code duplication. Since the default values are different between the
-two, use -1 for designating that the default value should be used.
+Document them, and use RZ/T2H as a fallback for RZ/N2H as the DMACs are
+entirely compatible.
 
 Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 ---
@@ -85,159 +78,144 @@ Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 V2:
  * remove notes
 
- drivers/dma/sh/rz-dmac.c | 68 +++++++++++++++++++++++-----------------
- 1 file changed, 39 insertions(+), 29 deletions(-)
+ .../bindings/dma/renesas,rz-dmac.yaml         | 100 ++++++++++++++----
+ 1 file changed, 82 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index 20a5c1766a58..f94be3f8e232 100644
---- a/drivers/dma/sh/rz-dmac.c
-+++ b/drivers/dma/sh/rz-dmac.c
-@@ -95,9 +95,16 @@ struct rz_dmac_icu {
- 	u8 dmac_index;
- };
+diff --git a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+index f891cfcc48c7..f7bcdb4a29ca 100644
+--- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
++++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+@@ -28,6 +28,13 @@ properties:
  
-+struct rz_dmac_info {
-+	void (*register_dma_req)(struct platform_device *icu_dev, u8 dmac_index,
-+				 u8 dmac_channel, u16 req_no);
-+	u16 dma_req_no_default;
-+};
+       - const: renesas,r9a09g057-dmac # RZ/V2H(P)
+ 
++      - const: renesas,r9a09g077-dmac # RZ/T2H
 +
- struct rz_dmac {
- 	struct dma_device engine;
- 	struct rz_dmac_icu icu;
-+	const struct rz_dmac_info *info;
- 	struct device *dev;
- 	struct reset_control *rstc;
- 	void __iomem *base;
-@@ -106,8 +113,6 @@ struct rz_dmac {
- 	unsigned int n_channels;
- 	struct rz_dmac_chan *channels;
- 
--	bool has_icu;
--
- 	DECLARE_BITMAP(modules, 1024);
- };
- 
-@@ -319,6 +324,19 @@ static void rz_dmac_set_dmars_register(struct rz_dmac *dmac, int nr, u32 dmars)
- 	rz_dmac_ext_writel(dmac, dmars32, dmars_offset);
- }
- 
-+static void rz_dmac_set_dma_req_no(struct rz_dmac *dmac, unsigned int index,
-+				   int req_no)
-+{
-+	if (req_no < 0)
-+		req_no = dmac->info->dma_req_no_default;
++      - items:
++          - enum:
++              - renesas,r9a09g087-dmac # RZ/N2H
++          - const: renesas,r9a09g077-dmac
 +
-+	if (dmac->info->register_dma_req)
-+		dmac->info->register_dma_req(dmac->icu.pdev, dmac->icu.dmac_index,
-+					     index, req_no);
-+	else
-+		rz_dmac_set_dmars_register(dmac, index, req_no);
-+}
+   reg:
+     items:
+       - description: Control and channel register block
+@@ -35,27 +42,12 @@ properties:
+     minItems: 1
+ 
+   interrupts:
++    minItems: 16
+     maxItems: 17
+ 
+   interrupt-names:
+-    items:
+-      - const: error
+-      - const: ch0
+-      - const: ch1
+-      - const: ch2
+-      - const: ch3
+-      - const: ch4
+-      - const: ch5
+-      - const: ch6
+-      - const: ch7
+-      - const: ch8
+-      - const: ch9
+-      - const: ch10
+-      - const: ch11
+-      - const: ch12
+-      - const: ch13
+-      - const: ch14
+-      - const: ch15
++    minItems: 16
++    maxItems: 17
+ 
+   clocks:
+     items:
+@@ -121,6 +113,35 @@ required:
+ allOf:
+   - $ref: dma-controller.yaml#
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - renesas,rz-dmac
++              - renesas,r9a09g057-dmac
++    then:
++      properties:
++        interrupt-names:
++          items:
++            - const: error
++            - const: ch0
++            - const: ch1
++            - const: ch2
++            - const: ch3
++            - const: ch4
++            - const: ch5
++            - const: ch6
++            - const: ch7
++            - const: ch8
++            - const: ch9
++            - const: ch10
++            - const: ch11
++            - const: ch12
++            - const: ch13
++            - const: ch14
++            - const: ch15
 +
- static void rz_dmac_prepare_desc_for_memcpy(struct rz_dmac_chan *channel)
- {
- 	struct dma_chan *chan = &channel->vc.chan;
-@@ -336,13 +354,7 @@ static void rz_dmac_prepare_desc_for_memcpy(struct rz_dmac_chan *channel)
- 	lmdesc->chext = 0;
- 	lmdesc->header = HEADER_LV;
+   - if:
+       properties:
+         compatible:
+@@ -188,6 +209,49 @@ allOf:
+         - renesas,icu
+         - resets
  
--	if (dmac->has_icu) {
--		rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac_index,
--					   channel->index,
--					   RZV2H_ICU_DMAC_REQ_NO_DEFAULT);
--	} else {
--		rz_dmac_set_dmars_register(dmac, channel->index, 0);
--	}
-+	rz_dmac_set_dma_req_no(dmac, channel->index, -1);
- 
- 	channel->chcfg = chcfg;
- 	channel->chctrl = CHCTRL_STG | CHCTRL_SETEN;
-@@ -393,12 +405,7 @@ static void rz_dmac_prepare_descs_for_slave_sg(struct rz_dmac_chan *channel)
- 
- 	channel->lmdesc.tail = lmdesc;
- 
--	if (dmac->has_icu) {
--		rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac_index,
--					   channel->index, channel->mid_rid);
--	} else {
--		rz_dmac_set_dmars_register(dmac, channel->index, channel->mid_rid);
--	}
-+	rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
- 
- 	channel->chctrl = CHCTRL_SETEN;
- }
-@@ -671,13 +678,7 @@ static void rz_dmac_device_synchronize(struct dma_chan *chan)
- 	if (ret < 0)
- 		dev_warn(dmac->dev, "DMA Timeout");
- 
--	if (dmac->has_icu) {
--		rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac_index,
--					   channel->index,
--					   RZV2H_ICU_DMAC_REQ_NO_DEFAULT);
--	} else {
--		rz_dmac_set_dmars_register(dmac, channel->index, 0);
--	}
-+	rz_dmac_set_dma_req_no(dmac, channel->index, -1);
- }
- 
- /*
-@@ -868,14 +869,13 @@ static int rz_dmac_parse_of_icu(struct device *dev, struct rz_dmac *dmac)
- 	uint32_t dmac_index;
- 	int ret;
- 
--	ret = of_parse_phandle_with_fixed_args(np, "renesas,icu", 1, 0, &args);
--	if (ret == -ENOENT)
-+	if (!dmac->info->register_dma_req)
- 		return 0;
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: renesas,r9a09g077-dmac
++    then:
++      properties:
++        reg:
++          maxItems: 1
++        clocks:
++          maxItems: 1
 +
-+	ret = of_parse_phandle_with_fixed_args(np, "renesas,icu", 1, 0, &args);
- 	if (ret)
- 		return ret;
- 
--	dmac->has_icu = true;
--
- 	dmac->icu.pdev = of_find_device_by_node(args.np);
- 	of_node_put(args.np);
- 	if (!dmac->icu.pdev) {
-@@ -930,6 +930,7 @@ static int rz_dmac_probe(struct platform_device *pdev)
- 	if (!dmac)
- 		return -ENOMEM;
- 
-+	dmac->info = device_get_match_data(&pdev->dev);
- 	dmac->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, dmac);
- 
-@@ -947,7 +948,7 @@ static int rz_dmac_probe(struct platform_device *pdev)
- 	if (IS_ERR(dmac->base))
- 		return PTR_ERR(dmac->base);
- 
--	if (!dmac->has_icu) {
-+	if (!dmac->info->register_dma_req) {
- 		dmac->ext_base = devm_platform_ioremap_resource(pdev, 1);
- 		if (IS_ERR(dmac->ext_base))
- 			return PTR_ERR(dmac->ext_base);
-@@ -1067,9 +1068,18 @@ static void rz_dmac_remove(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- }
- 
-+static const struct rz_dmac_info rz_dmac_v2h_info = {
-+	.register_dma_req = rzv2h_icu_register_dma_req,
-+	.dma_req_no_default = RZV2H_ICU_DMAC_REQ_NO_DEFAULT,
-+};
++        clock-names: false
++        resets: false
++        reset-names: false
 +
-+static const struct rz_dmac_info rz_dmac_common_info = {
-+	.dma_req_no_default = 0,
-+};
++        interrupts:
++          maxItems: 16
 +
- static const struct of_device_id of_rz_dmac_match[] = {
--	{ .compatible = "renesas,r9a09g057-dmac", },
--	{ .compatible = "renesas,rz-dmac", },
-+	{ .compatible = "renesas,r9a09g057-dmac", .data = &rz_dmac_v2h_info },
-+	{ .compatible = "renesas,rz-dmac", .data = &rz_dmac_common_info },
- 	{ /* Sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, of_rz_dmac_match);
++        interrupt-names:
++          items:
++            - const: ch0
++            - const: ch1
++            - const: ch2
++            - const: ch3
++            - const: ch4
++            - const: ch5
++            - const: ch6
++            - const: ch7
++            - const: ch8
++            - const: ch9
++            - const: ch10
++            - const: ch11
++            - const: ch12
++            - const: ch13
++            - const: ch14
++            - const: ch15
++
++      required:
++        - clocks
++        - power-domains
++        - renesas,icu
++
+ additionalProperties: false
+ 
+ examples:
 -- 
 2.52.0
 

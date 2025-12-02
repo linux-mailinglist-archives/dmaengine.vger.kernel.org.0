@@ -1,85 +1,86 @@
-Return-Path: <dmaengine+bounces-7472-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7473-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7698CC9C1D5
-	for <lists+dmaengine@lfdr.de>; Tue, 02 Dec 2025 17:08:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 19122C9D5D1
+	for <lists+dmaengine@lfdr.de>; Wed, 03 Dec 2025 00:47:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9812B34A569
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Dec 2025 16:07:46 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7F591349ADC
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Dec 2025 23:47:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A013D248896;
-	Tue,  2 Dec 2025 16:07:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B029230FF26;
+	Tue,  2 Dec 2025 23:47:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lvWqMhWW"
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="oB90EXRH"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010013.outbound.protection.outlook.com [52.101.69.13])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010008.outbound.protection.outlook.com [52.101.201.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F0D2727FD;
-	Tue,  2 Dec 2025 16:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DA230F953;
+	Tue,  2 Dec 2025 23:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764691663; cv=fail; b=Or0cPAU3DimdWb1hTKJC1rhNBppdhhkQfSWqvS3F9jjvuKeIaxSzYDhnSYEhRqveXc3bel3KpzOOVNqmK9fJ5GOwCGoGybwSL0kkxXyzucfAgxs8tkOWYL8/tyHk+AMxS2WmDMG+0LVYtPo272QV5/0WBuSoiMKkWu8ZcuJUnXE=
+	t=1764719268; cv=fail; b=HmA8IYZ5QY40eZdKr+/Id7kuUCqKtr1iWIIhtQMV3TqnS/zXN3YyuLHcLSLwhOWbRIZ3IWD1u4F1+MJ3iK4RwziOwNI9QN9CZOBvoqx9D8iYE8Mrtmud69cBxHxQ6f8cB4GJUKI7wWSzRuTNuGR8g/SlMEguJJhsFDRWlo6GOMU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764691663; c=relaxed/simple;
-	bh=e+UmWc4ZqCIpKlbmn8CjOiYoO1nWlZ09fkdfkj1RWas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=j9v9LL5GhVv0+fc2uyzbvJ5W0z1akU27dCipCs4/DWBmXi/ue8GKXcp1PjedHPcrvmtbGAWreZMmPITc2fzjJrHUx1K8/nmyWdNI5Qk9JO6qo9+/RAVmeaPx0W7xkY3IuAzcRTiFecyV1QOKNHHZnkMyEEYIoh7eLhD0faQa7mo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lvWqMhWW; arc=fail smtp.client-ip=52.101.69.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1764719268; c=relaxed/simple;
+	bh=S/8Pins3hHOaA5ZJ5qnwNVcGTya20MMR8hnO5lIOZgE=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=LxQpBCs5kayLMb2pZmev7X12iOIG6FrNIMj9iGqnb5T0DcwRzvE2K4OeiFMOsQUEQMBBJdK3R5KlIi0V1GNi6OSIqJVFzF6bLNKZ/OSRjBCP8hl9o1joNmsZsk+VGMk4WU5e9dt+0czaGGk2gSzO7bb8zjWfC876OmnD5J7TFFg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=oB90EXRH; arc=fail smtp.client-ip=52.101.201.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RND891X+48ulfEyj9NSD8mfLBYxKD7NJcjBu8blhv1gGHjyoVexOw8FUhF9/BbGYwN3mAadfAvFpwFexhbFjpLkdvDcoPiIsRUGWAJ92zN2/8tLS57J1MYnN2hGe4t1IVo1mEXINLXAxNdhZBAwq9ylNwjGDmF/zvKq4R2W/BLVCgtAUPIfELNBYt5eeJylsokinQZJcCQ1TyviaWmxGBc7mGaGl3ldmDku62Ee4bTKGcTMHR4zhWzLDf4Jcgk6BXbzGQAsDhIZbukZ1453c3S3z7XZvVKuhZy97WWQiD721UMRVFTC3xow3i11TDvd9Rs5XnQsfA3QHIBs5u4uXEA==
+ b=waZSn2UoeJXGKgJlIbdA7F5O6wSLOA9voWp1TTSUFmCiFajZK8sogAdjIOUNxRG/hCDvePDr+kqOHdmSKQACeT9ti/lJjQkEgHYxrTuaZy+GWrWe+uPZsLBn4CTRqoqDPJo8bZhb+PsCS/YkUrjvHmYQKm0WMvaFqkna3WTPyzuuzS+kQ8arwIH7XIBDeANhTCFOBZjnGC+A6HLS4W7Ed9OUq6/ggL4kds0HLJvGtYBh6v3ybo/d0DZNlICbjHmjkj+xgINEO6iZdId5kMHB2/Y8wwt3Tlct7Pt2ux24QyuRNz/yBAaZx13STcajKbCtX6AkWCVR59yPw3duIhILiw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DOJIS8YXiE8qUb66H0T0sUZ3K9kFWBCpgDKmYUJPjyw=;
- b=grIEZIfCgsJmKteqdPgfLZnpL3dHsphbK9FZiK9S+wigI4PffzAKIC55NLj/ykrbfoC0pxV+rxjBncK29AVOPYacn78EeALVWX4gsPwWPrBEY8i7OV3zrvTDxoH8kdHPgvZBKPdUFgbH9SkKD+ob0I1zQ2RHfIF9qPtftjNUIHw1XBVkheTzbpt1Wqs/sDYEeOk+aacfCIXAf6E2p33AeQCe+V2tudn8+dbyw8XnFy3bV7ZQP8yEeVmjeysudeAZbNmHZ8+MsbdIbsGFTaaTwZuP6RbuAT677tVY1rugkFAGQo/aXDRuYRwdlw4MaIpn8F0NnKgHRFwt7/zZ1gNKIw==
+ bh=M9akn1mqbP5HEeO/c9MkIDa3j1j9wjsT8SmPw+z2g/4=;
+ b=te8Dk13O4wKrwU6OjCBp25HuIgujisFTTMKzNijEH8t9KGIITDLeKppu2XGPOJzNd9z7LzibewkXhFLR04txBKkij63k7fejSk7opkphMT+pytxjheOrekQaRsKuVB8WzQc6o8ThWzw/OUX8xUPLKxkDZevsMZq3bitjpcrqSLN7KBPBgt+wF4yStO4XyvdyGogfJ10KIhT2nkD6x+Z1k39mmrQlnqUkQpM5YCKnPFwL721Bd36ceOVXB044rbYl/aspkjRGIUjZUkv7LwTeaVrrOPaM1yYP10e3tMu79MYEVLYyPNyh3JCcnrCneSbrSGeB3DZDTwsLzsssZQJYzA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DOJIS8YXiE8qUb66H0T0sUZ3K9kFWBCpgDKmYUJPjyw=;
- b=lvWqMhWWOaXrS+MCKjXsOgGvsmYcrmuSPjeiybXW39gRjIC55XF+JtNzm1Jdh0bAez7or3LYzUf4bP8uxsgpxwSjQbDx9NTE2SUi2pYHTMVEkX8c8zbMmW07B6Ud6gZzigYHMYx98xmz1V2HERIQ+A9u8at83P5r+7Xl6fTE9w51ZeAvGVQ/NjYX8Qb1eW9NBuMIE5NNyUHJpO5CijF6PFGXwj6cR4kI8+1OfyvZHVLTQaiABS3OfC1eyEiFiEgfvInIfxSpzjDDxtMXojjWfgLx2KxE23LHqaQVyn2S+pRupl3mOAKg3W0h/lDXiKjbK2empaanQO+6nbhV1dskUg==
+ bh=M9akn1mqbP5HEeO/c9MkIDa3j1j9wjsT8SmPw+z2g/4=;
+ b=oB90EXRHuI4N7e2Z4p7U5+vGdEiKD718vjS3Xa0D8Dx9ez+eWLj4xAf+AVPTvf0entIeRexK90JZreLkPQRvg54BN7T8y0RMn5Ib5HPoP521yio33B7HrX+FY0WBYRks9Krj45AUV5P/DtGmt4ThQs8d/nfNz0pfJiQp8Q4gEUK7QQ0tE+ihcvULbhmZ+MVYqrOGCFKRZMh5WtcE780OMeiPI2LLb7mo2161xBLXbLibUykFMn/N2SXh0lxyUF4rP/RJ9up/KTJg2L5lBNWo1d7nBCPwP4c3hXiksPGj/NFqCMZuhMJb+HnneR8wCPOQaTxxDw7ggPxxkqlkdug1Hg==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
- by PA1PR04MB10866.eurprd04.prod.outlook.com (2603:10a6:102:488::12) with
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from DS4PR03MB8447.namprd03.prod.outlook.com (2603:10b6:8:322::12)
+ by SA2PR03MB5689.namprd03.prod.outlook.com (2603:10b6:806:119::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.9; Tue, 2 Dec
- 2025 16:07:34 +0000
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9366.012; Tue, 2 Dec 2025
- 16:07:34 +0000
-Date: Tue, 2 Dec 2025 11:07:23 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mani@kernel.org, kwilczynski@kernel.org, kishon@kernel.org,
-	bhelgaas@google.com, corbet@lwn.net, vkoul@kernel.org,
-	jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com,
-	Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
-	kurt.schwemmer@microsemi.com, logang@deltatee.com,
-	jingoohan1@gmail.com, lpieralisi@kernel.org, robh@kernel.org,
-	jbrunet@baylibre.com, fancer.lancer@gmail.com, arnd@arndb.de,
-	pstanner@redhat.com, elfring@users.sourceforge.net
-Subject: Re: [RFC PATCH v2 00/27] NTB transport backed by remote DW eDMA
-Message-ID: <aS8Ou7YacTs2yLqk@lizhi-Precision-Tower-5810>
-References: <20251129160405.2568284-1-den@valinux.co.jp>
- <aS4QkYn+aKphlRFm@lizhi-Precision-Tower-5810>
- <hp4shyyqwjddo54vac6gtau44qyshqw3ez5cqswtu4qhgg3ji3@6bi3rlnbqfz6>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <hp4shyyqwjddo54vac6gtau44qyshqw3ez5cqswtu4qhgg3ji3@6bi3rlnbqfz6>
-X-ClientProxiedBy: SJ0PR03CA0187.namprd03.prod.outlook.com
- (2603:10b6:a03:2ef::12) To DU2PR04MB8951.eurprd04.prod.outlook.com
- (2603:10a6:10:2e2::22)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Tue, 2 Dec
+ 2025 23:47:43 +0000
+Received: from DS4PR03MB8447.namprd03.prod.outlook.com
+ ([fe80::4682:710e:536c:360a]) by DS4PR03MB8447.namprd03.prod.outlook.com
+ ([fe80::4682:710e:536c:360a%2]) with mapi id 15.20.9388.003; Tue, 2 Dec 2025
+ 23:47:42 +0000
+From: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
+To: Dinh Nguyen <dinguyen@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Niravkumar L Rabara <niravkumar.l.rabara@intel.com>,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	Khairul Anuar Romli <khairul.anuar.romli@altera.com>
+Subject: [PATCH v2 0/3] Add dma-coherent property
+Date: Wed,  3 Dec 2025 07:47:32 +0800
+Message-ID: <cover.1764717960.git.khairul.anuar.romli@altera.com>
+X-Mailer: git-send-email 2.43.7
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR03CA0122.namprd03.prod.outlook.com
+ (2603:10b6:a03:33c::7) To DS4PR03MB8447.namprd03.prod.outlook.com
+ (2603:10b6:8:322::12)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -87,307 +88,147 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|PA1PR04MB10866:EE_
-X-MS-Office365-Filtering-Correlation-Id: 770dc714-2df2-413c-c6b7-08de31bce756
+X-MS-TrafficTypeDiagnostic: DS4PR03MB8447:EE_|SA2PR03MB5689:EE_
+X-MS-Office365-Filtering-Correlation-Id: a2cc5bb4-1e5a-44e1-51c3-08de31fd2f7d
+X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|19092799006|52116014|7416014|376014|366016|38350700014;
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?rXXHlyIiOKokPV3KZHMLVQTStXduyJpQ3xiDjNC3VHB7he3ZnSWYFM1Gtwna?=
- =?us-ascii?Q?SRsSlA5tdqm8yYXmaLCvyDG10dByRPPO/e4ykV8tsrzg+KJRYilWHH3xBtB+?=
- =?us-ascii?Q?VfbVRXLZ6ZZwCa9/fjfgWp2ULyAMqVVfMygCU9RJ/QapHEU3cD48nMNsl1mP?=
- =?us-ascii?Q?AqUVxrfOf2ManrE/GQTp+c+zVC/NrSmdVWf4G1rKFZHkrC3ZZM2K8+/LI2+v?=
- =?us-ascii?Q?ceNzZ96WKrXfWqgdUlF8XD70Kzzk3eHSwVIwLUJ+vBJCdjjRlLFsMeqSvQRM?=
- =?us-ascii?Q?06xUt1evVaMl8oau8oI3QHvl2Z3Wx/3Hx8EnkvuCaidpkci1otuR6y17yA/6?=
- =?us-ascii?Q?qE8TDSNNuDncA6+Qk481tuM+VOhGhOEVL6soQ9s2hCAolzMpNhQBq+x4riCA?=
- =?us-ascii?Q?8b9/6OxeMNGtKhKCgCuFDbvF/HLoWQ6W1VX1V0pjJ2Tj/LXJMM2JwUlnCkCh?=
- =?us-ascii?Q?HCp4zgaNccOrwIn48AxohQ27PhAkyNauyIkcN1wcjRSoxSWp2gfGgb3UjGt2?=
- =?us-ascii?Q?jJifdJt4AcUlsvfv/Mm1uB0VR29X9s6AV6MCDuUgKjdA1xuLtAPfU1bH3V5d?=
- =?us-ascii?Q?d7M1BKPDuhJYc3/GTLFAK87F0MwU1yWkrdrJCw9zXCTtKZdGLQDnShDvA3tk?=
- =?us-ascii?Q?iyihzpuU6M1ciZHoKXSDGv6KK5MnNuDx0Wni4zYiMX9Fp5kib1k7B6z0rmen?=
- =?us-ascii?Q?sgUvzDjJlJYn0NG3EH5OP5VTIne+VtSgYlH+lcFJDilo/nvA1uXfgBRWyfCB?=
- =?us-ascii?Q?9lSpSyogwbKXB1IFsY1YZE+BOJM0bs6UsILtbUbTBLZ8IeMnGGP8k8iFJbIF?=
- =?us-ascii?Q?WThdnibQDqLVXmU+pzxAZ689kYvWKb0X5YTWsotTVdbkL9j9nOomFiAtoK4g?=
- =?us-ascii?Q?3zvbatyG3fHCbWqFOQAyZBqkS+LG4qC9JA2gEJPF9fImAwhoqYFh8QgPAtAH?=
- =?us-ascii?Q?0df5mISiYR7g3iYgeJpguHXnorM+2P3mVjGGKddWb9nooFW51HwUE7wdA2N7?=
- =?us-ascii?Q?Uy5jv2+ebTJNmu1Om9rHMWt77mEVYbELSpgVyt+bEbAGMGYYeAfqXTLYykP+?=
- =?us-ascii?Q?Gft7S79zU3XUU80I56MhUi+pLZBIkmFPX+fueT0I1lP1DMGoZmPTcOfan0Vf?=
- =?us-ascii?Q?ywA02ORDF7l8O7NTsIOIXInXl4XZQ16/hMeWWC1vQr/U3LF5bKRbTsmvRIHR?=
- =?us-ascii?Q?yUS/uJGS99FIwLdVW0+i4HELehjvSzYiOqVirYwHdGS89akQ3rpgAXSjxDQe?=
- =?us-ascii?Q?rccJy+N2ZLiKdYC2Pjv+5QWZZQSD4SbuUOxa0kqoAildf4jqyoB4b7EGkWz+?=
- =?us-ascii?Q?hEZXWDbqjY2D3/IYp2meU/qBPdfKieB5mA+Hme+s/3UoOMvazxRqXqZvDT2g?=
- =?us-ascii?Q?kChYTv2WDNXT5kGZGj96mC6jAVcGXdtpaR4bls7SvCqEijH9EGNjTmiEsETW?=
- =?us-ascii?Q?wLBDrglmLTpzv3rNfAQG6sMEHDZS1XRfROtwiVCq0hLmB79k1GZCHYZ6OgK1?=
- =?us-ascii?Q?J+UwcRT8oHwIz+cvmJF5jqf6yGqO2/CiLgyn?=
+	=?utf-8?B?TitxZkkvYml0UmMwZ0xMNExNT2EwL1MycmdBaEFzaXovZDRZTXRMMndsenB0?=
+ =?utf-8?B?M1BZT1RxWW9GdVFyUWNFTzN2bmpsbmpNdEE2dHQ1S2t6UjJJbzJZMHV6TVl4?=
+ =?utf-8?B?dXhtcXE0S3Vmemk3d3psRVpwRHI5ZDYwV3N6N3FRYUFOWW8yZy9rWExEUmgw?=
+ =?utf-8?B?SHNFVVV4V20va1lNbWlYeURXUXRvSUJkYytYSjRhWC9hcTFwUkpCQVBqU2FT?=
+ =?utf-8?B?VnNVZ28yMDNVV0NEUGFpUk5VSDVqL0RoeVJSZEFkbTczelBlVFE1aFYvVkZG?=
+ =?utf-8?B?aG8rYjQ2SWdQNFVDM24yQ1lVZmx1dG03YVEzb1VPa002ejNRcFZtWU1wbWhi?=
+ =?utf-8?B?R2JRaStjTnRUVnhQTDdtNjI4bktVR0NnT1RYL21YOHNOMk4rVVpEQXU3ejJm?=
+ =?utf-8?B?YmRmS25RUGlSY2xTWmptNlJVZzVSZGI0SnB4SHFLQ2FWTEVVTjJtRm1LT2M3?=
+ =?utf-8?B?S1VVanljTmdpQk5ZNHBQcmhsWnZGZlhyTzFLTUNhOHF1RWVJemw3KzlBcFJs?=
+ =?utf-8?B?T1lpc0lyZ05TTThKcFltM3V0OHpWZ014T1o0UnlOOXBIWmQ1a3BWUDdwbE8x?=
+ =?utf-8?B?NnRlNXZmb2dYd1ZzRHlMYm0waEhwWTFjQktKbG4reFhLNUlUY0w1SFlnRnZl?=
+ =?utf-8?B?TmFORy9xSnRXVVAzV0RUdmxzSEZBZy9Rd0plZ0hPd1BTWjM1M1B1WUF3cFhY?=
+ =?utf-8?B?TklETUpVVGZsSCs2N3NNU1ExZ0dGZnAxYXZaUStjemRMN0NhbzJ1RXh4MXpJ?=
+ =?utf-8?B?ZzR1Z1YwNmtRN2cyako0dWxrYmlSMjlubFBkbkw0aDJRQkMrc2x1bzltVHJm?=
+ =?utf-8?B?U1oybkJqNTJyaVlSU0RJS3hsZWRVb050dFlramtsZHpDU0xDY0N0TEd5TWVC?=
+ =?utf-8?B?d3hOMUdTUHdkWGhqKzlFMVFLM3Q5NHBIUXBZZVU0QmZwUHFERTlrYjhaeEl0?=
+ =?utf-8?B?VC8vSFZxcHQ2c29DTzFwU05DdXI2dFJydDlqSkY3SnpvcFBjR0Z2U2ZkSFZw?=
+ =?utf-8?B?ckxZODFuMGl3a3l1b3ZiaFpRNC9kU2Rrb1dVVEt5a0NRV0EyMWxlSkJmU2RE?=
+ =?utf-8?B?S1BQN1lRYSs1V3JyRmZqbm1MYVQwNlIySU5JdEdoVVlzMXRLMmJzclZVdFpi?=
+ =?utf-8?B?TW83MEl3dVMrMEs2N1RNcDQ3a3d6VWdJNVl1YUgrMys2OVRuQzJYdDhMYThB?=
+ =?utf-8?B?bzRGY0RzL1BtekdJa3lTMTBjZDRqRXdzWXRyNUFVRTdFWk05R3JiZVVTQlRk?=
+ =?utf-8?B?Q0pScHU5REJXRDhOL0tid1hOUzRPeDM4Uy9YQkVoK1JzUnpoK2M1YWRpK3dx?=
+ =?utf-8?B?Ykc1UmNoNWozVW5iNFNyZzQrK0xlbmEvc1BNZzE4RFBQM2RyczV3dVR2RWdV?=
+ =?utf-8?B?RG01Uml4WDRld1VlUEVRMVhIOVRXMGdRTlRLQTYzOXEvd240ZDUrRE9ZWE8x?=
+ =?utf-8?B?b3RUOUVKZmxSUVF6TVhIcmdsMHRCWENOVTBjbjljK01Xb0s2ZkpMRGRTREwv?=
+ =?utf-8?B?ZnhLUCs5cElyU01kaHpuZHlqa1pWTmdLWVExVFlxMzc0cUxhdkZYSmlNaHhZ?=
+ =?utf-8?B?a3ZPUnNoU0tjc29senE2ZURkZmFISWErV2ZnMVI1SlR1WVF1MG10YUEzNnBS?=
+ =?utf-8?B?UW1RNzc0QVAzc3Z2eHZmdTJCMTFVM25pQ1R0eldIbktsYzM2VVZvU0pyVjBH?=
+ =?utf-8?B?OCtKRnVYVE9YbmF6YVRicy85N092aTh5R2VZa3VuZ2cvQVVNNEpkaHYvZ3dE?=
+ =?utf-8?B?U2pyalUzUTJ0dEo2d2MvS25TblBaYXFQc0RZZUdYdTdiRndvazVna1JIU0I2?=
+ =?utf-8?B?OXdOQU8xMS9Ta1R2aHJHaGZmdWl2QlJKTzVpa3RsMkUzdDJjUXIwekI1YjQ5?=
+ =?utf-8?B?M29YNjh3dEhYNGVGNGg0Unlnc1Nld1FGTmFqc1RuWmFJU3krV0EyVm1YUXFN?=
+ =?utf-8?B?cURjTjErYVVVQVZOT2k3UTZIR1M1SnNhRjAyTithOVYwRzFrQzM5cUFHVWxi?=
+ =?utf-8?B?Y2t4a1VEdFg1ZStyK2huS3ROT0tXd2UwendYM2VEbWFkbDZBeWJWcVpGaUxU?=
+ =?utf-8?Q?IuP+6L?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(52116014)(7416014)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PR03MB8447.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IeZ2t+Tt9PC7Ty2N3vc9gVHO3PQkTwTgF2r4twyflReYTHyZhxaADpki9g+Y?=
- =?us-ascii?Q?L9x+xl73mbAFbek2YkQL8h65n4tQOI6hKfnf/yA3PV7+GujHVXIuTJCu7LV+?=
- =?us-ascii?Q?39nka52eZghpMpIMeiCBnoM2YPZaN4um+MSQZSKlgTEgyabYf7Uwn/jXmZlC?=
- =?us-ascii?Q?8p6B238L5HZ0lbWfp7R0NIr4e61n7ABB7TKwO1TqllcVfyOGyQ70QfTlF9AX?=
- =?us-ascii?Q?ojgvt5LftMJit330i5ofDaAK68J6mBhslGYHs6teZLk0xTXyH1XS0rFwG14O?=
- =?us-ascii?Q?ZrdrA87EcNAERwKsK4DkbHszdaWesv/aSjVE7kbs+7hTZG+erIiOmIqUvOjL?=
- =?us-ascii?Q?ST+jVMBUCJh76WsxoPHwG4jthoTScSwUfYs4ba6wx04yIyCJaXVhNPKEn3VE?=
- =?us-ascii?Q?a0aHYQIaRUeotg5kkLAIDBzYgrAycOYIasnSpTPKdk3VHT7gjUV4fWY3QNRk?=
- =?us-ascii?Q?ACG88/fMQY4GuDyDo9QRbbnxt76IXXpLrW3pSgqk2P/EFtDwIEuloybI3E66?=
- =?us-ascii?Q?pvzCc0p2gG+NbRadvAJgvn5hptuTFkkEQcP5DVyvtMr7VNqyiRMnQAWrEqF+?=
- =?us-ascii?Q?0+LN3IxNIw+98eYSety1Toe/nFnefwX9EOHdMXXbsdmwBQYJGJqwoxjB47gb?=
- =?us-ascii?Q?Nym5XWgFb4EyoIBH/E6Q46vjh52x6p0N1GA6Cdjxt/Ris54xjWDScKhXrtLD?=
- =?us-ascii?Q?g3QgJM+3X2eZKIaW9KZNR3jFEDu887XOyzv6fCTR3iwjQpQZ4ASm0nN0oIi5?=
- =?us-ascii?Q?Am9T3U4RHPSorcPciaKyJecn4sA5HsmR7SZfi7zvGN4qYYHztHKctJWz/4yt?=
- =?us-ascii?Q?/FbYXhWIGR5N5VNPDmv8Ce9RkiXfLstgup1jBmkQA7Etwrs4oKy5vQHfOSXc?=
- =?us-ascii?Q?0fjlYnsTilvigaRS6lsNpYO5j2dVuzuSZTZWbpZtugYudbvZeFs6B98RZtPi?=
- =?us-ascii?Q?GksGFqZns1jCuXVjffceLhwqrDXnIqptGs+xtvRtWW5E8kwUv83xUuOLa2DA?=
- =?us-ascii?Q?0vwAEpX+IZwdk4GMfI/cbDBvJYro6blPNNSLr15AHtlpjEWAKxLU/ErXfbhC?=
- =?us-ascii?Q?DGeEEeazyJkjtgDI0nGmBZ4lkv8x1h67Q+IkqDyLKgr7VZfCOjDbrzT0gWf3?=
- =?us-ascii?Q?cuLvWvAcGFF2FM7WtZ02rUUOilH75GMSIvVUSzypbQYqOW+XMQLlen/ECjrS?=
- =?us-ascii?Q?rHBRIe2z6Dzscvn0jjLOAkl9NZ+q4a55pYshibcAWsn6EEvxhryhI+xEjT0N?=
- =?us-ascii?Q?QBet7HRQIFvS1O3hti/OcFhtV28YWHUnLhpgDB3jIOdKzAIAmhxuj5mva3pw?=
- =?us-ascii?Q?AEUwLpDLDX5g9Aif+XSEFLyrWOV46V3JlWk7eGins+Z6GRLjrwUaskE6Lw7r?=
- =?us-ascii?Q?f3thfSy08yCU1NzWZsL4rUy+oLUn046l4h9ZAiFRCuXi3OTiQSYpAIokiqRt?=
- =?us-ascii?Q?Pd/tkN8jpNhpSTfsgzCQFWmSnQpbE0AJZC0nWRHKQ35tWS5TZ03BZzmFLqiu?=
- =?us-ascii?Q?wc1OxdLkd213OI92Xhtk77jxUXbOhUbq/SlfiKuhFboKs5EbILJlXiVtU+PT?=
- =?us-ascii?Q?5A+zsP24aIPnx5kS39YXMKfxUYkQSpucfeKPC+mE?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 770dc714-2df2-413c-c6b7-08de31bce756
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
+	=?utf-8?B?WkFWei9DT3JvUzJaL1QzQjlmUWFUcHRSc3pQZm45YWVBd1JaYkNmeVc3UDhY?=
+ =?utf-8?B?cVJUaFErWjNUS3JTOE5jLzdOOTBNWHdNL2JIcHBhdjNXbU1DbjVhVGpicEx4?=
+ =?utf-8?B?a3FsL0RjL1dQVVYvODRPczFRQUxSZENNUkpXaEdpM0pZZVhjNkkxeVJkZ0tN?=
+ =?utf-8?B?cHpqMGNkL0VBYlVtOE1xTTVTRWJOZDNBZklHbkd3MStJYkJPR0pLSEYyUWlY?=
+ =?utf-8?B?TnNyNzE5UkhSWmZ3RFlUQWJQWTJMTzN1Y1NHclhzYkdwbUdUb2NYZklYWlMw?=
+ =?utf-8?B?ajdRTm5INU5jM2tueTBvMmExcUlXSEY2UHRPcTBMUFNWSnRLVUhjakFSSTRn?=
+ =?utf-8?B?cnNjN0R4bHF1MVdMb2YxbGpRdHdNQnJqWTNtTDFiVXBLSXFyenBJS0plYlo3?=
+ =?utf-8?B?cHNSUUNVdjE3aWNyU2VMTnJzN0Z3SHNSbHJQeFdsWlVodVVpSWRhOHpVenMv?=
+ =?utf-8?B?bEMwd2trKzJoNm1TNWQ0cmRDRDVBaVp5bmR5cjlhbitNWDVIdlJDK2ovcS83?=
+ =?utf-8?B?enNYMkd4THNEbWl5RjVaOG9VWVNHV1BaTzBYbTVrSTFEUkRXV0taWDkrbkRt?=
+ =?utf-8?B?MEozQ0YyZjJzdVlQWFVIalJxY29zd0JEeUxFaGlkZk9CNVU4Nm5XRENWRnBt?=
+ =?utf-8?B?N1ZweEtBRDB2T1JQcFVmb3FhNTJXcFluVzIyTnVQUGoya2RsUVBvNHd2SnU0?=
+ =?utf-8?B?MjJBTzdvU2NzenlPcndTenc4U3ZOQjUwd25EaTl1VXMvUWhFb1I0dTBVMFZQ?=
+ =?utf-8?B?Ynd2SUFaaytlWHIrSHYxUm5Hckhra3pKNkdBc0QzRCtHUk8xYjF4YUN1UTdG?=
+ =?utf-8?B?Uy9mR0RtazBnUnBMbzVPWXNseWRtcTlOYmNsZUhJcitoQ0xOWmZJWTd2eUdD?=
+ =?utf-8?B?SkwwKzBVZEFnWlNCQjJzUW9WdEVuaDE5SDcwRUUzMkhTZE1Rb1VjVmpUNmJv?=
+ =?utf-8?B?WlVFRG16SlMxVzcvbmlXVmVMWGdERzBac3dVaWl3OE5jTFJIdVNaWTVZNjBK?=
+ =?utf-8?B?aG5GaFlQVk1relYyYTV2Nlp0L01xMTdIeGdvVldQd2NGc1BBTVAvdUlGY2g5?=
+ =?utf-8?B?S2llSWJKWnZIQ1RPaWErRUF6S2NlNUVSMEhqMjgwbi9YS2dOdDg2K2ZzZlBV?=
+ =?utf-8?B?QXhMbnV5MEtqU0NuYUN6WXVwQ2d6bUNMRHBWRTdMek5McTRjeTRuWWhrcWNm?=
+ =?utf-8?B?YVRaclJmN3NwZ3BJRmZiQkpycCtOcW9qcURLS3o4dmZreDdoM082QlRMd0Nr?=
+ =?utf-8?B?Q3hndm9KdklvTUdGZDNSbzJuT2czeVdJT3JIWHJZdkY5ckhmc09Sa3R5djhn?=
+ =?utf-8?B?U3dOa00xOFJrZ284R3hsSVM5eHBYRFB3UDEyejNVY2JkZ0lEeS9MbS9KUXJE?=
+ =?utf-8?B?NXUvakh2c05YL1ppS1FYZTU5bzdUYkFMVmdscU1pSjlsZEVuaHhMNWFqSTZ3?=
+ =?utf-8?B?SWN6Z2J5Y2I2a3h0TXBIY240ZS9FcVEweVAwWHJ4ZWVHOUJ2NFAyT1JLbmZw?=
+ =?utf-8?B?UHpvQ00rSjZzUGVKYjZhYzBGcE1lT1ZBOEN4RjJoTDdJanplT0lGN2pyM0xF?=
+ =?utf-8?B?WTF2cjZhOXhjT3JXZEJNWWdBSERVRDhUSUg3eVhkVzFjQm1Pb2ZOZDhxbG9q?=
+ =?utf-8?B?WTBSWmpzVkkwVUxtMUdKbURCSHNOS3B5OVhtMy9JTFoydGdINTNJKzRwYkZF?=
+ =?utf-8?B?VVgzTHY0cEFHenFtM2pkL3MvMWlWeVQzMWU4d3ZvY0xqbjNVaE14ZFhLZHdO?=
+ =?utf-8?B?TjBLd0ZaRVk4NjV4VWR0UXlCMzhhMDl1R2RRZ0I5UC9jTlRuOXlja25vamdF?=
+ =?utf-8?B?K0VqT2VQc1dFK3JuZ2VaM2Y2LzdlZ0dXWDlnZWtBZlpNdklweGtLSTlwRi9U?=
+ =?utf-8?B?WTlTM2RKRjhTVkRBbzRRQU0vdU5KYzV4NWJsdXptRXlWbTNEeDE1RUg3dmZZ?=
+ =?utf-8?B?NE15ekJ1dlRXVUxSMWRqakdIRDF0YmZ3WkJhQmplY3hsenBpakJKQXIxVUd6?=
+ =?utf-8?B?MHlGdUhORjJZb0RHa1J2bkY0TEhMSVdqNElEeERmTThkNytldlJwVUExNnJL?=
+ =?utf-8?B?WTBIMmpQdUt4b2wxcklWRFVFY3lRMlpzM0ZNTVFPc0FnTkNMQVpmMDRFWStR?=
+ =?utf-8?B?U3EyYjFkMWxkanU3Z3FWdEh1QXFmeHc2RHlkMVFjVWVxTGNiY01HRmdBaitV?=
+ =?utf-8?B?Q1E9PQ==?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a2cc5bb4-1e5a-44e1-51c3-08de31fd2f7d
+X-MS-Exchange-CrossTenant-AuthSource: DS4PR03MB8447.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2025 16:07:34.1461
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2025 23:47:42.9177
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7sHKPLFXR0KS0EgGicIiKcgNsl6ODfH5FhfWIYyBjeqJKvBgg4jB3f/3baVCS/l4W10QoLIZXC7WtL6rpRKSLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10866
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5r456RhIxOEqfTJBhSjQVmZQ0OYw1kTfw1CAw2WtBWFUWuevD65BqN9ZhpMyq5bFUOO+g9N0weaHB51k1bALctIEwgzz7xnfL5WCbssddqE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR03MB5689
 
-On Tue, Dec 02, 2025 at 03:20:01PM +0900, Koichiro Den wrote:
-> On Mon, Dec 01, 2025 at 05:02:57PM -0500, Frank Li wrote:
-> > On Sun, Nov 30, 2025 at 01:03:38AM +0900, Koichiro Den wrote:
-> > > Hi,
-> > >
-> > > This is RFC v2 of the NTB/PCI series for Renesas R-Car S4. The ultimate
-> > > goal is unchanged, i.e. to improve performance between RC and EP
-> > > (with vNTB) over ntb_transport, but the approach has changed drastically.
-> > > Based on the feedback from Frank Li in the v1 thread, in particular:
-> > > https://lore.kernel.org/all/aQEsip3TsPn4LJY9@lizhi-Precision-Tower-5810/
-> > > this RFC v2 instead builds an NTB transport backed by remote eDMA
-> > > architecture and reshapes the series around it. The RC->EP interruption
-> > > is now achieved using a dedicated eDMA read channel, so the somewhat
-> > > "hack"-ish approach in RFC v1 is no longer needed.
-> > >
-> > > Compared to RFC v1, this v2 series enables NTB transport backed by
-> > > remote DW eDMA, so the current ntb_transport handling of Memory Window
-> > > is no longer needed, and direct DMA transfers between EP and RC are
-> > > used.
-> > >
-> > > I realize this is quite a large series. Sorry for the volume, but for
-> > > the RFC stage I believe presenting the full picture in a single set
-> > > helps with reviewing the overall architecture. Once the direction is
-> > > agreed, I will respin it split by subsystem and topic.
-> > >
-> > >
-> > ...
-> > >
-> > > - Before this change:
-> > >
-> > >   * ping
-> > >     64 bytes from 10.0.0.11: icmp_seq=1 ttl=64 time=12.3 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=2 ttl=64 time=6.58 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=3 ttl=64 time=1.26 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=4 ttl=64 time=7.43 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=5 ttl=64 time=1.39 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=6 ttl=64 time=7.38 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=7 ttl=64 time=1.42 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=8 ttl=64 time=7.41 ms
-> > >
-> > >   * RC->EP (`sudo iperf3 -ub0 -l 65480 -P 2`)
-> > >     [ ID] Interval           Transfer     Bitrate         Jitter    Lost/Total Datagrams
-> > >     [  5]   0.00-10.01  sec   344 MBytes   288 Mbits/sec  3.483 ms  51/5555 (0.92%)  receiver
-> > >     [  6]   0.00-10.01  sec   342 MBytes   287 Mbits/sec  3.814 ms  38/5517 (0.69%)  receiver
-> > >     [SUM]   0.00-10.01  sec   686 MBytes   575 Mbits/sec  3.648 ms  89/11072 (0.8%)  receiver
-> > >
-> > >   * EP->RC (`sudo iperf3 -ub0 -l 65480 -P 2`)
-> > >     [  5]   0.00-10.03  sec   334 MBytes   279 Mbits/sec  3.164 ms  390/5731 (6.8%)  receiver
-> > >     [  6]   0.00-10.03  sec   334 MBytes   279 Mbits/sec  2.416 ms  396/5741 (6.9%)  receiver
-> > >     [SUM]   0.00-10.03  sec   667 MBytes   558 Mbits/sec  2.790 ms  786/11472 (6.9%)  receiver
-> > >
-> > >     Note: with `-P 2`, the best total bitrate (receiver side) was achieved.
-> > >
-> > > - After this change (use_remote_edma=1) [1]:
-> > >
-> > >   * ping
-> > >     64 bytes from 10.0.0.11: icmp_seq=1 ttl=64 time=1.48 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=2 ttl=64 time=1.03 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=3 ttl=64 time=0.931 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=4 ttl=64 time=0.910 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=5 ttl=64 time=1.07 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=6 ttl=64 time=0.986 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=7 ttl=64 time=0.910 ms
-> > >     64 bytes from 10.0.0.11: icmp_seq=8 ttl=64 time=0.883 ms
-> > >
-> > >   * RC->EP (`sudo iperf3 -ub0 -l 65480 -P 4`)
-> > >     [  5]   0.00-10.01  sec  3.54 GBytes  3.04 Gbits/sec  0.030 ms  0/58007 (0%)  receiver
-> > >     [  6]   0.00-10.01  sec  3.71 GBytes  3.19 Gbits/sec  0.453 ms  0/60909 (0%)  receiver
-> > >     [  9]   0.00-10.01  sec  3.85 GBytes  3.30 Gbits/sec  0.027 ms  0/63072 (0%)  receiver
-> > >     [ 11]   0.00-10.01  sec  3.26 GBytes  2.80 Gbits/sec  0.070 ms  1/53512 (0.0019%)  receiver
-> > >     [SUM]   0.00-10.01  sec  14.4 GBytes  12.3 Gbits/sec  0.145 ms  1/235500 (0.00042%)  receiver
-> > >
-> > >   * EP->RC (`sudo iperf3 -ub0 -l 65480 -P 4`)
-> > >     [  5]   0.00-10.03  sec  3.40 GBytes  2.91 Gbits/sec  0.104 ms  15467/71208 (22%)  receiver
-> > >     [  6]   0.00-10.03  sec  3.08 GBytes  2.64 Gbits/sec  0.176 ms  12097/62609 (19%)  receiver
-> > >     [  9]   0.00-10.03  sec  3.38 GBytes  2.90 Gbits/sec  0.270 ms  17212/72710 (24%)  receiver
-> > >     [ 11]   0.00-10.03  sec  2.56 GBytes  2.19 Gbits/sec  0.200 ms  11193/53090 (21%)  receiver
-> >
-> > Almost 10x fast, 2.9G vs 279M? high light this one will bring more peopole
-> > interesting about this topic.
->
-> Thank you for the review!
->
-> OK, I'll highlight this in the next iteration.
-> By the way, my impression is that we can achieve even higher with this remote
-> eDMA architecture.
+This patch series adds dma-coherent property for the Agilex5 platform by:
 
-eDMA can reduce one memory copy and longer TLP data length. Previously, I
-tried use RDMA framework some year ago, but it is over complex and stop the
-work.
+- Updating the device tree bindings for:
+  - Cadence HP NAND controller (`cdns,hp-nfc`)
+  - Synopsys DesignWare AXI DMA controller (`snps,dw-axi-dmac`)
+  to accept the `dma-coherent` property.
 
->
-> >
-> > >     [SUM]   0.00-10.03  sec  12.4 GBytes  10.6 Gbits/sec  0.188 ms  55969/259617 (22%)  receiver
-> > >
-> > >   [1] configfs settings:
-> > >       # modprobe pci_epf_vntb dyndbg=+pmf
-> > >       # cd /sys/kernel/config/pci_ep/
-> > >       # mkdir functions/pci_epf_vntb/func1
-> > >       # echo 0x1912 >   functions/pci_epf_vntb/func1/vendorid
-> > >       # echo 0x0030 >   functions/pci_epf_vntb/func1/deviceid
-> > >       # echo 32 >       functions/pci_epf_vntb/func1/msi_interrupts
-> > >       # echo 16 >       functions/pci_epf_vntb/func1/pci_epf_vntb.0/db_count
-> > >       # echo 128 >      functions/pci_epf_vntb/func1/pci_epf_vntb.0/spad_count
-> > >       # echo 2 >        functions/pci_epf_vntb/func1/pci_epf_vntb.0/num_mws
-> > >       # echo 0xe0000 >  functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw1
-> > >       # echo 0x20000 >  functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw2
-> > >       # echo 0xe0000 >  functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw2_offset
-> >
-> > look like, you try to create sub-small mw windows.
-> >
-> > Is it more clean ?
-> >
-> > echo 0xe0000 >  functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw1.0
-> > echo 0x20000 >  functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw1.1
-> >
-> > so wm1.1 natively continue from prevous one.
->
-> Thanks for the suggestion.
->
-> I was trying to keep the sub-small mw windows referred to in the same way
-> as normal windows for simplicity and readability, but I agree your proposal
-> looks intuitive from a User-eXperience point of view.
->
-> My only concern is that e.g. {mw1.0, mw1.1, mw2.0} may translate internally
-> into something like {mw1, mw2, mw3} effectively, and that numbering
-> mismatch might become confusing when reading or debugging the code.
+- Adding the dma-coherent property to the Agilex5 device tree and wiring up
+  the property to the supported peripherals:
+  - NAND controller
+  - DMA controller
 
-If there are enough bars, you can try use one dedicate bar for EDMA register
-space, LL space shared with bar0 (control bar) to reduce complex, and get
-better performace firstly.
+This dma-coherent addition aligns the Agilex5 platform with ARM’s
+architectural requirements for coherent interconnects.
 
-Frank
+---
+Notes:
+This patch series is applied and validated on socfpga dts maintainer's
+branch
+https://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux.git/log/?h=socfpga_dts_for_v6.19
 
->
-> -Koichiro
->
-> >
-> > Frank
-> >
-> > >       # echo 0x1912 >   functions/pci_epf_vntb/func1/pci_epf_vntb.0/vntb_vid
-> > >       # echo 0x0030 >   functions/pci_epf_vntb/func1/pci_epf_vntb.0/vntb_pid
-> > >       # echo 0x10 >     functions/pci_epf_vntb/func1/pci_epf_vntb.0/vbus_number
-> > >       # echo 0 >        functions/pci_epf_vntb/func1/pci_epf_vntb.0/ctrl_bar
-> > >       # echo 4 >        functions/pci_epf_vntb/func1/pci_epf_vntb.0/db_bar
-> > >       # echo 2 >        functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw1_bar
-> > >       # echo 2 >        functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw2_bar
-> > >       # ln -s controllers/e65d0000.pcie-ep functions/pci_epf_vntb/func1/primary/
-> > >       # echo 1 > controllers/e65d0000.pcie-ep/start
-> > >
-> > >
-> > > Thanks for taking a look.
-> > >
-> > >
-> > > Koichiro Den (27):
-> > >   PCI: endpoint: pci-epf-vntb: Use array_index_nospec() on mws_size[]
-> > >     access
-> > >   PCI: endpoint: pci-epf-vntb: Add mwN_offset configfs attributes
-> > >   NTB: epf: Handle mwN_offset for inbound MW regions
-> > >   PCI: endpoint: Add inbound mapping ops to EPC core
-> > >   PCI: dwc: ep: Implement EPC inbound mapping support
-> > >   PCI: endpoint: pci-epf-vntb: Use pci_epc_map_inbound() for MW mapping
-> > >   NTB: Add offset parameter to MW translation APIs
-> > >   PCI: endpoint: pci-epf-vntb: Propagate MW offset from configfs when
-> > >     present
-> > >   NTB: ntb_transport: Support offsetted partial memory windows
-> > >   NTB: core: Add .get_pci_epc() to ntb_dev_ops
-> > >   NTB: epf: vntb: Implement .get_pci_epc() callback
-> > >   damengine: dw-edma: Fix MSI data values for multi-vector IMWr
-> > >     interrupts
-> > >   NTB: ntb_transport: Use seq_file for QP stats debugfs
-> > >   NTB: ntb_transport: Move TX memory window setup into setup_qp_mw()
-> > >   NTB: ntb_transport: Dynamically determine qp count
-> > >   NTB: ntb_transport: Introduce get_dma_dev() helper
-> > >   NTB: epf: Reserve a subset of MSI vectors for non-NTB users
-> > >   NTB: ntb_transport: Introduce ntb_transport_backend_ops
-> > >   PCI: dwc: ep: Cache MSI outbound iATU mapping
-> > >   NTB: ntb_transport: Introduce remote eDMA backed transport mode
-> > >   NTB: epf: Provide db_vector_count/db_vector_mask callbacks
-> > >   ntb_netdev: Multi-queue support
-> > >   NTB: epf: Add per-SoC quirk to cap MRRS for DWC eDMA (128B for R-Car)
-> > >   iommu: ipmmu-vmsa: Add PCIe ch0 to devices_allowlist
-> > >   iommu: ipmmu-vmsa: Add support for reserved regions
-> > >   arm64: dts: renesas: Add Spider RC/EP DTs for NTB with remote DW PCIe
-> > >     eDMA
-> > >   NTB: epf: Add an additional memory window (MW2) barno mapping on
-> > >     Renesas R-Car
-> > >
-> > >  arch/arm64/boot/dts/renesas/Makefile          |    2 +
-> > >  .../boot/dts/renesas/r8a779f0-spider-ep.dts   |   46 +
-> > >  .../boot/dts/renesas/r8a779f0-spider-rc.dts   |   52 +
-> > >  drivers/dma/dw-edma/dw-edma-core.c            |   28 +-
-> > >  drivers/iommu/ipmmu-vmsa.c                    |    7 +-
-> > >  drivers/net/ntb_netdev.c                      |  341 ++-
-> > >  drivers/ntb/Kconfig                           |   11 +
-> > >  drivers/ntb/Makefile                          |    3 +
-> > >  drivers/ntb/hw/amd/ntb_hw_amd.c               |    6 +-
-> > >  drivers/ntb/hw/epf/ntb_hw_epf.c               |  177 +-
-> > >  drivers/ntb/hw/idt/ntb_hw_idt.c               |    3 +-
-> > >  drivers/ntb/hw/intel/ntb_hw_gen1.c            |    6 +-
-> > >  drivers/ntb/hw/intel/ntb_hw_gen1.h            |    2 +-
-> > >  drivers/ntb/hw/intel/ntb_hw_gen3.c            |    3 +-
-> > >  drivers/ntb/hw/intel/ntb_hw_gen4.c            |    6 +-
-> > >  drivers/ntb/hw/mscc/ntb_hw_switchtec.c        |    6 +-
-> > >  drivers/ntb/msi.c                             |    6 +-
-> > >  drivers/ntb/ntb_edma.c                        |  628 ++++++
-> > >  drivers/ntb/ntb_edma.h                        |  128 ++
-> > >  .../{ntb_transport.c => ntb_transport_core.c} | 1829 ++++++++++++++---
-> > >  drivers/ntb/test/ntb_perf.c                   |    4 +-
-> > >  drivers/ntb/test/ntb_tool.c                   |    6 +-
-> > >  .../pci/controller/dwc/pcie-designware-ep.c   |  287 ++-
-> > >  drivers/pci/controller/dwc/pcie-designware.h  |    7 +
-> > >  drivers/pci/endpoint/functions/pci-epf-vntb.c |  229 ++-
-> > >  drivers/pci/endpoint/pci-epc-core.c           |   44 +
-> > >  include/linux/ntb.h                           |   39 +-
-> > >  include/linux/ntb_transport.h                 |   21 +
-> > >  include/linux/pci-epc.h                       |   11 +
-> > >  29 files changed, 3415 insertions(+), 523 deletions(-)
-> > >  create mode 100644 arch/arm64/boot/dts/renesas/r8a779f0-spider-ep.dts
-> > >  create mode 100644 arch/arm64/boot/dts/renesas/r8a779f0-spider-rc.dts
-> > >  create mode 100644 drivers/ntb/ntb_edma.c
-> > >  create mode 100644 drivers/ntb/ntb_edma.h
-> > >  rename drivers/ntb/{ntb_transport.c => ntb_transport_core.c} (59%)
-> > >
-> > > --
-> > > 2.48.1
-> > >
+This changes is validated on:
+	- intel/socfpga_agilex5_socdk.dtb
+	- snps,dw-axi-dmac.yaml
+	- snps,dw-axi-dmac.yaml intel/socfpga_agilex5_socdk.dtb 
+	- cdns,hp-nfc.yaml 
+	- cdns,hp-nfc.yaml intel/socfpga_agilex5_socdk.dtb
+
+Changes in v2:
+	- Rephrase git commit message to describe why the property is
+	  needed now.
+	- Remove redundant statement in the git commit message.
+	- Correct the version in patch series title to v2. 
+---
+Khairul Anuar Romli (3):
+  dt-bindings: mtd: cdns,hp-nfc: Add dma-coherent property
+  dt-bindings: dma: snps,dw-axi-dmac: add dma-coherent property
+  arm64: dts: socfpga: agilex5: Add dma-coherent property
+
+ Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml | 2 ++
+ Documentation/devicetree/bindings/mtd/cdns,hp-nfc.yaml      | 2 ++
+ arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi              | 3 +++
+ 3 files changed, 7 insertions(+)
+
+-- 
+2.43.7
+
 

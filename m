@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-7459-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7460-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99DD0C9A543
-	for <lists+dmaengine@lfdr.de>; Tue, 02 Dec 2025 07:34:15 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B66CC9A567
+	for <lists+dmaengine@lfdr.de>; Tue, 02 Dec 2025 07:36:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8EF9C341127
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Dec 2025 06:34:05 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 489A14E3506
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Dec 2025 06:35:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A3862F9DA4;
-	Tue,  2 Dec 2025 06:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C2F42F5A09;
+	Tue,  2 Dec 2025 06:35:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="diXjWAKb"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="G138ElTO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010035.outbound.protection.outlook.com [52.101.228.35])
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011028.outbound.protection.outlook.com [40.107.74.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57E01F151C;
-	Tue,  2 Dec 2025 06:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8B01F151C;
+	Tue,  2 Dec 2025 06:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.28
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764657242; cv=fail; b=l6myeUEzD/x777LUalLKJFJ8bbo8Igdw+VUBXFX6Wf9Qkpy7ZE3x5chNYr+SW53UW5lcU/X+xS9ZvbUj3SZwx2CgMFQSpnYNkZ6WbYmUDgMey44mo/k0paRMvuJBP/KHPvfqTgkFAwWL+RpSm3kUMyi0xyRJWT0xVjcVKE7KsS4=
+	t=1764657343; cv=fail; b=WT0NgLsMsYplixI3Ed92aIPlW866tmGm8deexNPEdyOl3SdkhPa6Qdw2kJxHYUCYYoftVN0jSN1liSxD3oex61dCbYr9uW1hn3xL+KEnyocZzDEhinFfPyFhA+/PmnFK76sb2kj6ARxyTxuT04+4XETg+RDC6Za+6mJjt3sO9AQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764657242; c=relaxed/simple;
-	bh=v2XZQAFiRRXGd73VXAoYoaqxa6GMuFftcbvz3gG0bdM=;
+	s=arc-20240116; t=1764657343; c=relaxed/simple;
+	bh=erc1Omy7xmw/caozCemCJw1bssGmCTMyHB2oMPTmlBI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Aj/2g7sn473T/n5TM8XRdMzOb7Zo71CBhG+xGkejbXQCVZutDxJwY2jNKw6vH8bZs1k4aAX8Ai8DTkveda9dlSmPCDGTL4KAKxhwQI8KaksGFG6aOE1MBZl/i0YbKByAM3K5TR6Efdo8ByVQeQHwNkhWDNDj4lTRgmKIV7n278E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=diXjWAKb; arc=fail smtp.client-ip=52.101.228.35
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ayKpOIQVt5iVDOkdr8FUuZndrcoSpMcFoLy7Qk8lQgnEhCzz8Zk0Tf3rEMtx1nfFxgFalk+GaM8hXSZp0XPDy7XlI6sgHmB8Z+qk4vR9VeWroNnAWjmZVZ6tVfbRBxRxQzLDYYl3E2exbWs2DevfSPP3AmUyJoTrw4Gg8jqGQUc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=G138ElTO; arc=fail smtp.client-ip=40.107.74.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VwxZ5s0hvjROgUNuSUCI1jPAp3LHKfHMyUe1P/6q5Bq/o14bRKVWt27eEx9wYH6cucn5ajDLReu/2h6ZC3qQNNrMhmzJIvTCPI8NvgvTaLL3zoeulbkcIm6UGW02ETC/ouTmJE8kXI/BoZaJvHkXDtPrDSxH8hxTslwUihmS311CTn7yA+0YB47/1c4HoEFEESjm9e0pgKHRc/I1LWBL7lSxbHBZppgLYVAEXRW7mdac5lkykfMqvJSYv2lyJ4GQPLRWMD85JolZ1sC7qTyYTWUEutMraRh2myyk33OyuRef0DIY1iKH6M5q4ojw9jEOAU0aIhX0wGTB+7hJoIVVzg==
+ b=HtYXi4Rl3ilOE0r1ZO+F40j0e9jjqEGgPB2OzHDvAIvayKJTFr/HwEzoviE8OXArgoGu0u3Cl3pucW/8iipewrZIgdpwZPCoTGgSdmVMHwNEJqp99Hd/xl82ns/OlfhTNADWmCRdzhQQ32IkXGaT47AQ05TikD/7a8DiX0uUWlq9rkpJkRduEtrLG3hnzWQGSwS9L2OJAvJm/DrrUodTUR7o+y3wgKNDga5SPJ2mxYVyuC9LZyDfij9SqH9pzhM+2ZYKpbr903oojMj5HPTkbRsXRC8wgbvLWXykXPJSn3v479QzrOnrlfJL5p1OS+Q2ze4njRWCntQVkdW8+HaWZw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h9y6tWRl9Q8bOxypxt9eumd2jGjTOFGR2ABA4SUfqc8=;
- b=fOZogpEkvrf02ZVS5HPV0eeH10W9RsDp68L30muaPNmQHjD0vndoBkGazYVFcwsLA4b1J46G4nq0TAKqRQ27bMcsfhx4P2E3bSRcQkLIrryPPTO+9gDR8cd3iCiTSvtsioYpod+C0lHbL3a7pZ9Bx1vsmqGnpqbL7W9M21/sxBJkvOpzBFLUXDewyQhZaQ2DCMGssvppjszDjZngGgy8B2iatvB/Ya5/HrkDGhAtNNtsWOXzuqiKLjpwxXRI7m0Kk4OuuN9LrH2gwFAi+5W5c1B2AVUu5g3eVkuIM7kWAscgn3zChFbL037l7A/QmHxoe0ncXM6Qx5oKH/iTDqbX5g==
+ bh=bAPUNuaGGFJU0L0Wk9F5R2Etom/uK7KLIs0U5PKAOYU=;
+ b=gcH+HkW0Ollh3ibIW57I/YR+XFE2FxIrdK8FbpBT9RnwPAA4AMiNLaLRNm2dKZ+rdJ2ymwvh0JfQSAjo8Y0UOzjK2uNjrg08BQvCsfqqBl04Skx4Bya8A/gnt+FU9j/77yfiPka24eek5NOyttOs4J2idMXlkmXbz854ABEDgdGlk6VCLTzxSjHLummkSsjKnRWunZMpRoMUZPMDIgO7rlblpsnVUl1+OclJlBiwkBEq9DmsSmRrrS4iswSuKYdqB5OWER3/uTNLEORDU2fOcEmmXLgAmhSqa2/4N6/R7zEOrppkTeO9X7f4mM7apy3SNFZ+hevE2ANyriUwP9Ni5w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h9y6tWRl9Q8bOxypxt9eumd2jGjTOFGR2ABA4SUfqc8=;
- b=diXjWAKbtICKASAyUJfblsxcPfSARjRvHv1/nrWXBq5Z+QHSOelIsXyQAdAoz4vLh9C5F6Nxvlhr6rA2fnYQ3gI/u4VLCWcz3/32RBP1SzMh/P0psYbDtfZFODhTuZeBzr4VJZvQNrUvXdNfkFZd+WhIYD77SC4/DlcJmiEndt8=
+ bh=bAPUNuaGGFJU0L0Wk9F5R2Etom/uK7KLIs0U5PKAOYU=;
+ b=G138ElTO+Mk5kKJSXp0KcQlutv7Is/ntd3HUrdzWGRaKKDUw3MZlNyg7GDEdER2DdWHShXCrjwlPfm9DBcRQfZj59/B6N79OI1DzcxxmckXckmp7f6LLHSw5C5pNMCIyV22EcrA0jqG9QGDTVlwptKvAqVX7tycVLBaniqiZx7A=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=valinux.co.jp;
 Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:24c::11)
- by TY4P286MB7525.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:351::10) with
+ by TY3P286MB2788.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:252::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.17; Tue, 2 Dec
- 2025 06:33:58 +0000
+ 2025 06:35:38 +0000
 Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  ([fe80::fb7e:f4ed:a580:9d03]) by TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  ([fe80::fb7e:f4ed:a580:9d03%5]) with mapi id 15.20.9366.012; Tue, 2 Dec 2025
- 06:33:57 +0000
-Date: Tue, 2 Dec 2025 15:33:57 +0900
+ 06:35:38 +0000
+Date: Tue, 2 Dec 2025 15:35:36 +0900
 From: Koichiro Den <den@valinux.co.jp>
 To: Frank Li <Frank.li@nxp.com>
 Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org, 
@@ -68,17 +68,17 @@ Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org,
 	logang@deltatee.com, jingoohan1@gmail.com, lpieralisi@kernel.org, robh@kernel.org, 
 	jbrunet@baylibre.com, fancer.lancer@gmail.com, arnd@arndb.de, pstanner@redhat.com, 
 	elfring@users.sourceforge.net
-Subject: Re: [RFC PATCH v2 14/27] NTB: ntb_transport: Move TX memory window
- setup into setup_qp_mw()
-Message-ID: <rgc2guhv66v2gqyjiox2oslhvctbqygkl75uwouj7e5e3w6bgs@djdn4yp7akv4>
+Subject: Re: [RFC PATCH v2 19/27] PCI: dwc: ep: Cache MSI outbound iATU
+ mapping
+Message-ID: <ddriorsgyjs6klcb6d7pi2u3ah3wxlzku7v2dpyjlo6tmalvfw@yj5dczlkggt6>
 References: <20251129160405.2568284-1-den@valinux.co.jp>
- <20251129160405.2568284-15-den@valinux.co.jp>
- <aS30YHfDUH7mRheL@lizhi-Precision-Tower-5810>
+ <20251129160405.2568284-20-den@valinux.co.jp>
+ <aS39gkJS144og1d/@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aS30YHfDUH7mRheL@lizhi-Precision-Tower-5810>
-X-ClientProxiedBy: TY4P286CA0015.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:405:2b0::15) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
+In-Reply-To: <aS39gkJS144og1d/@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: TY4P286CA0038.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:2b2::16) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:400:24c::11)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -87,229 +87,242 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYWP286MB2697:EE_|TY4P286MB7525:EE_
-X-MS-Office365-Filtering-Correlation-Id: cabbf7e4-44ab-4157-0f4d-08de316cc5d4
+X-MS-TrafficTypeDiagnostic: TYWP286MB2697:EE_|TY3P286MB2788:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1605a222-9d53-4e7c-2967-08de316d0172
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|10070799003|7416014;
+	BCL:0;ARA:13230040|7416014|10070799003|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vbKH+KW/vCO28KhnYgLYkE4jpmLkUohDeJgmlqIPVhoTHruCST4pFmfOP21Z?=
- =?us-ascii?Q?Ko4b7ISu2fLCHvLSzPHBOwIsDXLWBlLrwyUN9g/5r4WtXwJfF6QwboljIYHN?=
- =?us-ascii?Q?vr3Tm3hWrjR8CtV4JeDl+BCQAS1GVwdEbU6Y/yjvhiqTMYo5lyzgLuacWzi9?=
- =?us-ascii?Q?33MrmLfGV/w72LwIwXiMZ7MltzlJ++XFEdByldtNMLh8LzTiSHxXmwbopypK?=
- =?us-ascii?Q?IZbPLCkUaN2ERUq6dxzap5lTD8Kn/jONssPD+M3sKqNfdA4RT/VtSEmDlIQp?=
- =?us-ascii?Q?KbcTyxPRyaekajF5Zz5JAl2sO+2qyEAZWd5oQ57TlOfh4YybKw2QC8QyEweC?=
- =?us-ascii?Q?0atATn2Z4CFseg6cmQVNPTZkQiFUsq2FnYZcBRzT3D0F6Zj0Gd8vYYg5fK7f?=
- =?us-ascii?Q?YDcB4QO/JnpfkaE0oCxoATgSTWop1a2qyC00SmWGfnf+d/7sDdl95pdr+H/3?=
- =?us-ascii?Q?2kybfAGtYK+8rcmrhG8FK28g8Dp7YffPHP3D4QtvuQVp7/flpS4JcA1NAp4z?=
- =?us-ascii?Q?9uTDh1r+TgYRugR+xq+uAZakyFmexPp6X0oQGLVF0TnCqQ1mA+Xnufg5j+4l?=
- =?us-ascii?Q?JvKeIHfA3X9ijKheW8AdDpewfIlP5o3miYFGCUxmEPYFDqgkbGcWnbWhy0yd?=
- =?us-ascii?Q?g2KJrtE3dsX4mo/1AxZm3hIzWG7CXspjIvT2r8vFFm2zauJvSrdujhu2W2Wo?=
- =?us-ascii?Q?Kw/7NSC6z/qlYpUrX/0yKuh/6WZQ0tLLQwekWiR8AOwlgG3CsE5u0Mt4MyiW?=
- =?us-ascii?Q?naDu3aXc+GAuunVpLlfP7jc0ny354iuHD/WNz9WwMl+yPoQIJmHVkILgRmGq?=
- =?us-ascii?Q?22DGYj8wCI2WrIZwP5qgVTUu12M34HVJH14TO55emYz/Vtm5yyz7cm3PkWwX?=
- =?us-ascii?Q?KZxvt6Lp2efmbRwbJQRARptYB2V44OCCp9jhG5XY/dkIwVAcaWuvrsgKAyKo?=
- =?us-ascii?Q?27kERRqh4F9nN/M0b3saM3e2QXgwSRvVp6aZWAMCggrkc/dJ1Djc2Cti/GGJ?=
- =?us-ascii?Q?BzYsh40dvnDLjorPUucXDM40uhOjaWHDoeJ0bA+TRbu2sf33oMnVV8iBB10o?=
- =?us-ascii?Q?elA3QJabLWq8/+ZEHxUtu9ZYTeYg9yiWwUlx3QY1tooQqiwljH1i0EYmY33C?=
- =?us-ascii?Q?T3QRZcqZWyUCxYQzKys2/qA16W+TUjSJraaTKfWkAAtlFUdgI73Au2u0JhNi?=
- =?us-ascii?Q?C2dSU5nqI89qd9LdIGtwyRC23m6aOuMGMsrXuvbwI9amKQf59AehLSMue5g5?=
- =?us-ascii?Q?VgKAZC+kIHdHZx5a3pyO5xC5zJHD/LE8sos1vnWPAU5Vd/JCyglC9VpCwz9Y?=
- =?us-ascii?Q?XxPdIt/9a63MT6sqhZ6/EZRemPi1tM3yTCk9yOtiZOPqY9BJtfpQ9XIq/C7k?=
- =?us-ascii?Q?tn91g+YtADmBDiBZr87jbvOYgGYB4WEVFQdfM/KCo0wJeQjx9va22jUZnsoa?=
- =?us-ascii?Q?ivEBiWZkYV2lykvYAK4lHVWFXDQri8j+?=
+	=?us-ascii?Q?oR7wAyOlhkPC4MCBHg/41+pbdUVYvPjEaDp3lXZ184eRUUWyISeQe/sKN0ug?=
+ =?us-ascii?Q?4Tsch90PAdbHNB8i5FATK/4JYvCbTC5sC28WhPyNf4iMk9nVzZDM4HMoSQg3?=
+ =?us-ascii?Q?/qwBBlgOySzyuMJYX58slwhcwG8i26pZLDRs/oukY/LlISU7X4Hicnqp+ij3?=
+ =?us-ascii?Q?qhpEt7iNhco8qtCTZdUfD2Gcyznaj86rt9hYNyQruqFVPli4hA4sPfEJ0S/d?=
+ =?us-ascii?Q?69AmO7sXdtE1vY4eMr+oealqSGqzaFhCT7gZodwdajYRvCSqD6HDwYN+fVg1?=
+ =?us-ascii?Q?RXQ6E2NWHswulF+El+g8iVVve+NAwHySyZXj8hGZ6TQcWlvFTnOlXvx9DG0h?=
+ =?us-ascii?Q?lGl0fgTDSJv388xNEaXjV0ZI1bKH6t6Ks3rtf0nadiSPQNx/niWngZiCtALh?=
+ =?us-ascii?Q?5EOLZafstawLHm7PnmvcmK5vE5hhjJeb1pf3ubPSOoy9qFM/32JnMLg8kC8D?=
+ =?us-ascii?Q?mz5MC3pquUUZI36+vqIxWWZ5Td6Pcscc1YU9UrZnBt7p4P/aBVPtcF5w9jtc?=
+ =?us-ascii?Q?9U+3Yg0yAiPVX85Bn/djKZrh/M3mDiYNMGVTfmJIAtISddEmP5knOL0EElrT?=
+ =?us-ascii?Q?MA8OnFqh4OhnqYp8ytXBHBHfzvW/lW76KbeAVdgTqBtvCOCSypAhIlYwke5G?=
+ =?us-ascii?Q?J5WuocILv/uPK7PjnA7SqtxtR6a9ULnmDHxXhOJhmLKBRpNCKF4cZMxRtuGO?=
+ =?us-ascii?Q?SR4pyO+IcMaqY2x8bOnHOu//3C5tt7nFzE/I9uJpeeefelqNpFXj3GXiR6n2?=
+ =?us-ascii?Q?U1O777bzzC1l57SIgGk67AvBCvBbua3hb4+9OsSw8jQzA5BDyNdax85WU8yL?=
+ =?us-ascii?Q?UIsG+sHLfA3zGnabAY7OVxzWY9RFFhfEV703L5t3X++1DNM9Zru/XduFVWy7?=
+ =?us-ascii?Q?KdrOaHMf+MfNbCIkwndLNI58qM4w3TnQIjB0yNAypgh71MtxEk8QrEU3H+qW?=
+ =?us-ascii?Q?qrqSaql51o+TA9iJAHq13aqYTTPjIjxoKrm9ExC6myQDIhCW7sgDtYNIZDuc?=
+ =?us-ascii?Q?tA3A9QAchqiRgKTuQqcL4ZhIMOLqBbPlSJu8FH9J/Ir6UvgfLk82MtOhBtBJ?=
+ =?us-ascii?Q?78anqRZojbUXyR+0iamKlZAWBZzSYYsPM5oK0s9VYw5hCFV/etvrGc8wrbpo?=
+ =?us-ascii?Q?WHmjgpaIejiwhtXnofQJno1aUy2vwS1LI1yZMu7qGDAFCQRQ5RYSeKi6wwPS?=
+ =?us-ascii?Q?UTqy8Eo8564kk6aUiCtET0L3xKUr3OHl54aTpCiVA7ABFvjDY4IFi921zkGh?=
+ =?us-ascii?Q?jwg0xZ/yQW18jpD2Yj/BMcfVoiQAXo0YKwVqO1PCt+UxQ6XMcfPXxf3yDNz/?=
+ =?us-ascii?Q?/PBwrZAkt0/v0LwG5t2wCbu8sC0BaSps7Xg5NLDHbdrUrir3DIPgXMTHqKYZ?=
+ =?us-ascii?Q?wsrOnTjjTfm0bhqQFoterDdUv4GNJbrkqI3lTIcIY3oUotmSng=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(10070799003)(7416014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(10070799003)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?PPqamHi5ILJhT37rsYW0q7LDRfwTt+0DOQAQJ0tiyOreidMm2ACRLZvtasPY?=
- =?us-ascii?Q?/61YcLKg1/DgVoPGM709cWvU/qcPgTjevNYu/EznkKrvCF51VIEdWl/crkoe?=
- =?us-ascii?Q?MLpVCg+wJ5AIPm0BzNa7lYtodmpfw5FOAK4ESxidIPl58Tew4uimL9bahacY?=
- =?us-ascii?Q?QXRmSOjXeAFArS+JXthHyVi9xhWo7AaGZorLakwO/c1rdbLATELPcnc/Sl1j?=
- =?us-ascii?Q?J0HzwzDWK29S6tmCpUpT9freCTVWZzjWdfeHZdQIu1VLJjidAMlNrFEyM6kB?=
- =?us-ascii?Q?qXz6DKgWZiJ+DUDiGoTe5K37HokoxDt41jfZ1Q1R/8x5GKFyzWYr3Oni8hdf?=
- =?us-ascii?Q?r+vsHOO0g1bGYKM66D+xAv23s0ax4O61sRgwK/jxKyeUPcvr/8ZUd4w1KOIV?=
- =?us-ascii?Q?Cwn5eZwLLDJX4QKDVLzVaYhNju3AjuRqff1r2ZdfhMll9xwpHLwHlB23fmtv?=
- =?us-ascii?Q?5Ew/N9CXW+6otJzqhgxS/4PS30Sl3eCMK5R/doHZsYA80MojWgfseNJZLOZs?=
- =?us-ascii?Q?NmaWygMaqk0ZngSnAR0puw4XW1NPYfEn2WLc+1995oiM+gVHTri6E85c9Y8c?=
- =?us-ascii?Q?1oUBaKpIPcv3koGWfjKddomDETZM27/17q1oKiEdqbmqhu84zi8ecqj7uVAy?=
- =?us-ascii?Q?94OVMd7ewIQfXRFl9IWW83tuh0cErVIcP0gvE5E+n2O6q7nW15Nprs81ispR?=
- =?us-ascii?Q?rqcA5uCVctVzfSE4LQhGapn/+OLZl9Jw0RJQxeDpmDPplJaRLeYBt0fk8vSs?=
- =?us-ascii?Q?66hxCOzudRkliVlEswD/YbZ4vYJuwQ8YMjAmAnurcQLL9KxiG553ZAwqf+nx?=
- =?us-ascii?Q?fdIR6CeBDkXiaEW0LgYkshzVdvoXWh1c1ob0X8c9or3geaSdj/dHbt00LORP?=
- =?us-ascii?Q?ubNeYYMAdYZIynZ3t9XF/kHEy+/pdXFtuG87npBgGrdZfP73INAD3Lh4lsEc?=
- =?us-ascii?Q?cUbRCRx8ij+Wwx91vG02k8UjsoxxKDpkvocx4hUhE/gE+tUM2dbtcJhesEe4?=
- =?us-ascii?Q?AckiqYD+mAIPcf7SP/SJc1mEKqNVlzfhThX/TB4j8aqhxUTptl59YC+STxa6?=
- =?us-ascii?Q?eGkHt3F6wEcuwMr+NXCBsvytN9/N4OxwI8Yo3yjiLPHZUoyWuHwXUwUvqUMa?=
- =?us-ascii?Q?noh3vqSfefb1+TkGzmrzJzIjNec14I41j/9/y86p6HuGo1XATVdKxETDHq5D?=
- =?us-ascii?Q?2iM7bZcnIKaRieDaoqxmBhiDiI1dC4DzK2j7rpPIXsQhU4YI7hvN9DHtrsYD?=
- =?us-ascii?Q?DxMOQqUuJYJDFtq9mKGKqdgToPQEv3rOKSs2AUxt2RbjV+4A0f9wluinHruX?=
- =?us-ascii?Q?IraGsrL7lHOYxIhBAtSJjzkkMxMYtpU6rYFX3l5aCTGOjXOE8Rvh2pco6OEI?=
- =?us-ascii?Q?rktVvYUaQ+JSpImLa/lfBXzsvBt+Y5sk7pPAQ0lkcIrDVpYwjPvv7vali4Bg?=
- =?us-ascii?Q?pc+8uGwE8aHRKXHJ+QYKUi3qq3X0cWqKmGcyFdVBnv3ze3RwN49uoadVHyKr?=
- =?us-ascii?Q?7pEudfnpfjpCQHY4C10/uZ6x7s6bFp6DpND2w9KAaZnmmOAlmc39lmEMMBVU?=
- =?us-ascii?Q?anAADwfk9YsJEZZuTt0IUXS21Q7guutmJGClVa/9y85qZxZcHLq04nZJ+vNQ?=
- =?us-ascii?Q?aqtJ3eICj9cU0zPPu4PGa30=3D?=
+	=?us-ascii?Q?qd+fv9ve/2GrWCf1vfNNjjhEsy7+tHxLvYxgZfakvAsnvbpcVv8OFhJjt7n7?=
+ =?us-ascii?Q?yshliNE82mohUHIQnHOQEZxmdLostO5nDnZlGta0G32rZnC3FQz4/gTjDCIR?=
+ =?us-ascii?Q?5YcTIVsRiYbKh0vYU/J6LkrwX4u5UZz37X7kXwVUC49P2dA22hAK9+KMfUI6?=
+ =?us-ascii?Q?h+YHwJ7BzNMlw+Wh84LiyMSQqFgqTC82hMWJpxlj1w4mRJYjse/ZC3uBtV8o?=
+ =?us-ascii?Q?9YI7b82youkNQF8X/3rVNmeRPITkXcEafzv7axpgK8LJRB/x6QY103K6JC/H?=
+ =?us-ascii?Q?bNOdiOnMhzB2/YOdgLUxwX8A6aEqM0JlwWHXtWxenJALjkIDgNICDIBlKHgy?=
+ =?us-ascii?Q?4bp/uivCPh6G4tz7MRPP1JMInnGTNw7RKqGIIlyla1szbHYUUO5uVW6ZglWa?=
+ =?us-ascii?Q?Jj6pQjcDggBYYJw6BzgVis8tluMv8eIqbQSeG2zLWqi+a1mIzkBQeKCshxj6?=
+ =?us-ascii?Q?Bkck3/Oz24fn3VqOMtapgG0rOki3BfcX4V9unRI/Rz1swDzsQPCDWRF/Np52?=
+ =?us-ascii?Q?m0n+OSnHTjPrDkLcQ13t7RCM2mmd0UQ7wCj3f8Y6BMkqjjZeoEciHWyH4IVb?=
+ =?us-ascii?Q?L8GbeKrw0pxduM0/16MVkeqt7x/G7oqi3xaakbf15g/wWSROEolhbCdj3EP5?=
+ =?us-ascii?Q?mf1JoM9HRg/VB9PVazs8PEGQ4guwJPbzH0T98pN4QFaDYHo9ZugX2i6VYCyE?=
+ =?us-ascii?Q?bZCOhstNXc7YO6OAWxI8588ZjGfaqr/Jr0EmOKtt+X++1lWX86dwDWQJZSWK?=
+ =?us-ascii?Q?syuxkarcQ9LvDH3VuF40ZYCy9VAk+cwJBs7ctEx19CLNlULVgAskOqY1Zg8R?=
+ =?us-ascii?Q?riSyeiopinBpcr4Fd8cIujFxrCEQbkCvvCNbkqhFEzYTbSN/EbqpHHiwzDQF?=
+ =?us-ascii?Q?tlZO9atiznd+LnGCrEdKhyfv0rFvIP84OCGURkRpNeKgj/S6doApvdxr6S99?=
+ =?us-ascii?Q?l2QygK7NbUCkQyDZbTCT2Uw9uep6nf1kLcUHNuedUFnA+Uf//8EHzM3qjgtm?=
+ =?us-ascii?Q?S/w4hAkFMs9Auq01ijpH66VhAw8m/fNFqo6hCLq0ny6+e84Qrlz2GvEEh46k?=
+ =?us-ascii?Q?nJG2MY4f0EOPzZgxjlIgMdnGPvRa2YkJqmLsL1yPh1E7CO1JXqFklM9WOGKY?=
+ =?us-ascii?Q?7i8tfJfsF4pXmI6puxyhNRRwaS8fS+YgDsPygjUZXE+lHKEIALTAeXeCNhda?=
+ =?us-ascii?Q?lsUsP0HSPs9E/KRESg053r33moCXrn1YdKhN+VfYrkK9nJSrLM/7CPLd301C?=
+ =?us-ascii?Q?pAznowSDkqnF6RuDZy/Elr4L1bIrNlss26rVLGEuGp0iOW5D6mnaCxhLApMg?=
+ =?us-ascii?Q?wxkooOQT0KxKAizlzfM/62ir0cNOkiIGY056RBan4zSPL3EYp634bitz+/m3?=
+ =?us-ascii?Q?krhXVJNpTmaF6HnscUmwZg8EFw7PaaNvBKokbcLDN4ekHz1hCN9+GfAU/qBg?=
+ =?us-ascii?Q?wN0TklDxzfCeMp9uZIgIl/JtADm71QrEhgdgwp4gx5rKOU8vMcrjYVhrISGe?=
+ =?us-ascii?Q?JR6TZyxUGqYMS1z2xuc8uKrpfBpzJ4Y/1Zl0zbR1Ev87Oli339VorpJKbouz?=
+ =?us-ascii?Q?pCFC62yNiRFpbEUs07GqaiMwRychX8eb+CHGf5vD3LtD4Wj7LuxWOKg3HprE?=
+ =?us-ascii?Q?ZYJjK622agUhzhHTSO3oToA=3D?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: cabbf7e4-44ab-4157-0f4d-08de316cc5d4
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1605a222-9d53-4e7c-2967-08de316d0172
 X-MS-Exchange-CrossTenant-AuthSource: TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2025 06:33:57.9396
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2025 06:35:38.0505
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AmAUV6MJyhliCp7lZrW477bRogO8xursbihLyx2lMVFbsQTXsUrfOav2UskpP2loneGTXa0f/2UID6EFz1SM0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY4P286MB7525
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1Imnym8JK98ErYpiNqIpPrRVBBoWz371Z9lM3khGv/yT+aBBFf/CBP2V3fkCZmAbg0Bz4/5vtaS4BvaffllD5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3P286MB2788
 
-On Mon, Dec 01, 2025 at 03:02:40PM -0500, Frank Li wrote:
-> On Sun, Nov 30, 2025 at 01:03:52AM +0900, Koichiro Den wrote:
-> > Historically both TX and RX have assumed the same per-QP MW slice
-> > (tx_max_entry == remote rx_max_entry), while those are calculated
-> > separately in different places (pre and post the link-up negotiation
-> > point). This has been safe because nt->link_is_up is never set to true
-> > unless the pre-determined qp_count are the same among them, and qp_count
-> > is typically limited to nt->mw_count, which should be carefully
-> > configured by admin.
+On Mon, Dec 01, 2025 at 03:41:38PM -0500, Frank Li wrote:
+> On Sun, Nov 30, 2025 at 01:03:57AM +0900, Koichiro Den wrote:
+> > dw_pcie_ep_raise_msi_irq() currently programs an outbound iATU window
+> > for the MSI target address on every interrupt and tears it down again
+> > via dw_pcie_ep_unmap_addr().
 > >
-> > However, setup_qp_mw can actually split mw and handle multi-qps in one
-> > MW properly, so qp_count needs not to be limited by nt->mw_count. Once
-> > we relaxing the limitation, pre-determined qp_count can differ among
-> > host side and endpoint, and link-up negotiation can easily fail.
+> > On systems that heavily use the AXI bridge interface (for example when
+> > the integrated eDMA engine is active), this means the outbound iATU
+> > registers are updated while traffic is in flight. The DesignWare
+> > endpoint spec warns that updating iATU registers in this situation is
+> > not supported, and the behavior is undefined.
 > >
-> > Move the TX MW configuration (per-QP offset and size) into
-> > ntb_transport_setup_qp_mw() so that both RX and TX layout decisions are
-> > centralized in a single helper. ntb_transport_init_queue() now deals
-> > only with per-QP software state, not with MW layout.
+> > Under high MSI and eDMA load this pattern results in occasional bogus
+> > outbound transactions and IOMMU faults such as:
 > >
-> > This keeps the previous behaviour, while preparing for relaxing the
-> > qp_count limitation and improving readibility.
+> >   ipmmu-vmsa eed40000.iommu: Unhandled fault: status 0x00001502 iova 0xfe000000
 > >
-> > No functional change is intended.
-> >
-> > Signed-off-by: Koichiro Den <den@valinux.co.jp>
-> > ---
-> >  drivers/ntb/ntb_transport.c | 67 ++++++++++++++-----------------------
-> >  1 file changed, 26 insertions(+), 41 deletions(-)
-> >
-> > diff --git a/drivers/ntb/ntb_transport.c b/drivers/ntb/ntb_transport.c
-> > index 57b4c0511927..79063e2f911b 100644
-> > --- a/drivers/ntb/ntb_transport.c
-> > +++ b/drivers/ntb/ntb_transport.c
-> > @@ -569,7 +569,8 @@ static int ntb_transport_setup_qp_mw(struct ntb_transport_ctx *nt,
-> >  	struct ntb_transport_mw *mw;
-> >  	struct ntb_dev *ndev = nt->ndev;
-> >  	struct ntb_queue_entry *entry;
-> > -	unsigned int rx_size, num_qps_mw;
-> > +	unsigned int num_qps_mw;
-> > +	unsigned int mw_size, mw_size_per_qp, qp_offset, rx_info_offset;
-> >  	unsigned int mw_num, mw_count, qp_count;
-> >  	unsigned int i;
-> >  	int node;
-> > @@ -588,15 +589,33 @@ static int ntb_transport_setup_qp_mw(struct ntb_transport_ctx *nt,
-> >  	else
-> >  		num_qps_mw = qp_count / mw_count;
-> >
-> > -	rx_size = (unsigned int)mw->xlat_size / num_qps_mw;
-> > -	qp->rx_buff = mw->virt_addr + rx_size * (qp_num / mw_count);
-> > -	rx_size -= sizeof(struct ntb_rx_info);
-> > +	mw_size = min(nt->mw_vec[mw_num].phys_size, mw->xlat_size);
-> > +	if (max_mw_size && mw_size > max_mw_size)
-> > +		mw_size = max_mw_size;
-> >
-> > -	qp->remote_rx_info = qp->rx_buff + rx_size;
-> > +	/* Split this MW evenly among the queue pairs mapped to it. */
-> > +	mw_size_per_qp = (unsigned int)mw_size / num_qps_mw;
 > 
-> Can you use the same variable firstly to make review easily?
+> I agree needn't map/unmap MSI every time. But I think there should be
+> logic problem behind this. IOMMU report error means page table already
+> removed, but you still try to access it after that. You'd better find where
+> access MSI memory after dw_pcie_ep_unmap_addr().
+
+I don't see any other callers that access the MSI region after
+dw_pcie_ep_unmap_addr(), but I might be missing something. Also, even if I
+serialize dw_pcie_ep_raise_msi_irq() invocations, the problem still
+appears.
+
+A couple of details I forgot to describe in the commit message:
+(1). The IOMMU error is only reported on the RC side.
+(2). Sometimes there is no IOMMU error printed and the board just freezes (becomes unresponsive).
+
+The faulting iova is 0xfe000000. The iova 0xfe000000 is the base of
+"addr_space" for R-Car S4 in EP mode:
+https://github.com/jonmason/ntb/blob/68113d260674/arch/arm64/boot/dts/renesas/r8a779f0.dtsi#L847
+
+So it looks like the EP sometimes issue MWr at "addr_space" base (offset 0),
+the RC forwards it to its IOMMU (IPMMUHC) and that faults. My working theory
+is that when the iATU registers are updated under heavy DMA load, the DAR of
+some in-flight transfer can get corrupted to 0xfe000000. That would match one
+possible symptom of the undefined behaviour that the DW EPC spec warns about
+when changing iATU configuration under load.
+
+-Koichiro
+
 > 
-> tx_size = (unsigned int)mw_size / num_qps_mw;
-> 
-> It is hard to make sure code logic is the same as old one.
-
-I'll do so. Thank you!
-
-Koichiro
-
+> dw_pcie_ep_unmap_addr() use writel(), which use dma_dmb() before change
+> register, previous write should be completed before write ATU register.
 > 
 > Frank
 > 
-> > +	qp_offset = mw_size_per_qp * (qp_num / mw_count);
+> > followed by the system becoming unresponsive. This is the actual output
+> > observed on Renesas R-Car S4, with its ipmmu_hc used with PCIe ch0.
+> >
+> > There is no need to reprogram the iATU region used for MSI on every
+> > interrupt. The host-provided MSI address is stable while MSI is enabled,
+> > and the endpoint driver already dedicates a scratch buffer for MSI
+> > generation.
+> >
+> > Cache the aligned MSI address and map size, program the outbound iATU
+> > once, and keep the window enabled. Subsequent interrupts only perform a
+> > write to the MSI scratch buffer, avoiding dynamic iATU reprogramming in
+> > the hot path and fixing the lockups seen under load.
+> >
+> > Signed-off-by: Koichiro Den <den@valinux.co.jp>
+> > ---
+> >  .../pci/controller/dwc/pcie-designware-ep.c   | 48 ++++++++++++++++---
+> >  drivers/pci/controller/dwc/pcie-designware.h  |  5 ++
+> >  2 files changed, 47 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 3780a9bd6f79..ef8ded34d9ab 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -778,6 +778,16 @@ static void dw_pcie_ep_stop(struct pci_epc *epc)
+> >  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+> >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> >
+> > +	/*
+> > +	 * Tear down the dedicated outbound window used for MSI
+> > +	 * generation. This avoids leaking an iATU window across
+> > +	 * endpoint stop/start cycles.
+> > +	 */
+> > +	if (ep->msi_iatu_mapped) {
+> > +		dw_pcie_ep_unmap_addr(epc, 0, 0, ep->msi_mem_phys);
+> > +		ep->msi_iatu_mapped = false;
+> > +	}
 > > +
-> > +	/* Place remote_rx_info at the end of the per-QP region. */
-> > +	rx_info_offset = mw_size_per_qp - sizeof(struct ntb_rx_info);
+> >  	dw_pcie_stop_link(pci);
+> >  }
+> >
+> > @@ -881,14 +891,37 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+> >  	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
+> >
+> >  	msg_addr = dw_pcie_ep_align_addr(epc, msg_addr, &map_size, &offset);
+> > -	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+> > -				  map_size);
+> > -	if (ret)
+> > -		return ret;
+> >
+> > -	writel(msg_data | (interrupt_num - 1), ep->msi_mem + offset);
+> > +	/*
+> > +	 * Program the outbound iATU once and keep it enabled.
+> > +	 *
+> > +	 * The spec warns that updating iATU registers while there are
+> > +	 * operations in flight on the AXI bridge interface is not
+> > +	 * supported, so we avoid reprogramming the region on every MSI,
+> > +	 * specifically unmapping immediately after writel().
+> > +	 */
+> > +	if (!ep->msi_iatu_mapped) {
+> > +		ret = dw_pcie_ep_map_addr(epc, func_no, 0,
+> > +					  ep->msi_mem_phys, msg_addr,
+> > +					  map_size);
+> > +		if (ret)
+> > +			return ret;
+> >
+> > -	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->msi_mem_phys);
+> > +		ep->msi_iatu_mapped = true;
+> > +		ep->msi_msg_addr = msg_addr;
+> > +		ep->msi_map_size = map_size;
+> > +	} else if (WARN_ON_ONCE(ep->msi_msg_addr != msg_addr ||
+> > +				ep->msi_map_size != map_size)) {
+> > +		/*
+> > +		 * The host changed the MSI target address or the required
+> > +		 * mapping size. Reprogramming the iATU at runtime is unsafe
+> > +		 * on this controller, so bail out instead of trying to update
+> > +		 * the existing region.
+> > +		 */
+> > +		return -EINVAL;
+> > +	}
 > > +
-> > +	qp->tx_mw_size = mw_size_per_qp;
-> > +	qp->tx_mw = nt->mw_vec[mw_num].vbase + qp_offset;
-> > +	if (!qp->tx_mw)
-> > +		return -EINVAL;
-> > +	qp->tx_mw_phys = nt->mw_vec[mw_num].phys_addr + qp_offset;
-> > +	if (!qp->tx_mw_phys)
-> > +		return -EINVAL;
-> > +	qp->rx_info = qp->tx_mw + rx_info_offset;
-> > +	qp->rx_buff = mw->virt_addr + qp_offset;
-> > +	qp->remote_rx_info = qp->rx_buff + rx_info_offset;
+> > +	writel(msg_data | (interrupt_num - 1), ep->msi_mem + offset);
 > >
-> >  	/* Due to housekeeping, there must be atleast 2 buffs */
-> > -	qp->rx_max_frame = min(transport_mtu, rx_size / 2);
-> > -	qp->rx_max_entry = rx_size / qp->rx_max_frame;
-> > +	qp->tx_max_frame = min(transport_mtu, mw_size_per_qp / 2);
-> > +	qp->tx_max_entry = mw_size_per_qp / qp->tx_max_frame;
-> > +	qp->rx_max_frame = min(transport_mtu, mw_size_per_qp / 2);
-> > +	qp->rx_max_entry = mw_size_per_qp / qp->rx_max_frame;
-> >  	qp->rx_index = 0;
+> >  	return 0;
+> >  }
+> > @@ -1268,6 +1301,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  	INIT_LIST_HEAD(&ep->func_list);
+> >  	INIT_LIST_HEAD(&ep->ib_map_list);
+> >  	spin_lock_init(&ep->ib_map_lock);
+> > +	ep->msi_iatu_mapped = false;
+> > +	ep->msi_msg_addr = 0;
+> > +	ep->msi_map_size = 0;
 > >
-> >  	/*
-> > @@ -1133,11 +1152,7 @@ static int ntb_transport_init_queue(struct ntb_transport_ctx *nt,
-> >  				    unsigned int qp_num)
-> >  {
-> >  	struct ntb_transport_qp *qp;
-> > -	phys_addr_t mw_base;
-> > -	resource_size_t mw_size;
-> > -	unsigned int num_qps_mw, tx_size;
-> >  	unsigned int mw_num, mw_count, qp_count;
-> > -	u64 qp_offset;
+> >  	epc = devm_pci_epc_create(dev, &epc_ops);
+> >  	if (IS_ERR(epc)) {
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > index 269a9fe0501f..1770a2318557 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -481,6 +481,11 @@ struct dw_pcie_ep {
+> >  	void __iomem		*msi_mem;
+> >  	phys_addr_t		msi_mem_phys;
+> >  	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
+> > +
+> > +	/* MSI outbound iATU state */
+> > +	bool			msi_iatu_mapped;
+> > +	u64			msi_msg_addr;
+> > +	size_t			msi_map_size;
+> >  };
 > >
-> >  	mw_count = nt->mw_count;
-> >  	qp_count = nt->qp_count;
-> > @@ -1152,36 +1167,6 @@ static int ntb_transport_init_queue(struct ntb_transport_ctx *nt,
-> >  	qp->event_handler = NULL;
-> >  	ntb_qp_link_context_reset(qp);
-> >
-> > -	if (mw_num < qp_count % mw_count)
-> > -		num_qps_mw = qp_count / mw_count + 1;
-> > -	else
-> > -		num_qps_mw = qp_count / mw_count;
-> > -
-> > -	mw_base = nt->mw_vec[mw_num].phys_addr;
-> > -	mw_size = nt->mw_vec[mw_num].phys_size;
-> > -
-> > -	if (max_mw_size && mw_size > max_mw_size)
-> > -		mw_size = max_mw_size;
-> > -
-> > -	tx_size = (unsigned int)mw_size / num_qps_mw;
-> > -	qp_offset = tx_size * (qp_num / mw_count);
-> > -
-> > -	qp->tx_mw_size = tx_size;
-> > -	qp->tx_mw = nt->mw_vec[mw_num].vbase + qp_offset;
-> > -	if (!qp->tx_mw)
-> > -		return -EINVAL;
-> > -
-> > -	qp->tx_mw_phys = mw_base + qp_offset;
-> > -	if (!qp->tx_mw_phys)
-> > -		return -EINVAL;
-> > -
-> > -	tx_size -= sizeof(struct ntb_rx_info);
-> > -	qp->rx_info = qp->tx_mw + tx_size;
-> > -
-> > -	/* Due to housekeeping, there must be atleast 2 buffs */
-> > -	qp->tx_max_frame = min(transport_mtu, tx_size / 2);
-> > -	qp->tx_max_entry = tx_size / qp->tx_max_frame;
-> > -
-> >  	if (nt->debugfs_node_dir) {
-> >  		char debugfs_name[8];
-> >
+> >  struct dw_pcie_ops {
 > > --
 > > 2.48.1
 > >

@@ -1,105 +1,162 @@
-Return-Path: <dmaengine+bounces-7483-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7484-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A8C3C9EBE9
-	for <lists+dmaengine@lfdr.de>; Wed, 03 Dec 2025 11:39:35 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20128C9EEF5
+	for <lists+dmaengine@lfdr.de>; Wed, 03 Dec 2025 13:09:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0FA2A3478D6
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Dec 2025 10:39:35 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id EF2234E05A0
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Dec 2025 12:09:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 657BF2EE5F4;
-	Wed,  3 Dec 2025 10:39:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935BA2BF3C5;
+	Wed,  3 Dec 2025 12:09:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="et4xYk5h"
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="C4sjjgNA"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321732ED860;
-	Wed,  3 Dec 2025 10:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89BC2BE059
+	for <dmaengine@vger.kernel.org>; Wed,  3 Dec 2025 12:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764758369; cv=none; b=LUpi/5qWbeaeIPIiEfWaKOo/sfuxldFPKWHWDBiPDsaguhT8VkaJYu3rDJ42S4F35Wh20a7JlIdheY5ZtTLQiVK3ygRuFRejxTYIPSV3oxtWTz+TTSMewIv6gxmJY74OJ+9rATvzu2qerwCiV5MybiAPqD416GfPjHT9owNjccg=
+	t=1764763749; cv=none; b=knYvlrElgiRDlG32BRGtGLNffqTHBqmhiVzRcRcPCmF0W7d0N75M8CA/Uad1hq2YKio8lPCyUo2qYJBwLb7/zhsSG33vNfFbSl4NgluffDUD2aUSbiADUkMvzhoaD64i/vFijJYcODi/gDVWZofH2irXD3AHTNw/6fSkVD0HOcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764758369; c=relaxed/simple;
-	bh=TLBlsGSLsSIAD6kDe9cUxlU+9iuTV0gMwtHNAzccloc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LkKOjBSApyJBKsVitSXjoP4aKlyFE/wPV+Atq2M1AjhO1c4jqGuaud+95sgYqwnvFNF6Dn2MMwbbbYNrM9AWX/Xt3cZUjR7xn9Etx+lVXQOxmzSkIqG+GMgCbSzI87PLXOC/1Up5jtBRmdd6qPF7iOuZ5z9u+TkBIQZTcSlctO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=et4xYk5h; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F189C4CEFB;
-	Wed,  3 Dec 2025 10:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764758368;
-	bh=TLBlsGSLsSIAD6kDe9cUxlU+9iuTV0gMwtHNAzccloc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=et4xYk5h44EL2L+Ku72VBPYS4J8Y+XWKAj7xjtSPfXIneLcslFxUXA+iSrCZBaMzk
-	 466J15UKAhQp94skS0BrJJ3GxkoEW3evFGBFFpu5AFzpP/fTC06DaQx0K0kEhK8ZVC
-	 mMW8bkmW4hjWBAarxAOHEDVQ7y56B8Bxx4wtlCcDjhch3SHlnqhfKMreANVUCN2e+I
-	 rYHZ8LcpBvT6x1nD9t0ccH+oDcQexzyjDd+gl+1VJ888aDyoeujrPkjPfSdl0SL2O8
-	 O3MTOWYKXc0ouvbTfep9Ys0pg3hFYkdEwNe2lmy16YrR7RuFXLDIvnJaII2WCaT1AM
-	 HE5wk0CK/K4cQ==
-Date: Wed, 3 Dec 2025 11:39:21 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: Frank Li <Frank.li@nxp.com>, ntb@lists.linux.dev,
-	linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mani@kernel.org,
-	kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com,
-	corbet@lwn.net, vkoul@kernel.org, jdmason@kudzu.us,
-	dave.jiang@intel.com, allenbh@gmail.com, Basavaraj.Natikar@amd.com,
-	Shyam-sundar.S-k@amd.com, kurt.schwemmer@microsemi.com,
-	logang@deltatee.com, jingoohan1@gmail.com, lpieralisi@kernel.org,
-	robh@kernel.org, jbrunet@baylibre.com, fancer.lancer@gmail.com,
-	arnd@arndb.de, pstanner@redhat.com, elfring@users.sourceforge.net,
-	Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: [RFC PATCH v2 19/27] PCI: dwc: ep: Cache MSI outbound iATU
- mapping
-Message-ID: <aTATWZaiqwNfwymD@ryzen>
-References: <20251129160405.2568284-1-den@valinux.co.jp>
- <20251129160405.2568284-20-den@valinux.co.jp>
- <aS39gkJS144og1d/@lizhi-Precision-Tower-5810>
- <ddriorsgyjs6klcb6d7pi2u3ah3wxlzku7v2dpyjlo6tmalvfw@yj5dczlkggt6>
- <aS6yIz94PgikWBXf@ryzen>
- <pxvbohmndr3ayktksocqhzhgxbmvpibg3kixqgch2grookrvgq@gx3iqjcskjcu>
+	s=arc-20240116; t=1764763749; c=relaxed/simple;
+	bh=P7lSmpig9zvj2k3eR7cFCUad6kDfPxhEgkhD6MAg9ho=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NFCtELnh2kOkUBsQtQ72Z7taM/TKYxmoPNaGKCmNPz9RlzjmV2kD5Tepwq0A6beR8x+YM4hI48O0RMTLC5CDkItCNBEAjvHpkJM8ogiclfGcHbvd1AG/aT83qubBdQ2NLhr8CkcbDzF+yieKEuceUdNS5BbblrTbSHkN8wzu7ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=C4sjjgNA; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8804650ca32so56594406d6.0
+        for <dmaengine@vger.kernel.org>; Wed, 03 Dec 2025 04:09:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura.hr; s=sartura; t=1764763747; x=1765368547; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HY6LofQj0a46MQGd5q5uk/dioxwk+UPp1qGJ6sCZzPw=;
+        b=C4sjjgNA8FMDK1xGguDM1lBjSRBwp1u04sFFvfLypnEJa/mPP+FnURA+ZEiLeyWdad
+         usGyR+kWBcWnSeB6Pgf4WHnyGHrGt/XT83Tz4Rs6g1zQxBp29j8w0P77MH0o3KE3xIU0
+         low89WAIzGXjZqsSeYJffjdwBJhw8AP+N3TdszY+bn/msHMISjKrmjPzP2Nc+1Lt2lFv
+         H1l/NG/300+mOjV3kofjuQrmoV781VK2myIc0uNUJQL+xV/BfDTUD3lL/+D1E9wFY+vh
+         k4jgGH2YC8OlXmpROkLdwjz7A/YTTDU8c8lrzoSlB2uYyKAkZWWGzq7iuj17rwhNxBZM
+         EjQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764763747; x=1765368547;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HY6LofQj0a46MQGd5q5uk/dioxwk+UPp1qGJ6sCZzPw=;
+        b=bHuoh6s8HONQcZJ44Ayk0+V5T+KpuCYVcPn4tXcTshLVEqvUFkE5PdKlJ0rRUorKMC
+         iq22j6UIFEhvcPtWm2h6JkicbKDe8RHC9atm26QqErE74bapG9Z5DE7LoxeLbxm8PkLW
+         YeaYz8zPl/q3UTdROxrwBPhc8Gnp1vok7TVGZvHtFQyeb3VMlBm912kSMeccCyWkhZcr
+         F5svoA2jDzOsnh5TpCd8c34hk1tzP2iZ/U9vPiGubowaNuoyZs2PiUh4WU6bv9g1YesO
+         10bMhTAlldoeDb5RuMTStSP2Y61V03HcdMAL0HTiwil0VxyWqy4pENyW3f0/FhCcqWiY
+         coKA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7FVQrf9F6GHicr4DUPSbRjTGAOyb7E05s3s0DmR/vkQ0cfYqU0iVlXZlHOqVbPvAPHjQ0SuXOM2Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgNyrcsRwUUbfd3FKSUSBROIkQGqTzj5x/kgA53/2bz2xqccll
+	F4AexXQIjZC39uX6ncYHpzSqSvd1qBe8c1qOEoCstnpGd2BrY5axmmd970NGjc+JiWE=
+X-Gm-Gg: ASbGncuP7YyG0kKCo4CH8mohSBiBKFlb3gsn/lciqVqYHrrdtmVXcvoOLXDwblMNZES
+	k6SWT/cq3OfSsd5/aohEZ+PIIVMaB6qmxtuy9oSZwqZjS6JdkUgaWjx1LsiB0n4lyARjWGJt/tT
+	uHbSvKEIuuo0K751iH+2ehctimkVoPqpvOKPAYJu+FmsCGajUmZdCMbIKhfYHW3U6nZTRY4r8hD
+	wJ+ntblrlqFfiMFgOvZvAdm2tbkQkcCylrVQD4Qt0VjgzjbxJA2W136RGytzxIo3lrYpZRbTDWL
+	XlAuMEwnUWGYQQ6ptztA94PhPRy7pcYbiNytlQUmDoSXLUxDCl/kpgUwPIuJ74RFudlp+Zs68ts
+	7Hmhwdefp8GAwBYB/wpLqkrR393Mf3xwMS5xPl2ZEv3BgYOihUuFXen15qcbp7/wEn6aeL2QkHl
+	I5cCCx+ILay2IypKq7ageydvdIO/xnJwkXHQaGnLRlM7Oc+1JXaoNOFkY=
+X-Google-Smtp-Source: AGHT+IEvNXdED/r4HNe9JNsgMM/9LcSRInAqa0tAj0HpibxFF7yD3qYBXk2NGsNRo5JcknABVsIKhw==
+X-Received: by 2002:ad4:5aa5:0:b0:880:448b:b893 with SMTP id 6a1803df08f44-8881956a88amr25245066d6.50.1764763746646;
+        Wed, 03 Dec 2025 04:09:06 -0800 (PST)
+Received: from fedora (cpezg-94-253-146-247-cbl.xnet.hr. [94.253.146.247])
+        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-88652b49390sm126308036d6.32.2025.12.03.04.09.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Dec 2025 04:09:06 -0800 (PST)
+From: Robert Marko <robert.marko@sartura.hr>
+To: ludovic.desroches@microchip.com,
+	vkoul@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	daniel.machon@microchip.com
+Cc: luka.perkov@sartura.hr,
+	Tony Han <tony.han@microchip.com>,
+	Cristian Birsan <cristian.birsan@microchip.com>
+Subject: [PATCH] dmaengine: at_xdmac: get the number of DMA channels from device tree
+Date: Wed,  3 Dec 2025 13:08:23 +0100
+Message-ID: <20251203120856.1267671-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <pxvbohmndr3ayktksocqhzhgxbmvpibg3kixqgch2grookrvgq@gx3iqjcskjcu>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 03, 2025 at 05:40:45PM +0900, Koichiro Den wrote:
-> > 
-> > If we want to improve the dw-edma driver, so that an EPF driver can have
-> > multiple outstanding transfers, I think the best way forward would be to create
-> > a new _prep_slave_memcpy() or similar, that does take a direction, and thus
-> > does not require dmaengine_slave_config() to be called before every
-> > _prep_slave_memcpy() call.
-> 
-> Would dmaengine_prep_slave_single_config(), which Frank tolds us in this
-> thread, be sufficient?
+From: Tony Han <tony.han@microchip.com>
 
-I think that Frank is suggesting a new dmaengine API,
-dmaengine_prep_slave_single_config(), which is like
-dmaengine_prep_slave_single(), but also takes a struct dma_slave_config *
-as a parameter.
+In case of kernel runs in non-secure mode, the number of DMA channels can
+be got from device tree since the value read from GTYPE register is "0" as
+it's always secured.
+As the number of channels can never be negative, update them to the type
+"unsigned".
 
+Signed-off-by: Tony Han <tony.han@microchip.com>
+Reviewed-by: Cristian Birsan <cristian.birsan@microchip.com>
+---
+ drivers/dma/at_xdmac.c | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-I really like the idea.
-I think it would allow us to remove the mutex in nvmet_pci_epf_dma_transfer():
-https://github.com/torvalds/linux/blob/v6.18/drivers/nvme/target/pci-epf.c#L389-L429
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index 3fbc74710a13..acabf82e293c 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -2257,12 +2257,29 @@ static int __maybe_unused atmel_xdmac_runtime_resume(struct device *dev)
+ 	return clk_enable(atxdmac->clk);
+ }
+ 
++static inline int at_xdmac_get_channel_number(struct platform_device *pdev,
++					      u32 reg, u32 *pchannels)
++{
++	int	ret;
++
++	if (reg) {
++		*pchannels = AT_XDMAC_NB_CH(reg);
++		return 0;
++	}
++
++	ret = of_property_read_u32(pdev->dev.of_node, "dma-channels", pchannels);
++	if (ret)
++		dev_err(&pdev->dev, "can't get number of channels\n");
++
++	return ret;
++}
++
+ static int at_xdmac_probe(struct platform_device *pdev)
+ {
+ 	struct at_xdmac	*atxdmac;
+-	int		irq, nr_channels, i, ret;
++	int		irq, ret;
+ 	void __iomem	*base;
+-	u32		reg;
++	u32		nr_channels, i, reg;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0)
+@@ -2278,7 +2295,10 @@ static int at_xdmac_probe(struct platform_device *pdev)
+ 	 * of channels to do the allocation.
+ 	 */
+ 	reg = readl_relaxed(base + AT_XDMAC_GTYPE);
+-	nr_channels = AT_XDMAC_NB_CH(reg);
++	ret = at_xdmac_get_channel_number(pdev, reg, &nr_channels);
++	if (ret)
++		return ret;
++
+ 	if (nr_channels > AT_XDMAC_MAX_CHAN) {
+ 		dev_err(&pdev->dev, "invalid number of channels (%u)\n",
+ 			nr_channels);
+-- 
+2.52.0
 
-Frank you wrote: "Thanks, we also consider ..."
-Does that mean that you have any plans to work on this?
-I would definitely be interested.
-
-
-Kind regards,
-Niklas
 

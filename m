@@ -1,37 +1,37 @@
-Return-Path: <dmaengine+bounces-7516-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7517-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2123CA82C7
-	for <lists+dmaengine@lfdr.de>; Fri, 05 Dec 2025 16:23:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22D0BCA8263
+	for <lists+dmaengine@lfdr.de>; Fri, 05 Dec 2025 16:16:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EE8C231167BB
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Dec 2025 15:21:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CE71231D85EF
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Dec 2025 15:14:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6F09348453;
-	Fri,  5 Dec 2025 15:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF8234AAE6;
+	Fri,  5 Dec 2025 15:14:31 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D20553128CD;
-	Fri,  5 Dec 2025 15:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75912882B8;
+	Fri,  5 Dec 2025 15:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764947666; cv=none; b=OXM6WZwhf6YY8XSaRDT7F2S3YgSLZHWlT3T5+SYVhzXZnonDy58VXn44briAWoVTKEKUuhx1SEGhqIBpeQnzUwCmpaH36J7n3oEp5zxipLYRB5wsk1GvzAqLH7ddSPNYL/fh/ySGNZ1K3riZn3pmaPP/kvrK5mO4wLA/xzulvPQ=
+	t=1764947669; cv=none; b=LAED3zmV8HGfpFProsAltklYTkRVkqKWmnGxvqrFiQS3zUduWiBxqFFyJAQIJGhPU9gk7YaR4WkrY4oXpBSqjBsVlpNLOdQbUUgW02l4FBRq07faTEc7suTcPHS1G5HDdBpVgWedIOAYHis3sGuTyN90kT9jsV1bxpI3qeMeaaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764947666; c=relaxed/simple;
-	bh=FHNLY+zmitbKKd7HxkszEXAyj18Tz6ibrEBH/y5/FNQ=;
+	s=arc-20240116; t=1764947669; c=relaxed/simple;
+	bh=LGNDITOGN56nKw/+waZVvVH6x24rIrz1jsoZ3YGgqOg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=asDKTqUPBsvrT/4Wx9WL95cjShxnLSrekudYUIEYJtOdA9alMIGzaPrAtp54AXlyuIJVkS29ZzkJ0wzJTR8Lju21cvaZv/dL9HyAN/8kKJ3MGjPHt+k/kENfD+BJzvlF/k6oJ5466snlm6yuTNUj71v+RQ20tWz1ruw0emer9+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=renesas.com; spf=fail smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: w9nZcPmDR+mLMTEuFJ4TKA==
-X-CSE-MsgGUID: 15jBQDvfQeeyO9Wj8iQzNg==
+	 MIME-Version; b=poNS3pYVe+IhX0qmWQ+3FnoaZ80qCBc702zYIdBUIB0aLMcl22tqfA9Hh5rzk4UDJxv8IWEP/I+O3rcn2XFc1YVzF/W02g1YfXMUmMQ34gq/iddaO7ueWAic6XuJZqX1AMsuvjihALhh73YYDfrRR4oZJO/8EYIaKgSM8W9w+3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: DlSGkFb+TgGXA5Q0hTaMYw==
+X-CSE-MsgGUID: 7V/iATJSTC6j9AqIryBf8Q==
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 06 Dec 2025 00:14:15 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 06 Dec 2025 00:14:21 +0900
 Received: from demon-pc.localdomain (unknown [10.226.93.202])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 589464007D09;
-	Sat,  6 Dec 2025 00:14:11 +0900 (JST)
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id D5AEB4005E29;
+	Sat,  6 Dec 2025 00:14:16 +0900 (JST)
 From: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -48,9 +48,9 @@ Cc: dmaengine@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v3 5/6] arm64: dts: renesas: r9a09g077: add DMAC support
-Date: Fri,  5 Dec 2025 17:12:53 +0200
-Message-ID: <20251205151254.2970669-6-cosmin-gabriel.tanislav.xa@renesas.com>
+Subject: [PATCH v3 6/6] arm64: dts: renesas: r9a09g087: add DMAC support
+Date: Fri,  5 Dec 2025 17:12:54 +0200
+Message-ID: <20251205151254.2970669-7-cosmin-gabriel.tanislav.xa@renesas.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251205151254.2970669-1-cosmin-gabriel.tanislav.xa@renesas.com>
 References: <20251205151254.2970669-1-cosmin-gabriel.tanislav.xa@renesas.com>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Renesas RZ/T2H (R9A09G077) SoC has three instances of the DMAC IP.
+The Renesas RZ/N2H (R9A09G087) SoC has three instances of the DMAC IP.
 
 Add support for them.
 
@@ -75,19 +75,19 @@ V3:
 V2:
  * remove notes
 
- arch/arm64/boot/dts/renesas/r9a09g077.dtsi | 90 ++++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r9a09g087.dtsi | 90 ++++++++++++++++++++++
  1 file changed, 90 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g077.dtsi b/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-index 6812af127684..ee11efb68638 100644
---- a/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
+diff --git a/arch/arm64/boot/dts/renesas/r9a09g087.dtsi b/arch/arm64/boot/dts/renesas/r9a09g087.dtsi
+index 19475c72017f..7b1f2c1c9e85 100644
+--- a/arch/arm64/boot/dts/renesas/r9a09g087.dtsi
++++ b/arch/arm64/boot/dts/renesas/r9a09g087.dtsi
 @@ -376,6 +376,96 @@ i2c2: i2c@81008000 {
  			status = "disabled";
  		};
  
 +		dmac0: dma-controller@800c0000 {
-+			compatible = "renesas,r9a09g077-dmac";
++			compatible = "renesas,r9a09g087-dmac", "renesas,r9a09g077-dmac";
 +			reg = <0 0x800c0000 0 0x1000>;
 +			interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>,
 +				     <GIC_SPI 33 IRQ_TYPE_EDGE_RISING>,
@@ -109,7 +109,7 @@ index 6812af127684..ee11efb68638 100644
 +					  "ch4", "ch5", "ch6", "ch7",
 +					  "ch8", "ch9", "ch10", "ch11",
 +					  "ch12", "ch13", "ch14", "ch15";
-+			clocks = <&cpg CPG_CORE R9A09G077_CLK_PCLKH>;
++			clocks = <&cpg CPG_CORE R9A09G087_CLK_PCLKH>;
 +			power-domains = <&cpg>;
 +			#dma-cells = <1>;
 +			dma-channels = <16>;
@@ -117,7 +117,7 @@ index 6812af127684..ee11efb68638 100644
 +		};
 +
 +		dmac1: dma-controller@800c1000 {
-+			compatible = "renesas,r9a09g077-dmac";
++			compatible = "renesas,r9a09g087-dmac", "renesas,r9a09g077-dmac";
 +			reg = <0 0x800c1000 0 0x1000>;
 +			interrupts = <GIC_SPI 48 IRQ_TYPE_EDGE_RISING>,
 +				     <GIC_SPI 49 IRQ_TYPE_EDGE_RISING>,
@@ -139,7 +139,7 @@ index 6812af127684..ee11efb68638 100644
 +					  "ch4", "ch5", "ch6", "ch7",
 +					  "ch8", "ch9", "ch10", "ch11",
 +					  "ch12", "ch13", "ch14", "ch15";
-+			clocks = <&cpg CPG_CORE R9A09G077_CLK_PCLKH>;
++			clocks = <&cpg CPG_CORE R9A09G087_CLK_PCLKH>;
 +			power-domains = <&cpg>;
 +			#dma-cells = <1>;
 +			dma-channels = <16>;
@@ -147,7 +147,7 @@ index 6812af127684..ee11efb68638 100644
 +		};
 +
 +		dmac2: dma-controller@800c2000 {
-+			compatible = "renesas,r9a09g077-dmac";
++			compatible = "renesas,r9a09g087-dmac", "renesas,r9a09g077-dmac";
 +			reg = <0 0x800c2000 0 0x1000>;
 +			interrupts = <GIC_SPI 64 IRQ_TYPE_EDGE_RISING>,
 +				     <GIC_SPI 65 IRQ_TYPE_EDGE_RISING>,
@@ -169,7 +169,7 @@ index 6812af127684..ee11efb68638 100644
 +					  "ch4", "ch5", "ch6", "ch7",
 +					  "ch8", "ch9", "ch10", "ch11",
 +					  "ch12", "ch13", "ch14", "ch15";
-+			clocks = <&cpg CPG_CORE R9A09G077_CLK_PCLKH>;
++			clocks = <&cpg CPG_CORE R9A09G087_CLK_PCLKH>;
 +			power-domains = <&cpg>;
 +			#dma-cells = <1>;
 +			dma-channels = <16>;
@@ -177,8 +177,8 @@ index 6812af127684..ee11efb68638 100644
 +		};
 +
  		gmac0: ethernet@80100000 {
- 			compatible = "renesas,r9a09g077-gbeth", "snps,dwmac-5.20";
- 			reg = <0 0x80100000 0 0x10000>;
+ 			compatible = "renesas,r9a09g087-gbeth", "renesas,r9a09g077-gbeth",
+ 				     "snps,dwmac-5.20";
 -- 
 2.52.0
 

@@ -1,307 +1,185 @@
-Return-Path: <dmaengine+bounces-7526-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7527-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F224CABC69
-	for <lists+dmaengine@lfdr.de>; Mon, 08 Dec 2025 02:58:57 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F9BBCABCCF
+	for <lists+dmaengine@lfdr.de>; Mon, 08 Dec 2025 03:08:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A699B3014B55
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Dec 2025 01:58:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C8B523004F7F
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Dec 2025 02:07:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52471260580;
-	Mon,  8 Dec 2025 01:58:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 570EC2236FD;
+	Mon,  8 Dec 2025 02:07:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="jHaOCiIp"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SfEFZt0j";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="a4ok5T+W"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012008.outbound.protection.outlook.com [52.101.43.8])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5102512DE;
-	Mon,  8 Dec 2025 01:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765159089; cv=fail; b=rRlnWX4CkPVKVYEx3tOxSJRPv7hxcKFdyIg4GUfQZ+b4Rf40mlSeQSTQtxp8oKBkM7L1K9Oez9nOxRuFoWVay60blFKjcLCsb6VccG8jPilHFsX6sRH6ce6BMmUIa3yJt6l7mCCv1H5TcqYN4vAj+CN6L9x79FRwwP64FSaW3l8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765159089; c=relaxed/simple;
-	bh=vlkOHKTHHq+eQKZx1M3IMN7460KgLmPyGXLScMY0JoQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BuiiATStQgBdHNbeduNTGSSWxyXUnlUEbQfMwSZTknCHBDystn/SqoKhOEiupHOq2CezZjeNQljyNPUB/pQklS+l6rs+bhlSQFPyrwvjVYFVARdeK1sVURHAQvN3d4oFdMWVyd48HnTTbfRIdYU/3fi5+3Ay3l4TIPbw/vhwtsA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=jHaOCiIp; arc=fail smtp.client-ip=52.101.43.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=G1OvwCrYPLnhhf4lAryC6y/tH3Ax08tH2W57t0dgHPXY6LavCy0pp9LMoO1ovcutO6z62fO6xgPqWlNazcLC9EXMFzSuoVHs8EecLIuf7sVd9HdyL9zPhpU8j3Nu2D35xgl1xyjuXHkjHcvHp7kPuh07OvQLQE4BUrf938Wlk6qfPAFQrTKaVBsf8k4DoHoa6/uOX1LZi/1TF4kO7h2EdrsQgHdPuJihnjrE31Yv3uKBbSCnQ86KzAX2+kBnNcpiAxuGeVCNAkaJ1KV3c3/iVOrCJ3JQgEssMHyJpkGjyOcnoy0HyiAW/iYbcSf3jj4pAhOux3O/i4T+z/7EFVuxiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6TRgJ0Vr4q6O+p/bGdJYlehhVaNCSQ6NNuHUwTTLKIk=;
- b=vdCWqQpvS3c4zLxlqLFkyaEsX7SsPTcdJCP6Dm8dUR0+0W3G/ERPbHRa7N/SfGBEgS44pRX9sOi9j7eITVje4gpgw0EsJW1lLgtOp37BPyRwlq8S/LsMzgEVhLB/cciG4JcAunbJJZhwCWHgs2uo1qcyHaDOFp+JFAFFR+ztdKBBySIoL2aoEPPX7DAPuivnLH9NvQDBNEi+vdmdmlIhK7lkhlSoIWaQbgq8LlselnheAc4FvXcmblx3/4AqA9pZAAm32lk7GyneWutt2ff5fQ0xOeS8IPIiABqfs1a4R9WGarwbFR/zAF5iieBV9OdywYNRpAQU3bIEdc/5/boYHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6TRgJ0Vr4q6O+p/bGdJYlehhVaNCSQ6NNuHUwTTLKIk=;
- b=jHaOCiIpmi16AZlMra3EB91YfQfD5tTMB21UVFRQlCMDG96AntfmJ5mM5OcN03lQhsvuHD6aQLGsRUZpDBtRw/LAEOb7v0R3MTi0EGpxo5dywNvbSPlkIQmke2XRn3A8r3110fIw73It6Opges31IKDefnUoPPe3IV/z8DECjC+nhg35cKy4osJeuPQ3mAk0tTmtJHIEr0cGk4fp8uQLQuXzjLHRaIu/0o23HFGJvj8W+DcF0X200RJ8Avr+5cWFCl/3dS6yI/nQTuegzwkx9ZSpmB5eityaA5WIkyOOQ0Uo523avNUoLu+EwvbenjE/gyubA5TFdonX/vzQ0U8nsw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=altera.com;
-Received: from DS4PR03MB8447.namprd03.prod.outlook.com (2603:10b6:8:322::12)
- by SA6PR03MB8010.namprd03.prod.outlook.com (2603:10b6:806:437::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Mon, 8 Dec
- 2025 01:58:05 +0000
-Received: from DS4PR03MB8447.namprd03.prod.outlook.com
- ([fe80::4682:710e:536c:360a]) by DS4PR03MB8447.namprd03.prod.outlook.com
- ([fe80::4682:710e:536c:360a%2]) with mapi id 15.20.9388.013; Mon, 8 Dec 2025
- 01:58:05 +0000
-From: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
-To: Dinh Nguyen <dinguyen@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Khairul Anuar Romli <khairul.anuar.romli@altera.com>
-Subject: [PATCH v2 4/4] dma: dw-axi-dmac: Add support for Agilex5 and dynamic bus width
-Date: Mon,  8 Dec 2025 09:57:45 +0800
-Message-ID: <1c160c5169f6f5b6ff49e7478171bd5c27ff9b4b.1764927089.git.khairul.anuar.romli@altera.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <cover.1764927089.git.khairul.anuar.romli@altera.com>
-References: <cover.1764927089.git.khairul.anuar.romli@altera.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0237.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::32) To DS4PR03MB8447.namprd03.prod.outlook.com
- (2603:10b6:8:322::12)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2692025DD1E
+	for <dmaengine@vger.kernel.org>; Mon,  8 Dec 2025 02:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765159665; cv=none; b=JfwdvopsF8OaLQlBbbOc/4XWnIBYLJk6v84HqyxUMAekba0B8oqEDAZA+RdtZVoJphQBYdZgzEEVB7NVL+gCmeD8RAvwKJD0Kvg2vJQKUCw0jwhVvaFG6FqEsOBdyrQNXGjGSgXvYJAPSQLfOc6dw49oWEMh5uZxvUwxi8+ckbs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765159665; c=relaxed/simple;
+	bh=gMen/gq2qbb3evDcxh/JIUbW5y5jZwuYFY2YO25kuro=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uJvqMUyVKMOb0wuN+OOBAE6mlimfNmRon009FIBEK//M+oJltwyh48pnShbJGCIvYSqDFK+PUMOmZwk0LmFFSQ5sp4PvgrgHBZNaz/jCfmd6MR8L/mVqqmeUhJq3mQgCQh8IUuIYuTXOd1Ax/bDwFBk566Cd+R7RDb5tIp780P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SfEFZt0j; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=a4ok5T+W; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5B826srT3668968
+	for <dmaengine@vger.kernel.org>; Mon, 8 Dec 2025 02:07:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=kyHmknQkCVxLSMd4maYwpzVVh7sGVCZ9KQx
+	o0EUBDD4=; b=SfEFZt0jM7dx40OXlp4oUpIFWf0dyiPQyHpR3DJGD1RmYJWhiud
+	ztQCxEqStGLrkbWrSSeMDLT1s5z+eC6BxS/OZDtvXMj/0T66DN9aim2gpX3Oq+xB
+	2Nu4iWEu+5z2Vt3axQLTqmWrfgIbZvf35z3hBRfJLLhHDF2XVMwhz7HRrE7YXFuz
+	9Ypcv40072YkZDbAHdlMKqvweeHpKjoN+eShwPeM0UfOyzmbEi6xTu9HppqvpHT+
+	CWVgWR9QwvSmzNLCC1J5Q6mzVRfT7fFH6znB5exHTLVbBvbw+eXSnVJ71JPhTxXO
+	2HQf9ksxk+E2PV7pqN6k2YLdtdIWffHXXaQ==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4awnkr001p-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Mon, 08 Dec 2025 02:07:36 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-34a1bca4c2aso597333a91.1
+        for <dmaengine@vger.kernel.org>; Sun, 07 Dec 2025 18:07:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1765159656; x=1765764456; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kyHmknQkCVxLSMd4maYwpzVVh7sGVCZ9KQxo0EUBDD4=;
+        b=a4ok5T+WHLc+VmFYpc6U5heOtoxJ5dAqD3xFaWjNKlVXfRREz1mvRK+2Zq6q3yIO4D
+         SEnihKj/lBSItLzZDgCmHWLqKDfj6Dh8eSnr89Wk8zQcufE1kg5mfeACUj4BJCi88ocS
+         +S0nLHYQ2fX6fX4GUs9n2FGC/BK+uXmmvVZOlt+dR/QhZO06LdEL4wFfXjRuQrD3clFa
+         p4JIBt4DrKZhxLXW3mW/ewxsHAKqUB99XPcyDExernvD1UQSHgZY2iZU0fIqejcs83lN
+         UOsdP6GfzoRT8scnDdkuOZKOGO/Wzu5wbqv45S0/pOQR1J4MweQnU+Qaz9br+7tRd3la
+         JtgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765159656; x=1765764456;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kyHmknQkCVxLSMd4maYwpzVVh7sGVCZ9KQxo0EUBDD4=;
+        b=XtmEILK+8ebfsWHJRo4UJUrFlSQn9EUs9EwaA02nTFbYeDx70yk9MCql/Uq2mTjy0D
+         fOrpF0WjHhkG4JuPWmm5Nj52HKmHFMIelngAxurtCfCt1HvHnab/Z6SGGe1u54SwakAX
+         IWKcfmigUhdcHB97E1Ewe+3k5clY3gynO/11eILrFL5WE0YrmIfKUzFlXNR7pqHNFrIg
+         XyTLmXHFJ7gqDsaK412Z2VOwhDodomY31BpYiH1hElD/Ruox8A8sZA8fdvtMckjxqyzW
+         JNTTt3wamqN7LwXLsW43T9mt0rxLrOQ5LWvmip4cXC5lu9NSJk6v3yhkCzAGX2lIZsTy
+         sN9w==
+X-Forwarded-Encrypted: i=1; AJvYcCVQkKHYzAyWWQvBDmMXzlqPZpe1vrjd7TA2kbE+B8vZ0ef5a9X4IERE6I1VZ9keLYYvmqFiazAsmyE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7DHXmXlDz8q8dodf+p2g3ED4C6uBttVWW7bkjGkq/G4/OSrA4
+	CqgTapwqYZnsk9caErAR3lzZBQKg+ERQGHoVGrRx671CWCRhymg2PisDaZHO99wenCOb2hBaPk3
+	mu8e5NI4BeSm/nHWb7t9GDn2xUOneKEvPuzMubewCvFdSMRAX4PYoz1cMScQ+R68=
+X-Gm-Gg: ASbGncuT3dMp2Fu6l5rQpICGR/KDak7Cri/4IUl8x/w0uvHwYqdEeRc1mNbyoRj29bJ
+	wU7SY606EocvVOXZ8Ug4XVxAAbNWhNkA5kC6RYUC+DedsZ/L14K+YVqwyGRMsRgOObSHIkwDVaO
+	Cza3SU76Ix2XZJ+i2v1imfpV4+H5fEuT5IuTsM7+zrovAedDyRiYvnuMXWTuqfRzOzMJ96Mi/+B
+	PmNf7zYsk96Vg1r9R1mxea/fTOPhWh0BgTDNt6yKcYdfSbpgn9Fe0+NBvAPJnkBIpwTCs3n5W/d
+	8y3f+iRXDjZQufRkDpY+CWyO+R6tLLrnFv+Y3qz/kNN7wx3ZCdy9xo/XVF4reZhZMOtth4SYsCz
+	o1hix/mpqL3hCBkHDlbwoO12CeZgwblfIjqOlcBlm9BIl5VNXSR448CiL
+X-Received: by 2002:a17:90b:3147:b0:338:3789:2e7b with SMTP id 98e67ed59e1d1-349a2563d8emr5189563a91.13.1765159655860;
+        Sun, 07 Dec 2025 18:07:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHP8sXQR2Sb8rm/y1E0aqY/cAdvNLNh7/WjP0gnZUZkqH9ZRzEPk9fjBRdnLGdjSlWj3XZeOA==
+X-Received: by 2002:a17:90b:3147:b0:338:3789:2e7b with SMTP id 98e67ed59e1d1-349a2563d8emr5189545a91.13.1765159655416;
+        Sun, 07 Dec 2025 18:07:35 -0800 (PST)
+Received: from quoll (fs98a57d9d.tkyc007.ap.nuro.jp. [152.165.125.157])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-349a28cdf5asm4992382a91.4.2025.12.07.18.07.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Dec 2025 18:07:35 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+To: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Subject: [PATCH] dmaengine: dw-edma: Fix confusing cleanup.h syntax
+Date: Mon,  8 Dec 2025 03:07:30 +0100
+Message-ID: <20251208020729.4654-2-krzysztof.kozlowski@oss.qualcomm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PR03MB8447:EE_|SA6PR03MB8010:EE_
-X-MS-Office365-Filtering-Correlation-Id: 078ca213-22a0-47d5-0eab-08de35fd3a21
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?MQhYpEd7GGfxK4GbaPtXRHbjlme3z86CB7u9bAoZl+RP9AWgKrEa3KdoupyE?=
- =?us-ascii?Q?mp+ri0xn28RTD6x14lm+whywcRdVMJchVTTwpyHrCaoaXB/3W+x8DOK5CQIW?=
- =?us-ascii?Q?MA5cbXWvRiYuLnsRDf/OBy9LHYVuQlNT8vGRL17LnVZUOH9Dx0qIBhWgdkB1?=
- =?us-ascii?Q?QfIWCC8e73jS/RGaMK0cEEhYW1JlK+Z4AAMe1JD5SnmRS4XC4NxsrCuZDJCn?=
- =?us-ascii?Q?xOiToCBeRPn3toUajMQjORpK5XGWVqQgiYJekbbLRwhcxcOlllG7hw9dDkC6?=
- =?us-ascii?Q?G0ohF5te6+SKNbp+AKqrDvJjzMoIbdLuVKojoPZEd02GTrI9agx20KHtXUMC?=
- =?us-ascii?Q?0vcBDLm0L7JhVJ1FuX04sAqSaFIztZi0n0KhoJE/sB44WTRVSE8js3mcGwRb?=
- =?us-ascii?Q?8KYnM1h2UiD/yIi1gJ47yLVSZnUTsd0NEwjKv7ysStL1FkJifCVRMHrB/Vjx?=
- =?us-ascii?Q?Fo73S4rjxPITsbzRrtyK6zC6dCeyujcZ7R4qRWb291vTq5FZBXtP4EoCHIkh?=
- =?us-ascii?Q?jFqmHv8ef00VEoFEylqMTDipOzU+juSVonbk0nXkGWWuuktCagMI6b0qVbh+?=
- =?us-ascii?Q?Bc93N2S4EhIiocMTDP5ooOqGwYEA85fQ4U8wFfA+ZRy3zhOXq3wRNrhaFZSK?=
- =?us-ascii?Q?3wn0kYK8YWnP7Iel2l7EKg0PmWzZjdPG3qECB7giwH0HBALsWiJc1QaaDM0L?=
- =?us-ascii?Q?usqKdz0YyxnexN0i4hoe7nonOzA0fhVZkRGpNFNkhbcdXWlKqK/nQSGvquQ6?=
- =?us-ascii?Q?aNwrO/YtJeZc970Mp+CxIUOk7nl+hoIXDtJyBfBgTnTfooUA0Xl9i/MGpAS1?=
- =?us-ascii?Q?v/8Gd/BLyOAGTRoxF7ocB4upoJuiPyzDLCUHiPfjwlW6C/Tb6VPl3K8T9aXC?=
- =?us-ascii?Q?SbYeinE3vlBL03StKsC40M785hmmxm6wI2q7+eLXbOgTsBC808VA/xesomcS?=
- =?us-ascii?Q?Im8XWaW1fTPp5p72wuZ0XscwzYoN9lsnTkfLGHK5RI2JFRXCug3kp0OcUWLh?=
- =?us-ascii?Q?9Caz2xLjtj7d22D5iltVKxBTFJXRHC8ycyv1GHWPx5DIT2AYLYt0UELjHzl7?=
- =?us-ascii?Q?id+r9do0eFwertoNU/xkJ+n9DUo7JgK5lu0QO5YdCDb+Bn5qKFvqNkuDxcjC?=
- =?us-ascii?Q?4FVxJE+dR9ef66BDDKtJq8h/q4goeffN53FI/gZI2ru16Wb10ZwYq9OttpC9?=
- =?us-ascii?Q?N9D+MTtBgnGGtgEZLk0srb8iOwdNm2eFHpBq9ZTiCiJl3YvTgtEWwuIzDpsz?=
- =?us-ascii?Q?iZwr+90DQ6k3CKmvqou6aiYTmr08oxPCX7TIvZCLKy3nr7MTmKUUFQtjTuuh?=
- =?us-ascii?Q?0ScQE/UxMkS7DP4ppPJrw2759V/mB4LSzGwq6Y5982annHnG1wgEAJ0lj4x9?=
- =?us-ascii?Q?AGTqEgEh1jswRL7C5C3S/qi/SeIE54hTxmN20Og3UE/uAWL7sqNSvJ1EkiYP?=
- =?us-ascii?Q?M8jIrvcSCH0HJgWVO7u0p57xGeBK2MjJgo7EdkAc4BhdLLaci4044dzeSc5I?=
- =?us-ascii?Q?2vuwFzi/xGTjG94=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PR03MB8447.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?5qJvJbxq/NoooSJiBRbay4cs4tx70dvFXlTk8hMb5GVV6j2GlYF2fdWwy6Mv?=
- =?us-ascii?Q?3Tm0UE4zT8hF8EMW610WfQTf0kjh4g+LW9LI6RLzQhBc62EPGunGBv6RG7xI?=
- =?us-ascii?Q?bzPKJs6yNsgNPpkubiuB0neBiVlaaCy6qhU5hza4siou9v5QASF2B6ayfPXk?=
- =?us-ascii?Q?pu5OkzT7sqRfqZ70hBOLvFy/B6V2SZlT0uOSz6BwC754BkMJCPTkQ9zzOVRH?=
- =?us-ascii?Q?/OKJ+RvlX6j+BsZtHjW2DX7oKUkAO6A2BTzNX6nlDLioVqein5DzvTrXXL0H?=
- =?us-ascii?Q?CqzPYigp6Vw8FsIl8MpdDD4DuEIx3cbaFffMLggB5067yjYPwbPrfzxyBGwk?=
- =?us-ascii?Q?nfpY3zR2oeYSlsaCIfsDiJzGt8DAfV/a3vwTDdQ7yZQ9ua3kM4ELgMe+MUXq?=
- =?us-ascii?Q?2LFJtLkPTypjo0G0AH6dlaIU17Ifx8yEEJRYjsrfOCN5BrZ2vSms0GddaVwN?=
- =?us-ascii?Q?skjvh4dFXOCGc/gLzHM9/kf0HEAicneFOgXUto2TldLI38Sg0dIanjOOHAFu?=
- =?us-ascii?Q?Yp0M8Mqd+IBURnJuDR1G/xIqAYahCQrSVnHsWrwI4e+relE2VHi9Ey+XkgUf?=
- =?us-ascii?Q?r8NfDhVwEq4FrX5cOnU80z8VsFDZ8bkPQ7CMbwo5mj9M1Ij2PnZHmPMhaV4w?=
- =?us-ascii?Q?GMvQ3UZAEctmQP+IiCKCBsZ/61pEFCjF1Lq2Z2Tdjfqp3kZKuowvIZmI7O9J?=
- =?us-ascii?Q?Qxy5FvMeXze6UMKZrts7ztlDAa0+s2+nSzTEfOFrrNiN9aGMBboubR6s84C6?=
- =?us-ascii?Q?VpaTp2jZaYZPpFQAlHpgGLf/IK430UeArFTuiPIpHwmOtV2HkgJiZPwQpvSf?=
- =?us-ascii?Q?3tiZ8O4zx8JAuzF/OejCy+yCyq5ioNHa6p+2vILUQ+1kfF4Y4GUaEN6o3qaG?=
- =?us-ascii?Q?Py0hRp0NQMyzUuk7bzr0yqmqbsM1/3MmL2B/jYnKhvTicCzw2HVouhTs2x2/?=
- =?us-ascii?Q?+Utr9afMsW4uvDgANjd68ECvAHmwOUG1F1oHQHLS6Z+NA06pqmCT3Etzxk88?=
- =?us-ascii?Q?6SbxfFx0IwI3vJkEGcwh8pfelX8HAbAzWN6qai3s1JDUilajlFQB9wJuJqj/?=
- =?us-ascii?Q?SvV+M7lcl0OzD19c3l66riwO71Py4ShbAKe/6JPJ+EJDOSAyUSVpGyvqe2ts?=
- =?us-ascii?Q?uLEFXGHF6ec9z28tIve4+rSHhshWQ3p80WVAvzovZRmJs3i8ZsWy+Bx6NtS2?=
- =?us-ascii?Q?3JgA41n9bWrVt0shv6RAIvqXyzzD/PcGeyyP70n3Btr5Htf0l27mK7gOtGx0?=
- =?us-ascii?Q?zFyzw90IuEIB7eVHbnAR6Z+JK2j2t5vMiEJ6w9JAFVt5bhQIPHEHH+mc6j4P?=
- =?us-ascii?Q?krXNjPdjarEVuz4NqUpJVLf04E4jNHCqrduuquxLl1ZZFbMYCQWIXCJobZBP?=
- =?us-ascii?Q?Ef4l5YIKw2NB1QJZoNz2banSi4U3rS/GpxQaLTLjKz5VKno1U681oHFh1Lf5?=
- =?us-ascii?Q?LYeZ8AWE6O0p2DKxoJeWyT/anK8sWGSgSIpDyQ84c0jIQaAw4DfIHQuGFH1c?=
- =?us-ascii?Q?B6uVdedlmpTF+Di1Oo9penA7qSZaJksU8qZnVgahMZ9UohsMI2lUAPZxJzSC?=
- =?us-ascii?Q?7Ik7buIw/1PU61jS+bRmT9ikw/zuxCMwKb9g0+r1lEuWjKLMHCrNW3juvXKl?=
- =?us-ascii?Q?rA=3D=3D?=
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 078ca213-22a0-47d5-0eab-08de35fd3a21
-X-MS-Exchange-CrossTenant-AuthSource: DS4PR03MB8447.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2025 01:58:05.3825
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fYW/k6gZsvonI8pgdJPg4qa+R4/eRSMpXgjTHN9YqVDO6jJowWsfEAaEIBP22szwYWSBd9o2VfHQp5mGcOol0C65xDUQGzF3MAXMPksRSnU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR03MB8010
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1613; i=krzysztof.kozlowski@oss.qualcomm.com;
+ h=from:subject; bh=gMen/gq2qbb3evDcxh/JIUbW5y5jZwuYFY2YO25kuro=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBpNjLhreeR6+EoBlpnTlVWIvGVDeLfVkpuYqxuV
+ ttd5VVdpJSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaTYy4QAKCRDBN2bmhouD
+ 1yiJD/93hoNzW//isX/4xi2/d9VssT6jT9Dx4StYMk5Ww7eguZv9axEBJaUst9MOaudEXiqb+BF
+ OOnP2GoDg0EuUhBLPpjp8MkOaP3KIwfnZZXNKtv3nWGjRYz3Q3pMPcnz0ykdrLRuuEz1GJK9/qL
+ PR0pD5vPWXGpWjJq4P2fYv6VsFZDuuYZ7MZYB2MxqjXPGk8Oe1rgYScY+YfHPVoxIPpgHMDFenj
+ URJFdpYfJwKE2hS+SwtPlCZQ7Js7xuS5KMO1W4C/1AcQk4PCErFD7F7KcT4gCBAlDO/19IsaHuE
+ 8U0pzLyBw5xCakVZWl9l4VDNXWZ7fPX3uERw2ZC4hRWIQlTfXiehMjc7v+4CNh63aFv03vq5Mvc
+ baSBDx5bDP02AODeWI1aeS6AI7HZ/nMmdBQfCqXsdB3nR4fyCArI6sR6931skKpM8MnpweZgRsd
+ /BlwFChBIK5Q3aDXGp2+SFarbFLynGBhXcYTFzNbam6ygdz2eRO8RwTS+jiUTCKadxo2F/IRHJ9
+ P/ghE4sTF3LGHLXOPdaC+eUvsqTU8UlX8FPH4Jvis0qmF6Wy5/VwFnbUDTV4cgCHC2M7/CFlAkZ
+ Gsi35Xjdcbc34rl+cDc0dbkPA4LzEhm6zGL73AHqLCcVwbslbLPFn36VcJ4THGnyM7tDqoRfSmK OqnzBPGWAm3guTw==
+X-Developer-Key: i=krzysztof.kozlowski@oss.qualcomm.com; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjA4MDAxNSBTYWx0ZWRfX44tb/Kj1ZtPj
+ wtg9sWoI3AIqVJwlNwSUf5wPQu0P03v3p47nSeKI3ixkUbPqGuql2l1cKqdSQBgLNcf0RtzvJjn
+ qOlS8UaIFEx0MD2fmnCkxQ5ffTCua3JsixoxQ4aiSyTD8zTICu8JbY8tXEKpqhhVGG8llzvoBdp
+ bDwT3A/ZaxIEtMg0cURilM2y5tBZOd7XKelUHgpby0OyDAOHo88lD3gIuwKdegz1uokZSS9OpYv
+ 0LASrFCN900AL4F/jF3juAIUuMqdoG00qhwh3vw0IVU9KO7fpqFzw7PILaq0Vc+2g/ZyWgRQKWh
+ URMwEElBklc/FIOyubhTHUZT1OdD1rV/HmI8WkE8j7SQbdQFlqh24vJHtf2nj6vXt2oMQoP754s
+ z+F3nq+tFPBVFTf82EYC3a5fyyF4pw==
+X-Proofpoint-GUID: YVNzD-mhK6KpMwSWzMXKovSwjRsKWbji
+X-Proofpoint-ORIG-GUID: YVNzD-mhK6KpMwSWzMXKovSwjRsKWbji
+X-Authority-Analysis: v=2.4 cv=RMy+3oi+ c=1 sm=1 tr=0 ts=693632e9 cx=c_pps
+ a=vVfyC5vLCtgYJKYeQD43oA==:117 a=vTE1kzb4AqIx7XBf0Bkr0A==:17
+ a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=EUspDBNiAAAA:8 a=5IeaWxQi5oGOKGcrkHwA:9 a=rl5im9kqc5Lf4LNbBjHf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-06_02,2025-12-04_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 bulkscore=0 suspectscore=0 spamscore=0 lowpriorityscore=0
+ adultscore=0 phishscore=0 clxscore=1011 impostorscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512080015
 
-Add device tree compatible string support for the Altera Agilex5 AXI DMA
-controller.
+Initializing automatic __free variables to NULL without need (e.g.
+branches with different allocations), followed by actual allocation is
+in contrary to explicit coding rules guiding cleanup.h:
 
-Introduces logic to parse the "dma-ranges" property and calculate the
-actual number of addressable bits (bus width) for the DMA engine. This
-calculated value is then used to set the coherent mask via
-'dma_set_mask_and_coherent()', allowing the driver to correctly handle
-devices with bus widths less than 64 bits. The addressable bits default to
-64 if 'dma-ranges' is not specified or cannot be parsed.
+"Given that the "__free(...) = NULL" pattern for variables defined at
+the top of the function poses this potential interdependency problem the
+recommendation is to always define and assign variables in one statement
+and not group variable definitions at the top of the function when
+__free() is used."
 
-Introduce 'addressable_bits' to 'struct axi_dma_chip' to store this value.
+Code does not have a bug, but is less readable and uses discouraged
+coding practice, so fix that by moving declaration to the place of
+assignment.
 
-Signed-off-by: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 ---
-Changes in v2:
-	- Add driver implementation to set the DMA BIT MAST to 40 based on
-	  dma-ranges defined in DT.
-	- Add glue for driver and DT.
----
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 63 ++++++++++++++++++-
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  1 +
- 2 files changed, 63 insertions(+), 1 deletion(-)
+ drivers/dma/dw-edma/dw-edma-pcie.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index b23536645ff7..165481b4dde1 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -271,7 +271,9 @@ static void axi_dma_hw_init(struct axi_dma_chip *chip)
- 		axi_chan_irq_disable(&chip->dw->chan[i], DWAXIDMAC_IRQ_ALL);
- 		axi_chan_disable(&chip->dw->chan[i]);
- 	}
--	ret = dma_set_mask_and_coherent(chip->dev, DMA_BIT_MASK(64));
-+
-+	dev_dbg(chip->dev, "Adressable bus width: %u\n", chip->addressable_bits);
-+	ret = dma_set_mask_and_coherent(chip->dev, DMA_BIT_MASK(chip->addressable_bits));
- 	if (ret)
- 		dev_warn(chip->dev, "Unable to set coherent mask\n");
- }
-@@ -1461,13 +1463,23 @@ static int axi_req_irqs(struct platform_device *pdev, struct axi_dma_chip *chip)
- 	return 0;
- }
- 
-+/* Forward declaration (no size required) */
-+static const struct of_device_id dw_dma_of_id_table[];
-+
- static int dw_probe(struct platform_device *pdev)
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index 3371e0a76d3c..e9caf8adca1f 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -161,13 +161,13 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 			      const struct pci_device_id *pid)
  {
- 	struct axi_dma_chip *chip;
- 	struct dw_axi_dma *dw;
- 	struct dw_axi_dma_hcfg *hdata;
- 	struct reset_control *resets;
-+	const struct of_device_id *match;
- 	unsigned int flags;
-+	unsigned int addressable_bits = 64;
-+	unsigned int len_bytes;
-+	unsigned int num_cells;
-+	const __be32 *prop;
-+	u64 bus_width;
-+	u32 *cells;
- 	u32 i;
- 	int ret;
+ 	struct dw_edma_pcie_data *pdata = (void *)pid->driver_data;
+-	struct dw_edma_pcie_data *vsec_data __free(kfree) = NULL;
+ 	struct device *dev = &pdev->dev;
+ 	struct dw_edma_chip *chip;
+ 	int err, nr_irqs;
+ 	int i, mask;
  
-@@ -1483,9 +1495,56 @@ static int dw_probe(struct platform_device *pdev)
- 	if (!hdata)
+-	vsec_data = kmalloc(sizeof(*vsec_data), GFP_KERNEL);
++	struct dw_edma_pcie_data *vsec_data __free(kfree) =
++		kmalloc(sizeof(*vsec_data), GFP_KERNEL);
+ 	if (!vsec_data)
  		return -ENOMEM;
  
-+	match = of_match_node(dw_dma_of_id_table, pdev->dev.of_node);
-+	if (!match) {
-+		dev_err(&pdev->dev, "Unsupported AXI DMA device\n");
-+		return -ENODEV;
-+	}
-+
-+	prop = of_get_property(pdev->dev.of_node, "dma-ranges", &len_bytes);
-+	if (prop) {
-+		num_cells = len_bytes / sizeof(__be32);
-+		cells = kcalloc(num_cells, sizeof(*cells), GFP_KERNEL);
-+		if (!cells)
-+			return -ENOMEM;
-+
-+		ret = of_property_read_u32(pdev->dev.of_node, "#address-cells", &i);
-+		if (ret) {
-+			dev_err(&pdev->dev, "missing #address-cells property\n");
-+			return ret;
-+		}
-+
-+		ret = of_property_read_u32(pdev->dev.of_node, "#size-cells", &i);
-+		if (ret) {
-+			dev_err(&pdev->dev, "missing #size-cells property\n");
-+			return ret;
-+		}
-+
-+		if (!of_property_read_u32_array(pdev->dev.of_node,
-+						"dma-ranges", cells, num_cells)) {
-+			dev_dbg(&pdev->dev, "dma-ranges numbe of cells: %u\n", num_cells);
-+			// Check if size-cells is 2 cells.
-+			if (i == 2 && num_cells > 3) {
-+				// Combine size cells into 64-bit length
-+				dev_dbg(&pdev->dev, "size-cells MSB: %u\n", cells[num_cells - 2]);
-+				dev_dbg(&pdev->dev, "size-cells LSB: %u\n", cells[num_cells - 1]);
-+				bus_width = ((u64)cells[num_cells - 2] << 32) |
-+cells[num_cells - 1];
-+			}
-+
-+			// Count number of bits in bus_width
-+			if (bus_width)
-+				addressable_bits = fls64(bus_width) - 1;
-+
-+			dev_dbg(&pdev->dev, "Bus width: %u bits (length: 0x%llx)\n",
-+				addressable_bits, bus_width);
-+		}
-+	}
-+
- 	chip->dw = dw;
- 	chip->dev = &pdev->dev;
- 	chip->dw->hdata = hdata;
-+	chip->addressable_bits = addressable_bits;
- 
- 	chip->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(chip->regs))
-@@ -1669,6 +1728,8 @@ static const struct of_device_id dw_dma_of_id_table[] = {
- 	}, {
- 		.compatible = "starfive,jh8100-axi-dma",
- 		.data = (void *)AXI_DMA_FLAG_HAS_RESETS,
-+	}, {
-+		.compatible = "altr,agilex5-axi-dma"
- 	},
- 	{}
- };
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-index b842e6a8d90d..f8152f8b3798 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-@@ -71,6 +71,7 @@ struct axi_dma_chip {
- 	struct clk		*core_clk;
- 	struct clk		*cfgr_clk;
- 	struct dw_axi_dma	*dw;
-+	u32			addressable_bits;
- };
- 
- /* LLI == Linked List Item */
 -- 
-2.43.7
+2.51.0
 
 

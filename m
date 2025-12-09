@@ -1,228 +1,121 @@
-Return-Path: <dmaengine+bounces-7540-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7541-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED0B3CADD9C
-	for <lists+dmaengine@lfdr.de>; Mon, 08 Dec 2025 18:16:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 290D3CAEBD7
+	for <lists+dmaengine@lfdr.de>; Tue, 09 Dec 2025 03:32:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8110730DF967
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Dec 2025 17:10:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 190C3304DEAB
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Dec 2025 02:32:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9389D2D8364;
-	Mon,  8 Dec 2025 17:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC84324A047;
+	Tue,  9 Dec 2025 02:32:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Wp8+bfBz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssDBAeTb"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013001.outbound.protection.outlook.com [40.107.162.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3AE2D5432;
-	Mon,  8 Dec 2025 17:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765213848; cv=fail; b=DJBk38TM/e8xwhL5Nu2gFn3PoKBZ7+ibv6gBV4oiroaZhgCNjtLzpSoBN4E9z7GtqGfnTaFT+3loTBtk9O2pBWPMxqGV7xYtgcDV/MUWPmE6ueJBemdeldzstWG6AFg/G+Jm6n0XNimHCqLvSrhe6MfpwaHUx3Rd/INmrEsg0zw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765213848; c=relaxed/simple;
-	bh=uI/FTwhlLA2v5cGJPepnQoEJ0HhkCDL8rgc8/R4uoxc=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=bAROt4MITFC1idn7lbXq5XMxCbS+dsbInc1LW+DPSio0Spv1oDGjgJReS5aaOzu+5D/7r/4W74HKeV+uDULbubUrByZCAl7+5guLXK8G9kR7TMuOfvtSa9EczaiZkEVpBD2Q6NtzZMO/tNcCWGRaoxMXNnGYnZSqS4Vajnv2IC4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Wp8+bfBz; arc=fail smtp.client-ip=40.107.162.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IdsHQpvX12hhZYKEca62MJdQMh1a54exvmCY1H7p2kiUZ5BkARZoEXFFUg2PSOR+7C8KFwqixuLPXYWl+rYtkh3kstnHDQDlCZZ4deIRPOfRdjnNq1McA4+G6vOIDiwXtMCs2R0b35YtV+eOBwW5Quqwt3Ao2K6xg86hDdnJIzcySLznJNaL1zhRisndw6oSh9CCVUZUF81aMuFMBLDUGg4BpL3SMhB/CTASLJS4H3hdD6l6F64m9cXqMp3q+kvOOAlviA0j4D/d3equE8SWnOrWcKjHE3+qobwoJOvKm9u2sdDOsfa/hnxguuzpi9sVRVunCSd2MxNAM3w4ALWt6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xs8yZnqOabVBEXqm3NXuiT9v+Cd9usEZTuBQBZk71B0=;
- b=cnS+eC37TEsJ5c9hSobLSArvEBE67bp9VwOXrf1Ngar8smHdEgwgldyAdGaqZ9h0epbBtTQrb5/oeheKzd1EAQ47/Nk60O6e8CP1WTo1/kahndlZHC7cHo4CgLOCJv+myYYKp5iQW6Wpq5EfxdIBGmjd8Vn8eCReVZB3PFChBSQtqGOLB2lmkliyOMorAka9ec/FOT1ipgWrZT4rCoJgt9fi+SzUFmmuMmaF/IqQTe+do/9EFqcJuUJjeis1RznomMNkb50DQyjCubMkZjLgKdjjb0cXmSUOK2qv1e60uSJZzdK5CVvnfFiwIYmX96zYQ24nQr91wE/n0+SaQ0TJiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xs8yZnqOabVBEXqm3NXuiT9v+Cd9usEZTuBQBZk71B0=;
- b=Wp8+bfBzCi1UMpTORcIwGdxq7iLA9sZPnw7YgyklgLMUPDXSzG27zUnWL3o9ZHFtvkwFWRUUy5T0UhU4VOru7lt8Cqn/OgpCPiIBPkMNA6Ee+Ad48xphiJMWam3LaJp4VcH0EakCZT+6Jlz6H9XmP5OGIisOpoLHAb30Ow7hJd1mYFCOh8/9evJWwb2KiGr3pxeU9TosuSKld0ti5GnQhYG5hfQ6joI8b7bkmNGN8uyScOUjYuxbevj9L33z5+mEqCaQHG7h7QShjgm1tR3drHSdUBUkesE5j6Ks7zCA3y8AcABs4hm4GeU82McYEqZfaiSCPA1zHfZI7uvuyz4iAg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
- by PAWPR04MB9888.eurprd04.prod.outlook.com (2603:10a6:102:385::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9388.14; Mon, 8 Dec
- 2025 17:10:43 +0000
-Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
- ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9388.013; Mon, 8 Dec 2025
- 17:10:43 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Mon, 08 Dec 2025 12:09:47 -0500
-Subject: [PATCH 8/8] crypto: atmel: Use
- dmaengine_prep_slave_single_config() API
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251208-dma_prep_config-v1-8-53490c5e1e2a@nxp.com>
-References: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
-In-Reply-To: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
-To: Vinod Koul <vkoul@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- "David S. Miller" <davem@davemloft.net>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, Koichiro Den <den@valinux.co.jp>, 
- Niklas Cassel <cassel@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, 
- mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
- linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1765213799; l=1013;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=uI/FTwhlLA2v5cGJPepnQoEJ0HhkCDL8rgc8/R4uoxc=;
- b=NJvfMFtSyAekS4RsdTliRSFgHfPHM+Om4WikO2X1TdMnN0K6PvlejzXZGx3IxKzKG7iDnbBgm
- Vlethj0OatABQZMXsgyLCAuvz4Canb6JGUZLfjupzPWjrPaWzIEFi/l
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: PH8PR02CA0036.namprd02.prod.outlook.com
- (2603:10b6:510:2da::28) To DU2PR04MB8951.eurprd04.prod.outlook.com
- (2603:10a6:10:2e2::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3A117D2;
+	Tue,  9 Dec 2025 02:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765247521; cv=none; b=c+WhJSt90Tk+GWcj6Lu08PJsj2cghYwC+ZOfv8P9fb1Mn0S4KI03ZGQj12ztAcASIaVX2UhDAM7xH51AQaiUnsRKbFuJgxXq5FIHuda69FYgYDQa5xHtpYNMQ8Yhiit89NsQpoPJaw1QL+mqeb+KfWcMh+BPNmvQTQ5VRcUxzRo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765247521; c=relaxed/simple;
+	bh=PFVA+zI/bstNK1jQzv4pqwneP+Zt6w13hC5OvKuRyxA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=LrcukmjBzGa5MS/Ss4eFMSmfQxGBr3A8lypY92oxof288aFE3PE1I1fAUuYKdHRbKwYzDCgdVGs+PedlE1PIHB8NIzxxV4h82GT7Em68rNroihsPz0dL0eXjqT9K+yA/tNTk0k+g4MiZ9SXjshTlJqyoIIuaHdE97Y+oHu1bv0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssDBAeTb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5133C4CEF1;
+	Tue,  9 Dec 2025 02:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765247521;
+	bh=PFVA+zI/bstNK1jQzv4pqwneP+Zt6w13hC5OvKuRyxA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=ssDBAeTbczZcFBMVwJmnbc5qTq4e3er8CMp8YHSBZeSJNJCRRehCBlaX69b4xM6CC
+	 RTGORQ7hpxfny+Pl46rv5Ho5XD7fE9sxwtE+8iGu+LpGLS5y43jXc+I1xI3yGWwBKB
+	 qieu9pYrgpQvy4Rz0Hs+hjeoyyL0dwjgyMPBtG4emJgKch6f4c2LxE7cRkYqI/fQyZ
+	 FXK2+X3C6JBp3QC48q5xf8EsOmpTSQQPfqjb5b4lDhvQ6qVaEk1a9RgkEiZsepnrpp
+	 aqnzSnBXjs11ueplVPkabxSpSHDArAaqUTQYXkvXXETtteAKFperbM9o3uSONI7B9X
+	 prSg9e6ertUPQ==
+Message-ID: <e1aae851-4031-4b5c-a807-7a61ecfe6af1@kernel.org>
+Date: Mon, 8 Dec 2025 20:31:58 -0600
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|PAWPR04MB9888:EE_
-X-MS-Office365-Filtering-Correlation-Id: 294742f5-e570-4a51-da6e-08de367cb89e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|52116014|19092799006|1800799024|366016|376014|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?emtZMlpISkFyUXpsRWZsdFFoVTUxMFNBYzB3OFA1SWN2OGtyN0MvME1CT2k4?=
- =?utf-8?B?OUtTbE5oVDlJQmloWW94cmV0VDlXQXVzcGo2L2xYb0dRTHZNYVpwT0dBQk9a?=
- =?utf-8?B?Q0N6c1k4WE5tRThnaHY5c09iSHJIZTBPdkpwV2pkT08zdWpqa0hwdU9UallT?=
- =?utf-8?B?ajFZSzFRNEo2RzYxcm9PWHpQcmdBWTMyb05qdi9VYzlrVm1lTkFPUlZLMmgw?=
- =?utf-8?B?dGdCNFQvMW9zcTRMYlE1TFVWV3I1RHgyZThaUUh1WE9PUHBXMVpOOEhYbGw3?=
- =?utf-8?B?S0podzBGT1l0TVAvaVR4b0VTd0kwRGR5WFh3d0NLR0NEYkpkMXlwUXQ2QWhF?=
- =?utf-8?B?a0JaK1I5VUVqZDkxeUFQdDE2aDVwZ3lNRnVpTGJueFhSWjcrZDUxM2Yrdlpa?=
- =?utf-8?B?aG13Wi9zSXdZV1c5bDcyRUZKUXRlSXQxS1ZXZlhQZ1R1VkdjbGxQbXB5R3ZS?=
- =?utf-8?B?RklQODFNR2J6WnpPVTZsSjk3dkJhR2I0RU1MVUdCSDhVYThUbERRY0czamJu?=
- =?utf-8?B?UDNBdGFjZ2YxWjE4WlJMODhFZmhhdGVZOVRBNHZ2cVNRRWZOWVI5MWJrWHhl?=
- =?utf-8?B?bFA2czR1NzR3VmJZMGFmaGVIL0ZMNWNvSlBGMnNxZ3RUOWpYbm9qb3RERC9J?=
- =?utf-8?B?aHk1Z21KK1hkbDZhOHdCaVNMQnBlWnRoS0JMRE1ZN1BCR3hVNmJFemFmTHFE?=
- =?utf-8?B?R2tCNko2Y2p1c0pKYWNHWG1YNXZsYTJSVS9RczIweldKNiswUFFzcU15aTRL?=
- =?utf-8?B?SnJEMVhTQ2Uya2FoSWRYbUQwOEdOUDhhR1M4UGljUTdHL25TVXlIQ3d1YytQ?=
- =?utf-8?B?aFgvZno3ZmZNOVlYQWU5Vm0zVDJlcEpZV3B4SVdFU0I2QlZxZlhaYkFidmVw?=
- =?utf-8?B?cWorcG9iOWVydkJ5SDE1eFcrY3FXTmNCdzJzSGNjRzhzaks4SmozbW0vVHlU?=
- =?utf-8?B?aUNITXAwRGE2RUhENklKNTdobk1tZWsxdVg3c09vK3lZd2YxQU1oZitUZ0Y4?=
- =?utf-8?B?UDYzRjB0dUhyb0ZWeGN5WmVTNkgzcVFLcno5amljZWRrNE4vVVFod2pjNWoy?=
- =?utf-8?B?QVR1MzZFNVVUa010cm9lM0U1UmYyeUoxTUFycTZ4czZBNkgvYlVaSmhjOTNU?=
- =?utf-8?B?TlRqb25WQWI4M1JjNkdOcWltOUo1MTdYclRrdDk4THpQQUl0VXRIT0lyTm10?=
- =?utf-8?B?NzRFL2VCWkdkV0RvY3oxdEppNEFKVWY0Z2Y1WjQ1Wk15czNhWlplUGxXazFv?=
- =?utf-8?B?SVN2d1FZZmovazd5UVd1YWVodm1abldSbDFZbnhLZlIxOGdLZitzNElmeTJ0?=
- =?utf-8?B?YWFQTk1OK3hZamVMcmZvcmNGTEZXNE96ck52aCtLRVR6d0RCOEVLSkI0ZmdV?=
- =?utf-8?B?YmE4anQ4MFNLVTZGTE1BYi9oMzRERUphdG1pRkZtdUh5djRTNzMzaTEzaElj?=
- =?utf-8?B?em9jVnBqMDVKZHJSaS94d254MGFWVG9wN3VzdVJzVHN4VGtwVm5PTURLRDNw?=
- =?utf-8?B?WlozVXZJUE5FZTlpanRXTUw2SHIyeXdXZDhXYWkzTXZoZE9CVTA0czhJQStK?=
- =?utf-8?B?eVBxZkQxeHdUNlRzTEt1Z2ZHTTZSQ1BKMHgzVXFtbndFV1lqd0lIWFpXb3cz?=
- =?utf-8?B?aFl2dlFyZHdaZ1dYbWxGa000RzVSMjdRVVAvZm80K2Y5T0RFQlQvc0hJZWJY?=
- =?utf-8?B?UFpWZ0xReVl6V25MbDJkMjIzQkFLZWdIOXpFV2RXdFBYS2VzNzcxN1hrdGZ0?=
- =?utf-8?B?amZ5REJKL3BIaHptR25lKzh1TEw2UVFlVHpiMmwxbFBpQ1ZtVWw0d0pob3Nj?=
- =?utf-8?B?eVNVZ3VGUkk0VnR1ZUFhQU1YTFVkZnRwNVh5MVZZcFpzS3pTTWVVWFRiL2NM?=
- =?utf-8?B?WHY1RUxKOFZacGZ3TUJ4YjlCcktiOUpFanRoMmRwOXd6c1V4NVpJQ3JEaERz?=
- =?utf-8?B?WjM4TGNObkJVdU9iUVdrKytCaVEwR1p5VlMxeVFtdHJSQ3Z6MXJzRTMvUGVw?=
- =?utf-8?B?S0kyNktzY3paYU8rU2hBTnZ2d0huWE9QYSs5THVoUFRwcFZOeVJ0bHFSZVVN?=
- =?utf-8?B?WGxJNEwyTUlKSUtYSzd5dzdnK1diZyt5T0VHUT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(19092799006)(1800799024)(366016)(376014)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eTREVjlnS3dEaXdoby9kSno5K1ZyVXRENFQ5Q3ZoMDgySmlOKzBjNnJJWnNq?=
- =?utf-8?B?NEdFeGcrWGV3WlREZFNKbyt6TFpaMXoyYkkvMXU0enFvcmZvSXBDTUp3MnJ6?=
- =?utf-8?B?Y1M4dUgrckhKRXV2UEx5ZmFHdnNPR2lldE0wQXZYcjhMdXFuR2xnc0dhMlla?=
- =?utf-8?B?WncyQWg2RGxwTGxrZUlhUWpXQ1lERHZmeFZhSXU5T05zQ2phaWdGbzlHelFM?=
- =?utf-8?B?NmFMTWR6VkUxT1BNRmVDMlFxUUVZTXg2dUpHOUVrYzltaUgzMWpEY3RLYmhy?=
- =?utf-8?B?ZndmVDUySjVZSmJPSjVjZEE0RXBRSXpleDVNMnF0VG4xZ1dPSWNaM2g0TGRn?=
- =?utf-8?B?ZGduK1FmcmdNbVUxL0srbEhsYVlRdE9QamxicGVkT0daVzU4bjNvaVNGNlRq?=
- =?utf-8?B?QWRwRlVWa2tSQk5wbk94MWo3MHYvQlN2NlBsQ05sK3NZTkpQN3EvMk5XQjVI?=
- =?utf-8?B?NEE2MTh5TzUzZDdHa2VSVFZLbWMyakxDT1FZaWZ3WmxHNXc5RzJCTWtoWjYy?=
- =?utf-8?B?U3IyaVphTjhib3VGbWtoekVRbW8vQnNUdDNTWUcybG5ieXBGWHE3Z3lrL0d0?=
- =?utf-8?B?aTZvVTRJMlBtNFBsU083TlpQU2c4RWU3ek9UNW1IQnV2eTR6Yk1PUTJXNVBG?=
- =?utf-8?B?TTVtcjJaUEpBYStuNnJ6cU1McFdaZ1lyKzVTRG4vOTBVOEdYSDRmS0FkRnpL?=
- =?utf-8?B?RmQ5TE1zMGp0b3cwbnJ5N0tway8yKzJwNGpZTnhMVEJwZ3FncUFQNWpBMlRq?=
- =?utf-8?B?eGgwRTdQazBJQWtuM1NlQnI2aEhmd05HcFZHRkoydjI2VS85R1hXaElCN29U?=
- =?utf-8?B?NXJpRmJ5SUMwbXlWL3JzN2tJK0JUZFYxdGkxeUtNNm9RYms3YUJXeStGVzVo?=
- =?utf-8?B?TDgwY0szTHlzdFBNNFp3TDlOczhVbURkRktJTTlHYmVuTEZpa0pkR3BoZ3FX?=
- =?utf-8?B?ajVNQ1F3YlhRMThUZWZyeE5ZMTdLeFgvV2R6RHV6enNlT200THJvSzlvMWdm?=
- =?utf-8?B?TnlYTzhydzJqVkxvbWhSdmVhQTk1K25nZWV6ZTRUTEU1aDVPbnpOenBhTStw?=
- =?utf-8?B?SkZYaGw1Y0xqY1MzTzFxL3psMmNmclpZVEVGdm1CQ1U4VThjcHFTcDlNcGM4?=
- =?utf-8?B?YkFsMEZhdHppZ1FyRkx3UUNXRnZxZHdoL2NHTjVVQ056dnk5eE5pYitRVFAx?=
- =?utf-8?B?U1o4V01DRTRaaHd3VTA2RDI2Q0ZhbzdIMFA0MnVqcHVoSUJXZHUxd2JUS2Qz?=
- =?utf-8?B?d0xNdWgrZ3ppYjJxSkpESERXL3JlRHNreHQxNjR0VjZTbGlJWkoxQXBWdUcy?=
- =?utf-8?B?WW0wcWZndEg4OS9qWUxORHdPZDJiWVowbHpoNGo4UWczd08vSGFRSzBNSnlR?=
- =?utf-8?B?M2hYdnJSRlhqdFFVRGZhMmxKMmVQL1ZhUDloakdjNzhyVWIybWQwdUNROWZH?=
- =?utf-8?B?SnNFUENRZ0R3d1QvT1dHemRIWW9Mai9tTGJZNi9HS2xqT2I1aFFJaGd5Mm5u?=
- =?utf-8?B?VStsNTdVTG1WZWxwVkFaY0JDbWt0VFJQOTg3U3FndCtUVm9SaElFRDhpN3J0?=
- =?utf-8?B?Q2tHT3I5eDViVEdqSmttdldJS1N6djN1cFlEYzJUZDZCMSt4azRSWVJhMTl4?=
- =?utf-8?B?azJTN09CVysvTHhhaUdkajNUUmpHSjFrZkQzVEhJRDY3NllHOWltaVhJTllF?=
- =?utf-8?B?RDhsdWRPTWluaVMyMmRUQVVQUkc5R0N2RGhkeE1QamtYOXlFaWxvZ2xRUExo?=
- =?utf-8?B?VGl5QWFtVElSMnl2UnhLSitVYm9VNTVkdGtnT0I2MjF6RjBYdVFEZHJ4MzNI?=
- =?utf-8?B?OFNXaXhKdXVkZjVHU3JnZ3JBclo2aGJZY1NqOW9McVYzRGI0MmYzSExBcnBa?=
- =?utf-8?B?SytVSEEyTUZFc2M4YjE4c2dKaGd3K1lpb1laaTR1Z081TytxWTlXd3ZwRU5u?=
- =?utf-8?B?Nld3Ujh2eWhWWWt1Qys5YTZpK3ZjakVERTRnWGNDc1c1Z0VMRnpCVVBRdDBl?=
- =?utf-8?B?WExGS2Q0YzRKcHhrR0l4WUZIaDVWVnMyVXhlK2NTV1BJV3ZkZnQ4VDlDTTls?=
- =?utf-8?B?WkZnU1pjdmd5dlcwQXp1QlVyK3pYUU1RdlNxazgzWm52V2tkaHFFSkFnZExL?=
- =?utf-8?Q?syjk4BOlbaLfHxZMC/zO1kpSD?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 294742f5-e570-4a51-da6e-08de367cb89e
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2025 17:10:43.5663
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TDbsD6eZ8l9SKjRqvI37EX38vvPVZZVPSt3NbMTGCu+nh0qRpbn7WQ3KAP3k4KZSFntEUYlPQnEm+PPtF/XktQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9888
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] Add dma-coherent property
+To: Khairul Anuar Romli <khairul.anuar.romli@altera.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul
+ <vkoul@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Niravkumar L Rabara <niravkumar.l.rabara@intel.com>,
+ dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+References: <cover.1764717960.git.khairul.anuar.romli@altera.com>
+Content-Language: en-US
+From: Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <cover.1764717960.git.khairul.anuar.romli@altera.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Using new API dmaengine_prep_slave_single_config() to simple code.
 
-No functional change.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/crypto/atmel-aes.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+On 12/2/25 17:47, Khairul Anuar Romli wrote:
+> This patch series adds dma-coherent property for the Agilex5 platform by:
+> 
+> - Updating the device tree bindings for:
+>    - Cadence HP NAND controller (`cdns,hp-nfc`)
+>    - Synopsys DesignWare AXI DMA controller (`snps,dw-axi-dmac`)
+>    to accept the `dma-coherent` property.
+> 
+> - Adding the dma-coherent property to the Agilex5 device tree and wiring up
+>    the property to the supported peripherals:
+>    - NAND controller
+>    - DMA controller
+> 
+> This dma-coherent addition aligns the Agilex5 platform with ARM’s
+> architectural requirements for coherent interconnects.
+> 
+> ---
+> Notes:
+> This patch series is applied and validated on socfpga dts maintainer's
+> branch
+> https://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux.git/log/?h=socfpga_dts_for_v6.19
+> 
+> This changes is validated on:
+> 	- intel/socfpga_agilex5_socdk.dtb
+> 	- snps,dw-axi-dmac.yaml
+> 	- snps,dw-axi-dmac.yaml intel/socfpga_agilex5_socdk.dtb
+> 	- cdns,hp-nfc.yaml
+> 	- cdns,hp-nfc.yaml intel/socfpga_agilex5_socdk.dtb
+> 
+> Changes in v2:
+> 	- Rephrase git commit message to describe why the property is
+> 	  needed now.
+> 	- Remove redundant statement in the git commit message.
+> 	- Correct the version in patch series title to v2.
+> ---
+> Khairul Anuar Romli (3):
+>    dt-bindings: mtd: cdns,hp-nfc: Add dma-coherent property
+>    dt-bindings: dma: snps,dw-axi-dmac: add dma-coherent property
+>    arm64: dts: socfpga: agilex5: Add dma-coherent property
+> 
+>   Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml | 2 ++
+>   Documentation/devicetree/bindings/mtd/cdns,hp-nfc.yaml      | 2 ++
+>   arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi              | 3 +++
+>   3 files changed, 7 insertions(+)
+> 
 
-diff --git a/drivers/crypto/atmel-aes.c b/drivers/crypto/atmel-aes.c
-index 3a2684208dda9ee45d71b4bc2958be293a4fb6fe..14d46186865a1a6d8a11486b8f3aca92341fb1f9 100644
---- a/drivers/crypto/atmel-aes.c
-+++ b/drivers/crypto/atmel-aes.c
-@@ -820,12 +820,10 @@ static int atmel_aes_dma_transfer_start(struct atmel_aes_dev *dd,
- 		return -EINVAL;
- 	}
- 
--	err = dmaengine_slave_config(dma->chan, &config);
--	if (err)
--		return err;
--
--	desc = dmaengine_prep_slave_sg(dma->chan, dma->sg, dma->sg_len, dir,
--				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	desc = dmaengine_prep_slave_sg_config(dma->chan, dma->sg, dma->sg_len,
-+					      dir,
-+					      DMA_PREP_INTERRUPT | DMA_CTRL_ACK,
-+					      &config);
- 	if (!desc)
- 		return -ENOMEM;
- 
+Applied!
 
--- 
-2.34.1
+Thanks,
+Dinh
 
 

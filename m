@@ -1,121 +1,82 @@
-Return-Path: <dmaengine+bounces-7541-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7542-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 290D3CAEBD7
-	for <lists+dmaengine@lfdr.de>; Tue, 09 Dec 2025 03:32:33 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5873FCAF0D3
+	for <lists+dmaengine@lfdr.de>; Tue, 09 Dec 2025 07:38:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 190C3304DEAB
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Dec 2025 02:32:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 38A53301D5A6
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Dec 2025 06:38:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC84324A047;
-	Tue,  9 Dec 2025 02:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssDBAeTb"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0510E266B6B;
+	Tue,  9 Dec 2025 06:38:21 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3A117D2;
-	Tue,  9 Dec 2025 02:32:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B528223DFB;
+	Tue,  9 Dec 2025 06:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765247521; cv=none; b=c+WhJSt90Tk+GWcj6Lu08PJsj2cghYwC+ZOfv8P9fb1Mn0S4KI03ZGQj12ztAcASIaVX2UhDAM7xH51AQaiUnsRKbFuJgxXq5FIHuda69FYgYDQa5xHtpYNMQ8Yhiit89NsQpoPJaw1QL+mqeb+KfWcMh+BPNmvQTQ5VRcUxzRo=
+	t=1765262300; cv=none; b=qFKN2fuPViDr9QPUe8oqb+SfGe2X5OTNr4GIM2cc2zFCT34StLKX244jxFCRwUUjp8+6v9XddfLpnecgTbJ8h67sGicaEa/acnqCAOzR48Hb6yWYwPSbz9HcooE7GybUn3I6l+m7H1TAJBl5eke6EMAJqzC0T8euM77oleOWsxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765247521; c=relaxed/simple;
-	bh=PFVA+zI/bstNK1jQzv4pqwneP+Zt6w13hC5OvKuRyxA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=LrcukmjBzGa5MS/Ss4eFMSmfQxGBr3A8lypY92oxof288aFE3PE1I1fAUuYKdHRbKwYzDCgdVGs+PedlE1PIHB8NIzxxV4h82GT7Em68rNroihsPz0dL0eXjqT9K+yA/tNTk0k+g4MiZ9SXjshTlJqyoIIuaHdE97Y+oHu1bv0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssDBAeTb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5133C4CEF1;
-	Tue,  9 Dec 2025 02:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765247521;
-	bh=PFVA+zI/bstNK1jQzv4pqwneP+Zt6w13hC5OvKuRyxA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=ssDBAeTbczZcFBMVwJmnbc5qTq4e3er8CMp8YHSBZeSJNJCRRehCBlaX69b4xM6CC
-	 RTGORQ7hpxfny+Pl46rv5Ho5XD7fE9sxwtE+8iGu+LpGLS5y43jXc+I1xI3yGWwBKB
-	 qieu9pYrgpQvy4Rz0Hs+hjeoyyL0dwjgyMPBtG4emJgKch6f4c2LxE7cRkYqI/fQyZ
-	 FXK2+X3C6JBp3QC48q5xf8EsOmpTSQQPfqjb5b4lDhvQ6qVaEk1a9RgkEiZsepnrpp
-	 aqnzSnBXjs11ueplVPkabxSpSHDArAaqUTQYXkvXXETtteAKFperbM9o3uSONI7B9X
-	 prSg9e6ertUPQ==
-Message-ID: <e1aae851-4031-4b5c-a807-7a61ecfe6af1@kernel.org>
-Date: Mon, 8 Dec 2025 20:31:58 -0600
+	s=arc-20240116; t=1765262300; c=relaxed/simple;
+	bh=xzM56ImHaGqlS44dVuPIX6ZJ/sTggxw7Eb2KfxoA8rE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rSiWRGWmNbucT3jxgyWX03QaAJzS6Bf5UAh04QwgA+9VPTnjIwcvHcf0Q3gTXPt2bv+f9nE6Iz/zu3vGHqIiDEHOm20PUOmKHbihg47WLmojhF2wiw8pP1ZWZ9zIQOrpvx074u0ouu/UJzEIG7IlETo92lA8U5aX01uwnuMKO/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 1062568AFE; Tue,  9 Dec 2025 07:38:09 +0100 (CET)
+Date: Tue, 9 Dec 2025 07:38:09 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH 1/8] dmaengine: Add API to combine configuration and
+ preparation (sg and single)
+Message-ID: <20251209063809.GA27728@lst.de>
+References: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com> <20251208-dma_prep_config-v1-1-53490c5e1e2a@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] Add dma-coherent property
-To: Khairul Anuar Romli <khairul.anuar.romli@altera.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul
- <vkoul@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Niravkumar L Rabara <niravkumar.l.rabara@intel.com>,
- dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-References: <cover.1764717960.git.khairul.anuar.romli@altera.com>
-Content-Language: en-US
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <cover.1764717960.git.khairul.anuar.romli@altera.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251208-dma_prep_config-v1-1-53490c5e1e2a@nxp.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
+On Mon, Dec 08, 2025 at 12:09:40PM -0500, Frank Li wrote:
+> Previously, configuration and preparation required two separate calls. This
+> works well when configuration is done only once during initialization.
+> 
+> However, in cases where the burst length or source/destination address must
+> be adjusted for each transfer, calling two functions is verbose and
+> requires additional locking to ensure both steps complete atomically.
+> 
+> Add a new API and callback device_prep_slave_sg_config that combines
+> configuration and preparation into a single operation. If the configuration
+> argument is passed as NULL, fall back to the existing implementation.
 
-
-On 12/2/25 17:47, Khairul Anuar Romli wrote:
-> This patch series adds dma-coherent property for the Agilex5 platform by:
-> 
-> - Updating the device tree bindings for:
->    - Cadence HP NAND controller (`cdns,hp-nfc`)
->    - Synopsys DesignWare AXI DMA controller (`snps,dw-axi-dmac`)
->    to accept the `dma-coherent` property.
-> 
-> - Adding the dma-coherent property to the Agilex5 device tree and wiring up
->    the property to the supported peripherals:
->    - NAND controller
->    - DMA controller
-> 
-> This dma-coherent addition aligns the Agilex5 platform with ARM’s
-> architectural requirements for coherent interconnects.
-> 
-> ---
-> Notes:
-> This patch series is applied and validated on socfpga dts maintainer's
-> branch
-> https://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux.git/log/?h=socfpga_dts_for_v6.19
-> 
-> This changes is validated on:
-> 	- intel/socfpga_agilex5_socdk.dtb
-> 	- snps,dw-axi-dmac.yaml
-> 	- snps,dw-axi-dmac.yaml intel/socfpga_agilex5_socdk.dtb
-> 	- cdns,hp-nfc.yaml
-> 	- cdns,hp-nfc.yaml intel/socfpga_agilex5_socdk.dtb
-> 
-> Changes in v2:
-> 	- Rephrase git commit message to describe why the property is
-> 	  needed now.
-> 	- Remove redundant statement in the git commit message.
-> 	- Correct the version in patch series title to v2.
-> ---
-> Khairul Anuar Romli (3):
->    dt-bindings: mtd: cdns,hp-nfc: Add dma-coherent property
->    dt-bindings: dma: snps,dw-axi-dmac: add dma-coherent property
->    arm64: dts: socfpga: agilex5: Add dma-coherent property
-> 
->   Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml | 2 ++
->   Documentation/devicetree/bindings/mtd/cdns,hp-nfc.yaml      | 2 ++
->   arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi              | 3 +++
->   3 files changed, 7 insertions(+)
-> 
-
-Applied!
-
-Thanks,
-Dinh
+Maybe this would be a good time to start retiring the "slave" naming
+and come up with shorter names as a win-win situation?
 
 

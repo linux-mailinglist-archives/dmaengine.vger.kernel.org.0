@@ -1,119 +1,83 @@
-Return-Path: <dmaengine+bounces-7558-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7559-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6E07CB3DE4
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Dec 2025 20:32:48 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23AA8CB42CE
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Dec 2025 23:52:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6428030A35F9
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Dec 2025 19:31:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AE414301EFA1
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Dec 2025 22:50:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F380A31B823;
-	Wed, 10 Dec 2025 19:31:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD7702C236B;
+	Wed, 10 Dec 2025 22:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIg8K37Y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIXY6p8L"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F89D381C4
-	for <dmaengine@vger.kernel.org>; Wed, 10 Dec 2025 19:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722A926B2AD;
+	Wed, 10 Dec 2025 22:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765395076; cv=none; b=Qg2ftWqjLcBHU6DNBcc+eiu41jNPwpf/30yTy0Klm9JflLN0/1VzWDknaQ7zzrXvti56h8vf6bLtvWWoGudjqJMAwsUPSLY0qpShTZa0lSmJbrhLdLiO7ZAzkgJNBYavtCsUSmE2lGYa208PFyhwBvq4YhfwQuzpN+Cni5yLF5I=
+	t=1765407057; cv=none; b=NJL8FjP99Hm7/C4EO6EYpaAzuBl1wHQ4i4ba1PFSggF9F+G6GfApADVQBgno8d8DZjKVPA70zA2AW6ORcrE6z0sNiwj1teobPkn6mvlWrxN8F4u+1KsLrmGY7SXy+LRqY9HpII3h8ushkfAwBfcK7SVpcUM2Ir2dnTO4yFJgSFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765395076; c=relaxed/simple;
-	bh=YqPz9Xt4JconGPKB7H1nvBnJY4LIBmzUWRtoZym29V0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BM2uyTS+7PdPoHI49ED/skrVYrEB2xbw4b5GzR2zIO9HyL7j7Zw1AZ7Gg69iWaWKqu7eI69ya6vee1H5sH4VHvRk24VLLzg+IQrNjriNDs6ahzY03izXDkj55Xquiy4fGUzC1DL8k0cEvj5jG06rDmgM4e5l/uw72WCA2bc4Jhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UIg8K37Y; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-477aa218f20so1368885e9.0
-        for <dmaengine@vger.kernel.org>; Wed, 10 Dec 2025 11:31:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765395072; x=1765999872; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xUygINJwBiQR5/xt5IgZK/GlpK6OO7X4BKt/LNCencc=;
-        b=UIg8K37YrUjdpZKaTwtk1UT8pxUCuwZHGVo+J9h+1AiwCQW7nv/U/ffr4ly+QxO1g3
-         JEsmFhFrtWkytpIIN3HRiUBUM80sptJMcLDgfHtrePxLBFON45OO63+eQP4m3Gfyiboi
-         y6g08IqxWzfyznngvH5MaBeg+Rxjs5vHS+AkMp4vmRHfzpELqxdFCwB3zEUiIAPYx08o
-         e6L3hMMa5GhkGAIsiIJQSvwVfiMjw9ZFhK+AQSwK1cx7v1pR2GOxp7Dvkkl+I4Icduo4
-         dVFgWVNEB2k8Q5oRSQo5Z0+5Idc933q9hcC9r0YTHn+/LohKqEO1bXzYIAAFlQawD6Lf
-         IBug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765395072; x=1765999872;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xUygINJwBiQR5/xt5IgZK/GlpK6OO7X4BKt/LNCencc=;
-        b=uBvaZFLAlOl+D2uUCvlarhY2AfPARdgY1k1yk/ZB3Ignpou6v2hYMX7PT5DCIt6A8m
-         N/c5TkcZHfVLQZ5WJBqjri0AVlUJ1Md5rSP8JVfmyCxeGQ3Ws2TuQlh2fxLE7Kb8Kae5
-         D3A0egfsCMoJUIFsP6hpj0yvvnoquuGIeJG3Ommu1biFtKddAUSDN/eYflw7HWjJjRBq
-         eyw15VgCsdPJqMTxbvRsf6bShnu+4to09pndfetLse1V6B16uIbeZHjUkz7iK4wc4uWf
-         05wowMQssFDIMF9icdPJRg+k4wFNHW8IERvQDcN2gHD5U2akBZqNXQ8/a5OoAs+ZYMdY
-         Mwag==
-X-Gm-Message-State: AOJu0YzA496KvdQeNi4lE6edTa/RIs5PatBaOJ+1pT8zoXPeTgBrHq2z
-	VMq2EZt/eKpebxrdzjqlPXMO8bDLW6ytnUH4vCEJbFEGDMFB4nHzUuNT
-X-Gm-Gg: ASbGncsluI9bWWsxCeAMk5w/lDNCMZyHRSL6or0YTnWgQsBl3B1XmbgUeTV4VStEfhO
-	wEFNsJmB0fxjraXsTFlI/NbnrJJph98ORQNRFwT8+55RWVkskS3LJVnah3xIGduhN+7AWUPu+ET
-	8VWq9IO4013DPsvJL04YeqF8/sWx6Zyhmj0IEDeDGsaTf+R9nBjg9cGo7zgluKGqN7/P7SaJ7g1
-	Ut7NO9j+JFh7ZluAjd5/OkqKWp5ON/56JLvnwihgYyEhLluIsHHGCQ8fr4FZkM9kX2arWW5Ecr8
-	KJxEZ4bldBKNkHW3PtoRRlHQgU6bij50mQhnGoOToy6td7zq/YugAqhCSnlmVdHbEN4+FbfFQnn
-	emUx43coNHmc5IWbE0D6c9eLai/42WYv2XPyKfvFN4N6UgFHgZnIh9GRnvO3d6hKE6VhK8O+FwK
-	QXvGHi6s6gtmcEyDQ57st7neB0ThRKcnbx85wNfB8+qgLL
-X-Google-Smtp-Source: AGHT+IFkql1ij2gs6ixXOw1rPCKSbCIW8e/NxKM+3h3S227vchXKYCHdaaVdSLS6BFaAqRx4oXq9AQ==
-X-Received: by 2002:a05:600c:3541:b0:477:632c:5b91 with SMTP id 5b1f17b1804b1-47a8375a183mr46122505e9.16.1765395072375;
-        Wed, 10 Dec 2025 11:31:12 -0800 (PST)
-Received: from dev-AI-Series.. (bba-86-96-93-57.alshamil.net.ae. [86.96.93.57])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47a88281e85sm8828475e9.9.2025.12.10.11.31.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Dec 2025 11:31:12 -0800 (PST)
-From: "Anton D. Stavinskii" <stavinsky@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	inochiama@gmail.com,
-	"Anton D. Stavinskii" <stavinsky@gmail.com>
-Subject: [PATCH] dmaengine: cv1800b-dmamux: fix channel allocation order
-Date: Wed, 10 Dec 2025 23:30:12 +0400
-Message-ID: <20251210193011.567210-2-stavinsky@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1765407057; c=relaxed/simple;
+	bh=a2bzuFLMtFhycfladekqoVs0KC0eCxKrtmBPj8wRj2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=kh9rDvHOk7Y3351SUMTY9VC2yQmMWbcD4R17pa2AE2vV2a1Q66TGLm38EHprGK3czTJlCJlgAJEE+iHuIiR9qv3g/n4NuHAZO2rBza/x4W/1ux0/M5gFFl9RX1gZcTbVr85tdeVSeb0FShMIJFrmNFvbOAnWZlGTJ0sP5a7YT1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DIXY6p8L; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3412EC4CEF1;
+	Wed, 10 Dec 2025 22:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765407057;
+	bh=a2bzuFLMtFhycfladekqoVs0KC0eCxKrtmBPj8wRj2I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DIXY6p8LCPnJLjTXOvDC6QVcMRuMXwOKfkk9G5nBdKrdw12H04e9XOplPEaTYQEQu
+	 qN1UMXZoVsxKgTyduWwg/mc9Xz6xSe/NXPVCTOeM7MBf4Y6owfshKbx9t1FeL57Cy2
+	 kR1lMy7F3jGcTZ5QGXFtt1cKPpUdFJ+F5FhFZQzN2MQFSHx0dxlPLTtsg+oK8PfHPo
+	 ygIXiJGtF+R+PIaIV0xR8XFMAGjFsIbQiKUQV1u1tKlHVML6M48AdG14XCJC/+r2wk
+	 h/7D+HK1dFOxpErXp4kNUumDSXqEAKCch1UQ/wQKSOCvunW9qNNdFDOHLE6Zvqj23E
+	 X34k775mY3NDw==
+Date: Wed, 10 Dec 2025 16:50:55 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH 2/8] PCI: endpoint: pci-epf-test: use new DMA API to
+ simple code
+Message-ID: <20251210225055.GA3544934@bhelgaas>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251208-dma_prep_config-v1-2-53490c5e1e2a@nxp.com>
 
-The dmamux builds the free_maps list using llist_add(), which inserts
-new nodes at the head. Using increasing channel indices causes the
-first allocation to use DMA channel 7 while the DMA engine hands out
-channel 0, leading to mismatched routing.
+On Mon, Dec 08, 2025 at 12:09:41PM -0500, Frank Li wrote:
+> Using new API dmaengine_prep_slave_single_config() to simple code.
 
-Reverse the channel index order so the first allocation gets channel 0.
+Capitalize and include actual interface:
 
-Fixes: db7d07b5add4d ("dmaengine: add driver for Sophgo CV18XX/SG200X dmamux")
-Signed-off-by: Anton D. Stavinskii <stavinsky@gmail.com>
----
- drivers/dma/cv1800b-dmamux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  PCI: endpoint: pci-epf-test: Use dmaengine_prep_slave_single_config() to simplify code
 
-diff --git a/drivers/dma/cv1800b-dmamux.c b/drivers/dma/cv1800b-dmamux.c
-index e900d6595617..825e1614051d 100644
---- a/drivers/dma/cv1800b-dmamux.c
-+++ b/drivers/dma/cv1800b-dmamux.c
-@@ -214,7 +214,7 @@ static int cv1800_dmamux_probe(struct platform_device *pdev)
- 		}
- 
- 		init_llist_node(&tmp->node);
--		tmp->channel = i;
-+		tmp->channel = MAX_DMA_CH_ID - i;
- 		llist_add(&tmp->node, &data->free_maps);
- 	}
- 
--- 
-2.43.0
-
+  Use dmaengine_prep_slave_single_config() to simplify code
 

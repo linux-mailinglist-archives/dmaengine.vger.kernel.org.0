@@ -1,231 +1,243 @@
-Return-Path: <dmaengine+bounces-7587-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7588-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77705CB8E24
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Dec 2025 14:20:06 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 261E5CB9843
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Dec 2025 19:08:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 18B2A305116B
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Dec 2025 13:20:04 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B5D713012449
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Dec 2025 18:08:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F71621FF35;
-	Fri, 12 Dec 2025 13:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8B862F0699;
+	Fri, 12 Dec 2025 18:08:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQiTLARM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vha5Ng+h"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9E61DDC35
-	for <dmaengine@vger.kernel.org>; Fri, 12 Dec 2025 13:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE112D77EA;
+	Fri, 12 Dec 2025 18:08:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765545603; cv=none; b=Yo7Is7LiMjX3xVpneeuzJsuMpB5uqNNvHkcyZlh5lnFQ7eA7BTry1nMd9a9uX4nMe+6LDuKSUwremygXt9aWwfqOdU6OyVHhL0gW/HRf4mhIDZQhURK4go84Rm/yAx3Ky8kd99ggHod/scn/Nc/Cq4amX5fgSOlgQbKIdNodd/I=
+	t=1765562890; cv=none; b=sNWk0jG41lWqB/wzCExIAjqaI20WeWzBz3hrkO1LyaqqvlOGEf3BmMWSEOWHYhw/ExSZhTbmTTvHZFc7aZYp4/oJKkzdcdE1YXYlvf30Xk5o177PeZz9jRb+0Hwvm30m+V0KRfg1L5FJymZyolT3PfrYbcT9oviD4oXVPc4tZwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765545603; c=relaxed/simple;
-	bh=y/n2HpEJXEeD2OUCVwpAOVpXqQe23MBCeXUtceU56aE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TYJOJ7EXwwb137cglZbyzRc1wXn6WNIi2KmRLMA4G6R12I2Rm7/ZmxP/iSzN/UJnBNUwO7wa5L8VCaMxMZz3cHRTi8pF/EANZ0GoEXr2KlOESV1lEGe7E4KQyohgh7Y9CFeapRzu99kFY3oLE0AYzWNNASB53MhmVNszHUXInLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQiTLARM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E571EC19425
-	for <dmaengine@vger.kernel.org>; Fri, 12 Dec 2025 13:20:02 +0000 (UTC)
+	s=arc-20240116; t=1765562890; c=relaxed/simple;
+	bh=6nAtonLglnUwDYSz6eucjK8KLKabE12fM1gh78hx9Ls=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=k7rnp7Axy17A4S3g2bBWp4hQjiizJBxJ2dWJI7MLJF5oipgsvBqa75rv+fHhWhHDKRGa3GkEzzSGCcrH6NvXZ1LlObdbLzVQtZIPqHUCvLXkpLEciCXb9zOSYReiHKAJfz42ARw4BNVhjGaQ3QlCGL0omWJNhbqcOc99l6AxDZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vha5Ng+h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB975C4CEF1;
+	Fri, 12 Dec 2025 18:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765545602;
-	bh=y/n2HpEJXEeD2OUCVwpAOVpXqQe23MBCeXUtceU56aE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PQiTLARM1UgaA3lrisoVcXjE3DMZqjgPT9rgGqrKhXLzbJ487bGm5ZWjG5mN6lWHO
-	 utAuUwuA3JihOAE+acgRTR6bltWI/3BN/sjzhC7Qw2WQFh7zmFgedj2sWwV5hZ9475
-	 XHd8QC5dGiwxLx1yoFpbTvBTmdgaGb5ZicWBwaZg7BB4MeB29ySZTIVzEvO1HV4z6D
-	 bvQkR8snFjblurZLhvP1W7S02P+wC7yVjASefkKGS47QfcH7/pJcljGhDc3KNejFdi
-	 GhCJOJ342KC5bjEYKCdI01uog1ZJWukstOwwTq4Dm16ZMzEwn5tKCxDwq7vwp2vjAU
-	 2J3SodHc4/lag==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-641977dc00fso1841677a12.1
-        for <dmaengine@vger.kernel.org>; Fri, 12 Dec 2025 05:20:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXpxjSCYflvMvrzHvnz4C+4BKKzAKUWNota+GBYexVELL+nAkcdXF8JaFySperBs3NYJdUtEHiBZU8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweznuL4mOj636iys2aS56aKHL0B8wuRvnQv5mdNaEl/MezEnum
-	QXfulq6ZN12o4Mec/oHsUN/vdxeAe8ON6nZqK3Ga2KIRxmVua1ov3vCXU+SWQiyveDMpOp3MaVV
-	sJ9yI2SrRvzfdj/ZlrVBIfKz24FQZTA==
-X-Google-Smtp-Source: AGHT+IH5efhgSFOPqgOiwqHuVybcB1pM+vtgMykwpJv7zU5eTdlwMKKp3N9YCPgC8H309zIrc1SLEg1Gef91bpLp6oE=
-X-Received: by 2002:a05:6402:5194:b0:647:8d63:d8b4 with SMTP id
- 4fb4d7f45d1cf-6499b10ffd2mr2004220a12.6.1765545601392; Fri, 12 Dec 2025
- 05:20:01 -0800 (PST)
+	s=k20201202; t=1765562890;
+	bh=6nAtonLglnUwDYSz6eucjK8KLKabE12fM1gh78hx9Ls=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Vha5Ng+hB6Vv0e/zk2DLwmxB4mRDXwMynVoS2IT7Iv4YTTGCAEjHag+WWOvVdxcn7
+	 d1IzVcrHHIzP+8cBwltu4w6SqSVzLUPw2SsRgSIr3LYtd9EnBWwyLA9143KBIlbJho
+	 udcLYb2Mb2OfXWLBRkjM86K8bXRzbg5KpIJmewAZdbElwsBrnuxWnz8z1M8nb//RnP
+	 MTao9cCQk8eNx0eMZiGCwuKWTAif2qN2y3OqfjkTa0RnUi6E5Mn4TYMFYUqACaP5Il
+	 XabxZyQ2rI8Yx6J+fKNw+2K1YnLOHYfij3NGE0uxXPkqN0CFbrQhKcy8SC9lN9T9XQ
+	 w9dZ4Vo+y2I2g==
+Date: Fri, 12 Dec 2025 12:08:08 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Devendra K Verma <devendra.verma@amd.com>
+Cc: bhelgaas@google.com, mani@kernel.org, vkoul@kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michal.simek@amd.com
+Subject: Re: [PATCH v7 1/2] dmaengine: dw-edma: Add AMD MDB Endpoint Support
+Message-ID: <20251212180808.GA3645554@bhelgaas>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1765425415.git.khairul.anuar.romli@altera.com>
- <646113c742278626c8796d8553cdb251a4daf737.1765425415.git.khairul.anuar.romli@altera.com>
- <20251211154524.GA1464056-robh@kernel.org> <CAL_JsqKPVdUzytrVKs5q5JfPnxLdz-UdN5K-cJUVQ_uWM5azLA@mail.gmail.com>
- <b4e36cd5-959b-4758-8c52-6dad7e6f17f0@altera.com>
-In-Reply-To: <b4e36cd5-959b-4758-8c52-6dad7e6f17f0@altera.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 12 Dec 2025 07:19:49 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL5yLyQ2_MEGorETtqz_EEZDRy_b+9PtBcV5ZVFG25qyg@mail.gmail.com>
-X-Gm-Features: AQt7F2p6jIbY7t1hLFi5XdgYG8BFlHa57zPqUcXer1tzcZ3WhU6A9lFxHU3oiao
-Message-ID: <CAL_JsqL5yLyQ2_MEGorETtqz_EEZDRy_b+9PtBcV5ZVFG25qyg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] dma: dw-axi-dmac: Add support for Agilex5 and
- dynamic bus width
-To: "Romli, Khairul Anuar" <khairul.anuar.romli@altera.com>
-Cc: Dinh Nguyen <dinguyen@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, 
-	Vinod Koul <vkoul@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251212122056.8153-2-devendra.verma@amd.com>
 
-On Thu, Dec 11, 2025 at 6:46=E2=80=AFPM Romli, Khairul Anuar
-<khairul.anuar.romli@altera.com> wrote:
->
-> On 11/12/2025 11:52 pm, Rob Herring wrote:
-> > On Thu, Dec 11, 2025 at 9:45=E2=80=AFAM Rob Herring <robh@kernel.org> w=
-rote:
-> >>
-> >> On Thu, Dec 11, 2025 at 12:40:38PM +0800, Khairul Anuar Romli wrote:
-> >>> Add device tree compatible string support for the Altera Agilex5 AXI =
-DMA
-> >>> controller.
-> >>>
-> >>> Introduces logic to parse the "dma-ranges" property and calculate the
-> >>> actual number of addressable bits (bus width) for the DMA engine. Thi=
-s
-> >>> calculated value is then used to set the coherent mask via
-> >>> 'dma_set_mask_and_coherent()', allowing the driver to correctly handl=
-e
-> >>> devices with bus widths less than 64 bits. The addressable bits defau=
-lt to
-> >>> 64 if 'dma-ranges' is not specified or cannot be parsed.
-> >>>
-> >>> Introduce 'addressable_bits' to 'struct axi_dma_chip' to store this v=
-alue.
-> >>>
-> >>> Signed-off-by: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
-> >>> ---
-> >>> Changes in v3:
-> >>>        - Refactor the code to align with dma controller device node m=
-ove
-> >>>          to 1 level down.
-> >>> Changes in v2:
-> >>>        - Add driver implementation to set the DMA BIT MAST to 40 base=
-d on
-> >>>          dma-ranges defined in DT.
-> >>>        - Add glue for driver and DT.
-> >>> ---
-> >>>   .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 69 ++++++++++++++++=
-++-
-> >>>   drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  1 +
-> >>>   2 files changed, 69 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers=
-/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> >>> index b23536645ff7..96b0a0842ff5 100644
-> >>> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> >>> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> >>> @@ -271,7 +271,9 @@ static void axi_dma_hw_init(struct axi_dma_chip *=
-chip)
-> >>>                axi_chan_irq_disable(&chip->dw->chan[i], DWAXIDMAC_IRQ=
-_ALL);
-> >>>                axi_chan_disable(&chip->dw->chan[i]);
-> >>>        }
-> >>> -     ret =3D dma_set_mask_and_coherent(chip->dev, DMA_BIT_MASK(64));
-> >>> +
-> >>> +     dev_dbg(chip->dev, "Adressable bus width: %u\n", chip->addressa=
-ble_bits);
-> >>> +     ret =3D dma_set_mask_and_coherent(chip->dev, DMA_BIT_MASK(chip-=
->addressable_bits));
-> >>>        if (ret)
-> >>>                dev_warn(chip->dev, "Unable to set coherent mask\n");
-> >>>   }
-> >>> @@ -1461,13 +1463,24 @@ static int axi_req_irqs(struct platform_devic=
-e *pdev, struct axi_dma_chip *chip)
-> >>>        return 0;
-> >>>   }
-> >>>
-> >>> +/* Forward declaration (no size required) */
-> >>> +static const struct of_device_id dw_dma_of_id_table[];
-> >>> +
-> >>>   static int dw_probe(struct platform_device *pdev)
-> >>>   {
-> >>>        struct axi_dma_chip *chip;
-> >>>        struct dw_axi_dma *dw;
-> >>>        struct dw_axi_dma_hcfg *hdata;
-> >>>        struct reset_control *resets;
-> >>> +     struct device_node *parent;
-> >>> +     const struct of_device_id *match;
-> >>>        unsigned int flags;
-> >>> +     unsigned int addressable_bits =3D 64;
-> >>> +     unsigned int len_bytes;
-> >>> +     unsigned int num_cells;
-> >>> +     const __be32 *prop;
-> >>> +     u64 bus_width;
-> >>> +     u32 *cells;
-> >>>        u32 i;
-> >>>        int ret;
-> >>>
-> >>> @@ -1483,9 +1496,61 @@ static int dw_probe(struct platform_device *pd=
-ev)
-> >>>        if (!hdata)
-> >>>                return -ENOMEM;
-> >>>
-> >>> +     match =3D of_match_node(dw_dma_of_id_table, pdev->dev.of_node);
-> >>> +     if (!match) {
-> >>> +             dev_err(&pdev->dev, "Unsupported AXI DMA device\n");
-> >>> +             return -ENODEV;
-> >>> +     }
-> >>> +
-> >>> +     parent =3D of_get_parent(pdev->dev.of_node);
-> >>> +     if (parent) {
-> >>> +             prop =3D of_get_property(parent, "dma-ranges", &len_byt=
-es);
-> >>> +             if (prop) {
-> >>> +                     num_cells =3D len_bytes / sizeof(__be32);
-> >>> +                     cells =3D kcalloc(num_cells, sizeof(*cells), GF=
-P_KERNEL);
-> >>> +                     if (!cells)
-> >>> +                             return -ENOMEM;
-> >>> +
-> >>> +                     ret =3D of_property_read_u32(parent, "#address-=
-cells", &i);
-> >>> +                     if (ret) {
-> >>> +                             dev_err(&pdev->dev, "missing #address-c=
-ells property\n");
-> >>> +                             return ret;
-> >>> +                     }
-> >>> +
-> >>> +                     ret =3D of_property_read_u32(parent, "#size-cel=
-ls", &i);
-> >>> +                     if (ret) {
-> >>> +                             dev_err(&pdev->dev, "missing #size-cell=
-s property\n");
-> >>> +                             return ret;
-> >>> +                     }
-> >>> +
-> >>> +                     if (!of_property_read_u32_array(parent, "dma-ra=
-nges",
-> >>> +                                                     cells, num_cell=
-s)) {
-> >>
-> >> We have common code to parse dma-ranges. Use it and don't implement yo=
-ur
-> >> own.
-> >
-> > Actually, the driver and DT core should take care of all this for you
-> > and there's nothing to do in the driver. A driver only needs to set
-> > the mask for the IP itself and only when >32 bits. The core takes care
-> > of any additional restrictions in the bus.
-> >
-> > Rob
->
-> The current implementation explicitly set the mask to 64.
->
-> -     ret =3D dma_set_mask_and_coherent(chip->dev, DMA_BIT_MASK(64));
->
-> Will the core re-set the mask based on the dma-ranges on DT?
+On Fri, Dec 12, 2025 at 05:50:55PM +0530, Devendra K Verma wrote:
+> AMD MDB PCIe endpoint support. For AMD specific support
+> added the following
+>   - AMD supported PCIe Device IDs and Vendor ID (Xilinx).
+>   - AMD MDB specific driver data
+>   - AMD MDB specific VSEC capability to retrieve the device DDR
+>     base address.
+> ...
 
-I don't think it changes the mask, but there's also bus ranges which
-get factored in. See struct device.bus_dma_limit and dma_range_map.
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
 
-Rob
+> +/* Synopsys */
+>  #define DW_PCIE_VSEC_DMA_ID			0x6
+>  #define DW_PCIE_VSEC_DMA_BAR			GENMASK(10, 8)
+>  #define DW_PCIE_VSEC_DMA_MAP			GENMASK(2, 0)
+>  #define DW_PCIE_VSEC_DMA_WR_CH			GENMASK(9, 0)
+>  #define DW_PCIE_VSEC_DMA_RD_CH			GENMASK(25, 16)
+
+These should include "SYNOPSYS" since they are specific to
+PCI_VENDOR_ID_SYNOPSYS.  Add corresponding XILINX #defines below for
+the XILINX VSEC.  They'll be the same masks.
+
+> +/* AMD MDB (Xilinx) specific defines */
+> +#define DW_PCIE_XILINX_MDB_VSEC_DMA_ID		0x6
+> +#define DW_PCIE_XILINX_MDB_VSEC_ID		0x20
+> +#define PCI_DEVICE_ID_AMD_MDB_B054		0xb054
+
+Looks odd to me that PCI_DEVICE_ID_AMD_MDB_B054 goes with
+PCI_VENDOR_ID_XILINX.  To me this would make more sense as
+PCI_DEVICE_ID_XILINX_B054.  Move it so it's not in the middle of the
+VSEC-related things.
+
+> +#define DW_PCIE_AMD_MDB_INVALID_ADDR		(~0ULL)
+
+It looks like this is related to the value from
+DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG and is only used for Xilinx, so
+should be named similarly, e.g., DW_PCIE_XILINX_MDB_INVALID_ADDR, and
+moved to be next to it.
+
+> +#define DW_PCIE_XILINX_LL_OFF_GAP		0x200000
+> +#define DW_PCIE_XILINX_LL_SIZE			0x800
+> +#define DW_PCIE_XILINX_DT_OFF_GAP		0x100000
+> +#define DW_PCIE_XILINX_DT_SIZE			0x800
+
+These LL/DT gap and size #defines don't look like they're directly
+related to the VSEC, so they should at least be moved after the
+DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG #defines, since those *are* part of
+the VSEC.
+
+> +#define DW_PCIE_XILINX_MDB_VSEC_HDR_ID		0x20
+
+DW_PCIE_XILINX_MDB_VSEC_HDR_ID is pointless and should be removed.
+See below.
+
+> +#define DW_PCIE_XILINX_MDB_VSEC_REV		0x1
+> +#define DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_HIGH	0xc
+> +#define DW_PCIE_XILINX_MDB_DEVMEM_OFF_REG_LOW	0x8
+
+> +static const struct dw_edma_pcie_data amd_mdb_data = {
+
+This is a confusing mix of "xilinx" and "amd_mdb".  The DEVICE_ID
+#define uses "AMD_MDB".  The other #defines mostly use XILINX.  This
+data structure uses "amd_mdb".  The function uses "xilinx".
+
+Since this patch only applies to PCI_VENDOR_ID_XILINX, I would make
+this "xilinx_mdb_data".  If new devices come with a different vendor
+ID, e.g., AMD, you can add a corresponding block for that.
+
+> +static void dw_edma_pcie_get_xilinx_dma_data(struct pci_dev *pdev,
+> +					     struct dw_edma_pcie_data *pdata)
+> +{
+> +	u32 val, map;
+> +	u16 vsec;
+> +	u64 off;
+> +
+> +	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+> +					DW_PCIE_XILINX_MDB_VSEC_DMA_ID);
+> +	if (!vsec)
+> +		return;
+> +
+> +	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
+> +	if (PCI_VNDR_HEADER_REV(val) != 0x00 ||
+> +	    PCI_VNDR_HEADER_LEN(val) != 0x18)
+> +		return;
+> +
+> +	pci_dbg(pdev, "Detected PCIe Vendor-Specific Extended Capability DMA\n");
+
+Perhaps reword this to "Detected Xilinx Vendor-Specific Extended
+Capability DMA", and the one in dw_edma_pcie_get_synopsys_dma_data()
+to similarly mention "Synopsys" to reinforce the fact that these are
+Xilinx-specific and Synopsys-specific.
+
+I think the REV and LEN checks are unnecessary; see below.
+
+> +	pci_read_config_dword(pdev, vsec + 0x8, &val);
+> +	map = FIELD_GET(DW_PCIE_VSEC_DMA_MAP, val);
+
+Should use XILINX #defines.  Another reason for adding "SYNOPSYS" to
+the #defines for the Synopsys VSEC.
+
+> +	vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_XILINX,
+> +					DW_PCIE_XILINX_MDB_VSEC_ID);
+> +	if (!vsec)
+> +		return;
+> +
+> +	pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
+> +	if (PCI_VNDR_HEADER_ID(val) != DW_PCIE_XILINX_MDB_VSEC_HDR_ID ||
+
+pci_find_vsec_capability() already checks that PCI_VNDR_HEADER_ID() ==
+DW_PCIE_XILINX_MDB_VSEC_ID, so there's no need to check this again.
+
+> +	    PCI_VNDR_HEADER_REV(val) != DW_PCIE_XILINX_MDB_VSEC_REV)
+
+I know this is copied from dw_edma_pcie_get_vsec_dma_data(), but I
+think it's a bad idea to check for the exact revision because it
+forces a change to existing, working code if there's ever a device
+with a new revision of this VSEC ID.
+
+If there are new revisions of this VSEC, they should preserve the
+semantics of previous revisions.  If there was a rev 0 of this VSEC, I
+think we should check for PCI_VNDR_HEADER_REV() >= 1.  If rev 1 was
+the first revision, you could skip the check altogether.
+
+If rev 2 *adds* new registers or functionality, we would have to add
+new code to support that, and *that* code should check for
+PCI_VNDR_HEADER_REV() >= 2.
+
+I think the REV and LEN checking in dw_edma_pcie_get_vsec_dma_data()
+is also too aggressive.
+
+>  static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  			      const struct pci_device_id *pid)
+>  {
+> @@ -179,12 +318,34 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	}
+>  
+>  	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+> +	vsec_data->devmem_phys_off = DW_PCIE_AMD_MDB_INVALID_ADDR;
+
+Seems weird to set devmem_phys_off here since it's only used for
+PCI_VENDOR_ID_XILINX.  Couldn't this be done in
+dw_edma_pcie_get_xilinx_dma_data()?
+
+> -	dw_edma_pcie_get_vsec_dma_data(pdev, vsec_data);
+> +	dw_edma_pcie_get_synopsys_dma_data(pdev, vsec_data);
+> +	dw_edma_pcie_get_xilinx_dma_data(pdev, vsec_data);
+> +
+> +	if (pdev->vendor == PCI_VENDOR_ID_XILINX) {
+> +		/*
+> +		 * There is no valid address found for the LL memory
+> +		 * space on the device side.
+> +		 */
+> +		if (vsec_data->devmem_phys_off == DW_PCIE_AMD_MDB_INVALID_ADDR)
+> +			return -ENOMEM;
+> +
+> +		/*
+> +		 * Configure the channel LL and data blocks if number of
+> +		 * channels enabled in VSEC capability are more than the
+> +		 * channels configured in amd_mdb_data.
+> +		 */
+> +		dw_edma_set_chan_region_offset(vsec_data, BAR_2, 0,
+> +					       DW_PCIE_XILINX_LL_OFF_GAP,
+> +					       DW_PCIE_XILINX_LL_SIZE,
+> +					       DW_PCIE_XILINX_DT_OFF_GAP,
+> +					       DW_PCIE_XILINX_DT_SIZE);
+> +	}
+
+This PCI_VENDOR_ID_XILINX block looks like maybe it would make sense
+inside dw_edma_pcie_get_xilinx_dma_data()?  That function could look
+like:
+
+  dw_edma_pcie_get_xilinx_dma_data(...)
+  {
+    if (pdev->vendor != PCI_VENDOR_ID_XILINX)
+      return;
+
+    pdata->devmem_phys_off = DW_PCIE_XILINX_MDB_INVALID_ADDR;
+    ...
+
+>  static const struct pci_device_id dw_edma_pcie_id_table[] = {
+>  	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, &snps_edda_data) },
+> +	{ PCI_VDEVICE(XILINX, PCI_DEVICE_ID_AMD_MDB_B054),
+> +	  (kernel_ulong_t)&amd_mdb_data },
 

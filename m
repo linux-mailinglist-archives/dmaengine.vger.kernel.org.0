@@ -1,220 +1,96 @@
-Return-Path: <dmaengine+bounces-7609-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7610-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D60BDCBA828
-	for <lists+dmaengine@lfdr.de>; Sat, 13 Dec 2025 11:27:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DF14CBB1A5
+	for <lists+dmaengine@lfdr.de>; Sat, 13 Dec 2025 18:00:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4283E30A6016
-	for <lists+dmaengine@lfdr.de>; Sat, 13 Dec 2025 10:27:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9EAA030469BF
+	for <lists+dmaengine@lfdr.de>; Sat, 13 Dec 2025 17:00:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9326D2FB601;
-	Sat, 13 Dec 2025 10:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0C8C2E11C7;
+	Sat, 13 Dec 2025 17:00:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CU2gPfMt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwzsPYFW"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA962FB098
-	for <dmaengine@vger.kernel.org>; Sat, 13 Dec 2025 10:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4861C2D6E6A;
+	Sat, 13 Dec 2025 17:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765621658; cv=none; b=Nexu28I0d+V5ePnuCck0+Bgv6cSRDNnA3vTYKgBmDM9eNo9K1j+NSGDsa314x0FHAcmu2B0iEwk/iqcv9SqxZfp6ZuVXUzoN8WKfH2P3S3bBGYpMtWE3VrLheYjOhPqWdhoxjG+x56s5Cax7J42YMNcFX3XOPL0B1rHJiweB8Ww=
+	t=1765645208; cv=none; b=W7b1aNuskS57WPAkf4xS5lUNUKLS6nr2x17M8UGTC6FaLtqaI5qxCwYM0UsfBqExlraPv6T0Qxwp2t0s8doi629w6jp4c+Nx1vDdrfJhX/2HE+9YrG3kNyi/d5SkgfFVfVXfGmxak6V2pICPtSJZ/cy85WpXzXY3AdlF38enUlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765621658; c=relaxed/simple;
-	bh=Ga+OtgLv4XXqLeYthfHmQsxLqCuqOInMrZnoEq37VXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F7zS13xq4jd1AwWq46Z85//hWesIdmFP1i4VDzXKme8xUv2Tl7t+Yt8YkUBTL12ycUhESprWQA5WJXggl7JN+15yUAHgpC+FbNcZaMLX32nlTZzZyme0YLBPjaTcKrTrYhPkN+hipKNdWWUtg0fDBEVXz4OTWv30C8pB1tPDAXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CU2gPfMt; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-34abc7da414so1240530a91.0
-        for <dmaengine@vger.kernel.org>; Sat, 13 Dec 2025 02:27:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765621656; x=1766226456; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HZe6fXEstv7pAYGHzZssYL65WuRCRc7rX2Oo6ReALjM=;
-        b=CU2gPfMtApkCCGGnWYS5ucB5yVbH400i9b0jQGu0v81FTXUYF14guwqYY/TKJGBfGD
-         MwzjGjOpI7EqpcL1xGAiFGWTPAjUpRLbl9XkWE/Ehk3PZGnNCOXW67BS3FqSs2Q9s5Dq
-         kYRXF39HLagcNchDkfjLSyo5ClyntPo480GXBgUYmNmq0DuNhPKDDMIciOSa4h9NN6mJ
-         4lzcEEF3YnA9wk/TE3MLHs0gSKyCnJk0D0FElKqC9VPa40ZN+1KMHtlPKKt/X7uVp6B0
-         Sc/Ruau0iygD2vk3zOxOqBIUYGYukNHgArlKiVe1QkWK9zb1T09M6gw3+yuCSq8wsvs6
-         Mz+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765621656; x=1766226456;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HZe6fXEstv7pAYGHzZssYL65WuRCRc7rX2Oo6ReALjM=;
-        b=hOYdBV3RCY0vX7kFS2lWRz4edpAD1Jne8CAjIiJR8IFCWPCR/9/e/dEy98KqioZh59
-         Wz0wBEYy9XRH+N6uJA0pv+rn8vJ+Xgsl/l6gmIae4vuX5AzU/zZMldcf8v70VmudbFp2
-         nvcM5QAZMWPQTw8BcP9Rk3RDLXWoZRnszjVLX6NGiQitBJ4lFRoTG9/rMmb701JdQI3M
-         u0CNS5PWyDDfPfGtDf4tPzvw7gBq72bAwkdVvCMTJFu9Xs+1LMtC0lBqrTtVsWXhVaiE
-         nbOgzZSiJM/kU15pYCvng/pmVAr7AXvcAN4kf01iBoUqnYRCxTUJ9KOtJOamDHudd81g
-         gVaw==
-X-Forwarded-Encrypted: i=1; AJvYcCWS7tgVLXfHc5kRbAClQgf04hW7dWmLYyiKFCXyRMHaT5TH3MsDls4OqGJUY7c8zYtXG6lznxgMvzo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzo0mC4rvyHWkU7znbNKgkWo2SzbvH2vprHo9n/HN0apGM4+FOE
-	img4PVK/9xcBpfchd3ir8S24sjqbvu4r+iP4AkevEzQX8NJwgWr6Qlwu
-X-Gm-Gg: AY/fxX6obvrUySBLb+hHj8NywpPFWULPkLJvaTglSwnWbrLCpyUHDPyCC+PdnIPi34M
-	88WWvjh6/X3Z7TLo8+u+R7Y7D3hsRAvsYUINSM7w1SHZZZKu+3MFKFrxzw3YAKJFVQ5xyQQ2nXm
-	cnV9YHExWPRxqzbF8ZWsoNnTM23WxsGVZysQcFodceTpDASKjpjD+9S/CjSdxbSjfn31JmTV+J2
-	fDSIxKZiai/Ki1PWHhr8WrWTNlLuXCP6cg7D+ZTiYxkN2ATv3pcI9OaM18CdkNIshPwFdtHzhNU
-	KgYEOJ8ooj9ObcHyBA0lXRp6afXbD1XX9nTdechGdP4OBr+hbu8La/lpwKXwBxvBldMGLcTzuPU
-	yaHDGWy7dSOnbZB1TZfgIRCK4z6g9ZxxMc5KhkzqgESls8uZW3Xi6twCAZHds/hVkqOa0CBZgAR
-	/2VESzypn/TA==
-X-Google-Smtp-Source: AGHT+IEgdWNaLErL+Bv/4TEGb6my3L3COg4e3V2Q69toNrJl2ns4dPdMhDJIDV+5TWNQeiqW0B6fPQ==
-X-Received: by 2002:a05:7023:a8e:b0:11b:c0db:a5ea with SMTP id a92af1059eb24-11f34c4ef0cmr3404454c88.26.1765621655966;
-        Sat, 13 Dec 2025 02:27:35 -0800 (PST)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f2e2ff624sm26725752c88.12.2025.12.13.02.27.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Dec 2025 02:27:35 -0800 (PST)
-Date: Sat, 13 Dec 2025 18:26:35 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Samuel Holland <samuel.holland@sifive.com>, 
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: "Anton D . Stavinskii" <stavinsky@gmail.com>, 
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, sophgo@lists.linux.dev, 
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Chen Wang <unicorn_wang@outlook.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Longbin Li <looong.bin@gmail.com>, Yixun Lan <dlan@gentoo.org>, Ze Huang <huangze@whut.edu.cn>
-Subject: Re: [PATCH 2/3] dmaengine: dw-axi-dmac: Add support for CV1800B DMA
-Message-ID: <aT0_KFNqDraRodyG@inochi.infowork>
-References: <20251212020504.915616-1-inochiama@gmail.com>
- <20251212020504.915616-3-inochiama@gmail.com>
- <8a3d3db6-6614-42f7-a271-e6188391daf6@sifive.com>
+	s=arc-20240116; t=1765645208; c=relaxed/simple;
+	bh=VzKBYcoy1QLzHCut6+iKlDtsmmJak9U5g55kExj/JFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SDuFPXgszTYzVwbJMXXIUOF45dM0q52mPtJZlH0Lxjt6kKDFyYsjakf1DV6Hz+5iuwYuwNJNxQqEJE0KG0DSdLuL2TNHUMF3KKDaeewdXB6h/fehxKMZYBet36eZlgDctSWN+nzypdJNHpI1bB5I9LBxG6T1gkkstjRq3i5hobU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwzsPYFW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96631C4CEF7;
+	Sat, 13 Dec 2025 16:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765645207;
+	bh=VzKBYcoy1QLzHCut6+iKlDtsmmJak9U5g55kExj/JFI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RwzsPYFWZct3fYDaSoH2MO8Pr6OmUerebApwD55CqIDmIjhoGYii118YuorwNlvqq
+	 ScAULQd/58dFFaqTTbGQluGmGyWmjP197/lR0mEIj9eB+4T931oqm6bV+zZ3Dtp3UB
+	 /3rEA58xa9OtbeLC8Sdoct2UoObIYuhaP3mRahKBMFr5MyUfu8A/UkiQKKb0hJJ052
+	 XpUK03v0ZQVQ46uHO5Tv0MUUttfEsK/oQCNHvdjrmUt7X7j38m0kpVAalfiSZ9oRUU
+	 sWgR/3U8XMRryBhIuoNjoTDFmxZ+oM6dTz94zalzS6WErXPW7Vhg3NOCfVaTboJchh
+	 qJxB4vBT3+yhg==
+Date: Sat, 13 Dec 2025 16:59:49 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Michal Simek
+ <michal.simek@amd.com>, Vinod Koul <vkoul@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, Yong Wu <yong.wu@mediatek.com>, Peter Rosin
+ <peda@axentia.se>, Linus Walleij <linusw@kernel.org>, Chen-Yu Tsai
+ <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel
+ Holland <samuel@sholland.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
+ <festevam@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+ <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ dmaengine@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-iio@vger.kernel.org, iommu@lists.linux.dev,
+ linux-gpio@vger.kernel.org, linux-sunxi@lists.linux.dev,
+ imx@lists.linux.dev, linux-sound@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Remove unused includes
+Message-ID: <20251213165949.4b51f7cb@jic23-huawei>
+In-Reply-To: <20251212231203.727227-1-robh@kernel.org>
+References: <20251212231203.727227-1-robh@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8a3d3db6-6614-42f7-a271-e6188391daf6@sifive.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Dec 13, 2025 at 04:55:06PM +0900, Samuel Holland wrote:
-> Hi Inochi,
-> 
-> On 2025-12-12 11:05 AM, Inochi Amaoto wrote:
-> > As the DMA controller on Sophgo CV1800 series SoC only has 8 channels,
-> > the SoC provides a dma multiplexer to reuse the DMA channel. However,
-> > the dma multiplexer also controlls the DMA interrupt multiplexer, which
-> 
-> typo: controls
-> 
+On Fri, 12 Dec 2025 17:11:52 -0600
+"Rob Herring (Arm)" <robh@kernel.org> wrote:
 
-Thanks.
-
-> > means that the dma multiplexer needs to know the channel number.
-> > 
-> > Allow the driver to use DMA phandle args as the channel number, so the
-> > DMA multiplexer can route the DMA interrupt correctly.
-> > 
-> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> > ---
-> >  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 23 ++++++++++++++++---
-> >  drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  1 +
-> >  2 files changed, 21 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> > index b23536645ff7..62bf0d0dc354 100644
-> > --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> > +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> > @@ -50,6 +50,7 @@
-> >  #define AXI_DMA_FLAG_HAS_APB_REGS	BIT(0)
-> >  #define AXI_DMA_FLAG_HAS_RESETS		BIT(1)
-> >  #define AXI_DMA_FLAG_USE_CFG2		BIT(2)
-> > +#define AXI_DMA_FLAG_HANDSHAKE_AS_CHAN	BIT(3)
-> > 
-> >  static inline void
-> >  axi_dma_iowrite32(struct axi_dma_chip *chip, u32 reg, u32 val)
-> > @@ -1361,15 +1362,26 @@ static struct dma_chan *dw_axi_dma_of_xlate(struct of_phandle_args *dma_spec,
-> >  					    struct of_dma *ofdma)
-> >  {
-> >  	struct dw_axi_dma *dw = ofdma->of_dma_data;
-> > +	unsigned int handshake = dma_spec->args[0];
-> >  	struct axi_dma_chan *chan;
-> >  	struct dma_chan *dchan;
-> > 
-> > -	dchan = dma_get_any_slave_channel(&dw->dma);
-> > +	if (dw->hdata->use_handshake_as_channel_number) {
-> > +		if (handshake >= dw->hdata->nr_channels)
-> > +			return NULL;
-> > +
-> > +		chan = &dw->chan[handshake];
-> > +		dchan = dma_get_slave_channel(&chan->vc.chan);
-> > +	} else {
-> > +		dchan = dma_get_any_slave_channel(&dw->dma);
-> > +	}
-> > +
-> >  	if (!dchan)
-> >  		return NULL;
-> > 
-> > -	chan = dchan_to_axi_dma_chan(dchan);
-> > -	chan->hw_handshake_num = dma_spec->args[0];
-> > +	if (!chan)
+> Remove includes which are not referenced by either DTS files or drivers.
 > 
-> When use_handshake_as_channel_number is false, chan is uninitialized here.
+> There's a few more which are new, so they are excluded for now.
 > 
-> Regards,
-> Samuel
-> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Thanks, I also noticed this, will fixed in the V2.
+Acked-by: Jonathan Cameron <jonathan.cameron@huawei.com> #for-iio
 
-Regards,
-Inochi
+Ideally we'll get a QC ack on those as well.
 
-> > +		chan = dchan_to_axi_dma_chan(dchan);
-> > +	chan->hw_handshake_num = handshake;
-> >  	return dchan;
-> >  }
-> > 
-> > @@ -1508,6 +1520,8 @@ static int dw_probe(struct platform_device *pdev)
-> >  			return ret;
-> >  	}
-> > 
-> > +	chip->dw->hdata->use_handshake_as_channel_number = !!(flags & AXI_DMA_FLAG_HANDSHAKE_AS_CHAN);
-> > +
-> >  	chip->dw->hdata->use_cfg2 = !!(flags & AXI_DMA_FLAG_USE_CFG2);
-> > 
-> >  	chip->core_clk = devm_clk_get(chip->dev, "core-clk");
-> > @@ -1663,6 +1677,9 @@ static const struct of_device_id dw_dma_of_id_table[] = {
-> >  	}, {
-> >  		.compatible = "intel,kmb-axi-dma",
-> >  		.data = (void *)AXI_DMA_FLAG_HAS_APB_REGS,
-> > +	}, {
-> > +		.compatible = "sophgo,cv1800b-axi-dma",
-> > +		.data = (void *)AXI_DMA_FLAG_HANDSHAKE_AS_CHAN,
-> >  	}, {
-> >  		.compatible = "starfive,jh7110-axi-dma",
-> >  		.data = (void *)(AXI_DMA_FLAG_HAS_RESETS | AXI_DMA_FLAG_USE_CFG2),
-> > diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-> > index b842e6a8d90d..67cc199e24d1 100644
-> > --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-> > +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-> > @@ -34,6 +34,7 @@ struct dw_axi_dma_hcfg {
-> >  	bool	reg_map_8_channels;
-> >  	bool	restrict_axi_burst_len;
-> >  	bool	use_cfg2;
-> > +	bool	use_handshake_as_channel_number;
-> >  };
-> > 
-> >  struct axi_dma_chan {
-> > --
-> > 2.52.0
-> > 
-> > 
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
+Jonathan
+>  .../dt-bindings/iio/qcom,spmi-adc7-pmr735b.h  |  30 --
+>  .../dt-bindings/iio/qcom,spmi-adc7-smb139x.h  |  19 --
 

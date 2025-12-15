@@ -1,51 +1,52 @@
-Return-Path: <dmaengine+bounces-7637-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7639-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38799CBF744
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F01CDCBF749
 	for <lists+dmaengine@lfdr.de>; Mon, 15 Dec 2025 19:40:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E2016300661A
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Dec 2025 18:40:52 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1D381300094F
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Dec 2025 18:40:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F2B5258EE9;
-	Mon, 15 Dec 2025 18:40:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 223313271E2;
+	Mon, 15 Dec 2025 18:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="mCEEkuDl"
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="JwgjwZJC"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16CA20DD48
-	for <dmaengine@vger.kernel.org>; Mon, 15 Dec 2025 18:40:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FCB3271E7
+	for <dmaengine@vger.kernel.org>; Mon, 15 Dec 2025 18:40:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765824051; cv=none; b=jKbojduEtZGe83dV08QN2573X6VDeuD74emLNCcOEyAyRx3YQ0aclwII84U64NZV4l1HKSaDPG5xap6IiFgkvePrhVXng+QmEqvZhs9btF4Wc6SjCs7Eso5v+5Kde0bBxK2OFPLIa3ODP3JQkKFQTr14FT7Zo8e5Mp+34ZQkr3s=
+	t=1765824057; cv=none; b=e7D9NqB4zgrsiZ1txZnPY2lP3iRym9Q8CAx2ZAaJ6RywpD8byN91WO6C/TtKBYpkJ+3MdD7tJS00wuDCauzvwEaMQdZ5evGhcVAboYCytKTLxU11Hf5TPisTbTdyAWYnq97jr+8xPTMzLmqv5cNRe2FoIzLT9a/WewsLi3mwuvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765824051; c=relaxed/simple;
-	bh=IjaGKL39cT69lYkrweDPDdRyvyMyN9uV0+51S/3OK5A=;
-	h=From:To:Cc:Date:Message-ID:MIME-Version:Subject; b=XLh0o0COxcu6oOBgpt+bpDwdRJ+3Adan+8Cky69ZpRmbn3Lv8Vb5kmSRpyrmyUTl7JGRUlz033Rd+HzVPEzmKaty7dZqrgfkc4x1pj8Ee4mwhQIw6gnnfN+WywQMgoxIlK6KLfjY0mdTEHy7wfWixrpuHN1GMM+1gZSmrrVWi7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=mCEEkuDl; arc=none smtp.client-ip=204.191.154.188
+	s=arc-20240116; t=1765824057; c=relaxed/simple;
+	bh=VWAI2Ez0kyZFfTAmr6t37NhaWqm802zVvgi2dBS3UyI=;
+	h=From:To:Cc:Date:Message-ID:In-Reply-To:References:MIME-Version:
+	 Subject; b=bIvQ05nwk9GwZp04Y942SNzxTDdQYIBU0jOwtEpzHUj90aQmVffIqhBq0VFMZcgr/+rHJuvdTxrmXuuy4jvszGVe+CqL7N3uDDZfvAr8k8sEudvaDScTvbwPpGR6M74OTob4+e+QZ4eQ0JMIGkRoMU8ioJ7u4J3Wfd/8hNtrnKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=JwgjwZJC; arc=none smtp.client-ip=204.191.154.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-ID:Date:Cc:To:From
-	:references:content-disposition:in-reply-to;
-	bh=sSEs18lv9JZXbUAGEJkICiVGcv2WeMt70tCwXrmYCcY=; b=mCEEkuDlYS4aMVFZq/AgOPSitk
-	neG9/1GrxH+XWevcaWmwQaQDJa0kV+9KAV405L+nqyv8i3kRuq5TRNqyfsVEXX32EpcbQc8tNFK7v
-	hqZsSpdnCvT155NOFA70lCttvFdaHe+t/3Kg3lY50q4VFjbxxfDF0KOE4NPlcPGEGr0rzjvtWv4if
-	XOMdGxn/x+tlJWDbDpw9w/j3J+2dTUTJlSAvsXESdW5eeknPNL1lYDAYPCpUWCouQOpAeE2RqRiY9
-	LsLDT8jkq/apgxt5XIknmkjcCbOQIbd4bJw2MxsMtbkJT9fg2aK5nkk0YNYeCMRDyQCnDFAyQFuRn
-	UT0UJl1w==;
+	d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Cc:To:From:content-disposition;
+	bh=aE7wrKnJZ2HI5JjehI1+4tKFa0x6OaH0qb/SH4obmRc=; b=JwgjwZJClN7Ydcq5PF0PJlTc4M
+	mwNSiVO2laBVapfQuHG5zO7NpO8CpsnwFhAj44kQgbxVKX1I9q8nlAUCbWxZAtT6lCXvJUONVm6Wq
+	mH83v/wqKqXm+thVhinXFypAo7gBQMiMIYoZw7c6zGKssu62SEpkdVcQTEyJ8/zqwFiRQJX8b2sGz
+	bkNSyGxITCCV5cZHwx4Gjtksntap9C1PWFgZNXn2F8CZGum62EohuxF6D52Skt+N8wt+SJYJBDU2+
+	JaUo2YeOEOVvR6PJFpiiWkGl/ZzEEr/TT5djjbZ5Ajl00dx/3EJHGoxXlw1mspa6ndiv8BYL9CnAX
+	/9KeC8Tg==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
 	by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.98.2)
 	(envelope-from <gunthorp@deltatee.com>)
-	id 1vVD84-00000003Fw1-1upJ;
-	Mon, 15 Dec 2025 11:17:07 -0700
+	id 1vVD89-00000003Fw2-0rlL;
+	Mon, 15 Dec 2025 11:17:10 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.98.2)
 	(envelope-from <gunthorp@deltatee.com>)
-	id 1vVD7s-000000000gK-43ob;
+	id 1vVD7t-000000000gN-0VQX;
 	Mon, 15 Dec 2025 11:16:53 -0700
 From: Logan Gunthorpe <logang@deltatee.com>
 To: dmaengine@vger.kernel.org,
@@ -54,10 +55,14 @@ Cc: Kelvin Cao <kelvin.cao@microchip.com>,
 	George Ge <George.Ge@microchip.com>,
 	Christoph Hellwig <hch@infradead.org>,
 	Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+	George Ge <george.ge@microchip.com>,
+	Christoph Hellwig <hch@lst.de>,
 	Logan Gunthorpe <logang@deltatee.com>
-Date: Mon, 15 Dec 2025 11:16:46 -0700
-Message-ID: <20251215181649.2605-1-logang@deltatee.com>
+Date: Mon, 15 Dec 2025 11:16:47 -0700
+Message-ID: <20251215181649.2605-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20251215181649.2605-1-logang@deltatee.com>
+References: <20251215181649.2605-1-logang@deltatee.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,257 +71,309 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: dmaengine@vger.kernel.org, vkoul@kernel.org, kelvin.cao@microchip.com, George.Ge@microchip.com, hch@infradead.org, christophe.jaillet@wanadoo.fr, logang@deltatee.com
+X-SA-Exim-Rcpt-To: dmaengine@vger.kernel.org, vkoul@kernel.org, hch@infradead.org, christophe.jaillet@wanadoo.fr, kelvin.cao@microchip.com, George.Ge@microchip.com, george.ge@microchip.com, hch@lst.de, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Level: 
-Subject: [PATCH v11 0/3] Switchtec Switch DMA Engine Driver
+Subject: [PATCH v11 1/3] dmaengine: switchtec-dma: Introduce Switchtec DMA engine skeleton
 X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-This is v11 of the Switchtec Switch DMA Engine Driver. We sent v10 in the
-previous cycle with almost no feedback.
+From: Kelvin Cao <kelvin.cao@microchip.com>
 
-To reiterate the response to the feedback we keep getting: virt-dma in
-not appropriate for this driver because the hardware has a submission
-queue itself. There's no sense adding a software queue when entries can
-just be placed on the hardware queue. This is the same as similar dma
-engine drivers which came before it: ioat and plx.
+Some Switchtec Switches can expose DMA engines via extra PCI functions
+on the upstream ports. At most one such function can be supported on
+each upstream port. Each function can have one or more DMA channels.
 
-The patchset has been rebased on v6.19-rc1.
+This patch is just the core PCI driver skeleton and dma
+engine registration.
 
-Hoping to get this reviewed and in this cycle.
-
-Thanks,
-
-Logan
-
---
-
-v11 changes:
- - Rebased onto v6.19-rc1
-
-v10 changes:
- - Rebased onto v6.18-rc1
- - Some systems were seeing the warning message: "WARN: Device release
-   is not defined so it is not safe to unbind this driver while in use"
-   Adjusted the copy_align parameter to align to 8 bytes to fix this
-   issue.
-
-v9 changes:
- - Rebase onto v6.17-rc2
- - Fix multiple RCU derference warnings
- - Fix the spinlocks being used before they were initialized causing
-   an INFO message when built with lockdep enabled. (noticed by Maciej
-   Grochowski)
- - Add additional entries to the PCI table which use an EFAR vendor ID.
- - Remove some enums that were not used by the code
- - Update copyright date to 2025 (as requested by Vinod)
- - Drop the default values enum and just set the defaults
-   directly. (to address some confusing code noticed by Vinod)
- - Use GENMASK and FIELD_GET/PREP macros instead of direct bit
-   operations (suggested by Vinod)
- - Use lower case hex numbers (requested by Vinod)
- - Don't mangle the return value of readl_poll_timeout_atomic()
-   and return it's error directly (per Vinod)
- - Split the patch into a couple patches (per Vinod)
- - Fix some missing new line characters on numerous printks
- - Rename switchtec_dma_process_desc() function to
-   switchtec_dma_cleanup_completed() for clarity.
- - Open code a few short, unnecessary, helper functions.
- - Drop the tasklet used for the chan_status interrupt. It is only
-   really used when the device is paused so performance is not
-   critical and thus it can be a threaded interrupt instead of
-   a tasklet.
- - Fixed an uninitialized symbol ('i') error (caught by Dan Carpenter)
-
-v8 changes:
- - Rebase onto kernel 6.8
- - Add Gen5 device IDs
-
-v7 changes:
- - Remove implementation of device_prep_dma_imm_data
-
-v6 changes:
- - Fix './scripts/checkpatch.pl --strict' warnings
- - Use readl_poll_timeout_atomic for status checking with timeout
- - Wrap enable_channel/disable_channel over channel_op
- - Use flag GFP_NOWAIT for mem allocation in switchtec_dma_alloc_desc
- - Use proper comment for macro SWITCHTEC_DMA_DEVICE
-
-v5 changes:
- - Remove unnecessary structure modifier '__packed'
- - Remove the use of union of identical data types in a structure
- - Remove unnecessary call sites of synchronize_irq
- - Remove unnecessary rcu lock for pdev during device initialization
- - Use pci_request_irq/pci_free_irq to replace request_irq/free_irq
- - Add mailing list info in file MAINTAINERS
- - Miscellaneous cleanups
-
-v4 changes:
- - Sort driver entry in drivers/dma/Kconfig and drivers/dma/Makefile
-   alphabetically
- - Fix miscellaneous style issues
- - Correct year in copyright
- - Add function and call sites to flush PCIe MMIO Write
- - Add a helper to wait for status register update
- - Move synchronize_irq out of RCU critical section
- - Remove unnecessary endianness conversion for register access
- - Remove some unused code
- - Use pci_enable_device/pci_request_mem_regions instead of
-   pcim_enable_device/pcim_iomap_regions to make the resource lifetime
-   management more understandable
- - Use offset macros instead of memory mapped structures when accessing
-   some registers
- - Remove the attempt to set DMA mask with smaller number as it would
-   never succeed if the first attempt with bigger number fails
- - Use PCI_VENDOR_ID_MICROSEMI in include/linux/pci_ids.h as device ID
-
-v3 changes:
- - Remove some unnecessary memory/variable zeroing
-
-v2 changes:
- - Move put_device(dma_dev->dev) before kfree(swdma_dev) as dma_dev is
-   part of swdma_dev.
- - Convert dev_ print calls to pci_ print calls to make the use of
-   print functions consistent within switchtec_dma_create().
- - Remove some dev_ print calls, which use device pointer as handles,
-   to ensure there's no reference issue when the device is unbound.
- - Remove unused .driver_data from pci_device_id structure.
-
-v1:
-  The following patch implements a DMAEngine driver to use the DMA
-  controller in Switchtec PSX/PFX switchtes. The DMA controller
-  appears as a PCI function on the switch upstream port. The DMA
-  function can include one or more DMA channels.
- Switchtec Switch DMA Engine Driver
-
-This is v9 of the Switchtec Switch DMA Engine Driver. It's been over a
-year since the last posting, appologies for that. Kelvin has asked
-me to take over getting the work upstream.
-
-I reviewed the feedback and addressed most of it in this posting. I've
-also caught additional issues during my testing.
-
-The remaining disagreement is on how the completions are cleaned up. I
-maintain[1] that it's best to clean them up in the status() call back
-in addition to the interrupt as this allows for transfers that don't
-use interrupts. Vinod has argued that this is wrong and the other
-drivers that do this should be changed as well (IOAT and PLX). In this
-poisting, I have left it the original way with cleanups in the status()
-call back.
-
-This patch set is based on v6.17-rc2.
-
-Thanks,
-
-Logan
-
-[1] https://lore.kernel.org/r/e759d483-e303-421a-b674-72fd9121750d@deltatee.com
-
---
-
-v9 changes:
- - Rebase onto v6.17-rc2
- - Fix multiple RCU derference warnings
- - Fix the spinlocks being used before they were initialized causing
-   an INFO message when built with lockdep enabled. (noticed by Maciej
-   Grochowski)
- - Add additional entries to the PCI table which use an EFAR vendor ID.
- - Remove some enums that were not used by the code
- - Update copyright date to 2025 (as requested by Vinod)
- - Drop the default values enum and just set the defaults
-   directly. (to address some confusing code noticed by Vinod)
- - Use GENMASK and FIELD_GET/PREP macros instead of direct bit
-   operations (suggested by Vinod)
- - Use lower case hex numbers (requested by Vinod)
- - Don't mangle the return value of readl_poll_timeout_atomic()
-   and return it's error directly (per Vinod)
- - Split the patch into a couple patches (per Vinod)
- - Fix some missing new line characters on numerous printks
- - Rename switchtec_dma_process_desc() function to
-   switchtec_dma_cleanup_completed() for clarity.
- - Open code a few short, unnecessary, helper functions.
- - Drop the tasklet used for the chan_status interrupt. It is only
-   really used when the device is paused so performance is not
-   critical and thus it can be a threaded interrupt instead of
-   a tasklet.
- - Fixed an uninitialized symbol ('i') error (caught by Dan Carpenter)
-
-v8 changes:
- - Rebase onto kernel 6.8
- - Add Gen5 device IDs
-
-v7 changes:
- - Remove implementation of device_prep_dma_imm_data
-
-v6 changes:
- - Fix './scripts/checkpatch.pl --strict' warnings
- - Use readl_poll_timeout_atomic for status checking with timeout
- - Wrap enable_channel/disable_channel over channel_op
- - Use flag GFP_NOWAIT for mem allocation in switchtec_dma_alloc_desc
- - Use proper comment for macro SWITCHTEC_DMA_DEVICE
-
-v5 changes:
- - Remove unnecessary structure modifier '__packed'
- - Remove the use of union of identical data types in a structure
- - Remove unnecessary call sites of synchronize_irq
- - Remove unnecessary rcu lock for pdev during device initialization
- - Use pci_request_irq/pci_free_irq to replace request_irq/free_irq
- - Add mailing list info in file MAINTAINERS
- - Miscellaneous cleanups
-
-v4 changes:
- - Sort driver entry in drivers/dma/Kconfig and drivers/dma/Makefile
-   alphabetically
- - Fix miscellaneous style issues
- - Correct year in copyright
- - Add function and call sites to flush PCIe MMIO Write
- - Add a helper to wait for status register update
- - Move synchronize_irq out of RCU critical section
- - Remove unnecessary endianness conversion for register access
- - Remove some unused code
- - Use pci_enable_device/pci_request_mem_regions instead of
-   pcim_enable_device/pcim_iomap_regions to make the resource lifetime
-   management more understandable
- - Use offset macros instead of memory mapped structures when accessing
-   some registers
- - Remove the attempt to set DMA mask with smaller number as it would
-   never succeed if the first attempt with bigger number fails
- - Use PCI_VENDOR_ID_MICROSEMI in include/linux/pci_ids.h as device ID
-
-v3 changes:
- - Remove some unnecessary memory/variable zeroing
-
-v2 changes:
- - Move put_device(dma_dev->dev) before kfree(swdma_dev) as dma_dev is
-   part of swdma_dev.
- - Convert dev_ print calls to pci_ print calls to make the use of
-   print functions consistent within switchtec_dma_create().
- - Remove some dev_ print calls, which use device pointer as handles,
-   to ensure there's no reference issue when the device is unbound.
- - Remove unused .driver_data from pci_device_id structure.
-
-v1:
-  The following patch implements a DMAEngine driver to use the DMA
-  controller in Switchtec PSX/PFX switchtes. The DMA controller
-  appears as a PCI function on the switch upstream port. The DMA
-  function can include one or more DMA channels.
-
-Kelvin Cao (3):
-  dmaengine: switchtec-dma: Introduce Switchtec DMA engine skeleton
-  dmaengine: switchtec-dma: Implement hardware initialization and
-    cleanup
-  dmaengine: switchtec-dma: Implement descriptor submission
-
- MAINTAINERS                 |    7 +
- drivers/dma/Kconfig         |    9 +
- drivers/dma/Makefile        |    1 +
- drivers/dma/switchtec_dma.c | 1456 +++++++++++++++++++++++++++++++++++
- 4 files changed, 1473 insertions(+)
+Signed-off-by: Kelvin Cao <kelvin.cao@microchip.com>
+Co-developed-by: George Ge <george.ge@microchip.com>
+Signed-off-by: George Ge <george.ge@microchip.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ MAINTAINERS                 |   7 ++
+ drivers/dma/Kconfig         |   9 ++
+ drivers/dma/Makefile        |   1 +
+ drivers/dma/switchtec_dma.c | 218 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 235 insertions(+)
  create mode 100644 drivers/dma/switchtec_dma.c
 
-
-base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5b11839cba9d..8653502ae275 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -25209,6 +25209,13 @@ S:	Supported
+ F:	include/net/switchdev.h
+ F:	net/switchdev/
+ 
++SWITCHTEC DMA DRIVER
++M:	Kelvin Cao <kelvin.cao@microchip.com>
++M:	Logan Gunthorpe <logang@deltatee.com>
++L:	dmaengine@vger.kernel.org
++S:	Maintained
++F:	drivers/dma/switchtec_dma.c
++
+ SY8106A REGULATOR DRIVER
+ M:	Icenowy Zheng <icenowy@aosc.io>
+ S:	Maintained
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 8bb0a119ecd4..85296c5cead9 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -610,6 +610,15 @@ config SPRD_DMA
+ 	help
+ 	  Enable support for the on-chip DMA controller on Spreadtrum platform.
+ 
++config SWITCHTEC_DMA
++	tristate "Switchtec PSX/PFX Switch DMA Engine Support"
++	depends on PCI
++	select DMA_ENGINE
++	help
++	  Some Switchtec PSX/PFX PCIe Switches support additional DMA engines.
++	  These are exposed via an extra function on the switch's upstream
++	  port.
++
+ config TXX9_DMAC
+ 	tristate "Toshiba TXx9 SoC DMA support"
+ 	depends on MACH_TX49XX
+diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+index a54d7688392b..df566c4958b6 100644
+--- a/drivers/dma/Makefile
++++ b/drivers/dma/Makefile
+@@ -74,6 +74,7 @@ obj-$(CONFIG_SF_PDMA) += sf-pdma/
+ obj-$(CONFIG_SOPHGO_CV1800B_DMAMUX) += cv1800b-dmamux.o
+ obj-$(CONFIG_STE_DMA40) += ste_dma40.o ste_dma40_ll.o
+ obj-$(CONFIG_SPRD_DMA) += sprd-dma.o
++obj-$(CONFIG_SWITCHTEC_DMA) += switchtec_dma.o
+ obj-$(CONFIG_TXX9_DMAC) += txx9dmac.o
+ obj-$(CONFIG_TEGRA186_GPC_DMA) += tegra186-gpc-dma.o
+ obj-$(CONFIG_TEGRA20_APB_DMA) += tegra20-apb-dma.o
+diff --git a/drivers/dma/switchtec_dma.c b/drivers/dma/switchtec_dma.c
+new file mode 100644
+index 000000000000..f3c366936684
+--- /dev/null
++++ b/drivers/dma/switchtec_dma.c
+@@ -0,0 +1,218 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Microchip Switchtec(tm) DMA Controller Driver
++ * Copyright (c) 2025, Kelvin Cao <kelvin.cao@microchip.com>
++ * Copyright (c) 2025, Microchip Corporation
++ */
++
++#include <linux/bitfield.h>
++#include <linux/circ_buf.h>
++#include <linux/dmaengine.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/delay.h>
++#include <linux/iopoll.h>
++
++#include "dmaengine.h"
++
++MODULE_DESCRIPTION("Switchtec PCIe Switch DMA Engine");
++MODULE_VERSION("0.1");
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Kelvin Cao");
++
++struct switchtec_dma_dev {
++	struct dma_device dma_dev;
++	struct pci_dev __rcu *pdev;
++	void __iomem *bar;
++};
++
++static void switchtec_dma_release(struct dma_device *dma_dev)
++{
++	struct switchtec_dma_dev *swdma_dev =
++		container_of(dma_dev, struct switchtec_dma_dev, dma_dev);
++
++	put_device(dma_dev->dev);
++	kfree(swdma_dev);
++}
++
++static int switchtec_dma_create(struct pci_dev *pdev)
++{
++	struct switchtec_dma_dev *swdma_dev;
++	struct dma_device *dma;
++	struct dma_chan *chan;
++	int nr_vecs, rc;
++
++	/*
++	 * Create the switchtec dma device
++	 */
++	swdma_dev = kzalloc(sizeof(*swdma_dev), GFP_KERNEL);
++	if (!swdma_dev)
++		return -ENOMEM;
++
++	swdma_dev->bar = ioremap(pci_resource_start(pdev, 0),
++				 pci_resource_len(pdev, 0));
++
++	pci_info(pdev, "Switchtec PSX/PFX DMA EP\n");
++
++	RCU_INIT_POINTER(swdma_dev->pdev, pdev);
++
++	nr_vecs = pci_msix_vec_count(pdev);
++	rc = pci_alloc_irq_vectors(pdev, nr_vecs, nr_vecs, PCI_IRQ_MSIX);
++	if (rc < 0)
++		goto err_exit;
++
++	dma = &swdma_dev->dma_dev;
++	dma->copy_align = DMAENGINE_ALIGN_8_BYTES;
++	dma->dev = get_device(&pdev->dev);
++
++	dma->device_release = switchtec_dma_release;
++
++	rc = dma_async_device_register(dma);
++	if (rc) {
++		pci_err(pdev, "Failed to register dma device: %d\n", rc);
++		goto err_exit;
++	}
++
++	list_for_each_entry(chan, &dma->channels, device_node)
++		pci_info(pdev, "%s\n", dma_chan_name(chan));
++
++	pci_set_drvdata(pdev, swdma_dev);
++
++	return 0;
++
++err_exit:
++	iounmap(swdma_dev->bar);
++	kfree(swdma_dev);
++	return rc;
++}
++
++static int switchtec_dma_probe(struct pci_dev *pdev,
++			       const struct pci_device_id *id)
++{
++	int rc;
++
++	rc = pci_enable_device(pdev);
++	if (rc)
++		return rc;
++
++	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	if (rc)
++		goto err_disable;
++
++	rc = pci_request_mem_regions(pdev, KBUILD_MODNAME);
++	if (rc)
++		goto err_disable;
++
++	pci_set_master(pdev);
++
++	rc = switchtec_dma_create(pdev);
++	if (rc)
++		goto err_free;
++
++	pci_info(pdev, "Switchtec DMA Channels Registered\n");
++
++	return 0;
++
++err_free:
++	pci_free_irq_vectors(pdev);
++	pci_release_mem_regions(pdev);
++
++err_disable:
++	pci_disable_device(pdev);
++
++	return rc;
++}
++
++static void switchtec_dma_remove(struct pci_dev *pdev)
++{
++	struct switchtec_dma_dev *swdma_dev = pci_get_drvdata(pdev);
++
++	rcu_assign_pointer(swdma_dev->pdev, NULL);
++	synchronize_rcu();
++
++	pci_free_irq_vectors(pdev);
++
++	dma_async_device_unregister(&swdma_dev->dma_dev);
++
++	iounmap(swdma_dev->bar);
++	pci_release_mem_regions(pdev);
++	pci_disable_device(pdev);
++
++	pci_info(pdev, "Switchtec DMA Channels Unregistered\n");
++}
++
++/*
++ * Also use the class code to identify the devices, as some of the
++ * device IDs are also used for other devices with other classes by
++ * Microsemi.
++ */
++#define SW_ID(vendor_id, device_id) \
++	{ \
++		.vendor     = vendor_id, \
++		.device     = device_id, \
++		.subvendor  = PCI_ANY_ID, \
++		.subdevice  = PCI_ANY_ID, \
++		.class      = PCI_CLASS_SYSTEM_OTHER << 8, \
++		.class_mask = 0xffffffff, \
++	}
++
++static const struct pci_device_id switchtec_dma_pci_tbl[] = {
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4000), /* PFX 100XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4084), /* PFX 84XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4068), /* PFX 68XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4052), /* PFX 52XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4036), /* PFX 36XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4028), /* PFX 28XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4100), /* PSX 100XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4184), /* PSX 84XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4168), /* PSX 68XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4152), /* PSX 52XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4136), /* PSX 36XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4128), /* PSX 28XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4352), /* PFXA 52XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4336), /* PFXA 36XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4328), /* PFXA 28XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4452), /* PSXA 52XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4436), /* PSXA 36XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x4428), /* PSXA 28XG4 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5000), /* PFX 100XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5084), /* PFX 84XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5068), /* PFX 68XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5052), /* PFX 52XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5036), /* PFX 36XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5028), /* PFX 28XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5100), /* PSX 100XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5184), /* PSX 84XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5168), /* PSX 68XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5152), /* PSX 52XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5136), /* PSX 36XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5128), /* PSX 28XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5300), /* PFXA 100XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5384), /* PFXA 84XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5368), /* PFXA 68XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5352), /* PFXA 52XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5336), /* PFXA 36XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5328), /* PFXA 28XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5400), /* PSXA 100XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5484), /* PSXA 84XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5468), /* PSXA 68XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5452), /* PSXA 52XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5436), /* PSXA 36XG5 */
++	SW_ID(PCI_VENDOR_ID_MICROSEMI, 0x5428), /* PSXA 28XG5 */
++	SW_ID(PCI_VENDOR_ID_EFAR,      0x1001), /* PCI1001 16XG4 */
++	SW_ID(PCI_VENDOR_ID_EFAR,      0x1002), /* PCI1002 16XG4 */
++	SW_ID(PCI_VENDOR_ID_EFAR,      0x1003), /* PCI1003 16XG4 */
++	SW_ID(PCI_VENDOR_ID_EFAR,      0x1004), /* PCI1004 16XG4 */
++	SW_ID(PCI_VENDOR_ID_EFAR,      0x1005), /* PCI1005 16XG4 */
++	SW_ID(PCI_VENDOR_ID_EFAR,      0x1006), /* PCI1006 16XG4 */
++	{0}
++};
++MODULE_DEVICE_TABLE(pci, switchtec_dma_pci_tbl);
++
++static struct pci_driver switchtec_dma_pci_driver = {
++	.name           = KBUILD_MODNAME,
++	.id_table       = switchtec_dma_pci_tbl,
++	.probe          = switchtec_dma_probe,
++	.remove		= switchtec_dma_remove,
++};
++module_pci_driver(switchtec_dma_pci_driver);
 -- 
 2.47.3
 

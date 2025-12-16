@@ -1,173 +1,122 @@
-Return-Path: <dmaengine+bounces-7670-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7671-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4D30CC3DA8
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 16:15:49 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8BF0CC3DF1
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 16:19:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C300E30FBD53
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 15:09:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9F7B73043AA3
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 15:18:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD6F533A9C2;
-	Tue, 16 Dec 2025 15:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BEF033D6D2;
+	Tue, 16 Dec 2025 15:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nuyH9lFr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mYGx0Ccr"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983A5339872
-	for <dmaengine@vger.kernel.org>; Tue, 16 Dec 2025 15:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F135133D513;
+	Tue, 16 Dec 2025 15:01:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765897266; cv=none; b=Q6RxVqOVzvrJMz11H3qAYoQPnTNAD3MjSxKYaIv+pcQeknAvVYdHvV4o5Xu0T4nfb4OBGScX6hoaDcxwmfoP2be5fTa7bX0vuXfjcstP2XTgjVVFEU2TO4wEflVV2LMBlBXVQCjqlyxl+93oyEjuSs40cNfE3QKN80eegBppH1o=
+	t=1765897318; cv=none; b=sv8LDScvllFJW1H9qYp/1pRazw0YgB91gPVDNwPEVhZSpSWnnChCDbXca40fonxkfeWkEIND6zIpfDMfYXpriJ09Wpg6RAFXtdM3ibORTrD4hwF8N65Y+L7zWolu45i5cmnx5GudIwv9BQWBG2PLlnkw7SzIwKsxCRtB0P5onuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765897266; c=relaxed/simple;
-	bh=QPKsKeT3gWgGX03dpUV6lwGL3b/wOT3vbrntiwSEOXc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pzaEUaJGSx//sPbtRjh9uyJzX/hYywLMJeQrLBSkQipRnQGmZkcNhPO785nJ9nkzv0fyhWavwYrIw6CQh3gNpy44Wr/SNN/Cpx+Pkbk1+Kyh5JFdlER5QVHifEMVjTWSMpwoHqRoEvWGWUmZ9FMYN9Xryvz5TmR7TC7ZI1J4tAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nuyH9lFr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23514C4CEF1
-	for <dmaengine@vger.kernel.org>; Tue, 16 Dec 2025 15:01:06 +0000 (UTC)
+	s=arc-20240116; t=1765897318; c=relaxed/simple;
+	bh=l6BsXuUQhKVvOvNQVNusVS5RLyr3LsVQL3METhXptkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ErH+WdbKy+WNk2nYZQvITj4sEq9OM8mlm7/wHkdclvNkDmRDh2cGuS23OPdu61cY0Je0ZRWm02SOuhV/94/D2S0uFAZdvoUMGxCHGCA+Rrc8iQ3pCA9WjCAzLyqrb4WKh4RYICFkfRekTRAIjjjyXVbtLSDvys5I50Oin4VW5vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mYGx0Ccr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2628EC4CEF1;
+	Tue, 16 Dec 2025 15:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765897266;
-	bh=QPKsKeT3gWgGX03dpUV6lwGL3b/wOT3vbrntiwSEOXc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nuyH9lFr0HElGTm11ozrGEh5GR4mrOxDjzSYPKWiUTV0KViG4zo5T3wFNuCyjUrck
-	 LTGWRJD0olCd3ufg1jL1nS1IGG4PPujLwAHClCa47IBYFpOH8MG5yrSJGE2l6aCwcD
-	 X5kS0WB6zf9QC9bf3Rgxop6JM0WX3rjubhvvA5bNOzxuUnfGUPLLklnnp5oaZ4YOgM
-	 EFU7ZQN0GqIwHD9w/wYky4rfuPW/B83eKO8BXMo1JrTZInJVVqFSBSnueibSeqJImH
-	 UGiuVd7I1tW9krQWVUgR9YlCtNupr3d3/zw1wD5xO1+QDghcoNZGXzGnP2s5QI2Yy2
-	 NEKnH7RCptepQ==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5945510fd7aso4011526e87.0
-        for <dmaengine@vger.kernel.org>; Tue, 16 Dec 2025 07:01:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUoy3iw0jUA7kwULhkH4rHik3YK133CzOFti8nQCzyDSseYGISTC31ymgTcrPvwUHEcfKn5V+7A0Rg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPAzrmtnCzNhsm29blBjfBkyhnuV6/U5BTxvPRbQxA916WHBGk
-	onhcUD7j3CG+CDzCBwVkUFmstnwG3vRrlmIpbgbcXkHv+GzYry3rdb8TcYA3DMfV/rNxJSSDSiR
-	qEuoBT5/cL+Ky4rGCoIFvc6ZvsMYIvTYewrXlA4s9dw==
-X-Google-Smtp-Source: AGHT+IG5d6DdYq9LAyVUP18St0s5pfnMgnJzNUjAA/NoQAsSm6+L4uBAJHyDNUiXdMopypVt3tNMTw9B+D8JE4f0jrI=
-X-Received: by 2002:a05:6512:23a0:b0:595:910c:8ee9 with SMTP id
- 2adb3069b0e04-598faa876f8mr4651161e87.37.1765897264824; Tue, 16 Dec 2025
- 07:01:04 -0800 (PST)
+	s=k20201202; t=1765897317;
+	bh=l6BsXuUQhKVvOvNQVNusVS5RLyr3LsVQL3METhXptkM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mYGx0CcroGx+8n06A1aiaZqq4+chW41i1tx54gQ6z3/T5zHt55tvXEFa2vuQEcXe2
+	 Af3ucF7wj1DbxMHQ+f6pzwHYMEyZ7g3EVjkXuPBW2N2gzexqlklcONWJMzeRDYiZmh
+	 N2i9sityb9jgDYljDPBPifwuuQFa285GMh2k//q42YRSsrm7b1mzNFreY8b/Wal3kt
+	 aqLszFgTsVGqVLLQKMA/C5yoZBFELxhQRtMDKKvRYjZU6kLVUEFGTjlNdBA/rgU95d
+	 XQcKiZOhlQuzOzy5V4YZ0CWCmBwH/VUUCkh/cdKYxhnhOETyR+sWL3hgHEH7AwsXKU
+	 1uSkfhtJ/uVLg==
+Date: Tue, 16 Dec 2025 20:31:54 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Frank Li <Frank.li@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	carlos.song@nxp.com
+Subject: Re: [PATCH v2 1/2] dmaengine: Add cleanup FREE defines for
+ dma_async_tx_descriptor
+Message-ID: <aUF0Yu5Cexvm7JFe@vaman>
+References: <20251003-dma_chan_free-v2-0-564946b6c563@nxp.com>
+ <20251003-dma_chan_free-v2-1-564946b6c563@nxp.com>
+ <2c457a46-2b7f-4d66-8555-3b3cb52afe64@intel.com>
+ <aTDkODHZg0JfrZJC@lizhi-Precision-Tower-5810>
+ <77ff15d7-cdb9-46f7-9f05-97aff2dc8ee9@intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251128-qcom-qce-cmd-descr-v9-0-9a5f72b89722@linaro.org>
- <20251128-qcom-qce-cmd-descr-v9-3-9a5f72b89722@linaro.org> <aUFX14nz8cQj8EIb@vaman>
-In-Reply-To: <aUFX14nz8cQj8EIb@vaman>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Tue, 16 Dec 2025 16:00:51 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MetbSuaU9VpK7CTio4kt-1pkwEFecARv7ROWDH_yq63OQ@mail.gmail.com>
-X-Gm-Features: AQt7F2rrGRpQXYPK-EvVzXEKVsCh-nkChR-L4QKbJkBv4BRnBUz63CKwNYJ04mc
-Message-ID: <CAMRc=MetbSuaU9VpK7CTio4kt-1pkwEFecARv7ROWDH_yq63OQ@mail.gmail.com>
-Subject: Re: [PATCH v9 03/11] dmaengine: qcom: bam_dma: implement support for
- BAM locking
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Thara Gopinath <thara.gopinath@gmail.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	Udit Tiwari <quic_utiwari@quicinc.com>, Daniel Perez-Zoghbi <dperezzo@quicinc.com>, 
-	Md Sadre Alam <mdalam@qti.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77ff15d7-cdb9-46f7-9f05-97aff2dc8ee9@intel.com>
 
-On Tue, Dec 16, 2025 at 2:00=E2=80=AFPM Vinod Koul <vkoul@kernel.org> wrote=
-:
->
-> On 28-11-25, 12:44, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Use metadata operations in DMA descriptors to allow BAM users to pass
-> > additional information to the engine. To that end: define a new
-> > structure - struct bam_desc_metadata - as a medium and define two new
-> > commands: for locking and unlocking the BAM respectively. Handle the
-> > locking in the .attach() callback.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  drivers/dma/qcom/bam_dma.c       | 59 ++++++++++++++++++++++++++++++++=
-+++++++-
-> >  include/linux/dma/qcom_bam_dma.h | 12 ++++++++
-> >  2 files changed, 70 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> > index c9ae1fffe44d79c5eb59b8bbf7f147a8fa3aa0bd..d1dc80b29818897b333cd22=
-3ec7306a169cc51fd 100644
-> > --- a/drivers/dma/qcom/bam_dma.c
-> > +++ b/drivers/dma/qcom/bam_dma.c
-> > @@ -30,6 +30,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/dma-mapping.h>
-> > +#include <linux/dma/qcom_bam_dma.h>
-> >  #include <linux/scatterlist.h>
-> >  #include <linux/device.h>
-> >  #include <linux/platform_device.h>
-> > @@ -391,6 +392,8 @@ struct bam_chan {
-> >       struct list_head desc_list;
-> >
-> >       struct list_head node;
-> > +
-> > +     bool bam_locked;
-> >  };
-> >
-> >  static inline struct bam_chan *to_bam_chan(struct dma_chan *common)
-> > @@ -655,6 +658,53 @@ static int bam_slave_config(struct dma_chan *chan,
-> >       return 0;
-> >  }
-> >
-> > +static int bam_metadata_attach(struct dma_async_tx_descriptor *desc, v=
-oid *data, size_t len)
-> > +{
-> > +     struct virt_dma_desc *vd =3D container_of(desc, struct virt_dma_d=
-esc, tx);
-> > +     struct bam_async_desc *async_desc =3D container_of(vd, struct bam=
-_async_desc,  vd);
-> > +     struct bam_desc_hw *hw_desc =3D async_desc->desc;
-> > +     struct bam_desc_metadata *metadata =3D data;
-> > +     struct bam_chan *bchan =3D to_bam_chan(metadata->chan);
-> > +     struct bam_device *bdev =3D bchan->bdev;
-> > +
-> > +     if (!data)
-> > +             return -EINVAL;
-> > +
-> > +     if (metadata->op =3D=3D BAM_META_CMD_LOCK || metadata->op =3D=3D =
-BAM_META_CMD_UNLOCK) {
-> > +             if (!bdev->dev_data->bam_pipe_lock)
-> > +                     return -EOPNOTSUPP;
-> > +
-> > +             /* Expecting a dummy write when locking, only one descrip=
-tor allowed. */
-> > +             if (async_desc->num_desc !=3D 1)
-> > +                     return -EINVAL;
-> > +     }
-> > +
-> > +     switch (metadata->op) {
-> > +     case BAM_META_CMD_LOCK:
-> > +             if (bchan->bam_locked)
-> > +                     return -EBUSY;
-> > +
-> > +             hw_desc->flags |=3D DESC_FLAG_LOCK;
->
-> Why does this flag imply for the hardware.
+On 04-12-25, 08:07, Dave Jiang wrote:
+> 
+> 
+> On 12/3/25 6:30 PM, Frank Li wrote:
+> > On Wed, Dec 03, 2025 at 03:48:41PM -0700, Dave Jiang wrote:
+> >>
+> >>
+> >> On 10/3/25 9:26 AM, Frank Li wrote:
+> >>> Add cleanup FREE defines for dma_async_tx_descriptor to support automatic
+> >>> cleanup and simplify error handling.
+> >>>
+> >>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> >>> ---
+> >>> Check patch report exceed 100 chars, but it's still better put into one
+> >>> line to keep consistent with other DEFINE_FREE and better readablity
+> >>>
+> >>> change in v2
+> >>> - remove surpoiouse remove empty line
+> >>> ---
+> >>>  include/linux/dmaengine.h | 3 +++
+> >>>  1 file changed, 3 insertions(+)
+> >>>
+> >>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> >>> index 99efe2b9b4ea9844ca6161208362ef18ef111d96..27fa1646a807c49c781e1bce9e3e7d9a3c66f41d 100644
+> >>> --- a/include/linux/dmaengine.h
+> >>> +++ b/include/linux/dmaengine.h
+> >>> @@ -5,6 +5,7 @@
+> >>>  #ifndef LINUX_DMAENGINE_H
+> >>>  #define LINUX_DMAENGINE_H
+> >>>
+> >>> +#include <linux/cleanup.h>
+> >>>  #include <linux/device.h>
+> >>>  #include <linux/err.h>
+> >>>  #include <linux/uio.h>
+> >>> @@ -1612,6 +1613,8 @@ static inline int dmaengine_desc_free(struct dma_async_tx_descriptor *desc)
+> >>>  	return desc->desc_free(desc);
+> >>>  }
+> >>>
+> >>> +DEFINE_FREE(dma_async_tx_descriptor, struct dma_async_tx_descriptor *, if (_T) dmaengine_desc_free(_T))
+> >>
+> >> maybe free_dma_async_tx may be clearer as the name vs dma_async_tx_descriptor.
+> > 
+> > If that, 'dmaengine_desc_free' is better because avoid create new name for
+> > it.
+> 
+> That works too.
 
-Please rephrase, I don't get what you mean.
+Agree, it is better name
 
->
-> I do not like the interface designed here. This is overloading. Can we
-> look at doing something better here.
->
-
-It used to be a generic flag in dmaengine visible for all users.
-Dmitry argued that it's too Qualcomm-specific for a generic flag and
-suggested using the metadata to hide the communication between the QCE
-and BAM drivers. I'm open to other suggestions but it has to be a bit
-more specific than "do something better". :)
-
-Bartosz
+-- 
+~Vinod
 

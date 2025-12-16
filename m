@@ -1,144 +1,94 @@
-Return-Path: <dmaengine+bounces-7687-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7688-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CF7ACC456A
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 17:38:05 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E023ECC45F7
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 17:44:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DBA36309B157
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 16:30:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 73E963056562
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 16:38:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96A272D7DDD;
-	Tue, 16 Dec 2025 16:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09F8C2EDD40;
+	Tue, 16 Dec 2025 16:38:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JdmxJGyQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJpemtmI"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9DE2652AF;
-	Tue, 16 Dec 2025 16:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EF22E06EF;
+	Tue, 16 Dec 2025 16:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765902547; cv=none; b=VJLCna0TorcaFGEF/r7mXzuaxydgP1p6FLn7OTAE1pvgnsoqU5NYl9VMccPpUQOQmPli5sxihgonZlSGTefYw4HDCxv/RUWCvyvreCR5nR8+H5mUbWKdV2MaGC/2Itdwg+8eaF/FjEY7AB5sJnufIn3v+cciFMDCGtmuRz0JUgc=
+	t=1765903133; cv=none; b=BG34H5qOeiFWkLTnEG6RZbv618u9TvT7m8PqnpIAuTrK+GLznDazbxhNWKGa7grViOZkUPmhw7gEicPvwXEh19o65rw2orVzR7DFbALNFltxXNhtzvaW22hXozWxQ6M50zZ6ckfXkHwYJm3MPj2al9RpP08t3HV4odPLgrM8DeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765902547; c=relaxed/simple;
-	bh=2Q+qK2NqcPX9cbzhyXO64+yCRyf/DbYINlYSrayO9q0=;
+	s=arc-20240116; t=1765903133; c=relaxed/simple;
+	bh=YORjPCca5peZWVj6CVOcw/8KWpP/pH7SpA6us1ULmiM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZYjGxfWm6uLfREkpzCUdAhW4dtPFh81MzIjEXyqueu4TWs8+HdTxQKDqpDhr6x4vNQBKVr5g7hE6/QvQ3UXGxkbCLssanjZsWz7Q5OdftqCiiBdO99G+fTIVXwbgMtJKEE+g47Dmgx136Ul7w5WdAwUW1SWVay8D/jM+2Q790pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JdmxJGyQ; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 50B7E4E41C2A;
-	Tue, 16 Dec 2025 16:29:02 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 150F96071C;
-	Tue, 16 Dec 2025 16:29:02 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B6A63119A9036;
-	Tue, 16 Dec 2025 17:28:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1765902535; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=WDH8v49meu1cbdbqCsHVd8Ol6TU4lh3FhMKZUYOzIyw=;
-	b=JdmxJGyQPl89ZvAe+i5sgqoeA7jQmxJWnBAIHwZxcehomzVI9qb40ttSy9cx0wRqbThzlq
-	lHAyEaQZl2k3DPsEQjC65K+IuLFg7sKNjqiBePyTq7VviJcrRHiM9bN2eMTapQXooL3Lmu
-	joBBSrhkICZtvT6a/2rKkS5eNphmHSGwgOESA/7qal3nmlbmOmLz+W6tugpU9vkYI95Zr+
-	oxUYy7GXXT1YkRVynXnWByxfKZ94QxEpAfuHNh8d9Ac3oWCQsqX4988ORYKqvM0U/YQqfL
-	3mBQCk3ssFunMThFAA4+VRHjyfUtDGefOn2sRBJLRZ0Frk8p1CsW+dFfmlCeIg==
-Date: Tue, 16 Dec 2025 17:28:41 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Robert Marko <robert.marko@sartura.hr>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
-	Steen.Hegelund@microchip.com, daniel.machon@microchip.com,
-	UNGLinuxDriver@microchip.com, herbert@gondor.apana.org.au,
-	davem@davemloft.net, vkoul@kernel.org, linux@roeck-us.net,
-	andi.shyti@kernel.org, lee@kernel.org, andrew+netdev@lunn.ch,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	linusw@kernel.org, olivia@selenic.com, radu_nicolae.pirea@upb.ro,
-	richard.genoud@bootlin.com, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-	richardcochran@gmail.com, wsa+renesas@sang-engineering.com,
-	romain.sioen@microchip.com, Ryan.Wanner@microchip.com,
-	lars.povlsen@microchip.com, tudor.ambarus@linaro.org,
-	charan.pedumuru@microchip.com, kavyasree.kotagiri@microchip.com,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-clk@vger.kernel.org, mwalle@kernel.org,
-	luka.perkov@sartura.hr
-Subject: Re: [PATCH v2 04/19] dt-bindings: arm: move AT91 to generic
- Microchip binding
-Message-ID: <202512161628415e9896d1@mail.local>
-References: <20251215163820.1584926-1-robert.marko@sartura.hr>
- <20251215163820.1584926-4-robert.marko@sartura.hr>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LCgN7fku+loTA4z1kKUvZX5Sr8QMmF2/9GeXqQw94zcJiUZ1AUpLDXzxz7Z6z+UkXVTgik1BNaLYh6zoDYFzMmxJKjmumI+MNzsEC/Wx3lCnKEXBzC4Y38UAfRq7lAoUk79dpkgzOKXTyNGOzIpk6YrRoFFkQ77SUSohG+H+eNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJpemtmI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 951B3C4CEF1;
+	Tue, 16 Dec 2025 16:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765903133;
+	bh=YORjPCca5peZWVj6CVOcw/8KWpP/pH7SpA6us1ULmiM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WJpemtmIk2rMjnCn3v7nh69rKI9f12U5K2ce7K1SdvTH3K8V/XCAjGYqUooo1dsve
+	 +UyVw2M0adaPV13tXJzfkeBbMgPJjBgHCPnQzu10PywY64IvX9480ctmR+xWE7e1Ya
+	 xrEit1nRdKDse2nMppdXuD4T/1KZuNVXpdVt6V9g2fc/Erlse1yltwMPrqIQ7n6g7k
+	 SWV6H5Ft3u3hvznJ8yHbOwpudHC7IVdEVoRqHz5+vDZtMHjJ46yOFMQ5SB7/aCEOcz
+	 6tYakF8JzlBYJ6M33r5stI/UDX2jB3GeCO9uXJEGM2TVSCkbMLCB5JGzZuGaf5Lub9
+	 90aO5EMg4uVVQ==
+Date: Tue, 16 Dec 2025 16:38:47 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Longbin Li <looong.bin@gmail.com>, Ze Huang <huangze@whut.edu.cn>,
+	"Anton D . Stavinskii" <stavinsky@gmail.com>,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	sophgo@lists.linux.dev, Yixun Lan <dlan@gentoo.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: dma: snps,dw-axi-dmac: Add CV1800B
+ compatible
+Message-ID: <20251216-alto-clasp-bc7077c5eea0@spud>
+References: <20251214224601.598358-1-inochiama@gmail.com>
+ <20251214224601.598358-2-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="VEWkek89ZpqGU94g"
+Content-Disposition: inline
+In-Reply-To: <20251214224601.598358-2-inochiama@gmail.com>
+
+
+--VEWkek89ZpqGU94g
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251215163820.1584926-4-robert.marko@sartura.hr>
-X-Last-TLS-Session-Version: TLSv1.3
 
-On 15/12/2025 17:35:21+0100, Robert Marko wrote:
-> Create a new binding file named microchip.yaml, to which all Microchip
-> based devices will be moved to.
-> 
-> Start by moving AT91, next will be SparX-5.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+pw-bot: not-applicable
 
-Both lines of SoCs are designed by different business units and are
-wildly different and while both business units are currently owned by
-the same company, there are no guarantees this will stay this way so I
-would simply avoid merging both.
+--VEWkek89ZpqGU94g
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> ---
->  .../bindings/arm/{atmel-at91.yaml => microchip.yaml}       | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->  rename Documentation/devicetree/bindings/arm/{atmel-at91.yaml => microchip.yaml} (98%)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/microchip.yaml
-> similarity index 98%
-> rename from Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> rename to Documentation/devicetree/bindings/arm/microchip.yaml
-> index 88edca9b84d2..3c76f5b585fc 100644
-> --- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> +++ b/Documentation/devicetree/bindings/arm/microchip.yaml
-> @@ -1,19 +1,16 @@
->  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/arm/atmel-at91.yaml#
-> +$id: http://devicetree.org/schemas/arm/microchip.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
-> -title: Atmel AT91.
-> +title: Microchip platforms
->  
->  maintainers:
->    - Alexandre Belloni <alexandre.belloni@bootlin.com>
->    - Claudiu Beznea <claudiu.beznea@microchip.com>
->    - Nicolas Ferre <nicolas.ferre@microchip.com>
->  
-> -description: |
-> -  Boards with a SoC of the Atmel AT91 or SMART family shall have the following
-> -
->  properties:
->    $nodename:
->      const: '/'
-> -- 
-> 2.52.0
-> 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaUGLFwAKCRB4tDGHoIJi
+0nDOAP9vwQyYWU89RuSI7vTvOyK9H8grlJWln1QnEpgY2Xw2/wEA4SyvcrWu3DkE
+u0H72/NgKCnlCeFE/XVZXkj6DahaRgo=
+=Zrte
+-----END PGP SIGNATURE-----
+
+--VEWkek89ZpqGU94g--
 

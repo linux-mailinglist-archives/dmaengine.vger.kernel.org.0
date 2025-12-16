@@ -1,285 +1,146 @@
-Return-Path: <dmaengine+bounces-7665-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7666-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74E3BCC4952
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 18:11:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 827FDCC33B4
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 14:30:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id AA7C8305DB4E
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 17:09:06 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 08D7830345AF
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 13:25:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD3A134F27D;
-	Tue, 16 Dec 2025 12:51:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B4A533BBC8;
+	Tue, 16 Dec 2025 13:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/mH6mX0"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7694F34DCE9;
-	Tue, 16 Dec 2025 12:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E977E339874;
+	Tue, 16 Dec 2025 13:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765889469; cv=none; b=cplpRDaSkj28+kqHwpIxkKlaiWUN1ZsCM2LR4vgGm6sY4IX5M9Zbc+mnbRt6ujumkavjzhVvZ4U9CAxqNxqgSWx/5GFnZ15EO7eSr/jFjCsO5niwja/J8TCwX/Pb3dqUH5uwATT3YsINmzzr7noWpFTs7Hw0urNJ+IhsLbisafs=
+	t=1765890012; cv=none; b=RU8awzhCciVLPEsSsOmxry3hq40wD438XqONaSWJZjrIi2wVNevjH9Er5t49zfuEBvBYQjliTEfqqsKI16A9h2Xslf9Io1KQEaRYmeTcDD7trWtSlyVkKtvBSVInI3r+5d4w49tJ5aAiF+Ralv+KOpvH+5/sSTtb04kPEYiseK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765889469; c=relaxed/simple;
-	bh=mcmnDlU9X2YImHpKQA7Bd9UBFqiCXpNB6xWvDm3kEO4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HvBczTUnQDglWhGaz506qb33421YKb4ue5NtJg/hT8RzKm2SlcHYcIh6Zyb73eEr4grSAn1k8k/SSFTb365jgMbKAHhaCsxjsHfyx5JuHRSWl407YlvYf0wbK8sTuY4SIdToBh58Obpvcrw4y9oM8KSL5yXfBijlb1bdGPE2D68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B9C0FEC;
-	Tue, 16 Dec 2025 04:50:59 -0800 (PST)
-Received: from [10.57.43.186] (unknown [10.57.43.186])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B6363F694;
-	Tue, 16 Dec 2025 04:51:04 -0800 (PST)
-Message-ID: <910e3db2-c4ef-4c21-9336-49469234b8e6@arm.com>
-Date: Tue, 16 Dec 2025 12:51:02 +0000
+	s=arc-20240116; t=1765890012; c=relaxed/simple;
+	bh=mQBluV4vo6oktVQMR47MWjsZkZHvF2VHMeD3tqW78+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ixXeHfbuFKK+5n3BrvNZYDNvh99QjjE76B/RRgAAoM9hPDwWMiqJ3m13jDQoBKnm5v9u8J6kNOkAIIbJaydCwVgoAa+H/zf4k1hjATfxEETS6+4aQ2r8/mlxyZpi6PweM+AQjzvA9mnQtMvgcaT1pG7insxGj+wbi98bmsfjxlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/mH6mX0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E575C4CEF1;
+	Tue, 16 Dec 2025 13:00:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765890011;
+	bh=mQBluV4vo6oktVQMR47MWjsZkZHvF2VHMeD3tqW78+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d/mH6mX0eV2p9m7sYxhd3qcf37tLj1VmfJt7vEv1GsrZWMEkcY1dHcUW73Z60Nzds
+	 cWCIqM4gY0hwzYxK5rT52lPxMBFfIv9esPpLkPVpFRQp6t56HAnArMzaOtuxGZzxft
+	 OsMqKHkYP1TwMTdsFqEHM3Usjhg475XALpCMK/pUFaGAW20gLipDJqU0UCzratyv7N
+	 mBXvX6HS9s+6xpRIeGW/mgZOqB8vCGfvvkH1Rdt1jDmBVC0kV02cbZ6vClscrWkzc9
+	 sFBlYPqiOSqMahw2Yz3H2ISEjmR68Q0yTx2t02J/BlYQldHlj5cMMqYA/kx1J52gk7
+	 BUSGWdUOsjmRQ==
+Date: Tue, 16 Dec 2025 18:30:07 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Thara Gopinath <thara.gopinath@gmail.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Udit Tiwari <quic_utiwari@quicinc.com>,
+	Daniel Perez-Zoghbi <dperezzo@quicinc.com>,
+	Md Sadre Alam <mdalam@qti.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>, dmaengine@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v9 03/11] dmaengine: qcom: bam_dma: implement support for
+ BAM locking
+Message-ID: <aUFX14nz8cQj8EIb@vaman>
+References: <20251128-qcom-qce-cmd-descr-v9-0-9a5f72b89722@linaro.org>
+ <20251128-qcom-qce-cmd-descr-v9-3-9a5f72b89722@linaro.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] dma: arm-dma350: add support for shared interrupt
- mode
-To: Jun Guo <jun.guo@cixtech.com>, peter.chen@cixtech.com,
- fugang.duan@cixtech.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, vkoul@kernel.org, ychuang3@nuvoton.com,
- schung@nuvoton.com
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- linux-arm-kernel@lists.infradead.org, jelly.jia@cixtech.com
-References: <20251216123026.3519923-1-jun.guo@cixtech.com>
- <20251216123026.3519923-3-jun.guo@cixtech.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20251216123026.3519923-3-jun.guo@cixtech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251128-qcom-qce-cmd-descr-v9-3-9a5f72b89722@linaro.org>
 
-On 2025-12-16 12:30 pm, Jun Guo wrote:
-> The arm dma350 controller's hardware implementation varies: some
-> designs dedicate a separate interrupt line for each channel, while
-> others have all channels sharing a single interrupt.This patch adds
-> support for the hardware design where all DMA channels share a
-> single interrupt.
+On 28-11-25, 12:44, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Signed-off-by: Jun Guo <jun.guo@cixtech.com>
+> Use metadata operations in DMA descriptors to allow BAM users to pass
+> additional information to the engine. To that end: define a new
+> structure - struct bam_desc_metadata - as a medium and define two new
+> commands: for locking and unlocking the BAM respectively. Handle the
+> locking in the .attach() callback.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->   drivers/dma/arm-dma350.c | 124 +++++++++++++++++++++++++++++++++++----
->   1 file changed, 114 insertions(+), 10 deletions(-)
+>  drivers/dma/qcom/bam_dma.c       | 59 +++++++++++++++++++++++++++++++++++++++-
+>  include/linux/dma/qcom_bam_dma.h | 12 ++++++++
+>  2 files changed, 70 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/dma/arm-dma350.c b/drivers/dma/arm-dma350.c
-> index 9efe2ca7d5ec..6bea18521edd 100644
-> --- a/drivers/dma/arm-dma350.c
-> +++ b/drivers/dma/arm-dma350.c
-> @@ -14,6 +14,7 @@
->   #include "virt-dma.h"
->   
->   #define DMAINFO			0x0f00
-> +#define DRIVER_NAME		"arm-dma350"
->   
->   #define DMA_BUILDCFG0		0xb0
->   #define DMA_CFG_DATA_WIDTH	GENMASK(18, 16)
-> @@ -142,6 +143,9 @@
->   #define LINK_LINKADDR		BIT(30)
->   #define LINK_LINKADDRHI		BIT(31)
->   
-> +/* DMA NONSECURE CONTROL REGISTER */
-> +#define DMANSECCTRL		0x20c
-> +#define INTREN_ANYCHINTR_EN	BIT(0)
->   
->   enum ch_ctrl_donetype {
->   	CH_CTRL_DONETYPE_NONE = 0,
-> @@ -192,11 +196,16 @@ struct d350_chan {
->   
->   struct d350 {
->   	struct dma_device dma;
-> +	void __iomem *base;
->   	int nchan;
->   	int nreq;
->   	struct d350_chan channels[] __counted_by(nchan);
->   };
->   
-> +struct d350_driver_data {
-> +	bool combined_irq;
-> +};
+> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+> index c9ae1fffe44d79c5eb59b8bbf7f147a8fa3aa0bd..d1dc80b29818897b333cd223ec7306a169cc51fd 100644
+> --- a/drivers/dma/qcom/bam_dma.c
+> +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/module.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/dma-mapping.h>
+> +#include <linux/dma/qcom_bam_dma.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/device.h>
+>  #include <linux/platform_device.h>
+> @@ -391,6 +392,8 @@ struct bam_chan {
+>  	struct list_head desc_list;
+>  
+>  	struct list_head node;
 > +
->   static inline struct d350_chan *to_d350_chan(struct dma_chan *chan)
->   {
->   	return container_of(chan, struct d350_chan, vc.chan);
-> @@ -461,7 +470,61 @@ static void d350_issue_pending(struct dma_chan *chan)
->   	spin_unlock_irqrestore(&dch->vc.lock, flags);
->   }
->   
-> -static irqreturn_t d350_irq(int irq, void *data)
-> +static irqreturn_t d350_global_irq(int irq, void *data)
+> +	bool bam_locked;
+>  };
+>  
+>  static inline struct bam_chan *to_bam_chan(struct dma_chan *common)
+> @@ -655,6 +658,53 @@ static int bam_slave_config(struct dma_chan *chan,
+>  	return 0;
+>  }
+>  
+> +static int bam_metadata_attach(struct dma_async_tx_descriptor *desc, void *data, size_t len)
 > +{
-> +	struct d350 *dmac = (struct d350 *)data;
-> +	struct device *dev = dmac->dma.dev;
-> +	irqreturn_t ret = IRQ_NONE;
-> +	int i;
+> +	struct virt_dma_desc *vd = container_of(desc, struct virt_dma_desc, tx);
+> +	struct bam_async_desc *async_desc = container_of(vd, struct bam_async_desc,  vd);
+> +	struct bam_desc_hw *hw_desc = async_desc->desc;
+> +	struct bam_desc_metadata *metadata = data;
+> +	struct bam_chan *bchan = to_bam_chan(metadata->chan);
+> +	struct bam_device *bdev = bchan->bdev;
 > +
-> +	for (i = 0; i < dmac->nchan; i++) {
-> +		struct d350_chan *dch = &dmac->channels[i];
-> +		u32 ch_status;
+> +	if (!data)
+> +		return -EINVAL;
 > +
-> +		ch_status = readl(dch->base + CH_STATUS);
-> +		if (!ch_status)
-> +			continue;
+> +	if (metadata->op == BAM_META_CMD_LOCK || metadata->op == BAM_META_CMD_UNLOCK) {
+> +		if (!bdev->dev_data->bam_pipe_lock)
+> +			return -EOPNOTSUPP;
 > +
-> +		ret = IRQ_HANDLED;
-> +
-> +		if (ch_status & CH_STAT_INTR_ERR) {
-> +			struct virt_dma_desc *vd = &dch->desc->vd;
-> +			u32 errinfo = readl_relaxed(dch->base + CH_ERRINFO);
-> +
-> +			if (errinfo &
-> +			    (CH_ERRINFO_AXIRDPOISERR | CH_ERRINFO_AXIRDRESPERR))
-> +				vd->tx_result.result = DMA_TRANS_READ_FAILED;
-> +			else if (errinfo & CH_ERRINFO_AXIWRRESPERR)
-> +				vd->tx_result.result = DMA_TRANS_WRITE_FAILED;
-> +			else
-> +				vd->tx_result.result = DMA_TRANS_ABORTED;
-> +
-> +			vd->tx_result.residue = d350_get_residue(dch);
-> +		} else if (!(ch_status & CH_STAT_INTR_DONE)) {
-> +			dev_warn(dev, "Channel %d unexpected IRQ: 0x%08x\n", i,
-> +				 ch_status);
-> +		}
-> +
-> +		writel_relaxed(ch_status, dch->base + CH_STATUS);
-> +
-> +		spin_lock(&dch->vc.lock);
-> +		if (ch_status & CH_STAT_INTR_DONE) {
-> +			vchan_cookie_complete(&dch->desc->vd);
-> +			dch->status = DMA_COMPLETE;
-> +			dch->residue = 0;
-> +			d350_start_next(dch);
-> +		} else if (ch_status & CH_STAT_INTR_ERR) {
-> +			vchan_cookie_complete(&dch->desc->vd);
-> +			dch->status = DMA_ERROR;
-> +			dch->residue = dch->desc->vd.tx_result.residue;
-> +		}
-> +		spin_unlock(&dch->vc.lock);
+> +		/* Expecting a dummy write when locking, only one descriptor allowed. */
+> +		if (async_desc->num_desc != 1)
+> +			return -EINVAL;
 > +	}
 > +
-> +	return ret;
-> +}
+> +	switch (metadata->op) {
+> +	case BAM_META_CMD_LOCK:
+> +		if (bchan->bam_locked)
+> +			return -EBUSY;
 > +
-> +static irqreturn_t d350_channel_irq(int irq, void *data)
->   {
->   	struct d350_chan *dch = data;
->   	struct device *dev = dch->vc.chan.device->dev;
-> @@ -506,10 +569,18 @@ static irqreturn_t d350_irq(int irq, void *data)
->   static int d350_alloc_chan_resources(struct dma_chan *chan)
->   {
->   	struct d350_chan *dch = to_d350_chan(chan);
-> -	int ret = request_irq(dch->irq, d350_irq, IRQF_SHARED,
-> -			      dev_name(&dch->vc.chan.dev->device), dch);
-> -	if (!ret)
-> -		writel_relaxed(CH_INTREN_DONE | CH_INTREN_ERR, dch->base + CH_INTREN);
-> +	int ret = 0;
-> +
-> +	if (dch->irq) {
-> +		ret = request_irq(dch->irq, d350_channel_irq, IRQF_SHARED,
-> +				  dev_name(&dch->vc.chan.dev->device), dch);
-> +		if (ret) {
-> +			dev_err(chan->device->dev, "Failed to request IRQ %d\n", dch->irq);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	writel_relaxed(CH_INTREN_DONE | CH_INTREN_ERR, dch->base + CH_INTREN);
->   
->   	return ret;
->   }
-> @@ -526,7 +597,8 @@ static void d350_free_chan_resources(struct dma_chan *chan)
->   static int d350_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
-> -	struct d350 *dmac;
-> +	struct d350 *dmac = NULL;
-> +	const struct d350_driver_data *data;
->   	void __iomem *base;
->   	u32 reg;
->   	int ret, nchan, dw, aw, r, p;
-> @@ -556,6 +628,7 @@ static int d350_probe(struct platform_device *pdev)
->   		return -ENOMEM;
->   
->   	dmac->nchan = nchan;
-> +	dmac->base = base;
->   
->   	reg = readl_relaxed(base + DMAINFO + DMA_BUILDCFG1);
->   	dmac->nreq = FIELD_GET(DMA_CFG_NUM_TRIGGER_IN, reg);
-> @@ -582,6 +655,27 @@ static int d350_probe(struct platform_device *pdev)
->   	dmac->dma.device_issue_pending = d350_issue_pending;
->   	INIT_LIST_HEAD(&dmac->dma.channels);
->   
-> +	data = device_get_match_data(dev);
-> +	/* Cix Sky1 has a common host IRQ for all its channels. */
-> +	if (data && data->combined_irq) {
-> +		int host_irq = platform_get_irq(pdev, 0);
-> +
-> +		if (host_irq < 0)
-> +			return dev_err_probe(dev, host_irq,
-> +					     "Failed to get IRQ\n");
-> +
-> +		ret = devm_request_irq(&pdev->dev, host_irq, d350_global_irq,
-> +				       IRQF_SHARED, DRIVER_NAME, dmac);
-> +		if (ret)
-> +			return dev_err_probe(
-> +				dev, ret,
-> +				"Failed to request the combined IRQ %d\n",
-> +				host_irq);
-> +	}
-> +
-> +	/* Combined Non-Secure Channel Interrupt Enable */
-> +	writel_relaxed(INTREN_ANYCHINTR_EN, dmac->base + DMANSECCTRL);
+> +		hw_desc->flags |= DESC_FLAG_LOCK;
 
-This one line is all that should be needed - all the rest is pointless 
-overcomplication and churn. And either way, copy-pasting the entire IRQ 
-handler is not OK.
+Why does this flag imply for the hardware.
 
-Thanks,
-Robin.
+I do not like the interface designed here. This is overloading. Can we
+look at doing something better here.
 
-> +
->   	/* Would be nice to have per-channel caps for this... */
->   	memset = true;
->   	for (int i = 0; i < nchan; i++) {
-> @@ -595,10 +689,15 @@ static int d350_probe(struct platform_device *pdev)
->   			dev_warn(dev, "No command link support on channel %d\n", i);
->   			continue;
->   		}
-> -		dch->irq = platform_get_irq(pdev, i);
-> -		if (dch->irq < 0)
-> -			return dev_err_probe(dev, dch->irq,
-> -					     "Failed to get IRQ for channel %d\n", i);
-> +
-> +		if (!data) {
-> +			dch->irq = platform_get_irq(pdev, i);
-> +			if (dch->irq < 0)
-> +				return dev_err_probe(
-> +					dev, dch->irq,
-> +					"Failed to get IRQ for channel %d\n",
-> +					i);
-> +		}
->   
->   		dch->has_wrap = FIELD_GET(CH_CFG_HAS_WRAP, reg);
->   		dch->has_trig = FIELD_GET(CH_CFG_HAS_TRIGIN, reg) &
-> @@ -639,7 +738,12 @@ static void d350_remove(struct platform_device *pdev)
->   	dma_async_device_unregister(&dmac->dma);
->   }
->   
-> +static const struct d350_driver_data sky1_dma350_data = {
-> +	.combined_irq = true,
-> +};
-> +
->   static const struct of_device_id d350_of_match[] __maybe_unused = {
-> +	{ .compatible = "cix,sky1-dma-350", .data = &sky1_dma350_data },
->   	{ .compatible = "arm,dma-350" },
->   	{}
->   };
-
+-- 
+~Vinod
 

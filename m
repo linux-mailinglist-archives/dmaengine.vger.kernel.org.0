@@ -1,97 +1,155 @@
-Return-Path: <dmaengine+bounces-7647-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7648-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D26ECC1975
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 09:34:46 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A012CC1A60
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 09:49:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6E645303B64A
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 08:33:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 89EC13020CE9
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 08:45:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F81534B1A3;
-	Tue, 16 Dec 2025 08:13:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFF4C32A3F0;
+	Tue, 16 Dec 2025 08:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="raQjYvy5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QR7Uiw5V"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4578C3446CF;
-	Tue, 16 Dec 2025 08:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F70D313E2F;
+	Tue, 16 Dec 2025 08:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765872787; cv=none; b=g1catiRSKNAPvNmgd/K+2ExytljD6pQ43bEywXBVj5EqG2STNFFO6LTvU33yojVFIr712o1gyiklJ222lfMRhWGZlcwLeITsmuvzp/yVvYAl1HHP7hZSzRnfXBdEfSDCgcLgmhiNbzFFwvqT5Ih2WorvIpzGBJKTrDeB96Uk7Ks=
+	t=1765874727; cv=none; b=VYLjEz3Ow7Yrjzk3eDV5ELAcafhPi5JyTidR7NdQ4ADMV8se1eG3Jy3CpvKDiaWcXRN+oHJYxI9A+SYQSBDWruCtvVjO4KNHpUp2ibnWZcWXvawaUYDOSXgVPaxYfP0qbsnN0u8yCPBwiY+ldW4fW/RjSmWZa8q+2W7bpyNUFFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765872787; c=relaxed/simple;
-	bh=U31Std80+hAqNaEEA7XIqhz+Jgwt8jOJjCv994SGRc0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hjzIcGeTswrIEME/ONx8yn6oX8SdHeViSZOeIPAlL68P90os+IN7f6wEF/L1Lpn1dJ2jq6YUzYTbSdHb5xQJC3Sv+y627a/y7MD8S5qwMVaxL1V4dQ0ttcCz9BaKIG/lHFTYBEfwcHZg7mRQhUa7dktLvF4E+b6Sfq+at7TM9+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=raQjYvy5; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 6A7544E41C1D;
-	Tue, 16 Dec 2025 08:13:03 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 2C6FB6071C;
-	Tue, 16 Dec 2025 08:13:03 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B01FD11942FC6;
-	Tue, 16 Dec 2025 09:12:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1765872782; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=JS1bp9q60tJiFItdPRAoiXuaPpXIH1pa1HICS/H8bUA=;
-	b=raQjYvy53gwIQeiS5Wd+n2/uEO1J/BSlmgAkiDDnXGjbT6Dv/Uafg4DvoJax4X2XSHJVvh
-	23d+pUM4UONdYJ44TL7evqyYgc4+7yrEZL1ftIAGjqdWicFI9QfEfCpYCy1AMNmO2trjku
-	gCuF77hevou9PUv8B7Nq7V3xcPtrqlkA+MxylYYajGbh7c7Y8DlwumRsPInLESpTL5jmw7
-	vtX80/+CHfYkuolMu7JedClVt5bPbpyDSsOW0ED9+XaDjV8kqxfbSe1U8N71d39i9jrtWm
-	mNn5v3xwQaOedwT0Zf6N97D+SzPhb1nHRJZ8w+5btFGfRuKJPXonc5v1pOHFZA==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: Khairul Anuar Romli <khairul.anuar.romli@altera.com>,  Rob Herring
- <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
- Dooley <conor+dt@kernel.org>,  Eugeniy Paltsev
- <Eugeniy.Paltsev@synopsys.com>,  Vinod Koul <vkoul@kernel.org>,  Richard
- Weinberger <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,
-  Niravkumar L Rabara <niravkumar.l.rabara@intel.com>,
-  dmaengine@vger.kernel.org,  devicetree@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 0/3] Add dma-coherent property
-In-Reply-To: <e1aae851-4031-4b5c-a807-7a61ecfe6af1@kernel.org> (Dinh Nguyen's
-	message of "Mon, 8 Dec 2025 20:31:58 -0600")
-References: <cover.1764717960.git.khairul.anuar.romli@altera.com>
-	<e1aae851-4031-4b5c-a807-7a61ecfe6af1@kernel.org>
-User-Agent: mu4e 1.12.7; emacs 30.2
-Date: Tue, 16 Dec 2025 09:12:57 +0100
-Message-ID: <877bumsv3q.fsf@bootlin.com>
+	s=arc-20240116; t=1765874727; c=relaxed/simple;
+	bh=tvseRd0ZBKVZuxl0/2VvYZVVO718dYCkJYN9IBKiMek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xm/uLDwUfDp1rNRSmF7idhOsYk1DWGxyb1OD4KgdF5RMfN8DDvzYylAbwOoAdAuCTMBJsfqz/065Xam+iiHOkJg8GIydUPQTtxopfvuDBKsipUaTbi3SG7f6097QclIuQr+rqAAm3bj8wfxhgtdYlGSY49aZnKV83jU0rThdwZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QR7Uiw5V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2840C16AAE;
+	Tue, 16 Dec 2025 08:45:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765874727;
+	bh=tvseRd0ZBKVZuxl0/2VvYZVVO718dYCkJYN9IBKiMek=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QR7Uiw5VgzfsE7U2kpUwyYuna6qcbU3xhKYDGw7qrT+JaDIQ0b7i73YSGqS77cDNW
+	 UTNhYKC+8o/f77bxcvYPR19JheTOlciBMoIBWrALFiOrqXbOl/JHnuTTQBxlTWJ2nP
+	 yPWNXIn0wJyGOnrZaBiykTUUDy/dAK+mp9lX69iV7gXRwdyWlABYY4KfpOwT+0Ckkt
+	 0evz8jbMl1Gric++TNzBTHxA8gcRJFA/OwUGTGRSG5bcwDk4fK08uKw/n7zoX77mdI
+	 Hp/BD5AlYesfSLHaHF4nRPNzs8LLrjC55iXgDVXsofltBzxK+wwhlmn5ibZGMnog+E
+	 wKxcUd69ZdlPA==
+Message-ID: <83c771e7-f32b-48e4-91ab-d7c3b9746e14@kernel.org>
+Date: Tue, 16 Dec 2025 09:45:22 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: dma: Add Amlogic general DMA
+To: xianwei.zhao@amlogic.com, Vinod Koul <vkoul@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20251216-amlogic-dma-v1-0-e289e57e96a7@amlogic.com>
+ <20251216-amlogic-dma-v1-1-e289e57e96a7@amlogic.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20251216-amlogic-dma-v1-1-e289e57e96a7@amlogic.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 16/12/2025 09:03, Xianwei Zhao via B4 Relay wrote:
+> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> 
+> Add documentation describing the Amlogic general DMA.
+> 
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+>  .../bindings/dma/amlogic,general-dma.yaml          | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/amlogic,general-dma.yaml b/Documentation/devicetree/bindings/dma/amlogic,general-dma.yaml
+> new file mode 100644
+> index 000000000000..8b9cec9b8da0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/amlogic,general-dma.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/amlogic,general-dma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic general DMA controller
+> +
+> +description: |
+> +  This is a general-purpose peripheral DMA controller. It currently supports
+> +  major peripherals including I2C, I3C, PIO, and CAN-BUS. Transmit and receive
+> +  for the same peripheral use two separate channels, controlled by different
+> +  register sets. I2C and I3C transfer data in 1-byte units, while PIO and
+> +  CAN-BUS transfer data in 4-byte units. From the controller’s perspective,
+> +  there is no significant difference.
+> +
+> +maintainers:
+> +  - Xianwei Zhao <xianwei.zhao@amlogic.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: amlogic,general-dma
 
->> Khairul Anuar Romli (3):
->>    dt-bindings: mtd: cdns,hp-nfc: Add dma-coherent property
->>    dt-bindings: dma: snps,dw-axi-dmac: add dma-coherent property
->>    arm64: dts: socfpga: agilex5: Add dma-coherent property
->>   Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml | 2 ++
->>   Documentation/devicetree/bindings/mtd/cdns,hp-nfc.yaml      | 2 ++
->>   arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi              | 3 +++
->>   3 files changed, 7 insertions(+)
->>=20
->
-> Applied!
+I don't know what you mean by "general" but it feels like wildcard, not
+SoC, so that would be a no-go. Read writing bindings or several talks
+about this.
 
-Have you applied all 3 patches? If yes, where? It happened during the
-merge window but I see nothing in v6.19-rc1. I was about to take the mtd
-binding patch, but if you took it already that's fine, I'll mark this
-series as already applied.
-
-Thanks,
-Miqu=C3=A8l
+Best regards,
+Krzysztof
 

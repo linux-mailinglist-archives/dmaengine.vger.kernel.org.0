@@ -1,103 +1,57 @@
-Return-Path: <dmaengine+bounces-7676-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7677-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id C30E8CC40C8
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 16:49:27 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B5A5CC3E8B
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 16:26:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 201E330145DA
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 15:48:35 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5C27B302C5D9
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 15:26:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 618613596FA;
-	Tue, 16 Dec 2025 15:25:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 828A3366DCD;
+	Tue, 16 Dec 2025 15:26:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4mm0TQc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJnxXBfP"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987E7366541
-	for <dmaengine@vger.kernel.org>; Tue, 16 Dec 2025 15:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53809366DCB;
+	Tue, 16 Dec 2025 15:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765898715; cv=none; b=rmiAV7trswQMdddbzvOP/3oh4Byiq4avoUB/ffbnv1QYtYowCH8/L/JcPspwHUhofwEuWmAbWVoDS3Go2e+Vercwm/pWJE7fho9w8+fvsalZNN/AJx7v01M+/8JAVDr3iCXcJMNGerYiHa2JOjw3jrAhUrzhvP4U+86Ak3zpZsE=
+	t=1765898765; cv=none; b=Xs/LeXH/o2QJDlVR/nBQFll5gvRqAEBSa7qsJgirxIQr2vk04WZapGx4jr1JaMyPhPcXGd09jwgDeNTgckTzUD0CXAlwfXixDDyIpnQZ1YsEOtpI2f+wFMneI00oxURJNEAE3nQH1UtxMb52HFve2TmsYNDriV1bg63OVnGjmts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765898715; c=relaxed/simple;
-	bh=MDkvhx/UWht+J1EF6yeI4u41iXTnDyRpJQfMIotkrz8=;
+	s=arc-20240116; t=1765898765; c=relaxed/simple;
+	bh=oPBT1uvFdNEw1M57O3taYeispOFBCMR0ND78csytjM0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dpTMrl0Aj95p9eZkE9c6mME3qy7aT3p4k8hIzETBhLMZFuWMnz2JBRq1sVwLZN5MwPgP2LaYlbrM1RslllcDtZW2Jr7D96cOxGm+eGZqSJQzVt8jRrZPq0w9DqWS49NAk9BJcb+fTT79ikVxDYEPqwNjAqnOlq80EKrJWc7Gtqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h4mm0TQc; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4779ce2a624so51335935e9.2
-        for <dmaengine@vger.kernel.org>; Tue, 16 Dec 2025 07:25:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765898712; x=1766503512; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4GMNrMLkfDebdMnrSKqK61b1HC+YKle22T3SSCNCdsM=;
-        b=h4mm0TQcwejvOXo2DUDHHUak4AKwWOVwACN2x6eG6RtfkkEmVYzNjovFkKZtq7WnOu
-         W2a7P1spHrFj8JG/cdy7MZQZy4ceSc3EOprb0D/2/dKNC83G8hgpURwASTvDq6ttVN/T
-         XJL7ZuN1owonTolnqRPKPGi8Dtq4fZHgvEHUeEHFTMMpC7e5ywdUOCQzkLOkSNx8xvQM
-         8dGulD+PHtTep81pivIdWu7X9iZyyXftmxquAB+l3FQ6RP4qCD2xckZRcQTLO38VIm4u
-         gcUFwkKBjslBOHh8Fn4N7u0ajVGpvWw+PQ3KYZ9odgAK22cSdQ2USKSq/hfMK5+tJR7K
-         Hdmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765898712; x=1766503512;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4GMNrMLkfDebdMnrSKqK61b1HC+YKle22T3SSCNCdsM=;
-        b=U9ve5ZbiQ2GikNYIp3eObCP6ppxRE9ctELOYsU1GkxUTD1ArZ4Zh6OlbBzfnEnCVlZ
-         JgRiidIojzTudmJ71RAh4o1KrEI1kKA2co76YdAGwo2p1AcjNmRCF91jtWpIXsPsT0vI
-         2LQFLEh+d78DDYg4KvH5BDla9q3iKHrK3z03wVO1iuOFCFS9dq2dx8X5aYA+7YBhlg7z
-         rq2qWqFdwMZTSIflCzBXKPtrTLP5A8E72oxZ73/E1pNJTpwlootok5Gw3NOLc9mfKUVg
-         qXThMF4wJkM2fNETOV4oEb9JjkwQkexlrdw5/nVJ40HuEB7/3fqs49492QntqEy5M/dF
-         aUPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfpwdWAzEhJoMdnN5B/KgR3qS5L/0wv7NtEhJ9VnsQwA9xLHAjw+hw+ek9sl3CnCWdVcgTdjNWqUo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPK6nkh0Oo4fVosst75ToxyJPHqoY9XUwP4nKA2gPXQSRSBLsf
-	xtgHqIgbFcSgMmwf3gfSu5vjht2jGrLnlzaqs0P+90JaVX5XtdNjNw3f
-X-Gm-Gg: AY/fxX7x78um/HLuCzYkvKF6pDDCN+BMRZNFU1+N6fEsRCwRjoJnSX5tiIcpryqFydD
-	L0t+Rw8+YaD7x4mion6W/yhhHe9tYiRNcth46+dnR4tjpR5GPPjTozyr78jFc8YpHWTF1hYhop8
-	/AzoAbeMVRKpbVHJsGV0DaJecIBHMPuOGVDSNDWLnIFoL81ffVdPGA4xhsE4PIo7xaXsNzR9HX/
-	wg/Xp7i8jf56Xe3GKbBKgoqXc1d9LVNctxNiG0MBhBq83z4f4dVauoFhA2NzgoPBQSR/I5qBMqe
-	IlY2ZdNuFM6nSVPHlgIr8D6hfx9pk2APYZeFPKYMVPipwMdhOVIwUrBmHPxWP8iGaZVdQPnJk4+
-	1S+rtG/lzaAhLx1DFkxUAlofCqrKPj3ViQ5c8tNxsU6cheNEngLZSRs6gLeYhnOCVYItfog1moj
-	e/NamR50PaIQCPZp+ltzKH7vtQUNLXWUz6I2E1fxztBU+RhVX9gi0q
-X-Google-Smtp-Source: AGHT+IFV+c61z+DgSxhQNpcRqsr6GKrDffylNeUc9FZ154kyk76iN8prufaBiE8rBuUIXMcUo/WuYg==
-X-Received: by 2002:a05:600c:3b05:b0:477:7bca:8b34 with SMTP id 5b1f17b1804b1-47a8f8ab546mr158959185e9.6.1765898711717;
-        Tue, 16 Dec 2025 07:25:11 -0800 (PST)
-Received: from anton.local (bba-92-98-207-67.alshamil.net.ae. [92.98.207.67])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47a8f4b1347sm270035235e9.8.2025.12.16.07.25.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Dec 2025 07:25:11 -0800 (PST)
-Date: Tue, 16 Dec 2025 19:25:06 +0400
-From: "Anton D. Stavinskii" <stavinsky@gmail.com>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, 
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Chen Wang <unicorn_wang@outlook.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Longbin Li <looong.bin@gmail.com>, Ze Huang <huangze@whut.edu.cn>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	sophgo@lists.linux.dev, Yixun Lan <dlan@gentoo.org>
-Subject: Re: [PATCH v2 0/3] riscv: sophgo: allow DMA multiplexer set channel
- number for DMA controller
-Message-ID: <aUF4w9sO5lmU9T6v@anton.local>
-Mail-Followup-To: Inochi Amaoto <inochiama@gmail.com>, 
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Chen Wang <unicorn_wang@outlook.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Longbin Li <looong.bin@gmail.com>, Ze Huang <huangze@whut.edu.cn>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	sophgo@lists.linux.dev, Yixun Lan <dlan@gentoo.org>
-References: <20251214224601.598358-1-inochiama@gmail.com>
- <aUE9hDtflXpcgGnX@inochi.infowork>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lf3H9gdZ9D+N1C4RiPjshA+zQ9qd+N8m+JXQZAlxAiPSRhofHRbllK2t7P1PyA99cmTY5xjlXBLLoCCscCVNuUUNvPJ4ecuBCoYoKIlfkqsj7vQg7ihSk3DO6q8PEkEVPX8utz4S9Pn1u30PW6zvQL6jQgih3nE/lNrGxAwsZvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJnxXBfP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CBD2C4CEF1;
+	Tue, 16 Dec 2025 15:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765898764;
+	bh=oPBT1uvFdNEw1M57O3taYeispOFBCMR0ND78csytjM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GJnxXBfPGtoNsJLWtS7GgJZuvk3Uw1qUsM/wE8UZrz3dp+hHdytF0KiRmmboyVLJ9
+	 MfBmfGXr0HLGBcnae0jiS6cebsQKQ/EOdaSsTMRqfFyk/quob+d0X8vpmuTWfS1ipd
+	 o4mX5DK8y+wmcRxiEbcXEvwfKg7jp774WHtYdE+QsQSMY3qmvMFKUqt5cGPJTi5Y6C
+	 VRIR9c8g6yj8tJzoUsr/wLWKr4UanbkyYE+7iQLvBGddjfBnzQJs4yU9oXu5B1Tdwu
+	 92eOz5pJz7bt0cd3+n825hi5gowGfCYIhy5wdjQ5nL9K5hdP4A6LIEfANxoR3yps20
+	 llOoN+cNHBNKA==
+Date: Tue, 16 Dec 2025 20:56:01 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: jeanmichel.hautbois@yoseli.org, Angelo Dureghello <angelo@sysam.it>,
+	Greg Ungerer <gerg@linux-m68k.org>, imx@lists.linux.dev,
+	dmaengine@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] dma: mcf-edma: Add per-channel IRQ naming for
+ debugging
+Message-ID: <aUF6CdS6WVZuEP24@vaman>
+References: <20251126-dma-coldfire-v2-0-5b1e4544d609@yoseli.org>
+ <20251126-dma-coldfire-v2-2-5b1e4544d609@yoseli.org>
+ <aScnArV/22L5VmxP@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -106,17 +60,60 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aUE9hDtflXpcgGnX@inochi.infowork>
+In-Reply-To: <aScnArV/22L5VmxP@lizhi-Precision-Tower-5810>
 
-On Tue, Dec 16, 2025 at 07:09:16PM +0400, Inochi Amaoto wrote:
-
-> Hi Anton,
+On 26-11-25, 11:12, Frank Li wrote:
+> On Wed, Nov 26, 2025 at 09:36:03AM +0100, Jean-Michel Hautbois via B4 Relay wrote:
+> > From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+> >
+> > Add dynamic per-channel IRQ naming to make DMA interrupt identification
+> > easier in /proc/interrupts and debugging tools.
+> >
+> > Instead of all channels showing "eDMA", they now show:
+> > - "eDMA-0" through "eDMA-15" for channels 0-15
+> > - "eDMA-16" through "eDMA-55" for channels 16-55
+> > - "eDMA-tx-56" for the shared channel 56-63 interrupt
+> > - "eDMA-err" for the error interrupt
+> >
+> > This aids debugging DMA issues by making it clear which channel's
+> > interrupt is being serviced.
+> >
+> > Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+> > ---
+> >  drivers/dma/mcf-edma-main.c | 26 ++++++++++++++++++--------
+> >  1 file changed, 18 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/dma/mcf-edma-main.c b/drivers/dma/mcf-edma-main.c
+> > index f95114829d80..6a7d88895501 100644
+> > --- a/drivers/dma/mcf-edma-main.c
+> > +++ b/drivers/dma/mcf-edma-main.c
+> > @@ -81,8 +81,14 @@ static int mcf_edma_irq_init(struct platform_device *pdev,
+> >  	if (!res)
+> >  		return -1;
+> >
+> > -	for (ret = 0, i = res->start; i <= res->end; ++i)
+> > -		ret |= request_irq(i, mcf_edma_tx_handler, 0, "eDMA", mcf_edma);
+> > +	for (ret = 0, i = res->start; i <= res->end; ++i) {
+> > +		char *irq_name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
+> > +						"eDMA-%d", (int)(i - res->start));
+> > +		if (!irq_name)
+> > +			return -ENOMEM;
+> > +
+> > +		ret |= request_irq(i, mcf_edma_tx_handler, 0, irq_name, mcf_edma);
+> > +	}
+> >  	if (ret)
+> >  		return ret;
 > 
-> Since you have tested this patch before, could you give a Tested-by?
+> The existing code have problem, it should use devm_request_irq(). if one
+> irq request failure, return here,  requested irq will not free.
+
+Why is that an error!
+
 > 
-Done. V2 works fine with Milk Duo 256M with 2 channels RX and TX working
-simultaneously.
+> You'd better add patch before this one to change to use devm_request_irq()
 
+Not really, devm_ is a not always good option.
 
-Tested-by: Anton D. Stavinskii <stavinsky@gmail.com>
+-- 
+~Vinod
 

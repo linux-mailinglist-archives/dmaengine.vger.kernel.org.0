@@ -1,135 +1,118 @@
-Return-Path: <dmaengine+bounces-7732-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7733-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94F4FCC561A
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 23:41:39 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D1FFCC563D
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 23:45:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F3D00304B962
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 22:41:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 209663030C9A
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 22:45:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B62933F8C9;
-	Tue, 16 Dec 2025 22:41:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E94BB2E92B3;
+	Tue, 16 Dec 2025 22:45:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gEz+VZQ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSDMHNou"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A0933D6DB;
-	Tue, 16 Dec 2025 22:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4475433F8DA
+	for <dmaengine@vger.kernel.org>; Tue, 16 Dec 2025 22:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765924863; cv=none; b=sVjiJvl+I8jqu5jpErSDc9sfBd0TnIwILJ6mi8doXVp+TOs1KoMRAbVCPcVQnNo0joeR4BUA8Mx/OPeKdolaD8an/i1RJBb6hlfpE/Zdv7u3YSBgi9Xq8CRUtk79TFKIgQ9xVNDUwOxqzGAQvVgKpHkMZZHQC51UUfRj1cu7OBc=
+	t=1765925122; cv=none; b=iqoV7vNtCwyAy6wZxUeLsmbtmkgRQxjx07ebrO56MmmI5xC67FP3T35Vh+NvYd6lVb4qCjM1h8vTcvw+AAIX83QRlGeHOU4IL00CpSr++cb24T20vR1ixCQoPsOC2BLZGqPi7LjpfQ7VQl5NYYuqW8hoHQ9VxTPJiGoZdDDcx/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765924863; c=relaxed/simple;
-	bh=F4nBlBidqUY4wHY3UGyVfOGJUkba0Ns3cRLyrEueVek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rs0qznhrVTuogcAOaNG3gaJ2MIf2cvfS/XR46kEiQoJqDxNTIr+hwhXIlzsC1CjlZNaQEWfDzU6I35FhdTZUwem04t5MV5KrvPYt5vf2JQTvyHWHnS9HSkKG7Wl9yCdyNch8n2Jrhb5Yo9e0tRg5Td7CS8O+7k161WUr/9uSYCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gEz+VZQ6; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id A083BC1A589;
-	Tue, 16 Dec 2025 22:40:34 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 209CB6071C;
-	Tue, 16 Dec 2025 22:40:59 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 02EF2102F01D0;
-	Tue, 16 Dec 2025 23:40:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1765924853; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=p40JSqlhbKdTItQZ+N/qAEwTU4k0uQat5nJYxSbGhm4=;
-	b=gEz+VZQ6ruzh1HRxC6RBi7LjHCvppYTRhjSCI+zapFY1BzdKjLykGIsoA+5dBrQxDW8p3m
-	OO1KwL8BA9dUrfh/AdzYfd9Y0GtQTaE7Qx9epEG776yjviUNFaOmfXz0auLuvfgyGfZBs4
-	jg8UrJJR7F8+UxRR9S+lpyS5W0Lo9j+3mteypwPXsIov4vyid4eYLE1VneqbZCqE4y9mir
-	O9MX7eg1GKbkCaKcv88nJ1IEgNOswmDwo9Eb6quJhGj+1ooWoNYiiC50Dnga3zaMrim7JD
-	qqxuFChNMU86OjnuZ0tHCLLnG2SD3rpM14oOugDkAu14dGdUJzv2QVmksSuuqg==
-Date: Tue, 16 Dec 2025 23:40:46 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Robert Marko <robert.marko@sartura.hr>, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
-	Steen.Hegelund@microchip.com, daniel.machon@microchip.com,
-	UNGLinuxDriver@microchip.com, herbert@gondor.apana.org.au,
-	davem@davemloft.net, vkoul@kernel.org, linux@roeck-us.net,
-	andi.shyti@kernel.org, lee@kernel.org, andrew+netdev@lunn.ch,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	linusw@kernel.org, olivia@selenic.com, radu_nicolae.pirea@upb.ro,
-	richard.genoud@bootlin.com, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-	richardcochran@gmail.com, wsa+renesas@sang-engineering.com,
-	romain.sioen@microchip.com, Ryan.Wanner@microchip.com,
-	lars.povlsen@microchip.com, tudor.ambarus@linaro.org,
-	charan.pedumuru@microchip.com, kavyasree.kotagiri@microchip.com,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-clk@vger.kernel.org, mwalle@kernel.org,
-	luka.perkov@sartura.hr
-Subject: Re: [PATCH v2 04/19] dt-bindings: arm: move AT91 to generic
- Microchip binding
-Message-ID: <2025121622404642e6f789@mail.local>
-References: <20251215163820.1584926-1-robert.marko@sartura.hr>
- <20251215163820.1584926-4-robert.marko@sartura.hr>
- <202512161628415e9896d1@mail.local>
- <CA+HBbNFG+xNokn5VY5G6Cgh41NZ=KteRi0D9c0B15xb77mzv8w@mail.gmail.com>
- <202512161726449fe42d71@mail.local>
- <20251216-underarm-trapped-626f16d856f5@spud>
+	s=arc-20240116; t=1765925122; c=relaxed/simple;
+	bh=/ns1Rp/WSyMte8FAqNCkjuzh1ej9BUVs0MBSnMXCYb8=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bJceywnn9y4FouDobO3Dbh6E1jIR8LGMs1cJEqU+xROwSYvu31pahsrbdmRpmYnijTdCe2h7sIbNRhwgpyPFK6v7IFY5UmLMgr2wk2Q7hEfk4DD7fnMDhhePMbSNBH7HMnETAVeeU7sCfbWhSIPnNwjNoUpurbG+TrchvLyAFi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSDMHNou; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-34c2f52585fso4224700a91.1
+        for <dmaengine@vger.kernel.org>; Tue, 16 Dec 2025 14:45:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765925120; x=1766529920; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=A7nXoigv9/yz61HlMjawiCb2Rzy4kdcjqDMu4uuBc3o=;
+        b=QSDMHNouoA2fawUtmLZ1VYKaGkG+nInPQxh/AaPvaySs743dgzj9E0A6Y2Pj22BPDN
+         uOnSayhn010iDB1TuKqugonExPyoGLUq/iEbRpuILHOhsjC5EcF7evV2AvwtqKPLyHr2
+         Z50gC8FgWCYtaiM1NfMkVOokpA0DyleWumEvbhWGY/3ZjvrZgrBDv2Fv6tOzndM5CP6v
+         7PTkx5BO6EpocdlrIOoJyTvBguOG98Jm9+Yr5vZy5E0D6CIJNMIs52IW/vZglZyke8Dz
+         JnYQfyQS0WOTr8lnYGef6kg2qVQoj9Dq7GofofMePTuiepDE+joyjVmNaVuzOeES1HVS
+         A2Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765925120; x=1766529920;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=A7nXoigv9/yz61HlMjawiCb2Rzy4kdcjqDMu4uuBc3o=;
+        b=HfYJsmoHXad6aSn0u7fB1BQLDbR8g5l6BOO+stBJ1OheFr6BNC1/PfbuByvf5OHb//
+         02rM9A/f6EBjI5zEFtw37KmRHoSzHNgLej6V2wqn5yZLkl+gAtymqoyrQ/ymRYZqqLaP
+         S1PlzJj3qvf9wlpmyIpfcfgWaH0HQXz6II0HdAdM6eq2FXtQGtKMW1/GHnODcc33Fw4Q
+         7xi57Shtwwa4fawjDb9cd9FvCIXiv7VKcYNEeOWelAnEqC7RYpB5hC9AsED4uNIpLNpm
+         CGXYIBt6SxG7owRhJT0ckKg2TrvMIPGk6DYloNn9tKORPdYJ1wT7oRStwewR5ZiGcOXj
+         3qVA==
+X-Forwarded-Encrypted: i=1; AJvYcCWp/XDLtaf5dhTmsStyuuF7agvm8s8KkqprbSmoBzU+ZsJ6AesqmQvgs5bDlLQBEyUHoPc9NAZPYzA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz9LdwyvzfLCYUHusTiMBHYAJ05b3burTA7wTxJVBOZIutr7qw
+	j7NrjVf7ZwnrAjba7HwFOqly5KvisvoEHeSmLTWIz5u6OvykL72ecew4
+X-Gm-Gg: AY/fxX4QXH1b+rbWwoxE6O1FaXvpd1B2xTgBl39H7bzKOzjvo5QpEYB9KyNKGJmo4On
+	kzTdXQDICfb2ytYsHQXaslWwDzYc1K1R4BsRttUErJZ0yZz1SOcTEegKTuldDvr5qLZu5n4ZBbv
+	8jw/otBdi+N3Yie/pRHLXdlQSSatsF4l4L2SIyjq5kh5RKcjKPcPh6yhGREyy/9r9T+WOjjyMCd
+	X3StWUoRrmYFTm+mOHzaujB/7g6h9mjfm5yNxFSKbP10qoN2m67sYcOBQWegskxNiZeqr75a6/x
+	3XS3XA7ROSyT+owZNx+k5bpPpBFF00zWqqxHZ/0SYfqB3J4iggFuHiRbJ8+Wwuir1APM4kgVEiu
+	DfGlFJU6dhhkRNaUEeZm2d5iv5ouKceI8xrRk2Fg5RqbY6K3K2RhyCoTmNZhznRMfwVuxGuw1XY
+	49O3YqhFTgOw==
+X-Google-Smtp-Source: AGHT+IE9nIlDHsFmfYsacNR6G1ZVOO+zgg/tDfoQF+xuebBoHAyCLps0J4BtB+5eml9RBwlgxvUP1Q==
+X-Received: by 2002:a05:701b:2719:b0:11b:c4ee:66b with SMTP id a92af1059eb24-11f354dd89amr8447143c88.37.1765925120396;
+        Tue, 16 Dec 2025 14:45:20 -0800 (PST)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f2e1bb28dsm57479374c88.2.2025.12.16.14.45.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Dec 2025 14:45:19 -0800 (PST)
+Date: Wed, 17 Dec 2025 06:44:17 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Inochi Amaoto <inochiama@gmail.com>, 
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Chen Wang <unicorn_wang@outlook.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	Longbin Li <looong.bin@gmail.com>, Ze Huang <huangze@whut.edu.cn>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	sophgo@lists.linux.dev, Yixun Lan <dlan@gentoo.org>
+Subject: Re: [PATCH v2 0/3] riscv: sophgo: allow DMA multiplexer set channel
+ number for DMA controller
+Message-ID: <aUHgt8caOoo1gsES@inochi.infowork>
+References: <20251214224601.598358-1-inochiama@gmail.com>
+ <aUE9hDtflXpcgGnX@inochi.infowork>
+ <aUF4w9sO5lmU9T6v@anton.local>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251216-underarm-trapped-626f16d856f5@spud>
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <aUF4w9sO5lmU9T6v@anton.local>
 
-On 16/12/2025 19:21:27+0000, Conor Dooley wrote:
-> On Tue, Dec 16, 2025 at 06:26:44PM +0100, Alexandre Belloni wrote:
-> > On 16/12/2025 17:56:20+0100, Robert Marko wrote:
-> > > On Tue, Dec 16, 2025 at 5:29 PM Alexandre Belloni
-> > > <alexandre.belloni@bootlin.com> wrote:
-> > > >
-> > > > On 15/12/2025 17:35:21+0100, Robert Marko wrote:
-> > > > > Create a new binding file named microchip.yaml, to which all Microchip
-> > > > > based devices will be moved to.
-> > > > >
-> > > > > Start by moving AT91, next will be SparX-5.
-> > > >
-> > > > Both lines of SoCs are designed by different business units and are
-> > > > wildly different and while both business units are currently owned by
-> > > > the same company, there are no guarantees this will stay this way so I
-> > > > would simply avoid merging both.
-> > > 
-> > > Hi Alexandre,
-> > > 
-> > > The merge was requested by Conor instead of adding a new binding for LAN969x [1]
-> > > 
-> > > [1] https://patchwork.kernel.org/project/linux-arm-kernel/patch/20251203122313.1287950-2-robert.marko@sartura.hr/
-> > > 
-> > 
-> > I would still keep them separate, SparX-5 is closer to what is
-> > devicetree/bindings/mips/mscc.txt than to any atmel descended SoCs.
+On Tue, Dec 16, 2025 at 07:25:06PM +0400, Anton D. Stavinskii wrote:
+> On Tue, Dec 16, 2025 at 07:09:16PM +0400, Inochi Amaoto wrote:
 > 
-> If you don't want the sparx-5 stuff in with the atmel bits, that's fine,
-> but I stand over my comments about this lan969x stuff not getting a file
-> of its own.
-> Probably that means putting it in the atmel file, alongside the lan966x
-> boards that are in there at the moment.
+> > Hi Anton,
+> > 
+> > Since you have tested this patch before, could you give a Tested-by?
+> > 
+> Done. V2 works fine with Milk Duo 256M with 2 channels RX and TX working
+> simultaneously.
+> 
+> 
+> Tested-by: Anton D. Stavinskii <stavinsky@gmail.com>
 
-I'm fine with this.
+Thanks
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Regards,
+Inochi
 

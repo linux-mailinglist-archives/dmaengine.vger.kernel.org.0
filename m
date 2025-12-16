@@ -1,131 +1,148 @@
-Return-Path: <dmaengine+bounces-7663-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7664-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BBE6CC45F4
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 17:44:33 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BA12CC3BB1
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 15:49:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0AE2930D9E56
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 16:38:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 44B563003056
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 14:48:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BF2138E16E;
-	Tue, 16 Dec 2025 12:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB9F13930DE;
+	Tue, 16 Dec 2025 12:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnoL6OaL"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C085438E156;
-	Tue, 16 Dec 2025 12:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0C53930D7;
+	Tue, 16 Dec 2025 12:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765888996; cv=none; b=NZJx4jjMITgPjnkWhHxkiTD1zrH21kJn1USXFuc5kFoV0jf+TvgdnK9TATnbLrVidb35PWHxU2YmilZZoDkxna0YbuWCl/n0q7GdA2UgjcvamjJfcFhu5nBaXWiGl/GRQYMQAKShbywTVPcP8ssBEQIYFs6IICquwMPAI7PYK00=
+	t=1765889123; cv=none; b=RISljcSKVNz5/AcS+bRCLk7cAcXTAxL/s9lJZvPT11tFWLz7KTNxJdDE1ILmiwusNYcxvCeyggCB+QFZd/G6zIKXjEjKS1jCFJAYQi96xp++UlS49JB6fLtPayUmzY1NXAhJ7bkHoT6h6qc5QqcywuGGDdh8knkOn4I6oinPmuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765888996; c=relaxed/simple;
-	bh=GWWMNA7kXHTwxvnmlwFDb6c/u6dTQsrwBV98UQHxvhw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RV8OwMoe07KLi7FyIkjQQ9p45y3xqyk04JzNnjunMlS1PFRXEIHxBPyyghfr+VtrvvFUwnB0qZ2SP3bzbhB5B1V34gAM3tXvlQ94e5FjEAGK73QQvx0dtBfe9KTTkUM08wbVooNEDBeqCS+5k0iBxlB8C1uPk9NUA4UMXYl3bJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77086FEC;
-	Tue, 16 Dec 2025 04:43:05 -0800 (PST)
-Received: from [10.57.43.186] (unknown [10.57.43.186])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DC973F694;
-	Tue, 16 Dec 2025 04:43:09 -0800 (PST)
-Message-ID: <9d4c274f-3e4c-49a1-9b2a-a95e9a48a4a6@arm.com>
-Date: Tue, 16 Dec 2025 12:43:07 +0000
+	s=arc-20240116; t=1765889123; c=relaxed/simple;
+	bh=BB7cuc1NoM/ZjbE9WkcQ3syZOkeMW0I8NGbpaVWvHrA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GfBs/CIOO0HN03GvKycn3ThHu/46AYYiTtK5hmlfnw/N9XmOQTicc5LsefRf4JGqafQ7lnwUEh0w7oLjj3bPNoA2lJzSoFmvhLY9Y3w/HiR8oxlFqWwl2D6SjF7+TOcyOoaPraDfzv/hA/RlDdi3p6XmQYabfnKc+D3CdSjdkLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnoL6OaL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8388FC4CEF1;
+	Tue, 16 Dec 2025 12:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765889123;
+	bh=BB7cuc1NoM/ZjbE9WkcQ3syZOkeMW0I8NGbpaVWvHrA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZnoL6OaLXuO+HTBjme5kokBg0mnjS5RwOuZ6J05mjCYsgC+8P5QwHuW5NKH2ESn6J
+	 G3W5VhnMayk+dn5VjLfT5UFuTX93YBBL9G/2FKYLk/kw3iPFRGcDCSZtUBKzRMSV/a
+	 RouZAANdXw1Db478Bn39VjR3zqFC0RYvl5Id7A9t1MT39UIG2Jd87pr3U/+5olFHoC
+	 sbo5M9OnE+as1zxfENAdombBcAwZECL0O0bltvRPFc1jAQuExxy57AQ05hCuQs4JP5
+	 JLaTsl2h5ZXDDzL+jnGJYuCiJB+YdY2g2Siou/HnXT76l2YwUQRT7WyHzz09vv+OZ4
+	 9GDNXf1AYoSfQ==
+Date: Tue, 16 Dec 2025 18:15:19 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH 0/8] dmaengine: Add new API to combine onfiguration and
+ descriptor preparation
+Message-ID: <aUFUX0e_h7RGAecz@vaman>
+References: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: dma: arm-dma350: update DT binding
- docs for cix sky1 SoC
-To: Jun Guo <jun.guo@cixtech.com>, peter.chen@cixtech.com,
- fugang.duan@cixtech.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, vkoul@kernel.org, ychuang3@nuvoton.com,
- schung@nuvoton.com
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- linux-arm-kernel@lists.infradead.org, jelly.jia@cixtech.com
-References: <20251216123026.3519923-1-jun.guo@cixtech.com>
- <20251216123026.3519923-2-jun.guo@cixtech.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20251216123026.3519923-2-jun.guo@cixtech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
 
-On 2025-12-16 12:30 pm, Jun Guo wrote:
-> Add SoC-specific compatible strings to the DT binding documents to support
-> cix sky1 SoC.
+On 08-12-25, 12:09, Frank Li wrote:
+
+Spell check on subject please :-)
+
+> Previously, configuration and preparation required two separate calls. This
+> works well when configuration is done only once during initialization.
 > 
-> When adding support for a new SoC that uses the arm dma controller,
-> future contributors should be encouraged to actually add SoC-specific
-> compatible strings. The use of the "arm,dma-350" compatible string in
-> isolation should be disallowed.
+> However, in cases where the burst length or source/destination address must
+> be adjusted for each transfer, calling two functions is verbose.
+> 
+> 	if (dmaengine_slave_config(chan, &sconf)) {
+> 		dev_err(dev, "DMA slave config fail\n");
+> 		return -EIO;
+> 	}
+> 
+> 	tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
+> 
+> After new API added
+> 
+> 	tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags, &sconf);
 
-No, you've missed the point - however many channels the hardware 
-implements, the DT should list that many interrupt specifiers; it 
-doesn't matter whether any of them happen to be the same.
+Nak, we cant change the API like this.
+I agree that you can add a new way to call dmaengine_slave_config() and
+dmaengine_prep_slave_single() together.
+maybe dmaengine_prep_config_perip_single() (yes we can go away with slave, but
+cant drop it, as absence means something else entire).
 
-Thanks,
-Robin.
+I would like to retain the dmaengine_prep_slave_single() as an API for
+users to call and invoke. There are users who configure channel once as
+well
 
-> Signed-off-by: Jun Guo <jun.guo@cixtech.com>
+> 
+> Additional, prevous two calls requires additional locking to ensure both
+> steps complete atomically.
+> 
+>     mutex_lock()
+>     dmaengine_slave_config()
+>     dmaengine_prep_slave_single()
+>     mutex_unlock()
+> 
+> after new API added, mutex lock can be moved. See patch
+>      nvmet: pci-epf: Use dmaengine_prep_slave_single_config() API
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->   .../devicetree/bindings/dma/arm,dma-350.yaml  | 31 +++++++++++++------
->   1 file changed, 21 insertions(+), 10 deletions(-)
+> Frank Li (8):
+>       dmaengine: Add API to combine configuration and preparation (sg and single)
+>       PCI: endpoint: pci-epf-test: use new DMA API to simple code
+>       dmaengine: dw-edma: Use new .device_prep_slave_sg_config() callback
+>       dmaengine: dw-edma: Pass dma_slave_config to dw_edma_device_transfer()
+>       nvmet: pci-epf: Remove unnecessary dmaengine_terminate_sync() on each DMA transfer
+>       nvmet: pci-epf: Use dmaengine_prep_slave_single_config() API
+>       PCI: epf-mhi:Using new API dmaengine_prep_slave_single_config() to simple code.
+>       crypto: atmel: Use dmaengine_prep_slave_single_config() API
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/arm,dma-350.yaml b/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
-> index 429f682f15d8..78bcc7f9aa8b 100644
-> --- a/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
-> +++ b/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
-> @@ -14,7 +14,11 @@ allOf:
->   
->   properties:
->     compatible:
-> -    const: arm,dma-350
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - cix,sky1-dma-350
-> +          - const: arm,dma-350
->   
->     reg:
->       items:
-> @@ -22,15 +26,22 @@ properties:
->   
->     interrupts:
->       minItems: 1
-> -    items:
-> -      - description: Channel 0 interrupt
-> -      - description: Channel 1 interrupt
-> -      - description: Channel 2 interrupt
-> -      - description: Channel 3 interrupt
-> -      - description: Channel 4 interrupt
-> -      - description: Channel 5 interrupt
-> -      - description: Channel 6 interrupt
-> -      - description: Channel 7 interrupt
-> +    maxItems: 8
-> +    description: |
-> +      The DMA controller may be configured with separate interrupts for each channel,
-> +      or with a single combined interrupt for all channels, depending on the SoC integration.
-> +    oneOf:
-> +      - items:
-> +          - description: Channel 0 interrupt
-> +          - description: Channel 1 interrupt
-> +          - description: Channel 2 interrupt
-> +          - description: Channel 3 interrupt
-> +          - description: Channel 4 interrupt
-> +          - description: Channel 5 interrupt
-> +          - description: Channel 6 interrupt
-> +          - description: Channel 7 interrupt
-> +      - items:
-> +          - description: Combined interrupt shared by all channels
->   
->     "#dma-cells":
->       const: 1
+>  drivers/crypto/atmel-aes.c                    | 10 ++---
+>  drivers/dma/dw-edma/dw-edma-core.c            | 38 +++++++++++-----
+>  drivers/nvme/target/pci-epf.c                 | 21 +++------
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c  | 52 +++++++---------------
+>  drivers/pci/endpoint/functions/pci-epf-test.c |  8 +---
+>  include/linux/dmaengine.h                     | 64 ++++++++++++++++++++++++---
+>  6 files changed, 111 insertions(+), 82 deletions(-)
+> ---
+> base-commit: bc04acf4aeca588496124a6cf54bfce3db327039
+> change-id: 20251204-dma_prep_config-654170d245a2
+> 
+> Best regards,
+> --
+> Frank Li <Frank.Li@nxp.com>
 
+-- 
+~Vinod
 

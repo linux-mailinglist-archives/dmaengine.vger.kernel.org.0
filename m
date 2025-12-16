@@ -1,55 +1,59 @@
-Return-Path: <dmaengine+bounces-7698-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7699-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29D8ECC48B8
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 18:07:38 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE869CC47FE
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 17:59:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 65F6F304E546
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 16:59:31 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C04E13009DAA
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 16:59:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD2FD314D2C;
-	Tue, 16 Dec 2025 16:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D82F2D877A;
+	Tue, 16 Dec 2025 16:59:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EKJ9Batp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0OWcfUb"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17BE313E02;
-	Tue, 16 Dec 2025 16:59:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95F424A058;
+	Tue, 16 Dec 2025 16:59:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765904368; cv=none; b=TJDVWTjKNzEGyzlAG51kNYdOtNgrV7lKbakFMdZx5JWvYP5dmId4Tyr6zUUKmpam9hd3aPmlFt56HMNBjlz88EyRaUNuMx9y6NOfOvUfriMz76Zp3NPJ1ncq0dSOsFi8rVnSUL6edDGa7VruI8PrsVkl5nTX5Si01jXiN1Mq1uA=
+	t=1765904371; cv=none; b=LAqYE+TNrqKbkeL6/0uPWFiIqgV79CYySnJdtyaGcwjfdGd0nQDacSKjc1I4Qk0kzUHUYrrMgEXrxkc+6DgXFCSo0XWPLeC4nUEb/yjd+7arfcceWcceJJYkBbn54BtCEgmg4TGxKbSUk19H2bqjA3s5BtVnRzNXUBdxJiq3Qrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765904368; c=relaxed/simple;
-	bh=E2b1QseqTisF5iwWpBtbuAgacFNg+u4tXoabApuiEgc=;
+	s=arc-20240116; t=1765904371; c=relaxed/simple;
+	bh=vc1iSBm3wFs8fhJAJ1q2N7a2JIySHMcFeo++xQQ9R2s=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hDE5Z0BJCEf8ac/+R12Dwha5YRGrxinigHjgtPhFvn01uEGfXADc75NNuWkVfXtRaYCXghnmG9NgiUVlgTvG9adn/TO6N7Avjkuj4gQxi6bTZkCxlUsKEipNBx6YoElXzj/1K7D32mTCLvriMxqfkinQn66VxR28UTA7wHq2zj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EKJ9Batp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 936DFC4CEF1;
-	Tue, 16 Dec 2025 16:59:25 +0000 (UTC)
+	 MIME-Version:Content-Type; b=odilQtQzRfSy7lIgzKFSjV5lLMu3zVVxQvJAvJ2fb8a2EQdyt2AQTKndeyUak8GV1KB6mIiRMl0nEgxJrGHDmOYiVQRPuPmHZQINOkP+POlF2pvdQEdVGAkPghTcJGOFpAk56CGwXYH6K0hQ24hfYyjcqFPmU3eFiphIjL941OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0OWcfUb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CFE8C4CEFB;
+	Tue, 16 Dec 2025 16:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765904367;
-	bh=E2b1QseqTisF5iwWpBtbuAgacFNg+u4tXoabApuiEgc=;
+	s=k20201202; t=1765904371;
+	bh=vc1iSBm3wFs8fhJAJ1q2N7a2JIySHMcFeo++xQQ9R2s=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=EKJ9BatpAOLYo2/apV3uFhZF/WhTJ42t/DexuAFnEDxy0a8LgUCaqvyrzm0TSI4GM
-	 s8ibRUY39kCo1TTn5eslRsQZXIVHVXeYzNAn2nQv/3McBFw2GKH5rRMT/sQgflPvqg
-	 qx7ntHQ/0t/QF4+er+dQAPzDukFi85zHXFOmbaQUJO04NwmiTKiQtvSG6uqlxgsrWi
-	 aVqdh7eA51PA7RgYs53QLGGKf6LLjgTGW0Ty7V+EMwjFrGmz8v6hHpI5yLCkqIGkEj
-	 5zZ0v6hvbIfIkr53djvJFeHgOhaF73v3TcEYSGi8h93RXuxTXhGuxNtFXNYwXGu/Nh
-	 zPdVC4p78VxLg==
+	b=M0OWcfUbedRtcNUKJMb69nusPgQfV5j2alU6ZE7s2Rx2WiJ/PZi3Abbo3YidSNcaM
+	 oyuT4r9p6SnlOxTfvuKoutLObJXipYKy57xgMexf2LBPYr41Lih9X5aYtXarohimN3
+	 PdgFR4vX6PLya3HJDwYyY8kqqrCtl8ks4tmB/UjJ9a19klO2UznkV/hsi0KslRty/E
+	 Ju3HzUdX+jN7BWUcr4ZooiK3Ol4PeudbYMlCmQeaAUoBuF0P5xkp1xU7WryIVoAof0
+	 JkpA/EX7nV86lLI2fDHLsov6XKrtQTrpen14cPfP76KsILzcRzMWydBtFt5x5T29ii
+	 3j1D5j0Fvbc+g==
 From: Vinod Koul <vkoul@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-In-Reply-To: <20251106-qcom-bam-dma-refactor-v1-0-0e2baaf3d81a@linaro.org>
-References: <20251106-qcom-bam-dma-refactor-v1-0-0e2baaf3d81a@linaro.org>
-Subject: Re: (subset) [PATCH 0/3] dmengine: qcom: bam_dma: some driver
- refactoring
-Message-Id: <176590436523.430148.5029789142471290220.b4-ty@kernel.org>
-Date: Tue, 16 Dec 2025 22:29:25 +0530
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+ Prabhakar <prabhakar.csengg@gmail.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20251125212621.267397-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20251125212621.267397-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH] dt-bindings: dma: rz-dmac: Document RZ/V2N SoC support
+Message-Id: <176590436727.430148.10863238173576645400.b4-ty@kernel.org>
+Date: Tue, 16 Dec 2025 22:29:27 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,18 +65,16 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Thu, 06 Nov 2025 16:44:49 +0100, Bartosz Golaszewski wrote:
-> Here are some changes I figured would be nice to have while working on
-> the BAM locking feature.
+On Tue, 25 Nov 2025 21:26:21 +0000, Prabhakar wrote:
+> Document the DMA controller on the Renesas RZ/V2N SoC, which is
+> architecturally identical to the DMAC found on the RZ/V2H(P) SoC.
 > 
 > 
 
 Applied, thanks!
 
-[1/3] dmaengine: qcom: bam_dma: order includes alphabetically
-      commit: 892f2bb487916cb15432912cd6aae445ab2f48f0
-[2/3] dmaengine: qcom: bam_dma: use lock guards
-      commit: 20f581834aacd743b3d95bbbb37a802d14cf3690
+[1/1] dt-bindings: dma: rz-dmac: Document RZ/V2N SoC support
+      commit: f94163e950c9568fe2d2d88317d9602ce021e646
 
 Best regards,
 -- 

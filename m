@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-7648-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7649-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A012CC1A60
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 09:49:59 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81591CC1A86
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 09:51:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 89EC13020CE9
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 08:45:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B522D30053E8
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 08:46:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFF4C32A3F0;
-	Tue, 16 Dec 2025 08:45:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCFEE338592;
+	Tue, 16 Dec 2025 08:46:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QR7Uiw5V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsC1Ezil"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F70D313E2F;
-	Tue, 16 Dec 2025 08:45:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6901C5D77;
+	Tue, 16 Dec 2025 08:46:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765874727; cv=none; b=VYLjEz3Ow7Yrjzk3eDV5ELAcafhPi5JyTidR7NdQ4ADMV8se1eG3Jy3CpvKDiaWcXRN+oHJYxI9A+SYQSBDWruCtvVjO4KNHpUp2ibnWZcWXvawaUYDOSXgVPaxYfP0qbsnN0u8yCPBwiY+ldW4fW/RjSmWZa8q+2W7bpyNUFFw=
+	t=1765874809; cv=none; b=YWjKhL6I44FTsV5LYF2NWMwrqHkleTXH3qhiWfnF9PuauJlixQQg69wg7tK9KN/kFuBPSx+LF1qVlTq0ftZGDbRv2Zhwkj7kDwfZ4vgNW86kcAntcjH/iiOHs1pdSV34NOgIVq73vXED58WgPkC9Lc8iEaL9L3YTLgMW0oNWmy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765874727; c=relaxed/simple;
-	bh=tvseRd0ZBKVZuxl0/2VvYZVVO718dYCkJYN9IBKiMek=;
+	s=arc-20240116; t=1765874809; c=relaxed/simple;
+	bh=U6AMER3xHbREfz4zPD/+FFhhIS+o9BoU8Nkc/13AIdc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xm/uLDwUfDp1rNRSmF7idhOsYk1DWGxyb1OD4KgdF5RMfN8DDvzYylAbwOoAdAuCTMBJsfqz/065Xam+iiHOkJg8GIydUPQTtxopfvuDBKsipUaTbi3SG7f6097QclIuQr+rqAAm3bj8wfxhgtdYlGSY49aZnKV83jU0rThdwZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QR7Uiw5V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2840C16AAE;
-	Tue, 16 Dec 2025 08:45:24 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=fkG//fTSI+D2erSS7FuJv6jemWMe4PXXDPCEZOjJh+xQNEU+3aRVvvMPPrQJlLVqK1ll0qwkv/RclYPzHUDs8kuu7R1wYWaU57HN2MlasgcJzy5Cw+5hXOrUSIISpRW2lnrAKDzufWlIY+KsB6Xwb5B5xV7XFLxN2XuU0ukL0OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsC1Ezil; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5EE0C113D0;
+	Tue, 16 Dec 2025 08:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765874727;
-	bh=tvseRd0ZBKVZuxl0/2VvYZVVO718dYCkJYN9IBKiMek=;
+	s=k20201202; t=1765874809;
+	bh=U6AMER3xHbREfz4zPD/+FFhhIS+o9BoU8Nkc/13AIdc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QR7Uiw5VgzfsE7U2kpUwyYuna6qcbU3xhKYDGw7qrT+JaDIQ0b7i73YSGqS77cDNW
-	 UTNhYKC+8o/f77bxcvYPR19JheTOlciBMoIBWrALFiOrqXbOl/JHnuTTQBxlTWJ2nP
-	 yPWNXIn0wJyGOnrZaBiykTUUDy/dAK+mp9lX69iV7gXRwdyWlABYY4KfpOwT+0Ckkt
-	 0evz8jbMl1Gric++TNzBTHxA8gcRJFA/OwUGTGRSG5bcwDk4fK08uKw/n7zoX77mdI
-	 Hp/BD5AlYesfSLHaHF4nRPNzs8LLrjC55iXgDVXsofltBzxK+wwhlmn5ibZGMnog+E
-	 wKxcUd69ZdlPA==
-Message-ID: <83c771e7-f32b-48e4-91ab-d7c3b9746e14@kernel.org>
-Date: Tue, 16 Dec 2025 09:45:22 +0100
+	b=PsC1Ezilg837+gM/eC8yMnZFcF5N9RetIZBHpkvNt5INBubjkB80mtCOMneHDO02m
+	 AxS1ivh4v1nqFlQP37ewI4SryBcqo2Po9xTSp5pbAVPYiqpjMl7ymrh/tkpRZ7gA5m
+	 8AbQVpfK7GvvdFrzCxxtwZ/0t6cAWRwedAnhP5jFLAd4oUDmaZUwRQz63XC0Gwk+A1
+	 stCvPZ8D1urXIwkiEtV/pAtIoC8iigvL9bGfZjS0grvt0yXxVud37kgITWsy/drC60
+	 46hmHgj6LvM5BfPuEHVDElXwARDICARrykHtwX5SFiU9kCpC70DQu3gXBQr+CY/kWM
+	 9e/JSlnqOH7Ww==
+Message-ID: <176db27e-a689-4de1-898b-527420bf68dc@kernel.org>
+Date: Tue, 16 Dec 2025 09:46:45 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -48,7 +48,7 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: dma: Add Amlogic general DMA
+Subject: Re: [PATCH 2/3] dma: amlogic: Add general DMA driver for SoCs
 To: xianwei.zhao@amlogic.com, Vinod Koul <vkoul@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
@@ -57,7 +57,7 @@ Cc: linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
 References: <20251216-amlogic-dma-v1-0-e289e57e96a7@amlogic.com>
- <20251216-amlogic-dma-v1-1-e289e57e96a7@amlogic.com>
+ <20251216-amlogic-dma-v1-2-e289e57e96a7@amlogic.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -103,52 +103,92 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251216-amlogic-dma-v1-1-e289e57e96a7@amlogic.com>
+In-Reply-To: <20251216-amlogic-dma-v1-2-e289e57e96a7@amlogic.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 On 16/12/2025 09:03, Xianwei Zhao via B4 Relay wrote:
 > From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 > 
-> Add documentation describing the Amlogic general DMA.
+> Amlogic SoCs include a general-purpose DMA controller that can be used
+> by multiple peripherals, such as I2C PIO and I3C. Each peripheral group
+> is associated with a dedicated DMA channel in hardware.
 > 
 > Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 > ---
->  .../bindings/dma/amlogic,general-dma.yaml          | 70 ++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
+>  drivers/dma/Kconfig       |   8 +
+>  drivers/dma/Makefile      |   1 +
+>  drivers/dma/amlogic-dma.c | 567 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 576 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/amlogic,general-dma.yaml b/Documentation/devicetree/bindings/dma/amlogic,general-dma.yaml
-> new file mode 100644
-> index 000000000000..8b9cec9b8da0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/amlogic,general-dma.yaml
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/amlogic,general-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Amlogic general DMA controller
-> +
-> +description: |
-> +  This is a general-purpose peripheral DMA controller. It currently supports
-> +  major peripherals including I2C, I3C, PIO, and CAN-BUS. Transmit and receive
-> +  for the same peripheral use two separate channels, controlled by different
-> +  register sets. I2C and I3C transfer data in 1-byte units, while PIO and
-> +  CAN-BUS transfer data in 4-byte units. From the controller’s perspective,
-> +  there is no significant difference.
-> +
-> +maintainers:
-> +  - Xianwei Zhao <xianwei.zhao@amlogic.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: amlogic,general-dma
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 8bb0a119ecd4..fc7f70e22c22 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -85,6 +85,14 @@ config AMCC_PPC440SPE_ADMA
+>  	help
+>  	  Enable support for the AMCC PPC440SPe RAID engines.
+>  
+> +config AMLOGIC_DMA
+> +	tristate "Amlogic genneral DMA support"
+> +	depends on ARCH_MESON
 
-I don't know what you mean by "general" but it feels like wildcard, not
-SoC, so that would be a no-go. Read writing bindings or several talks
-about this.
+Missing compile test.
+
+> +	select DMA_ENGINE
+> +	select REGMAP_MMIO
+> +	help
+> +	  Enable support for the Amlogic general DMA engines.
+> +
+
+
+
+> +
+> +	ret = of_dma_controller_register(np, aml_of_dma_xlate, aml_dma);
+> +	if (ret)
+> +		return ret;
+> +
+> +	regmap_write(aml_dma->regmap, RCH_INT_MASK, 0xffffffff);
+> +	regmap_write(aml_dma->regmap, WCH_INT_MASK, 0xffffffff);
+> +
+> +	ret = devm_request_irq(&pdev->dev, aml_dma->irq, aml_dma_interrupt_handler,
+> +			       IRQF_SHARED, dev_name(&pdev->dev), aml_dma);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(aml_dma->dma_device.dev, "initialized\n");
+
+Useless message, drop. This does not look like useful printk message.
+Drivers should be silent on success:
+https://elixir.bootlin.com/linux/v6.15-rc7/source/Documentation/process/coding-style.rst#L913
+https://elixir.bootlin.com/linux/v6.15-rc7/source/Documentation/process/debugging/driver_development_debugging_guide.rst#L79
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id aml_dma_ids[] = {
+> +	{ .compatible = "amlogic,general-dma", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, aml_dma_ids);
+> +
+> +static struct platform_driver aml_dma_driver = {
+> +	.probe = aml_dma_probe,
+> +	.driver		= {
+> +		.name	= "aml-dma",
+> +		.of_match_table = aml_dma_ids,
+> +	},
+> +};
+> +
+> +module_platform_driver(aml_dma_driver);
+> +
+> +MODULE_DESCRIPTION("GENERAL DMA driver for Amlogic");
+> +MODULE_AUTHOR("Xianwei Zhao <xianwei.zhao@amlogic.com>");
+> +MODULE_ALIAS("platform:aml-dma");
+> +MODULE_LICENSE("GPL");
+> 
+
 
 Best regards,
 Krzysztof

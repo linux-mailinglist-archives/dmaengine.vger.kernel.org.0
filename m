@@ -1,184 +1,136 @@
-Return-Path: <dmaengine+bounces-7680-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7681-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14B62CC4074
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 16:45:42 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA375CC448F
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 17:27:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0262130469BC
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 15:43:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6AD423072297
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 16:24:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC9EF35C1B9;
-	Tue, 16 Dec 2025 15:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78DDB32695C;
+	Tue, 16 Dec 2025 15:55:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="avTeetSC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnJY5LCi"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFF333A9C8;
-	Tue, 16 Dec 2025 15:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32E92D3737;
+	Tue, 16 Dec 2025 15:55:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765899791; cv=none; b=jFx16sM4G3oV8wRQZtDM28olO2KI6AK04bA9QEJKTURZfihoZdkrhTJNvR9tr0bw1x/ARTiqSwzJxvQRORn4QYoNQJcjRAkj7UX7YUh5DSU5iN4obR54eH0OwhGIXAO25O6v4DM3MWNdxYkzs4zW+SYOGRDChzq3+wmmKXheVUc=
+	t=1765900507; cv=none; b=R7zzo6vz3SY1YGXki1+fsK8v0Kio3tXel1Td53nqpD2jk+W0RqDm8flVRL9N8+v6jW5j5B3StfPbWMFCdUrmNz0eQHXFLzxfSYV26Qvbj3aCowEmOFJwzvIfuDPnfWNx/lPjLdVrWLbF4a/962n/cE/ZbeGATwveOifsdmGZ+x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765899791; c=relaxed/simple;
-	bh=ZJTJypfLe1H/1AUEwksCTkMoXxELG4u7pdR81YdX+EQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g2OAq1Q1Sik+S0NaYMQJROBwVSeIjutu+8mAB1ulQ6S7GW1EBGXwsGSVS7qvqs1Nqq7kl+LO3FixlFKAC481+yOLtKyHYbs07QbEem9K4GRpWBhSxee4SRtorDbg4ezYoYeDbOfNHoVvaIjsLjEaikkuE6eBJQt1q7/qj0K/aJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avTeetSC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD8A9C4CEF1;
-	Tue, 16 Dec 2025 15:43:10 +0000 (UTC)
+	s=arc-20240116; t=1765900507; c=relaxed/simple;
+	bh=01o5UEZSfkctZGOC5qlwlYDaww6GquCTHK/kGSGT9Qs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JnQYZrp2x0OZdMWLvktVyfnHViFljIF0q27YRYy4jYP7zJzXOfWANh4ZO3WwSYT4BtiBPdsn/40biBdXsmAqYeCAmnb1l2cS9xO45/5IZdC9Y9UP8mN0GZnH88P6PHRucLGzHQRWKbfvWH1QZ/4XCSYy8Qg7PydWltFBmV5xPig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KnJY5LCi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1484C4CEF1;
+	Tue, 16 Dec 2025 15:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765899791;
-	bh=ZJTJypfLe1H/1AUEwksCTkMoXxELG4u7pdR81YdX+EQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=avTeetSCg2f1iVCLtIL2eMD8lxo6IXEVPcYP29oezKOpSlnYbzQvySLzpryda+R1A
-	 ew6Qmjryuhzff4o2BNqhJbYikZ/FxB9nsZ+SVx/fEVe4+Vk8KAAXNTxXKgB1dOxfC6
-	 74+SKOUxUYH7bvsWWQn3Q5qwYcHK43xEPD2CbWjHDldkEanlq21fmXVgnU0XBWMqbv
-	 BNwMTA5V4T1ZdwdXE45rLHOcG/cKJ0JLceGyQuUmh04zLBAqknv3qYM1zyCFIEZrg6
-	 xNyoNgN2Bk8xHpe+jauDCs8GKdRJcRNBlYtSaJq0IBEmiVa1MMIQaZqoQDY1frH7eC
-	 nyyoTKRn0yS8A==
-Date: Tue, 16 Dec 2025 21:13:07 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH 0/8] dmaengine: Add new API to combine onfiguration and
- descriptor preparation
-Message-ID: <aUF-C8iUCs-dYXGm@vaman>
-References: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
- <aUFUX0e_h7RGAecz@vaman>
- <aUF2SX/6bV2lHtF0@lizhi-Precision-Tower-5810>
+	s=k20201202; t=1765900506;
+	bh=01o5UEZSfkctZGOC5qlwlYDaww6GquCTHK/kGSGT9Qs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KnJY5LCi/daDI436cW11l2Wqr+RJlCMtWNkJk2AtzanmHz93rQJ124FWk4sFUtsA6
+	 iVo4ZZWRFT4V/zqvlbP7Mu/vlS+xtrtlI7SYy3E04iqXohV2Oe4HUDa6isZCRbzxTc
+	 /mvQXq7uA8hGmtra8djoYst0s2tt0EfGlkx6wwR7MTb0KQ4BY4unq4LgWmGXccHlMy
+	 ZHbUYJRJJh3TZgot7Lt2gxaABElqBUyrBX2iIfqM6dvs/N9XGlNoObcZlgTWXH9FO7
+	 9E6+x2wXTqTogPi50AcxgqckAp2FL7Su9wOSPLWvnUCCQAPFKrt8DexSDUaYg5cK1x
+	 HTM+jBrwl41cA==
+Message-ID: <d9665340-5a96-4105-88e9-ec14a715df5a@kernel.org>
+Date: Tue, 16 Dec 2025 16:54:54 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aUF2SX/6bV2lHtF0@lizhi-Precision-Tower-5810>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/19] dt-bindings: arm: AT91: relicense to dual
+ GPL-2.0/BSD-2-Clause
+To: Robert Marko <robert.marko@sartura.hr>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, nicolas.ferre@microchip.com,
+ alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
+ Steen.Hegelund@microchip.com, daniel.machon@microchip.com,
+ UNGLinuxDriver@microchip.com, herbert@gondor.apana.org.au,
+ davem@davemloft.net, vkoul@kernel.org, linux@roeck-us.net,
+ andi.shyti@kernel.org, lee@kernel.org, andrew+netdev@lunn.ch,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, linusw@kernel.org,
+ olivia@selenic.com, radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com,
+ gregkh@linuxfoundation.org, jirislaby@kernel.org, mturquette@baylibre.com,
+ sboyd@kernel.org, richardcochran@gmail.com,
+ wsa+renesas@sang-engineering.com, romain.sioen@microchip.com,
+ Ryan.Wanner@microchip.com, lars.povlsen@microchip.com,
+ tudor.ambarus@linaro.org, charan.pedumuru@microchip.com,
+ kavyasree.kotagiri@microchip.com, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+ netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-clk@vger.kernel.org, mwalle@kernel.org
+Cc: luka.perkov@sartura.hr
+References: <20251215163820.1584926-1-robert.marko@sartura.hr>
+ <20251215163820.1584926-3-robert.marko@sartura.hr>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20251215163820.1584926-3-robert.marko@sartura.hr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 16-12-25, 10:10, Frank Li wrote:
-> On Tue, Dec 16, 2025 at 06:15:19PM +0530, Vinod Koul wrote:
-> > On 08-12-25, 12:09, Frank Li wrote:
-> >
-> > Spell check on subject please :-)
-> >
-> > > Previously, configuration and preparation required two separate calls. This
-> > > works well when configuration is done only once during initialization.
-> > >
-> > > However, in cases where the burst length or source/destination address must
-> > > be adjusted for each transfer, calling two functions is verbose.
-> > >
-> > > 	if (dmaengine_slave_config(chan, &sconf)) {
-> > > 		dev_err(dev, "DMA slave config fail\n");
-> > > 		return -EIO;
-> > > 	}
-> > >
-> > > 	tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
-> > >
-> > > After new API added
-> > >
-> > > 	tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags, &sconf);
-> >
-> > Nak, we cant change the API like this.
+On 15/12/2025 17:35, Robert Marko wrote:
+> As it is preferred to have bindings dual licensed, lets relicense the AT91
+> bindings from GPL-2.0 only to GPL-2.0/BSD-2 Clause.
 > 
-> Sorry, it is typo here. in patch
-> 	dmaengine_prep_slave_single_config(chan, dma_local, len, dir, flags, &sconf);
-> 
-> > I agree that you can add a new way to call dmaengine_slave_config() and
-> > dmaengine_prep_slave_single() together.
-> > maybe dmaengine_prep_config_perip_single() (yes we can go away with slave, but
-> > cant drop it, as absence means something else entire).
-> 
-> how about dmaengine_prep_peripheral_single() and dmaengine_prep_peripheral_sg()
-> to align recent added "dmaengine_prep_peripheral_dma_vec()"
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
 
-It doesnt imply config has been done, how does it differ from usual
-prep_ calls. I see confusions can be caused!
+You need all contributors to ack this...
 
-> I think "peripheral" also is reduntant. dmaengine_prep_single() and
-> dmaengine_prep_sg() should be enough because
-
-Then you are missing the basic premises of dmaengine that we have memcpy
-ops and peripheral dma ops (aka slave) Absence of peripheral always
-implies that it is memcpy
-
-> - dmaengine_prep_dma_cyclic() is actually work with prepiperial FIFO
-> - some prepierial FIFO work like memory, by use shared memory method, like
-> PCIe map windows.
-> - argument: config and dir already passdown information to indicate if it
-> is device preiperial. So needn't indicate at function name.
-> - maybe later extend to support mem to mem by config becuase adjust burst
-> size for difference alignment or difference bus fabric port to optimaze
-> performance.
-> 
-> Frank
-> 
-> >
-> > I would like to retain the dmaengine_prep_slave_single() as an API for
-> > users to call and invoke. There are users who configure channel once as
-> > well
-> >
-> > >
-> > > Additional, prevous two calls requires additional locking to ensure both
-> > > steps complete atomically.
-> > >
-> > >     mutex_lock()
-> > >     dmaengine_slave_config()
-> > >     dmaengine_prep_slave_single()
-> > >     mutex_unlock()
-> > >
-> > > after new API added, mutex lock can be moved. See patch
-> > >      nvmet: pci-epf: Use dmaengine_prep_slave_single_config() API
-> > >
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > > Frank Li (8):
-> > >       dmaengine: Add API to combine configuration and preparation (sg and single)
-> > >       PCI: endpoint: pci-epf-test: use new DMA API to simple code
-> > >       dmaengine: dw-edma: Use new .device_prep_slave_sg_config() callback
-> > >       dmaengine: dw-edma: Pass dma_slave_config to dw_edma_device_transfer()
-> > >       nvmet: pci-epf: Remove unnecessary dmaengine_terminate_sync() on each DMA transfer
-> > >       nvmet: pci-epf: Use dmaengine_prep_slave_single_config() API
-> > >       PCI: epf-mhi:Using new API dmaengine_prep_slave_single_config() to simple code.
-> > >       crypto: atmel: Use dmaengine_prep_slave_single_config() API
-> > >
-> > >  drivers/crypto/atmel-aes.c                    | 10 ++---
-> > >  drivers/dma/dw-edma/dw-edma-core.c            | 38 +++++++++++-----
-> > >  drivers/nvme/target/pci-epf.c                 | 21 +++------
-> > >  drivers/pci/endpoint/functions/pci-epf-mhi.c  | 52 +++++++---------------
-> > >  drivers/pci/endpoint/functions/pci-epf-test.c |  8 +---
-> > >  include/linux/dmaengine.h                     | 64 ++++++++++++++++++++++++---
-> > >  6 files changed, 111 insertions(+), 82 deletions(-)
-> > > ---
-> > > base-commit: bc04acf4aeca588496124a6cf54bfce3db327039
-> > > change-id: 20251204-dma_prep_config-654170d245a2
-> > >
-> > > Best regards,
-> > > --
-> > > Frank Li <Frank.Li@nxp.com>
-> >
-> > --
-> > ~Vinod
-
--- 
-~Vinod
+Best regards,
+Krzysztof
 

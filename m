@@ -1,81 +1,72 @@
-Return-Path: <dmaengine+bounces-7709-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7710-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB5A2CC49B2
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 18:15:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6053CC4A1F
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 18:21:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1AD3B3016F96
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 17:15:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 30F9D305D99D
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 17:18:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9204328B69;
-	Tue, 16 Dec 2025 17:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B37430F538;
+	Tue, 16 Dec 2025 17:18:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fd77r7CV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9Z0adoY"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462EF72602;
-	Tue, 16 Dec 2025 17:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165113A1E8E;
+	Tue, 16 Dec 2025 17:18:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765905309; cv=none; b=LnuBWAAjmNS2H98DgxXyYO0++R/7z6nfVFFmOBNxnmRrzJO4YbXJ3UzLvKgXYTaYKuzM4KQ0XghUM0VymuD4mYmdBnSPH7tynXhqwB3tIbpa+pZxfBb8qkIuscPTn9De8dk61UpXIeDtAYiqlJUl0Np+hUBNBxPfkpeWXrOtUEs=
+	t=1765905482; cv=none; b=dRqxTIfM7sVVPn1N4zJFpXmeZbvLzYeI2KxRqe6UyPOd9cNb+tQ+KXAJx1rpw06hxRpTZUiv0kOdxX6zkm6RC223hb/VxE1ML59bqrrO28UAH/nLyjlMsjWP0E+SP3RV+CAL3g+tx2JpU1aQGvKLr/Zp1dzkjLnQ5CpwYIkbLkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765905309; c=relaxed/simple;
-	bh=mcmdjoIeQ8dVaydge/S3sCXDOzpTarcOqio6eoFh39k=;
+	s=arc-20240116; t=1765905482; c=relaxed/simple;
+	bh=cppGG9PT+JpiVSfKeuzy9K48JaGezXDa3T4Yw7/QjLM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rrHXTHMM8940VyGS/oFtYGMoLc0inKaEen3gfFSjzRe7hxDv+h6CXG8f1C6j1EL+GVsg7SXXRfTic0i4cDAjJGllioKn/CEVIYo3k65J38YH6pkjVC/jeOovTFpI04ejlhHffXEJJeIDMx5eZzfHHNIrto//AQQ7DGmtaBDR07I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fd77r7CV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79985C4CEF1;
-	Tue, 16 Dec 2025 17:15:08 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=EUwLg5Woq+qGxztFBNIJR0pYysNiCVthb1oGSGlT2gaG8qooQgm5WEF0SkDn5ovnph7DCjvZjAAmyzU9xQ2JPyosYRGhameol7v1YcKBx4gYw/MvLPgnOvfiOw50J66hNtGBUKs56F0MbnRfHjGfD6tvAxzHZ1wkcLi+YJayw7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9Z0adoY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3909C113D0;
+	Tue, 16 Dec 2025 17:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765905308;
-	bh=mcmdjoIeQ8dVaydge/S3sCXDOzpTarcOqio6eoFh39k=;
+	s=k20201202; t=1765905481;
+	bh=cppGG9PT+JpiVSfKeuzy9K48JaGezXDa3T4Yw7/QjLM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fd77r7CVON1lRH0b5ILmf5Gy/OkXnk169H1lioS5jyy9elisWdT1B/13wKfu+8pZc
-	 MMVtqqxS56r1V01p+Q85v7lwRhImLwUnIJJ0vwO75aAuzEyDngWY8pLjYM79dfY8f+
-	 5hyuQnh96NvBdqQApeIyRFLfbs6yW4Y4LKCn8Aw/RrfYIIobxDskLwKUX6wRtVGBKw
-	 R2zpsoAI2i5/AFYKvFT2N8twQh/qnJ6umnF7PnanyQvjDYoEksoloEXlTs+/elMEY/
-	 PTZGiL02hNPhdY5Gtl8RycZ9WpmAyen3c6YEpedvcyXnwPyXz276eehtsd3P+/npXv
-	 IAcWNiEQ0WdfQ==
-Date: Tue, 16 Dec 2025 11:15:05 -0600
-From: Rob Herring <robh@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Michal Simek <michal.simek@amd.com>, Vinod Koul <vkoul@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
-	Peter Rosin <peda@axentia.se>, Linus Walleij <linusw@kernel.org>,
-	Chen-Yu Tsai <wens@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	dmaengine@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-iio@vger.kernel.org, iommu@lists.linux.dev,
-	linux-gpio@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	imx@lists.linux.dev, linux-sound@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Remove unused includes
-Message-ID: <20251216171505.GA2641341-robh@kernel.org>
-References: <20251212231203.727227-1-robh@kernel.org>
- <20251213165949.4b51f7cb@jic23-huawei>
- <695ca5d2-b713-4838-8427-a9d31751c0cf@oss.qualcomm.com>
+	b=J9Z0adoYBmlbmaIqmD79zYatnS+Nt9uvNPpMDj8zX/H9mOuYbV48DmY7Rh8YVw9qd
+	 kPaz6lUutNxyvoq7ZvVMPOvsgYTAzuBlktLuvQ5j5I6V5g7piqDfxgXGt8ewBWaV99
+	 KVhZfzc6hJz1AFyIDWQlGEPMQlWZ23GklILkeYlwlpyezVASDJn8Y3tC+h9+7ViXMV
+	 F6TWaAZvDP6hyZlZdErrsnkbI/f8almng8GM1fBYyZOmchVnX0pKgBMiqUi4HiCeSf
+	 uiFFuy6zg2Y5TNiUPlnOgcsviidlVs2UFXR0qo2C805X9YA13sjqyc7PDY5fLzXDrQ
+	 dyBmhKeBtDjFQ==
+Date: Tue, 16 Dec 2025 22:47:57 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH 0/8] dmaengine: Add new API to combine onfiguration and
+ descriptor preparation
+Message-ID: <aUGURVuW33WSTuyI@vaman>
+References: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
+ <aUFUX0e_h7RGAecz@vaman>
+ <aUF2SX/6bV2lHtF0@lizhi-Precision-Tower-5810>
+ <aUF-C8iUCs-dYXGm@vaman>
+ <aUGA7tmDYm1MhRXn@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -84,37 +75,76 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <695ca5d2-b713-4838-8427-a9d31751c0cf@oss.qualcomm.com>
+In-Reply-To: <aUGA7tmDYm1MhRXn@lizhi-Precision-Tower-5810>
 
-On Tue, Dec 16, 2025 at 01:02:52PM +0100, Konrad Dybcio wrote:
-> On 12/13/25 5:59 PM, Jonathan Cameron wrote:
-> > On Fri, 12 Dec 2025 17:11:52 -0600
-> > "Rob Herring (Arm)" <robh@kernel.org> wrote:
-> > 
-> >> Remove includes which are not referenced by either DTS files or drivers.
-> >>
-> >> There's a few more which are new, so they are excluded for now.
-> >>
-> >> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > 
-> > Acked-by: Jonathan Cameron <jonathan.cameron@huawei.com> #for-iio
-> > 
-> > Ideally we'll get a QC ack on those as well.
-> > 
-> > Jonathan
-> >>  .../dt-bindings/iio/qcom,spmi-adc7-pmr735b.h  |  30 --
-> >>  .../dt-bindings/iio/qcom,spmi-adc7-smb139x.h  |  19 --
+On 16-12-25, 10:55, Frank Li wrote:
+> On Tue, Dec 16, 2025 at 09:13:07PM +0530, Vinod Koul wrote:
+> > On 16-12-25, 10:10, Frank Li wrote:
+> > > On Tue, Dec 16, 2025 at 06:15:19PM +0530, Vinod Koul wrote:
+> > > > On 08-12-25, 12:09, Frank Li wrote:
+> > > >
+> > > > Spell check on subject please :-)
+> > > >
+> > > > > Previously, configuration and preparation required two separate calls. This
+> > > > > works well when configuration is done only once during initialization.
+> > > > >
+> > > > > However, in cases where the burst length or source/destination address must
+> > > > > be adjusted for each transfer, calling two functions is verbose.
+> > > > >
+> > > > > 	if (dmaengine_slave_config(chan, &sconf)) {
+> > > > > 		dev_err(dev, "DMA slave config fail\n");
+> > > > > 		return -EIO;
+> > > > > 	}
+> > > > >
+> > > > > 	tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
+> > > > >
+> > > > > After new API added
+> > > > >
+> > > > > 	tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags, &sconf);
+> > > >
+> > > > Nak, we cant change the API like this.
+> > >
+> > > Sorry, it is typo here. in patch
+> > > 	dmaengine_prep_slave_single_config(chan, dma_local, len, dir, flags, &sconf);
+> > >
+> > > > I agree that you can add a new way to call dmaengine_slave_config() and
+> > > > dmaengine_prep_slave_single() together.
+> > > > maybe dmaengine_prep_config_perip_single() (yes we can go away with slave, but
+> > > > cant drop it, as absence means something else entire).
+> > >
+> > > how about dmaengine_prep_peripheral_single() and dmaengine_prep_peripheral_sg()
+> > > to align recent added "dmaengine_prep_peripheral_dma_vec()"
+> >
+> > It doesnt imply config has been done, how does it differ from usual
+> > prep_ calls. I see confusions can be caused!
 > 
-> Those are being moved to dts/qcom:
+> dmaengine_prep_peripheral_single(.., &sconf) and
+> dmaengine_prep_peripheral_sg(..., &sconf).
 > 
-> https://lore.kernel.org/linux-arm-msm/20251127133903.208760-1-jishnu.prakash@oss.qualcomm.com/
+> The above two funcitions have pass down &sconf.
 > 
-> and will hopefully be in use later in this cycle.
+> The usual prep_ call have not sconf argument, which need depend on previous
+> config.
 > 
-> Krzysztof and the submitter agreed on that outcome since they represent
-> hw constants and aren't "real" bindings (connecting sw to sw)
+> further, If passdown NULL for config, it means use previuos config.
 
-Okay, I'll drop those 2 when applying.
+I know it is bit longer but somehow I would feel better for the API to
+imply config as well please
 
-Rob
+> 
+> >
+> > > I think "peripheral" also is reduntant. dmaengine_prep_single() and
+> > > dmaengine_prep_sg() should be enough because
+> >
+> > Then you are missing the basic premises of dmaengine that we have memcpy
+> > ops and peripheral dma ops (aka slave) Absence of peripheral always
+> > implies that it is memcpy
+> 
+> Okay, it is not big deal. is dmaengine_prep_dma_cyclic() exception? which
+> have not "peripheral" or "slave", but it is not for memcpy.
+
+Cyclic by definition implies a cyclic dma over a peripheral
+
+-- 
+~Vinod
 

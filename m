@@ -1,53 +1,55 @@
-Return-Path: <dmaengine+bounces-7704-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7705-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C03DDCC484D
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 18:02:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACC70CC48E0
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 18:09:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 099143062FB1
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 17:00:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 51372309FB22
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 17:00:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9072320386;
-	Tue, 16 Dec 2025 16:59:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B29532694E;
+	Tue, 16 Dec 2025 16:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K10ZcPOW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwSgG/6z"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386842BE7AB;
-	Tue, 16 Dec 2025 16:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FD52DAFA4;
+	Tue, 16 Dec 2025 16:59:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765904386; cv=none; b=UMqITsJKwMj9qctQmPIAGZD4tCxh/ERJmpNIom68MItKg4nK0fx7O4dkyc1NMlUK3mlSzPKk5S//P8K8E7J6Rywz3q0edz3kHIXlTNkn/Ygr/rxCh2n/ul36d84IpXBtD+QFWj+NW9R8Iyn77n8WN28kBjy6SA9MRZ//MC8LdgU=
+	t=1765904389; cv=none; b=iiK6vOyZoia/9y/L6NGxP64nLFevs6gXsD4Z54j2Q2z0yDThqNDjEAPj2WxoO3OBeVY1qd/0Htie6sVaI32UaPGHC83vTIhSnqMwn0dH/At4qz4Ky3sf8mO0oSIb9cF7nh+G1NJzr7U4plucLkZ4zCus/2hEF39BP9R4qIXJJRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765904386; c=relaxed/simple;
-	bh=W/X2VxJRpTojMR9uqAxwXMGCviIoIhTVQO42sSdwrtw=;
+	s=arc-20240116; t=1765904389; c=relaxed/simple;
+	bh=IEUxEiubHfZryPxl7VoGp+qOf8EBAHnzqwRfMyWiBzs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=O1yLDpxHNd6LUeUmbmDFvMKRpHJicQyFI4kT1zGXWGrDDlX6ktXDQfW9t7JdvhU0aOjmybzSTKCiAS83dR9ir+L6JBpKphUaIsvtkTqP61OIPzRdyBsOn0UgT71yOwtioRe0VDgh6hmew+rC8p9UxCs0dffLadGU74CCrZLuOq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K10ZcPOW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A52F3C4CEFB;
-	Tue, 16 Dec 2025 16:59:44 +0000 (UTC)
+	 MIME-Version:Content-Type; b=CHu4MG18PwGmUZid669fWiovx6JHs4PMwmZBXuATPIyKBejlJA2Ayer9zV07+eIvT8YnKceji16CcxM2Xc3Egx/qAak61QPhspMFPk85qH9OSv9YqglR2DyNUxMjT/8Powo9F8AFdARdPAnP0oPHD78C8869B8tDoDX8NRW9z9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwSgG/6z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DB8AC19422;
+	Tue, 16 Dec 2025 16:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765904385;
-	bh=W/X2VxJRpTojMR9uqAxwXMGCviIoIhTVQO42sSdwrtw=;
+	s=k20201202; t=1765904388;
+	bh=IEUxEiubHfZryPxl7VoGp+qOf8EBAHnzqwRfMyWiBzs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=K10ZcPOWF+QzIe9WQe2qXUAQq/JpBtNVLUhjhnaqeyvlREK/EdkXnjI8RDuASp/W/
-	 DSgzVCG0bWynps2e+LA+wcANFkDVS/5uU8uHumVbS4IF05nBYglF1lEnV5bKsqwReD
-	 ur17WHXocnFKjVLErI6/z2HrsTgfItzKla+w/hIqonmOcsrZfLgh/AUM61Yh1uY8t1
-	 ezF/XebFw1wVxHwDFA9xbSGjIXU7PMb6YFpOJqlLQS1LfYwzpCgxNeWSuw9QpqMV2w
-	 moenWvJWQJQ+KYRQze4t9W4jInm/L9CmBD06lQhlO09SMJLgPHxPkg8VI1rE1Voy9X
-	 7jWM9zx2w4LuQ==
+	b=hwSgG/6z6szArHuo7d16I1MZ6M5yJKvZMTL19/c2eUGUBl+pW/8+IQdvDY7LaQ+5L
+	 1D7WQERB3Nqy37aYtZWrLOT9KL+RX2hZo5swx231VZYXFYlJ1qb8D7ln38AyOgskae
+	 SeBjC4nQ8LKq/A2Z8ba+RrBNrdtouR6s/HIIECxOGJIqtsMIJ0L1/kHmqH5ykig2ss
+	 pHmmFCfhMOgtCjHxYEA/2+xeQLyJ4kly2U2Sl48lQ6BV+QxjMHe69LRw2IKJkNhD9A
+	 Fm4onOIplddXlK/7hAHBTPebXAodh+op7VQs0aKliC6CouPIUG2ZfwH6x5hoM1V74J
+	 67PwaM5w+4EFQ==
 From: Vinod Koul <vkoul@kernel.org>
 To: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, dmaengine@vger.kernel.org
-In-Reply-To: <20251101191524.1991135-1-rdunlap@infradead.org>
-References: <20251101191524.1991135-1-rdunlap@infradead.org>
-Subject: Re: [PATCH] dmaengine: dw_edma: correct kernel-doc warnings in
- <linux/dma/edma.h>
-Message-Id: <176590438430.430148.13852948544103905139.b4-ty@kernel.org>
-Date: Tue, 16 Dec 2025 22:29:44 +0530
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, 
+ Paul Mundt <lethal@linux-sh.org>, dmaengine@vger.kernel.org, 
+ linux-sh@vger.kernel.org
+In-Reply-To: <20251104002001.445297-1-rdunlap@infradead.org>
+References: <20251104002001.445297-1-rdunlap@infradead.org>
+Subject: Re: [PATCH] dmaengine: shdma: correct most kernel-doc issues in
+ shdma-base.h
+Message-Id: <176590438608.430148.16381479522388164901.b4-ty@kernel.org>
+Date: Tue, 16 Dec 2025 22:29:46 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -59,37 +61,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Sat, 01 Nov 2025 12:15:24 -0700, Randy Dunlap wrote:
-> Use the correct enum name in its kernel-doc heading.
-> Add ending ':' to struct member names.
-> Drop the @id: kernel-doc entry since there is no struct member named 'id'.
+On Mon, 03 Nov 2025 16:20:01 -0800, Randy Dunlap wrote:
+> Fix kernel-doc comments in include/linux/shdma-base.h to avoid
+> most warnings:
 > 
-> edma.h:46: warning: expecting prototype for struct dw_edma_core_ops.
->  Prototype was for struct dw_edma_plat_ops instead
-> Warning: edma.h:101 struct member 'ops' not described in 'dw_edma_chip'
-> Warning: edma.h:101 struct member 'flags' not described in 'dw_edma_chip'
-> Warning: edma.h:101 struct member 'reg_base' not described
->  in 'dw_edma_chip'
-> Warning: edma.h:101 struct member 'll_wr_cnt' not described
->  in 'dw_edma_chip'
-> Warning: edma.h:101 struct member 'll_rd_cnt' not described
->  in 'dw_edma_chip'
-> Warning: edma.h:101 struct member 'll_region_wr' not described
->  in 'dw_edma_chip'
-> Warning: edma.h:101 struct member 'll_region_rd' not described
->  in 'dw_edma_chip'
-> Warning: edma.h:101 struct member 'dt_region_wr' not described
->  in 'dw_edma_chip'
-> Warning: edma.h:101 struct member 'dt_region_rd' not described
->  in 'dw_edma_chip'
-> Warning: edma.h:101 struct member 'mf' not described in 'dw_edma_chip'
+> - prefix an enum name with "enum"
+> - prefix enum values with '@'
+> - prefix struct member names with '@'
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: dw_edma: correct kernel-doc warnings in <linux/dma/edma.h>
-      commit: f5a4aa643ee968137eea902aa321c58c14c256c7
+[1/1] dmaengine: shdma: correct most kernel-doc issues in shdma-base.h
+      commit: de4761fb57f6a71eeb5a4c1167ae3606b08d8f59
 
 Best regards,
 -- 

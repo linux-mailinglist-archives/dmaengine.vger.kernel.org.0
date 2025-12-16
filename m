@@ -1,105 +1,134 @@
-Return-Path: <dmaengine+bounces-7667-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7668-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51B70CC32FA
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 14:25:42 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1254FCC32C7
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 14:24:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C70873035A27
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 13:23:46 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id CA933302EB20
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Dec 2025 13:24:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FEF2350D7E;
-	Tue, 16 Dec 2025 13:11:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECB0D35504C;
+	Tue, 16 Dec 2025 13:11:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snNOJVhr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFwjwqyl"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9593502B6;
-	Tue, 16 Dec 2025 13:11:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89538354AF1;
+	Tue, 16 Dec 2025 13:11:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765890709; cv=none; b=CWc1XfR3WzsXm+AsC/+/UsySbAGutbxdQAfNegZz8C1qGrpRjAJ8yFcjY1m3/7ZyqdPORYkM1aOh1Si6uSfENY7GXK3eUZAQz6zr4QG9VYghksUYhUT4epUXlyXTz2VzSZn0qnPxoC9IwEkTa+a1zpfbB7DnHnPkPb7EHAZQh8Y=
+	t=1765890711; cv=none; b=JJqjVcrzVs6ePmYLduXmlxXfnRcZNuN0e89qpUznwgkDPFJjFeqn3DZV3e2pdY4I/B+RgMHli6ReqCEZZkb0za/mqCIUgP38fP/PQzSYY7TkWxFRn3XytXs9fllG6I7M+3pEXFGU6q457V8W8/fOATc9Mp1YGcxGL4ropPps7rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765890709; c=relaxed/simple;
-	bh=Da1yKunK6yDB+R6mPqFK1cShCjePJ/m3utIT45pGxK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lzFdIQBdquuI1FkBLl+/t1C5U0sONFZzS0YHXFXWevR6MbVIGDPetLEXoE1BocbM7sHNj7r7SvDx6IT/+GEyQ5dHGH/MSoSqB4niFtufgqQPn0/XsI9nD2sY5kpZGq8PH/9nClEjP3H4U6sQreOFGwbb6mRgfWhmcm/lZJcrXJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snNOJVhr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 541BDC4CEF1;
-	Tue, 16 Dec 2025 13:11:47 +0000 (UTC)
+	s=arc-20240116; t=1765890711; c=relaxed/simple;
+	bh=uK7rtQd0fuH8HIq2iyTTKTpcKJsEkMoXU53XE1O8rzg=;
+	h=From:Date:Content-Type:MIME-Version:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=WjqNvnPVSnnLYiNDt9GKiqMAKsWDOG/gLl3KPDJ8QB7RZCSLCzVw1Z6uGsIVJrJKVreTbmuj7Kx7qRtlcKRDF6le3uEkRXGbxKKR7iHhCIHBTZ7EQqDQ9Jn1go3aD7Zm0KsRDqI/fv5sK2ufufz8docbp0UhoOQH0To2SvwJUOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFwjwqyl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB05BC19423;
+	Tue, 16 Dec 2025 13:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765890708;
-	bh=Da1yKunK6yDB+R6mPqFK1cShCjePJ/m3utIT45pGxK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=snNOJVhrs1y5uRk/+i8bK7uPgOScGa+5PgY81doUZnze2nir4I8i4wM2DlaXkZyUd
-	 kirQ4pnG+67UXT5nng66/vqUHNHCuV2roh4WLFlDKF/GYriw81mSeH/xZFo2c+J+dt
-	 3LHtUws1t29HzFPQIq8TFB6ZmXmLi6GpvHK19IiteVB1zJa14FL9YKW9N4a3mkFVxQ
-	 2N2RzxO8vK3nN0hzJioU1NOk/ucZgB50OkQpBkYg1WD0Bvbvavt5eT3RY7q+gJeuzI
-	 nyar/1Z490GUjBedE70DzQn2U8oPnj0rW426tIWnWCVP2A5ZAgDbRpEM6lZwVQhxX4
-	 /vrrFgSN80TYw==
-Date: Tue, 16 Dec 2025 18:41:44 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Thomas Andreatta <thomasandreatta2000@gmail.com>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	Olivier Dautricourt <olivierdautricourt@gmail.com>,
-	Stefan Roese <sr@denx.de>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>,
-	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v4 0/13] dmaengine: introduce sg_nents_for_dma() and
- convert users
-Message-ID: <aUFakHZL8viMN3WR@vaman>
-References: <20251124121202.424072-1-andriy.shevchenko@linux.intel.com>
+	s=k20201202; t=1765890711;
+	bh=uK7rtQd0fuH8HIq2iyTTKTpcKJsEkMoXU53XE1O8rzg=;
+	h=From:Date:Cc:To:In-Reply-To:References:Subject:From;
+	b=fFwjwqyl4XciRQVPx8XogJowdRcsdYKb/ioKdv1BlYgi1o+jrg3aT4TAjJOxcokcI
+	 QsSoL7E/aTwp0Xx89fUuxiHPnEWOL+3YP75h9bjRELSdSMWlSEQ92eq4Dd4ceSznxM
+	 FA0++iF6bDiu+t9pjncqus1HTUPK3svYbIJYzU9lKuMSr/WEguQljrDJAZRNzhNg42
+	 v7hCHoWhSvks4wsNhavYOp/zj1CynIbu8P4b+tzQRYE66RX9T0NwB8sBSiXWwnDEBo
+	 MIlWjd8LzSrypRzNesJoMN6k5blOrxuig+/T5bgwizw08Jd3RqQ5mQlMx9Ug7dba8M
+	 js45kMZa3qkiw==
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 16 Dec 2025 07:11:49 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251124121202.424072-1-andriy.shevchenko@linux.intel.com>
+Cc: netdev@vger.kernel.org, linusw@kernel.org, vkoul@kernel.org, 
+ pabeni@redhat.com, jirislaby@kernel.org, lars.povlsen@microchip.com, 
+ linux-arm-kernel@lists.infradead.org, claudiu.beznea@tuxon.dev, 
+ kuba@kernel.org, mturquette@baylibre.com, Steen.Hegelund@microchip.com, 
+ mwalle@kernel.org, tudor.ambarus@linaro.org, devicetree@vger.kernel.org, 
+ UNGLinuxDriver@microchip.com, edumazet@google.com, 
+ linux-clk@vger.kernel.org, andi.shyti@kernel.org, olivia@selenic.com, 
+ conor+dt@kernel.org, luka.perkov@sartura.hr, richard.genoud@bootlin.com, 
+ linux-hwmon@vger.kernel.org, krzk+dt@kernel.org, 
+ wsa+renesas@sang-engineering.com, Ryan.Wanner@microchip.com, 
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+ alexandre.belloni@bootlin.com, lee@kernel.org, linux@roeck-us.net, 
+ davem@davemloft.net, gregkh@linuxfoundation.org, 
+ kavyasree.kotagiri@microchip.com, nicolas.ferre@microchip.com, 
+ andrew+netdev@lunn.ch, romain.sioen@microchip.com, sboyd@kernel.org, 
+ linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-serial@vger.kernel.org, daniel.machon@microchip.com, 
+ dmaengine@vger.kernel.org, richardcochran@gmail.com, 
+ herbert@gondor.apana.org.au, charan.pedumuru@microchip.com, 
+ linux-crypto@vger.kernel.org, linux-i2c@vger.kernel.org, 
+ radu_nicolae.pirea@upb.ro
+To: Robert Marko <robert.marko@sartura.hr>
+In-Reply-To: <20251215163820.1584926-1-robert.marko@sartura.hr>
+References: <20251215163820.1584926-1-robert.marko@sartura.hr>
+Message-Id: <176589052274.1815136.7513475493879599819.robh@kernel.org>
+Subject: Re: [PATCH v2 01/19] include: dt-bindings: add LAN969x clock
+ bindings
 
-On 24-11-25, 13:09, Andy Shevchenko wrote:
-> A handful of the DMAengine drivers use same routine to calculate the number of
-> SG entries needed for the given DMA transfer. Provide a common helper for them
-> and convert.
+
+On Mon, 15 Dec 2025 17:35:18 +0100, Robert Marko wrote:
+> Add the required LAN969x clock bindings.
 > 
-> I left the new helper on SG level of API because brief grepping shows potential
-> candidates outside of DMA engine, e.g.:
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> ---
+> Changes in v2:
+> * Rename file to microchip,lan9691.h
 > 
->   drivers/crypto/chelsio/chcr_algo.c:154:  nents += DIV_ROUND_UP(less, entlen);
->   drivers/spi/spi-stm32.c:1495:  /* Count the number of entries needed */
+>  include/dt-bindings/clock/microchip,lan9691.h | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/microchip,lan9691.h
 > 
-> Changelog v4:
-> - fixed compilation errors (Vinod)
 
-:-(
 
-drivers/dma/altera-msgdma.c: In function ‘msgdma_prep_slave_sg’:
-drivers/dma/altera-msgdma.c:399:29: error: unused variable ‘sg’ [-Werror=unused-variable]
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-Clearly your script is not working. I am surprised that you are not able
-to compile these changes. Bit disappointed tbh!
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
--- 
-~Vinod
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: tags/next-20251215 (best guess, 14/15 blobs matched)
+ Base: tags/next-20251215 (use --merge-base to override)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/microchip/' for 20251215163820.1584926-1-robert.marko@sartura.hr:
+
+arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dtb: / (microchip,sparx5-pcb135): compatible: ['microchip,sparx5-pcb135', 'microchip,sparx5'] is valid under each of {'items': [{'const': 'microchip,sparx5-pcb135'}, {'const': 'microchip,sparx5'}], 'maxItems': 2, 'minItems': 2, 'type': 'array'}, {}
+	from schema $id: http://devicetree.org/schemas/arm/microchip.yaml
+arch/arm64/boot/dts/microchip/sparx5_pcb135.dtb: / (microchip,sparx5-pcb135): compatible: ['microchip,sparx5-pcb135', 'microchip,sparx5'] is valid under each of {'items': [{'const': 'microchip,sparx5-pcb135'}, {'const': 'microchip,sparx5'}], 'maxItems': 2, 'minItems': 2, 'type': 'array'}, {}
+	from schema $id: http://devicetree.org/schemas/arm/microchip.yaml
+arch/arm64/boot/dts/microchip/sparx5_pcb134.dtb: / (microchip,sparx5-pcb134): compatible: ['microchip,sparx5-pcb134', 'microchip,sparx5'] is valid under each of {'items': [{'const': 'microchip,sparx5-pcb134'}, {'const': 'microchip,sparx5'}], 'maxItems': 2, 'minItems': 2, 'type': 'array'}, {}
+	from schema $id: http://devicetree.org/schemas/arm/microchip.yaml
+arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dtb: / (microchip,sparx5-pcb134): compatible: ['microchip,sparx5-pcb134', 'microchip,sparx5'] is valid under each of {'items': [{'const': 'microchip,sparx5-pcb134'}, {'const': 'microchip,sparx5'}], 'maxItems': 2, 'minItems': 2, 'type': 'array'}, {}
+	from schema $id: http://devicetree.org/schemas/arm/microchip.yaml
+arch/arm64/boot/dts/microchip/sparx5_pcb125.dtb: / (microchip,sparx5-pcb125): compatible: ['microchip,sparx5-pcb125', 'microchip,sparx5'] is valid under each of {'items': [{'const': 'microchip,sparx5-pcb125'}, {'const': 'microchip,sparx5'}], 'maxItems': 2, 'minItems': 2, 'type': 'array'}, {}
+	from schema $id: http://devicetree.org/schemas/arm/microchip.yaml
+
+
+
+
+
 

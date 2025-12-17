@@ -1,60 +1,60 @@
-Return-Path: <dmaengine+bounces-7777-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7776-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7A42CC8848
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 16:41:05 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E0ABCC892C
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 16:49:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5415530AAADC
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:25:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E4F30324E70B
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:25:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D588364E9D;
-	Wed, 17 Dec 2025 15:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE9F3644BC;
+	Wed, 17 Dec 2025 15:17:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="dwCQeaGR"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="rPuhCfeq"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010020.outbound.protection.outlook.com [52.101.228.20])
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010013.outbound.protection.outlook.com [52.101.229.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40691361DAD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F4B362157;
 	Wed, 17 Dec 2025 15:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.20
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765984672; cv=fail; b=bqKahxvMH5zqqWIAv/wyOwtvha3+YG/AJIvevgch2oJHdsKHIFXXix24v9GiFc9MAQeAdf+uqkQkq6gDUujIXePsXnEJCzofl287HwGGZjwOjS3EIdoocFpdNtfsqfhMdC53cCD4TgyIthduVhqxDApj6In++mXxiK4lGmYAUVU=
+	t=1765984671; cv=fail; b=cDqnNTkgJeM96Jgk6oDvnKPoLn3+jnR2ccsNYHX3Ws+CbKUzK8idGZ4RplAj7BmjxteyPhOzz0nBW2DSADgk8IY3wHiew0O4sWGKMEUkBRZbg8V/G6XF2t0mxlAAvOh5Dl5W44REWq5CrB7D6SZw49D2BnrugCeR68oP+XaToag=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765984672; c=relaxed/simple;
-	bh=fOSJLrLrFLoKv0qHk+W+c7m9DC4dwJUYznyFzyvl1sU=;
+	s=arc-20240116; t=1765984671; c=relaxed/simple;
+	bh=a4G9QRnVsPt/uuqkfe9kUrRCGOW9nceP9hOOxskp0WE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nJdMBb6dslm5taLpoB8BSOhK25kVnwSYLzPhnS4UrMAayShtr1/ePcRSDpGAyfXLQ6x5BS/0lr3A1t5I1E0XzEkeA7DSjhiweu93HgeXwP3uU6VLeQSOmGgSf0eB6twU/35qIlCr3xGX6Fu1FqOVFPfN6zHIe6K9/20DeeFnus8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=dwCQeaGR; arc=fail smtp.client-ip=52.101.228.20
+	 Content-Type:MIME-Version; b=IZxdMC9t3VkINhXyxgWLo6L7g4uNXtEfV39//RhvoD6VHbu7nsCxfZcpRBQjvPjJAVoXHu6YLBGHc8f75jWoJ+AydKb4DYRqeBrBDcjoPECeiMZnGCRdqZ9/6TrXlX8w535F32ZBFnzdZWeYxX61ILF6oMSIn1wiB8mFJ0j/F5k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=rPuhCfeq; arc=fail smtp.client-ip=52.101.229.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NAFviUgJ/eYPP00FdjelQ6molxSmQTtVrxnMQ0y0cCYy7JIssqUUG2UQdz/BTrJE19BxpP2h8k+gTTOLb+wZLl0RX/0nR0UYkqM/Vij59AaA6zC1BzdR6jz2/tJhIV42aMB5C5+ndvokfWlvspzNTfI4ADrb80LtFL/MOwtSJO6dpeDAETY4Yd3IydwCqX7mZ/GuDc7NANOLc7vTsXzkBIVvUhmT7K1P6MHLBnF4X1ZbdCQdOrUqF1AsXYNBvr+tCzMCP3HVzDaFDL4jR+f+DetIlTlAm9Y1QLpGBr5bDqvbYQwH6qYSWZoU+vyr/bTWz5RGNdxXjG8LpQU6UFTtLw==
+ b=jcbFjJdcW9cBdP1aVH3sVRpsiE2CN+LeJLCjjfg7X+7LC5chkQuop50kiZ2RvajXeGoKMoQwWweL05q+XR7uGCHekBcrTexHJWi4NHdLxE2ZIGJlqWY7364el6P6EuGWRLrBXY30YQBDRLFlLTU+MZpsO1LIQNNmgtQPNIumLxSV2pHJXHNn7seOdCC/ARGQRmzDoVzQCMABTahMbn4APoGnZ2IYP6dwr3vk1IeDubVbx+L2tEKIZPDpLILA4Ld5JzlCrUaGXiw8rLVV14FN3DBmBYTbdKHvnYH0Jvt8u1aIwvealnoVzYLhYoU624QFs+Um/4O/nu9MItYDXlHuIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d06MQL3alOxYyQ0pwMZdFFY6ArVfMDxTphVx+kcblwo=;
- b=xscci4InYLdJQrmUZHL37StNEZZnHp+OLU4mBwMOMl0w/tjiuhuRR8vWWieFxnxq5n0fvrhGzDBY9OlNAlBs/c9oroRzkRy4Za1GYPIJF1gCRMYNJOIaEy/UQ41bQXsgkexwRtTurs2JfLoyDtc4fIWx/VcFPQv9Bo+k//K+C6a+wTkEgfsTLZc3T03fdvxCJWBvuQK3fvJJgP4iC/vSZUWTAbDybmED+zeJmLmu2waN5nRkw7nYvU+7ZBBJvUGG0CcrzNV4lmX1lxtP9wEfYj4Mgv7UNvmJycCaqmufBBIx/Ud35Tz4G5ghHUI+9z85uyddz7LikbzJnxVf5awyPA==
+ bh=fGCTgygFHcBT4UMiTZRF4kncO36Fu1a7I/tGPUBEN0I=;
+ b=cEruZ6sSWHUUWiW+VwS2BP2DB1CM03qc60JxmIxX4EQIXolP9dUGAbEsMp50xlrbtZxVETVz5fHUbzJ6eT/HK7lJ61+b9ih7nkP7ws6KsLW9xoBb8DKjjYnZIfG7p25pl+MwcUo7YOh+t1eJxy76F/Bufw2PxkbWlPWdL5CkNPFAoOUR88PrIrackxgzuLPetAl6C8e5nEqGj6G57d/hHGQt/vOAnlYiyVceuT0m1xGMLEs55ucoJktXrlF1RkHQi94Hvjxh2L8DRpCbRkqZfsY8YIKkCgvIPU5nslvIUB7BziyATw7o9B2CqhTRhZ2rwRmRpzVpfhhvZXNucOFXAg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d06MQL3alOxYyQ0pwMZdFFY6ArVfMDxTphVx+kcblwo=;
- b=dwCQeaGRhcQPG0WBOm6ufnjbXhhBqP8NfFzCr4sYY5Edz2RLx/RlZM3DCXbC6ukktcehEdcCG1sbrmPQNbbKrYl2g+rRPqabx1xsm93Asm1JT+mLm9Fax0sNfEZx8Rc2kNbMoOExy53BDQ3OXHqgyLgA8Q8gddmnyA01u62cqL0=
+ bh=fGCTgygFHcBT4UMiTZRF4kncO36Fu1a7I/tGPUBEN0I=;
+ b=rPuhCfeq3Jn8Uo56hRV9IH8kVmavYoOZ28FZNx/H+ll51odi59hFY1V9F8twTDB/O4Vjt4PdfoR+N0q57SSKdUQQ8jhFf9C0ysTX8qR25zhn2AW4a8nyLcliRdpd8T9u+cvXDm3kPGmivQq9wJTP7YBkbzzl13KVuETdlaK9sPA=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=valinux.co.jp;
 Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:24c::11)
  by TYCP286MB2863.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:306::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.6; Wed, 17 Dec
- 2025 15:16:39 +0000
+ 2025 15:16:40 +0000
 Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  ([fe80::fb7e:f4ed:a580:9d03]) by TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  ([fe80::fb7e:f4ed:a580:9d03%5]) with mapi id 15.20.9434.001; Wed, 17 Dec 2025
- 15:16:39 +0000
+ 15:16:40 +0000
 From: Koichiro Den <den@valinux.co.jp>
 To: Frank.Li@nxp.com,
 	dave.jiang@intel.com,
@@ -97,16 +97,16 @@ Cc: mani@kernel.org,
 	arnd@arndb.de,
 	elfring@users.sourceforge.net,
 	den@valinux.co.jp
-Subject: [RFC PATCH v3 28/35] ntb_netdev: Multi-queue support
-Date: Thu, 18 Dec 2025 00:16:02 +0900
-Message-ID: <20251217151609.3162665-29-den@valinux.co.jp>
+Subject: [RFC PATCH v3 29/35] NTB: epf: Add per-SoC quirk to cap MRRS for DWC eDMA (128B for R-Car)
+Date: Thu, 18 Dec 2025 00:16:03 +0900
+Message-ID: <20251217151609.3162665-30-den@valinux.co.jp>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251217151609.3162665-1-den@valinux.co.jp>
 References: <20251217151609.3162665-1-den@valinux.co.jp>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TY4P301CA0106.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:405:37b::17) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
+X-ClientProxiedBy: TY4P301CA0005.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:405:26f::9) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:400:24c::11)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -116,661 +116,241 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: TYWP286MB2697:EE_|TYCP286MB2863:EE_
-X-MS-Office365-Filtering-Correlation-Id: a4c5e57e-be89-4e7f-4e21-08de3d7f46d9
+X-MS-Office365-Filtering-Correlation-Id: 0a7de7a2-4218-4c83-0d26-08de3d7f4757
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|10070799003|1800799024|366016;
+	BCL:0;ARA:13230040|7416014|376014|10070799003|1800799024|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4yLkxDCH/B/xkFCekL5/KbJSw76bENkIpzfPTySCCZB4NEszX9t83ZHNzOmI?=
- =?us-ascii?Q?9UdO3wz/gt7MtNR0zzSmjzVB+Oj7lysUEC1odb41xdFza9jd7t7OItMYzBp1?=
- =?us-ascii?Q?etCYnzdfkH4vG4kmnfago33T8uxHCkRPeR/6nyh7PgKB2QfKYMSxKOBBzudh?=
- =?us-ascii?Q?Z6Keu7ZDWxXL0X0hERZ8KFk2czEux0UtL2tgbW5GYKax0CwCGnjQ/Z3x6gts?=
- =?us-ascii?Q?wE63QKgtczGQTj0IC1Edl4SO1RIbVNatzvabjtGaAdPieFpOwjZHb5h3hOjS?=
- =?us-ascii?Q?xC18qAogu4+hwz3K0d7/eED7lb4q4jSua3vbCzWfdZaOCwLtrYURNS0kyePx?=
- =?us-ascii?Q?V/qjQ/uR5W9vu4C+8/Mxd3IEPUPHMpZE1DPrxj5iX19WSIWLFl62k+re1fbz?=
- =?us-ascii?Q?9RYuMPzaYAHAxZS1LJurPvBn06TxqwUg8mVFEQumX+WwnKl9ATHrsMe8ZhPu?=
- =?us-ascii?Q?94X8TQ8XaNFmy+G+s6CqV3dmJ+Rr0U0DdGv9MbYdjlaiGi+lx8o0ImPWJSPn?=
- =?us-ascii?Q?YdQ5LcamHwq03v9w5AleQ9BgGL6QcO6/fTOY29/PODEOaU2zp98U74E07hoA?=
- =?us-ascii?Q?+uBf2kWE+ay7ItdkZRMdHGGzQ5amfWLTV/1pDSrkqkeXY7Vt/EVijNvT4mQi?=
- =?us-ascii?Q?ycyYbBWwt3UfkSXJ4g9a1y0AgLjU2RXHFsbzi22NdE9TVX3iANgippEILEgQ?=
- =?us-ascii?Q?euMIQHS3YVThEni6YHfE+lxZAUODSHg1PEJW10zc7RZCyMNPR9YAw8zTJ74R?=
- =?us-ascii?Q?GB1Iw0IP1KIGVj8rXY03qFk9h6Y271P0+4pRP61qYiz2XoNmJjbccaK/CF9/?=
- =?us-ascii?Q?0uGKQaYWuKm1gsUqgYpXlxQ9na1nTrm95N7vAah3mUAc2hUkJoMI3RDijwt7?=
- =?us-ascii?Q?6264TghOMXixzaXXKAYaUe2p1WGQmvZaGCIYM8W6a+ZfN/Y3OTkmpTvmJ/rQ?=
- =?us-ascii?Q?VcbRRXMytWrfb9JC4HDBUyPV7XzJDpMtpARWowkP8Eu6JQfSBEPIRLxrpYeo?=
- =?us-ascii?Q?/PI72UKTU/cgdJsymAyOqYwUmq0LO6RZroxQDHlV0ffz7OvxGTY2VYPIRODx?=
- =?us-ascii?Q?8K4NyJ7Npu3YbtVJcloTUv7PwPlreS6X5GzzN9K9tgOCKj1epegDloAiKlgz?=
- =?us-ascii?Q?SAtuHa3JJ6cViXmlASgHRj9F9/hRWkQ1Tg4nl01QaqZ6+d0vnzs4+TOECYcS?=
- =?us-ascii?Q?fgr6VLiFxkoXZGkqgAD0VzAMzfWS6T70C1tlBXR26nRXlTR1EN5sP7OnDgnK?=
- =?us-ascii?Q?6EXb4I6tw+1yfoRZ9bt6f1avBLkjEGzvNKVjVz+J6Al1uIBiQMpJiMiA65IS?=
- =?us-ascii?Q?TtrKjWwbhOPOR8xao1zmM3n9hP4qSMacRvXyN/Ghsh7BmkSWmCU+QqDwd1NK?=
- =?us-ascii?Q?u8XocNjIB6ZC2oGg9Ua2ec12spAUGapZIL6qo+NSLVjoGiEQc9sTZP6/P/n5?=
- =?us-ascii?Q?MWgcgcaryNSeJ0MY1rESkqwyhbZ98YVZ?=
+	=?us-ascii?Q?qIF/ch9/irPNPtkDzULZ1PKRHG4qAWuaBYjhOT2FnLJnsp3MHMcF5cktBiyL?=
+ =?us-ascii?Q?4H5odU8KFmgj4zlyAobvzFow0XsCi6S619AYLWWx5ELsvZSVy9R64dpSa/Fq?=
+ =?us-ascii?Q?TZ5n2+s6FMnJpd7keMdyueIc6nzY+G0lQ79c2JeDwSETw9jzNZjVR/fwNUiw?=
+ =?us-ascii?Q?D94d25AscRx6S/TZ3vEEUMhHfJkJMmLdsHpFGYwHnCNYw5PWvoC2MCVAW4iN?=
+ =?us-ascii?Q?P+BRldJ8kazFkXLPRJidukGhRauKr4FUI0woUjVIf3QKJsZ9ngnikBRiuQ09?=
+ =?us-ascii?Q?5arqAaP/v4ms6uf7KRJYLxFfY/sDlCetXgJpFMfPuxFQ5JXNR6w3tWEh95aD?=
+ =?us-ascii?Q?RQEyS/BMvQIUpM9i9aAi24N2PgsVRDlIKBuF75zfr8B1XIIEYBPQrBu3V7VC?=
+ =?us-ascii?Q?TFZsLozoxKW+6vy3ESxZTormzMoOsjDEd7PkkaxTjAdkvC+SXa/9Xvvdxaee?=
+ =?us-ascii?Q?iZZxzz65X3Uznvm5UUA/pdq15cGFn1cAqbMETzJ7+cJj66ySQycZ1EkTVWx9?=
+ =?us-ascii?Q?RRM3L+Cwf3/yppRzSpGuMpdhchWNQot+6A6tM9X12zBOzfFwmJS5roUg7epK?=
+ =?us-ascii?Q?DqLy9OBDjCzTO7oqbq9fKEY31yUSbEPqY7FUcF4Y91+X9OKXDg56UymBbVvz?=
+ =?us-ascii?Q?6F5mZNMdfjRJgICGSOYNPZCYRrJKyX+zDwiSgiymq87FM74roLt7U2Zk8BV0?=
+ =?us-ascii?Q?YH5pZKGaWYakhoNMyT5gobzQa3cT5954CtN5WIf+KTlABQC0HhwweIO7YUBe?=
+ =?us-ascii?Q?wUCfIMlDPp0Q1b52xyFB12svu3mYeFdLEoYtKskgg8fkB+9fmaVL+n++24sv?=
+ =?us-ascii?Q?fFrBdCLl0Jj7OsRS8R+ShEfJTFGxsnMB6w/hU8SdTl5fnyYH5VyZliv2BcOx?=
+ =?us-ascii?Q?5e2vfP2hnpctQ+iUDHJU20PlL3kY9RCZrfo+DP1wNAnk/GggirOkmzxsLimp?=
+ =?us-ascii?Q?X8/mC36YV7iuDV8TpHi6hPqSUlPgsFp4NMulkPIk7PRLgaDcAqz7rl+kcTKO?=
+ =?us-ascii?Q?PG2cO/fqq6NGDtnKVoJZrmmpyn/+JOyYfAnVWqP8PiEo32E9F/T0GHDa1uTz?=
+ =?us-ascii?Q?vsAHSrcDkdVTY7cPUtg8nr9oTXyv3ByT8/zloNd92dWpIz9gFeNpbY6HMBpV?=
+ =?us-ascii?Q?72mTEjPh+NaWww58/AkgXHEp9fp9SjaJLN770co65WwJ4xomKTCxBWE7Yd/M?=
+ =?us-ascii?Q?WYl11GF+5OGeDJpsJt8TGrhZHD2wCmRA/2bu0C8ANpxbKSnkGvtH7cBxNDTg?=
+ =?us-ascii?Q?eBxk//Z+XIG0G+XE5EZW8mm/69QWV1mxANIgdHZpg8bvJNAVY1jEYysMNg9C?=
+ =?us-ascii?Q?qSXC5hqm8mrw7QGiaQrBLRkGkFxTesON/GHe/RBPBHIZVVNtDbsh6WtV/pIf?=
+ =?us-ascii?Q?W+cauoKr4ehRxPBeleH9ACvUJkbjxlxcC3Vtsw3CqG5Xl0deh2ME7CeZoze/?=
+ =?us-ascii?Q?jrrBGKmUELKTKdn7iM4nQYCUF2H58BH6?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(10070799003)(1800799024)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(10070799003)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RhEjU/OxcZtLuYJqNF0xsB7I/ypfSQMhebXCpyfzWXA/ElsFl4lIxAdIrOXn?=
- =?us-ascii?Q?U1IOfZM8+B0quMrdDeqx0qCdSbmEpDMiWXUnoq2YXx/RSLlgtxSjJe1C/bR6?=
- =?us-ascii?Q?QgR4ZnF3hM7pQSX9PwA+9N0NBZw27vRZATTwOM2fIjQX818cJt4/STUfjlT5?=
- =?us-ascii?Q?fa9G8GUa9XxBOkxJcU+yS7CoF8b/NQSESByLnL09r1vqDHkznP6C1G6eY0Pv?=
- =?us-ascii?Q?SP+NjMXFH1g7sHF1GA0fhPN4uMp2Bj8n9yirFhWv8FrGfDDCyCgTnmkKxl30?=
- =?us-ascii?Q?hZOl4vaOKfucsw7/boC4KUOX7GXCB0NxvYnW9gyIDjPyiDlL4+/R+qKQcBkS?=
- =?us-ascii?Q?B4MrDU1VRAcKg3wVtC8C9vDBrG70jeCHfA8MXMoq6F1OUBUTF56wOpR8/9yp?=
- =?us-ascii?Q?BIlbbuxD3+Iz0S6duE6YmTzeqInuHbbutWlFfzYKhN8Xxfx6xu8B6Y1MqL0u?=
- =?us-ascii?Q?y44ZFPx38O07NsJ6M6EYDR6jIF3gWG1dbl4/7urRQpcLs4ZqEsS1hqmn6YDl?=
- =?us-ascii?Q?MOhHA1emja+N0/cULiIahujqvpn8IT26ScGpPgZo02MxsBbsXaTG5Eh7hqiV?=
- =?us-ascii?Q?2EULgWeCxec6cw8O6SR9TLk1eb3cR3sXQRMM+cpZ0t2ud25sqkMltGeRATGm?=
- =?us-ascii?Q?5ErGHdDhVE5e6Po9ikQIBP36YmytAlvN5adc6hrU1Ul+lv7D+marM/TyPlIl?=
- =?us-ascii?Q?al2+fnUuIMc5jZaIaoqhkzUesLai41MlgLjZ97plfKoSLkYji1MlcBrpyA1d?=
- =?us-ascii?Q?QNcytlFul9+FAXCVHgrzC+6VcbQgsHoEA5gfihe2gQQqw2y2WJWcgybqxzuV?=
- =?us-ascii?Q?nXN0ZihOEXYB30S5uCD58J/CmxvNJh/Apx9JBC7ziueKSPAtiXwXCDgy3MDt?=
- =?us-ascii?Q?3eIQuEf/xxXomrG5A2pKsBAE8ldmgCE9Jv0SJiBO2/+yPXdOWs6kN50XOGyk?=
- =?us-ascii?Q?jYHWVhcu+Ykk+t+RjcRpszx+3d/2Q7pl1BnFH/UvyzIsezklETl/WkySBbJz?=
- =?us-ascii?Q?kOi/g6pbedvXo8hsgJLyKJxb2C2k8gZnbi+NgwOCeC2hiNx20xzGDB3eJQBI?=
- =?us-ascii?Q?WFTo2CBzm6XUjalf3UEsdmjbdZs16Vu9YFALZqjasMTolGAd4iX62c0rOhn9?=
- =?us-ascii?Q?gl6ntGAZLjF7rBg9Z0cF9x/+GocxScvCCr1AaM9Ex2HaAzBjkNFYAUL6ZgHP?=
- =?us-ascii?Q?z3oZqL9oc7YRvn24PWsAByaNkL8PDREe8ERulO2OfwowLG1N8qovPy7rB2HG?=
- =?us-ascii?Q?OgeuS6J3pMmyZQ2v8B9HHIHy5CcibeMMlLoyNCnPYAyBgWDtV9sKULGK7B1+?=
- =?us-ascii?Q?3KiF6lGkzvG4Uu/OF+kcVdOe6wzHBIn/3O+NsqrSm0z0J5gAENRYA4qfbebw?=
- =?us-ascii?Q?49jXqr+V7+3KavN4uVxLXm5TgVa7K89FVO6rNki4y7O3KNAlv3tSTxLdR7KI?=
- =?us-ascii?Q?1eHNfZt00QJgnj96Ecno8iLc6H9YudyB79AJOJwjmH9m/6onGd5HvWraXjED?=
- =?us-ascii?Q?r0AQI8sT9xCBST9IX9p2kTp0S+tly7qKgr2hjAqBQiix/6qzrQMiaB5BGOXH?=
- =?us-ascii?Q?OlvRWJGRjBRGLH1QfM1jDYZcIeavAlB/c1l+NyRZLlfPT8FLzkkYDV4t7CT3?=
- =?us-ascii?Q?yhV0lvXaONye1eSoK6nyU00=3D?=
+	=?us-ascii?Q?qiRxN8GdRJwFGPVsFTPfMTuMrQy7M8+ND54WQ1n842IyjXCRIwO0uwzQ37g8?=
+ =?us-ascii?Q?ncfVlnwzq15BtLTgS44NBs6JQsmtoWqCBwsd3vjPRt82oiqbQsjvbhLm7GPX?=
+ =?us-ascii?Q?O5kmjLdt1svijAShTftK6UT/XznKWnvOnWt3TTwintC0XxnuxfzfUF3Jw5jO?=
+ =?us-ascii?Q?uH6Kn1dZquWBbg2Gt/1yhFA+kyQGxSpAn35vmtGcaBnBlV5ofHw2Yl6RQ2v9?=
+ =?us-ascii?Q?v+t9HM9d9fst5lHLL5wcDJReUsWNEotyNzKLLq/MxhnkZGtDKbyqdALPt+kc?=
+ =?us-ascii?Q?wQHcwvpDDKEW+HW3R02qeJ5N+SB6qiCwRKs5lai22sk04PxG9XogIM98kbRB?=
+ =?us-ascii?Q?D1El1n1QEIN5I/QalLF0e29MsLeaDo3rbbYDgxGKtM4631yI+g8r6OQE1t5w?=
+ =?us-ascii?Q?AcsOP0NA2BgXCqEq+6NhEr9Y+/3wCNyFX1k530gdv7bxS7CDqNmKEuHakDGJ?=
+ =?us-ascii?Q?2gIGoV8vu4jy2jQgevBUHha2Ht+JrbSlw1dChiZK2aJJh/atlGf80Won6gSq?=
+ =?us-ascii?Q?fSZDVcQKb0zRnEN6IjiangjJHkz1e1HH1PyaO4Yw8jA6Mp4E5pCGfey+qg5i?=
+ =?us-ascii?Q?S4bPkOQ+YfZdRlwdM6+9XOPwvxt4zX6nU9POK2aXrcMNq6JIqUgg9uXKc2Nk?=
+ =?us-ascii?Q?qH7WVKHHzENUNc9/FOTaCi9uQv9BgYYoWHpPW9bOzx5Y0QAZDwt8gKoFKgb1?=
+ =?us-ascii?Q?AUvT7eibqJp3WJrzEHFgsZATsqvU7AkazMbieQqVihxBPjhcMyxw5VbYkshN?=
+ =?us-ascii?Q?6h5xXO5WgHdqhx1u9MyzFM1tulmBeNSxMHk/FNrzPemh1PhkUZGnhxjjAQ20?=
+ =?us-ascii?Q?wpdwkrRuX08Sp3kKvrO1HpMYNvtnTu0xk76SEUpt0OYT5efhJwQOEobTk3Nr?=
+ =?us-ascii?Q?pn5KFpTIiTmj6jWz5+6RXbmnkGgUjNCLdzfODX6YqHBw71QehvWl1aIbl/xZ?=
+ =?us-ascii?Q?sgi7Jx99sddOY9N7qNWuPKe7BNA8PBOQ7fulO89KapxMc1L8a/YbYO0w9hVV?=
+ =?us-ascii?Q?41sOhNLncJM43buZSeuobo/33iYFJvRW30M2c32F4/5KbJ9loJWzGsuQPBHG?=
+ =?us-ascii?Q?VnXa9d1mcenlX+1FwzdkUBDem3On3zFRlC6kD4rgoS3bMv2dXHeknfD9znW7?=
+ =?us-ascii?Q?Zp+MBhg5JyVtZeAtb2+pF6HKsfUYdruO1iN8qlla48R5OFZeRfKpUx35ucSG?=
+ =?us-ascii?Q?A5bz17hSqsNB7YjJI8jc9o1nD7VU3PvzEXrYC0CnPpWWWMKVxb3fysLbrPh0?=
+ =?us-ascii?Q?MWNa7ncIm3Xoopx1JdWRmYkXk/u8UloUWnBe+DDxJN+ijE1PGGmVilqWMbDs?=
+ =?us-ascii?Q?tknrmnDIY4TKCTrCcT33AAAWIkqCjzP5dA74lym7IXSE2HgkVv6iNbC93NDD?=
+ =?us-ascii?Q?tUYlw5l1cI9SoFaTo1FXFuv1KbSTf6s2XGJuKe/5V3ed4sIF4BOyb3OjFk8R?=
+ =?us-ascii?Q?EoB6oLVD+F4NlreRKDbhInOkqtxI5ez0dh3Zp8+3FMOR5dIysD/pJFTp+umc?=
+ =?us-ascii?Q?xt/KLcfDWYOpncjh5SyUL2+JMc9GcOB0s0pnYKg2T4lgye9a/5u6Na9Z/x7v?=
+ =?us-ascii?Q?XaCu3iFptKLSSOwlDOy2btX7+Z6mnwWXoLAR8BZQ7sxf0mSQ5gDIwqmOiN9j?=
+ =?us-ascii?Q?iWXkI3mnG0ni2a3F5ZQE4Ic=3D?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4c5e57e-be89-4e7f-4e21-08de3d7f46d9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a7de7a2-4218-4c83-0d26-08de3d7f4757
 X-MS-Exchange-CrossTenant-AuthSource: TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2025 15:16:39.2912
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2025 15:16:40.0862
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JZ6dB9yXjKs/zvwAdw+a44MfdhOKlRc6fvBng4/eYTD8XOgcvE1TJ68vkCf5d/dKTC6xwdLcHMvpSus++SfcVQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: F9kQBDRlVH61IbI2v1DnVQAF6q9WKPe2/Sf5dF+pU8zt0yE3t4SAIxHWL8fK38K0J5J/EPx4ZWKkhuu239XybA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCP286MB2863
 
-In eDMA-backed mode (use_remote_edma=1), ntb_transport can scale
-throughput across multiple queue pairs without being constrained by
-scarce PCI memory window space used for data-plane buffers. It contrasts
-with the default backend mode, where even with a single queue pair, only
-up to 15 in-flight descriptors fit in a 1 MiB MW.
+Some R-Car platforms using Synopsys DesignWare PCIe with the integrated
+eDMA exhibit reproducible payload corruption in RC->EP remote DMA read
+traffic whenever the endpoint issues 256-byte Memory Read (MRd) TLPs.
 
-Teach ntb_netdev to allocate multiple ntb_transport queue pairs and
-expose them as a multi-queue net_device.
+The eDMA injects multiple MRd requests of size less than or equal to
+min(MRRS, MPS), so constraining the endpoint's MRd request size removes
+256-byte MRd TLPs and avoids the issue. This change adds a per-SoC knob
+in the ntb_hw_epf driver and sets MRRS=128 on R-Car.
 
-With this patch, up to N queue pairs are created, where N is chosen as
-follows:
+We intentionally do not change the endpoint's MPS. Per PCIe Base
+Specification, MPS limits the payload size of TLPs with data transmitted
+by the Function, while Max_Read_Request_Size limits the size of read
+requests produced by the Function as a Requester. Limiting MRRS is
+sufficient to constrain MRd Byte Count, while lowering MPS would also
+throttle unrelated traffic (e.g. endpoint-originated Posted Writes and
+Completions with Data) without being necessary for this fix.
 
-  - By default, N is num_online_cpus(), to give each CPU its own queue.
-  - If the ntb_num_queues module parameter is non-zero, it overrides the
-    default and requests that many queues.
-  - In both cases the requested value is capped at a fixed upper bound
-    to avoid unbounded allocations, and by the number of queue pairs
-    actually available from ntb_transport.
+This quirk is scoped to the affected endpoint only and can be removed
+once the underlying issue is resolved in the controller/IP.
 
-If only one queue pair can be created (or ntb_num_queues=1 is set), the
-driver effectively falls back to the previous single-queue behaviour.
-
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Koichiro Den <den@valinux.co.jp>
 ---
- drivers/net/ntb_netdev.c | 341 ++++++++++++++++++++++++++++-----------
- 1 file changed, 243 insertions(+), 98 deletions(-)
+ drivers/ntb/hw/epf/ntb_hw_epf.c | 66 +++++++++++++++++++++++++++++----
+ 1 file changed, 58 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ntb_netdev.c b/drivers/net/ntb_netdev.c
-index fbeae05817e9..7aeca35b46c5 100644
---- a/drivers/net/ntb_netdev.c
-+++ b/drivers/net/ntb_netdev.c
-@@ -53,6 +53,8 @@
- #include <linux/pci.h>
- #include <linux/ntb.h>
- #include <linux/ntb_transport.h>
-+#include <linux/cpumask.h>
-+#include <linux/slab.h>
- 
- #define NTB_NETDEV_VER	"0.7"
- 
-@@ -70,26 +72,84 @@ static unsigned int tx_start = 10;
- /* Number of descriptors still available before stop upper layer tx */
- static unsigned int tx_stop = 5;
- 
-+/*
-+ * Upper bound on how many queue pairs we will try to create even if
-+ * ntb_num_queues or num_online_cpus() is very large. This is an
-+ * arbitrary safety cap to avoid unbounded allocations.
-+ */
-+#define NTB_NETDEV_MAX_QUEUES  64
-+
-+/*
-+ * ntb_num_queues == 0 (default) means:
-+ *   - use num_online_cpus() as the desired queue count, capped by
-+ *     NTB_NETDEV_MAX_QUEUES.
-+ * ntb_num_queues > 0:
-+ *   - try to create exactly ntb_num_queues queue pairs (again capped
-+ *     by NTB_NETDEV_MAX_QUEUES), but fall back to the number of queue
-+ *     pairs actually available from ntb_transport.
-+ */
-+static unsigned int ntb_num_queues;
-+module_param(ntb_num_queues, uint, 0644);
-+MODULE_PARM_DESC(ntb_num_queues,
-+		 "Number of NTB netdev queue pairs to use (0 = per-CPU)");
-+
-+struct ntb_netdev;
-+
-+struct ntb_netdev_queue {
-+	struct ntb_netdev *ntdev;
-+	struct ntb_transport_qp *qp;
-+	struct timer_list tx_timer;
-+	u16 qid;
-+};
-+
- struct ntb_netdev {
- 	struct pci_dev *pdev;
- 	struct net_device *ndev;
--	struct ntb_transport_qp *qp;
--	struct timer_list tx_timer;
-+	unsigned int num_queues;
-+	struct ntb_netdev_queue *queues;
+diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
+index 5303a8944019..efe540a8c734 100644
+--- a/drivers/ntb/hw/epf/ntb_hw_epf.c
++++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
+@@ -74,6 +74,12 @@ enum epf_ntb_bar {
+ 	NTB_BAR_NUM,
  };
  
- #define	NTB_TX_TIMEOUT_MS	1000
- #define	NTB_RXQ_SIZE		100
++struct ntb_epf_soc_data {
++	const enum pci_barno *barno_map;
++	/* non-zero to override MRRS for this SoC */
++	int force_mrrs;
++};
++
+ #define NTB_EPF_MAX_MW_COUNT	(NTB_BAR_NUM - BAR_MW1)
  
-+static unsigned int ntb_netdev_default_queues(void)
-+{
-+	unsigned int n;
-+
-+	if (ntb_num_queues)
-+		n = ntb_num_queues;
-+	else
-+		n = num_online_cpus();
-+
-+	if (!n)
-+		n = 1;
-+
-+	if (n > NTB_NETDEV_MAX_QUEUES)
-+		n = NTB_NETDEV_MAX_QUEUES;
-+
-+	return n;
-+}
-+
- static void ntb_netdev_event_handler(void *data, int link_is_up)
- {
--	struct net_device *ndev = data;
--	struct ntb_netdev *dev = netdev_priv(ndev);
-+	struct ntb_netdev_queue *q = data;
-+	struct ntb_netdev *dev = q->ntdev;
-+	struct net_device *ndev = dev->ndev;
-+	bool any_up = false;
-+	unsigned int i;
- 
--	netdev_dbg(ndev, "Event %x, Link %x\n", link_is_up,
--		   ntb_transport_link_query(dev->qp));
-+	netdev_dbg(ndev, "Event %x, Link %x, qp %u\n", link_is_up,
-+		   ntb_transport_link_query(q->qp), q->qid);
- 
- 	if (link_is_up) {
--		if (ntb_transport_link_query(dev->qp))
-+		for (i = 0; i < dev->num_queues; i++) {
-+			if (ntb_transport_link_query(dev->queues[i].qp)) {
-+				any_up = true;
-+				break;
-+			}
-+		}
-+
-+		if (any_up)
- 			netif_carrier_on(ndev);
- 	} else {
- 		netif_carrier_off(ndev);
-@@ -99,7 +159,9 @@ static void ntb_netdev_event_handler(void *data, int link_is_up)
- static void ntb_netdev_rx_handler(struct ntb_transport_qp *qp, void *qp_data,
- 				  void *data, int len)
- {
--	struct net_device *ndev = qp_data;
-+	struct ntb_netdev_queue *q = qp_data;
-+	struct ntb_netdev *dev = q->ntdev;
-+	struct net_device *ndev = dev->ndev;
- 	struct sk_buff *skb;
- 	int rc;
- 
-@@ -135,7 +197,8 @@ static void ntb_netdev_rx_handler(struct ntb_transport_qp *qp, void *qp_data,
- 	}
- 
- enqueue_again:
--	rc = ntb_transport_rx_enqueue(qp, skb, skb->data, ndev->mtu + ETH_HLEN);
-+	rc = ntb_transport_rx_enqueue(q->qp, skb, skb->data,
-+				      ndev->mtu + ETH_HLEN);
- 	if (rc) {
- 		dev_kfree_skb_any(skb);
- 		ndev->stats.rx_errors++;
-@@ -143,42 +206,37 @@ static void ntb_netdev_rx_handler(struct ntb_transport_qp *qp, void *qp_data,
- 	}
+ struct ntb_epf_dev {
+@@ -624,11 +630,12 @@ static int ntb_epf_init_dev(struct ntb_epf_dev *ndev)
  }
  
--static int __ntb_netdev_maybe_stop_tx(struct net_device *netdev,
--				      struct ntb_transport_qp *qp, int size)
-+static int ntb_netdev_maybe_stop_tx(struct ntb_netdev_queue *q, int size)
+ static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
+-			    struct pci_dev *pdev)
++			    struct pci_dev *pdev,
++			    const struct ntb_epf_soc_data *soc)
  {
--	struct ntb_netdev *dev = netdev_priv(netdev);
-+	struct net_device *ndev = q->ntdev->ndev;
-+
-+	if (ntb_transport_tx_free_entry(q->qp) >= size)
-+		return 0;
-+
-+	netif_stop_subqueue(ndev, q->qid);
+ 	struct device *dev = ndev->dev;
+ 	size_t spad_sz, spad_off;
+-	int ret;
++	int ret, cur;
  
--	netif_stop_queue(netdev);
- 	/* Make sure to see the latest value of ntb_transport_tx_free_entry()
- 	 * since the queue was last started.
- 	 */
- 	smp_mb();
+ 	pci_set_drvdata(pdev, ndev);
  
--	if (likely(ntb_transport_tx_free_entry(qp) < size)) {
--		mod_timer(&dev->tx_timer, jiffies + usecs_to_jiffies(tx_time));
-+	if (likely(ntb_transport_tx_free_entry(q->qp) < size)) {
-+		mod_timer(&q->tx_timer, jiffies + usecs_to_jiffies(tx_time));
- 		return -EBUSY;
- 	}
+@@ -646,6 +653,17 @@ static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
  
--	netif_start_queue(netdev);
--	return 0;
--}
--
--static int ntb_netdev_maybe_stop_tx(struct net_device *ndev,
--				    struct ntb_transport_qp *qp, int size)
--{
--	if (netif_queue_stopped(ndev) ||
--	    (ntb_transport_tx_free_entry(qp) >= size))
--		return 0;
-+	netif_wake_subqueue(ndev, q->qid);
+ 	pci_set_master(pdev);
  
--	return __ntb_netdev_maybe_stop_tx(ndev, qp, size);
-+	return 0;
- }
- 
- static void ntb_netdev_tx_handler(struct ntb_transport_qp *qp, void *qp_data,
- 				  void *data, int len)
- {
--	struct net_device *ndev = qp_data;
-+	struct ntb_netdev_queue *q = qp_data;
-+	struct ntb_netdev *dev = q->ntdev;
-+	struct net_device *ndev = dev->ndev;
- 	struct sk_buff *skb;
--	struct ntb_netdev *dev = netdev_priv(ndev);
- 
- 	skb = data;
- 	if (!skb || !ndev)
-@@ -194,13 +252,12 @@ static void ntb_netdev_tx_handler(struct ntb_transport_qp *qp, void *qp_data,
- 
- 	dev_kfree_skb_any(skb);
- 
--	if (ntb_transport_tx_free_entry(dev->qp) >= tx_start) {
-+	if (ntb_transport_tx_free_entry(qp) >= tx_start) {
- 		/* Make sure anybody stopping the queue after this sees the new
- 		 * value of ntb_transport_tx_free_entry()
- 		 */
- 		smp_mb();
--		if (netif_queue_stopped(ndev))
--			netif_wake_queue(ndev);
-+		netif_wake_subqueue(ndev, q->qid);
- 	}
- }
- 
-@@ -208,16 +265,26 @@ static netdev_tx_t ntb_netdev_start_xmit(struct sk_buff *skb,
- 					 struct net_device *ndev)
- {
- 	struct ntb_netdev *dev = netdev_priv(ndev);
-+	u16 qid = skb_get_queue_mapping(skb);
-+	struct ntb_netdev_queue *q;
- 	int rc;
- 
--	ntb_netdev_maybe_stop_tx(ndev, dev->qp, tx_stop);
-+	if (unlikely(!dev->num_queues))
-+		goto err;
-+
-+	if (unlikely(qid >= dev->num_queues))
-+		qid = qid % dev->num_queues;
- 
--	rc = ntb_transport_tx_enqueue(dev->qp, skb, skb->data, skb->len);
-+	q = &dev->queues[qid];
-+
-+	ntb_netdev_maybe_stop_tx(q, tx_stop);
-+
-+	rc = ntb_transport_tx_enqueue(q->qp, skb, skb->data, skb->len);
- 	if (rc)
- 		goto err;
- 
- 	/* check for next submit */
--	ntb_netdev_maybe_stop_tx(ndev, dev->qp, tx_stop);
-+	ntb_netdev_maybe_stop_tx(q, tx_stop);
- 
- 	return NETDEV_TX_OK;
- 
-@@ -229,80 +296,103 @@ static netdev_tx_t ntb_netdev_start_xmit(struct sk_buff *skb,
- 
- static void ntb_netdev_tx_timer(struct timer_list *t)
- {
--	struct ntb_netdev *dev = timer_container_of(dev, t, tx_timer);
-+	struct ntb_netdev_queue *q = container_of(t, struct ntb_netdev_queue, tx_timer);
-+	struct ntb_netdev *dev = q->ntdev;
- 	struct net_device *ndev = dev->ndev;
- 
--	if (ntb_transport_tx_free_entry(dev->qp) < tx_stop) {
--		mod_timer(&dev->tx_timer, jiffies + usecs_to_jiffies(tx_time));
-+	if (ntb_transport_tx_free_entry(q->qp) < tx_stop) {
-+		mod_timer(&q->tx_timer, jiffies + usecs_to_jiffies(tx_time));
- 	} else {
--		/* Make sure anybody stopping the queue after this sees the new
-+		/*
-+		 * Make sure anybody stopping the queue after this sees the new
- 		 * value of ntb_transport_tx_free_entry()
- 		 */
- 		smp_mb();
--		if (netif_queue_stopped(ndev))
--			netif_wake_queue(ndev);
-+		netif_wake_subqueue(ndev, q->qid);
- 	}
- }
- 
- static int ntb_netdev_open(struct net_device *ndev)
- {
- 	struct ntb_netdev *dev = netdev_priv(ndev);
-+	struct ntb_netdev_queue *queue;
- 	struct sk_buff *skb;
--	int rc, i, len;
--
--	/* Add some empty rx bufs */
--	for (i = 0; i < NTB_RXQ_SIZE; i++) {
--		skb = netdev_alloc_skb(ndev, ndev->mtu + ETH_HLEN);
--		if (!skb) {
--			rc = -ENOMEM;
--			goto err;
--		}
-+	int rc = 0, i, len;
-+	unsigned int q;
- 
--		rc = ntb_transport_rx_enqueue(dev->qp, skb, skb->data,
--					      ndev->mtu + ETH_HLEN);
--		if (rc) {
--			dev_kfree_skb(skb);
--			goto err;
-+	/* Add some empty rx bufs for each queue */
-+	for (q = 0; q < dev->num_queues; q++) {
-+		queue = &dev->queues[q];
-+
-+		for (i = 0; i < NTB_RXQ_SIZE; i++) {
-+			skb = netdev_alloc_skb(ndev, ndev->mtu + ETH_HLEN);
-+			if (!skb) {
-+				rc = -ENOMEM;
-+				goto err;
-+			}
-+
-+			rc = ntb_transport_rx_enqueue(queue->qp, skb, skb->data,
-+						      ndev->mtu + ETH_HLEN);
-+			if (rc) {
-+				dev_kfree_skb(skb);
-+				goto err;
-+			}
- 		}
--	}
- 
--	timer_setup(&dev->tx_timer, ntb_netdev_tx_timer, 0);
-+		timer_setup(&queue->tx_timer, ntb_netdev_tx_timer, 0);
++	if (soc && pci_is_pcie(pdev) && soc->force_mrrs) {
++		cur = pcie_get_readrq(pdev);
++		ret = pcie_set_readrq(pdev, soc->force_mrrs);
++		if (ret)
++			dev_warn(&pdev->dev, "failed to set MRRS=%d: %d\n",
++				 soc->force_mrrs, ret);
++		else
++			dev_info(&pdev->dev, "capped MRRS: %d->%d for ntb-epf\n",
++				 cur, soc->force_mrrs);
 +	}
- 
- 	netif_carrier_off(ndev);
--	ntb_transport_link_up(dev->qp);
--	netif_start_queue(ndev);
 +
-+	for (q = 0; q < dev->num_queues; q++)
-+		ntb_transport_link_up(dev->queues[q].qp);
-+
-+	netif_tx_start_all_queues(ndev);
- 
- 	return 0;
- 
- err:
--	while ((skb = ntb_transport_rx_remove(dev->qp, &len)))
--		dev_kfree_skb(skb);
-+	for (q = 0; q < dev->num_queues; q++) {
-+		queue = &dev->queues[q];
-+
-+		while ((skb = ntb_transport_rx_remove(queue->qp, &len)))
-+			dev_kfree_skb(skb);
-+	}
- 	return rc;
- }
- 
- static int ntb_netdev_close(struct net_device *ndev)
+ 	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+ 	if (ret) {
+ 		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+@@ -720,6 +738,7 @@ static void ntb_epf_cleanup_isr(struct ntb_epf_dev *ndev)
+ static int ntb_epf_pci_probe(struct pci_dev *pdev,
+ 			     const struct pci_device_id *id)
  {
- 	struct ntb_netdev *dev = netdev_priv(ndev);
-+	struct ntb_netdev_queue *queue;
- 	struct sk_buff *skb;
-+	unsigned int q;
- 	int len;
- 
--	ntb_transport_link_down(dev->qp);
-+	netif_tx_stop_all_queues(ndev);
-+
-+	for (q = 0; q < dev->num_queues; q++) {
-+		queue = &dev->queues[q];
- 
--	while ((skb = ntb_transport_rx_remove(dev->qp, &len)))
--		dev_kfree_skb(skb);
-+		ntb_transport_link_down(queue->qp);
- 
--	timer_delete_sync(&dev->tx_timer);
-+		while ((skb = ntb_transport_rx_remove(queue->qp, &len)))
-+			dev_kfree_skb(skb);
- 
-+		timer_delete_sync(&queue->tx_timer);
-+	}
- 	return 0;
- }
- 
- static int ntb_netdev_change_mtu(struct net_device *ndev, int new_mtu)
- {
- 	struct ntb_netdev *dev = netdev_priv(ndev);
-+	struct ntb_netdev_queue *queue;
- 	struct sk_buff *skb;
--	int len, rc;
-+	unsigned int q, i;
-+	int len, rc = 0;
- 
--	if (new_mtu > ntb_transport_max_size(dev->qp) - ETH_HLEN)
-+	if (new_mtu > ntb_transport_max_size(dev->queues[0].qp) - ETH_HLEN)
- 		return -EINVAL;
- 
- 	if (!netif_running(ndev)) {
-@@ -311,41 +401,54 @@ static int ntb_netdev_change_mtu(struct net_device *ndev, int new_mtu)
- 	}
- 
- 	/* Bring down the link and dispose of posted rx entries */
--	ntb_transport_link_down(dev->qp);
-+	for (q = 0; q < dev->num_queues; q++)
-+		ntb_transport_link_down(dev->queues[0].qp);
- 
- 	if (ndev->mtu < new_mtu) {
--		int i;
--
--		for (i = 0; (skb = ntb_transport_rx_remove(dev->qp, &len)); i++)
--			dev_kfree_skb(skb);
-+		for (q = 0; q < dev->num_queues; q++) {
-+			queue = &dev->queues[q];
- 
--		for (; i; i--) {
--			skb = netdev_alloc_skb(ndev, new_mtu + ETH_HLEN);
--			if (!skb) {
--				rc = -ENOMEM;
--				goto err;
--			}
--
--			rc = ntb_transport_rx_enqueue(dev->qp, skb, skb->data,
--						      new_mtu + ETH_HLEN);
--			if (rc) {
-+			for (i = 0;
-+			     (skb = ntb_transport_rx_remove(queue->qp, &len));
-+			     i++)
- 				dev_kfree_skb(skb);
--				goto err;
-+
-+			for (; i; i--) {
-+				skb = netdev_alloc_skb(ndev,
-+						       new_mtu + ETH_HLEN);
-+				if (!skb) {
-+					rc = -ENOMEM;
-+					goto err;
-+				}
-+
-+				rc = ntb_transport_rx_enqueue(queue->qp, skb,
-+							      skb->data,
-+							      new_mtu +
-+							      ETH_HLEN);
-+				if (rc) {
-+					dev_kfree_skb(skb);
-+					goto err;
-+				}
- 			}
- 		}
- 	}
- 
- 	WRITE_ONCE(ndev->mtu, new_mtu);
- 
--	ntb_transport_link_up(dev->qp);
-+	for (q = 0; q < dev->num_queues; q++)
-+		ntb_transport_link_up(dev->queues[q].qp);
- 
- 	return 0;
- 
- err:
--	ntb_transport_link_down(dev->qp);
-+	for (q = 0; q < dev->num_queues; q++) {
-+		struct ntb_netdev_queue *queue = &dev->queues[q];
-+
-+		ntb_transport_link_down(queue->qp);
- 
--	while ((skb = ntb_transport_rx_remove(dev->qp, &len)))
--		dev_kfree_skb(skb);
-+		while ((skb = ntb_transport_rx_remove(queue->qp, &len)))
-+			dev_kfree_skb(skb);
-+	}
- 
- 	netdev_err(ndev, "Error changing MTU, device inoperable\n");
- 	return rc;
-@@ -404,6 +507,7 @@ static int ntb_netdev_probe(struct device *client_dev)
- 	struct net_device *ndev;
- 	struct pci_dev *pdev;
- 	struct ntb_netdev *dev;
-+	unsigned int q, desired_queues;
- 	int rc;
- 
- 	ntb = dev_ntb(client_dev->parent);
-@@ -411,7 +515,9 @@ static int ntb_netdev_probe(struct device *client_dev)
- 	if (!pdev)
- 		return -ENODEV;
- 
--	ndev = alloc_etherdev(sizeof(*dev));
-+	desired_queues = ntb_netdev_default_queues();
-+
-+	ndev = alloc_etherdev_mq(sizeof(*dev), desired_queues);
++	const struct ntb_epf_soc_data *soc = (const void *)id->driver_data;
+ 	struct device *dev = &pdev->dev;
+ 	struct ntb_epf_dev *ndev;
+ 	int ret;
+@@ -731,16 +750,16 @@ static int ntb_epf_pci_probe(struct pci_dev *pdev,
  	if (!ndev)
  		return -ENOMEM;
  
-@@ -420,6 +526,15 @@ static int ntb_netdev_probe(struct device *client_dev)
- 	dev = netdev_priv(ndev);
- 	dev->ndev = ndev;
- 	dev->pdev = pdev;
-+	dev->num_queues = 0;
-+
-+	dev->queues = kcalloc(desired_queues, sizeof(*dev->queues),
-+			      GFP_KERNEL);
-+	if (!dev->queues) {
-+		rc = -ENOMEM;
-+		goto err_free_netdev;
-+	}
-+
- 	ndev->features = NETIF_F_HIGHDMA;
+-	ndev->barno_map = (const enum pci_barno *)id->driver_data;
+-	if (!ndev->barno_map)
++	if (!soc || !soc->barno_map)
+ 		return -EINVAL;
  
- 	ndev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
-@@ -436,26 +551,51 @@ static int ntb_netdev_probe(struct device *client_dev)
- 	ndev->min_mtu = 0;
- 	ndev->max_mtu = ETH_MAX_MTU;
++	ndev->barno_map = soc->barno_map;
+ 	ndev->dev = dev;
  
--	dev->qp = ntb_transport_create_queue(ndev, client_dev,
--					     &ntb_netdev_handlers);
--	if (!dev->qp) {
-+	for (q = 0; q < desired_queues; q++) {
-+		struct ntb_netdev_queue *queue = &dev->queues[q];
-+
-+		queue->ntdev = dev;
-+		queue->qid = q;
-+		queue->qp = ntb_transport_create_queue(queue, client_dev,
-+						       &ntb_netdev_handlers);
-+		if (!queue->qp)
-+			break;
-+
-+		dev->num_queues++;
-+	}
-+
-+	if (!dev->num_queues) {
- 		rc = -EIO;
--		goto err;
-+		goto err_free_queues;
- 	}
+ 	ntb_epf_init_struct(ndev, pdev);
+ 	mutex_init(&ndev->cmd_lock);
  
--	ndev->mtu = ntb_transport_max_size(dev->qp) - ETH_HLEN;
-+	rc = netif_set_real_num_tx_queues(ndev, dev->num_queues);
-+	if (rc)
-+		goto err_free_qps;
-+
-+	rc = netif_set_real_num_rx_queues(ndev, dev->num_queues);
-+	if (rc)
-+		goto err_free_qps;
-+
-+	ndev->mtu = ntb_transport_max_size(dev->queues[0].qp) - ETH_HLEN;
+-	ret = ntb_epf_init_pci(ndev, pdev);
++	ret = ntb_epf_init_pci(ndev, pdev, soc);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to init PCI\n");
+ 		return ret;
+@@ -812,21 +831,52 @@ static const enum pci_barno rcar_barno[NTB_BAR_NUM] = {
+ 	[BAR_MW4]	= NO_BAR,
+ };
  
- 	rc = register_netdev(ndev);
- 	if (rc)
--		goto err1;
-+		goto err_free_qps;
- 
- 	dev_set_drvdata(client_dev, ndev);
--	dev_info(&pdev->dev, "%s created\n", ndev->name);
-+	dev_info(&pdev->dev, "%s created with %u queue pairs\n",
-+		 ndev->name, dev->num_queues);
- 	return 0;
- 
--err1:
--	ntb_transport_free_queue(dev->qp);
--err:
-+err_free_qps:
-+	for (q = 0; q < dev->num_queues; q++)
-+		ntb_transport_free_queue(dev->queues[q].qp);
++static const struct ntb_epf_soc_data j721e_soc = {
++	.barno_map = j721e_map,
++};
 +
-+err_free_queues:
-+	kfree(dev->queues);
++static const struct ntb_epf_soc_data mx8_soc = {
++	.barno_map = mx8_map,
++};
 +
-+err_free_netdev:
- 	free_netdev(ndev);
- 	return rc;
- }
-@@ -464,9 +604,14 @@ static void ntb_netdev_remove(struct device *client_dev)
- {
- 	struct net_device *ndev = dev_get_drvdata(client_dev);
- 	struct ntb_netdev *dev = netdev_priv(ndev);
-+	unsigned int q;
++static const struct ntb_epf_soc_data rcar_soc = {
++	.barno_map = rcar_barno,
++	/*
++	 * On some R-Car platforms using the Synopsys DWC PCIe + eDMA we
++	 * observe data corruption on RC->EP Remote DMA Read paths whenever
++	 * the EP issues large MRd requests. The corruption consistently
++	 * hits the tail of each 256-byte segment (e.g. offsets
++	 * 0x00E0..0x00FF within a 256B block, and again at 0x01E0..0x01FF
++	 * for larger transfers).
++	 *
++	 * The DMA injects multiple MRd requests of size less than or equal
++	 * to the min(MRRS, MPS) into the outbound request path. By
++	 * lowering MRRS to 128 we prevent 256B MRd TLPs from being
++	 * generated and avoid the issue on the affected hardware. We
++	 * intentionally keep MPS unchanged and scope this quirk to this
++	 * endpoint to avoid impacting unrelated devices.
++	 *
++	 * Remove this once the issue is resolved (maybe controller/IP
++	 * level) or a more preferable workaround becomes available.
++	 */
++	.force_mrrs = 128,
++};
 +
- 
- 	unregister_netdev(ndev);
--	ntb_transport_free_queue(dev->qp);
-+	for (q = 0; q < dev->num_queues; q++)
-+		ntb_transport_free_queue(dev->queues[q].qp);
-+
-+	kfree(dev->queues);
- 	free_netdev(ndev);
- }
- 
+ static const struct pci_device_id ntb_epf_pci_tbl[] = {
+ 	{
+ 		PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
+ 		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
+-		.driver_data = (kernel_ulong_t)j721e_map,
++		.driver_data = (kernel_ulong_t)&j721e_soc,
+ 	},
+ 	{
+ 		PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x0809),
+ 		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
+-		.driver_data = (kernel_ulong_t)mx8_map,
++		.driver_data = (kernel_ulong_t)&mx8_soc,
+ 	},
+ 	{
+ 		PCI_DEVICE(PCI_VENDOR_ID_RENESAS, 0x0030),
+ 		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
+-		.driver_data = (kernel_ulong_t)rcar_barno,
++		.driver_data = (kernel_ulong_t)&rcar_soc,
+ 	},
+ 	{ },
+ };
 -- 
 2.51.0
 

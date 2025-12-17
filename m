@@ -1,104 +1,180 @@
-Return-Path: <dmaengine+bounces-7741-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7742-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01D9FCC6010
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 06:10:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C9841CC6463
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 07:36:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C25A7302357A
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 05:10:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0EA58304F11B
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 06:34:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A99D1224AED;
-	Wed, 17 Dec 2025 05:10:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F799313545;
+	Wed, 17 Dec 2025 06:34:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcJmWWfK"
+	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="DJbCZ9JI"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D1D1BEF8A;
-	Wed, 17 Dec 2025 05:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AA6311C30;
+	Wed, 17 Dec 2025 06:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765948232; cv=none; b=iaKrufj689Jt3FdEUBGs/k0W8c7jPsnF5eVdJ0vgfePm4lZdP4kYopG/TdzD9pc5wDH46Uc8cUruWmprC5/k3a0I1Mlujkkr0HcMzHv6A1X0SRPpJJG663K0pg8KayYBhzf6sAB4hoobG5zthuP5KUCRHx0ZU07jyM7XesGASdw=
+	t=1765953282; cv=none; b=EBC/YKNm/j6Z2ESbYQjIGe4m7rTDkxU6dplI22tOiUNegGkFRL/B5cHQp6wFxKCzmkU6OS8/jb4NlsL60rFNQCywvTjfJ+0uCLtuuVS/2JnbUD54R9c5cu/lsZFbVT66Vxr+jQLGlvs1Ko1iwn2rLjrKiUvuu6sLC+P5YPT0mLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765948232; c=relaxed/simple;
-	bh=bLaK2gFWACWyalrEyaiMmZm2YYU4Bq1urmASnlDm6Os=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMvYE7ZyFPFtIz+qYF9MKWRqBHxRIhj8qjKrs8kjCdxiiIH7lM865R8op07J1Q/lAFTdd8jIjrJfzkJZJfzPTHogaPY+qpNcp3W0ASKOYQRcChs4tUdf/3MeTAZ9T7xuyaSkcUSXIu4WK3Ntmj1bhSe99MVmY84HiH1c+Ujo/pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcJmWWfK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C1DCC19421;
-	Wed, 17 Dec 2025 05:10:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765948231;
-	bh=bLaK2gFWACWyalrEyaiMmZm2YYU4Bq1urmASnlDm6Os=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BcJmWWfK33MwnybWoQwekHilGr5zCy1560YIq82bx13SaA1+NQhhGq6QhzHPOtbEe
-	 g76xucoHWrhcqeg8jb5VE05l6kNRJqy8dzrHM71a0cQhnkMbxx8WNSdtD/xq6p5DJh
-	 bLHZ6CrHbnrrdiA/lniK+9rvYDMqboXAwilsS0aU54t6HtaaMkb9cupJ0QxHomVxV2
-	 yEKUZaMdsykL/s2wdfPiua3AQCBlcTtdYyxETlm+DBvrPfzz8JejKbsd8W5e+SNrmX
-	 GIQpG0as5/ipXXQUCNwIQXZKMAJ3whyWGdWsrBeHqTqlltwGj8NOqaddzfTt/pb5xg
-	 F3WTKkjID57OQ==
-Date: Wed, 17 Dec 2025 10:40:28 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH 0/8] dmaengine: Add new API to combine onfiguration and
- descriptor preparation
-Message-ID: <aUI7RJvQUx3m2IRf@vaman>
-References: <20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com>
- <aUFUX0e_h7RGAecz@vaman>
- <aUF2SX/6bV2lHtF0@lizhi-Precision-Tower-5810>
- <aUF-C8iUCs-dYXGm@vaman>
- <aUGA7tmDYm1MhRXn@lizhi-Precision-Tower-5810>
- <aUGURVuW33WSTuyI@vaman>
- <aUGWtarjFNNy2KyZ@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1765953282; c=relaxed/simple;
+	bh=FXvzyuor5O93IICa/mEsw7W5vjo1bFaXlXdvxn/LBNs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=On43rCZaLCPjdzrsZ6yyzPGBhYusKEcMC0KvC2SxbAYHOJ+o2VtgL3tQDufZMhtuUPt1Zgk8cbn+fY5mkik2FINWrFUMobx24UQvvHinPoGTvyQb3UU0TacQVErY+Ap7w6ohXhoIzybv0PDPDeBEuSnUwbBVyYBSzwyZ9BHoGFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=pass smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=DJbCZ9JI; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yoseli.org
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 19042444B5;
+	Wed, 17 Dec 2025 06:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
+	t=1765953272;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FZh9dHS8Dtfv8ujCmkwpKZQwtkzHUzvrWD3huUC/4dQ=;
+	b=DJbCZ9JIgH9U44U0cyVKOae4zelzA30sA5wo9ssXjDZwQfVA9lp2ELtTponfD54O9v+yl0
+	9u1r8PP1CIHawddyl8XSbgG5OBEVO5F/vIalnymzeYNUwjgfW+LD31Gpf8YB4Eu3y/MGII
+	h1EsEkWz+189NtG2qlDJlDuZNXAz+TQrcFptz2XDW28z+NrSn8XzQYAPgKFT8wm9dZJYsu
+	y7PGVD6p+pmUvVEfUPdk+sbIhGaG9yhJ45hn87CxQ4NVeljqpCOwXrqumSpZU34rT0WOhD
+	8eb9m8WuOIpfHoRDbUm8G7+U95Z65lsInn+dlX9NG9ZIoys8HHxDX3qfa4eURw==
+From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.li@nxp.com>,
+ Greg Ungerer <gerg@linux-m68k.org>
+Cc: imx@lists.linux.dev, dmaengine@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v2 2/5] dma: mcf-edma: Add per-channel IRQ naming for debugging
+Date: Wed, 17 Dec 2025 07:34:07 +0100
+Message-ID: <5064909.31r3eYUQgx@jeanmichel-ms7b89>
+In-Reply-To: <aUF8/r6FZcPraINk@lizhi-Precision-Tower-5810>
+References:
+ <20251126-dma-coldfire-v2-0-5b1e4544d609@yoseli.org> <aUF6CdS6WVZuEP24@vaman>
+ <aUF8/r6FZcPraINk@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aUGWtarjFNNy2KyZ@lizhi-Precision-Tower-5810>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdegudekhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthhqredttddtjeenucfhrhhomheplfgvrghnqdfoihgthhgvlhcujfgruhhtsghoihhsuceojhgvrghnmhhitghhvghlrdhhrghuthgsohhisheshihoshgvlhhirdhorhhgqeenucggtffrrghtthgvrhhnpeffvefhuddvleduuefgtdeludeuvdfhuedvvefgieeifeeiveetkedttedtieefteenucfkphepvdgrtddumegvtdgrmeduieelmeejudegtdemvdgrgedtmehffegrrgemjedujegvmedufegsvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemudeileemjedugedtmedvrgegtdemfhefrggrmeejudejvgemudefsgdvpdhhvghlohepjhgvrghnmhhitghhvghlqdhmshejsgekledrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepjhgvrghnmhhitghhvghlrdhhrghuthgsohhisheshihoshgvlhhirdhorhhgpdhqihgupeduledtgedvgeeggeeuhedpmhhouggvpehsmhhtphhouhhtpdhnsggprhgtphhtthhopeejpdhrtghpthhtohepvhhkohhulheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephfhrrghnkhdrlhhisehng
+ ihprdgtohhmpdhrtghpthhtohepghgvrhhgsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehimhigsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepughmrggvnhhgihhnvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmieekkheslhhishhtshdrlhhinhhugidqmheikehkrdhorhhg
+X-GND-State: clean
 
-On 16-12-25, 12:28, Frank Li wrote:
-> On Tue, Dec 16, 2025 at 10:47:57PM +0530, Vinod Koul wrote:
-> > On 16-12-25, 10:55, Frank Li wrote:
-> > > The usual prep_ call have not sconf argument, which need depend on previous
-> > > config.
-> > >
-> > > further, If passdown NULL for config, it means use previuos config.
-> >
-> > I know it is bit longer but somehow I would feel better for the API to
-> > imply config as well please
-> 
-> I can use you suggested dmaengine_prep_config_perip_single().
-> 
-> But how about use dmaengine_prep_config_single(), which little bit shorter
-> and use "config" to imply it is for periperal? (similar to cyclic case?)
+Hi Frank,
 
-Yes that is a good idea. config does imply peripheral cases. Please make
-sure API documentation marks that clearly
+Le mardi 16 d=C3=A9cembre 2025, 16:38:38 heure normale d=E2=80=99Europe cen=
+trale Frank Li a=20
+=C3=A9crit :
+> On Tue, Dec 16, 2025 at 08:56:01PM +0530, Vinod Koul wrote:
+> > On 26-11-25, 11:12, Frank Li wrote:
+> > > On Wed, Nov 26, 2025 at 09:36:03AM +0100, Jean-Michel Hautbois via B4=
+=20
+Relay wrote:
+> > > > From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+> > > >=20
+> > > > Add dynamic per-channel IRQ naming to make DMA interrupt
+> > > > identification
+> > > > easier in /proc/interrupts and debugging tools.
+> > > >=20
+> > > > Instead of all channels showing "eDMA", they now show:
+> > > > - "eDMA-0" through "eDMA-15" for channels 0-15
+> > > > - "eDMA-16" through "eDMA-55" for channels 16-55
+> > > > - "eDMA-tx-56" for the shared channel 56-63 interrupt
+> > > > - "eDMA-err" for the error interrupt
+> > > >=20
+> > > > This aids debugging DMA issues by making it clear which channel's
+> > > > interrupt is being serviced.
+> > > >=20
+> > > > Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+> > > > ---
+> > > >=20
+> > > >  drivers/dma/mcf-edma-main.c | 26 ++++++++++++++++++--------
+> > > >  1 file changed, 18 insertions(+), 8 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/dma/mcf-edma-main.c b/drivers/dma/mcf-edma-mai=
+n.c
+> > > > index f95114829d80..6a7d88895501 100644
+> > > > --- a/drivers/dma/mcf-edma-main.c
+> > > > +++ b/drivers/dma/mcf-edma-main.c
+> > > > @@ -81,8 +81,14 @@ static int mcf_edma_irq_init(struct platform_dev=
+ice
+> > > > *pdev,> > >=20
+> > > >  	if (!res)
+> > > >  =09
+> > > >  		return -1;
+> > > >=20
+> > > > -	for (ret =3D 0, i =3D res->start; i <=3D res->end; ++i)
+> > > > -		ret |=3D request_irq(i, mcf_edma_tx_handler, 0, "eDMA",=20
+mcf_edma);
+> > > > +	for (ret =3D 0, i =3D res->start; i <=3D res->end; ++i) {
+> > > > +		char *irq_name =3D devm_kasprintf(&pdev->dev,=20
+GFP_KERNEL,
+> > > > +						"eDMA-%d",=20
+(int)(i - res->start));
+> > > > +		if (!irq_name)
+> > > > +			return -ENOMEM;
+> > > > +
+> > > > +		ret |=3D request_irq(i, mcf_edma_tx_handler, 0,=20
+irq_name, mcf_edma);
+> > > > +	}
+> > > >=20
+> > > >  	if (ret)
+> > > >  =09
+> > > >  		return ret;
+> > >=20
+> > > The existing code have problem, it should use devm_request_irq(). if =
+one
+> > > irq request failure, return here,  requested irq will not free.
+> >=20
+> > Why is that an error!
+>=20
+>         ret =3D fsl_edma->drvdata->setup_irq(pdev, fsl_edma);
+>         if (ret)
+>                 return ret;
+>=20
+> if last one of request_irq() failure, mcf_edma_irq_init() return failure.
+> probe will return failure also without free irq.
+>=20
+> So previous irq by request_irq() is never free at this case.
 
-BR
--- 
-~Vinod
+=46rom kernel/irq/manage.c I see in a nutshell:
+	request_threaded_irq() {
+		action =3D kzalloc(sizeof(struct irqaction), GFP_KERNEL);
+		retval =3D __setup_irq(irq, desc, action);
+		if (retval) {
+			kfree(action->secondary);
+			kfree(action);
+		}
+	}
+
+I don't see an issue with the existing code then ?
+Am I wrong ?
+
+Thanks,
+JM
+
+>=20
+> Frank
+>=20
+> > > You'd better add patch before this one to change to use
+> > > devm_request_irq()
+> >=20
+> > Not really, devm_ is a not always good option.
+> >=20
+> > --
+> > ~Vinod
+
+
+
+
 

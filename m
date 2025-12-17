@@ -1,49 +1,49 @@
-Return-Path: <dmaengine+bounces-7757-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7759-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD1B9CC8677
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 16:22:58 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 101A4CC863B
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 16:19:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A465230C68FC
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:16:22 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 25A04301E34F
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:16:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8A1D3242D8;
-	Wed, 17 Dec 2025 15:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF51A33C190;
+	Wed, 17 Dec 2025 15:16:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="cEHu0fo5"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="hPgW/alq"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011052.outbound.protection.outlook.com [40.107.74.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB3C22FDEC;
-	Wed, 17 Dec 2025 15:16:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCB43358A4;
+	Wed, 17 Dec 2025 15:16:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765984580; cv=fail; b=VJ4bkBHcmF2Y4obgETEyJaXwn7gF7cu1ed7pjhoMrgtGl3vVZe4hdbtOZwsUqrTTjpem2EY6vRkVXlvTr7sqRhcQQwQ7EYo+KzQbFXhvcfjj2x53aO1JtLla+9/oC3R2vcEZDhAeKZwCaRgUepZD7n9W/xKATjTN0QOLr+kbp6Q=
+	t=1765984585; cv=fail; b=mkctY0TZTT4SFKeD8ODYZ71SSo+ATLsXmjX6+9zXqoBowuo5Ji1FXinRICeOLOiKlBkJoSDVYw4yooCRy5eLo53zQWdHHAabpO8wpu08hmHxcaDWQjPfRoe1dT7KHXu50Wq3T6bWqBM+U+wXaNxw3imwG0JRnqFPxq31pxFSEJo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765984580; c=relaxed/simple;
-	bh=giXGEvXD2Ai+O5YhLmkxdNq8aD5ZZAyzGWCbggeYxOQ=;
+	s=arc-20240116; t=1765984585; c=relaxed/simple;
+	bh=dinoBCJj2bnKJQv62Qeox+djGNA5UtuTaqJ4qztBoq0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KbIqkyabP4URjQVQqIDzT9woTwG/sW63EFi3HSvUmo2S0w4ZLQZwvBaxMmNbHQXdIWFaCJpV0hIMuDhvfvKpj8eLEM5VavcCHVkLSJZGS+IgKhsPA6IQtH3FB0KkrXwyVY+jVFT8h4BJ4nfvboMUVkKIOOLoXREGqOVV3Dwrlz0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=cEHu0fo5; arc=fail smtp.client-ip=40.107.74.52
+	 Content-Type:MIME-Version; b=SdKmeoAQvmrMskQvxpNpDQQ2zCbFlAU6DfL+mT9ZLJ9VJs8zssSAb7BoPHtZYTI5Y21f8U8/c4o4nJlNFfSJXA5UyUI83Cq5oT31VXDW3B6dHEgMoAXuED2WdI5KiVM0M9GSzH0cgk2K/qXGcIqiLIvHcdPUDL4ZnnW/s3pHMaE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=hPgW/alq; arc=fail smtp.client-ip=40.107.74.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VLYOJbcX5S7prkWdidI6qhIEDvBYlBNaxQqBVk0rsO6jbmdXH2yLeH4uEsqaeBv+nw2Kbhza80K6D7BJ2fxBG9QCatKhQAoRTXhVs4V8G6ql1s0tlV0UNf82Abvrua8KheD8rUTmOvpOCHLg8aVkncXxxZlC5l333gHmKtArrLKvo+093sRdzyPOaoBF82fMWj+kFIUP4X35avFWmARyB+mVjZBTU/7+rycM9bQaaX07hxGb3eqoP1ieHpek9jNQ68Tfn8rCZhzQO1cpKigsqKABnboZgDVSbDQyk8FYX7kB20Hz7VrL+zR1IEoM7Ev+dvhBTvngWJfnNQUu/UligQ==
+ b=ZEYVSOlNPXkBt3A+fDO6AwBEtx2wTAcTve2SZfsMswLBcPWFWQhZBMJZ5/SvH22NHbyJM/t8L0XHf4vk0IdlvSayqtqiI3uOpPiysxx4VJtarNqGsPII9Sn4xuoQR9HBnqC9S5Oj1u+1i+m4N3bPUqSVJ7fS9Uf/WUJgfyvhepcTywb7l6S2LI9MXeMoqqY03lkhk6s5IXZl04fDW2ebCXozH4k4eS9yhbX7ztmHsQ/53wEfAJc2qO9clLcOLR6ODl1kJXAN180zUriQ1QSMmJngGqGu3NkhSQb3wjlSn9iitREI1xk0Fow8k/yGTYI5UPkEIyndVowczK5lvSo8QA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VD6NCTTJahO4Rf1Dji0OqiYFqVU8dPDbvWQgpvSQdFQ=;
- b=wmv2j7/BIFtQpB2Lmdld/wf5zll3nWfBAmEJKVvovSWOL8eIkvzeDRrLiAddVWo1a6nNJmT2sV57atJ5i45w9usFe6c1b1giEOB6I/rqYmSpa0wLJ08koLpBH68A0IEPKFX2jsKxPu/WeLab7m1NBjt0DMxUTwEJGrKLR4/U5i3vv4atGC7/w+7JzRIIDgw6FK33U2ygwpWyibNym9qgdqmp/OEXRlfvg0oHc97RLrT9bUThdnbSYYrXfIcw7dujjmkYjuTs+stfMtLYZdJ0w958qbVji/w7/wHbIZcpbSBqiYkAmYv+dYCjfLnHdr5jE+W7y8kPfsRNMhv04ruJRA==
+ bh=TndGji5lg89cVye3iC5pe/TN/3ffkCrfIeu8yWxalNA=;
+ b=RlqejTff++sxvm9HW9AjwOv2Vrw/F+ZhUOX+mA5F2JkGlnr0xCBJH3dH21VYZU2E8rvnq9dP8uh/iTlCNUx49CkTeyYeM+kb4gO66tKIe7FX94qoBQ4gfgKihiZalTT2WrB2MUtxcqCm6uoCaz9ffx9IJ+aOtXKzfUJCuMl+O3i2O35xSf86fVu7svRSDln6VccEfZGaOqw8t3QQ81+fplNLqgDgo5GKqsrcYssKD9vff/xEkESEk2yGtzzpZx4UsnX21q6qBJp+7m6CigIpFRzYBQNedoBQ82ZHV5tSHEO47m3pWB08E2pqQ76siBQVUopPKzw9gAG6LJmkVa4sXA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VD6NCTTJahO4Rf1Dji0OqiYFqVU8dPDbvWQgpvSQdFQ=;
- b=cEHu0fo5SZttzWLNZ2M5LOJaHQGp0CAkGyy3rY5NGnRQ672VRa/i70JIZq8SSnZZ8wlhW2gcPypd5/XXa7kTNonRvtlz3B0SEC5CO824NTHql2AxTHJFF0dfxAiR6SWOH402/p+dvjH2BU4PThFyrtR37jeC83KNRFLimcquJ/w=
+ bh=TndGji5lg89cVye3iC5pe/TN/3ffkCrfIeu8yWxalNA=;
+ b=hPgW/alqqa98WBiHqjMh8aDaTcCc+Y1Ziim0QRJdHjnvWyWIz1OoEQUlpdPO5LBbQumdrGFV+55P4n868OXMgL1yABhx2ZWNvbm6XH0viIpkebDjHyDfkspcycISpuDd+0dUlgG5gNM0fQXwXwzbo6EcVFxwtXAcp/9n30lPYCY=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=valinux.co.jp;
 Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:24c::11)
@@ -54,7 +54,7 @@ Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:24c::11)
 Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  ([fe80::fb7e:f4ed:a580:9d03]) by TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  ([fe80::fb7e:f4ed:a580:9d03%5]) with mapi id 15.20.9434.001; Wed, 17 Dec 2025
- 15:16:15 +0000
+ 15:16:16 +0000
 From: Koichiro Den <den@valinux.co.jp>
 To: Frank.Li@nxp.com,
 	dave.jiang@intel.com,
@@ -97,16 +97,16 @@ Cc: mani@kernel.org,
 	arnd@arndb.de,
 	elfring@users.sourceforge.net,
 	den@valinux.co.jp
-Subject: [RFC PATCH v3 02/35] NTB: epf: Add mwN_offset support and config region versioning
-Date: Thu, 18 Dec 2025 00:15:36 +0900
-Message-ID: <20251217151609.3162665-3-den@valinux.co.jp>
+Subject: [RFC PATCH v3 03/35] PCI: dwc: ep: Support BAR subrange inbound mapping via address match iATU
+Date: Thu, 18 Dec 2025 00:15:37 +0900
+Message-ID: <20251217151609.3162665-4-den@valinux.co.jp>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251217151609.3162665-1-den@valinux.co.jp>
 References: <20251217151609.3162665-1-den@valinux.co.jp>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TYCP286CA0242.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:456::9) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
+X-ClientProxiedBy: TYCP286CA0037.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:29d::12) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:400:24c::11)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -116,443 +116,425 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: TYWP286MB2697:EE_|OS9P286MB4633:EE_
-X-MS-Office365-Filtering-Correlation-Id: d65ab6f4-0778-4b29-fb53-08de3d7f3887
+X-MS-Office365-Filtering-Correlation-Id: 40879712-f8d8-4b53-ca2c-08de3d7f3907
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|10070799003|376014|7416014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dzw3konwxBm3fLxgM2I58wZW3SLkl1IQW9FAXFUZgRsoYiRmkSaqCBzk2ZEn?=
- =?us-ascii?Q?3uQojSpCH5QbkiQMSmhkSLuX5AH3kemfZ3jlFu9CB5BUXAV4iIvxo8Q9/+Ul?=
- =?us-ascii?Q?H7oQpBKVnxmLyDY11R7isS1jrydljFMGsE4Ss318r1p88ny5Pw+eHTGTAlRy?=
- =?us-ascii?Q?21Gj8ii2h5MTCu040b/NywjMS0ZuY+Yby8mtN/RFlHZ1knzucoOhhJvM3BnV?=
- =?us-ascii?Q?uO8bdz0fnHLo/Z2R7x3uyDPpAzGsrYVY2ycEWxeO2cEbHKB67x2FxHAGJau7?=
- =?us-ascii?Q?dUzAg2BbFQRbN6V6okgHqwrdObQGbjswT+TX7ftbTImT1OiBnyCqTndS/23/?=
- =?us-ascii?Q?FnhypMx9nx38vqkzYfwAymq+JwcKdDm/qhqrimBV3A0nDNw0yzJ+xd7Zf0ki?=
- =?us-ascii?Q?ia56CIXT3xvyc2uNZHnvkqCwDsbT0/lH/7EZJRZd3pr0FYn4PdYbVjEEruJM?=
- =?us-ascii?Q?IQ5qnN1r8yfkidFnzcuXQhskN6bxMAHcDggr9kdj5L4DHpL5o0htnAw9/7vE?=
- =?us-ascii?Q?yNI11vG4wucvHS921hv4wwMV4s1ZxaXCgCy0Gav1UA2l62EwnxQZDK25IvtU?=
- =?us-ascii?Q?62TjkOf2W7mseJJJXWNiiBl55X/PJps+NQq5olCgUz5ZZ1RSqZkBMINZupgQ?=
- =?us-ascii?Q?yTGPqMC93J34i42v3M3FdYH8iTxdlv1vFdceswxuqRbIIYz3amudMm9gzh3+?=
- =?us-ascii?Q?L7z7V69ilnOxR94eqSO+2r0zmn6Lza0XgtX0PxT6jblEz+0bWZnJuV7nrjWZ?=
- =?us-ascii?Q?THLREo9X5WBs4Q+RjjaPLMOuV3AIzYb1HLUoiVOshL5iB/Xc3vRjzb/egbT9?=
- =?us-ascii?Q?Rg6wd21g/ko+auyMFZeHmXmNdq+AJ5mlmt5are1c01kpxOnd1J7MmyOv6jMU?=
- =?us-ascii?Q?n8CsXu8maspGXG5czriw8Xr3WMjEs3y6DDUnLbazRPXpvSui6iTWQVWcJjys?=
- =?us-ascii?Q?PJ2kGbxp7FTDyTnrKIadDaodno75BG8Kjm51jApFuY1bv8CMNiNNm8jL0nmO?=
- =?us-ascii?Q?4DAt/HwNFOYFdHQP6offerwslcfMlrsM1D9WRfecv1NrS2d6rtPO2daEYyak?=
- =?us-ascii?Q?RPxX2Q3HnOy7J2jmabeBarGQtRtXKqUC8e3pvsg7HoP7Rb5nPwAGqljIDpDL?=
- =?us-ascii?Q?EEzrBXaWSZ/3eKsDscLwD/pu1BjLUKetv9uTDPjE13cjTjqVPEWkwkPitxJH?=
- =?us-ascii?Q?e1JLO51g8zGWJ8NkmNN8I+59du+ngyN1jaOiDkWnNUmhl6Agj7jGnOyCYF5r?=
- =?us-ascii?Q?fW/vZbJCJttB4SRcfSazE+QBVNlZllrEiK4MzzpgIiuvcfB0VdNVStPYiYx8?=
- =?us-ascii?Q?lHO5XipI6KTVyoGdncs1tN+K9z/Zzr8Wy2ilHm8xSvCm2P5er/p2VBiK0S9W?=
- =?us-ascii?Q?oes62iXUBrK1BlYWTf+QYdwDOcXGUu4lJvbmuIiHL3zkoA0+eUB7v9uoERC7?=
- =?us-ascii?Q?LlG8n8ChRcV5lIy+8BsSI5mWEuAcjrDg?=
+	=?us-ascii?Q?uBoM97CjnEUMHFtSTBU4mXFVoRi3CO2qQ1IPmgM1Oa/TGaNvds+8EjVUruao?=
+ =?us-ascii?Q?IwB0LBaS7q2KZGJh1/8FtnATbMQbhyBbcavKoQoohBMMijX2LIioixvhFk0s?=
+ =?us-ascii?Q?KWiwTKRzQA8L6I7qMCJrkLhbeJLvxZh7MYMxwrmmcWi+0KrWiZbav8J3Fzkk?=
+ =?us-ascii?Q?OdgbN0fML+bSQtUsTqsMPmva3KVBcgXpT9JDd/4W6gGVPTJwA4k/xr95pFPG?=
+ =?us-ascii?Q?31PBOE9CSFQygxV3sAFCvp3XnDqPijDzLd2Tb0Rr71AtJ6H3sWfXvc7TVfDo?=
+ =?us-ascii?Q?Dz/QVgVCw3YJWL7rrRcS2Fb6clA+Tzk9OaaaNeFsFUSjrjM7U2m4HNAYifs/?=
+ =?us-ascii?Q?8MFfIlJLzWPm3yAu7uA4GxnP2/tpLB/MTrxbMqGgcLtJHuO76nVNnR4YdbmE?=
+ =?us-ascii?Q?qQ32dCgboQmGWaTRKXLxBkYHlSUcxehZmr+C7FBlhCiJhHXa8cPw4mu9N5x8?=
+ =?us-ascii?Q?UGPDOw+8MQdnWVJgp3G7kxzzg+m1pSOI3xIveNm9dece18zd5bBL6ML/HQiN?=
+ =?us-ascii?Q?Cxbt2Wr3Qdd8CPAqpVsm/eCbjjjYiyRF5R4wr8aNPo5bPUD/B69+i5HcfDt2?=
+ =?us-ascii?Q?94CtTmykhSiJmywjMLtol7qMn5n7bfKfsRvViKLPvCdv+K1sQ80qteavxnyj?=
+ =?us-ascii?Q?S9hMysy2w9UhOgbs7SPrPeKStElD9OP6CEs2XkPDtWVoVk4WnWacOUqWONrs?=
+ =?us-ascii?Q?drBhnFvxooxM5VJ2sCw2qAOzKTaJCU8TxBlfW90JtempzRy1jpC/Ugaa/8m3?=
+ =?us-ascii?Q?yUh6cvObXTe/Wh6hJ3vOILxVUQtLjo84XExUuxNw9LAe+34hrbvmy9Cz6cuj?=
+ =?us-ascii?Q?cOh1nEswG6BHlTG6QQASzRkpxOetBKP0M8xEXjpvkhMGPPsgBKq/eULjc8yY?=
+ =?us-ascii?Q?g3V+9MtmY9+aXF+u94CfnA6H+O+cTjqQcMYOaM7oYLdlaHL8i8kIQJ2g0bXZ?=
+ =?us-ascii?Q?wItgxygnwkrB7vM3lUGiyNkmsSZbpiWuuxFHz1T/7IBp+otEGobCXPlfbFkO?=
+ =?us-ascii?Q?f3b0a5YBCfciItX9tdMF6jUnja6JZrm88OgDz/yXk31bf6T8/lOJ/CwCl243?=
+ =?us-ascii?Q?hFbS6Bwgw1tPiyJsy7fl6ecWIB05vOfJ2Q7xKn2FM13sh7dZz7tvpS7SfKz1?=
+ =?us-ascii?Q?WHjgs/d7lVKQweS67SsrqP/uQfTBx9PCYE+daVEjkJK/Qm8dVPBvnRtLzA0z?=
+ =?us-ascii?Q?tDbAOSuqQYlFr7ckF7uWRPzzthhR84UiR7lNYJMr1paoXEgPUf+ZxeNpmgld?=
+ =?us-ascii?Q?sJ2XOt7PsaD/r7HFldcaJW05wRH6DTH5Bedm3l2uLbtG9d6rZ24NAMalHsHX?=
+ =?us-ascii?Q?g+EOgdKHily9h2+Ngh2oQfVdNSIkdfBGDbEIRlPvHhUPHRACyJGXWV5CPhFQ?=
+ =?us-ascii?Q?qXL5EdaVFGwgvNGMYEtDNeyJ2vOLFEyHRFYX54MN1R6hyURpcxCApXafSQl0?=
+ =?us-ascii?Q?HJOHBL2gqWWEd+bKZvBXEAEeEqUSYReb?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Z1KHKf8tupxcm6iFB720xRivOmnD6mKBrDTiRX3e/j2TQK9toVuOVCjFlktP?=
- =?us-ascii?Q?7l+QlFIA5qH/LyKZqUCv8C3PeGVbWG3c+qzXGgT/+xXvg62+SnxeQkpMlM+o?=
- =?us-ascii?Q?Psf2wmQqj8Hz12DpcaIU3OwcyhKBS1Bf0bnbFvQ9RIKBZAzbODvLGv8CltND?=
- =?us-ascii?Q?47MKI44JKXFDbGeCIiMAH9h2dk2DS8Tu0MRck76URfZBn2qwCb/AeBXXGckq?=
- =?us-ascii?Q?sAID8KwLo6fblFIONe04zvSVE7RCT/gfukB22qjJbZaHSW9TGUeGMdMXgLoL?=
- =?us-ascii?Q?YsOkCqrxQhr+5P5/HTxh4taxwgX+bO9uXcOaGHBKwKGTlImI61uWVbsYH9m1?=
- =?us-ascii?Q?aJlh1doKUbbAhylwh8NBDmzdsf0XOV72Z6xm2IAHQTtsoU1WHQsxsqM+XBKC?=
- =?us-ascii?Q?gFy4SKgntogU6JL2FBlJJlDRGJni25tJ+2NZf/I81ZFkLSP/J7m0S3nlJ15F?=
- =?us-ascii?Q?UbAgfAXZqRluFTDNNwiAU0XEmI4bmF+MDNy+jPDpa5xutHBhJUk43qDMtAy+?=
- =?us-ascii?Q?gzRVVosNrQcBOXpA470bub3EWhbHNO2lGU4oJi7Zv/MP1n1uSVQ4HF8j/5IK?=
- =?us-ascii?Q?A77iRy/8XkhsW488FdVD06Q7vRnOo78YhBC6jNH0+CghX0uPVmbxe/aoMO6I?=
- =?us-ascii?Q?0v5XfcasumZCzvzTvTZJ4GkNIiZLT4x/OpBukW6jlR8tE5/cDs5ERdb88jQk?=
- =?us-ascii?Q?/q0Ulq0TYpdwMdszhuYibT6CZxh1Wpgt4UzbGNyq6UhBf5G6hcx+dkF+Sz9X?=
- =?us-ascii?Q?FTAFuLfW/9lN1erIJEVXgF/xlFbsEf+/1JctatR/KDs1KWcwW0FciNsmEMx2?=
- =?us-ascii?Q?Ez+WBFwlabIALwWy7SDTBsVVGYA8FeBpdWwzYbKUtVD2o9aOpRYeH6J6ooNC?=
- =?us-ascii?Q?sfmnzJR8GGz5U6irD1T15Vi90ruT6G0rFpGGyhc+QUInP6ps8oHeSKFd63r1?=
- =?us-ascii?Q?b0U0iUD8GsohT9LxnqooWCn0mjNrb37VIkDsXPgFX1xtCi17LtlJ8yuvArl9?=
- =?us-ascii?Q?8gy45HmpW7spW5UkgCqmiD8+Vj1JhrvDRgH2ZHuajt15gzTf9x93DnV0ZlOc?=
- =?us-ascii?Q?Gb1OHgvq/U8RhBHRDWOzasMAT1vOkWjtoHIs7Ctwvsp2qMA/gzZrcXpvvA8T?=
- =?us-ascii?Q?ur4uGNQIqu7P9xcDBSIhGCeIwF17Q5iEFILKMqkl9P7zJVoUY4d4ddb6dOMr?=
- =?us-ascii?Q?JW3BDQKdofNMDUG9yDECwDx2gQIINez6kRMz0jEupi8MXirGNzhiuh+E95Pa?=
- =?us-ascii?Q?l3VDY/RP2ptaq0G6Fbp/GpDgMHO4XaWjtuTnwD6r0M4j2L9n8mX3VA9mtWog?=
- =?us-ascii?Q?JWd5UuewRQJk6b/Bx1ExDIgAEx6K9BMzKOzkC0N1ON+VKrNHN+oTukWQqBXj?=
- =?us-ascii?Q?sQ56rKjQTPPqSQE4wM3PMko7W5pdEdvkyS10ZalQENkUZ0Mrg6HjAfM9H3wv?=
- =?us-ascii?Q?PzDefDKqjZBMod0Tsr4r9rOQN25R7Q86HYMh+FgHA/aUAENzwXAvhVJxKr2z?=
- =?us-ascii?Q?ugElCkn/kXH0Ik/QhYZjhTdnL/z37dhEOgH4TG3IHbsa84EAA6RMi5NynV/I?=
- =?us-ascii?Q?FZ4yocLBEeuoa5RoGwGY9JK96jDQI6NYh6SECOUDJHadyyAJTBmLGLGMNjok?=
- =?us-ascii?Q?wTWlTzAM/kQpt7ErKxfgEks=3D?=
+	=?us-ascii?Q?pi74Wjy4cO+fJjw8SZ8R+XjjQfmKdkYChZQ8u5xvqPREhP/hfoIBY+urDe1E?=
+ =?us-ascii?Q?YAr9eo/zFYS3lu4jc8o2nOv5Dg5DrFct8OJftPu6g/tkQH7vOovkAvAcxqCW?=
+ =?us-ascii?Q?tqwqamhqArvn1ub+VVnQhy+jSGcHlyQdSME3gRlsCT011/jCQhQcgH35b4wo?=
+ =?us-ascii?Q?n8LhnGU9SBFanuM/Wc8d33C3SJA3jqPCXody9rMUmjXCz7ZxqNPnlPUU+xtu?=
+ =?us-ascii?Q?PRbTgxXoesMky1kzIfhS0514qGRDfwRLK0DWTs4vHhoOC/x1fTnCZ7JG1ln1?=
+ =?us-ascii?Q?Qd1NBvYkBQz6q/pCyywn6J4genCNztCori+ujXMv8Xl3QMPsYppIgOAtOgg6?=
+ =?us-ascii?Q?OzOhJDs22XrbGKLYphzFol2kamkGKpXDhes5wiokd+DFybFY9yKPmhhOWgUz?=
+ =?us-ascii?Q?n3wYyKA9nFV5kQ+vZQrW/2LHrGkfZbwoeIEb3r4o0OH3AyTiCXgq90/318Xe?=
+ =?us-ascii?Q?nqbp3xAgbsuE2FuziaDP2GwlqaWWg85k/S5obiLkNKqz2z+QZGxgE48rqRXw?=
+ =?us-ascii?Q?qCFHtiM4jG+rBbQXI1I55kEXSdLIP7ehX8jBQfAulEAzpFDLfhp6dxv/g8H1?=
+ =?us-ascii?Q?5kJQVOUmWldqlIndBlcL9NEuO4ioF3d65PhpnSLqKKhUuwHrFZqbXpV9JUEm?=
+ =?us-ascii?Q?xLH6maqC75W+YAyWBAzC2L7QAvKrJLAGXW0YZvjvnsJoNu6wyjUiVZz4IRW1?=
+ =?us-ascii?Q?EGedBdvE5m+ZgmvFS2FZ+Jhv2scMKzeIgmDYXCB4k9KAaq1z8aeclsNpR0TP?=
+ =?us-ascii?Q?/Nszft8IupKAxWHgEOeSHur7jLvbMoOE6NuZhuzHNh6rBHdMADNTWS2hzK1P?=
+ =?us-ascii?Q?dFwfbItdhTRrTUUU5O7vw+uJvtoFJgOhB/po7HxdHMY1FO1kThQtouH2FD1/?=
+ =?us-ascii?Q?FliVMSfLZauVZCBrk/hr2nZBjGpxQq0OUmibvfMTDJAHuyuNOtyhebragAeD?=
+ =?us-ascii?Q?nidXKjSiuaKB6i4gPZXRFTdrXgApiwZK5nQ/5dY+ssS6ljpqrmqrAPRTNOqI?=
+ =?us-ascii?Q?W8QwG/oSQS38/+nnQKYtB0/10oOLgyHdGck3mup1sbs+T0OGLngcylorCNNZ?=
+ =?us-ascii?Q?cCfUl+XSyfL53A+I62L9h+drE1AUeJUiJLY4UIc6/6Dfw3BcGnPCAig2GNmP?=
+ =?us-ascii?Q?WOll1OfXS87UCnEZ/SUbpJb9QGNF1SHloZciqL4oqYFh0uOveKcH52p/FI5J?=
+ =?us-ascii?Q?hO8ykRIOUZlVfToGEyiv1gyJi0KMRt8jjTL+0j0+tCpwLJIIypq8RC6piNm3?=
+ =?us-ascii?Q?LBj88OIosDVN5j481qWn2QsFoXRDjuaVaZQ8IFxZzX6Z9SXIZEIPi7zPsNfd?=
+ =?us-ascii?Q?I3qZOq1H1QMd9Rq/bUQalIzwmXHKjJx2esn7p6gNwxoH6OjEESAE9/mcYTqv?=
+ =?us-ascii?Q?BQe6yhhYV9EJupdn9xysBNlMpAQRpxQODsVCKuWBzd96Q3y3yG27ddKOwByR?=
+ =?us-ascii?Q?XlcIlpb5/AuSeqkATS89jbMsPiyJWiKTMVkGXeOSKW4aC9L0zdKsYbCxW/7f?=
+ =?us-ascii?Q?qS55/i4n2YqaGKmbHMq0a5TlCRroS4lyf8BruKSymO2i+9ZSXsjK0i3sz8QQ?=
+ =?us-ascii?Q?2o1knVdsCn8DSw0+RTnUIp1+Ls4CGBA7O6poS3RDkBjcdY6fjSBfBCtaUPMA?=
+ =?us-ascii?Q?pkWEKshy0YcBfA7Q2KimGzk=3D?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: d65ab6f4-0778-4b29-fb53-08de3d7f3887
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40879712-f8d8-4b53-ca2c-08de3d7f3907
 X-MS-Exchange-CrossTenant-AuthSource: TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2025 15:16:15.2411
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2025 15:16:16.0940
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: skeYbzjyWzARUN/MamArF/U6DWVowgswXkylL1C7egc6tYVKDZykfQDQr0bEWD7ZBn/6wg6wa6gMyagCgrpK4g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: sA0RavGibqa+QmsKCLSy1hoRre9sVmc2jYsvG/SppcedTBcnH6GTRSg90lJ8zmvzDGS4qvwoPU/B8gbfnZjCPA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9P286MB4633
 
-Introduce new mwN_offset configfs attributes to specify memory window
-offsets. This enables mapping multiple windows into a single BAR at
-arbitrary offsets, improving layout flexibility.
+Extend dw_pcie_ep_set_bar() to support Address Match Mode IB iATU
+with the new 'submap' field in pci_epf_bar.
 
-Extend the control register region and add a 32-bit config version
-field. Reuse NTB_EPF_TOPOLOGY (0x0C), which is currently unused, as the
-version register. The endpoint function driver writes 1
-(NTB_EPF_CTRL_VERSION_V1), and ntb_hw_epf reads it at probe time and
-refuses to bind to unknown versions.
-
-Endpoint running with an older kernel that do not program
-NTB_EPF_CTRL_VERSION will be rejected early by host with newer kernel,
-instead of misbehaving at runtime.
+The existing dw_pcie_ep_inbound_atu(), which is for BAR match mode, is
+renamed to dw_pcie_ep_ib_atu_bar() and the new dw_pcie_ep_ib_atu_addr()
+is introduced, which is for Address match mode.
 
 Signed-off-by: Koichiro Den <den@valinux.co.jp>
 ---
- drivers/ntb/hw/epf/ntb_hw_epf.c               |  44 +++++-
- drivers/pci/endpoint/functions/pci-epf-vntb.c | 136 ++++++++++++++++--
- 2 files changed, 160 insertions(+), 20 deletions(-)
+ .../pci/controller/dwc/pcie-designware-ep.c   | 197 ++++++++++++++++--
+ drivers/pci/controller/dwc/pcie-designware.h  |   2 +
+ drivers/pci/endpoint/pci-epc-core.c           |   2 +-
+ include/linux/pci-epf.h                       |  27 +++
+ 4 files changed, 215 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
-index d3ecf25a5162..126ba38e32ea 100644
---- a/drivers/ntb/hw/epf/ntb_hw_epf.c
-+++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
-@@ -30,18 +30,22 @@
- #define NTB_EPF_LINK_STATUS	0x0A
- #define LINK_STATUS_UP		BIT(0)
- 
--#define NTB_EPF_TOPOLOGY	0x0C
-+/* 0x24 (32bit) is unused */
-+#define NTB_EPF_CTRL_VERSION	0x0C
- #define NTB_EPF_LOWER_ADDR	0x10
- #define NTB_EPF_UPPER_ADDR	0x14
- #define NTB_EPF_LOWER_SIZE	0x18
- #define NTB_EPF_UPPER_SIZE	0x1C
- #define NTB_EPF_MW_COUNT	0x20
--#define NTB_EPF_MW1_OFFSET	0x24
- #define NTB_EPF_SPAD_OFFSET	0x28
- #define NTB_EPF_SPAD_COUNT	0x2C
- #define NTB_EPF_DB_ENTRY_SIZE	0x30
- #define NTB_EPF_DB_DATA(n)	(0x34 + (n) * 4)
- #define NTB_EPF_DB_OFFSET(n)	(0xB4 + (n) * 4)
-+#define NTB_EPF_MW_OFFSET(n)	(0x134 + (n) * 4)
-+#define NTB_EPF_MW_SIZE(n)	(0x144 + (n) * 4)
-+
-+#define NTB_EPF_CTRL_VERSION_V1	1
- 
- #define NTB_EPF_MIN_DB_COUNT	3
- #define NTB_EPF_MAX_DB_COUNT	31
-@@ -451,11 +455,12 @@ static int ntb_epf_peer_mw_get_addr(struct ntb_dev *ntb, int idx,
- 				    phys_addr_t *base, resource_size_t *size)
- {
- 	struct ntb_epf_dev *ndev = ntb_ndev(ntb);
--	u32 offset = 0;
-+	resource_size_t bar_sz;
-+	u32 offset, sz;
- 	int bar;
- 
--	if (idx == 0)
--		offset = readl(ndev->ctrl_reg + NTB_EPF_MW1_OFFSET);
-+	offset = readl(ndev->ctrl_reg + NTB_EPF_MW_OFFSET(idx));
-+	sz = readl(ndev->ctrl_reg + NTB_EPF_MW_SIZE(idx));
- 
- 	bar = ntb_epf_mw_to_bar(ndev, idx);
- 	if (bar < 0)
-@@ -464,8 +469,11 @@ static int ntb_epf_peer_mw_get_addr(struct ntb_dev *ntb, int idx,
- 	if (base)
- 		*base = pci_resource_start(ndev->ntb.pdev, bar) + offset;
- 
--	if (size)
--		*size = pci_resource_len(ndev->ntb.pdev, bar) - offset;
-+	if (size) {
-+		bar_sz = pci_resource_len(ndev->ntb.pdev, bar);
-+		*size = sz ? min_t(resource_size_t, sz, bar_sz - offset)
-+			   : (bar_sz > offset ? bar_sz - offset : 0);
-+	}
- 
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index e94cde1a3506..9480aebaa32a 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -139,9 +139,10 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
  	return 0;
  }
-@@ -547,6 +555,24 @@ static inline void ntb_epf_init_struct(struct ntb_epf_dev *ndev,
- 	ndev->ntb.ops = &ntb_epf_ops;
+ 
+-static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+-				  dma_addr_t parent_bus_addr, enum pci_barno bar,
+-				  size_t size)
++/* Bar match mode */
++static int dw_pcie_ep_ib_atu_bar(struct dw_pcie_ep *ep, u8 func_no, int type,
++				 dma_addr_t parent_bus_addr, enum pci_barno bar,
++				 size_t size)
+ {
+ 	int ret;
+ 	u32 free_win;
+@@ -174,6 +175,151 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+ 	return 0;
  }
  
-+static int ntb_epf_check_version(struct ntb_epf_dev *ndev)
++struct dw_pcie_ib_map {
++	struct list_head	list;
++	enum pci_barno		bar;
++	u64			pci_addr;
++	u64			parent_bus_addr;
++	u64			size;
++	u32			index;
++};
++
++static struct dw_pcie_ib_map *
++dw_pcie_ep_find_ib_map(struct dw_pcie_ep *ep, enum pci_barno bar, u64 pci_addr)
 +{
-+	struct device *dev = ndev->dev;
-+	u32 ver;
++	struct dw_pcie_ib_map *m;
 +
-+	ver = readl(ndev->ctrl_reg + NTB_EPF_CTRL_VERSION);
++	list_for_each_entry(m, &ep->ib_map_list, list) {
++		if (m->bar == bar && m->pci_addr == pci_addr)
++			return m;
++	}
 +
-+	switch (ver) {
-+	case NTB_EPF_CTRL_VERSION_V1:
-+		break;
-+	default:
-+		dev_err(dev, "Unsupported NTB EPF version %u\n", ver);
++	return NULL;
++}
++
++static u64 dw_pcie_ep_read_bar_assigned(struct dw_pcie_ep *ep, u8 func_no,
++					enum pci_barno bar, int flags)
++{
++	u32 reg = PCI_BASE_ADDRESS_0 + (4 * bar);
++	u32 lo, hi;
++	u64 addr;
++
++	lo = dw_pcie_ep_readl_dbi(ep, func_no, reg);
++
++	if (flags & PCI_BASE_ADDRESS_SPACE)
++		return lo & PCI_BASE_ADDRESS_IO_MASK;
++
++	addr = lo & PCI_BASE_ADDRESS_MEM_MASK;
++	if (!(flags & PCI_BASE_ADDRESS_MEM_TYPE_64))
++		return addr;
++
++	hi = dw_pcie_ep_readl_dbi(ep, func_no, reg + 4);
++	return addr | ((u64)hi << 32);
++}
++
++/* Address match mode */
++static int dw_pcie_ep_ib_atu_addr(struct dw_pcie_ep *ep, u8 func_no, int type,
++				  struct pci_epf_bar *epf_bar)
++{
++	struct pci_epf_bar_submap *submap = epf_bar->submap;
++	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++	enum pci_barno bar = epf_bar->barno;
++	struct dw_pcie_ib_map *m, *new;
++	struct device *dev = pci->dev;
++	u64 pci_addr, parent_bus_addr;
++	u64 size, off, base;
++	unsigned long flags;
++	int free_win, ret;
++	u32 i;
++
++	if (!epf_bar->num_submap)
++		return 0;
++
++	if (!submap)
 +		return -EINVAL;
++
++	base = dw_pcie_ep_read_bar_assigned(ep, func_no, bar, epf_bar->flags);
++	if (!base) {
++		dev_err(dev,
++			"BAR%u not assigned, cannot set up sub-range mappings\n",
++			bar);
++		return -EINVAL;
++	}
++
++	for (i = 0; i < epf_bar->num_submap; i++) {
++		off = submap[i].offset;
++		size = submap[i].size;
++		parent_bus_addr = submap[i].phys_addr;
++
++		if (!size)
++			continue;
++
++		if (off > (~0ULL) - base)
++			return -EINVAL;
++
++		pci_addr = base + off;
++
++		new = devm_kzalloc(dev, sizeof(*new), GFP_KERNEL);
++		if (!new)
++			return -ENOMEM;
++
++		spin_lock_irqsave(&ep->ib_map_lock, flags);
++		m = dw_pcie_ep_find_ib_map(ep, bar, pci_addr);
++		if (m) {
++			if (m->parent_bus_addr == parent_bus_addr &&
++			    m->size == size) {
++				spin_unlock_irqrestore(&ep->ib_map_lock, flags);
++				devm_kfree(dev, new);
++				continue;
++			}
++
++			ret = dw_pcie_prog_inbound_atu(pci, m->index, type,
++						       parent_bus_addr, pci_addr,
++						       size);
++			if (!ret) {
++				m->parent_bus_addr = parent_bus_addr;
++				m->size = size;
++			}
++			spin_unlock_irqrestore(&ep->ib_map_lock, flags);
++			devm_kfree(dev, new);
++			if (ret)
++				return ret;
++			continue;
++		}
++
++		free_win = find_first_zero_bit(ep->ib_window_map,
++					      pci->num_ib_windows);
++		if (free_win >= pci->num_ib_windows) {
++			spin_unlock_irqrestore(&ep->ib_map_lock, flags);
++			devm_kfree(dev, new);
++			return -ENOSPC;
++		}
++		set_bit(free_win, ep->ib_window_map);
++
++		new->bar = bar;
++		new->index = free_win;
++		new->pci_addr = pci_addr;
++		new->parent_bus_addr = parent_bus_addr;
++		new->size = size;
++		list_add_tail(&new->list, &ep->ib_map_list);
++
++		spin_unlock_irqrestore(&ep->ib_map_lock, flags);
++
++		ret = dw_pcie_prog_inbound_atu(pci, free_win, type,
++					       parent_bus_addr, pci_addr, size);
++		if (ret) {
++			spin_lock_irqsave(&ep->ib_map_lock, flags);
++			list_del(&new->list);
++			clear_bit(free_win, ep->ib_window_map);
++			spin_unlock_irqrestore(&ep->ib_map_lock, flags);
++			devm_kfree(dev, new);
++			return ret;
++		}
 +	}
 +
 +	return 0;
 +}
 +
- static int ntb_epf_init_dev(struct ntb_epf_dev *ndev)
+ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep,
+ 				   struct dw_pcie_ob_atu_cfg *atu)
  {
- 	struct device *dev = ndev->dev;
-@@ -695,6 +721,10 @@ static int ntb_epf_pci_probe(struct pci_dev *pdev,
- 		return ret;
- 	}
+@@ -204,17 +350,34 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	enum pci_barno bar = epf_bar->barno;
+-	u32 atu_index = ep->bar_to_atu[bar] - 1;
++	struct dw_pcie_ib_map *m, *tmp;
++	u32 atu_index;
  
-+	ret = ntb_epf_check_version(ndev);
-+	if (ret)
-+		return ret;
-+
- 	ret = ntb_epf_init_dev(ndev);
- 	if (ret) {
- 		dev_err(dev, "Failed to init device\n");
-diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-index 56aab5d354d6..4dfb3e40dffa 100644
---- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-@@ -39,6 +39,7 @@
- #include <linux/atomic.h>
- #include <linux/delay.h>
- #include <linux/io.h>
-+#include <linux/log2.h>
- #include <linux/module.h>
- #include <linux/slab.h>
+-	if (!ep->bar_to_atu[bar])
++	if (!ep->epf_bar[bar])
+ 		return;
  
-@@ -61,6 +62,7 @@ static struct workqueue_struct *kpcintb_workqueue;
+ 	__dw_pcie_ep_reset_bar(pci, func_no, bar, epf_bar->flags);
  
- #define LINK_STATUS_UP			BIT(0)
- 
-+#define CTRL_VERSION			1
- #define SPAD_COUNT			64
- #define DB_COUNT			4
- #define NTB_MW_OFFSET			2
-@@ -107,7 +109,7 @@ struct epf_ntb_ctrl {
- 	u32 argument;
- 	u16 command_status;
- 	u16 link_status;
--	u32 topology;
-+	u32 version;
- 	u64 addr;
- 	u64 size;
- 	u32 num_mws;
-@@ -117,6 +119,8 @@ struct epf_ntb_ctrl {
- 	u32 db_entry_size;
- 	u32 db_data[MAX_DB_COUNT];
- 	u32 db_offset[MAX_DB_COUNT];
-+	u32 mw_offset[MAX_MW];
-+	u32 mw_size[MAX_MW];
- } __packed;
- 
- struct epf_ntb {
-@@ -128,6 +132,7 @@ struct epf_ntb {
- 	u32 db_count;
- 	u32 spad_count;
- 	u64 mws_size[MAX_MW];
-+	u64 mws_offset[MAX_MW];
- 	atomic64_t db;
- 	u32 vbus_number;
- 	u16 vntb_pid;
-@@ -454,10 +459,13 @@ static int epf_ntb_config_spad_bar_alloc(struct epf_ntb *ntb)
- 	ntb->reg = base;
- 
- 	ctrl = ntb->reg;
-+	ctrl->version = CTRL_VERSION;
- 	ctrl->spad_offset = ctrl_size;
- 
- 	ctrl->spad_count = spad_count;
- 	ctrl->num_mws = ntb->num_mws;
-+	memset(ctrl->mw_offset, 0, sizeof(ctrl->mw_offset));
-+	memset(ctrl->mw_size, 0, sizeof(ctrl->mw_size));
- 	ntb->spad_size = spad_size;
- 
- 	ctrl->db_entry_size = sizeof(u32);
-@@ -689,15 +697,31 @@ static void epf_ntb_db_bar_clear(struct epf_ntb *ntb)
-  */
- static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
- {
-+	struct device *dev = &ntb->epf->dev;
-+	u64 bar_ends[BAR_5 + 1] = { 0 };
-+	unsigned long bars_used = 0;
-+	enum pci_barno barno;
-+	u64 off, size, end;
- 	int ret = 0;
- 	int i;
--	u64 size;
--	enum pci_barno barno;
--	struct device *dev = &ntb->epf->dev;
- 
- 	for (i = 0; i < ntb->num_mws; i++) {
--		size = ntb->mws_size[i];
- 		barno = ntb->epf_ntb_bar[BAR_MW1 + i];
-+		off = ntb->mws_offset[i];
-+		size = ntb->mws_size[i];
-+		end = off + size;
-+		if (end > bar_ends[barno])
-+			bar_ends[barno] = end;
-+		bars_used |= BIT(barno);
+-	dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, atu_index);
+-	clear_bit(atu_index, ep->ib_window_map);
++	/* BAR match iATU */
++	if (ep->bar_to_atu[bar]) {
++		atu_index = ep->bar_to_atu[bar] - 1;
++		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, atu_index);
++		clear_bit(atu_index, ep->ib_window_map);
++		ep->bar_to_atu[bar] = 0;
 +	}
 +
-+	for (barno = BAR_0; barno <= BAR_5; barno++) {
-+		if (!(bars_used & BIT(barno)))
++	/* Address match iATU */
++	guard(spinlock_irqsave)(&ep->ib_map_lock);
++	list_for_each_entry_safe(m, tmp, &ep->ib_map_list, list) {
++		if (m->bar != bar)
 +			continue;
-+		if (bar_ends[barno] < SZ_4K)
-+			size = SZ_4K;
-+		else
-+			size = roundup_pow_of_two(bar_ends[barno]);
- 
- 		ntb->epf->bar[barno].barno = barno;
- 		ntb->epf->bar[barno].size = size;
-@@ -713,8 +737,12 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
- 				      &ntb->epf->bar[barno]);
- 		if (ret) {
- 			dev_err(dev, "MW set failed\n");
--			goto err_alloc_mem;
-+			goto err_set_bar;
- 		}
++		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, m->index);
++		clear_bit(m->index, ep->ib_window_map);
++		list_del(&m->list);
++		kfree(m);
 +	}
 +
-+	for (i = 0; i < ntb->num_mws; i++) {
-+		size = ntb->mws_size[i];
- 
- 		/* Allocate EPC outbound memory windows to vpci vntb device */
- 		ntb->vpci_mw_addr[i] = pci_epc_mem_alloc_addr(ntb->epf->epc,
-@@ -723,19 +751,31 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
- 		if (!ntb->vpci_mw_addr[i]) {
- 			ret = -ENOMEM;
- 			dev_err(dev, "Failed to allocate source address\n");
--			goto err_set_bar;
-+			goto err_alloc_mem;
- 		}
- 	}
- 
-+	for (i = 0; i < ntb->num_mws; i++) {
-+		ntb->reg->mw_offset[i] = (u32)ntb->mws_offset[i];
-+		ntb->reg->mw_size[i] = (u32)ntb->mws_size[i];
-+	}
-+
- 	return ret;
- 
--err_set_bar:
--	pci_epc_clear_bar(ntb->epf->epc,
--			  ntb->epf->func_no,
--			  ntb->epf->vfunc_no,
--			  &ntb->epf->bar[barno]);
- err_alloc_mem:
--	epf_ntb_mw_bar_clear(ntb, i);
-+	while (--i >= 0)
-+		pci_epc_mem_free_addr(ntb->epf->epc,
-+				      ntb->vpci_mw_phy[i],
-+				      ntb->vpci_mw_addr[i],
-+				      ntb->mws_size[i]);
-+err_set_bar:
-+	while (--barno >= BAR_0)
-+		if (bars_used & BIT(barno))
-+			pci_epc_clear_bar(ntb->epf->epc,
-+					  ntb->epf->func_no,
-+					  ntb->epf->vfunc_no,
-+					  &ntb->epf->bar[barno]);
-+
- 	return ret;
+ 	ep->epf_bar[bar] = NULL;
+-	ep->bar_to_atu[bar] = 0;
  }
  
-@@ -1040,6 +1080,60 @@ static ssize_t epf_ntb_##_name##_store(struct config_item *item,	\
- 	return len;							\
- }
+ static unsigned int dw_pcie_ep_get_rebar_offset(struct dw_pcie *pci,
+@@ -364,10 +527,14 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 		/*
+ 		 * We can only dynamically change a BAR if the new BAR size and
+ 		 * BAR flags do not differ from the existing configuration.
++		 * When 'use_submap' is true and the intention is to create
++		 * sub-range mappings perhaps incrementally, epf_bar->size
++		 * does not mean anything so no need to validate it.
+ 		 */
+ 		if (ep->epf_bar[bar]->barno != bar ||
+-		    ep->epf_bar[bar]->size != size ||
+-		    ep->epf_bar[bar]->flags != flags)
++		    ep->epf_bar[bar]->flags != flags ||
++		    ep->epf_bar[bar]->use_submap != epf_bar->use_submap ||
++		    (!epf_bar->use_submap && ep->epf_bar[bar]->size != size))
+ 			return -EINVAL;
  
-+#define EPF_NTB_MW_OFF_R(_name)						\
-+static ssize_t epf_ntb_##_name##_show(struct config_item *item,		\
-+				      char *page)			\
-+{									\
-+	struct config_group *group = to_config_group(item);		\
-+	struct epf_ntb *ntb = to_epf_ntb(group);			\
-+	struct device *dev = &ntb->epf->dev;				\
-+	int win_no, idx;						\
-+									\
-+	if (sscanf(#_name, "mw%d_offset", &win_no) != 1)		\
-+		return -EINVAL;						\
-+									\
-+	idx = win_no - 1;						\
-+	if (idx < 0 || idx >= ntb->num_mws) {				\
-+		dev_err(dev, "MW%d out of range (num_mws=%d)\n",	\
-+			win_no, ntb->num_mws);				\
-+		return -EINVAL;						\
-+	}								\
-+									\
-+	idx = array_index_nospec(idx, ntb->num_mws);			\
-+	return sprintf(page, "%llu\n", ntb->mws_offset[idx]);		\
-+}
+ 		/*
+@@ -408,8 +575,12 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	else
+ 		type = PCIE_ATU_TYPE_IO;
+ 
+-	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar,
+-				     size);
++	if (epf_bar->use_submap)
++		ret = dw_pcie_ep_ib_atu_addr(ep, func_no, type, epf_bar);
++	else
++		ret = dw_pcie_ep_ib_atu_bar(ep, func_no, type,
++					    epf_bar->phys_addr, bar, size);
 +
-+#define EPF_NTB_MW_OFF_W(_name)						\
-+static ssize_t epf_ntb_##_name##_store(struct config_item *item,	\
-+				       const char *page, size_t len)	\
-+{									\
-+	struct config_group *group = to_config_group(item);		\
-+	struct epf_ntb *ntb = to_epf_ntb(group);			\
-+	struct device *dev = &ntb->epf->dev;				\
-+	int win_no, idx;						\
-+	u64 val;							\
-+	int ret;							\
-+									\
-+	ret = kstrtou64(page, 0, &val);					\
-+	if (ret)							\
-+		return ret;						\
-+									\
-+	if (sscanf(#_name, "mw%d_offset", &win_no) != 1)		\
-+		return -EINVAL;						\
-+									\
-+	idx = win_no - 1;						\
-+	if (idx < 0 || idx >= ntb->num_mws) {				\
-+		dev_err(dev, "MW%d out of range (num_mws=%d)\n",	\
-+			win_no, ntb->num_mws);				\
-+		return -EINVAL;						\
-+	}								\
-+									\
-+	idx = array_index_nospec(idx, ntb->num_mws);			\
-+	ntb->mws_offset[idx] = val;					\
-+									\
-+	return len;							\
-+}
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1120,6 +1291,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 	struct device *dev = pci->dev;
+ 
+ 	INIT_LIST_HEAD(&ep->func_list);
++	INIT_LIST_HEAD(&ep->ib_map_list);
++	spin_lock_init(&ep->ib_map_lock);
+ 	ep->msi_iatu_mapped = false;
+ 	ep->msi_msg_addr = 0;
+ 	ep->msi_map_size = 0;
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index f555926a526e..1770a2318557 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -476,6 +476,8 @@ struct dw_pcie_ep {
+ 	phys_addr_t		*outbound_addr;
+ 	unsigned long		*ib_window_map;
+ 	unsigned long		*ob_window_map;
++	struct list_head	ib_map_list;
++	spinlock_t		ib_map_lock;
+ 	void __iomem		*msi_mem;
+ 	phys_addr_t		msi_mem_phys;
+ 	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index ca7f19cc973a..2b95dbc7242a 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -604,7 +604,7 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	    (epc_features->bar[bar].fixed_size != epf_bar->size))
+ 		return -EINVAL;
+ 
+-	if (!is_power_of_2(epf_bar->size))
++	if (!epf_bar->num_submap && !is_power_of_2(epf_bar->size))
+ 		return -EINVAL;
+ 
+ 	if ((epf_bar->barno == BAR_5 && flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ||
+diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+index 48f68c4dcfa5..126647b9f01e 100644
+--- a/include/linux/pci-epf.h
++++ b/include/linux/pci-epf.h
+@@ -110,6 +110,25 @@ struct pci_epf_driver {
+ 
+ #define to_pci_epf_driver(drv) container_of_const((drv), struct pci_epf_driver, driver)
+ 
++/**
++ * struct pci_epf_bar_submap - represents a BAR subrange for inbound mapping
++ * @phys_addr: physical address that should be mapped to the BAR subrange
++ * @size: the size of the subrange to be mapped
++ * @offset: The byte offset from the BAR base
++ * @mapped: Set to true if already mapped
++ *
++ * When @use_submap is set in struct pci_epf_bar, an EPF driver may describe
++ * multiple independent mappings within a single BAR. An EPC driver can use
++ * these descriptors to set up the required address translation (e.g. multiple
++ * inbound iATU regions) without requiring the whole BAR to be mapped at once.
++ */
++struct pci_epf_bar_submap {
++	dma_addr_t	phys_addr;
++	size_t		size;
++	size_t		offset;
++	bool		mapped;
++};
 +
- #define EPF_NTB_BAR_R(_name, _id)					\
- 	static ssize_t epf_ntb_##_name##_show(struct config_item *item,	\
- 					      char *page)		\
-@@ -1110,6 +1204,14 @@ EPF_NTB_MW_R(mw3)
- EPF_NTB_MW_W(mw3)
- EPF_NTB_MW_R(mw4)
- EPF_NTB_MW_W(mw4)
-+EPF_NTB_MW_OFF_R(mw1_offset)
-+EPF_NTB_MW_OFF_W(mw1_offset)
-+EPF_NTB_MW_OFF_R(mw2_offset)
-+EPF_NTB_MW_OFF_W(mw2_offset)
-+EPF_NTB_MW_OFF_R(mw3_offset)
-+EPF_NTB_MW_OFF_W(mw3_offset)
-+EPF_NTB_MW_OFF_R(mw4_offset)
-+EPF_NTB_MW_OFF_W(mw4_offset)
- EPF_NTB_BAR_R(ctrl_bar, BAR_CONFIG)
- EPF_NTB_BAR_W(ctrl_bar, BAR_CONFIG)
- EPF_NTB_BAR_R(db_bar, BAR_DB)
-@@ -1130,6 +1232,10 @@ CONFIGFS_ATTR(epf_ntb_, mw1);
- CONFIGFS_ATTR(epf_ntb_, mw2);
- CONFIGFS_ATTR(epf_ntb_, mw3);
- CONFIGFS_ATTR(epf_ntb_, mw4);
-+CONFIGFS_ATTR(epf_ntb_, mw1_offset);
-+CONFIGFS_ATTR(epf_ntb_, mw2_offset);
-+CONFIGFS_ATTR(epf_ntb_, mw3_offset);
-+CONFIGFS_ATTR(epf_ntb_, mw4_offset);
- CONFIGFS_ATTR(epf_ntb_, vbus_number);
- CONFIGFS_ATTR(epf_ntb_, vntb_pid);
- CONFIGFS_ATTR(epf_ntb_, vntb_vid);
-@@ -1148,6 +1254,10 @@ static struct configfs_attribute *epf_ntb_attrs[] = {
- 	&epf_ntb_attr_mw2,
- 	&epf_ntb_attr_mw3,
- 	&epf_ntb_attr_mw4,
-+	&epf_ntb_attr_mw1_offset,
-+	&epf_ntb_attr_mw2_offset,
-+	&epf_ntb_attr_mw3_offset,
-+	&epf_ntb_attr_mw4_offset,
- 	&epf_ntb_attr_vbus_number,
- 	&epf_ntb_attr_vntb_pid,
- 	&epf_ntb_attr_vntb_vid,
+ /**
+  * struct pci_epf_bar - represents the BAR of EPF device
+  * @phys_addr: physical address that should be mapped to the BAR
+@@ -119,6 +138,9 @@ struct pci_epf_driver {
+  *            requirement
+  * @barno: BAR number
+  * @flags: flags that are set for the BAR
++ * @use_submap: set true to request subrange mappings within this BAR
++ * @num_submap: number of entries in @submap
++ * @submap: array of subrange descriptors allocated by the caller
+  */
+ struct pci_epf_bar {
+ 	dma_addr_t	phys_addr;
+@@ -127,6 +149,11 @@ struct pci_epf_bar {
+ 	size_t		mem_size;
+ 	enum pci_barno	barno;
+ 	int		flags;
++
++	/* Optional sub-range mapping */
++	bool		use_submap;
++	int		num_submap;
++	struct pci_epf_bar_submap	*submap;
+ };
+ 
+ /**
 -- 
 2.51.0
 

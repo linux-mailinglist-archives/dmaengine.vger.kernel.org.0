@@ -1,56 +1,56 @@
-Return-Path: <dmaengine+bounces-7763-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7764-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEC45CC86B0
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 16:25:12 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 721B7CC8899
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 16:43:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 75239300F9F4
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:18:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1956A3144A90
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:19:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 067DE34A3CE;
-	Wed, 17 Dec 2025 15:16:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F4EC34C80C;
+	Wed, 17 Dec 2025 15:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="pyIwc27d"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="HiOSFIXd"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011052.outbound.protection.outlook.com [40.107.74.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E56346A11;
-	Wed, 17 Dec 2025 15:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1107834A3D9;
+	Wed, 17 Dec 2025 15:16:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765984594; cv=fail; b=KamF04VrYDP26USh1nvTIBr/foOszqTo+iPe+GuNs9dibwxuodJiJQlhTIf1qfHfI1hdsvWxpHPZxXUTgdWc31QWjoapuP+i/DbmYF7ZMrnQxBL60djNBwxbATahHn2idTFiFKEzbZ9dd3elbaT/Ocg9hpKuG0byClCioooEfDU=
+	t=1765984597; cv=fail; b=sxH0I0WL0v/lz4NKrOr+uQNU1yWYAGzi6sXkoqLVRPh2PALocf3vR7BLtQiKSPVE72FObqCC/XXw9/uecABWPVokWI9NnWMl7cjWzyEacvI25fzj3t0EeHV8CB54wHRxfuf+ThFoNwBGZyWF94kEahdRKKH5eNLAt9xzwQVB+tY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765984594; c=relaxed/simple;
-	bh=QulA/l4jlXLSCdzEL01TZUBJhPE+Uy0xusRCEA2UqxA=;
+	s=arc-20240116; t=1765984597; c=relaxed/simple;
+	bh=2unACm8YuH5rg3Kr8a77L0+4xpOwH6gDn2wu0QO0SEI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SQoCtBKu+n6GzGf9i6tTuDY2Tfu0kStlnkRwCUxD/V6FaoH82l/PpbKHppJxpfNabbLTwgf2QPHqj69TIDBAw9vw+EzMJ4AcVY4kHNI20UPjVbu15H2bSIbS33upQeAAhZBnRfEszlzyuyroPEwM3Y/6QmC/GD9QuGbMzIlnAL0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=pyIwc27d; arc=fail smtp.client-ip=40.107.74.52
+	 Content-Type:MIME-Version; b=JcTDO4KMFel6inVn43BL19O/jyS9C+ZrgVwYvbWjshf4g6dnW8rEo+AZM9OgL4R1shY6OFRAgoLyV4meLzF6XQIkIW+C7qNsOdSM6vHJcZHUTVz0zTUBPyldolLVxKfFNnVGCwCXibhoNHAiYjhPdiDS/dJQQIrbxi6S2JEHdY8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=HiOSFIXd; arc=fail smtp.client-ip=40.107.74.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aLFbT9UAOj/XFFPWhR4e+9N7jorEAWRXMsONRrXC9Irmr9BipujG2oi9HvWRaD8yjfb3GbMGd3WjuOhYcNUoF0ido5PgkTWtaZUgSfIEto53hUKaT39aizVl1FHIE6e5rAIaT3+PRWjGhx7EKs3RwJCsWJaNvwLqmu2H+QH2sGKbRtRESXefYS2JPQQY6ZaPU0GHTguXoF65G5EuSDDODHqAywMyOH6K/sAOayb3AvJRLvzrq1PY6gZ0AFGPGhHVr8G50Cla7XhIyYE/NdF6jHqvXQoarnj9zHmw3Zn70t9g1as6/34vxyMapnFKWQXupJ+tsc1ItsebWcsUZY9LfA==
+ b=aAKop0ASn98KTR1l49xCFJRLJQYxuasxwtE1vdGFUhimujmFnqMwFkUgFg304V51C91d3I3w+jXYF//dE8b5XIwlq2OLywxE+BAtqe5t6eONQkqClkamtcQiLb+yADI3aEMAsDFhKPzy/0iNJvtF8AGoCQ9qCLcEr0PLX9iac5rg2NCryvOaq7/EwfZ5EtJ+DaBryFZ+z0Trsuu1zwcXucpyNYtlt27ZO1Vyc4wv+p2IEIfyaod0Q0VngVKLq18oh0ojnhDRJP/8BbSlg2lWzdRyXl9vCkM0q2sP4AL7SvcNCclpbhPjd6esHY2gtCF6IaT7gqTPDAyo7i3EssoLJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WhYXTzIUkx70sdTDrWwodMO1dxR+UYO3uw1/O8oDCQ4=;
- b=WqjGm6HzCk9BmVmZllmi2IwO5g/bqvH3wdWue9kWnnfpQNOo62Vyy+LvGlXEBwrDtske2VNqYFuYFg68GqDwQJe58z0pF8oN11fiVgEwWwwaHXWV0ARi5K7eUivJJpWhbaAZWja/WL51W0TmHzv2G7+OPg6ELDsKilX5m0AG5KBY0noaYLvhFIjt7RV1fsY1LwuBt2biSeVPP/kbL4l7xEskMTCeJCJXHPi5pvEJKnh2uPP9zqcr81+Zd06kLgCxtR/jyKXjRGpRoKuChugUTfDHd7YlbXTtRZS/YyYVbYyBH7yM5Pi9OnutYThSV103KSHxfByKzuDrkZSAJPS4uA==
+ bh=xXTRUMQYNz+2O0wAqrZ4c8/uym3gFTXkl1J+RoIWNOA=;
+ b=Oh7Cpxf0CQvKvPU8v6DKOh8WWhbfbhoLZReVjj3wwmfnDkT9sqh1arvGYcePMqeJRrV79DD74dTtR/fwbI8HMjqYy0bZvKqKWznAAwzbdgL9TszKIx+bDdSKmTZxKS9NqTw5sYkLWlKS4RRcl5fUrgUayPV8+wxR1nPZc4suYwPko0//OU89gbaHYViF71pP7SQ32CKGxvbsEHJ54tfhwTWjA9cyDPnjD4Tslv9sExcaRJ7hGKpy52FdGcruHm6Pu0v5IubnNgWtATU783uRp0pMgK2Y0+iD7s4DDQOCMuQzB+K0Yne3+WaBiyXtWsUxtRSjoWRe53XbPGgzqY8S+g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WhYXTzIUkx70sdTDrWwodMO1dxR+UYO3uw1/O8oDCQ4=;
- b=pyIwc27df7uFkxg3oHyH0NnJAVivanX/R1UQsUKEfB0x1I300kYLbN3FlqZ7Z37wK5qcQ8sEFdqKHDNNQL2cZdkmdvDmk4YzlT8Snx3BflIeB37womuyHuJVOBmPNxOTbiRlG1DRSffXXWl6wg7Hf150FGbLrEAAmYhqr2wCTAI=
+ bh=xXTRUMQYNz+2O0wAqrZ4c8/uym3gFTXkl1J+RoIWNOA=;
+ b=HiOSFIXdQKU1z8FfY2sMlBsppj+pgLJ4IIf83hWzn+BpRxCAMGt7vzx6qQ3bwimqVDMkdl2oFHis72qEEQIni1B86t7mEYKxiUTb0EEEDozczvf1lRARRyB8QVPHHrF+2Vi3HQ6nPlrzgXbLZMQicwgl1GCqCKtLzDRk1lPm5ng=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=valinux.co.jp;
 Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:24c::11)
  by OS9P286MB4633.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:2fc::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.6; Wed, 17 Dec
- 2025 15:16:23 +0000
+ 2025 15:16:24 +0000
 Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  ([fe80::fb7e:f4ed:a580:9d03]) by TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  ([fe80::fb7e:f4ed:a580:9d03%5]) with mapi id 15.20.9434.001; Wed, 17 Dec 2025
@@ -97,16 +97,16 @@ Cc: mani@kernel.org,
 	arnd@arndb.de,
 	elfring@users.sourceforge.net,
 	den@valinux.co.jp
-Subject: [RFC PATCH v3 11/35] NTB: ntb_transport: Move TX memory window setup into setup_qp_mw()
-Date: Thu, 18 Dec 2025 00:15:45 +0900
-Message-ID: <20251217151609.3162665-12-den@valinux.co.jp>
+Subject: [RFC PATCH v3 12/35] NTB: ntb_transport: Dynamically determine qp count
+Date: Thu, 18 Dec 2025 00:15:46 +0900
+Message-ID: <20251217151609.3162665-13-den@valinux.co.jp>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251217151609.3162665-1-den@valinux.co.jp>
 References: <20251217151609.3162665-1-den@valinux.co.jp>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TYWPR01CA0031.jpnprd01.prod.outlook.com
- (2603:1096:400:aa::18) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
+X-ClientProxiedBy: TY4P286CA0060.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:371::8) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:400:24c::11)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -116,220 +116,138 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: TYWP286MB2697:EE_|OS9P286MB4633:EE_
-X-MS-Office365-Filtering-Correlation-Id: 25dcbf3b-eaa1-41bc-8016-08de3d7f3d28
+X-MS-Office365-Filtering-Correlation-Id: 176a022d-266f-4e61-7bee-08de3d7f3dae
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|10070799003|376014|7416014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?oSF/SwuCPGrzBz+I8Mfnt9jH4AQi+w+HVgM9xAYk/Bdc02+YSSXld3p7zzq/?=
- =?us-ascii?Q?nnRRy7av4vLnPudY6cJTxGQPL6lANMU7n8FJewnIY2SDOB3/KA23Mu/Ig/hh?=
- =?us-ascii?Q?WyoD6/qabZikWvT8g9Z9vDhJoVM40stozX/MpiNKm15Lwpb/9ZJsDCytcFf7?=
- =?us-ascii?Q?M8TBVMjzqPFVh48+dGrgEeR/y0vPBLjSe4V9bDPjlFkbobbHMCON3HXeAR+k?=
- =?us-ascii?Q?iKVZ/QjrdAcUATwYTTM7n/OcwC3yLTQWQmK6MWfpRAvEVi6PQqwBa/VElUqY?=
- =?us-ascii?Q?oyf+Yjdsx/G4sQCa8Fq21qOxtNV/gbRxHJBa+7NUt2rdzB/Ik/O53xJ2FKwV?=
- =?us-ascii?Q?RDGZ6cmR3jhMYFPHbuCKzz4jjFuqS3IoEAxUQSHlc38nswMK618MM/ewsu1f?=
- =?us-ascii?Q?DvaE/+xlLQqr1KQQkbChSg7Uv4CAG/uHVWS8pJXszQc2+LqqMkwVu/A/EavH?=
- =?us-ascii?Q?fkVkJLpFA2ND4mXWRKDYlnYyidSTbaD9whLfSn3IYXzBgmZXtbQx0lTJCkpX?=
- =?us-ascii?Q?+5Ji8glIp+Is/7JAfPDijQDKv75nLBKNjSRnf/jF6ebsnVUiBasI2JBXS6gJ?=
- =?us-ascii?Q?FWzMATClKgk/Rvy1PLGssxXtwVKIhOB8FOq+LlgIusNqdJ6yD4/SwjyvdcS6?=
- =?us-ascii?Q?wIFMVxkbOv4ml5SxQ7cK/TC39/im4oLmnoeuTT3i3kSRK/R20Og1HFrl6iE2?=
- =?us-ascii?Q?bmemUry5hPobDkz1aGyoEttRXIdm9DLXU7ejlO5fla+79Wp0Fy8IeYehowrC?=
- =?us-ascii?Q?1XIN0aY+IvGg2sz5w+qsWzugFYBazfH1CYmMfaTOvQWLosYv4x7WcKnWCVNy?=
- =?us-ascii?Q?wkKWPHwhEp9iJdnYw8i+fgtKHFJoWB0mIVTgd/RY1YJgqeyJc7+aQ3GBCugV?=
- =?us-ascii?Q?aRUZj74k8nzKu+/zXZeE53SKNG+GwJRFN+kA9pqusgBzcYSxYEYMMxAXnTGi?=
- =?us-ascii?Q?FvBiQmrc9YgwAE8eE6n54XdkNW54FQNMjrPDaE5tXfVFdpPdD8kfUsTvEk8M?=
- =?us-ascii?Q?oNESfz+EQJMe9isWE03bj8fhXiwbtUCQv9ZgJGqOYmDrPvOlBFDOCd+vGQpV?=
- =?us-ascii?Q?psPIwqvkaK/DYVxCB/IuaFsXNED6j90k7U5yYtFCMklH7T1drdrwuBdMfttb?=
- =?us-ascii?Q?Y5aFlJ4VGWEValv/0ufM9np/pb8Ak17j1PY46lKajCcBWrSLjjDAoPIkNiuI?=
- =?us-ascii?Q?ehgf98JAnIYcIraGdxK5CFutU/Ghbobg2q2cgyTkpxpwyafYxpklVs8qTag/?=
- =?us-ascii?Q?L1zm6IfX50jFH0e66vIYvbOsmdEjKZrQQ+2MuDRDSSYb6oO4GA6CyGMpT3g4?=
- =?us-ascii?Q?6wp/CkeRLJ5lBvNw9QabR7Iaic+WcY572pxHmN17ihRVB0pa8wHlk6YHMWg0?=
- =?us-ascii?Q?GNoyjn8iBUy6razaVNvOQH9l1uOBZv49O+QbCa2PsUrXnhvCY2KfpiMVHQdS?=
- =?us-ascii?Q?C5C3hInyWjw/b5QcaOzuMEG7NKrg8mpB?=
+	=?us-ascii?Q?gwy32MFL3m0NECEQE3NVqJEp2zNSsccBSMuvKk7E4RZnp5uTWfwSnlboI2i9?=
+ =?us-ascii?Q?JXULiawNx2BlHzI95WUOxr5kwjtkFc6/U0KwcEkXOeDJ5v5FEaGw5GjEWFB9?=
+ =?us-ascii?Q?Qgvm2EnKO1+XdorSPnpkrvsOjH39YIDU+ogaFx6R1BtPPkWEzTgy3YGSvgOY?=
+ =?us-ascii?Q?KAAdK4P62ZNRiRFPv0brG5WqXQBf+GXIzMQh0DTU7l33IfKuLuldc/jWflep?=
+ =?us-ascii?Q?B/Ki9F7fBST9RHS5PgewIv34lgenDoMmUonsVym0HDHUfA++jwUxXkPDrn3p?=
+ =?us-ascii?Q?pNM79qXlbi0EtkhF1/Lcp8pQasK2tDcZrYTBO7+Q2bOyU6osH+qeVbZpntIo?=
+ =?us-ascii?Q?nm96jxOsmviL38W2havyGPhZpVHzKypGSCw7pJQ3sioqvE7nrOVBAzsw/5as?=
+ =?us-ascii?Q?alzLMJHnAh7TkCtcdcigVdVocwWFZKfS5CLAR05DyO+rp96neuJLG4xaIuML?=
+ =?us-ascii?Q?of6w1IauFEMFmGhbne5Jbk/dapUOx8ZNeFHc/4+2s+d+NlyU7kBSAMzaeIVr?=
+ =?us-ascii?Q?cLxldBM3B+4d7A0Ma7QlGxWD0Ofw0XjCkamlvmrIPdQtbngUjN+jSskzy4Fy?=
+ =?us-ascii?Q?Mzr1dbUpZkjhjW2ycXdcvxS5RGvc3lpYHi5KzFbsSNPjxV3PzQr7RITYcM5i?=
+ =?us-ascii?Q?29OEYRUIn0SNJ3cbpxSbrH+jsqkpVXbmftYou5RsGK88PIwdKYXHlsc/LaCs?=
+ =?us-ascii?Q?H+R85rUCGdmJdDDLEkR8vONCWC2LSwmJ5XkBKOzlClQOCfHrF1D/JgEWsPfF?=
+ =?us-ascii?Q?NBQakLa6hWJZQWbujPbGJkmlGW5bqp36VF5ABSqessxYOkgdt/kK6g+fz3mr?=
+ =?us-ascii?Q?LY3nfWdoxIVz4b9hzrf9UQMPXjyck4cearxQxGu5C9+eyEtnnYejo9h1BlEq?=
+ =?us-ascii?Q?Nw3DLXmV9+xrgxlSlnnglXWkYy0vkVXV4SkVUdcwc3pu76X57cDZNrtqP87I?=
+ =?us-ascii?Q?Zv9RqlhaFRHyt28+6w1aIEhOSu1mz1qyj/LCEcLJMC4YCTN0sgR3RLD2qysX?=
+ =?us-ascii?Q?zrKZlF5rGgATy6/xGvGsYXJ/wbsnBJAQGUyaFp+epfLM/9zf7ovz+i74TVyw?=
+ =?us-ascii?Q?64KzLQvc0bojtqNxOKCfC6vuFfQEQc2mKwddsF1mc+3UVf1qZ2lS67bJVkrE?=
+ =?us-ascii?Q?BaohPHckwCesYGdE/Om80EQHh3ZRJgCybUGpbDNDA5+LGVojI1FAvgNN1N4N?=
+ =?us-ascii?Q?J9TekNQodP2sjkQfEXNiz3N1OyBR94xjVkalbd5zdpsGEfUM55iRFZ47OQ7P?=
+ =?us-ascii?Q?O9h56KzjTrok852HbGbd8oin3+WvQGE0rNVLuxUNXPRSVDG4zS8hFPDbJKwP?=
+ =?us-ascii?Q?/nA0uiLrk5xihHvla4/vSj35EWdSIN5pHfr8+OfQvavNANawqbgzdJ5ojIyR?=
+ =?us-ascii?Q?K4L/vkY6EUWf86zJRzBN5+w36XJ8zkOG+hmOh/CiW5lNGbOFe+tRjPCVhxwB?=
+ =?us-ascii?Q?9koOvKCFWjHkIxkYjUfOlBvI+Atq3jl9?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?CaGtZsmqJ+UxxL1crOoR9iwNQXnYX9ue9N2JDO2Rz4/f4EomK/kJVzZ2AqTn?=
- =?us-ascii?Q?5T21t1c2n7EjgI5KVnic9PEr6c2lgxWux0bVSQweBgTVhcw5TlfwrIGNynv/?=
- =?us-ascii?Q?abJ65HUrxsMCtuEsw8bcsaCWG/mCxp/ZT4MYZ4ixUI9bhxuYg4PEkhX+22OO?=
- =?us-ascii?Q?ZsF0jvTgArYlf4hJ5sY32k9WNzFFgF0bybK7yIuKxra6plOt8noeC2ri2u4Q?=
- =?us-ascii?Q?Y/3+BFP0T45CvVAthC4lmFfkUDZGIvuMcQVSPmKGABN47Qvuvpn4bFfmuSOP?=
- =?us-ascii?Q?tKuAAJtBuqLGA7/lgOdX5bmZIwnMw9rAR1ZUBa3tdTsSkPToKgYIMcFHRQrC?=
- =?us-ascii?Q?JDTno/VuY9Vc4VH3ebdtuyxp3GQ8TOYXC2nPWzztjaPULhk8Tl8g59wpnhnt?=
- =?us-ascii?Q?CoZ06xzLewbtrqaoWTuJRelHLJlK/ZyT3882lyz3hv60hdVRElG0qkrWOLze?=
- =?us-ascii?Q?ucpyo1D0y9FvcPafDn5tFF2eGdlvcNCi8ULweUNk2L6WEJipnksTihr/n3tc?=
- =?us-ascii?Q?RbBfNRFHkV3iMyhs/BEu/Se+J60i8TSCIRNnwIxE1z5J2ghRJ7cSeu+a5NJQ?=
- =?us-ascii?Q?Ahcnhe8mMvuouHExVmABMzQr5FYc3xAjhXqBX5Wea8exxLw1I9WbvNj2altl?=
- =?us-ascii?Q?SJl7Fcm/r/pPeex8XlU0IKH5oPn7yDMYafprTVwk5yyjDiuksIee1EBhGesi?=
- =?us-ascii?Q?zV/Xz8DngWQwJO433qZAsgnsEm5wUx9ORcafzOEe/ywvWWAXC65rFw0th99G?=
- =?us-ascii?Q?hadoG/ccvnH58x9EaCsIxeIBOGIldSTR+qorl2F47qrWPMzGdhTdkqaolQoZ?=
- =?us-ascii?Q?ozujhcpV6lsZM3L8syKQup2a3TkpGcBzfSjv180rW57APDj1xXXc+7wjYCdG?=
- =?us-ascii?Q?nD2vrAv2Phe4wAEO1o2tsmAXztSyRFDAfZ6TWZVcGA3wizoK1dwCVhh+kRcM?=
- =?us-ascii?Q?GQ3MxeBgnGI2YJEQtv8WWjyuGmazxPsDQsj/YbS7ziHzcct3nJT6z+H6Mpb5?=
- =?us-ascii?Q?+Q1LzqGloNJKSx4B3ydeguIcBwbrl3qPXrhANUCAdEQ2SAqkJd/rFyTOvobN?=
- =?us-ascii?Q?RhdNVNRciMdMZwEKdF8/Q/IuB2FMpcJ9au9X6N9/T8qOQx2raqYfELaBj10h?=
- =?us-ascii?Q?8EsosFvQPJDMc+46hpvaSh1pa9WgGlF8mdoRY69U2NiLyqIAyaGF5WQ3H/Ct?=
- =?us-ascii?Q?GXGsnMXI5siAPpJINY3b6+2n5jLKZTxY+lf+BQpXd7xFeTNZa5o2mQOR6DoC?=
- =?us-ascii?Q?upYilDYcJvMgSIRLn+W4EAcwhzdEP9gVG/suG+OTasfFXWrQ9EmBYeWLOOE0?=
- =?us-ascii?Q?x/30IXBz8I7ket7XNgy8wFGoQ4wEZ3cHrbt3tj9rUt0UfBpR7rcT7sxsr5t7?=
- =?us-ascii?Q?1Fknp/AGlmBm3x6DyRsn9Za6XiY//P1dclZzr075O6XSvDXZEIhoAW3hQB6c?=
- =?us-ascii?Q?UylmhQhFmInYarwQyJj+XBYxsxJwA05xp5WhJjSb2H+Oznt7lmqc1mwHk1VZ?=
- =?us-ascii?Q?6jvNbpL+KMsAJDGme04Mr9vZ6p7RebhFhfUkyVZlZdA6p5oWWczR0tDAfDTx?=
- =?us-ascii?Q?SsR/qOI6XWAxhTVDnwMGOz/mv7CAeZIazEQbcQW25DXdLfsqA2/qg8gCwUId?=
- =?us-ascii?Q?LAVl3fNCl5c8LXx4K/xvZI0=3D?=
+	=?us-ascii?Q?4rVe7t6siq6X9JYH2tB5Pqwtx5czrVFXToLiufLbiMrrc0AASFFkJ10y1sjU?=
+ =?us-ascii?Q?guSuqlBsfRJ2k2Bv6QvzeSh9oQiToje08/Jdg0DNcHUu1ELEtQt/CKVE4jwb?=
+ =?us-ascii?Q?A5GSwQ9csN01JWQCdNlHoISUW5vblMTdRRftgNCVsra4fU0JGqqDm+c5FThZ?=
+ =?us-ascii?Q?kiXtnhvsfIYwdD14giz0qFmWJU1/0s20mYiXgSFrfrxXWl1B1DednidUh9ZN?=
+ =?us-ascii?Q?J4x0pWYi0FalipulZlJZlQRXeRERTAot0psj+o6No1B0AWtbOBWXyI60tR5C?=
+ =?us-ascii?Q?ULlPs8ul86oY7x6qRuQwIWSjTc5xGihyLes/mEO4Yqq/+14xjIBLJAzcjoo9?=
+ =?us-ascii?Q?l1Y+v/ZI/JWGm5R8zVaQIc3wf42Rhp81KFyTd8lr1bVj7zv0s8Qin8k/U0wy?=
+ =?us-ascii?Q?BZPIl1KFeFUjQkv46Trr5U7O2rOMHeTxwUBXCqb5GvJrS4kKj5+nobreSC1d?=
+ =?us-ascii?Q?mCqAgg+ExlkjNRSZTabB/5/Nq3BH1rIpo8zo/kuGkaPiAjw7h0Md/9IRPSBp?=
+ =?us-ascii?Q?in0Vd5uc99K8d1Ror23dChAAGgYyVMWAg4jfqL9Y3NOr+oHsnbDErAJSuoX1?=
+ =?us-ascii?Q?nmEg4PWQ5qitMV8y6OBf3VbGIV0ooMifEF6DImJdvcbJatRZePdbv7WwwzrC?=
+ =?us-ascii?Q?LPNeqbcmTDv4NBCHy6LKrJgpZOqjRZIW3NamACc2leRy/F0GJuAsxfh/s7JW?=
+ =?us-ascii?Q?tO1yahoP4qLMGwbE5if/udeEd7EkLHqy6ou5FtlRPmw1UJoyLtKEmABkxFRA?=
+ =?us-ascii?Q?iBxe6JnL2UIIMZWGj4isjzIk7+kpMC8C51MXQUc6V5nWLvMYOhZOxF6osneD?=
+ =?us-ascii?Q?SS0uBJz1aibAv4D2VGGoMzE/iq67nemX416npyHLe3neV92Mm/IUtIt38vU9?=
+ =?us-ascii?Q?xevAPv88s5DJKJIXl6L7vPG2GWFEE5HWlGZkJk5D8SGudse+sXs9QfqjQQlw?=
+ =?us-ascii?Q?grSf2cDx5qr2cLtmu052xt+jS9KYVKSMoiMKNUoDp3lOViif3MhZ39h8BSy9?=
+ =?us-ascii?Q?WKu/IYZxf1RIBHbMvSHlqFImhfzezXDL7XcVU2DZvs+KwKrirq3/XKlwkH+5?=
+ =?us-ascii?Q?NdgYNKGySWcmghKOBPa0AVIUgqGQ9M3BWNWF6u/JtiwTMXJaBBUvBemYXR2b?=
+ =?us-ascii?Q?QadlcsNSISGD2Ta5sXn11OzCLXJz7Eb0HeXmgB+SauRV2TwA5+GmJN4qQ/qZ?=
+ =?us-ascii?Q?Pw4HUhhcVIBcxvrbjUD5gGsJCldj6WXwvIRFkPGCFGJlCYFxAqeaTsvVa28p?=
+ =?us-ascii?Q?Tj/P1ZmWQSWPCYIn4yjDbwzOP66aIrE2lypRwGWnSYJ9PsTWi/gExL5e0vOG?=
+ =?us-ascii?Q?+YxVPWY6Ff69sMd9us0/3KrEjcGFTmp3O6ojb44T0bk4NqP9wLghd2Duk9Y4?=
+ =?us-ascii?Q?uG0K9cjPK135oWhcYE93jheKNIgnQGTmk2pgW/bBzywrx7pEklpCpuScmhf8?=
+ =?us-ascii?Q?I8O/8xb6dzj5mdzEU1IBzjS+8L/MpthwyADj6zD/3z8Z/ZXUAYPqCdMR/D0B?=
+ =?us-ascii?Q?XRMSV1rhLQPMOAsR4kEmQClC3BD7xU0M33OCf/C3fYJVvqurGvtTLiJabnNh?=
+ =?us-ascii?Q?78dBAG55bFfGOHgH6rgcYSSP+9khVVmZEx2TRYEdtwxCth31V/3mU/f7Niy9?=
+ =?us-ascii?Q?cErmPlwBqcG80OsYuQztQ6o=3D?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25dcbf3b-eaa1-41bc-8016-08de3d7f3d28
+X-MS-Exchange-CrossTenant-Network-Message-Id: 176a022d-266f-4e61-7bee-08de3d7f3dae
 X-MS-Exchange-CrossTenant-AuthSource: TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2025 15:16:23.0288
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2025 15:16:23.8878
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7JPH+8J+sTAYOZrEj4y03oyEaVbi5qYutqIbh6/jBMv9RpIk4886HWr58jBLGI+Bj8O/0q4TIGJE0zg1cjkhKQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5Akg6Oy3McoeNhSUZZPoSh00F2ux/+oXV3ksMUREc35l+A+f6MDiRMaVbA+ASyVPhBojJm4TWu2XSotxuX/x3Q==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9P286MB4633
 
-Historically both TX and RX have assumed the same per-QP MW slice
-(tx_max_entry == remote rx_max_entry), while those are calculated
-separately in different places (pre and post the link-up negotiation
-point). This has been safe because nt->link_is_up is never set to true
-unless the pre-determined qp_count are the same among them, and qp_count
-is typically limited to nt->mw_count, which should be carefully
-configured by admin.
+One MW can host multiple queue pairs, so stop limiting qp_count to the
+number of MWs.
 
-However, setup_qp_mw can actually split mw and handle multi-qps in one
-MW properly, so qp_count needs not to be limited by nt->mw_count. Once
-we relaxing the limitation, pre-determined qp_count can differ among
-host side and endpoint, and link-up negotiation can easily fail.
-
-Move the TX MW configuration (per-QP offset and size) into
-ntb_transport_setup_qp_mw() so that both RX and TX layout decisions are
-centralized in a single helper. ntb_transport_init_queue() now deals
-only with per-QP software state, not with MW layout.
-
-This keeps the previous behaviour, while preparing for relaxing the
-qp_count limitation and improving readibility.
-
-No functional change is intended.
+Now that both TX and RX MW sizing are done in the same place, the MW
+layout is derived from a single code path on both host and endpoint, so
+the layout cannot diverge between the two sides.
 
 Signed-off-by: Koichiro Den <den@valinux.co.jp>
 ---
- drivers/ntb/ntb_transport.c | 76 ++++++++++++++++---------------------
- 1 file changed, 32 insertions(+), 44 deletions(-)
+ drivers/ntb/ntb_transport.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/ntb/ntb_transport.c b/drivers/ntb/ntb_transport.c
-index 57b4c0511927..42abd1ce02d5 100644
+index 42abd1ce02d5..bac842177b55 100644
 --- a/drivers/ntb/ntb_transport.c
 +++ b/drivers/ntb/ntb_transport.c
-@@ -569,7 +569,10 @@ static int ntb_transport_setup_qp_mw(struct ntb_transport_ctx *nt,
- 	struct ntb_transport_mw *mw;
+@@ -1024,6 +1024,7 @@ static void ntb_transport_link_work(struct work_struct *work)
  	struct ntb_dev *ndev = nt->ndev;
- 	struct ntb_queue_entry *entry;
--	unsigned int rx_size, num_qps_mw;
-+	phys_addr_t mw_base;
-+	resource_size_t mw_size;
-+	unsigned int rx_size, tx_size, num_qps_mw;
-+	u64 qp_offset;
- 	unsigned int mw_num, mw_count, qp_count;
- 	unsigned int i;
- 	int node;
-@@ -588,13 +591,38 @@ static int ntb_transport_setup_qp_mw(struct ntb_transport_ctx *nt,
- 	else
- 		num_qps_mw = qp_count / mw_count;
+ 	struct pci_dev *pdev = ndev->pdev;
+ 	resource_size_t size;
++	u64 qp_bitmap_free;
+ 	u32 val;
+ 	int rc = 0, i, spad;
  
--	rx_size = (unsigned int)mw->xlat_size / num_qps_mw;
--	qp->rx_buff = mw->virt_addr + rx_size * (qp_num / mw_count);
--	rx_size -= sizeof(struct ntb_rx_info);
-+	mw_base = nt->mw_vec[mw_num].phys_addr;
-+	mw_size = nt->mw_vec[mw_num].phys_size;
-+
-+	if (mw_size > mw->xlat_size)
-+		mw_size = mw->xlat_size;
-+	if (max_mw_size && mw_size > max_mw_size)
-+		mw_size = max_mw_size;
-+
-+	tx_size = (unsigned int)mw_size / num_qps_mw;
-+	qp_offset = tx_size * (qp_num / mw_count);
-+
-+	qp->rx_buff = mw->virt_addr + qp_offset;
-+
-+	qp->tx_mw_size = tx_size;
-+	qp->tx_mw = nt->mw_vec[mw_num].vbase + qp_offset;
-+	if (!qp->tx_mw)
-+		return -EINVAL;
-+
-+	qp->tx_mw_phys = mw_base + qp_offset;
-+	if (!qp->tx_mw_phys)
-+		return -EINVAL;
+@@ -1071,8 +1072,23 @@ static void ntb_transport_link_work(struct work_struct *work)
  
-+	rx_size = tx_size;
-+	rx_size -= sizeof(struct ntb_rx_info);
- 	qp->remote_rx_info = qp->rx_buff + rx_size;
+ 	val = ntb_spad_read(ndev, NUM_QPS);
+ 	dev_dbg(&pdev->dev, "Remote max number of qps = %d\n", val);
+-	if (val != nt->qp_count)
++	if (val == 0)
+ 		goto out;
++	else if (val < nt->qp_count) {
++		/*
++		 * Clamp local qp_count to peer-advertised NUM_QPS to avoid
++		 * mismatched queues.
++		 */
++		qp_bitmap_free = nt->qp_bitmap_free;
++		for (i = val; i < nt->qp_count; i++) {
++			nt->qp_bitmap &= ~BIT_ULL(i);
++			nt->qp_bitmap_free &= ~BIT_ULL(i);
++		}
++		dev_warn(&pdev->dev,
++			 "Local number of qps is reduced: %d->%d (qp_bitmap_free: 0x%llx->0x%llx)\n",
++			 nt->qp_count, val, qp_bitmap_free, nt->qp_bitmap_free);
++		nt->qp_count = val;
++	}
  
-+	tx_size -= sizeof(struct ntb_rx_info);
-+	qp->rx_info = qp->tx_mw + tx_size;
-+
- 	/* Due to housekeeping, there must be atleast 2 buffs */
-+	qp->tx_max_frame = min(transport_mtu, tx_size / 2);
-+	qp->tx_max_entry = tx_size / qp->tx_max_frame;
- 	qp->rx_max_frame = min(transport_mtu, rx_size / 2);
- 	qp->rx_max_entry = rx_size / qp->rx_max_frame;
- 	qp->rx_index = 0;
-@@ -1133,16 +1161,6 @@ static int ntb_transport_init_queue(struct ntb_transport_ctx *nt,
- 				    unsigned int qp_num)
- {
- 	struct ntb_transport_qp *qp;
--	phys_addr_t mw_base;
--	resource_size_t mw_size;
--	unsigned int num_qps_mw, tx_size;
--	unsigned int mw_num, mw_count, qp_count;
--	u64 qp_offset;
--
--	mw_count = nt->mw_count;
--	qp_count = nt->qp_count;
--
--	mw_num = QP_TO_MW(nt, qp_num);
+ 	val = ntb_spad_read(ndev, NUM_MWS);
+ 	dev_dbg(&pdev->dev, "Remote number of mws = %d\n", val);
+@@ -1301,8 +1317,6 @@ static int ntb_transport_probe(struct ntb_client *self, struct ntb_dev *ndev)
  
- 	qp = &nt->qp_vec[qp_num];
- 	qp->qp_num = qp_num;
-@@ -1152,36 +1170,6 @@ static int ntb_transport_init_queue(struct ntb_transport_ctx *nt,
- 	qp->event_handler = NULL;
- 	ntb_qp_link_context_reset(qp);
+ 	if (max_num_clients && max_num_clients < qp_count)
+ 		qp_count = max_num_clients;
+-	else if (nt->mw_count < qp_count)
+-		qp_count = nt->mw_count;
  
--	if (mw_num < qp_count % mw_count)
--		num_qps_mw = qp_count / mw_count + 1;
--	else
--		num_qps_mw = qp_count / mw_count;
--
--	mw_base = nt->mw_vec[mw_num].phys_addr;
--	mw_size = nt->mw_vec[mw_num].phys_size;
--
--	if (max_mw_size && mw_size > max_mw_size)
--		mw_size = max_mw_size;
--
--	tx_size = (unsigned int)mw_size / num_qps_mw;
--	qp_offset = tx_size * (qp_num / mw_count);
--
--	qp->tx_mw_size = tx_size;
--	qp->tx_mw = nt->mw_vec[mw_num].vbase + qp_offset;
--	if (!qp->tx_mw)
--		return -EINVAL;
--
--	qp->tx_mw_phys = mw_base + qp_offset;
--	if (!qp->tx_mw_phys)
--		return -EINVAL;
--
--	tx_size -= sizeof(struct ntb_rx_info);
--	qp->rx_info = qp->tx_mw + tx_size;
--
--	/* Due to housekeeping, there must be atleast 2 buffs */
--	qp->tx_max_frame = min(transport_mtu, tx_size / 2);
--	qp->tx_max_entry = tx_size / qp->tx_max_frame;
--
- 	if (nt->debugfs_node_dir) {
- 		char debugfs_name[8];
+ 	qp_bitmap &= BIT_ULL(qp_count) - 1;
  
 -- 
 2.51.0

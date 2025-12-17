@@ -1,157 +1,145 @@
-Return-Path: <dmaengine+bounces-7748-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7749-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58D92CC7D6E
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 14:33:08 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47D5CCC8164
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:10:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C9A9E3014A9F
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 13:33:07 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id AAC573007B46
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 14:10:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0FBC3659F4;
-	Wed, 17 Dec 2025 13:33:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44F9F37831D;
+	Wed, 17 Dec 2025 13:52:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="G3TZwRs8"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="PSdkWlVh"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DFB364EBE
-	for <dmaengine@vger.kernel.org>; Wed, 17 Dec 2025 13:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EC7230BD9
+	for <dmaengine@vger.kernel.org>; Wed, 17 Dec 2025 13:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765978385; cv=none; b=kxYTbixnPDq6g3yemPH4fxyZrtalt1Lc9gcmYuKqMaI345TQgswTsdUdYDgbssy619Us9VQV50ahtxDT+43k0kd4mKfrxQRI13djM+B+miw2lSpSODE32o3kL88eBPp9z4B+v3xkRrlu6XAFkdMCUy9Po3b0Jd6EHQ8bImtSEEU=
+	t=1765979551; cv=none; b=RbgMbBrePExzwxaJlCWyt9Ia8filF5Wzax7sH8zffeGhYrW35Tmae8NbwWnwD387SwzRYZhBfvM6tH+SGIlvHRRJhuqvu1UIgtjTp015M0UN2dGcqCX3tf/urgdQ4mfFSnEu7jDJFsGLlkUu3UwIgQrKaQAqU1dD06EbyPskeB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765978385; c=relaxed/simple;
-	bh=3NxV/sdr2BZyW6Fp6jeGvfWxTA5ctLtFaPPYKmOmWzs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=avk0kFGVr0ql1ByUghaZUXnseRhqB9r60DtEiGc97LOkoAzNalSHHMz7T61gRdsBwzmnYQ6em70pnqWLme25Ce8xLobe/2ebczX3A/TjyU3qI6IaNDhFQfbLGVXHXUp+LNB1BFhE8g4YMbdghoAKBTNIHa+5c3u71QheTK/JKiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=G3TZwRs8; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-64981b544a1so7797354a12.1
-        for <dmaengine@vger.kernel.org>; Wed, 17 Dec 2025 05:33:03 -0800 (PST)
+	s=arc-20240116; t=1765979551; c=relaxed/simple;
+	bh=pwXBE6nXIPhLXqWiJsXmXE5doaQ5fCUQPNT6gkqWtrM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K9Vh4bFbBFhhkXBNmoSQp0HU3p79G6nV4wC9El8MKmk7qZm3Z0+zieDcmpcf35hHUjYXl3QmYZPsrYi71Qch7P2FJgFX30+Sogn9svqbZKDIkcegsv+j2ih134aJeUkTqouNU3uDVcBoCEYUJlj8Q7d49m1NhGYqRsICl2RLYBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=PSdkWlVh; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-47796a837c7so42607365e9.0
+        for <dmaengine@vger.kernel.org>; Wed, 17 Dec 2025 05:52:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1765978382; x=1766583182; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3NxV/sdr2BZyW6Fp6jeGvfWxTA5ctLtFaPPYKmOmWzs=;
-        b=G3TZwRs8slika+uM8zA2b/tbxbmR9UD4zQjKjHTYFdQgFKQIvb5WcOE963ZZ02V0Mc
-         qP0y3gHvcLeM0uzdbqcjgz/OUiak06hFqxxk2bqy9JyIuV+hWAOR+yfQT3/puygEdmcZ
-         mSOwl2czqg7bWviUHQvoqfL2VNr6lSNSEKluYXqSdbSaAHT1yuKd6fpzL1rD93FYSdgq
-         nGfR/UWTLwfs3EF6NQKalofoEucjD9bsNEEN4J8bADznJikY/0q8pziBBNcl66wb0YW6
-         VefrjPLW58syX/GbFPK5ltyANGRw4PSWy3W4rvQNgVF5nVe6Cj7L6F0oCvRlAt9PVq8m
-         SAHw==
+        d=tuxon.dev; s=google; t=1765979545; x=1766584345; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HBodynF7SrNXks4H2GWi7XhN1JOLIeDFQT2O54uJxt0=;
+        b=PSdkWlVhWonIgS75A9FBckFemM6RGJRIJuIZrsFb9ru+flOErfhs1afIZyti0YSGem
+         ytypC1UU7hxWpYjnKz5aboGSDzaV6lX24p2WAGwCZPLQzB2FpymO0mRWFChO7mtO5Sja
+         3iysK36cpMrLXKFiSAZ7uM1S/MJTHp6bjMjVQ+XMngrO8PzZLIJTzeotI57sJ67INk/R
+         gmRpxpQo3b0BZ9unwL+sbyFHJME3B6wQyiR5VeKV4+C8WhAfjVIQpmHnPwSNgH+WJZzc
+         /aHCznIU/OhxgxvlBMeMJWY8VAl4gIIcak1XgbraeXxj6WQsKzWvsO9yx6f5BgSumGW5
+         39BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765978382; x=1766583182;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3NxV/sdr2BZyW6Fp6jeGvfWxTA5ctLtFaPPYKmOmWzs=;
-        b=qj0MfRVgbut0PDND0Hpebj4FQUPYo/Mt6OkehS1CuscUJ500fcFwamKHseNnR31Evf
-         QtCmEFpxkNBsnNPwYVhvYo19vGpH4ecxz0EfMnavMaxjVVQeBmj5M78xdsjsg3doNUt+
-         ASqomCjtpJPaLO1Gu8iaKsaIR3uZpjdUvApFIwBqc8Gc7zBKXg6IquAg/VolOuTcq1gp
-         /OywIvNcfP1cRz4en2Md43oL1U1TAyDodOPVIqyQ3HRgr3bB982t8Xql2bEdtimEPw1e
-         DUXKO5oAHc5S7uiDYmPqM4TzsevVfAnzw0RdcQZ15F+N3w4JXKaOoqpGnuserwM+UEov
-         MXrg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHN1wJ40IJEpM5/GvPEdf6O2DjxJfKjt2PPPQ/29JESGM4Shpwal0SkaFsL3X6RtbeWZlbEJ+los8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz09x92pswoM/hVAN4OTetxQjmsGih6Hm+/ocV1WMEshat6XQBi
-	wW/ymWQfYhm0DZ82UaPjmju/FP2e3QtIqROOmtzWd349AZTDAJgL6Bz0QwJuWBhLsxotn5/vIGd
-	0CVLFNbxwSPv7+r6QmMNf0nSe2yiIvwHHUXZDtsx8ow==
-X-Gm-Gg: AY/fxX6UQL0BOZBNUKeK0TYIZaX04eFXEdA9uPChPfLGxVg806tw7J8rnGFSTwcFIU4
-	GDXv/mwivqVmL6Wgj60JKgy42A5Cu2wjuu/lR5NPABuFHAyzslpJnDuCXM3HB1Y93a4Ve7egWA2
-	GPTqsJoiZMykpvJys5aXttKYo86b6oLgqPbXhpqwqlcAajc3BD5tPc/+ESBj7YTiAV4gjbiA4NE
-	gJBYkwALDGjHSVvJf0YbD3svLPS/pk2Td1yFsMx5pC/ZOb3McIg1aEqtDJXYSlu0nUlEjmPjT/+
-	ybbhDd/B5socdsgMbFfRyxONf/y4H4Rst9zYyrmFguombqqO/46e
-X-Google-Smtp-Source: AGHT+IHQBmS2mrQa3fgyiBBuz2kWHV24zlBwa/1NFFHKPKgWTqO46GlqIXXFCMupFuoXyMzVWH1kl/6iZAAmZg0kVsk=
-X-Received: by 2002:a17:906:c39e:b0:b7f:e709:d447 with SMTP id
- a640c23a62f3a-b7fe709d458mr591500066b.33.1765978382116; Wed, 17 Dec 2025
- 05:33:02 -0800 (PST)
+        d=1e100.net; s=20230601; t=1765979545; x=1766584345;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HBodynF7SrNXks4H2GWi7XhN1JOLIeDFQT2O54uJxt0=;
+        b=qljLv7aQzLmatb8HDkU8Hv0/ZWo/3bkOOOa34mgox1sRHKDarBnRA+9AovAGvOIYgW
+         CqjEqLm1kDnudr2DLTL0N1/wANH7fbOdASQKc4YuGCDHB0zZCLosNRiQK/4EN48lyCRU
+         TUKgxnE2CgsZSyo2eKNU5o808iHa5sOKtG6Le3hD6L3padSxLw2l4Yk0Sa8asFRc3jPx
+         zIXx67Wtm7GTUMjBNVc4oWpbwTxiNtqahcvTY6OvFQmvrYgE4F/1K6EImWrXqtMaDOOO
+         QblK49i9UkbGbkv/UqN1qk1R/wQCHtyXmKjPQYUFsYlQZmgVQdEoGt0nSfSYHXRoRpi+
+         iegg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdGyFvGjiR9tjgD7NZQGLx+pDHy4l3WhZ9Uy5gZr6NQmUIBIznxk9AhP/6lhv7QYzZzhmCAM5MRPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0QOqES4ia0+nhNV2FrrDR48czo+uajP1UxeRDjMuM+N7xccrP
+	5lXS94a2wPLfWJpOFDnDyTrcM4uSTlsa+8XrwBun/m/HxXPJabBm9pOjA70jc4Ded4g=
+X-Gm-Gg: AY/fxX4JezMKLz5QeLfZsh2sq903MFE1hWCbdOZoC8QmR3fd8w7a2Xgs84JSWchZg2w
+	07yRXe8k+6EIohYjZa1Wv2PNDP+4w/aDe9CtWrcNGJB4hS0tfUBK9OScaXNulXaG6H0RDPshTvh
+	36oFe4MIK8w4uskWK1i5vbdIw3ez8Caw4V6lULGoP7phAcXPqVvLihdtkeD5RULBqlzB7A/iDh1
+	SQA4v6qWGY9A3rVpVqB6MBZXw/V4+6uUtohw0aKGyniyfBKd6Uyr4T1lndOgJ8Ea4CnOUSn/1Fw
+	/KgXgnm9BEHkjfdUuZK+yO9gwUW1wuB/vAEEGmLvMVBWQdook69hmJuMTVJ2lY+ueJAguJeYSvB
+	54bZPKw3jDXjxN12G/SNHD6V4MMv6lpGlcGcxKMpxxeXZOl0Pva5gHc80WTcRmvvr2BzYQYiiIb
+	w0IX/xzn022/qWQnTQXms2tzUQoIbIfOgDwNwzxmdw
+X-Google-Smtp-Source: AGHT+IFWUB9/ub8J/4zlBS37nn0rWNyxAo4tGYMQy9tEpqVv/pZQq+c686VLWl0YwlnI82ltMdplxg==
+X-Received: by 2002:a05:600c:46cb:b0:47a:810f:1d06 with SMTP id 5b1f17b1804b1-47a8f89cb47mr194004325e9.4.1765979545347;
+        Wed, 17 Dec 2025 05:52:25 -0800 (PST)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.134])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4310adf701csm4508000f8f.42.2025.12.17.05.52.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Dec 2025 05:52:24 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: vkoul@kernel.org,
+	fabrizio.castro.jz@renesas.com,
+	biju.das.jz@bp.renesas.com,
+	geert+renesas@glider.be,
+	prabhakar.mahadev-lad.rj@bp.renesas.com
+Cc: claudiu.beznea@tuxon.dev,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v5 0/6] dmaengine: sh: rz-dmac: Add tx_status and pause/resume support
+Date: Wed, 17 Dec 2025 15:52:07 +0200
+Message-ID: <20251217135213.400280-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251215163820.1584926-1-robert.marko@sartura.hr>
- <20251215163820.1584926-5-robert.marko@sartura.hr> <fe15fcce-865a-4969-9b6f-95920fcaa5c7@kernel.org>
- <CA+HBbNGNMGRL11kdg14LwkiTazXJYXOZeVCKsmW6-XF6k5+sVA@mail.gmail.com> <3d6f254c-d53f-47d9-8081-8506d202bf9d@kernel.org>
-In-Reply-To: <3d6f254c-d53f-47d9-8081-8506d202bf9d@kernel.org>
-From: Robert Marko <robert.marko@sartura.hr>
-Date: Wed, 17 Dec 2025 14:32:49 +0100
-X-Gm-Features: AQt7F2p7AtghDvAyv4NK8Ascs8BHBx___HwB1JF-DX23awYiIEMyiUo7jk7sWyI
-Message-ID: <CA+HBbNEKJ2qG4s51Gq9dh0uGuSwyPDfsq+mb5w6Kry6e9N0VSg@mail.gmail.com>
-Subject: Re: [PATCH v2 05/19] dt-bindings: arm: microchip: move SparX-5 to
- generic Microchip binding
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	claudiu.beznea@tuxon.dev, Steen.Hegelund@microchip.com, 
-	daniel.machon@microchip.com, UNGLinuxDriver@microchip.com, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
-	linux@roeck-us.net, andi.shyti@kernel.org, lee@kernel.org, 
-	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, linusw@kernel.org, olivia@selenic.com, 
-	radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com, 
-	gregkh@linuxfoundation.org, jirislaby@kernel.org, mturquette@baylibre.com, 
-	sboyd@kernel.org, richardcochran@gmail.com, wsa+renesas@sang-engineering.com, 
-	romain.sioen@microchip.com, Ryan.Wanner@microchip.com, 
-	lars.povlsen@microchip.com, tudor.ambarus@linaro.org, 
-	kavyasree.kotagiri@microchip.com, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-clk@vger.kernel.org, mwalle@kernel.org, luka.perkov@sartura.hr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 17, 2025 at 2:23=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 16/12/2025 18:01, Robert Marko wrote:
-> > On Tue, Dec 16, 2025 at 4:58=E2=80=AFPM Krzysztof Kozlowski <krzk@kerne=
-l.org> wrote:
-> >>
-> >> On 15/12/2025 17:35, Robert Marko wrote:
-> >>> Now that we have a generic Microchip binding, lets move SparX-5 as we=
-ll as
-> >>> there is no reason to have specific binding file for each SoC series.
-> >>>
-> >>> The check for AXI node was dropped.
-> >>
-> >> Why?
-> >
-> > According to Conor, it is pointless [1]
->
-> You have entire commit msg to explain this. It's basically my third
-> question where reasoning behind changes is not explained.
->
-> When you send v3, you will get the same questions...
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Hi Krzysztof,
-Considering that instead of merging the bindings LAN969x will be added
-to Atmel instead,
-this will be dropped in v3.
-Sorry for the inconvenience.
+Hi,
 
-Regards,
-Robert
->
->
-> Best regards,
-> Krzysztof
+Series adds tx_status and pause/resume support for the rz-dmac driver.
+Along with it were added fixes identified while working on the above
+mentioned enhancements.
+
+Previous versions were addressed by Biju. The previous versions were
+posted here:
+
+v4: https://lore.kernel.org/all/20240628151728.84470-1-biju.das.jz@bp.renesas.com/
+v3: https://lore.kernel.org/all/20230412152445.117439-1-biju.das.jz@bp.renesas.com/
+v2: https://lore.kernel.org/all/20230405140842.201883-1-biju.das.jz@bp.renesas.com/
+v1: https://lore.kernel.org/all/20230324094957.115071-1-biju.das.jz@bp.renesas.com/
+
+Changes in v5:
+- added patches
+-- dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+-- dmaengine: sh: rz-dmac: Protect the driver specific lists
+-- dmaengine: sh: rz-dmac: Move all CHCTRL updates under spinlock
+-- dmaengine: sh: rz-dmac: Drop unnecessary local_irq_save() call
+-- dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks
+-- dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+- for pause/resume used the DMA controller support to pause/resume
+  transfers compared with previous versions
+- adjusted patches:
+-- dmaengine: sh: rz-dmac: Add device_tx_status() callback
+
+Thank you,
+Claudiu
 
 
+Biju Das (2):
+  dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+  dmaengine: sh: rz-dmac: Add device_tx_status() callback
 
---=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura d.d.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+Claudiu Beznea (4):
+  dmaengine: sh: rz-dmac: Protect the driver specific lists
+  dmaengine: sh: rz-dmac: Move all CHCTRL updates under spinlock
+  dmaengine: sh: rz-dmac: Drop unnecessary local_irq_save() call
+  dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks
+
+ drivers/dma/sh/rz-dmac.c | 265 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 222 insertions(+), 43 deletions(-)
+
+-- 
+2.43.0
+
 

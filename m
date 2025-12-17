@@ -1,49 +1,49 @@
-Return-Path: <dmaengine+bounces-7780-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7781-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90F76CC8ED8
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 18:00:58 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F825CC88F0
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 16:47:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 50AF23004625
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 17:00:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9E5A131BFC9D
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:39:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77244369964;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8550A369970;
 	Wed, 17 Dec 2025 15:17:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="PkHoPuKZ"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="oxfZ4vRM"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010013.outbound.protection.outlook.com [52.101.229.13])
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010020.outbound.protection.outlook.com [52.101.228.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F086E36657C;
-	Wed, 17 Dec 2025 15:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62287364EAB;
+	Wed, 17 Dec 2025 15:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.20
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765984676; cv=fail; b=EMCnuSA4yf3rq4CQU7HGM8Elc6LRcsp2+3AL1oVtNIEL8l1u9wouPMF7Pkwkzo/6H+8sTgttYfi8pkvEHbQioyqJU25s3OMvnv5IXXCEktGDlX0Cv9HHIk9CdrAyHp6mKS9ZO5EDaGSYRW1wy8z+kD8GL4wriWFXgpd2/LrKMbg=
+	t=1765984676; cv=fail; b=ed+Axlz8RnK0QPT4zRFQiIv+fx3b4VvBq2ljebopHhlr7zhZoD/SJZOBdr2LCb7jYuhWeRxtUMEjrXLUDlb//8JiGLuroWu/4/2oE0gaDCaljZr89dQ96PKxfxwrnsd9TWFv7uo+Ep+BEhJGVnJIgdDlgA1rvYZRDbGaIPuxw0s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1765984676; c=relaxed/simple;
-	bh=/1OXLMEl0+xEGADqX4N+3aFF3M9YFod1lihNvIzYdlo=;
+	bh=woB06NkymuQMz4leOTLhvgJLQVdNeKEJIZ9thr0VS2o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pLgA/sB6PL3cqbMYASORkkNL/C03ii8OCH7UzGe9Ww4joKF756G1Y9dslcbHZ/rrCZfxeIvXaPKduFahxoCCvHFyO2WKEHldeljBRlqJrQzFXnTweq3o3t0Mj1ZBC83Bs5QiYqp9dWNG1kDqflA+KI0fiRi6xNrhtshQC+W95is=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=PkHoPuKZ; arc=fail smtp.client-ip=52.101.229.13
+	 Content-Type:MIME-Version; b=O18wyDmKRlKyMqrRkTYQ2L2kRjH3q2Qqvh7/XK4o9E9wO/UwS8DhV0gFPSEx5IoGprvOPkI9NCrk3+NYJJ5T1dd8R6bj8pzEpobhYfl8538fs6y+ct6uKrJRFzvSOQz+W35xxkVe6IywT3c/OXNtG6M9wumX2pM85qQDIjBs3uQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=oxfZ4vRM; arc=fail smtp.client-ip=52.101.228.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hcsrjkzKDGVldEdbKKTPNSclfH4EXp9psQHkPMUZ2lrO352WNz5N0X5dpmLApqJxZogtUv1itZGjq7mq5n/Rn8w0Lqtz5FJEtPEhYCtF5Q92GLcHgfJS3hYrjRBXpklHM1m+NMXJ/6MJzQxSr80DUr0dKzb7DoFElbUsGrAeW3p7otjz7DddBwdVlCrjKe9/9MKQdMyCXSK+ZXDNv1/W93FxY8sRR8wQG8y6xwZn8KxTzlk5rxkX9DuqvPxn/w7kEYiUjrzJbXw4bXxmFwUN0ZTVv1xcHu32qF7Zs4AJDQ9wLaNED9blphBThRM+Cp9znXSyYKbb96Dys47oh6UJgw==
+ b=aVNu7IEj99CfnOpDcpNHKJLjfcUDSRv8a1IwD8CMdAMG0tn98aklbb76pgk7RACFrgZjeviHrQ328Oez+PS+W371Y4XkY592uOC1OJwtyPv0h1Whe6ZtQsr9ENjzxZTrxT11m+WFJpGbDQd0GfoGsM1ANbYDamzwmDFUfnIlwl4aYUnG+anCVm7rJ1+cImBZU6+oIU0lMrRfHTBC5r8pO2Rfj267tk5MrZ6DtbX5vnqsf16wz02NPvL5KXeNevPNXpd2a2tz+N/9tVhfEhYRYGsFiZCAEmUn7HRWvCi74zrq16oeb/MfP5q3DUQfbROv5Tu3OEFu8INe0V529N5G/g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jP2NFmFhezNJzOBBHMSBbmnhldv6+xAK3DW3wXhut7w=;
- b=t5f4LzLR7qP4m2i3/HTc5nc+ObMqXqpyhE3f4p6UX5y0nSetk01CuoSi+n6NcVF2TQcB0toS651pBku3W9GMwzu2ohKVt1JNTOjakgC3OeQ/dzmevitcAb7jSz28vLs1BVQrqhJZAriKHWkXO9j/sUxZYSZMcRQyxEvQ+/HfURvdX43KUBGaSCZMgjWkp3c93o9j3im2YJAJtNO4/4A5jcZ1VOSnH+SdpmCtWZULTzOcS58wMnJ6mJ482Yt+09CnzztLio7vAPz6xfdqw+ihEqJ6ff8JkQTgYkl4eQYA3NH3BsGdrtFeCW9hCELRSnBqpIu/NBud2ofPWUSXGBnHIw==
+ bh=MAVmbXBmrEALoCTWYu49qfxKawjYIsxIDI1OIzbn8cU=;
+ b=TDN891NQRr7aP/GNhvuivATFuq10j4I/BIwhAJhzIeBNpUf5ON8GbBh04SLgMrlV38t0dhNBgE8/YRBor9blMWqCNAqyBPZkYENQvNz/zFZ7n5wWEQBT8yw0cxUYKw8lw9kTyUNfMPlKpiKw7inpC/MHUtgbaBJadYjrcHl7Xa4Sht6ADB8DvhE8/i31CZ9756rxRKcdSEnrqY8QOHsE3YvW5DETcMb/xdKKnzQmQKZGkG6iSPOztWR9Sab+K03C+L9zea6mjaJhdEfD9AhstmVFy8Vwv5sv/Hz970KRU+M9LSlpp/nsNPQaTwsIc+zh7JBGGsHe/S+SMsR5XgEqpw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jP2NFmFhezNJzOBBHMSBbmnhldv6+xAK3DW3wXhut7w=;
- b=PkHoPuKZmkyzIBnWwFExK4+Onb9EipTagd5w4Mar8EODBASEybyiySNhqI1e2dzuyEkf/XKz4gUUy36rLZeNC1NEZ6I/le+79rkzeTiwaVygwzjf1fug/nkmYpQBHNOt0M4V3IyJO3HaKCR+KM3vEU8qEQ0XnNswT37Ecz2OHck=
+ bh=MAVmbXBmrEALoCTWYu49qfxKawjYIsxIDI1OIzbn8cU=;
+ b=oxfZ4vRMOh3m7EFVElGqQ8cQVIbgaqoFYwv3uBXZ8Lv/0lokO0W1rctBJxoybhHLHLYTihv/o+GYqemAv+gRn5iwvprzqEbd+Ke46fFYDKslJmML+uyk3j46LmvSLY3KUCcakkTPFgYb6hCn0W3T9Uh6zisoYbfriWpD9qpphN8=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=valinux.co.jp;
 Received: from TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:24c::11)
@@ -97,16 +97,16 @@ Cc: mani@kernel.org,
 	arnd@arndb.de,
 	elfring@users.sourceforge.net,
 	den@valinux.co.jp
-Subject: [RFC PATCH v3 32/35] arm64: dts: renesas: Add Spider RC/EP DTs for NTB with remote DW PCIe eDMA
-Date: Thu, 18 Dec 2025 00:16:06 +0900
-Message-ID: <20251217151609.3162665-33-den@valinux.co.jp>
+Subject: [RFC PATCH v3 33/35] NTB: epf: Add an additional memory window (MW2) barno mapping on Renesas R-Car
+Date: Thu, 18 Dec 2025 00:16:07 +0900
+Message-ID: <20251217151609.3162665-34-den@valinux.co.jp>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251217151609.3162665-1-den@valinux.co.jp>
 References: <20251217151609.3162665-1-den@valinux.co.jp>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TYWP286CA0031.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:262::19) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
+X-ClientProxiedBy: TY4P301CA0103.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:405:37b::18) To TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:400:24c::11)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -116,223 +116,114 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: TYWP286MB2697:EE_|TYCP286MB2863:EE_
-X-MS-Office365-Filtering-Correlation-Id: f4f302e8-3ca2-4242-58bc-08de3d7f48bb
+X-MS-Office365-Filtering-Correlation-Id: 52e5d0e4-7ff5-411f-03a4-08de3d7f4937
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|7416014|376014|10070799003|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UkNuwyJ7ZgHFpV+z3f+5TOHkZCTqA72dcD5+4EEcG7ifBetYg2tb1r6FF7al?=
- =?us-ascii?Q?Pjn81bQLeQr/ZgfnlymqrPAwBMozXVvAbIHRc4WRUTvtKsXEGdcGwqa7SzcM?=
- =?us-ascii?Q?aPBO+5jk+IUSCqwZ+dpE0EEsGsyyZuJ3gFCEzOY4v03nKIvtAQjJPM3SuB/D?=
- =?us-ascii?Q?YzLScmw2jnFh9NX3HYkGZ2cZiqudiEfxh+cD1Fpd61PXk26mENYRWDZE4fos?=
- =?us-ascii?Q?fhfTTffMEUJJwLiT2HizRJ+dBSxvEm/XzF9sVkRcCBzL+DmdCxid7CeRvfwU?=
- =?us-ascii?Q?3scA3ozg7kkfrSNEdQrerM45x+DRRnhi3BhDSjfT2zMpv0sV68PAmyGKKQET?=
- =?us-ascii?Q?sA2OHsYPh2hv8qyJpXf8ZoAOjUKD7YbVCeBWzu85i+PoQVeW+vEsCw7B8ttN?=
- =?us-ascii?Q?H8Xv8jVeHAMPmT1tUfA9Rle3UXumIViI4NcYTXQIYeFzX0f0vFP4RBwDj4gp?=
- =?us-ascii?Q?KN0KJgE7oSTgWznNDXh+ucpR+dAACImtgEJHh53UMhQdqimrbq/zSQzW1C2q?=
- =?us-ascii?Q?KssXtlw3wlAIDxfw0MeOqIBqCx3102pFfWVIGUiXQ1Z5RGLjOzbIqdqAV8UZ?=
- =?us-ascii?Q?KcbN41pGNYXSLzE9nyezvt3wKV3ohziFhDoEK3HFdcgZq5Q4dRxfSr1GQb+A?=
- =?us-ascii?Q?BnH9au8mW8LbsoxFXlqKXSyIt+Yqvnevr+HQDDQbttgIVPgCPv2ufNA7GqPU?=
- =?us-ascii?Q?5+773CvdapUnukI1u4GxKO8TOrtUTMBCypBJLA9B3EsJcYBJanzWSxe4yBjM?=
- =?us-ascii?Q?lK0T5kvWfJo011H+fDjcopGY0CA+kbKzhTugIZDf2rAD0zIilYG+zvhM42WZ?=
- =?us-ascii?Q?/IA1XhkcDEtxRv1RjbGKcagh46NALrP1TF6teZgftJn/humqx8/NmCUTdfz0?=
- =?us-ascii?Q?dzcWhMZXkyaRjop3Ikr0f9CTdbKIJB8+rypS8NZNhyM6SmckpmgZjLHwLTHg?=
- =?us-ascii?Q?UyxL1HzbWA0scGCcCZemTLPExeLDU6xkiX4RouoGiGeFXq0DI4i0wIXZeW+O?=
- =?us-ascii?Q?5vMmdd+xIc2e/AE4bxDkKBp/e5wt8Up/jHHz3HFMZqi01qRROrW1ZcOfGi+E?=
- =?us-ascii?Q?JBWvPH9kIPm0avxlIrfXKxF75Ab90/FZkkM6o3e8CQdZzYf8ftxm9KMXnPzC?=
- =?us-ascii?Q?QQMwKMo7QfIYswc24B7N30kb+MebKte475HX1bUCXIVYHuASFoPoJRC8YbZj?=
- =?us-ascii?Q?RbhFOEsM7D/HwJ30WNFOv/I1U2HcpruQNFf3XWhfw5JcpXufJBmn4pKsn5xM?=
- =?us-ascii?Q?KWBrB5ZksAopIOOPAqHVQnepoIeOUmKDkIEydfrhOr5drFVprpgSGcguKnNm?=
- =?us-ascii?Q?JwF6a9TxeXSJzPWqfezra9K0ddONoAtvJ2eyMpXxNF8DI9uRd8brCMgBaKQx?=
- =?us-ascii?Q?zv+38hEByeM3tQ0da/ziGY+LCjFkTsl8zJC4ax9BPW1k8Rkw3qqpARPdqs8g?=
- =?us-ascii?Q?MQQPqjSoJ86RkGzjTlKsaeoC5VBCSZ52?=
+	=?us-ascii?Q?D/vv/oLGwynS/Wn9IVZIBchARkfdYIlTdq4xBMfNZq5UOiX4pGmDvkXoOhMb?=
+ =?us-ascii?Q?DaHpkCreXsnRyBEBKA/1vAlx5rzrHkH9L6ehobVGjDWe+ih8aul/NaMJ0EV5?=
+ =?us-ascii?Q?FXF+wKPKxC1grbonP43705qJkNNVrg6ELVIiU5qpm+2VB5XkpcQAj/XTzJEZ?=
+ =?us-ascii?Q?0QiQfvAAJDaTL0ASMcAhlQ/Bnp49miOzWac6w15fUlQwntQ2PTTstx82MpSK?=
+ =?us-ascii?Q?c2xWqTCejXesQYildCAjZ/Pck937g6vt4sYl41huBVcdc0In5WSKIl0yEi8M?=
+ =?us-ascii?Q?d5uD+LapTH6g+tG0sLagJJf3SxzMPKehY4WSdsHB0m4xbS9w380+wvaJHjkf?=
+ =?us-ascii?Q?e7gApiCiNF68KYzAnTyEtpigcQNei6R6hDqxeBkplkZ4opTFZOpm9qFR5l8l?=
+ =?us-ascii?Q?0SxmkdT4X69RO4RPrY33cjZYzPT4SxR9Lt7E5viyqLyazyLpnQlICnfQVHHG?=
+ =?us-ascii?Q?TMA3R2pcKzS++Roz/JerPj2Nb+KR8nNtAKQvQR9YBJ+TwWf7XRKYTxxZ+lwX?=
+ =?us-ascii?Q?v3uby32I3g9tqH7irArfmqqbMwOl7CT997bhwrApz+3WvpY4vwDWQ0WbOvab?=
+ =?us-ascii?Q?a70kK0wDSxyk23ehJGVDOdtu6HGymNQo9kutCSk1aTQ+dYwnakzDMaV5OWh9?=
+ =?us-ascii?Q?XPN/OEn8+Et51kq4VV/LpGYKytLa2xoe/8cJ36XGtHDX2jbaaf99jz2Lq5No?=
+ =?us-ascii?Q?emwePIv6YRrwsv+4E7bz2PVB8YCqpWkOQJe7vaY+AX4lF9wBqEGh915qNNi2?=
+ =?us-ascii?Q?KkfC4l7+wf/AwWgBcSPMeJW1sxEgYbW/pfK5hoPvQBIGyZULL1SBIVIgvsC0?=
+ =?us-ascii?Q?6OpdNrUM4Uu2XNFY2lFNCZce5cXDUcUKZYb3X0z891KRMe1Ac4qetBafGRfA?=
+ =?us-ascii?Q?Lc789aizY1J3/q1haj7ChbZscRtGii8rwsux+KXhp/vjrwT5hZUgAIaCBjRi?=
+ =?us-ascii?Q?SsKxSKYa7TN07G5VHWCJM+cwRmQzIugfEmClzc7aJYd/oxQJ0Sr/bzfixb+Y?=
+ =?us-ascii?Q?iCdCiPtwHuI3ugt2NlUKuFKwuCncKXaenAgBgz9iuMIdrMjnR4WpsfO3821S?=
+ =?us-ascii?Q?d5VEPplSXlwps7vEwZDyjV5+EUr6GRALrM0Kyhukc7YBHue8bmlI00/6C/VF?=
+ =?us-ascii?Q?QMLJXDe8Mx/3wKqcb00RlHxDJVINU24v6/j+ZS7B5Wt3rZBZ8iJRnk/8QX2s?=
+ =?us-ascii?Q?NUcJWgv8001zsg5aTnc01oSf6FBgQgYOs09uhwFXhT5+/31rZSnVSN7BzKYu?=
+ =?us-ascii?Q?13lqh27L5gYKK83twZAO67/MPokIpBDF40vC4BQz5/TTdIU+96OZk8vqjxNh?=
+ =?us-ascii?Q?zx1ppRqOeLg25Raa6/GIsjHIEXU4F2l85MuJWXauvYbAE+xMSRez+RLZ5I+E?=
+ =?us-ascii?Q?wojf8g1KUGNoo7eZ1qRSF80wUpTpMpPKN1lnei6oY0/kHIMa+IvvpdXAjySM?=
+ =?us-ascii?Q?EwNlYq7k4YOepTAQOHK4nz9hnfFFH40n?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(10070799003)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bLqHYW3hWW2Ak0Y+3zKiHqOshVsiz4cxQDqmu7oXx8+5nSBkwIgcfY58ibs9?=
- =?us-ascii?Q?AizHGAqW6jO4OneiOI1zDu02E8/5kDKp1iGaKBXfQ1uJ+AZ/UQmcqx2RUP14?=
- =?us-ascii?Q?24NVs8v9yQOY+8PRBxyqKW5eHwpRNxdSvL1LjDzA+hKfjs6bC7oMFzy6Bcv7?=
- =?us-ascii?Q?2vP0bLC+XxjnVgpAKOPZbUfBDEQ9Bl3sYH7Syr+G6YLSe8Yc19QdpHgfJ/QE?=
- =?us-ascii?Q?tf77vVSSX/4Qgz3h5E8qRe60W07zmEYdP7ijhcyLdmfn1Vec9P1vXEvmDd10?=
- =?us-ascii?Q?O7Oe4kaQ+B3ygNpeNAxEknnm6t+jwH8U037TgARpfpnYSnMvcq3MmuyG5Qa9?=
- =?us-ascii?Q?lHZFRZzB2dizvH6yjiDlTGmF30H5CCGysop0mgAlZQZsPsBiXKOWFWHu4oPc?=
- =?us-ascii?Q?QcqMQzt4A516QbQ67bao8VkULconUlZFI2wBjcz2Exf7wBs1Ur+69t083nrd?=
- =?us-ascii?Q?CDvqCGsqYQp7imf2HWVZ4l7+yPqJQF4AjRH2mwhR5/+MkAivXXDak/U7SFra?=
- =?us-ascii?Q?/nJIJg4+Y+40i8kP5bPwCw9DZmpAcWdYbiw/7kkO52a9b3Xj6mZsJQvb55mX?=
- =?us-ascii?Q?4AmNIjo0hCodyiEw0RJOMgiZ+i5rt7FBwKpTj6zi7Ke+wmLdfLIYzzoP5xyI?=
- =?us-ascii?Q?hFTeH89ooaLBdzTQY9c2+KdKrZXZ9dpMAEtZPPNXmcoGmH7tW64JsSSnf0Lo?=
- =?us-ascii?Q?3YLaS+827ok7D8y1d8sC2b5/D8y3PY1xvx1SHv49Qs8qJsORCc2exqNlpHxg?=
- =?us-ascii?Q?h5D2yD7Mvf6qn09YbWpy1b+Z7INFpCsIIBqtvQ9F0iafsjhumZAfxJh3OYiv?=
- =?us-ascii?Q?RnsrShiTs/VGfuOBRhkKKJHesL570X6A1PTdXeZ3HbA/uAd6r2uVUW2i64wH?=
- =?us-ascii?Q?RW5uJIAezV/xUZdq+ZTPp0eVQEhZJehNckEcv3p1Kjonnr/Z9VJ0oO2IHvXs?=
- =?us-ascii?Q?o+EREuxW35X6FVVXBqvyDe5Wp/LemzFKH/t8CYJ2eq3zIa23NJlE7qN6pfGL?=
- =?us-ascii?Q?ePMI5LLA2Y0+BJ6J5rAfTypJ30Fd1p/+OuI+FydOfI4xtZBA1oJrr3iYLXH8?=
- =?us-ascii?Q?YrYWZ9S5yTnquKv986n0yJNHoCyB6N1WhufKqptfF8qvGCbiQaKMjNDiQUop?=
- =?us-ascii?Q?ws1Erc+S7IFEeg848W8J9sV9YgcEo617MeuTttfbPdCO/fdoOkbC1/QbVSTa?=
- =?us-ascii?Q?4x37Ex17hjQtvVi43ala2mYLj5l3JKZgAEu9CfvqMF95HPF5VGgIVsNJQz8h?=
- =?us-ascii?Q?HTe93NSXIDU/0tQ9woGsDc17fmpcCy86h/Zh1Oxw/dl1FE5YfOGNTgH4GBfH?=
- =?us-ascii?Q?lo7XJiEYIhDTZGcHZCqQ8gTWSkWZF7yGo/JMMv15h1U6d3HyfZ3WNwhapHqC?=
- =?us-ascii?Q?LxBTGf/Yz5zmmJA9SyeItUOKRDsXgsir5GsN8R8do8rKAjrcNRU1oGW79rc9?=
- =?us-ascii?Q?axIS+4LfeEKuzyvalkIiOhANwQQZSpVxHJ/2Q3o2uY3kqCQdsowI0DTzbqcm?=
- =?us-ascii?Q?qFvBQzmIq2giWAljNTZcBhgIukS4ZqSMjQflw74gb3MqbSPB4ZpEa0e6n/MP?=
- =?us-ascii?Q?h4JHENQLFYI1Y5yXUrTGczpiNlZRqVwOBjHCoxS1fLcjHVtL4NtcFRAOuohU?=
- =?us-ascii?Q?/TzrJPoz6dlabbrjmQQl8Sw=3D?=
+	=?us-ascii?Q?TODbqSpMRtddSOZR9hPo5hUbWO6QS44gB84nBbNKqUZvPf7x2WeS/nfvPvxy?=
+ =?us-ascii?Q?QfKh6wO/Ry2Z8G8I4WBpSwSEbhNekuEwKtfahqphNtUQvWyrooUiIlNwirpp?=
+ =?us-ascii?Q?BHNVXRoGWim/hJzrD6fFZgqqfRoVnJ6gNZNWv1zyGp376rZQwZle0NauLI9l?=
+ =?us-ascii?Q?0/2fIfVwMMz62lRDriaqPHxs9ypVowtqY/loUKIqGK+ieVGK1wpGD29Nm0X4?=
+ =?us-ascii?Q?0FYxtf2T5iXrNsp7i+U2zDvajkPEejRcdW1Ftb/ZNzMqltuvDiHuBvKWj/77?=
+ =?us-ascii?Q?rKer+0CqxNmovyZXW1aRJoum7cFsknkoHp1GggjQaxtBwRiWz21/o+bBB8La?=
+ =?us-ascii?Q?k5SagymLi3cUZfvUzFCTB1h8dK+MBT6BdHRCwUp8z28KpYhB2GNXaf6zRh1z?=
+ =?us-ascii?Q?krXqql827psL9bgF+GgZ7hCm5D3ZnFXaURsVFjNCKLu/PKVJItON4FGmwL6K?=
+ =?us-ascii?Q?ii7PKe4sGkOuTpnWwBhwIDwmhxPzzh2NHX8FtCZ9LGfxIv9TJkmqsbN1g15e?=
+ =?us-ascii?Q?ZjE5LV4ieQGlsiOncaMZtmI0EvNFDxENvgvpz0KK0dAqrYBC97Q+ju3spPB+?=
+ =?us-ascii?Q?SHUvzltYWtgNNbNwbxAXjaGfE8XPICSzsABOaNBYcyw9guQKPIP5QGugx17I?=
+ =?us-ascii?Q?fmDepnXDfbaFtR2h+bYdCc3+NrtqWjy3JhXrA5dHKUb/65hbvz0yMELnSAxo?=
+ =?us-ascii?Q?rH3lRpFguBB6rUnvxox4W9N+x1S1yykjDmS3R0J+omKauZqGETdJeQd5+6av?=
+ =?us-ascii?Q?sQ6QnBvJ53J5VchdDDjdiPEwrKhOAow1euHS3xoa8rR0ma/SOxGeouWjcIjs?=
+ =?us-ascii?Q?4OBZVQjUKs8exUP4n7Q/eHVJoVPmvCJPHPDb50bl5eKj1CSDuCMahq8b2Khn?=
+ =?us-ascii?Q?cReNqlutSzhEPGvnBCUtus0TfI2jOphEahXEL372d5c1rgDeMKQx4mCFTHy2?=
+ =?us-ascii?Q?0LWjHzCoGVqdVo5eeO/zOaSxRnG/D/J+ihHWr54O1bo1l3vRG6yxnMvUnc71?=
+ =?us-ascii?Q?nBwNMiP0xpXEXdka4kfIpIZ/+GGobl3H3G64axLeQ8wz8qEg50eyeMufMasd?=
+ =?us-ascii?Q?XZXmhFglsOAW5dkWrE4om+5bN4jZ0g0po6UQBCiuN2rOA/O/rf7QUj4QcPo6?=
+ =?us-ascii?Q?uxqar1FXnpz98lL55TWCNA8QVmcFD4gE77sHGtUmi+dvqMZV4I0IF6L0fA6p?=
+ =?us-ascii?Q?NWuaWzxvB7txCWJUGJJLC3Ps0k+/zuYMyImAKIok5OBnAvkuYaPMAjHNCTCQ?=
+ =?us-ascii?Q?O+y6IZvRXOMjCQtd04UxxdQRYbrf9rH6EQ4fWVPfs3mn64nfzAPjZPuOxH1N?=
+ =?us-ascii?Q?6QVeQC8cg7iKmBqP9BH6sxvPYuYetoTSkriXOLQ63diShBDY3PHgEi+133w3?=
+ =?us-ascii?Q?2VbwnQsJUCGZ6wS1yGc1XIR5PWX9WMnIUk0BQKlzDjfqDVe67oA4R0DWuk8t?=
+ =?us-ascii?Q?Gq7PphFp8CXB1dhdPwoJBC3B+CddKvyUmh2UJ1Lo1ZoKjBlSGJiE+2NA8l6E?=
+ =?us-ascii?Q?jHUK9n2LfpGnC+l3FtuXqnj1/9nulOVCCwOM/VDwC/g8+FwyznDav34U3eca?=
+ =?us-ascii?Q?iXLJ5s8XLEOSiR42HkmhefruNMt36tVuMlthdOwKP7VLWqFt2ADbbb6coNxd?=
+ =?us-ascii?Q?jQRywO/kfYEr8sTlKCBHplM=3D?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4f302e8-3ca2-4242-58bc-08de3d7f48bb
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52e5d0e4-7ff5-411f-03a4-08de3d7f4937
 X-MS-Exchange-CrossTenant-AuthSource: TYWP286MB2697.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2025 15:16:42.4198
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2025 15:16:43.2285
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: p62KTlN83cAZQl6OLISeg+irWBGnY6CvKdBI3Zr/hT/Z5wIug4xjeQw7E10RIdgc2/FaBxNLZQ53vtd+ljRHQg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8OrsiPET/W9IY9CcFYdoG0DgklRJGy8JesSb8xG13F2M1v2mv0bCc/IN2mY4+7lYSAszsnW+qVuARamdLJo3ZA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCP286MB2863
 
-Add dedicated DTs for the Spider CPU+BreakOut boards when used in PCIe
-RC/EP mode with DW PCIe eDMA based NTB transport.
+To enable remote eDMA mode on NTB transport, one additional memory
+window is required. Since a single BAR can now be split into multiple
+memory windows, add MW2 to BAR2 on R-Car.
 
- * r8a779f0-spider-rc.dts describes the board in RC mode.
+For pci_epf_vntb configfs settings, users who want to use MW2 (e.g. to
+enable remote eDMA mode for NTB transport as mentioned above) may
+configure as follows:
 
-   It reserves 4 MiB of IOVA starting at 0xfe000000, which on this SoC
-   is the ECAM/Config aperture of the PCIe host bridge. In stress
-   testing with the remote eDMA, allowing generic DMA mappings to occupy
-   this range led to immediate instability. The exact mechanism is under
-   investigation, but reserving the range avoids the issue in practice.
-
- * r8a779f0-spider-ep.dts describes the board in EP mode.
-
-   The RC interface is disabled and the EP interface is enabled. IPMMU
-   usage matches the RC case.
-
-The base r8a779f0-spider.dts is intentionally left unchanged and
-continues to describe the default RC-only board configuration.
+  $ echo 2       > functions/pci_epf_vntb/func1/pci_epf_vntb.0/num_mws
+  $ echo 0xE0000 > functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw1
+  $ echo 0x20000 > functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw2
+  $ echo 0xE0000 > functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw2_offset
+  $ echo 2       > functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw1_bar
+  $ echo 2       > functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw2_bar
 
 Signed-off-by: Koichiro Den <den@valinux.co.jp>
 ---
- arch/arm64/boot/dts/renesas/Makefile          |  2 +
- .../boot/dts/renesas/r8a779f0-spider-ep.dts   | 37 +++++++++++++
- .../boot/dts/renesas/r8a779f0-spider-rc.dts   | 52 +++++++++++++++++++
- 3 files changed, 91 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a779f0-spider-ep.dts
- create mode 100644 arch/arm64/boot/dts/renesas/r8a779f0-spider-rc.dts
+ drivers/ntb/hw/epf/ntb_hw_epf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index 1fab1b50f20e..e8d312be515b 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -82,6 +82,8 @@ dtb-$(CONFIG_ARCH_R8A77995) += r8a77995-draak-panel-aa104xd12.dtb
- dtb-$(CONFIG_ARCH_R8A779A0) += r8a779a0-falcon.dtb
- 
- dtb-$(CONFIG_ARCH_R8A779F0) += r8a779f0-spider.dtb
-+dtb-$(CONFIG_ARCH_R8A779F0) += r8a779f0-spider-ep.dtb
-+dtb-$(CONFIG_ARCH_R8A779F0) += r8a779f0-spider-rc.dtb
- dtb-$(CONFIG_ARCH_R8A779F0) += r8a779f4-s4sk.dtb
- 
- dtb-$(CONFIG_ARCH_R8A779G0) += r8a779g0-white-hawk.dtb
-diff --git a/arch/arm64/boot/dts/renesas/r8a779f0-spider-ep.dts b/arch/arm64/boot/dts/renesas/r8a779f0-spider-ep.dts
-new file mode 100644
-index 000000000000..6753f8497d0d
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a779f0-spider-ep.dts
-@@ -0,0 +1,37 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Device Tree Source for the Spider CPU and BreakOut boards
-+ * (PCIe EP mode with DW PCIe eDMA used for NTB transport)
-+ *
-+ * Based on the base r8a779f0-spider.dts.
-+ *
-+ * Copyright (C) 2025 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+#include "r8a779f0-spider-cpu.dtsi"
-+#include "r8a779f0-spider-ethernet.dtsi"
-+
-+/ {
-+	model = "Renesas Spider CPU and Breakout boards based on r8a779f0";
-+	compatible = "renesas,spider-breakout", "renesas,spider-cpu",
-+		     "renesas,r8a779f0";
-+};
-+
-+&i2c4 {
-+	eeprom@51 {
-+		compatible = "rohm,br24g01", "atmel,24c01";
-+		label = "breakout-board";
-+		reg = <0x51>;
-+		pagesize = <8>;
-+	};
-+};
-+
-+&pciec0 {
-+	status = "disabled";
-+};
-+
-+&pciec0_ep {
-+	iommus = <&ipmmu_hc 32>;
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/renesas/r8a779f0-spider-rc.dts b/arch/arm64/boot/dts/renesas/r8a779f0-spider-rc.dts
-new file mode 100644
-index 000000000000..c7112862e1e1
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a779f0-spider-rc.dts
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Device Tree Source for the Spider CPU and BreakOut boards
-+ * (PCIe RC mode with remote DW PCIe eDMA used for NTB transport)
-+ *
-+ * Based on the base r8a779f0-spider.dts.
-+ *
-+ * Copyright (C) 2025 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+#include "r8a779f0-spider-cpu.dtsi"
-+#include "r8a779f0-spider-ethernet.dtsi"
-+
-+/ {
-+	model = "Renesas Spider CPU and Breakout boards based on r8a779f0";
-+	compatible = "renesas,spider-breakout", "renesas,spider-cpu",
-+		     "renesas,r8a779f0";
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/*
-+		 * Reserve 4 MiB of IOVA starting at 0xfe000000. Allowing DMA
-+		 * writes whose DAR (destination IOVA) falls numerically inside
-+		 * the ECAM/config window has been observed to trigger
-+		 * controller misbehavior.
-+		 */
-+		pciec0_iova_resv: pcie-iova-resv {
-+			iommu-addresses = <&pciec0 0x0 0xfe000000 0x0 0x00400000>;
-+		};
-+	};
-+};
-+
-+&i2c4 {
-+	eeprom@51 {
-+		compatible = "rohm,br24g01", "atmel,24c01";
-+		label = "breakout-board";
-+		reg = <0x51>;
-+		pagesize = <8>;
-+	};
-+};
-+
-+&pciec0 {
-+	iommus = <&ipmmu_hc 32>;
-+	iommu-map = <0 &ipmmu_hc 32 1>;
-+	iommu-map-mask = <0>;
-+
-+	memory-region = <&pciec0_iova_resv>;
-+};
+diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
+index efe540a8c734..18d27ba9b6f4 100644
+--- a/drivers/ntb/hw/epf/ntb_hw_epf.c
++++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
+@@ -826,7 +826,7 @@ static const enum pci_barno rcar_barno[NTB_BAR_NUM] = {
+ 	[BAR_PEER_SPAD]	= BAR_0,
+ 	[BAR_DB]	= BAR_4,
+ 	[BAR_MW1]	= BAR_2,
+-	[BAR_MW2]	= NO_BAR,
++	[BAR_MW2]	= BAR_2,
+ 	[BAR_MW3]	= NO_BAR,
+ 	[BAR_MW4]	= NO_BAR,
+ };
 -- 
 2.51.0
 

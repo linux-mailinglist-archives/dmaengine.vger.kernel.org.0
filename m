@@ -1,77 +1,77 @@
-Return-Path: <dmaengine+bounces-7751-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7753-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1819BCC81EB
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:16:40 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C96E2CC816A
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:10:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9EBE5308E672
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 14:10:55 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 996E03008BC4
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 14:10:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E041B37A3E0;
-	Wed, 17 Dec 2025 13:52:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE0237C110;
+	Wed, 17 Dec 2025 13:52:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="l+sXsQ2O"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="MBAqUXyC"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D13928C87D
-	for <dmaengine@vger.kernel.org>; Wed, 17 Dec 2025 13:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6083563D8
+	for <dmaengine@vger.kernel.org>; Wed, 17 Dec 2025 13:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765979554; cv=none; b=PEKo8E0aFc7kfITSvpFLNSn8AysxdS42tj+Akd/tlOXf/fBRrhWZ3k8WteN3olpozj/CfwUaefd7iKDUSQyZo3WZCvO5q1Q305TcVir9k+Bvc9U/s/XrZrF+XPeMeh+iwXrN0hZ5/s+tbLi8nygS5oQazx/PdRPmtB8qdnyxlX0=
+	t=1765979558; cv=none; b=t1CNSkZ+Gu07izpfqTSHRj2UzsHarJwZ/BFuUz8mya8j/Zu8cwwcF0DuKL/w8Nn6g7WKl2fbhSyZZJjADqlwJXK65+bqyj8eEby5e8YBhgZZ6HjYe4wF8sKJOzow9oqhfjTvWV3dE5eVZLKJjYLvEDj9KBF0HCPO/qPkipNBS/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765979554; c=relaxed/simple;
-	bh=D2T7TmmZbGv18Uh8J4cdBHWJXJAc+GOKLv2WgixHQ6A=;
+	s=arc-20240116; t=1765979558; c=relaxed/simple;
+	bh=gEmoRtjLtJIWXeIxbyc1ZwCZe9AbS1c3qYMrSFz21rg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VLodLaUYp3TQsPXPYP9CoaNo5ZF8hNxh7M2pVU8JmvXFMNmMV87bWX35dullkCp0naQJBIK07876r+Gbhk9khl3sUHDyufHlUnya44+Uf5BmQ3TCh7gdNC+bHAI3k4Rf9/6XxKRYGVuIsJBAdZhW5vcPOgl6ya1nLb6XK0yKw6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=l+sXsQ2O; arc=none smtp.client-ip=209.85.221.47
+	 MIME-Version; b=o8qIY3Ah/v+GB0vWj5U1kWkrw8XDjAXQSkhhHd7OBH+VeuEAuBcBq3kuCng4brvOh8FJ2ig20DRihKjQ5QVB4qAFblhFBmFbG9OPbuSfYTolZfxxPpNSq+dsf7o3cQKFKqYfm9fOcJUQk5JLZSGNA/OlOn9CQTZmSayU7pA5Wv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=MBAqUXyC; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-42e2e3c0dccso3174588f8f.2
-        for <dmaengine@vger.kernel.org>; Wed, 17 Dec 2025 05:52:30 -0800 (PST)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-430f3ef2d37so2957928f8f.3
+        for <dmaengine@vger.kernel.org>; Wed, 17 Dec 2025 05:52:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1765979548; x=1766584348; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1765979549; x=1766584349; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OiurWDqD087A+2PBJW62gWLArV1oM1DnASwOeXGS6o4=;
-        b=l+sXsQ2OOTrJj+cmkO6cJcjLJM67rKvXtJU8F/MzaxcxCHNrRs3ufrk4lEDk3bGnBH
-         146y1mKHl5xJ5viXsnLkQl4aBkeFd/qgLhuElDFeKU0Tuw3E1hJayYzFpIaI9AaxJDjR
-         CoTpNSuAYUq56xkndS5K12Txg467ztZT+sprHmQochdVHSwVqJ5tEKIdYWb52uRp5kgB
-         Utium2ZbAiSTWzSJO41JMTZ8TNJL0AQhmnpWpBTO4mFNC0d+E5r2EyMWG/jqZxU9Q8NI
-         RTsEwvR31II+AF7k+aAHiqER4YUxakNdHc7SHB98sRhr6SqHAfit+1UkyBUJ1u4HcVbj
-         pb+Q==
+        bh=zGVStpQwPomlTdstFsandqO2eIQ1hd4Sclxyb3yiqx4=;
+        b=MBAqUXyCqdf5c1rgnBVnMqf5nLaB6TW/OIrvqEHlB3bTxHe2Q+9eyiu/8JaBTNjkLk
+         FYy6WTKM7ydojbdWWPM7wSkROg+uGXPARNNebu/kSsSNDFhtJ7nMlWbnPL8pOOLC/eXE
+         jCV68UOKrdqG6AudBHUEFCHZewJIaEGzOIP5KjaQIp/3MyxjJ3O/PnJX0DxrfK0vtmVD
+         KMC/WpWUfYXHzPZOaMQbzKar2gCh5uAPrQd72lCA7PXiQQzECXjl1fNyWsScqY165BNI
+         Fp3WJny1p+nZIHWtaIEqMmY6wbYSpm6Ivu6Ahbo5hrv+RE13L/6rlHiK6o4Uv1aGFm9e
+         KTXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765979548; x=1766584348;
+        d=1e100.net; s=20230601; t=1765979549; x=1766584349;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=OiurWDqD087A+2PBJW62gWLArV1oM1DnASwOeXGS6o4=;
-        b=V/THYoVqNDy3gjge5P7U2dBpO1n+KY35BXgBjOZkBMz8kOHDE51INh3/qk5dimv8B9
-         mmDptz8gOe1HrtVQNHsRRrjO2bGoPmme/778l6z+qwPH6AW+uglppLXM9l4OUzBDXIvk
-         0DdHQSfLhRs+6z8aAVWbSPeqV4g0WsRZ7Zc7W7S3VBHLLxxfZwnWBK6K3JecdWZ68eYI
-         5IRIo+W676yPa9dnUmJqpXGvg4z3UOND6V0mRae4uXj/SR/SpoxFoJaSGKos4gkiwEQD
-         0TfKC8Xw/Exjhx9O9IUCRHY3sUg5k3I5gcT57kCfMFdKoZPmKuiJcCkMOMB9lV/V+FEj
-         uMOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWT5sResFH53Vj9YQejnjHYeqmzkQE0dSa88EYGKTkoZTN832PQpNpu6p2UCbV938hM0YpeGnGRWFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBflkrHwK/icR3i7XErkJCpJ+7GqOSpunf8G65+epA3zblRmRD
-	qjtpv836pCI9NLHaq9R8H6Z7fBmYgLS/4k3sNIbbvzhF2GpTVgpAI1SXQFN3M8F0f5U=
-X-Gm-Gg: AY/fxX5h62iibB/tzI0BHnR1KNXdwEjGyEkM3zcBr/Abs2j21d+qTv0I2q+pcrPjh7+
-	pZxusmaeYdnccCnC2ET6Mb190Ns5xFzgE3Xftt3LJ3FGNIrouK5DFhTLwi01GifyqwSkQLEFJNs
-	94gq4uTVplSZ9bwExkieehXBiyc3cvS+UVrdQlUzOiHcf2I0I+CA7DWYFFVFeQ3hKSNCcNy/Si4
-	Yzsq1oZSpSujSRys+ctrI8lmHuL4BhJbIOCTlsaqru3C48OyGsWA9paIEbJFxJ++0ncmSNx2qn0
-	+Sm3JURnrh1p5QEpqqbTc1SzVK7udNA1X3iiUWv+l/4zzWmuKCX3sOACnIswOJYonP5XrnSvr7C
-	edUmqwADilinvvcw3kYOH2WKylm6XUkyflBDfmrVYzQQxkk2iaEk8GLVti1pMzKPI/1rhwjix10
-	kFrnwG2ZGoTton8yvDkZLV2zGtBa88myq3BlyzLb9L
-X-Google-Smtp-Source: AGHT+IFBGJjaVHWPYOnuom4x2tvqUJvMTQ6WQNn312V9kRaikBmwm+H4UADRXnDowE0AWwmip+iF/w==
-X-Received: by 2002:a05:6000:420a:b0:430:fced:90a with SMTP id ffacd0b85a97d-430fced09ebmr9829622f8f.16.1765979548201;
-        Wed, 17 Dec 2025 05:52:28 -0800 (PST)
+        bh=zGVStpQwPomlTdstFsandqO2eIQ1hd4Sclxyb3yiqx4=;
+        b=Z25Il657C8AHsMa2SRdVY7SZMPpmcWWEhR9YvoUrB83lvwlv3WVf7OfZbdLQ1eRhV8
+         z/MWh7ea/Vq6Jdsvcm1tRBI1MB1kQyY/FeQcYsL8XmixX4Gfcs3m6ReN578jZZ2Q+izY
+         fB756ve1dGtglxOxDAJn2GVUxzE/zf57zgaVR22+DRVUb7YNXdONV+xaxVegtRBuT8G0
+         DnC9TJ4sFpRFgoktGPDBdpyLCWCp1QAfFrXAGtSnapgMdMkPfoWhj+BwAtUWFLHIggP2
+         gxWFRuCz90E365BvOAURQ4C1dEGUYCrpCX+yEDBYDPYHjuiJSViL5v8KFdWnNDOIw3x9
+         4rpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0L+rumopvSLsoXUczK8Dym8ZZ6HCEteJVv2juh7+l1WZJBsbI3MnSAY+H0Fhf3z0vYMfsepl/okM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/9KQ73HjPoXeBv4leTu7d/RuNcXCSL+oprnoTXNJ9FZzeoy8F
+	QvLnrBLPDJZJIf7JcY30ecctqL+HE4HPqVUi44cXnqhFiRabC8rxsGBfJtfojqCloHU=
+X-Gm-Gg: AY/fxX5X2VBmqvjlG++UOSH9HU6Mro6ZUmFuHxHGsgdkQ9ZbPXowfcJvX67pC7PRKXz
+	mZ6oKDNn9t5epqiBHQ2cIoecicPJL4C9mgF9APFNkYBGxxLo3LWbnjb+YWe5e9K5skfSFLCqqPN
+	8BlBp/fPz8e4FOB08PR3XUnKd/OVqIGpLYAtqaKVE2dIuyn9q++F0JkmTKmKm5+VzrjaQYRViIf
+	nwUqaU1IBFh70Z5mzz+0UpXCrjKuRVMfOwS7HU0Kp7KVL1gOiCyPtmDNkacRrbvVm0lEAnyWVcF
+	7p9X35YEWk8QsCPs+vhXkxx0nBPrHS8EV9OMIbAPzunNANoI1xI9hVSyUwyNpJY7dBXWao8t9rD
+	83U7DKHzZUS41XFg0gsr4Zn8aa1cvj1jIfGAXKLWduO3vIIRMt6F0EDZBW/u5LHK8BwEXeCbK64
+	388L3Kiebn+/VRVZtW4u26nmXa225aqZbjXFMGMe/Y
+X-Google-Smtp-Source: AGHT+IED9HanqqLjN0QtB0ReE4lGpkn+FHqD4ofAHtZbJtmJpbrl0xl9aY+9K4+DrVBoQRCemkHTLg==
+X-Received: by 2002:a05:6000:4202:b0:431:1ae:a3d0 with SMTP id ffacd0b85a97d-43101aeacf1mr10038607f8f.25.1765979549499;
+        Wed, 17 Dec 2025 05:52:29 -0800 (PST)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.134])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4310adf701csm4508000f8f.42.2025.12.17.05.52.27
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4310adf701csm4508000f8f.42.2025.12.17.05.52.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Dec 2025 05:52:27 -0800 (PST)
+        Wed, 17 Dec 2025 05:52:29 -0800 (PST)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: vkoul@kernel.org,
@@ -82,11 +82,10 @@ To: vkoul@kernel.org,
 Cc: claudiu.beznea@tuxon.dev,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v5 2/6] dmaengine: sh: rz-dmac: Move all CHCTRL updates under spinlock
-Date: Wed, 17 Dec 2025 15:52:09 +0200
-Message-ID: <20251217135213.400280-3-claudiu.beznea.uj@bp.renesas.com>
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v5 3/6] dmaengine: sh: rz-dmac: Drop unnecessary local_irq_save() call
+Date: Wed, 17 Dec 2025 15:52:10 +0200
+Message-ID: <20251217135213.400280-4-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251217135213.400280-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20251217135213.400280-1-claudiu.beznea.uj@bp.renesas.com>
@@ -100,63 +99,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Both rz_dmac_disable_hw() and rz_dmac_irq_handle_channel() update the
-CHCTRL registers. To avoid concurrency issues when updating these
-registers, take the virtual channel lock. All other CHCTRL updates were
-already protected by the same lock.
+rz_dmac_enable_hw() calls local_irq_save()/local_irq_restore(), but
+this is not needed because the callers of rz_dmac_enable_hw() already
+protect the critical section using spin_lock_irqsave()/spin_lock_irqrestore().
 
-Previously, rz_dmac_disable_hw() disabled and re-enabled local IRQs, before
-accessing CHCTRL registers but this does not ensure race-free access.
-Remove the local IRQ disable/enable code as well.
+Remove the local_irq_save()/local_irq_restore() calls.
 
-Fixes: 5000d37042a6 ("dmaengine: sh: Add DMAC driver for RZ/G2L SoC")
-Cc: stable@vger.kernel.org
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
 
 Changes in v5:
 - none, this patch is new
 
- drivers/dma/sh/rz-dmac.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/dma/sh/rz-dmac.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
 diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index c8e3d9f77b8a..c013bf30fa5e 100644
+index c013bf30fa5e..ae8a4bd9d7fa 100644
 --- a/drivers/dma/sh/rz-dmac.c
 +++ b/drivers/dma/sh/rz-dmac.c
-@@ -298,13 +298,10 @@ static void rz_dmac_disable_hw(struct rz_dmac_chan *channel)
+@@ -267,15 +267,12 @@ static void rz_dmac_enable_hw(struct rz_dmac_chan *channel)
  {
  	struct dma_chan *chan = &channel->vc.chan;
  	struct rz_dmac *dmac = to_rz_dmac(chan->device);
 -	unsigned long flags;
+ 	u32 nxla;
+ 	u32 chctrl;
+ 	u32 chstat;
  
  	dev_dbg(dmac->dev, "%s channel %d\n", __func__, channel->index);
  
 -	local_irq_save(flags);
- 	rz_dmac_ch_writel(channel, CHCTRL_DEFAULT, CHCTRL, 1);
+-
+ 	rz_dmac_lmdesc_recycle(channel);
+ 
+ 	nxla = channel->lmdesc.base_dma +
+@@ -290,8 +287,6 @@ static void rz_dmac_enable_hw(struct rz_dmac_chan *channel)
+ 		rz_dmac_ch_writel(channel, CHCTRL_SWRST, CHCTRL, 1);
+ 		rz_dmac_ch_writel(channel, chctrl, CHCTRL, 1);
+ 	}
+-
 -	local_irq_restore(flags);
  }
  
- static void rz_dmac_set_dmars_register(struct rz_dmac *dmac, int nr, u32 dmars)
-@@ -569,8 +566,8 @@ static int rz_dmac_terminate_all(struct dma_chan *chan)
- 	unsigned int i;
- 	LIST_HEAD(head);
- 
--	rz_dmac_disable_hw(channel);
- 	spin_lock_irqsave(&channel->vc.lock, flags);
-+	rz_dmac_disable_hw(channel);
- 	for (i = 0; i < DMAC_NR_LMDESC; i++)
- 		lmdesc[i].header = 0;
- 
-@@ -721,6 +718,8 @@ static irqreturn_t rz_dmac_irq_handler(int irq, void *dev_id)
- {
- 	struct rz_dmac_chan *channel = dev_id;
- 
-+	guard(spinlock)(&channel->vc.lock);
-+
- 	if (channel) {
- 		rz_dmac_irq_handle_channel(channel);
- 		return IRQ_WAKE_THREAD;
+ static void rz_dmac_disable_hw(struct rz_dmac_chan *channel)
 -- 
 2.43.0
 

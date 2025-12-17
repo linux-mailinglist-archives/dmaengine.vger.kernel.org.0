@@ -1,77 +1,77 @@
-Return-Path: <dmaengine+bounces-7753-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7752-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C96E2CC816A
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:10:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E44C4CC8158
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 15:09:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 996E03008BC4
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 14:10:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 86D1B3081D48
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Dec 2025 14:03:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE0237C110;
-	Wed, 17 Dec 2025 13:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75CDE37C0E0;
+	Wed, 17 Dec 2025 13:52:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="MBAqUXyC"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="LPRMhSfO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6083563D8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED1F346E4C
 	for <dmaengine@vger.kernel.org>; Wed, 17 Dec 2025 13:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765979558; cv=none; b=t1CNSkZ+Gu07izpfqTSHRj2UzsHarJwZ/BFuUz8mya8j/Zu8cwwcF0DuKL/w8Nn6g7WKl2fbhSyZZJjADqlwJXK65+bqyj8eEby5e8YBhgZZ6HjYe4wF8sKJOzow9oqhfjTvWV3dE5eVZLKJjYLvEDj9KBF0HCPO/qPkipNBS/M=
+	t=1765979556; cv=none; b=COURAuU2fNW69g9LgUvm2e8HpFSm0Uir0m+QQcjVo7rxM5CBeh24X0KXb6zL9QKFDvgAKA7qomOdv7DzVRivN8qBJrLpTE/hWJpqTUYfGgjOxK+xBe9Jv1wKnIUFze8DzLrKA8aO2cj/IrYXqDCaKcd99VO1AV9oKv5zxYJBGiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765979558; c=relaxed/simple;
-	bh=gEmoRtjLtJIWXeIxbyc1ZwCZe9AbS1c3qYMrSFz21rg=;
+	s=arc-20240116; t=1765979556; c=relaxed/simple;
+	bh=7JrTv0IRsL9KnStfX7nUQ6IVV3uIn2Bop0bK0zMenlU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o8qIY3Ah/v+GB0vWj5U1kWkrw8XDjAXQSkhhHd7OBH+VeuEAuBcBq3kuCng4brvOh8FJ2ig20DRihKjQ5QVB4qAFblhFBmFbG9OPbuSfYTolZfxxPpNSq+dsf7o3cQKFKqYfm9fOcJUQk5JLZSGNA/OlOn9CQTZmSayU7pA5Wv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=MBAqUXyC; arc=none smtp.client-ip=209.85.221.49
+	 MIME-Version; b=ViW+Q6tAdUfLWPYUqPHmR/ftL8h9M3CAsamszONKrzyF0G1JFIIUkiUhD0bqneHZhxlSSTWRBupSWJDC5EE37CHjgExu7Rsrb8KvoNmxWmVF0SdzUoYtyA2JH/05sW19qZ81dBDCnmZn+6qLE0XWlPmuYEaWCWVz0TtYhxc8kUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=LPRMhSfO; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-430f3ef2d37so2957928f8f.3
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4775895d69cso23376185e9.0
         for <dmaengine@vger.kernel.org>; Wed, 17 Dec 2025 05:52:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1765979549; x=1766584349; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1765979551; x=1766584351; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zGVStpQwPomlTdstFsandqO2eIQ1hd4Sclxyb3yiqx4=;
-        b=MBAqUXyCqdf5c1rgnBVnMqf5nLaB6TW/OIrvqEHlB3bTxHe2Q+9eyiu/8JaBTNjkLk
-         FYy6WTKM7ydojbdWWPM7wSkROg+uGXPARNNebu/kSsSNDFhtJ7nMlWbnPL8pOOLC/eXE
-         jCV68UOKrdqG6AudBHUEFCHZewJIaEGzOIP5KjaQIp/3MyxjJ3O/PnJX0DxrfK0vtmVD
-         KMC/WpWUfYXHzPZOaMQbzKar2gCh5uAPrQd72lCA7PXiQQzECXjl1fNyWsScqY165BNI
-         Fp3WJny1p+nZIHWtaIEqMmY6wbYSpm6Ivu6Ahbo5hrv+RE13L/6rlHiK6o4Uv1aGFm9e
-         KTXQ==
+        bh=+RF8g82ixW6GvXALrrpEyK6fcK8V7YLOR+NrlqZkXU0=;
+        b=LPRMhSfOb7UYec44CeVsJLNhS6pSE+AwqzV4S0n6ow4AKI6zpc5vHDTgUoS4erDCrn
+         C24BeVWYAcoT8mroZd9B1JSzSZP2DImOej+T/m4NqKq+ymJcbpv1MW8rfHh1GyWgIYbn
+         fMMNlqgjruUD1TdbRkKczn/J+IqywhlVw0zKtm06U3o60LQRVWDVVocVxSd1+qV9A1dD
+         3DXjDjNpbjz7IFAXA8XycsiXzlohc54rsXyN77h73YGUc8pMARP417aQ8D/wuOhVrQFd
+         BP+VvAg1/aGg+hByuJLBRQfT7lYxRcQBNU1aaJHTGp/vsttuvaShd3JuOf9xGNMlD0hc
+         IcPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765979549; x=1766584349;
+        d=1e100.net; s=20230601; t=1765979551; x=1766584351;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=zGVStpQwPomlTdstFsandqO2eIQ1hd4Sclxyb3yiqx4=;
-        b=Z25Il657C8AHsMa2SRdVY7SZMPpmcWWEhR9YvoUrB83lvwlv3WVf7OfZbdLQ1eRhV8
-         z/MWh7ea/Vq6Jdsvcm1tRBI1MB1kQyY/FeQcYsL8XmixX4Gfcs3m6ReN578jZZ2Q+izY
-         fB756ve1dGtglxOxDAJn2GVUxzE/zf57zgaVR22+DRVUb7YNXdONV+xaxVegtRBuT8G0
-         DnC9TJ4sFpRFgoktGPDBdpyLCWCp1QAfFrXAGtSnapgMdMkPfoWhj+BwAtUWFLHIggP2
-         gxWFRuCz90E365BvOAURQ4C1dEGUYCrpCX+yEDBYDPYHjuiJSViL5v8KFdWnNDOIw3x9
-         4rpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0L+rumopvSLsoXUczK8Dym8ZZ6HCEteJVv2juh7+l1WZJBsbI3MnSAY+H0Fhf3z0vYMfsepl/okM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/9KQ73HjPoXeBv4leTu7d/RuNcXCSL+oprnoTXNJ9FZzeoy8F
-	QvLnrBLPDJZJIf7JcY30ecctqL+HE4HPqVUi44cXnqhFiRabC8rxsGBfJtfojqCloHU=
-X-Gm-Gg: AY/fxX5X2VBmqvjlG++UOSH9HU6Mro6ZUmFuHxHGsgdkQ9ZbPXowfcJvX67pC7PRKXz
-	mZ6oKDNn9t5epqiBHQ2cIoecicPJL4C9mgF9APFNkYBGxxLo3LWbnjb+YWe5e9K5skfSFLCqqPN
-	8BlBp/fPz8e4FOB08PR3XUnKd/OVqIGpLYAtqaKVE2dIuyn9q++F0JkmTKmKm5+VzrjaQYRViIf
-	nwUqaU1IBFh70Z5mzz+0UpXCrjKuRVMfOwS7HU0Kp7KVL1gOiCyPtmDNkacRrbvVm0lEAnyWVcF
-	7p9X35YEWk8QsCPs+vhXkxx0nBPrHS8EV9OMIbAPzunNANoI1xI9hVSyUwyNpJY7dBXWao8t9rD
-	83U7DKHzZUS41XFg0gsr4Zn8aa1cvj1jIfGAXKLWduO3vIIRMt6F0EDZBW/u5LHK8BwEXeCbK64
-	388L3Kiebn+/VRVZtW4u26nmXa225aqZbjXFMGMe/Y
-X-Google-Smtp-Source: AGHT+IED9HanqqLjN0QtB0ReE4lGpkn+FHqD4ofAHtZbJtmJpbrl0xl9aY+9K4+DrVBoQRCemkHTLg==
-X-Received: by 2002:a05:6000:4202:b0:431:1ae:a3d0 with SMTP id ffacd0b85a97d-43101aeacf1mr10038607f8f.25.1765979549499;
-        Wed, 17 Dec 2025 05:52:29 -0800 (PST)
+        bh=+RF8g82ixW6GvXALrrpEyK6fcK8V7YLOR+NrlqZkXU0=;
+        b=ENqIlrDMZJRpv+jAd5mTY4MvJgP+OfziXvfJlAZ8E7HJ5pWQJhBKqMEHFsl13UPkKw
+         0tx6CVNNl6wibZROlHUG/XNJIc/5+vJtZ4pM+ViD+y1rcwPHmYE7/WzGxiYGdUAhnHrD
+         1oN7bfqZjx36VxSxG152lobhe1013iUJB/7kXs9/1kdacMxHssVQhFhkXKGWuBC4kUGL
+         hIHLphaLxqspRvFzod51N6AtJBcqTIDh0EJMHmM+Y3nIxAr906KHvfd0x73wlhP+dDMl
+         DWL5965HTUs0OCYwLKyi3XlV81oXdoxLTJ6CYvsh96GroqF8AOcSECyiLGgDBHPM7ilh
+         IzXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXBG+EqoJScLvda8SGiP+2Q+x50o0DYQPCPsqo0tULed+ZAKOPDMf79ifeR5lT4U+fXFHkkpJlmsqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXCAfWNKHz9ltlZWcbAjpSYT0n0cDJ6XApcF+1UZkO8Mv7PGS8
+	eLpHZ09/wfohPIdKKjXqvvym2JpyBEpvnopmaNmUae9Wf6orWs06axF3B7MYxVXaygo=
+X-Gm-Gg: AY/fxX4KPqbzlO3t6oQQAXUYwZcv2zu7aOyMnHLbhlV4R0nLVE46McagED13CZ1eLZJ
+	C1VcIBKVK78gAlmcSnkAsthTHgljaTdySWR1KsRufGqBPHl225fpjZg1tmrRcho2a8BCPuazqUY
+	N1f7g0JyZbNJLe2Jv6uo/ju5TbVi21XJ1tO/JTPUfuOGR2wepsSsRExs08bIiL97fZe90jKBhC/
+	PKdHcldtDbblIe/9pfWZQmFtDHkUNM71HAFHpjFfoMSyddQRYmFHsIJZvAvmTIBq+lXjLC6255r
+	XQ7yAlZSxdhOwqPGRxOxfLj5hU1igBGoUpfMyTmgKtak+1KLNjvVpH1Ys+1qEYiyAk/po9jM4cd
+	Hb+KdalUKTFMQtKCLPsOden2fOuDyueVT9RGmMNesGb7ufXuCOo9k81GPM8jHq81rfQkXwCgjRb
+	FOhhUyBZGUuO7IAUXZGR611pe4v9lyJG0ikoZQ68mB
+X-Google-Smtp-Source: AGHT+IGMOXN3SUPQAVr+4rMg2uhbTT6gszrPHta6YOzDTU42mejwVH5KVf8wsbz8i5OAbWyz3sVNMw==
+X-Received: by 2002:a05:600c:3495:b0:458:a7fa:211d with SMTP id 5b1f17b1804b1-47a8f90f364mr186111885e9.29.1765979550854;
+        Wed, 17 Dec 2025 05:52:30 -0800 (PST)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.134])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4310adf701csm4508000f8f.42.2025.12.17.05.52.28
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4310adf701csm4508000f8f.42.2025.12.17.05.52.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Dec 2025 05:52:29 -0800 (PST)
+        Wed, 17 Dec 2025 05:52:30 -0800 (PST)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: vkoul@kernel.org,
@@ -83,9 +83,9 @@ Cc: claudiu.beznea@tuxon.dev,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v5 3/6] dmaengine: sh: rz-dmac: Drop unnecessary local_irq_save() call
-Date: Wed, 17 Dec 2025 15:52:10 +0200
-Message-ID: <20251217135213.400280-4-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v5 4/6] dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+Date: Wed, 17 Dec 2025 15:52:11 +0200
+Message-ID: <20251217135213.400280-5-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251217135213.400280-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20251217135213.400280-1-claudiu.beznea.uj@bp.renesas.com>
@@ -97,52 +97,78 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+From: Biju Das <biju.das.jz@bp.renesas.com>
 
-rz_dmac_enable_hw() calls local_irq_save()/local_irq_restore(), but
-this is not needed because the callers of rz_dmac_enable_hw() already
-protect the critical section using spin_lock_irqsave()/spin_lock_irqrestore().
+Add rz_dmac_invalidate_lmdesc() so that the same code can be shared
+between rz_dmac_terminate_all() and rz_dmac_free_chan_resources().
 
-Remove the local_irq_save()/local_irq_restore() calls.
+Based on a patch in the BSP by Long Luu <long.luu.ur@renesas.com>.
 
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+[claudiu.beznea: adjusted the commit description; defined the lmdesc
+ inside the for block to have more compact code]
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
 
 Changes in v5:
-- none, this patch is new
+- adjusted the commit description
+- defined the lmdesc inside the for block
 
- drivers/dma/sh/rz-dmac.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/dma/sh/rz-dmac.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index c013bf30fa5e..ae8a4bd9d7fa 100644
+index ae8a4bd9d7fa..bb5677f5a318 100644
 --- a/drivers/dma/sh/rz-dmac.c
 +++ b/drivers/dma/sh/rz-dmac.c
-@@ -267,15 +267,12 @@ static void rz_dmac_enable_hw(struct rz_dmac_chan *channel)
+@@ -250,6 +250,13 @@ static void rz_lmdesc_setup(struct rz_dmac_chan *channel,
+  * Descriptors preparation
+  */
+ 
++static void rz_dmac_invalidate_lmdesc(struct rz_dmac_chan *channel)
++{
++	for (struct rz_lmdesc *lmdesc = channel->lmdesc.base;
++	     lmdesc < channel->lmdesc.base + DMAC_NR_LMDESC; lmdesc++)
++		lmdesc->header = 0;
++}
++
+ static void rz_dmac_lmdesc_recycle(struct rz_dmac_chan *channel)
  {
- 	struct dma_chan *chan = &channel->vc.chan;
+ 	struct rz_lmdesc *lmdesc = channel->lmdesc.head;
+@@ -456,15 +463,12 @@ static void rz_dmac_free_chan_resources(struct dma_chan *chan)
+ {
+ 	struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
  	struct rz_dmac *dmac = to_rz_dmac(chan->device);
--	unsigned long flags;
- 	u32 nxla;
- 	u32 chctrl;
- 	u32 chstat;
+-	struct rz_lmdesc *lmdesc = channel->lmdesc.base;
+ 	struct rz_dmac_desc *desc, *_desc;
+ 	unsigned long flags;
+-	unsigned int i;
  
- 	dev_dbg(dmac->dev, "%s channel %d\n", __func__, channel->index);
+ 	spin_lock_irqsave(&channel->vc.lock, flags);
  
--	local_irq_save(flags);
--
- 	rz_dmac_lmdesc_recycle(channel);
+-	for (i = 0; i < DMAC_NR_LMDESC; i++)
+-		lmdesc[i].header = 0;
++	rz_dmac_invalidate_lmdesc(channel);
  
- 	nxla = channel->lmdesc.base_dma +
-@@ -290,8 +287,6 @@ static void rz_dmac_enable_hw(struct rz_dmac_chan *channel)
- 		rz_dmac_ch_writel(channel, CHCTRL_SWRST, CHCTRL, 1);
- 		rz_dmac_ch_writel(channel, chctrl, CHCTRL, 1);
- 	}
--
--	local_irq_restore(flags);
- }
+ 	rz_dmac_disable_hw(channel);
+ 	list_splice_tail_init(&channel->ld_active, &channel->ld_free);
+@@ -556,15 +560,12 @@ rz_dmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ static int rz_dmac_terminate_all(struct dma_chan *chan)
+ {
+ 	struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
+-	struct rz_lmdesc *lmdesc = channel->lmdesc.base;
+ 	unsigned long flags;
+-	unsigned int i;
+ 	LIST_HEAD(head);
  
- static void rz_dmac_disable_hw(struct rz_dmac_chan *channel)
+ 	spin_lock_irqsave(&channel->vc.lock, flags);
+ 	rz_dmac_disable_hw(channel);
+-	for (i = 0; i < DMAC_NR_LMDESC; i++)
+-		lmdesc[i].header = 0;
++	rz_dmac_invalidate_lmdesc(channel);
+ 
+ 	list_splice_tail_init(&channel->ld_active, &channel->ld_free);
+ 	list_splice_tail_init(&channel->ld_queue, &channel->ld_free);
 -- 
 2.43.0
 

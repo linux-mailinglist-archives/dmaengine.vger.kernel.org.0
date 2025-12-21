@@ -1,134 +1,112 @@
-Return-Path: <dmaengine+bounces-7854-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7855-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 940B0CD3500
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Dec 2025 19:22:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60539CD3C4A
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Dec 2025 07:48:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 36B9F300D143
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Dec 2025 18:22:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CE620300A1C2
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Dec 2025 06:47:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5103830E822;
-	Sat, 20 Dec 2025 18:22:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71E4A1EE7B9;
+	Sun, 21 Dec 2025 06:47:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X+2V9U4i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pRbQfv5A"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C635D233134;
-	Sat, 20 Dec 2025 18:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB4E13A258;
+	Sun, 21 Dec 2025 06:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766254963; cv=none; b=VwZJqLDDcJ9fkEBRJanuM1zIbwgcX+yTjLR3OrOQG6V4D3BFaj4f+Aq2OsW1TiA5z6rhEdRr+HXmiFTt+F0StSzggW3XdSYVKm0AXzub0yyaTP6VpS3sak7guKAI8CQb7qXj8c85naPAkONK07WMvIhQSl426NwjHOGiT2hPTCY=
+	t=1766299678; cv=none; b=n1LkcQVRLX33CWWDyuExohSK/0MZs76ZtVHWtt2UTheKCsF4ZVG8L1vTMzyzxDv/cKyF+1ZRh9MFVCoOaoEIN9DubgoBAcjtAKCHHk20MBDw5PoNCfcz2Okvk7MXEky+6DybYQFKeiapuA7Q6+ucYUwDu6b5wMbXjvRgR3Sg2kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766254963; c=relaxed/simple;
-	bh=jwD9JF1XWRo08bLaqC1IP6DQSrv2Y2f69IjjEBAuUTs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iVFxEyDyECWc/+XFBenWFciMKdBFJxIFWEAaxgntJGLaPfeF+WDSv5F1jU3a6qa6CFu9FWPZXBmotnximDO5AeZTZVo1V8Rt5TD35A4NBpFpWM2oe4rDDJNladPkn++ISYXy7ZSR49HobeAWdJpr0jIzwtKzyhO5pLGmf4XctE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X+2V9U4i; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766254961; x=1797790961;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jwD9JF1XWRo08bLaqC1IP6DQSrv2Y2f69IjjEBAuUTs=;
-  b=X+2V9U4ilXZ62z4oprkds/3ER5YR9WVfFjSoD29UzAeArVOtQRdIgbEZ
-   I51pkoIyt4L/HQ64EPpYSBJcz2iM2POZOCmKc47X3SlMuh21ADDTOtTwF
-   SQbRR+gkbzg/7YxmGxBoJSsjfBjMDneVH+jWlpm17lSeY6CWKWtygE/Hw
-   623cuo6vrfDi4z/oUvF4OjQlIjDvqKL4z6K6Dou9srgXPx9symKe0uCGq
-   CEQTCUtvMAKT/6p7gG1h8iOew58nm1dlHDBMGLi9Vu6qwiA9XwqxwFXRv
-   XWTJcIYbFUc4uffslPTQJCd0emlPCEEpkAKiQ0ELr9zFaswU+QrUvMmMy
-   g==;
-X-CSE-ConnectionGUID: Woa9krmbSCiVYfBpU+hFKg==
-X-CSE-MsgGUID: /qBsMdQ1SAKHdjVnY9v7HQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11648"; a="68334610"
-X-IronPort-AV: E=Sophos;i="6.21,164,1763452800"; 
-   d="scan'208";a="68334610"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2025 10:22:41 -0800
-X-CSE-ConnectionGUID: eZWzadxLTG6eqk7+ipkMVQ==
-X-CSE-MsgGUID: 7F/cbxTQSpuWktK5vEPTeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,164,1763452800"; 
-   d="scan'208";a="236556869"
-Received: from lkp-server01.sh.intel.com (HELO 0d09efa1b85f) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 20 Dec 2025 10:22:38 -0800
-Received: from kbuild by 0d09efa1b85f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vX1b9-0000000050X-00FL;
-	Sat, 20 Dec 2025 18:22:35 +0000
-Date: Sun, 21 Dec 2025 02:21:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-amlogic@lists.infradead.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Xianwei Zhao <xianwei.zhao@amlogic.com>
-Subject: Re: [PATCH 2/3] dma: amlogic: Add general DMA driver for SoCs
-Message-ID: <202512210111.1UZxHivt-lkp@intel.com>
-References: <20251216-amlogic-dma-v1-2-e289e57e96a7@amlogic.com>
+	s=arc-20240116; t=1766299678; c=relaxed/simple;
+	bh=dq4SjEE6XVIDRMreVqzrzH3io5MNY5o1sITwGmWprhc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kwL2LtZxz56r8s60j8+kR9lGCjW9ZJCSQ+i2hryoHihmUusw/Ipe8oUkZS6gGsyXQzRmuLVfUgA0uD8IVqOqZ769R12FQyx7bs8KSIpp0TUot9Z+IId4eDNHNz6bkVG2ZGopU3S1uvIIJpmywOIoAd/bhhBF0NN3N8ir9aupKvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pRbQfv5A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96864C4CEFB;
+	Sun, 21 Dec 2025 06:47:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766299677;
+	bh=dq4SjEE6XVIDRMreVqzrzH3io5MNY5o1sITwGmWprhc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pRbQfv5A3j0G+9CBPGmKz1bqN+Wno5MhiZZTVaj09+xLi1etHeMCLlT+3tD55aY51
+	 rk5KCqlSXv1c1HqjuWPvs0F7FbYjpVsUT36kZ2KJ28XMoLxYMRwkidtWB/faxPMFdr
+	 qpk38TA6PWjqy9k7Z5FLp+474yB+TOzh552CszlCUOWNA2o3Dlr0umqOu4s7Ksho4h
+	 lOGrf+Y03PE8iz6SFeCveZv+m9d6xmlEer9p8DklSzpifOGU8BntDvUdqQGQzzo2hH
+	 xxBzyW2WoLjtcRpnJj0CdBedLi6wn/iH+Q2Jj+FvuqAQMRXz3KzgpX1ASoYJ+wnVSw
+	 T29KUQcq3IcOg==
+Received: by wens.tw (Postfix, from userid 1000)
+	id 4AD3F5FDFB; Sun, 21 Dec 2025 14:47:55 +0800 (CST)
+From: Chen-Yu Tsai <wens@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Chen-Yu Tsai <wens@kernel.org>,
+	dmaengine@vger.kernel.org,
+	linux-sunxi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Jernej Skrabec <jernej.skrabec@gmail.com>
+Subject: [PATCH RESEND] dmaengine: sun6i: Add debug messages for cyclic DMA prepare
+Date: Sun, 21 Dec 2025 14:47:52 +0800
+Message-ID: <20251221064754.1783369-1-wens@kernel.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251216-amlogic-dma-v1-2-e289e57e96a7@amlogic.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Xianwei,
+The driver already has debug messages for memcpy and linear transfers,
+but is missing them for cyclic transfers.
 
-kernel test robot noticed the following build errors:
+Cyclic transfers are one of the main uses of the DMA controller, used
+for audio data transfers. And since these are likely the first DMA
+peripherals to be enabled, it helps to have these debug messages.
 
-[auto build test ERROR on 8f0b4cce4481fb22653697cced8d0d04027cb1e8]
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
+---
+Hi Vinod,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Xianwei-Zhao-via-B4-Relay/dt-bindings-dma-Add-Amlogic-general-DMA/20251216-163238
-base:   8f0b4cce4481fb22653697cced8d0d04027cb1e8
-patch link:    https://lore.kernel.org/r/20251216-amlogic-dma-v1-2-e289e57e96a7%40amlogic.com
-patch subject: [PATCH 2/3] dma: amlogic: Add general DMA driver for SoCs
-config: arm-allyesconfig (https://download.01.org/0day-ci/archive/20251221/202512210111.1UZxHivt-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251221/202512210111.1UZxHivt-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512210111.1UZxHivt-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/dma/amlogic-dma.c:132:41: error: argument 'chan_ns' to the 'counted_by' attribute is not a field declaration in the same structure as 'aml_chans'
-     132 |         struct aml_dma_chan             aml_chans[]__counted_by(chan_ns);
-         |                                         ^~~~~~~~~
+This patch seems to have fallen through the cracks.
 
 
-vim +132 drivers/dma/amlogic-dma.c
+ drivers/dma/sun6i-dma.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-   120	
-   121	struct aml_dma_dev {
-   122		struct dma_device		dma_device;
-   123		void __iomem			*base;
-   124		struct regmap			*regmap;
-   125		struct clk			*clk;
-   126		int				irq;
-   127		struct platform_device		*pdev;
-   128		struct aml_dma_chan		*aml_rch[MAX_CHAN_ID];
-   129		struct aml_dma_chan		*aml_wch[MAX_CHAN_ID];
-   130		unsigned int			chan_nr;
-   131		unsigned int			chan_used;
- > 132		struct aml_dma_chan		aml_chans[]__counted_by(chan_ns);
-   133	};
-   134	
-
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index 2215ff877bf7..2e03c587bd2e 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -826,6 +826,11 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
+ 			v_lli->cfg = lli_cfg;
+ 			sdev->cfg->set_drq(&v_lli->cfg, DRQ_SDRAM, vchan->port);
+ 			sdev->cfg->set_mode(&v_lli->cfg, LINEAR_MODE, IO_MODE);
++			dev_dbg(chan2dev(chan),
++				"%s; chan: %d, dest: %pad, src: %pad, len: %zu. flags: 0x%08lx\n",
++				__func__, vchan->vc.chan.chan_id,
++				&sconfig->dst_addr, &buf_addr,
++				buf_len, flags);
+ 		} else {
+ 			sun6i_dma_set_addr(sdev, v_lli,
+ 					   sconfig->src_addr,
+@@ -833,6 +838,11 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
+ 			v_lli->cfg = lli_cfg;
+ 			sdev->cfg->set_drq(&v_lli->cfg, vchan->port, DRQ_SDRAM);
+ 			sdev->cfg->set_mode(&v_lli->cfg, IO_MODE, LINEAR_MODE);
++			dev_dbg(chan2dev(chan),
++				"%s; chan: %d, dest: %pad, src: %pad, len: %zu. flags: 0x%08lx\n",
++				__func__, vchan->vc.chan.chan_id,
++				&buf_addr, &sconfig->src_addr,
++				buf_len, flags);
+ 		}
+ 
+ 		prev = sun6i_dma_lli_add(prev, v_lli, p_lli, txd);
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.3
+
 

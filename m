@@ -1,197 +1,184 @@
-Return-Path: <dmaengine+bounces-7863-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7864-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D851CCD54D8
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 10:22:26 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AFD9CD589F
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 11:21:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4B9D63007C5B
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 09:21:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1C412302EF4B
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 10:21:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 446683090CC;
-	Mon, 22 Dec 2025 09:21:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 509F0337680;
+	Mon, 22 Dec 2025 10:21:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Ad2WlJIu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="f2To8LbV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lptE8bgT"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3977C13959D;
-	Mon, 22 Dec 2025 09:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0A4336EFE;
+	Mon, 22 Dec 2025 10:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766395315; cv=none; b=b4AtOn8UzYgIdyTJIwU5c4hC+nuNcjf+NFmr/uaWEF5bH4QkEstZ4mDh70PKTJmON4XX2gyABPHS/BKGJBLRuFO2m3fWcd1xg/HZN9W6D8kaCiW4lU3hSaIrO46A5uNDpOBFyvIF1EuN9XF4NG0aEoKAADnde2yUDTcH7spUlzI=
+	t=1766398885; cv=none; b=tpVsq5jEmkiG4eRObSOeHcHFt/+XfTcjZITXj0x1ZqVufeAJ5Lku6RrLDwT+6feEMU4Dur5vg4JoTKwY5f9mVNLX4zgb7oecrmGokqXnBFI+GxO9HajWpB4yXaK0Ut7jf6PwgL6BqbuM90rHdaDj88hLmkf3qk0ZGZZiDbomM9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766395315; c=relaxed/simple;
-	bh=cvlyUBDX6+e2wPVlgcubg2bBxCLZKZeLme9jqZ1Aqds=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=V7u6R7T9uAfWp/C0yjkSp0r8M1PJPf0UvfIXplh3+Z63sQQ+lCehe443Zr7WXqGD78ksTFFhIaxJ8m54ZS15R8adOLZe4Oh2aH3ybudT8D3tvCY+Gcc09vs+XzXjh1i/jyn07Jxx8x8Vikdk6CWirztmghtImbwHRSkCdK9Os64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Ad2WlJIu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=f2To8LbV; arc=none smtp.client-ip=202.12.124.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.stl.internal (Postfix) with ESMTP id 441B11D00070;
-	Mon, 22 Dec 2025 04:21:52 -0500 (EST)
-Received: from phl-imap-17 ([10.202.2.105])
-  by phl-compute-04.internal (MEProxy); Mon, 22 Dec 2025 04:21:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1766395312;
-	 x=1766481712; bh=aSoxsmf+Y71lyGjCN0Q0k/Yv0E6KF5Wpn24d4lIijMo=; b=
-	Ad2WlJIu+ptS2H1tq4RJyIA0bT5ydQP4JNdhOaDfcK/w41NQJ2M2//CMh6bUHA6t
-	zL6QjyT1vrNhZvBQYGnrApzz6WxI/bljjrZ77LOYWrOhBNbAQj1RNyYk+14rq2+/
-	cetLwGGNU5CgzSnjQkcTBxhCy95CPFKJ7WT7CiSTiE6xKOqhiPTYgHg881liAMVL
-	+Q4Cm5vvUriKY80cueynBBLDEby9zrEV3VvBtcrlb6VeO3Qjx7gNmS2dwLL7sT8N
-	KsJvfFuF0NJK3e1ZrdWDh6CUoCuQI0UtF99it/mKl/gPVbbHbP/A8GRRRZ1Naoo1
-	Kuy7lqIAv9KhOTf1KoplqQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1766395312; x=
-	1766481712; bh=aSoxsmf+Y71lyGjCN0Q0k/Yv0E6KF5Wpn24d4lIijMo=; b=f
-	2To8LbV4IsaPArujcUn8ofFe5MTWrTMSdvjwzY6+lTJjK0idI5NqsjMOhsX7gTnn
-	GqJDqeJei2gmidChV01WMymH2j3MIw5+hvmFOpwo2RK2NoEUGwWSiQEZAnm6WZu+
-	GrAUmluVCcDLmvyii56EBkW03DvGnrtquT99nlR0OYNr8oUGvpmlJLuFNvu0MNAu
-	pCIOkQYEBfhAMeRj8gvjUTmJsSZ1XeaDeobrczi2GSM9h1LcmxOKS3CKuPS1JEDR
-	C0iQ63XgKmRwb1emNP0fUmROjWtRAdPL2tz7q4dem5X+iWOwjbIFSFEZDeKwAqGN
-	eLgHoqpNZYHN5jWWaeSyw==
-X-ME-Sender: <xms:rw1JaeJRpF9DGnLw7VK3wLT7m6uJnZjUfmcphAxzB54SIrNzDqEiSg>
-    <xme:rw1JaQ-9bq7Uf3zCJiqw0tZZFEU9o6VHWmwfmJkE1GZ2kUOaGIRW2iMzJBkpVC8v4
-    SQsEaWbU6itznEvSmoLph7IcO_NyEWBsyuqw8o9-wNIt1tEbHuDiA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdehieehjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpedvhfdvkeeuudevfffftefgvdevfedvleehvddvgeejvdefhedtgeegveehfeeljeen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdp
-    rhgtphhtthhopegurghvvgdrjhhirghnghesihhnthgvlhdrtghomhdprhgtphhtthhope
-    hvihhnihgtihhushdrghhomhgvshesihhnthgvlhdrtghomhdprhgtphhtthhopehthhho
-    mhgrshdrfigvihhsshhstghhuhhhsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtoh
-    epughmrggvnhhgihhnvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehl
-    ihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:rw1JaYihvqZ23HFMUo1kDi4npNA8hPLVsecmoGZLi0GyH4dRYjKZvQ>
-    <xmx:rw1Jae8-5HMzvQ0qyr9sEpovVGoLJIituT-1pT9oNznlQlZ6KyxItg>
-    <xmx:rw1JaSbHfqYnbZ0BYRWXUfOpUOcu5XxXqU1y0z9DJIxHYrtsTL9Bhw>
-    <xmx:rw1Jad1Jsp6kN6Gw_SlAanQXt8rXcJv3S8-Ri4EzhTrCdngVSvb9Cg>
-    <xmx:sA1Jac3aNDd2JuVIVDQDk3_OH4ljvdrqyPbjeGcYx9fQZdhpabtH5JR1>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B6EB9C40054; Mon, 22 Dec 2025 04:21:51 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1766398885; c=relaxed/simple;
+	bh=ur3+ntnWaxFP7G2fO4rVI/mtWr0Ceux11S/HrxXPHyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ohIiM446BF6OulxM7pRlPkUXSikPKiw7Yd0LiPGRSLlUqIjGh7q6rHD3+81g+CrzhRZO3RCuT8Fn0/0OnO88FeTTFM7GzHhbneLnFkYWfjgTFdw00nGi5NpZP1yv8aBWLHsq2nbEuZzVAQeEvANXCkXsSCf7PoaKzhISG7yG/Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lptE8bgT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01B22C4CEF1;
+	Mon, 22 Dec 2025 10:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766398884;
+	bh=ur3+ntnWaxFP7G2fO4rVI/mtWr0Ceux11S/HrxXPHyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lptE8bgTwFEpwlUv5EpAcYdPSRw1p64QACv0Fy2z1FXeJejK3oo8kKBToGcKyE5Sb
+	 w7z9Os/KKbIzCwZiX6cKPPxAT5qHZIrdKG7p9jKn9pCOYZkXSXBvywpwIUptlSp+UN
+	 G+xuEY0lnHohIKHb/4/2l85k1xgAY1tB02xuL4UdoBIzVTupgcZbunxs0cjuWoiNYI
+	 tkZX121GToykUSkfaKtK/km9h8hgzK0ZdrGZubIrcHQFZR+Oonro9KWwVVurncoS75
+	 49YdVzbQsj8eiLE+qfnrwTInzHcOQnIuQ0bhAJ4nyuXiOvnVMr5ebIrEZLaZWS8Gef
+	 H+0NL9IbCGqaA==
+Date: Mon, 22 Dec 2025 15:51:06 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Niklas Cassel <cassel@kernel.org>, Koichiro Den <den@valinux.co.jp>, 
+	ntb@lists.linux.dev, linux-pci@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Frank.Li@nxp.com, kwilczynski@kernel.org, kishon@kernel.org, 
+	bhelgaas@google.com, corbet@lwn.net, vkoul@kernel.org, jdmason@kudzu.us, 
+	dave.jiang@intel.com, allenbh@gmail.com, Basavaraj.Natikar@amd.com, 
+	Shyam-sundar.S-k@amd.com, kurt.schwemmer@microsemi.com, logang@deltatee.com, 
+	jingoohan1@gmail.com, lpieralisi@kernel.org, robh@kernel.org, jbrunet@baylibre.com, 
+	fancer.lancer@gmail.com, arnd@arndb.de, pstanner@redhat.com, 
+	elfring@users.sourceforge.net
+Subject: Re: [RFC PATCH v2 19/27] PCI: dwc: ep: Cache MSI outbound iATU
+ mapping
+Message-ID: <ym3evivt3co5ic7p5co624me3hmvoa53it22a6ddcu7dacl3wk@le233yriaip5>
+References: <20251129160405.2568284-1-den@valinux.co.jp>
+ <20251129160405.2568284-20-den@valinux.co.jp>
+ <aTaE3yB7tQ-Homju@ryzen>
+ <4909f70a-2f65-4cac-96ac-5cd4371bc867@oss.qualcomm.com>
+ <aUj4M3z87MwFSUFW@ryzen>
+ <a7b94f8f-8773-43b0-b481-29828aba9abd@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: As4msN9o8sCJ
-Date: Mon, 22 Dec 2025 10:21:31 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- "Vinicius Costa Gomes" <vinicius.gomes@intel.com>,
- "Dave Jiang" <dave.jiang@intel.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <a4c50d48-8b5f-4b5f-9a4e-6ea1f9433c0b@app.fastmail.com>
-In-Reply-To: <20251222-uapi-idxd-v1-1-baa183adb20d@linutronix.de>
-References: <20251222-uapi-idxd-v1-1-baa183adb20d@linutronix.de>
-Subject: Re: [PATCH] dmaengine: idxd: uapi: use UAPI types
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a7b94f8f-8773-43b0-b481-29828aba9abd@oss.qualcomm.com>
 
-On Mon, Dec 22, 2025, at 09:04, Thomas Wei=C3=9Fschuh wrote:
-> Using libc types and headers from the UAPI headers is problematic as it
-> introduces a dependency on a full C toolchain.
->
-> Use the fixed-width integer types provided by the UAPI headers instead.
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+On Mon, Dec 22, 2025 at 01:44:02PM +0530, Krishna Chaitanya Chundru wrote:
+> 
+> 
+> On 12/22/2025 1:20 PM, Niklas Cassel wrote:
+> > On Mon, Dec 22, 2025 at 10:40:12AM +0530, Krishna Chaitanya Chundru wrote:
+> > > On 12/8/2025 1:27 PM, Niklas Cassel wrote:
+> > > > On Sun, Nov 30, 2025 at 01:03:57AM +0900, Koichiro Den wrote:
+> > > > 
+> > > > I guess the problem is that some EPF drivers, even if only
+> > > > one capability can be enabled (MSI/MSI-X), call both
+> > > > pci_epc_set_msi() and pci_epc_set_msix(), e.g.:
+> > > > https://github.com/torvalds/linux/blob/v6.18/drivers/pci/endpoint/functions/pci-epf-test.c#L969-L987
+> > > > 
+> > > > To fill in the number of MSI/MSI-X irqs.
+> > > > 
+> > > > While other EPF drivers only call either pci_epc_set_msi() or
+> > > > pci_epc_set_msix(), depending on the IRQ type that will actually
+> > > > be used:
+> > > > https://github.com/torvalds/linux/blob/v6.18/drivers/nvme/target/pci-epf.c#L2247-L2262
+> > > > 
+> > > > I think both versions is okay, just because the number of IRQs
+> > > > is filled in for both MSI/MSI-X, AFAICT, only one of them will
+> > > > get enabled.
+> > > > 
+> > > > 
+> > > > I guess it might be hard for an EPC driver to know which capability
+> > > > that is currently enabled, as to enable a capability is only a config
+> > > > space write by the host side.
+> > > As the host is the one which enables MSI/MSIX, it should be better the
+> > > controller
+> > > driver takes this decision and the EPF driver just sends only raise_irq.
+> > > Because technically, host can disable MSI and enable MSIX at runtime also.
+> > > 
+> > > In the controller driver,  it can check which is enabled and chose b/w
+> > > MSIX/MSI/Legacy.
+> > I'm not sure if I'm following, but if by "the controller driver", you
+> > mean the EPC driver, and not the host side driver, how can the EPC
+> > driver know how many interrupts a specific EPF driver wants to use?
+> I meant the dwc drivers here.
+> Set msi & set msix still need to called from the EPF driver only to tell how
+> many
+> interrupts they want to configure etc.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Please leave a newline before and after your reply to make it readable in text
+based clients, which some of the poor folks like me still use.
 
-This is certainly an improvement.=20
+> > 
+> >  From the kdoc to pci_epc_set_msi(), the nr_irqs parameter is defined as:
+> > @nr_irqs: number of MSI interrupts required by the EPF
+> > https://github.com/torvalds/linux/blob/v6.19-rc2/drivers/pci/endpoint/pci-epc-core.c#L305
+> > 
+> > 
+> > Anyway, I posted Koichiro's patch here:
+> > https://lore.kernel.org/linux-pci/20251210071358.2267494-2-cassel@kernel.org/
+> I will comment on that patch.
+> > 
+> > See my comment:
+> >    pci-epf-test does change between MSI and MSI-X without calling
+> >    dw_pcie_ep_stop(), however, the msg_addr address written by the host
+> >    will be the same address, at least when using a Linux host using a DWC
+> >    based controller. If another host ends up using different msg_addr for
+> >    MSI and MSI-X, then I think that we will need to modify pci-epf-test to
+> >    call a function when changing IRQ type, such that pcie-designware-ep.c
+> >    can tear down the MSI/MSI-X mapping.
+> Maybe for arm based systems we are getting same address but for x86 based
+> systems
+> it is not guarantee that you will get same address.
+> > So if we want to improve things, I think we need to modify the EPF drivers
+> > to call a function when changing the IRQ type. The EPF driver should know
+> > which IRQ type that is currently in use (see e.g. nvme_epf->irq_type in
+> > drivers/nvme/target/pci-epf.c).
+> My suggestion is let EPF driver call raise_irq with the vector number then
+> the dwc driver
+> can raise IRQ based on which IRQ host enables it.
+> > Additionally, I don't think that the host side should be allowed to change
+> > the IRQ type (using e.g. setpci) when the EPF driver is in a "running state".
+> In the host driver itelf they can choose to change it by using
+> pci_alloc_irq_vectors
+> <https://elixir.bootlin.com/linux/v6.18.2/C/ident/pci_alloc_irq_vectors>,
+> Currently it is not present but in future someone can change it, as spec
+> didn't say you
+> can't update it.
 
-Since I'm looking at this file, I'd point out a few other oddities
-in the header that have absolutely nothing to do with your patch:
+The spec has some wording on it (though not very clear) in r6.0, sec 6.1.4
 
-> @@ -176,132 +172,132 @@ enum iax_completion_status {
->  #define DSA_COMP_STATUS(status)		((status) & DSA_COMP_STATUS_MASK)
->=20
->  struct dsa_hw_desc {
-> -	uint32_t	pasid:20;
-> -	uint32_t	rsvd:11;
-> -	uint32_t	priv:1;
-> -	uint32_t	flags:24;
-> -	uint32_t	opcode:8;
-> -	uint64_t	completion_addr;
-> +	__u32	pasid:20;
-> +	__u32	rsvd:11;
-> +	__u32	priv:1;
-> +	__u32	flags:24;
-> +	__u32	opcode:8;
-> +	__u64	completion_addr;
+"System software initializes the message address and message data (from here on
+referred to as the “vector”) during device configuration, allocating one or more
+vectors to each MSI-capable Function."
 
-Bitfields are usually a bad idea to describe hardware structures
-since the actual layout is ABI specific.
+This *sounds* like the MSI/MSI-X initialization should happen during device
+configuration.
 
->  	union {
-> -		uint8_t		expected_res;
-> +		__u8		expected_res;
->  		/* create delta record */
->  		struct {
-> -			uint64_t	delta_addr;
-> -			uint32_t	max_delta_size;
-> -			uint32_t 	delt_rsvd;
-> -			uint8_t 	expected_res_mask;
-> +			__u64	delta_addr;
-> +			__u32	max_delta_size;
-> +			__u32	delt_rsvd;
-> +			__u8	expected_res_mask;
->  		};
+> > I think things will break badly if you e.g. try to do this on an PCIe
+> > connected network card while the network card is in use.
+> I agree on this.
+> 
+> I just want to highlight there is possibility of this in future, if someone
+> comes up with a
+> clean logic.
+> 
 
-All the outer structures are marked as __packed, but
-the unions and inner structures are not, so this still
-ends up with padding, and a -Wpadded warning. This came
-up as one of the uapi structures that is incompatible
-between x86-64 and compat i386 user space.
+I don't know if this is even possible. For example, I don't think a host is
+allowed to reattach a device which was using MSI to a VM which only uses MSI-X
+during live device migration in virtualization world. I bet the device might not
+perform as expected if that happens.
 
-This ends up being harmless since other members of the
-union are the same 24 byte length. For consistency, I'd
-always add explicit padding, and I plan to send a patch
-for all uapi structures that need this in the future.
+- Mani
 
-> -		uint8_t		op_specific[24];
-> +		__u8		op_specific[24];
->  	};
->  } __attribute__((packed));
-
-The packed attribute here makes the structure unsuitable
-for hardware DMA access since the compiler may generate
-bytewise access. These should probably all be dropped or
-changed into
-
-__attribute__((packed, aligned(8)))
-
-to make the structure itself aligned by the members if
-some members need packing.
-
->   * volatile and prevent the compiler from optimize the read.
->   */
->  struct dsa_completion_record {
-> -	volatile uint8_t	status;
-> +	volatile __u8	status;
-
-volatile by itself is not really sufficient to do that in
-portable code, there should also be a dmb_mb() or similar
-around it.
-
-As far as I can tell, the driver cannot ever be used on
-anything other than x86, so there is no harm in practice.
-
-        Arnd
+-- 
+மணிவண்ணன் சதாசிவம்
 

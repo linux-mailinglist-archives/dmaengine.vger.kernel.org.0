@@ -1,119 +1,118 @@
-Return-Path: <dmaengine+bounces-7857-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7858-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AA50CD428A
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Dec 2025 16:57:14 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62EB6CD4AF1
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 05:16:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 495513006467
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Dec 2025 15:57:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 900113006AB2
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 04:16:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B9A829BDB4;
-	Sun, 21 Dec 2025 15:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ni/bg7ps"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0A71EFF9B;
+	Mon, 22 Dec 2025 04:16:28 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735AA28727A
-	for <dmaengine@vger.kernel.org>; Sun, 21 Dec 2025 15:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23B433993;
+	Mon, 22 Dec 2025 04:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766332632; cv=none; b=uiVSfEqw7TrFjOlLqDoUD+MEDihA2v/iBTOQaWYCtPOFmwnwM7B3XkzFLh0eEDHNJR6kVQIL39E6e9fLW0vV5pFBXx8eRZd44CyzgjxI4X1lkR/Dt8Es5LDCZrthb74VmYQO+NJe9Ik97GVNlgYeG7KmXBfBxRxtz2qPHC3IQZY=
+	t=1766376988; cv=none; b=MYU6ilgkbk0DKmf869rFr/dK8qYcQVjoKobfg3kAfSFC5coMXs/D4MAw7fgWy7yJ87bhtN94f2xGW4XkMDZpYkPsYdwMT8vxeevAqgOKpu5jYEySn/LvdUUJkSraHcOud2v8H+Q5+pAVF+3lDBGj5CwU9XZQZGKaxUH3TWLKdso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766332632; c=relaxed/simple;
-	bh=mrMOQdDsAyBJL5Fgn/G2OhbffuTYYry72mzdpWhvbCI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vFqmTcR5mSgZN3IyxhdAl4fvOZl9rdoudb7lRgFnTFTFs4UfgIitaDmHnG2pcFtY88gr/OJzrz+4rrOgSJ1DYhJoJAtmjpoBesRHGTdMoUlo86dt0+f4g7kqoA3/O2yigdJTWuwwueeGy+ewxg+7QNXjY6XnXVh9pMXwoEGXjzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ni/bg7ps; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-47a8195e515so23143625e9.0
-        for <dmaengine@vger.kernel.org>; Sun, 21 Dec 2025 07:57:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766332629; x=1766937429; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mrMOQdDsAyBJL5Fgn/G2OhbffuTYYry72mzdpWhvbCI=;
-        b=Ni/bg7psCSUyErsoea9IjsITMxN04bm44C4CpaE1rGtK4etMFEvaNojWjYiJ6iG/Yx
-         EuyOl6JGsmrsMSJlzpb6/CN8OCiHK+QxxvWmj4YT8q+F+SI1wAW6RZpMUI9hdAhe8NW7
-         WUWpGAX/DKkhN71hMy3k8f1P67jRcKnOTzdnt7+gjv6K9yW4C789Vuv194KzKID7+NXv
-         1tK9pbp1Be6rK7WHAPRd+lMnaTGVkdXUJ/RkvMVhyJq99wmXK5iF853F7/9/bSMR/V9T
-         XcSN4O6MsCoR9lirgeLuHI7WguIbmNY58cCf5leDpAH4d8ptVQAcC1s7opSkc3aWGO8b
-         QK5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766332629; x=1766937429;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mrMOQdDsAyBJL5Fgn/G2OhbffuTYYry72mzdpWhvbCI=;
-        b=IIoPCBaUsF4gDKI/VLMpYLept2nt+MA50i2j9zHh6R1jAegqky6jwUlFxUlrEIJxsn
-         xPaKVwXkbqDQ2fNCL6Vo3yAsm4UczpgleYlVr6PRgDZ+su6JRX6+nxuvXMBxsRUWOKy3
-         OEbH1F5qsq/rSlo9WJG/E4SW6vb3ybTm3xKwtA1bNHxEG8NAkxLrPLJ/p3LqLPwJMlLF
-         Vt5vojP2zEUIZNhKyTI4ALdBUkcBg955Hartdl8cRAHnhInJTYhJIPpUcjIn+cKQBBfm
-         YS+6cKeQ7HWbDjcHouS6pHK+1vxYMU/SpEpiruK9wo5DdxFcXfLzCPwEufoEvaZMhF9/
-         Uc9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW6VfGcoAv/pMErE4SdHFS5hhFJq2JiQSZu75E68yCKin+SbcD0P/PAlchG1xkSSS+KUIFbpdodR9k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4X9VUobrE1xjVylIeR6zZmzwd/64sRBD4cxUZlPb+FiAWrewA
-	bZeA6tC6xOtHfT94zqtygtwspqhxlcJ+44D+8gmUCOT3O7ps6BJxXeSZo7kY2w==
-X-Gm-Gg: AY/fxX5pXkrEt2Q2Q/jUlfUB0cs7p/MQzoHVnctDKmYIOQ2/mQLfyihnIYmBh/KVSmR
-	ZPszoq9S/DtGDBpkjA+JqpAZlER9Gl7EpfKwCis8qAWAMcYr6sLfSviF+JBiCxv0owsvThhLYuA
-	rwuXWMPEZBy83gjrXl/snF2PiC4Rzu4krjjtY9fhfFoVmzYGccNVvnnw4x+sHmRZuxdB7bLOvp/
-	prDzNjGQ88BeXQYJdrvlVPw8Qe9VRBn0HV9oIf83cfh1kDzqw3JXOzWqj232tw6eJY1kb1IcpVR
-	xvb55aKyvDGN9rzxK8wTZ+SCg4qSdhAPlMVXyxz/AcEN5f8vDpaJjOAfKQvBsqcACgeqZTFy2y9
-	eQpl3Rb8uDhtdsmmAt45P0L0l/PlEhL2pcrtfkDJspLA0mG3ZqH3rm31DUYO/em4lpJzexK4h3a
-	HafK/Q8odi6ZW36YfQNQTG1u3P7dnRj3mc7mkPjk4fnj7GmhKnpKZ0bJz6II1m3/qCSBnP
-X-Google-Smtp-Source: AGHT+IExEA0mdDUqUtqXOeUL++O53ldVOc/C42cZHo7ZCg0+/iRgPqjs3JCL6tqxJgQuhZDXsn6nRw==
-X-Received: by 2002:a05:600c:6388:b0:477:63db:c718 with SMTP id 5b1f17b1804b1-47d19557cd2mr82943635e9.16.1766332628749;
-        Sun, 21 Dec 2025 07:57:08 -0800 (PST)
-Received: from jernej-laptop.localnet (82-192-45-213.dynamic.telemach.net. [82.192.45.213])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47be3ac5409sm75866275e9.15.2025.12.21.07.57.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Dec 2025 07:57:08 -0800 (PST)
-From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
- Jernej Skrabec <jernej@kernel.org>, Samuel Holland <samuel@sholland.org>,
- Chen-Yu Tsai <wens@kernel.org>
-Cc: Andre Przywara <andre.przywara@arm.com>, dmaengine@vger.kernel.org,
- linux-sunxi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH] dmaengine: sun6i: Choose appropriate burst length under maxburst
-Date: Sun, 21 Dec 2025 16:57:07 +0100
-Message-ID: <3385264.aeNJFYEL58@jernej-laptop>
-In-Reply-To: <20251221080450.1813479-1-wens@kernel.org>
-References: <20251221080450.1813479-1-wens@kernel.org>
+	s=arc-20240116; t=1766376988; c=relaxed/simple;
+	bh=ScVIEfLOJnXIXYnj68t/1imJqAgx5SDhZJ51F+SMhLI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gPXHLPAcqb68FIb+ehBv1OftiBiFDHQpPOcMq7nqr7AfkZ+YiugMmPuw2ZtXufCGGIgHQnVgzNVS9xWgtxqHl54PJkDdC/Vhb36UtIV5MD0eSF0rDZLx58wPLex5mOv1jSXx4ktw+TSbzWia+KwSYMN2k4S2QNQ2X4VrXnZb5ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
+Received: from localhost.localdomain (unknown [36.112.3.209])
+	by APP-03 (Coremail) with SMTP id rQCowACXs9pExEhpobSKAQ--.56029S2;
+	Mon, 22 Dec 2025 12:08:36 +0800 (CST)
+From: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
+To: vkoul@kernel.org,
+	dave.jiang@intel.com
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] dmaengine: fix a reference leak in __dma_async_device_channel_register()
+Date: Mon, 22 Dec 2025 12:08:34 +0800
+Message-Id: <20251222040834.975443-1-lihaoxiang@isrc.iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowACXs9pExEhpobSKAQ--.56029S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7KryUur4DZFyrKF18uFWxWFg_yoW8WrWrpr
+	srGa45trWUtan5uanxXF1Fva4UCanYy3yS9ryrG343Cr9xXr9Yya40ya4jq3WDA39xJF4x
+	tFZxXw48uF1UCr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUSNtxUUU
+	UU=
+X-CM-SenderInfo: 5olkt0x0ld0ww6lv2u4olvutnvoduhdfq/1tbiBwkEE2lIrP1SDwAAs0
 
-Dne nedelja, 21. december 2025 ob 09:04:48 Srednjeevropski standardni =C4=
-=8Das je Chen-Yu Tsai napisal(a):
-> maxburst, as provided by the client, specifies the largest amount of
-> data that is allowed to be transferred in one burst. This limit is
-> normally provided to avoid a data burst overflowing the target FIFO.
-> It does not mean that the DMA engine can only do bursts in that size.
->=20
-> Let the driver pick the largest supported burst length within the
-> given limit. This lets the driver work correctly with some clients that
-> give a large maxburst value. In particular, the 8250_dw driver will give
-> a quarter of the UART's FIFO size as maxburst. On some systems the FIFO
-> size is 256 bytes, giving a maxburst of 64 bytes, while the hardware
-> only supports bursts of up to 16 bytes.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
+After device_register() is called, put_device() is required to drop the
+device reference. In this case, put_device() -> chan_dev_release() will
+finally release chan->dev. Thus there is no need to call kfree again to
+release the chan->dev.
 
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Found by code review.
 
-Best regards,
-Jernej
+Fixes: d2fb0a043838 ("dmaengine: break out channel registration")
+Cc: stable@vger.kernel.org
+Signed-off-by: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
+---
+ drivers/dma/dmaengine.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index ca13cd39330b..9d7cea1d6e91 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -1071,6 +1071,7 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+ 					       const char *name)
+ {
+ 	int rc;
++	bool dev_registered = false;
+ 
+ 	chan->local = alloc_percpu(typeof(*chan->local));
+ 	if (!chan->local)
+@@ -1102,6 +1103,7 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+ 	else
+ 		dev_set_name(&chan->dev->device, "%s", name);
+ 	rc = device_register(&chan->dev->device);
++	dev_registered = true;
+ 	if (rc)
+ 		goto err_out_ida;
+ 	chan->client_count = 0;
+@@ -1112,7 +1114,10 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+  err_out_ida:
+ 	ida_free(&device->chan_ida, chan->chan_id);
+  err_free_dev:
+-	kfree(chan->dev);
++	if (dev_registered)
++		put_device(&chan->dev->device);
++	else
++		kfree(chan->dev);
+  err_free_local:
+ 	free_percpu(chan->local);
+ 	chan->local = NULL;
+-- 
+2.25.1
 
 

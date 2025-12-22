@@ -1,473 +1,243 @@
-Return-Path: <dmaengine+bounces-7861-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7862-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5B91CD4ECE
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 09:04:41 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17C96CD4F0E
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 09:14:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A2D023003481
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 08:04:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 23DD4300422F
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 08:14:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9828330BB80;
-	Mon, 22 Dec 2025 08:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51B3F30BF64;
+	Mon, 22 Dec 2025 08:14:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vrBW9MOY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RgPQDdTe"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gLS+j2GK";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="XAwzH/CS"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE9A24E4C3;
-	Mon, 22 Dec 2025 08:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148BD30BBA5
+	for <dmaengine@vger.kernel.org>; Mon, 22 Dec 2025 08:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766390679; cv=none; b=U/+ZVwmb0JOp41CBiTNRcN4xfIaToIxBG8zc5TT6nCkoaj18pXs6xyAjcu/Ln6XzRsUG1Hl/xBbe3AjBP+avksNNSvcXe7vkVTXBNGbG7LS3Xn+btoquhLvra0f+Jzu/gBKyxWbYlQXAWc/RS+VFgzHDSXO4Fu4uLYa0JaEy73A=
+	t=1766391256; cv=none; b=EYTkcozh9A4ofJa46HH9YISlAkW/inleJHwm4s6g+JTHlETibuFDvBEdVJBQNsAM45tJkWuKy73Bad6pyvuhnyuwmzDyadGSXH4xDGWiYwX1B2wZeAJ5iGFrKtguCpcpr7yHJsezvTthB2DMEJGuVljgvaTQH8eAwiuAzT1hJCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766390679; c=relaxed/simple;
-	bh=x89KSPKJrplWxLOPS+kqKtScxkmyFNwjKV81VUvuZ5E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=beHTxo05D/LlPifLf7bDlqzN2kjw4sEEJGOtypd8B1tUruOj9AVO5cEY1zBP+7DzLkxjRiWAlHw3y8BWg7X5uWtevhG/PrKdfyZBOIqIt0Pe86B4hZD3UHqwB81MScFKsCx7jJiILJWabrwaTCkESXH9rmJro77qRFJSzoQ2FRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vrBW9MOY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RgPQDdTe; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1766390676;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2YLjS1hsgnkUVHk9gHTBrp934onhDP17aX3BXfgb1Js=;
-	b=vrBW9MOYUkRLxmfA6886sKP9tE/tnVmHCPAacERNtWpaRiQq9vG6pwp+uLR2gMDepqt44s
-	8oKF1VKWtC4vTVJd0DwoEg27PPTRpzqtGmliTCPybEIAviAs/M6RB8cdlBifQZ3UruE/PP
-	M4fvuZLiXXkO0CdMntDlnH0E/ninUxJTPHIWu55D2WQSdd7/h/Mk/aNxxsp/a5WpC8uwwq
-	f7nwqB63AZ72gCXe9U9cY0YDwA5cWozi5X6Vvptv2kzbspz/EdOxaz5cj5Vbg1tVhCbYu0
-	QtFbfSpB7IIgHHiHbz3anLAV0NY6iFvdGG5k+L7UZfUlmg2lbjCKlpXRI5t18w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1766390676;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2YLjS1hsgnkUVHk9gHTBrp934onhDP17aX3BXfgb1Js=;
-	b=RgPQDdTee2kb/X5vn5WMrgkqfibrzxbDZ1AeDHSSZAJ1Ieksxl9jJjj9n0Z25IDb62rGo+
-	+E2dPjYVbbiDT8Ag==
-Date: Mon, 22 Dec 2025 09:04:13 +0100
-Subject: [PATCH] dmaengine: idxd: uapi: use UAPI types
+	s=arc-20240116; t=1766391256; c=relaxed/simple;
+	bh=ug4yylwNcO90NJvpE3SC7VOMbFwgEshDUXvRfWQd9TY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MB2KZ20B6/yzCKVexYzeMY0dAPpZTtFgCAYvykwBxmfEZLHuik5aKEDfiJQpKdMfaheAF4OntOIxvkNlkwSMkbebTgjbuQfb9yqHXKwQXS+upk5QnVZKiLEOQQZc7cwPDT3F7bqLE4DDDn4gcm9ZvfG7LHRtLsXp1dTwtk09qgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gLS+j2GK; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=XAwzH/CS; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BLMv9jl3808462
+	for <dmaengine@vger.kernel.org>; Mon, 22 Dec 2025 08:14:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	cbxoIvggTHwJGPAyfPp+mE9GnjxpExWzAQ+NnFf0Hcc=; b=gLS+j2GKE+o26XxJ
+	09rshfZSMea52CyGG6s8CXRBs45zFtBLYGt1nTkJS/UukmbwGBe1rbkueX5WQWKh
+	XINKSK5P6lmg1kvpW7ip+Sp0Y6JdPZK0VD0nG+7Gel9VQ7rhGHYOKfDgzm7CQw2u
+	o5DtXyFS+XmYg3dba8o9BnTQ4AiYBjLKZ7Pf3qLqeOFMMggmpt0UcOfxIlgXKXhx
+	KCpWN3BZcNomRwybcxiOJAM1z1q1YVH8LGixmpCnBo95tKys/ed6BiLmKR2Vbjm3
+	eYpdOFaOLlnj9tYkLc4h3cpYKEkz6nAKk4UA9F61HJvMbvSdCEgQ2qUmWjSrpTK/
+	3zvKiA==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b5mru483q-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Mon, 22 Dec 2025 08:14:13 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-34c6e05af6fso3896986a91.1
+        for <dmaengine@vger.kernel.org>; Mon, 22 Dec 2025 00:14:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1766391252; x=1766996052; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cbxoIvggTHwJGPAyfPp+mE9GnjxpExWzAQ+NnFf0Hcc=;
+        b=XAwzH/CSpJXg9AvP/SNFpd9RXjQ4mnIUxP05PGKfePsUHXIk0fGu1hW2MP37H7EyHb
+         aWpGMGHHz+t0CoK+FqRFKUmiDo1NopchfnhjKMKokT3HuPEkw9+DXRBwZ2XlV+3ns8SA
+         NzfmLnjCaD0tIXe6NSyn5jBjcbSORQ6R6w8ztOiq2FtmiQp72ywyKciVUHkImjjd95YI
+         UAB1dZh3MNiA2ino4vnkwNg8pRG3ibOOXjA5j1VVmHcU04QCAxpvNK/6jSne1R52aKkd
+         7JZj6c9bmyHa1l9ctQqJ4mYiVqD4p3TFpUZf/HGlmNPPMLnwUcPJWpR3vkS7Wf8DZd1R
+         bzkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766391252; x=1766996052;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cbxoIvggTHwJGPAyfPp+mE9GnjxpExWzAQ+NnFf0Hcc=;
+        b=LKniKQzP3WOZ21f2UF1jrkWyxgTyN5PHVOsFj6uDrvfsld4+xYDyga16YcLY2VVW9z
+         jCzraHM7Yz+b2v5NMZOCGsQJDhG8G6xgiWarJNsmTteuuO0hxxIg3198RaaIjkqo6jnP
+         mlj9gH3Qh0WjeikrGR+yFUc3xn8FP6WX2sHEgngDyHZua9LGQSnyRuml8+yp7CC9nSRa
+         Ja58CRciWis1zQZC2IpZ3MCC9UDLiukIM5zFRVI9QSCCVrDckK+cYRUh7EseTnW+NZkK
+         GU++QApdt1O1UQ57lsbIaN9L6wTDrTOT+CcPWDL6e28V2zziyLlQdlwu8mL/7kTsLHuv
+         ERVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUL46qE3nzeximFtwuNa5kXhzN3o/twckPTsvK9yJRYRDbVkpYw2T7UNgCizg8mbh0z7II66aicbpI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz09Dwb84udY4tPTFQW33B++LZIK4parp0IGtd+UsbwFRi/t6VB
+	Gc/85wn8VKHBeUKIZcd2ezRepjNMONIVAzW9du5mRReW2BGR3u8dgxIjz0/q68E5CAdvyRKY4F7
+	PSGfAVYUlamR4ERg943420d7y12slNLIq6x5LwYFUuZBnzDjw/o0y7tIUSz5DZiw=
+X-Gm-Gg: AY/fxX4E4GQYwpTA626wSBqH6eTGCbc+KfJOlm00XvObm8ggFMvWpEuQPF8O6awNjpi
+	1O+1mYQ/IzQxk1cRPyUfs9FRCYZGsRCQdCMxb8Rv2UV1hCkIw223GOfC/tHPZW999cpGn//LhSo
+	dxW/7h1O0imojhfU7FF+KETyrOhrf27n2R3bxdXdRD2s0NBhDlAa89K6LMANK2Zdn9VQhBemKhA
+	ImaIcRzmq0tEaEbAya8Hi2OEWWBlOFMaK8kYwwxE4K7hsU0aYlHPbtJpWPu6Hee+x99Gg7CAWdN
+	NFCs059K1rK/HFf/gZHA5FpMTNo4GJYP7i9v9tqCKEwnp5TR9q7z2NWD0rovYLDGHAlMSQ9V0tA
+	3MUmMMMwmFvgAAe39J8W13vIwi4ku1jDJK0uBgEI9gQ==
+X-Received: by 2002:a17:90b:1d83:b0:32a:34d8:33d3 with SMTP id 98e67ed59e1d1-34e91f749d8mr8077465a91.0.1766391252413;
+        Mon, 22 Dec 2025 00:14:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG1Go09mxe6FptC6uL4OomBUKer2vZ4FaNIffkFWpnND+g9IVqxiqRcg2zZV/2/WJ8KZ0XTqQ==
+X-Received: by 2002:a17:90b:1d83:b0:32a:34d8:33d3 with SMTP id 98e67ed59e1d1-34e91f749d8mr8077421a91.0.1766391251826;
+        Mon, 22 Dec 2025 00:14:11 -0800 (PST)
+Received: from [10.218.35.45] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34e70dbd618sm12166827a91.12.2025.12.22.00.14.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Dec 2025 00:14:11 -0800 (PST)
+Message-ID: <a7b94f8f-8773-43b0-b481-29828aba9abd@oss.qualcomm.com>
+Date: Mon, 22 Dec 2025 13:44:02 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 19/27] PCI: dwc: ep: Cache MSI outbound iATU
+ mapping
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Koichiro Den <den@valinux.co.jp>, ntb@lists.linux.dev,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Frank.Li@nxp.com, mani@kernel.org,
+        kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com,
+        corbet@lwn.net, vkoul@kernel.org, jdmason@kudzu.us,
+        dave.jiang@intel.com, allenbh@gmail.com, Basavaraj.Natikar@amd.com,
+        Shyam-sundar.S-k@amd.com, kurt.schwemmer@microsemi.com,
+        logang@deltatee.com, jingoohan1@gmail.com, lpieralisi@kernel.org,
+        robh@kernel.org, jbrunet@baylibre.com, fancer.lancer@gmail.com,
+        arnd@arndb.de, pstanner@redhat.com, elfring@users.sourceforge.net
+References: <20251129160405.2568284-1-den@valinux.co.jp>
+ <20251129160405.2568284-20-den@valinux.co.jp> <aTaE3yB7tQ-Homju@ryzen>
+ <4909f70a-2f65-4cac-96ac-5cd4371bc867@oss.qualcomm.com>
+ <aUj4M3z87MwFSUFW@ryzen>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <aUj4M3z87MwFSUFW@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20251222-uapi-idxd-v1-1-baa183adb20d@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIAHz7SGkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1NDIyMj3dLEgkygWEWKroWhhaWZsVmasYFRmhJQfUFRalpmBdis6NjaWgA
- ZibD9WwAAAA==
-X-Change-ID: 20251222-uapi-idxd-8189636f302f
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, 
- Dave Jiang <dave.jiang@intel.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Arnd Bergmann <arnd@arndb.de>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1766390675; l=9746;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=x89KSPKJrplWxLOPS+kqKtScxkmyFNwjKV81VUvuZ5E=;
- b=3C0YvvwlFvclhfiytWAmkq3/nVw4hAfjZY2xAAWtGCMdgtQOT+oYhORNvRoJx21/afSzhX3t+
- E62rzXEJ/TiAigOzAhjJTPYlGB2H9WyVbJH7DzYGe3GrrlrqH1TU0bi
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjIyMDA3MyBTYWx0ZWRfX28td5LjqKxU9
+ UVYt7gfA+/Rv6PVOctQjEUlGw7GtmJw4VIdH2PnhShQfgGFLij4JUq1T0EDt1V48v57mUvyMr2l
+ DVTr8slyrkMW4lguDx1biljs/R5EDmFmwL7A7eBLDTJG9LWnC+U8V6oI2icC2qdzMVPR0K8jS5a
+ Oj61d3HqLYxjdMxFkUQJRW0iF7Km8InlN4ljGq30KDMHUAv0xDN1M7RFdccMp0bupq0BsZx26OF
+ V0BZxW3ukBmcDbbLGTIgvaQ/lkj1UQ42Ap5XKXGuJsd2WqSlH+hAoZzrwa1ak+bPq1JWrV76R9s
+ cdulCgZr3rsGgMDV/mAMVC+bp1TcZwiJeha2fZV1b1gX+rSZLwIvWpvUQ2qIX87A3rtet82+CXo
+ u6aOSiY4GYUj9hQKSaSBrVPVb7hD10ec2rBai80c/XpjCi+9vyxICAREsQacETLzSAeVSGbWp20
+ govOVmCsT1iWqCxgNkg==
+X-Authority-Analysis: v=2.4 cv=VMnQXtPX c=1 sm=1 tr=0 ts=6948fdd5 cx=c_pps
+ a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=9AdMxfjQAAAA:20 a=VwQbUJbxAAAA:8 a=P-IC7800AAAA:8
+ a=XlojDObrNaimPXCU0dcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=uKXjsCUrEbL0IQVhDsJ9:22 a=d3PnA9EDa4IxuAV0gXij:22 a=bA3UWDv6hWIuX7UZL3qL:22
+X-Proofpoint-ORIG-GUID: cpiAabBllmwtaXySW2WUUeFzvPk_4csE
+X-Proofpoint-GUID: cpiAabBllmwtaXySW2WUUeFzvPk_4csE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-21_05,2025-12-19_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 malwarescore=0 phishscore=0 suspectscore=0 lowpriorityscore=0
+ spamscore=0 adultscore=0 priorityscore=1501 impostorscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2512220073
 
-Using libc types and headers from the UAPI headers is problematic as it
-introduces a dependency on a full C toolchain.
 
-Use the fixed-width integer types provided by the UAPI headers instead.
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- include/uapi/linux/idxd.h | 270 +++++++++++++++++++++++-----------------------
- 1 file changed, 133 insertions(+), 137 deletions(-)
+On 12/22/2025 1:20 PM, Niklas Cassel wrote:
+> On Mon, Dec 22, 2025 at 10:40:12AM +0530, Krishna Chaitanya Chundru wrote:
+>> On 12/8/2025 1:27 PM, Niklas Cassel wrote:
+>>> On Sun, Nov 30, 2025 at 01:03:57AM +0900, Koichiro Den wrote:
+>>>
+>>> I guess the problem is that some EPF drivers, even if only
+>>> one capability can be enabled (MSI/MSI-X), call both
+>>> pci_epc_set_msi() and pci_epc_set_msix(), e.g.:
+>>> https://github.com/torvalds/linux/blob/v6.18/drivers/pci/endpoint/functions/pci-epf-test.c#L969-L987
+>>>
+>>> To fill in the number of MSI/MSI-X irqs.
+>>>
+>>> While other EPF drivers only call either pci_epc_set_msi() or
+>>> pci_epc_set_msix(), depending on the IRQ type that will actually
+>>> be used:
+>>> https://github.com/torvalds/linux/blob/v6.18/drivers/nvme/target/pci-epf.c#L2247-L2262
+>>>
+>>> I think both versions is okay, just because the number of IRQs
+>>> is filled in for both MSI/MSI-X, AFAICT, only one of them will
+>>> get enabled.
+>>>
+>>>
+>>> I guess it might be hard for an EPC driver to know which capability
+>>> that is currently enabled, as to enable a capability is only a config
+>>> space write by the host side.
+>> As the host is the one which enables MSI/MSIX, it should be better the
+>> controller
+>> driver takes this decision and the EPF driver just sends only raise_irq.
+>> Because technically, host can disable MSI and enable MSIX at runtime also.
+>>
+>> In the controller driver,  it can check which is enabled and chose b/w
+>> MSIX/MSI/Legacy.
+> I'm not sure if I'm following, but if by "the controller driver", you
+> mean the EPC driver, and not the host side driver, how can the EPC
+> driver know how many interrupts a specific EPF driver wants to use?
+I meant the dwc drivers here.
+Set msi & set msix still need to called from the EPF driver only to tell 
+how many
+interrupts they want to configure etc.
+>
+>  From the kdoc to pci_epc_set_msi(), the nr_irqs parameter is defined as:
+> @nr_irqs: number of MSI interrupts required by the EPF
+> https://github.com/torvalds/linux/blob/v6.19-rc2/drivers/pci/endpoint/pci-epc-core.c#L305
+>
+>
+> Anyway, I posted Koichiro's patch here:
+> https://lore.kernel.org/linux-pci/20251210071358.2267494-2-cassel@kernel.org/
+I will comment on that patch.
+>
+> See my comment:
+>    pci-epf-test does change between MSI and MSI-X without calling
+>    dw_pcie_ep_stop(), however, the msg_addr address written by the host
+>    will be the same address, at least when using a Linux host using a DWC
+>    based controller. If another host ends up using different msg_addr for
+>    MSI and MSI-X, then I think that we will need to modify pci-epf-test to
+>    call a function when changing IRQ type, such that pcie-designware-ep.c
+>    can tear down the MSI/MSI-X mapping.
+Maybe for arm based systems we are getting same address but for x86 
+based systems
+it is not guarantee that you will get same address.
+> So if we want to improve things, I think we need to modify the EPF drivers
+> to call a function when changing the IRQ type. The EPF driver should know
+> which IRQ type that is currently in use (see e.g. nvme_epf->irq_type in
+> drivers/nvme/target/pci-epf.c).
+My suggestion is let EPF driver call raise_irq with the vector number 
+then the dwc driver
+can raise IRQ based on which IRQ host enables it.
+> Additionally, I don't think that the host side should be allowed to change
+> the IRQ type (using e.g. setpci) when the EPF driver is in a "running state".
+In the host driver itelf they can choose to change it by using 
+pci_alloc_irq_vectors 
+<https://elixir.bootlin.com/linux/v6.18.2/C/ident/pci_alloc_irq_vectors>, 
+Currently it is not present but in future someone can change it, as spec 
+didn't say you
+can't update it.
+> I think things will break badly if you e.g. try to do this on an PCIe
+> connected network card while the network card is in use.
+I agree on this.
 
-diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
-index 3d1987e1bb2d..fdcc8eefb925 100644
---- a/include/uapi/linux/idxd.h
-+++ b/include/uapi/linux/idxd.h
-@@ -3,11 +3,7 @@
- #ifndef _USR_IDXD_H_
- #define _USR_IDXD_H_
- 
--#ifdef __KERNEL__
- #include <linux/types.h>
--#else
--#include <stdint.h>
--#endif
- 
- /* Driver command error status */
- enum idxd_scmd_stat {
-@@ -176,132 +172,132 @@ enum iax_completion_status {
- #define DSA_COMP_STATUS(status)		((status) & DSA_COMP_STATUS_MASK)
- 
- struct dsa_hw_desc {
--	uint32_t	pasid:20;
--	uint32_t	rsvd:11;
--	uint32_t	priv:1;
--	uint32_t	flags:24;
--	uint32_t	opcode:8;
--	uint64_t	completion_addr;
-+	__u32	pasid:20;
-+	__u32	rsvd:11;
-+	__u32	priv:1;
-+	__u32	flags:24;
-+	__u32	opcode:8;
-+	__u64	completion_addr;
- 	union {
--		uint64_t	src_addr;
--		uint64_t	rdback_addr;
--		uint64_t	pattern;
--		uint64_t	desc_list_addr;
--		uint64_t	pattern_lower;
--		uint64_t	transl_fetch_addr;
-+		__u64	src_addr;
-+		__u64	rdback_addr;
-+		__u64	pattern;
-+		__u64	desc_list_addr;
-+		__u64	pattern_lower;
-+		__u64	transl_fetch_addr;
- 	};
- 	union {
--		uint64_t	dst_addr;
--		uint64_t	rdback_addr2;
--		uint64_t	src2_addr;
--		uint64_t	comp_pattern;
-+		__u64	dst_addr;
-+		__u64	rdback_addr2;
-+		__u64	src2_addr;
-+		__u64	comp_pattern;
- 	};
- 	union {
--		uint32_t	xfer_size;
--		uint32_t	desc_count;
--		uint32_t	region_size;
-+		__u32	xfer_size;
-+		__u32	desc_count;
-+		__u32	region_size;
- 	};
--	uint16_t	int_handle;
--	uint16_t	rsvd1;
-+	__u16	int_handle;
-+	__u16	rsvd1;
- 	union {
--		uint8_t		expected_res;
-+		__u8		expected_res;
- 		/* create delta record */
- 		struct {
--			uint64_t	delta_addr;
--			uint32_t	max_delta_size;
--			uint32_t 	delt_rsvd;
--			uint8_t 	expected_res_mask;
-+			__u64	delta_addr;
-+			__u32	max_delta_size;
-+			__u32	delt_rsvd;
-+			__u8	expected_res_mask;
- 		};
--		uint32_t	delta_rec_size;
--		uint64_t	dest2;
-+		__u32	delta_rec_size;
-+		__u64	dest2;
- 		/* CRC */
- 		struct {
--			uint32_t	crc_seed;
--			uint32_t	crc_rsvd;
--			uint64_t	seed_addr;
-+			__u32	crc_seed;
-+			__u32	crc_rsvd;
-+			__u64	seed_addr;
- 		};
- 		/* DIF check or strip */
- 		struct {
--			uint8_t		src_dif_flags;
--			uint8_t		dif_chk_res;
--			uint8_t		dif_chk_flags;
--			uint8_t		dif_chk_res2[5];
--			uint32_t	chk_ref_tag_seed;
--			uint16_t	chk_app_tag_mask;
--			uint16_t	chk_app_tag_seed;
-+			__u8	src_dif_flags;
-+			__u8	dif_chk_res;
-+			__u8	dif_chk_flags;
-+			__u8	dif_chk_res2[5];
-+			__u32	chk_ref_tag_seed;
-+			__u16	chk_app_tag_mask;
-+			__u16	chk_app_tag_seed;
- 		};
- 		/* DIF insert */
- 		struct {
--			uint8_t		dif_ins_res;
--			uint8_t		dest_dif_flag;
--			uint8_t		dif_ins_flags;
--			uint8_t		dif_ins_res2[13];
--			uint32_t	ins_ref_tag_seed;
--			uint16_t	ins_app_tag_mask;
--			uint16_t	ins_app_tag_seed;
-+			__u8	dif_ins_res;
-+			__u8	dest_dif_flag;
-+			__u8	dif_ins_flags;
-+			__u8	dif_ins_res2[13];
-+			__u32	ins_ref_tag_seed;
-+			__u16	ins_app_tag_mask;
-+			__u16	ins_app_tag_seed;
- 		};
- 		/* DIF update */
- 		struct {
--			uint8_t		src_upd_flags;
--			uint8_t		upd_dest_flags;
--			uint8_t		dif_upd_flags;
--			uint8_t		dif_upd_res[5];
--			uint32_t	src_ref_tag_seed;
--			uint16_t	src_app_tag_mask;
--			uint16_t	src_app_tag_seed;
--			uint32_t	dest_ref_tag_seed;
--			uint16_t	dest_app_tag_mask;
--			uint16_t	dest_app_tag_seed;
-+			__u8	src_upd_flags;
-+			__u8	upd_dest_flags;
-+			__u8	dif_upd_flags;
-+			__u8	dif_upd_res[5];
-+			__u32	src_ref_tag_seed;
-+			__u16	src_app_tag_mask;
-+			__u16	src_app_tag_seed;
-+			__u32	dest_ref_tag_seed;
-+			__u16	dest_app_tag_mask;
-+			__u16	dest_app_tag_seed;
- 		};
- 
- 		/* Fill */
--		uint64_t	pattern_upper;
-+		__u64	pattern_upper;
- 
- 		/* Translation fetch */
- 		struct {
--			uint64_t	transl_fetch_res;
--			uint32_t	region_stride;
-+			__u64	transl_fetch_res;
-+			__u32	region_stride;
- 		};
- 
- 		/* DIX generate */
- 		struct {
--			uint8_t		dix_gen_res;
--			uint8_t		dest_dif_flags;
--			uint8_t		dif_flags;
--			uint8_t		dix_gen_res2[13];
--			uint32_t	ref_tag_seed;
--			uint16_t	app_tag_mask;
--			uint16_t	app_tag_seed;
-+			__u8	dix_gen_res;
-+			__u8	dest_dif_flags;
-+			__u8	dif_flags;
-+			__u8	dix_gen_res2[13];
-+			__u32	ref_tag_seed;
-+			__u16	app_tag_mask;
-+			__u16	app_tag_seed;
- 		};
- 
--		uint8_t		op_specific[24];
-+		__u8		op_specific[24];
- 	};
- } __attribute__((packed));
- 
- struct iax_hw_desc {
--	uint32_t        pasid:20;
--	uint32_t        rsvd:11;
--	uint32_t        priv:1;
--	uint32_t        flags:24;
--	uint32_t        opcode:8;
--	uint64_t        completion_addr;
--	uint64_t        src1_addr;
--	uint64_t        dst_addr;
--	uint32_t        src1_size;
--	uint16_t        int_handle;
-+	__u32        pasid:20;
-+	__u32        rsvd:11;
-+	__u32        priv:1;
-+	__u32        flags:24;
-+	__u32        opcode:8;
-+	__u64        completion_addr;
-+	__u64        src1_addr;
-+	__u64        dst_addr;
-+	__u32        src1_size;
-+	__u16        int_handle;
- 	union {
--		uint16_t        compr_flags;
--		uint16_t        decompr_flags;
-+		__u16        compr_flags;
-+		__u16        decompr_flags;
- 	};
--	uint64_t        src2_addr;
--	uint32_t        max_dst_size;
--	uint32_t        src2_size;
--	uint32_t	filter_flags;
--	uint32_t	num_inputs;
-+	__u64	src2_addr;
-+	__u32	max_dst_size;
-+	__u32	src2_size;
-+	__u32	filter_flags;
-+	__u32	num_inputs;
- } __attribute__((packed));
- 
- struct dsa_raw_desc {
--	uint64_t	field[8];
-+	__u64	field[8];
- } __attribute__((packed));
- 
- /*
-@@ -309,91 +305,91 @@ struct dsa_raw_desc {
-  * volatile and prevent the compiler from optimize the read.
-  */
- struct dsa_completion_record {
--	volatile uint8_t	status;
-+	volatile __u8	status;
- 	union {
--		uint8_t		result;
--		uint8_t		dif_status;
-+		__u8		result;
-+		__u8		dif_status;
- 	};
--	uint8_t			fault_info;
--	uint8_t			rsvd;
-+	__u8			fault_info;
-+	__u8			rsvd;
- 	union {
--		uint32_t		bytes_completed;
--		uint32_t		descs_completed;
-+		__u32		bytes_completed;
-+		__u32		descs_completed;
- 	};
--	uint64_t		fault_addr;
-+	__u64		fault_addr;
- 	union {
- 		/* common record */
- 		struct {
--			uint32_t	invalid_flags:24;
--			uint32_t	rsvd2:8;
-+			__u32	invalid_flags:24;
-+			__u32	rsvd2:8;
- 		};
- 
--		uint32_t	delta_rec_size;
--		uint64_t	crc_val;
-+		__u32	delta_rec_size;
-+		__u64	crc_val;
- 
- 		/* DIF check & strip */
- 		struct {
--			uint32_t	dif_chk_ref_tag;
--			uint16_t	dif_chk_app_tag_mask;
--			uint16_t	dif_chk_app_tag;
-+			__u32	dif_chk_ref_tag;
-+			__u16	dif_chk_app_tag_mask;
-+			__u16	dif_chk_app_tag;
- 		};
- 
- 		/* DIF insert */
- 		struct {
--			uint64_t	dif_ins_res;
--			uint32_t	dif_ins_ref_tag;
--			uint16_t	dif_ins_app_tag_mask;
--			uint16_t	dif_ins_app_tag;
-+			__u64	dif_ins_res;
-+			__u32	dif_ins_ref_tag;
-+			__u16	dif_ins_app_tag_mask;
-+			__u16	dif_ins_app_tag;
- 		};
- 
- 		/* DIF update */
- 		struct {
--			uint32_t	dif_upd_src_ref_tag;
--			uint16_t	dif_upd_src_app_tag_mask;
--			uint16_t	dif_upd_src_app_tag;
--			uint32_t	dif_upd_dest_ref_tag;
--			uint16_t	dif_upd_dest_app_tag_mask;
--			uint16_t	dif_upd_dest_app_tag;
-+			__u32	dif_upd_src_ref_tag;
-+			__u16	dif_upd_src_app_tag_mask;
-+			__u16	dif_upd_src_app_tag;
-+			__u32	dif_upd_dest_ref_tag;
-+			__u16	dif_upd_dest_app_tag_mask;
-+			__u16	dif_upd_dest_app_tag;
- 		};
- 
- 		/* DIX generate */
- 		struct {
--			uint64_t	dix_gen_res;
--			uint32_t	dix_ref_tag;
--			uint16_t	dix_app_tag_mask;
--			uint16_t	dix_app_tag;
-+			__u64	dix_gen_res;
-+			__u32	dix_ref_tag;
-+			__u16	dix_app_tag_mask;
-+			__u16	dix_app_tag;
- 		};
- 
--		uint8_t		op_specific[16];
-+		__u8		op_specific[16];
- 	};
- } __attribute__((packed));
- 
- struct dsa_raw_completion_record {
--	uint64_t	field[4];
-+	__u64	field[4];
- } __attribute__((packed));
- 
- struct iax_completion_record {
--	volatile uint8_t        status;
--	uint8_t                 error_code;
--	uint8_t			fault_info;
--	uint8_t			rsvd;
--	uint32_t                bytes_completed;
--	uint64_t                fault_addr;
--	uint32_t                invalid_flags;
--	uint32_t                rsvd2;
--	uint32_t                output_size;
--	uint8_t                 output_bits;
--	uint8_t                 rsvd3;
--	uint16_t                xor_csum;
--	uint32_t                crc;
--	uint32_t                min;
--	uint32_t                max;
--	uint32_t                sum;
--	uint64_t                rsvd4[2];
-+	volatile __u8        status;
-+	__u8                 error_code;
-+	__u8		     fault_info;
-+	__u8		     rsvd;
-+	__u32                bytes_completed;
-+	__u64                fault_addr;
-+	__u32                invalid_flags;
-+	__u32                rsvd2;
-+	__u32                output_size;
-+	__u8                 output_bits;
-+	__u8                 rsvd3;
-+	__u16                xor_csum;
-+	__u32                crc;
-+	__u32                min;
-+	__u32                max;
-+	__u32                sum;
-+	__u64                rsvd4[2];
- } __attribute__((packed));
- 
- struct iax_raw_completion_record {
--	uint64_t	field[8];
-+	__u64	field[8];
- } __attribute__((packed));
- 
- #endif
+I just want to highlight there is possibility of this in future, if 
+someone comes up with a
+clean logic.
 
----
-base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
-change-id: 20251222-uapi-idxd-8189636f302f
-
-Best regards,
--- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+- Krishna Chaitanya.
+>
+>
+> Kind regards,
+> Niklas
 
 

@@ -1,55 +1,56 @@
-Return-Path: <dmaengine+bounces-7878-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7879-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54889CD91AC
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 12:28:27 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAD9BCD91B5
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 12:28:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 867053001630
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 11:28:21 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9CBA630028AC
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 11:28:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9120C3314A1;
-	Tue, 23 Dec 2025 11:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1138F330B21;
+	Tue, 23 Dec 2025 11:28:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNp7bR4g"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTZpsN3e"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E982D3A80;
-	Tue, 23 Dec 2025 11:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B2A32BF2F;
+	Tue, 23 Dec 2025 11:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766489298; cv=none; b=QfZ2ydUYKqq45WQXzsMVmIW3p95Vhkk1u7IquiTBhhXIefaZigjy68m7fLUC1PGAC9AIyw2vTTwJVtvR7FGBZLnXMpa8Z4Zu5R7rHLW8XzvVH5DzvzNI4s4sgCpO5lkXSGuKUmeAyY6jgg6XBuwrNaIlLadq5AxgdpnAEvezBw4=
+	t=1766489301; cv=none; b=NA6v6Ccs2WmUayuvwk4Zp4+t7LQ2NT0EzSufMTyTJCkrWEEVLMw86iNNnHNQmGPJhPfwf7BUbPORmkws5hMxNVar4jcnpLIZ41j7bz2Iy4fMETScesUoXWvzAnAbZihkfUfx3+LB7brQ7z2cDoQyVG/Ohz5X+TqlbPbWXyKgC+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766489298; c=relaxed/simple;
-	bh=CXTikuhV3EiY2FsqamIAGYKReZj4jV2kfB6eDMhHLMk=;
+	s=arc-20240116; t=1766489301; c=relaxed/simple;
+	bh=lZe1cCbxkn52whYgqfzuO8vrl214dFz4RWvAWiF8ObI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JxMY4mP7YB447TAir5rRwKKV6rZijvyGLbge5S+RjKRxlPupvbArH5wmscH33gtKD5M05mBfgavAKaJ8WHa7+izgKPVcYGQqh6PQqmymRVPv9gJ5A8dgm8CEcsR4jenBs7HBn9/0B/7eqZJY4eZP5I6ndhlljbDv/fKJsq9CxY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNp7bR4g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CFF4C116C6;
-	Tue, 23 Dec 2025 11:28:16 +0000 (UTC)
+	 MIME-Version:Content-Type; b=D8h63SqzpjvhIqrXCJAV8m86lNvCTBJ4wnLgy5Ueto3+K21sDH80WUHRBKt8kwauZIQsmNTnwR8ThJdBmrI8TDzM4CGdOS7TWXoSX8OBZ7joofCkyavCxXXLCr0vTbh96w1uZwfTAo7/HeeuvkW+7oiq9l7eqTAt36w0V6Evg4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTZpsN3e; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AB01C116C6;
+	Tue, 23 Dec 2025 11:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766489298;
-	bh=CXTikuhV3EiY2FsqamIAGYKReZj4jV2kfB6eDMhHLMk=;
+	s=k20201202; t=1766489300;
+	bh=lZe1cCbxkn52whYgqfzuO8vrl214dFz4RWvAWiF8ObI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=aNp7bR4gYyKYps54two3btL413p044OdUWAmTgk89BAST4/0E3VU4kB0PmkQOV0Kk
-	 4R1qx2jf3MfYRkfTUr5XJE+5FGg2H8z8zUA2XjVUF5v76ZNRILzTGwL3+k/UFVF/Jr
-	 hylATzl9LbnBPKZ7sABP6COi1zuwMrdwIiqFoiHQ+xncwnTMU4UKEtoD67URq3CL0m
-	 6Jf2M/Sbgx1rS+SbWE0N1p/aW08rm219hhcQ/yVDKq4vSaUYYg6mHqF8yXwhYhdIiu
-	 uq47aVE/kLZOCEZgnJQ2Omu+hc6lBSknW8u6VR9++X0juttE2Q1lS3eHnEgEVHdjj9
-	 OOdtEUaPAiZWw==
+	b=DTZpsN3eHoFAL9lrlZRgFKStnM20W6ebr/myjO8gHzSWEQKg0j7s+gU5cLBlx/qhk
+	 2iOvObt6Oxh3c0IoTL3f0rp2ZZd6wCYPH/aCbVLV9O3EeVp8I66XxWnELaoZWpdWL2
+	 KS1hCJeaWL6G+hDcujgg9Zmns9YQkyp9SAoz4EDxQl57jEN6411dFMCBuXX8lkg+Tx
+	 rYm5Jc5LjJkHArFYrjdgdNxzbOCU4hSqtePP0JKUyR6M9BVa3v6zUAqeNCmJ9cINU/
+	 Z358X8iWp06b+w2Sz3N2U0zAhckweAxPNdfwnJiyOHXbCoSn8lmBiL6OyIIZII/75M
+	 wnD1ZyGfbFyfQ==
 From: Vinod Koul <vkoul@kernel.org>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Arnd Bergmann <arnd@arndb.de>
-In-Reply-To: <20251222-uapi-idxd-v1-1-baa183adb20d@linutronix.de>
-References: <20251222-uapi-idxd-v1-1-baa183adb20d@linutronix.de>
-Subject: Re: [PATCH] dmaengine: idxd: uapi: use UAPI types
-Message-Id: <176648929594.697163.13256165598692141453.b4-ty@kernel.org>
-Date: Tue, 23 Dec 2025 16:58:15 +0530
+To: Jernej Skrabec <jernej@kernel.org>, 
+ Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@kernel.org>
+Cc: Andre Przywara <andre.przywara@arm.com>, dmaengine@vger.kernel.org, 
+ linux-sunxi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20251221080450.1813479-1-wens@kernel.org>
+References: <20251221080450.1813479-1-wens@kernel.org>
+Subject: Re: [PATCH] dmaengine: sun6i: Choose appropriate burst length
+ under maxburst
+Message-Id: <176648929819.697163.12733277039569161505.b4-ty@kernel.org>
+Date: Tue, 23 Dec 2025 16:58:18 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -57,22 +58,29 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Mon, 22 Dec 2025 09:04:13 +0100, Thomas Weißschuh wrote:
-> Using libc types and headers from the UAPI headers is problematic as it
-> introduces a dependency on a full C toolchain.
+On Sun, 21 Dec 2025 16:04:48 +0800, Chen-Yu Tsai wrote:
+> maxburst, as provided by the client, specifies the largest amount of
+> data that is allowed to be transferred in one burst. This limit is
+> normally provided to avoid a data burst overflowing the target FIFO.
+> It does not mean that the DMA engine can only do bursts in that size.
 > 
-> Use the fixed-width integer types provided by the UAPI headers instead.
+> Let the driver pick the largest supported burst length within the
+> given limit. This lets the driver work correctly with some clients that
+> give a large maxburst value. In particular, the 8250_dw driver will give
+> a quarter of the UART's FIFO size as maxburst. On some systems the FIFO
+> size is 256 bytes, giving a maxburst of 64 bytes, while the hardware
+> only supports bursts of up to 16 bytes.
 > 
-> 
+> [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: idxd: uapi: use UAPI types
-      commit: 98b9f207afa53aff2edb0e52910c4348b456b37d
+[1/1] dmaengine: sun6i: Choose appropriate burst length under maxburst
+      commit: 7178c3586ab42693b28bb81014320a7783e5c435
 
 Best regards,
 -- 

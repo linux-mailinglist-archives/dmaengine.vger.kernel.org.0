@@ -1,179 +1,155 @@
-Return-Path: <dmaengine+bounces-7890-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7891-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6E6DCD9799
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 14:45:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99B82CD97DB
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 14:51:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 56650301EDCD
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 13:45:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8579F3019199
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 13:50:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E827C2248AE;
-	Tue, 23 Dec 2025 13:45:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAF1F279DCA;
+	Tue, 23 Dec 2025 13:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="T/ONAb6e"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB6015ECCC
-	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 13:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4AB2741B6
+	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 13:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766497536; cv=none; b=D5vClHruCxDj1YAp9ieGnH6LkL8kQxq1yq9rEY5rjyBekl1anrGdcRKEjh/h76lVtNJzAdUdzpM/Qaog5Vq2x/s7GH6unr5rzFrJX/6umBGPpUsmOCXdYlawU3ozuvZWTWZQwVBe1W33J4qzwwc268UfuiMFmGUpd+rzy9u1MOA=
+	t=1766497843; cv=none; b=InEItXCoNki33BFTNgQ6APwgp/msZEzClNa2qmut/xG+gvF0JoV9pv293yIm4Qt8WE1s1dV9l8oD3DpR/fJXqz7HrYdPAMQRToA1KYG908CRisYS2stpl0X7mHpWgccPjgG8cMuv5aa7aAWGsynIEIkqOLPPzq/p3Cra3l4p9NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766497536; c=relaxed/simple;
-	bh=+vgDq4lQzhcJ/PmjToagAIXB+7UjAyqauVh2qc4S2YQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gV2bOIFi25dcZf3PEW8w/fArXXzSoQLFe3Gv2plO59xok10XGxeRccdMMJ61UTukBgURGyaLB/CpVymw0P+Y565f9Rfc2omILeSrj/dBku3MaAjc5jl2WbR7sLKEhDIFJqyjJfc68CLuBLPmpoyJ0Va2mJMBlR6gNcnPDcBDhBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-64b560e425eso6365129a12.1
-        for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 05:45:35 -0800 (PST)
+	s=arc-20240116; t=1766497843; c=relaxed/simple;
+	bh=R5YlQFivD0z58iZAMVJliC1tEHPcqljapZwmSPcdxck=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d6bgaUIPN/zpL7cA0ocJbsdphsloAGLluhhFAG0UkxWUc71mFuWeMDOd6Ts5rSdXx4VsJGt3nLTBm20rK3PbILiinBrfN5weg3pVbFZa0kuABKn3FYctYNaZaLwiO1uqonN/9uhNDN6FI60n5ItT/HU2MpwrWVCnGMNP/aY8QC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=T/ONAb6e; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4779aa4f928so49112215e9.1
+        for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 05:50:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1766497839; x=1767102639; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CSLSTBCuxYpWQX70zdRdCRHrxzQ3ybHMPnhlQz4+NDY=;
+        b=T/ONAb6e6EdzKehm3Q2ZKbuGfNKB+5FjoyghRV8w//gA6oQIcj4dNjJ5Y8zrXcg6Jp
+         aP2cIywdx7RC91HsI4DuvUmWcR+hHTlqeOfB49GKX9QWNZab4LJBWFqKMavyqa6RqUMe
+         TG1oHUnja/WENJ1VwcEtgYaassrPtf+i4S7n76c61Dg3r6lB0S3UHVKDXb0Jp7hQxi+i
+         +DhTbxwDim9YCyavpZGueCKOhiDXeMEL74e9LEVfQBaIH7BseMejHCdl5HOvlU77JOJp
+         icTY0ycSwdKptA2x8dwqoorRs589WKHsEdaM8yjaTcTUvu5iDzIzELDvcjwEKI7N+uWr
+         1N6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766497534; x=1767102334;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1766497839; x=1767102639;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=U258/dz1ml2wi6XM7goSRHkqu3ww0wtWLKndOq5PViQ=;
-        b=kVjcIUL/wGKCgy9NASPbjXtoMFUCJrIw/jWK2pX8oXEaMBBhTWtfdGJRANK32MfXHJ
-         b03qlO4U2zYQmT0WZKZ3Szh2X82QqqmAJt4GYyI2EIqRE3teiDtl08pxlgd5RoSlUyNR
-         SAqTMkMGGaPHNRafI3GJanGIOpJatg2WwJeCAgx5pPWgI9XRhl6OnyNPvMQ0W9Qcvv46
-         obg1YfGfRmUePXVaHhdukfnW8phR8QoZIMm+f+kbCpEMGZv8hTUTxefeAXbmUgcDEYRG
-         GQ2Dj/TnZy/dTmYlI+XvdWCAg08KFFf/CYxM4/EzgBjxZXut4h/fGgIkDLumNA+upJEv
-         6buw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtg/SvZqh8A6iY5OvPRIV2qMLu6BK76upxBMwjbn8UG6jkeb1qs/EZwHElgxDXKJn3rFUqAdDSr+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9u8qCMN1ZF4xUVRdZFYqF7lE6WdBdTa3Ows5a972nMLFPT8Gf
-	xnr7j/gb/rVt8/IYLUu4fkPBneOvrv0Q44Ymc9GnPVColuQS0mkZjqypMd+ZLQfzJfk=
-X-Gm-Gg: AY/fxX7aZ+gNqjKOIWqGjQ40tt7U45KAu/sw37dQdXco6bfDb5v6Otncxa8x7Twsskj
-	p5K0eJRfDla0JhvuQpYz+/9T71j4SWP+etlzjTiFs00rif7xkm3+9FwObzmAAgdQ5fLNhrMgZ0H
-	O8Og0ZhcnDphKFjP5YfnPlN6VmnmgfG8Kwf3SINL50surdCk8610vYj3qqlvxIxov/B30vm/SaF
-	ZW6ef53KbK+ZOzs/ZAza3uUbTnZV1h+PzB7ANfbpCcyT0pPNlZKglDcdfnibfcDm8fOiiJd5e2P
-	MASfpLabHHBtmUBNyqi/H6YVhLMO1Szv3ACD+oFiJYXZQTq813+ogFsFkEGkdaHpO4cpniANvVX
-	IDjF7vpxjDaFcGqpn3WbKvdpVi+IZ5MCO9yAcuQ8lWR4u3nyCADXnVFgOtxia2GypDlz1A1brUe
-	9zjRw32E00HNiXF7vt3jneddOqBVjjLvWSwlAhwwZv/nOrbU87
-X-Google-Smtp-Source: AGHT+IExT5Jwm9tOlAKUq9k5nsIxnYZwI2gikpeW7mRnAghkiq5usBAAew4KuI+tsaxBOVAU/OTb/g==
-X-Received: by 2002:a17:907:9717:b0:b72:8e31:4354 with SMTP id a640c23a62f3a-b8036f947c5mr1526327866b.25.1766497533339;
-        Tue, 23 Dec 2025 05:45:33 -0800 (PST)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037f09149sm1396418166b.47.2025.12.23.05.45.28
-        for <dmaengine@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Dec 2025 05:45:28 -0800 (PST)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-64b61f82b5fso6546675a12.0
-        for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 05:45:28 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVCrEz89tV2/T1bKSU3Yf9P8aBHzgBhU0b2Zx8sNmCdKT8AMJzuhOHRrgxOPiYUKgT5+9dGrivcs74=@vger.kernel.org
-X-Received: by 2002:a05:6402:1e90:b0:64d:4894:776b with SMTP id
- 4fb4d7f45d1cf-64d48947948mr7064838a12.27.1766497528286; Tue, 23 Dec 2025
- 05:45:28 -0800 (PST)
+        bh=CSLSTBCuxYpWQX70zdRdCRHrxzQ3ybHMPnhlQz4+NDY=;
+        b=ORZV9TTpUpwloJGExeDWGFrxcmGXXJxzSRDwtX16tBIc+ldByxCPrwiBEgxcfey9Rs
+         SEfjaAg9hP/TSyh6YJJW9LlPqJJ49OjpNzO8sLie1M22Z3oXwGNP8r7gx4rJteORPydi
+         ahT+qqPTsYCPUMdFDyAEGYzqlpZypJzeqmWqNII0rU9mowokkIBjH+WqQCl/kLQC1RNr
+         ZIaPTkthP27DCt5hfUPGP6MFkBc9QVUXOsPx8Z1MQzjq4U6Bn6DNIwE3rR3yrzCuzNLC
+         soJQ+EGFlNUb7ev8GuMQiO7r0ggfEPjbunyzFb3Tk+NrBiuKKHHqQNZTRA8NVUasoi4f
+         pp7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVXHiEDDu66bY7eOvbqIeuT9BBg0NZWUX21PhI/rVa37YOKD+0SOZNtvctBfaM9hzecXJmVqWtpcl8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo7pzX2DdlGu6DIYgbiT+A3kv0YLoIq9cdgf99IQNCbve86QI3
+	BhuWPt/7dWzSW0qjPnTfrIB2OVWrFuurM69hOjLiwL+ZMk7JUXXRHEPkDYOc95Nc5Cw=
+X-Gm-Gg: AY/fxX4WIwJm8jhNSiXX9zQcMN/4l2tEkzUDzML7m3aa+FXOJUVgJHRXNYix0DFRz0o
+	5YiK9zFmh/9rOAzMKSJ2kkndYrDtXsfTcVEGNVnGjF0dCKRqN0vM+iEbwh5Qdw5IA9qb6P+cDKj
+	7TsgW5k5OW9BdB57xdS7sc1PJfj5UzFRQ6+xA9m+0AQbxYHZeX/8ZVBKOthVAuds2JYtvMw7+zS
+	4JutnZtNkuNKD75m3BcunznldtMAhrgXpA8dOzx8F/niR5aVuqoX3k6+y85KzLt6Q4vtEop5tFg
+	MchZLi2G8Udinsrk7LfkR0spV3uj6ln3J4Aw6PbBgWRK26rvcFIPXBuF795tHzOp9N4qQqrkz4k
+	reMcrTE6sWRRDeeKmIPGB0nENrt9lbNyVqp1Q/EfYD+rwFgMdXWwxJEeZ+7D8ha789QeLGiIqR2
+	PX5u5KxVnLprMoXS98WzjeuvTuSYIowcigY0cgLZ2MrEqb2pr1yRCBGkwDG2E6Mfik3Agzj/Q=
+X-Google-Smtp-Source: AGHT+IFFvIkSqaMDo61ZCu99zvjXsDbrrlIP0g2MTNusrjNtnv6buJ7QPDHENNpiJsBuRLIuAxu/GA==
+X-Received: by 2002:a05:600c:3b8f:b0:475:e09c:960e with SMTP id 5b1f17b1804b1-47d19593d0dmr187785365e9.32.1766497839109;
+        Tue, 23 Dec 2025 05:50:39 -0800 (PST)
+Received: from claudiu-TUXEDO-InfinityBook-Pro-AMD-Gen9.. ([2a02:2f04:620a:8300:4258:c40f:5faf:7af5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d192e88f5sm237921025e9.0.2025.12.23.05.50.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Dec 2025 05:50:38 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: vkoul@kernel.org,
+	biju.das.jz@bp.renesas.com,
+	fabrizio.castro.jz@renesas.com,
+	geert+renesas@glider.be,
+	prabhakar.mahadev-lad.rj@bp.renesas.com
+Cc: claudiu.beznea@tuxon.dev,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v6 0/8] dmaengine: sh: rz-dmac: Add tx_status and pause/resume support
+Date: Tue, 23 Dec 2025 15:49:44 +0200
+Message-ID: <20251223134952.460284-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251201124911.572395-1-cosmin-gabriel.tanislav.xa@renesas.com> <20251201124911.572395-3-cosmin-gabriel.tanislav.xa@renesas.com>
-In-Reply-To: <20251201124911.572395-3-cosmin-gabriel.tanislav.xa@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 23 Dec 2025 14:45:15 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdV=EW4YbEBiXH2p0SeC5Kw-YmYWuQwsudpGgM63pgqcfw@mail.gmail.com>
-X-Gm-Features: AQt7F2oX7CMa_8FU9LCOCZqrziankMeMXgDYxBV-ZhAtoMZJ9gqMth9qd4a31zo
-Message-ID: <CAMuHMdV=EW4YbEBiXH2p0SeC5Kw-YmYWuQwsudpGgM63pgqcfw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] dmaengine: sh: rz_dmac: make register_dma_req() chip-specific
-To: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, Johan Hovold <johan@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Cosmin,
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-On Mon, 1 Dec 2025 at 13:52, Cosmin Tanislav
-<cosmin-gabriel.tanislav.xa@renesas.com> wrote:
-> The Renesas RZ/T2H (R9A09G077) and RZ/N2H (R9A09G087) SoCs use a
-> completely different ICU unit compared to RZ/V2H, which requires a
-> separate implementation.
->
-> To prepare for adding support for these SoCs, add a chip-specific
-> structure and put a pointer to the rzv2h_icu_register_dma_req() function
-> in the .register_dma_req field of the chip-specific structure to allow
-> for other implementations. Do the same for the default request value,
-> RZV2H_ICU_DMAC_REQ_NO_DEFAULT.
->
-> While at it, factor out the logic that calls .register_dma_req() or
-> rz_dmac_set_dmars_register() into a separate function to remove some
-> code duplication. Since the default values are different between the
-> two, use -1 for designating that the default value should be used.
->
-> Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+Hi,
 
-Thanks for your patch!
+Series adds tx_status and pause/resume support for the rz-dmac driver.
+Along with it were added fixes and improvements identified while working
+on the above mentioned enhancements.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Previous versions were addressed by Biju. The previous versions were
+posted here:
 
-You can find a few non-functional nits below...
+v4: https://lore.kernel.org/all/20240628151728.84470-1-biju.das.jz@bp.renesas.com/
+v3: https://lore.kernel.org/all/20230412152445.117439-1-biju.das.jz@bp.renesas.com/
+v2: https://lore.kernel.org/all/20230405140842.201883-1-biju.das.jz@bp.renesas.com/
+v1: https://lore.kernel.org/all/20230324094957.115071-1-biju.das.jz@bp.renesas.com/
 
-> --- a/drivers/dma/sh/rz-dmac.c
-> +++ b/drivers/dma/sh/rz-dmac.c
-> @@ -95,9 +95,16 @@ struct rz_dmac_icu {
->         u8 dmac_index;
->  };
->
-> +struct rz_dmac_info {
-> +       void (*register_dma_req)(struct platform_device *icu_dev, u8 dmac_index,
-> +                                u8 dmac_channel, u16 req_no);
+Changes in v6:
+- added patches:
+-- dmaengine: sh: rz-dmac: Drop read of CHCTRL register
+-- dmaengine: sh: rz-dmac: Drop goto instruction and label
+- use vc lock in IRQ handler only for the error path
+- fixed typos
+- adjusted patch
+  "dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks"
 
-icu_register_dma_req, to make clear this is ICU-specific?
+Changes in v5:
+- added patches
+-- dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+-- dmaengine: sh: rz-dmac: Protect the driver specific lists
+-- dmaengine: sh: rz-dmac: Move all CHCTRL updates under spinlock
+-- dmaengine: sh: rz-dmac: Drop unnecessary local_irq_save() call
+-- dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks
+-- dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+- for pause/resume used the DMA controller support to pause/resume
+  transfers compared with previous versions
+- adjusted patches:
+-- dmaengine: sh: rz-dmac: Add device_tx_status() callback
 
-> +       u16 dma_req_no_default;
+Thank you,
+Claudiu
 
-default_dma_req_no, to avoid confusion between literal "no" and an
-abbreviation of "number"?
+Biju Das (2):
+  dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+  dmaengine: sh: rz-dmac: Add device_tx_status() callback
 
-> +};
-> +
+Claudiu Beznea (6):
+  dmaengine: sh: rz-dmac: Protect the driver specific lists
+  dmaengine: sh: rz-dmac: Move CHCTRL updates under spinlock
+  dmaengine: sh: rz-dmac: Drop read of CHCTRL register
+  dmaengine: sh: rz-dmac: Drop goto instruction and label
+  dmaengine: sh: rz-dmac: Drop unnecessary local_irq_save() call
+  dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks
 
-> @@ -1067,9 +1068,18 @@ static void rz_dmac_remove(struct platform_device *pdev)
->         pm_runtime_disable(&pdev->dev);
->  }
->
-> +static const struct rz_dmac_info rz_dmac_v2h_info = {
-> +       .register_dma_req = rzv2h_icu_register_dma_req,
-> +       .dma_req_no_default = RZV2H_ICU_DMAC_REQ_NO_DEFAULT,
-
-Since this is the only remaining user of RZV2H_ICU_DMAC_REQ_NO_DEFAULT,
-and this structure does specify hardware, perhaps just hardcode 0x3ff?
-
-> +};
-> +
-> +static const struct rz_dmac_info rz_dmac_common_info = {
-
-rz_dmac_classic_info, as this is not really common to all variants?
-I am open for a different name ;-)
-
-> +       .dma_req_no_default = 0,
-> +};
-> +
->  static const struct of_device_id of_rz_dmac_match[] = {
-> -       { .compatible = "renesas,r9a09g057-dmac", },
-> -       { .compatible = "renesas,rz-dmac", },
-> +       { .compatible = "renesas,r9a09g057-dmac", .data = &rz_dmac_v2h_info },
-> +       { .compatible = "renesas,rz-dmac", .data = &rz_dmac_common_info },
->         { /* Sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, of_rz_dmac_match);
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ drivers/dma/sh/rz-dmac.c | 281 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 231 insertions(+), 50 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.43.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 

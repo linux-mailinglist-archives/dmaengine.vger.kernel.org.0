@@ -1,166 +1,141 @@
-Return-Path: <dmaengine+bounces-7907-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7908-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75AE8CD9B03
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 15:36:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 94DDECD9B33
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 15:43:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 651FD300C0FB
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 14:36:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 38523301AD12
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 14:43:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB71F1C28E;
-	Tue, 23 Dec 2025 14:36:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CFEB342513;
+	Tue, 23 Dec 2025 14:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfAKWHuF"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7714201004
-	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 14:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E171DE4CE;
+	Tue, 23 Dec 2025 14:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766500575; cv=none; b=BxMO6MS0nxuN5qBhRWAoRpyQ+sD+oUKPH8pE1xeKD/uwKbaTqIQ1+1oUJA0pLJs7V+/bJ9JoBoNzhyZLgN5THyCiUtVDjMiCXiELgwEAMmcF7E8scnHZnsfH9/F3SmrLlUpkeKl64eNryV9I7NDbumsLTaqsCZXsWzkG2J5CI/Q=
+	t=1766501031; cv=none; b=diOwc07pYdXh/CE6PdckCZ+vuIr2S1DP7rpnEXSrcnEwec5mo7V89RloxCP01LztlMCLs18rTEAd496xWPsmWSIK2XpfKWUKTUbLAQZU9zkKIUwdbnPrK1DhdgU4uHbg87+T21A7vvmH3R4JkGUNcwwWw1KGYX9OwMVAqjKDJQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766500575; c=relaxed/simple;
-	bh=xRHgi78/9TJa6RE/uf2fUH6wEG9F+YXSAx9KnXSZTx4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TTs1d2qUyKJh+NSNC+q4EwF6Vj3aCMc0NwCcN5HYEt7AbRvEJUQ1A1/vkrcZQ2I0NvvXcUsxgZhmF6A4Tzwt1oQcenA1jMAF8RAQKsiWjYum1StBAyRZOgrC4klw1eWTCxwQIYqZ69LQhWLysQ6EN1Qat+y8Y34dSdo1QS9wAxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8b2627269d5so546365185a.2
-        for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 06:36:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766500572; x=1767105372;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V9KRWI7ek4fDakJL55ErZIsshqTMY6fNujiPa5ZpWhI=;
-        b=EsMclde/2Qo2lX+oCZU3u1N+UKAiSpSemysNojqc379J6BH0rdidqnhcdV6BR6XXnL
-         G0DKxIZZX8D5eLYu6niZOfBfRPsQ9/yF1QLp+B6oHpXTlqRgRiFHNKC4nvqQUW4MX8ZI
-         83RvTWdxz01v+Bsp6p4mBCT83WkpK1aD1SpVU4UpQeQ0PWWuLdGY/wdrLzMzPCwKAfLK
-         ROQftY0s4/AADoeZeoYJ6Lj0zrB3ma20g7BuA5rmbTtMmjKJa9C+Tm8zRP5afP7EwfJH
-         b4S1XjP5eTsq4wjy2C1Xniqrb3VptLhGgVT3PPoOvuKy5MHwAkY/2gi0nhs6KLaI0Osj
-         LMIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUF7tPKladc5Unxm2OmSQGaiuU63SuRMeE4i+d/6RA4Vgg7A4U0Uz7j/Ium1pntiaeDdBMqiwlVw2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzepnF2FviUCkM27Alsd75xt8DlN1Q7jbeWFVh/Rs9d6orlbP+s
-	6r4fVzcs5gla5jvhIwwvGjIn/C9pxeg/S9jpmKSKM/ujIaOa1hlJWDFlZZN+VYKSg7o=
-X-Gm-Gg: AY/fxX52DSjyHIlYv9TbCOV2+Q6ApL5Si06YG6zXaX0IHeawlpKnVUbPy+S6nMdro7u
-	3/yP69fPY9DhZLNyYNUxYweZyXKxP+zqTrutpDr9ITd8+K30Rx8za8JB3oAqR3iYOfO8XwN6EqY
-	SFXQOZn/gujwXJhZRghcZW53ahurNlH348ip0md1VxQAStIsd+xlL67pK4T68y/21QIm5Itfv51
-	gyrG8q+3pAuQ+BZwvSSNXe41iRggZzW/m72UxOLB2QxE6FP7wXU5MCKfIfR5718KfGf//TN8h43
-	XkIEI+vyIr53EoVMVikK+MxofkTRRHoi5G7xBfIMq/GxnFKF2DhxChKEjjmUpEqExgdQrIxjLvb
-	t9aP3J/sNRi+1yGIP7vZO/kQ7tozsaoI2aL7gzNaXGHu0FqOobllfHa+ftuJQx1cb9iNuF6mO1Y
-	diIbOBlm8xZq6QmaPTT0SODtPxpd81EJz8NYtekKiCRnCqg/XVIoI/
-X-Google-Smtp-Source: AGHT+IFOAKyk9VJRl7HTPv7epsCPz1lugFS4J/L+LzU9JnpALP487FkdSLl/mhXOZ3J6reGfUmkxeA==
-X-Received: by 2002:a05:620a:1794:b0:892:9838:b16a with SMTP id af79cd13be357-8c08fabfeabmr2277929985a.59.1766500572350;
-        Tue, 23 Dec 2025 06:36:12 -0800 (PST)
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com. [209.85.222.176])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c09678afa6sm1111184185a.2.2025.12.23.06.36.12
-        for <dmaengine@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Dec 2025 06:36:12 -0800 (PST)
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8b2627269d5so546363485a.2
-        for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 06:36:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX4+CmhZFXP4rCIxd+H9xXcWaOMHYP200Z+jVfbqVC4MiIqnipVhrphvEkRJp5jda9d9grC2lySog0=@vger.kernel.org
-X-Received: by 2002:a05:6122:4f97:b0:557:c697:a30c with SMTP id
- 71dfb90a1353d-5615be24746mr4492855e0c.15.1766500234851; Tue, 23 Dec 2025
- 06:30:34 -0800 (PST)
+	s=arc-20240116; t=1766501031; c=relaxed/simple;
+	bh=dB/+cWWuWt5zZaOF4WBQgVGeqRwXMeabHbV/nLVmbvY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=afUMqXPURdEdsimcOfigUyw5QTDYU7iMSSmt2aHwZ7z7fgWsfGcWOSA9xefcJgLg7etEHbptUaWlqGnFyqaj8YIapBwr8GRVcwqRgZU/lJmBtdyO53iND/d2BoxdzRg8ANHYnonqNf/hLURzHfmK2YT0k/Zmab1RHv7W2ALggcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfAKWHuF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 193F0C113D0;
+	Tue, 23 Dec 2025 14:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766501030;
+	bh=dB/+cWWuWt5zZaOF4WBQgVGeqRwXMeabHbV/nLVmbvY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MfAKWHuFbtD0xW1u7oSpiVKbCSBZjKXbHZgHHl/15nnW/uyFFf4XJP00SoR3z9JdD
+	 rYuxJy4cH27U8+zKbhG9PznjFiDGu1ksCvBhMD3oJNWdMMZASOUQMjEAt3urdm9mD/
+	 bHhglQTjnotVIWBdxXhf5rB20ugMOrsi+w8SGJeJyft2KAgP42HsndKPDkA3fEyKC6
+	 qrkF48gedAccR7Gu+3jMczbHecCVYIrFS8TL1t1oj9DsyxGEVyc/jq3ddSmGNNhEcq
+	 iXl7U4o2uZdWtSEG6/m1F/+GqTMGBBhPJN8lA5bBa172Z5ogGGJV9RTOqtTP98FPAF
+	 hNURvzP+WpGwQ==
+Date: Tue, 23 Dec 2025 14:43:39 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Robert Marko <robert.marko@sartura.hr>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev, Steen.Hegelund@microchip.com,
+	daniel.machon@microchip.com, UNGLinuxDriver@microchip.com,
+	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
+	linux@roeck-us.net, andi.shyti@kernel.org, lee@kernel.org,
+	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, linusw@kernel.org, olivia@selenic.com,
+	radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org,
+	mturquette@baylibre.com, sboyd@kernel.org, richardcochran@gmail.com,
+	wsa+renesas@sang-engineering.com, romain.sioen@microchip.com,
+	Ryan.Wanner@microchip.com, lars.povlsen@microchip.com,
+	tudor.ambarus@linaro.org, kavyasree.kotagiri@microchip.com,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-clk@vger.kernel.org, mwalle@kernel.org,
+	luka.perkov@sartura.hr
+Subject: Re: [PATCH v2 18/19] dt-bindings: arm: microchip: document EV23X71A
+ board
+Message-ID: <20251223-chrome-simile-8cf1e9afe155@spud>
+References: <20251215163820.1584926-1-robert.marko@sartura.hr>
+ <20251215163820.1584926-18-robert.marko@sartura.hr>
+ <20251216-endorse-password-ae692dda5a9c@spud>
+ <CA+HBbNF-=W7A3Joftsqn+A6s170sqOZ77jpS105s5HPqkskQzA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251201124911.572395-1-cosmin-gabriel.tanislav.xa@renesas.com>
- <20251201124911.572395-3-cosmin-gabriel.tanislav.xa@renesas.com>
- <CAMuHMdV=EW4YbEBiXH2p0SeC5Kw-YmYWuQwsudpGgM63pgqcfw@mail.gmail.com> <TYYPR01MB1395515AF65F8522AED6B591885B5A@TYYPR01MB13955.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYYPR01MB1395515AF65F8522AED6B591885B5A@TYYPR01MB13955.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 23 Dec 2025 15:30:23 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdU1+-o7AOjdJe7yCgU+4x3Kn6d8B5P-EWk6P5_qXsCOZg@mail.gmail.com>
-X-Gm-Features: AQt7F2qE2AtxEG2BOxgdP_v34Yp6lChJ9ZLcTByA9b4yF0Q7ASGmqWvId4Nax_Q
-Message-ID: <CAMuHMdU1+-o7AOjdJe7yCgU+4x3Kn6d8B5P-EWk6P5_qXsCOZg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] dmaengine: sh: rz_dmac: make register_dma_req() chip-specific
-To: Cosmin-Gabriel Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"magnus.damm" <magnus.damm@gmail.com>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, Johan Hovold <johan@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pLErx9Z52ADLmcrz"
+Content-Disposition: inline
+In-Reply-To: <CA+HBbNF-=W7A3Joftsqn+A6s170sqOZ77jpS105s5HPqkskQzA@mail.gmail.com>
 
-Hi Cosmin,
 
-On Tue, 23 Dec 2025 at 15:08, Cosmin-Gabriel Tanislav
-<cosmin-gabriel.tanislav.xa@renesas.com> wrote:
-> > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > On Mon, 1 Dec 2025 at 13:52, Cosmin Tanislav
-> > <cosmin-gabriel.tanislav.xa@renesas.com> wrote:
-> > > The Renesas RZ/T2H (R9A09G077) and RZ/N2H (R9A09G087) SoCs use a
-> > > completely different ICU unit compared to RZ/V2H, which requires a
-> > > separate implementation.
-> > >
-> > > To prepare for adding support for these SoCs, add a chip-specific
-> > > structure and put a pointer to the rzv2h_icu_register_dma_req() function
-> > > in the .register_dma_req field of the chip-specific structure to allow
-> > > for other implementations. Do the same for the default request value,
-> > > RZV2H_ICU_DMAC_REQ_NO_DEFAULT.
-> > >
-> > > While at it, factor out the logic that calls .register_dma_req() or
-> > > rz_dmac_set_dmars_register() into a separate function to remove some
-> > > code duplication. Since the default values are different between the
-> > > two, use -1 for designating that the default value should be used.
-> > >
-> > > Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+--pLErx9Z52ADLmcrz
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > > @@ -1067,9 +1068,18 @@ static void rz_dmac_remove(struct platform_device *pdev)
-> > >         pm_runtime_disable(&pdev->dev);
-> > >  }
-> > >
-> > > +static const struct rz_dmac_info rz_dmac_v2h_info = {
-> > > +       .register_dma_req = rzv2h_icu_register_dma_req,
-> > > +       .dma_req_no_default = RZV2H_ICU_DMAC_REQ_NO_DEFAULT,
+On Tue, Dec 23, 2025 at 11:34:55AM +0100, Robert Marko wrote:
+> On Tue, Dec 16, 2025 at 6:32=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
+rote:
 > >
-> > Since this is the only remaining user of RZV2H_ICU_DMAC_REQ_NO_DEFAULT,
-> > and this structure does specify hardware, perhaps just hardcode 0x3ff?
->
-> In my opinion we should let the macro live in the ICU header as the
-> value is more tied to the ICU block than to the DMAC block, even if
-> the DMAC driver is the only actual user. But if you think this is
-> worth changing, I will change it.
-
-I have no strong feelings about this.
-
-If it is really more of an internal ICU thingy, an alternative would
-be to remove all public *_ICU_DMAC_REQ_NO_DEFAULT definitions, and
-just pass -1.  Then the ICU drivers become responsible for filling in
-the appropriate default value.
-
-> > > +};
-> > > +
-> > > +static const struct rz_dmac_info rz_dmac_common_info = {
+> > On Mon, Dec 15, 2025 at 05:35:35PM +0100, Robert Marko wrote:
+> > > Microchip EV23X71A board is an LAN9696 based evaluation board.
+> > >
+> > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > > ---
+> > >  Documentation/devicetree/bindings/arm/microchip.yaml | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/microchip.yaml b/D=
+ocumentation/devicetree/bindings/arm/microchip.yaml
+> > > index 910ecc11d5d7..b20441edaac7 100644
+> > > --- a/Documentation/devicetree/bindings/arm/microchip.yaml
+> > > +++ b/Documentation/devicetree/bindings/arm/microchip.yaml
+> > > @@ -239,6 +239,14 @@ properties:
+> > >            - const: microchip,lan9668
+> > >            - const: microchip,lan966
+> > >
+> > > +      - description: The LAN969x EVB (EV23X71A) is a 24x 1G + 4x 10G
+> > > +          Ethernet development system board.
+> > > +      - items:
+> > > +          - enum:
+> > > +              - microchip,ev23x71a
+> > > +              - microchip,lan9696
 > >
-> > rz_dmac_classic_info, as this is not really common to all variants?
-> > I am open for a different name ;-)
->
-> rz_dmac_generic_info? I don't have a strong opinion, but I agree that
-> common denotes that it would be shared across all variants, which is
-> not the case.
+> > This looks wrong, unless "microchip,lan9696" is a board (which I suspect
+> > it isn't).
+>=20
+> Hi,
+> No, LAN9696 is the exact SoC SKU used on the board.
+> I will drop it in v3.
 
-Fine for me, too.
+Instead of dropping it, this should become an items list with 3 consts I
+think.
 
-Gr{oetje,eeting}s,
+--pLErx9Z52ADLmcrz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaUqqhAAKCRB4tDGHoIJi
+0kmEAPwMbSydapbKFensNMM3LBSQavqvbhont2R2vwPmXc9oUAEA++sW5lHhwJ+e
+9LfhPrkmqekkXDEYUUHTET78Ply7Xgw=
+=FgUt
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--pLErx9Z52ADLmcrz--
 

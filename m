@@ -1,169 +1,138 @@
-Return-Path: <dmaengine+bounces-7911-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7912-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6363ECD9D4E
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 16:46:17 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FEDDCD9F83
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 17:31:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 79FE2313DFA1
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 15:39:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 66568308BE7B
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 16:28:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4FCE34F47D;
-	Tue, 23 Dec 2025 15:29:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6BAA302157;
+	Tue, 23 Dec 2025 16:28:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="lDOkL1Fy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAROg1Xk"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FACF34F241
-	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 15:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7585A2222A9;
+	Tue, 23 Dec 2025 16:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766503778; cv=none; b=oDEZOq0eiEs2m4cEbPGn0n0FMhSTk1R3/MU3sgrOD10lOPc07EBMecn/juc207usIvSqU29xtVbApxUaJTlX/DwmsVmJFT6zhM5UUTBxJANZZFdYlCPcIirFydutqqpXFgg2B/NZ4LapucCWkLc0fBGBLUyIw3o0Ps3iMz8KlLM=
+	t=1766507324; cv=none; b=cYzOuC+yUHJ7Igv1i2L4/L2gDHo8Yg/7POFcvvggXgtpoSX/cAjLQ5Qf12WStNdquUS1lS3TOdS37mNXXdkG/IKiLxxdsxCqW/V+IWlNnUqPBRXr3hLpeHrlBRO42Ee4ik0N8qi2vepXEsdoZvULBTOEwao/OgDdBGK1S6yKYqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766503778; c=relaxed/simple;
-	bh=UJ4a8K9wry/JPIeGH5DwpGba6bA4R4gax6qub7x2SY4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rBt2ZEaIiPxOafzHPJbHVD6c3heqB43ly9UbrnjQL6o6Jl50q2HeJYXj3VbshbkZJagUxh2Z1VcklH2Uz0ywRnGnDtJqvLSzc3A2ivw5TRcMBQpqZNArgHYSAUjyq/KZQntu0+CSghiFnZg56B9aC7r7toJRB5CN/VwbpvznGdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=lDOkL1Fy; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b727f452fffso986225966b.1
-        for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 07:29:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1766503774; x=1767108574; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cLjISIOInag6cJNCp9GAXmtvydDuwUZOD3O+6EuGMpA=;
-        b=lDOkL1FyHZFJ/9/OvPdkMyYxnkNuTkuKFAJlUBUCP6HN0MqcClWvGh955PsXfCG+TE
-         XTJ9K//mvDtqzzy+8UpL1y6RStVl9cIPSZrvePcdWuCn+ocgGrIKDtG9+54W1w2//ou8
-         OA5XU6YHOGYGLPwmx49l4TBtdurcyXq+U5KGyoNvmaVZMCeozr9d58t7zZ1j+zZEQDsh
-         Kf3pekwyW72hmnLuSoSmitxCpGyWf6IWLHLSubohN8Q1uFEJ0jlLdVAnxp2afKolq/Di
-         Hpo3XANTXWdDsDg7UaN6dPqi5wLfeRPeuisBuru1875FAqqqDaYDIxgxJJ2SJLG7SJGQ
-         +dlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766503774; x=1767108574;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=cLjISIOInag6cJNCp9GAXmtvydDuwUZOD3O+6EuGMpA=;
-        b=M+uqgwWr+lwuppVxdNDFeWb5YHiihJUBqNluQQhzArQt4vBNDckWQKMF+Ia23wVdVz
-         TMq7IgIex0mY0a/+ukAXW8n0xWWGzSzgGmI6ObmuQ6y5IHdwIRqiNUVLqRc93QkaDNM5
-         exe2ueyOXnkxsEtrbNS5/oehtES3qT1ZOXCmq7dw9OLIy7gZR/oPY6NoXDGKPRQ4HBFY
-         U/AMHTdxpCTcUcmNdUOieBUr4V0OUk1RCElcc/yORkGOmZr8uKwEYyp725p+qn4ynXCm
-         LuxsihfNQXfNnPdw4mnoXID082oEVBgzhXx2yCDbO29tPDLUDi3Y6fRlqRrroHA4puim
-         wqpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUF0+pctU6UOUZI69fVnpNlKUnkPcOFEE9vlS1pEHhbx3FSHxbYNW/0t2f333dSqkGwo9vmGBhMCRY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjTa0fBcx07B2U6SKbncjdFBl5D69nN88JtviPUCyUhSesB2nh
-	qktDkvSoHFDiELwjiSmfgu21NsR5oVAWlZA6m491sSRx1InP5eG5NgknvkW4tm7a7Hp9pN7Zdh9
-	8MsYHjEvyzZ5tSzQ3hQpXmN0T4Na2darbYjGf4MHzdw==
-X-Gm-Gg: AY/fxX5ujmPGaLK6tylYL4SJpHhJlqDNVAtYiYb64LXH2xhdayQfnVt/kvwA6vAKpwG
-	RfozQoyEYUdOjzNRAy97coiwE5iaRny2jJMrpQ3VjGSQoVDvVAr/Uiz1Q4seQSF5Tou/mlcgGxU
-	JjMGTf0PZYveDQcUoDLCC3WoAaiZWbBOraQaw/htN+OzJhfr+kRTnmM4HZfpOr2S0AIF+eSrLL0
-	ie/t3NMjEubdMES9uqoi/3qy3J86KVF9Ma3DsXCdaz5NYFtMb4GGDRK+wKkQBjxS2yZOPVsvRfV
-	EKW1AGlfUF7CINvjE/3kHTUQ4HSHTmWecozKLo2IBr+gowcQMA==
-X-Google-Smtp-Source: AGHT+IE+xxKz9WunQGu5xp3nWvZrKUFIZLNano4iauMvK7wBVyl981tNBySUR5mcD+g4BmTew6KluXuH/rQplznm+8E=
-X-Received: by 2002:a17:906:30d4:b0:b7c:cc8d:14f4 with SMTP id
- a640c23a62f3a-b8020400995mr1538956066b.4.1766503773539; Tue, 23 Dec 2025
- 07:29:33 -0800 (PST)
+	s=arc-20240116; t=1766507324; c=relaxed/simple;
+	bh=k5BQkIt0NB7ozx6foGOfAycuSqqq5wW1jsLWOKfYEwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=tnw3PRrQcc7sOM33aAY5frljcF38Cg0xhgS3mbHYGSa3x/Dr0/vuAAsli30GX2dw0xF14Tx9yEKd33FDXIJ2f/iBWTov2ojuLK+RO4XGIaup2bMCeOOeZovDRbNa5ZdJMDhEc2Rh8Tdos+9AyHsIY9R7A9aFzb5KrwXSoP6AxoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAROg1Xk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE8AEC113D0;
+	Tue, 23 Dec 2025 16:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766507324;
+	bh=k5BQkIt0NB7ozx6foGOfAycuSqqq5wW1jsLWOKfYEwE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=uAROg1Xka0OYDVHm57STv2RFPVgdCB7PxVki8aTFfjzWTI4h/P75zOoPVJ37ypSfQ
+	 qm9qsI3kGFWRcwXWdcodgUdZLNoJgR7lpSejF4MP77+O99WYkotIWrzveXO8uD6z+C
+	 +ZbL9PqZKMqRBJhLTkoGSyGUaFjP8/3Slc9NXvYKYFWO2Td8WbPx9yefvNwg959/7R
+	 lt+OOI9Pb8Qv0MXFpoiDKAtyvYAqAxdnl/HjLtM/Z/lVIppgqtbPoIXYkw+gK2aYH1
+	 iUzZxbOgjjURRsCmoqOsj7RmqKCLt2FH8YrxAL+lTUHv+wHn3vAM+LhAeuAMqZQCYR
+	 XvEBmkT3tldFQ==
+Date: Tue, 23 Dec 2025 10:28:42 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Verma, Devendra" <Devendra.Verma@amd.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"vkoul@kernel.org" <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Simek, Michal" <michal.simek@amd.com>
+Subject: Re: [PATCH v7 2/2] dmaengine: dw-edma: Add non-LL mode
+Message-ID: <20251223162842.GA4022246@bhelgaas>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251215163820.1584926-1-robert.marko@sartura.hr>
- <20251215163820.1584926-18-robert.marko@sartura.hr> <20251216-endorse-password-ae692dda5a9c@spud>
- <CA+HBbNF-=W7A3Joftsqn+A6s170sqOZ77jpS105s5HPqkskQzA@mail.gmail.com> <20251223-chrome-simile-8cf1e9afe155@spud>
-In-Reply-To: <20251223-chrome-simile-8cf1e9afe155@spud>
-From: Robert Marko <robert.marko@sartura.hr>
-Date: Tue, 23 Dec 2025 16:29:22 +0100
-X-Gm-Features: AQt7F2rjEyMDZrOpK1oplok3NPPf4ZxKJg97_UNzU27UIMOHDSKt5OOOHzhM_mA
-Message-ID: <CA+HBbNFhVVoaiVJtH-fB3Wmeh6O3C_H=bwz2vBDR2MO4o0qy_w@mail.gmail.com>
-Subject: Re: [PATCH v2 18/19] dt-bindings: arm: microchip: document EV23X71A board
-To: Conor Dooley <conor@kernel.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	claudiu.beznea@tuxon.dev, Steen.Hegelund@microchip.com, 
-	daniel.machon@microchip.com, UNGLinuxDriver@microchip.com, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
-	linux@roeck-us.net, andi.shyti@kernel.org, lee@kernel.org, 
-	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, linusw@kernel.org, olivia@selenic.com, 
-	radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com, 
-	gregkh@linuxfoundation.org, jirislaby@kernel.org, mturquette@baylibre.com, 
-	sboyd@kernel.org, richardcochran@gmail.com, wsa+renesas@sang-engineering.com, 
-	romain.sioen@microchip.com, Ryan.Wanner@microchip.com, 
-	lars.povlsen@microchip.com, tudor.ambarus@linaro.org, 
-	kavyasree.kotagiri@microchip.com, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-clk@vger.kernel.org, mwalle@kernel.org, luka.perkov@sartura.hr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SA1PR12MB8120306AAE9B655A8F8273B795AAA@SA1PR12MB8120.namprd12.prod.outlook.com>
 
-On Tue, Dec 23, 2025 at 3:43=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> On Tue, Dec 23, 2025 at 11:34:55AM +0100, Robert Marko wrote:
-> > On Tue, Dec 16, 2025 at 6:32=E2=80=AFPM Conor Dooley <conor@kernel.org>=
- wrote:
+On Tue, Dec 16, 2025 at 10:15:34AM +0000, Verma, Devendra wrote:
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+
+[snipped pointless header quotes]
+
+> > On Fri, Dec 12, 2025 at 05:50:56PM +0530, Devendra K Verma wrote:
+> > > AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
+> > > The current code does not have the mechanisms to enable the DMA
+> > > transactions using the non-LL mode. The following two cases are added
+> > > with this patch:
+> > > - For the AMD (Xilinx) only, when a valid physical base address of
+> > >   the device side DDR is not configured, then the IP can still be
+> > >   used in non-LL mode. For all the channels DMA transactions will
+> > >   be using the non-LL mode only. This, the default non-LL mode,
+> > >   is not applicable for Synopsys IP with the current code addition.
 > > >
-> > > On Mon, Dec 15, 2025 at 05:35:35PM +0100, Robert Marko wrote:
-> > > > Microchip EV23X71A board is an LAN9696 based evaluation board.
-> > > >
-> > > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/arm/microchip.yaml | 8 ++++++++
-> > > >  1 file changed, 8 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/arm/microchip.yaml b=
-/Documentation/devicetree/bindings/arm/microchip.yaml
-> > > > index 910ecc11d5d7..b20441edaac7 100644
-> > > > --- a/Documentation/devicetree/bindings/arm/microchip.yaml
-> > > > +++ b/Documentation/devicetree/bindings/arm/microchip.yaml
-> > > > @@ -239,6 +239,14 @@ properties:
-> > > >            - const: microchip,lan9668
-> > > >            - const: microchip,lan966
-> > > >
-> > > > +      - description: The LAN969x EVB (EV23X71A) is a 24x 1G + 4x 1=
-0G
-> > > > +          Ethernet development system board.
-> > > > +      - items:
-> > > > +          - enum:
-> > > > +              - microchip,ev23x71a
-> > > > +              - microchip,lan9696
-> > >
-> > > This looks wrong, unless "microchip,lan9696" is a board (which I susp=
-ect
-> > > it isn't).
+> > > - If the default mode is LL-mode, for both AMD (Xilinx) and Synosys,
+> > >   and if user wants to use non-LL mode then user can do so via
+> > >   configuring the peripheral_config param of dma_slave_config.
+> > > ...
 > >
-> > Hi,
-> > No, LAN9696 is the exact SoC SKU used on the board.
-> > I will drop it in v3.
+> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > > @@ -223,8 +223,31 @@ static int dw_edma_device_config(struct
+> > dma_chan *dchan,
+> > >                                struct dma_slave_config *config)  {
+> > >       struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+> > > +     int non_ll = 0;
+> >
+> > Other "non_ll" uses below are bool, so a little bit of an int/bool mix.
+> >
+> > The name also leads to a lot of double negative use ("!non_ll", etc), which is
+> > hard to read.  I suppose "non-LL" corresponds to some spec language, but it
+> > would be nice if we could avoid some of the negation by testing for "ll_mode"
+> > or calling the other mode "single_burst" or similar.
+> >
+> 
+> Yes, non-LL is being referred in the Synosys databook extensively to
+> differentiate between LL and non-LL mode.
 >
-> Instead of dropping it, this should become an items list with 3 consts I
-> think.
+> I agree with the concern raised here but, at the moment, this is the
+> only suitable term that can handle the following cases:
 
-Ok, that lines up with what other boards in the binding do, will do that in=
- v3.
+> 1) Choice of variable of the DMA client to use non-LL mode,
+> 2) Establish flow for the non-LL use-case in the driver.
+> 
+> Before, using the term with negation (non_ll), the possibility was explored
+> to use a term which does not result in double negation, eg, ll or ll_mode.
+> But this again breaks the above either one or both use-cases.
+> If using ll_mode as a variable, then with this, DMA client shall
+> either provide ll_mode=false or non_ll=true.
+> 
+> When ll_mode=false. This option would be as good as
+> passing a valid reference to peripheral_config pointer as
+> the value of ll_mode would never be used for ll_mode=true
+> due to default mode being LL.
+> On the basis of ll_mode=true, the DMA client given option, no code
+> is impacted with these patches.
+> 
+> When DMA client gives non_ll=true; this causes confusion,
+> DMA client does right but internally ll_mode as a variable is set
+> to establish the flow for non-LL mode. The different variable is
+> used for establishing the non-LL mode inside the driver code.
+> Also, it uses the combination of double negation variable.
+> 
+> Though, the use of non_ll, raises concern due to double
+> negation but its use fits the use-case from both DMA client
+> and in the driver to establish the non-LL flow. Additionally,
+> The use of non_ll also aligns with the documentation of the
+> vendor making it easier to follow.
+> Please let me know your thoughts on this.
 
-Regards,
-Robert
-
-
-
---=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura d.d.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+OK.  It's good to match the databook.  Maybe there's a way to
+restructure the code to prefer "if (chan->non_ll)" tests over
+"if (!chan->non_ll)"?
 

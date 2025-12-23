@@ -1,168 +1,151 @@
-Return-Path: <dmaengine+bounces-7867-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7868-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57404CD7266
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 21:52:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E9EC4CD8CBB
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 11:28:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0D6533011421
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Dec 2025 20:52:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 12582300DC94
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 10:26:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1151320CA7;
-	Mon, 22 Dec 2025 20:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0235A315D3E;
+	Tue, 23 Dec 2025 10:26:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LP7gtx86"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="flVO9maY"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527B730BF5C;
-	Mon, 22 Dec 2025 20:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9673126D4
+	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 10:26:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766436748; cv=none; b=P4vZu9OzXvxjPxH6Jf6FjB+EbGZJVdO096TXlQsXJvJ2sFu9ze2kiD3ebkVxbf05ljSda9crU2djaTw24ZMGXPkMKDiiMYEKdh5od/bhrRCxq22KJIuDDFxnpctSWIm7s42y8gC0LeNirJuVS7QpQXs23PDQnkuKyeRuLA4cgd0=
+	t=1766485603; cv=none; b=jhx2oLaTd/jASkyARQ1+w8KvfW36Ynx/3vBbr5xMRWa2cKYbqsfUbq3Nr/ev2MKhIFzCpEG6tw86RuaxeykI6HRm/timSvmyhnzE4ElAnBTbXg+MPs9VLbwWVyAlL1mJbe74R16nAVEyjkeqCQlyv2vLU7SMWzg448Lhm98zOdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766436748; c=relaxed/simple;
-	bh=OdmgDnlZXoaijslX7KX93Y/AqjvNgxBPHYAqXwXXxdU=;
+	s=arc-20240116; t=1766485603; c=relaxed/simple;
+	bh=YVwAgujR9NOc+IYyDzM5KSQjfLkhSIOv57djO/pjGF0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nG8DZIUFjajf0kCx5hBZ6Qz6Wx0FzHeuEPfWo657KjHhAz+vM+0RaiKtBNLR7NduQx0tbi5C6i7M9pzpac+w//aM8sXB/XywFXnwkpRbbPugpwfTGHBdNCaKWxG08P6xnyF0sSEPG36ZKtTwa7JMS4ZbE4NC1ax0hAmeS8wLaK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LP7gtx86; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B847C4CEF1;
-	Mon, 22 Dec 2025 20:52:17 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=OtGGbWttBNt6AKte5n+q2hb1g8gzDHNDesTCM+qgJduwM4bo1SwkpROQq2pyY6TZwOE5D1DlSPpJw023XGmbm+4IbuTMYiB/byBJBO1ybpzFlPhqEd+LU6RaZFvQImrB9Kcxdav7dvnXBI3YmPk6CfuW0yiPfxLKNvNWZC1H1iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=flVO9maY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA4CBC116B1;
+	Tue, 23 Dec 2025 10:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766436747;
-	bh=OdmgDnlZXoaijslX7KX93Y/AqjvNgxBPHYAqXwXXxdU=;
+	s=k20201202; t=1766485603;
+	bh=YVwAgujR9NOc+IYyDzM5KSQjfLkhSIOv57djO/pjGF0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LP7gtx86RAzVh7qT2KAGSn+4voGagDkW1iJjRP9zR2DHX1Gkye0aa7mpl26h01aLY
-	 H2ymWDiTnXueFfgNVtKqlSkXS3TPx+LDfNTXfBMQCR5+AyeKuceONQCA+7M1D/CETo
-	 zgAZsfuTEvRrpGhJrnS+4BxU0KPY2+iMpNcwxLtgQlgKR5okQBc39yUbWU5nA4UTUT
-	 Fr1dPchs/v3bABcoZw4cFOcs/pTPumX0qg+2AvJQ8s94UU7LiPaGtyu+vR+WioKhgt
-	 jMT5X+3diCmXjtgC9rKh7oo7GK+Kvksd4oiGgF3KVkaEGPCMlSL7rgkIt+AEzkCf3M
-	 kYXgPlKyAUR/A==
-Date: Mon, 22 Dec 2025 20:52:15 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Robert Marko <robert.marko@sartura.hr>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, Steen.Hegelund@microchip.com,
-	daniel.machon@microchip.com, UNGLinuxDriver@microchip.com,
-	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
-	linux@roeck-us.net, andi.shyti@kernel.org, lee@kernel.org,
-	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, linusw@kernel.org, olivia@selenic.com,
-	radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com,
-	gregkh@linuxfoundation.org, jirislaby@kernel.org,
-	mturquette@baylibre.com, sboyd@kernel.org, richardcochran@gmail.com,
-	wsa+renesas@sang-engineering.com, romain.sioen@microchip.com,
-	Ryan.Wanner@microchip.com, lars.povlsen@microchip.com,
-	tudor.ambarus@linaro.org, charan.pedumuru@microchip.com,
-	kavyasree.kotagiri@microchip.com, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-	netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-clk@vger.kernel.org,
-	mwalle@kernel.org, luka.perkov@sartura.hr
-Subject: Re: [PATCH v2 16/19] dt-bindings: pinctrl: pinctrl-microchip-sgpio:
- add LAN969x
-Message-ID: <20251222-outsell-demotion-97b03a1bf42e@spud>
-References: <20251215163820.1584926-1-robert.marko@sartura.hr>
- <20251215163820.1584926-16-robert.marko@sartura.hr>
- <20251216-payback-ceremony-cfb7adad8ef1@spud>
- <CA+HBbNESUZ6KB0BbpZUMfh1rjZTZMgY1SwmFQbx+CRP+a_1x9g@mail.gmail.com>
+	b=flVO9maYiKW7mcJXVBxYktLv9G/x7tvtD/inuWSqMd6g+ATrhpXMyNgMeCoTbsU7p
+	 o2n9bR8GwVZyDmCuOlbciqeL5in+79naWIR+GundPala0Cyzsrt1juvRWmXO59kQ8Q
+	 7i1jJF18Grk6IasPlz//P3AcFzODPcSv9Uwdrj/iswSr5IObNSSQ9wEwRy0pz5Hdbb
+	 aEjNmyK0+YSLLX0mTeVesHO2JAzA9ZY8shDh9BcqezRcNr2CjVykiVMH0mjiDk7/ev
+	 DLR4WsAsUHboqNvnAJfF/ym8oU2SfUJyaBjsPKfT4P/mV4j3MwoAsE+kVjHZ11tCXB
+	 ELCf4xNcZ3Yig==
+Date: Tue, 23 Dec 2025 15:56:39 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Logan Gunthorpe <logang@deltatee.com>
+Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	Kelvin Cao <kelvin.cao@microchip.com>,
+	George Ge <George.Ge@microchip.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+	Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v11 2/3] dmaengine: switchtec-dma: Implement hardware
+ initialization and cleanup
+Message-ID: <aUpuXwb1h6rtlfoB@vaman>
+References: <20251215181649.2605-1-logang@deltatee.com>
+ <20251215181649.2605-3-logang@deltatee.com>
+ <aUE7zahyYgsls-Ic@vaman>
+ <eeda026b-bfe1-42ba-a062-ca90b5f03ee6@deltatee.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="JhIlysxRG7haAr0O"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+HBbNESUZ6KB0BbpZUMfh1rjZTZMgY1SwmFQbx+CRP+a_1x9g@mail.gmail.com>
+In-Reply-To: <eeda026b-bfe1-42ba-a062-ca90b5f03ee6@deltatee.com>
 
+On 19-12-25, 10:19, Logan Gunthorpe wrote:
+> Hi Vinod,
+> 
+> Thanks for reviewing this. I've queued up a bunch of changes based on
+> your feedback, but I have some questions and notes.
+> 
+> On 2025-12-16 04:00, Vinod Koul wrote:
+> >> +	struct switchtec_dma_desc **desc_ring;
+> > 
+> > This is bit interesting. Any reason why you choose double pointer here.
+> > If you take a look at other driver, they follow similar approach but
+> > dont use double pointer for this.
+> > 
+> 
+> The ring size has had to be quite large. It is currently set to 32K in
+> order to be able to get maximum performance in some work loads. While
+> each element is only 104 bytes, the total array is more than 3MB which
+> is too much for a single allocation. The PLX dma driver this is based on
+> does the same thing even though it's queue size is only 2048.
 
---JhIlysxRG7haAr0O
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ring size is fine, the question is about use of a double pointer instead
+of a single pointer
 
-On Mon, Dec 22, 2025 at 08:57:14PM +0100, Robert Marko wrote:
-> On Tue, Dec 16, 2025 at 6:34=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
-rote:
-> >
-> > On Mon, Dec 15, 2025 at 05:35:33PM +0100, Robert Marko wrote:
-> > > Document LAN969x compatibles for SGPIO.
-> > >
-> > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > > ---
-> > >  .../pinctrl/microchip,sparx5-sgpio.yaml       | 20 ++++++++++++++---=
---
-> > >  1 file changed, 15 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,spar=
-x5-sgpio.yaml b/Documentation/devicetree/bindings/pinctrl/microchip,sparx5-=
-sgpio.yaml
-> > > index fa47732d7cef..9fbbafcdc063 100644
-> > > --- a/Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpi=
-o.yaml
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpi=
-o.yaml
-> > > @@ -21,10 +21,15 @@ properties:
-> > >      pattern: '^gpio@[0-9a-f]+$'
-> > >
-> > >    compatible:
-> > > -    enum:
-> > > -      - microchip,sparx5-sgpio
-> > > -      - mscc,ocelot-sgpio
-> > > -      - mscc,luton-sgpio
-> > > +    oneOf:
-> > > +      - enum:
-> > > +          - microchip,sparx5-sgpio
-> > > +          - mscc,ocelot-sgpio
-> > > +          - mscc,luton-sgpio
-> > > +      - items:
-> > > +          - enum:
-> > > +              - microchip,lan9691-sgpio
-> > > +          - const: microchip,sparx5-sgpio
-> > >
-> > >    '#address-cells':
-> > >      const: 1
-> > > @@ -80,7 +85,12 @@ patternProperties:
-> > >      type: object
-> > >      properties:
-> > >        compatible:
-> > > -        const: microchip,sparx5-sgpio-bank
-> >
-> > This should just be able to become "compatible: contains: const: microc=
-hip,sparx5-sgpio-bank.
-> > pw-bot: changes-requested
->=20
-> Hi Conor,
-> I have tried using contains, but it would fail to match with the
-> following error:
-> arch/arm64/boot/dts/microchip/lan9696-ev23x71a.dtb:
-> /axi/gpio@e2010230/gpio@0: failed to match any schema with compatible:
-> ['microchip,lan9691-sgpio-bank', 'microchip,sparx5-sgpio-bank']
-> arch/arm64/boot/dts/microchip/lan9696-ev23x71a.dtb:
-> /axi/gpio@e2010230/gpio@1: failed to match any schema with compatible:
-> ['microchip,lan9691-sgpio-bank', 'microchip,sparx5-sgpio-bank']
+> >> +		if (swdma_chan->cq_tail == 0)
+> >> +			swdma_chan->phase_tag = !swdma_chan->phase_tag;
+> >> +
+> >> +		/*  Out of order CE */
+> >> +		if (se_idx != tail) {
+> >> +			spin_unlock_bh(&swdma_chan->complete_lock);
+> >> +			continue;
+> >> +		}
+> >> +
+> >> +		do {
+> >> +			dma_cookie_complete(&desc->txd);
+> >> +			dma_descriptor_unmap(&desc->txd);
+> >> +			dmaengine_desc_get_callback_invoke(&desc->txd, &res);
+> >> +			desc->txd.callback = NULL;
+> >> +			desc->txd.callback_result = NULL;
+> > 
+> > Not filling results?
+> 
+> I'm not sure the question here. This code calls the callback with the
+> result and then clears the callback for the next use of the descriptor.
+> 
+> >> +			desc->completed = false;
+> > 
+> > ?
+> > 
+> 
+> The completed flag is used to track which requests in the ring have been
+> completed. It is set to true when it's completed and then cleared here
+> when they have been cleaned up again for reuse in a subsequent
+> transaction. The completions can happen out of order but they are
+> cleaned up in order before they can be reused.
+> >> @@ -127,9 +1140,13 @@ static void switchtec_dma_remove(struct pci_dev *pdev)
+> >>  {
+> >>  	struct switchtec_dma_dev *swdma_dev = pci_get_drvdata(pdev);
+> >>  
+> >> +	switchtec_dma_chans_release(pdev, swdma_dev);
+> >> +
+> >>  	rcu_assign_pointer(swdma_dev->pdev, NULL);
+> >>  	synchronize_rcu();
+> >>  
+> >> +	pci_free_irq(pdev, swdma_dev->chan_status_irq, swdma_dev);
+> >> +
+> > 
+> > This is good. But what about the tasklet, that needs to be quiesced too
+> > 
+> 
+> I'm not sure what you are looking for, I couldn't find any explicit
+> quiesce function that is commonly used on teardown in other drivers.
+> Clearing the pdev pointer above and synchronizing the RCU should ensure
+> there are no other jobs in progress or tasklets running.
+> 
+> Note: I have tested teardown while running dmatest and have not found
+> any issues.
 
-Oh, I think I cocked up here and thought this was some restriction
-imposition but it's a child with a compatible. My bad.
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+The tasklet can be schedule and then you free irq which creates a racy
+situation, so I always recommend to kill the tasklet after freeing the
+irq!
 
---JhIlysxRG7haAr0O
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaUmvfgAKCRB4tDGHoIJi
-0tRXAP9gzDqYdpyBkIGlCjn7mhzBtUAutbY+XxoO8Nlc7hwxmwEAkw67FpKyZJTF
-kOylRNmtyQKnS0TafkT2Y8FTAU67FwU=
-=dRXc
------END PGP SIGNATURE-----
-
---JhIlysxRG7haAr0O--
+-- 
+~Vinod
 

@@ -1,118 +1,196 @@
-Return-Path: <dmaengine+bounces-7914-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7916-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78FB2CDA4AF
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 19:42:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C7DDDCDA761
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 21:19:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 48A743010CD4
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 18:42:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5FE0430155E6
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 20:19:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BE88347BC6;
-	Tue, 23 Dec 2025 18:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17FFC34CFC0;
+	Tue, 23 Dec 2025 20:19:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="Dr0P5PAH"
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="sp/p1grd"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0030A27B340
-	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 18:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BE4321F48
+	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 20:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766515369; cv=none; b=LZG1JOCJCGB4gQ1+wj/xGhWboBrYzbDa1UUNDCwamIi1fhwcqvh5Noy8A2oJLlkhymbbXuu8OS7e3jfByJq+4wY8xxn0vmf+niyNGqdBDLtC7TBbA9Kiv3IT6DBb2TBw6vu1dJihToDCfh1M7Lm6Mecpa0HxQZynHCa64Tpw94U=
+	t=1766521182; cv=none; b=lRZ8nGKfCcHIWmsvN6GrE9Omw9nOgnjf4DH603wiMXz2EdqNV5pxZKFaZamaSROYY0isFTr0FQZcWtJ8NgZCvDjV95ZoXTLTWOW5bTSjLFgBh0EV8HuKdUV/szNZdo3xnwP/7iXk6+FO6C6MNT7r0O9mI9mgc0zMoFR/CfX8wKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766515369; c=relaxed/simple;
-	bh=Q2sTuKZ/+6CstqUbVXfSX4KcCgppjU730sp2PDJPkGU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=BI7J9dUPEdZ9MasFb+A6dnubW64X96exe7ZUrxX+82jpMx7q/wiKj/aJMuioGc7NdjnIj2DUg4rKmCdvPZ/QqWPY6lX+Uyos9zBa2fVCNzgbzUgoNv2KUXnUz0KtubnRLUmo9SbhuK6kfFupreH0BcN4cLb8Llrp51if81xBQrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=Dr0P5PAH; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=L89MaalH1pA3hN9cuu5fQ0kUzbIeK37MzWcPyMp9NbU=; b=Dr0P5PAHSaxLDOCP0IKDQQJJNZ
-	Vgyvg57tRENX7EBOfxa7mL3+j6Sl8jJb8+YCPg75cq3uEW9SFv4FO3kCCuuZoFaGzk0puICiLdoiU
-	Na+nk/ofImAYENYLOd532AZmBzM+z9skPfL9q5SRzM0GouBsaCjfHO0wUZXTF2uic9JAFiU1K4faZ
-	LjzCpcxvgBas/8iYNbrHeksKX55dZO+U8lzm7gNGpVfmIAefBulF+UfxODRFv3dq/0Wf3KHUJD/Rn
-	zCgCclZjtkYax6mZV4veoxB+bukwkBfeBp3n9UyUZ4DbdywrArR6OrZh46RetugK8DvodYznv33C9
-	T3ONpIqA==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.2)
-	(envelope-from <logang@deltatee.com>)
-	id 1vY7LJ-000000099rh-3q1X;
-	Tue, 23 Dec 2025 11:42:46 -0700
-Message-ID: <40576306-d9d8-4467-b449-1a8736515e13@deltatee.com>
-Date: Tue, 23 Dec 2025 11:42:45 -0700
+	s=arc-20240116; t=1766521182; c=relaxed/simple;
+	bh=dIzeT2bAtbNpWCzGPjuV3B4HClIyvUup/5uZSPzsL1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NhFAqnV5v6soTNpkapUozP6kY0Nzj50jqFVX5TkTXzS8sJXHW7QyExlMVkVx4YrWJK+nWH79tm3mwQR4jHnIzLxSTVkuTc4FT/DXD9iT0jLhZ5CzEIzPMnW+F9H+zAm+AwAGHJ+efSqxygYsehqoxx9SHa85MZQIsuj3Y8BLCbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=sp/p1grd; arc=none smtp.client-ip=209.85.210.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-7aae5f2633dso5381855b3a.3
+        for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 12:19:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura.hr; s=sartura; t=1766521179; x=1767125979; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=g1vfXs4RxjLrMI0+CYv1SSuI1FXB9RtpNik5CYzHMIg=;
+        b=sp/p1grd5lkwv7sdu7MGJVw2B0P0H5QVE8/lQhc+Z2UZNVOBBoNa5ucm40go5i/fj9
+         3bRj50JzDaFFJsr8MI2FZzYTHMYcmCqt9nTPUe/PVXN/Ps5bwDnjgwZbERarBuwr46lB
+         OuKPXCXNsGCklL60xZHfTLjhhnEY5kVGOl2EbzI7+pE0JMk7XTcTMKO3iF8NqtWdSiPq
+         CtXHKt9XfTwL4LnbC9WBGzL1k8xf/LnpbWEJ8S0okPTAwOoUaB65017hanldfEULAnHn
+         jvXLRNVzVHerjoc6u2P31IfxpTha4cFgFpF8CMffs77aGOMk+4Me/DGg/qiGyEx6ff9o
+         EWtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766521179; x=1767125979;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g1vfXs4RxjLrMI0+CYv1SSuI1FXB9RtpNik5CYzHMIg=;
+        b=LVzokKhhv5kvUKrNpH2DNaUvSNQHPTKOwgX0emOSB0A2UlERwzuVOWiX3ou7oySEaZ
+         oz85+E9j1EE032etbR5KE0NHIGjXMLZS//U1WaV4WEGOC3DgROIQDUKKJOkpOOIQGpQU
+         G1/xi7AR/T7C9Ip0DoBEk31gt+chhTOGDT9ANcmV2U6R6hbDn0Cn8IPh+0G346sCs5zR
+         syJ/sCa1OXMDBbSU9paocEcO1TToEGHrTe3iOc3dq06d6JbhaeyxDnloGdpZOF+Jbz/g
+         Xn1KAMehQ4F557ROJog1KRlYgVjwvaijC1TPm4a0ROMGT/A0q/cLdD03OTq618c2BDKE
+         IgVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXq2WDhSB0pU/Fny7ERP3BPh8j9IHx6oanGXht++J+jsWPpNAMhzU9W3NmvbcgmrmyL4gswCpK8U4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCrti1nGfn6mg4/7Xu1CgGtBDuoeDm5M1k/iANpgyA2tv9yQm3
+	V+G/7SXKUrmNd6/1Lc57LPy15n9xdLPDtcsBb2M07Lp38oLs48I/OqRN9D7eCGvELlw=
+X-Gm-Gg: AY/fxX479ozYZ22enUotk5zFWuLh1peAKON7L7zRyq73n9u+WXr9iCYGZfJnu2Df4CL
+	MlKULxug10YGIBSCINnD/sqEay2sUJBFcmrKxUt+H17XM2VcQJBiPFZ3t7xBhrXou8wkGgGBSL4
+	jw8H0ec1kpPV+6nD/XJlzv8DTxx0xXomNkhDOgeoNB4lSdxIn20dLnTO52Yvdu8NJBLQntG/XdE
+	wsmyt4tpbbvrT0j0aNL7po53+ddfRQDHrEGugwn2WzJC9HLmo0MsfhVo7SnZnOvliOLhtLm76pQ
+	i8pcmAHdteHoHoZ5VcbKR7dQijYDEWk7tTGw8Z+rGdx8pY8Mg7kFBParFw9bB8J5aH1vw4Ccm7b
+	AXHpQAysY69Kt1tFdhghru/Uk589HrZj5Lq5pZ9jC2Th4+Cz0PnANkGTRK4KyNfBjql8FgCGTUB
+	WwVylNDKfH1JYJMS3AOcGcDAOnLHbVF9VByvAW77a48q+55RHK7/0l7lklMWuSrKpyIn34uLvMt
+	OAQJiq1
+X-Google-Smtp-Source: AGHT+IElu2DeQr7IoImhfsWaHg06ftf4nZ3LUQN+WUZ/izPfinsCvzTpfHsJa/ze8aScZK07T0eUkA==
+X-Received: by 2002:a05:6a20:918d:b0:35d:d477:a801 with SMTP id adf61e73a8af0-376a7eed254mr14238755637.13.1766521179192;
+        Tue, 23 Dec 2025 12:19:39 -0800 (PST)
+Received: from fedora (dh207-15-53.xnet.hr. [88.207.15.53])
+        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-c1e7cbfa619sm12567549a12.36.2025.12.23.12.19.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Dec 2025 12:19:38 -0800 (PST)
+From: Robert Marko <robert.marko@sartura.hr>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	vkoul@kernel.org,
+	andi.shyti@kernel.org,
+	lee@kernel.org,
+	andrew+netdev@lunn.ch,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linusw@kernel.org,
+	Steen.Hegelund@microchip.com,
+	daniel.machon@microchip.com,
+	UNGLinuxDriver@microchip.com,
+	olivia@selenic.com,
+	radu_nicolae.pirea@upb.ro,
+	richard.genoud@bootlin.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	broonie@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	lars.povlsen@microchip.com,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Cc: luka.perkov@sartura.hr,
+	Robert Marko <robert.marko@sartura.hr>
+Subject: [PATCH v3 00/15] Add support for Microchip LAN969x
+Date: Tue, 23 Dec 2025 21:16:11 +0100
+Message-ID: <20251223201921.1332786-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Vinod Koul <vkoul@kernel.org>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
- Kelvin Cao <kelvin.cao@microchip.com>, George Ge <George.Ge@microchip.com>,
- Christoph Hellwig <hch@infradead.org>,
- Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
- Christoph Hellwig <hch@lst.de>
-References: <20251215181649.2605-1-logang@deltatee.com>
- <20251215181649.2605-3-logang@deltatee.com> <aUE7zahyYgsls-Ic@vaman>
- <eeda026b-bfe1-42ba-a062-ca90b5f03ee6@deltatee.com> <aUpuXwb1h6rtlfoB@vaman>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <aUpuXwb1h6rtlfoB@vaman>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: vkoul@kernel.org, dmaengine@vger.kernel.org, kelvin.cao@microchip.com, George.Ge@microchip.com, hch@infradead.org, christophe.jaillet@wanadoo.fr, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH v11 2/3] dmaengine: switchtec-dma: Implement hardware
- initialization and cleanup
-X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
 
+This series adds support for the Microchip LAN969x switch SoC family.
 
+Series is a bit long since after discussions in previous versions, it was
+recommended[1][2] to add SoC specific compatibles for device nodes so it
+includes the required bindings updates.
 
-On 2025-12-23 03:26, Vinod Koul wrote:
-> On 19-12-25, 10:19, Logan Gunthorpe wrote:
->> On 2025-12-16 04:00, Vinod Koul wrote:
->>> This is bit interesting. Any reason why you choose double pointer here.
->>> If you take a look at other driver, they follow similar approach but
->>> dont use double pointer for this.
->>>
->>
->> The ring size has had to be quite large. It is currently set to 32K in
->> order to be able to get maximum performance in some work loads. While
->> each element is only 104 bytes, the total array is more than 3MB which
->> is too much for a single allocation. The PLX dma driver this is based on
->> does the same thing even though it's queue size is only 2048.
-> 
-> Ring size is fine, the question is about use of a double pointer instead
-> of a single pointer
+[1] https://lore.kernel.org/all/20251203-splendor-cubbyhole-eda2d6982b46@spud/
+[2] https://lore.kernel.org/all/173412c8-c2fb-4c38-8de7-5b1c2eebdbf9@microchip.com/
+[3] https://lore.kernel.org/all/20251203-duly-leotard-86b83bd840c6@spud/
 
-Ah, I guess we could make the array part of switchtec_dma_chan, I can
-make that change. It is a large allocation (256KB) either way.
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
 
->> I'm not sure what you are looking for, I couldn't find any explicit
->> quiesce function that is commonly used on teardown in other drivers.
->> Clearing the pdev pointer above and synchronizing the RCU should ensure
->> there are no other jobs in progress or tasklets running.
->>
->> Note: I have tested teardown while running dmatest and have not found
->> any issues.
-> 
-> The tasklet can be schedule and then you free irq which creates a racy
-> situation, so I always recommend to kill the tasklet after freeing the
-> irq!
-> 
+Changes in v3:
+* Pick Acked-by from Conor
+* Drop HWMON binding as it was picked into hwmon already
+* Document EV23X71A into AT91 binding
+* Drop SparX-5 and AT91 bindings merge
+* Apply remark from Conor on DMA binding regarding merging cases
 
-Ok, yes, I think it should be possible to move the tasklet_kill down
-below the free_irq. I'll give it a try.
+Changes in v2:
+* Change LAN969x wildcards to LAN9691 in patches
+* Split SoC DTSI and evaluation board patches
+* Add the suggested binding changes required for SoC specific compatibles
+* Merge SparX-5 and AT91 bindings as suggested[3]
 
-Logan
+Robert Marko (15):
+  include: dt-bindings: add LAN969x clock bindings
+  dt-bindings: usb: Add Microchip LAN969x support
+  dt-bindings: mfd: atmel,sama5d2-flexcom: add microchip,lan9691-flexcom
+  dt-bindings: serial: atmel,at91-usart: add microchip,lan9691-usart
+  dt-bindings: spi: at91: add microchip,lan9691-spi
+  dt-bindings: i2c: atmel,at91sam: add microchip,lan9691-i2c
+  dt-bindings: rng: atmel,at91-trng: add microchip,lan9691-trng
+  dt-bindings: crypto: atmel,at91sam9g46-aes: add microchip,lan9691-aes
+  dt-bindings: crypto: atmel,at91sam9g46-sha: add microchip,lan9691-sha
+  dt-bindings: dma: atmel: add microchip,lan9691-dma
+  dt-bindings: net: mscc-miim: add microchip,lan9691-miim
+  dt-bindings: pinctrl: pinctrl-microchip-sgpio: add LAN969x
+  arm64: dts: microchip: add LAN969x support
+  dt-bindings: arm: AT91: document EV23X71A board
+  arm64: dts: microchip: add EV23X71A board
+
+ .../devicetree/bindings/arm/atmel-at91.yaml   |   6 +
+ .../crypto/atmel,at91sam9g46-aes.yaml         |   1 +
+ .../crypto/atmel,at91sam9g46-sha.yaml         |   1 +
+ .../bindings/dma/atmel,sama5d4-dma.yaml       |   4 +-
+ .../bindings/i2c/atmel,at91sam-i2c.yaml       |   1 +
+ .../bindings/mfd/atmel,sama5d2-flexcom.yaml   |   1 +
+ .../devicetree/bindings/net/mscc,miim.yaml    |  11 +-
+ .../pinctrl/microchip,sparx5-sgpio.yaml       |  20 +-
+ .../bindings/rng/atmel,at91-trng.yaml         |   1 +
+ .../bindings/serial/atmel,at91-usart.yaml     |   1 +
+ .../bindings/spi/atmel,at91rm9200-spi.yaml    |   1 +
+ .../bindings/usb/microchip,lan9691-dwc3.yaml  |  68 ++
+ arch/arm64/boot/dts/microchip/Makefile        |   1 +
+ arch/arm64/boot/dts/microchip/lan9691.dtsi    | 487 +++++++++++
+ .../boot/dts/microchip/lan9696-ev23x71a.dts   | 757 ++++++++++++++++++
+ include/dt-bindings/clock/microchip,lan9691.h |  24 +
+ 16 files changed, 1376 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/microchip,lan9691-dwc3.yaml
+ create mode 100644 arch/arm64/boot/dts/microchip/lan9691.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/lan9696-ev23x71a.dts
+ create mode 100644 include/dt-bindings/clock/microchip,lan9691.h
+
+-- 
+2.52.0
+
 

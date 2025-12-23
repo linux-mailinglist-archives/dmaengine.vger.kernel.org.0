@@ -1,82 +1,82 @@
-Return-Path: <dmaengine+bounces-7933-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7934-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 451EACDA8DB
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 21:43:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05885CDA8FF
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 21:45:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 460703009F2F
+	by sea.lore.kernel.org (Postfix) with ESMTP id 53BD73019B55
 	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 20:43:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24C730F803;
-	Tue, 23 Dec 2025 20:43:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DF08313555;
+	Tue, 23 Dec 2025 20:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N3Gz0D31"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfnhowmC"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBB62EA749
-	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 20:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CC42FBE1F
+	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 20:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766522584; cv=none; b=QCjokBQ0jAENYp1DwO5nGDtxoHECC4L0bKRcUeRxIouT51jwuiwMRC1Ot20tEKkPdAEDswpfs1T9N6Wht3OrbvqhMCQ3OMt5BmXD2NRPzDTT6E918RBw1kJKbGyKcfFIvXLWEQUhzalDid+GzSCOAFXDTgiHsVthznrmnXk2TmQ=
+	t=1766522584; cv=none; b=lSVtCta5/VQyMcVTQMG+u54s+3/HI2EYOPTwcdtZ6TUTUz3zkGtzGdrNKwb1WpFIza6+9NoDX9PqEMmhJymJ4DCxbtn9DmPAhoiMBxaxEkl+m0zAX9TvDRVDnLIcJuoAJ/mn3sWCDnBJINja94adITuaGvfrWCsJok1HrlTt1eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1766522584; c=relaxed/simple;
-	bh=dVPhSupKjkNxYTT4xpPhhp81sYshESJdrI9dqnFc014=;
+	bh=yMwiptWpv+B9ZQzk1lcYIODOZzAI5+8f83d3TcSFEMU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HsSY1RtgRw/l15sWoRYvIRFkT8OEXzkU6eKC3QkXmAHmXIErNbumYZD7i0g30UUSLmC77HqlSazSKpI4ipaKmrWnleL8CfP8IMpVgmfYgAaOL8rdp8kieOSIwljKKOdebmVwPVPWES1QNMsVaNH0pZjIFMtr+/gLlzKKywocMHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N3Gz0D31; arc=none smtp.client-ip=209.85.216.49
+	 MIME-Version; b=mqi4U0KtXDfx6sOfp/gT+4lXtPSj5JUvIfrfqobjbiwCYflJl5jt5h0lDBc7YvYQqPApeR4Wqru75j1A49InLBKXuKxCWfiuigkxtQOahV9AGkezxEviiDN8PzfiExd6Bnpd9ClCu/I4SOsn+3hC5yDDJanesj9acdqC6BuJWoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RfnhowmC; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-34be2be4b7cso3552668a91.3
-        for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 12:43:02 -0800 (PST)
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7b8e49d8b35so6608185b3a.3
+        for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 12:43:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766522581; x=1767127381; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1766522582; x=1767127382; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1skd3xL+sZ59w+5Tt0e9sUWzqt/UFsyMduMqakn5wi4=;
-        b=N3Gz0D31AAU6ro6MT7Sk0B4+enHwziWIGVH6YQb42azaj3j3LBp15Hj3lmtrzPyARM
-         I0nOzqzErdMb5Or5QD2WF7+ZgVgAQaHvygmzyyKnQbtCJj1Wpu/ArY7VvTzZFYYRgJrb
-         Qr4Br2axwfpuCOHEkr38TcedSHeWm+a9VqVdDwT/a381mQ6fhubHzgFSbWEL+1uszD9x
-         vr3l5tqaf0LypSSy875rnudBNNhexHw58o4J/M7pppKJQSsLVuLm85QjMCE+PRVzs1VD
-         wduNYh2WOW5nlpkBIi0IkBzfkIDDi/E1yJaaU+JmS/t2LcjnZQNqTrPbiWSIhdwseEoH
-         892g==
+        bh=5K53dh7iZV5I7itYjrbEpcWSYQZjhrNtckyUwAic/RY=;
+        b=RfnhowmCe8QmPzlJ5viprKu10igza5MjCGFhiEaHBZ90vNquEvxc7rMPgXr1/1APg7
+         4C8MY3g0Qj37Vyn0I6jtXYeI8I6Lp9+j0DW7XbbkEnbZtJCu2mXt9UWD2dMHlfng7Nv1
+         rubDpINRXf+0tz1lLpbgVVKOGK4mDJQ0RvG9auanw6UbmCVnwLNNo9jpmmbOo9dR//BJ
+         92QYc9qwGMJ6qpj2QD+0FcUyt5HmDMpGgiqxsi1GsnZsZkk1JJc3OPpJpS4oeBo+hkOz
+         /eerB+GuSNqUDLhOWtOQlLXQ5OqQQ6H6bQRGQyx5gbCeFfp4xOJIz1mJc0Bqn4wNg/f/
+         lotA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766522581; x=1767127381;
+        d=1e100.net; s=20230601; t=1766522582; x=1767127382;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=1skd3xL+sZ59w+5Tt0e9sUWzqt/UFsyMduMqakn5wi4=;
-        b=CXaXdC/EbkW984ZZYlGjLNCQ7lDiB5dEsNWRLuVufW9fpsa9ok8ogqRmgsq8N9ftNs
-         ZD0rI66PpBGzAgastdZmUfMicmQj5WGZRB0oeT8P7G80rLAKmjfnKBw8tUk4UbizRkQL
-         FzY8ep18HNbHJGt822/zbMtgGpcMIUHldmuEgm9NQxYl0WMsGl65ziha52jAwLMA2ZoG
-         FKXfdxnB+EF4BCtKOCQvNXBEW8X4rf8WUnjxEw3YIb1iUL3aPWRDo8FWIL9xjD8jF9Ot
-         Zigk4Pzpq7weU04oosm9ULbalXOhIL2rE3sL6XjlXlKWaVuZsn80HvoVleZFOc2HgU2j
-         cYFA==
-X-Gm-Message-State: AOJu0YxKVhReExxrEjrBFypqr1NtsNy3wDpFygsXFZVx/FrmuhSBqtru
-	Tn7GL+96FNc3pGIWD4pUVawSAFn5DgTxZjIxyD5Sjl2hHvd6mEU+vCzSIOvHKQ==
-X-Gm-Gg: AY/fxX4nMexVUH5aHY7GvP7kIv8nNlSfLgTPnAsEl7A9bUNOEcVtbGSfpmeBPKsBLIM
-	3HvYyaW11sDnUWe1qPWbx/DYK0bwClQUS0iGIzxSLhyaD+wliQJVZ4krDZ6ttoQxUelAk5250Y6
-	jdsMfK5x+70+d9UMBEThOgEKos8Afj1luIQJg9+EizjkCSQJMpeiHC6P3BR57HeXY8g6E50F6xu
-	UbnpiUY7x4st4IfwJVZjJV5WqtxTyjtTc3Fulvu+67/qVRcteqPZLLKioippRC9cQO1YY8UDV3k
-	PmEQTkGNEK+y+gGQxPNRtT4Y8zf9KjlX5hJzKHlfjNP2nKrz0haE3fuD4y00tEXJbLxCKdZe1gI
-	Ijdjfu7ffV4ST5f3zNEgogHol31A5HxuexmYyrn3NpHs8fxN1twEss6B30w==
-X-Google-Smtp-Source: AGHT+IGMQDSi2ZlhEGbkrnswZLpBeB3IntHFJSFQ1YG0eY3xXfHJGFZXfsVzOiSVxxWF80SQqc05ng==
-X-Received: by 2002:a17:90b:5610:b0:34c:7182:cf9d with SMTP id 98e67ed59e1d1-34e921c7373mr12211478a91.25.1766522581140;
-        Tue, 23 Dec 2025 12:43:01 -0800 (PST)
+        bh=5K53dh7iZV5I7itYjrbEpcWSYQZjhrNtckyUwAic/RY=;
+        b=uT3hDN7GklVDTsgUxYh+nucY+rxe6Sa1hq182gLnfVhu7OL5bDT9bBNHMhuScy3+LT
+         K2XcAGs2rSysOF2cTvRd8boEaJXVO7pSpffdQxSP/31/w/yHEQeNlSlySZoY6+U9XQ3z
+         nCWAH0DJAOUg9F8PAPGGLtUiNTY5URdU3IvgnFzRq94AcKVmNzRSAvWbUbNGPoGuipSS
+         YiZKMtO+auafHlxhOq/mAecMFCJ8rDnX7zNuloMO/r2UfliK02Uolej91NnZv1JSmCqD
+         kJvNFEjHy3kJOCngMePtz/wnqAzydimfu2KwuDayNACL5MxfH7yB0o9eAIzklqssmHxY
+         Acvg==
+X-Gm-Message-State: AOJu0YzpoqGO9WoVfDt3mxPiNCdmZWvV1r8yQJvEFBKYNgJTc9mubsm8
+	c4+bmaX/t9y+5VPWa3egwfoYHKfKqQ8alNKaIh3A3msIVtG7EuAc6SKBslZY1A==
+X-Gm-Gg: AY/fxX6tm/t3NvDnKSgEmhBwYviyf9tJnxGvDav4aQ6sMoaybYXvQGd3UIxBtO48Ey6
+	LqDkhoxTPhb0/DGoc2nqagz8XaCCKj96bs3p17/I/kWujxRAgBE+RMx/6H5hVDMxklCpnKu4G2x
+	ASo8YWcH2EzJSV8WCta9b2W8E7i53z9lb5pc5R8H+rocgKJBK1ZyJ85qDUScBXzPzFMUGKXml+G
+	7LFAGbs89oisDyrkcWtOex4LNSgkqKiLOXx7Pq9uCqaDGN4HNvPMURPUjMTPZxwp+OIPSimkjjH
+	MiUtnLAX46l64efVYUmNpCPEyC3pnq3MCOtVCVL7ONCtYDFqV3cyLP38EY7xuviCDHLOdRcBMor
+	echATDQaSf1IKXvkctpr1o2Jsl74PkLdKXWa2/ZkUAghzh7XR0Db/OelBCw==
+X-Google-Smtp-Source: AGHT+IG5U1kfjxNkKuFC7Oj5ybiC1eIbI8paxEgn2ytDfdv38mA4nXn5G9F1DYN1N+ndgD5VvLuyDw==
+X-Received: by 2002:a05:6a20:918b:b0:366:14ac:e1e0 with SMTP id adf61e73a8af0-376ab1ea654mr15523988637.70.1766522582461;
+        Tue, 23 Dec 2025 12:43:02 -0800 (PST)
 Received: from ryzen ([2601:644:8000:8e26::ea0])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34e922278a4sm13931871a91.11.2025.12.23.12.43.00
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34e922278a4sm13931871a91.11.2025.12.23.12.43.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Dec 2025 12:43:00 -0800 (PST)
+        Tue, 23 Dec 2025 12:43:01 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
 To: dmaengine@vger.kernel.org
 Cc: Vinod Koul <vkoul@kernel.org>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCHv5 1/2] dmaengine: mv_xor: use devm_platform_ioremap_resource
-Date: Tue, 23 Dec 2025 12:42:41 -0800
-Message-ID: <20251223204242.3415-2-rosenp@gmail.com>
+Subject: [PATCHv5 2/2] dmaengine: mv_xor: use devm_clk_get_optional_enabled
+Date: Tue, 23 Dec 2025 12:42:42 -0800
+Message-ID: <20251223204242.3415-3-rosenp@gmail.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251223204242.3415-1-rosenp@gmail.com>
 References: <20251223204242.3415-1-rosenp@gmail.com>
@@ -88,55 +88,44 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Simplifies probe slightly by removing explicit struct resource pointers
-and platform_get_resource calls.
+Driver was written before this was available. Simplifies code slightly.
+
+Actually also a bugfix. clk_disable_unprepare is missing in _remove,
+which is also missing.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/dma/mv_xor.c | 23 ++++++-----------------
- 1 file changed, 6 insertions(+), 17 deletions(-)
+ drivers/dma/mv_xor.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index 5e8386296046..3597ad8d1220 100644
+index 3597ad8d1220..d15a1990534b 100644
 --- a/drivers/dma/mv_xor.c
 +++ b/drivers/dma/mv_xor.c
-@@ -1309,7 +1309,6 @@ static int mv_xor_probe(struct platform_device *pdev)
- 	const struct mbus_dram_target_info *dram;
- 	struct mv_xor_device *xordev;
- 	struct mv_xor_platform_data *pdata = dev_get_platdata(&pdev->dev);
--	struct resource *res;
- 	unsigned int max_engines, max_channels;
- 	int i, ret;
+@@ -1351,9 +1351,9 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 	/* Not all platforms can gate the clock, so it is not
+ 	 * an error if the clock does not exists.
+ 	 */
+-	xordev->clk = clk_get(&pdev->dev, NULL);
+-	if (!IS_ERR(xordev->clk))
+-		clk_prepare_enable(xordev->clk);
++	xordev->clk = devm_clk_get_optional_enabled(&pdev->dev, NULL);
++	if (IS_ERR(xordev->clk))
++		return PTR_ERR(xordev->clk);
  
-@@ -1319,23 +1318,13 @@ static int mv_xor_probe(struct platform_device *pdev)
- 	if (!xordev)
- 		return -ENOMEM;
+ 	/*
+ 	 * We don't want to have more than one channel per CPU in
+@@ -1441,11 +1441,6 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 				irq_dispose_mapping(xordev->channels[i]->irq);
+ 		}
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res)
--		return -ENODEV;
-+	xordev->xor_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(xordev->xor_base))
-+		return PTR_ERR(xordev->xor_base);
- 
--	xordev->xor_base = devm_ioremap(&pdev->dev, res->start,
--					resource_size(res));
--	if (!xordev->xor_base)
--		return -EBUSY;
+-	if (!IS_ERR(xordev->clk)) {
+-		clk_disable_unprepare(xordev->clk);
+-		clk_put(xordev->clk);
+-	}
 -
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	if (!res)
--		return -ENODEV;
--
--	xordev->xor_high_base = devm_ioremap(&pdev->dev, res->start,
--					     resource_size(res));
--	if (!xordev->xor_high_base)
--		return -EBUSY;
-+	xordev->xor_high_base = devm_platform_ioremap_resource(pdev, 1);
-+	if (IS_ERR(xordev->xor_high_base))
-+		return PTR_ERR(xordev->xor_high_base);
- 
- 	platform_set_drvdata(pdev, xordev);
+ 	return ret;
+ }
  
 -- 
 2.52.0

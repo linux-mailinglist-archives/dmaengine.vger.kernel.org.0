@@ -1,165 +1,203 @@
-Return-Path: <dmaengine+bounces-7870-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7871-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECE52CD8D7F
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 11:37:57 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53E8DCD8F3B
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 11:50:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 50175304A2AF
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 10:35:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1017230AB247
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 10:43:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF3AE352FA0;
-	Tue, 23 Dec 2025 10:35:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F7EA324B1F;
+	Tue, 23 Dec 2025 10:41:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="GF2uS7wi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehXOHZRH"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BEF34F254
-	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 10:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083661B4F0A;
+	Tue, 23 Dec 2025 10:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766486112; cv=none; b=SFQXK8qDSiUm99a/4kLCbFS9ynLQNSedRtoKvq4EzvxUvIpU8J/hW/en+v075jzFWxsxY4OzIk18ro6zSUSMAhwQQ/N8vhPDJbeVIOrJvbiMrvA14N/1l42rX9m6HzIfalBvtSXR0VDpLybmZQZnILb5jm8B9oLvfQxI6v2p3WU=
+	t=1766486508; cv=none; b=nOrbRFcAZgu4o4w6CooviXO7yYfBxGjPWg1kRZYK3EN5N+1nCRfX3yA8ZjpWAH7twz7nf65P3wF3clseaXqLQB3MydKENfhDl3SpSp7vBz+yx7SRab1/rMG6uuugoCwjAgFV6EdXQ04qtIgCLDBzKvpKCZbjMhSpEQKRP1Bm91k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766486112; c=relaxed/simple;
-	bh=nhnhn/ujbA1yivMUlMSXRd1v6Sz4LmmXkvWUytEJhUI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IdbGl52mTif7g/LCUZah1w1CgHQKTx04XtczdVnV+WLpJ9K8cwWwu29AzAOqSUx66R1IY9AiziEeUn3EwLdxlXU4C9VoNVSSn6W1IqU3Mb1v+aX9GBrtLYcqo5857XNdIKjCbjl6oEd3N9oLh11RZGPQtzZlfkRuRsKoTYuksUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=GF2uS7wi; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b73a9592fb8so913593666b.1
-        for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 02:35:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1766486106; x=1767090906; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SWwHgDUayFaSdSqe2T6d6UFJFmjd2ZLae5KHc+yXH7I=;
-        b=GF2uS7wiRyhBmf1kLR0gIF3Rip3N0z7rurwMgvhBqXkpElhZHM//c4ztfkOfl34VXQ
-         1X14GkorXLzezj84xr2Y/dQLW+EfbQhQVOVhtnuM3M454FOIn2PNXJXS36N8bH/whQBV
-         zY0fHit1GfAmUbUyKlPfmB88R6AoVgxYJryPviR3Xhc9pr/mmX1utNgHaFZ5HiT/+TFT
-         EPfJeiatuCcTI+Wko2Rrfq/cDBpi0ycNUhFAp5hGmFIf/u3Ol72pdr/MxF3qgwek5A2i
-         SlQTW3sCFS0UxINftvR9ief03PbV1fiyjZferC+QgdFvMpknr46FIg9k8YC+cFlkaq8w
-         fJHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766486106; x=1767090906;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SWwHgDUayFaSdSqe2T6d6UFJFmjd2ZLae5KHc+yXH7I=;
-        b=CIO3Byp/pEo8NI7gTK7E1wPNyZaAhGlsNCVgZNp/kmiRDA5DUTXt+xchv7RhlySKqD
-         jEjsAJCZqi+NEZpEKxpnccK1M3jsEy47KvWqnRJ6nRitjukLCoIXe2vln1inEWtr0rlL
-         RK4tKpr1p3zZeSy8OHww+5o9uaNDvd0r2l7wQOCn+meVO9z7RPgbZzFsjBo3+1w2KKIy
-         8uH0E/TrlWP54dXSqe3AV6X1C9jVhwSbKZm/54zguOJuFBLAgXX/Vds9EaU/9apPBw/a
-         mKwHlIG1YpgPhC4lQc0oS5pAM5eiAyuW2i8KHvsqEC3WF7rHPVKTSMxAIvCVzjE/pq31
-         XKBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOK7mhbvQU6lY4p1QM7gYbFvwNOmo4Vx0M7WNW6O6qY4Ue19S7h+CbSD8BoMOvF0tpD0dgfp7pcwM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziPB9+1lpG8Mgv+azwmZBmqE0m4yj0yhAd2ZnvuGWe8h8H3GcR
-	Y8Geam906UY4JFThZRJ1r+RhKg26Gr1+uUbD/KpvXjnba+Jthio2fx3YgbVK1bRt5N4TCaZptfs
-	FvI43DrHrkST9kVYkFikcX3Vywb+AjVGbUXYgJP+C7w==
-X-Gm-Gg: AY/fxX7EDBfJUdbPvRM7kVss6yvGqLrZR2a0IYV6rACdiS7hkuHpjWWalQfK+igDA7f
-	5VP9NEyHsjHN279uLhRHWo+FoF/hBs1z+oqwfE4kLbiHUoE5yi3VznqnwtTe5x+VlrL8SytkMgg
-	wEy0b/rpo6SDHXUiQcFSHcHFBN/2sgRvqG5n7h84uA6f4B7VqIxJrK1GlwIfSCyOyx/fA3dARFQ
-	H0Xwl9QUkOBUWSIlzRXB+c7tECU4VM7cNTMEWSOOnkqzLf53UzAFssGaIjJJAgSSz9Ds4CqbqME
-	a8WBoDX7vE1SeMw6jQA0GBeCI1bEcr2prKPWfrzq8aU04+q5ug==
-X-Google-Smtp-Source: AGHT+IEJHssgBNa10sdxlMZ0RfBcXjnBKXrp4KRUpqNBX0cKMLRNtJZXOvlDmXwgBRgg1wr13xel6K2BxjWOkHuOL+E=
-X-Received: by 2002:a17:907:a45:b0:b81:ec7c:31fd with SMTP id
- a640c23a62f3a-b81ec7c321bmr332573366b.13.1766486105902; Tue, 23 Dec 2025
- 02:35:05 -0800 (PST)
+	s=arc-20240116; t=1766486508; c=relaxed/simple;
+	bh=dh1LliqkmgcxlRpXE4EKf7TKTcpUvkSiqOpQkRgrNGg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EN/IaS8PUSLSnb9ivLwmjy79Q+6BDfftKI9rxvnmGX1vzhGNdDxa0zXxpeDOzYETAB3HYP6QoafKJKdeXQEzqUFu5zjUcIadzILigzT9QNdyOjGWJP5fl9k/av1xNHtiNFzGs//pb7e1AkolbnrZGfGrk1WWLpeTmICfYQQM01Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehXOHZRH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8EA8C113D0;
+	Tue, 23 Dec 2025 10:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766486507;
+	bh=dh1LliqkmgcxlRpXE4EKf7TKTcpUvkSiqOpQkRgrNGg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ehXOHZRH3fe4YvnWKEw6pTVW2pbWT5bBgiBswCQP+mCqQuswq1dDSeRBBW6rQPwsc
+	 dVR1KzAR1jQesyvFk2/8iKqEUA7IRQyq0Aqaiuv3B8arbU7hB1ECpNxYlOaw2stzMd
+	 5YdxjHkHMOUeEM4UnXoM/CtL49zQg4f0CE9rmQNeeeNs2eh7Y9NiquWHtPs/zHDs/9
+	 DuVhdm3T7PaXeCoFR+P48FnRL2KNsRcoAyGDS2yEiGrkxHtQA+5V0vnDIWFgMjBVfb
+	 dihF+oI+uNHyjra+sM2iijAVYTDaHzpPf8w+oAXzEtzismq6MbeLlFQciymiYGglzd
+	 RH7lvTqmlUMPQ==
+Date: Tue, 23 Dec 2025 16:11:43 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v2 1/8] dmaengine: Add API to combine configuration and
+ preparation (sg and single)
+Message-ID: <aUpx59CeT4XfL5i1@vaman>
+References: <20251218-dma_prep_config-v2-0-c07079836128@nxp.com>
+ <20251218-dma_prep_config-v2-1-c07079836128@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251215163820.1584926-1-robert.marko@sartura.hr>
- <20251215163820.1584926-18-robert.marko@sartura.hr> <20251216-endorse-password-ae692dda5a9c@spud>
-In-Reply-To: <20251216-endorse-password-ae692dda5a9c@spud>
-From: Robert Marko <robert.marko@sartura.hr>
-Date: Tue, 23 Dec 2025 11:34:55 +0100
-X-Gm-Features: AQt7F2rp1ybXWw2BWzfekoJJeczrMeV1nO2lvHuguNeXKU1awsBcuKjFcFE-_B8
-Message-ID: <CA+HBbNF-=W7A3Joftsqn+A6s170sqOZ77jpS105s5HPqkskQzA@mail.gmail.com>
-Subject: Re: [PATCH v2 18/19] dt-bindings: arm: microchip: document EV23X71A board
-To: Conor Dooley <conor@kernel.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	claudiu.beznea@tuxon.dev, Steen.Hegelund@microchip.com, 
-	daniel.machon@microchip.com, UNGLinuxDriver@microchip.com, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
-	linux@roeck-us.net, andi.shyti@kernel.org, lee@kernel.org, 
-	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, linusw@kernel.org, olivia@selenic.com, 
-	radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com, 
-	gregkh@linuxfoundation.org, jirislaby@kernel.org, mturquette@baylibre.com, 
-	sboyd@kernel.org, richardcochran@gmail.com, wsa+renesas@sang-engineering.com, 
-	romain.sioen@microchip.com, Ryan.Wanner@microchip.com, 
-	lars.povlsen@microchip.com, tudor.ambarus@linaro.org, 
-	kavyasree.kotagiri@microchip.com, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-clk@vger.kernel.org, mwalle@kernel.org, luka.perkov@sartura.hr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251218-dma_prep_config-v2-1-c07079836128@nxp.com>
 
-On Tue, Dec 16, 2025 at 6:32=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> On Mon, Dec 15, 2025 at 05:35:35PM +0100, Robert Marko wrote:
-> > Microchip EV23X71A board is an LAN9696 based evaluation board.
-> >
-> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > ---
-> >  Documentation/devicetree/bindings/arm/microchip.yaml | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/microchip.yaml b/Doc=
-umentation/devicetree/bindings/arm/microchip.yaml
-> > index 910ecc11d5d7..b20441edaac7 100644
-> > --- a/Documentation/devicetree/bindings/arm/microchip.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/microchip.yaml
-> > @@ -239,6 +239,14 @@ properties:
-> >            - const: microchip,lan9668
-> >            - const: microchip,lan966
-> >
-> > +      - description: The LAN969x EVB (EV23X71A) is a 24x 1G + 4x 10G
-> > +          Ethernet development system board.
-> > +      - items:
-> > +          - enum:
-> > +              - microchip,ev23x71a
-> > +              - microchip,lan9696
->
-> This looks wrong, unless "microchip,lan9696" is a board (which I suspect
-> it isn't).
+On 18-12-25, 10:56, Frank Li wrote:
+> Previously, configuration and preparation required two separate calls. This
+> works well when configuration is done only once during initialization.
+> 
+> However, in cases where the burst length or source/destination address must
+> be adjusted for each transfer, calling two functions is verbose and
+> requires additional locking to ensure both steps complete atomically.
+> 
+> Add a new API dmaengine_prep_config_single() and dmaengine_prep_config_sg()
+> and callback device_prep_config_sg() that combines configuration and
+> preparation into a single operation. If the configuration argument is
+> passed as NULL, fall back to the existing implementation.
+> 
+> Add a new API dmaengine_prep_config_single_safe() and
+> dmaengine_prep_config_sg_safe() for re-entrancy, which require driver
+> implement callback device_prep_config_sg().
+> 
+> Tested-by: Niklas Cassel <cassel@kernel.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> change in v2
+> - add () for function
+> - use short name device_prep_sg(), remove "slave" and "config". the 'slave'
+> is reduntant. after remove slave, the function name is difference existed
+> one, so remove _config suffix.
+> ---
+>  Documentation/driver-api/dmaengine/client.rst |   9 +++
+>  include/linux/dmaengine.h                     | 103 ++++++++++++++++++++++++--
+>  2 files changed, 105 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+> index d491e385d61a98b8a804cd823caf254a2dc62cf4..02c45b7d7a779421411eb9c68325cdedafcfe3b1 100644
+> --- a/Documentation/driver-api/dmaengine/client.rst
+> +++ b/Documentation/driver-api/dmaengine/client.rst
+> @@ -80,6 +80,10 @@ The details of these operations are:
+>  
+>    - slave_sg: DMA a list of scatter gather buffers from/to a peripheral
+>  
+> +  - config_sg: Similar with slave_sg, just pass down dma_slave_config
+> +    struct to avoid call dmaengine_slave_config() every time if need
+> +    adjust burst length or FIFO address.
+> +
+>    - peripheral_dma_vec: DMA an array of scatter gather buffers from/to a
+>      peripheral. Similar to slave_sg, but uses an array of dma_vec
+>      structures instead of a scatterlist.
+> @@ -106,6 +110,11 @@ The details of these operations are:
+>  		unsigned int sg_len, enum dma_data_direction direction,
+>  		unsigned long flags);
+>  
+> +     struct dma_async_tx_descriptor *dmaengine_prep_config_sg(
+> +		struct dma_chan *chan, struct scatterlist *sgl,
+> +		unsigned int sg_len, enum dma_transfer_direction dir,
+> +		unsigned long flags, struct dma_slave_config *config);
+> +
+>       struct dma_async_tx_descriptor *dmaengine_prep_peripheral_dma_vec(
+>  		struct dma_chan *chan, const struct dma_vec *vecs,
+>  		size_t nents, enum dma_data_direction direction,
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 99efe2b9b4ea9844ca6161208362ef18ef111d96..276dca760f95e1131f5ff5bf69752c4c9cb1bcad 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -835,6 +835,8 @@ struct dma_filter {
+>   *	where the address and size of each segment is located in one entry of
+>   *	the dma_vec array.
+>   * @device_prep_slave_sg: prepares a slave dma operation
+> + *	(Deprecated, use @device_prep_config_sg)
 
-Hi,
-No, LAN9696 is the exact SoC SKU used on the board.
-I will drop it in v3.
+Sorry that is _not_ deprecated, we are adding another way to do this in
+a single shot
 
-Regards
-Robert
->
-> > +          - const: microchip,lan9691
-> > +
-> >        - description: The Sparx5 pcb125 board is a modular board,
-> >            which has both spi-nor and eMMC storage. The modular design
-> >            allows for connection of different network ports.
-> > --
-> > 2.52.0
-> >
+> + * @device_prep_config_sg: prepares a slave DMA operation with dma_slave_config
+>   * @device_prep_dma_cyclic: prepare a cyclic dma operation suitable for audio.
+>   *	The function takes a buffer of size buf_len. The callback function will
+>   *	be called after period_len bytes have been transferred.
+> @@ -934,6 +936,11 @@ struct dma_device {
+>  		struct dma_chan *chan, struct scatterlist *sgl,
+>  		unsigned int sg_len, enum dma_transfer_direction direction,
+>  		unsigned long flags, void *context);
+> +	struct dma_async_tx_descriptor *(*device_prep_config_sg)(
+> +		struct dma_chan *chan, struct scatterlist *sgl,
+> +		unsigned int sg_len, enum dma_transfer_direction direction,
+> +		unsigned long flags, struct dma_slave_config *config,
+> +		void *context);
+>  	struct dma_async_tx_descriptor *(*device_prep_dma_cyclic)(
+>  		struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
+>  		size_t period_len, enum dma_transfer_direction direction,
+> @@ -974,22 +981,85 @@ static inline bool is_slave_direction(enum dma_transfer_direction direction)
+>  	       (direction == DMA_DEV_TO_DEV);
+>  }
+>  
+> -static inline struct dma_async_tx_descriptor *dmaengine_prep_slave_single(
+> -	struct dma_chan *chan, dma_addr_t buf, size_t len,
+> -	enum dma_transfer_direction dir, unsigned long flags)
+> +/*
+> + * Re-entrancy and locking considerations for callers:
+> + *
+> + * dmaengine_prep_config_single(sg)_safe() is re-entrant and requires the
+> + * DMA engine driver to implement device_prep_config_sg(). It returns NULL
+> + * if device_prep_config_sg() is not implemented.
+> + *
+> + * The unsafe variant (without the _safe suffix) falls back to calling
+> + * dmaengine_slave_config() and dmaengine_prep_slave_sg() separately.
+> + * In this case, additional locking may be required, depending on the
+> + * DMA consumer's usage.
+> + */
+> +static inline struct dma_async_tx_descriptor *
+> +dmaengine_prep_config_sg_safe(struct dma_chan *chan, struct scatterlist *sgl,
+> +	unsigned int sg_len, enum dma_transfer_direction dir,
+> +	unsigned long flags, struct dma_slave_config *config)
+> +{
+> +	if (!chan || !chan->device || !chan->device->device_prep_config_sg)
+> +		return NULL;
+> +
+> +	return chan->device->device_prep_config_sg(chan, sgl, sg_len,
+> +						   dir, flags, config, NULL);
+> +}
+> +
+> +static inline struct dma_async_tx_descriptor *
+> +dmaengine_prep_config_single_safe(struct dma_chan *chan, dma_addr_t buf,
+> +	size_t len, enum dma_transfer_direction dir, unsigned long flags,
+> +	struct dma_slave_config *config)
 
+Agree with Damien, this could look better!
 
-
---=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura d.d.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+-- 
+~Vinod
 

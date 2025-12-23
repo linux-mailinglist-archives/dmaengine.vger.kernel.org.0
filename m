@@ -1,51 +1,51 @@
-Return-Path: <dmaengine+bounces-7913-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7914-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41E74CDA4A9
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 19:41:08 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78FB2CDA4AF
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 19:42:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 06788302AFB1
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 18:41:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 48A743010CD4
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 18:42:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09D9933FE08;
-	Tue, 23 Dec 2025 18:41:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BE88347BC6;
+	Tue, 23 Dec 2025 18:42:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="iK82Uqj8"
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="Dr0P5PAH"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D360627B340
-	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 18:41:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0030A27B340
+	for <dmaengine@vger.kernel.org>; Tue, 23 Dec 2025 18:42:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766515265; cv=none; b=tuGJJQjxSDMjcMRHHRbH9lazHsyfz6Ip7n0kk9cdW+limELcO36qHYkfE5swr5PT6Ox4+7uSjzrwF+K0tYs4jhxtfX9HuWC55NvkmuRge0kGxfG2Im+mkKcM9PZiwR6CTWTA6StkdbjUjVIhZt3E+Xfk5pBKBdtxcL2htjOSxfc=
+	t=1766515369; cv=none; b=LZG1JOCJCGB4gQ1+wj/xGhWboBrYzbDa1UUNDCwamIi1fhwcqvh5Noy8A2oJLlkhymbbXuu8OS7e3jfByJq+4wY8xxn0vmf+niyNGqdBDLtC7TBbA9Kiv3IT6DBb2TBw6vu1dJihToDCfh1M7Lm6Mecpa0HxQZynHCa64Tpw94U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766515265; c=relaxed/simple;
-	bh=08S+ppuKSSoXIrnhy4sRHIsllmsVwWklIO3XAeN/cUo=;
+	s=arc-20240116; t=1766515369; c=relaxed/simple;
+	bh=Q2sTuKZ/+6CstqUbVXfSX4KcCgppjU730sp2PDJPkGU=;
 	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=DMBXCcOcEC+DL8PY6PvMmiw0OTzGyKmxgjZue43I0TEO2X0olL8Cg17UEvT8fYMBsLB3DOmovSRe5hSjxI6pPTJ4nZersNt/sNRWy9QiitEbJ+01OI2kP8eu4ZLJoNye9xOIe7Z2eMxv7Y52ZL36O5X5gTokN2fdkFu71yqPJ0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=iK82Uqj8; arc=none smtp.client-ip=204.191.154.188
+	 Content-Type:Subject; b=BI7J9dUPEdZ9MasFb+A6dnubW64X96exe7ZUrxX+82jpMx7q/wiKj/aJMuioGc7NdjnIj2DUg4rKmCdvPZ/QqWPY6lX+Uyos9zBa2fVCNzgbzUgoNv2KUXnUz0KtubnRLUmo9SbhuK6kfFupreH0BcN4cLb8Llrp51if81xBQrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=Dr0P5PAH; arc=none smtp.client-ip=204.191.154.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
 	MIME-Version:Date:Message-ID:content-disposition;
-	bh=RqxUPiMEAVU3f1j/Wu9JVAnLlowg0yNtqssNEqsE73o=; b=iK82Uqj8z2sCXGMLLuS9gjMbto
-	iD0TLGjdu1H3SZNKeCuI+pi3iXOhr/mm+BEwoG71N4oOnb0Y+KijxAKMusCknFwIxeATIF5REboRt
-	fT5UMWpgYG3qdqrVXL4GOSAXMyTi/qvEWMv7pUV4q4BUva1k6aS4QD2sDA7bjLKmfrgX1jZhqP2hY
-	AyAU/Mvsmqx0+cWsnnGUlGa3cmFkT6utqddPdKYQMcrqAh3c5Q5B+zRwzDSRjROOCrgtv4fHb0H7S
-	r7JeGufIDUEretBZqxrPl3fqSyyl4xJH1zEeDL868LbqQ/EHSrrNKTgd/qoQ09G6KQ65Fvz0CgZYk
-	F0Q6PXDQ==;
+	bh=L89MaalH1pA3hN9cuu5fQ0kUzbIeK37MzWcPyMp9NbU=; b=Dr0P5PAHSaxLDOCP0IKDQQJJNZ
+	Vgyvg57tRENX7EBOfxa7mL3+j6Sl8jJb8+YCPg75cq3uEW9SFv4FO3kCCuuZoFaGzk0puICiLdoiU
+	Na+nk/ofImAYENYLOd532AZmBzM+z9skPfL9q5SRzM0GouBsaCjfHO0wUZXTF2uic9JAFiU1K4faZ
+	LjzCpcxvgBas/8iYNbrHeksKX55dZO+U8lzm7gNGpVfmIAefBulF+UfxODRFv3dq/0Wf3KHUJD/Rn
+	zCgCclZjtkYax6mZV4veoxB+bukwkBfeBp3n9UyUZ4DbdywrArR6OrZh46RetugK8DvodYznv33C9
+	T3ONpIqA==;
 Received: from guinness.priv.deltatee.com ([172.16.1.162])
 	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.98.2)
 	(envelope-from <logang@deltatee.com>)
-	id 1vY7JW-000000099ql-3oXJ;
-	Tue, 23 Dec 2025 11:40:55 -0700
-Message-ID: <297aaeb1-9b83-41d9-96bb-5c71d94ca9d7@deltatee.com>
-Date: Tue, 23 Dec 2025 11:40:38 -0700
+	id 1vY7LJ-000000099rh-3q1X;
+	Tue, 23 Dec 2025 11:42:46 -0700
+Message-ID: <40576306-d9d8-4467-b449-1a8736515e13@deltatee.com>
+Date: Tue, 23 Dec 2025 11:42:45 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -54,113 +54,65 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 To: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org, Kelvin Cao <kelvin.cao@microchip.com>,
- George Ge <George.Ge@microchip.com>, Christoph Hellwig <hch@infradead.org>,
+Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+ Kelvin Cao <kelvin.cao@microchip.com>, George Ge <George.Ge@microchip.com>,
+ Christoph Hellwig <hch@infradead.org>,
  Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
  Christoph Hellwig <hch@lst.de>
 References: <20251215181649.2605-1-logang@deltatee.com>
- <20251215181649.2605-4-logang@deltatee.com> <aUFHfUFNrDojRoRm@vaman>
- <ab9b7838-09bf-4a1c-9d93-097b3dca0e02@deltatee.com> <aUpv3fP3PIhJVr9h@vaman>
+ <20251215181649.2605-3-logang@deltatee.com> <aUE7zahyYgsls-Ic@vaman>
+ <eeda026b-bfe1-42ba-a062-ca90b5f03ee6@deltatee.com> <aUpuXwb1h6rtlfoB@vaman>
 Content-Language: en-CA
 From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <aUpv3fP3PIhJVr9h@vaman>
+In-Reply-To: <aUpuXwb1h6rtlfoB@vaman>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-SA-Exim-Connect-IP: 172.16.1.162
 X-SA-Exim-Rcpt-To: vkoul@kernel.org, dmaengine@vger.kernel.org, kelvin.cao@microchip.com, George.Ge@microchip.com, hch@infradead.org, christophe.jaillet@wanadoo.fr, hch@lst.de
 X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Level: 
-Subject: Re: [PATCH v11 3/3] dmaengine: switchtec-dma: Implement descriptor
- submission
+Subject: Re: [PATCH v11 2/3] dmaengine: switchtec-dma: Implement hardware
+ initialization and cleanup
 X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
 
 
-On 2025-12-23 03:33, Vinod Koul wrote:
-> On 19-12-25, 10:42, Logan Gunthorpe wrote:
->> On 2025-12-16 04:50, Vinod Koul wrote:
->>> What about the descriptor, you should push into a pending queue or
->>> something here?
+On 2025-12-23 03:26, Vinod Koul wrote:
+> On 19-12-25, 10:19, Logan Gunthorpe wrote:
+>> On 2025-12-16 04:00, Vinod Koul wrote:
+>>> This is bit interesting. Any reason why you choose double pointer here.
+>>> If you take a look at other driver, they follow similar approach but
+>>> dont use double pointer for this.
+>>>
 >>
->> There's only the one queue in this driver and it is added to directly by
->> switchtec_dma_prep_memcpy(). So there's nothing more to do on the
->> hardware's side to submit the job. The jobs added to the queue with the
->> prep() function will start to be processed when the sq_tail pointer is
->> set in switchtec_dma_issue_pending() below.
+>> The ring size has had to be quite large. It is currently set to 32K in
+>> order to be able to get maximum performance in some work loads. While
+>> each element is only 104 bytes, the total array is more than 3MB which
+>> is too much for a single allocation. The PLX dma driver this is based on
+>> does the same thing even though it's queue size is only 2048.
 > 
-> That is not really correct dmaengine semantics, please fix that.
-> We expect the descriptor to be prepared in the prep_xxx call. Then we
-> expect it to be submitted in a queue and finally pushed to hardware on
-> issue_pending. 
+> Ring size is fine, the question is about use of a double pointer instead
+> of a single pointer
 
-Ok, I was digging into this. The PLX driver this was based on is a bit
-different, the switchtec one is actually closer to the IOAT driver. Both
-have a ring queue with a head index that gets incremented for each entry.
+Ah, I guess we could make the array part of switchtec_dma_chan, I can
+make that change. It is a large allocation (256KB) either way.
 
-As best as I can tell the IOAT driver increments a produce value after a
-prep_xxx call and then in tx_submit function it copies the the produce
-value to the actual head value. The switchtec driver, unlike IOAT, only
-ever "produces" one reqeust at a time, but I think if we move the head
-increment from the prep command into the tx_submit() call it will be
-correct.
->> We've answered this question a couple times now. See my detailed
->> response here:
+>> I'm not sure what you are looking for, I couldn't find any explicit
+>> quiesce function that is commonly used on teardown in other drivers.
+>> Clearing the pdev pointer above and synchronizing the RCU should ensure
+>> there are no other jobs in progress or tasklets running.
 >>
->> https://lore.kernel.org/all/e759d483-e303-421a-b674-72fd9121750d@deltatee.com/
->>
->> Essentially this is the only place we have to do the cleanup when
->> running jobs with interrupts disabled (a valid use case). Both PLX and
->> IOAT do similar things for good reasons and we'd really rather not have
->> the downsides noted in the link above without a more compelling
->> technical reason for this being incorrect.
+>> Note: I have tested teardown while running dmatest and have not found
+>> any issues.
 > 
-> This feels wrong :-) Relying on query to cleanup should not be done. A
-> client may not issue this. It is not a mandatory thing to do!
-> I would not suggest enabling interrupts, as you suggested in the link
-> above. I am sure you are getting at least some completion notices? The
-> tasklet can then do the cleanup as well. that would be a better reliable
-> way to do this
+> The tasklet can be schedule and then you free irq which creates a racy
+> situation, so I always recommend to kill the tasklet after freeing the
+> irq!
 > 
-> We should fix the other two drivers!
 
-Yes, it is not mandatory to call tx_status() nor is it mandatory to be
-called with the IOAT, PLX and Swithctec drivers as they are currently
-written. The only "completion notice" the hardware can send is the
-hardware interrupt and if we want to disable that interrupt for a polled
-mode of operation then the completions need to be processed somewhere
-and the only place to do that is in tx_status().
-
-The way I read things is there are two ways to operate: with or without
-interrupts.
-
-1) If interrupts are used (DMA_PREP_INTERRUPT is set), then the tasklet
-will be triggered by the hardware interrupt and the tasklet will handle
-the cleanup. The tasklet calls the callback which signals the user. In
-this situation *if* tx_status() is called, the dma cookie will likely
-already be set and the function will return early without calling
-cleanup(). If tx_status() doesn't get called, the tasklet would process
-the completion and call the callback and everything works fine. If
-tx_status() happens to be called before the interrupt occurs, then
-cleanup() would be called but chances are nothing will be done; or it
-could cleanup a descriptor before the tasklet if the timing is just
-right (but that would not be a problem either).
-
-2) If interrupts are not used (DMA_PREP_INTERRUPT is not set), then no
-interrupt will occur and thus the tasklet will never run. The only way
-for the user to know if a job is done is by calling tx_status(). In
-which case, the driver must query the hardware for pending completions
-during the tx_status() call. There is no other place to process the
-completions.
-
-The only option we have to remove the cleanup() call from tx_status()
-would be to essentially ignore DMA_PREP_INTERRUPT and thus the hardware
-interrupt will always occur for every request regardless of whether the
-user needs to be interrupted or not. This means applications that don't
-need the interrupt will incur extra hardware interrupts when they aren't
-really needed. I personally think that is a bad choice: it is much
-better to disable the hardware interrupt if nothing is waiting for it
-and process the completions in tx_status() when it is polled.
+Ok, yes, I think it should be possible to move the tasklet_kill down
+below the free_irq. I'll give it a try.
 
 Logan
 

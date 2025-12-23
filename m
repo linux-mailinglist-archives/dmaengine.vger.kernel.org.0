@@ -1,58 +1,58 @@
-Return-Path: <dmaengine+bounces-7905-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7906-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B27CBCD99DA
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 15:25:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9748DCD99E3
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 15:26:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4B160300F322
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 14:24:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B27783008E87
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 14:25:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C64032B9AA;
-	Tue, 23 Dec 2025 14:24:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A783933032D;
+	Tue, 23 Dec 2025 14:25:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="CoTVPMOL"
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="XSWUPwUh"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011048.outbound.protection.outlook.com [40.107.74.48])
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011025.outbound.protection.outlook.com [40.107.74.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6962FAC0E;
-	Tue, 23 Dec 2025 14:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2790E2D876B;
+	Tue, 23 Dec 2025 14:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.25
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766499896; cv=fail; b=SRSczVANiiK1Alc++c5JDK2TD8jvlEPYRguGtw0FuHbIt5j220kqHQF/cXV/+e3e2wI/CNSWwCXo1A65YXrf/H4lhjBUMSamtuo+uHYLzlB0fx+PxGJ8cO+PjVBxvuqh1IZHzN8Vw4EpKXfS4woaOO2mMrRSrsx6KCxVZEZC+w4=
+	t=1766499927; cv=fail; b=E8xrSt2E/5oFYlMZYRPWmCm3Q4uG4OTEuDP0dSRNC0a93jkECV5/DGUUd8UBAcxTIwXK630bp/AN9lP8zKxJPtlsCcCyM4A6uH/Z0+0RG9+YnPiMv+merkBKCadOPG98v9nxuPdH/d+APfA3qoo3TtFhMQLG6LD20l/Ia9oc0U8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766499896; c=relaxed/simple;
-	bh=T9bp7oYWkGDATa21o9Xchj8FC4QMcf/lxl+b0u+UjRk=;
+	s=arc-20240116; t=1766499927; c=relaxed/simple;
+	bh=teXrgMxGdycGHdbtmSuBcQghV0/MaEK3iGi41hF7SLA=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GlQcD1Xm/Fdy1Q1USax9rgf+1/m6un6pWbYKD32d7z7sZk2wnSg55Q4iHmDIU1JZAfai6lMziMGwKVSYwURCdzT0vHafkZVytJ2aMhvMKBrsbNCBFCLfyz9VxI+yygMtkEljpG5nCyAj17+DHYl7gLHdyJr2w2O9AORKOtfsyBo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=CoTVPMOL; arc=fail smtp.client-ip=40.107.74.48
+	 Content-Type:MIME-Version; b=L7i9mF3utHYe2JMJrEltgGElKUBSX+eyTth7zZnMahvvbNWfyHWU0PjkfzKJLNL4gk2n0ef+6YXfXF8yjYF0gXMzMTfJ/PVV/LRnvDVMyO0GapzI1MgOL1OFjrCBjBwJm/t6P3KZojJLrxHdhGmB1pnt9XkAFMjjris2FLokuKY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=XSWUPwUh; arc=fail smtp.client-ip=40.107.74.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YHLyB+efE6p51+pjFezZTH7Yqr4NCEdsW2/9fGKD2qq99itQB+9lPvInK2LevZGGkt0uWV8zzdjqXyvMoL1zyUJwaw3PNAJSzromv9QPACc4O76CO0bkKX92YVVUnvp+Zn+dKzr6KK2n8ys6OaXbyYxqgt45rqbgzceHIX/8FcgTWxIZ9q/TlqU88mtFKITSrvb+Owuoc3Vh73QcToqmtvQZYaLUm1kG8u3gWnQITzjrUOBG+izGprapHUBgSec0HZnQIPSEpdvQz0LJNZLr3/QOP5DF/H5wpD8hKYEQyrYy5YVIakvJE9qQr2+YEVOHW4vW5ylVAKZUj1MnULfQ1A==
+ b=S7ZdzXAUwyy5oGnMb+20jxJ2bOV3NlrAgiy1pgp5AIXvAVdFilQYgLRgmMOWFqwVBgnlQvAehg814MAoBWgqZc9g35zZRq5prkVh7iYkqHqWaklyRND13choFM2dsotmF7g5U1M42/vcZP1he/aXyEzmZysjz7xOpT+YCdzbpmM8fpoP/RMJEPlKAf88+PWZp5PBUONcJ09VnwoCTkwafEmQSI67BYho1o+DGMNsfmjquUrmHhbcAv8/SRvDcbu58W8RBb8RvyNs4LvCVq7IYpSKZIoVSbfDl63lRQ5X9wgIPaKgU5G9BAHBG0cfqFd2SoSBcB9j716SPH7BA3gc0g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YGvIhjcPONjiUApAaARGIqpFKcYiZqCYeVnim4OdxNI=;
- b=lYFEKsi8T94a9EUYdlHtERShUc+hM+4krgg7fglkh0xUjobZaIJY1eUmFWNBEj9CEQVR2GiNx4lPWV16jo8qMoG6Yd+8kjd2I8vv18BNsFhYjXmNC+OV8gt3G+SBW3v70/oLp4S55a51pjhwGj3k3ociElA8xJZesJKSC1rpaXUTH6l4+bMZk4eNPCDOu/foxk1+inKSUee7DpBDNbEeccVKLFeTw5LJwZRLArHrKmbsfmpCLYev4Ydq/HNR8dB1QsYig+dtNyM6ED+Rn7tlMY3NvS/nRifLaFgElfR1bbAqDAuy5yZbdH6VIPsDM/qxuJXGxjmJPTTj9C8ioe1rPg==
+ bh=n8DERAKbdsjXLs4NkUaeStjPtiFQKe8KtCs7se7DtfI=;
+ b=Ih9/csxvHa0pFAfqVFEz6L9rns5vnxmqwIeX/AajztAPIQIG46NWvWKuWRuLjcPoDOxtHSFPyT0TrMhWKhoOdx+Y8lnhIru6Bt6IOkDIXLAUt5yViYjIB3/umOpv/J751YgDvFTkSrfHQzo7XMbwkw1NPHv5zF9X6QGeaLuMpcWsYsF+unmbkx8KSLGBRP3J66g3eY14ybnuwNe4/LWXZ9xlgjqtNuoTNY/QseigOqkceYLHUnhNtT93tzVh7ZXuQEa7Ww/LdCusu1UpQNPYQ3ybDXsZs4PmqP6lekrpZEBLUpBDpelvACRJ2Dwd26f/w8W1M79dg+S/YEZK3zuJog==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
  header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YGvIhjcPONjiUApAaARGIqpFKcYiZqCYeVnim4OdxNI=;
- b=CoTVPMOLmhNbOw37Ts0B55NHf1/cfFaypvOkcyDtpRR1LNdPS9WsNnpw4gRjqUHpBDtt6Pc4GJlws/nzkTcX4ygtgl94dBzDM+IzkUfvRo3fKqKFAYKAOW6fTMiQxLOa+f5bM5aBG9LGPM7DJPJrDI5ITGYsquoIR4ZBAe+X+QM=
+ bh=n8DERAKbdsjXLs4NkUaeStjPtiFQKe8KtCs7se7DtfI=;
+ b=XSWUPwUhXSKZby2PmL//rhCHkwtJPoLvpJhYekbJudIGQgJT5yXPvX5cbA70PevcFIVRUnYU1AgKItLGITrKsdFeYniqIxr3Hv0m+pfzElFzYo4KvhhanA0tzjMGKm7g/tJdWZ7eRQ11JwAlZyMYaSTf+0OSqPH0TaeX7UjETb4=
 Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
  by OS9PR01MB16098.jpnprd01.prod.outlook.com (2603:1096:604:3dc::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9456.11; Tue, 23 Dec
- 2025 14:24:47 +0000
+ 2025 14:25:22 +0000
 Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
  ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
  ([fe80::86ef:ca98:234d:60e1%6]) with mapi id 15.20.9456.008; Tue, 23 Dec 2025
- 14:24:47 +0000
+ 14:25:22 +0000
 From: Biju Das <biju.das.jz@bp.renesas.com>
 To: Claudiu.Beznea <claudiu.beznea@tuxon.dev>, "vkoul@kernel.org"
 	<vkoul@kernel.org>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
@@ -61,19 +61,18 @@ To: Claudiu.Beznea <claudiu.beznea@tuxon.dev>, "vkoul@kernel.org"
 CC: Claudiu.Beznea <claudiu.beznea@tuxon.dev>, "dmaengine@vger.kernel.org"
 	<dmaengine@vger.kernel.org>, "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>, Claudiu Beznea
-	<claudiu.beznea.uj@bp.renesas.com>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>
-Subject: RE: [PATCH v6 2/8] dmaengine: sh: rz-dmac: Move CHCTRL updates under
- spinlock
-Thread-Topic: [PATCH v6 2/8] dmaengine: sh: rz-dmac: Move CHCTRL updates under
- spinlock
-Thread-Index: AQHcdBMkHSl9Q52GS02yRnvn1nk9H7UvR2Zw
-Date: Tue, 23 Dec 2025 14:24:47 +0000
+	<claudiu.beznea.uj@bp.renesas.com>
+Subject: RE: [PATCH v6 3/8] dmaengine: sh: rz-dmac: Drop read of CHCTRL
+ register
+Thread-Topic: [PATCH v6 3/8] dmaengine: sh: rz-dmac: Drop read of CHCTRL
+ register
+Thread-Index: AQHcdBMkFL/8hfjk00qpIX9LIsI0BrUvR6dA
+Date: Tue, 23 Dec 2025 14:25:22 +0000
 Message-ID:
- <TY3PR01MB1134657B08475CABC31BBE9D186B5A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <TY3PR01MB1134694D4CF924BDA7ECCCA7586B5A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
 References: <20251223134952.460284-1-claudiu.beznea.uj@bp.renesas.com>
- <20251223134952.460284-3-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20251223134952.460284-3-claudiu.beznea.uj@bp.renesas.com>
+ <20251223134952.460284-4-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20251223134952.460284-4-claudiu.beznea.uj@bp.renesas.com>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -82,72 +81,72 @@ authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=bp.renesas.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OS9PR01MB16098:EE_
-x-ms-office365-filtering-correlation-id: 1f857c6c-072f-4357-0bce-08de422f06af
+x-ms-office365-filtering-correlation-id: 5cbb0269-33c4-41f8-c2ed-08de422f1b8b
 x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700021;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?g/1On+vSaMzAGts6bXcSyfJGYDJRFJa4zyX3ExwG2YRU0KzsCchL8G+pCNgD?=
- =?us-ascii?Q?vygil6xTdYgyel8HylNv2AnfLPzK6gyUmMMGZZgcFG99Idp4pLz8/K5YyQ3d?=
- =?us-ascii?Q?2slUiEp9Vf3ZmOBx66Ov7S0G4PjOJMiFhPXJYhm62OaMWc92dn9JBrJwJnsU?=
- =?us-ascii?Q?MBiD6Ju1DLKX6OONJnP34CAYRnK6PJq2HwUAYt+oisS8QKUfMy7Ga2DodNj2?=
- =?us-ascii?Q?se79xRIfOqfCnBbYZz7pca2GnxmOkB6gonlaWNadidWRtdB63zvIeNHg0Huh?=
- =?us-ascii?Q?PVFvIPUJurVXZGHeYTwc6v3HcDdO5Ikh1VJfjf8mJuujFwGF/E1BKIel7K+p?=
- =?us-ascii?Q?Pd6/KK1lCP+iuft0Mk9jKDBSyvCrBo10DzmgG8dHyzCVQqdsshmoBZbpVB2T?=
- =?us-ascii?Q?uLHJQxdN6tyv6/678LG4cVM4g3BqwG7DCLojsFU4CYpzSEO71bmdX1cPf/ru?=
- =?us-ascii?Q?Ixn6O0Yd2aPYg5QlSrpvJ8dM0LcySDMUzA8ml/cJ34vUXCG6INHDFXTlizxT?=
- =?us-ascii?Q?W3TebjxGR6luq08yXfyABPiIkDKiqHcxzOxOCw8ssGz0uNjh1apwL6gAjuxt?=
- =?us-ascii?Q?3vy6KMPEIFd1BMqdmdgykJULHhvhnjrqTjg/IjwXD8aeJJU++gDnB3fe3Hq2?=
- =?us-ascii?Q?AvWmmYpBOwJn78E2tDtoj2ikAIRH1pctRjWv9yA6VY22BVAPpr8qlNdqP2m0?=
- =?us-ascii?Q?iL+DHCDsALKRxkRpKiO3ZknEtC4dlcQEIHtorgfCECF/8FLrU/HM+LhWsDNO?=
- =?us-ascii?Q?mgxigzLZUq0VdBWDvEOwPQCUhTv8doYWrBIMxK+kmW4r/lUfENc4IT8nzb0Z?=
- =?us-ascii?Q?knHT3pFaQr1B33pwpNyu56a8tM7RxB8/LlIdoqMlSu23wETDnZT67dNyqNhM?=
- =?us-ascii?Q?cjboWugRDHJMq7EtZ7X6xf1S5sl5fPG0zpYS3mkbW9UWNPZ1YcFU+T2xvnpL?=
- =?us-ascii?Q?jxNEYWWrjR8T5Q1XoT82Q5Jd6DUtjZOV6bFOEJg+wlQ2xjar9eO8er1Xo+P8?=
- =?us-ascii?Q?0O+Hwam7lMkWn8JAJ2N7xPgaUwULm5iOn/UTt1TxZ1DFbw50Asv+//w4+0op?=
- =?us-ascii?Q?XvzfL37Niij4eNvBmXqf0pV/qlAJLQMvFVVtjvebZddHtd7LGJLos/hwv1w6?=
- =?us-ascii?Q?ic3eESyZAWivFjmkUmGXyjF0IaqH71W4s25gS11JUgYwJR1Fp8ecF3HVAF2g?=
- =?us-ascii?Q?k9e+xUzZnfBHz4eeO2m3AhiEEBd64/BSn7cOycyoccDuireC7bNAXVM6gVhu?=
- =?us-ascii?Q?Z7HLdbIuhRDXXN0sAPUyA8fPB19asQ/9PB5p0GWBwODFLb291buKHp8pffh+?=
- =?us-ascii?Q?7rBAJxBFaKHBN9CELGz+MEYEVSYQ/uWwVSb76Bxe8mGrSDFVz4/j4256kQu7?=
- =?us-ascii?Q?GepwqS/hjFVuLIl5KAJpg6IRWJKpVcQMRQb3VGnBwzK/uBjtomSNu5u1APu5?=
- =?us-ascii?Q?NLzw4TbH7ETFIhj/a20w26qXHNfjxBPZSZdXs1EsVBbrTexay77nJJ82dnG9?=
- =?us-ascii?Q?Hnl14SoKPgU7I33oJjJTKytOZ5MehKCejdcv?=
+ =?us-ascii?Q?nebABwPWyGkJRG8BVQn3WMAUJls9sRVw5D6PGWR9FNnSJ1OacSs/5lW4U0SR?=
+ =?us-ascii?Q?sJTQ2qMDa7hXk09aYaT+wqVftDgSLBacZuqumW2GH+JjXPu2fLA0wbZmpnKy?=
+ =?us-ascii?Q?Emun/IxNWuEZFsCYBk27ccL7ccFzwx0xvpjnxqQY/L+TEiM80ZwQaJxBf7o9?=
+ =?us-ascii?Q?ADqgpV8oPSIXnKqU6+a8sptTLkSK6FmIy337G+qeDUgKJ2tUFCxSoYVMgj16?=
+ =?us-ascii?Q?pr9mWK21ocbGJ3dqvIhqr1HyfD7vTidK5ZYtUGsOp3WS8O7mcoQ1ooqqmvvo?=
+ =?us-ascii?Q?GomG7hztN9XhgvIsfuUo7tDwnZ2+DDPYp8EkkP07XzoRYo1AktlxV13s2wPe?=
+ =?us-ascii?Q?tg5oZ4LD3JIpTGGJd/9yqucKT8pCSzuu1ne1Ca7Hz3OSqGw3RuvjHVak92gg?=
+ =?us-ascii?Q?0mwqu35asyKstMhEnYN/6uNTGXEMH6H25vjZn5ig6YQAEyiFz8PQx99ysGzy?=
+ =?us-ascii?Q?/pX8tWQRUWJ8jyBxhk/McMAG92noked791pYjfRh2FwGNO17Bk+GaIqZmARL?=
+ =?us-ascii?Q?lyYU7csyBxAnAqFRG0Aaz78pqLfY2+pXvs4lKqGLj2AoZ2Ee97nVAIjdbCiH?=
+ =?us-ascii?Q?GsYMiyvSBq2WyTuR4qIFloK98otrv5mXADea9Mu1XrVd1I8QtNA16RCdsmbd?=
+ =?us-ascii?Q?4f2/qMUmfC/gBUf2qsUyr2CS2PkkuA+n2p9xgNqx3FLJyWFySZdPUMHurOeN?=
+ =?us-ascii?Q?S/rmHi74BkjCZRCnzkO9lhZkFlgKQMiQERcmBbfCsWPOyiQkWtW549FD5TKF?=
+ =?us-ascii?Q?VwhuAEHO1lQjdntAdYUf5UZF1Xl+lBKgW85Mt8zF3q5zWnA/5Y2AOZIasetP?=
+ =?us-ascii?Q?tDe3q8m11yOu2s4tc+Vr1rN+RSQAXBmZXmA/za4qdY0A9fRceLZTxkBDmqAR?=
+ =?us-ascii?Q?bk/mOjFnDKEAVKhzZP6twOZl9lf6iGX7vJRVMvZavrCcf+2obVemfkgrLqPz?=
+ =?us-ascii?Q?iXyNCEGpYaS3MSAn7vwaCuL+KMkGAoMKphj0IGIC1nTHATQp+cIrIKGJQQYW?=
+ =?us-ascii?Q?Dty70F0gCeMv12E9Zlg2b6B/X93v4qR1fhCsQeRYtz6iPGfT+inmlQIVX1K/?=
+ =?us-ascii?Q?tJay1TwQavEGKB/hid/6QhQSH/PKyGNIeqc5qoq7Q/BdWETXKSc7bcfwqrM/?=
+ =?us-ascii?Q?pXb+S1c3yNB1hsGIymuGASeVktev803e9QC53MMbtzBTBgn2Y8LhtwKbPoKR?=
+ =?us-ascii?Q?8vm3iwOEZ7KPoVsvwYNLvUo2jAGv37ncViritMfkvQyzg1k7YY3OVrfreU3B?=
+ =?us-ascii?Q?Lomw8JMQ9TFUCNvNQkN5w72wA+e1RrWg54FBFMSzN6ORQfYS2wnB/QaU2SiQ?=
+ =?us-ascii?Q?07NKDQ5K68ErGARYK6BrfHdF2MFozDzYt489HVFxTJkXG8TsknP60tMSTlhv?=
+ =?us-ascii?Q?acjkpoQ1bMmFCytfk/Mn/FUHMIEyLvo/fMlOmVaT3M3X6oicSNCj2S1Mzq7Y?=
+ =?us-ascii?Q?6KUfM1yCVWdjsh4nEdoiwPOYNm+1HZIZ8Oh2cufny+3wIkS/qcN/y8fhoins?=
+ =?us-ascii?Q?rOgr9i8I6DjImCVina8Z6F4N/BC1cRrCP/F9?=
 x-forefront-antispam-report:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700021);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?7toi+a+71B6JwwCTZnqD3Wqa/1jh18F6XuOeIVFPCwPYtaBMZCyITAjZ/iiW?=
- =?us-ascii?Q?MtXtlfjMMwKAxQqgzajqsSsoJQYqpqB0i4alA5v9MdzBHFC31RvLPSo8QfJF?=
- =?us-ascii?Q?EgFSxkAMH/cf4nX8WN/bl8U/WidJQkGdHuVtwAeMQVhDuvbgdPddpk2wHXK5?=
- =?us-ascii?Q?OS8EI4W6rrdv9y0mdoHfCbLs4ajxHHmEA6zkcB95c6TwEz8FmAQvsEeBsNlq?=
- =?us-ascii?Q?CTYldb1ot1Rb/TtkJzJ8oeCnDB+Lg+kk/mBEyrR/oI5J2JqhDXbViNaYDy+A?=
- =?us-ascii?Q?IdPeZQcOvwpuXAKptA3vGs+LAJQkGqJXuPQVl6tMWC+djL6rMqF27MZwm6sf?=
- =?us-ascii?Q?STKj8ZAW3ll7wHEVoPaJdu/sS2kI5lu3d8Yx3RZQrmsorvgHQuUWdCakzC7l?=
- =?us-ascii?Q?eJa/Bupsdo6dAyqi2koBKZ7p8SiImC/b64hBkHffm6dafLbimot9OZkcJLKi?=
- =?us-ascii?Q?IS0cPpqpYGbWNH4IyrvKuzVfplh6Y0Jp5FbT+/D922vJikicgET3Ww7ext6L?=
- =?us-ascii?Q?nZqwTm4sX7cpPiRKyRaOldMYL1EwI3eSVSRru+RgRUsAsmWo03foecPMGNxu?=
- =?us-ascii?Q?dUBB4mmWa7kpbB62qP6TxVpB69M9MEmS+1fNzFJ5clkfT8Yu0E/vi7v4HGOf?=
- =?us-ascii?Q?kAjEtLJlNI5mqadwKqH6smVl+4egxs0s7AMbDg/kBnt+ix/MpTS64E2vL6By?=
- =?us-ascii?Q?KhrAyArH0HyzcUyuvhOfp7ZH0QgxjFVWjDicCsyJ8ZnbE/d86wYhWOsb7nyL?=
- =?us-ascii?Q?hHJW8P/W4F1HfTO+FEJYjQDbcLVbOeqWsWWQROuGQf4lJjsOmbQoBoG+qJm6?=
- =?us-ascii?Q?Jo738tiZ80aP+fqJPKS6SAc2QsJevZch06tGsXDPiqRU3K6Ed8kOHZBuj2Jp?=
- =?us-ascii?Q?RvtIN25rfAFqmLdnFQtvD8ULP4nCwjZQ/l6xnZ+i3GE4vLdAYcrbLcwTfwB7?=
- =?us-ascii?Q?ohNQarOsENNDW+qVAYt7NbaaRV18nJZXjfGRqL2PP3khautWsRkLg28dnmMn?=
- =?us-ascii?Q?Pmgzy3ZXb7UvGz06V3qkAEIP54h2m+pRXc73nyWQVM9hz4VQsWQk21rEzNO7?=
- =?us-ascii?Q?/CbJtn81OVE6f8u7ImgM2O3o9I0PV5FPRbpiT1OWx4147sfhiXBqS7YGGcKl?=
- =?us-ascii?Q?TZNoQOQYzKw1udOrbyrfHgNQAuEfu3wPyUxL+UEzNioz47h76/hBQqJucOrn?=
- =?us-ascii?Q?G0aFApRZgWbpzdC4/NC4w6VIuHTwadoNu9waXxaAIaAhycou24/tUuqRPgxb?=
- =?us-ascii?Q?6JtE4YvNT9TQG0skNBABcCDvEPbPRgxDkc7RiCCe0OJWn8OGFq+EzgHkS6n8?=
- =?us-ascii?Q?C4U8Sc8FfehcE0zd6BmPW31AbJQ/u7UqwNH/7h+R8Si1bwOVm0nughfBAeJb?=
- =?us-ascii?Q?pr7oP+63JRYXYTkYt4jSOHgjOiKEXwvU402pYWlCVO6ighAjuSDrpyVej5vD?=
- =?us-ascii?Q?CvyPP4AzvUfYYvwl4K2cmhz5+NMbGaeYO+Ss8tJvCZ5rkm9mYn5zzNdpcuhn?=
- =?us-ascii?Q?dDD5OkGaPSfQB9FtkpZSojqu8EJoSIGdFORyaKSiAEFIVMCtYLsev256sH+u?=
- =?us-ascii?Q?WgWX0/ZADU4CP8TDxwR7hCCSP3BUcyQ1nFPfQpj4WghKlaYuVDrqwUHSAp0W?=
- =?us-ascii?Q?iTiVRnDY9W/jp6KD4GG7QNyI3XKbUimVkcu0NawvzBWu/vIju6Z5QCBXC2Je?=
- =?us-ascii?Q?/22fdh7GtPCI61v1FzyUEDaz8YYDoSlo7gi8E6V8J4oJDPUN+H+C8ffe4z/z?=
- =?us-ascii?Q?4KpVlgCfEA=3D=3D?=
+ =?us-ascii?Q?1mH8oSJyn6VcGFhMeUsoBPFZU/fTQWDmlKXWIyCZaJGvcVKsEQ6vWAo5BGc3?=
+ =?us-ascii?Q?xQ6q3x4LGZf8Yin1wYjc7J852c0HTo8Vxmu07oi+91svZMwyrTw3g5q4K7Kv?=
+ =?us-ascii?Q?eacAJlg2O6tZVQ1qZjw93ZD5tNkN0laXXyI8Csp0idQblNjkfUYNMjd04SAz?=
+ =?us-ascii?Q?6zCtSN8NtjlazJTL91YV1bMgwQ1MUiIQL/fRDNLwwJEMPOGGwa6bg/sS7hXC?=
+ =?us-ascii?Q?HRbWqmiGeCW9gxyUx5965dICS52oPzHy+ihfIAragYLHxrUJGfUKCrlB4Ggm?=
+ =?us-ascii?Q?OghNswP0Q4Ruclax3zC3A3yLQ13dpzRjSOHdo3i6By/bAHT33vPIXlfpWGu7?=
+ =?us-ascii?Q?gr/Epk2fvnOm9+QmZBg7L8Uz6deIblGI4334AqPmW7Cd/kl1W6Qv2SmZ3l2g?=
+ =?us-ascii?Q?52lXiW0ZPITfuRLtH/w6hhnGRJIkeLCVie4fY6BYsGIBCb1EiJrUkNXHZppL?=
+ =?us-ascii?Q?FKfiBFc93FzaA7MRVvQ+pKgY2O9SJLrUU+R820usHgYNhMtnIx/Vg6njQ/v+?=
+ =?us-ascii?Q?w1Nb+eTytFGYQfqirFpYZxR7ooWnBeoRYuJmp5vGAZfXCst0fvEGb6D8a8Ak?=
+ =?us-ascii?Q?3XeerAXR2V2J2jnNNCkD/Ax2LOj7Wk6hv03Gm9GFejJaX4CLI/JRxuzF40zX?=
+ =?us-ascii?Q?ivQxRrFr9KumAYdVO06XBuIVNe7Pstk58y6iIZaRmosL0OgHOvlBTBd7l6pk?=
+ =?us-ascii?Q?7RXv7sSZ2o/QMBONf0M1rgYTWeTCtgoUzsv0b9YAEvRfjVqMVtUnLRLx0QUA?=
+ =?us-ascii?Q?JlR/va0y/ShWDqF25SfSCLH8SH6ChmowG42UU4XFJ4Nf1kmJyl7Ino7SgrcI?=
+ =?us-ascii?Q?gy0laLLWe1W6HXbFAmHMSpTOSmDKgLQcSxmagP+2cXNkOJpK2xLJ22dYSNO1?=
+ =?us-ascii?Q?XLUzyj7pQ7Lw0rFKIqvYvMJlqhgBaHrZYvXC1j/C2/Aym/v2RW+hNL/xXaCh?=
+ =?us-ascii?Q?ZTt30/zAr5WDzf1AatNniBHhUYj53wUJvhJgYrZK5MKIpRO83zi9eZuteHXy?=
+ =?us-ascii?Q?ti8XFR5kIPI+HPCE/ivcAVgGOcpWa171dGlX+2dsZYIGkmiy3RbI2pH9na8Y?=
+ =?us-ascii?Q?Ee0hWKQ6Ai1DO4Psv+l1gK4GQsK3kZgMrSTP+ynBl5ll3lDqmW6mGEi0nJIQ?=
+ =?us-ascii?Q?t/3/YFUGNxGLDg1TH2SsId/5H7s6oto2RhTmT6rsPz8S0UxGkuhGv/xDDtNh?=
+ =?us-ascii?Q?fvVZl5HKkZTOm9wime9mkWslZv4mfcXPpKpD276J2CLMKR5GquyV/rf+4Nai?=
+ =?us-ascii?Q?sLy42Cngim8Rbd27w+eCXKu93pyv1KLFRIAViJl7/xcEha8nqhMYOl4v+8hZ?=
+ =?us-ascii?Q?mJ+B9jsEd+FiuZq7qxn87ZTJd9qjwNrzT1gygjsrcjazbBRuKU0jNzLHACoD?=
+ =?us-ascii?Q?O1QV3OespGZ1WHVDJmxkBWBxZ6aElrOQnSB42PlSIMKvFJbno82YWvAcyyLt?=
+ =?us-ascii?Q?zT63sMkXqEyRAvRUb8a9N+stdcP4I6mRBMJdDFPj2rNQmmLbf80UfFHkUqog?=
+ =?us-ascii?Q?PUdB8g59yrWCJ+xq0sKkj7++ZtigObYy/VezlyeL5h8C1QjgjqRqjzB/6hKB?=
+ =?us-ascii?Q?fsobXg2ITGAyeWomj5wMZnkdRbxotiHHOlFIyDFHytAW0HcNcFl9Q/Ujidck?=
+ =?us-ascii?Q?hyQhQxmQt5iKBzbIB+49oW01i5l4CmVPczvlTliUbzqsGKtIoyW/xYD3kYAe?=
+ =?us-ascii?Q?qrXl5jYhu1yT00D2EoZYS5oZAU8TEurCgTnrP/LX2s3fBNdc9nlIGpUQZ7q1?=
+ =?us-ascii?Q?nuhtLCCFTA=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -159,13 +158,13 @@ MIME-Version: 1.0
 X-OriginatorOrg: bp.renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f857c6c-072f-4357-0bce-08de422f06af
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2025 14:24:47.5970
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5cbb0269-33c4-41f8-c2ed-08de422f1b8b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2025 14:25:22.5692
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WddXq6QiLZnI28jmAGgQdowSR40xnYy5GnSxtuUJDag2NeNAQrRt4hbEpXyG6Nr3UzK8sNdw2FN6O51gwscS1ovhPpVzOnC1oX8lE+8co10=
+X-MS-Exchange-CrossTenant-userprincipalname: Mm/QYv0POGZkxIjuuGpeW/T4vQXs1B79cw5JuwvIB7JxU3IaYKp32p02KZNGgQuEj/mYBpYO/i7C0M8SiZ4ulOr1+TDyYqLl4flYSeIFTxw=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9PR01MB16098
 
 Hi Claudiu,
@@ -173,91 +172,82 @@ Hi Claudiu,
 > -----Original Message-----
 > From: Claudiu <claudiu.beznea@tuxon.dev>
 > Sent: 23 December 2025 13:50
-> Subject: [PATCH v6 2/8] dmaengine: sh: rz-dmac: Move CHCTRL updates under=
- spinlock
+> Subject: [PATCH v6 3/8] dmaengine: sh: rz-dmac: Drop read of CHCTRL regis=
+ter
 >=20
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >=20
-> Both rz_dmac_disable_hw() and rz_dmac_irq_handle_channel() update the CHC=
-TRL register. To avoid
-> concurrency issues when configuring functionalities exposed by this regis=
-ters, take the virtual
-> channel lock.
-> All other CHCTRL updates were already protected by the same lock.
+> The CHCTRL register has 11 bits that can be updated by software. The docu=
+mentation for all these bits
+> states the following:
+> - A read operation results in 0 being read
+> - Writing zero does not affect the operation
 >=20
-> Previously, rz_dmac_disable_hw() disabled and re-enabled local IRQs, befo=
-re accessing CHCTRL registers
-> but this does not ensure race-free access.
-> Remove the local IRQ disable/enable code as well.
+> All bits in the CHCTRL register accessible by software are set and clear =
+bits.
 >=20
-> Fixes: 5000d37042a6 ("dmaengine: sh: Add DMAC driver for RZ/G2L SoC")
-> Cc: stable@vger.kernel.org
+> The documentation for the CLREND bit of CHCTRL states:
+> Setting this bit to 1 can clear the END bit of the CHSTAT_n/nS register.
+> Also, the DMA transfer end interrupt is cleared. An attempt to read this =
+bit results in 0 being read.
+> 1: Clears the END bit.
+> 0: Does not affect the operation.
+>=20
+> Since writing zero to any bit in this register does not affect controller=
+ operation and reads always
+> return zero, there is no need to perform read-modify-write accesses to se=
+t the CLREND bit. Drop the
+> read of the CHCTRL register.
+>=20
+> Also, since setting the CLREND bit does not interact with other functiona=
+lities exposed through this
+> register and only clears the END interrupt, there is no need to lock arou=
+nd this operation. Add a
+> comment to document this.
+>=20
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
 Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
 Cheers,
 Biju
-
 > ---
 >=20
 > Changes in v6:
-> - update patch title and description
-> - in rz_dmac_irq_handle_channel() lock only around the
->   updates for the error path and continued using the vc lock
->   as this is the error path and the channel will anyway be
->   stopped; this avoids updating the code with another lock
->   as it was suggested in the review process of v5 and the code
->   remain simpler for a fix, w/o any impact on performance
->=20
-> Changes in v5:
 > - none, this patch is new
 >=20
->  drivers/dma/sh/rz-dmac.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+>  drivers/dma/sh/rz-dmac.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 >=20
-> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c index c8=
-e3d9f77b8a..818d1ef6f0bf
+> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c index 81=
+8d1ef6f0bf..43a772e4478c
 > 100644
 > --- a/drivers/dma/sh/rz-dmac.c
 > +++ b/drivers/dma/sh/rz-dmac.c
-> @@ -298,13 +298,10 @@ static void rz_dmac_disable_hw(struct rz_dmac_chan =
-*channel)  {
+> @@ -698,7 +698,7 @@ static void rz_dmac_irq_handle_channel(struct rz_dmac=
+_chan *channel)  {
 >  	struct dma_chan *chan =3D &channel->vc.chan;
 >  	struct rz_dmac *dmac =3D to_rz_dmac(chan->device);
-> -	unsigned long flags;
+> -	u32 chstat, chctrl;
+> +	u32 chstat;
 >=20
->  	dev_dbg(dmac->dev, "%s channel %d\n", __func__, channel->index);
->=20
-> -	local_irq_save(flags);
->  	rz_dmac_ch_writel(channel, CHCTRL_DEFAULT, CHCTRL, 1);
-> -	local_irq_restore(flags);
->  }
->=20
->  static void rz_dmac_set_dmars_register(struct rz_dmac *dmac, int nr, u32=
- dmars) @@ -569,8 +566,8 @@
-> static int rz_dmac_terminate_all(struct dma_chan *chan)
->  	unsigned int i;
->  	LIST_HEAD(head);
->=20
-> -	rz_dmac_disable_hw(channel);
->  	spin_lock_irqsave(&channel->vc.lock, flags);
-> +	rz_dmac_disable_hw(channel);
->  	for (i =3D 0; i < DMAC_NR_LMDESC; i++)
->  		lmdesc[i].header =3D 0;
->=20
-> @@ -707,7 +704,9 @@ static void rz_dmac_irq_handle_channel(struct rz_dmac=
-_chan *channel)
+>  	chstat =3D rz_dmac_ch_readl(channel, CHSTAT, 1);
 >  	if (chstat & CHSTAT_ER) {
->  		dev_err(dmac->dev, "DMAC err CHSTAT_%d =3D %08X\n",
->  			channel->index, chstat);
-> -		rz_dmac_ch_writel(channel, CHCTRL_DEFAULT, CHCTRL, 1);
-> +
-> +		scoped_guard(spinlock_irqsave, &channel->vc.lock)
-> +			rz_dmac_ch_writel(channel, CHCTRL_DEFAULT, CHCTRL, 1);
+> @@ -710,8 +710,11 @@ static void rz_dmac_irq_handle_channel(struct rz_dma=
+c_chan *channel)
 >  		goto done;
 >  	}
 >=20
+> -	chctrl =3D rz_dmac_ch_readl(channel, CHCTRL, 1);
+> -	rz_dmac_ch_writel(channel, chctrl | CHCTRL_CLREND, CHCTRL, 1);
+> +	/*
+> +	 * No need to lock. This just clears the END interrupt. Writing
+> +	 * zeros to CHCTRL is just ignored by HW.
+> +	 */
+> +	rz_dmac_ch_writel(channel, CHCTRL_CLREND, CHCTRL, 1);
+>  done:
+>  	return;
+>  }
 > --
 > 2.43.0
 

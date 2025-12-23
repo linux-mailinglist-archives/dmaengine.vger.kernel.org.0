@@ -1,52 +1,51 @@
-Return-Path: <dmaengine+bounces-7873-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7874-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58E5BCD9009
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 12:01:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 139F0CD908B
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 12:10:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5685430433CC
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 11:00:12 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 62C4D302034B
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Dec 2025 11:07:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 951C133F364;
-	Tue, 23 Dec 2025 11:00:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33AFE2F39B1;
+	Tue, 23 Dec 2025 11:07:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kdCeVmXm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WiFN/5Pr"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7BA33DEFA;
-	Tue, 23 Dec 2025 11:00:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B8A18EFD1;
+	Tue, 23 Dec 2025 11:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766487608; cv=none; b=Cr6Ov9Vp/LHth+/FqWrvnKDXlAT0km2WcNfq+YujNMiz4CWC5wuxChoEz+b7naaqfmwBrsnwrPoQBjTXdmiMBRzisdIgHz++Zy6ITRl3hVDFlu9aaJqOjj7TsjV2i09PxXywpHfmzUkJ9IqNMOFPfU9BxdxGPEE06+iP64BkGYs=
+	t=1766488062; cv=none; b=k+SHuR8fA4VrMjYkBHItptY4KJaafoZZXoJZB+VuFYbiVCAT+BNV5Sq3s6dMBpgy/izfa+uu8gWTu/+rwksoISzfFLmQv8ArXyMRCjEPzmpaZQdi8wvI0aFOYhmGTiCpOVa2xC13LeKoyy0jePA91dbbCX6+99Iy54SlOSfSas4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766487608; c=relaxed/simple;
-	bh=bcGMCw+CenBCj2sTzEG9MDgQX6flK84gwT3bccMPJ1g=;
+	s=arc-20240116; t=1766488062; c=relaxed/simple;
+	bh=gUjbEFknRhqasS6YRgpYb1eKphkZZ4QNS7vc6zMwKv4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bqwMRDvgS09EdpFXUT9cb9XdQw0Jt7RGtByVi2Z0oqAlCsgzp33C55XUIX7eYjc0Ni7XoqIKFSS6uEsqrmtEZLMDCvzmr8Z2O50VxpwsIw8SS05YQn/ZThCv1hZQzhOwjupYHP1NGYV2w9WL8kgP0L2tybbo8ulExkmu0gKE86Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kdCeVmXm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0592C113D0;
-	Tue, 23 Dec 2025 11:00:05 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=s/e+AvcLbhCNMe2lThyFjTlaEU5oHzAO2wqL6mI27rgn0wON2Np9yaT4G70rwXiRM6X1jikalGckARj81/a3haj4QTMgx1JO3VkIfu3YKq5NEKoR5jmvygpBLAutktrqyV55ga/v593Dx6WpkM360/9nzUkBQX8kDuZgbIv7OYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WiFN/5Pr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95CE9C16AAE;
+	Tue, 23 Dec 2025 11:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766487606;
-	bh=bcGMCw+CenBCj2sTzEG9MDgQX6flK84gwT3bccMPJ1g=;
+	s=k20201202; t=1766488061;
+	bh=gUjbEFknRhqasS6YRgpYb1eKphkZZ4QNS7vc6zMwKv4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kdCeVmXmKdQVqI3VjSEwbOOSPunRXt25bjBVAYQ8Qq5DX7Xmv8he1QHB4IM6kmiol
-	 kSQFG0uH3AooaJfKlQ2vmeyi4DdTdaOFctqyYh371npDMV1Hiku1nwZS7L2sNaZkxW
-	 w9BHikFKc8zG2JxTx9Ej5eSnjZ59zi+qmqELObExP/Gdh/7hwdlQCEsPHcdpw2RFkx
-	 446pkFSc/P9vixCHjc/aT5tyO5ZK7cWhprpeiBwNp4d+2V+3lJs31OsctwaU2xuTyC
-	 WTQVlGeC7dH4+DB2aeaIjv+NvEz6Lx0A6KQ2wP/1MzgDfscJXtAcIfuR2/U0dw/tmG
-	 lp/dw9brRCw5A==
-Date: Tue, 23 Dec 2025 16:30:02 +0530
+	b=WiFN/5PrQ2w/+2leMeDnqGDYFc2IeiCM50MOSnVQNcoia/DA/kkJ4pNo1BE4nBSqo
+	 L9lN60xgo33ajpwGuVbVxp5nyYdvYu12QuM/bGJ+/TzE6o9lhKYsJH4Hs3mvKVaMLE
+	 N0XFwwG96DNl+3DzfNaAcdRuUEZ73Nv8fFQnLwm7Z77CIzVZHMh1IEQZ1b+YS/R0AH
+	 Zl7DXDSxoSBwcEFSj8+E8iYyF8cMMA4ORpEJzEuiYUrsPxrev5NxBFg7ODJqaIAcok
+	 SzFYYICMigWpo06r5aJQdcRVWSanz2vfYXvwNiunrhGswhaL+SQCikPCD04Vy8j3qL
+	 fL9C8ilJ7e/cA==
+Date: Tue, 23 Dec 2025 16:37:37 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] dmaengine: at_hdmac: enable compile testing
-Message-ID: <aUp2MkMmDFw1kgdK@vaman>
-References: <20251117161657.11083-1-johan@kernel.org>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: dmaengine@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv4 dmaengine 0/2] mv_xor: some devm cleanups
+Message-ID: <aUp3-WM1DM2HQMFy@vaman>
+References: <20251105210317.18215-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,13 +54,34 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251117161657.11083-1-johan@kernel.org>
+In-Reply-To: <20251105210317.18215-1-rosenp@gmail.com>
 
-On 17-11-25, 17:16, Johan Hovold wrote:
-> There seems to be nothing preventing the driver from being compile
-> tested so enable that for wider build coverage.
+On 05-11-25, 13:03, Rosen Penev wrote:
+> Some devm cleanups that are now possible.
+> 
+> It's interesting that this driver lacks a _remove function to free its
+> resources...
+> 
+> v2: resent with dmaengine prefix
 
-Sorry this fails for me, can you please rebase
+Not required to add this in within []..
+[PATCHv4 0/2] dmaengine: mv_xor..  would be fin
+
+I cant apply this as it fails for me, please rebase
+
+> v3: add error handling for devm_clk_get_optional_enabled to potentially
+> handle EPROBE_DEFER.
+> v4: remove request_irq based on feedback.
+> 
+> Rosen Penev (2):
+>   dmaengine: mv_xor: use devm_platform_ioremap_resource
+>   dmaengine: mv_xor: use devm_clk_get_optional_enabled
+> 
+>  drivers/dma/mv_xor.c | 34 +++++++++-------------------------
+>  1 file changed, 9 insertions(+), 25 deletions(-)
+> 
+> --
+> 2.51.2
 
 -- 
 ~Vinod

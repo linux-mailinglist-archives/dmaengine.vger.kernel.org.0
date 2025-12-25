@@ -1,145 +1,101 @@
-Return-Path: <dmaengine+bounces-7949-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7950-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC426CDDEEC
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Dec 2025 17:45:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D17F8CDDFFC
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Dec 2025 18:39:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E20A430071AB
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Dec 2025 16:45:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 642A8300E01A
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Dec 2025 17:39:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A17F026FDAC;
-	Thu, 25 Dec 2025 16:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57B7678F4F;
+	Thu, 25 Dec 2025 17:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="w2oWrB/L"
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="LK/mkqoL";
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="LK/mkqoL"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from mail.mleia.com (mleia.com [178.79.152.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87EBE26E173;
-	Thu, 25 Dec 2025 16:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751A73207
+	for <dmaengine@vger.kernel.org>; Thu, 25 Dec 2025 17:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766681125; cv=none; b=OfAqtiLdIxB0UeUY7HXnsJTGjLkNVpIcnnTpu+7p1Y7GfthAaIxF97OilGapX1laaoy8bItJ7JLltG9CHNX28htLJq04e3/8BuChH6nAYedL4r97Y1tQ7xBl2B8uboto7zmSQJYvbfh0nib0tzmahvncPz45e5h72c+XlnWgdjs=
+	t=1766684339; cv=none; b=kcioquiBoPx1f0J8wu4uoeBrghDyHiYIjnjwiavvd1jl09oiJZzsj60Ax2uS+0KkXLfgJeiVWwMV3h6OIEqUvXZsPKwt5rRiDMKqvzRVuvoNhAEkPrnVG4d7+FW/JY6kuFmw108YoRMEZcGf4W0kJbYjaR0MemyZ1mNhImkrnxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766681125; c=relaxed/simple;
-	bh=F1jhIpkPigW3NGIX9mflaV75Z1dCaWVNIHmhw5WRobg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fNO4rVOchX2/kJG9HVXRfcQ1aQJATLlG4WGLVqd5lehC5Wsa6eF8kBUVxsSJhHSwBHqO4HGh3A8i+fon5yhjEhny5UvMVhVhfyZyOoSAYCaQfs9yWmWuAyjyCtbAZeGvNFSjkqj+lv1vxF+8Z7nKTzIJWh0iFMEARvjijAfNXRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=w2oWrB/L; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 1DF714E41D7E;
-	Thu, 25 Dec 2025 16:45:20 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id D4ABC60742;
-	Thu, 25 Dec 2025 16:45:19 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CE071103C8CAF;
-	Thu, 25 Dec 2025 17:45:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1766681118; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=y+IbK0Z2/OU5lKK1OsobvgQQxvg8i2YYJKuwcQL/IaE=;
-	b=w2oWrB/Lvj0ilqa74OxdNWZZ5v5bZKDMsOwNdTw98nCTYRmHJf0e8HPP4xrul/ajIIWaG6
-	t+8YBXYcFixu06CqgdbC5v32jcQub6bcSngIGegihqteqFa3sT2OygBAntd7puzJ5JuOLc
-	yrAN1lGgPUzv5ggcWybFYL0ATjFVbfwCFzSN99Xyolep1YR7P1d+HA4V2jYmfT5EpNkjGj
-	taMJ9+3ELee1EwOn0NwVvTxts78Sk4we6hcqZom9KxJwUndXFo9dk4NPmJ/VIt4ktwNOtg
-	Jix8U3vz8F7vK0JiOUBb9DweiouM32UX42UK5WVXYkIP4EzjlXnlyHNZTEZLSg==
-Date: Thu, 25 Dec 2025 17:45:12 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Robert Marko <robert.marko@sartura.hr>, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
-	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
-	andi.shyti@kernel.org, lee@kernel.org, andrew+netdev@lunn.ch,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	linusw@kernel.org, Steen.Hegelund@microchip.com,
-	daniel.machon@microchip.com, UNGLinuxDriver@microchip.com,
-	olivia@selenic.com, radu_nicolae.pirea@upb.ro,
-	richard.genoud@bootlin.com, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, broonie@kernel.org, mturquette@baylibre.com,
-	sboyd@kernel.org, lars.povlsen@microchip.com,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-	netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-clk@vger.kernel.org,
-	luka.perkov@sartura.hr
-Subject: Re: [PATCH v3 01/15] include: dt-bindings: add LAN969x clock bindings
-Message-ID: <20251225164512525907d8@mail.local>
-References: <20251223201921.1332786-1-robert.marko@sartura.hr>
- <20251223201921.1332786-2-robert.marko@sartura.hr>
- <20251224-berserk-mackerel-of-snow-4cae54@quoll>
- <CA+HBbNGym6Q9b166n-P=h_JssOHm0yfyL73JZ+G9P81muK=g4A@mail.gmail.com>
- <78bf252c-fd5e-4a36-b1a3-ca8ed26fde7a@kernel.org>
- <CA+HBbNG+ZVD6grGDp32Ninx7H1AyEbGvP0nwc0zUv94tOV8hYg@mail.gmail.com>
- <d210552f-c8bf-4084-9317-b743075d9946@kernel.org>
- <2025122516245554f59e2e@mail.local>
+	s=arc-20240116; t=1766684339; c=relaxed/simple;
+	bh=R5cnfIy7oQzAkNbx7v2TCrT31U73/fYq70zXG8jOVrY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fv5eHn2Q84mIZvp0ClM4IIVGvEx+HLpR8hWzO83aVLl4RV0bgSE1y1MfryMU9oLXPssK0LDzRGtlk5+RUXvtLN/s86QSwA8tWJ1jU17euFyHgyjso3RBSIhy2ybjQtTow84jAHtk4T79DB4cJnQ0H5qvzA6FVkzTErZZyW/3nGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=LK/mkqoL; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=LK/mkqoL; arc=none smtp.client-ip=178.79.152.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1766684329; bh=R5cnfIy7oQzAkNbx7v2TCrT31U73/fYq70zXG8jOVrY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LK/mkqoL9Fa8jB4m3VE/xddEk+9uE5lRQeBrmGZkxxYAyeX3cfR07ofeRSuVyk2aZ
+	 r6axc8Gyf1QdI1VMHLjAoTLjB3Qt2IF27oPoS6OqBg6kus73oNJs9KEJ3eHMWVLbiU
+	 MG3Ca25l4UKpPHLLl0cI7WqEnA0BwCazzzT9uWsDdDeP6JTo0hiIytWntB+tuUP3Nf
+	 DLHlUVNxOVf0987v8LqmYEQewinFsOMupAzreokmdk00tu0guJtqlcJx1ko/ei+ChL
+	 gpFbI6Ke8J2QS5vRU8TgvoWwayIIv5WnX/jBtzslkGJgQpEWFvSE8Bn4XR6rOGLOKF
+	 t8FlTrLRSSTBQ==
+Received: from mail.mleia.com (localhost [127.0.0.1])
+	by mail.mleia.com (Postfix) with ESMTP id A3B283E8C62;
+	Thu, 25 Dec 2025 17:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1766684329; bh=R5cnfIy7oQzAkNbx7v2TCrT31U73/fYq70zXG8jOVrY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LK/mkqoL9Fa8jB4m3VE/xddEk+9uE5lRQeBrmGZkxxYAyeX3cfR07ofeRSuVyk2aZ
+	 r6axc8Gyf1QdI1VMHLjAoTLjB3Qt2IF27oPoS6OqBg6kus73oNJs9KEJ3eHMWVLbiU
+	 MG3Ca25l4UKpPHLLl0cI7WqEnA0BwCazzzT9uWsDdDeP6JTo0hiIytWntB+tuUP3Nf
+	 DLHlUVNxOVf0987v8LqmYEQewinFsOMupAzreokmdk00tu0guJtqlcJx1ko/ei+ChL
+	 gpFbI6Ke8J2QS5vRU8TgvoWwayIIv5WnX/jBtzslkGJgQpEWFvSE8Bn4XR6rOGLOKF
+	 t8FlTrLRSSTBQ==
+Received: from mail.mleia.com (91-159-24-186.elisa-laajakaista.fi [91.159.24.186])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.mleia.com (Postfix) with ESMTPSA id 4460C3E8B7A;
+	Thu, 25 Dec 2025 17:38:48 +0000 (UTC)
+From: Vladimir Zapolskiy <vz@mleia.com>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Subject: [PATCH] dmaengine: pl08x: Fix comment stating the difference between PL080 and PL081
+Date: Thu, 25 Dec 2025 19:38:47 +0200
+Message-ID: <20251225173847.1395928-1-vz@mleia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2025122516245554f59e2e@mail.local>
-X-Last-TLS-Session-Version: TLSv1.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20251225_173849_685473_E3AB1E76 
+X-CRM114-Status: GOOD (  10.05  )
 
-On 25/12/2025 17:25:07+0100, Alexandre Belloni wrote:
-> On 25/12/2025 09:47:34+0100, Krzysztof Kozlowski wrote:
-> > On 24/12/2025 15:01, Robert Marko wrote:
-> > > On Wed, Dec 24, 2025 at 2:05 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >>
-> > >> On 24/12/2025 11:30, Robert Marko wrote:
-> > >>> On Wed, Dec 24, 2025 at 11:21 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >>>>
-> > >>>> On Tue, Dec 23, 2025 at 09:16:12PM +0100, Robert Marko wrote:
-> > >>>>> Add the required LAN969x clock bindings.
-> > >>>>
-> > >>>> I do not see clock bindings actually here. Where is the actual binding?
-> > >>>> Commit msg does not help me at all to understand why you are doing this
-> > >>>> without actual required bindings.
-> > >>>
-> > >>> I guess it is a bit confusing, there is no schema here, these are the
-> > >>> clock indexes that
-> > >>> reside in dt-bindings and are used by the SoC DTSI.
-> > >>
-> > >> I understand as not used by drivers? Then no ABI and there is no point
-> > >> in putting them into bindings.
-> > > 
-> > > It is not included by the driver directly, but it requires these exact
-> > > indexes to be passed
-> > > so its effectively ABI.
-> > 
-> > How it requires the exact index? In what way? I do not see anything in
-> > the gck driver using/relying on these values. Nothing. Please point me
-> > to the line which directly uses these values.... or how many times I
-> > will need to write this is not ABI?
-> > 
-> 
-> The index here is the exact id that needs to be set in the PMC_PCR
-> register and so it is dictated by the hardware.
+Fix a trivial typo in the comment, otherwise it takes an effort to
+understand what it actually means to say.
 
-This is the line you are looking for:
-https://elixir.bootlin.com/linux/v6.18.2/source/drivers/clk/at91/clk-generated.c#L44
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+---
+ drivers/dma/amba-pl08x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	regmap_write(gck->regmap, gck->layout->offset,
-		     (gck->id & gck->layout->pid_mask));
-
-> 
-> 
-> -- 
-> Alexandre Belloni, co-owner and COO, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
+diff --git a/drivers/dma/amba-pl08x.c b/drivers/dma/amba-pl08x.c
+index 38cdbca59485..e42e9130aaad 100644
+--- a/drivers/dma/amba-pl08x.c
++++ b/drivers/dma/amba-pl08x.c
+@@ -2978,7 +2978,7 @@ static int pl08x_probe(struct amba_device *adev, const struct amba_id *id)
+ 	return ret;
+ }
+ 
+-/* PL080 has 8 channels and the PL080 have just 2 */
++/* PL080 has 8 channels and the PL081 have just 2 */
+ static struct vendor_data vendor_pl080 = {
+ 	.config_offset = PL080_CH_CONFIG,
+ 	.channels = 8,
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.43.0
+
 

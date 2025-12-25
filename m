@@ -1,106 +1,86 @@
-Return-Path: <dmaengine+bounces-7951-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7952-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 452C7CDE04E
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Dec 2025 19:15:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BC9ABCDE14C
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Dec 2025 21:32:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ECA533007968
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Dec 2025 18:15:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C839C3008EA6
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Dec 2025 20:32:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A204224B15;
-	Thu, 25 Dec 2025 18:15:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96C35261B9D;
+	Thu, 25 Dec 2025 20:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="rKSid7x1";
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="rKSid7x1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6VDcYXt"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail.mleia.com (mleia.com [178.79.152.223])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846DFF4F1;
-	Thu, 25 Dec 2025 18:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E02199EAD;
+	Thu, 25 Dec 2025 20:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766686530; cv=none; b=Pt9nig5iUih8+1IvUkZ3WyerbGLXo1bzwXhO5nsuQiZ+QKbfs5cCD/gGoy7gth3UfVFYd2obiBG8SWcWxx0T6rDxz/IGUxy7RAvSfcFBwjQMYUcgDu4fTv72hQmPC2IHfb/SoVQs1LYe8hpA/E7a7mzjLjiX8YVBzCz7aPfUWX0=
+	t=1766694755; cv=none; b=Mf0kOTQmJPcrnNWLyGq51zyoRZ3gBF6k1aZv8+4Sihogbobtsbng1+WEF6+zGkN/m5D+1RQamRluNsLxYsqRI9EP5dJpQTj8KcM5et2pqEV5Rz72YvQM/V0boqLL+m2DSRL3ybldM2bwCOwYKhGrGlv0F+8MhcTHVDPLc4bpz2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766686530; c=relaxed/simple;
-	bh=tNowQMQMzpnovUwXiG0zD2EcvOR26dswqhTFIyI8BxI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gSSKw7HdIaxf+IbMvXocKxwgYJNlx3D+4SeGZWZ7o8onG5Sief7bHQxcWXYjSdTnkeD/hgL0gtkwUR8bDCrc7AtDOJ/nvw60W70lZvcTmWavtqCRMfyfY5LVx5Iwx2l7SROLCAMBsa93aGISz9tAHzKiAIgHwAd5ZNroFXZ5Ozo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=rKSid7x1; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=rKSid7x1; arc=none smtp.client-ip=178.79.152.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1766686526; bh=tNowQMQMzpnovUwXiG0zD2EcvOR26dswqhTFIyI8BxI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rKSid7x1KCEiIx14Eo9Oj1Z6oJ6D7ISGnMzLRWj36+lCHTAG/XkTMX99edC9BhGVE
-	 Egh8oUqiH9Pn1hUPUTvjcV5EPXORnEMi/O5IUu/8Tsp1s3GKRtgBrYskK7l2x5F15u
-	 5nuj5/TBQFQoVzRRH5QMnoeOfFg732mz56Rw5+yNC9s9ZgdYxgSwqPdG60nssP9zy2
-	 M3gZBsh5KvDQ3c+zT0Khmt87xpo8uV72TuHmlNB3RDVBk1t3XoMkbu7uKa13svTXzh
-	 +E0femCur+OhxhZ2jkhoChp2pceCD6MgY48T4jJ2F8qjCUE1Milub2bG6y/MEdJSjj
-	 0vdshHGptHxDQ==
-Received: from mail.mleia.com (localhost [127.0.0.1])
-	by mail.mleia.com (Postfix) with ESMTP id DF15F3E8C62;
-	Thu, 25 Dec 2025 18:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1766686526; bh=tNowQMQMzpnovUwXiG0zD2EcvOR26dswqhTFIyI8BxI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rKSid7x1KCEiIx14Eo9Oj1Z6oJ6D7ISGnMzLRWj36+lCHTAG/XkTMX99edC9BhGVE
-	 Egh8oUqiH9Pn1hUPUTvjcV5EPXORnEMi/O5IUu/8Tsp1s3GKRtgBrYskK7l2x5F15u
-	 5nuj5/TBQFQoVzRRH5QMnoeOfFg732mz56Rw5+yNC9s9ZgdYxgSwqPdG60nssP9zy2
-	 M3gZBsh5KvDQ3c+zT0Khmt87xpo8uV72TuHmlNB3RDVBk1t3XoMkbu7uKa13svTXzh
-	 +E0femCur+OhxhZ2jkhoChp2pceCD6MgY48T4jJ2F8qjCUE1Milub2bG6y/MEdJSjj
-	 0vdshHGptHxDQ==
-Received: from mail.mleia.com (91-159-24-186.elisa-laajakaista.fi [91.159.24.186])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.mleia.com (Postfix) with ESMTPSA id 5A1153E8B7A;
-	Thu, 25 Dec 2025 18:15:26 +0000 (UTC)
-From: Vladimir Zapolskiy <vz@mleia.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: dma: pl08x: Do not use plural form of a proper noun PrimeCell
-Date: Thu, 25 Dec 2025 20:15:19 +0200
-Message-ID: <20251225181519.1401953-1-vz@mleia.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1766694755; c=relaxed/simple;
+	bh=OlMwKRemqpxu1qixxaUujZZmxWqSk+fU5T6TjQIfHes=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dldVZvODbPjl2lPSJGOkeRC9SNyn2aEMQWmeQuQ/Olb26j6ti0rROgbWqmQ05JC8sAE+anPUnkycR7YOKQ4emaS2cDInD3CpFmTqRqL5d7LOeweRC80wBXTvdO7WKA5cg0KXk86iAMX2rEZuM6gHqC8cRc/cJaGslNrBr7hmJ5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6VDcYXt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E902FC4CEF1;
+	Thu, 25 Dec 2025 20:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766694754;
+	bh=OlMwKRemqpxu1qixxaUujZZmxWqSk+fU5T6TjQIfHes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D6VDcYXtHs6fSm0cvzASNAmckB9F9WPZrJj6GFS1DWeG5AyUtnRS+HTxeEn3lfE0j
+	 X0mk5OLc648E+zRf8EuPlbe4TQjE9uTUaOHE2z+vIO9ZWoFEXzjBUIHF9CG4dzPQve
+	 v83KQkZpwBtEZofvB9fY2BqXuG53ojlepTiUErcgXxbaMiU8EDiz5Q7rpj3SvwxMIA
+	 wcqT0kw6j7feBvZO7hZ35tl45EOx8RVFm5K59tqICB2GXAgBdzsEOQf6hJnpK1sT9v
+	 SP56DGjvycoPe2bHyASKmklE74IU5IZSqnnfhTjhhOa8oWJicVV2cLVw9to6ctdIHr
+	 qTvx4sCsAld6A==
+Date: Thu, 25 Dec 2025 21:32:31 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Robert Marko <robert.marko@sartura.hr>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, lee@kernel.org, 
+	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	linusw@kernel.org, Steen.Hegelund@microchip.com, daniel.machon@microchip.com, 
+	UNGLinuxDriver@microchip.com, olivia@selenic.com, radu_nicolae.pirea@upb.ro, 
+	richard.genoud@bootlin.com, gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	broonie@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
+	lars.povlsen@microchip.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, netdev@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-clk@vger.kernel.org, luka.perkov@sartura.hr, 
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v3 06/15] dt-bindings: i2c: atmel,at91sam: add
+ microchip,lan9691-i2c
+Message-ID: <plir5hx4hpgrj4emspyu3wyvpnax6zz6tlattwq4l2ye3hohkr@ysbjwf2p53lh>
+References: <20251223201921.1332786-1-robert.marko@sartura.hr>
+ <20251223201921.1332786-7-robert.marko@sartura.hr>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20251225_181526_930463_BA1F4DD2 
-X-CRM114-Status: UNSURE (   8.87  )
-X-CRM114-Notice: Please train this message. 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251223201921.1332786-7-robert.marko@sartura.hr>
 
-As a proper noun PrimeCell is a single entity and it can not have a plural
-form, fix the typo.
+Hi Robert,
 
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
----
- Documentation/devicetree/bindings/dma/arm-pl08x.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Dec 23, 2025 at 09:16:17PM +0100, Robert Marko wrote:
+> Document Microchip LAN969x I2C compatible.
+> 
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-diff --git a/Documentation/devicetree/bindings/dma/arm-pl08x.yaml b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
-index ab25ae63d2c3..beab36ac583f 100644
---- a/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
-+++ b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/dma/arm-pl08x.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: ARM PrimeCells PL080 and PL081 and derivatives DMA controller
-+title: ARM PrimeCell PL080 and PL081 and derivatives DMA controller
- 
- maintainers:
-   - Vinod Koul <vkoul@kernel.org>
--- 
-2.43.0
+Acked-by: Andi Shyti <andi.shyti@kernel.org>
 
+Thanks,
+Andi
 

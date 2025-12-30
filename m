@@ -1,57 +1,69 @@
-Return-Path: <dmaengine+bounces-7984-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7985-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9748ACEA62F
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Dec 2025 19:03:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BAE2CEA651
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Dec 2025 19:06:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BBB5D3025160
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Dec 2025 18:02:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 07AB8301E904
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Dec 2025 18:06:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ADAD2FF65B;
-	Tue, 30 Dec 2025 18:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082B732693F;
+	Tue, 30 Dec 2025 18:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sMPKVo3Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LdP5RAlZ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAA62D3738;
-	Tue, 30 Dec 2025 18:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B820C2253A0;
+	Tue, 30 Dec 2025 18:06:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767117748; cv=none; b=RqVfs0hAT/T603OVH+CRO6D1Hi0jWqbjbZ5O/iHkeCzGAz7BzxmluNCzMEKTvuqa1uAG/7SGKGVd2W12olHMeFjfxPr9xdzvgSDKPASrrT4b8VeLrzrXwcNU+nlTiwQtkyi3jtvc9sH3ChKXFEhp9FBy79BF2+EfzwWss5ZY000=
+	t=1767117970; cv=none; b=jB7OEtz+A8sqZ4MdsmDZpYbGyx54s1BcMS6mJ0SGrGk2b7zwp9EUr77bQfNi9FobqcV/TFNYZqthSj2q1hsyZu4rqEfLkLmCHp3pHInrxzZUxVRqOG3iVOeu76xowWORMs4n5+EJGNO31/PgfzlvSv02uDKGTeDmczG07kCP1Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767117748; c=relaxed/simple;
-	bh=CGJRvsvRqrY06eLsApGvbZjfhRGxGSz0nojzUjMmD2A=;
+	s=arc-20240116; t=1767117970; c=relaxed/simple;
+	bh=d56dgI6Y5PdhNqTXDppdPpaYunnHYAw+cp/8Lv9TnIw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oh+RhqqwtbloNOzmSdapb/NBBBUx1I7oreWe9BbelsuF7jr8RfaMxx6PzMJXV7P6nn3B7N3sI2V+QEUgB6ap60LMEBSP6KHhvd3DYYuEpvIRmOjU0qTV9Pl+l3HH05M4t3izc8kjGB4k7DqAnWL2uceK8Ywt23G3cyo9PgA/Tq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sMPKVo3Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6F49C116D0;
-	Tue, 30 Dec 2025 18:02:27 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=UzS50p/CJTHjHLbrIoYTQqU07WMWcqvtaOHN5xZep2sAs1JYCdJp2VEDMiJiQCCYkNcTP703UWBYhnw3fyrkK0d0vsvO+6lbkyAVwkzK+K+bBgr1wf+OCE3A9Q1618YYHAuKW3Rv22tbHd9Z5ikUwTa+9ohf9SDSK+C/nYiQlgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LdP5RAlZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DA0C4CEFB;
+	Tue, 30 Dec 2025 18:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767117747;
-	bh=CGJRvsvRqrY06eLsApGvbZjfhRGxGSz0nojzUjMmD2A=;
+	s=k20201202; t=1767117970;
+	bh=d56dgI6Y5PdhNqTXDppdPpaYunnHYAw+cp/8Lv9TnIw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sMPKVo3Z+xWMyPuyX82WJfQIbBoB/bFGEx3nuaDAO13FEySFh4ZJ3ncIT6WUNvrwI
-	 q90csKg3kXo4GmOAs7pqW2EpaZkvYHecNxGTXMe3BvCIDiBAcNwk+IZtHE1xAlO6fH
-	 VOaXGYMJH22iYtSlAI7U20cFIYlQ2hzoXeflQCpMnslw1h4AUMCHMRJP1jUiTvF491
-	 1bC1yZErK9kL1/sInbBJYMNxVQNeQXogwPOw71GhQVMHmn9LSYZ442gWgrB3hyiVwb
-	 oX3krkojLWg8R+WTgGIMmuy331fwsM8XEkFodepGnv0Rcw2nKWgA77UYIaHgo/C2Zw
-	 Fpt0N2aRpbL/A==
-Date: Tue, 30 Dec 2025 12:02:26 -0600
+	b=LdP5RAlZVwfui6ATS7o6Q1TU6zwgdzyBneXEku3UUjhcew8CcIMDuW91se2EYAB2w
+	 KoTu1wvAY6xPblQ7lL70pVSG+HZcqZTkmVO7BTONVuss2b7R15Dtv/REXIQmOSKvwi
+	 HzIPNGELsRJ3r1NmPshi4izd7YUCNWKWuUHDd6Om6HnyXyO01tyS0b2SlMfxy6oCHW
+	 TK8/VCAagei4yvhmcJAsMlkZa/yJqmHcAw9vhbq939v4GFmOd3wASmZmD6ArSDzIAh
+	 WVHQyMQUdKYzLY12Z13eIvwfw76BEb7sx9hcRQuAbn/CJI49FTMJT32dVc6o3uLw9P
+	 Ws5JJMFAPTSGA==
+Date: Tue, 30 Dec 2025 12:06:09 -0600
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
-Cc: Conor Dooley <conor+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: dma: snps,dw-axi-dmac: Add
- compatible string for Agilex5
-Message-ID: <176711774630.870949.13920707490957857831.robh@kernel.org>
-References: <cover.1766966955.git.khairul.anuar.romli@altera.com>
- <dbc775f114445c06c6e4ce424333e1f3cbb92583.1766966955.git.khairul.anuar.romli@altera.com>
+To: Robert Marko <robert.marko@sartura.hr>
+Cc: herbert@gondor.apana.org.au, Steen.Hegelund@microchip.com,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+	claudiu.beznea@tuxon.dev, conor+dt@kernel.org,
+	nicolas.ferre@microchip.com, kuba@kernel.org,
+	linux-i2c@vger.kernel.org, lee@kernel.org,
+	linux-crypto@vger.kernel.org, jirislaby@kernel.org,
+	andrew+netdev@lunn.ch, dmaengine@vger.kernel.org,
+	andi.shyti@kernel.org, linux-gpio@vger.kernel.org,
+	pabeni@redhat.com, gregkh@linuxfoundation.org, davem@davemloft.net,
+	luka.perkov@sartura.hr, vkoul@kernel.org,
+	UNGLinuxDriver@microchip.com, radu_nicolae.pirea@upb.ro,
+	daniel.machon@microchip.com, richard.genoud@bootlin.com,
+	alexandre.belloni@bootlin.com, krzk+dt@kernel.org,
+	lars.povlsen@microchip.com, linux-kernel@vger.kernel.org,
+	broonie@kernel.org, linusw@kernel.org, edumazet@google.com,
+	olivia@selenic.com
+Subject: Re: [PATCH v4 01/15] dt-bindings: usb: Add Microchip LAN969x support
+Message-ID: <176711796888.884073.12938472533739359591.robh@kernel.org>
+References: <20251229184004.571837-1-robert.marko@sartura.hr>
+ <20251229184004.571837-2-robert.marko@sartura.hr>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -60,32 +72,21 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dbc775f114445c06c6e4ce424333e1f3cbb92583.1766966955.git.khairul.anuar.romli@altera.com>
+In-Reply-To: <20251229184004.571837-2-robert.marko@sartura.hr>
 
 
-On Mon, 29 Dec 2025 11:49:01 +0800, Khairul Anuar Romli wrote:
-> The address bus on Agilex5 is limited to 40 bits. When SMMU is enable this
-> will cause address truncation and translation faults. Hence introducing
-> "altr,agilex5-axi-dma" to enable platform specific configuration to
-> configure the dma addressable bit mask.
+On Mon, 29 Dec 2025 19:37:42 +0100, Robert Marko wrote:
+> Microchip LAN969x has DWC3 compatible controller, though limited to 2.0(HS)
+> speed, so document it.
 > 
-> Add a fallback capability for the compatible property to allow driver to
-> probe and initialize with a newly added compatible string without requiring
-> additional entry in the driver.
-> 
-> Signed-off-by: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
 > ---
-> Changes in v5:
-> 	- No changes
-> Changes in v4:
-> 	- remove dma-ranges as it is no longer required
-> Changes in v3:
-> 	- Simple dma-ranges property with true and without description
 > Changes in v2:
-> 	- Add dma-ranges
-> ---
->  .../devicetree/bindings/dma/snps,dw-axi-dmac.yaml  | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
+> * Fix example indentation
+> 
+>  .../bindings/usb/microchip,lan9691-dwc3.yaml  | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/microchip,lan9691-dwc3.yaml
 > 
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>

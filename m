@@ -1,157 +1,203 @@
-Return-Path: <dmaengine+bounces-7964-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7977-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BA2DCE7FE0
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Dec 2025 20:05:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28495CE9C37
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Dec 2025 14:19:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BCAC6305A840
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Dec 2025 19:01:57 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 205723016916
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Dec 2025 13:19:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC1C8338916;
-	Mon, 29 Dec 2025 18:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF9F52066F7;
+	Tue, 30 Dec 2025 13:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="JcqlzjRA"
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="zFolPSmJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FF7335567
-	for <dmaengine@vger.kernel.org>; Mon, 29 Dec 2025 18:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82F71F4CBB
+	for <dmaengine@vger.kernel.org>; Tue, 30 Dec 2025 13:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767033625; cv=none; b=IrHVi9j3u9711kRUNcLLLtzxrjhOcwzHqT0lB/mLSHIxTJZvKb6Emb0ZfGXQqrB+ndFc/jQIshOS15uUKzLaH2DevS4+Uf1Hx+v/64LwPrcN5ty8MEJDmh6CiZ7TN+VUWl7zq/7M7YDqzYy8ZGaC60B5SF3Kpe6AFLnDP6hxGFQ=
+	t=1767100759; cv=none; b=A8HTK3nWxVYFcFo7X7IOvzKLl/AgZxBF0dla1Tw6hGygG3idx+FceyAeE08pT4T9kUAxRDnT9r1l4o2EgujSRLgQ1HQre90HgUAay2KyeBX655pUcU7y3kssUiFU1B3JBWALQgsV0+/PYYQc+YvzRd0GS612FpEZ3Jhhe2NvaiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767033625; c=relaxed/simple;
-	bh=GSmfufS+BjcFXAR7DhKTmRXgeyl65npdKjntCPPDfHY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Bbm52bsCCgJ/6IsA5NEInwMh6H5IoXTt2vukf2cS8lKQAvaQXiYB9GyGGTWSIfShKT9dfeAqJFmm74SccWdT4zSognVJlt91qfiwhB5CGzq5EGBqzyUrqfZ/lbxfpOsrBFF1hKpw6K+mzXoGBZV3B7xkPz/7R0CWoZGJExD5Q0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=JcqlzjRA; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1767100759; c=relaxed/simple;
+	bh=60nzpBoByaz3l7USmNfHjsOcoHPQLtJjqSS2IxjgkYM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D4ENe24nIuAPbmPfcrUrJ9IBYw5M1A8aE5ZXFd5U0ClbsPPq2m4Q0mhOYk+Rd/ygEqqKKT97Sc9C6pSYVbhWcHXUeWab7I1e+couCJzGiF0T7oEBez+hxuksz5PVVmNxp/yD2TrQ6wW46N3bB98t4oiPtadVCb3GrNmEj5PSB2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=zFolPSmJ; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-47d182a8c6cso41578465e9.1
-        for <dmaengine@vger.kernel.org>; Mon, 29 Dec 2025 10:40:20 -0800 (PST)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-64b608ffca7so12252996a12.3
+        for <dmaengine@vger.kernel.org>; Tue, 30 Dec 2025 05:19:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1767033619; x=1767638419; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=sartura.hr; s=sartura; t=1767100756; x=1767705556; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=m2FSF4N3N2MYzlByPoECc2cAz8v8tXyMKGpnQtUm3aY=;
-        b=JcqlzjRAY7GYd7DXROYgWaELXWB9Ssktmv0mSGBMky80lcqfObTvF++Aws/cnbhLIt
-         yMn5+n7PQsVaPG5S0nSJdGjAQv+rbOP7HgcdcPpJ397mAkKVT5uX3fyEiZz4iNDImAv1
-         ygQjSfkGsJtE4BH6mibkK5llo62IgL2R6umMw1dy0lu+we47jagIw6mQtfbEdcJbvIFs
-         sj7gIiiZW5UrWkm0ZabFQQS5bX4/iAVnhv0/33iHD3qs/a9XjKvmtSqSoKgynE0Fb5bW
-         zfOQUkXxivxUuLlwihW02aUZHmiajEMBEq4a1P099s5Ia7Jcqgyr+cJNoEthuSEHRpJw
-         8pYA==
+        bh=JVg7jxPsCBHGWb7o7CsiEjtqnH/DgSZg+hH6XuxK1WQ=;
+        b=zFolPSmJoMqgnCTqu4gM03tcTKAvXsLJ8Hmkp8qvO0p4rQjB2jsm8n6OYv5SUXGJJz
+         nkzzsa025JDEo8I/YuzUxrxtcmAQL12xwgIJTYrYiZ3QPweXwXHF5LQAGwbUolbUa+05
+         e4XaUHb9KQLQsrcHfUkd+dv/mCR6UkkIpM4GFCD7Bhv2SMF//apKbczG4Wbb7+2+Cv1n
+         JxcNAunEXj45dhRrmQvxwOn4/7e6LurqxvcMAh2G0cswJXwC3K0JZKuS9xpufme17ueY
+         sUV1m9KCpGcrI59maem3Di0gKZ6cR7WEDzQ5sWoko5Hd8KIa+24AnoVZJB1yCmu+8HMF
+         85jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767033619; x=1767638419;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20230601; t=1767100756; x=1767705556;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=m2FSF4N3N2MYzlByPoECc2cAz8v8tXyMKGpnQtUm3aY=;
-        b=iFrXfqusb4fsrkEMgbQe0BUmcKSPZPEvUHEpuQlZhOBvjAyQ1DrN4OYZYaGalIbL3S
-         3A9qTDWglhGOeiHiKCaDrN0J4jx4eCY2jZQahao438jRlqHMKVakd16S8LxDBd6868fA
-         sG8TFTSz7hQomZKbt/twffEnzt8vtfETB0UUXPbgUHE/ZYtQO4RztYd+n2wokwb3SKct
-         ugRmZATdCLnlMgWbffU7yDqREBafXtq1yZqJ9Jidbv90Ooqk9DsnCvWbnh0/cD7B2t/+
-         tYo1EkYPbR8sNqcO/01EAwcuKf4vByB2FbML4rY1EwCVjAYd5dyfyqOZP7SBDw01pia1
-         vzrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWij0ARq31EykZ19IQ8Ej4NABNB+xXUyyroxtTDgFCp2+FJ06EFsTRcY/JpjmTAtCZnLgAddNUxRw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxgqyfyn2ApyjRwUFXu2HCPNrqmkxkVbvvwDAansU9E3u8lwkkG
-	aufEgQs2t2yz4l3senQOE0iQWwLt7j1kU3fHsTBngolNwCkt9u3mfPvVqxf2UgmpY2A=
-X-Gm-Gg: AY/fxX659n2lGcFfuJKw1iGWj6DoLRgBvNeIRVs46ayKA5JmsJdBwm5CeN/FhYEL6nY
-	VmWnCzF7ifCS4AsAsxOLVbqCi19O7ozV2H3Uvc0eZvR9DUosY/+fllBaXG5OzqOiRfHIT+NWU+i
-	tCT0MyvOJDMxOGo12dd+Bis3iPDlvpnSo90aRxQyKJvLDOXfGBgUzXdPyksyB7eGxY2ciHxT9KW
-	tq38gqntZq8QC5TPeB2AmvVDBdIKKeljIwD2LvNccdfnH1B9hhcT182nfBhJ5mhaYkQkzrfUiMu
-	4EhZDvEJcVHzyId4uZ6VvKK/vREPwkW1sgdSD6iZ6yPCBwXK5aUCh0dRyITE59EHQgSnj+JdyaO
-	5cCbK+GIuroSBNJjDlcf9u2wm4y1bzP7oeuy51FV7T7336z10Ky6cfqA6YICpFMNTe/sTN9gHar
-	lUN4eG62fvklBIvFH+Ev9MPBjjWVBm94gdRbpgHLtwcjGDKOWEnOSuR9+ELXT4G0BDCLTKHqsxm
-	PfwXcTnLE4aOKRU3zVmAvSMh2Os
-X-Google-Smtp-Source: AGHT+IGouKdEkhppybsCuf/IfO2U2/Dz9wh0+2E3/5N4x/PhA0Nd7PQ1c14nBgJEnbaurS5x35/GCw==
-X-Received: by 2002:a05:600c:4e90:b0:46e:4e6d:79f4 with SMTP id 5b1f17b1804b1-47d19557183mr403585065e9.15.1767033618979;
-        Mon, 29 Dec 2025 10:40:18 -0800 (PST)
-Received: from fedora (cpezg-94-253-146-116-cbl.xnet.hr. [94.253.146.116])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-47be27b28a7sm604907455e9.12.2025.12.29.10.40.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Dec 2025 10:40:18 -0800 (PST)
-From: Robert Marko <robert.marko@sartura.hr>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	vkoul@kernel.org,
-	andi.shyti@kernel.org,
-	lee@kernel.org,
-	andrew+netdev@lunn.ch,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linusw@kernel.org,
-	Steen.Hegelund@microchip.com,
-	daniel.machon@microchip.com,
-	UNGLinuxDriver@microchip.com,
-	olivia@selenic.com,
-	radu_nicolae.pirea@upb.ro,
-	richard.genoud@bootlin.com,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	broonie@kernel.org,
-	lars.povlsen@microchip.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Cc: luka.perkov@sartura.hr,
-	Robert Marko <robert.marko@sartura.hr>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v4 03/15] dt-bindings: serial: atmel,at91-usart: add microchip,lan9691-usart
-Date: Mon, 29 Dec 2025 19:37:44 +0100
-Message-ID: <20251229184004.571837-4-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251229184004.571837-1-robert.marko@sartura.hr>
-References: <20251229184004.571837-1-robert.marko@sartura.hr>
+        bh=JVg7jxPsCBHGWb7o7CsiEjtqnH/DgSZg+hH6XuxK1WQ=;
+        b=VxIyjggEEX+B4XSeGM1WH0Bxntb0MsnGWUGJkrVpmMG0tkb7VuXlu/xYo0cIAOVVva
+         Kre5M3mwk1KRcLc/zfFX/eW9xK6Zd4MKAZgVlhhwsg8UE81OnyXm3qfJABp18dNeJEEr
+         T3oXxuL49k72MaCGyhmwEQjGAuujFHWz8HNgYMHHLJz2+eyuJeJ684+Tv7mX3m1H0BJX
+         0MbKHxQmvIo6z86dSRga+kJOT97oXEikDIiHveW69TgHoAluLODS2pHo5pg34VL/fE23
+         7EijNIVCt/7U77AI4Q5xZNf58wgK4LcV13MvqEm/pStqPSuWr/mZeJZ16a1UZnkcF4K/
+         GPZg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8xptcrjMNQHqCxfuDOBHnrbJok/f5Ge41EWh66WhHSDkPyaOi6ft72ocbmLqAw/dwGW4Yw1zU44Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyN55debqGncauhGRmZH7hQkh4EkW2mBmr+Lt+ReFUIn12ICp3
+	87suULbju+xix74rQ5yZA6lZpRq3js7/77J04U7bTDxSTaPuCFMg41Tay5u7OTn0cA071VnEg/7
+	Uw98blBrbtxidjQeiYrMgiPvs76OUj/7krgBPFfuwIA==
+X-Gm-Gg: AY/fxX5t/9pBRhzbLFbqI/fe8LLJb0MeP2xpCQiAXEPzDdQNOSBiWf1g3JUjC3DrA/q
+	7Ht2H4wlZIzdRDH/7Frxnf/emTAWxsCQNtAAT3rxPVTnKjFJIvfWGKBgqKmtuw+ncgc4If83/0q
+	lP0aeV9xflI1EMAvyGDPW7toAQdd8/rq5Kam9o2KgZsZqE2ksjC64yawXl9eLnZ2zbkchmqyVMS
+	4cQ9ljPrqQv96RV4e417hCSKYUcr+szDPcBxEXTAmhJg40x+0O7PvUoTv0e7iWmano+zmaqLFlZ
+	eHqtscAh5ILBskz+onhLclHznoIkn0OAuztCyZbGuycKkUo6MlBf
+X-Google-Smtp-Source: AGHT+IEmR/sUysOjbEHwlCYRZf3GAy62DmeIroQ8rAQLTd36sLOMpKr0juQStEhaH7R4NFBMQh1Bj3mg4pQKMCaWdh0=
+X-Received: by 2002:a05:6402:42d0:b0:64e:f6e1:e519 with SMTP id
+ 4fb4d7f45d1cf-64ef6e1e772mr4128289a12.19.1767100756030; Tue, 30 Dec 2025
+ 05:19:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251203121208.1269487-1-robert.marko@sartura.hr> <aUF4OS4DsmRlQQt3@vaman>
+In-Reply-To: <aUF4OS4DsmRlQQt3@vaman>
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Tue, 30 Dec 2025 14:19:05 +0100
+X-Gm-Features: AQt7F2qe8u7JIqD_s36UvUenlFX1mMzbx3PprH-BCcOTY8WkqWfY72IF1X03T8I
+Message-ID: <CA+HBbNGv1YzZhBfAO7JvossJeM46CFcPmUtDmYaK4Fm8iB9stg@mail.gmail.com>
+Subject: Re: [PATCH RESEND] dmaengine: at_xdmac: get the number of DMA
+ channels from device tree
+To: Vinod Koul <vkoul@kernel.org>
+Cc: ludovic.desroches@microchip.com, linux-arm-kernel@lists.infradead.org, 
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	daniel.machon@microchip.com, luka.perkov@sartura.hr, 
+	Tony Han <tony.han@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Document Microchip LAN969x USART compatible.
+On Tue, Dec 16, 2025 at 4:18=E2=80=AFPM Vinod Koul <vkoul@kernel.org> wrote=
+:
+>
+> On 03-12-25, 13:11, Robert Marko wrote:
+> > From: Tony Han <tony.han@microchip.com>
+> >
+> > In case of kernel runs in non-secure mode, the number of DMA channels c=
+an
+> > be got from device tree since the value read from GTYPE register is "0"=
+ as
+> > it's always secured.
+> >
+> > As the number of channels can never be negative, update them to the typ=
+e
+> > "unsigned".
+> >
+> > This is required for LAN969x.
+>
+> You updated the changelog, but tagged it as resend. It should be v2!
 
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
----
-Changes in v3:
-* Pick Acked-by from Conor
+Hi,
+Sorry for this, I sent the wrong patch and though quickly resending
+the right one would be better.
 
- Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml | 1 +
- 1 file changed, 1 insertion(+)
+>
+> >
+> > Signed-off-by: Tony Han <tony.han@microchip.com>
+> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > ---
+> >  drivers/dma/at_xdmac.c | 26 +++++++++++++++++++++++---
+> >  1 file changed, 23 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+> > index 3fbc74710a13..acabf82e293c 100644
+> > --- a/drivers/dma/at_xdmac.c
+> > +++ b/drivers/dma/at_xdmac.c
+> > @@ -2257,12 +2257,29 @@ static int __maybe_unused atmel_xdmac_runtime_r=
+esume(struct device *dev)
+> >       return clk_enable(atxdmac->clk);
+> >  }
+> >
+> > +static inline int at_xdmac_get_channel_number(struct platform_device *=
+pdev,
+> > +                                           u32 reg, u32 *pchannels)
+> > +{
+> > +     int     ret;
+> > +
+> > +     if (reg) {
+> > +             *pchannels =3D AT_XDMAC_NB_CH(reg);
+> > +             return 0;
+> > +     }
+> > +
+> > +     ret =3D of_property_read_u32(pdev->dev.of_node, "dma-channels", p=
+channels);
+> > +     if (ret)
+> > +             dev_err(&pdev->dev, "can't get number of channels\n");
+>
+> Do we need to log error, I thought the API did that...
 
-diff --git a/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-index 087a8926f8b4..375cd50bc5cc 100644
---- a/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-+++ b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-@@ -24,6 +24,7 @@ properties:
-           - const: atmel,at91sam9260-usart
-       - items:
-           - enum:
-+              - microchip,lan9691-usart
-               - microchip,sam9x60-usart
-               - microchip,sam9x7-usart
-               - microchip,sama7d65-usart
--- 
-2.52.0
+I dont think API helps here, we would just be left with the error
+code, which can be hard
+to trace back but I am flexible.
 
+Regards,
+Robert
+>
+> > +
+> > +     return ret;
+> > +}
+> > +
+> >  static int at_xdmac_probe(struct platform_device *pdev)
+> >  {
+> >       struct at_xdmac *atxdmac;
+> > -     int             irq, nr_channels, i, ret;
+> > +     int             irq, ret;
+> >       void __iomem    *base;
+> > -     u32             reg;
+> > +     u32             nr_channels, i, reg;
+> >
+> >       irq =3D platform_get_irq(pdev, 0);
+> >       if (irq < 0)
+> > @@ -2278,7 +2295,10 @@ static int at_xdmac_probe(struct platform_device=
+ *pdev)
+> >        * of channels to do the allocation.
+> >        */
+> >       reg =3D readl_relaxed(base + AT_XDMAC_GTYPE);
+> > -     nr_channels =3D AT_XDMAC_NB_CH(reg);
+> > +     ret =3D at_xdmac_get_channel_number(pdev, reg, &nr_channels);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> >       if (nr_channels > AT_XDMAC_MAX_CHAN) {
+> >               dev_err(&pdev->dev, "invalid number of channels (%u)\n",
+> >                       nr_channels);
+> > --
+> > 2.52.0
+>
+> --
+> ~Vinod
+
+
+
+--=20
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura d.d.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
 

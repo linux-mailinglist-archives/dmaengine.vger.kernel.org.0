@@ -1,75 +1,96 @@
-Return-Path: <dmaengine+bounces-7982-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7983-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 144C7CEA5AB
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Dec 2025 18:47:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3EEDCEA5B7
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Dec 2025 18:48:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 244773016EED
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Dec 2025 17:47:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9AAB8301E934
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Dec 2025 17:48:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A5E1254B03;
-	Tue, 30 Dec 2025 17:47:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77C54322A28;
+	Tue, 30 Dec 2025 17:48:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KHq7+OQn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iskjk0uk"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D17225779;
-	Tue, 30 Dec 2025 17:47:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D57225779;
+	Tue, 30 Dec 2025 17:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767116844; cv=none; b=Zu+xRmAlqm9z+Juo+cNPOpxGugPN8oyrpbhyUbcNj024WfP86BCmlVjkQkQycQgJE+LP6269uvOPigakU4SLzfM5Owhs5k5MP/LYTF3yiiVsrqWQqAwdHXpu7FAbKNHW2wnZCgZwC1RFPnZcFUZB/3PqYRFwP4IahZW7BePePrY=
+	t=1767116886; cv=none; b=SqqqdKk16oDoO3YlEMPNGF4xRIcZWCqSmN4hugdZQUT+w9SBR7Szm09no6BoQ79eYTZN8XAbvhvg2iUhR5CxCheKOJqj4dSzZuHu05nOkgX99UzYFr/owt1qki9SXx5+TFtitGLqRgRKCXZzfJhHtxTiMleXWrx3YZEGOlJLDQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767116844; c=relaxed/simple;
-	bh=9Tzt1v79UocLdfoE8Ziycc0C4ZzVCqV9HIYQnpWxpKc=;
+	s=arc-20240116; t=1767116886; c=relaxed/simple;
+	bh=N7UUAxBiz2VNPSI7n0ZU15lbc01uDl6QBt1Zyg5SYlg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AxyHh++/Do+5ZNLx4K2fNq3zncoF3QqRcENTV64bwLdqhPTxGBoQNRroLXjkVzAseP5AWVk6GlU23q4N1eEMO2pjgMh6l2K3YNVed/zeACZjKvVrCgS0tVQxrgvuSL0bQlmyk19fEhjyDmiOQGBynCqTJaaqDv56P7ZmXRwttxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KHq7+OQn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDB36C4CEFB;
-	Tue, 30 Dec 2025 17:47:23 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=r+cwxI+GdV1So9MTthJ48p9dBpPNI/AddJxHzdNb0xyB/kUg7SUHeMJX/pVPDePCkL/cFubwVnMz/Ea3h4HiAtPGet/JY08LQHgtcoQnZBRyAeia++/HFGgbsxn7PpkK4iBP4tjQOxJmQDQShO4K7u/7Ojf4eN+dCJGOhysn+dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iskjk0uk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA01BC4CEFB;
+	Tue, 30 Dec 2025 17:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767116844;
-	bh=9Tzt1v79UocLdfoE8Ziycc0C4ZzVCqV9HIYQnpWxpKc=;
+	s=k20201202; t=1767116885;
+	bh=N7UUAxBiz2VNPSI7n0ZU15lbc01uDl6QBt1Zyg5SYlg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KHq7+OQnPfCkUwLu951WCbcS3KJQPaoDiMRREFKZDKIfzLTEsgptaXBiJMTqj9j5b
-	 Sw0rIcQ12u/AVJF9pqNPw81RA1RX/9ZCVwWwwehQfFj0z4tvJS+WK455q2eek944AT
-	 RKSYO02c623QJvQmIv+0ogsaiiAKvoEuaIQz4XdPSp/QatNgxE9lLZpZksyPN9d+jH
-	 IU/mqk2WfO9vSYPnXOGNVr7RIVTuDnWDSFf/6WN3m8GT1KGUONr+9dFFA8BfIc5+Qg
-	 VWt+aucwZ1VFnkXRu/2pCzqciD265evGRtn/Qe/WhdayUR/b8JJqfc8uH6VwS8suv1
-	 f7qdKAL/EdLpw==
-Date: Tue, 30 Dec 2025 11:47:22 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: dma: pl08x: Do not use plural form of a
- proper noun PrimeCell
-Message-ID: <176711684252.854117.1334721306263110697.robh@kernel.org>
-References: <20251225181519.1401953-1-vz@mleia.com>
+	b=iskjk0ukY1R3GMaQ4173SEL1UBw1S23M3vuCmZpUxD6ByaTFqGNWya1PiPjLxhx2X
+	 LR6my8/W09bViFJbO3An9D/BSikw8KBehDvWvmzYHw4KmWmnchIBsYGbEo9UCrVVPe
+	 ikCNEbAeSkSDXJEXgJi1/RIU13aRPX+QQJ/i0D8WAjFwFvt9mhJBLrbRy1vmGemVIY
+	 Wwh7XDzIRw+ZrzYM9xSgPnZT9IIyvBm8uIYl2/sQligLHSKK4qUlwYsLQesw4OGUUl
+	 bwq4aN/0jDRyQD1Hl6RlBXHKdH7xySJ7mEia1rzZARx3dbdtC5wnYwG14sVzJWsJMi
+	 +pH9dnWceBcgQ==
+Date: Tue, 30 Dec 2025 17:47:56 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Robert Marko <robert.marko@sartura.hr>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev, herbert@gondor.apana.org.au,
+	davem@davemloft.net, vkoul@kernel.org, andi.shyti@kernel.org,
+	lee@kernel.org, andrew+netdev@lunn.ch, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, linusw@kernel.org,
+	Steen.Hegelund@microchip.com, daniel.machon@microchip.com,
+	UNGLinuxDriver@microchip.com, olivia@selenic.com,
+	radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org,
+	broonie@kernel.org, lars.povlsen@microchip.com,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+	netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-usb@vger.kernel.org, luka.perkov@sartura.hr
+Subject: Re: [PATCH v4 14/15] dt-bindings: arm: AT91: document EV23X71A board
+Message-ID: <20251230-imprecise-cohesive-25a1f0ec1896@spud>
+References: <20251229184004.571837-1-robert.marko@sartura.hr>
+ <20251229184004.571837-15-robert.marko@sartura.hr>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZWjypDN5GPfEBIGy"
+Content-Disposition: inline
+In-Reply-To: <20251229184004.571837-15-robert.marko@sartura.hr>
+
+
+--ZWjypDN5GPfEBIGy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251225181519.1401953-1-vz@mleia.com>
 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-On Thu, 25 Dec 2025 20:15:19 +0200, Vladimir Zapolskiy wrote:
-> As a proper noun PrimeCell is a single entity and it can not have a plural
-> form, fix the typo.
-> 
-> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-> ---
->  Documentation/devicetree/bindings/dma/arm-pl08x.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+--ZWjypDN5GPfEBIGy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaVQQTAAKCRB4tDGHoIJi
+0ufVAP41AIR3LR0nvj27ohIxrkUaPNdUAsA77vMxPkkpcl6SgAEA2oZF4ChuF/6n
+1N8HRuxXSCp7DSjp7VlfsdsWNtMzeQo=
+=pUr1
+-----END PGP SIGNATURE-----
+
+--ZWjypDN5GPfEBIGy--
 

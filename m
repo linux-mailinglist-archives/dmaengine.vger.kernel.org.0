@@ -1,66 +1,55 @@
-Return-Path: <dmaengine+bounces-7994-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-7995-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7B11CED3BF
-	for <lists+dmaengine@lfdr.de>; Thu, 01 Jan 2026 18:41:58 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD131CED3E8
+	for <lists+dmaengine@lfdr.de>; Thu, 01 Jan 2026 18:43:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 518F3300100B
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Jan 2026 17:41:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ACED930285E6
+	for <lists+dmaengine@lfdr.de>; Thu,  1 Jan 2026 17:42:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440FE26C39F;
-	Thu,  1 Jan 2026 17:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE8362E975E;
+	Thu,  1 Jan 2026 17:41:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ER9t7cAl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="coz2jbT+"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F0A224AF1;
-	Thu,  1 Jan 2026 17:41:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9652F2F28EA;
+	Thu,  1 Jan 2026 17:41:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767289316; cv=none; b=NrTyiQWRpofLmJkcT0La0zOE28btIyA8GiYS41FfWN2bUbicL5plMTG4zofHuO57L7lxfkfV2P2JcEHzg4b1abYwHYSCacd+mNCdPRNCBHrn1mAK34pKKVDIN4eR5SX3/kIf5m5Jws3f4UcU9Lt8JbJYQ1Ncz+9kxAoR8DwuRHs=
+	t=1767289318; cv=none; b=XXFraON/1YdHIQxpTlXYmE6K6lsepKssMqIYBRRUklhELpub39s7QQqsxwL2CdXxGu6lDtJypCcsqJ61Te0nFmjQXk1TZLv8rW7vtGEUGrONChJVkGl9VKmwrCs/9Fw/T1AWcX6ECXHTi8Wf7BXoW1L/xhFNjUNgAb9+nJB8Djs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767289316; c=relaxed/simple;
-	bh=Zv64SapDen5kzKJuMbMGdMPYfIhGVyuPqNwGNzVunrE=;
+	s=arc-20240116; t=1767289318; c=relaxed/simple;
+	bh=EzgEO36WKTuxxmrk9QYRyVB5NuHgZRZWzoxw4v+H4uk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=m8XXNr8BZpXXMzhYmKYONw+6diQPTE2tmAiOrPA10aUOjHf0VqhKjWujHUTpVEZDL7AS7gOnMaqcOLUnTu8S+7psaPd5C0YHYkcT88CDc4+ID2tQ+cUeiPXt3ViuUM91MgxHYjGmtZECWjHMJ7rl/2QSSljpS8uFuhKKqLRs9FY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ER9t7cAl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 455F6C4CEF7;
-	Thu,  1 Jan 2026 17:41:46 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ARkbBwyaBqcpwNODHrSub4FREi8ZkEywWzRm4BMIiXjr6A0hCCoC8ro6jaT1UnIw4M6CfYtGX10Y19r2sqAXyFf5zVv+lkT6b2GIA2/KAe20Ze/o8o4ftvilfrutZAH7KpngCwEobvVg3Zt8cWW8TbSTUTNDfIK+fiX7+68KoJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=coz2jbT+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BBC8C116B1;
+	Thu,  1 Jan 2026 17:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767289315;
-	bh=Zv64SapDen5kzKJuMbMGdMPYfIhGVyuPqNwGNzVunrE=;
+	s=k20201202; t=1767289318;
+	bh=EzgEO36WKTuxxmrk9QYRyVB5NuHgZRZWzoxw4v+H4uk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ER9t7cAlj7MqNGXcP5YMCKuLDsKR9w84FCNrArooQFtHOjmbI/DfZrwYQE1VvulF8
-	 DZFaUNowxcdH965RH9OZgKQAcXSyG2w5/MG46R88qAOCABM+8kP/0TVLa6bD4kqL4E
-	 GriArNDwSzEGl3tltbYRZxoiNQGRjqyqUKNmhJI/GVdl1unkW+vYqi+lKLebLH9/PR
-	 Dtcrikk7oRT/GK4vdCGlBPTHnucq204vQ6dfb87P8u4v7kGhQl1vvcSbNh3KTThJRG
-	 FNP98/I/YiWCMXFsPA0TvmzkGoFOTDL9lb8djzInRuDqu1+qcPkf+hK4tlCEL93Sf5
-	 VUXlu59t8g4hA==
+	b=coz2jbT+XkYJivihRAqqsZ9UIfxOnUF40vslhia+SF3yAMvBv6lgzA2brj/qQ6jur
+	 0JHqk0k9BM1dCa3yuRPMM/yIo9EQLE5JomAZQ8siN0sXvJ1qQ6lspcX95hoQZ72+1g
+	 MNxHd1ohGHA2+UOrVgfLIiKrq8KJ04SAVk0KyNIa1ASooQDskoNx6u/FJpvfF5UaUD
+	 C9ZcupaJXEVJ/EIFj1ZBdSj0PBpdCm/R7VJowkBNaU0KS+67qSglNf3mGLiQRpIyA5
+	 gF0csejz/USK96ucPHS+1Mp8NyP9MpO0cUvLcK5z32sWhip5UN9CIISR3rQlNPqd/e
+	 4hXdb6k7TllHA==
 From: Vinod Koul <vkoul@kernel.org>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
- claudiu.beznea@tuxon.dev, herbert@gondor.apana.org.au, davem@davemloft.net, 
- andi.shyti@kernel.org, lee@kernel.org, andrew+netdev@lunn.ch, 
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, linusw@kernel.org, 
- Steen.Hegelund@microchip.com, daniel.machon@microchip.com, 
- UNGLinuxDriver@microchip.com, olivia@selenic.com, radu_nicolae.pirea@upb.ro, 
- richard.genoud@bootlin.com, gregkh@linuxfoundation.org, 
- jirislaby@kernel.org, broonie@kernel.org, lars.povlsen@microchip.com, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
- dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org, 
- netdev@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, 
- linux-usb@vger.kernel.org, Robert Marko <robert.marko@sartura.hr>
-Cc: luka.perkov@sartura.hr
-In-Reply-To: <20251229184004.571837-1-robert.marko@sartura.hr>
-References: <20251229184004.571837-1-robert.marko@sartura.hr>
-Subject: Re: (subset) [PATCH v4 00/15] Add support for Microchip LAN969x
-Message-Id: <176728930591.239406.10977505367349763113.b4-ty@kernel.org>
-Date: Thu, 01 Jan 2026 23:11:45 +0530
+To: ludovic.desroches@microchip.com, linux-arm-kernel@lists.infradead.org, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ daniel.machon@microchip.com, Robert Marko <robert.marko@sartura.hr>
+Cc: luka.perkov@sartura.hr, Tony Han <tony.han@microchip.com>
+In-Reply-To: <20251203121208.1269487-1-robert.marko@sartura.hr>
+References: <20251203121208.1269487-1-robert.marko@sartura.hr>
+Subject: Re: [PATCH RESEND] dmaengine: at_xdmac: get the number of DMA
+ channels from device tree
+Message-Id: <176728931580.239406.8826639306613360080.b4-ty@kernel.org>
+Date: Thu, 01 Jan 2026 23:11:55 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -72,24 +61,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Mon, 29 Dec 2025 19:37:41 +0100, Robert Marko wrote:
-> This series adds support for the Microchip LAN969x switch SoC family.
+On Wed, 03 Dec 2025 13:11:43 +0100, Robert Marko wrote:
+> In case of kernel runs in non-secure mode, the number of DMA channels can
+> be got from device tree since the value read from GTYPE register is "0" as
+> it's always secured.
 > 
-> Series is a bit long since after discussions in previous versions, it was
-> recommended[1][2] to add SoC specific compatibles for device nodes so it
-> includes the required bindings updates.
-> 
-> [1] https://lore.kernel.org/all/20251203-splendor-cubbyhole-eda2d6982b46@spud/
-> [2] https://lore.kernel.org/all/173412c8-c2fb-4c38-8de7-5b1c2eebdbf9@microchip.com/
-> [3] https://lore.kernel.org/all/20251203-duly-leotard-86b83bd840c6@spud/
-> [4] https://lore.kernel.org/all/756ead5d-8c9b-480d-8ae5-71667575ab7c@kernel.org/
+> As the number of channels can never be negative, update them to the type
+> "unsigned".
 > 
 > [...]
 
 Applied, thanks!
 
-[09/15] dt-bindings: dma: atmel: add microchip,lan9691-dma
-        commit: c47422f4d0a26b25ff59709921eaaf8f916eec7d
+[1/1] dmaengine: at_xdmac: get the number of DMA channels from device tree
+      commit: d3824968dbd9056844bbd5041020a3e28c748558
 
 Best regards,
 -- 

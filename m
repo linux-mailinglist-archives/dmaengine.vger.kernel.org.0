@@ -1,102 +1,135 @@
-Return-Path: <dmaengine+bounces-8005-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8006-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EA71CF0D52
-	for <lists+dmaengine@lfdr.de>; Sun, 04 Jan 2026 12:38:09 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AD7FCF1398
+	for <lists+dmaengine@lfdr.de>; Sun, 04 Jan 2026 19:56:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BE676300C6FE
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Jan 2026 11:38:07 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 41FAB300092A
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Jan 2026 18:55:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E745228640C;
-	Sun,  4 Jan 2026 11:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2E063101BA;
+	Sun,  4 Jan 2026 18:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSrmBejJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IC7pSnzE"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FC22116F6
-	for <dmaengine@vger.kernel.org>; Sun,  4 Jan 2026 11:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBCE23AB90;
+	Sun,  4 Jan 2026 18:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767526686; cv=none; b=uz25EevLgXn/K06RpcJERDYAStGYwIkfZZwkATSsqzSiHGuAZkq5iRqrGuA4MP2L4Grloq+bLSFqqssbIXHLHI62g2zbw0p+e8TmGJs9JetYmJAi5j5AYH8GRJc0sIaGcPiQ/LLd/pAC3SKTd6sxGpZ18/vAEWjJH14zLOOb6ZE=
+	t=1767552955; cv=none; b=GuFsJaMsGb0giLUpW9LWxb/MAH0a1E8vj2DUUwVsaEQ04+e92REqndyHMr8VRet1cn3enEB3j9g/OALU6p4xafkzZyQNYMWh9+2agMdBvFZoU2vfIaPIurKv36yQOZc9AWHLRd8SicGqxMMhsTMN/N5TvmW5bBdaLtzM9Krzmug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767526686; c=relaxed/simple;
-	bh=zzt8nsTReCOrFFimHSYnuwYVhyLibD7TXrGiySpB+f0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pf3t88EDvMwVVpVQrVEs4f/bUAzWiI1m2PYF2Yl2sC9n1ejAyH/AhFDaiyOfdZcQS9eGCZEtijN0BPIHtUAIp5zKLDZku+7cgJsA5sZD8Jx89klPAx2R5C1l3fZvVcvFaZdIYj6cfp+juMXYSRkDN3I6RZtK4LgsAAOdjpUA+GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSrmBejJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FD41C4CEF7
-	for <dmaengine@vger.kernel.org>; Sun,  4 Jan 2026 11:38:06 +0000 (UTC)
+	s=arc-20240116; t=1767552955; c=relaxed/simple;
+	bh=FsmYT4J2wneLygt9k8P00NIpU5dia1i3KeDHzRjOSyc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=lgfvFDzKAZwDcGA6St5eX6bKOdP+MVwaHH4l/sOU1c4j+lYovfr10IAm2fBzlfSJXDGj4skFvmbO4ms/jifC/r8K2IUywDv9rYz89ombyIprPL4YUOeHm6TQClcHYvriVUY//tBoqPy8FCTcXiKFi935b24K72bUvr5NPGslHYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IC7pSnzE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30F5FC4CEF7;
+	Sun,  4 Jan 2026 18:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767526686;
-	bh=zzt8nsTReCOrFFimHSYnuwYVhyLibD7TXrGiySpB+f0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lSrmBejJxZP8gHrW1lt8qLoXx5i5yIr8c9JjAw76JwT4w2DU5Bw/V3A8ds+61J9gA
-	 qrA1BD0oGFxFt5TGFqAv6/RSxsC53w/k7B87GXnPPGu5JyBIFEy/k2xW5XqJfBLQwZ
-	 s7To43MM/23LrjwnT2MHsbj2v+MNR3gch8pFv9yPYQDYuMjuaAik+CInCYu5+ZmfZA
-	 x9Du36muqnYdgEnwcEtBPGE0Q2krb+xtqRR3x8L+34PJR5hQ5QQvm7VmmsMrN+wnM9
-	 I2UaQA0Jag3f/lobO/fONtZhnVUHsQ9680OTtldkoKQt1MckmCleLVqFj0F055vXis
-	 sgoDnkXq9m56w==
-Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-644715aad1aso1219220d50.0
-        for <dmaengine@vger.kernel.org>; Sun, 04 Jan 2026 03:38:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVFkH5LhfUMjXxXmvNCMC84LVm+EuVY2osSqkQmhpK79EEmqTgTCdeMP7jFYY2EUBn6BgHVxUD4Nqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyORHBOtcgYCo8l3B7iqMIRgI4Cs+1Xs+2baqDAcHnRw5iWTnVY
-	0cqn5ptNnBMXnA1WwSoE5Hx/pd3aBm78UT4a4oy7P7yHg+B5ksX+VnrLIyWCvvrpw4D9aCL586i
-	osL9vujzKh24PSPawOM+5IX51WnshzAY=
-X-Google-Smtp-Source: AGHT+IF4Orabbp+U3oU6DE4mJfK9KKnbEOxrcm3UcvoG3IBBIUd0oK3DmWjwYq82sAXiIcIbWSh2iznA2Fvf8inAirk=
-X-Received: by 2002:a05:690e:b4d:b0:645:591a:cb5c with SMTP id
- 956f58d0204a3-646e341a6cdmr3638468d50.23.1767526685648; Sun, 04 Jan 2026
- 03:38:05 -0800 (PST)
+	s=k20201202; t=1767552955;
+	bh=FsmYT4J2wneLygt9k8P00NIpU5dia1i3KeDHzRjOSyc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=IC7pSnzEclHGwg200X/YkdBBynq7odRScUs9ppZoZpZ5+vCC75MulNZG9xoNbQ7ea
+	 YHl+gfz24aU8DAk/01qqCzHWqgE5huqcVehQ7bOvjuf1C9PfOOiVV+8sKjo5PD0Ux8
+	 gufnEXHEZAj84Zw7OxxJ8epEP1/fFxR6HWqDntc0r/AZVBg5anq5l1wosBra4diGjh
+	 HemjiMkiYw9l4FXiTGEZzICBstLP/oFQ2Kp80I2pGwGdvs9cEXvi/gXm+jLpkn5ydQ
+	 PaFF0rRXFM7FglqmFWK1tATHw28PJZH5oZFT/U/eEwxFbtqt5UsOaoH8qU0JuS60fs
+	 dMLakUjvihl3Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3BC38380AA4F;
+	Sun,  4 Jan 2026 18:52:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251212231203.727227-1-robh@kernel.org>
-In-Reply-To: <20251212231203.727227-1-robh@kernel.org>
-From: Linus Walleij <linusw@kernel.org>
-Date: Sun, 4 Jan 2026 12:37:54 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkAaAH9_YdTGqHUcOp8PfW+1P=ZLZzS_QseVYWxA4kiWw@mail.gmail.com>
-X-Gm-Features: AQt7F2qijkDXeXovdHRRQ5QEL33UZBQlEMiEIzun3p2-rj7cwfnP7kAmQfWhUyg
-Message-ID: <CAD++jLkAaAH9_YdTGqHUcOp8PfW+1P=ZLZzS_QseVYWxA4kiWw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Remove unused includes
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Michal Simek <michal.simek@amd.com>, 
-	Vinod Koul <vkoul@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Yong Wu <yong.wu@mediatek.com>, Peter Rosin <peda@axentia.se>, 
-	Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	dmaengine@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-iio@vger.kernel.org, iommu@lists.linux.dev, linux-gpio@vger.kernel.org, 
-	linux-sunxi@lists.linux.dev, imx@lists.linux.dev, linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 00/15] Add support for Microchip LAN969x
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <176755275401.146974.3696343941489230641.git-patchwork-notify@kernel.org>
+Date: Sun, 04 Jan 2026 18:52:34 +0000
+References: <20251229184004.571837-1-robert.marko@sartura.hr>
+In-Reply-To: <20251229184004.571837-1-robert.marko@sartura.hr>
+To: Robert Marko <robert.marko@sartura.hr>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+ claudiu.beznea@tuxon.dev, herbert@gondor.apana.org.au, davem@davemloft.net,
+ vkoul@kernel.org, andi.shyti@kernel.org, lee@kernel.org,
+ andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, linusw@kernel.org, Steen.Hegelund@microchip.com,
+ daniel.machon@microchip.com, UNGLinuxDriver@microchip.com,
+ olivia@selenic.com, radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com,
+ gregkh@linuxfoundation.org, jirislaby@kernel.org, broonie@kernel.org,
+ lars.povlsen@microchip.com, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+ luka.perkov@sartura.hr
 
-On Sat, Dec 13, 2025 at 12:12=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org=
-> wrote:
+Hello:
 
-> Remove includes which are not referenced by either DTS files or drivers.
->
-> There's a few more which are new, so they are excluded for now.
->
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Good.
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+On Mon, 29 Dec 2025 19:37:41 +0100 you wrote:
+> This series adds support for the Microchip LAN969x switch SoC family.
+> 
+> Series is a bit long since after discussions in previous versions, it was
+> recommended[1][2] to add SoC specific compatibles for device nodes so it
+> includes the required bindings updates.
+> 
+> [1] https://lore.kernel.org/all/20251203-splendor-cubbyhole-eda2d6982b46@spud/
+> [2] https://lore.kernel.org/all/173412c8-c2fb-4c38-8de7-5b1c2eebdbf9@microchip.com/
+> [3] https://lore.kernel.org/all/20251203-duly-leotard-86b83bd840c6@spud/
+> [4] https://lore.kernel.org/all/756ead5d-8c9b-480d-8ae5-71667575ab7c@kernel.org/
+> 
+> [...]
 
-Yours,
-Linus Walleij
+Here is the summary with links:
+  - [v4,01/15] dt-bindings: usb: Add Microchip LAN969x support
+    (no matching commit)
+  - [v4,02/15] dt-bindings: mfd: atmel,sama5d2-flexcom: add microchip,lan9691-flexcom
+    (no matching commit)
+  - [v4,03/15] dt-bindings: serial: atmel,at91-usart: add microchip,lan9691-usart
+    (no matching commit)
+  - [v4,04/15] dt-bindings: spi: at91: add microchip,lan9691-spi
+    (no matching commit)
+  - [v4,05/15] dt-bindings: i2c: atmel,at91sam: add microchip,lan9691-i2c
+    (no matching commit)
+  - [v4,06/15] dt-bindings: rng: atmel,at91-trng: add microchip,lan9691-trng
+    (no matching commit)
+  - [v4,07/15] dt-bindings: crypto: atmel,at91sam9g46-aes: add microchip,lan9691-aes
+    (no matching commit)
+  - [v4,08/15] dt-bindings: crypto: atmel,at91sam9g46-sha: add microchip,lan9691-sha
+    (no matching commit)
+  - [v4,09/15] dt-bindings: dma: atmel: add microchip,lan9691-dma
+    (no matching commit)
+  - [v4,10/15] dt-bindings: net: mscc-miim: add microchip,lan9691-miim
+    https://git.kernel.org/netdev/net-next/c/c303e8b86d9d
+  - [v4,11/15] dt-bindings: pinctrl: pinctrl-microchip-sgpio: add LAN969x
+    (no matching commit)
+  - [v4,12/15] arm64: dts: microchip: add LAN969x clock header file
+    (no matching commit)
+  - [v4,13/15] arm64: dts: microchip: add LAN969x support
+    (no matching commit)
+  - [v4,14/15] dt-bindings: arm: AT91: document EV23X71A board
+    (no matching commit)
+  - [v4,15/15] arm64: dts: microchip: add EV23X71A board
+    (no matching commit)
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
 

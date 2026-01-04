@@ -1,186 +1,102 @@
-Return-Path: <dmaengine+bounces-8004-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8005-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C181ACF0CB0
-	for <lists+dmaengine@lfdr.de>; Sun, 04 Jan 2026 10:35:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EA71CF0D52
+	for <lists+dmaengine@lfdr.de>; Sun, 04 Jan 2026 12:38:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 865E2300A1C4
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Jan 2026 09:35:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BE676300C6FE
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Jan 2026 11:38:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43BDE25BEF8;
-	Sun,  4 Jan 2026 09:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E745228640C;
+	Sun,  4 Jan 2026 11:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kti7j3mb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSrmBejJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D5322F772
-	for <dmaengine@vger.kernel.org>; Sun,  4 Jan 2026 09:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FC22116F6
+	for <dmaengine@vger.kernel.org>; Sun,  4 Jan 2026 11:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767519337; cv=none; b=M9zpFZcox56JNjxBoruaa3kCkNGFayPyX9ZR7n/zGi48ONVZ8pt/L1f12ApKQsURxW16Femz/lVk8Hpy1fFR0TOrgX+LH1QHTWrV4Ji7nJHOYcAyX4VO4Iwxbh5eh0ua8RMIQHLQMkGjDGl4GK1VaEfWifCnJAl/85I7Np0ENPE=
+	t=1767526686; cv=none; b=uz25EevLgXn/K06RpcJERDYAStGYwIkfZZwkATSsqzSiHGuAZkq5iRqrGuA4MP2L4Grloq+bLSFqqssbIXHLHI62g2zbw0p+e8TmGJs9JetYmJAi5j5AYH8GRJc0sIaGcPiQ/LLd/pAC3SKTd6sxGpZ18/vAEWjJH14zLOOb6ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767519337; c=relaxed/simple;
-	bh=SuFOO/tNySxoNgXbPXHSomgCAtOj4ixZJQRd+GaxQDE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=t1tTgPTY8o6ff6KOyp5ywtRchMmZfXWiRTBW0ZeYv2Df5wlCmpeQ7DAKvo6n0GogjZJtlxbOMdVn07W3IKmhuVmi4qzsge3qIEEF115wwljHA6gt5i5QSinwrmWPZ81hTqrg0yVIzFRT78kN0+wEf4j8WNxqqX7zD1YkvUa/xyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kti7j3mb; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2a0d52768ccso164067465ad.1
-        for <dmaengine@vger.kernel.org>; Sun, 04 Jan 2026 01:35:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767519335; x=1768124135; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l37PyB/W+FDuQ2CynzBQFMBqus2VgISaBdkZtBkXNYU=;
-        b=Kti7j3mbUh6R1T+EtI9e9N5mBSq++rX2OQJr7a11vQ90p0oR7AYn7Xsys3wMyohYYF
-         FMg8kCo6LK+xeTOG494ign08P1Gp7v/3KcsLmXHy+6iDNrSCcnOTVXmXOnrroTa/HDMp
-         b4ns+sn1Mk1eI9ts6a+NJ0JBTUgD8ZyPQyKaiBP7gr6Q7CU1bGzhmnhb3WoMAHJ5E3aL
-         KjZn1f/xmK8vXL6htDjnTj7OXQ9rM4zOIm1WKPfmaJWpOnWZRwJ4QSKuS7vvblSzeSq6
-         SVaMYwE5zvVKHg9kc61aplgB2i62uJc9lj0Hd5DFSyJ8jTLWL+kyll15qesbqRccKKL+
-         InnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767519335; x=1768124135;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l37PyB/W+FDuQ2CynzBQFMBqus2VgISaBdkZtBkXNYU=;
-        b=jgf02Uolbp/48eVBu72wWeC6nNV6jv9dfu32WEbq0mxckAXAouQwuA2KhtrmdtNUu6
-         wFCGEROiiST6q2N3A3mVFjArhsbObUb+VEqleU9qOh4bwlezzy19T7qRsOcYo1ZpwBn3
-         ExD9QmZqPcurA/DwghVlLkuT2LrHL0KG3VFVi12MgluBv4SP3vHBn8maLj792F4fApfq
-         ea4w69AY8mNzpOqi3HpCFwj2GRYlwPylcDJL70vpl+Ho+iEJPw44vJO60vTpPHrb3AvE
-         ttmTvMf6iyFn9hRqJsQ1Ln3j0vbIWyInlAd58Tz0d6bUwGIFigRZ2H2Eq67jFtZvpuP3
-         MDnA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXzGyMG51m+DbErq3SI5aj0QWvQrx8ZZu1X0GubUNCePtobh6EyBRgdMu9MsYihXswOKcovBE4uHQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaUUCsM6dEyholb93t8J2GLbMI3V0mW/EN1WEP3dYFE3jyP3h5
-	Bvx32IcR69irXoZgqVX3OhZkV5QjWRILkIrqqLgS2etJY8tz45wtbk66
-X-Gm-Gg: AY/fxX7m5Z+x23KeflXlwNEF1hW4XfDlHjLbdzZbvVLz17HJZZA40qjddXpobh4OIxY
-	G9r3aUydpA+WFJZIKrCspCfE/7Z+DOiCFVEV/ydCJjES9/lWJi7aoDZaGs5PL7TNaDli4BMotM6
-	TPgrER7gvVJrk14Egkf6qRIEsEjfIUJVk6nz86U8TSF+NEk2RLLiZF6JWhrVOsFQXDl2IjEollm
-	SgO1UnKFVdzyftHubnUSPUmtrHvWnLyWh/Kt3PREoYLsUGViUJ8EMmwdfIMJ54wd/v8xgFygV7+
-	TfdFLigKwmIIiehPlYT5Lo0174r+pzj8ELbqIaMFjwwEhcq7vQVUiqaniInBzPx+UjEnym1952k
-	9C75lmrnbeQ1VGQM17ykwXtbZNaPM2HNXqbxF/2h11q5ult4QkNQZnSw5ttdKQoHtfOfqgwcT0B
-	HkKX4zatS4sjtNPNcHZNWHNLcT+tTOFsph8IE=
-X-Google-Smtp-Source: AGHT+IHrtadIdvCnb84ZovbrmnJBPh89J+gLlQqCflxPNThF2rz+Kh+bAU2dRDpzA/sQbxFYkDnhjw==
-X-Received: by 2002:a17:903:284:b0:299:e215:f62d with SMTP id d9443c01a7336-2a2f2202faamr485342125ad.5.1767519334877;
-        Sun, 04 Jan 2026 01:35:34 -0800 (PST)
-Received: from localhost.localdomain ([60.51.11.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34f476ec328sm3469546a91.2.2026.01.04.01.35.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Jan 2026 01:35:34 -0800 (PST)
-From: Khairul Anuar Romli <karom.9560@gmail.com>
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Khairul Anuar Romli <karom.9560@gmail.com>
-Subject: [PATCH 1/1] dmaengine: dw-axi-dmac: fixed alignment, blank line and not useful return warning
-Date: Sun,  4 Jan 2026 17:35:29 +0800
-Message-ID: <20260104093529.40913-1-karom.9560@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1767526686; c=relaxed/simple;
+	bh=zzt8nsTReCOrFFimHSYnuwYVhyLibD7TXrGiySpB+f0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pf3t88EDvMwVVpVQrVEs4f/bUAzWiI1m2PYF2Yl2sC9n1ejAyH/AhFDaiyOfdZcQS9eGCZEtijN0BPIHtUAIp5zKLDZku+7cgJsA5sZD8Jx89klPAx2R5C1l3fZvVcvFaZdIYj6cfp+juMXYSRkDN3I6RZtK4LgsAAOdjpUA+GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSrmBejJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FD41C4CEF7
+	for <dmaengine@vger.kernel.org>; Sun,  4 Jan 2026 11:38:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767526686;
+	bh=zzt8nsTReCOrFFimHSYnuwYVhyLibD7TXrGiySpB+f0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=lSrmBejJxZP8gHrW1lt8qLoXx5i5yIr8c9JjAw76JwT4w2DU5Bw/V3A8ds+61J9gA
+	 qrA1BD0oGFxFt5TGFqAv6/RSxsC53w/k7B87GXnPPGu5JyBIFEy/k2xW5XqJfBLQwZ
+	 s7To43MM/23LrjwnT2MHsbj2v+MNR3gch8pFv9yPYQDYuMjuaAik+CInCYu5+ZmfZA
+	 x9Du36muqnYdgEnwcEtBPGE0Q2krb+xtqRR3x8L+34PJR5hQ5QQvm7VmmsMrN+wnM9
+	 I2UaQA0Jag3f/lobO/fONtZhnVUHsQ9680OTtldkoKQt1MckmCleLVqFj0F055vXis
+	 sgoDnkXq9m56w==
+Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-644715aad1aso1219220d50.0
+        for <dmaengine@vger.kernel.org>; Sun, 04 Jan 2026 03:38:06 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVFkH5LhfUMjXxXmvNCMC84LVm+EuVY2osSqkQmhpK79EEmqTgTCdeMP7jFYY2EUBn6BgHVxUD4Nqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyORHBOtcgYCo8l3B7iqMIRgI4Cs+1Xs+2baqDAcHnRw5iWTnVY
+	0cqn5ptNnBMXnA1WwSoE5Hx/pd3aBm78UT4a4oy7P7yHg+B5ksX+VnrLIyWCvvrpw4D9aCL586i
+	osL9vujzKh24PSPawOM+5IX51WnshzAY=
+X-Google-Smtp-Source: AGHT+IF4Orabbp+U3oU6DE4mJfK9KKnbEOxrcm3UcvoG3IBBIUd0oK3DmWjwYq82sAXiIcIbWSh2iznA2Fvf8inAirk=
+X-Received: by 2002:a05:690e:b4d:b0:645:591a:cb5c with SMTP id
+ 956f58d0204a3-646e341a6cdmr3638468d50.23.1767526685648; Sun, 04 Jan 2026
+ 03:38:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251212231203.727227-1-robh@kernel.org>
+In-Reply-To: <20251212231203.727227-1-robh@kernel.org>
+From: Linus Walleij <linusw@kernel.org>
+Date: Sun, 4 Jan 2026 12:37:54 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkAaAH9_YdTGqHUcOp8PfW+1P=ZLZzS_QseVYWxA4kiWw@mail.gmail.com>
+X-Gm-Features: AQt7F2qijkDXeXovdHRRQ5QEL33UZBQlEMiEIzun3p2-rj7cwfnP7kAmQfWhUyg
+Message-ID: <CAD++jLkAaAH9_YdTGqHUcOp8PfW+1P=ZLZzS_QseVYWxA4kiWw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Remove unused includes
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Michal Simek <michal.simek@amd.com>, 
+	Vinod Koul <vkoul@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Yong Wu <yong.wu@mediatek.com>, Peter Rosin <peda@axentia.se>, 
+	Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	dmaengine@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-iio@vger.kernel.org, iommu@lists.linux.dev, linux-gpio@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, imx@lists.linux.dev, linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixed the scripts/checkpatch.pl warning in
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:345
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:356
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:422
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:494
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:597
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:1167
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:1456
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:1650
+On Sat, Dec 13, 2025 at 12:12=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org=
+> wrote:
 
-Signed-off-by: Khairul Anuar Romli <karom.9560@gmail.com>
----
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+> Remove includes which are not referenced by either DTS files or drivers.
+>
+> There's a few more which are new, so they are excluded for now.
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index b23536645ff7..501d3342414a 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -342,8 +342,8 @@ static void axi_desc_put(struct axi_dma_desc *desc)
- 	kfree(desc);
- 	atomic_sub(descs_put, &chan->descs_allocated);
- 	dev_vdbg(chan2dev(chan), "%s: %d descs put, %d still allocated\n",
--		axi_chan_name(chan), descs_put,
--		atomic_read(&chan->descs_allocated));
-+		 axi_chan_name(chan), descs_put,
-+		 atomic_read(&chan->descs_allocated));
- }
- 
- static void vchan_desc_put(struct virt_dma_desc *vdesc)
-@@ -353,7 +353,7 @@ static void vchan_desc_put(struct virt_dma_desc *vdesc)
- 
- static enum dma_status
- dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
--		  struct dma_tx_state *txstate)
-+		   struct dma_tx_state *txstate)
- {
- 	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
- 	struct virt_dma_desc *vdesc;
-@@ -419,6 +419,7 @@ static void dw_axi_dma_set_byte_halfword(struct axi_dma_chan *chan, bool set)
- 
- 	iowrite32(val, chan->chip->apb_regs + offset);
- }
-+
- /* Called in chan locked context */
- static void axi_chan_block_xfer_start(struct axi_dma_chan *chan,
- 				      struct axi_dma_desc *first)
-@@ -491,7 +492,7 @@ static void axi_chan_start_first_queued(struct axi_dma_chan *chan)
- 
- 	desc = vd_to_axi_desc(vd);
- 	dev_vdbg(chan2dev(chan), "%s: started %u\n", axi_chan_name(chan),
--		vd->tx.cookie);
-+		 vd->tx.cookie);
- 	axi_chan_block_xfer_start(chan, desc);
- }
- 
-@@ -592,8 +593,6 @@ static void dw_axi_dma_set_hw_channel(struct axi_dma_chan *chan, bool set)
- 			(chan->id * DMA_APB_HS_SEL_BIT_SIZE));
- 	reg_value |= (val << (chan->id * DMA_APB_HS_SEL_BIT_SIZE));
- 	lo_hi_writeq(reg_value, chip->apb_regs + DMAC_APB_HW_HS_SEL_0);
--
--	return;
- }
- 
- /*
-@@ -1164,7 +1163,7 @@ static irqreturn_t dw_axi_dma_interrupt(int irq, void *dev_id)
- 		axi_chan_irq_clear(chan, status);
- 
- 		dev_vdbg(chip->dev, "%s %u IRQ status: 0x%08x\n",
--			axi_chan_name(chan), i, status);
-+			 axi_chan_name(chan), i, status);
- 
- 		if (status & DWAXIDMAC_IRQ_ALL_ERR)
- 			axi_chan_handle_err(chan, status);
-@@ -1453,7 +1452,7 @@ static int axi_req_irqs(struct platform_device *pdev, struct axi_dma_chip *chip)
- 		if (chip->irq[i] < 0)
- 			return chip->irq[i];
- 		ret = devm_request_irq(chip->dev, chip->irq[i], dw_axi_dma_interrupt,
--				IRQF_SHARED, KBUILD_MODNAME, chip);
-+				       IRQF_SHARED, KBUILD_MODNAME, chip);
- 		if (ret < 0)
- 			return ret;
- 	}
-@@ -1647,7 +1646,7 @@ static void dw_remove(struct platform_device *pdev)
- 	of_dma_controller_free(chip->dev->of_node);
- 
- 	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
--			vc.chan.device_node) {
-+				 vc.chan.device_node) {
- 		list_del(&chan->vc.chan.device_node);
- 		tasklet_kill(&chan->vc.task);
- 	}
--- 
-2.43.0
+Good.
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
+Yours,
+Linus Walleij
 

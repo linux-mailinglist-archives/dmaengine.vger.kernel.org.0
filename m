@@ -1,37 +1,37 @@
-Return-Path: <dmaengine+bounces-8015-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8014-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39650CF35FB
-	for <lists+dmaengine@lfdr.de>; Mon, 05 Jan 2026 12:56:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3785CF363D
+	for <lists+dmaengine@lfdr.de>; Mon, 05 Jan 2026 12:58:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 76D0930060DD
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Jan 2026 11:56:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 94BDF3070FD2
+	for <lists+dmaengine@lfdr.de>; Mon,  5 Jan 2026 11:56:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DB8B338922;
-	Mon,  5 Jan 2026 11:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDBE633890E;
+	Mon,  5 Jan 2026 11:50:57 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD033385BF;
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 590663385B9;
 	Mon,  5 Jan 2026 11:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767613858; cv=none; b=GVy7kwW9sVnllSGHSNdBFTCC/97fM8q7bH3DoUeupjAJAi7U+C9kDrHCLELxjFp/Jymq4mRkoyYfuUKaRj/8zrFYJOsDRDok+Hb/i/G15JNiYN96lWkQDFiYYMlRm6j1z2npSrBv8wrjkEW13DXc/R+BsFojIGQl4VZ7dX85uAs=
+	t=1767613857; cv=none; b=BSDCXxAkHrsoA8s4SgkOFBz5665Ul1H2H+q+TXeCeLV2EJbwO45Kv73aQ39fzPdLP7Wi9MSjybVg+Lxt1mGDULeaalCjZ4C7yNpn0+3GfdFwdf5HAH0PyS6J/ZeUSfbV8HCWDkdFkXXMkXwnwRV0QV/QQqbfASlGVwaTpnJeF8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767613858; c=relaxed/simple;
-	bh=zjM2wzVUidoSsGNlBrMAr26NSnnXT8gNMLOQ4iBf0xQ=;
+	s=arc-20240116; t=1767613857; c=relaxed/simple;
+	bh=bn3WG61uhmNeWFU1uhItvslzfycMZHQ8/mXEERSSoAo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uYdj1mCGOeYyUliaBzr0cqT5ntdbISGpteJPsCM1C812wO0QIop13zFddNqJ5HZXDsYHWom6XJJMsRDQTV9gJlF5uvV7kGi8gizAzVuvBtpWx5k0/fhhQlgkJoeN07zJRlIWGoNmuDylE5ju0g/65Xrej9L/GAOE6G3H3Fu4RUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
+	 MIME-Version; b=pNKfzkMQPQs9PA4LDqFQJiwWHw7rBpa/FuSCd3FaFOHZDpruG8Jntfh3wzDUZrNum7O+2WdbiyVJjuDGYQoIBAcFG7Bd+vo79hfGuhgheHnBVGceQNksLg3gw1eAxwQe7zksWp6ix9qBKw91CEYzR7tMmML4jrETOMbe/lIxV08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: hwP48P8gQ7KlP8lvNaezDw==
-X-CSE-MsgGUID: RF3Pg/HtRbO2W/Riiwdywg==
+X-CSE-ConnectionGUID: YHK6/s9lS5OjUOOFoaJJ9Q==
+X-CSE-MsgGUID: iPSEZjj2Ta+uwq56yjJnNg==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 05 Jan 2026 20:45:46 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 05 Jan 2026 20:45:52 +0900
 Received: from demon-pc.localdomain (unknown [10.226.92.160])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 6712C41AF7E7;
-	Mon,  5 Jan 2026 20:45:42 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 0BC2941AF7ED;
+	Mon,  5 Jan 2026 20:45:47 +0900 (JST)
 From: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -48,9 +48,9 @@ Cc: dmaengine@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v4 1/4] dmaengine: sh: rz_dmac: make error interrupt optional
-Date: Mon,  5 Jan 2026 13:44:42 +0200
-Message-ID: <20260105114445.878262-2-cosmin-gabriel.tanislav.xa@renesas.com>
+Subject: [PATCH v4 2/4] dmaengine: sh: rz_dmac: make register_dma_req() chip-specific
+Date: Mon,  5 Jan 2026 13:44:43 +0200
+Message-ID: <20260105114445.878262-3-cosmin-gabriel.tanislav.xa@renesas.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260105114445.878262-1-cosmin-gabriel.tanislav.xa@renesas.com>
 References: <20260105114445.878262-1-cosmin-gabriel.tanislav.xa@renesas.com>
@@ -62,59 +62,187 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Renesas RZ/T2H (R9A09G077) and RZ/N2H (R9A09G087) SoCs do not have
-an error interrupt for the DMACs, and the current driver implementation
-does not make much use of it.
+The Renesas RZ/T2H (R9A09G077) and RZ/N2H (R9A09G087) SoCs use a
+completely different ICU unit compared to RZ/V2H, which requires a
+separate implementation.
 
-To prepare for adding support for these SoCs, do not error out if the
-error interrupt is missing.
+To prepare for adding support for these SoCs, add a chip-specific
+structure and put a pointer to the rzv2h_icu_register_dma_req() function
+in the .register_dma_req field of the chip-specific structure to allow
+for other implementations. Do the same for the default request value,
+RZV2H_ICU_DMAC_REQ_NO_DEFAULT, and place it into .dma_req_no_default.
+
+While at it, factor out the logic that calls .register_dma_req() or
+rz_dmac_set_dmars_register() into a separate function to remove some
+code duplication.
 
 Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 
 V4:
+ * dma_req_no_default -> default_dma_req_no
+ * register_dma_req -> icu_register_dma_req
+ * rz_dmac_common_info -> rz_dmac_generic_info
  * pick up Geert's Reviewed-by
 
 V3:
- * no changes
+ * replace -1 with direct usage of dma_req_no_default and remove the
+   check inside rz_dmac_set_dma_req_no()
 
 V2:
  * remove notes
 
- drivers/dma/sh/rz-dmac.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ drivers/dma/sh/rz-dmac.c | 65 ++++++++++++++++++++++------------------
+ 1 file changed, 36 insertions(+), 29 deletions(-)
 
 diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index 9e5f088355e2..801e363f341f 100644
+index 801e363f341f..b3e38bd294b2 100644
 --- a/drivers/dma/sh/rz-dmac.c
 +++ b/drivers/dma/sh/rz-dmac.c
-@@ -959,16 +959,15 @@ static int rz_dmac_probe(struct platform_device *pdev)
- 	}
+@@ -95,9 +95,16 @@ struct rz_dmac_icu {
+ 	u8 dmac_index;
+ };
  
- 	/* Register interrupt handler for error */
--	irq = platform_get_irq_byname(pdev, irqname);
--	if (irq < 0)
--		return irq;
++struct rz_dmac_info {
++	void (*icu_register_dma_req)(struct platform_device *icu_dev,
++				     u8 dmac_index, u8 dmac_channel, u16 req_no);
++	u16 default_dma_req_no;
++};
++
+ struct rz_dmac {
+ 	struct dma_device engine;
+ 	struct rz_dmac_icu icu;
++	const struct rz_dmac_info *info;
+ 	struct device *dev;
+ 	struct reset_control *rstc;
+ 	void __iomem *base;
+@@ -106,8 +113,6 @@ struct rz_dmac {
+ 	unsigned int n_channels;
+ 	struct rz_dmac_chan *channels;
+ 
+-	bool has_icu;
 -
--	ret = devm_request_irq(&pdev->dev, irq, rz_dmac_irq_handler, 0,
--			       irqname, NULL);
--	if (ret) {
--		dev_err(&pdev->dev, "failed to request IRQ %u (%d)\n",
--			irq, ret);
--		return ret;
-+	irq = platform_get_irq_byname_optional(pdev, irqname);
-+	if (irq > 0) {
-+		ret = devm_request_irq(&pdev->dev, irq, rz_dmac_irq_handler, 0,
-+				       irqname, NULL);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to request IRQ %u (%d)\n",
-+				irq, ret);
-+			return ret;
-+		}
- 	}
+ 	DECLARE_BITMAP(modules, 1024);
+ };
  
- 	/* Initialize the channels. */
+@@ -319,6 +324,16 @@ static void rz_dmac_set_dmars_register(struct rz_dmac *dmac, int nr, u32 dmars)
+ 	rz_dmac_ext_writel(dmac, dmars32, dmars_offset);
+ }
+ 
++static void rz_dmac_set_dma_req_no(struct rz_dmac *dmac, unsigned int index,
++				   int req_no)
++{
++	if (dmac->info->icu_register_dma_req)
++		dmac->info->icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac_index,
++						 index, req_no);
++	else
++		rz_dmac_set_dmars_register(dmac, index, req_no);
++}
++
+ static void rz_dmac_prepare_desc_for_memcpy(struct rz_dmac_chan *channel)
+ {
+ 	struct dma_chan *chan = &channel->vc.chan;
+@@ -336,13 +351,7 @@ static void rz_dmac_prepare_desc_for_memcpy(struct rz_dmac_chan *channel)
+ 	lmdesc->chext = 0;
+ 	lmdesc->header = HEADER_LV;
+ 
+-	if (dmac->has_icu) {
+-		rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac_index,
+-					   channel->index,
+-					   RZV2H_ICU_DMAC_REQ_NO_DEFAULT);
+-	} else {
+-		rz_dmac_set_dmars_register(dmac, channel->index, 0);
+-	}
++	rz_dmac_set_dma_req_no(dmac, channel->index, dmac->info->default_dma_req_no);
+ 
+ 	channel->chcfg = chcfg;
+ 	channel->chctrl = CHCTRL_STG | CHCTRL_SETEN;
+@@ -393,12 +402,7 @@ static void rz_dmac_prepare_descs_for_slave_sg(struct rz_dmac_chan *channel)
+ 
+ 	channel->lmdesc.tail = lmdesc;
+ 
+-	if (dmac->has_icu) {
+-		rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac_index,
+-					   channel->index, channel->mid_rid);
+-	} else {
+-		rz_dmac_set_dmars_register(dmac, channel->index, channel->mid_rid);
+-	}
++	rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
+ 
+ 	channel->chctrl = CHCTRL_SETEN;
+ }
+@@ -676,13 +680,7 @@ static void rz_dmac_device_synchronize(struct dma_chan *chan)
+ 	if (ret < 0)
+ 		dev_warn(dmac->dev, "DMA Timeout");
+ 
+-	if (dmac->has_icu) {
+-		rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac_index,
+-					   channel->index,
+-					   RZV2H_ICU_DMAC_REQ_NO_DEFAULT);
+-	} else {
+-		rz_dmac_set_dmars_register(dmac, channel->index, 0);
+-	}
++	rz_dmac_set_dma_req_no(dmac, channel->index, dmac->info->default_dma_req_no);
+ }
+ 
+ /*
+@@ -873,14 +871,13 @@ static int rz_dmac_parse_of_icu(struct device *dev, struct rz_dmac *dmac)
+ 	uint32_t dmac_index;
+ 	int ret;
+ 
+-	ret = of_parse_phandle_with_fixed_args(np, "renesas,icu", 1, 0, &args);
+-	if (ret == -ENOENT)
++	if (!dmac->info->icu_register_dma_req)
+ 		return 0;
++
++	ret = of_parse_phandle_with_fixed_args(np, "renesas,icu", 1, 0, &args);
+ 	if (ret)
+ 		return ret;
+ 
+-	dmac->has_icu = true;
+-
+ 	dmac->icu.pdev = of_find_device_by_node(args.np);
+ 	of_node_put(args.np);
+ 	if (!dmac->icu.pdev) {
+@@ -935,6 +932,7 @@ static int rz_dmac_probe(struct platform_device *pdev)
+ 	if (!dmac)
+ 		return -ENOMEM;
+ 
++	dmac->info = device_get_match_data(&pdev->dev);
+ 	dmac->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, dmac);
+ 
+@@ -952,7 +950,7 @@ static int rz_dmac_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dmac->base))
+ 		return PTR_ERR(dmac->base);
+ 
+-	if (!dmac->has_icu) {
++	if (!dmac->info->icu_register_dma_req) {
+ 		dmac->ext_base = devm_platform_ioremap_resource(pdev, 1);
+ 		if (IS_ERR(dmac->ext_base))
+ 			return PTR_ERR(dmac->ext_base);
+@@ -1072,9 +1070,18 @@ static void rz_dmac_remove(struct platform_device *pdev)
+ 	pm_runtime_disable(&pdev->dev);
+ }
+ 
++static const struct rz_dmac_info rz_dmac_v2h_info = {
++	.icu_register_dma_req = rzv2h_icu_register_dma_req,
++	.default_dma_req_no = RZV2H_ICU_DMAC_REQ_NO_DEFAULT,
++};
++
++static const struct rz_dmac_info rz_dmac_generic_info = {
++	.default_dma_req_no = 0,
++};
++
+ static const struct of_device_id of_rz_dmac_match[] = {
+-	{ .compatible = "renesas,r9a09g057-dmac", },
+-	{ .compatible = "renesas,rz-dmac", },
++	{ .compatible = "renesas,r9a09g057-dmac", .data = &rz_dmac_v2h_info },
++	{ .compatible = "renesas,rz-dmac", .data = &rz_dmac_generic_info },
+ 	{ /* Sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, of_rz_dmac_match);
 -- 
 2.52.0
 

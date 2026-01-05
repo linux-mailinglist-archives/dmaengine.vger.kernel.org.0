@@ -1,237 +1,263 @@
-Return-Path: <dmaengine+bounces-8008-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8009-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15C04CF24AC
-	for <lists+dmaengine@lfdr.de>; Mon, 05 Jan 2026 08:59:22 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53F6CCF2FF8
+	for <lists+dmaengine@lfdr.de>; Mon, 05 Jan 2026 11:34:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DAD4630109B1
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Jan 2026 07:59:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6A88A3084383
+	for <lists+dmaengine@lfdr.de>; Mon,  5 Jan 2026 10:30:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA142BEFF5;
-	Mon,  5 Jan 2026 07:59:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2505B316185;
+	Mon,  5 Jan 2026 10:30:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="cj6O+Inv"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="G+sCDgHa"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11020103.outbound.protection.outlook.com [52.101.228.103])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011057.outbound.protection.outlook.com [52.101.52.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1FC1F63CD;
-	Mon,  5 Jan 2026 07:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8B9313E1C;
+	Mon,  5 Jan 2026 10:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767599958; cv=fail; b=EDNo+yIb0PUFZeBV2KBK2RvmuDOH5utWcoEsEx9VVqlH0EX1Ip6w7rgs948Ufw0ArazYma/vlJq2OO8yXasawuyLJkhD4lEfcgTyWaR5ah2hK5PqdJJfdgNuct3EpmUeLF75WZipVqPNcJC2FXHfXSeSfHJ+Dpn+GbZQXH31WCo=
+	t=1767609011; cv=fail; b=kIVBrYHUKxKrEhEWbJJThifIzTGju+lV5Q8y94SGRNAlKjDHAPAFrB5GFfOGleq8Rtd0KaWSRjiEgIeKxhqdIez0+YiVhKHbAnr/E1eycH6OTOSqlfBLirD5bCS53IHKC5uSiInvTLpf1S9MdBGCxD4vSX3GFNzOnLvsPhNn1uA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767599958; c=relaxed/simple;
-	bh=F74BQHIBlSTp00B603vvlaChzttnzzAGOvCOpYtWs94=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dIDsVakFVQT86va0RBJKrDj98IBPzPQlUdcemXxgAuz1WAoYpN+M4utyW9MmN0A94x3bmE5uBdxg4Upwc9h5in19hGjaWn5HPrEQUq155sG0OBMzoDwpnEYQqRYdcgOUaqpnADuJx6SQNwmzJju1ybUQwUJy/0OPQulJIqBnYjE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=cj6O+Inv; arc=fail smtp.client-ip=52.101.228.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
+	s=arc-20240116; t=1767609011; c=relaxed/simple;
+	bh=5OTELLNnfiOAL0dvjTpBNC1Z3AZRIABCnHUlD8YdtNs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LldZLw92z/YVwvAkl9cEpP9MlMQb8K/qQq7Oh2Z6AMGyQvyE7Q8RkZqDXhY0JH58y8Fc/U4Kf9Z4WGVcqkhpscQh0VdOhKAvb4tN24jXk38JpTlsskI74WSEL29IYmPHJWc7I89Fvyi/2xAXBFEStY2+T88C4n+fTYyiB8/40ec=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=G+sCDgHa; arc=fail smtp.client-ip=52.101.52.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zAV82jO3+SaMxgVWiQgP75EBZ43wgO5sfNG02UQo/ik2SbFl9iMGRimB1FNp7WSProOunxy60W+RJY/UECoqvo7ZnZrBVygfUaNKuH93Vkbo1sLa0w5biOAbPO1EivVnKQvk76Ag2CscrfC6Z95vgGqmogY7w3YQwUfmIHLVf8DxSf0NskByfQpuI+8IInte9JKMdyotJt4+dXpdlxrUncs/wD40/3rcc0ZMpH/Dxjr8O2/1bHh5F24SboNWc/brNxaLYwvjUjkrtKZnR2+iW1paJCQr48Ml3nu3nKrSYqhKCA59ndFAkMaBTIRBJUla1Trgam0lJU24FAJvZHKXhw==
+ b=kd0sWjY0gg4ETw76tyfHjuAtG7VaMfWh4XDeNjW12u582KDJfv568y96/qxJaCWf4ZmMffrFsKNtrURTvAkd+03/sE4mo5S//6jdctmu+KZvEsbvC5O8nHts/gnrLbJ+o8ZRUbyeVxWtHiuWjXDBxIXrL0C28PdklW4OSFGcoErSvrYj+aGXcBs40TdDqT7a4fQtRVqTgOU8utPgeWUWwQ1u3iVrjA6di5LILTTPJU0/+ffdDvPiDyHqcG92epfkyhLSu+GO76Z7BoJG1KAhYYu+X9o82PTOkxQhmTV22blu718PlA9E0DXc3jn3dwuNJS9oJYQ4YYgJAVL8O573rw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ne77bEBDSXYt42JRrkLQVdbNvl+iBTg8atgd68vUbXA=;
- b=HruQuVG5XMN2kZ/ODkNUdnkYZLSYn1ioR/3Sqr+jf1X2KBV9Oc2bxT9MVvb0KquYXSv4Jep/0HAdXZu2COqg1NCZtVqW1WrGHpTTJhYZR89HG7yZhnOK/NJv2vml7G7a/vccFm+2A5C+5bP4hyBjxg3dKrmg7+zLnkwHsnE2Ikc6QOe6cv4e3rxMynHyEk0PXr1ghDRXh4z14006xwjhxsZQmnLzi1lnLUK1/27+4Q1qYNzmkxsSytFINIkSl0Ncd0wg7Xl6GG/tmVIe9O0sd/M5Dp5E/LKS0wIBus0byJCmJgvVAZTqymQ4A058WAd/Di2hLsYjLzF6zKY5LaQwLQ==
+ bh=o0lF86hqnOP+A6Er97eZmpVQ11MmqmvYUYu1NZBDgOg=;
+ b=ajj9x4V6hsvsBp5766TUMBJ2bEPtHwWhLMA/RjMe40oLH+YFZTrA1pbCvC1YoqISUmbFn5LGCvLCQSIp21B6k6czrnrIHnPdzk08yvGyZr4FoIdLWhIZExb/WD+mQ5QQbuJJ/r0vfhnrxkbgzEQ1d9pJTcEZTkg4qO0QUan78kqo61P1HNNF1+SyzCgDpNKd0ZI6rieTDI7YE0QMVqSIEZo53FPUs3ftPa2a8nUaxdbrIIJwxZTwdMNg7pvi0XzREq/CnDt289nFYFvQT3a8KJl4xUWwIf3vAMV2/eikRj5pxGMro0GQ3pZyI9dKfjE9Ty9w9eCr61LFgIQmd3R6Lg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
- header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
- s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ne77bEBDSXYt42JRrkLQVdbNvl+iBTg8atgd68vUbXA=;
- b=cj6O+Inv3xe5+sLtHmMLDf2CzphaOizPr3LpVLVVnQAdXGmZ+hzD8qhVh1CTU+QTGqxV/HKOYExMwUg7QTXtEQ47a8CcfITotE00rBZdVAr4hZKbZM7JYdtcHCqodnBvU1WcRxE0NKEloi6VKwWx8oYpdrgy7CChACX5pjCxKBo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=valinux.co.jp;
-Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
- by TYVP286MB3165.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:29a::6) with
+ bh=o0lF86hqnOP+A6Er97eZmpVQ11MmqmvYUYu1NZBDgOg=;
+ b=G+sCDgHaZUkx3szeTWE+UQgFPBAussyQMW3lor3hpx4AhkXGoWUtoP8Fx1+Rj+3Wq1RkQEuc6BRaXVWTC4xPrJ0XjIsXkO93dKG7nwQj7vJ4D9I7hiEqkeoGHkOHQ1OPL8YHbniUjR0nA1dqfjM1Wr4cysTWmYoBIyW6BCn43rg=
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com (2603:10b6:806:331::16)
+ by IA1PR12MB6091.namprd12.prod.outlook.com (2603:10b6:208:3ed::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Mon, 5 Jan
- 2026 07:59:13 +0000
-Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.20.9478.004; Mon, 5 Jan 2026
- 07:59:12 +0000
-From: Koichiro Den <den@valinux.co.jp>
-To: mani@kernel.org,
-	vkoul@kernel.org
-Cc: Frank.Li@nxp.com,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: dw-edma: Fix MSI data values for multi-vector IMWr interrupts
-Date: Mon,  5 Jan 2026 16:59:04 +0900
-Message-ID: <20260105075904.1254012-1-den@valinux.co.jp>
-X-Mailer: git-send-email 2.51.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYWP286CA0031.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:262::19) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:405:38f::10)
+ 2026 10:30:06 +0000
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::2fd:1a4e:2042:7dd3]) by SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::2fd:1a4e:2042:7dd3%5]) with mapi id 15.20.9478.004; Mon, 5 Jan 2026
+ 10:30:06 +0000
+From: "Verma, Devendra" <Devendra.Verma@amd.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "mani@kernel.org"
+	<mani@kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
+ Michal" <michal.simek@amd.com>, "Verma, Devendra" <Devendra.Verma@amd.com>
+Subject: RE: [PATCH v7 2/2] dmaengine: dw-edma: Add non-LL mode
+Thread-Topic: [PATCH v7 2/2] dmaengine: dw-edma: Add non-LL mode
+Thread-Index: AQHca2HPzgtqx97sLEy+fRS/FbbYFLUeUYsAgAV6cSCAC6+nAIAUCbjQ
+Date: Mon, 5 Jan 2026 10:30:06 +0000
+Message-ID:
+ <SA1PR12MB812096C7393E4E218220DC439586A@SA1PR12MB8120.namprd12.prod.outlook.com>
+References:
+ <SA1PR12MB8120306AAE9B655A8F8273B795AAA@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <20251223162842.GA4022246@bhelgaas>
+In-Reply-To: <20251223162842.GA4022246@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2026-01-05T10:28:41.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB8120:EE_|IA1PR12MB6091:EE_
+x-ms-office365-filtering-correlation-id: d8918747-aa1d-4f51-8aa3-08de4c456504
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700021;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?IPNPhXsZMwIXY7TsPKvKzncHbyhW8Q7oLMYApj3D5JPDnTkA8551zOoCXvHb?=
+ =?us-ascii?Q?oqUMM/CmXyQYzczU9r8rOD0VA6ZQgc78CprAMZtMejufSqr+yy/qiIziPq9x?=
+ =?us-ascii?Q?VIrjQ68gCuHbJE4t5WKD35aGBISXbFnByIZNQQc0kRLhOf4zti2n7KXgoyZi?=
+ =?us-ascii?Q?xol1kvlZd/ClJTQ2TkJIuQJtAEZbyNwIp8OPtki8/s9Dbohqdfn7uut4k4If?=
+ =?us-ascii?Q?ePaZ5Xp084rFLQRBYqoE1YnEAk34gUsXYfJqfDQtrTQ0B35tu3aVX9Wpg/th?=
+ =?us-ascii?Q?5J3bOzra4xQXvbu5wABPAM1GGVx7z1LnEKe6dCxerm+SmtELjhXBlMdMNOnn?=
+ =?us-ascii?Q?JHkgODl9w+PU7cC0kvbPNu5GAjZ/SuN2VRQHxs4hIGSfpI2p0dzZh8COUwDl?=
+ =?us-ascii?Q?4nFdtzqO5qbDrWdHRqTOvxdsSFmnTQ4tVzwz0fzdlXW9SNOlnTt0sEVr4wEI?=
+ =?us-ascii?Q?mPDGFVJhHifR316TjexbiYL2MKJb+ZE7WXHLNbd669uJRYtnhA1IqOqtMn55?=
+ =?us-ascii?Q?8oKOl+l3ZupXC+fzn0+Xv+L5dlBEr8IC6Xz6wOmr8V+c2QGSkJc/14PTRAco?=
+ =?us-ascii?Q?gcFrQPZdz8cKb56vucscTVag4obd614igwDj1Z6flmiYrU+BejFvXiyVsX1f?=
+ =?us-ascii?Q?cZn11imtQ3zBFZUKYiHuCkCdfe5GpsMK1/JZ6PibzsUIfUZWPLlQ5gomPaNn?=
+ =?us-ascii?Q?7cplQbuKRVfXfnyRDYyNGxJUARBU5yPm1ik1ETQf0j38XXQJZBfVN+XTMXot?=
+ =?us-ascii?Q?oKnp0RBelHZjj1oEkTJMVLF/ZH9lEPErNZwV0bpcfbkObGyuX1umtubcFK/B?=
+ =?us-ascii?Q?ZD9WGBoNmgbx5sFKvaaIzUPWk4+ARP+GSjexzvSxVcWIfwUg7nu9h0cIU/Ib?=
+ =?us-ascii?Q?IEZKeqKNf292iZbL4gDjd3sRS5qoGdBUY0QSZ3aCkNW1AoC8C2cMbcfJNMyv?=
+ =?us-ascii?Q?M09uQe1eTzMhG6StwRlJFaiQGBkYSAwMuJcjiDzp16z5AxexBOCCDzUSwshs?=
+ =?us-ascii?Q?4DxiLWleabGxDk3U+GGgpLJ5eAJNxf4vfCgqI9qUYUcxyBBUdkU29xSk+Wud?=
+ =?us-ascii?Q?hrLITvNeED58rccxt1TF0HQYovq3Cjy+H54SLb2hut/jcYpYqu5SbTaGtC04?=
+ =?us-ascii?Q?giDBoV/akOutyb/0f3ZkfYfTEyGreJXLAPSVbe6Jpx+U2+GTlHhHs+4uTlTO?=
+ =?us-ascii?Q?nHF5Z7n0RjsnMh3vDC+vXbAiDcRCa1ZEz8pR80m+RBqCVKCqmjb2p+4i241p?=
+ =?us-ascii?Q?/7x1Wpn5RV2MXOH8xcIk2BQe9eD4we10go38oGWLJ6ZhWnnixVZITzeZsfu7?=
+ =?us-ascii?Q?yaA3Wg0y/pzQR29xX0Rgf+l+aiYmkctglFrpPIPPg8sH4S/BVKYUSHi0EYwa?=
+ =?us-ascii?Q?3ze++te4lbaWIhlDU7jl5RyVQ3jwiiCBTpC+2evH+BGtrX3q55kBWa7b3aHI?=
+ =?us-ascii?Q?aLhigtLgAI7kEK+8I9mJfwPeD6rzxRnufa1X2ihBHzCeqZM6LDUre4F5V670?=
+ =?us-ascii?Q?JeV2N+KRz0LrhNS17ABkVxwUk5bAYBx+YtmL?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8120.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?gkyn7BWKf+aTW76SQLa6/exH54MmBk+70DaJ+I5m1ZrA5yD0MSZEqlLTf5F/?=
+ =?us-ascii?Q?tBIwGh1DyDBFJAKE/13KjmSdovmZiCg4K7+eKv628jSmVtu82Sz5Bd4/oxba?=
+ =?us-ascii?Q?9lcYzONW22tI0nq1wZBWhPmkTHq94OigR3wEDSE5IPla/V1iPXMOZ24gSdyS?=
+ =?us-ascii?Q?vRm3mZtr6rgC+IhnBk/jkYNlguxG5EdG1JhgQaa9WETg0RpNjQVPCRh9xN4C?=
+ =?us-ascii?Q?tpeVosa1sHWVP9ji+LFXf3h1gHbN7V3y8pvJmSJFHJ3c3hhMDMLTPpYidV0A?=
+ =?us-ascii?Q?0sROnVFobtZynLbckYcypmwJ7oKStj+5k+BgYFvCSLJteqWdYZYWUoODadfO?=
+ =?us-ascii?Q?7aXryLqTV/7dAxh02DnNito2AA6SbmR3t2Ke1CL49ErmQP9LiecDWjloXowY?=
+ =?us-ascii?Q?U6cqr/CVasX/ERsMGRuj+4Isuvwu+xPy4pbUFiaaUZvPjZ0Ov6PfmNcCZfMI?=
+ =?us-ascii?Q?FZofpVB5vRd4rS0S4eQJQVDUXTy3JvCUkllLJWj44cFWAktRR8JSaP0xOTs4?=
+ =?us-ascii?Q?kPbAh+K8/EXb6je+dR+dqmDMf//4vWIJXAtKmCn7d0kGcSPXVY4gFn+Gsks7?=
+ =?us-ascii?Q?mNHhKL3VPClSDJSLVgVbF5dcZ/70NGtqf1tanLwsp0Mys1yT8gP+nRHiTbH5?=
+ =?us-ascii?Q?IAyj+W4klmftTvFi0qIOYVXd4YtqUpFZFVfEKFMYod/Dj/Nt2VLkjeOeWeia?=
+ =?us-ascii?Q?o3mVfRy4jpYh5Cc4rIhl7r1VeO1k92/NxyyX6F4j07kHLvzBVymCnDEzaPWV?=
+ =?us-ascii?Q?VaffaPExxwE6SyZeNvhhz3TZ/e/YM3MJzTqwYoebjeqIkYn1ZzoytzU/KyS+?=
+ =?us-ascii?Q?NieaDE2oAK64wM2MhloDUhqV1licYiJf/HJq790QtlSU752ZpGPPfvU7m+/z?=
+ =?us-ascii?Q?jCFsJ/wFLU98+FnP/upBfea48pb430m/ffu9HQcA4v6oCncfBb3KvEd04M48?=
+ =?us-ascii?Q?c+iCrZR+weUIoZvhF/TW187oyiyPWd4+JdY1Gl/6Ai5hivEZnPUOmUTtk0kL?=
+ =?us-ascii?Q?FKEF8kLQRflNNm4j4mUctLpCZsPu59S5JQuzhjGS3A4mvx1Y6b2kMnTdxLNC?=
+ =?us-ascii?Q?PBJ+JQPT4mqsKjn4B8FVBRHpkt4B8Eiut79na3RRHMW/QtsTcVq3TB4KF6Hb?=
+ =?us-ascii?Q?48rlvvzi31TgVKfDNhT/IdUm+Mi5ysZRZcfnNwxleX3nUfPt8NjRxsSrnH9N?=
+ =?us-ascii?Q?tW8PEwor/ezJ5C0T4PHQFJA+fByj7v59pN6uuOVw2FSdXcI/W4UBad62Ac2h?=
+ =?us-ascii?Q?uMs64oJ+HtLz2mw23lcT/jkyq/vockFx/OTk+kjdPzqZjwaDyXe0k7YTMxB3?=
+ =?us-ascii?Q?z+p8sx7UwVkHe7k9p8yqZqvxWvVhY6FOd/+OZX0cj1Tmv0TmWbvXHVDBy+xh?=
+ =?us-ascii?Q?bZzCEoXphRpgbXSQO/2uVhWB95qTCoOdkeZNp+MNTjiRqpZd3QLARmgtTm+W?=
+ =?us-ascii?Q?oApfjzJrXfOiJ+vveNUntuST8aB96SdvfacxeHGQ9tTkS6psV0zeNQvZVadm?=
+ =?us-ascii?Q?0QEvjWIKC7ZzG+C/TGnXfDoVsgyRBUX0rDARx13MNznFcMom7eYjJzeii9NE?=
+ =?us-ascii?Q?zFzx6/wG+reO8s+FYxrPSGPJONAqGSTpE7EHq58EtyG/KZi7cCgVZBijJGAc?=
+ =?us-ascii?Q?nwFVOJ+zUJHi/OFfztE3cTCGInd8/Ejx2eCoPemB1v6jztkB02hmkQFCwZxj?=
+ =?us-ascii?Q?PPECYsMpW+U7Ufv251rLT/lS4Z/XI9xuzaXphqJZ6K+MoXr0?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TYVP286MB3165:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a5d24d0-bfd2-4e35-fc69-08de4c305040
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|10070799003|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Ad9Efk3GW0n+F2sJxDYJZX1ir7VF/L0zEi0L6XVuf43f0KH/6c/cWHkyxdsj?=
- =?us-ascii?Q?blZB9n02krTt34OGryFVzH1GBqEh4i9Tl/2I5FCuH0kJvQ6RO4YwxjZpxg/2?=
- =?us-ascii?Q?i8stFk68WXfUg+VeupJk/xfhGjfslbKUU/dHiWiS8O/sJYAZkBgOuT0zNfqK?=
- =?us-ascii?Q?oE6b+/FAbo+4XYrPS0gql+MlaBX8F1S7trEJxMN19cgEba4sIRTAB2EQd6ER?=
- =?us-ascii?Q?hQA79TJufEnhpXhKwC01HMhq603tnr8BAZiNZH1Cca4cDdjN3mdAyvdUg4bv?=
- =?us-ascii?Q?9ZNy5t2bvilF58SQYeZNzDLkDrOMDmUYneaHkmxqz8CdJ30vci0+IaIrTW41?=
- =?us-ascii?Q?v0zkz7okiBLiMMoEJuxjYv8LYtE7yLOWY3Zk9I9DcPQHaljYRvNUjioeyFjo?=
- =?us-ascii?Q?RoN26pCps11VlKqpK6+G9vJZJb/tIlYC/HpKwsH/aqpPG1MaY/b7BHohmd6u?=
- =?us-ascii?Q?D0aPCOI6HQvhcBewsvLRIMJbC+8/TjDEfgBFktaMmsBOdt6fI8CqKIef5kK+?=
- =?us-ascii?Q?OIiHsa3kEAdNgZUctcuYnmt1gPLIhQDEZtwZ6O/Miz8Ah8FPP4CvXjVHbCE9?=
- =?us-ascii?Q?XFvPaULXEbari3n1X/Zszrnm7DPdEvm2K4XAy5xj3/bBAhxOCWVHCH6el6lg?=
- =?us-ascii?Q?eAj7ocRt4fI9zwNbtmOW0yi2SO7bfVNSkWLoDpu1Hr7DbsZ+ORrouVXnUI4p?=
- =?us-ascii?Q?mqD1XS4L4iFnXaK6CZbAYZIfSbBGhY9/nT2RuTyqgDje3q3ACBsu0NFVOhsP?=
- =?us-ascii?Q?rV4ud9yNFcse4NPbAGNkGrMrGXgwp+qWurC3eoO9Dw9NC+UglfXNNM4C1ydA?=
- =?us-ascii?Q?20cTIdTUyfXv7Rn1e6nC+gDvBYPzmtoKjioOJS/0DpV0u1qTaQVZu5j4aj0N?=
- =?us-ascii?Q?jNOxe1BvWiPAKTJOiXxG3/qSeXvSEuruCvqIVD2kXSy6wINNaQYxlMOfVH0z?=
- =?us-ascii?Q?7dctwMn1KsLM47OUahB4b3ODk39ez/65fXg+I13p3Te7Psi4jSYeh9yDHP8z?=
- =?us-ascii?Q?EvjNtbmAnWsFuepELecxAgnM7gCFR+4oHxK2bPbGFThSpEq+dflAO/Dqu1IX?=
- =?us-ascii?Q?k9yj/wfVwyECWY3SspidDYtg+7nAckIrJAvH6Q8f69eHQtmwiuW3n+QqMxBg?=
- =?us-ascii?Q?IVs51j4GHg7FzTU9FO3/jCXseN9vAyDkVsXVnn1dKBgWsICGpPmf6NphJVCf?=
- =?us-ascii?Q?tQIBl+u815BW6fWLzp5jTN8R+juqBI14X+9LgM+xeIHamZecXTPjBhIARZtw?=
- =?us-ascii?Q?CHawAqAMIzAIxbEKX46Ya6v3knKhplYcQmGzTEnbDwQEskRsIiMJzvPMvRKo?=
- =?us-ascii?Q?NufpcRHf2e4Q2w5myHDGy7a8stkZ1vRN9BWoStyh6sDCViV/71tfF8MHDc2M?=
- =?us-ascii?Q?N5aibXyn0wdq6+qBEWXVVSgafVyYWOsN9SePcwWVsBucCNCmcTq5a3muGUO8?=
- =?us-ascii?Q?6drq8EdaZFnNuI+arALfGjshs6cr2dO7?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?6kqgrr6bvHLiRgvxEUN+QgomB0Ban9kxUNRXiDatyl45chP/VfXAlt8nB0O4?=
- =?us-ascii?Q?Q435go2V2orct8j7DVscanz8od+oERd4DiGPWcGmc4vK8jh1JMFiGLXtLRHI?=
- =?us-ascii?Q?exlDJgFNF6jCUmeUsp3U/aqdIfaVpIoRdlpHmcaHgah6m5c3vJjgDFy6Yb+3?=
- =?us-ascii?Q?EBB1atlPwytOJetyOMDuWUox4GI6+KIFlr1sd/mlA1iLAJ/Mw/FB5xBHRbk4?=
- =?us-ascii?Q?cckaRZSFeQ5vLvbZAycqalyaz+jTQ6Mb/0VikE6WRjFNcBJ33l6+m1WGaWoK?=
- =?us-ascii?Q?nKCwqjvmUy6lwSff9o9+P7ykeAoq9Wsb3B7yOTjPpadVXq+bYyzm53Vnr/Kz?=
- =?us-ascii?Q?p2fdMPSSlz5qIOvuroTMXacgEWNRyAhyY96e4LHeRPkdoSrMsHbBuvVyXrqo?=
- =?us-ascii?Q?coedjjE0FLmvobRLeKjOwCSm7W6ayDaYDnLXTo4A/vwgx5l2vHUZD4wbY3nf?=
- =?us-ascii?Q?IEKC6+IZ6H7PzfGZFvNfG8ZlMNuMxbKcqYuY+tMg6itfvwYW18fGew3Sx3Ey?=
- =?us-ascii?Q?l9uQTXVnPsqTfeUMhDyJO1nS6I47fA1e0o/2LCSI3zejTVtY1guZBHRiWrPI?=
- =?us-ascii?Q?66xdF54sSkbw1CpCLUP/b0fkk58wFCcAxP929DNgygCFTAasHhDVXxGJ8A4n?=
- =?us-ascii?Q?LgVO7dC2E7cDdSB70DT489Qbueh2ikfY8dXX2tl3g0IjuQK23t5BDNGZFw32?=
- =?us-ascii?Q?QHN1GoXY1tXkmhBpd8UUbpetMU0EKKwkvxgq3P8BLMMtiWc5dpw/CZDIfFFf?=
- =?us-ascii?Q?bGr6yfqNoEzaA+xWVsD8N2YP4u33CQuu9xaSKPkpMcuM3YSxbkaKnkRCkg57?=
- =?us-ascii?Q?iicWl2/yq+W8SXR5jQxNzhn5O9YaPFGRZ7IzCu/bJs7rZkkEN1oy3j7ERgqn?=
- =?us-ascii?Q?/LL86PzSvgQJ9cpa+5hG+vBdMWoIuWQ201lzWhQWU2U/3KwblOS/RQGmmk7+?=
- =?us-ascii?Q?/s/kQ4cl6oyk/c/VFj+RtJBDJpj9DWwlZV55uaP6vUsAaJZbyATiv8hbqmzz?=
- =?us-ascii?Q?PPPKV3Rpb6hJnb3y5NRxT0y0gfBVhWsDgRQ/Yn8fik7TPEtst59wQqXNlMvE?=
- =?us-ascii?Q?o+hckF1liiEkwWdp7t5fju11u/fnRf3+HrL6s3cSYDqZb9uoyuMIo9+Sd90/?=
- =?us-ascii?Q?icyn2ADRa+Jsh99fmrVcaM6+yKflwoNbAxFi92IXIqUf4Hv3KqAHkWCjZ45h?=
- =?us-ascii?Q?o6QL5w+44Jf1yggmBY4TWHVLX2JjN2D+n3jD34AGhWuXNkONQiIPeViQnv9Q?=
- =?us-ascii?Q?AVhHMuwfJXG60wNbVkhsRNUcdlVybGnePLRxv5dV1fSHEhUdamZWj1JJh2uR?=
- =?us-ascii?Q?ktau4rS6TmaCn6gto/hGeh1vxVXpASr1VHbo15kMpomSjsv5YRsUt2DbZVQH?=
- =?us-ascii?Q?CMoqIZgG7RdANfnM9beDrillkODTD8ilOJ9oh0BEZIqkwg9y8zLKdBcYysHC?=
- =?us-ascii?Q?k2WcKslpNIkoxfsKPdyK7h+cPiyvhgb+05b5E+8om9SMYg6zaQ4icnUNDLBW?=
- =?us-ascii?Q?Mk8Xzmr11uRKffA4YcAt6jAB21hCsER3Gu6ooARTyilXSlo5ENfZ522zI8Bx?=
- =?us-ascii?Q?NTQXnuH9cA4AFWmyoP+Olco7UY70DIQ1yydZMKkWentpw0ColwcmhQm6NCnP?=
- =?us-ascii?Q?tpRbwnPqXb2sXkMjrKD81VGDf273zaVikEM1WeKrKlWftdEir6pnVKQUojeh?=
- =?us-ascii?Q?Od7Tmb9UuTegxYYDy2zMlCMws2DDMpXgRU7h+f64rdmcrYzOutI8/o5xP6GY?=
- =?us-ascii?Q?cvcnQf9wpiu2LyaRuzzfEuLu+PXXCU5bSEIQkKHOVOEiG0xoNT6s?=
-X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a5d24d0-bfd2-4e35-fc69-08de4c305040
-X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2026 07:59:12.2479
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8120.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8918747-aa1d-4f51-8aa3-08de4c456504
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jan 2026 10:30:06.3896
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2kOIQQGfgH4jv+q5HflvzuenW/vlmCvl6C63CN2A3IMb/1jJedqZ7qdISO/zI16bkR2KUmuGdeywNU/hyRdMtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYVP286MB3165
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anltktHuMko1i9s0gLyLf/mqXgjwHIiOVC3Pfj/h/kpjbyUGKlw6e6VH+3wTOGwZyl18hZwnTdI9H8mXzJRBSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6091
 
-When multiple MSI vectors are allocated for the DesignWare eDMA, the
-driver currently records the same MSI message for all IRQs by calling
-get_cached_msi_msg() per vector. For multi-vector MSI (as opposed to
-MSI-X), the cached message corresponds to vector 0 and msg.data is
-supposed to be adjusted by the vector index.
+[AMD Official Use Only - AMD Internal Distribution Only]
 
-As a result, all eDMA interrupts share the same MSI data value and the
-interrupt controller cannot distinguish between them.
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Tuesday, December 23, 2025 9:59 PM
+> To: Verma, Devendra <Devendra.Verma@amd.com>
+> Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> Subject: Re: [PATCH v7 2/2] dmaengine: dw-edma: Add non-LL mode
+>
+> Caution: This message originated from an External Source. Use proper
+> caution when opening attachments, clicking links, or responding.
+>
+>
+> On Tue, Dec 16, 2025 at 10:15:34AM +0000, Verma, Devendra wrote:
+> > > From: Bjorn Helgaas <helgaas@kernel.org>
+>
+> [snipped pointless header quotes]
+>
+> > > On Fri, Dec 12, 2025 at 05:50:56PM +0530, Devendra K Verma wrote:
+> > > > AMD MDB IP supports Linked List (LL) mode as well as non-LL mode.
+> > > > The current code does not have the mechanisms to enable the DMA
+> > > > transactions using the non-LL mode. The following two cases are
+> > > > added with this patch:
+> > > > - For the AMD (Xilinx) only, when a valid physical base address of
+> > > >   the device side DDR is not configured, then the IP can still be
+> > > >   used in non-LL mode. For all the channels DMA transactions will
+> > > >   be using the non-LL mode only. This, the default non-LL mode,
+> > > >   is not applicable for Synopsys IP with the current code addition.
+> > > >
+> > > > - If the default mode is LL-mode, for both AMD (Xilinx) and Synosys=
+,
+> > > >   and if user wants to use non-LL mode then user can do so via
+> > > >   configuring the peripheral_config param of dma_slave_config.
+> > > > ...
+> > >
+> > > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > > > @@ -223,8 +223,31 @@ static int dw_edma_device_config(struct
+> > > dma_chan *dchan,
+> > > >                                struct dma_slave_config *config)  {
+> > > >       struct dw_edma_chan *chan =3D dchan2dw_edma_chan(dchan);
+> > > > +     int non_ll =3D 0;
+> > >
+> > > Other "non_ll" uses below are bool, so a little bit of an int/bool mi=
+x.
+> > >
+> > > The name also leads to a lot of double negative use ("!non_ll",
+> > > etc), which is hard to read.  I suppose "non-LL" corresponds to some
+> > > spec language, but it would be nice if we could avoid some of the
+> negation by testing for "ll_mode"
+> > > or calling the other mode "single_burst" or similar.
+> > >
+> >
+> > Yes, non-LL is being referred in the Synosys databook extensively to
+> > differentiate between LL and non-LL mode.
+> >
+> > I agree with the concern raised here but, at the moment, this is the
+> > only suitable term that can handle the following cases:
+>
+> > 1) Choice of variable of the DMA client to use non-LL mode,
+> > 2) Establish flow for the non-LL use-case in the driver.
+> >
+> > Before, using the term with negation (non_ll), the possibility was
+> > explored to use a term which does not result in double negation, eg, ll=
+ or
+> ll_mode.
+> > But this again breaks the above either one or both use-cases.
+> > If using ll_mode as a variable, then with this, DMA client shall
+> > either provide ll_mode=3Dfalse or non_ll=3Dtrue.
+> >
+> > When ll_mode=3Dfalse. This option would be as good as passing a valid
+> > reference to peripheral_config pointer as the value of ll_mode would
+> > never be used for ll_mode=3Dtrue due to default mode being LL.
+> > On the basis of ll_mode=3Dtrue, the DMA client given option, no code is
+> > impacted with these patches.
+> >
+> > When DMA client gives non_ll=3Dtrue; this causes confusion, DMA client
+> > does right but internally ll_mode as a variable is set to establish
+> > the flow for non-LL mode. The different variable is used for
+> > establishing the non-LL mode inside the driver code.
+> > Also, it uses the combination of double negation variable.
+> >
+> > Though, the use of non_ll, raises concern due to double negation but
+> > its use fits the use-case from both DMA client and in the driver to
+> > establish the non-LL flow. Additionally, The use of non_ll also aligns
+> > with the documentation of the vendor making it easier to follow.
+> > Please let me know your thoughts on this.
+>
+> OK.  It's good to match the databook.  Maybe there's a way to restructure=
+ the
+> code to prefer "if (chan->non_ll)" tests over "if (!chan->non_ll)"?
 
-Introduce dw_edma_compose_msi() to construct the correct MSI message for
-each vector. For MSI-X nothing changes. For multi-vector MSI, derive the
-base IRQ with msi_get_virq(dev, 0) and apply the per-vector offset to
-msg.data before storing it in dw->irq[i].msi.
-
-This makes each IMWr MSI vector use a unique MSI data value.
-
-Signed-off-by: Koichiro Den <den@valinux.co.jp>
----
-Base: vkoul/dmaengine.git commit 7b28c670df45 (latest on branch 'fixes')
-This is a spin-off patch from the following series:
-https://lore.kernel.org/all/20251217151609.3162665-11-den@valinux.co.jp/
-
- drivers/dma/dw-edma/dw-edma-core.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 8e5f7defa6b6..3542177a4a8e 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -839,6 +839,28 @@ static inline void dw_edma_add_irq_mask(u32 *mask, u32 alloc, u16 cnt)
- 		(*mask)++;
- }
- 
-+static void dw_edma_compose_msi(struct device *dev, int irq, struct msi_msg *out)
-+{
-+	struct msi_desc *desc = irq_get_msi_desc(irq);
-+	struct msi_msg msg;
-+	unsigned int base;
-+
-+	if (!desc)
-+		return;
-+
-+	get_cached_msi_msg(irq, &msg);
-+	if (!desc->pci.msi_attrib.is_msix) {
-+		/*
-+		 * For multi-vector MSI, the cached message corresponds to
-+		 * vector 0. Adjust msg.data by the IRQ index so that each
-+		 * vector gets a unique MSI data value for IMWr Data Register.
-+		 */
-+		base = msi_get_virq(dev, 0);
-+		msg.data |= (irq - base);
-+	}
-+	*out = msg;
-+}
-+
- static int dw_edma_irq_request(struct dw_edma *dw,
- 			       u32 *wr_alloc, u32 *rd_alloc)
- {
-@@ -869,8 +891,7 @@ static int dw_edma_irq_request(struct dw_edma *dw,
- 			return err;
- 		}
- 
--		if (irq_get_msi_desc(irq))
--			get_cached_msi_msg(irq, &dw->irq[0].msi);
-+		dw_edma_compose_msi(dev, irq, &dw->irq[0].msi);
- 
- 		dw->nr_irqs = 1;
- 	} else {
-@@ -896,8 +917,7 @@ static int dw_edma_irq_request(struct dw_edma *dw,
- 			if (err)
- 				goto err_irq_free;
- 
--			if (irq_get_msi_desc(irq))
--				get_cached_msi_msg(irq, &dw->irq[i].msi);
-+			dw_edma_compose_msi(dev, irq, &dw->irq[i].msi);
- 		}
- 
- 		dw->nr_irqs = i;
--- 
-2.51.0
-
+OK, this can be done. I will update this in the next revision. Thanks!
 

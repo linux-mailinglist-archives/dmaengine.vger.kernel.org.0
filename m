@@ -1,158 +1,117 @@
-Return-Path: <dmaengine+bounces-8075-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8076-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D22C4CF84D1
-	for <lists+dmaengine@lfdr.de>; Tue, 06 Jan 2026 13:24:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 37C71CF84FD
+	for <lists+dmaengine@lfdr.de>; Tue, 06 Jan 2026 13:26:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9A34C30361DD
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Jan 2026 12:20:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 48A673083C5F
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Jan 2026 12:21:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AE092DA75C;
-	Tue,  6 Jan 2026 12:20:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 804512DA75C;
+	Tue,  6 Jan 2026 12:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="szG3dNaZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XxIX/Uc6"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544C6242D89
-	for <dmaengine@vger.kernel.org>; Tue,  6 Jan 2026 12:20:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7714C81;
+	Tue,  6 Jan 2026 12:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767702027; cv=none; b=kDoeSTOg9iOmVkNfU7FMrnluEHrAvQDCINLKI+r6GKBuxnyji+SyjLXzuKC9pvxXk1qm8ZsQU77pjmDx+tc42rTaOsMicgar0tllbq4qkiVlTW6O1PF/stBR9K61wWb8u4edjWNwWs5pnfQqmHpqChwL1qA86dBvA2LqbP8KsK8=
+	t=1767702099; cv=none; b=qG+lXnY7dRA9httSw2891+hwsOtmLJJv6ifDvPL9hoYgVyvUfSOlSbj3qXFGLYap7GbdD+1/Z/maZOvngXa9nQybzvrkM3quQtDERY+MrI3B1RYQy/OFI1MXw7xMGT4cghfJciyxeIVELvBlv8xH2G4yKBINn/WRo4DgxTjOc28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767702027; c=relaxed/simple;
-	bh=WeihQnzULL5ReZ1WSNOJlegujvsKvpc8qcS09s0GfCk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ovmpf2voceCsIWD2TZcXFyuFi9Aj09MdYU+MLAzXekPsPTZK0UP0ikG5pYMiZ1vXVLlvQrW3jWq1mOISpx+fQE/91zuCNYc9mjX27N0S9dHIQRn1LAhrfa4BRimC2PPnfupCt0mmg3qXUj55SiwlqR46jtrSd5I2uI6RIVWk7xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=szG3dNaZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 131CDC19422
-	for <dmaengine@vger.kernel.org>; Tue,  6 Jan 2026 12:20:27 +0000 (UTC)
+	s=arc-20240116; t=1767702099; c=relaxed/simple;
+	bh=zKoDQhppgeJZ9g12tU8EVyMA0qPWRL9mN42OuCpgg2o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=iVPXsc+CJoh9r+1NjpphV0KlTEQGJzUwPngwxqBR61OaMDRZsjAiad9U9qNePaL3pA1tYGPpkAitUr221YDv4vC+GQt8a5yf3J7GAbkplLx3+QLtHYItSTfKrog86wRFUQFLT/5SPmukJRbPUNy9q3y6G5WKC8Lp3GqC1nHcMnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XxIX/Uc6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67B30C116C6;
+	Tue,  6 Jan 2026 12:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767702027;
-	bh=WeihQnzULL5ReZ1WSNOJlegujvsKvpc8qcS09s0GfCk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=szG3dNaZBdsiJh86/Aalpg4FsmNcyaj3IYV4ok84hTDobawGrLqMNJJPsyZqNiqc0
-	 /qM7ucsfLCGKATgvxPXtuyOAJSxmN1hJdlk65Eeer6vqnZA2+3ezdrsyPYElLtdARD
-	 CUvNwN/ox6d7oQc5lzmnSYI1XZt5xna9Ofw0wiohruXl2yCZ8F/LS1c+wT/aw7P68l
-	 xjG0/Ygod491SiWVsn/Ms/oYXv9ra3GprcQh5PjrWAKM1kwbeeip2Kl0uxuv9AhTO5
-	 WDmHKBf2wHAaaEZa1Wq2TqgnLO20CEpmjbqDYOOztaLwvKZLZKTTZ33Tdzj6JAYrp1
-	 b+SAbafP5rwZg==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-59b6a987346so274738e87.3
-        for <dmaengine@vger.kernel.org>; Tue, 06 Jan 2026 04:20:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU8wlk955pqkMPsgrs5s2CZNF/QtCbSmj8OGdaPioxL3wvZTkPshWwD1E5WGr8v2fogxYsLCxixEkA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxne8zNTXkTbq96PRfN38s1+Q7Y6feB2VKZZnjmO39mN07g4fKp
-	cWNcL3AQookGjHDbKnAZCwhkAsfNIIIOGQdYoGBn/p5pCrUz6+86xb+GO8WRJ3ALvnH7+46fi9z
-	E+38zdQK7ftDDzMScdlMzfLOiGsIbJ307swRbSY4P/Q==
-X-Google-Smtp-Source: AGHT+IFx8nmopRtdPvy2vs4YbNQIpmVdCKW26mAOQptIblPti0KoPLS0IvUN6CFUKIjuyb6dXhRAvaO9RxHVoFJhqjo=
-X-Received: by 2002:ac2:4215:0:b0:59b:6c3d:5373 with SMTP id
- 2adb3069b0e04-59b6c3d53b3mr84520e87.7.1767702025661; Tue, 06 Jan 2026
- 04:20:25 -0800 (PST)
+	s=k20201202; t=1767702099;
+	bh=zKoDQhppgeJZ9g12tU8EVyMA0qPWRL9mN42OuCpgg2o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=XxIX/Uc67pW2srZGfx7L0M+e9v4WJplWlh+0kQ17cQgE3TXo+brUPnDmZLyRtoSUt
+	 NS+uIwMPQZ70cpM6y22JW6jE/dRqSDBuoaKh3TDd4eQ4IT4Jx15VdWTziP2iWd7hyT
+	 8OX2eLY4it+aWALZe6uARyvIyLy21rDK0Ye78wOqq/EzQrYHKYcMeEdEu4Z4w+nezL
+	 tzp4dBFmmOQZQbNRn7ffWbWe0RozvMjSW0zRQdrMreHOK30MtxQyiBnLFJ206BIfbe
+	 8CnAyOGc9R4FmPtyuFsNwRGbSDB0oM4sgN4C+vBUFcob0xOC+hjUtYbCLlYNR7KL28
+	 4JA9Jx+fmQb/A==
+From: Mark Brown <broonie@kernel.org>
+To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
+ claudiu.beznea@tuxon.dev, herbert@gondor.apana.org.au, davem@davemloft.net, 
+ vkoul@kernel.org, andi.shyti@kernel.org, lee@kernel.org, 
+ andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org, 
+ pabeni@redhat.com, linusw@kernel.org, Steen.Hegelund@microchip.com, 
+ daniel.machon@microchip.com, UNGLinuxDriver@microchip.com, 
+ olivia@selenic.com, radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com, 
+ gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+ lars.povlsen@microchip.com, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
+ Robert Marko <robert.marko@sartura.hr>
+Cc: luka.perkov@sartura.hr
+In-Reply-To: <20251229184004.571837-1-robert.marko@sartura.hr>
+References: <20251229184004.571837-1-robert.marko@sartura.hr>
+Subject: Re: (subset) [PATCH v4 00/15] Add support for Microchip LAN969x
+Message-Id: <176770209215.32810.211066871008391751.b4-ty@kernel.org>
+Date: Tue, 06 Jan 2026 12:21:32 +0000
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251128-qcom-qce-cmd-descr-v9-0-9a5f72b89722@linaro.org>
- <20251128-qcom-qce-cmd-descr-v9-3-9a5f72b89722@linaro.org>
- <aUFX14nz8cQj8EIb@vaman> <CAMRc=MetbSuaU9VpK7CTio4kt-1pkwEFecARv7ROWDH_yq63OQ@mail.gmail.com>
- <aUF2gj_0svpygHmD@vaman> <CAMRc=McO-Fbb=O3VjFk5C14CD6oVA4UmLroN4_ddCVxtfxr03A@mail.gmail.com>
- <aUpyrIvu_kG7DtQm@vaman> <CAMRc=Md6ucK-TAmtvWMmUGX1KuVE9Wj_z4i7_-Gc7YXP=Omtcw@mail.gmail.com>
- <aVZh3hb32r1oVcwG@vaman> <CAMRc=MePAVMZPju6rZsyQMir4CkQi+FEqbC++omQtVQC1rHBVg@mail.gmail.com>
- <aVf5WUe9cAXZHxPJ@vaman> <CAMRc=Mdaucen4=QACDAGMuwTR1L5224S0erfC0fA7yzVzMha_Q@mail.gmail.com>
-In-Reply-To: <CAMRc=Mdaucen4=QACDAGMuwTR1L5224S0erfC0fA7yzVzMha_Q@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Tue, 6 Jan 2026 13:20:12 +0100
-X-Gmail-Original-Message-ID: <CAMRc=McyTAvshqgfwTYpN1Av3Z4K=udzrr5t12fwcsBc=vtrcA@mail.gmail.com>
-X-Gm-Features: AQt7F2q1ahQ11FMaw_VOtAKsOF6Acj2JjLhWv_yxQJgI5ojADI61utbgGQpaYTQ
-Message-ID: <CAMRc=McyTAvshqgfwTYpN1Av3Z4K=udzrr5t12fwcsBc=vtrcA@mail.gmail.com>
-Subject: Re: [PATCH v9 03/11] dmaengine: qcom: bam_dma: implement support for
- BAM locking
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Thara Gopinath <thara.gopinath@gmail.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	Udit Tiwari <quic_utiwari@quicinc.com>, Daniel Perez-Zoghbi <dperezzo@quicinc.com>, 
-	Md Sadre Alam <mdalam@qti.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-47773
 
-On Fri, Jan 2, 2026 at 6:14=E2=80=AFPM Bartosz Golaszewski <brgl@kernel.org=
-> wrote:
->
-> On Fri, Jan 2, 2026 at 5:59=E2=80=AFPM Vinod Koul <vkoul@kernel.org> wrot=
-e:
-> >
-> > On 02-01-26, 10:26, Bartosz Golaszewski wrote:
-> > > On Thu, Jan 1, 2026 at 1:00=E2=80=AFPM Vinod Koul <vkoul@kernel.org> =
-wrote:
-> > > >
-> > > > > >
-> > > > > > > It will perform register I/O with DMA using the BAM locking m=
-echanism
-> > > > > > > for synchronization. Currently linux doesn't use BAM locking =
-and is
-> > > > > > > using CPU for register I/O so trying to access locked registe=
-rs will
-> > > > > > > result in external abort. I'm trying to make the QCE driver u=
-se DMA
-> > > > > > > for register I/O AND use BAM locking. To that end: we need to=
- pass
-> > > > > > > information about wanting the command descriptor to contain t=
-he
-> > > > > > > LOCK/UNLOCK flag (this is what we set here in the hardware de=
-scriptor)
-> > > > > > > from the QCE driver to the BAM driver. I initially used a glo=
-bal flag.
-> > > > > > > Dmitry said it's too Qualcomm-specific and to use metadata in=
-stead.
-> > > > > > > This is what I did in this version.
-> > > > > >
-> > > > > > Okay, how will client figure out should it set the lock or not?=
- What are
-> > > > > > the conditions where the lock is set or not set by client..?
-> > > > > >
-> > > > >
-> > > > > I'm not sure what you refer to as "client". The user of the BAM e=
-ngine
-> > > > > - the crypto driver? If so - we convert it to always lock/unlock
-> > > > > assuming the TA *may* use it and it's better to be safe. Other us=
-ers
-> > > > > are not affected.
-> > > >
-> > > > Client are users of dmaengine. So how does the crypto driver figure=
- out
-> > > > when to lock/unlock. Why not do this always...?
-> > > >
-> > >
-> > > It *does* do it always. We assume the TA may be doing it so the crypt=
-o
-> > > driver is converted to *always* perform register I/O with DMA *and* t=
-o
-> > > always lock the BAM for each transaction later in the series. This is
-> > > why Dmitry inquired whether all the HW with upstream support actually
-> > > supports the lock semantics.
-> >
-> > Okay then why do we need an API?
-> >
-> > Just lock it always and set the bits in the dma driver
-> >
->
-> We need an API because we send a locking descriptor, then a regular
-> descriptor (or descriptors) for the actual transaction(s) and then an
-> unlocking descriptor. It's a thing the user of the DMA engine needs to
-> decide on, not the DMA engine itself.
->
-> Also: only the crypto engine needs it for now, not all the other users
-> of the BAM engine.
->
+On Mon, 29 Dec 2025 19:37:41 +0100, Robert Marko wrote:
+> This series adds support for the Microchip LAN969x switch SoC family.
+> 
+> Series is a bit long since after discussions in previous versions, it was
+> recommended[1][2] to add SoC specific compatibles for device nodes so it
+> includes the required bindings updates.
+> 
+> [1] https://lore.kernel.org/all/20251203-splendor-cubbyhole-eda2d6982b46@spud/
+> [2] https://lore.kernel.org/all/173412c8-c2fb-4c38-8de7-5b1c2eebdbf9@microchip.com/
+> [3] https://lore.kernel.org/all/20251203-duly-leotard-86b83bd840c6@spud/
+> [4] https://lore.kernel.org/all/756ead5d-8c9b-480d-8ae5-71667575ab7c@kernel.org/
+> 
+> [...]
 
-Hi Vinod, is there anything else I can do or more information I can
-provide in order to move this forward?
+Applied to
 
-Bartosz
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+
+Thanks!
+
+[04/15] dt-bindings: spi: at91: add microchip,lan9691-spi
+        commit: 96d337436fe0921177a6090aeb5bb214753654fc
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
 

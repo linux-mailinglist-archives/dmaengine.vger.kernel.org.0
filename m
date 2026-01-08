@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-8097-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8098-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 584F1D00709
-	for <lists+dmaengine@lfdr.de>; Thu, 08 Jan 2026 01:03:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E0D9AD00712
+	for <lists+dmaengine@lfdr.de>; Thu, 08 Jan 2026 01:03:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BF41C3023D3B
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Jan 2026 00:03:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CF30730312EB
+	for <lists+dmaengine@lfdr.de>; Thu,  8 Jan 2026 00:03:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FEA81CD2C;
-	Thu,  8 Jan 2026 00:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7467BA21;
+	Thu,  8 Jan 2026 00:03:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lzKptKNQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CJPqEtaQ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440A1469D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAB4347DD;
 	Thu,  8 Jan 2026 00:03:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767830586; cv=none; b=rRSBwsPB3wd4uBvmwbWZj03KI6+7LRODAgBv4N/l7DQ4npB9VAin/TsoyVKXbjXDP3V1E4zMI03xhH8mtQWlL0yRPxDI65weXnqgCbNV6RayDbZrQg5S7c3CfVxrgUVri+Rfbgjv5frsgzEvh8adgTPiw/TlM8LBq/nCY/i/omw=
+	t=1767830588; cv=none; b=pduBiS95nCs3CCPzDK45GbjwiPeH1v4pkC7MohbxfSfrFMXu8KnleO8E/lB1CPYkoWzmt1f4zaTBGU302Pnq2NY0Y9EIQPzF7hDMlT/8Ch7U4Gol7ciL+BiGs0H/LcwGPbW73Y1TigecAxp78huD8W2Ypits2uF2aGqb9fbgphg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767830586; c=relaxed/simple;
-	bh=Bop3zpkorMkLEa3rPejwVhYu9CpvRTGItMYtNXIFDkk=;
+	s=arc-20240116; t=1767830588; c=relaxed/simple;
+	bh=Mjs+isH35nbq5IQLiDPgBuN2JrDFOhx6xgAZFUFeFS4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Nf5+ZvmBsJBMrYU5ZMycFiZc4dkijLryGL4g03ZG3TjZWY9T+feln7xoSw73X39gigR8281Jhw5P2uQ5FaeZkZeshd300YgQyKs5PwaZVLWG8IRvb9ughSSCYDA3h1LFn+Poyhj09UVaFi4lg2jbu3oMU9VD+7FhiIXSZHDM0iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lzKptKNQ; arc=none smtp.client-ip=192.198.163.19
+	 In-Reply-To:To:Cc; b=DHqH9Uz1ekYlp+TQIPEkD435RWioiYUQFVnSpwr1vlh2M0I7UbOSQ9Vj5kYqxovoWPFsEY1uUZF+bdAu31A/Ck/KUeLONjMlipa0Tt+dwaH2p/ADQQRNweuc/6nXjSnadwIFI7PP6d1wGlimp1jolTH+dNbWfYMs7hv4Ybs+zMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CJPqEtaQ; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767830584; x=1799366584;
+  t=1767830586; x=1799366586;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=Bop3zpkorMkLEa3rPejwVhYu9CpvRTGItMYtNXIFDkk=;
-  b=lzKptKNQVWHN83H+i5gkCLAwLcf2qWwbfWvyZ9ubt0BWMI31zCUuoMQM
-   8ZhEcwxQ2r05hyPC7zLsYDp0oarcT145aa+6AmchNzPQ6fgETRZfwNhEn
-   qt+uFrFEYj7i3Wy5zR6o3u/x+2zcmNBU7IU79orxtVPt5V2dSakQbdE8t
-   Zubrwgs/U2TBk7JBFHl7sate8bCEsrs3/atxLGNAyYdQNSZK42Wp8j2SR
-   YLAvTqdiPrp2BxZh/F072ks26bn/M/jvejGkeachMfCOSP4W1665Va93D
-   JfRO1Yng4Ask884JW6tdq9EWAe7oL/KphIxHZ3Zm2ORdQrjMfiEzpBH0S
-   w==;
-X-CSE-ConnectionGUID: 1X1XDxilSWqQjOXLhBIWRA==
-X-CSE-MsgGUID: tcxRrTg2TO23fZIfYyF8DA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11664"; a="68214635"
+  bh=Mjs+isH35nbq5IQLiDPgBuN2JrDFOhx6xgAZFUFeFS4=;
+  b=CJPqEtaQ30Pza9JgXu2tmmGD4ixpxalFjg/oXp1n2WVGtiNkeZnj07O8
+   vXEq4toxLHuDoLIS0MWSz8R+NblaQpSDZGXRw1l7IeyMN1nfxTFci/8rK
+   EHmQyq2wrCr2BU/ON1mMrpdhRlCOu7cKtjW3xX1xxvHetuiKrswZc/1Ok
+   dqocqoZ15kZkpcRfdlOdmCkw83ytWyaiYR6zB6tayIOCFZcIR3x22QMag
+   yOe9YPjFH3ihNhUeBV+oEAG6QQsWbqDDMjLaBYe3cngf7CCYr702ON6WG
+   mcel2E/YNmhriaBUAUn948FuIioVgRtyjLm/iw2nYDOdq/pofmQ5aT/LV
+   Q==;
+X-CSE-ConnectionGUID: IKjY/SmbSPCdRBfHgu8Kow==
+X-CSE-MsgGUID: wMtR4PCoS8iHHI9BiAIdOQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11664"; a="68214637"
 X-IronPort-AV: E=Sophos;i="6.21,209,1763452800"; 
-   d="scan'208";a="68214635"
+   d="scan'208";a="68214637"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
   by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2026 16:03:01 -0800
-X-CSE-ConnectionGUID: aQtYZUSmTBe79VgVIpfhCw==
-X-CSE-MsgGUID: 2ixshudmSjWmot1Qka1FPw==
+X-CSE-ConnectionGUID: /gaJzZFjTqCvVRjZqhIZ2Q==
+X-CSE-MsgGUID: i19lJU91Qbqb5fzkzzwavA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,209,1763452800"; 
-   d="scan'208";a="203074580"
+   d="scan'208";a="203074582"
 Received: from vcostago-desk1.jf.intel.com (HELO [10.88.27.144]) ([10.88.27.144])
   by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2026 16:03:01 -0800
 From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Date: Wed, 07 Jan 2026 16:02:22 -0800
-Subject: [PATCH RESEND v2 1/2] dmaengine: idxd: Expose DSA3.0 capabilities
- through sysfs
+Date: Wed, 07 Jan 2026 16:02:23 -0800
+Subject: [PATCH RESEND v2 2/2] dmaengine: idxd: Add Max SGL Size Support
+ for DSA3.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260107-idxd-yi-sun-dsa3-sgl-size-v2-1-dbef8f559e48@intel.com>
+Message-Id: <20260107-idxd-yi-sun-dsa3-sgl-size-v2-2-dbef8f559e48@intel.com>
 References: <20260107-idxd-yi-sun-dsa3-sgl-size-v2-0-dbef8f559e48@intel.com>
 In-Reply-To: <20260107-idxd-yi-sun-dsa3-sgl-size-v2-0-dbef8f559e48@intel.com>
 To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, 
@@ -78,45 +78,22 @@ Cc: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
  Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, 
  Yi Lai <yi1.lai@intel.com>
 X-Mailer: b4 0.15-dev-47773
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1767830580; l=7284;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1767830580; l=5027;
  i=vinicius.gomes@intel.com; s=20230921; h=from:subject:message-id;
- bh=X3/DM835J8N+Dt8QtaSm7nps284B0jwq7UC0laCdVlo=;
- b=rj3XGbTMy7oief0sVuGDsPs4YxGbWM3POBdyZuBi+egXnJOWIXN9VGBo/HASZKP4biAmXF1uf
- 9cQwO4AI5gXDLSG7GXcgtjH0PrQOP/VgKVbptWoax8PwEc+786Juo25
+ bh=Iuh1FqQhvl1qBB9wMSSzJC94HqpzF4pusHp8FsXIYyA=;
+ b=jVLdyf0/ysGptwWmCOL9ty1x/m5sNszOFV5jOwM6KooO9Utv7cyxNxKwNAh1kkieWVMsSXkok
+ iA/VWskQsI9DQEIJ5e/Lh7uaG05A/XKjUYSvyQ7pnJSGY2YZjt9SDBD
 X-Developer-Key: i=vinicius.gomes@intel.com; a=ed25519;
  pk=aJkrtgqgT6TZ8iIHSG8/rTPsmlYnjMrUjCsMYvCzntk=
 
 From: Yi Sun <yi.sun@intel.com>
 
-Introduce sysfs interfaces for 3 new Data Streaming Accelerator (DSA)
-capability registers (dsacap0-2) to enable userspace awareness of hardware
-features in DSA version 3 and later devices.
+Certain DSA 3.0 opcodes, such as Gather copy and Gather reduce, require max
+SGL configured for workqueues prior to supporting these opcodes.
 
-Userspace components (e.g. configure libraries, workload Apps) require this
-information to:
-1. Select optimal data transfer strategies based on SGL capabilities
-2. Enable hardware-specific optimizations for floating-point operations
-3. Configure memory operations with proper numerical handling
-4. Verify compute operation compatibility before submitting jobs
-
-The output format is <dsacap2>,<dsacap1>,<dsacap0>, where each DSA
-capability value is a 64-bit hexadecimal number, separated by commas.
-The ordering follows the DSA 3.0 specification layout:
- Offset:    0x190    0x188    0x180
- Reg:       dsacap2  dsacap1  dsacap0
-
-Example:
-cat /sys/bus/dsa/devices/dsa0/dsacaps
- 000000000000f18d,0014000e000007aa,00fa01ff01ff03ff
-
-According to the DSA 3.0 specification, there are 15 fields defined for
-the three dsacap registers. However, there's no need to define all
-register structures unless a use case requires them. At this point,
-support for the Scatter-Gather List (SGL) located in dsacap0 is necessary,
-so only dsacap0 is defined accordingly.
-
-For reference, the DSA 3.0 specification is available at:
-Link: https://software.intel.com/content/www/us/en/develop/articles/intel-data-streaming-accelerator-architecture-specification.html
+Configure the maximum scatter-gather list (SGL) size for workqueues during
+setup on the supported HW. Application can then properly handle the SGL
+size without explicitly setting it.
 
 Signed-off-by: Yi Sun <yi.sun@intel.com>
 Co-developed-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
@@ -125,169 +102,120 @@ Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Tested-by: Yi Lai <yi1.lai@intel.com>
 Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 ---
- Documentation/ABI/stable/sysfs-driver-dma-idxd | 15 +++++++++++++++
- drivers/dma/idxd/idxd.h                        |  3 +++
- drivers/dma/idxd/init.c                        |  6 ++++++
- drivers/dma/idxd/registers.h                   | 25 +++++++++++++++++++++++++
- drivers/dma/idxd/sysfs.c                       | 24 ++++++++++++++++++++++++
- 5 files changed, 73 insertions(+)
+ drivers/dma/idxd/device.c    |  5 +++++
+ drivers/dma/idxd/idxd.h      | 16 ++++++++++++++++
+ drivers/dma/idxd/init.c      |  5 +++++
+ drivers/dma/idxd/registers.h |  3 ++-
+ 4 files changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-index 4a355e6747ae..08d030159f09 100644
---- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
-+++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-@@ -136,6 +136,21 @@ Description:	The last executed device administrative command's status/error.
- 		Also last configuration error overloaded.
- 		Writing to it will clear the status.
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index c2cdf41b6e57..c26128529ff4 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -390,6 +390,7 @@ static void idxd_wq_disable_cleanup(struct idxd_wq *wq)
+ 	memset(wq->name, 0, WQ_NAME_SIZE);
+ 	wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
+ 	idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
++	idxd_wq_set_init_max_sgl_size(idxd, wq);
+ 	if (wq->opcap_bmap)
+ 		bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
+ }
+@@ -989,6 +990,8 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
+ 	/* bytes 12-15 */
+ 	wq->wqcfg->max_xfer_shift = ilog2(wq->max_xfer_bytes);
+ 	idxd_wqcfg_set_max_batch_shift(idxd->data->type, wq->wqcfg, ilog2(wq->max_batch_size));
++	if (idxd_sgl_supported(idxd))
++		wq->wqcfg->max_sgl_shift = ilog2(wq->max_sgl_size);
  
-+What:		/sys/bus/dsa/devices/dsa<m>/dsacaps
-+Date:		April 5, 2026
-+KernelVersion:	6.20.0
-+Contact:	dmaengine@vger.kernel.org
-+Description:	The DSA3 specification introduces three new capability
-+		registers: dsacap[0-2]. User components (e.g., configuration
-+		libraries and workload applications) require this information
-+		to properly utilize the DSA3 features.
-+		This includes SGL capability support, Enabling hardware-specific
-+		optimizations, Configuring memory, etc.
-+		The output format is '<dsacap2>,<dsacap1>,<dsacap0>' where each
-+		DSA cap value is a 64 bit hex value.
-+		This attribute should only be visible on DSA devices of version
-+		3 or later.
-+
- What:		/sys/bus/dsa/devices/dsa<m>/iaa_cap
- Date:		Sept 14, 2022
- KernelVersion: 6.0.0
+ 	/* bytes 32-63 */
+ 	if (idxd->hw.wq_cap.op_config && wq->opcap_bmap) {
+@@ -1167,6 +1170,8 @@ static int idxd_wq_load_config(struct idxd_wq *wq)
+ 
+ 	wq->max_xfer_bytes = 1ULL << wq->wqcfg->max_xfer_shift;
+ 	idxd_wq_set_max_batch_size(idxd->data->type, wq, 1U << wq->wqcfg->max_batch_shift);
++	if (idxd_sgl_supported(idxd))
++		wq->max_sgl_size = 1U << wq->wqcfg->max_sgl_shift;
+ 
+ 	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
+ 		wqcfg_offset = WQCFG_OFFSET(idxd, wq->id, i);
 diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 74e6695881e6..cc0a3fe1c957 100644
+index cc0a3fe1c957..ea8c4daed38d 100644
 --- a/drivers/dma/idxd/idxd.h
 +++ b/drivers/dma/idxd/idxd.h
-@@ -252,6 +252,9 @@ struct idxd_hw {
- 	struct opcap opcap;
- 	u32 cmd_cap;
- 	union iaa_cap_reg iaa_cap;
-+	union dsacap0_reg dsacap0;
-+	union dsacap1_reg dsacap1;
-+	union dsacap2_reg dsacap2;
- };
+@@ -227,6 +227,7 @@ struct idxd_wq {
+ 	char name[WQ_NAME_SIZE + 1];
+ 	u64 max_xfer_bytes;
+ 	u32 max_batch_size;
++	u32 max_sgl_size;
  
- enum idxd_device_state {
+ 	/* Lock to protect upasid_xa access. */
+ 	struct mutex uc_lock;
+@@ -348,6 +349,7 @@ struct idxd_device {
+ 
+ 	u64 max_xfer_bytes;
+ 	u32 max_batch_size;
++	u32 max_sgl_size;
+ 	int max_groups;
+ 	int max_engines;
+ 	int max_rdbufs;
+@@ -692,6 +694,20 @@ static inline void idxd_wq_set_max_batch_size(int idxd_type, struct idxd_wq *wq,
+ 		wq->max_batch_size = max_batch_size;
+ }
+ 
++static bool idxd_sgl_supported(struct idxd_device *idxd)
++{
++	return idxd->data->type == IDXD_TYPE_DSA &&
++	       idxd->hw.version >= DEVICE_VERSION_3 &&
++	       idxd->hw.dsacap0.sgl_formats;
++}
++
++static inline void idxd_wq_set_init_max_sgl_size(struct idxd_device *idxd,
++						 struct idxd_wq *wq)
++{
++	if (idxd_sgl_supported(idxd))
++		wq->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
++}
++
+ static inline void idxd_wqcfg_set_max_batch_shift(int idxd_type, union wqcfg *wqcfg,
+ 						  u32 max_batch_shift)
+ {
 diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 2acc34b3daff..2bdd1b34d50a 100644
+index 2bdd1b34d50a..fb80803d5b57 100644
 --- a/drivers/dma/idxd/init.c
 +++ b/drivers/dma/idxd/init.c
-@@ -585,6 +585,12 @@ static void idxd_read_caps(struct idxd_device *idxd)
+@@ -222,6 +222,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+ 		init_completion(&wq->wq_resurrect);
+ 		wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
+ 		idxd_wq_set_max_batch_size(idxd->data->type, wq, WQ_DEFAULT_MAX_BATCH);
++		idxd_wq_set_init_max_sgl_size(idxd, wq);
+ 		wq->enqcmds_retries = IDXD_ENQCMDS_RETRIES;
+ 		wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
+ 		if (!wq->wqcfg) {
+@@ -590,6 +591,10 @@ static void idxd_read_caps(struct idxd_device *idxd)
+ 		idxd->hw.dsacap1.bits = ioread64(idxd->reg_base + IDXD_DSACAP1_OFFSET);
+ 		idxd->hw.dsacap2.bits = ioread64(idxd->reg_base + IDXD_DSACAP2_OFFSET);
  	}
- 	multi_u64_to_bmap(idxd->opcap_bmap, &idxd->hw.opcap.bits[0], 4);
- 
-+	if (idxd->hw.version >= DEVICE_VERSION_3) {
-+		idxd->hw.dsacap0.bits = ioread64(idxd->reg_base + IDXD_DSACAP0_OFFSET);
-+		idxd->hw.dsacap1.bits = ioread64(idxd->reg_base + IDXD_DSACAP1_OFFSET);
-+		idxd->hw.dsacap2.bits = ioread64(idxd->reg_base + IDXD_DSACAP2_OFFSET);
++	if (idxd_sgl_supported(idxd)) {
++		idxd->max_sgl_size = 1U << idxd->hw.dsacap0.max_sgl_shift;
++		dev_dbg(dev, "max sgl size: %u\n", idxd->max_sgl_size);
 +	}
-+
+ 
  	/* read iaa cap */
  	if (idxd->data->type == IDXD_TYPE_IAX && idxd->hw.version >= DEVICE_VERSION_2)
- 		idxd->hw.iaa_cap.bits = ioread64(idxd->reg_base + IDXD_IAACAP_OFFSET);
 diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index 8dc2e8bca779..85e83a61a50b 100644
+index 85e83a61a50b..f95411363ea9 100644
 --- a/drivers/dma/idxd/registers.h
 +++ b/drivers/dma/idxd/registers.h
-@@ -18,6 +18,7 @@
+@@ -390,7 +390,8 @@ union wqcfg {
+ 		/* bytes 12-15 */
+ 		u32 max_xfer_shift:5;
+ 		u32 max_batch_shift:4;
+-		u32 rsvd4:23;
++		u32 max_sgl_shift:4;
++		u32 rsvd4:19;
  
- #define DEVICE_VERSION_1		0x100
- #define DEVICE_VERSION_2		0x200
-+#define DEVICE_VERSION_3		0x300
- 
- #define IDXD_MMIO_BAR		0
- #define IDXD_WQ_BAR		2
-@@ -587,6 +588,30 @@ union evl_status_reg {
- 	u64 bits;
- };
- 
-+#define IDXD_DSACAP0_OFFSET		0x180
-+union dsacap0_reg {
-+	u64 bits;
-+	struct {
-+		u64 max_sgl_shift:4;
-+		u64 max_gr_block_shift:4;
-+		u64 ops_inter_domain:7;
-+		u64 rsvd1:17;
-+		u64 sgl_formats:16;
-+		u64 max_sg_process:8;
-+		u64 rsvd2:8;
-+	};
-+};
-+
-+#define IDXD_DSACAP1_OFFSET		0x188
-+union dsacap1_reg {
-+	u64 bits;
-+};
-+
-+#define IDXD_DSACAP2_OFFSET		0x190
-+union dsacap2_reg {
-+	u64 bits;
-+};
-+
- #define IDXD_MAX_BATCH_IDENT	256
- 
- struct __evl_entry {
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 9f0701021af0..cc2c83d7f710 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -1713,6 +1713,18 @@ static ssize_t event_log_size_store(struct device *dev,
- }
- static DEVICE_ATTR_RW(event_log_size);
- 
-+static ssize_t dsacaps_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	struct idxd_device *idxd = confdev_to_idxd(dev);
-+
-+	return sysfs_emit(buf, "%016llx,%016llx,%016llx\n",
-+			  (u64)idxd->hw.dsacap2.bits,
-+			  (u64)idxd->hw.dsacap1.bits,
-+			  (u64)idxd->hw.dsacap0.bits);
-+}
-+static DEVICE_ATTR_RO(dsacaps);
-+
- static bool idxd_device_attr_max_batch_size_invisible(struct attribute *attr,
- 						      struct idxd_device *idxd)
- {
-@@ -1750,6 +1762,14 @@ static bool idxd_device_attr_event_log_size_invisible(struct attribute *attr,
- 		!idxd->hw.gen_cap.evl_support);
- }
- 
-+static bool idxd_device_attr_dsacaps_invisible(struct attribute *attr,
-+					       struct idxd_device *idxd)
-+{
-+	return attr == &dev_attr_dsacaps.attr &&
-+		(idxd->data->type != IDXD_TYPE_DSA ||
-+		idxd->hw.version < DEVICE_VERSION_3);
-+}
-+
- static umode_t idxd_device_attr_visible(struct kobject *kobj,
- 					struct attribute *attr, int n)
- {
-@@ -1768,6 +1788,9 @@ static umode_t idxd_device_attr_visible(struct kobject *kobj,
- 	if (idxd_device_attr_event_log_size_invisible(attr, idxd))
- 		return 0;
- 
-+	if (idxd_device_attr_dsacaps_invisible(attr, idxd))
-+		return 0;
-+
- 	return attr->mode;
- }
- 
-@@ -1795,6 +1818,7 @@ static struct attribute *idxd_device_attributes[] = {
- 	&dev_attr_cmd_status.attr,
- 	&dev_attr_iaa_cap.attr,
- 	&dev_attr_event_log_size.attr,
-+	&dev_attr_dsacaps.attr,
- 	NULL,
- };
- 
+ 		/* bytes 16-19 */
+ 		u16 occupancy_inth;
 
 -- 
 2.52.0

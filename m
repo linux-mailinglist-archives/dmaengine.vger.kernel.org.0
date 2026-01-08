@@ -1,152 +1,158 @@
-Return-Path: <dmaengine+bounces-8104-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8106-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFA76D02200
-	for <lists+dmaengine@lfdr.de>; Thu, 08 Jan 2026 11:32:08 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BED97D02323
+	for <lists+dmaengine@lfdr.de>; Thu, 08 Jan 2026 11:49:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DD1043001BF8
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Jan 2026 10:32:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9BF0030BB656
+	for <lists+dmaengine@lfdr.de>; Thu,  8 Jan 2026 10:41:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52CC43B8BA6;
-	Thu,  8 Jan 2026 10:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A5684BB0B7;
+	Thu,  8 Jan 2026 10:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="own0Pc+t";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xLz/pdli"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="YALbVOd1"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C9348E8D2;
-	Thu,  8 Jan 2026 10:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1394B9E76
+	for <dmaengine@vger.kernel.org>; Thu,  8 Jan 2026 10:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767868029; cv=none; b=Ho7PsVSysvscfPfObXDxKmq89aWcJWy8qWQ4G0MPaLNF1cTgvK6Zosh1KbEQxGO9pQz0YXBfb7pMFuKWiQhPMuGwipwV2hVMV5Bwya+Yup1vafih2CKO0DABQe9zMCcFJkB0THKk/9m7WciskVKsmfBwt2UF/5haDGRMvLCNe5A=
+	t=1767868591; cv=none; b=hwmRfN7F3CY5tBfH3nhi7bqzILTK42POionwE1F4VYJctVyVDcazFPBiLUs6n1kh8RNhgB2F7jg2jdHo3t3GO36BN9UZ5ub8MfgRiSUEv0Cybk6T3akQoN7mvQIHsW5jCPvLn8vdoapNKrsj69gKMm79ilhoW2idLKJDnkYWwPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767868029; c=relaxed/simple;
-	bh=cw/hFBUMtTjJ9nQOD48Kt7+2qMNfXJa4DptZ3WzsYOc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Tavc34Y+2iJndkMsMOTD/e0oQkt1Dc0AyS/q0Xxwq8tPvj3Bo32qA2GBzRjmwqx2XRlGjjoK19CM41t4OPU8UD/s5BgmXTpiF6ROJrdcMBW75XfCXYBNAt3z6pgHP9Czl1cCE3R/3RqOWiIodoOg9mNf3be9thhYhYKfHpiWP4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=own0Pc+t; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xLz/pdli; arc=none smtp.client-ip=202.12.124.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.stl.internal (Postfix) with ESMTP id 52C6B1D000CF;
-	Thu,  8 Jan 2026 05:27:01 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Thu, 08 Jan 2026 05:27:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1767868021;
-	 x=1767954421; bh=hwzwki6Pe3xy/D9JLf90oZTp8vrfN7FL6aqLOPOqUak=; b=
-	own0Pc+tz/1xpMkmjnIJPigoJ/n3ElwnWX2oDVY1UHfiT1OGKU6cvEGVTVd3qmtE
-	LMZ48ogTLUS7KUmmONtV18M2pXzjVnMsX2PnLb9Mlp0o2TIWkMtXgufBVCcDfdi2
-	emIV0ff8tyuAyRHtPzYdXWVMZIm0qyd7e6CNcE8EtCtfcVRgoj1j1ZmjLBVJLbI+
-	WCXRVjwXYwFIHRHd2ls3ebkNhhCZagKQg1X8bRZRKSSbxE1yX9CBzKbWxF1mapUK
-	2DlpG6wkQklyQbn+f+fdHpG1NnOr5FbjONBN2SZ1Jo8w+Ua/fmI2fXMGX/12RejT
-	AkD2Jd7y5BgPv4mGdsU2RA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767868021; x=
-	1767954421; bh=hwzwki6Pe3xy/D9JLf90oZTp8vrfN7FL6aqLOPOqUak=; b=x
-	Lz/pdlioXqr4eciYE+NwBEDQBHhCUJNXSgCPDzlcGxf38ijUo6p2jDrW3fUmQvfL
-	qDk2psT/IPsjAPKMSY8dsWjxif29wzDe1Ef4NgZ7qBcEoKqCynUvnOpwWecDG9QI
-	XX4tA/VrwsCVlKiVDXqJ0MwXaXPPrJAXNJt/z3HoTVVAQYEe45VEMlzQVxZre2xN
-	8Ga3EHTzPY73YpyWwUmsOIh+Z3+A+4xZ9efPHYSDnVa3qky/2b2qTCNIw6EPKmJS
-	CJmjr4QMRBV3YLE6t3ok2ZmP/0JSyEn4h0olqorxEXUHXJ97QX1cSRTeTgwOxyU0
-	Ti5s7ElHJEnw/Vq0IdDuQ==
-X-ME-Sender: <xms:dYZfaSNMp4Kww6ORbKW-_hxES8LSnmDq0nJ4ZsBjez2O51JACNBqng>
-    <xme:dYZfabywdVUOVIFk19a-ew0_6gCxY8ZDY5te0Geqi6VgEtc6LlTcokwYpmveqsSUN
-    V63ALWY1uWznZWFQdDH4ggR634Nfq0iWr_IXrc58mRVbm39zO05zA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdehjeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtoheprghllhgvnhdrlhhkmhhlsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
-    epkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvkhhouhhlsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
-    rdhorhhg
-X-ME-Proxy: <xmx:dYZfaUaSGJMpeDKmT1pNVlxb5oV4UFPl4hFpySNNVaA_CeHExjT0Cg>
-    <xmx:dYZfaYWFZUVBMOBNRyGruzziEsqw0YBcyHnBUpP_ZjnsmAEtJ4Q1QA>
-    <xmx:dYZfaaifBIU38pTsYoKO-ehL8Sm2vJDCr4MKTuNBbfwIhByhCg8KLQ>
-    <xmx:dYZfaesruqCgf5rR9-ds3xsg6piffndBbHq8z6jKoNSFkLBXMWUWwg>
-    <xmx:dYZfaYHFyqX0H1yfGxsnSrTGi18pl6hPfJNrnwl-EDU3lugruSh1iFG7>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 059BE700065; Thu,  8 Jan 2026 05:27:01 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1767868591; c=relaxed/simple;
+	bh=wnK7QZWEdjbRSd+ckGKjMNtsLt/n6eI8Vz+g54tbC+U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sr/eDfoStk/nnCK4YiOCBHOqH6GDvw8zhEHB9N3BH2DLBmKo0E1/HonMUdQEbRf+9kuBgx5v0WBvfLjFT8YJWC8w2dsWv4ardip2q9VNlMqAzSP8yW0IWQi3cIyDq2A243ONqSruocGzTf5gLIZDnQskNEphHIj/hP3GdKFGYdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=YALbVOd1; arc=none smtp.client-ip=209.85.221.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-4327555464cso1705201f8f.1
+        for <dmaengine@vger.kernel.org>; Thu, 08 Jan 2026 02:36:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1767868582; x=1768473382; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iW0aR/BFqnFRZ5JzecJqpzmhmWQzbJ3SDfxxLqkiE2g=;
+        b=YALbVOd198I0/KrzhrrQmGbnf9lsbg0stnLZQSS0bfFRr4vL6SwUe2YndHnxYxlXOJ
+         DaX92mk1mCqhjx/yW9boiHoC3j3JzIrKp2kowIdagyMaWgnw5g/RP//XChZUaLD2nXIj
+         JVpdz6KQMIX84deDxw14SSGdMId8XM8lrtBEZ7ijeEZghyg/WIcPPfqAWAifJlIVYeJT
+         8BbwWaLxIZ+hRWu3jcjHeZ8b7B+dEp0sQv3FS7nmycJ9MWnVTsD72cy6aRkm6T0uHT8I
+         2rQGRlBmWxhFg5szQ3YkcZRHh4Szsb2kOolqJPShPsJRtGLVup1ps/PNOyH8rW+pGnDZ
+         Gbpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767868582; x=1768473382;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iW0aR/BFqnFRZ5JzecJqpzmhmWQzbJ3SDfxxLqkiE2g=;
+        b=X0gVgWzPPx8ujZNXxP1sfrD2IgYE+mV327X2cTwL232sCpRQz0b3i53pBoVoIKOWWW
+         8aiAdHtg7mmfF89bBxt/JvjgtxEf195wpaPfIfM43cLF2evcRWdA43UFN4nFg6adZEo2
+         E0EdwvMesRXlVi8o2M4zcGeORbT6Eveq/T1xPVanFcQNz673f1GJeP03j1YaUA83PAIK
+         5CaI6LmeUp14nmc0sfJcUdzXwPTHMuirl49NVEdOD3jWRtDWCfk0TixHEkma2KOX5eCL
+         eqwujJmTeU6xNDXrxjD6omXDtWiKlddQx57auldQU5z6GPd2en2yqIl8mR2QUBS06WmD
+         NBLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTJgHEuD+NnbhVpKw+63FlnaOXSDHski1s6bEFHZPwcktKK1R5LP6XtiV6q/uWy+qXTORn1k7K8Ow=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN/ES4kpj4UZtyQf2HAyqL+mFyL0UXalTgvHonSF2A0dQJvdUw
+	bWbzu9pLwfMzXPQ8HCnjXdJbq2SetWFiLok1U3mFUkVuKV68fHPZdXi/sZmVGOXBYZA=
+X-Gm-Gg: AY/fxX60pmJqT3mGptCF+/2nsqD0qAvnyWAmB/ZrqM4m6+h7W6n7jlk7FxAxsB+xiv8
+	I09VNBUvDyYkEIqeX7I1xt2IFT4QvVqGSe7gh4NCzBiAEB0P2e/MYRAt9m/A2nui3tvautSP2Pp
+	fIPrzcRqgQ98WG08T8Tq4zx9994yM64fe1QDO7qsLqI70n1eDg6fR3soxft6cvw2KQNihGCKjmD
+	W6zjtL8q0F7rcE6Pe9JitZasRbX5WB/zBq6mmer+dMk+O7t3IIGqWNa43eJEXiPL+n6CTZFx8by
+	k1dcB9UV3vPQZVqeTEb2ppUeKnDlPSg/NjDupYWxoPb5OO/9D/KwlD5WeMUot7glb6ScnWfooJk
+	Kk+H3kLQq2v+3gkHP7gOZPVjpAKi9WML4koZUnUaw4ll5qxD29j/vN60vxusVSWeumeBcDKrz00
+	cBDvUrsDjw5HV3ksRFtAMje8uuyTY+xIxC3MMkny0=
+X-Google-Smtp-Source: AGHT+IEw4qrDEXmjZPid0SAgx92vHxoeKBWnaNYmuWTONQxS178/XrjYlMowupgNc3euDV/He7jZeg==
+X-Received: by 2002:a05:6000:18a6:b0:431:2b2:9629 with SMTP id ffacd0b85a97d-432c37a6c08mr6750050f8f.51.1767868582443;
+        Thu, 08 Jan 2026 02:36:22 -0800 (PST)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5ee243sm15399033f8f.31.2026.01.08.02.36.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jan 2026 02:36:22 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: vkoul@kernel.org,
+	fabrizio.castro.jz@renesas.com,
+	geert+renesas@glider.be,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	biju.das.jz@bp.renesas.com
+Cc: claudiu.beznea@tuxon.dev,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/8] dmaengine: sh: rz-dmac: Add tx_status and pause/resume support
+Date: Thu,  8 Jan 2026 12:36:12 +0200
+Message-ID: <20260108103620.3482147-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AlCBMFNMbPuR
-Date: Thu, 08 Jan 2026 11:26:26 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: Allen <allen.lkml@gmail.com>, "Vinod Koul" <vkoul@kernel.org>
-Cc: "Kees Cook" <kees@kernel.org>, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <6342bd3d-6023-4780-b3b9-96af7d2a4814@app.fastmail.com>
-In-Reply-To: <20260108080332.2341725-2-allen.lkml@gmail.com>
-References: <20260108080332.2341725-1-allen.lkml@gmail.com>
- <20260108080332.2341725-2-allen.lkml@gmail.com>
-Subject: Re: [RFC PATCH 1/1] dmaengine: introduce dmaengine_bh_wq and bh helpers
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 8, 2026, at 09:03, Allen Pais wrote:
-> Create a dedicated dmaengine bottom-half workqueue (WQ_BH | WQ_PERCPU)
-> and provide helper APIs for queue/flush/cancel of BH work items. Add
-> per-channel BH helpers in dma_chan so drivers can schedule a BH callback
-> without maintaining their own tasklets.
->
-> Convert virt-dma to use the new per-channel BH helpers and remove the
-> per-channel tasklet. Update existing drivers that only need tasklet
-> teardown to use dma_chan_kill_bh().
->
-> This provides a common BH execution path for dmaengine and establishes
-> the base for converting remaining DMA tasklets to workqueue-based BHs.
->
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Hi Allen,
+Hi,
 
-I agree that the dmaengine code should stop using tasklets here,
-but I think the last time we discussed this, we ended up not
-going with work queues as a replacement because of the inherent
-scheduling overhead. 
+Series adds tx_status and pause/resume support for the rz-dmac driver.
+Along with it were added fixes and improvements identified while working
+on the above mentioned enhancements.
 
-The use of this tasklet is to invoke the dmaengine_desc_callback(),
-which at the moment clearly expects to be called from tasklet
-context, but in most cases probably should just be called from
-hardirq context, e.g. when all it does is to call complete()
-or wake_up(). In particular, I assume this breaks any console
-driver that tries to use DMA to send output to a UART.
+Previous versions were addressed by Biju. The previous versions were
+posted here:
 
-It may make sense to take the portions of your patch that
-abstract the dmaengine drivers away from tasklet and have them
-interact with shared functions, but I don't think we should
-introduce a workqueue at all here, at least not until we
-have identified dmaengine users that want workqueue behavior.
+v4: https://lore.kernel.org/all/20240628151728.84470-1-biju.das.jz@bp.renesas.com/
+v3: https://lore.kernel.org/all/20230412152445.117439-1-biju.das.jz@bp.renesas.com/
+v2: https://lore.kernel.org/all/20230405140842.201883-1-biju.das.jz@bp.renesas.com/
+v1: https://lore.kernel.org/all/20230324094957.115071-1-biju.das.jz@bp.renesas.com/
 
-If your goal is to reduce the number of tasklet uses in the
-kernel, I would suggest taking this on at one level higher up
-the stack: assume that dma_async_tx_descriptor->callback()
-is always called at tasklet context, and introduce an
-alternative mechanism that is called from hardirq context,
-then change over each user of dma_async_tx_descriptor to
-use the hardirq method instead of the tasklet method, if
-at all possible.
+Changes in v7:
+- adjusted the pause/resume support
+- collected tags
 
-      Arnd
+Changes in v6:
+- added patches:
+-- dmaengine: sh: rz-dmac: Drop read of CHCTRL register
+-- dmaengine: sh: rz-dmac: Drop goto instruction and label
+- use vc lock in IRQ handler only for the error path
+- fixed typos
+- adjusted patch
+  "dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks"
+
+Changes in v5:
+- added patches
+-- dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+-- dmaengine: sh: rz-dmac: Protect the driver specific lists
+-- dmaengine: sh: rz-dmac: Move all CHCTRL updates under spinlock
+-- dmaengine: sh: rz-dmac: Drop unnecessary local_irq_save() call
+-- dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks
+-- dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+- for pause/resume used the DMA controller support to pause/resume
+  transfers compared with previous versions
+- adjusted patches:
+-- dmaengine: sh: rz-dmac: Add device_tx_status() callback
+
+Thank you,
+Claudiu
+
+Biju Das (2):
+  dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+  dmaengine: sh: rz-dmac: Add device_tx_status() callback
+
+Claudiu Beznea (6):
+  dmaengine: sh: rz-dmac: Protect the driver specific lists
+  dmaengine: sh: rz-dmac: Move CHCTRL updates under spinlock
+  dmaengine: sh: rz-dmac: Drop read of CHCTRL register
+  dmaengine: sh: rz-dmac: Drop goto instruction and label
+  dmaengine: sh: rz-dmac: Drop unnecessary local_irq_save() call
+  dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks
+
+ drivers/dma/sh/rz-dmac.c | 281 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 231 insertions(+), 50 deletions(-)
+
+-- 
+2.43.0
+
 

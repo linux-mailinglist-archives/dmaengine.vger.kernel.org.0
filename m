@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-8119-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8118-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AD9DD023E1
-	for <lists+dmaengine@lfdr.de>; Thu, 08 Jan 2026 11:58:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C33FDD023D8
+	for <lists+dmaengine@lfdr.de>; Thu, 08 Jan 2026 11:57:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 55AF1300CB49
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Jan 2026 10:57:35 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id AAB2E3007646
+	for <lists+dmaengine@lfdr.de>; Thu,  8 Jan 2026 10:57:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 952C6407565;
-	Thu,  8 Jan 2026 10:56:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EB923E9F6C;
+	Thu,  8 Jan 2026 10:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SKVTyNUZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M9mWuv6O"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0E44A5B01;
-	Thu,  8 Jan 2026 10:56:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05342E36F8;
+	Thu,  8 Jan 2026 10:56:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767869814; cv=none; b=feBlhESjBpapAMGB2gLgz+eD57JX4uVfRTcq2cdqz3I05rVm0uQtPZem4gYo4o6J/JT7jQD4//R5sFPnAccmuhyChjRXxen+7uhcCkMKNQuGJr5YKz1h6UML3iLpq+vmRwKaAzkQV2FmeAR2r0N8NUa8VqOdIGf6o6kztzYON/s=
+	t=1767869814; cv=none; b=CQBOh1hUFjEoy3CKp4sOufKev7vbWwo/0Pd1rKo9PBz+aVmr4d3Mz5BS40uUm+KcFPJxU7UYMX77gQAI8sPRTkOTxhyX4EwBL1IbdkT1wEFIMWN2YbuIoCGcwFrbdLS1jyTJJ6DYFs2qcJF8p7Bi3ZnRnmaF9GAGGTs305YZF+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1767869814; c=relaxed/simple;
-	bh=n0PKa+x5gXv92s+9IcYHn+CLocgSZP4a9Z3TXr15mqo=;
+	bh=rdhxhHeXthv3D6UydRaYxlwt/uP4N7mUvFy9MHLi4Co=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cpjrprtx1jHxl55ridbWQYa4fFKuanUrIj9tSOsF/7Wtn/ZcEHrC9I3DoqC08s0lEW2tlW3maswbHn84ggCR5CNRKaWvPCEignuwM/ZtwVqmMa6GPwANV+PteLSgX9imZZadgGid8Cwt1Ch768tw0aKw8Ai6s84g7gyLjS7iqZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SKVTyNUZ; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version; b=LaaPS7EvN1bDDbvbsjiUZAvfVcK4W8fwQ8sqOLbPeRLMWwl+PUS1T0Nv8RcGJpkKQgIXZc9nDRNCdtCJLumLferZV1plS5W7BY9tskgrsaImThbeyX2TmPJo0fwXCc5elXVOcNkYuSOeXRO/oVVywkbZqQxNmvze+rX2yB3zusU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M9mWuv6O; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767869809; x=1799405809;
+  t=1767869807; x=1799405807;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=n0PKa+x5gXv92s+9IcYHn+CLocgSZP4a9Z3TXr15mqo=;
-  b=SKVTyNUZTZBBfdMoyHBbAA2+1My+buLaXwuAgDkRsD0/Do0nsEilb/Ij
-   3O3EHcgUPE0akxImxgvBJTSUtLnYaV9E2EcT/XIifOKi2SRHX3WXLvPzB
-   18rlSqCgJvN+dMqEES4pzewP4o+i+y+i/KxIHZsFtL78HfR2U2Kb64AxK
-   3u64fgDe5UZek987+n0bFR7mXIYYKDV/UQrHKmJoa4m6a8xiHzc2cK3zh
-   E2UuUznaMEfWxNtOCZncfQl2FgJi7ikBP4rSnuATjW58ukOa/isZhopBt
-   n5vpxTlwNKs+7rArhEPv04ZNq11F+myZjCio5bzrb9VxxHF/8p+c6lFqn
-   w==;
-X-CSE-ConnectionGUID: BtF09BbMTPizquLeju8Jxw==
-X-CSE-MsgGUID: a/yxqrpvQRiO5EXCIf/qEg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11664"; a="80354577"
+  bh=rdhxhHeXthv3D6UydRaYxlwt/uP4N7mUvFy9MHLi4Co=;
+  b=M9mWuv6Ov0YyGRjoCsjoIfTCVflofyOr5JkWHMMyeCYodynFc4ZsLI3R
+   V129NZYHaJPz9QRHsoujEzjfuM2g48Bov1BeBuyASRvUV5JJUMvXNcn1t
+   TwqoFoKtS8xOfaS18qa+AdDGstwCXiEsxiz7I6fsF9f/pFJMpNY9FxRY4
+   T+0n/+1lw0XUa2NsVKsFLCS3i5DlUisbqqaOiV9AAmUzlWiPopRcz3V6n
+   eTjUPa9DSdT6PSclq6Mlu8DimGdfyI56ToNBjqIANWHb0OcHe15nNZFoS
+   qCFbVaC90wtsDwPrbk8a8djr2JiVw1Y7LH+7TVXzqmzOzF3Fgv1PPZ9eR
+   A==;
+X-CSE-ConnectionGUID: VBkXCNHFQKKy+QY10jSLow==
+X-CSE-MsgGUID: ZV8HaeURQrWLynX1jhaeog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11664"; a="80354561"
 X-IronPort-AV: E=Sophos;i="6.21,210,1763452800"; 
-   d="scan'208";a="80354577"
+   d="scan'208";a="80354561"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
   by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 02:56:28 -0800
-X-CSE-ConnectionGUID: dXQieIjVTd2WGJm8g7WiPQ==
-X-CSE-MsgGUID: mheJh/SfRpuKhuDOeynzPQ==
+X-CSE-ConnectionGUID: QhV2ONw8RvuC/tQXu0jlDA==
+X-CSE-MsgGUID: 4vsa0VpNTJGGMmrjFSW5TQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,210,1763452800"; 
-   d="scan'208";a="203615539"
+   d="scan'208";a="203615537"
 Received: from black.igk.intel.com ([10.91.253.5])
   by fmviesa009.fm.intel.com with ESMTP; 08 Jan 2026 02:56:21 -0800
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 4675E9B; Thu, 08 Jan 2026 11:56:20 +0100 (CET)
+	id 4B3ED9D; Thu, 08 Jan 2026 11:56:20 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -87,9 +87,9 @@ Cc: Olivier Dautricourt <olivierdautricourt@gmail.com>,
 	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
 	Michal Simek <michal.simek@amd.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v5 02/13] dmaengine: altera-msgdma: use sg_nents_for_dma() helper
-Date: Thu,  8 Jan 2026 11:50:13 +0100
-Message-ID: <20260108105619.3513561-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 03/13] dmaengine: axi-dmac: use sg_nents_for_dma() helper
+Date: Thu,  8 Jan 2026 11:50:14 +0100
+Message-ID: <20260108105619.3513561-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260108105619.3513561-1-andriy.shevchenko@linux.intel.com>
 References: <20260108105619.3513561-1-andriy.shevchenko@linux.intel.com>
@@ -106,29 +106,25 @@ Instead of open coded variant let's use recently introduced helper.
 Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/dma/altera-msgdma.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/dma/dma-axi-dmac.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
-index a203fdd84950..50534a6045a0 100644
---- a/drivers/dma/altera-msgdma.c
-+++ b/drivers/dma/altera-msgdma.c
-@@ -396,13 +396,11 @@ msgdma_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
- 	void *desc = NULL;
- 	size_t len, avail;
- 	dma_addr_t dma_dst, dma_src;
--	u32 desc_cnt = 0, i;
--	struct scatterlist *sg;
-+	u32 desc_cnt;
- 	u32 stride;
- 	unsigned long irqflags;
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index 045e9b9a90df..f5caf75dc0e7 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -677,10 +677,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_slave_sg(
+ 	if (direction != chan->direction)
+ 		return NULL;
  
+-	num_sgs = 0;
 -	for_each_sg(sgl, sg, sg_len, i)
--		desc_cnt += DIV_ROUND_UP(sg_dma_len(sg), MSGDMA_MAX_TRANS_LEN);
-+	desc_cnt = sg_nents_for_dma(sgl, sg_len, MSGDMA_MAX_TRANS_LEN);
- 
- 	spin_lock_irqsave(&mdev->lock, irqflags);
- 	if (desc_cnt > mdev->desc_free_cnt) {
+-		num_sgs += DIV_ROUND_UP(sg_dma_len(sg), chan->max_length);
+-
++	num_sgs = sg_nents_for_dma(sgl, sg_len, chan->max_length);
+ 	desc = axi_dmac_alloc_desc(chan, num_sgs);
+ 	if (!desc)
+ 		return NULL;
 -- 
 2.50.1
 

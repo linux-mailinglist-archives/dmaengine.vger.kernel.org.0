@@ -1,52 +1,55 @@
-Return-Path: <dmaengine+bounces-8134-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8135-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADD5AD06DB9
-	for <lists+dmaengine@lfdr.de>; Fri, 09 Jan 2026 03:33:57 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4538FD06DF5
+	for <lists+dmaengine@lfdr.de>; Fri, 09 Jan 2026 03:42:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2B5BF300E3C2
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Jan 2026 02:33:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8286830173A6
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Jan 2026 02:42:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 820BA314D3F;
-	Fri,  9 Jan 2026 02:33:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0E173168E5;
+	Fri,  9 Jan 2026 02:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVomjLhC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P9GPn2/4"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D03930FF1D;
-	Fri,  9 Jan 2026 02:33:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB85E2BB13;
+	Fri,  9 Jan 2026 02:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767926031; cv=none; b=mRCUSNveeV+3yZesrYuYOMQilVEfWP+1JzLfMJ+1OPoW/4/mvfGzpkgsNlBDz7Ano4OVEiUz2w1itPpWxR87Nl/TIC1bsk5t83+0Md5B51A8riX+t3hVvILkn5xztocZA7xRbSSvHiGbAY1pVKNA7jVJQhjtAJL5ddDG2pQwvSc=
+	t=1767926527; cv=none; b=oImU4TxldYkZqhFH2aJghsXlAVA525/0j203Q0GG1mUxfP+t0E5jwT5t3SG/NmtHN8/bbSQhl/+anjhPahBlLr6JY81LClsKa8UxhhsFZ9rf2itlKnjILI7P09aZ+GupvVi5vzfQ4AJ1CXmiJ2Hzt5RvgzkFgl/j4XwFVukEza8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767926031; c=relaxed/simple;
-	bh=UKYkPiFyNNBwE7sYWnWNClkXpzgVuyxBkB/AzfDgTcU=;
+	s=arc-20240116; t=1767926527; c=relaxed/simple;
+	bh=g31+4Hf030M5UkrfcWRXSDe9kElttwljGric81+w9Hw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PHqe1sBGuaj9dLZY+dWQv/R4RQi2DrzzGfrUYwwnblB84hzQ8AVCUfcoqXndheBK97HXIpzqoU9cCH9o7Jn2J4XU1/UwRcm0xuEO0MnkkTR9HKTd2skNTzzDFZivcIe2/BG8USME3mTii4/0fU3U6sC07BMYAeudQlP7SmYvFFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVomjLhC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D23C116C6;
-	Fri,  9 Jan 2026 02:33:50 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=vAKLU1fsXZLMocy17RvUJA6DkpFaMiVLnoBOStM7pYxHEoZFh3OkvD9011knMQahGV7LpcKPNfRfRSbIIJLzL+5w/RmMwVnUGgjxfAA5CtmgmkH7BBSaIpFCjCem260nwa64K1sd9iKXT7ZelBsJnCLY2QCOHTxGPEpxaaf+kPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9GPn2/4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5507C116C6;
+	Fri,  9 Jan 2026 02:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767926030;
-	bh=UKYkPiFyNNBwE7sYWnWNClkXpzgVuyxBkB/AzfDgTcU=;
+	s=k20201202; t=1767926525;
+	bh=g31+4Hf030M5UkrfcWRXSDe9kElttwljGric81+w9Hw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mVomjLhCxoqgLjUpX2lrS6WRNOoaxfTEzs1ZE/sFpSGzTTXGcWVf+JeTyZtcg2ee7
-	 KlmOcaRlqGbGhDKWPRlFYQbUq2DZsriNExRZ+SmPvS30cJiCNqM8d3+HsFfcxsQayY
-	 h3nuuwc7IUMhZnE7awvORDtFp9R6+rzf7UWs4D08rwJsrYGA7I9M+/ECn0j5rXTclj
-	 4TGq46LYWIs3Nc/vizqf3Q8Yq6ke2ByQ1a/vR+K7hrGofFv+azqSFzMP/z7sYhoAm9
-	 Wn23wrAS17yEoWU7hc9VrdCMdoNgOQlA2sn+4nYsWVXZoKjXhJR7fTDSfYXOHN3l+n
-	 0ZnriBXQeZGjQ==
-Date: Fri, 9 Jan 2026 08:03:47 +0530
+	b=P9GPn2/4mrGiOQuMOVF3/qf3CWBbZDpu10LOxAYiSicJBhAgK05Wi1CMZmgZo3nrd
+	 sjMWJiuK9iVJ4IE7WS0lSULEUoLljgnCt/jQwJpSkNnqH5QD8NS093J467RPre87fn
+	 is3ckKb1kj6aSclP+7K6KJb5UlcwJhJgDPNkhUraCWQvaU/lA9NhUDBWIUWrU4shCb
+	 BNuFPZmxKwaAVD4o1pKn8Ur9RK0cNz9ZYk2rat1kytYxRAvkRe/xQBC+DKbF9jZcK1
+	 VOZpF+EXDBQHM2yX8F+PUMonMGhMQAAACCsK/HlCI11Gz33tKpuqqfNb2D592PCnUO
+	 0btfwyrJmbGYQ==
+Date: Fri, 9 Jan 2026 08:12:01 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] dmaengine: A little cleanup and refactoring
-Message-ID: <aWBpC3un9BmJ6dYU@vaman>
-References: <20251110085349.3414507-1-andriy.shevchenko@linux.intel.com>
- <aV9SJrOpQvRsJ3nA@smile.fi.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>, dmaengine@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Brian Norris <briannorris@chromium.org>
+Subject: Re: [RESEND][PATCH v1] dmaengine: sh: Discard pm_runtime_put()
+ return value
+Message-ID: <aWBq-Rfu1yez6EjK@vaman>
+References: <8633556.T7Z3S40VBb@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -55,17 +58,54 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aV9SJrOpQvRsJ3nA@smile.fi.intel.com>
+In-Reply-To: <8633556.T7Z3S40VBb@rafael.j.wysocki>
 
-On 08-01-26, 08:43, Andy Shevchenko wrote:
-> On Mon, Nov 10, 2025 at 09:47:42AM +0100, Andy Shevchenko wrote:
-> > This just a set of small almost ad-hoc cleanups and refactoring.
-> > Nothing special and nothing that changes behaviour.
+On 08-01-26, 16:28, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Any comments on this series?
+> Clobbering an error value to be returned from shdma_tx_submit() with
+> a pm_runtime_put() return value is not particularly useful, especially
+> if the latter is 0, so stop doing that.
+> 
+> This will facilitate a planned change of the pm_runtime_put() return
+> type to void in the future.
 
-Looks good mostly, seems to have a small checkpatch error, pls fix that
-and update
+Hey Rafael,
+
+This is commit b442377c0ea2044a8f50ffa3fe59448f9ed922c in my tree.
+
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> This is requisite for converting pm_runtime_put() into a void function.
+> 
+> If you decide to pick it up, please let me know.
+> 
+> Otherwise, an ACK or equivalent will be appreciated, but also the lack
+> of specific criticism will be eventually regarded as consent.
+> 
+> Originally posted here:
+> 
+> https://lore.kernel.org/linux-pm/9626129.rMLUfLXkoz@rafael.j.wysocki/
+> 
+> ---
+>  drivers/dma/sh/shdma-base.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/drivers/dma/sh/shdma-base.c
+> +++ b/drivers/dma/sh/shdma-base.c
+> @@ -143,7 +143,7 @@ static dma_cookie_t shdma_tx_submit(stru
+>  				}
+>  
+>  				schan->pm_state = SHDMA_PM_ESTABLISHED;
+> -				ret = pm_runtime_put(schan->dev);
+> +				pm_runtime_put(schan->dev);
+>  
+>  				spin_unlock_irq(&schan->chan_lock);
+>  				return ret;
+> 
+> 
 
 -- 
 ~Vinod

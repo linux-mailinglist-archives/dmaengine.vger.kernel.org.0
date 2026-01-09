@@ -1,90 +1,127 @@
-Return-Path: <dmaengine+bounces-8146-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8147-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F19CBD097B3
-	for <lists+dmaengine@lfdr.de>; Fri, 09 Jan 2026 13:20:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88DE7D0A97E
+	for <lists+dmaengine@lfdr.de>; Fri, 09 Jan 2026 15:21:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 430F330D1845
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Jan 2026 12:15:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C4ADD3054358
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Jan 2026 14:15:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66CF0359FBE;
-	Fri,  9 Jan 2026 12:15:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33D4935E53E;
+	Fri,  9 Jan 2026 14:15:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKppacJ3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOo7l5zc"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E21310636
-	for <dmaengine@vger.kernel.org>; Fri,  9 Jan 2026 12:15:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C2735E53B
+	for <dmaengine@vger.kernel.org>; Fri,  9 Jan 2026 14:15:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767960918; cv=none; b=cwrvxkDY2H6tdsNSP9tG/Q33Yp7edtE941a9M7HYJV2RM43d+ovj6G+TfELJr+mdLM/+zLR/aRzBrchG/Q7YxERGmbm2ORY+sXUbAiwTUtUH8mWerN4Z+2miJdn8crwg6tPhlOG3Ue2h78ahN1IihC9LSY0D2WCccM57ZoJyGrE=
+	t=1767968152; cv=none; b=MSxB1g+RM3blRZ12G9W+0WUibMcmj69vW554Mq/T+kWyg9CsR98k6CcPLHfl+dAlQUmOroHZLqhObh06sS+GEW4WJ0b2ftPSof3M9F92PL6eNUzyPyf6bOl4eRLnJxX/27m2tFCqWW5dpbvrYFnz7I8L1FqyHm42pEd8EG3ALgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767960918; c=relaxed/simple;
-	bh=Q+MvHTPWuJLz+VvQWoGrQuTCvgpFbzUt9tL0+8XM1zk=;
+	s=arc-20240116; t=1767968152; c=relaxed/simple;
+	bh=LEkB5xtHjXVuFngpe1PCgKH2zts37TIIn2uF2x0GoHA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PL5EElyx/eq/Bn9XFd+tu4PSiDDsDF0q7MHGH00SWALXvkk5kSu3mv4EUTadmQ0ypmosBDcu+dGrOVvNgkHypW8aSxKV60kwnWE9DJGGgJ9jR497UPOCk3UplWthr7ljRh/wsWaraR2V8Qloz6P8Ts7DfOZvlcQxmFUEy7aELYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKppacJ3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B2D9C4AF0C
-	for <dmaengine@vger.kernel.org>; Fri,  9 Jan 2026 12:15:18 +0000 (UTC)
+	 To:Cc:Content-Type; b=erV7298nC3BT/AxL4J2/HDnE2WLR1G1obX1ITPECrkQhIXYl3kH2j49KZ6XPcMhUIwHuzkag7kbt78vYh/QheuK2J11o3CuPbMzN2+yWDAs7D86zq/bjnIsxZSPbU8CqOUrV3jZlMWwEYvLB9NEhDJHoRTJMx6E99qGhZmaHK+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOo7l5zc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5C5DC4AF09
+	for <dmaengine@vger.kernel.org>; Fri,  9 Jan 2026 14:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767960918;
-	bh=Q+MvHTPWuJLz+VvQWoGrQuTCvgpFbzUt9tL0+8XM1zk=;
+	s=k20201202; t=1767968151;
+	bh=LEkB5xtHjXVuFngpe1PCgKH2zts37TIIn2uF2x0GoHA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cKppacJ3r9yywX2c/rEBZBCX5qHhCtSBCyswDY0Gr2ORStDHDxBGFYdXvK1VM/2U/
-	 DL1dmiTWc8hqUZqdSdeRHVlGwYgUucP75UtzNNDvaX7Z5zjB4E/biYvP0lnrR/wtmJ
-	 QSFg4V3a5Q61C7Dlz8l1BAnzVGptA8iUMVQwzrjaTZKFe+G+emB3sam3OHQ5jmZAEy
-	 CEbLvwPEtUCZCZEJYmNIkudiNNZQJbth+OHAKEjyK2pCnjV5b/PChNKwmlE7pG/nDW
-	 ikrNkLehhUTemQyDh3sctI9aXRc0IoPdF+GCHGFBjOw/jde6iziZ1gVKjJf4LQdiVO
-	 IbUwEVl990f7Q==
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-450b3f60c31so2067397b6e.3
-        for <dmaengine@vger.kernel.org>; Fri, 09 Jan 2026 04:15:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXyrzzYv3pOSgriXBBywSVautYQk0fBmkk9AYb2fdYKm5al3qeaNaXizfqL8xgQTHoNob5mJXe1ezo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2AFSYP4hRog5WFDpxCRku9WGguqmNgaLpuxJSWCA8kbGwDz/b
-	LuMswZxaVQ0S0atc6bFHO2kF+0wwWXDQRA8pCFwipsCL6lYC0U/3tZyCDi4SlF/quFn5dOXfIsz
-	2viXGgP9LvGBoQkW84igkfxB8cPBCgss=
-X-Google-Smtp-Source: AGHT+IGuNuuYP5j4GBXsCKGPHH8/WGJAFVmUXPrvsPhnj56nFHYpg9m2T4o+h62kffjtfOUR+/0mF/+dtLclowT7Nwg=
-X-Received: by 2002:a05:6808:159a:b0:44f:6dcd:1e52 with SMTP id
- 5614622812f47-45a6bcd99a8mr4869690b6e.8.1767960917170; Fri, 09 Jan 2026
- 04:15:17 -0800 (PST)
+	b=cOo7l5zcVTtSK8d8ZoTvhHMZ+7r8uJ5wqzr4r0b762f/oSwo5sTMbf3PEl1eTQZdB
+	 IvWvKGMgeq3/30kAiV/uEgD4pn8dx//EsSEigWkZsN4Fmut4XXWA2hOEJqN375YqTS
+	 SOGIZLBmj+Sjb4ECAWRxEu/pZW8kcdt53t01cCBSJwDyzryPI5px0vXYIzBvA9GEqP
+	 0Tv5X4AWL0Sxb09I6GvH1Vuvb2gWzh5DsK8pXApt1MJuXj9v9rxmFSGr4P1YFg5ML8
+	 pfai91JtK3wie4Vuz5MrUEnrzxNfyq1Q8Lh6zPWFc7Iljdw0qAadgaBxgTltPCrfKL
+	 3AmWZgO0PQgXA==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-383251c34e6so2937651fa.2
+        for <dmaengine@vger.kernel.org>; Fri, 09 Jan 2026 06:15:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXmgXPCSkPDsom/KfmByEH9x//WefGe2bUPqCFrPcyWBxq2sxCUpbPp++DQeuNrajGVPo8X9yiYYa8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG1M43cFyL96XfQrAU0zAYhMC/MXp2pB7K1RAO02OdjvzS06Dd
+	7jS/zDetCHhS9Yl5eXbUMDMipT8cOXToPdlzbUy/CqsmgRoVD8mqn4p3tWFAKVDUYXwsb7RzmCh
+	4g7m0Nb7xyWUWf9VmdhNH/k1Zz97YBhoUm2mYRTi/yw==
+X-Google-Smtp-Source: AGHT+IEjHf4XcU+bJuvypnOrwB1YOTeQllVX+zgkrui63UfDLj395Ntw/Lg3Gd2DnCc1/V002jcYulQEX3HszG3lhfY=
+X-Received: by 2002:a05:651c:507:b0:383:24fe:4eaf with SMTP id
+ 38308e7fff4ca-38324fe5240mr4126731fa.30.1767968150320; Fri, 09 Jan 2026
+ 06:15:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8633556.T7Z3S40VBb@rafael.j.wysocki> <aWBq-Rfu1yez6EjK@vaman>
-In-Reply-To: <aWBq-Rfu1yez6EjK@vaman>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 9 Jan 2026 13:15:04 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hOe5Yy4pj6CXNqPRX+mTZ_CNjNhvXP4vQy9=M0DMafuA@mail.gmail.com>
-X-Gm-Features: AQt7F2ohSuiKeqvlYLG5EK6PWfQHeWgJ_xIowCcEZ3PleyRvOqbPrEvL_6WRsGw
-Message-ID: <CAJZ5v0hOe5Yy4pj6CXNqPRX+mTZ_CNjNhvXP4vQy9=M0DMafuA@mail.gmail.com>
-Subject: Re: [RESEND][PATCH v1] dmaengine: sh: Discard pm_runtime_put() return value
+References: <aUFX14nz8cQj8EIb@vaman> <CAMRc=MetbSuaU9VpK7CTio4kt-1pkwEFecARv7ROWDH_yq63OQ@mail.gmail.com>
+ <aUF2gj_0svpygHmD@vaman> <CAMRc=McO-Fbb=O3VjFk5C14CD6oVA4UmLroN4_ddCVxtfxr03A@mail.gmail.com>
+ <aUpyrIvu_kG7DtQm@vaman> <CAMRc=Md6ucK-TAmtvWMmUGX1KuVE9Wj_z4i7_-Gc7YXP=Omtcw@mail.gmail.com>
+ <aVZh3hb32r1oVcwG@vaman> <CAMRc=MePAVMZPju6rZsyQMir4CkQi+FEqbC++omQtVQC1rHBVg@mail.gmail.com>
+ <aVf5WUe9cAXZHxPJ@vaman> <CAMRc=Mdaucen4=QACDAGMuwTR1L5224S0erfC0fA7yzVzMha_Q@mail.gmail.com>
+ <aWBndOfbtweRr0uS@vaman>
+In-Reply-To: <aWBndOfbtweRr0uS@vaman>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Fri, 9 Jan 2026 15:15:38 +0100
+X-Gmail-Original-Message-ID: <CAMRc=McPz+W4GOCbNMx-tpSav3+wuUrLT2CF5FhoV5U29oiK6A@mail.gmail.com>
+X-Gm-Features: AQt7F2rb9IR691hbgnp1FtGr7o2dONlDtlFsUGEVpYxhopq1kqU8-3RQfgdAT9Y
+Message-ID: <CAMRc=McPz+W4GOCbNMx-tpSav3+wuUrLT2CF5FhoV5U29oiK6A@mail.gmail.com>
+Subject: Re: [PATCH v9 03/11] dmaengine: qcom: bam_dma: implement support for
+ BAM locking
 To: Vinod Koul <vkoul@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-	dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Brian Norris <briannorris@chromium.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Thara Gopinath <thara.gopinath@gmail.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
+	Udit Tiwari <quic_utiwari@quicinc.com>, Daniel Perez-Zoghbi <dperezzo@quicinc.com>, 
+	Md Sadre Alam <mdalam@qti.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, dmaengine@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 9, 2026 at 3:42=E2=80=AFAM Vinod Koul <vkoul@kernel.org> wrote:
+On Fri, Jan 9, 2026 at 3:27=E2=80=AFAM Vinod Koul <vkoul@kernel.org> wrote:
 >
-> On 08-01-26, 16:28, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > >
-> > Clobbering an error value to be returned from shdma_tx_submit() with
-> > a pm_runtime_put() return value is not particularly useful, especially
-> > if the latter is 0, so stop doing that.
-> >
-> > This will facilitate a planned change of the pm_runtime_put() return
-> > type to void in the future.
+> > We need an API because we send a locking descriptor, then a regular
+> > descriptor (or descriptors) for the actual transaction(s) and then an
+> > unlocking descriptor. It's a thing the user of the DMA engine needs to
+> > decide on, not the DMA engine itself.
 >
-> Hey Rafael,
->
-> This is commit b442377c0ea2044a8f50ffa3fe59448f9ed922c in my tree.
+> I think downstream sends lock descriptor always. What is the harm in
+> doing that every time if we go down that path?
 
-Cool, thanks!
+No, in downstream it too depends on the user setting the right bits.
+Currently the only user of the BAM locking downstream is the NAND
+driver. I don't think the code where the crypto driver uses it is
+public yet.
+
+And yes, there is harm - it slightly impacts performance. For QCE it
+doesn't really matter as any users wanting to offload skcipher or SHA
+are better off using the Arm Crypto Extensions anyway as they are
+faster by an order of magnitude (!). It's also the default upstream,
+where the priorities are set such that the ARM CEs are preferred over
+the QCE. QCE however, is able to coordinate with the TrustZone and
+will be used to support the DRM use-cases.
+
+I prefer to avoid impacting any other users of BAM DMA.
+
+> Reg Dmitry question above, this is dma hw capability, how will client
+> know if it has to lock on older rev of hardware or not...?
+>
+> > Also: only the crypto engine needs it for now, not all the other users
+> > of the BAM engine.
+>
+
+Trying to set the lock/unlock bits will make
+dmaengine_desc_attach_metadata() fail if HW does not support it.
+
+> But they might eventually right?
+>
+
+Yes, and they will already have the interface to do it - in the form
+of descriptor metadata.
+
+Thanks,
+Bartosz
 

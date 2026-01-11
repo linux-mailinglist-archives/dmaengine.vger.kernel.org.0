@@ -1,80 +1,80 @@
-Return-Path: <dmaengine+bounces-8194-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8195-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4DB8D0D839
-	for <lists+dmaengine@lfdr.de>; Sat, 10 Jan 2026 16:12:19 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D965D0F080
+	for <lists+dmaengine@lfdr.de>; Sun, 11 Jan 2026 15:05:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A9DC8302B43C
-	for <lists+dmaengine@lfdr.de>; Sat, 10 Jan 2026 15:10:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D1691300E03C
+	for <lists+dmaengine@lfdr.de>; Sun, 11 Jan 2026 14:05:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9415F34B1B7;
-	Sat, 10 Jan 2026 15:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7BEB33F39A;
+	Sun, 11 Jan 2026 14:04:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="UR3LYot3"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="QExsiGGl"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF5C34A79E
-	for <dmaengine@vger.kernel.org>; Sat, 10 Jan 2026 15:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86482338939
+	for <dmaengine@vger.kernel.org>; Sun, 11 Jan 2026 14:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768057798; cv=none; b=tQD7qx+oVsK0vWsy9RxKTdibpTuESG96KsLf7vk+0Nzl9qu46MjtKMirajWZhNzz5C77u3+bgaU3nFERj1ojrOcaHh8b5E50/C/qdONcwCMoe4jZ6MiuRRiKbnSORPnuiibVjtA9QmG9qJluCQfjHRJulJpyM9tALrrT0X4fIUc=
+	t=1768140299; cv=none; b=TI1hUGy49MVHOLwOi7vqA/1uTBb/zbTeanZV4daG1WX4n6LYWwkqPAL7aH13UFS1S5xrqxnWkgo74kUJWKLR17LfMuwKuEbjDRMmL6LBn/VHCvd7qEPoVV9Hg9T35nlAQSBrFzO/4KOyJcOyM0cvu9jIjqSfA8zSYBMyDWNgHkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768057798; c=relaxed/simple;
-	bh=veOrw/m8cCXNOzS0YhBEMZHiqb+wrCM+D/j1ZadzRgQ=;
+	s=arc-20240116; t=1768140299; c=relaxed/simple;
+	bh=btyv13yF1O8eLHTxPRhdfp8TKAEfJvTKBJK1fYmI6Xg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QXQPSZhEvOLYupC8pxvPQnnKW5i1kjV5j5yrpAJFjbl30O538Fjtlj1ki68FNPomAbBYptYgj/4XMnpeCGvmdtLEqsNQal578PUZCcH89bcJG7b7mu8ML0r6PJssDw/BNWmW5286YZZUcOsj7uRwsAgTNDQtbYVRFPUfpU1sOnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=UR3LYot3; arc=none smtp.client-ip=209.85.221.47
+	 In-Reply-To:Content-Type; b=nb3Hgx047uv16cm0NAxxiInA5JEHjIfWkMGv4ylp1U0jh0ZuTJ2gf3poFjOtxK2b2wNDgV8U95bvfk9Q3uBVkpswqqVuQMnA15Qm7vwnp+koA4sM6M2XbevLa7/x5Sjx481yQEpVJrFmRhl66pBvIheO3ZtMVGJywEHWiVl2kAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=QExsiGGl; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-42fbc305882so2701470f8f.0
-        for <dmaengine@vger.kernel.org>; Sat, 10 Jan 2026 07:09:45 -0800 (PST)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-64c893f3a94so7208221a12.0
+        for <dmaengine@vger.kernel.org>; Sun, 11 Jan 2026 06:04:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1768057784; x=1768662584; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1768140296; x=1768745096; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZYFiIfX0/KjQWE2M1MYc+2i7VSmAxQXe92tai7T06wg=;
-        b=UR3LYot3X99B0iocnSlHLBo6xcEdvqWff5fJcdU9Exm6L/VyIsE1xVQ3sVYgXj7q3/
-         AJgsd1EMgirOEF5wAn7H3E2taaHVG0xxbScSmK/eNkl7JVSrD9tlrn9K3U+JEY1JherW
-         Qz8doesvUqWD5kfvD+tIrJouA/o6VYr3xVkPxj51Z9B+MKoAfeYgqiPVYyYZKZrNhk/F
-         P9bB6TJNL306n/2z4mmOJ83Oy5KeskaYSjMWq2a8PkNrM/SO+irij/BR+IX+izMpqtjd
-         cF/nBHWOZQPzwd+sng08PL/DHPEqiDOLBhZ8Qyrf6Ffy1AiCqVfxLza0Qx4ukc3S/Gwv
-         Y6Nw==
+        bh=0XwABaHQba0TZXE5KSskxvkqQOly72ac18mmHR+qtCY=;
+        b=QExsiGGlElrMbdLuVLF3vOqHwCf+WCT61him0YoQoIEWfiO4yNLyd4VPBUAKN40Gej
+         x+S845X0jv6JN0VBlI7arOrMRZmUjNjdywGxqg5AZeDp411nr7Ct3jMkAyw9oGfZ80tp
+         9peF5Nu7BK/4h9jjmebrpbIuSLELKFU7zvnFZqdA2gopeWLxeGHjMxwhymx3RIJ7uMfB
+         hpCmIW4/qAYok/gFj8dEiDrfBxbl4cYeMBaBpOEfsfmWLMvsLKPHH+jcF56wU5GfMxNT
+         Fk83jkyDvYSwRUyk76cF/DEUlxrfU34/Cp8JPQf9+99HmKUb0Ee91SKnRcSXxBM8h+ZI
+         d3oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768057784; x=1768662584;
+        d=1e100.net; s=20230601; t=1768140296; x=1768745096;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZYFiIfX0/KjQWE2M1MYc+2i7VSmAxQXe92tai7T06wg=;
-        b=EgStgBFq51jnHRQTRDGtobqLyFXHOerIdcPzWgY6rY9VRZv4JVdXK6w8WY4SCM50J7
-         tbBXAMmkyd1imXxPpFaBMJfPrg+R1DKsdbdZ8Tsi0gYysCwacM7O6AYPtz9WPJk90Au0
-         239vf8vjGZZ6OkeXjV/83hcFlmp5B1S5wGGyThDIQebm32aUvo9oz2O6AAaPtHkPBTvq
-         2YN7kZsA2lIzaouyeOT9OdNnDRz2LfLNfNIRqzmk8E76WKL+5JLJv5hxTsZjM8FlAzM+
-         I04Uhk+5ZH7gPgwRk3lmkDBMqUMjkDQ5dmanyn2vo9e0ipxstatM41B8H1EN4hCamvpY
-         NOqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgMOcjzFEe1CzR4ldsjUt59/YM+GGFbGWeOVG973wtRkchPIRw/umbZArtqCehEnmkS2KbQ4o7/G8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIBs9mp2owbcpqjvYK47epwYrC3wYMTi+EsDSSC+Pkm96A5Izg
-	yPBt787oTH4Qd7iAl4H4TinUQDrOOCx9+Ev+I2d28Y9SWPaU8iiIEU7/CP5xeIvj9hY=
-X-Gm-Gg: AY/fxX5o+iYqlU8QzPEoA1ukzaBPeCSULU5Krcf5t0DrItPLEGb3ufOV5R0+CHOiAcO
-	ona0kUfwnR6x5phZdxBjHdS39KSlmlETrCaiU3MK/aNhwWX7Bfa+bQAXJ8+eKJVNOv0JrzzQTPU
-	6Oz8wsIfzWTOdVnieL174qIzvuwL5B7NLvnQsmqQWC8x0f79mB3m2cGwjdw6olDjWae1z+vEWUf
-	I8d8QOn/lsXnEyirf+flCsRDsFUMOz8W7mam5jn4R1l7xnsQJVvzRiCT9Uf6OuO6D5zRYTORsCZ
-	8KOxjpyj6TaYNzxpgFoqIL5H/3ImxHMeSLXbIKOm80INdM+VwHlg0753r5/IMpDFbEfP7eEzSB3
-	9Ih3nQRcjBjC7VB0Wv+G+WQ8DnpWgasPfMXpzZFi7PztsArzGx+afNTK4l5U1pHXZL8nUG55mtM
-	3qfTuyev40aqRPjIbmPe0MOh8blBXz
-X-Google-Smtp-Source: AGHT+IHwvRNK+qwBLjP9mJj148RzU5png6+Rsy9u3J7EYhE07UUYa3vVSxYXarlT5BZGC6AC5xVP2w==
-X-Received: by 2002:a05:6000:40da:b0:430:f23f:4bc5 with SMTP id ffacd0b85a97d-432c3760d02mr14529601f8f.45.1768057784134;
-        Sat, 10 Jan 2026 07:09:44 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.31])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0e199bsm28208208f8f.16.2026.01.10.07.09.41
+        bh=0XwABaHQba0TZXE5KSskxvkqQOly72ac18mmHR+qtCY=;
+        b=SIoi41HQJNJK3z+HQ+nx2ADmjvtBJUsZRjeBa1PiB5MihVrCvanC93w1b7iE31stSV
+         FJ1ArzJ4uY2zew9OQ0yMFL1unkxUF7w+w8pL55mysnq9yKkDzwGZgCqHEYwfrmimBNVE
+         28CaK5wwonhQwHEIRVHOyVmYKCDPxBUelQ1PE2QGv5VTlQw+5c/0nlI5F5b7cBV3L+pP
+         70DcYMbOU6I7/ndS6PQZ9MS4MKTrFiUhAuShSDOiwKPU7P5huo+HuqTQ5P+qD5QpBd0N
+         CvFirQosxkHR+CE2jza5ZqHAmVNtAll8WFOifhR5TabH7otu/dn2xdPe2OtKfj1SAXDM
+         NB1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXcvahfCj2mvUAju33Of8eTTiYVVkawEWOrtvq5NlhRZBcaDcA2Q7DhcEFkldYP/Y56rIBMD1a1RUM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDbkAOzlBJ2zLzMf10l/6H3arhrOPdxOrQSm7ZofxHbgoiYHml
+	vX2QhCKoOygwZP6DuC7VBl193yCkyYviqLelJz94oE7NjWVsTY3veECPADtWWoyPbSQ=
+X-Gm-Gg: AY/fxX679hZlMwYjDku0w8kdpHJDPp4LryxuuT2uCT9LrC+gPLQohnl22HgzEDRMPNH
+	tL7RiJqbBtfosEP80VPu8qmy3XhEg2nBUWzYS0kPCLNmO8HxqUzzYHGcV4nS5NmINVG3bfvM+Gx
+	FzfmQJhBrKwAEB7qYr4YBU3M6qnKbXvvz+DKRZ0S/IfU6wgG/Yl/FKMunK3S6/X0GGGBIqDwXOM
+	NUAJaBfu1PtXTgACUJoOIgCmQGM7MZmGrdb1L8baXiav91gvbiPdm4842do+XhcjBYNobZC5NV6
+	zWLpRb2vhz2qv0fd+jZg2O/0NkDJJWm+p1i+MNr4ZJ0p1GuHoT0Zg1W+GootLBUWOxyP36RAdsn
+	OUlmpytZFfIE7UmRzBY61zx9YSkqarLyJ+gy6m/89VKghmXVS2L6yxrMcaPeAGAL4p3B1uBC/il
+	VTyEWyDGJHQPeHRv0nEvz50mE=
+X-Google-Smtp-Source: AGHT+IFH0IHMLB/e9VMPw+PNQvxklsKe4TmQmjkQDY/3vRiOU9XAUjD+Bmvv1dPy8Ir0WmHAJUU9Lg==
+X-Received: by 2002:a17:907:a08:b0:b07:87f1:fc42 with SMTP id a640c23a62f3a-b8444f488f0mr1766243166b.16.1768140295378;
+        Sun, 11 Jan 2026 06:04:55 -0800 (PST)
+Received: from [10.216.106.246] ([213.233.110.57])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b86f0d6d7c6sm455055266b.42.2026.01.11.06.04.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Jan 2026 07:09:43 -0800 (PST)
-Message-ID: <6c2612f9-97de-49e4-a7c2-eacea2d33f51@tuxon.dev>
-Date: Sat, 10 Jan 2026 17:09:40 +0200
+        Sun, 11 Jan 2026 06:04:54 -0800 (PST)
+Message-ID: <3f82d755-552a-4074-bee4-b2660eb6a979@tuxon.dev>
+Date: Sun, 11 Jan 2026 16:04:47 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -82,53 +82,38 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/12] ARM: at91: Simplify with scoped for each OF
- child loop
-To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
- Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>,
- Saravana Kannan <saravanak@google.com>, Nathan Chancellor
- <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Russell King <linux@armlinux.org.uk>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
- <alim.akhtar@samsung.com>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Nipun Gupta <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>,
- Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Vinod Koul <vkoul@kernel.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- llvm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-clk@vger.kernel.org, imx@lists.linux.dev, dmaengine@vger.kernel.org,
- linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
- Jonathan Cameron <jonathan.cameron@huawei.com>
-References: <20260109-of-for-each-compatible-scoped-v3-0-c22fa2c0749a@oss.qualcomm.com>
- <20260109-of-for-each-compatible-scoped-v3-2-c22fa2c0749a@oss.qualcomm.com>
+Subject: Re: [PATCH v4 01/15] dt-bindings: usb: Add Microchip LAN969x support
+To: Robert Marko <robert.marko@sartura.hr>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, nicolas.ferre@microchip.com,
+ alexandre.belloni@bootlin.com, herbert@gondor.apana.org.au,
+ davem@davemloft.net, vkoul@kernel.org, andi.shyti@kernel.org,
+ lee@kernel.org, andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, linusw@kernel.org, Steen.Hegelund@microchip.com,
+ daniel.machon@microchip.com, UNGLinuxDriver@microchip.com,
+ olivia@selenic.com, radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com,
+ gregkh@linuxfoundation.org, jirislaby@kernel.org, broonie@kernel.org,
+ lars.povlsen@microchip.com, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: luka.perkov@sartura.hr
+References: <20251229184004.571837-1-robert.marko@sartura.hr>
+ <20251229184004.571837-2-robert.marko@sartura.hr>
 Content-Language: en-US
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20260109-of-for-each-compatible-scoped-v3-2-c22fa2c0749a@oss.qualcomm.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <20251229184004.571837-2-robert.marko@sartura.hr>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 1/9/26 18:57, Krzysztof Kozlowski wrote:
-> Use scoped for-each loop when iterating over device nodes to make code a
-> bit simpler.
+On 12/29/25 20:37, Robert Marko wrote:
+> Microchip LAN969x has DWC3 compatible controller, though limited to 2.0(HS)
+> speed, so document it.
 > 
-> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+> Signed-off-by: Robert Marko<robert.marko@sartura.hr>
+
 Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 

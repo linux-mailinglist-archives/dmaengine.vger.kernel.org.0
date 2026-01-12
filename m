@@ -1,45 +1,45 @@
-Return-Path: <dmaengine+bounces-8213-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8214-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7661D12ADD
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 14:07:47 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24F70D12D6B
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 14:35:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B8F5C300647D
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 13:07:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B9B4F30142C7
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 13:35:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84AA5357A2D;
-	Mon, 12 Jan 2026 13:07:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07C0D358D07;
+	Mon, 12 Jan 2026 13:35:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bm7GSpVX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSAsE2ck"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5E4242D7C;
-	Mon, 12 Jan 2026 13:07:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DD93587A1;
+	Mon, 12 Jan 2026 13:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768223265; cv=none; b=hEovR9QcdbpnihDeT+vfJDoS6y3Zcb0+l+rZO4qjckIyK1VaEWUbIa/bEgy/bJ8cnk/t/SAz1jUEa2m6Vu8sE/V3bE4HszNq1HkwOqBBEAOnzk8XLwM4PjxbMBdegiG1VukxKQdJVoJ8f3dNmNnSSLCYJmTWqDkiQ5dTzupd520=
+	t=1768224941; cv=none; b=A7nEE4qRuMG/oXelVpdLdkQapmH9KxUmoiq6F4TQxmMwElBxDLKJjU9d6gNQbYoc4ODnKMnxppcdYTozUQdLNE3AFPr7EX3ReiVsGCMHCMeclOIUulxQy/EHrvrOEN4GaMa96gtJbJfBnYzTiJued3poiUVEMRi7dC9ng+I0dts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768223265; c=relaxed/simple;
-	bh=ix17Ps1qtfC2pvVqBCQ7IXMPmGDF8eNKN/QEJpT2JfE=;
+	s=arc-20240116; t=1768224941; c=relaxed/simple;
+	bh=hAdDNP0uJNY4vw73AVjOI055cmk4EXKQe7NLD05xkKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sieJu4lnAn0Dym3wuXH/FihT7lhd4BWA3Imu5B/NQjz1iGqF5I+FTaY4NXHNyJDFQv+YYWyDPTy3ZUCZzx7zsAiI0bojNzOfEy2044ye/grW6ylhVP+sYRhKY33+yLkz46N6Dp9+t6ZTfAURfR0GHGGtuQ/Mjr/J9Gr3aacZ2zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bm7GSpVX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A53D4C16AAE;
-	Mon, 12 Jan 2026 13:07:41 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=R8rbZ1l1UoOn265ySLmIUdi+JRY5vHpthAwsBfswmAwOzUmnqfnAvHOAQ2cCJKuFUyCx6hVMfPFTiO31iRVKnwNYTzKPJL8UtFEzUsZhJnMr3ZbLrGHjIEbb/XRjoLLdW1GtoI00fE2td3L5X+IDNJgokMVWMPti22WXLJAmpGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSAsE2ck; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D250C16AAE;
+	Mon, 12 Jan 2026 13:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768223264;
-	bh=ix17Ps1qtfC2pvVqBCQ7IXMPmGDF8eNKN/QEJpT2JfE=;
+	s=k20201202; t=1768224941;
+	bh=hAdDNP0uJNY4vw73AVjOI055cmk4EXKQe7NLD05xkKg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bm7GSpVXCKIS8pRomJHB+z84Bs6F+FgKNOySpLfK8U7Qg9PsOBtaawYpkhUo7ZK+q
-	 LRlnnrmWG9ESGWup87GMrfYC76XMWFfP2pr7pGR2eB3NXSGF9F7hZfNiKNf/BvD7wY
-	 5XirUTRbadEcT1N2C4MxEHk7BfLb1CijMEHtWtna5xbBsvvVLOhQQTMxwsEKsWmjmd
-	 UNdys7S70CgZuBhlN1gysNPDuMVzDMruYhGHRxhMBZE5UYA+bAi7Wxn1lbzZsOGf94
-	 68ax68PfiPzDnvVuPmLAxU33EZ8hyT6xTPEo+C8VGNNUzQWd8i9PpxxiW6MJsW5DTT
-	 +UgK/ibdrNvkw==
-Date: Mon, 12 Jan 2026 14:07:38 +0100
+	b=sSAsE2ckcMezYmFQIV9Yd3FvJ6NJatqBOWcglypCWCOOZcaRknUNzSGc1K1VDI6Q8
+	 G0+bUFIRre9DiQ8r9tI7UlnoO5tRY7Ry76RH6d/S7VS+YRTR2msLcsGXwXF2zA6GqL
+	 zAG+Ci/fWtl+3TQ+geYxXPx0H9l0tZmRXY9i5MC54T3nrR1oqNAMPtLFhAgceeehCA
+	 ZFYReahADgOJcNjwd5qjjTEduqvXJghwtfiQ2LHpMDlzRrYztueJoEt6PIR8kE07Fe
+	 L87h2tJEN7v2yrW04x6YoiiBTm9Sh/MqmMFic8lIUkq6ZP2FA7EvHBPS1NOjCL+ibG
+	 Gxx+qqK3PtHNw==
+Date: Mon, 12 Jan 2026 14:35:35 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>,
@@ -51,129 +51,53 @@ Cc: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
 	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-nvme@lists.infradead.org, imx@lists.linux.dev
-Subject: Re: [PATCH v2 00/11] dmaengine: dw-edma: flatten desc structions and
- simple code
-Message-ID: <aWTyGpGN6WqtVCfN@ryzen>
-References: <20260109-edma_ll-v2-0-5c0b27b2c664@nxp.com>
+	linux-nvme@lists.infradead.org, Damien Le Moal <dlemoal@kernel.org>,
+	imx@lists.linux.dev
+Subject: Re: [PATCH RFT 0/5] dmaengine: dw-edma: support dynamtic add link
+ entry during dma engine running
+Message-ID: <aWT4p7RnFykJnuOz@ryzen>
+References: <20260109-edma_dymatic-v1-0-9a98c9c98536@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260109-edma_ll-v2-0-5c0b27b2c664@nxp.com>
+In-Reply-To: <20260109-edma_dymatic-v1-0-9a98c9c98536@nxp.com>
 
 Hello Frank,
 
-Thanks for doing this work!
+On Fri, Jan 09, 2026 at 03:13:24PM -0500, Frank Li wrote:
 
-Sorry for pointing out a lot of typos here.
-However, I do think it gives a better impression if there are fewer typos.
+Subject: dmaengine: dw-edma: support dynamtic add link entry during dma engine running
 
-
-On Fri, Jan 09, 2026 at 10:28:20AM -0500, Frank Li wrote:
-
-Subject: dmaengine: dw-edma: flatten desc structions and simple code
-
-s/structions/structures/
-s/simple/simplify/
-
-
-> This patch week depend on the below serise.
-
-s/serise/series/
-
-
-> https://lore.kernel.org/imx/20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com/
-
-Should this not be based on:
-https://lore.kernel.org/dmaengine/20260105-dma_prep_config-v3-0-a8480362fd42@nxp.com/
-instead?
-
-
-> 
-> Basic change
-> 
-> struct dw_edma_desc *desc
->        └─ chunk list
->             └─ burst list
-> 
-> To
-> 
-> struct dw_edma_desc *desc
->             └─ burst[n]
-> 
-> And reduce at least 2 times kzalloc() for each dma descriptor create.
-
-s/create/creation/
-
-
-> 
-> I only test eDMA part, not hardware test hdma part.
-> 
-> The finial goal is dymatic add DMA request when DMA running. So needn't
-
-s/finial/final/
-
-Here and many other places:
-s/dymatic/dynamic/
-
-Also in patch 1/11:
 s/dynamtic/dynamic/
 
+Also in patch 1/5:
+s/dymatic/dynamic/
 
-> wait for irq for fetch next round DMA request.
+
+> Patch depend on
+> https://lore.kernel.org/imx/20260109-edma_ll-v2-0-5c0b27b2c664@nxp.com/T/#t
+
+To make it easier for the reader, please include the full list of
+dependencies, i.e. also include:
+https://lore.kernel.org/dmaengine/20260105-dma_prep_config-v3-0-a8480362fd42@nxp.com/
+here.
+
+
 > 
-> This work is neccesary to for dymatic DMA request appending.
+> Only test eDMA, have not tested HDMA.
+> Corn case have not tested, such as pause/resume transfer.
 
-s/to/too/
-s/neccessary/necessary/
-
-> 
-> The post this part first to review and test firstly during working dymatic
-> DMA part.
-> 
-> performance is little bit better. Use NVME as EP function
-
-s/NVME/NVMe/
+s/Corn case/Corner cases/
 
 
 > 
 > Before
 > 
->   Rnd read,    4KB,  QD=1, 1 job :  IOPS=6660, BW=26.0MiB/s (27.3MB/s)
->   Rnd read,    4KB, QD=32, 1 job :  IOPS=28.6k, BW=112MiB/s (117MB/s)
->   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=33.4k, BW=130MiB/s (137MB/s)
->   Rnd read,  128KB,  QD=1, 1 job :  IOPS=914, BW=114MiB/s (120MB/s)
->   Rnd read,  128KB, QD=32, 1 job :  IOPS=1204, BW=151MiB/s (158MB/s)
->   Rnd read,  128KB, QD=32, 4 jobs:  IOPS=1255, BW=157MiB/s (165MB/s)
->   Rnd read,  512KB,  QD=1, 1 job :  IOPS=248, BW=124MiB/s (131MB/s)
->   Rnd read,  512KB, QD=32, 1 job :  IOPS=353, BW=177MiB/s (185MB/s)
->   Rnd read,  512KB, QD=32, 4 jobs:  IOPS=388, BW=194MiB/s (204MB/s)
->   Rnd write,   4KB,  QD=1, 1 job :  IOPS=6241, BW=24.4MiB/s (25.6MB/s)
->   Rnd write,   4KB, QD=32, 1 job :  IOPS=24.7k, BW=96.5MiB/s (101MB/s)
->   Rnd write,   4KB, QD=32, 4 jobs:  IOPS=26.9k, BW=105MiB/s (110MB/s)
->   Rnd write, 128KB,  QD=1, 1 job :  IOPS=780, BW=97.5MiB/s (102MB/s)
->   Rnd write, 128KB, QD=32, 1 job :  IOPS=987, BW=123MiB/s (129MB/s)
->   Rnd write, 128KB, QD=32, 4 jobs:  IOPS=1021, BW=128MiB/s (134MB/s)
->   Seq read,  128KB,  QD=1, 1 job :  IOPS=1190, BW=149MiB/s (156MB/s)
->   Seq read,  128KB, QD=32, 1 job :  IOPS=1400, BW=175MiB/s (184MB/s)
->   Seq read,  512KB,  QD=1, 1 job :  IOPS=243, BW=122MiB/s (128MB/s)
->   Seq read,  512KB, QD=32, 1 job :  IOPS=355, BW=178MiB/s (186MB/s)
->   Seq read,    1MB, QD=32, 1 job :  IOPS=191, BW=192MiB/s (201MB/s)
->   Seq write, 128KB,  QD=1, 1 job :  IOPS=784, BW=98.1MiB/s (103MB/s)
->   Seq write, 128KB, QD=32, 1 job :  IOPS=1030, BW=129MiB/s (135MB/s)
->   Seq write, 512KB,  QD=1, 1 job :  IOPS=216, BW=108MiB/s (114MB/s)
->   Seq write, 512KB, QD=32, 1 job :  IOPS=295, BW=148MiB/s (155MB/s)
->   Seq write,   1MB, QD=32, 1 job :  IOPS=164, BW=165MiB/s (173MB/s)
->   Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=250, BW=126MiB/s (132MB/s)
->   IOPS=261, BW=132MiB/s (138MB/s
-> 
-> After
 >   Rnd read,    4KB,  QD=1, 1 job :  IOPS=6780, BW=26.5MiB/s (27.8MB/s)
 >   Rnd read,    4KB, QD=32, 1 job :  IOPS=28.6k, BW=112MiB/s (117MB/s)
 >   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=33.4k, BW=130MiB/s (137MB/s)
@@ -202,57 +126,110 @@ s/NVME/NVMe/
 >   Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=255, BW=128MiB/s (134MB/s)
 >    IOPS=266, BW=135MiB/s (141MB/s)
 > 
-> To: Manivannan Sadhasivam <mani@kernel.org>
-> To: Vinod Koul <vkoul@kernel.org>
-> To: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-> To: Kees Cook <kees@kernel.org>
-> To: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> To: Manivannan Sadhasivam <mani@kernel.org>
-> To: Krzysztof Wilczyński <kwilczynski@kernel.org>
-> To: Kishon Vijay Abraham I <kishon@kernel.org>
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> To: Christoph Hellwig <hch@lst.de>
-> To: Niklas Cassel <cassel@kernel.org>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-nvme@lists.infradead.org
-> Cc: imx@lists.linux.dev
+> After
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> Changes in v2:
-> - use 'eDMA' and 'HDMA' at commit message
-> - remove debug code.
-> - keep 'inline' to avoid build warning
-> - Link to v1: https://lore.kernel.org/r/20251212-edma_ll-v1-0-fc863d9f5ca3@nxp.com
-> 
-> ---
-> Frank Li (11):
->       dmaengine: dw-edma: Add spinlock to protect DONE_INT_MASK and ABORT_INT_MASK
->       dmaengine: dw-edma: Move control field update of DMA link to the last step
->       dmaengine: dw-edma: Add xfer_sz field to struct dw_edma_chunk
->       dmaengine: dw-edma: Remove ll_max = -1 in dw_edma_channel_setup()
->       dmaengine: dw-edma: Move ll_region from struct dw_edma_chunk to struct dw_edma_chan
->       dmaengine: dw-edma: Pass down dw_edma_chan to reduce one level of indirection
->       dmaengine: dw-edma: Add helper dw_(edma|hdma)_v0_core_ch_enable()
->       dmaengine: dw-edma: Add callbacks to fill link list entries
->       dmaengine: dw-edma: Use common dw_edma_core_start() for both eDMA and HDMA
->       dmaengine: dw-edma: Use burst array instead of linked list
->       dmaengine: dw-edma: Remove struct dw_edma_chunk
-> 
->  drivers/dma/dw-edma/dw-edma-core.c    | 203 +++++++----------------------
->  drivers/dma/dw-edma/dw-edma-core.h    |  64 +++++++---
->  drivers/dma/dw-edma/dw-edma-v0-core.c | 234 +++++++++++++++++-----------------
->  drivers/dma/dw-edma/dw-hdma-v0-core.c | 147 +++++++++++----------
->  4 files changed, 292 insertions(+), 356 deletions(-)
-> ---
-> base-commit: 5498240f25c3ccbd33af3197bec1578d678dc34d
-> change-id: 20251211-edma_ll-0904ba089f01
-> 
-> Best regards,
-> --
-> Frank Li <Frank.Li@nxp.com>
-> 
+>   Rnd read,    4KB,  QD=1, 1 job :  IOPS=6148, BW=24.0MiB/s (25.2MB/s)
+>   Rnd read,    4KB, QD=32, 1 job :  IOPS=29.4k, BW=115MiB/s (121MB/s)
+>   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=38.8k, BW=151MiB/s (159MB/s)
+>   Rnd read,  128KB,  QD=1, 1 job :  IOPS=859, BW=107MiB/s (113MB/s)
+>   Rnd read,  128KB, QD=32, 1 job :  IOPS=1504, BW=188MiB/s (197MB/s)
+>   Rnd read,  128KB, QD=32, 4 jobs:  IOPS=1531, BW=191MiB/s (201MB/s)
+>   Rnd read,  512KB,  QD=1, 1 job :  IOPS=238, BW=119MiB/s (125MB/s)
+>   Rnd read,  512KB, QD=32, 1 job :  IOPS=390, BW=195MiB/s (205MB/s)
+>   Rnd read,  512KB, QD=32, 4 jobs:  IOPS=404, BW=202MiB/s (212MB/s)
+>   Rnd write,   4KB,  QD=1, 1 job :  IOPS=5801, BW=22.7MiB/s (23.8MB/s)
+>   Rnd write,   4KB, QD=32, 1 job :  IOPS=24.7k, BW=96.6MiB/s (101MB/s)
+>   Rnd write,   4KB, QD=32, 4 jobs:  IOPS=32.7k, BW=128MiB/s (134MB/s)
+>   Rnd write, 128KB,  QD=1, 1 job :  IOPS=744, BW=93.1MiB/s (97.6MB/s)
+>   Rnd write, 128KB, QD=32, 1 job :  IOPS=1278, BW=160MiB/s (168MB/s)
+>   Rnd write, 128KB, QD=32, 4 jobs:  IOPS=1278, BW=160MiB/s (168MB/s)
+>   Seq read,  128KB,  QD=1, 1 job :  IOPS=853, BW=107MiB/s (112MB/s)
+>   Seq read,  128KB, QD=32, 1 job :  IOPS=1511, BW=189MiB/s (198MB/s)
+>   Seq read,  512KB,  QD=1, 1 job :  IOPS=240, BW=120MiB/s (126MB/s)
+>   Seq read,  512KB, QD=32, 1 job :  IOPS=386, BW=193MiB/s (203MB/s)
+>   Seq read,    1MB, QD=32, 1 job :  IOPS=200, BW=201MiB/s (211MB/s)
+>   Seq write, 128KB,  QD=1, 1 job :  IOPS=749, BW=93.7MiB/s (98.3MB/s)
+>   Seq write, 128KB, QD=32, 1 job :  IOPS=1266, BW=158MiB/s (166MB/s)
+>   Seq write, 512KB,  QD=1, 1 job :  IOPS=198, BW=99.0MiB/s (104MB/s)
+>   Seq write, 512KB, QD=32, 1 job :  IOPS=352, BW=176MiB/s (185MB/s)
+>   Seq write,   1MB, QD=32, 1 job :  IOPS=184, BW=184MiB/s (193MB/s)
+>   Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=287, BW=145MiB/s (152MB/s)
+>  IOPS=299, BW=149MiB/s (156MB/s)
+
+We can clearly see the improvement, but overall, your numbers are quite low.
+What is the PCIe Gen + number of lanes you are using?
+Are you running nvmet-pci-epf backed by a real drive or backed by null-blk?
+(Having nvmet-pci-epf backed by null-blk is much better for benchmarking.)
+
+I'm using nvmet-pci-epf backed by null-blk, with a PCIe Gen3 link with 4 lanes.
+
+
+Applying only your dependencies, I get:
+
+  Rnd read,    4KB,  QD=1, 1 job :  IOPS=12.1k, BW=47.2MiB/s (49.5MB/s)
+  Rnd read,    4KB, QD=32, 1 job :  IOPS=51.1k, BW=200MiB/s (209MB/s)
+  Rnd read,    4KB, QD=32, 4 jobs:  IOPS=72.2k, BW=282MiB/s (296MB/s)
+  Rnd read,  128KB,  QD=1, 1 job :  IOPS=2922, BW=365MiB/s (383MB/s)
+  Rnd read,  128KB, QD=32, 1 job :  IOPS=18.9k, BW=2368MiB/s (2483MB/s)
+  Rnd read,  128KB, QD=32, 4 jobs:  IOPS=18.7k, BW=2334MiB/s (2447MB/s)
+  Rnd read,  512KB,  QD=1, 1 job :  IOPS=1867, BW=934MiB/s (979MB/s)
+  Rnd read,  512KB, QD=32, 1 job :  IOPS=4738, BW=2369MiB/s (2484MB/s)
+  Rnd read,  512KB, QD=32, 4 jobs:  IOPS=4675, BW=2338MiB/s (2451MB/s)
+  Rnd write,   4KB,  QD=1, 1 job :  IOPS=10.6k, BW=41.4MiB/s (43.5MB/s)
+  Rnd write,   4KB, QD=32, 1 job :  IOPS=34.4k, BW=135MiB/s (141MB/s)
+  Rnd write,   4KB, QD=32, 4 jobs:  IOPS=34.4k, BW=135MiB/s (141MB/s)
+  Rnd write, 128KB,  QD=1, 1 job :  IOPS=2624, BW=328MiB/s (344MB/s)
+  Rnd write, 128KB, QD=32, 1 job :  IOPS=10.2k, BW=1277MiB/s (1339MB/s)
+  Rnd write, 128KB, QD=32, 4 jobs:  IOPS=10.3k, BW=1282MiB/s (1344MB/s)
+  Seq read,  128KB,  QD=1, 1 job :  IOPS=3195, BW=399MiB/s (419MB/s)
+  Seq read,  128KB, QD=32, 1 job :  IOPS=18.6k, BW=2321MiB/s (2434MB/s)
+  Seq read,  512KB,  QD=1, 1 job :  IOPS=2162, BW=1081MiB/s (1134MB/s)
+  Seq read,  512KB, QD=32, 1 job :  IOPS=4727, BW=2364MiB/s (2479MB/s)
+  Seq read,    1MB, QD=32, 1 job :  IOPS=2360, BW=2361MiB/s (2476MB/s)
+  Seq write, 128KB,  QD=1, 1 job :  IOPS=2997, BW=375MiB/s (393MB/s)
+  Seq write, 128KB, QD=32, 1 job :  IOPS=10.2k, BW=1278MiB/s (1341MB/s)
+  Seq write, 512KB,  QD=1, 1 job :  IOPS=1434, BW=717MiB/s (752MB/s)
+  Seq write, 512KB, QD=32, 1 job :  IOPS=2557, BW=1279MiB/s (1341MB/s)
+  Seq write,   1MB, QD=32, 1 job :  IOPS=1276, BW=1276MiB/s (1338MB/s)
+  Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=2110, BW=1058MiB/s (1109MB/s)
+ IOPS=2127, BW=1068MiB/s (1120MB/s)
+
+
+Applying your dependencies + this series, I get:
+
+  Rnd read,    4KB,  QD=1, 1 job :  IOPS=12.5k, BW=48.7MiB/s (51.0MB/s)
+  Rnd read,    4KB, QD=32, 1 job :  IOPS=55.3k, BW=216MiB/s (226MB/s)
+  Rnd read,    4KB, QD=32, 4 jobs:  IOPS=175k, BW=682MiB/s (715MB/s)
+  Rnd read,  128KB,  QD=1, 1 job :  IOPS=3018, BW=377MiB/s (396MB/s)
+  Rnd read,  128KB, QD=32, 1 job :  IOPS=20.1k, BW=2519MiB/s (2641MB/s)
+  Rnd read,  128KB, QD=32, 4 jobs:  IOPS=24.4k, BW=3051MiB/s (3199MB/s)
+  Rnd read,  512KB,  QD=1, 1 job :  IOPS=1850, BW=925MiB/s (970MB/s)
+  Rnd read,  512KB, QD=32, 1 job :  IOPS=5846, BW=2923MiB/s (3065MB/s)
+  Rnd read,  512KB, QD=32, 4 jobs:  IOPS=6141, BW=3071MiB/s (3220MB/s)
+  Rnd write,   4KB,  QD=1, 1 job :  IOPS=11.6k, BW=45.4MiB/s (47.6MB/s)
+  Rnd write,   4KB, QD=32, 1 job :  IOPS=49.6k, BW=194MiB/s (203MB/s)
+  Rnd write,   4KB, QD=32, 4 jobs:  IOPS=82.0k, BW=320MiB/s (336MB/s)
+  Rnd write, 128KB,  QD=1, 1 job :  IOPS=3051, BW=381MiB/s (400MB/s)
+  Rnd write, 128KB, QD=32, 1 job :  IOPS=13.0k, BW=1619MiB/s (1698MB/s)
+  Rnd write, 128KB, QD=32, 4 jobs:  IOPS=12.5k, BW=1559MiB/s (1635MB/s)
+  Seq read,  128KB,  QD=1, 1 job :  IOPS=3445, BW=431MiB/s (452MB/s)
+  Seq read,  128KB, QD=32, 1 job :  IOPS=18.3k, BW=2283MiB/s (2394MB/s)
+  Seq read,  512KB,  QD=1, 1 job :  IOPS=2048, BW=1024MiB/s (1074MB/s)
+  Seq read,  512KB, QD=32, 1 job :  IOPS=5766, BW=2883MiB/s (3023MB/s)
+  Seq read,    1MB, QD=32, 1 job :  IOPS=3038, BW=3038MiB/s (3186MB/s)
+  Seq write, 128KB,  QD=1, 1 job :  IOPS=2961, BW=370MiB/s (388MB/s)
+  Seq write, 128KB, QD=32, 1 job :  IOPS=12.3k, BW=1535MiB/s (1609MB/s)
+  Seq write, 512KB,  QD=1, 1 job :  IOPS=1482, BW=741MiB/s (777MB/s)
+  Seq write, 512KB, QD=32, 1 job :  IOPS=3144, BW=1572MiB/s (1648MB/s)
+  Seq write,   1MB, QD=32, 1 job :  IOPS=1549, BW=1550MiB/s (1625MB/s)
+  Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=2596, BW=1303MiB/s (1366MB/s)
+ IOPS=2617, BW=1313MiB/s (1377MB/s)
+
+
+So I can clearly see an improvement with this patch series.
+Great work so far!
+
+
+Kind regards,
+Niklas
 

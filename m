@@ -1,285 +1,185 @@
-Return-Path: <dmaengine+bounces-8217-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8218-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17D8AD13C0B
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 16:43:38 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id B924DD142E5
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 17:53:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 13CE830071B8
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 15:43:37 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 386373007C0D
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 16:53:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 360F534252C;
-	Mon, 12 Jan 2026 15:43:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0193F36E484;
+	Mon, 12 Jan 2026 16:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fOrfBrGB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aolkf+cT"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185FB3112C4;
-	Mon, 12 Jan 2026 15:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D92D36E46C;
+	Mon, 12 Jan 2026 16:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768232616; cv=none; b=Fq/SR9tNIkz0sIIAdl8sxj6qelhGMWjzLstiuvlH40A1cYOcJiWijH8q+wdAEJPgBXAI2w8PUPL3sZMOkkbsM1GmhV7h3ORYi1zi3Jkr7RFjrANJGZvp5WTJPe3RfiAt/fu88IyQQiNnMaHqeU807LAKklJeat9IwAWLsxHYdNA=
+	t=1768236781; cv=none; b=rfB26lI2hDFSZK4qhayxM5tSVCK0nzancIvnrPE8WZGJSEAUybA/1TR6oKzBVy8gVqv3aMgCts4bkQYYT/e/MoX/stjqw3aWsdrwIUHzhNPOkESM/7JcEQaWwv8/d6nimZ/thYoO+aoDAIGwbghnOvAf1xJuPlaJ4iK4R1kjvns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768232616; c=relaxed/simple;
-	bh=ttyw+Z9A6Ugb9XsJhcYqjED5RJ4KVzUON4Nc9GQdA8c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qvtwjW3AygSVSgPmcgl6MiG4stlDKbJi8jmml55zB1nt34pvbRm6TPj3VvTnR4nZHmC0z91jfQH699SS3zvoLkpZYiUWR+BHRMgEFCrhYv+E60vcSlAmPPbk1E134SkvlpSddrGSfms02qt5uG3m07n0BHsDb8ZqQnpbtc2pUGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fOrfBrGB; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1768236781; c=relaxed/simple;
+	bh=laV8xz/6V9G3zKvzYctIE/Zg4SHdexkGs0xwcwO8fzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N4D0XpGDl9tP6VfY5L7ZXyBZymb4m86VGgN23ZbzRbO71Y7V2IAgJrp99fVBs//S6T5UOBt8ueIJ+N2q19ljAQH6xasqrImq1qu8n6pwEpZH32SQn3gr4p8YWKbhQnVMPf03vgi43NwXstdO+d89ivWDbV5/XfDjaWJ+im9Laog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aolkf+cT; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768232614; x=1799768614;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ttyw+Z9A6Ugb9XsJhcYqjED5RJ4KVzUON4Nc9GQdA8c=;
-  b=fOrfBrGBnCvHkekiwLYqSX1hRHiXbaG9jKy21e4HeSEz1icuxKRvunVA
-   hr59EpC9jmKdyUVDea+xHudWyHlZzeGtVRVL+NXldOdu5Ttzve6fM3izx
-   gLyKfrkyHHPvEBfmfxDN34N/pPuNAx3W4TWn+rz3CE13mv9J4KJO6yZ6O
-   OvrxNCK02TvXnHr3dhUOdhHq6+khLQNwYXLsOBBkboOlTeiPcw7pLzn+T
-   JnkkJmXX5Zxkgt2++uDWMlLlp9fzVhWXDCzhHA4WHFEgPSZiF0CY3+0BY
-   T11u+lmtecoy8iZLpHIIJU5VlMgfg6YqOeVsDTcxKFGwmQtaDTmWGX4+4
-   A==;
-X-CSE-ConnectionGUID: BOI4/mB6QSy1YXarsqmJXA==
-X-CSE-MsgGUID: +LoLcujERyCrSaPVumaIXw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="69664113"
+  t=1768236780; x=1799772780;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=laV8xz/6V9G3zKvzYctIE/Zg4SHdexkGs0xwcwO8fzM=;
+  b=aolkf+cT6beSadffBBwt7cwokN52UurUF9lmUfAZFU8UIcXpcKvvY35Y
+   45rT4Xq38Fym0D468XNITHzSYxOh/k+f/n04euuDUlFHsOe9unlfj0Aps
+   fwRPGFaQIX8wULae+zeyQQwawX4k4r81ZF0pZqTqGQy1pQO0XSq8WkFoV
+   hnB6H/HsCb98UZ7N2Hq/FXNzmdkAeeVoQNS86MhpUnv3MywdqAhkiDGwZ
+   4zBmS6D2u6WhEFarAoxaTNbP1sicl76c+haCqyg+a51+fUpLbIn/kOXHL
+   Hx5rLl8E3JbEGO7GCicS6jP7lKQqoKayWgv/HbRKkHjuZemV8mq9wMdbC
+   w==;
+X-CSE-ConnectionGUID: JkaWjF46Rcyg0EYbw91BTw==
+X-CSE-MsgGUID: q6E2KvS1TgCtsZmu3MoTwA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="69499557"
 X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="69664113"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 07:43:33 -0800
-X-CSE-ConnectionGUID: mYxfRhNcTuC89TqzwR8OuA==
-X-CSE-MsgGUID: 6cZwTC1iS0eMNNfq0rXzWg==
+   d="scan'208";a="69499557"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 08:53:00 -0800
+X-CSE-ConnectionGUID: 6yMCn+3DSnGtPVZ4MqnqCg==
+X-CSE-MsgGUID: pFAlkfMLR3C3UGbxBjlfMQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="204029064"
-Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.110.139]) ([10.125.110.139])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 07:43:29 -0800
-Message-ID: <71518468-e877-4b78-ac22-bb50e40915f3@intel.com>
-Date: Mon, 12 Jan 2026 08:43:28 -0700
+   d="scan'208";a="208288084"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.37])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 08:52:58 -0800
+Date: Mon, 12 Jan 2026 18:52:56 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: correctmost <cmlists@sent.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev,
+	vkoul@kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
+ when idma64 is present in initramfs
+Message-ID: <aWUm6DLDADMX1m-H@smile.fi.intel.com>
+References: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
+ <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 26/35] NTB: ntb_transport: Introduce DW eDMA backed
- transport mode
-To: Koichiro Den <den@valinux.co.jp>
-Cc: Frank.Li@nxp.com, ntb@lists.linux.dev, linux-pci@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mani@kernel.org,
- kwilczynski@kernel.org, kishon@kernel.org, bhelgaas@google.com,
- corbet@lwn.net, geert+renesas@glider.be, magnus.damm@gmail.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
- joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, jdmason@kudzu.us,
- allenbh@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
- kurt.schwemmer@microsemi.com, logang@deltatee.com, jingoohan1@gmail.com,
- lpieralisi@kernel.org, utkarsh02t@gmail.com, jbrunet@baylibre.com,
- dlemoal@kernel.org, arnd@arndb.de, elfring@users.sourceforge.net
-References: <20251217151609.3162665-1-den@valinux.co.jp>
- <20251217151609.3162665-27-den@valinux.co.jp>
- <e3229f31-e781-4680-aed1-05ad5174a793@intel.com>
- <gvwki3y5bec5lr4eukzreuojw4t55og72bnuoh74gmbgrdbtiq@c5qgmt5cdygd>
- <cb83f12f-14f9-4df1-bd43-c127a06bb7dc@intel.com>
- <rlqffb3dnvalfjj4vcbmqkraqxmqdv5vd4tpqq2cssyuwrydc3@ujkesovxdgfy>
- <71fd5c95-3734-479f-b1dd-9a2b48fdeb74@intel.com>
- <3zrstpea6x4imus6vskkm72hnf45l32qai4d6qdtyf5fu7tzl6@nl2xlv7ivka7>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <3zrstpea6x4imus6vskkm72hnf45l32qai4d6qdtyf5fu7tzl6@nl2xlv7ivka7>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
++Cc: Mika
 
+On Mon, Jan 12, 2026 at 04:35:08PM +0200, Andy Shevchenko wrote:
+> On Tue, Dec 16, 2025 at 12:57:10PM -0500, correctmost wrote:
+> 
+> > The following commit
+> 
+> No, it's false positive. The reality is that something else is going on
+> there on this and other similar laptops.
+> 
+> > causes my Lenovo IdeaPad touchpad not to work when
+> > kernel/drivers/dma/idma64.ko.zst is present in the initramfs image:
+> > 
+> > #regzbot introduced: 9140ce47872bfd89fca888c2f992faa51d20c2bc
+> > 
+> > "idma64: Don't try to serve interrupts when device is powered off"
+> 
+> So, the touchpad is an I²C device, which is connected to an Intel SoC.
+> The I²C host controller is Synopsys DesignWare. On Intel SoCs the above
+> mentioned IP is generated with private DMA engine, that's called Intel
+> iDMA 64-bit. Basically it's two devices under a single PCI hood.
+> The problem here is that when PCI device is in D3, both devices are
+> powered off, but something sends an interrupt and it's not recognized
+> being the one, send by a device (touchpad).
+> 
+> There is one of the following potential issues (or their combinations):
+> 
+> - the I²C host controller hardware got off too early
+> - the line is shared with something else that generates interrupt storm
+> - the BIOS does weird (wrong) things at a boot time, like not properly
+>   shutting down and disabling interrupt sources; also may have wrong
+>   pin control settings
+> - the touchpad is operating on higher frequency like 400kHz (because
+>   BIOS told to use that one instead of 100kHz) than the HW is designed
+>   for and hence unreliable with all possible side effects
+> - the touchpad firmware behaves wrongly on some sequences (see also
+>   note about the bus speed above), try to upgrade touchpad FW
+> 
+> With my experience with the case of the above mentioned commit that it
+> may be BIOS thingy. Also consider the bus speed, there are quirks in
+> the kernel for that.
+> 
+> > Here are the related logs:
+> > 
+> > ---
+> > 
+> > irq 27: nobody cared (try booting with the "irqpoll" option)
+> 
+> Almost all below is not so interesting.
+> 
+> ...
+> 
+> > handlers:
+> > [<00000000104a7621>] idma64_irq [idma64]
+> > [<00000000bd8d08e9>] i2c_dw_isr
+> > Disabling IRQ #27
+> 
+> Yes, this line at least shared between those two and might be more.
+> 
+> ...
+> 
+> > i2c_designware i2c_designware.0: controller timed out
+> > hid (null): reading report descriptor failed
+> > i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
+> > i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed with error -110
+> 
+> Yes, sounds familiar with the speed settings. Try to down it to 100kHz in case
+> it's confirmed to be 400kHz.
+> 
+> > ---
+> > 
+> > Hardware info:
+> > - Lenovo 16" IdeaPad Slim 5 - 16IRU9
+> >   - Hardware name: LENOVO 83FW/LNVNB161216, BIOS PFCN14WW 09/20/2024
+> >   - ELAN06FA:00 04F3:327E Touchpad
+> > 
+> > Steps to reproduce:
+> > - Cold boot the laptop on Arch Linux
+> > 
+> > The bug is still present with the 6.19.0-rc1-1-git kernel.
+> > 
+> > The bisected commit is from March 2024, but I only recently noticed the issue
+> > because the initramfs images on Arch Linux now include these additional
+> > drivers (as of November 2025):
+> > - kernel/drivers/dma/idma64.ko.zst
+> > - kernel/drivers/mfd/intel-lpss-pci.ko.zst
+> > - kernel/drivers/mfd/intel-lpss.ko.zst
+> > 
+> > Two other users have reported the issue on the Arch Linux and CachyOS forums,
+> 
+> Any pointers to that thread, please?
+> 
+> > so I don't think this is a hardware issue with my individual laptop.
+> 
+> I don't know how this conclusion is came here. You mean HW as laptop model?
+> But are the involved components the same (I²C host controller + touchpad)?
 
-On 1/10/26 6:43 AM, Koichiro Den wrote:
-> On Thu, Jan 08, 2026 at 10:55:46AM -0700, Dave Jiang wrote:
->>
->>
->> On 1/7/26 6:25 PM, Koichiro Den wrote:
->>> On Wed, Jan 07, 2026 at 12:02:15PM -0700, Dave Jiang wrote:
->>>>
->>>>
->>>> On 1/7/26 7:54 AM, Koichiro Den wrote:
->>>>> On Tue, Jan 06, 2026 at 11:51:03AM -0700, Dave Jiang wrote:
->>>>>>
->>>>>>
->>>>>> On 12/17/25 8:16 AM, Koichiro Den wrote:
->>>>>>> Add a new ntb_transport backend that uses a DesignWare eDMA engine
->>>>>>> located on the endpoint, to be driven by both host and endpoint.
->>>>>>>
->>>>>>> The endpoint exposes a dedicated memory window which contains the eDMA
->>>>>>> register block, a small control structure (struct ntb_edma_info) and
->>>>>>> per-channel linked-list (LL) rings for read channels. Endpoint drives
->>>>>>> its local eDMA write channels for its transmission, while host side
->>>>>>> uses the remote eDMA read channels for its transmission.
->>>>>>>
->>>>>>> A key benefit of this backend is that the memory window no longer needs
->>>>>>> to carry data-plane payload. This makes the design less sensitive to
->>>>>>> limited memory window space and allows scaling to multiple queue pairs.
->>>>>>> The memory window layout is specific to the eDMA-backed backend, so
->>>>>>> there is no automatic fallback to the memcpy-based default transport
->>>>>>> that requires the different layout.
->>>>>>>
->>>>>>> Signed-off-by: Koichiro Den <den@valinux.co.jp>
->>>>>>> ---
->>>>>>>  drivers/ntb/Kconfig                  |  12 +
->>>>>>>  drivers/ntb/Makefile                 |   2 +
->>>>>>>  drivers/ntb/ntb_transport_core.c     |  15 +-
->>>>>>>  drivers/ntb/ntb_transport_edma.c     | 987 +++++++++++++++++++++++++++
->>>>>>>  drivers/ntb/ntb_transport_internal.h |  15 +
->>>>>>>  5 files changed, 1029 insertions(+), 2 deletions(-)
->>>>>>>  create mode 100644 drivers/ntb/ntb_transport_edma.c
->>>>>>>
->>>>>>> diff --git a/drivers/ntb/Kconfig b/drivers/ntb/Kconfig
->>>>>>> index df16c755b4da..5ba6d0b7f5ba 100644
->>>>>>> --- a/drivers/ntb/Kconfig
->>>>>>> +++ b/drivers/ntb/Kconfig
->>>>>>> @@ -37,4 +37,16 @@ config NTB_TRANSPORT
->>>>>>>  
->>>>>>>  	 If unsure, say N.
->>>>>>>  
->>>>>>> +config NTB_TRANSPORT_EDMA
->>>>>>> +	bool "NTB Transport backed by remote eDMA"
->>>>>>> +	depends on NTB_TRANSPORT
->>>>>>> +	depends on PCI
->>>>>>> +	select DMA_ENGINE
->>>>>>> +	select NTB_EDMA
->>>>>>> +	help
->>>>>>> +	  Enable a transport backend that uses a remote DesignWare eDMA engine
->>>>>>> +	  exposed through a dedicated NTB memory window. The host uses the
->>>>>>> +	  endpoint's eDMA engine to move data in both directions.
->>>>>>> +	  Say Y here if you intend to use the 'use_remote_edma' module parameter.
->>>>>>> +
->>>>>>>  endif # NTB
->>>>>>> diff --git a/drivers/ntb/Makefile b/drivers/ntb/Makefile
->>>>>>> index 9b66e5fafbc0..b9086b32ecde 100644
->>>>>>> --- a/drivers/ntb/Makefile
->>>>>>> +++ b/drivers/ntb/Makefile
->>>>>>> @@ -6,3 +6,5 @@ ntb-y			:= core.o
->>>>>>>  ntb-$(CONFIG_NTB_MSI)	+= msi.o
->>>>>>>  
->>>>>>>  ntb_transport-y		:= ntb_transport_core.o
->>>>>>> +ntb_transport-$(CONFIG_NTB_TRANSPORT_EDMA)	+= ntb_transport_edma.o
->>>>>>> +ntb_transport-$(CONFIG_NTB_TRANSPORT_EDMA)	+= hw/edma/ntb_hw_edma.o
->>>>>>> diff --git a/drivers/ntb/ntb_transport_core.c b/drivers/ntb/ntb_transport_core.c
->>>>>>> index 40c2548f5930..bd21232f26fe 100644
->>>>>>> --- a/drivers/ntb/ntb_transport_core.c
->>>>>>> +++ b/drivers/ntb/ntb_transport_core.c
->>>>>>> @@ -104,6 +104,12 @@ module_param(use_msi, bool, 0644);
->>>>>>>  MODULE_PARM_DESC(use_msi, "Use MSI interrupts instead of doorbells");
->>>>>>>  #endif
->>>>>>>  
->>>>>>> +bool use_remote_edma;
->>>>>>> +#ifdef CONFIG_NTB_TRANSPORT_EDMA
->>>>>>> +module_param(use_remote_edma, bool, 0644);
->>>>>>> +MODULE_PARM_DESC(use_remote_edma, "Use remote eDMA mode (when enabled, use_msi is ignored)");
->>>>>>> +#endif
->>>>>>
->>>>>> This seems clunky. Can the ntb_transport_core determine this when the things are called through ntb_transport_edma? Or maybe a set_transport_type can be introduced by the transport itself during allocation?
->>>>>
->>>>> Agreed. I plan to drop 'use_remote_edma' and instead,
->>>>> - add a module parameter: transport_type={"default","edma"} (defaulting to "default"),
->>>>> - introduce ntb_transport_backend_register() for transports to self-register via
->>>>>   struct ntb_transport_backend { .name, .ops }, and
->>>>> - have the core select the backend whose .name matches transport_type.
->>>>>
->>>>> I think this should keep any non-default transport-specific logic out of
->>>>> ntb_transport_core, or at least keep it to a minimum, while still allowing
->>>>> non-defualt transports (*ntb_transport_edma is the only choice for now
->>>>> though) to plug in cleanly.
->>>>>
->>>>> If you see a cleaner approach, I would appreciate it if you could elaborate
->>>>> a bit more on your idea.
->>>>
->>>
->>> Thank you for the comment, let me respond inline below.
->>>
->>>> Do you think it's flexible enough that we can determine a transport type per 'ntb_transport_mw' or is this an all or nothing type of thing?
->>>
->>> At least in the current implementation, the remote eDMA use is an
->>> all-or-nothing type rather than something that can be selected per
->>> ntb_transport_mw.
->>>
->>> The way remote eDMA consumes MW is quite similar to how ntb_msi uses them
->>> today. Assuming multiple MWs are available, the last MW is reserved to
->>> expose the remote eDMA info/register/LL regions to the host by packing all
->>> of them into a single MW. In that sense, it does not map naturally to a
->>> per-MW selection model.
->>>
->>>> I'm trying to see if we can do away with the module param.
->>>
->>> I think it is useful to keep an explicit way for an administrator to choose
->>> the transport type (default vs edma). Even on platforms where dw-edma is
->>> available, there can potentially be platform-specific or hard-to-reproduce
->>> issues (e.g. problems that only show up with certain transfer patterns),
->>> and having a way to fall back the long-existing traditional transport can
->>> be valuable.
->>>
->>> That said, I am not opposed to making the default behavior an automatic
->>> selection, where edma is chosen when it's available and the parameter is
->>> left unset.
->>>
->>>> Or I guess when you probe ntb_netdev, the selection would happen there and thus transport_type would be in ntb_netdev module?
->>>
->>> I'm not sure how selecting the transport type at ntb_netdev probe time
->>> would work in practice, and what additional benefit that would provide.
->>
->> So currently ntb_netdev or ntb_transport are not auto-loaded right? They are manually probed by the user. So with the new transport, the user would modprobe ntb_transport_edma.ko. And that would trigger the eDMA transport setup right? With the ntb_transport_core library existing, we should be able to load both the ntb_transport_host and ntb_transport_edma at the same time theoretically. And ntb_netdev should be able to select one or the other transport. This is the most versatile scenario. An alternative is there can be only 1 transport ever loaded, and when ntb_transport_edma is loaded, it just looks like the default transport and netdev functions as it always has without knowing what the underneath transport is. On the platform if there are multiple NTB ports, it would be nice to have the flexibility of allowing each port choose the usage of the current transport and the edma transport if the user desires.
-> 
-> I was assuming manual load in my previous response. Also in this RFC v3,
-> ntb_transport_edma is not even a standalone module yet (although I do think
-> it should be). At this point, I feel the RFC v3 implementation is still a
-> bit too rough to use as a basis for discussing the ideal long-term design,
-> so I'd like to set it aside for a moment and focus on what the ideal shape
-> could look like.
-> 
-> My current thoughts on the ideal structure, after reading your last
-> comment, are as follows:
-> 
-> * The existing cpu/dma memcpy-based transport becomes "ntb_transport_host",
->   and the new eDMA-based transport becomes "ntb_transport_edma".
-> * Each transport is a separate kernel module, and each provides its own
->   ntb_client implementation (i.e. each registers independently with the
->   NTB core). In this model, it should be perfectly fine for both modules to
->   be loaded at the same time.
-> * Common pieces (e.g. ntb_transport_bus registration, shared helpers, and
->   the boundary/API exposed to ntb_transport_clients such as ntb_netdev)
->   should live in a shared library module, such as "ntb_transport_core" (or
->   "ntb_transport", naming TBD).
-> 
-> Then, for transport type selection:
-> 
-> * If we want to switch the transport type (host vs edma) on a per-NTB-port
->   (device) basis, we can rely on the standard driver override framework
->   (ie. driver_override, unbind/bind). To make that work, at first we need
->   to add driver_override support to ntb_bus.
-> * In the case that ntb_netdev wants to explicitly select a transport type,
->   I think it should still be handled via the per-NTB-port driver_override
->   rather than building transport-selection logic into ntb_netdev itself
->   (perhaps with some extension to the boundary API for
->   ntb_transport_clients).
-> * If ntb_transport_host / ntb_transport_edma are built-in modules, a
->   post-boot rebind might be sufficient in most cases. If that's not
->   sufficient, we could also consider providing a kernel parameter to define
->   a boot-time policy. For example, something like:
->     ntb_transport.policy=edma@0000:01:00.0,host@0000:5f:00.0
-> 
-> How doe that sound? In any case, I am planning to submit RFC v4.
-
-Yup that sounds about what I was thinking. If you are submitting RFC v4 w/o the changes mentioned about, just mention that the progress is moving towards that in the cover letter to remind people. Thanks!
-
-Any additional thoughts Jon?
-
-> 
-> Thanks for the review,
-> Koichiro
-
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
 

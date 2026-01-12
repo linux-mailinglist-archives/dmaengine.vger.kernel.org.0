@@ -1,126 +1,146 @@
-Return-Path: <dmaengine+bounces-8208-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8209-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFF16D0F841
-	for <lists+dmaengine@lfdr.de>; Sun, 11 Jan 2026 18:34:23 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09FB8D1183F
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 10:34:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 18552300B8B2
-	for <lists+dmaengine@lfdr.de>; Sun, 11 Jan 2026 17:34:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CA37D30BD6DE
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 09:30:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E2221ABBB;
-	Sun, 11 Jan 2026 17:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E15E2459DD;
+	Mon, 12 Jan 2026 09:30:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNTEZFj/"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="OsUA9GSJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BF9217F31
-	for <dmaengine@vger.kernel.org>; Sun, 11 Jan 2026 17:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B585E264612
+	for <dmaengine@vger.kernel.org>; Mon, 12 Jan 2026 09:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768152857; cv=none; b=tivPWi7+DQiUQUpd9sGLJoFLbOUl+ifRde79KcamLa49p4BI5oYs/J5/TT6z6Wh07oW3Oze07HvHCG6MT6K4yxboESy+WsBlnoi2Nf7Qj+FXpNxPJZtYC5IRWz+4oxPZxb4aeYqv4jtCqZERU2dIWc1gYiiCm7MtiaRsBpfQct0=
+	t=1768210241; cv=none; b=InsHFm9JKnRNVCzfl5kBvOBbyRBQD6WM1oWS57dGouvz1ItNHtuFpbvBtLeAQMANHpmnHo2eoOI3hG0LI055xsnxTpe+SJ7rNQ7Mb1TFNsYvBrJ15jCmG1UYSqj7KWHfHKIM0lPo40FUSuuee5xK+b16+9X87ZUzEBkWlFe2NEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768152857; c=relaxed/simple;
-	bh=dLXg8Tun1CATMwFuG8BO0FoaoeUR2NCtQgRLoHdzjcU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iDAgpwSW/kjZ8iQxNYQ5oDZxCEod/VY8V4lKe+55PkYN+4lfXuAiOJIyyZM8dhM3lt3g2XkzSo2lrcsEVHHUxBFUUDBq+21HO/5Bu7TGm9tf/vJ39drls6R06Orw7I/W9DpYG6Ymo80giOYb0vEsmS90UQflxmH6wTcAVx3I2U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GNTEZFj/; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-81e9d0cd082so1566568b3a.0
-        for <dmaengine@vger.kernel.org>; Sun, 11 Jan 2026 09:34:16 -0800 (PST)
+	s=arc-20240116; t=1768210241; c=relaxed/simple;
+	bh=GWV28/vmpmO8SPm3F91Gti98N5Hg36koBeIE519B3i8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=orZx8KF4MFYuCzCVXGXTUHu/b231PKBYiq3ai2wqxwKAlMCYOOvXQNZbHqxOaDLzKNlroR/JcdAfOQYkqEFn3gtfy8Hux1UjlKpRDwNgsgaYBJyuzTYHkJ8b0WEitC3SOLVQCUWUHEJUp5tRrye7BlE4BvXKx+SuPfRTJk5hcrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=OsUA9GSJ; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b79f8f7ea43so1300050866b.2
+        for <dmaengine@vger.kernel.org>; Mon, 12 Jan 2026 01:30:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768152856; x=1768757656; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kAdFa71sxulBHvN3d+ZO19BCSK5Dix0XN3EYZJMwXuI=;
-        b=GNTEZFj/87da/T2EKLUwmOmR2EM1QQjmIs1RMIbtlkivu9gk+A7HNpyyxwNEnN9nnG
-         wIOG8BhrZbsPVr6dl9e0kqBuVHkm34ISHjxP7FoOMW7MuVCLsDgkYLtPTA5MxmdqaAgS
-         DLXnjpKYoLpTk1I4eHGIi7QrfjUjxJ+o9TrYa99EExDaDyKe2lUuc5dVjkxGjqaN3lKp
-         fomm60vjlsAb7QYlICWWF9dhmdkbo5CPZHzN2mogXp1hB+f1MVzDhX/rVXxuRzhzZQsh
-         c/C9Mhh273LLdIIJQQ4p/nzgt13YhSznIkiG8AKYzGHJGHxbyp6m2PrUE3EbYbTR7EPi
-         5DSA==
+        d=tuxon.dev; s=google; t=1768210238; x=1768815038; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lNLrzr3qkVx4OIY6GjV8r8rlvuM/wNc6aOYx08xVrrQ=;
+        b=OsUA9GSJiQJnuR4akDZDQgEHpG3KntWMVfYqn/jnln94cFOp6IK2+zuCgsx5iITR4/
+         ZtK6Udk1c17cnG1DBmNhCtfDNk+RF1z364tVbEhTB96KEOIJ3BW0VVbexGPQQro+i2+m
+         LSW2QP5LXqypZKOCB4t6ury7aazAFlbYbbAKlkMxeoU/MFouYgB6Q6RLcW68ccLUzeBg
+         M/MtY62qG2RaFXw/fE0PcxEsu/BHBLU5Zy4yplijU4Vve3/UXAl5iBMGFue15j4sajSR
+         P6j6UjFHspU1BQ3Vr8KRwjwjAfVGOkrkiuOvqEz62tpfMxF5f0rVqUCpmO6q4t988OHA
+         /BHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768152856; x=1768757656;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kAdFa71sxulBHvN3d+ZO19BCSK5Dix0XN3EYZJMwXuI=;
-        b=jyxbBj8ccZvBkYI9xnrfl5v5DgPE0UnGH9R3KKKcWCpuGcyuVIJyUyiFO06z/ioe5t
-         96Du0fqEyfpwco4oHksmSU3XVugGRi38uVVzYliO7+GGRwlNomr+WJ63YCCa0fU9N+DQ
-         P3VLeJd0CioVNDYQsfbnEcZxPxPWPdsO83vsyxv9ZVgfjC2t8YtP3Then3Q3WfQbeQJ/
-         TUZo2i/2DdcYgwVMmfZXkL+Z75kZyBva/UuVe3rECe9WPq652T7cVLt+arolFGbkOjAZ
-         VqDGxhvFhFjXcjHwMErEUcATleF8qxeEGSVNJ2NXdvkddFqJU6XfL3p5W3s6w81otz1R
-         D6dg==
-X-Forwarded-Encrypted: i=1; AJvYcCUaPKIREnc3MV5wIGK7aJ8vBdTDmRKj2iBPBr8RIz+r2X8AHQjw3QG4Y1A90NjEF+L6xDB8ByZBwgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTJ8f8MVmnjvyxSejokhdtEvoZT3eT92MgXRlyz4pzl+BH7hKW
-	Lk9Zcq2CE/ERaIhA5Qf41zI9ZrRhQUmFKvdkmQ/sMO/vgxmB/DIy3g4=
-X-Gm-Gg: AY/fxX6W2OgBEA3G2AFZuKUsUEHoG6uxtlCN3D3J1Gh9CrkHIJElpDXQGrcFzXdkYky
-	Ppa2HmMC5mWpqcjGhvqzBJBVyVVWB09SeFgTf2q2sv8aRdriSKG3HR9VUsqY2Yq9quoniFYWzFX
-	g5IOkkSkHFrf+S6bPocxgTglxg1uy8nIMQakCSid7o9oHK7/7pNdpA2vCBP/1yOzb19okmS1Gju
-	z9C2W6UHnUkFk7Pq7eRGwC0ts0RN3rwYEdUArS2ZT0JTz6dS9zDmzW6CpJeKod4it6IwxXWITDy
-	pYEz9BFIjJbseJG89ZAgfJ6dYefHSoqTLYqVzvX4wJ7S3B0XJMUWKzllxvNokJtdICuiIHE4J/e
-	mVikr/Iag6GzEwm04H+l12UCQzjTafRUZYRcd5wY1uRaPv6sB5pQl93KGAaPNqhk+SqTRBLP13u
-	ZQV/BO6UcgIHuZBCa1
-X-Google-Smtp-Source: AGHT+IGaMeHE02sK4SYHQBbCo/FHXxeNBMLTX0e8l/oO17jzSDdnVjve18NU2WXgh/2lEl9RfKUdPQ==
-X-Received: by 2002:a05:6a20:7d9d:b0:366:14ac:e1d9 with SMTP id adf61e73a8af0-3898f9bde73mr14022720637.63.1768152855900;
-        Sun, 11 Jan 2026 09:34:15 -0800 (PST)
-Received: from DESKTOP-BKIPFGN ([45.136.255.173])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c4cc95d5dbfsm15176159a12.27.2026.01.11.09.34.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Jan 2026 09:34:15 -0800 (PST)
-From: Kery Qi <qikeyu2017@gmail.com>
-To: peter.ujfalusi@gmail.com
-Cc: vkoul@kernel.org,
-	dmaengine@vger.kernel.org,
-	Kery Qi <qikeyu2017@gmail.com>
-Subject: [PATCH] dma: ti: edma: Fix PM reference leak on probe failure
-Date: Mon, 12 Jan 2026 01:33:49 +0800
-Message-ID: <20260111173348.2218-2-qikeyu2017@gmail.com>
-X-Mailer: git-send-email 2.50.1.windows.1
+        d=1e100.net; s=20230601; t=1768210238; x=1768815038;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lNLrzr3qkVx4OIY6GjV8r8rlvuM/wNc6aOYx08xVrrQ=;
+        b=N9NnXRh/H5BVbeZ3vwf2yx3CwuXCrnECdz8HkZLj63KOMQOxlEmB4sob+5Mv3my0w3
+         2XVeR567A7GeUqK2LR0tUdUMfBZ6++1lvBwcrFVPfyfo5eDUxRv075NzKA/5CoXbCocl
+         6d3i+aRL87sVhMTxXsLPKqWgGXNCRKePd9nZSNdgjlKm4DwxKMsufkcNOguhsqWhXSqd
+         xixdW/ka5H9rmAlvWq6oUkLCdXYa7e0VbxN+WhzSS8X3c6cK/QSJHeZxE6kfz1Lz7tu5
+         13Nw6cDgmurV5ESJtcrhyY8zNwzyqq85sUbHX6Nj+jSfUEtdr+fQKVtdzY1PEckwtTnI
+         70dg==
+X-Forwarded-Encrypted: i=1; AJvYcCVuzgOVpj4hc8rCswwc+OxuAjL+M0X8B9xS39pRhtgX93bQXgMjSZXOwEo45sWxC1r2bu6Dkf00DlU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6lnBPEUah2U5wZksZOPQ07bOnifH9XuY2Jh7bYx55EQOMC4mk
+	xo0qxsz+iBWXp0xkXeEqr6rMbZXP6D3L3QTiQezaVoELV3IG4C0P3LncQs3iSxTtf6Q=
+X-Gm-Gg: AY/fxX5eZApmYaPHhP8tWmi7Ycy4B35nTmVIjozcRzxLItH1/pAXH4m9N4cVs5nVipe
+	t/t7foaJ4zaXf8KtEDXXYwttguGpx+BoeCULTILc/OP90mk1gzgw0FQxCPj5i0OWWf4R3me8JGU
+	Rh1qp4lYLdZAbxP5ZM98k3iOHFGP/HznlyzhcdEn6MgOMTQL43h6tLF0Jiapma9z+dkew/RIWfx
+	hClXP3wGqgAYPHhsmHYd9KJB/iEyglVsV1x5scy/L7TmBlrjvWi1tP/gQAIqbDnp4i1hgNikTlc
+	v3zr5kYTruCxOW2zL5pcMsGuUk8VklS3nIkCH+xKFXh/jGQz0q3qQYytL7/g0aRMsKIaJzEgbv8
+	L7WqE5pEM3eWygebzxcLY/qfBkHFY8e2ZWBpPyQZ2hcaq5AZRA7txrdqHY0JozpQ9tggGdBvghO
+	xQWQWKAl5YMUcYrv2LgA==
+X-Google-Smtp-Source: AGHT+IE3jERyAgUMeyNFYUFeB+yy2mozpdQFjJ6f8BNz9krP4mlTPOQQ5ezMeogXcOrzxqj3jJR6fg==
+X-Received: by 2002:a17:906:f5a1:b0:b7a:72bd:ac65 with SMTP id a640c23a62f3a-b8444c3fc39mr1534919766b.9.1768210237758;
+        Mon, 12 Jan 2026 01:30:37 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.31])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b844e46ee63sm1446817366b.15.2026.01.12.01.30.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Jan 2026 01:30:37 -0800 (PST)
+Message-ID: <2ad40570-102e-448b-bf40-06af8ecdfca2@tuxon.dev>
+Date: Mon, 12 Jan 2026 11:30:35 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] dmaengine: sh: rz-dmac: Refactor runtime PM handling
+To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+ tomm.merciai@gmail.com
+Cc: linux-renesas-soc@vger.kernel.org, biju.das.jz@bp.renesas.com,
+ Vinod Koul <vkoul@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250905144427.1840684-1-tommaso.merciai.xr@bp.renesas.com>
+ <20250905144427.1840684-4-tommaso.merciai.xr@bp.renesas.com>
+Content-Language: en-US
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <20250905144427.1840684-4-tommaso.merciai.xr@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The PM reference count is not expected to be incremented on
-return in functions edma_probe.
+Hi, Tommaso,
 
-However, pm_runtime_get_sync will increment pm usage counter
-even failed. Forgetting to putting operation will result in a
-reference leak here.
+On 9/5/25 17:44, Tommaso Merciai wrote:
+> Refactor runtime PM handling to ensure correct power management and prevent
+> resource leaks.  Invoke pm_runtime_get_sync() when allocating DMA channel
+> resources and pm_runtime_put() when freeing them.  Add pm_runtime_put() in
+> rz_dmac_probe() to balance the usage count during device initialization,
+> and remove the unnecessary pm_runtime_put() from rz_dmac_remove() to avoid
+> PM inconsistencies.
+> 
+> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+> ---
+>   drivers/dma/sh/rz-dmac.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+> index 0bc11a6038383..4ab6076f5499e 100644
+> --- a/drivers/dma/sh/rz-dmac.c
+> +++ b/drivers/dma/sh/rz-dmac.c
+> @@ -455,7 +455,7 @@ static int rz_dmac_alloc_chan_resources(struct dma_chan *chan)
+>   	if (!channel->descs_allocated)
+>   		return -ENOMEM;
+>   
+> -	return channel->descs_allocated;
+> +	return pm_runtime_get_sync(chan->device->dev);
 
-Replace it with pm_runtime_resume_and_get to keep usage
-counter balanced, since the failure path returns without a
-matching pm_runtime_put_noidle().
+This looks wrong to me as, rz_dmac_alloc_chan_resources() could be 
+called from the following path:
 
-Fixes: 2a03c1314506 ("dmaengine: ti: edma: add missed operations")
-Signed-off-by: Kery Qi <qikeyu2017@gmail.com>
----
- drivers/dma/ti/edma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+dma_request_chan() ->
+   find_candidate() ->
+     dma_chan_get() ->
+       rz_dmac_alloc_chan_resources()
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index 552be71db6c4..93171b473151 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -2345,9 +2345,9 @@ static int edma_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, ecc);
- 
- 	pm_runtime_enable(dev);
--	ret = pm_runtime_get_sync(dev);
-+	ret = pm_runtime_resume_and_get(dev);
- 	if (ret < 0) {
--		dev_err(dev, "pm_runtime_get_sync() failed\n");
-+		dev_err(dev, "pm_runtime_resume_and_get() failed\n");
- 		pm_runtime_disable(dev);
- 		return ret;
- 	}
--- 
-2.34.1
+With this, the runtime PM reference counter is incremented on 
+dma_request_chan() calls, when DMA consumers request DMA channels, and 
+remains different than zero until the DMA channel is put. But, on 
+suspend path, the runtime PM reference counter is not touched even when 
+there are DMA channels requested.
 
+Am I missing something?
+
+Thank you,
+Claudiu
 

@@ -1,229 +1,367 @@
-Return-Path: <dmaengine+bounces-8228-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8229-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1106ED158D4
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 23:21:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82957D163DF
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 02:57:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4A63D30274C8
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jan 2026 22:21:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6796C30038DA
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 01:56:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD8F284B37;
-	Mon, 12 Jan 2026 22:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GbhfRBA8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5B6928CF50;
+	Tue, 13 Jan 2026 01:56:55 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023079.outbound.protection.outlook.com [52.101.127.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C812628488D
-	for <dmaengine@vger.kernel.org>; Mon, 12 Jan 2026 22:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768256463; cv=none; b=Y96/BjKit2r3387bALS6XwHTsPsYA2VgbdvFgiaoeJdsPO0W/5SW2Uky7MkyX4Uu5930RTdktnvfMn6IHlucpN9MdZ0WVWFhV6bL29mKi2yx/Wld3wuCok2VLHbLZl3Zl5dUuUs6I0bViJcuUbCrySPyg/x19ekLUC2DB0vGd90=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768256463; c=relaxed/simple;
-	bh=4SPFLrU7wrxVmSv7v+NsnMnYgOOi7bckFa4Tw9bRyYI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FHo/NeWnsafiPEYJ3a7uWEFIU0u1LYuf6dYj0YLobw24Xo0EVQK6xs6zx+sxxGGHIm+vreT/YTbefdw7M205hXb3vzyAkprtu10ruu23Kc+LyNgGQnXoVvHgGkFn1TTI4aMNu/qbOLuGhI0qqmhuACo/eBd4NMSQZNpn/Vrx28Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GbhfRBA8; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-34c24f4dfb7so3696247a91.0
-        for <dmaengine@vger.kernel.org>; Mon, 12 Jan 2026 14:21:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768256461; x=1768861261; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uoiv8fedPQnlXrFULgDUJIq2gVaU1GhpnBWRrOvatjM=;
-        b=GbhfRBA8R4AJbAzeRbjl3LO6sBoC0WvNDgwrshG3LHiemMqySaEv2Sf4NHb9dIrT71
-         7gYopR67xkbzzAnzBRKyzGzQ1qXZotXnuFpKNhvhe8t90Ds27KXQ+LrxaLvnUYjl4Wca
-         BZSpq6sMlR2o6WdvRPoM2yavIVt8rJcDLYQKtdlgT22T2EI+W4j8Ym9q2PmDnm1Fou2d
-         ZD5jKDZNOv4fieIVVrCB+lLLFQZIeXu9UsppCedPGUh2CnjDrh3jMnvTu3YqcNd7+kQ4
-         O7pAynp9I+C8o9sVbohrBcuJXm3lDqMtersmq8Alc+lOnR8Am78cF4zcolXMnsithgwL
-         VVBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768256461; x=1768861261;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Uoiv8fedPQnlXrFULgDUJIq2gVaU1GhpnBWRrOvatjM=;
-        b=wtvKVIdECY9evZt3eyzeXbaQ79P1hMSJfcXPr3nNM0NwvnX+PuVEPzlfmVsKfrNuF1
-         8dv/aatLB3dU0yUHtI1xnMgJGyLlGCZwIXhQCp0M1mtfJOAugWd78/plTdf+bOOt4aLO
-         cf5J7pd94XIf6yofPSyufhxy/1Ro3MkAhY/goKUa+JPmuzffugQL2ti61ng2SOI5de5z
-         ITZ3nXYtKkFvFF6kBD3gv5Un2bb5o2p8W9OsrXW62l8LTprEfY/otlHjdg0G0+W36MCH
-         yz8nSUSb1WANEiN+jD98CCEnWqcXeAz8mvWSQRXbjvT0kirkq2Bfls0UcAl5aBMdAK5e
-         W9eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzAiGWy9jHTo3vL8du8hniVT/Th4FtFVgnIeEaKtuN/ykAEeR/WcLHwmpGgRhCkamn52bXozrZzsk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZ0VjtXBtaOct0Rm5Qj+pTYLwQEkGzOM97tA1342Wk2wzsZPIf
-	o2bH9NmjboWib5ZjIT1aT2gacnzjnqGmPcA6PsWGqZaLmCgqFhmcLgW1rMPjOsbDDzclBX/tl+Q
-	yVHcijG48y/9appsirI6ovsbPXdZXwRM=
-X-Gm-Gg: AY/fxX6at4+DoFP1ODwU1fgIuKCjO0nYlfMfldCKy8H2Vnb1E3W4SGMFHpX3Udck21E
-	2W/qzN9vMjRZQ2i2lKbv8JNnViMMcsUCuJZHbzLmrpxtBChunLGD4TLGEEh1h8JtzQ7oGEb0Mte
-	Co+xzyI3XIRuUBIhudpyVmfPd6Bsf5tp3IDvzngKqZJhHEyQ6zw08p2yoV1oZ193UVxyj3oJZwe
-	Dw6pzjbcXSfcincTqES4h6qrWhUy2PMvkrSZyCntRAnF0rzHoViI/jCrnIf8RgzmYjPQDSgB5ON
-	WerplHeXO7tsBfnOWAUXTyIEizOwWC6x6tshpw==
-X-Google-Smtp-Source: AGHT+IE7ljtkZSrtzV+qfvV9wG3ZGInUhW/Yj2eTx8GRIuJg6yQ0KjOrmu0plhXgonSN2mFEMGybAsbjpLwGvuJspYM=
-X-Received: by 2002:a17:90b:57e4:b0:340:25f0:a9b with SMTP id
- 98e67ed59e1d1-34f68cefbf9mr17291828a91.33.1768256461059; Mon, 12 Jan 2026
- 14:21:01 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEE1285061;
+	Tue, 13 Jan 2026 01:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768269415; cv=fail; b=re8uUUtK3nYQyA1sQlk+a6NLy7fiodiQduvYPIUIYQ45sJ/4HxibRV7HupA3RBk6uZXxFAT3S7Hjfwpt1p8wPOjySTp/SJrYKXUleyCGJ6/1rxcg4WAOrrtBvmLz9RIr925R0xX6FHwYJwRijGeRfHhbYtM5K73l9dI4FZsP7nY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768269415; c=relaxed/simple;
+	bh=T3nKb8vRYQQP/N0jz58g5U6bLejT813uvCXUYKBeGnY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HamtliOa/URLxPZRtfS+F4pkme+tVfco85aoqzSxG63DfIzGUv0I7/ljYXvAW9E3e8F/nxsGdC2/GZBRD6hsT6QGfILkwETPhsg0+FGcQLpP736HypuiQP5reLFzAvpI0nUfOKst36i2rLP2LOusNMzCPnA6+SvVg96b2YpdcAg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.127.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fQHB0SJyetNaupwEKDqELqBIgui8cSfsb2KXpPJcL1zPCQ/BhzMclMEzaSBlIi1SIcMvxMYlkJhdlfOQMxeVq8F3QQy2iKvpJOc7pV6hSH+i/loE9Tag2hS5snYgD4L20CSz8GSYQzLzin9uK0UuSm4J7JmQ3QgfA0a5iaxwyDzsNyTmBSR4HjeUQsKN8OSIT3pct9wH8N/PixGMi/rLppO2m8APOOjW51TVF5yb4gerzVWqWZka17gr+7bUagl3Bt92Bn+1c0Aue6YUef614E951deMVyrobQ53jsgcigjb1RI97NSQ4A8ZBZI16CX/rOqXge2zO3JiP3N/pM64WA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LPFbcmPNbOnyYqEHcx+yLkKpb1NQykppMCqhGfBfe5w=;
+ b=dIUnhF0l4BRLDYhtigPNIxSMLsDbwrTW2I+BQe8X1ProRqWt9nuobP7ueeonP5nsW7KtFgyuI+zQ6jnXBTnkHO/YwoGdzwls/q0mlQ9o6DLhEXx/j2J2wGMdq+owYCLz+aRdaq9wunD3juo3NKsJetWpGmVjqO7TV3xUI51+LakYPnwLOqWHM61o5aU1RjLwgvSzmDqNEmGxey9/e3UVC25wbTVihdp0vBHonY6+PCCDK81vrVjWFRyB3OqO7V2VgcU7P7sU6cEUBKJoIcjg0fJ8228RrkEuQISZ0tYlOeZV7NXrTzLyzsKrFM1K3/2uIK/lPd7XRFEXn7JB6WgJdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SL2P216CA0210.KORP216.PROD.OUTLOOK.COM (2603:1096:101:19::14)
+ by SEYPR06MB5961.apcprd06.prod.outlook.com (2603:1096:101:d6::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Tue, 13 Jan
+ 2026 01:56:45 +0000
+Received: from TY2PEPF0000AB85.apcprd03.prod.outlook.com
+ (2603:1096:101:19:cafe::6a) by SL2P216CA0210.outlook.office365.com
+ (2603:1096:101:19::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9499.7 via Frontend Transport; Tue,
+ 13 Jan 2026 01:56:34 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ TY2PEPF0000AB85.mail.protection.outlook.com (10.167.253.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9520.1 via Frontend Transport; Tue, 13 Jan 2026 01:56:44 +0000
+Received: from [172.20.96.43] (unknown [172.20.96.43])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 64E8340A5A13;
+	Tue, 13 Jan 2026 09:56:43 +0800 (CST)
+Message-ID: <81579735-562c-4818-818e-029ef368b718@cixtech.com>
+Date: Tue, 13 Jan 2026 09:56:43 +0800
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260108080332.2341725-1-allen.lkml@gmail.com>
- <20260108080332.2341725-2-allen.lkml@gmail.com> <6342bd3d-6023-4780-b3b9-96af7d2a4814@app.fastmail.com>
- <CAOMdWSLX07i_-NjUB6TTXbWVmeFLSNoaTBhvOs0WX6Ad=A6PDA@mail.gmail.com> <7a557097-5dca-4c44-a48f-21dfa2659abc@app.fastmail.com>
-In-Reply-To: <7a557097-5dca-4c44-a48f-21dfa2659abc@app.fastmail.com>
-From: Allen <allen.lkml@gmail.com>
-Date: Mon, 12 Jan 2026 14:20:47 -0800
-X-Gm-Features: AZwV_QgfJKT1tiAhM67WF5J1qtR-_Y3PpGHx5sNB2w4LUPkDOZEkrIN5-b_KnvU
-Message-ID: <CAOMdWSJ7ut3n-nryTYSyPD37YwN7UqyZ1VcgZ9nmBcRF_jxH=w@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/1] dmaengine: introduce dmaengine_bh_wq and bh helpers
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vinod Koul <vkoul@kernel.org>, Kees Cook <kees@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] dma: arm-dma350: add support for shared interrupt
+ mode
+From: Jun Guo <jun.guo@cixtech.com>
+To: Robin Murphy <robin.murphy@arm.com>, peter.chen@cixtech.com,
+ fugang.duan@cixtech.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, vkoul@kernel.org, ychuang3@nuvoton.com,
+ schung@nuvoton.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+ linux-arm-kernel@lists.infradead.org, jelly.jia@cixtech.com
+References: <20251216123026.3519923-1-jun.guo@cixtech.com>
+ <20251216123026.3519923-3-jun.guo@cixtech.com>
+ <910e3db2-c4ef-4c21-9336-49469234b8e6@arm.com>
+ <87ad76b4-0141-46d9-81df-1e2948f46803@cixtech.com>
+Content-Language: en-US
+In-Reply-To: <87ad76b4-0141-46d9-81df-1e2948f46803@cixtech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB85:EE_|SEYPR06MB5961:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5f7f91e9-0484-4c06-f832-08de52470115
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TVdYZlVyQmdDd2JGRnBXanBibVdpNjI4TC91V2p1YnpwZkI1MFQvaitVSllw?=
+ =?utf-8?B?d3dZL0paVGdwVzhKMFFkNy9ENTA3QktNM2FEYTBwL2lvSGtBNC9kM2ZQTTRR?=
+ =?utf-8?B?UjRaR2tPYnQ0M05Bb09jaUFEVjNuN1ZOS1hCaUE3VC9uRkQ4UlZuamRjb0Qy?=
+ =?utf-8?B?NDdVTUxkYVRxZnVLNkEvZXpteDBmMTkvRFd1RzFSYmxMdExBMm1wYU1xeFc2?=
+ =?utf-8?B?RUtkRzk3ZktXbVM0Y1d3dlpLMVlkN2wzY1l1bWVxN3FWK2p5QXd2SUlnK0Ru?=
+ =?utf-8?B?UHZ3TURkN3Z2RXpHb1dpUUpLVmhjb1VmNFFmYnFrSmdBUGNiZldVb04rbENK?=
+ =?utf-8?B?bTFzSHMrT1RCNmljZmgycGRZYStkM1BZMHJuRlc1dVhmUXZjd210Z1RQM1ZL?=
+ =?utf-8?B?VmpLTzE3dDdqVmJMZ0VmanVRWCtEM0E0a0wrcXNpVWdrWlFoZUZmbU5RVGtn?=
+ =?utf-8?B?R2VlQ0pqcGFoOVpCeEdoVVkvMHJPL3luNEpuTnFYMzlHazN1NlZ5WU9CTkRi?=
+ =?utf-8?B?alJkSDhZd3NxSEowWDA2ZkVpRWxhN3dEL1BpQ2txRWR0WXFrQTNLcW1UbDY2?=
+ =?utf-8?B?eFNuclZTa3VaNGdtWVpITFNGblRJbVBET2RtV0c4UzdTTVNRV1E1OG45eHZn?=
+ =?utf-8?B?dnhmZDAwck9kMlBQdVlZRW50VlRXMlg2R01sZWJycjdQWXFnam9ZS2xxVE9l?=
+ =?utf-8?B?SDV3M1grTlU4Zm5wWVBKMzIrRlpnbUxOUHlOeDdQdDZGVWQwdHV0VzIrRlBn?=
+ =?utf-8?B?aEZ1M1I4SUxKck9kL0JndjF6NW9zbFErc2xLT3NCVitOb2loVnNWWkR0SC9I?=
+ =?utf-8?B?THRxZWxCNnpBZ3NaMzM0OVN4QnJ5NWFqNlVqVHVJT1ZZaUdvTlJkRWRoWFVt?=
+ =?utf-8?B?NEVwVXdFTmY0NWpSY1hjNjhRd2NsWmtpVGZKT0IvNktsbVNrMHJrSWJNYWJC?=
+ =?utf-8?B?dU93RWVKU3Z2eWs2L2JPdUdZelF6TGJyNStMM0VNS3QxZnRMZnFYbFJrVVk3?=
+ =?utf-8?B?OW5lSGxiSjdaUmJpazFBY0pNdm5UNmo0SEhFQW9nd2VmVDhuQ2dRd3U2M2RH?=
+ =?utf-8?B?aXNhelV4ZHlERDhNVTFYZjkxL2lZL3FWMjJaMzA3WXJRajhOTCtsRmtkVTdy?=
+ =?utf-8?B?UU1BRFFlUDh6YkNoemErUDlJODNnUjVLUldnNDFEMnhRK3p0QmIyWGtqQjJp?=
+ =?utf-8?B?RG81Vm9BZ2FwNlZIM2ZqVVRYQ20zaXFsZVc0Z0x2VzJvbWtEVC9IUzhmUWNo?=
+ =?utf-8?B?YU1iODM1M0t4QWlEU25HZ204MnNrRlJsc3loVEYrSDgvNHhrUWJtKzdieWFh?=
+ =?utf-8?B?NzAyVHBCQmNyZmwwTkVBSUh2blFwWTJQZlFPa2FZRERscUNGT1JVSEtLSlg0?=
+ =?utf-8?B?VmQ0cDhNUU9JRkhuWlJkd3g2N3pMQmpWYUtONGpJYTVYbUk5L0ozLzlTeHNC?=
+ =?utf-8?B?MFc2Zi9Hd2h3ekZpcEQ0NXY1Zy9mOVVRWlEwakNWMUN5L1VlQjJzdDZGUC8z?=
+ =?utf-8?B?NkdXNWIyMHN4SHVoV0I0TkV2VGw5dGdSTE1iZVlGY0ZOSWE5UjNjZzVlNXRj?=
+ =?utf-8?B?REJCWVcxVExHMXpBUHh6dG5SRGhZRjE4Q0FHeUNqcGV6a2pSVkVwM3dGa1Z3?=
+ =?utf-8?B?VklqVG1UbjkvNXdHYk9uZlo0ME1FVWxZTW0yR3NyNVpRU29NejJnTjYwdDBH?=
+ =?utf-8?B?eUI1OEdnYksvVEJIYkZUM3B3SEUvZ2l6UlAxVkhWM1JCVkN3RUhMZmlyZ0Ny?=
+ =?utf-8?B?T2MvUmZlSWc0MkhlYXdTK015aTNDdy8vZTF4UE03cXJmaVUvbHZTV21BdlhZ?=
+ =?utf-8?B?YnBGTmVvTW1DQ05GUkpCYjUxRHVxUElZcEpreVpLSkJvWEk2R1A3K3Nrbndn?=
+ =?utf-8?B?b3lpWUlyWlNjUHArNENrbUllUHZCNlRDTTIvN1R5T090aUdqMTViRjRoMXhw?=
+ =?utf-8?B?dXFhM2c0SjdnM0dvcGg3S2ZXRlVqeGZDWHIrU0RCSGFFMzFFZlY3UFhROTRV?=
+ =?utf-8?B?dWVzZnZ0SjkxdHplT3RXQXgzNWcrZUt5d3h4QnY4UTlBN25USUVwRWhtVTZM?=
+ =?utf-8?B?T0xybmVUb0ZYemkvUDFYM041bEFENTVZUHJ6eU9iWHhwbXF4UUVMVEhNWHEy?=
+ =?utf-8?Q?Svy4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7416014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2026 01:56:44.5420
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f7f91e9-0484-4c06-f832-08de52470115
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	TY2PEPF0000AB85.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5961
 
-> >    Thanks for the feedback. My intent with WQ_BH was to keep callbacks =
-in
-> >   softirq/BH context, but I agree the scheduling overhead and existing =
-tasklet
-> >   assumptions are valid concerns.
->
-> Hi Allen,
->
-> Sorry about missing the bit about WQ_BH, I forgot about the details
-> of or previous discussion and this is pretty much what I had
-> suggested last time,
->
-Hi Arnd,
+Hi Robin,
 
-  Sorry I missed the WQ_BH point in my reply, I=E2=80=99d forgotten the det=
-ails of our
-  earlier discussion, and I should have followed up on this sooner.
+   Regarding your previous comments on this patch, I wrote some 
+questions in my last email and would like to continue the discussion.
 
-> >   I can re-spin the RFC to drop the workqueue entirely and keep
-> > tasklet semantics,
-> >   while still abstracting tasklet handling into dmaengine helpers so dr=
-ivers no
-> >   longer directly manipulate tasklets. That keeps
-> > dmaengine_desc_callback_invoke()
-> >   in tasklet context and avoids breaking DMA users that rely on that be=
-havior.
->
-> It's probably fine to do both, but a series of two patches (first introdu=
-ce
-> the per-channel API, then move it over to WQ_BH) may be slightly
-> clearer here.
->
-> I'm not sure why the dmaengine_*_bh_wq() functions are exported
-> interfaces, as far as I can tell, you use them only internally
-> in the dma_chan_*_bh() functions, so making them static would
-> let the compiler inline them where possible.
->
-> There are of course dmaengine drivers that use tasklets for other
-> purposes than the channel callback. Was your idea here to use
-> the same workqueue for these? I would perhaps hold off on that for
-> the moment and see if there is a better alternative for those,
-> possibly hardirq context, threaded irq or a regular workqueue
-> depending on the driver.
->
-> >   A hardirq callback path feels like a larger API change, so I=E2=80=99=
-d
-> > prefer to handle that as a separate follow=E2=80=91up (e.g. explicit ha=
-rdirq
-> >  callback/flag + user migration where safe). Thoughts?
->
-> Yes, definitely keep that separate. I still think that this is
-> what we want eventually for a bigger improvement, but your
-> patch seems valuable on its own as well.
->
+On 12/17/2025 10:12 AM, Jun Guo wrote:
+> 
+> On 12/16/2025 8:51 PM, Robin Murphy wrote:
+>> On 2025-12-16 12:30 pm, Jun Guo wrote:
+>>> The arm dma350 controller's hardware implementation varies: some
+>>> designs dedicate a separate interrupt line for each channel, while
+>>> others have all channels sharing a single interrupt.This patch adds
+>>> support for the hardware design where all DMA channels share a
+>>> single interrupt.
+>>>
+>>> Signed-off-by: Jun Guo <jun.guo@cixtech.com>
+>>> ---
+>>>   drivers/dma/arm-dma350.c | 124 +++++++++++++++++++++++++++++++++++----
+>>>   1 file changed, 114 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/drivers/dma/arm-dma350.c b/drivers/dma/arm-dma350.c
+>>> index 9efe2ca7d5ec..6bea18521edd 100644
+>>> --- a/drivers/dma/arm-dma350.c
+>>> +++ b/drivers/dma/arm-dma350.c
+>>> @@ -14,6 +14,7 @@
+>>>   #include "virt-dma.h"
+>>>
+>>>   #define DMAINFO                     0x0f00
+>>> +#define DRIVER_NAME          "arm-dma350"
+>>>
+>>>   #define DMA_BUILDCFG0               0xb0
+>>>   #define DMA_CFG_DATA_WIDTH  GENMASK(18, 16)
+>>> @@ -142,6 +143,9 @@
+>>>   #define LINK_LINKADDR               BIT(30)
+>>>   #define LINK_LINKADDRHI             BIT(31)
+>>>
+>>> +/* DMA NONSECURE CONTROL REGISTER */
+>>> +#define DMANSECCTRL          0x20c
+>>> +#define INTREN_ANYCHINTR_EN  BIT(0)
+>>>
+>>>   enum ch_ctrl_donetype {
+>>>       CH_CTRL_DONETYPE_NONE = 0,
+>>> @@ -192,11 +196,16 @@ struct d350_chan {
+>>>
+>>>   struct d350 {
+>>>       struct dma_device dma;
+>>> +     void __iomem *base;
+>>>       int nchan;
+>>>       int nreq;
+>>>       struct d350_chan channels[] __counted_by(nchan);
+>>>   };
+>>>
+>>> +struct d350_driver_data {
+>>> +     bool combined_irq;
+>>> +};
+>>> +
+>>>   static inline struct d350_chan *to_d350_chan(struct dma_chan *chan)
+>>>   {
+>>>       return container_of(chan, struct d350_chan, vc.chan);
+>>> @@ -461,7 +470,61 @@ static void d350_issue_pending(struct dma_chan 
+>>> *chan)
+>>>       spin_unlock_irqrestore(&dch->vc.lock, flags);
+>>>   }
+>>>
+>>> -static irqreturn_t d350_irq(int irq, void *data)
+>>> +static irqreturn_t d350_global_irq(int irq, void *data)
+>>> +{
+>>> +     struct d350 *dmac = (struct d350 *)data;
+>>> +     struct device *dev = dmac->dma.dev;
+>>> +     irqreturn_t ret = IRQ_NONE;
+>>> +     int i;
+>>> +
+>>> +     for (i = 0; i < dmac->nchan; i++) {
+>>> +             struct d350_chan *dch = &dmac->channels[i];
+>>> +             u32 ch_status;
+>>> +
+>>> +             ch_status = readl(dch->base + CH_STATUS);
+>>> +             if (!ch_status)
+>>> +                     continue;
+>>> +
+>>> +             ret = IRQ_HANDLED;
+>>> +
+>>> +             if (ch_status & CH_STAT_INTR_ERR) {
+>>> +                     struct virt_dma_desc *vd = &dch->desc->vd;
+>>> +                     u32 errinfo = readl_relaxed(dch->base + 
+>>> CH_ERRINFO);
+>>> +
+>>> +                     if (errinfo &
+>>> +                         (CH_ERRINFO_AXIRDPOISERR | 
+>>> CH_ERRINFO_AXIRDRESPERR))
+>>> +                             vd->tx_result.result = 
+>>> DMA_TRANS_READ_FAILED;
+>>> +                     else if (errinfo & CH_ERRINFO_AXIWRRESPERR)
+>>> +                             vd->tx_result.result = 
+>>> DMA_TRANS_WRITE_FAILED;
+>>> +                     else
+>>> +                             vd->tx_result.result = DMA_TRANS_ABORTED;
+>>> +
+>>> +                     vd->tx_result.residue = d350_get_residue(dch);
+>>> +             } else if (!(ch_status & CH_STAT_INTR_DONE)) {
+>>> +                     dev_warn(dev, "Channel %d unexpected IRQ: 
+>>> 0x%08x\n", i,
+>>> +                              ch_status);
+>>> +             }
+>>> +
+>>> +             writel_relaxed(ch_status, dch->base + CH_STATUS);
+>>> +
+>>> +             spin_lock(&dch->vc.lock);
+>>> +             if (ch_status & CH_STAT_INTR_DONE) {
+>>> +                     vchan_cookie_complete(&dch->desc->vd);
+>>> +                     dch->status = DMA_COMPLETE;
+>>> +                     dch->residue = 0;
+>>> +                     d350_start_next(dch);
+>>> +             } else if (ch_status & CH_STAT_INTR_ERR) {
+>>> +                     vchan_cookie_complete(&dch->desc->vd);
+>>> +                     dch->status = DMA_ERROR;
+>>> +                     dch->residue = dch->desc->vd.tx_result.residue;
+>>> +             }
+>>> +             spin_unlock(&dch->vc.lock);
+>>> +     }
+>>> +
+>>> +     return ret;
+>>> +}
+>>> +
+>>> +static irqreturn_t d350_channel_irq(int irq, void *data)
+>>>   {
+>>>       struct d350_chan *dch = data;
+>>>       struct device *dev = dch->vc.chan.device->dev;
+>>> @@ -506,10 +569,18 @@ static irqreturn_t d350_irq(int irq, void *data)
+>>>   static int d350_alloc_chan_resources(struct dma_chan *chan)
+>>>   {
+>>>       struct d350_chan *dch = to_d350_chan(chan);
+>>> -     int ret = request_irq(dch->irq, d350_irq, IRQF_SHARED,
+>>> -                           dev_name(&dch->vc.chan.dev->device), dch);
+>>> -     if (!ret)
+>>> -             writel_relaxed(CH_INTREN_DONE | CH_INTREN_ERR, dch- 
+>>> >base + CH_INTREN);
+>>> +     int ret = 0;
+>>> +
+>>> +     if (dch->irq) {
+>>> +             ret = request_irq(dch->irq, d350_channel_irq, IRQF_SHARED,
+>>> +                               dev_name(&dch->vc.chan.dev->device), 
+>>> dch);
+>>> +             if (ret) {
+>>> +                     dev_err(chan->device->dev, "Failed to request 
+>>> IRQ %d\n", dch->irq);
+>>> +                     return ret;
+>>> +             }
+>>> +     }
+>>> +
+>>> +     writel_relaxed(CH_INTREN_DONE | CH_INTREN_ERR, dch->base + 
+>>> CH_INTREN);
+>>>
+>>>       return ret;
+>>>   }
+>>> @@ -526,7 +597,8 @@ static void d350_free_chan_resources(struct 
+>>> dma_chan *chan)
+>>>   static int d350_probe(struct platform_device *pdev)
+>>>   {
+>>>       struct device *dev = &pdev->dev;
+>>> -     struct d350 *dmac;
+>>> +     struct d350 *dmac = NULL;
+>>> +     const struct d350_driver_data *data;
+>>>       void __iomem *base;
+>>>       u32 reg;
+>>>       int ret, nchan, dw, aw, r, p;
+>>> @@ -556,6 +628,7 @@ static int d350_probe(struct platform_device *pdev)
+>>>               return -ENOMEM;
+>>>
+>>>       dmac->nchan = nchan;
+>>> +     dmac->base = base;
+>>>
+>>>       reg = readl_relaxed(base + DMAINFO + DMA_BUILDCFG1);
+>>>       dmac->nreq = FIELD_GET(DMA_CFG_NUM_TRIGGER_IN, reg);
+>>> @@ -582,6 +655,27 @@ static int d350_probe(struct platform_device *pdev)
+>>>       dmac->dma.device_issue_pending = d350_issue_pending;
+>>>       INIT_LIST_HEAD(&dmac->dma.channels);
+>>>
+>>> +     data = device_get_match_data(dev);
+>>> +     /* Cix Sky1 has a common host IRQ for all its channels. */
+>>> +     if (data && data->combined_irq) {
+>>> +             int host_irq = platform_get_irq(pdev, 0);
+>>> +
+>>> +             if (host_irq < 0)
+>>> +                     return dev_err_probe(dev, host_irq,
+>>> +                                          "Failed to get IRQ\n");
+>>> +
+>>> +             ret = devm_request_irq(&pdev->dev, host_irq, 
+>>> d350_global_irq,
+>>> +                                    IRQF_SHARED, DRIVER_NAME, dmac);
+>>> +             if (ret)
+>>> +                     return dev_err_probe(
+>>> +                             dev, ret,
+>>> +                             "Failed to request the combined IRQ %d\n",
+>>> +                             host_irq);
+>>> +     }
+>>> +
+>>> +     /* Combined Non-Secure Channel Interrupt Enable */
+>>> +     writel_relaxed(INTREN_ANYCHINTR_EN, dmac->base + DMANSECCTRL);
+>>
+>> This one line is all that should be needed - all the rest is pointless
+>> overcomplication and churn. And either way, copy-pasting the entire IRQ
+>> handler is not OK.
+>>
+>> Thanks,
+>> Robin.
+> 
+> If the design uses a single interrupt line for all channels, then I only 
+> need to request one interrupt. When the interrupt occurs, I have to poll 
+> within the interrupt handler to determine which channel triggered it. 
+> Are you saying that just this one line is enough to achieve that? I 
+> don't quite understand.
+> 
 
-Thanks for the detailed feedback. I=E2=80=99ll respin along these lines:
 
-  - Split the series into two patches: (1) introduce the per=E2=80=91channe=
-l BH API,
-    (2) switch the vchan implementation over to the WQ_BH backend if we dec=
-ide
-    to keep that step. This should make the progression clearer.
-
-  - The dmaengine_*_bh_wq() helpers will be made static; only dma_chan_*_bh=
-()
-    stays exported.
-
-  - I won=E2=80=99t try to move the other per=E2=80=91driver tasklets onto =
-the shared queue in
-    this series. That feels like a separate discussion, and the right conte=
-xt
-    (hardirq/threaded/workqueue) may vary by driver.
-
-  - I=E2=80=99ll keep the hardirq callback path separate. For that follow=
-=E2=80=91up, I can plan
-    to add an explicit =E2=80=9Chardirq safe=E2=80=9D request bit (e.g. a n=
-ew dma_ctrl_flags)
-    and update vchan_cookie_complete() to invoke the callback directly when
-    requested; otherwise it stays on the tasklet path.
-
-  If you=E2=80=99d prefer I drop the WQ_BH conversion entirely for now and =
-keep only the
-  tasklet=E2=80=91based per=E2=80=91channel API, I can do that too.
-
-Thanks,
-Allen
-
-
-> Some more thoughts on where that later change could take us:
->
-> >    /*
-> >   - * This tasklet handles the completion of a DMA descriptor by
-> >   - * calling its callback and freeing it.
-> >   + * This bottom-half handler completes a DMA descriptor by invoking i=
-ts
-> >   + * callback and freeing it.
-> >     */
-> >   -static void vchan_complete(struct tasklet_struct *t)
-> >   +static void vchan_complete(struct dma_chan *chan)
-> >    {
-> >   -    struct virt_dma_chan *vc =3D from_tasklet(vc, t, task);
-> >   +    struct virt_dma_chan *vc =3D to_virt_chan(chan);
-> >        struct virt_dma_desc *vd, *_vd;
-> >        struct dmaengine_desc_callback cb;
-> >        LIST_HEAD(head);
-> >   @@ -131,7 +131,7 @@ void vchan_init(struct virt_dma_chan *vc, struct
-> > dma_device *dmadev)
-> >        INIT_LIST_HEAD(&vc->desc_completed);
-> >        INIT_LIST_HEAD(&vc->desc_terminated);
-> >
-> >   -    tasklet_setup(&vc->task, vchan_complete);
-> >   +    dma_chan_init_bh(&vc->chan, vchan_complete);
->
-> This is where I think it makes sense to start, again for
-> the vchan imlmenentation. What the dmaengine drivers have
-> is a per-driver tasklet (or WQ_BH) with a single complete()
-> function that directly calls into the client drivers for
-> each completion that has happened.
->
-> Since the context we want depends on the type of client
-> driver, I think a good approach would be to start
-> by modifying vchan_cookie_complete() to allow it to
-> call the callback function directly from hardirq context
-> when the client asks for that, and avoid the round trip
-> through the tasklet where possible.
->
-> A new bit in the dma_ctrl_flags word could be used
-> to ask for hardirq vs softirq context, and the existing
-> drivers just fall back to using a tasklet for softirq
-> context.
->
->       Arnd
-
-
-
---=20
-       - Allen
+Best wishes,
+Jun Guo
 

@@ -1,281 +1,217 @@
-Return-Path: <dmaengine+bounces-8237-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8238-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95F11D1B284
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 21:10:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 66094D1B28D
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 21:10:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 37E863043932
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 20:09:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 976003022187
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 20:10:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 096AA38B7A0;
-	Tue, 13 Jan 2026 20:09:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDD3735EDD1;
+	Tue, 13 Jan 2026 20:10:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="zIz8nYJt"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="d5wvD7Ik"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011055.outbound.protection.outlook.com [52.101.70.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9D8369960
-	for <dmaengine@vger.kernel.org>; Tue, 13 Jan 2026 20:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768334995; cv=none; b=DZQ8ds6NwYfl5Ja7ltxHedpWUJ2tigPoL3DvaKZ8XyM96SF0KiwenLmlBn8Y0kS5imi9xBQ9atKcCDy/HD84l5cfOcqEf321vWoZb5al2DB8JoFeOuKZeQi6d/GuSML1dum2YTHHZL6QeWD2TtaDtaHpeG7Uof2D10f6V4pTjm8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768334995; c=relaxed/simple;
-	bh=pyMp5oFQEzQGlgpWodh5m5sUhmJKSJMmcF9EpqTle4o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ixXeueN/SEFzSezfOCIJqo/jqAmNd0SsohAtbUvo8qMisjsAnZYZuj8AFiHkzxMioz0p/KVnmfEn/U6RHyuEwGRPVyX+dzhDFmZnE3DRyt1IdqGq30wWUHV9+XTQ+E7xrNPq1C42UhEKexSZP44+gaODLJREiahvU1tfQzRgxYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=zIz8nYJt; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b87003e998bso31426166b.1
-        for <dmaengine@vger.kernel.org>; Tue, 13 Jan 2026 12:09:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1768334991; x=1768939791; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X3PB19UpbesWMeT0R3+l59gQeDUb0GCMAUDX3FFcChs=;
-        b=zIz8nYJtuj84rCwrR4h2rYUNtQy0kQi3Vs6Pa4eyUFvYBSmR3JdcK91Z5LcbNLJJbd
-         KBv1zpWpctONSZSIZfox4XBRJ3RoOniV3X3ufcycnUMgiQws9qL2iJTLfcYz/6ywcGtF
-         IEbL5rTF894Idp+8ULCgygVGYo7r2T+AndIh1IP7v3vgatT1IQO43J17idGJA2xunR2Y
-         7fJ9k/8LfGQoxc/GCDnq0d/fOOs+esgxOp4GdBC/tXJBsPbMEB8jlL/iIMNJVyMCIozF
-         aMqv/iMccUIy3JOOqaYhzVETvgeYFGAbN22kE3vQ40Dtdd6YFQhBIm6KtULuMQfYbl9n
-         eBaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768334991; x=1768939791;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=X3PB19UpbesWMeT0R3+l59gQeDUb0GCMAUDX3FFcChs=;
-        b=jffMDONFSeTK5CcE4WzUj7Em8I4AA3pZBk6+iUA0VocP2Sw7vD4APc4oUwAHs4k6XD
-         ynYV3iIUYSkLUKiY0sNw1+VNjbmgB6ZMuU9pb0UdheNqQoAp6ebsC7FQv2XPzSom/tth
-         j6nq+t4dWTlTcueiSEvhTYkXjEkvNE1ydwYrPu72tkDMMj/gNHzyQJW1JcdN/Iiynt3P
-         CAAB+C8fTKCHz0cLd6tfY/aNOs3AUFKJSc99V5azXxF5MQdd0LLaQtsKLEEzAiNmlUqG
-         jT+EaJ32Et+G5XOMW79OCpsWRDnMNEWyMNjovJt9wZEjzkeQNOPs5czxaBVC4AtHwnAc
-         7uyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUSwb18XglutPIYhM49k0SF15xlpL0c7GiAdF+mydLd1UTiX5o/vYUGQG1yK7neuvNIAkNvOIFhZpM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5Ax0nQLDlMOmFS64/jQyk4GZODup5jCMuer93NStWeDM7WB6h
-	rJnJRKIryo1dzJwae7S6X4h/oCotLNOchLs+kJf/4B9bW9EPPCH6TuvtQPX5V6QR0YtIrIDDqM2
-	3q+o+IUWOmPobFpRNJDPnAhCmwUWh531uabJnoTtoYg==
-X-Gm-Gg: AY/fxX6R/ezoNzbuXb21yhGbheZA+dKTAaGPQeatDFrq8xxdCqc+ks58dWX3VDjMxjX
-	bVs9WYVNfqiY6U6vjVcKG26lwTD++CpzdU3Z0zw7CnVHA6MPuB7TWqqxuMocjHWxPmeeGjssJjk
-	2uKRma7wp/OOMMH5AoA9UJtgp7OiVe/eXRdf5K4BtTfq2lrF06xvlyahU5IJ0G+m73kQCP6hwOO
-	IKmDY/mlAdhascYXTUFHGNS7lj/qVvzIFfgAIX5w2aTnUfmBnws2yirv2kMDzPulR3cbcsJYK/W
-	GjTtNkmumASg0nD3mq6TddDYSvWbB34mbjSUbA0ZLvTKRgBNHMVoIXdF7Kbj
-X-Received: by 2002:a17:907:9483:b0:b87:191f:4fab with SMTP id
- a640c23a62f3a-b8761d928b1mr18947166b.26.1768334991113; Tue, 13 Jan 2026
- 12:09:51 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A4728467C;
+	Tue, 13 Jan 2026 20:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768335002; cv=fail; b=L0F7lh3F0XVzMdCSqS10fO7SpdT7vO2HaVrzZiTQAh5Q9QDu0E69LmThd7xrUWSYdkhK18kMCFoGSLEyWJ2ACz+fCTaw6ozKDSZ4FDOJSp61vfKOUIUeYwEK9+dInpMDAuSf536RpEOWw4EJHgWDKwixwaEOHtA7YBqmIL5DbPg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768335002; c=relaxed/simple;
+	bh=YeY0pX31FUs4Bj8QlRzgZ82UFho7yXnkZtqDyO6pGlQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=YtzGj36pHvzIruqWv2vbEURrlYnmnV1LaVMrbcTuXkxNochhF6ToLC0Xi92I0K0K+RE8M8hWx1ny54VRsEkyMr0pcqThR7BNUg1fap67RigjaQlUTao7wo8HJVzJtSaksi98sg13ug9rcHPAVmpbz/PqkMr2OiFZhQ7F0SUivj0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=d5wvD7Ik; arc=fail smtp.client-ip=52.101.70.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UADj3YKglxf8Zs95BAtUY31pzTqRJP8kSpAb+SCDU/+cGvyYed+3LblQiy8V/wPSxcHMsa5zWr0zc2ziVaWCMeG/x0bU0kFyYNW1duKe4+in/Z0M0lX9njPBM9DuNH+mSZWuG5Fm8vDanBU+jhAX9LvO5Iw1a13L4eK9MsHY4itJabOPS6i3brmOImP7o0yOa9zV7tMsP9W3ATUERvoUkAK9bGAhykqjJheMrEMoWLuYPqFzxFoZCk3tHtOJgY25NE3OKSouNdY2dOd8Q3Ze64g1+WK6Mjte+ATVUhr+Dc5NYzgQGgXfA8iI+KJYtlOH5PypZpNea6uZzKhdPjwD5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=B52LdnTZixGUO+4Qmgc63C9FWNbWvOHkCS859ksJVRA=;
+ b=hs+ElQaTHm03/8Mejz9hNL24WzpWe+y2VYVlzf60sNCeisP0Z2c4JaxvmsVO87c3eSiHwFSbu6kC4DtaQy75o3R7DaWiDC9yby4Lg+GW8v287GaCujDbLIv+s88ciR9UxsMK1vPyE0mRHUgVdOkBFEUALezt0hXYOEN+5oRen6IprZAeJALLQ9h+munPDQfVLgRjOgg/C2IHGboPwXamAea5q1RNf+Zyi09aoAjY8/JgFUqxGVDbD5u6393RbJtvGjmPJqa6YUn7jMOtZIzOJFx29mM09mjJp/XyjPVIwz2rGFmH7JANk3zU3qBq8EqzmzcUIUApp8UWK481LD/euA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B52LdnTZixGUO+4Qmgc63C9FWNbWvOHkCS859ksJVRA=;
+ b=d5wvD7IkpAGLxjhXfKhRhSDtZe3gitCjs2LT9Km7ed6APT58PFmdAfD6mxe8ck22CnKgGaJRU5hdI3OXQuvGrzQqcYBUzyzrS4vdjDs4J8uQse1hhdnF0KmZ3EubWze0I3ooh9FCkcXAwYPubDx950ePsGos/fI2t2/a2h1zCsjl++wWjXunymN0ZfLce9tbGIv7kpPiI4H57EhZmCdqB2L4s4HPubxuWf0N9boxHiJDo9P/ZUlOZs1vcBWEVb2VQnGnd3nQVD2DV25Vlmnxpf8VuaqqhiH8312HSoat5yTJLkFZ6LJc8vy1W0ck3qe51wnA/HwhIoo3NcVPLA8Zgw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
+ by DU4PR04MB11816.eurprd04.prod.outlook.com (2603:10a6:10:626::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Tue, 13 Jan
+ 2026 20:09:57 +0000
+Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
+ ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
+ ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9478.004; Tue, 13 Jan 2026
+ 20:09:57 +0000
+Date: Tue, 13 Jan 2026 15:09:49 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Jared Kangas <jkangas@redhat.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Alison Wang <b18965@freescale.com>,
+	Arnd Bergmann <arnd@arndb.de>, Jingchang Lu <b35083@freescale.com>,
+	imx@lists.linux.dev, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: fsl-edma: don't explicitly disable clocks in
+ .remove()
+Message-ID: <aWamjRXwLuirU465@lizhi-Precision-Tower-5810>
+References: <20260113-fsl-edma-clock-removal-v1-1-2025b49e7bcc@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260113-fsl-edma-clock-removal-v1-1-2025b49e7bcc@redhat.com>
+X-ClientProxiedBy: PH8PR21CA0001.namprd21.prod.outlook.com
+ (2603:10b6:510:2ce::25) To DU2PR04MB8951.eurprd04.prod.outlook.com
+ (2603:10a6:10:2e2::22)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251229184004.571837-1-robert.marko@sartura.hr>
- <20251229184004.571837-16-robert.marko@sartura.hr> <858ca139-61c5-45e3-a2c9-d0af414e3592@tuxon.dev>
-In-Reply-To: <858ca139-61c5-45e3-a2c9-d0af414e3592@tuxon.dev>
-From: Robert Marko <robert.marko@sartura.hr>
-Date: Tue, 13 Jan 2026 21:09:40 +0100
-X-Gm-Features: AZwV_QhCSNrQ25JXSm6moAYHvYjCfUUDQoR1FC1MV_mP0oSiXaM4vWsMWx6MKV0
-Message-ID: <CA+HBbNFYBhtvUxd45O7eP_1JYENxeGZOkA+yUsEdztOSSi9Gdg@mail.gmail.com>
-Subject: Re: [PATCH v4 15/15] arm64: dts: microchip: add EV23X71A board
-To: claudiu beznea <claudiu.beznea@tuxon.dev>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
-	andi.shyti@kernel.org, lee@kernel.org, andrew+netdev@lunn.ch, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, linusw@kernel.org, 
-	Steen.Hegelund@microchip.com, daniel.machon@microchip.com, 
-	UNGLinuxDriver@microchip.com, olivia@selenic.com, radu_nicolae.pirea@upb.ro, 
-	richard.genoud@bootlin.com, gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	broonie@kernel.org, lars.povlsen@microchip.com, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, netdev@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-usb@vger.kernel.org, luka.perkov@sartura.hr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|DU4PR04MB11816:EE_
+X-MS-Office365-Filtering-Correlation-Id: dee8e13b-4bf5-405d-9cc1-08de52dfb95c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|19092799006|366016|1800799024|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?XvpHSTiR/SkhIrYFrW9uTCoRQJl4YWBHfQp5KqiDR7IecoB9eSpP5NEXBv9G?=
+ =?us-ascii?Q?KWbHUnYJvUcir0z5LT7Q71cTHJvPF2n/H64UN614KG9ulLjpo68mhbtYuW45?=
+ =?us-ascii?Q?G0hnyiV2G6G2fC6PuHwvaMsV7gPia/2Fndefz3M8Y7sDYSSAVygt6qOvG6a5?=
+ =?us-ascii?Q?c1Vc3uuUFRDtZ2Xa+tvaucMb7wJVdpycpu6BaQS3tT/ow524k6ytFF8Uqx6L?=
+ =?us-ascii?Q?iVDRQfKSTItGFjtRHmjdV4HI/9TM2dWEHAS2F6Rr+jISEjd58uBLW8mR992l?=
+ =?us-ascii?Q?2xxhepl3Jl3wjXzvPGi2y2QaFCOl3HlGGVYr5B0sTOd4yuJJX7hbSMPK2i28?=
+ =?us-ascii?Q?Kl/sTgOiitbgSFcZn3y5YKPdkTXyfHsckpapFji8lP7brENL3F2VEKVWUVS1?=
+ =?us-ascii?Q?PyhGZAKY6/DkkMLxMH5aZbKGHXuYIJlBcsOVBmmH0gq9koWkHKslr7wuS++L?=
+ =?us-ascii?Q?ghR0oozr1HS7kKAA55WmTSx0OgchdzEZ7caLnyXfrEcwGMDI6c04t090d7hc?=
+ =?us-ascii?Q?ZUqonE0o16WHYQLrcQ5xyErOmIFiG7nEprehdAzzxJLH6gotvpAWZYwJ0gMu?=
+ =?us-ascii?Q?73Lh3yxIprN1vrUemHsx2okY6zT9gDp+ABDxHC23C2FpfnvPturwgD/NRJum?=
+ =?us-ascii?Q?ydrkHymJl1XNor2+99qf4zTgT42gYYpPlfUKCXlxXt4aMfJBsTM3AsSQJHJj?=
+ =?us-ascii?Q?nKalEOocCnj707Mlv/w5qlGstCNGKbWvUvK2Eoq0N93axM2rr3bmnvTsddGL?=
+ =?us-ascii?Q?iywPUb+cj7AYnN2vXzGDDOcxExKeEmuEMaozEe6oON2Eiu3hM5LjEm098fNg?=
+ =?us-ascii?Q?VTbDqJmSWmTKCx57ar8X4AYjP4NuuswMhh0MFScp+IRddN25dOskK/lNVkoY?=
+ =?us-ascii?Q?2XPkDORDog0ok1mP11WvmbECIu5bvzMccdkosdGRqpsnnzXpFGuCNO1jxwoo?=
+ =?us-ascii?Q?r8sA5D0INwKVo1hQao5+1KQ+VPIwWa3o2SRYbgRTO3nbaNhx3dlLsRNiq5uN?=
+ =?us-ascii?Q?9C4sD4KgUlobNYql539/Wmi7nP5LW0Hy9SW4N1QhO9AioMo+je3LKrgcxEwQ?=
+ =?us-ascii?Q?8uho3xoCXDFbdVJ/f12Q36DdK84SWSzpo53G5ZvB6FhfzKpPtYJ7ZNNSfi91?=
+ =?us-ascii?Q?mDG57m/41YQuftW/J7tWSYpT2qSDKheABMlLWpt0kEW9qMheNB/H6DHK4+fe?=
+ =?us-ascii?Q?SKGF+M/ImlPyQZb3A0y+Ql6Lp8rn6xokryR0+PjxY0EgWCobbgNIAjHNY0GI?=
+ =?us-ascii?Q?SbZlvf0RmBR/LN59f+ajFWJV8vfcXqs6+KQizEtWkfhFuxKI1Wz4Rk1rTbq2?=
+ =?us-ascii?Q?9BYN9MgSPoaUUTaIc6Hv9cfoylBozIcywOj+8D8WLB7PeAGwcqUdZuvvt6hZ?=
+ =?us-ascii?Q?xPa2+q3S6gXGLHXvPz7kt0PXpbpa6b4TRoAnfHVQdYviVr22w+xgrmsDnGlF?=
+ =?us-ascii?Q?7N5gPvyMEHcVb8Vjf8vdQZmBkaFRt9V+U+2V+spJzgpl/rq35eH10TNsKwR2?=
+ =?us-ascii?Q?5VI3k2AdeXD2PmjQSMwxAUEaxcWJzw5y2CMc?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(19092799006)(366016)(1800799024)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?4LLnyDW/VM1x++D0rNxvj+Ym2LeJNhe8dRZn1mHArjCfS2zM66ttmxanZ3ny?=
+ =?us-ascii?Q?XRfWRFyOq1T+SoyieEey85IEr1hPVooUkZ/nYbeKaBDaBCI9y9eItbihIGMa?=
+ =?us-ascii?Q?RIPHWv4r8EbDGOgEpJN8KtNv7WKoGKUu1tYNaDXF8JnwNh+XcKg0ruxPFnjA?=
+ =?us-ascii?Q?BWn2bzn3HL9GmniEmWnJoBMrRYDByzy/4Cf2hXd64+jH4Fy6r/vrIqGG6esN?=
+ =?us-ascii?Q?vSQLzBqHQUsUwkqqSm/Xs4vh6JQ3mDHYYj/GT8nY/H0tqIsjaGjrlQ9PuApm?=
+ =?us-ascii?Q?p+D+7oNsXhepfbbslIp8YkxDvKBfdexsDcoWOkQ96Q7wb9nKVaPHz4ffxNML?=
+ =?us-ascii?Q?+fE0j79KORmVoPaTdcXUw/ERAv4OCaKsOPF/VaKiceQNJdBFd09InPAiMXIB?=
+ =?us-ascii?Q?V1lwY53914hd607j3cKhAeLMBGDrDQUxLHemlY3sTsM0ZPP2HC8czIbsGHCt?=
+ =?us-ascii?Q?ExoNKUQzwLuF2wwvGPJGhYllAQUHWyN0gqsszuVHOZPFxowQaIkfnPWk6wCX?=
+ =?us-ascii?Q?14VxetQO+0IajiwcDg2Q3KGxGoTjU7BMgC5CGqmZZfO0rMXasXsu44Girkwk?=
+ =?us-ascii?Q?7qCaaY6KPknBfZhqtGRht2cHwL6efnF0g2fIGx20VeKP2BS5zaGNtd/yjogX?=
+ =?us-ascii?Q?pRAYh4oy8b5DxWCiO/a8zLo/MdVRtvIt4YduZTvPMG0g9kr8kvBm6dPaT8Uq?=
+ =?us-ascii?Q?WRShIsbt35XJKGYeQHpLVFEZ5SoVoDUdYcd1ELCu8yy/mQlQ24RmC6WR19Ga?=
+ =?us-ascii?Q?S7awJ3jog4zTz2Jzd44DVUCcwTwH+L4HbjbN6DDnrpJ+DOhxm3jy1EeGHej6?=
+ =?us-ascii?Q?QwbJHBheMzQrCMdRzP07wBlvC+ml7iuOjbCPwm5qZQiwxAgvVyYBrwhtgv/K?=
+ =?us-ascii?Q?Nz1X7KXxSG11JskjCGMOHOU2PqmOlJiqMiLteLmOLyUa8HX90w8+0q8cqiKD?=
+ =?us-ascii?Q?0ahDY3c2lJQotFi+6tkr60DwfV1aX9rccx1qvuVZZcJEwYVL+a4M8y6Z7Rzs?=
+ =?us-ascii?Q?R2jjQ3M4EEwu1uO8kR5rRyJWbw7RFWw+GlI455jaQvoUCLi4/gn2bybpCCMm?=
+ =?us-ascii?Q?zTgQev/PjIqBUZtdWjakGczFTjr3IoCAp7LQ72wqkVwZLAlDwXV7PmgvNcEU?=
+ =?us-ascii?Q?oiZpb2hricgG3HL0hIWkFNfwIbVsCw6ONl7jSU5mNVdiELj7gBc2blGXzQqp?=
+ =?us-ascii?Q?6XIpa/AMWdsSmVFXGLeiXv/WTLdRpggH2Q/3Bt6cVm313gfVQKoAn15h1Acy?=
+ =?us-ascii?Q?h1i6CA/1Gbek2cyvoJkuHETU/VBPev8eqkTFMAn57XixhBfPQVc7v5c8pvb5?=
+ =?us-ascii?Q?VxDIbQOF1lvE4QpkwkoncHDDtdKGSFcFDwNOlLp2peU+D84AY/6id79nAfmJ?=
+ =?us-ascii?Q?mWeH9yw9fmy+XocT7SmE0Hi8SNtwo86Tn4BRP6V+PP/s46bh/dzCEXwLQ8k4?=
+ =?us-ascii?Q?XoRNj3X9K3nDY9LDH3XyEgNh5KV5P4eWn7KtAoM4jhpWcIdO2pX0AcMfKVHk?=
+ =?us-ascii?Q?lzr9ElBf6CvkjI+0ekLZq40vD4XhAmWuCDu7UVI5uUha/R2ynrITOoFRBtSC?=
+ =?us-ascii?Q?+nSCYRz9IChNuXB5zjMJPxBigXkcZZ9jAPUTaCxdvmOKB7REvpD+v3DZ1Y1B?=
+ =?us-ascii?Q?dH3SRkRnp/YoRCkyJ4LfDOoMc9S19CadtpyEPkZUCe5KiT8tzI8mjeKmLILT?=
+ =?us-ascii?Q?Q4gn0CKlxZhdJwZFW7Ff/cbV0+9eRNuLRgZBNP6ft0wiOwoc?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dee8e13b-4bf5-405d-9cc1-08de52dfb95c
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2026 20:09:57.6076
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BDtTjg9Bm6kt8ebJ4GO80fVSMr/BruJorLAfzx6zXGQaWw53cTcxYXozeCdJIlSlB7Jn+Jm1xASvs/HEMiXRWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB11816
 
-On Sun, Jan 11, 2026 at 3:42=E2=80=AFPM claudiu beznea <claudiu.beznea@tuxo=
-n.dev> wrote:
+On Tue, Jan 13, 2026 at 11:46:50AM -0800, Jared Kangas wrote:
+> The clocks in fsl_edma_engine::muxclk are allocated and enabled with
+> devm_clk_get_enabled(), which automatically cleans these resources up,
+> but these clocks are also manually disabled in fsl_edma_remove(). This
+> causes warnings on driver removal for each clock:
 >
-> Hi, Robert,
+>         edma_module already disabled
+>         WARNING: CPU: 0 PID: 418 at drivers/clk/clk.c:1200 clk_core_disable+0x198/0x1c8
+>         [...]
+>         Call trace:
+>          clk_core_disable+0x198/0x1c8 (P)
+>          clk_disable+0x34/0x58
+>          fsl_edma_remove+0x74/0xe8 [fsl_edma]
+>          [...]
+>         ---[ end trace 0000000000000000 ]---
+>         edma_module already unprepared
+>         WARNING: CPU: 0 PID: 418 at drivers/clk/clk.c:1059 clk_core_unprepare+0x1f8/0x220
+>         [...]
+>         Call trace:
+>          clk_core_unprepare+0x1f8/0x220 (P)
+>          clk_unprepare+0x34/0x58
+>          fsl_edma_remove+0x7c/0xe8 [fsl_edma]
+>          [...]
+>         ---[ end trace 0000000000000000 ]---
 >
-> On 12/29/25 20:37, Robert Marko wrote:
-> > Microchip EV23X71A is an LAN9696 based evaluation board.
-> >
-> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > ---
-> > Changes in v2:
-> > * Split from SoC DTSI commit
-> > * Apply DTS coding style
-> > * Enclose array in i2c-mux
-> > * Alphanumericaly sort nodes
-> > * Change management port mode to RGMII-ID
-> >
-> >   arch/arm64/boot/dts/microchip/Makefile        |   1 +
-> >   .../boot/dts/microchip/lan9696-ev23x71a.dts   | 757 +++++++++++++++++=
-+
-> >   2 files changed, 758 insertions(+)
-> >   create mode 100644 arch/arm64/boot/dts/microchip/lan9696-ev23x71a.dts
-> >
-> > diff --git a/arch/arm64/boot/dts/microchip/Makefile b/arch/arm64/boot/d=
-ts/microchip/Makefile
-> > index c6e0313eea0f..09d16fc1ce9a 100644
-> > --- a/arch/arm64/boot/dts/microchip/Makefile
-> > +++ b/arch/arm64/boot/dts/microchip/Makefile
-> > @@ -1,4 +1,5 @@
-> >   # SPDX-License-Identifier: GPL-2.0
-> > +dtb-$(CONFIG_ARCH_LAN969X) +=3D lan9696-ev23x71a.dtb
-> >   dtb-$(CONFIG_ARCH_SPARX5) +=3D sparx5_pcb125.dtb
-> >   dtb-$(CONFIG_ARCH_SPARX5) +=3D sparx5_pcb134.dtb sparx5_pcb134_emmc.d=
-tb
-> >   dtb-$(CONFIG_ARCH_SPARX5) +=3D sparx5_pcb135.dtb sparx5_pcb135_emmc.d=
-tb
-> > diff --git a/arch/arm64/boot/dts/microchip/lan9696-ev23x71a.dts b/arch/=
-arm64/boot/dts/microchip/lan9696-ev23x71a.dts
-> > new file mode 100644
-> > index 000000000000..435df455b078
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/microchip/lan9696-ev23x71a.dts
+> Fix these warnings by removing the unnecessary fsl_disable_clocks() call
+> in fsl_edma_remove().
 >
-> [ ...]
->
-> > +&gpio {
-> > +     emmc_sd_pins: emmc-sd-pins {
-> > +             /* eMMC_SD - CMD, CLK, D0, D1, D2, D3, D4, D5, D6, D7, RS=
-TN */
-> > +             pins =3D "GPIO_14", "GPIO_15", "GPIO_16", "GPIO_17",
-> > +                    "GPIO_18", "GPIO_19", "GPIO_20", "GPIO_21",
-> > +                    "GPIO_22", "GPIO_23", "GPIO_24";
-> > +             function =3D "emmc_sd";
-> > +     };
-> > +
-> > +     fan_pins: fan-pins {
-> > +             pins =3D "GPIO_25", "GPIO_26";
-> > +             function =3D "fan";
-> > +     };
-> > +
-> > +     fc0_pins: fc0-pins {
-> > +             pins =3D "GPIO_3", "GPIO_4";
-> > +             function =3D "fc";
-> > +     };
-> > +
-> > +     fc2_pins: fc2-pins {
-> > +             pins =3D "GPIO_64", "GPIO_65", "GPIO_66";
-> > +             function =3D "fc";
-> > +     };
-> > +
-> > +     fc3_pins: fc3-pins {
-> > +             pins =3D "GPIO_55", "GPIO_56";
-> > +             function =3D "fc";
-> > +     };
-> > +
-> > +     mdio_pins: mdio-pins {
-> > +             pins =3D "GPIO_9", "GPIO_10";
-> > +             function =3D "miim";
-> > +     };
-> > +
-> > +     mdio_irq_pins: mdio-irq-pins {
-> > +             pins =3D "GPIO_11";
-> > +             function =3D "miim_irq";
-> > +     };
-> > +
-> > +     sgpio_pins: sgpio-pins {
-> > +             /* SCK, D0, D1, LD */
-> > +             pins =3D "GPIO_5", "GPIO_6", "GPIO_7", "GPIO_8";
-> > +             function =3D "sgpio_a";
-> > +     };
-> > +
-> > +     usb_ulpi_pins: usb-ulpi-pins {
-> > +             pins =3D "GPIO_30", "GPIO_31", "GPIO_32", "GPIO_33",
-> > +                    "GPIO_34", "GPIO_35", "GPIO_36", "GPIO_37",
-> > +                    "GPIO_38", "GPIO_39", "GPIO_40", "GPIO_41";
-> > +             function =3D "usb_ulpi";
-> > +     };
-> > +
-> > +     usb_rst_pins: usb-rst-pins {
-> > +             pins =3D "GPIO_12";
-> > +             function =3D "usb2phy_rst";
-> > +     };
-> > +
-> > +     usb_over_pins: usb-over-pins {
-> > +             pins =3D "GPIO_13";
-> > +             function =3D "usb_over_detect";
-> > +     };
-> > +
-> > +     usb_power_pins: usb-power-pins {
-> > +             pins =3D "GPIO_1";
-> > +             function =3D "usb_power";
-> > +     };
-> > +
-> > +     ptp_out_pins: ptp-out-pins {
-> > +             pins =3D "GPIO_58";
-> > +             function =3D "ptpsync_4";
-> > +     };
->
-> Could you please move this one upper to have all the entries in the gpio
-> container alphanumerically sorted?
->
-> > +
-> > +     ptp_ext_pins: ptp-ext-pins {
-> > +             pins =3D "GPIO_59";
-> > +             function =3D "ptpsync_5";
-> > +     };
->
-> Same here.
+> Fixes: a9903de3aa16 ("dmaengine: fsl-edma: refactor using devm_clk_get_enabled")
+> Signed-off-by: Jared Kangas <jkangas@redhat.com>
+> ---
 
-Sure, I will make sure that pin nodes are alphabetical (I found some
-more that are not) in v5.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
+>  drivers/dma/fsl-edma-main.c | 1 -
+>  1 file changed, 1 deletion(-)
 >
-> [ ...]
+> diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
+> index 97583c7d51a2e8e7a50c7eb4f5ff0582ac95798d..093185768ad8ef09270ae02c99d0ee2accc183bd 100644
+> --- a/drivers/dma/fsl-edma-main.c
+> +++ b/drivers/dma/fsl-edma-main.c
+> @@ -915,7 +915,6 @@ static void fsl_edma_remove(struct platform_device *pdev)
+>  	of_dma_controller_free(np);
+>  	dma_async_device_unregister(&fsl_edma->dma_dev);
+>  	fsl_edma_cleanup_vchan(&fsl_edma->dma_dev);
+> -	fsl_disable_clocks(fsl_edma, fsl_edma->drvdata->dmamuxs);
+>  }
 >
-> > +             port29: port@29 {
-> > +                     reg =3D <29>;
-> > +                     phys =3D <&serdes 11>;
-> > +                     phy-handle =3D <&phy3>;
-> > +                     phy-mode =3D "rgmii-id";
-> > +                     microchip,bandwidth =3D <1000>;
+>  static int fsl_edma_suspend_late(struct device *dev)
 >
-> There are some questions around this node from Andrew in v1 of this serie=
-s,
-> which I don't see an answer for in any of the following versions. Could y=
-ou
-> please clarify?
-
-Sure, as for the RGMII I switched to rgmii-id so the PHY is adding the dela=
-ys.
-Though, I am not sure if its better to add them via MAC as it can add
-the delays instead of the PHY,
-so I am open to suggestions here.
-
-As for the phys property, yes that is not required here as RGMII ports
-are dedicated, there are no
-SERDES lanes being used for them.
-
-I have updated the bindings to account for this and it will be part of v5.
-
-Regards,
-Robert
-
+> ---
+> base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449
+> change-id: 20260112-fsl-edma-clock-removal-4e5882ecface
 >
-> The rest looks good to me.
+> Best regards,
+> --
+> Jared Kangas <jkangas@redhat.com>
 >
-> Thank you,
-> Claudiu
->
-
-
---=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura d.d.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
 

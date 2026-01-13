@@ -1,176 +1,174 @@
-Return-Path: <dmaengine+bounces-8234-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8235-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C302DD1943D
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 15:03:52 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45576D1B0F1
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 20:32:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E17CC304A7FD
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 13:57:40 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 49427303C106
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 19:31:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D633392814;
-	Tue, 13 Jan 2026 13:57:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81C0436A01B;
+	Tue, 13 Jan 2026 19:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="zvfoV53a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X2h7NdYZ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031033921EB
-	for <dmaengine@vger.kernel.org>; Tue, 13 Jan 2026 13:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D3235B143
+	for <dmaengine@vger.kernel.org>; Tue, 13 Jan 2026 19:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768312659; cv=none; b=D19t2BSuLwdM0DzcVWmg/ITeXoyKET4BXgadY7G0wdBVvskeyWnkjdn8JiwuoHfz6Jgi5i3EHY62aUlB696dHE6JiRgZ1aRJzEUZtHhYw9P03KfMx2jWrphBvd+QEmQ9vKrxq3qq0e1OhVHEWeKUgqUhr13LEUb3IJKY2pONnmc=
+	t=1768332710; cv=none; b=sqXOb2oNIW8Ry0HKyXEAA6e+WD6uiIl7/ecI3cAqS08e2DAyomewKmathzp9ZD9rLQqkJ0TjNMS30P4vs2HshUVt2Yc8qMbHAdaVtL4v+ou0VHlGn2Rolv3brBg8gOE76QgN99csg+mwiR3Ckhz/UX0qTu878MUNYFn+Dx0d0B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768312659; c=relaxed/simple;
-	bh=yHQXt2lohILulwRHWO2PwdKgbtksvgC0OIilYDvkikI=;
+	s=arc-20240116; t=1768332710; c=relaxed/simple;
+	bh=p1QU92yh7J3nKIOvCV3DBsIuLtNpk8bnzgF83kmPK1Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U8Vkrrwc2gUZoE3OgN+Ce8Ay7RHdZ0trf9M+lMRBH4Qu/ODj/9pAGFfq+AxOo+/rvk6pklQrb3wgHlDzDnBCMQy734iJhMV8wyIioZelmfN6Sb2yQvnsN2+pDiarIuKkvQ/j1Wn8gGwTtI0TpejjlIG9MqdkNVxj2xogOnOwDE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=zvfoV53a; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-64d4d8b3ad7so12275821a12.2
-        for <dmaengine@vger.kernel.org>; Tue, 13 Jan 2026 05:57:36 -0800 (PST)
+	 To:Cc:Content-Type; b=C+2rMSDOYyy4HvnGlkkWk1DSLtkgHqaensJGgkjXxSeMKlP9P1Gdrz5WhxGCgI0OQ8qiypcf7JAnmXpfEMZn0YV06gOEF+FlWJJPshXVHwdIXNH+UbrCm0tAt6hFkCFTpl09h8EtXP07W5yQh7pGdI3P5JcJF8vIyBM0q6yD8KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X2h7NdYZ; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-34c9edf63a7so6297418a91.1
+        for <dmaengine@vger.kernel.org>; Tue, 13 Jan 2026 11:31:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1768312655; x=1768917455; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1768332708; x=1768937508; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZYgsGgBKZshEd3LQPmk39JcNw7m/fhIkjkE+xKR+bec=;
-        b=zvfoV53a8KKlvQ3d1JQNoqsn1R64meaL/N0gvJBVsP07IpubGxx2QfE84x4Z2+kbFb
-         0hLYvrdv4SXvbje0qJL0Ne6nG9Fm0EboVzJAYkZUYQ9YLVSaQzuc2aaTV6Xaw3fXr4u5
-         epRUQ8Rr1fmQuXUGhAgjyFhKoeU5fsg5c9fXZgvqcAaQm3999ZjhMx1Bh0O7IukctDtr
-         cxNCZsPNksEYEPV48GWIxa6MuU7QzPugngj62cv1/mZlpNlETWTREwFO8KHkhEamhwC4
-         prCUxmFrHMkgeYCQCIr0xyrmQWG7B2ZuuAVRPrT+1i5F97N3cJr9JI7d5M8HP9SZcOFn
-         Uf9g==
+        bh=sz3d4wcwfG6auEnj5mgq+YAyioefyslevMqfwDmUqc8=;
+        b=X2h7NdYZmNoH9Fqm6uLFmYPO9hVHxx8xPFUdRZcmduA2Xn8vjCkXQp6uJdHqgFaDUt
+         6cIMm4HfIA67jenbSsgCC6xEchUpPHDgrZh5yfNjgA2o4EsUKjjDQc0Afq0s/puD5eE/
+         6vQxeqdOMSTs31MorybCBXLgjhDVE7OYG6JURiyvQUwOuvIPuaDV2hycO5XrJmZhgQ6k
+         YiVTEdQzJFpWH0nlHJwlu+nOGW2LeZ/w1+yY48Qk4WeKl70PchX+8oB4SUogsFNgbek4
+         JT2HDKhRaAPRiMFtnb09RU7NMJPm/A7yHF29nZMrB/5/xpvmh+tCdtdj0/v0lVTIfkXw
+         h76A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768312655; x=1768917455;
+        d=1e100.net; s=20230601; t=1768332708; x=1768937508;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ZYgsGgBKZshEd3LQPmk39JcNw7m/fhIkjkE+xKR+bec=;
-        b=isf0E2qFuRO7eMWyFpqQWZjEwe6JGOBv0Tm8Y9fn0KR1f/7I+2b3yewjPwMnXE7IOF
-         Tk3VQUR+h0DadVEID1LAnICdgPWObZfNhp/SRhzG5K8G1qVS9vggA/rNYO1XhAON3LK9
-         5rMyFt1cZX4I0PLPCd86UfupExIx3Dckik527w2w4h9PuLgHfMrHMbH9VSwLQTXxX7/9
-         /Utrcm76sbEO228yItaw6ZCYJRfxdGbv4R+FU1BQbMA1MD9GwjKNdcSoL+Ql+r4femm+
-         4ehPBGYw2Kx5E9lruyn5IrKK5+s2Jor95cYwQ2hF/lbr20gFAxpWK8zz4dzAp9io5EZU
-         cVeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPSwvAMTjBaq+DinN8mGX64HbenzLaVETopdrXLrCp1IkXiN1RORoR8e1zlVbMq4kRioPk91ZMm0Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLvuB+PVjD6aOzg1hILyr/zmb8p7g7Km5feVBIp4woMC1Yzg+m
-	L09vUIuV2QLyqgIW2O2nLwpsLfaxSfqMPMdG7Sym8l0/5zvBl/Q9F4bucYkDAxKLrx3SZdF9fjK
-	E+l/miwtFCQduQJGpwrBJ0vnsIWpQEK9ig/p37rHh0Q==
-X-Gm-Gg: AY/fxX7GP9mBx2KV0rajuMRToSUvlt1AUFae0SgSjPvRRnSmPM74M4QwYu7sEnlNMap
-	8Kv0NNnc0qSC0+4eUmRG/I5aTwTTt4j0HeK06rpHf72PRkjpjw+WpIZw3NGgIoXRB5RiUrHowWG
-	+5UKtGbV2ii1leOX0u8KsEUAu6NUFawc8nx003Nu9vW36fDRd2Vpns5RHFJZUZ9ElvD9inVCFkT
-	MTIFbfK9EEJLM/TzBN8PZ1/M5A4f6rpaUfnvxbicTphiBZtPC+DEXA2+700YizCLRKPAaZUjI7D
-	JZZnedG2V/EFbcZqma+yLDjs7iDzKG4znCocim6L8NbyMkDzkA==
-X-Google-Smtp-Source: AGHT+IHC69qajNN2R0Oc5VosMApQk8dB2K8/wIPuNuXO4ULHt0+4HajErsuy6Dkjt1+pDa9ixvBw3NRLu/Pa+AU8sC0=
-X-Received: by 2002:a05:6402:1e8c:b0:640:e75a:f95d with SMTP id
- 4fb4d7f45d1cf-65097dfbd5bmr20646641a12.15.1768312655296; Tue, 13 Jan 2026
- 05:57:35 -0800 (PST)
+        bh=sz3d4wcwfG6auEnj5mgq+YAyioefyslevMqfwDmUqc8=;
+        b=WYtxnFg9r1YEKRbyOXmXHzdVRfJk4nqifEyDrVeYDjGclTaESo6A6v0SBThriax40y
+         jqBS9Pe8eprTGpFZQxn5MDRpPcXOa93QtS6YHkgp4cXtQ1hwK5SQozhxC/biHWJ/Jf7c
+         vUbXJ/nROPus7LCeMaJhAFC7XLMsJHFNRGat7lnGmf763YTQZXcBC4rigUqBrhE7bmMn
+         +oWf/c1K5nIhjftiXW2tEFNfvb8aEasy/S+KpIpne4KDMSRAgiKLzQgGj9mR63PMDATN
+         X0+y5kqmVhIHszGVc998UsZa23HOn57uELU2s/jKWdvfI3VJ/yOI2N5Ci0hyjB5wN9AC
+         p5bw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzyAPnFtDvc54ILg7kZgbeNo8trgNd47FILvsbpEtWIY0EW0ALHxP9s0ldbyGSSejfE91Pc3rPT+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywu+gMa3q7pxCIrkZNdnSoCl1o1EbG85s8cr+d8PrXGR0ECjQk0
+	IRBkkZc009TNKf3WRKk6g0Oacttv2poLNwOrA9u2s6v/ehGxBF7Xq2/K/TQHUw5ybUic/fOoGp3
+	AKxQOrX9Cs+CO2lrEe+p4Apvxju0bgUE=
+X-Gm-Gg: AY/fxX6CrPFgtY5nd74RoT5CbP2qWRm6CwBQsuUflTo8wfCXoK8q+1rqdAjSTigYffg
+	93Dqet66ErrmFnNswyYaHYRLpFz5tPhDeKvhP9Dm7W39hqK4dvr6xaDbKdW3KOFQTPCZ1hljzVk
+	Jc6hMPg3FiwwY3m51FZiymjRebs77qrnoSMRzs61QWTPRG7aWGd0Msx7NHb4kkOhWG70rqeslkk
+	JjDVCGIn1OQ5zc7kT0eLZtvVntAYp4QerLguhKmvIPyxv7c26KVakkYI0YgyNXu+y+QpoVSNVK8
+	/hS8ppWf2fOTPtbRnkZK2OiRPKHf3tAN/w9Uidw=
+X-Received: by 2002:a17:90b:3943:b0:340:ca7d:936a with SMTP id
+ 98e67ed59e1d1-351091277cdmr187617a91.18.1768332708236; Tue, 13 Jan 2026
+ 11:31:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251229184004.571837-1-robert.marko@sartura.hr>
- <20251229184004.571837-13-robert.marko@sartura.hr> <2cdac084-4924-4ca2-85d6-2e6d9bf284aa@tuxon.dev>
-In-Reply-To: <2cdac084-4924-4ca2-85d6-2e6d9bf284aa@tuxon.dev>
-From: Robert Marko <robert.marko@sartura.hr>
-Date: Tue, 13 Jan 2026 14:57:24 +0100
-X-Gm-Features: AZwV_Qh0sAc6Pa2O_93Ow3lA3FmFDgK6_SoYiCOhp74HuwfyLgAjJuCjbp6xbBo
-Message-ID: <CA+HBbNH4q8o-4Jb=hu7JgE4emxFxktFSLHdfY4J6gCDbYTpWUA@mail.gmail.com>
-Subject: Re: [PATCH v4 12/15] arm64: dts: microchip: add LAN969x clock header file
-To: claudiu beznea <claudiu.beznea@tuxon.dev>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
-	andi.shyti@kernel.org, lee@kernel.org, andrew+netdev@lunn.ch, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, linusw@kernel.org, 
-	Steen.Hegelund@microchip.com, daniel.machon@microchip.com, 
-	UNGLinuxDriver@microchip.com, olivia@selenic.com, radu_nicolae.pirea@upb.ro, 
-	richard.genoud@bootlin.com, gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	broonie@kernel.org, lars.povlsen@microchip.com, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, netdev@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-usb@vger.kernel.org, luka.perkov@sartura.hr
+References: <20260108080332.2341725-1-allen.lkml@gmail.com>
+ <20260108080332.2341725-2-allen.lkml@gmail.com> <6342bd3d-6023-4780-b3b9-96af7d2a4814@app.fastmail.com>
+ <CAOMdWSLX07i_-NjUB6TTXbWVmeFLSNoaTBhvOs0WX6Ad=A6PDA@mail.gmail.com>
+ <7a557097-5dca-4c44-a48f-21dfa2659abc@app.fastmail.com> <CAOMdWSJ7ut3n-nryTYSyPD37YwN7UqyZ1VcgZ9nmBcRF_jxH=w@mail.gmail.com>
+ <b309e54a-b3b6-49f9-af85-2df5ffbe13bf@app.fastmail.com>
+In-Reply-To: <b309e54a-b3b6-49f9-af85-2df5ffbe13bf@app.fastmail.com>
+From: Allen <allen.lkml@gmail.com>
+Date: Tue, 13 Jan 2026 11:31:35 -0800
+X-Gm-Features: AZwV_Qid2n1EE1YuYEKuvh6LN5Pff0aaxhd7GLCcdeIwvJjpvNlqC7BIYp2VgNY
+Message-ID: <CAOMdWSLVk136RzEyiN76zqk65VLwYms0hCDi5Kww9FQppie12A@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/1] dmaengine: introduce dmaengine_bh_wq and bh helpers
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Vinod Koul <vkoul@kernel.org>, Kees Cook <kees@kernel.org>, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 11, 2026 at 3:42=E2=80=AFPM claudiu beznea <claudiu.beznea@tuxo=
-n.dev> wrote:
->
->
->
-> On 12/29/25 20:37, Robert Marko wrote:
-> > LAN969x uses hardware clock indexes, so document theses in a header to =
-make
-> > them humanly readable.
+> >> >   A hardirq callback path feels like a larger API change, so I=E2=80=
+=99d
+> >> > prefer to handle that as a separate follow=E2=80=91up (e.g. explicit=
+ hardirq
+> >> >  callback/flag + user migration where safe). Thoughts?
+> >>
+> >> Yes, definitely keep that separate. I still think that this is
+> >> what we want eventually for a bigger improvement, but your
+> >> patch seems valuable on its own as well.
+> >>
 > >
-> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > ---
-> > Changes in v4:
-> > * Move clock indexes from dt-bindings to a DTS header
+> > Thanks for the detailed feedback. I=E2=80=99ll respin along these lines=
+:
 > >
-> > Changes in v2:
-> > * Rename file to microchip,lan9691.h
+> >   - Split the series into two patches: (1) introduce the per=E2=80=91ch=
+annel BH API,
+> >     (2) switch the vchan implementation over to the WQ_BH backend if we=
+ decide
+> >     to keep that step. This should make the progression clearer.
 > >
-> >   arch/arm64/boot/dts/microchip/clk-lan9691.h | 24 ++++++++++++++++++++=
-+
-> >   1 file changed, 24 insertions(+)
-> >   create mode 100644 arch/arm64/boot/dts/microchip/clk-lan9691.h
-> >
-> > diff --git a/arch/arm64/boot/dts/microchip/clk-lan9691.h b/arch/arm64/b=
-oot/dts/microchip/clk-lan9691.h
-> > new file mode 100644
-> > index 000000000000..f0006a603747
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/microchip/clk-lan9691.h
-> > @@ -0,0 +1,24 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> >   - The dmaengine_*_bh_wq() helpers will be made static; only dma_chan_=
+*_bh()
+> >     stays exported.
 >
-> Shouldn't this use the same license as the dtsi including it?
+> Sounds good, yes.
+>
+> >   - I won=E2=80=99t try to move the other per=E2=80=91driver tasklets o=
+nto the shared queue in
+> >     this series. That feels like a separate discussion, and the right c=
+ontext
+> >     (hardirq/threaded/workqueue) may vary by driver.
+>
+> I'm not sure we are talking about the same thing here. I do think we shou=
+ld
+> try to have all the callbacks in each dmaengine driver go through the sam=
+e
+> per-channel deferral mechanism. What I meant to say is that all the taskl=
+ets
+> that are not used for the client callbacks should be separate from those,
+> e.g. the pl330_dotask() handler is used for unexpected events unrelated
+> to a channel.
 
-Yes, its a mistake on my side, will fix it in v5.
+Hi Arnd,
 
-Regards,
-Robert
+Thanks for clarifying, I understand now. Yes, the intent will be to have
+all per=E2=80=91channel client callbacks go through the shared per=E2=80=91=
+channel deferral
+mechanism (dma_chan_*_bh), while keeping any non=E2=80=91callback tasklets/=
+work
+separate (e.g. pl330_dotask() for unexpected events).
+
+I=E2=80=99ll keep WQ_BH and the per=E2=80=91channel API as the common callb=
+ack path, and in
+follow=E2=80=91on patches I=E2=80=99ll start converting driver callback pat=
+hs to use it.
+
+Thanks,
+Allen
+
+
 >
-> > +
-> > +#ifndef _DTS_CLK_LAN9691_H
-> > +#define _DTS_CLK_LAN9691_H
-> > +
-> > +#define GCK_ID_QSPI0         0
-> > +#define GCK_ID_QSPI2         1
-> > +#define GCK_ID_SDMMC0                2
-> > +#define GCK_ID_SDMMC1                3
-> > +#define GCK_ID_MCAN0         4
-> > +#define GCK_ID_MCAN1         5
-> > +#define GCK_ID_FLEXCOM0              6
-> > +#define GCK_ID_FLEXCOM1              7
-> > +#define GCK_ID_FLEXCOM2              8
-> > +#define GCK_ID_FLEXCOM3              9
-> > +#define GCK_ID_TIMER         10
-> > +#define GCK_ID_USB_REFCLK    11
-> > +
-> > +/* Gate clocks */
-> > +#define GCK_GATE_USB_DRD     12
-> > +#define GCK_GATE_MCRAMC              13
-> > +#define GCK_GATE_HMATRIX     14
-> > +
-> > +#endif
+> >   - I=E2=80=99ll keep the hardirq callback path separate. For that foll=
+ow=E2=80=91up, I can plan
+> >     to add an explicit =E2=80=9Chardirq safe=E2=80=9D request bit (e.g.=
+ a new dma_ctrl_flags)
+> >     and update vchan_cookie_complete() to invoke the callback directly =
+when
+> >     requested; otherwise it stays on the tasklet path.
+> >
+> >   If you=E2=80=99d prefer I drop the WQ_BH conversion entirely for now =
+and keep only the
+> >   tasklet=E2=80=91based per=E2=80=91channel API, I can do that too.
 >
+> No, I think that part is fine.
+>
+>      Arnd
+
 
 
 --=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura d.d.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+       - Allen
 

@@ -1,175 +1,281 @@
-Return-Path: <dmaengine+bounces-8236-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8237-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D74FD1B19D
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 20:48:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95F11D1B284
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 21:10:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C9DEA3004639
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 19:47:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 37E863043932
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 20:09:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9531E369231;
-	Tue, 13 Jan 2026 19:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 096AA38B7A0;
+	Tue, 13 Jan 2026 20:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Avh+gM2Y";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="nAVitvHM"
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="zIz8nYJt"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A9530DEDD
-	for <dmaengine@vger.kernel.org>; Tue, 13 Jan 2026 19:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9D8369960
+	for <dmaengine@vger.kernel.org>; Tue, 13 Jan 2026 20:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768333677; cv=none; b=LiS4kF3wxclcAMziJMutdBN9w+FU9wIWQQpVxfYiyN/O5HAfqfscKihI5f3c8WVy8zOQrHScIIx4Ndp/AcMG63ISQdvx2ljiCYj3sBL1a49rtpyTu95l6oIfEWVRL+4InpXNZhLeZ4wn5jXhohpqTjqHVNTuVIjediJxxCudBQA=
+	t=1768334995; cv=none; b=DZQ8ds6NwYfl5Ja7ltxHedpWUJ2tigPoL3DvaKZ8XyM96SF0KiwenLmlBn8Y0kS5imi9xBQ9atKcCDy/HD84l5cfOcqEf321vWoZb5al2DB8JoFeOuKZeQi6d/GuSML1dum2YTHHZL6QeWD2TtaDtaHpeG7Uof2D10f6V4pTjm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768333677; c=relaxed/simple;
-	bh=m7H4fYTAN2wd1dmuh2ZoMuMP5dHupazPoMOEB3geRO8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iXCBXzUsTirkSEnrrynfBmK+5WyDAIJi4wuIcZ403Bo1OuGWOwFEqS7xnTM3faKQqtUelvhI50wBmTXogfjupTrwX3+w86+a39RUCdynlqrgF+FneSy8FSYSfra36wUwYSu8AvdxEEzy6swtVXZc3wsWrtsMlTTMHAeFTZYQfAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Avh+gM2Y; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=nAVitvHM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768333675;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=h/J0VdyKSP8djFklxCotVlWBB1IldyLH81OZ7k+LqYY=;
-	b=Avh+gM2YODwOkGSrcCcS4mZP+fIJqNPWixuvRtuKbMgTExMyLWW6PDpe9FtggbNOO1PrB9
-	4nqepEWo4bPjWxYiP3YRD7RX4XKyuUopImSS23GeZkkY+nti/Wy+abrJDoJ4GkA6If3OUL
-	VFBSyYEcwOyIcaeRgJTSjNsFI5mxRX8=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-463-De0t-9KlNceCAIUQcXp4DQ-1; Tue, 13 Jan 2026 14:47:52 -0500
-X-MC-Unique: De0t-9KlNceCAIUQcXp4DQ-1
-X-Mimecast-MFC-AGG-ID: De0t-9KlNceCAIUQcXp4DQ_1768333672
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8b1d8f56e24so2069712885a.2
-        for <dmaengine@vger.kernel.org>; Tue, 13 Jan 2026 11:47:52 -0800 (PST)
+	s=arc-20240116; t=1768334995; c=relaxed/simple;
+	bh=pyMp5oFQEzQGlgpWodh5m5sUhmJKSJMmcF9EpqTle4o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ixXeueN/SEFzSezfOCIJqo/jqAmNd0SsohAtbUvo8qMisjsAnZYZuj8AFiHkzxMioz0p/KVnmfEn/U6RHyuEwGRPVyX+dzhDFmZnE3DRyt1IdqGq30wWUHV9+XTQ+E7xrNPq1C42UhEKexSZP44+gaODLJREiahvU1tfQzRgxYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=zIz8nYJt; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b87003e998bso31426166b.1
+        for <dmaengine@vger.kernel.org>; Tue, 13 Jan 2026 12:09:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768333671; x=1768938471; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h/J0VdyKSP8djFklxCotVlWBB1IldyLH81OZ7k+LqYY=;
-        b=nAVitvHMb84tJ6AE5FITabya2rROB3lJDXEMGmyyNOFe6zXLyDqKiI11K/gCxyXuJk
-         pJsodYDyzmeKaKnVEXjI0obHJjspo1vfKiTebHSWZEc6bcm+Xdo5Poo02nlDvU6eKLc8
-         wjToX2UxAGS0WuG51sYqs/mFjCNwoLTLBfYMCCyBuo9b+WhFM3kbePX2r9Y8s/cr4vy2
-         uhYx22bPh9qelYtJFPmVt+0XFwrpIYLe+3X2N7NEqFBy3vq+UZQSVjuh6m2CyExeJ4pu
-         WkzFzeaOmpA3CE7KQne/DMlkiI+LeFOWScRT7wpkpXdK+/KsCWkx1lhX7T+QZeYzzvRo
-         bQ+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768333671; x=1768938471;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=sartura.hr; s=sartura; t=1768334991; x=1768939791; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h/J0VdyKSP8djFklxCotVlWBB1IldyLH81OZ7k+LqYY=;
-        b=UgKbMaLn0h7qyXeFyqiKQuTBnACCmuAae6b+dDaXq556uVOphr3on2x+Ro6/voIw+1
-         1J1R/2rWX8K352SeEmQ+R9TvIZIH4BXDsawThx7VaQrOMbE4GExkvDTq3pdV7nNq+lIJ
-         jzjaelLwa0AKJUlkVfIxBLrCfpt9ZTpEyLJspgWr46wItemRDhKxx5Z+kRbIo0+HZOmI
-         3oa6WttZ/PtV+BcKfy391MMSqyv8SV3O/bj51uDK1eXriOGEBl2h/BxBKzbaPjgJHh8R
-         q/i5umtbsF0+V32aXcUM+yJcX2QSqR6txk3YHv6VD4IOm3UCWXmn8pmiFEQnpGHFLNKY
-         w/ww==
-X-Forwarded-Encrypted: i=1; AJvYcCUqaMN1l+n66QBzo5As8mXyETcFa2R/1RcRxZBQ/TsL5VHpgQGPSG1MZT3U/nbHq0t3i1TLDc2aF1k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5bUCHO1ncR6nrdBNWiHvTUIi0adA7nBzEmgDeNiZ1ZeXwQF9p
-	w0j0I7mJMrfvJLrEIdGU8PtZ0TFg8Ms8Bj4rYYoAmE7Twd+SUHjI56DcIqyfquHdjf2f1+1LFSS
-	OlB9Gi2hHv8GzsiwLwLEgNq+4wGyM/D12aDgGNZLlUDu9yrhxti+xDNIyi7kEKg==
-X-Gm-Gg: AY/fxX7Uh6aDXRXMG4X4fMvXWvkMsLcJhCWf2EzPyyL6YLV1q0ssVXV+rDBcdt3b2m8
-	3KCE37TNwmv9X/aErZU0mkEN9S9WO5aVpV4k689I3EQlbry+KwfsYfh1U2nienQrZn8sG948/pr
-	JARZUJ1PaGHJFWANAMRfjm11jJgb22qcUybTPZ0BGuGAKVaTzL5VWz6MmK5oxt91kubtf/AAiKB
-	5MRQ2H0yj9xMhHLtNhqs55DMF950dngV6ZC9PUGTgfINHUaAt+menFcwXvkww7k9Pwi4YwOLglH
-	/WIHA8tR418E9gLbXLnK51VLbsHw9yzhrW4aXBGJkYxnV0jhsI9UAkdyL48h1awj0LiwDTaL5lq
-	hq7PI3iZW4xnZMu18C/ekKWHrSrRGGfickJVqMxWIXg==
-X-Received: by 2002:a05:620a:7088:b0:8c3:7016:1d8c with SMTP id af79cd13be357-8c52fbdde52mr54923985a.88.1768333671654;
-        Tue, 13 Jan 2026 11:47:51 -0800 (PST)
-X-Received: by 2002:a05:620a:7088:b0:8c3:7016:1d8c with SMTP id af79cd13be357-8c52fbdde52mr54921585a.88.1768333671231;
-        Tue, 13 Jan 2026 11:47:51 -0800 (PST)
-Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4400:eb20:99f3:ffd5:11da:6745])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-890770e4262sm159356436d6.20.2026.01.13.11.47.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 11:47:50 -0800 (PST)
-From: Jared Kangas <jkangas@redhat.com>
-Date: Tue, 13 Jan 2026 11:46:50 -0800
-Subject: [PATCH] dmaengine: fsl-edma: don't explicitly disable clocks in
- .remove()
+        bh=X3PB19UpbesWMeT0R3+l59gQeDUb0GCMAUDX3FFcChs=;
+        b=zIz8nYJtuj84rCwrR4h2rYUNtQy0kQi3Vs6Pa4eyUFvYBSmR3JdcK91Z5LcbNLJJbd
+         KBv1zpWpctONSZSIZfox4XBRJ3RoOniV3X3ufcycnUMgiQws9qL2iJTLfcYz/6ywcGtF
+         IEbL5rTF894Idp+8ULCgygVGYo7r2T+AndIh1IP7v3vgatT1IQO43J17idGJA2xunR2Y
+         7fJ9k/8LfGQoxc/GCDnq0d/fOOs+esgxOp4GdBC/tXJBsPbMEB8jlL/iIMNJVyMCIozF
+         aMqv/iMccUIy3JOOqaYhzVETvgeYFGAbN22kE3vQ40Dtdd6YFQhBIm6KtULuMQfYbl9n
+         eBaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768334991; x=1768939791;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=X3PB19UpbesWMeT0R3+l59gQeDUb0GCMAUDX3FFcChs=;
+        b=jffMDONFSeTK5CcE4WzUj7Em8I4AA3pZBk6+iUA0VocP2Sw7vD4APc4oUwAHs4k6XD
+         ynYV3iIUYSkLUKiY0sNw1+VNjbmgB6ZMuU9pb0UdheNqQoAp6ebsC7FQv2XPzSom/tth
+         j6nq+t4dWTlTcueiSEvhTYkXjEkvNE1ydwYrPu72tkDMMj/gNHzyQJW1JcdN/Iiynt3P
+         CAAB+C8fTKCHz0cLd6tfY/aNOs3AUFKJSc99V5azXxF5MQdd0LLaQtsKLEEzAiNmlUqG
+         jT+EaJ32Et+G5XOMW79OCpsWRDnMNEWyMNjovJt9wZEjzkeQNOPs5czxaBVC4AtHwnAc
+         7uyA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSwb18XglutPIYhM49k0SF15xlpL0c7GiAdF+mydLd1UTiX5o/vYUGQG1yK7neuvNIAkNvOIFhZpM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5Ax0nQLDlMOmFS64/jQyk4GZODup5jCMuer93NStWeDM7WB6h
+	rJnJRKIryo1dzJwae7S6X4h/oCotLNOchLs+kJf/4B9bW9EPPCH6TuvtQPX5V6QR0YtIrIDDqM2
+	3q+o+IUWOmPobFpRNJDPnAhCmwUWh531uabJnoTtoYg==
+X-Gm-Gg: AY/fxX6R/ezoNzbuXb21yhGbheZA+dKTAaGPQeatDFrq8xxdCqc+ks58dWX3VDjMxjX
+	bVs9WYVNfqiY6U6vjVcKG26lwTD++CpzdU3Z0zw7CnVHA6MPuB7TWqqxuMocjHWxPmeeGjssJjk
+	2uKRma7wp/OOMMH5AoA9UJtgp7OiVe/eXRdf5K4BtTfq2lrF06xvlyahU5IJ0G+m73kQCP6hwOO
+	IKmDY/mlAdhascYXTUFHGNS7lj/qVvzIFfgAIX5w2aTnUfmBnws2yirv2kMDzPulR3cbcsJYK/W
+	GjTtNkmumASg0nD3mq6TddDYSvWbB34mbjSUbA0ZLvTKRgBNHMVoIXdF7Kbj
+X-Received: by 2002:a17:907:9483:b0:b87:191f:4fab with SMTP id
+ a640c23a62f3a-b8761d928b1mr18947166b.26.1768334991113; Tue, 13 Jan 2026
+ 12:09:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260113-fsl-edma-clock-removal-v1-1-2025b49e7bcc@redhat.com>
-X-B4-Tracking: v=1; b=H4sIACmhZmkC/x3MQQqEMBAF0atIr20wQUW8irgI7Y82RiMJyIB49
- wku36LqoYykyDRWDyXcmjWeBaauSDZ3rmBdisk2tm+MsexzYCyHYwlRdk444u0Ct+iGwUK8E1C
- JrwSvv288ze/7B1XCBg1oAAAA
-X-Change-ID: 20260112-fsl-edma-clock-removal-4e5882ecface
-To: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>, 
- Alison Wang <b18965@freescale.com>, Arnd Bergmann <arnd@arndb.de>, 
- Jingchang Lu <b35083@freescale.com>
-Cc: imx@lists.linux.dev, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jared Kangas <jkangas@redhat.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1768333669; l=2024;
- i=jkangas@redhat.com; s=20251111; h=from:subject:message-id;
- bh=m7H4fYTAN2wd1dmuh2ZoMuMP5dHupazPoMOEB3geRO8=;
- b=RTdr4dUq+xENYTPbNTXSYKGcwPQ5UmP3ZVIZbo6p8PArbQkhSnZe+H6uVpra2B+HKhbYHt2dy
- I+vvV99uQZJDUMBR0Gcy9NobxdDF8Dy+ng6btr6YNj4TQMSGLLvIHhc
-X-Developer-Key: i=jkangas@redhat.com; a=ed25519;
- pk=eFM2Mqcfarb4qox390655bUATO0fG9gwgaw7kGmOEZQ=
+References: <20251229184004.571837-1-robert.marko@sartura.hr>
+ <20251229184004.571837-16-robert.marko@sartura.hr> <858ca139-61c5-45e3-a2c9-d0af414e3592@tuxon.dev>
+In-Reply-To: <858ca139-61c5-45e3-a2c9-d0af414e3592@tuxon.dev>
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Tue, 13 Jan 2026 21:09:40 +0100
+X-Gm-Features: AZwV_QhCSNrQ25JXSm6moAYHvYjCfUUDQoR1FC1MV_mP0oSiXaM4vWsMWx6MKV0
+Message-ID: <CA+HBbNFYBhtvUxd45O7eP_1JYENxeGZOkA+yUsEdztOSSi9Gdg@mail.gmail.com>
+Subject: Re: [PATCH v4 15/15] arm64: dts: microchip: add EV23X71A board
+To: claudiu beznea <claudiu.beznea@tuxon.dev>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
+	andi.shyti@kernel.org, lee@kernel.org, andrew+netdev@lunn.ch, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, linusw@kernel.org, 
+	Steen.Hegelund@microchip.com, daniel.machon@microchip.com, 
+	UNGLinuxDriver@microchip.com, olivia@selenic.com, radu_nicolae.pirea@upb.ro, 
+	richard.genoud@bootlin.com, gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	broonie@kernel.org, lars.povlsen@microchip.com, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, netdev@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-usb@vger.kernel.org, luka.perkov@sartura.hr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The clocks in fsl_edma_engine::muxclk are allocated and enabled with
-devm_clk_get_enabled(), which automatically cleans these resources up,
-but these clocks are also manually disabled in fsl_edma_remove(). This
-causes warnings on driver removal for each clock:
+On Sun, Jan 11, 2026 at 3:42=E2=80=AFPM claudiu beznea <claudiu.beznea@tuxo=
+n.dev> wrote:
+>
+> Hi, Robert,
+>
+> On 12/29/25 20:37, Robert Marko wrote:
+> > Microchip EV23X71A is an LAN9696 based evaluation board.
+> >
+> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > ---
+> > Changes in v2:
+> > * Split from SoC DTSI commit
+> > * Apply DTS coding style
+> > * Enclose array in i2c-mux
+> > * Alphanumericaly sort nodes
+> > * Change management port mode to RGMII-ID
+> >
+> >   arch/arm64/boot/dts/microchip/Makefile        |   1 +
+> >   .../boot/dts/microchip/lan9696-ev23x71a.dts   | 757 +++++++++++++++++=
++
+> >   2 files changed, 758 insertions(+)
+> >   create mode 100644 arch/arm64/boot/dts/microchip/lan9696-ev23x71a.dts
+> >
+> > diff --git a/arch/arm64/boot/dts/microchip/Makefile b/arch/arm64/boot/d=
+ts/microchip/Makefile
+> > index c6e0313eea0f..09d16fc1ce9a 100644
+> > --- a/arch/arm64/boot/dts/microchip/Makefile
+> > +++ b/arch/arm64/boot/dts/microchip/Makefile
+> > @@ -1,4 +1,5 @@
+> >   # SPDX-License-Identifier: GPL-2.0
+> > +dtb-$(CONFIG_ARCH_LAN969X) +=3D lan9696-ev23x71a.dtb
+> >   dtb-$(CONFIG_ARCH_SPARX5) +=3D sparx5_pcb125.dtb
+> >   dtb-$(CONFIG_ARCH_SPARX5) +=3D sparx5_pcb134.dtb sparx5_pcb134_emmc.d=
+tb
+> >   dtb-$(CONFIG_ARCH_SPARX5) +=3D sparx5_pcb135.dtb sparx5_pcb135_emmc.d=
+tb
+> > diff --git a/arch/arm64/boot/dts/microchip/lan9696-ev23x71a.dts b/arch/=
+arm64/boot/dts/microchip/lan9696-ev23x71a.dts
+> > new file mode 100644
+> > index 000000000000..435df455b078
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/microchip/lan9696-ev23x71a.dts
+>
+> [ ...]
+>
+> > +&gpio {
+> > +     emmc_sd_pins: emmc-sd-pins {
+> > +             /* eMMC_SD - CMD, CLK, D0, D1, D2, D3, D4, D5, D6, D7, RS=
+TN */
+> > +             pins =3D "GPIO_14", "GPIO_15", "GPIO_16", "GPIO_17",
+> > +                    "GPIO_18", "GPIO_19", "GPIO_20", "GPIO_21",
+> > +                    "GPIO_22", "GPIO_23", "GPIO_24";
+> > +             function =3D "emmc_sd";
+> > +     };
+> > +
+> > +     fan_pins: fan-pins {
+> > +             pins =3D "GPIO_25", "GPIO_26";
+> > +             function =3D "fan";
+> > +     };
+> > +
+> > +     fc0_pins: fc0-pins {
+> > +             pins =3D "GPIO_3", "GPIO_4";
+> > +             function =3D "fc";
+> > +     };
+> > +
+> > +     fc2_pins: fc2-pins {
+> > +             pins =3D "GPIO_64", "GPIO_65", "GPIO_66";
+> > +             function =3D "fc";
+> > +     };
+> > +
+> > +     fc3_pins: fc3-pins {
+> > +             pins =3D "GPIO_55", "GPIO_56";
+> > +             function =3D "fc";
+> > +     };
+> > +
+> > +     mdio_pins: mdio-pins {
+> > +             pins =3D "GPIO_9", "GPIO_10";
+> > +             function =3D "miim";
+> > +     };
+> > +
+> > +     mdio_irq_pins: mdio-irq-pins {
+> > +             pins =3D "GPIO_11";
+> > +             function =3D "miim_irq";
+> > +     };
+> > +
+> > +     sgpio_pins: sgpio-pins {
+> > +             /* SCK, D0, D1, LD */
+> > +             pins =3D "GPIO_5", "GPIO_6", "GPIO_7", "GPIO_8";
+> > +             function =3D "sgpio_a";
+> > +     };
+> > +
+> > +     usb_ulpi_pins: usb-ulpi-pins {
+> > +             pins =3D "GPIO_30", "GPIO_31", "GPIO_32", "GPIO_33",
+> > +                    "GPIO_34", "GPIO_35", "GPIO_36", "GPIO_37",
+> > +                    "GPIO_38", "GPIO_39", "GPIO_40", "GPIO_41";
+> > +             function =3D "usb_ulpi";
+> > +     };
+> > +
+> > +     usb_rst_pins: usb-rst-pins {
+> > +             pins =3D "GPIO_12";
+> > +             function =3D "usb2phy_rst";
+> > +     };
+> > +
+> > +     usb_over_pins: usb-over-pins {
+> > +             pins =3D "GPIO_13";
+> > +             function =3D "usb_over_detect";
+> > +     };
+> > +
+> > +     usb_power_pins: usb-power-pins {
+> > +             pins =3D "GPIO_1";
+> > +             function =3D "usb_power";
+> > +     };
+> > +
+> > +     ptp_out_pins: ptp-out-pins {
+> > +             pins =3D "GPIO_58";
+> > +             function =3D "ptpsync_4";
+> > +     };
+>
+> Could you please move this one upper to have all the entries in the gpio
+> container alphanumerically sorted?
+>
+> > +
+> > +     ptp_ext_pins: ptp-ext-pins {
+> > +             pins =3D "GPIO_59";
+> > +             function =3D "ptpsync_5";
+> > +     };
+>
+> Same here.
 
-        edma_module already disabled
-        WARNING: CPU: 0 PID: 418 at drivers/clk/clk.c:1200 clk_core_disable+0x198/0x1c8
-        [...]
-        Call trace:
-         clk_core_disable+0x198/0x1c8 (P)
-         clk_disable+0x34/0x58
-         fsl_edma_remove+0x74/0xe8 [fsl_edma]
-         [...]
-        ---[ end trace 0000000000000000 ]---
-        edma_module already unprepared
-        WARNING: CPU: 0 PID: 418 at drivers/clk/clk.c:1059 clk_core_unprepare+0x1f8/0x220
-        [...]
-        Call trace:
-         clk_core_unprepare+0x1f8/0x220 (P)
-         clk_unprepare+0x34/0x58
-         fsl_edma_remove+0x7c/0xe8 [fsl_edma]
-         [...]
-        ---[ end trace 0000000000000000 ]---
+Sure, I will make sure that pin nodes are alphabetical (I found some
+more that are not) in v5.
 
-Fix these warnings by removing the unnecessary fsl_disable_clocks() call
-in fsl_edma_remove().
+>
+> [ ...]
+>
+> > +             port29: port@29 {
+> > +                     reg =3D <29>;
+> > +                     phys =3D <&serdes 11>;
+> > +                     phy-handle =3D <&phy3>;
+> > +                     phy-mode =3D "rgmii-id";
+> > +                     microchip,bandwidth =3D <1000>;
+>
+> There are some questions around this node from Andrew in v1 of this serie=
+s,
+> which I don't see an answer for in any of the following versions. Could y=
+ou
+> please clarify?
 
-Fixes: a9903de3aa16 ("dmaengine: fsl-edma: refactor using devm_clk_get_enabled")
-Signed-off-by: Jared Kangas <jkangas@redhat.com>
----
- drivers/dma/fsl-edma-main.c | 1 -
- 1 file changed, 1 deletion(-)
+Sure, as for the RGMII I switched to rgmii-id so the PHY is adding the dela=
+ys.
+Though, I am not sure if its better to add them via MAC as it can add
+the delays instead of the PHY,
+so I am open to suggestions here.
 
-diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
-index 97583c7d51a2e8e7a50c7eb4f5ff0582ac95798d..093185768ad8ef09270ae02c99d0ee2accc183bd 100644
---- a/drivers/dma/fsl-edma-main.c
-+++ b/drivers/dma/fsl-edma-main.c
-@@ -915,7 +915,6 @@ static void fsl_edma_remove(struct platform_device *pdev)
- 	of_dma_controller_free(np);
- 	dma_async_device_unregister(&fsl_edma->dma_dev);
- 	fsl_edma_cleanup_vchan(&fsl_edma->dma_dev);
--	fsl_disable_clocks(fsl_edma, fsl_edma->drvdata->dmamuxs);
- }
- 
- static int fsl_edma_suspend_late(struct device *dev)
+As for the phys property, yes that is not required here as RGMII ports
+are dedicated, there are no
+SERDES lanes being used for them.
 
----
-base-commit: 7d0a66e4bb9081d75c82ec4957c50034cb0ea449
-change-id: 20260112-fsl-edma-clock-removal-4e5882ecface
+I have updated the bindings to account for this and it will be part of v5.
 
-Best regards,
--- 
-Jared Kangas <jkangas@redhat.com>
+Regards,
+Robert
 
+>
+> The rest looks good to me.
+>
+> Thank you,
+> Claudiu
+>
+
+
+--=20
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura d.d.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
 

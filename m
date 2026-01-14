@@ -1,225 +1,249 @@
-Return-Path: <dmaengine+bounces-8246-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8247-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF0CBD20196
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Jan 2026 17:11:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EC32D2078D
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jan 2026 18:14:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C472E308ED7A
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Jan 2026 16:05:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2A248303897B
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jan 2026 17:13:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A35E3A1D12;
-	Wed, 14 Jan 2026 16:05:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01FF72DFA2D;
+	Wed, 14 Jan 2026 17:13:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hvvyLSnt";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="PtqPzWYi"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="FTrC6ScA"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012056.outbound.protection.outlook.com [52.101.66.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038933A1E7F
-	for <dmaengine@vger.kernel.org>; Wed, 14 Jan 2026 16:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768406707; cv=none; b=HpNrwXqDAHRIYMdGCHdmAG43Jx81UpF61vBkIg3q5kSfXboLrSZdjyT9vG+drXS8e+2mEZB/5FhMnrLLcSUwFkiB6UYvwq6ePOmOKtID84RAnkZJ0EBhCbQ0swcdqnrF1UMg4U1yed8VY5QCOt1Q1hovmeGai1ZOAnoUycIKI64=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768406707; c=relaxed/simple;
-	bh=9H8wiyUnF4ylFKzCr5J4gfcYevv9VaRGGFZiwCFq/48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NgHt8D6t4fbBGAJE+tJyhYjO044+E7N6bA6mcasjTYzfFVH9JzTuvV6f9tFiJLDFLXth+xv5hgNmZjQoyGWUxiECzDEmAuIUlns7HHFHB14lHdQM9VE8OldC28nk4+38nnkEtScxFvKX6YFLRO9+c7wODIY4t9ZVUe0cQYxga5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hvvyLSnt; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=PtqPzWYi; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60EE37mU147882
-	for <dmaengine@vger.kernel.org>; Wed, 14 Jan 2026 16:05:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+iaUhLfP280G9UZEsC2EmbnNHrNb/7z1dRVbvA0ugOA=; b=hvvyLSnt6H4DELQT
-	0Rr6yKGo4pmwmJxgbgeWK41sEZa7zAG02d7bu9mLTzjjHRabPxb4DIw5+44KET7L
-	TUXXGZ5LdM4MVTamDs84Qlk1gEuy0la4IaxtC/f7BRiGSfN7QvQ3UujqvzwvSPPk
-	uT5SCGbOuyCJC28x7Trb1DmdSafN/5pfzWqiSHCqMgFxM241YaqaAxMfYbKSLP7D
-	TcGi/s+Q63DzgGVAX5JI8vbQn+rq0t4BKLd5X9XyM6SNwEz81EvG7Ern4sSkmr0L
-	Ek22DAKnXcgzmMqsm74/Yys6SD0iMJqS4O7P1TcPIZdwqdInlQ/AtWJtBHKEpIBn
-	+zgXrg==
-Received: from mail-ua1-f69.google.com (mail-ua1-f69.google.com [209.85.222.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bp6rahuj5-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Wed, 14 Jan 2026 16:05:02 +0000 (GMT)
-Received: by mail-ua1-f69.google.com with SMTP id a1e0cc1a2514c-9411b2335f4so20553837241.3
-        for <dmaengine@vger.kernel.org>; Wed, 14 Jan 2026 08:04:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1768406697; x=1769011497; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+iaUhLfP280G9UZEsC2EmbnNHrNb/7z1dRVbvA0ugOA=;
-        b=PtqPzWYizov+FfbZHMUQEct8WHW2RqHApQBcX3A7wgWKXL7SHWUnSHB003FQcD1II+
-         mD/bR8VhAhpBsJNCxERjJY8FZVruIS2Wua1BTTv+4DuVNzzmttkFlrdI/dnQWzQMTlmH
-         WqTqqHKsqQpt9ctK4F+wBrnbehF8aZ3lod9w/Y5/TRmLK8vlvfyP9lrhKAD/77CgBLdy
-         zfpE8RJx/EowNgMMIVqlPdI8jljn0mwELY5dBCKtaBB3QyXgkt1kCIeWxR1hZvzie629
-         OYGOYTViOW9SPGyuq9x9l1rytgTBPGjco7ymfqVEqAk8SspS+MtzJxQ3jdmtlba0n1b8
-         qI1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768406697; x=1769011497;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+iaUhLfP280G9UZEsC2EmbnNHrNb/7z1dRVbvA0ugOA=;
-        b=JKRiAdjYbDwWkWGreaEvf6iKkYyBHF8CuFAN3XXC2sJuIbv/Xk6cxlY6AQQmCyEIFa
-         z+I8f9IETf6B8mbcvsktge/TIV0KqYwTpwmQaTZLCgPhXuPRUAL6aof3dU5FUvY/YcWt
-         lR/gHw8jwtZ3YHnAyA/6Z26aNUCxd61BpWYCnRkvGiLRpr5UjRGZML4Yk6hbKqS3AIpq
-         ZXd4ZP0rjCXcgn5b1nWkQYl2GxwyLDf4ob/yDaM7hxO02vVJE1SXT1SGHkXQhky3M8nl
-         tdy2Udl7nJQ53YOTMv9EOA3JTXsL1XnrBfPbiw12zvgCEohAiso05XhxXAKuac1hl7ot
-         Faqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmPFJyxN3IAnsXR24AYUgREiubMP/ImwMdofKq6jyBrGbm2hOb1wGt1cVSv6wi63t1f+yo7zUa7HQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfH0JBojlqSl26ItZTY/G4pKsgzMKn2RDGjG9hgSmazEJ3yXtN
-	tVm15Vwp3IuNJ8ytfpoXYMJHaeFtMFsSpnlb3AP3Mxn96lfHKB1KAzKKxiENt0enLR8tVa0TKom
-	V6HmrjSWY9udt55v+cP890o9TZRa5NkfcDYoiibLCIG3qEzZ5pDHRfPmY8GnZD2o=
-X-Gm-Gg: AY/fxX7bmP8wIZtPOf/TwjNsRePdhM5BKBkBuGpO0p4WPW2PKmKiX4XoHpjitLSKmCU
-	eYuwDkwvIxQUsWpDJj3jo+wjDrgy+AJxhMGfkwPaCM0eOFSkPJaG/9sorSiPjE26Zsngfuu2SDQ
-	DXibBGW8cHh56FPQKzQX2eGBMYykoW/IWXYZgIJqn04DE58a2+MjtoVRNYbU/aneP5q0yxRds16
-	+fFh/dn7vLZ/muzf3cN0HekGTFlhwy8jtXSpLpXcZATCJEZM9lpBQq+OqVYIsdCME3zjCoi5tT/
-	1CP9zjLPanstrHGD5yVhbLHUZBWrcKkuJkrmgyGTjcvzYxT2TGd+5UugzL1CgrdLM/W+zVNPrwC
-	2ZURUeWUEtGj7vsmXl51QtyyfqcrMfFbMql5ofil3f7RaDfri0au73RdNxIes/6lw8uYfnoXprn
-	yYLM+EQMcJlv8hrDMvbmS8YSA=
-X-Received: by 2002:a05:6102:5691:b0:534:cfe0:f861 with SMTP id ada2fe7eead31-5f17f4dcb94mr1446247137.18.1768406696341;
-        Wed, 14 Jan 2026 08:04:56 -0800 (PST)
-X-Received: by 2002:a05:6102:5691:b0:534:cfe0:f861 with SMTP id ada2fe7eead31-5f17f4dcb94mr1446067137.18.1768406694401;
-        Wed, 14 Jan 2026 08:04:54 -0800 (PST)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-382eb7c708fsm53807741fa.21.2026.01.14.08.04.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jan 2026 08:04:53 -0800 (PST)
-Date: Wed, 14 Jan 2026 18:04:51 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Thara Gopinath <thara.gopinath@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Udit Tiwari <quic_utiwari@quicinc.com>,
-        Daniel Perez-Zoghbi <dperezzo@quicinc.com>,
-        Md Sadre Alam <mdalam@qti.qualcomm.com>,
-        Dmitry Baryshkov <lumag@kernel.org>, dmaengine@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v9 03/11] dmaengine: qcom: bam_dma: implement support for
- BAM locking
-Message-ID: <bwhczqghukhoy2ktedizkexwhzdmirrxcucoewrc5dfe7ebvjk@554mr7q2urmr>
-References: <CAMRc=MetbSuaU9VpK7CTio4kt-1pkwEFecARv7ROWDH_yq63OQ@mail.gmail.com>
- <aUF2gj_0svpygHmD@vaman>
- <CAMRc=McO-Fbb=O3VjFk5C14CD6oVA4UmLroN4_ddCVxtfxr03A@mail.gmail.com>
- <aUpyrIvu_kG7DtQm@vaman>
- <CAMRc=Md6ucK-TAmtvWMmUGX1KuVE9Wj_z4i7_-Gc7YXP=Omtcw@mail.gmail.com>
- <aVZh3hb32r1oVcwG@vaman>
- <CAMRc=MePAVMZPju6rZsyQMir4CkQi+FEqbC++omQtVQC1rHBVg@mail.gmail.com>
- <aVf5WUe9cAXZHxPJ@vaman>
- <CAMRc=Mdaucen4=QACDAGMuwTR1L5224S0erfC0fA7yzVzMha_Q@mail.gmail.com>
- <aWBndOfbtweRr0uS@vaman>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1FB2E92C3;
+	Wed, 14 Jan 2026 17:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768410789; cv=fail; b=HDFR4B5lIzVNPg79WSAc9V4T6ESvmMlpzFCxnr3EA1Qq10XaLf3scMa12Z8rC0aEzgYhnDDPe0MBdQMuF0OI5bJWZ0BALbdXKN9UTpB2iGJuohkVlDLeFQL4fMsawJB1lJJ51PR8TYrOSUpCPRcOCa+1c9w6/GCNWI+OfNIVTjo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768410789; c=relaxed/simple;
+	bh=CSplLpUCQP24MOlkQlc7ScTOpJ/5JoXSLBul5QJfqRE=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=TRCAQfChBAY0/sooKAZdzVjLccc0XKQY+oiJjghK/fuMmBpXajbvYTpyGW2bMtrzarF8vgjdzdJzFN0ABt+QHUkA1dCztVNiAhZOlFwn3baw9xYRcsejUjqdnhGPTcxDYqkpDCoR37p9dFp5sozmdmGOywT+nJeeJ2LESoNze5U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=FTrC6ScA; arc=fail smtp.client-ip=52.101.66.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UVpCj6+o1brFOJNncGoXCgOS/MmQ1EUUWhEvD4MQJ0kWdGxM0iDrlBg6dOi23YQuEU7dJhqQwXpRh8w3u76GEp8QtToTjn+vBdLrPfXW5MV+o+m4fa5XIZ5o5OpPsyYxyq9k539fIrqmfQs40kh4DQA6VX2LAe9G4AWOEI1+or2/N151f3P/E6w3qDXLtzdxTD9YfcGuHNRPWX+v3+/yHxLKo1Fx9Bprw991y7dSGyOPxl0bSc9gm62sDPS1j7EkySz947+372U3e8IXVMAnzBBqaIPhWCPXmgLA8cLpF7iVotVS1YZMzCo1FpwSDmbskEWpPZMGO3E3ypQckyNm+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kh/Z7x7d22l4uD48k7l5iS7SWfdXNXGJDeiBnYuaoAQ=;
+ b=ogVLlGEwKAW5YtFHb0u46VykWicQQSJEyLK8sZJIaznhe3x4yHZTEEpPjf0P9l4Hy6fVIDi84SxGkLc+8pNq9cg6zTDVpA3zt8stXx4FZCgNFh007QxwYtPOoZhKHqIQV0tWzp9B8TlrF3I7khdU1suRbBwd7A96CiAm72o9JpANzDUybB75Twkc3iWkjM0d9oQivJjppyPKnA9VqFu76orUuZho3uXbAPo66cGme6RuUEBJJPy/YbpbpPowgWNh6yqXVysnTYs2oT2VaH2C5Wduc/VUzS/KJrI7JTUWQYkO1TmDDfflgXgpskTB5oZKrQLWPnhofIwLd2jNcs1VAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kh/Z7x7d22l4uD48k7l5iS7SWfdXNXGJDeiBnYuaoAQ=;
+ b=FTrC6ScAH8qlkg4XveQPCYLyFbSnD4Y+F6XWeWB+m8Wk7jdvsBuVTlK6n4AL4/FjNwgGzHiS5Xa7i+H55bJRsCW+90yBFW6wG1V/A9oX/6qFLjeXZNRztmcXpPUjg88mPaG+6o01ck6wjFmE1XfeLrDHLZqH2Qbl5Fkb3Y/leU6v/CtE4qCkcd8T97EG0FyMbCP/yw6FrS8NIRf+eX9YSKRMBcPdRatCB1YR5bDpKIWB78RdQAVrYET8v7FIUbowahFQdPmAgy/bgv+Ald2z19Atfr8YfzbQJGgNY2WEi7E05j23AGPwlF9Np7cDlB62URAIgKi9k2Auu82NU98TBQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8948.eurprd04.prod.outlook.com (2603:10a6:20b:42f::17)
+ by VI0PR04MB12155.eurprd04.prod.outlook.com (2603:10a6:800:312::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Wed, 14 Jan
+ 2026 17:13:05 +0000
+Received: from AS8PR04MB8948.eurprd04.prod.outlook.com
+ ([fe80::843f:752e:60d:3e5e]) by AS8PR04MB8948.eurprd04.prod.outlook.com
+ ([fe80::843f:752e:60d:3e5e%4]) with mapi id 15.20.9499.002; Wed, 14 Jan 2026
+ 17:13:05 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH 0/6] dmaengine: Add common dma_slave_config and split it
+ into src and dst parts
+Date: Wed, 14 Jan 2026 12:12:41 -0500
+Message-Id: <20260114-dma_common_config-v1-0-64feb836ff04@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAInOZ2kC/x2MSwqAIBQArxJvnZAS9rlKRPh52luooRCBdPek1
+ TCLmQoFM2GBtauQ8aZCKTbhfQfmVNEjI9scxCDkwLlgNqjDpBBSbIiOPDN6nvQouVikg9ZdGR0
+ 9/3Pb3/cDsmIx0WMAAAA=
+X-Change-ID: 20260112-dma_common_config-cb87b461296f
+To: Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768410779; l=2509;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=CSplLpUCQP24MOlkQlc7ScTOpJ/5JoXSLBul5QJfqRE=;
+ b=+z5CAAOjrNqbV8I1cCggesyui5SxOIhyNJV7UKRqOgkkPJUxRx+XTRbk6OPp1yVRhc3PZHnLB
+ OCUrFcCwUJeCQKeYKztHPd2clApFeWxERbLyd6BbK3GwutEaHSk83PQ
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: BY1P220CA0015.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:5c3::10) To AS8PR04MB8948.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42f::17)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aWBndOfbtweRr0uS@vaman>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE0MDEzMyBTYWx0ZWRfX3/Gii51LJcfY
- FTa4X2Kk6QUbCuRZEzPJWvM1c1S8/8XVhPQY7wjVFQBxZG2tYPvRpN9r3lSvYiXIFkfL8i5adYQ
- yXnH2BWswfcm6Z+P9uJ0h3sVdOogKk+oM/LwSKpJ1gdM1PDVh8NKiw0WFup9Rk5l8t8oBtdxWL2
- t/WLPkMc9SyOzvEm29ivkvl0rEI89+Zh2/JUKa8n6IbFUJHZbdtzJphG/nfu/KwSHbAUPC99MsM
- RLUerUYN0rTQyc0x8nV7Xy1DTQY++w6mOwWeLS6BydHeWzvIQeIbT9cDoiCqly2Faxe6x4GS7ye
- i/+i9z9GnNXEqHXLlssvvCS6ykaAWd4ujRSgjCLWirf/IifIkwnmxWmm3wGG8PxgbboUdZ4b2v0
- j2dwe9xSzzNfd7hV7idV99SCqdE8YDmEjc3DiVBRF5mnw4SJhr7tMJgvXBrepQFSwKw/078uo4g
- IJ+KmFaN3BdXx0eJBxQ==
-X-Proofpoint-GUID: Ca_uaSPPdRLNOTF9kaYxz-ysHtDbVMR4
-X-Proofpoint-ORIG-GUID: Ca_uaSPPdRLNOTF9kaYxz-ysHtDbVMR4
-X-Authority-Analysis: v=2.4 cv=L/EQguT8 c=1 sm=1 tr=0 ts=6967beae cx=c_pps
- a=UbhLPJ621ZpgOD2l3yZY1w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=tFmwwPv8JJdzMd2mOjkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TOPH6uDL9cOC6tEoww4z:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-14_05,2026-01-14_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015 spamscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 impostorscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601140133
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8948:EE_|VI0PR04MB12155:EE_
+X-MS-Office365-Filtering-Correlation-Id: 47f1436a-40f4-4c1e-ad6a-08de53902cdd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|19092799006|52116014|366016|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?N2VObHdoMXhxNDlma25lYjIwZEl2MENGL3BxaHlGSTFMZkpqVWJNTjVxUW1k?=
+ =?utf-8?B?dEhtbnB2aWFGVWw5a2dkTXBRWjhBWGRrdTczL0JHUGR2OFlFbDZhYi8wZE91?=
+ =?utf-8?B?WVg0UnRzTm96YTlRVm1XWGpHb1dmNG9QQ21HRklnSDJoaERyS1lxL1pCWGhk?=
+ =?utf-8?B?aDRNaWhnYkVWU0crY1ZzcWVsN2FJQ2l2K09NSi93eVJTNVROVy9JMVVOdWJm?=
+ =?utf-8?B?SjF4cUFIL3Zoa2lCQmk0TnJ2NXh2Q3NnSWo5V1FDUTYwV2xLaEVkRldDTXho?=
+ =?utf-8?B?SXpXZmxiZkFtbk5ONTNKUThQSlZKY3VoMjJObGhVWU9KNDE5YzZHSXlHRGEx?=
+ =?utf-8?B?d0tEaGJjVi9Ccm1IOWxkY3piQkFnemhPWndjR2dNa2RIV0pTZWI5cXQwZGNC?=
+ =?utf-8?B?UWtsOVlQUng5NXhyS3BKeCtwSFZYdUlESkI1elhvNytjNUZYSS83KzFEZWxN?=
+ =?utf-8?B?bStGcFlxZExKS3FOUmNNcUNrRWpndGJyZDlIK3RpbGpRZWNDY2hSaEc3TnBU?=
+ =?utf-8?B?Umk2U1owQk5PNWpHMmlKUlh2Y0IxUGRuVG1tdysvVno0b0NUbEE5S2ZHZGxt?=
+ =?utf-8?B?MkNZOXhTenJsRlM1RHV1b2tZR2pKWjMybnhMZ0VrQUo4WmVMUGh6ei9iWTRG?=
+ =?utf-8?B?eDhXdUh6T3pBbVFNVW41Umw5QkF0elAramhOVW1DdUdteUcya3gvWTFrZGRS?=
+ =?utf-8?B?KzRvTmJHa1NpOVRuWWlpc3RReGNHYzhMWHpYZmtmeTErUnZFUE00U0ZPVTUw?=
+ =?utf-8?B?aUZ0Kzl6bFRNVUhPaFpkT1ZyaklMRkJ4cEdpRGJGbW1xUzdaTXNOWGtyRzBj?=
+ =?utf-8?B?NitzQkF1UDBpUXVUcnhaSFc5ZjBGQUNzQ1VBYUh6cHBUQzltU0lKWmFFQTNH?=
+ =?utf-8?B?NzJSSUVicmNuaHJzbUdsanE2bnpUUy9WN0Y0MGRTSmNPaTR4OUlyQityRFkz?=
+ =?utf-8?B?RHJkOEFDdlZCOC9ZT2JSWjRpL1ZPWTlUWEErNS9HMFhicGk1RW5WbUNnaUJV?=
+ =?utf-8?B?TkI2RThlMnA3QUZiTHNPZ2tvM3RHRXF5Q1V6Z0NoR2x5Zk1tSTBQMFVwakpa?=
+ =?utf-8?B?aExtNEp3dlduN3hiZlVBY21DajBONEpsZEJSV1lNNGkvOUpPVzJNOVk3NW5w?=
+ =?utf-8?B?LytJQUJMWkEvUmVaaEdLT0JoSDE2R3FDUm5hL2o0SnpLRUVYak9hUEw0emJZ?=
+ =?utf-8?B?Wmt6ZlZEMCtTMmNNZDlWY2hqMnhlSDVTRXExSkQ0SmdtaEFRRm5SUU5jenBM?=
+ =?utf-8?B?YlAvczliT0lHRzkxN1NESjQ5TlNDbS92QUZhS3ZlMjZHR2ZuQ0JkZWY1MmFz?=
+ =?utf-8?B?dmEyZ0pvaGdkYWIwdWQ2ek5mclhITFg3ME5jdmg0NVRJYVBESEk1cXR1UTNI?=
+ =?utf-8?B?VVZERlI0U1ZvMXlTYTdHek1SSzlVbmgwS3J2VHQ4Vk5TbnNnb3ZNdEZBWEZ5?=
+ =?utf-8?B?VnZ6STlpNENPcnlyZ0thYmM2ZE1KejltTmRlUStQcXB2emNrMzBCejBxdDh0?=
+ =?utf-8?B?NnBQbXR0VmFER1UrdXdYWXRQRVF1N3FMdW9Xd3NpQ1JZNE1PcXdLYTgvd2xO?=
+ =?utf-8?B?QWF1SGVuZ3RsQ0ZVdlpzT0JCYnkxcG1JZjUvZjhjM0VNb21CdWVCa2l3U21k?=
+ =?utf-8?B?ZnZCRU9DNW1sdjBlNnpQWk40bHFWMDFBWlFGeHVxNEEyK2xqcnhjVzNSQlF5?=
+ =?utf-8?B?RGtlYnVHSFl6OHNnYW1KcEFGai9ySU9sSStlTXMvUkJDK1FSV2J6TUdQK1NV?=
+ =?utf-8?B?ZFpMeGJIS2o4WjI3VzU5ZktabjZuZ3hqaDdDYTBzd05nY3Q5djZQdEp5SmxT?=
+ =?utf-8?B?Q1VLM1FZcWVPdFBxTDl3TnpmeXM3SzhWNG9yZHBkbnlja1diRm9pcXBoT3Vr?=
+ =?utf-8?B?WEZVV0lSUk1WZFRCNG83d2srZzB5YjVUWEhETElTVEhWTEtwYXpabEZDeHpq?=
+ =?utf-8?B?S1Z0WUwzRXpmV2pyaUVDcXdYRnJ4Mkg1MUdjOEN3alBtZ1dheElIZEZlOUFK?=
+ =?utf-8?B?VDZwM056U2oyNlNzY3lYSUtnR2VyMkFLK1pRS2JUdnJkYmI1UW1vSlYvcDI2?=
+ =?utf-8?B?LzBlSkkwekhpUjJNQW8zUTBSdnlNejZRWTNvRXZMSHR2RHRvWS9kc3YrSUoz?=
+ =?utf-8?B?bnhHblp2RnZ3OTB5ZlQ5anhRUXJ5dUhERTdlS25WQlMyZ256NFN4V3VUZFZ4?=
+ =?utf-8?Q?ofnGKWdBoSbMwBRP9HBuGuc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8948.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(52116014)(366016)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UjdpZm4zRm5TR0VjNmNFQzl3TUhQRGxGblFBVGZPc2tWRUNTdzBVeDFud1gy?=
+ =?utf-8?B?VVdreEtOdENCU2ZDbE5DNEpWQnBDSGw4Q0FVendKZUN3RFZ1QWI5L2o3bTF6?=
+ =?utf-8?B?OVFpTktWQlQvN0s2YmpvVlNIN2pSNmZ4dEVTR3IwNTR5clRubzJPRm9ySVVx?=
+ =?utf-8?B?T1pJYy9JTkNqQTVvMzNhQWw1UjhBNDlxWk1WZG1iMTVFTXRvNUhXK284T3FU?=
+ =?utf-8?B?dllZeHFNYllFTnFPc2h2VHVxK0F3ZUhNdnFCYjRHc1hRRTZ1d2F1QVZIOXZ3?=
+ =?utf-8?B?NEdmYTQzMkhzMTFCYmFzS0NTQ3cxRGtBVjBJOE5WZ1R1dUt4MklXeHJZSm5M?=
+ =?utf-8?B?VUVkUndKVXNlYWpMc1NlZFJ1Z0VuS3FXWGdld3hiRHNXMGtWbEI2SjJpRUxG?=
+ =?utf-8?B?Q25BaTdyLzRsZktmMTA4eDVLMXJuVE9jQmRBRWI5a0txSTVCY25MQkkrRlNy?=
+ =?utf-8?B?UnppSWp4alJ1N3RzZVBpeHpidnBvYkoyd0ticXc2alJLRUYrdFRRMzUwdWdL?=
+ =?utf-8?B?anYxYjJrYkVrSmgzVU5oV1BneWRWMFg0K2pEMXlIVEN5K09iOFBoZDIwNzZE?=
+ =?utf-8?B?MWJJU01lbXltZStvMm0yeHUyK1cxNVA2K0VsTUhpQ1M0dTNvWWhBbW1ScDln?=
+ =?utf-8?B?djM0UndHc0M4N25DTXZIeEYwR1JoMFkvaWt5NFFUb3BrQlR0SEF5Nm1XUGRD?=
+ =?utf-8?B?Yis2T2RYMmgvQm1ueC96WmduZGpQQTVFbjRvdjdBb2NyWWxqQlpGYXIzQmxx?=
+ =?utf-8?B?bUhqczd2RDRYQnc0Z2R3TUFsV2JkNzllYklFc1llbU5uRmJJL3VQSzZ2UjlP?=
+ =?utf-8?B?aVhoUzdWSVY3RlNvNGc3LytZSzhuV1F2YzlKbW5FZzE5cGNjSTZOV2trODl4?=
+ =?utf-8?B?RlhpZ0xZZ2lJMmN2Z1RIeGd3d0lrd3pVNkg0dXhuWmV1VndIOEJsa3lrV0xN?=
+ =?utf-8?B?eSsvSE1jN2RkKzFucUwwVEp6NGtXbUF4SG0raUYrUHY2TjkxbmRFZmtibjdh?=
+ =?utf-8?B?Wi9hdmJqWnhESnNGcEhDQjNSWGZIRVZ6c1hwR1ovZXQ1U0tsOGl2RWVPWjdH?=
+ =?utf-8?B?ajZGMno0NlZTTFJwekhUMWdBNTFpeHh5RU1WZlBtWFdrT01NdTBVelo5bXds?=
+ =?utf-8?B?MXNwZy9EQTh5eVdXUVp2WkhWUVNVVDlnZ2ZXRDVuSWxuWllNWm90SHQxc0N0?=
+ =?utf-8?B?bUVIQkZ1OFJ0WmFBNEt6Q2Urbm00WjFPeFUwMXQ4ZzN4aWJLSDN6U0MwMU4r?=
+ =?utf-8?B?NVVsbllxQ2JPM0xoUXN1QjFoc2RRc1pDZVRzMEFNR3J5dnh3Sk41dXczMlQ3?=
+ =?utf-8?B?eHU1NHV1YWFFNU44M1o4VjlWbjdwQlpQdXlqU1dvdFhxWHZQRzBWUmdDQTMy?=
+ =?utf-8?B?bVVJQWNYeFpjajdSelFPczlDTXcrU2RnK3UxcHB2MUZjeEpWUmJYaTUrd0Fj?=
+ =?utf-8?B?RVBramludGVhUk5YQlpWNHdITWlCNkhPN2MvK1RrdnB3QVNsZ1V1KzFieFhN?=
+ =?utf-8?B?VzBTS3hVaEVVZUF5MzJ2dndEY2dJMEN0YU5zdHRFd3NHTXpuL3hUQnY5aWwz?=
+ =?utf-8?B?UDFhbUVGeEJXTEtSNTQ2SDhSWFl6aGpGU09NSy9Wb2dzNytaWEo2dEhZaThk?=
+ =?utf-8?B?MEFjUFJYOEUyS2dnVVhDTFRGTTBnOFVlajVvWUcvME9mUk0wNUt0dXVERUFM?=
+ =?utf-8?B?YnlPcE1hS01jK0w2SGVpY3VIRjY2RUwxMTFJRWRQYWc1a2NsQ0piQ1VtSmVX?=
+ =?utf-8?B?WGFQYi9jcENlZ3JYdDRGQ3NDSFhFZVYwQ1BDdWhqbmpqaGlhcXJieGN4SUVP?=
+ =?utf-8?B?YjE5UXB6R05NV1J0K2hFelAyUzR1ekhMSGZxalZxQnZQWXptVXF0TkhiZnJF?=
+ =?utf-8?B?YTE5UzlIS0FxdjdsMjF2L0Iya1p1Vnd2WUJuM3ZTazlYTWdBNm9lK3oydWZM?=
+ =?utf-8?B?Z0wzWTFyeExUVGxOWmRPclZmbGg4U2RoaElmVTg4QVQrb2JVZEc2R0Vqb3lC?=
+ =?utf-8?B?blVHdVNseCtIcXhpTmF6NTJUV21TUWsra2kxLzFNZXNNSFgrSitKN1g3dUlz?=
+ =?utf-8?B?SjA5a2E4RndBVlR5a3ZnMlFVOVJxWFlEbWQ4bXo1aXZkTFVhbHlhQ3R4SmtC?=
+ =?utf-8?B?Wm9yNWxLMk9xeVF2OHFCL3BENjQwUFpsckxaU1E4T0tWVGVud2ttK3E5d25O?=
+ =?utf-8?B?cmRwMURPVlJuY056OTJLWW1HdTdwWm5sVHozUWxsZWVCbXg1Wi9UQk9GektO?=
+ =?utf-8?B?c2JaTzFJek9GbUZ4cmJ0cXVaQzBNNU9la2VaTm4yN3hWS1hKR200dkZ0bGxp?=
+ =?utf-8?B?N1BXVkpHWmFSUi9mNHNzTVJHMFVEY0hiR1Q3UkszNkV0N2VLMWxrUT09?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47f1436a-40f4-4c1e-ad6a-08de53902cdd
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8948.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 17:13:05.1078
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CYs6SdxOgnyEWf0TRBsKKYvYJo8UEJCR+Fk3F7540swp6c1rqHIuLjhYNERlmZ6oTSUg2L6kIp/pj4F9hdBllg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB12155
 
-On Fri, Jan 09, 2026 at 07:57:00AM +0530, Vinod Koul wrote:
-> On 02-01-26, 18:14, Bartosz Golaszewski wrote:
-> > On Fri, Jan 2, 2026 at 5:59 PM Vinod Koul <vkoul@kernel.org> wrote:
-> > >
-> > > On 02-01-26, 10:26, Bartosz Golaszewski wrote:
-> > > > On Thu, Jan 1, 2026 at 1:00 PM Vinod Koul <vkoul@kernel.org> wrote:
-> > > > >
-> > > > > > >
-> > > > > > > > It will perform register I/O with DMA using the BAM locking mechanism
-> > > > > > > > for synchronization. Currently linux doesn't use BAM locking and is
-> > > > > > > > using CPU for register I/O so trying to access locked registers will
-> > > > > > > > result in external abort. I'm trying to make the QCE driver use DMA
-> > > > > > > > for register I/O AND use BAM locking. To that end: we need to pass
-> > > > > > > > information about wanting the command descriptor to contain the
-> > > > > > > > LOCK/UNLOCK flag (this is what we set here in the hardware descriptor)
-> > > > > > > > from the QCE driver to the BAM driver. I initially used a global flag.
-> > > > > > > > Dmitry said it's too Qualcomm-specific and to use metadata instead.
-> > > > > > > > This is what I did in this version.
-> > > > > > >
-> > > > > > > Okay, how will client figure out should it set the lock or not? What are
-> > > > > > > the conditions where the lock is set or not set by client..?
-> > > > > > >
-> > > > > >
-> > > > > > I'm not sure what you refer to as "client". The user of the BAM engine
-> > > > > > - the crypto driver? If so - we convert it to always lock/unlock
-> > > > > > assuming the TA *may* use it and it's better to be safe. Other users
-> > > > > > are not affected.
-> > > > >
-> > > > > Client are users of dmaengine. So how does the crypto driver figure out
-> > > > > when to lock/unlock. Why not do this always...?
-> > > > >
-> > > >
-> > > > It *does* do it always. We assume the TA may be doing it so the crypto
-> > > > driver is converted to *always* perform register I/O with DMA *and* to
-> > > > always lock the BAM for each transaction later in the series. This is
-> > > > why Dmitry inquired whether all the HW with upstream support actually
-> > > > supports the lock semantics.
-> > >
-> > > Okay then why do we need an API?
-> > >
-> > > Just lock it always and set the bits in the dma driver
-> > >
-> > 
-> > We need an API because we send a locking descriptor, then a regular
-> > descriptor (or descriptors) for the actual transaction(s) and then an
-> > unlocking descriptor. It's a thing the user of the DMA engine needs to
-> > decide on, not the DMA engine itself.
-> 
-> I think downstream sends lock descriptor always. What is the harm in
-> doing that every time if we go down that path?
-> Reg Dmitry question above, this is dma hw capability, how will client
-> know if it has to lock on older rev of hardware or not...?
+Many DMA engine drivers store a dma_slave_config per channel. Propagate
+this configuration into struct dma_chan to avoid duplicating the same
+code in each driver.
 
-We can identify that on the calling side, but I doubt we'd need it: The
-lock semantics was absent on APQ8064 / MSM8960 / IPQ8064 and it seems to
-be present for all devices afterwards.
+Much of dma_slave_config is identical for source and destination. Split
+the configuration into src and dst groups and use a union to preserve
+backward compatibility. This reduces the need for drivers to repeatedly
+check the DMA transfer direction.
 
-Frankly speaking, I think this is the best API we can get. It is
-definitely much better than the original proposal.
+This change introduces the general approach. If this method is accepted,
+more drivers can be updated incrementally.
 
-> 
-> > Also: only the crypto engine needs it for now, not all the other users
-> > of the BAM engine.
-> 
-> But they might eventually right?
+Looking ahead, this also enables improvements to the vchan
+implementation. Most DMA engines follow one of two descriptor models:
 
--- 
-With best wishes
-Dmitry
+  - Cyclic hardware buffers (e.g. dw-edma)
+  - Linked-list descriptors (e.g. fsl-edma)
+
+ *
+ *       ┌──────┐    ┌──────┐    ┌──────┐
+ *       │      │ ┌─►│      │ ┌─►│      │
+ *       │      │ │  │      │ │  │      │
+ *       ├──────┤ │  ├──────┤ │  ├──────┤
+ *       │ Next ├─┘  │ Next ├─┘  │ Next │
+ *       └──────┘    └──────┘    └──────┘
+
+A large portion of the software logic is shared between these models.
+Recent work already shares circular buffer handling between eDMA and
+HDMA [1], and this can be extended to support more hardware.
+
+Ultimately, a DMA engine should only need to implement logic to fill a
+single list item.
+
+[1] https://lore.kernel.org/dmaengine/aWTyGpGN6WqtVCfN@ryzen/T/#t
+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Frank Li (6):
+      dmaengine: Move struct dma_chan after struct dma_slave_config
+      dmaengine: Add common slave configuration to dma_chan
+      dmaengine: fsl-edma: use dma_chan common config
+      dmaengine: imx-sdma: use common config at dma_chan
+      dmaengine: Add union and dma_slave_get_config() helper for dma_slave_config
+      dmaengine: fsl-edma: use common dma_slave_get_cfg()
+
+ drivers/dma/fsl-edma-common.c | 141 +++++++++++++++++------------------
+ drivers/dma/fsl-edma-common.h |   1 -
+ drivers/dma/imx-sdma.c        |   8 +-
+ include/linux/dmaengine.h     | 166 +++++++++++++++++++++++++-----------------
+ 4 files changed, 166 insertions(+), 150 deletions(-)
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20260112-dma_common_config-cb87b461296f
+
+Best regards,
+--
+Frank Li <Frank.Li@nxp.com>
+
 

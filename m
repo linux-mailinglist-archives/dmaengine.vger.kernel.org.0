@@ -1,153 +1,209 @@
-Return-Path: <dmaengine+bounces-8243-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8244-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6059D1B964
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 23:27:43 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79DCDD1C8F4
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jan 2026 06:15:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 69055300DD94
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jan 2026 22:27:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3D82C3038288
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jan 2026 05:15:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66E05352F86;
-	Tue, 13 Jan 2026 22:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 942C634EEE7;
+	Wed, 14 Jan 2026 05:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="XovDrF4u"
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="Nzkb9Akz";
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="Nzkb9Akz"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from mail.mleia.com (mleia.com [178.79.152.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D062FCC0E
-	for <dmaengine@vger.kernel.org>; Tue, 13 Jan 2026 22:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A715A33509B
+	for <dmaengine@vger.kernel.org>; Wed, 14 Jan 2026 05:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768343262; cv=none; b=UMoIx2d1UITPJOoQ6qz4lOI0LakMRHEOpyit0YN/AS0QNK2uKR2lPjH8/Bp+PYwAOMGZsPF+CcXZX0j2D8b0FzfnV2SwT4zTH0C5m9gD9fVKopf2xBgSvdknQ1LkZGxxz2O6rGuf0DtU5YGDhHAX1mG07WrIEuLLDDuSMFjGZvU=
+	t=1768367744; cv=none; b=AqHUfjcnjLwQTgo/73A7QC1EHaSBFv8eKKHt5Ewyesi8Vwj+oKumS7oEVgmVuWJexWmlvMCPKqrBws8jqTyk8RYhFlYVWEKUXjSlyXXGg8mlftntc45SqIzDEosWfJ8dF9EQisTXTP/TWhhfOvTNgg33OouRZO6hycNolG4LuQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768343262; c=relaxed/simple;
-	bh=cA1PH8mnGwdaDv7rbK8KuZgtgiYJdmU+DQzkfYYQxzU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=kdY+jdkWD9CM8JbRSWJyu8HVwecU4jeKMhUhy9iwqPy4NHyFjlV/ggMKa8itp+72McRElGtQ8SIx/xzpImyL2NqFETSe8po+0TdOxeJSIyCPsulqb/VsPm1b9OI9t+1VQO/qjQL0899rf5awGlbNWkxW3/euQr0SqvVuMg5bCJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=XovDrF4u; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=soijWLwxzvdp610iCugN8AbLLyggDKtHD0IksM92Jng=; b=XovDrF4uSHDSnfTElYn/mTD+7Q
-	d/K9CPpYj/WY3+n8XHPiHVs9LHHP+IylSM1geZisL1EA+MywFP6BdnrQhxCRzm0p3o6nst4z5t/S6
-	GeDMi+/DXkJb35LH/yKo80t6t4rM9SruqZbaD9NZcVibQvl8WIKVCyQgDSWTyO5gtHi/JndmiJT1F
-	6OwpEp//W+rm8M/peHWRdw5a8dJ3jjAyEjy2osFzbsacT8hLmDfdy7Zj6Xx3H4FD7f9TIfH/4zuvE
-	g+GACix+MfY0xpb1JDXVpjXqRfK6rJV1yR74BGFSJkfhQ5kG46Er1yi9IcNUJ1AGbxVq6S5U5Zn3Z
-	nkbIuToA==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.2)
-	(envelope-from <logang@deltatee.com>)
-	id 1vfmrT-00000000lYa-3Ds7;
-	Tue, 13 Jan 2026 15:27:40 -0700
-Message-ID: <abfe2255-722f-409a-920f-0af179b8293b@deltatee.com>
-Date: Tue, 13 Jan 2026 15:27:21 -0700
+	s=arc-20240116; t=1768367744; c=relaxed/simple;
+	bh=JWtyRdM+P6tjlZl/Fi7+mI2HKpt62sZAbA5v+QE1ZTY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gzqLHcIQsX65cUhM98pZS29v3FevQK3gWUZdUZTKZIhMuyjextXT4gwWGoahmK2kUW2jNZlObftD/celwUg11cXzkmWTBB4fRMjlIN/8tD8WUwV+prcpe4shHXaR43ecpECLX5EcmFCqPC1CgKajR7mkdhEscL5edax/52B1DhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=Nzkb9Akz; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=Nzkb9Akz; arc=none smtp.client-ip=178.79.152.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1768367725; bh=JWtyRdM+P6tjlZl/Fi7+mI2HKpt62sZAbA5v+QE1ZTY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Nzkb9AkztrrBUgW2G58ZUWxQ/L1uLbAF58+7XtReHjwaiqMMuf7XEki1rjxx3STZo
+	 SxflWxzL6wpz60h4/qNThmCEqNVfUMgTEgV44sKEwFWELJdxfqOHlg/IpdehWmBK1V
+	 X0U54QNwUobdmmmhe7HonN++7ZzdaR2kY6cfmMFqZsvo+rUgaafMf/qGYVBpeWIzin
+	 B4TpbqElMW3NNrWEOMKTmxV6+Vhw4Sn/PmO9VVUEd0EV7zQbgCzHVOIpAjcWnANWko
+	 ysTIVL86wY9LKW7txjYGhvJ6DPDevG0kTsU3orCWuxRISIs4GAk2vGpp9iFAvhLE8p
+	 62+XWcgM9GCpw==
+Received: from mail.mleia.com (localhost [127.0.0.1])
+	by mail.mleia.com (Postfix) with ESMTP id C68123EC67A;
+	Wed, 14 Jan 2026 05:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1768367725; bh=JWtyRdM+P6tjlZl/Fi7+mI2HKpt62sZAbA5v+QE1ZTY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Nzkb9AkztrrBUgW2G58ZUWxQ/L1uLbAF58+7XtReHjwaiqMMuf7XEki1rjxx3STZo
+	 SxflWxzL6wpz60h4/qNThmCEqNVfUMgTEgV44sKEwFWELJdxfqOHlg/IpdehWmBK1V
+	 X0U54QNwUobdmmmhe7HonN++7ZzdaR2kY6cfmMFqZsvo+rUgaafMf/qGYVBpeWIzin
+	 B4TpbqElMW3NNrWEOMKTmxV6+Vhw4Sn/PmO9VVUEd0EV7zQbgCzHVOIpAjcWnANWko
+	 ysTIVL86wY9LKW7txjYGhvJ6DPDevG0kTsU3orCWuxRISIs4GAk2vGpp9iFAvhLE8p
+	 62+XWcgM9GCpw==
+Received: from mail.mleia.com (91-159-24-186.elisa-laajakaista.fi [91.159.24.186])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.mleia.com (Postfix) with ESMTPSA id 63B083EC06A;
+	Wed, 14 Jan 2026 05:15:25 +0000 (UTC)
+From: Vladimir Zapolskiy <vz@mleia.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org,
+	dmaengine@vger.kernel.org
+Subject: [PATCH] dma: iop32x-adma: Remove a leftover header file
+Date: Wed, 14 Jan 2026 07:14:58 +0200
+Message-ID: <20260114051508.3908807-1-vz@mleia.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Frank Li <Frank.li@nxp.com>
-Cc: dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
- Kelvin Cao <kelvin.cao@microchip.com>, George Ge <George.Ge@microchip.com>,
- Christoph Hellwig <hch@infradead.org>,
- Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
- Christoph Hellwig <hch@lst.de>
-References: <20260112184017.2601-1-logang@deltatee.com>
- <20260112184017.2601-3-logang@deltatee.com>
- <aWVjesSxFp1STEhV@lizhi-Precision-Tower-5810>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <aWVjesSxFp1STEhV@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: Frank.li@nxp.com, dmaengine@vger.kernel.org, vkoul@kernel.org, kelvin.cao@microchip.com, George.Ge@microchip.com, hch@infradead.org, christophe.jaillet@wanadoo.fr, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH v12 2/3] dmaengine: switchtec-dma: Implement hardware
- initialization and cleanup
-X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20260114_051525_831279_E0BE60B8 
+X-CRM114-Status: GOOD (  13.68  )
 
+The Intel IOPx3xx platform was completely removed in commit b91a69d162aa
+("ARM: iop32x: remove the platform"), and it'd be safe to remove an unused
+and leftover platform data specific header file dma-iop32x.h also.
 
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+---
+ include/linux/platform_data/dma-iop32x.h | 110 -----------------------
+ 1 file changed, 110 deletions(-)
+ delete mode 100644 include/linux/platform_data/dma-iop32x.h
 
-On 2026-01-12 14:11, Frank Li wrote:
-> On Mon, Jan 12, 2026 at 11:40:16AM -0700, Logan Gunthorpe wrote:
->> +
->> +	/* the head and tail for both desc_ring and hw_sq */
->> +	int head;
->> +	int tail;
->> +	int phase_tag;
->> +	struct switchtec_dma_hw_se_desc *hw_sq;
->> +	dma_addr_t dma_addr_sq;
-> 
-> Looks like it is cycle HW descriptors. I found most DMA engine use two
-> model, one is link list and other is use cycle buffer. Is possible to
-> create common logic for it, so each dma driver just implement hardware
-> related part.
-> 
-> https://lore.kernel.org/imx/aWTyGpGN6WqtVCfN@ryzen/T/#t
-> 
-> which just abstract eDMA and HDMA, we may extend to more hardware, reduce
-> duplicate code.
-> 
-> There are some race condition need be confided. we needn't dupicate efforts
-> to debug these race condition for every hardware.
-
-I'm not following. eDMA at least appears to use vchan and I have pointed
-out repeatedly that the vchan layer isn't appropriate for this driver
-(or the other PCI based drivers: ioat and plx_dma).
-
-The PCI dma engine drivers all have their own hardware specific queues
-that are written to directly on a prep call. All three drivers that do
-this are doing entirely hardware specific logic to program the dma
-engine in these calls and I don't see how any of it could be combined to
-improve the code. Using vchan just means wasting cpu cycles pushing to a
-software queue before going to the hardware queue. We'd much rather
-write directly into the hardware queue when prepping a job.
-
->> +struct switchtec_dma_hw_se_desc {
->> +	u8 opc;
->> +	u8 ctrl;
->> +	__le16 tlp_setting;
->> +	__le16 rsvd1;
->> +	__le16 cid;
->> +	__le32 byte_cnt;
->> +	__le32 addr_lo; /* SADDR_LO/WIADDR_LO */
->> +	__le32 addr_hi; /* SADDR_HI/WIADDR_HI */
->> +	__le32 daddr_lo;
->> +	__le32 daddr_hi;
->> +	__le16 dfid;
->> +	__le16 sfid;
->> +};
-> 
-> suppose need pack(1) and others, which need exactlly match hardware.
-
-The fields in this structure are correctly aligned. There is no need for
-marking the structure as packed and that can have a undesirable
-performance impact:
-
-"However, again, the compiler is aware of the alignment constraints and
-will generate extra instructions to perform the memory access in a way
-that does not cause unaligned access. Of course, the extra instructions
-obviously cause a loss in performance compared to the non-packed case,
-so the packed attribute should only be used when avoiding structure
-padding is of importance."[1]
-
-This structure requires no padding and there's no need to avoid padding
-with the packed attribute.
-
-Logan
-
-[1] https://docs.kernel.org/core-api/unaligned-memory-access.html
-
-
+diff --git a/include/linux/platform_data/dma-iop32x.h b/include/linux/platform_data/dma-iop32x.h
+deleted file mode 100644
+index ac83cff89549..000000000000
+--- a/include/linux/platform_data/dma-iop32x.h
++++ /dev/null
+@@ -1,110 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright © 2006, Intel Corporation.
+- */
+-#ifndef IOP_ADMA_H
+-#define IOP_ADMA_H
+-#include <linux/types.h>
+-#include <linux/dmaengine.h>
+-#include <linux/interrupt.h>
+-
+-#define IOP_ADMA_SLOT_SIZE 32
+-#define IOP_ADMA_THRESHOLD 4
+-#ifdef DEBUG
+-#define IOP_PARANOIA 1
+-#else
+-#define IOP_PARANOIA 0
+-#endif
+-#define iop_paranoia(x) BUG_ON(IOP_PARANOIA && (x))
+-
+-#define DMA0_ID 0
+-#define DMA1_ID 1
+-#define AAU_ID 2
+-
+-/**
+- * struct iop_adma_device - internal representation of an ADMA device
+- * @pdev: Platform device
+- * @id: HW ADMA Device selector
+- * @dma_desc_pool: base of DMA descriptor region (DMA address)
+- * @dma_desc_pool_virt: base of DMA descriptor region (CPU address)
+- * @common: embedded struct dma_device
+- */
+-struct iop_adma_device {
+-	struct platform_device *pdev;
+-	int id;
+-	dma_addr_t dma_desc_pool;
+-	void *dma_desc_pool_virt;
+-	struct dma_device common;
+-};
+-
+-/**
+- * struct iop_adma_chan - internal representation of an ADMA device
+- * @pending: allows batching of hardware operations
+- * @lock: serializes enqueue/dequeue operations to the slot pool
+- * @mmr_base: memory mapped register base
+- * @chain: device chain view of the descriptors
+- * @device: parent device
+- * @common: common dmaengine channel object members
+- * @last_used: place holder for allocation to continue from where it left off
+- * @all_slots: complete domain of slots usable by the channel
+- * @slots_allocated: records the actual size of the descriptor slot pool
+- * @irq_tasklet: bottom half where iop_adma_slot_cleanup runs
+- */
+-struct iop_adma_chan {
+-	int pending;
+-	spinlock_t lock; /* protects the descriptor slot pool */
+-	void __iomem *mmr_base;
+-	struct list_head chain;
+-	struct iop_adma_device *device;
+-	struct dma_chan common;
+-	struct iop_adma_desc_slot *last_used;
+-	struct list_head all_slots;
+-	int slots_allocated;
+-	struct tasklet_struct irq_tasklet;
+-};
+-
+-/**
+- * struct iop_adma_desc_slot - IOP-ADMA software descriptor
+- * @slot_node: node on the iop_adma_chan.all_slots list
+- * @chain_node: node on the op_adma_chan.chain list
+- * @hw_desc: virtual address of the hardware descriptor chain
+- * @phys: hardware address of the hardware descriptor chain
+- * @group_head: first operation in a transaction
+- * @slot_cnt: total slots used in an transaction (group of operations)
+- * @slots_per_op: number of slots per operation
+- * @idx: pool index
+- * @tx_list: list of descriptors that are associated with one operation
+- * @async_tx: support for the async_tx api
+- * @group_list: list of slots that make up a multi-descriptor transaction
+- *	for example transfer lengths larger than the supported hw max
+- * @xor_check_result: result of zero sum
+- * @crc32_result: result crc calculation
+- */
+-struct iop_adma_desc_slot {
+-	struct list_head slot_node;
+-	struct list_head chain_node;
+-	void *hw_desc;
+-	struct iop_adma_desc_slot *group_head;
+-	u16 slot_cnt;
+-	u16 slots_per_op;
+-	u16 idx;
+-	struct list_head tx_list;
+-	struct dma_async_tx_descriptor async_tx;
+-	union {
+-		u32 *xor_check_result;
+-		u32 *crc32_result;
+-		u32 *pq_check_result;
+-	};
+-};
+-
+-struct iop_adma_platform_data {
+-	int hw_id;
+-	dma_cap_mask_t cap_mask;
+-	size_t pool_size;
+-};
+-
+-#define to_iop_sw_desc(addr_hw_desc) \
+-	container_of(addr_hw_desc, struct iop_adma_desc_slot, hw_desc)
+-#define iop_hw_desc_slot_idx(hw_desc, idx) \
+-	( (void *) (((unsigned long) hw_desc) + ((idx) << 5)) )
+-#endif
+-- 
+2.51.0
 
 

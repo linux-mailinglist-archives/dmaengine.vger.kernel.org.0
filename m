@@ -1,32 +1,32 @@
-Return-Path: <dmaengine+bounces-8296-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8298-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A989D291A8
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Jan 2026 23:49:20 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B54F3D291A3
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Jan 2026 23:48:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CC1623074D74
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Jan 2026 22:48:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id F0DF53015DFC
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Jan 2026 22:48:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C7A8332EAF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 753CC333755;
 	Thu, 15 Jan 2026 22:47:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BWzomA+N"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c4YTuZgi"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9C3330D29;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422EA33121B;
 	Thu, 15 Jan 2026 22:47:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768517273; cv=none; b=NjYGbfmSbIlc6HVB+IUU0B3O559XjxsrMOPJk+01mDiW2sQlrLpeXKxQS8qwpT4EA2isYNbXzOLyrjT855EWaGY3YAxztJsYWXuujZ2JdrK0KlL7kHiM1oCBmXOVCgVQeFKBWnl0PNu1M8B2qw9421+j6oQFyXOqeCQaWbYTiTc=
+	t=1768517273; cv=none; b=ErkefhLZU8j6E90M4q1dLLhrVsQIpz250Jw/QXAEjicz6Gz9t8ZDneNzJmDOR84Hgmjtud15vVa2vsOTRKhzylKWnHXS5W1K7XonWgP72/+zyynFrzhq1xX0FvXvRzhTsnXX4ZHvai5dmzWOFxP9Dyt5FjfDHG9jneZQCXpFmUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1768517273; c=relaxed/simple;
-	bh=PupvgR8RmYXOn4O6I8PE4/ridnLMAk1et8YKJIT3bcA=;
+	bh=Fl4iu5qlLERicKEA6AODOo4UaiFTsq4rUJHJ2dZySbk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tV3/B/ky8/MWbeyl4Qkc8+wvmo3Qurt9+Rlucyho6aCrgupnEl/Vus1CBkSGBFoMHDm3DOzNU0l60a8CSJQm7DFmulGF/NvuV5wpqo/n3bk+iZrP6pUmtayAt9AUmVgWdTEZeiQGK3TvBW8LvQ2bB4E6vfdOUDDC9tMWk782JSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BWzomA+N; arc=none smtp.client-ip=198.175.65.21
+	 In-Reply-To:To:Cc; b=CVhmfR77maLFqrHHLahXTbxAoi62BQW4omvkVPVnB31wFQNiUWHeGkQd6qy0Zkq0E0/t56JOVL24G8tsHuEd7WQ5E4zUREXlgs+VmOKPi+vV6ZDW3/61o5n0Z1DBJE7bq7BxJknxS7gv+Ja1MqlYCCNDDYU+eG72eKEnz5wZXH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c4YTuZgi; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
@@ -34,32 +34,32 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   t=1768517271; x=1800053271;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=PupvgR8RmYXOn4O6I8PE4/ridnLMAk1et8YKJIT3bcA=;
-  b=BWzomA+NJe5KlC8dmfvRH0WSu9Y1ZRA/reip+r3DGM+2vxQYUSlXE3bR
-   KgIbHmgkLqsH5h8Iq1/CUm8sEFx5RTA7f4Z0nwZgeDmUy+oi0C47g657F
-   55khfCQ97+RtueLfcbqwlaHS9a1Eyt+cXX3WprGLsBoiiuda18b8RQhM3
-   krE7Z1tX4YQU2AUXzfR/2qJq95sN2PzD0yHHdsx18NN7htmoYeS7BI9JI
-   iyi1f+VURqYhepfg0sDlAfo7O1urKxEcncxplITkVnIhc3lW1V9KAN1GI
-   2XABRLLQkd9uEpKImYVg8/nYMHYp+dpWoK2S/qokbGdmHNZpGbC9HOdST
-   g==;
-X-CSE-ConnectionGUID: XcduCf88QEGRTyEZ5DcJ1Q==
-X-CSE-MsgGUID: fACXQs/SQpOKS0UJ4k5z6Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="69744635"
+  bh=Fl4iu5qlLERicKEA6AODOo4UaiFTsq4rUJHJ2dZySbk=;
+  b=c4YTuZgiGbGrHbYbGyO5pthvX0mn96dKq+FL2a1LEsmgiKcxFZHGs3Nb
+   IbcHKeCmmRC0xAPGfL/ABgupY9oThkJHxKzmOe9tC3DMqu4mBnGYAiOZq
+   ZE6SsXDTK3I0UuhtgUuH+ojISMR8rVsWCy/uvXnK8iFNiT6HtyaKY41yN
+   EofmiiNDTnvP43THIdzh0pd93IZs9poyB3uUxWH2tQzdgFzszCDl+G23M
+   Z6/ZjO3g8cofNJAV1iCtWMaBAuHGglXSoTSLF+R0NB5MzhcWwFkxkx09f
+   2x1BzyJVpNN8DDmPI12xQssPQMncm+lLe9CTrDXgZsTLG663oRSWkvjmj
+   Q==;
+X-CSE-ConnectionGUID: uRHaXK7NSUOlQQW9/hj/fA==
+X-CSE-MsgGUID: ZVYy8V9CQoyFV/iBD00cpw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="69744637"
 X-IronPort-AV: E=Sophos;i="6.21,229,1763452800"; 
-   d="scan'208";a="69744635"
+   d="scan'208";a="69744637"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
   by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 14:47:48 -0800
-X-CSE-ConnectionGUID: KCUJV66wR0ypFhl8nacIUQ==
-X-CSE-MsgGUID: XCVSDmBcQEuPuLLD25Ixjg==
+X-CSE-ConnectionGUID: 7A2laGH+RYCGsx6uDKcBgw==
+X-CSE-MsgGUID: IJ0VCn3hSP2oLe8QBYdl7Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,229,1763452800"; 
-   d="scan'208";a="204965451"
+   d="scan'208";a="204965456"
 Received: from vcostago-desk1.jf.intel.com (HELO [10.88.27.144]) ([10.88.27.144])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 14:47:47 -0800
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 14:47:48 -0800
 From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Date: Thu, 15 Jan 2026 14:47:24 -0800
-Subject: [PATCH RESEND v2 06/10] dmaengine: idxd: Wait for submitted
- operations on .device_synchronize()
+Date: Thu, 15 Jan 2026 14:47:25 -0800
+Subject: [PATCH RESEND v2 07/10] dmaengine: idxd: Fix not releasing
+ workqueue on .release()
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260115-idxd-fix-flr-on-kernel-queues-v3-v2-6-59e106115a3e@intel.com>
+Message-Id: <20260115-idxd-fix-flr-on-kernel-queues-v3-v2-7-59e106115a3e@intel.com>
 References: <20260115-idxd-fix-flr-on-kernel-queues-v3-v2-0-59e106115a3e@intel.com>
 In-Reply-To: <20260115-idxd-fix-flr-on-kernel-queues-v3-v2-0-59e106115a3e@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, 
@@ -76,49 +76,36 @@ To: Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Vinicius Costa Gomes <vinicius.gomes@intel.com>
 X-Mailer: b4 0.15-dev-47773
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1768517265; l=1195;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768517265; l=803;
  i=vinicius.gomes@intel.com; s=20230921; h=from:subject:message-id;
- bh=PupvgR8RmYXOn4O6I8PE4/ridnLMAk1et8YKJIT3bcA=;
- b=z3qZfzyyXDWZ5zXiVXX1TSXEUufGcbIs/iab7C1hm1lcDFMrRIIeA7xHAf0O/KX7bjkfWF8WQ
- nTCkp197LWGCMgsGOxYP0ehEFNGpo1f4WFX2EaXhXgO+cTpKij5+jSH
+ bh=Fl4iu5qlLERicKEA6AODOo4UaiFTsq4rUJHJ2dZySbk=;
+ b=YoXR5sQCrcuxCSpZnFfVw7f6uE2prEIiGo03ZgWk6gf5pIr6uvxmwyHOP7GI6A/igRhavGv4P
+ CPOYLIT1S0XB/PYLCtNdTcDB8RV06rXQt1w12gOW2VX6ne4AuJyub/9
 X-Developer-Key: i=vinicius.gomes@intel.com; a=ed25519;
  pk=aJkrtgqgT6TZ8iIHSG8/rTPsmlYnjMrUjCsMYvCzntk=
 
-When the dmaengine "core" asks the driver to synchronize, send a Drain
-operation to the device workqueue, which will wait for the already
-submitted operations to finish.
+The workqueue associated with an DSA/IAA device is not released when
+the object is freed.
 
+Fixes: 47c16ac27d4c ("dmaengine: idxd: fix idxd conf_dev 'struct device' lifetime")
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 ---
- drivers/dma/idxd/dma.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/dma/idxd/sysfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index e4f9788aa635..9937b671f637 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -203,6 +203,13 @@ static int idxd_dma_terminate_all(struct dma_chan *c)
- 	return 0;
- }
- 
-+static void idxd_dma_synchronize(struct dma_chan *c)
-+{
-+	struct idxd_wq *wq = to_idxd_wq(c);
-+
-+	idxd_wq_drain(wq);
-+}
-+
- int idxd_register_dma_device(struct idxd_device *idxd)
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index cc2c83d7f710..6d251095c350 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -1836,6 +1836,7 @@ static void idxd_conf_device_release(struct device *dev)
  {
- 	struct idxd_dma_dev *idxd_dma;
-@@ -234,6 +241,7 @@ int idxd_register_dma_device(struct idxd_device *idxd)
- 	dma->device_alloc_chan_resources = idxd_dma_alloc_chan_resources;
- 	dma->device_free_chan_resources = idxd_dma_free_chan_resources;
- 	dma->device_terminate_all = idxd_dma_terminate_all;
-+	dma->device_synchronize = idxd_dma_synchronize;
+ 	struct idxd_device *idxd = confdev_to_idxd(dev);
  
- 	rc = dma_async_device_register(dma);
- 	if (rc < 0) {
++	destroy_workqueue(idxd->wq);
+ 	kfree(idxd->groups);
+ 	bitmap_free(idxd->wq_enable_map);
+ 	kfree(idxd->wqs);
 
 -- 
 2.52.0

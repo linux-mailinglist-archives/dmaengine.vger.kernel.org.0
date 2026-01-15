@@ -1,104 +1,138 @@
-Return-Path: <dmaengine+bounces-8270-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8271-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75109D233D0
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Jan 2026 09:47:48 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6B2AD2402F
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Jan 2026 11:47:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 75B8E3023111
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Jan 2026 08:42:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A37BE302A3B9
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Jan 2026 10:46:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA3833BBB1;
-	Thu, 15 Jan 2026 08:42:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DB5736D4F0;
+	Thu, 15 Jan 2026 10:46:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKvh7Nwz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HuVr/n/y"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB4333A708
-	for <dmaengine@vger.kernel.org>; Thu, 15 Jan 2026 08:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA84236C0D0;
+	Thu, 15 Jan 2026 10:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768466561; cv=none; b=pTqoDvlFQbD0Efa4NcmX+OCrRbR57cy4ys6yhI0ewBUsWak4463PA+da3I8dA7NC9c5mhsxF1Z0+bU+J+Ry7Ps9AEcoREjHiSn9enWedRAwGLzsi666AKpKBWYzgJGA6eINKOXUjXyyGblabbYgNl0VN6TVuzm5SFB81aGcvK1M=
+	t=1768473963; cv=none; b=K5E3ROTQcvQlL30jQwOJruF2VRvag+hnLUpjvDvzkXyB8mv++HO55JyA34/s89cvtfRa20ubAeO2H72bnz5kQXBuZpgzfiLNml4BDkhf1I3lFWhJ0cWVFCQJBMmsubjBpro1/hMD45AdLb1jvPqfA7n/VmbSWwqG6n0ZNrAt6uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768466561; c=relaxed/simple;
-	bh=VUL6Odvz2BGJmEiErMIp7g1YPSC3jt6JjrwwVLc52zk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g/WHAbD2RP4VhFIKdFNJTn4/xhTt1m+vWBnweM2crx0jRnK4sXik3FnYtenrgP84PVckIbbbtDTwFQym8t38XWy/sXTizY1r2PTlXc3VQW4w1hZePvQ2GlPFa2C11mid9TMIoKFQ3T2IxvXD2VSjFJU/idqE6BxwkeoPsJznBEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GKvh7Nwz; arc=none smtp.client-ip=74.125.82.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-121bf277922so852386c88.0
-        for <dmaengine@vger.kernel.org>; Thu, 15 Jan 2026 00:42:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768466558; x=1769071358; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VUL6Odvz2BGJmEiErMIp7g1YPSC3jt6JjrwwVLc52zk=;
-        b=GKvh7NwzgBdYiYlE70l/lFxzOru3vkQxO3vU9KGfnxWaOxLqzTn9Zn2GO4RY6H0JV/
-         WTV7Sh3IzL+e22TIARy0575ItvU4RgCjw2o/Erlc4zEtnIR/Y34YNNO8XCmq9PZzbH7V
-         ylIqiJRfKoxzu3ENdeI1jCpfgxF5PjL/ULj+i+96S7aK1q4OnLrOBuy7xwsxo+heoHXP
-         +7IRr50rR19/FxGeGVxtzdgtzsXWrlu9KgBX70D/ZICQONTZ4qNtK/Kh0OhWv+FVV/Yr
-         MnRKMYN5uyTvDKlbdw/JV7ZNemiY0enSUF+l1TLAfbuIeKdi9fLECNp9JK/Pk8Ll6vfR
-         t/7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768466558; x=1769071358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VUL6Odvz2BGJmEiErMIp7g1YPSC3jt6JjrwwVLc52zk=;
-        b=QL3ieV7RYh5WW8VyJSYa6jx7B2RNY2BW0arttnTZOsovS0CsClpRvrkgR+bgmnuaSA
-         YNuDrx7kRgm4HOjcpty7ZT64to3LrQV/TKtsWXjBsC5zG1e7rVi2BCEYZiKtcdhkz2kM
-         h543CQ87L7RNJDjEcGPCUZVlSf+1mHRjnuli3sJWRhkB1wJilwDxisHmy/rYTzxsA9Uu
-         KcG+8b5UbTR+9fDkqovVqXDIQSPoeki0+wA+zUUG7KV85UZYTye00PorqRT3/wgdVyWC
-         aHAY12rc05mgH8kCaAlrcKrlMxEPCAt560E83mzD+ZU/6rizjZda9v6FmHrFD3DmTXfQ
-         K6cA==
-X-Forwarded-Encrypted: i=1; AJvYcCVR8OFzzDH3WaZhgprWO+Qi2OwnKFzTGoQWDKOWbuwmS0q1UvRs31AFvXBO6+IgIBIu6EeBkKxVZv0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzurWI5uNCbuGALqoy5hbEShNfeboNNUjXsFCGpqmqsRwuSChnq
-	E7bwMw/GbSkr0d0cVA6RhgDeDQiIwg4dEaLVgtI0XTsr+pyj4dX34xsLEElCbanB2hNCkOxOjNR
-	Nbb+XBUev83Go157g/md39+s6O6wzKro=
-X-Gm-Gg: AY/fxX6jMA1Y2wmqpS0Va7yQT6+GCC5dDRKW97aC6vRuC2WZSap3nno8uR40OXUgyGe
-	f1ZKSM8b3xa8un9fZbW1uW4SAXoGJ2tOH9i6iGZwNEm5asrF+nZJxHE4BrRKZ79AkeI0Nzf40Gi
-	8ql42rr6yFL28IXSzWVGwEY6oYhpn015BWLlQew+4imbJTALrmRJJU73J3gUW/ZoGmPXQ/QQLL0
-	cNpGHUnLLNzq5eicaK5WOS8CsbXO/PhNGxy+2kmBtp2M8uBkvevjV+AXkNv6jixAWQVGUbYfK6T
-	d8CjDS1Vr3d8mxdq2N0uVYvnYUGMpLmuI2gAAcV5zZEze6d7LfCIBQHgwFxAx2ySuALKPkua/9C
-	hq7OpDooRiQd31kmPtlaL
-X-Received: by 2002:a05:701b:231a:b0:11d:f440:b757 with SMTP id
- a92af1059eb24-12336a8ac7cmr5154017c88.26.1768466557874; Thu, 15 Jan 2026
- 00:42:37 -0800 (PST)
+	s=arc-20240116; t=1768473963; c=relaxed/simple;
+	bh=AYhbb/ilK8QiUl3qPi2RlveC6/IIr877+41kLSNmhVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nh/smABtNKOEIoZrDqsv4IX5mVQbgmGU/+3fWW+Gz8D4LAPOxQGOwFdda4EqJCCiFjQ42UU9GKiTi/D+MOIz6x4b/xoyhym75hzLixnUaJ+5X9aP27zZ7sWtKt197IKtFR9jukmWAxRkY7fuqHjMrACnyMlVyY148nAJwrGow5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HuVr/n/y; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768473962; x=1800009962;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AYhbb/ilK8QiUl3qPi2RlveC6/IIr877+41kLSNmhVc=;
+  b=HuVr/n/yKo7aLF6F15RiZbzIq3lpfOFZwjZTseKlaJ6pLm8TuIzTwtMk
+   dG+xUiLMuC4rcFCizt+eTwUJUQzoGh0CSLwKTDQxlUspIadqdNu4tMcQK
+   QLbgbWlHP6dqtd2A1syW0pmAV3Kz8Jl+MNEYh8WFtrhCcHTOJZCZBmJi4
+   R66F1GsSfeR2mi4vx6Alef9Ir38dybNHonURg1hVbfZN3HMwfpyKAtO3x
+   S/3+BVFaIGBK313IwyvrY8vavNQYH404mBgPZyydP4VKwOKBXUYD07AC8
+   wqAYrmgEPhyODeUW4qTFDu+rw83Ln7sMR7NBVXQxvZY78DWNqcY/1fYQl
+   A==;
+X-CSE-ConnectionGUID: 89JSBNa9QsqMs4JF6oToLQ==
+X-CSE-MsgGUID: /ehewHEUQhWNGOdg3EUYCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11671"; a="80499593"
+X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
+   d="scan'208";a="80499593"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 02:46:01 -0800
+X-CSE-ConnectionGUID: cA0Rcv7TT72BfFOxDGNZAQ==
+X-CSE-MsgGUID: Z/vQEeZqQIa3gYUaCCFDmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,228,1763452800"; 
+   d="scan'208";a="204956903"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 15 Jan 2026 02:45:58 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vgKrU-00000000HrI-0DgH;
+	Thu, 15 Jan 2026 10:45:56 +0000
+Date: Thu, 15 Jan 2026 18:45:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH 01/13] dmaengine: of_dma: Add
+ devm_of_dma_controller_register()
+Message-ID: <202601151857.D1ikP7GO-lkp@intel.com>
+References: <20260114-mxsdma-module-v1-1-9b2a9eaa4226@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260114-mxsdma-module-v1-0-9b2a9eaa4226@nxp.com> <20260114-mxsdma-module-v1-3-9b2a9eaa4226@nxp.com>
-In-Reply-To: <20260114-mxsdma-module-v1-3-9b2a9eaa4226@nxp.com>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Thu, 15 Jan 2026 10:45:18 +0200
-X-Gm-Features: AZwV_Qi-TQ7lJMIQ3JWU_HIrOBnLtQtdsWIBSjxYFap9Y2nvd_jWRPWPx5vtGmI
-Message-ID: <CAEnQRZBe5Q2Ejbf_-+Mo8zTc=mSDgpXuXbh3NVHcwjooggD0Ow@mail.gmail.com>
-Subject: Re: [PATCH 03/13] dmaengine: mxs-dma: Fix missing return value from of_dma_controller_register()
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Vinod Koul <vkoul@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@freescale.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260114-mxsdma-module-v1-1-9b2a9eaa4226@nxp.com>
 
-On Thu, Jan 15, 2026 at 12:34=E2=80=AFAM Frank Li <Frank.Li@nxp.com> wrote:
->
-> Propagate the return value of of_dma_controller_register() in probe()
-> instead of ignoring it.
->
-> Fixes: a580b8c5429a6 ("dmaengine: mxs-dma: add dma support for i.MX23/28"=
-)
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Hi Frank,
 
-I think you can send this as an independent patch or at least put it
-first in the series as it is a bugfix.
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 8f0b4cce4481fb22653697cced8d0d04027cb1e8]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/dmaengine-of_dma-Add-devm_of_dma_controller_register/20260115-063955
+base:   8f0b4cce4481fb22653697cced8d0d04027cb1e8
+patch link:    https://lore.kernel.org/r/20260114-mxsdma-module-v1-1-9b2a9eaa4226%40nxp.com
+patch subject: [PATCH 01/13] dmaengine: of_dma: Add devm_of_dma_controller_register()
+config: x86_64-randconfig-161-20260115 (https://download.01.org/0day-ci/archive/20260115/202601151857.D1ikP7GO-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
+smatch version: v0.5.0-8985-g2614ff1a
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260115/202601151857.D1ikP7GO-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601151857.D1ikP7GO-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/dma/dmaengine.c:54:
+>> include/linux/of_dma.h:88:1: error: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
+      87 | static inline
+         | ~~~~~~~~~~~~~
+         | int
+      88 | devm_of_dma_controller_register(struct device *dev, struct device_node *np,
+         | ^
+   1 error generated.
+
+
+vim +/int +88 include/linux/of_dma.h
+
+    86	
+    87	static inline
+  > 88	devm_of_dma_controller_register(struct device *dev, struct device_node *np,
+    89					struct dma_chan *(*of_dma_xlate)
+    90					(struct of_phandle_args *, struct of_dma *),
+    91					void *data)
+    92	{
+    93		return -ENODEV;
+    94	}
+    95	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

@@ -1,211 +1,205 @@
-Return-Path: <dmaengine+bounces-8306-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8307-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B82DD2FA39
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Jan 2026 11:35:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96BF0D334B9
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Jan 2026 16:46:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F1258301356A
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Jan 2026 10:35:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8293B3027CD8
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Jan 2026 15:43:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29AFE214204;
-	Fri, 16 Jan 2026 10:35:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D86133A9E4;
+	Fri, 16 Jan 2026 15:43:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ib2Shv4r"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Nm1vkJAJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011057.outbound.protection.outlook.com [52.101.70.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3153195E8;
-	Fri, 16 Jan 2026 10:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768559739; cv=none; b=liuGV5ZOq5eskoFeOeciXgdbYHkp9obOhlwYkfm+alN61cGNFAy1Rji1wQsSWXNIPb2IY+djOw/XqqyoCujmCBcxLDqyyzC1Q15QNtmiDXSwtMb/MrqrO98J5V3LJmLzhtSe162mPY/oJb+eZTmyteLcXY8sTlJoJIrgKGQxqA4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768559739; c=relaxed/simple;
-	bh=aiIGlsJXL0tDmzaEhpskji5W6TU6kJO+JTTWJog4LWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NG1X2HMU4UJOL9xwVwOqB9nnnoKREQvbmVwYvAa4c+NhSoPb4Sg53DU+OR0IlRLkyqnk8U6XRRQ90WiQNiThTIBPWJyNdcj3+BMO38/98b1s16/NG5qw2TmJxrK/mdGWo1grS6ExjwSDv5DNMWg6jsrd+GAo86fcHkqv2E4akqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ib2Shv4r; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768559737; x=1800095737;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=aiIGlsJXL0tDmzaEhpskji5W6TU6kJO+JTTWJog4LWk=;
-  b=ib2Shv4rNu9pyPvQB0e6gxAysxLTiUFt7WU2y2362xVFOWQThjynAapl
-   mNXsF5eKB3I88UzHczn1OnG82sg7s2jv2M0MqJggw41sJF/60GoXcfGNN
-   CCQJePFnNsXT1ZOAvN3QfSMZM+WRCR2uuKJ2hhLJeawd+B2uowg3DevJl
-   WtPrTtjVfPCZiarmpxSt+SAVeYl+p7slha6rvKPWU29kqErPGfL4TTrCf
-   j1JWzA6qtQ6KlAmpotqLRlEirY0HRdAuqT8IJrOoYB/DFRw3I0JhP1sG0
-   rlpEcTEDJySuizlzaJMul5xqHZNnsqVtZmzwIHABBsETP+2y6CPl+BR8S
-   A==;
-X-CSE-ConnectionGUID: qAjVUn6+QGSYtq01PONLtA==
-X-CSE-MsgGUID: 6k2Q3mFWTIymC7PhNL/0IA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="69776855"
-X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
-   d="scan'208";a="69776855"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 02:35:36 -0800
-X-CSE-ConnectionGUID: qNkMSGQDR+WVpxKlQ4UVrg==
-X-CSE-MsgGUID: l3ELfngdSqy6wtCjo2smzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
-   d="scan'208";a="235901137"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 02:35:34 -0800
-Date: Fri, 16 Jan 2026 12:35:31 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: correctmost <cmlists@sent.com>
-Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev,
-	vkoul@kernel.org, linux-i2c@vger.kernel.org,
-	mika.westerberg@linux.intel.com
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <aWoUc_GJuZ8SuYCM@smile.fi.intel.com>
-References: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
- <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
- <69f5dea3-17b0-4d3a-9de7-eb54f8f0f5cd@app.fastmail.com>
- <aWoM3JibLSBdGHeH@smile.fi.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E305933A9EB;
+	Fri, 16 Jan 2026 15:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768578190; cv=fail; b=k+uS6eN95LPbQSZpgmH4NaiRqqOZr19Kh6HB4q19EfG+SVgQq7/zRrTH/F2Ev5JUSDSm5DHNYmefrEj0n/DZJn/X250ZALnKQWuwMRMpI8Rkl+7nYmrgbjAUuCFnIkR+B/uCwb6dzdsNgR6p45QSN5JjWd268cDMVEMiHYBBjrE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768578190; c=relaxed/simple;
+	bh=mPrqMS90Wcw0EWko7nohIviWzlw/6c3DjGcEcJf8MWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=CY7um2vQDAywTp7SsJE8sO/wFIrg8qOF09PI8h0QLlQK12vBNU1AXsCy5oiYzJeXkcIbXCvxNQPrpgR4BC8Aj5cXGPPhYhYuzAuXzofUtTEuJEvWf72sb/MfBkk8jPSSTbQy7nf5pCCqCQ13Vfjnv8Q6oF6Nl9cyl0Y5NQC3d0E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Nm1vkJAJ; arc=fail smtp.client-ip=52.101.70.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UuKXvYzjZu2JtH4nSNfmU9ZpxBOsLY05slrQlT4T/qSTsTbWXKoxqEmp8oXw5dBY/jB8xnceJtHI0MT6TOaH/Ug1/Q1BA8BLpIGBz/U+p0CDP+at8Gdoy/pCLKhLSmSXZ7gAQHb6kyeXJ9P31ERqC/0u65CU+XXSlkp7DO+n9+UBs4IX+hYZQAxo+96qmNKJTy0iUxqyU1FJjuRmRc7CQKMwwpAiVIViQAKm2vxJcKxmkrAAKAUj6YTQWyjGFODiMy0QbiN/rWVVV5PnKkqQOUF60dOkgtrZuTERmp7gO02me7gfwow4YzIxswZ270BhN2c0P3zWmugToIc6Z0A9WQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TuLYBJ4NXhVskwDDL2M+S5I33n7q/vpYfTCFM5D05ZY=;
+ b=ETE+x8DbhwTCUJpr2vG7Og1howzvmI4Lwgz2lK+lBxIoebPoIfu3lASVxlUseL+LUpHByqc6HWiT8Hl+WvO0gZCTckJi72Xrgc8gbrSnIPRHdL6n17CbDrYWUaLKUtOA7SOM11oJTeCoOV2s4uDYbV8RqRSuNPolp2SJ+9p/HFyQLtXCzU8G3tG9L+629IY/psMbOitBCGpwoSsJO8bm5CN4s36+bHJ8fsHB8mXrkR1x/imz91BW0y9TnRY4UABIGTgrIYvw1XwmmHv2KAkcTLGc3lyJTrxGunlvcCQpsumkB5XX8was2k3/cy6eAZwjMdP1+XJgjsSos3VPJrF4pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TuLYBJ4NXhVskwDDL2M+S5I33n7q/vpYfTCFM5D05ZY=;
+ b=Nm1vkJAJdPHNv+WsqpYJeTuUQkvgQVepNP0/UPQhiRV1s3Nn5RrAsNmkW0Ehqj1kDx08MjsyQpRRBys7l5yLazQZiuSOs5ZPmjEv1tqlUD8ce+DbNgDSja77ViOQf2QWZbpqmEEXiT/aZVo4C/CA0I3coTf3ORSR0QOClWrlIHWJWxyNtyRUN8eyfUsy67nT++OFlkYbT8EGNgJNqiW66Z69Aq/bZ179qlVf6wWLWyaFSCWjyKYlHFYHHfIC78kL/O+BwjSCWJUNBWl/MelcHNF/TLR16o7YxLjA3S5AveOnfhZSbPD1KcWl60HqLdfimuBcn0NEOdQ9ieerqTPwxg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DU2PR04MB8951.eurprd04.prod.outlook.com (2603:10a6:10:2e2::22)
+ by GV1PR04MB10378.eurprd04.prod.outlook.com (2603:10a6:150:1d4::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.6; Fri, 16 Jan
+ 2026 15:43:03 +0000
+Received: from DU2PR04MB8951.eurprd04.prod.outlook.com
+ ([fe80::753c:468d:266:196]) by DU2PR04MB8951.eurprd04.prod.outlook.com
+ ([fe80::753c:468d:266:196%4]) with mapi id 15.20.9478.004; Fri, 16 Jan 2026
+ 15:43:03 +0000
+Date: Fri, 16 Jan 2026 10:42:54 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Longbin Li <looong.bin@gmail.com>, Ze Huang <huangze@whut.edu.cn>,
+	"Anton D . Stavinskii" <stavinsky@gmail.com>,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	sophgo@lists.linux.dev, Yixun Lan <dlan@gentoo.org>
+Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: cv180x: Allow the DMA
+ multiplexer to set channel number for DMA controller
+Message-ID: <aWpcfqHDFaq8Lsv5@lizhi-Precision-Tower-5810>
+References: <20251214224601.598358-1-inochiama@gmail.com>
+ <20251214224601.598358-4-inochiama@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251214224601.598358-4-inochiama@gmail.com>
+X-ClientProxiedBy: PH0PR07CA0043.namprd07.prod.outlook.com
+ (2603:10b6:510:e::18) To DU2PR04MB8951.eurprd04.prod.outlook.com
+ (2603:10a6:10:2e2::22)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aWoM3JibLSBdGHeH@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8951:EE_|GV1PR04MB10378:EE_
+X-MS-Office365-Filtering-Correlation-Id: bbd746f1-5184-434b-e530-08de5515efb6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|19092799006|1800799024|52116014|376014|7416014|366016|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?l/eJnA+lYwqOZcDcg48+3DEK+a3pPJRAfi6hHyl1r/r9L5Df/9P1+jAYLpyR?=
+ =?us-ascii?Q?flCe/GH45nJn7EsLAJ9r74jEhz3jKXj5FBbPrgS+p8y9e2wX/YWFxr453IbP?=
+ =?us-ascii?Q?a1J4i9wE2ojJpCOXbrxbVG28vXJC2WfQREIGvjn643Sw65OIne6Jsf6nU7GI?=
+ =?us-ascii?Q?Byb/tKGfetnpToP55g1LC5NtWsAiSvMqFXa4zZfMlMXNwsIkpYma78RRmaGB?=
+ =?us-ascii?Q?QuYzQuLLz2mgn+G/L+d+egeYFTAaCSW/GWQrIYHEltUeaubrK6C9QmQZoDEV?=
+ =?us-ascii?Q?EPFitDBBCvD1XsCnA9kjCZF+YId50xAHU7jETiIqHn6qdcAxuRK9rqYeWB9C?=
+ =?us-ascii?Q?WEc9uqHhOetrulf874fwG1qK9t/eFpkFN59wMIZwv05TccUH1BbQkEL3Zpin?=
+ =?us-ascii?Q?EnUDFeDFeHDZQux12StSLsVM+xYU+yFMl3wxfbwsTfQr2uFFkFBSR19N5spF?=
+ =?us-ascii?Q?rkz6bAd7PMFQ6zSOKzilYxr5RGxUQ3YRZmhQzgrVMYiAzWzABkI8VFuqw5Ul?=
+ =?us-ascii?Q?CEtotEhJglTF1NXSAj5icAy5TR5w3PNEViO3oE8W1b/V3f4u7SDSdSJ8UETJ?=
+ =?us-ascii?Q?JWiMzAeVkM3hpyu9sHcYuQX//oaJCtKvMqNVDNki6yoT5khm53YUOHrGy42O?=
+ =?us-ascii?Q?HdB5mYxVnn+JfyUKap8zlbpIYk0rQtbFDRcUztpjeJhX1AhvyBw0t9EHXW8M?=
+ =?us-ascii?Q?84KzLWTi9rKdFXKTVC2U5mIyCt20c9dksRhrNDi4t0/Jc8tJJBdK33rurlsW?=
+ =?us-ascii?Q?npXthZcjnf7WdqUYhfiOBFz9qlLbagM7j6vVjfD46go3LA8zg6CaZbSi30m4?=
+ =?us-ascii?Q?HBwCZxiwwik38ADRoHjIz2F54rdqvlWwEPNmJUlG2zOkUXMjixulEHJcGflt?=
+ =?us-ascii?Q?Jeb08y85ipjVQyaPzMZF5CX5O/n7GxpF1b3qGrJkaVIzEwIbI09rvJNoljGv?=
+ =?us-ascii?Q?v+aXYzwJqfIluJcAhRdwVxkwjvsXIcw/krizIf0BY1PY3DV+MrYtdu3b0Qcg?=
+ =?us-ascii?Q?gCOEo8t1/SwCpdabMeIt/XSroy0TG3Uwq01uH+9IWK7HItXIdrAgK7vgw8ld?=
+ =?us-ascii?Q?SgRTn9H6SaYsbNb+TAFc1elEPHNr6DntoULJE/GZxrar7Wz2WjXHIW+CnCEF?=
+ =?us-ascii?Q?hc1amXT0kAr8tprd7pXDvm3Zh8J9EoxfUsuvy6Akd5N48vBRdy76ImLwovir?=
+ =?us-ascii?Q?l7JwIeY2KzaQuLL6xj7SnpbXsi771XTmF6ea8NDizQERj4HBqIe69A8xUgBX?=
+ =?us-ascii?Q?Bbe2ST/G6/YSbDyMIss40MJy+pCoigxbZ2pwy2e9rfI9cv+j+zG+9ZlaCV6f?=
+ =?us-ascii?Q?TXEySCW+Ipg52P0yNLdXtK52pEdI7ldBxJIfOVVclsB51//R8BrLWloughlX?=
+ =?us-ascii?Q?Uw1c4JKTbZ5uATrLYeNh4LWM/EEmQpTzHYxXl86o0HIWLbSDKjW9rMh8Sf9s?=
+ =?us-ascii?Q?Xr+HU7+06d2b2Q2uRUOhp2hIq2ol5W2F56HaMGcHXWJiEo/1Bu5mhwW9EXzb?=
+ =?us-ascii?Q?u1FgOJhmiLnTnq6dDlR+OnshOXsBrUqmYm70mdEcj6lDVEtx0yPmnmOsc2vq?=
+ =?us-ascii?Q?K9KXhgW4rKZ3csd0r2Y8DVKqYgTcYieIcOjrESdVNcP82vh7YEIL4FLWo1ve?=
+ =?us-ascii?Q?HHlWs+DCva/JLFUAzjdb54c=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8951.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(1800799024)(52116014)(376014)(7416014)(366016)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?J0EwBKHgkbf3wLUDSOENmWJKYHPoEM1KGtrw2+Ium6YiXebyyizkNdCzLHf3?=
+ =?us-ascii?Q?m6g6UgVs29qW0epXnH6InwcwfSYmnpX+mVmd1yAA0wnc3Rrb55javQ7Qk3f5?=
+ =?us-ascii?Q?8sBDuB43UcTAUQIVQGbKvwmAEY3pWjN0o+0hs1Nu78NcsNmTBhlqlRz+tW1z?=
+ =?us-ascii?Q?w2TrTxZzTLNHl9RaIDwQz7/XhNcbMi5ehcKHHlfTgf7GCI3xsaT0+sXlsOEt?=
+ =?us-ascii?Q?kHEfKufSqj2mToH8BbfVMnyMULNS7zodm84550sEWqclyIP7+j9gso2fSh4H?=
+ =?us-ascii?Q?qm7sZzo6PVpTEpYiMGfGcP8KbjFwp7HrkSoWGXShLlE3fUdjkh1sQ9/Tmgl0?=
+ =?us-ascii?Q?wqolpLL1XIjs8JBqDoJPkRS2X3A9Trlou/MvcbKw0xDOQjfqwHnbZAiMDmS2?=
+ =?us-ascii?Q?vT7xGNLCJOiUwoKZxnq1DE3qpz/8yjmVBcnuq4ZwIQfAbiU9jJXWImhuzb91?=
+ =?us-ascii?Q?fviDAoIkBlpUVmvqka/UOf2EdLfqNfz5aak13mVDWy+A7gENFrRc4pJT877+?=
+ =?us-ascii?Q?GZ2AFXUcXjC03EtHzU/1jiXaeDtngOXUrjjAtMs6FUGygHDZTdlWA83VsjRc?=
+ =?us-ascii?Q?wsjE/CkZ26yLE89zWIuV1j23vi2pOx+VsIirHeq4m3LuxQVJiq+R1rjPatYf?=
+ =?us-ascii?Q?BNRQ9bitsFkd9L9cl0Xq9PCyoqX5ueT25CD3Rp5/B6leK099P1y8acgnfap0?=
+ =?us-ascii?Q?/gfFsiVEY4p1/qNlIv5NB0XOfdXwzeJxK1y2msnYoTqhyLxEG1TBOzyxIBMv?=
+ =?us-ascii?Q?u4bA8HC0+nnPBgUDSGzyNmQTQ78PyZ4Ug7yzMA3ENbVEPuztVcrgfJaLswS0?=
+ =?us-ascii?Q?rj/1r6og1H6ZAzqOoG18gSRABEHp1lYqi1ogx5vGPRDy8ECfaLP1cn/l1VvA?=
+ =?us-ascii?Q?qkCWGyCa6DyvQUNkdRfhdEqk8Ki+VswuwfgALibh4MO8wXZtBJdXlVRTf0ZE?=
+ =?us-ascii?Q?UJ+gyuEyy/7KtBsoiAqMf1UWOq2NGmynl/ktyPMPFA+0u/SQ8ho29EAuGbSt?=
+ =?us-ascii?Q?0hi7Tv3bwh1O0IVlf2eO4vZsdP0bStCBOBoXjpvzMzjXcUDfd/QTSj2Jiq2s?=
+ =?us-ascii?Q?+PddN7tXHnzS4FPHSNspqgz0qmjMAIClyI9CsyDtJ95JgedSIN3S4f+ZVWzw?=
+ =?us-ascii?Q?vF+XKoNR5M5vkBNBhCB6HJEM0pko9oNguFIJypscaCtsLemmNuwSzH9UE7WO?=
+ =?us-ascii?Q?A+qZehfmBKqjFG+rvYN0dnH5Gvrx+z95VI4vn2xF6AGkj4DNR29nYd6MlzAp?=
+ =?us-ascii?Q?mg7XRCDqybrsxq4fCR80l5yYMrEkZq4ZHd7OnjmvCmRS4rNhNbGaXfDMJVms?=
+ =?us-ascii?Q?w6vpmQaBK6pEmxgYsrwnUQiDeiUVnupFcQ0i7hM5cnxQVcIdipH8IKxtb/2c?=
+ =?us-ascii?Q?uuNzxH7KfBqj43HMdfPfze4J9B6sMDuohg/KBjkmDgbnJnl00KdzZQP4qtKR?=
+ =?us-ascii?Q?abL4EP5LhtYtJlA7N29/NoIxaL2VWHUycziYqNvOQth86Q8WDKa9SkRMsg3S?=
+ =?us-ascii?Q?rUZT7IALAJHuei6UCKLpxl1TRFqRsmHthVVBivO1XMj0nqKK+ooyL+c4CIsb?=
+ =?us-ascii?Q?e4Pp6O3DPgaDfXYykGs3jY5emYAxe8C6eZ1WV3xyCj26Pipshmq1qDKR1h6j?=
+ =?us-ascii?Q?+oB+3VZQId+/+xmQCucojeBNXcQfP4R1PinXkhtdvXq455+S5ZqQN85aAzLs?=
+ =?us-ascii?Q?3b2g21yrKbnPrJ2q9PaO9yGUcaNc84Z2DKZbTukxnHID3upvZitT/cOaNGYR?=
+ =?us-ascii?Q?ivoYl9An8g=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bbd746f1-5184-434b-e530-08de5515efb6
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8951.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2026 15:43:03.8940
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KmHnHOomJySm6hiE85tOJSpzUi/f4G+aMO6wLE85pkKLoNUgLms/RI5tCkmickg3cGIzQcDzRY7DppG+YhYFvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10378
 
-On Fri, Jan 16, 2026 at 12:03:12PM +0200, Andy Shevchenko wrote:
-> On Thu, Jan 15, 2026 at 05:50:36PM -0500, correctmost wrote:
-> > On Mon, Jan 12, 2026, at 9:35 AM, Andy Shevchenko wrote:
-> > > On Tue, Dec 16, 2025 at 12:57:10PM -0500, correctmost wrote:
-> > >
-> > >> The following commit
-> > >
-> > > No, it's false positive. The reality is that something else is going on
-> > > there on this and other similar laptops.
-> > >
-> > >> causes my Lenovo IdeaPad touchpad not to work when
-> > >> kernel/drivers/dma/idma64.ko.zst is present in the initramfs image:
-> > >> 
-> > >> #regzbot introduced: 9140ce47872bfd89fca888c2f992faa51d20c2bc
-> > >> 
-> > >> "idma64: Don't try to serve interrupts when device is powered off"
-> > >
-> > > So, the touchpad is an I²C device, which is connected to an Intel SoC.
-> > > The I²C host controller is Synopsys DesignWare. On Intel SoCs the above
-> > > mentioned IP is generated with private DMA engine, that's called Intel
-> > > iDMA 64-bit. Basically it's two devices under a single PCI hood.
-> > > The problem here is that when PCI device is in D3, both devices are
-> > > powered off, but something sends an interrupt and it's not recognized
-> > > being the one, send by a device (touchpad).
-> > >
-> > > There is one of the following potential issues (or their combinations):
-> > >
-> > > - the I²C host controller hardware got off too early
-> > > - the line is shared with something else that generates interrupt storm
-> > > - the BIOS does weird (wrong) things at a boot time, like not properly
-> > >   shutting down and disabling interrupt sources; also may have wrong
-> > >   pin control settings
-> > > - the touchpad is operating on higher frequency like 400kHz (because
-> > >   BIOS told to use that one instead of 100kHz) than the HW is designed
-> > >   for and hence unreliable with all possible side effects
-> > > - the touchpad firmware behaves wrongly on some sequences (see also
-> > >   note about the bus speed above), try to upgrade touchpad FW
-> > >
-> > > With my experience with the case of the above mentioned commit that it
-> > > may be BIOS thingy. Also consider the bus speed, there are quirks in
-> > > the kernel for that.
-> > 
-> > Thank you for the detailed notes.  I will see if I can update my BIOS and
-> > experiment with different quirks values, though I won't be able to do that
-> > until late next week.
-> 
-> You're welcome!
-> 
-> > >> Here are the related logs:
-> > >> 
-> > >> ---
-> > >> 
-> > >> irq 27: nobody cared (try booting with the "irqpoll" option)
-> > >
-> > > Almost all below is not so interesting.
-> > >
-> > > ...
-> > >
-> > >> handlers:
-> > >> [<00000000104a7621>] idma64_irq [idma64]
-> > >> [<00000000bd8d08e9>] i2c_dw_isr
-> > >> Disabling IRQ #27
-> > >
-> > > Yes, this line at least shared between those two and might be more.
-> > >
-> > > ...
-> > >
-> > >> i2c_designware i2c_designware.0: controller timed out
-> > >> hid (null): reading report descriptor failed
-> > >> i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
-> > >> i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed with error -110
-> > >
-> > > Yes, sounds familiar with the speed settings. Try to down it to 100kHz in case
-> > > it's confirmed to be 400kHz.
-> > >
-> > >> ---
-> > >
-> > > Any pointers to that thread, please?
-> > 
-> > The following threads have users who were able to restore touchpad
-> > functionality by undoing the idma64 change in initramfs:
-> 
-> Yes, = "they have hidden the existing problem". No value in that, sorry.
-> What is the exact link that refer to the thread you previously mentioned?
-> 
-> ...
-> 
-> > Lastly, I saw another bug report that mentions the "probe with driver
-> > i2c_hid_acpi failed with error -110" error.  It seems to state that the error
-> > only occurs when a power cable is connected during boot:
-> > 
-> > - https://bugzilla.altlinux.org/57094
-> >   - Huawei Matebook D15 BOD-WXX9-PCB-B4
-> >   - i2c-GXTP7863:00
-> > 
-> > >> so I don't think this is a hardware issue with my individual laptop.
-> > >
-> > > I don't know how this conclusion is came here. You mean HW as laptop model?
-> > > But are the involved components the same (I²C host controller + touchpad)?
-> > 
-> > Sorry for the confusion.  I meant the individual machine in my possession and
-> > not the laptop model as a whole.
-> 
-> Yeah, something here is common and I can't say for sure this all about Synaptic
-> touchpads...
-
-So, what I think I need to understand this more is the following
-(all information should be gathered under root user) for working
-and non-working cases:
-
-- `cat /proc/interrupts`
-- `dmesg`
-   # with `initcall_debug ignore_loglevel` added to the kernel command line
-- `cat /sys/kernel/debug/pinctrl/.../pins`
-   # ... should be something like INTC1234:00
-
-And just once these:
-- `acpidump -o tables.dat` # the tables.dat file
-- `grep -H 15 /sys/bus/acpi/devices/*/status`
-- `lspci -nk -vv`
-
--- 
-With Best Regards,
-Andy Shevchenko
+On Mon, Dec 15, 2025 at 06:46:00AM +0800, Inochi Amaoto wrote:
+> Change the DMA controller compatible to the sophgo,cv1800b-axi-dma,
+> which supports setting DMA channel number in DMA phandle args.
 
 
+Does it need update DMA comsumer?
+
+Frank
+>
+> Fixes: 514951a81a5e ("riscv: dts: sophgo: cv18xx: add DMA controller")
+> Reported-by: Anton D. Stavinskii <stavinsky@gmail.com>
+> Closes: https://github.com/sophgo/linux/issues/9
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> ---
+>  arch/riscv/boot/dts/sophgo/cv180x.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/boot/dts/sophgo/cv180x.dtsi b/arch/riscv/boot/dts/sophgo/cv180x.dtsi
+> index 1b2b1969a648..e1b515b46466 100644
+> --- a/arch/riscv/boot/dts/sophgo/cv180x.dtsi
+> +++ b/arch/riscv/boot/dts/sophgo/cv180x.dtsi
+> @@ -417,7 +417,7 @@ sdhci1: mmc@4320000 {
+>  		};
+>
+>  		dmac: dma-controller@4330000 {
+> -			compatible = "snps,axi-dma-1.01a";
+> +			compatible = "sophgo,cv1800b-axi-dma";
+>  			reg = <0x04330000 0x1000>;
+>  			interrupts = <SOC_PERIPHERAL_IRQ(13) IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&clk CLK_SDMA_AXI>, <&clk CLK_SDMA_AXI>;
+> --
+> 2.52.0
+>
 

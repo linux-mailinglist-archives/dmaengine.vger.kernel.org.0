@@ -1,75 +1,74 @@
-Return-Path: <dmaengine+bounces-8303-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8304-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54293D2A32D
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Jan 2026 03:36:43 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15B0FD2B133
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Jan 2026 04:59:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 495603039997
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Jan 2026 02:36:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 5EDAE300DDAA
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Jan 2026 03:59:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A2FA33891D;
-	Fri, 16 Jan 2026 02:36:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E412342CB1;
+	Fri, 16 Jan 2026 03:59:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MiuxIzkg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="moVrqKOX"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F9330DED4;
-	Fri, 16 Jan 2026 02:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9F2342534;
+	Fri, 16 Jan 2026 03:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768531001; cv=none; b=hTUuxcRKxSCzqex/e0Ku7B6bHfOcI3xtkn1qn2D7Sjs69cxAhP9w9TFUgbql73jMqa9kYph++gSNk5HlXNko0Pts0bUZc40K7hjUbBw8jq/Z64Ty1Utxm92UtFyE/YPApz/aqpXGmntUlPgPlQxGzI/RCZimWQ+uox5bwl0UIxs=
+	t=1768535982; cv=none; b=T/x7i9ZE+KL0DskXXN8HYzzG0KxnX/PBQKV5flBaYjLeWTpDDqqUoC4rT/lOUy3oIMyyUX62Z8Z8KLl72jAPyseo5IxD52mAg5kzesk+ALr95zPLefNA0T7BUw0PqDvby4rcCEe1OqPXol+ISZq40eT+KjoIV/peiN32UppwnUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768531001; c=relaxed/simple;
-	bh=I36aSXTzriBgDYv73mmeefdxppcdbFavEzvnxfjsNOs=;
+	s=arc-20240116; t=1768535982; c=relaxed/simple;
+	bh=CmGnH7AqqI0yoJCUsFq4Tmdh1ZlRFTL2l6zzaWwnmZk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=npW4lLvFz/3xn/UvC3pYdmhbl/CuXZFaBooN+09R1nq/ZaMAFPYYDNU+FftGnd08IYCh9cFUh2gf3WZjYJSc4cGjSa6JLWpTBh/jolkM24xugvfGz1ccCTdUgHEnK3HvPxPAuR6c9AfwiXM80E2rJVCYekGdyUw7Gyy03yYDjxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MiuxIzkg; arc=none smtp.client-ip=192.198.163.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=d5iXdGtfmZuWDm1IfmFKiJFNLgGyjkX2/cByDhrSO8GhOnAyLTZ8WE1XY2AUsBzGoTHWnl/b1nQNlJgT7GLykTVc2GBlZdtLIvvNDuDST/yilJdwnL3XmfMUJetMNfW5yLMZP4O4nyPf+xMCA04T+Lyws+wjVINnC+M54v6fZsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=moVrqKOX; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768530999; x=1800066999;
+  t=1768535979; x=1800071979;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=I36aSXTzriBgDYv73mmeefdxppcdbFavEzvnxfjsNOs=;
-  b=MiuxIzkg2tBePOA64h+lGjgWqpWxyixgm6QkepRo93gYgamQSM73KQqB
-   i8kymZ50Qoj5qAcd3xrK3v73+YFOYn/9QWLKCAKotSQQcXT/znAZwDo00
-   MYlvpF7EI7WIkdyef/GoULRRXdXHnBBEGZ3yqXo2r/2mL3sZzs2QviwAG
-   hjsKQyx442i+fDKCKOwFYnuoCBJjUb5RzMsqyrKx1bGmnUlB06vpP3wep
-   VL7sGRvRBloV1noksqzPor/UC5H3Lgfb33nsivCT8SJoSw2qnGKSRx2Wn
-   79OmuavpHT9TBvFagDSA6Xf4Ln2FXj6Jnj9J+x66GQaFPdI7O1RsYOvEI
+  bh=CmGnH7AqqI0yoJCUsFq4Tmdh1ZlRFTL2l6zzaWwnmZk=;
+  b=moVrqKOXalxNfTcIE7B/EwHlZlUGZhnsoKQTqgC9vmy40T8bDjUtqvJx
+   AOy6zEaE6j+jZbimPZZdT9xQ9MU1DG/g+xlCnGcCwdvC3HmjR6wcrbp9W
+   0Qdi6iF4vfROg7bEpNd42l0eoALa9jOgHHbY4i2YPyg61J8BYQZql95CR
+   LQwQwH1GlVOY8ka6nMqZublRUENCKk/LK70LMB0xxCzgeD7YFILrlJfeM
+   Byd1JLys9Pnz4jG5vDOuvQHezyqg02prJ5wfvYUhbWUxjuJdwLNj7dhMN
+   Xy9XXdzIuralhUhvUy5ORG1c+xQPK19k/0OnUm6ZhjLwlF4+/LTlbRM3H
    Q==;
-X-CSE-ConnectionGUID: 7jygvIJVTKmFIDIr8wEa9Q==
-X-CSE-MsgGUID: TfCYLF6WReuZbbuHPAJA/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="80490138"
-X-IronPort-AV: E=Sophos;i="6.21,229,1763452800"; 
-   d="scan'208";a="80490138"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 18:36:38 -0800
-X-CSE-ConnectionGUID: RNs7zFrbTSKiVzSsjB2SXQ==
-X-CSE-MsgGUID: wI6tJSYyT/ORZg51PZyQIA==
+X-CSE-ConnectionGUID: dXAZYE+USjWQ0wkb8Gsk3w==
+X-CSE-MsgGUID: nA4Ec/UkT7yz35HtxOsOMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11672"; a="87428007"
+X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
+   d="scan'208";a="87428007"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2026 19:59:39 -0800
+X-CSE-ConnectionGUID: bw4zyM8gTpesuT+M4QFy1Q==
+X-CSE-MsgGUID: KVT9E3iySwWcgq+yCDtZ3Q==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,229,1763452800"; 
-   d="scan'208";a="210153141"
+X-IronPort-AV: E=Sophos;i="6.21,230,1763452800"; 
+   d="scan'208";a="228174765"
 Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 15 Jan 2026 18:36:35 -0800
+  by fmviesa002.fm.intel.com with ESMTP; 15 Jan 2026 19:59:36 -0800
 Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vgZhN-00000000KGe-06KE;
-	Fri, 16 Jan 2026 02:36:29 +0000
-Date: Fri, 16 Jan 2026 10:36:27 +0800
+	id 1vgazl-00000000KLq-3MS5;
+	Fri, 16 Jan 2026 03:59:33 +0000
+Date: Fri, 16 Jan 2026 11:59:30 +0800
 From: kernel test robot <lkp@intel.com>
 To: Devendra K Verma <devendra.verma@amd.com>, bhelgaas@google.com,
 	mani@kernel.org, vkoul@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, michal.simek@amd.com,
-	Devendra.Verma@amd.com
+Cc: oe-kbuild-all@lists.linux.dev, dmaengine@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, Devendra.Verma@amd.com
 Subject: Re: [PATCH v8 2/2] dmaengine: dw-edma: Add non-LL mode
-Message-ID: <202601161018.9e9hUXUa-lkp@intel.com>
+Message-ID: <202601161151.MTsHwjVO-lkp@intel.com>
 References: <20260109120354.306048-3-devendra.verma@amd.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -96,36 +95,42 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Devendra-K-Verma/dmaengin
 base:   v6.19-rc4
 patch link:    https://lore.kernel.org/r/20260109120354.306048-3-devendra.verma%40amd.com
 patch subject: [PATCH v8 2/2] dmaengine: dw-edma: Add non-LL mode
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20260116/202601161018.9e9hUXUa-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260116/202601161018.9e9hUXUa-lkp@intel.com/reproduce)
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20260116/202601161151.MTsHwjVO-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260116/202601161151.MTsHwjVO-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601161018.9e9hUXUa-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601161151.MTsHwjVO-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> drivers/dma/dw-edma/dw-edma-pcie.c:348:37: error: use of undeclared identifier 'DW_PCIE_AMD_MDB_INVALID_ADDR'
+   drivers/dma/dw-edma/dw-edma-pcie.c: In function 'dw_edma_pcie_probe':
+>> drivers/dma/dw-edma/dw-edma-pcie.c:348:51: error: 'DW_PCIE_AMD_MDB_INVALID_ADDR' undeclared (first use in this function); did you mean 'DW_PCIE_XILINX_MDB_INVALID_ADDR'?
      348 |                 if (vsec_data->devmem_phys_off == DW_PCIE_AMD_MDB_INVALID_ADDR)
-         |                                                   ^
->> drivers/dma/dw-edma/dw-edma-pcie.c:358:14: error: use of undeclared identifier 'DW_PCIE_XILINX_LL_OFF_GAP'
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                                   DW_PCIE_XILINX_MDB_INVALID_ADDR
+   drivers/dma/dw-edma/dw-edma-pcie.c:348:51: note: each undeclared identifier is reported only once for each function it appears in
+>> drivers/dma/dw-edma/dw-edma-pcie.c:358:56: error: 'DW_PCIE_XILINX_LL_OFF_GAP' undeclared (first use in this function); did you mean 'DW_PCIE_XILINX_MDB_LL_OFF_GAP'?
      358 |                                                        DW_PCIE_XILINX_LL_OFF_GAP,
-         |                                                        ^
->> drivers/dma/dw-edma/dw-edma-pcie.c:359:14: error: use of undeclared identifier 'DW_PCIE_XILINX_LL_SIZE'
+         |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                                        DW_PCIE_XILINX_MDB_LL_OFF_GAP
+>> drivers/dma/dw-edma/dw-edma-pcie.c:359:56: error: 'DW_PCIE_XILINX_LL_SIZE' undeclared (first use in this function); did you mean 'DW_PCIE_XILINX_MDB_LL_SIZE'?
      359 |                                                        DW_PCIE_XILINX_LL_SIZE,
-         |                                                        ^
->> drivers/dma/dw-edma/dw-edma-pcie.c:360:14: error: use of undeclared identifier 'DW_PCIE_XILINX_DT_OFF_GAP'
+         |                                                        ^~~~~~~~~~~~~~~~~~~~~~
+         |                                                        DW_PCIE_XILINX_MDB_LL_SIZE
+>> drivers/dma/dw-edma/dw-edma-pcie.c:360:56: error: 'DW_PCIE_XILINX_DT_OFF_GAP' undeclared (first use in this function); did you mean 'DW_PCIE_XILINX_MDB_DT_OFF_GAP'?
      360 |                                                        DW_PCIE_XILINX_DT_OFF_GAP,
-         |                                                        ^
->> drivers/dma/dw-edma/dw-edma-pcie.c:361:14: error: use of undeclared identifier 'DW_PCIE_XILINX_DT_SIZE'
+         |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                                        DW_PCIE_XILINX_MDB_DT_OFF_GAP
+>> drivers/dma/dw-edma/dw-edma-pcie.c:361:56: error: 'DW_PCIE_XILINX_DT_SIZE' undeclared (first use in this function); did you mean 'DW_PCIE_XILINX_MDB_DT_SIZE'?
      361 |                                                        DW_PCIE_XILINX_DT_SIZE);
-         |                                                        ^
-   5 errors generated.
+         |                                                        ^~~~~~~~~~~~~~~~~~~~~~
+         |                                                        DW_PCIE_XILINX_MDB_DT_SIZE
 
 
-vim +/DW_PCIE_AMD_MDB_INVALID_ADDR +348 drivers/dma/dw-edma/dw-edma-pcie.c
+vim +348 drivers/dma/dw-edma/dw-edma-pcie.c
 
    309	
    310	static int dw_edma_pcie_probe(struct pci_dev *pdev,

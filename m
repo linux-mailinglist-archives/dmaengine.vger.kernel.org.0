@@ -1,193 +1,165 @@
-Return-Path: <dmaengine+bounces-8322-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8323-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59FEFD391B6
-	for <lists+dmaengine@lfdr.de>; Sun, 18 Jan 2026 00:39:40 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54112D394A4
+	for <lists+dmaengine@lfdr.de>; Sun, 18 Jan 2026 13:01:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id AA5303003877
-	for <lists+dmaengine@lfdr.de>; Sat, 17 Jan 2026 23:39:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0AE30300EE6D
+	for <lists+dmaengine@lfdr.de>; Sun, 18 Jan 2026 12:01:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74C432DCC1F;
-	Sat, 17 Jan 2026 23:39:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 588102F4A15;
+	Sun, 18 Jan 2026 12:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWWjZCoz"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="cTJURAmD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7521DB13A
-	for <dmaengine@vger.kernel.org>; Sat, 17 Jan 2026 23:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E711F241663;
+	Sun, 18 Jan 2026 12:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768693177; cv=none; b=NKhZhH8TA4k8768LJ+emiZByHJYcst9Aq3NgDAU+gpA61N6lh5JFcEv3D41mYbEDknKHqtF/AQsm93CY1jkBzhYEgmgvJfsXyQDRWQaQ4aKS786n1FF+/IbtufbZ8ad9JaWiJYvjg2vjd2zfz8jN7H63Vvohuga4v/fpESMKbhg=
+	t=1768737689; cv=none; b=dVOwPDRKFIVRAxzu8j8LRMUH8ntongr3vInAUXXtEU6sqpTVF04syzdoYTkiTpA2s6X27i2tqPwjUO3JM9P4YmoWGu53+oHWBktYmWH9oI7vTKBvOkANNMpjCCyWWHH73eKhUQUY+8nEZ+Z/3+fXljW6iTEGVfQdWbnZ445ZRXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768693177; c=relaxed/simple;
-	bh=uFxpvwi5WIS01iDWVBv9fzd7rIhy6Z+OnDWqhQCjr/0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=RRchK4grNwqhFznH9XC+lPcyriVE4A74ncgRZ7URaQyzP6lzR7Z/MIsr8DMbVpYaSe+UNGJ+KUo4f2hNkxzbNdWGdfG0YNW7VIgATEn4j3GEF9bPx+Qq95c+SCBWtNr6oWqjufVlg7tevJplf4BNhVNLFDYee21L38Mpz+h1xiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iWWjZCoz; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2a09d981507so23077235ad.1
-        for <dmaengine@vger.kernel.org>; Sat, 17 Jan 2026 15:39:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768693175; x=1769297975; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zzuKtZVwPzoPi8a8zv97UqWKB+hwHmdg0yPtGr8XvwQ=;
-        b=iWWjZCozieQOw06u5sVMoUYlc9LOhm4gsyw9ZvqgIl2a9HPpvuu7W4u3o72fpc7CPg
-         o6elZxE+iilTtG5CIlmE6vrJzO7g5QAI/Sco7LU+UILmaWvHkJTTrw4VC1p5eYLIxITI
-         IzLz/vveeP/tv30P6G1I4dBJkKAWIvquX5ddyCdbGj++E1s26x3D5h1N7uDe74ip3MVE
-         hYKeOW+4TCz0V6oy+vnd4pp59VF0Ctg49FmporBvqPhAsPqunzy+JterlCUXahspdNby
-         NENFO5jYqA3z/SyRHX7QIRw6ZSZG25PGuyL+6Ys4ZBiOXrnvxfGD9nNcv8EUvAJ6SuPx
-         H2Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768693175; x=1769297975;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zzuKtZVwPzoPi8a8zv97UqWKB+hwHmdg0yPtGr8XvwQ=;
-        b=sZPAfFGXSt7cJ6751Awu38VOaNcqZiYfXYELesyctQYqIYBVmyi1NKNZXJgq1PQViL
-         geSIN+OaJunVnH5pQ31QTbzie+VCdAgvXcjAPYXqoA4z10rjUbqIjuzwN5hiz6LL2UY8
-         HB8OvHojH70DIvU5M7mNjMUzH9P40MfN3B7eXwXUX9oRwEBQNdROLYB8WP5Sm5fPjRTQ
-         clbiI3ThaZYizTITDQ869SQNZLyvCQvORnvi8Q+fcdwTNETDjOiIRNbxc1+YasvMd5P+
-         EYo+qP8RxtUi55LZk9eM/0ABGZX0uJvqmxaIU6xD5ub5nP9+gRbbHU32htssoSBh6kvD
-         V0Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCX4LxSX/wswHB8R3SedQ/gnK004SBd61EqbQ0BYc2k8LK6k0WPTLzvt+v/I+93wd47WmbcK5pogXrQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLBRuK2L1jRr16+dEiNAB41PjmCvt40rMV3XwY6Y9BW26YmxxU
-	DCRgxQmDpZzBWAujb4ORtP/j5cHJw6uG3j0zm2BqYi6N53x64MQuebang1x3JYJk
-X-Gm-Gg: AY/fxX4w39YeIQNxjVxZkAYG8TmehibRMEbSq5sWcffx0qd40XfnVh0TWuh6+VqkGBb
-	rmPLpK4md2eUThyL80BPwe8fTgQ9ItOTGweYy8iJTSbv7sDonk+GpbLrqaIZJW+YzGgTQQAbbFF
-	IWdkqC85j1RYblp5QBJtLt0bjIU3ofcpg9Io5JMJxyk3dED5aJlfDG6gnjaiDgljP7zpLQbw3DN
-	HP24B+43F4z0jEZXt2Ti/85VzLBZ+tBbTcFb+11Y70RaQqWSulbu97ccLSQMSZoqzbv6R3VwvJJ
-	OzxMrugmYA9tCw8c16BLaTkTrbrC428iGlPZOn9VyEQb0WMpZ5buIha6cV9GETWz3clryYk7iBC
-	D+QwWcv/P+UwEmcJOado9CvY2le8kBGAs/Fxcb8/MwOx4ld4U7Ya+zHSe2C4AdNEBC13IIpjtML
-	2JP0BJo++eIQdrwLmZczD40mPEWqwKMap85/E=
-X-Received: by 2002:a17:903:244d:b0:2a0:971b:151 with SMTP id d9443c01a7336-2a71754641cmr79563415ad.2.1768693175379;
-        Sat, 17 Jan 2026 15:39:35 -0800 (PST)
-Received: from localhost.localdomain ([60.51.11.72])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-81fa1291facsm5299460b3a.57.2026.01.17.15.39.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Jan 2026 15:39:34 -0800 (PST)
-From: Khairul Anuar Romli <karom.9560@gmail.com>
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Khairul Anuar Romli <karom.9560@gmail.com>
-Subject: [PATCH v2] dmaengine: dw-axi-dmac: fix alignment, blank line and non-useful return warning
-Date: Sun, 18 Jan 2026 07:39:30 +0800
-Message-ID: <20260117233930.9665-1-karom.9560@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1768737689; c=relaxed/simple;
+	bh=wnB+uBwOjBGFlGsWs9fIGAbWdtqLerHxQ6Q3N/KcRFI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=o+Q8Ded90z12OhRn0UxRKJYZ1Xo1xQ5zh80NweQPIBcK0NBx8ES9QtqMpteZ9ZM6HsCb14Eb41h6Zf+j9fMItYM4mGnooDZFmB+H83jyvTu0aeX+79p2ajIZEz2ugSnzfavm0IGxcIrU1B7lLCdg8Ml/3MbRdMDAhzAR2GouLc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=cTJURAmD; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1768737664; x=1769342464; i=markus.elfring@web.de;
+	bh=0jdkaNY+/IRIq6f+DMBcA6hUDN8D2qN7jOeCgydmI0I=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=cTJURAmDZK6Z+0eo09Pvg8v/yx6M4zffHUPb1ATLmoQsweo4Bffj9qzW9CZoiYNV
+	 UpmrzM698F/pixarvIq8RYl8z7oPqomKDoxWqskfUVE6YNxPFH3vSJQTUMNT/KoPa
+	 IVa7/qmnaQWhIwhtsakqZNzwfRNydjq5xrACAIvWNA9k8ESBz3CyGB998YxuCa6rQ
+	 91Huu/ZTPMNDYORpJFMiJbYQMKV1OJHMNIuM5ZgZIKEyNl8M7b7KxCZAjY9P52cZ2
+	 5H6UVfUCRLz2RRTsSf1sFmwAgcjzfdEOZTf5nXeRwqm55fVPacMe24KMT06+Qly4n
+	 +/MkUDheQJTn+12Bhw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.1]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N0qv3-1w2QhJ1n8f-00u3xD; Sun, 18
+ Jan 2026 13:01:04 +0100
+Message-ID: <294276a3-a633-48c1-86cc-4c15ce43d96c@web.de>
+Date: Sun, 18 Jan 2026 13:00:15 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: Khairul Anuar Romli <karom.9560@gmail.com>, dmaengine@vger.kernel.org,
+ Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20260117233930.9665-1-karom.9560@gmail.com>
+Subject: Re: [PATCH v2] dmaengine: dw-axi-dmac: fix alignment, blank line and
+ non-useful return warning
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20260117233930.9665-1-karom.9560@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:tin5mmwglPesBaioI3G+uYNdaJJqZ8zRdIqibRHb+l4vR/FZpos
+ NRBgZZYakRuSig6bB4PpDqGMzru+LvEQ89eTuZO7UlK43+wnAJLVJiNLjIkcrPaX4iXee7X
+ g5XOnrqwXjpHOjh1BBhEV3ly5iIf8WLjf9T2qzPRDynP8Bjr/xAerU57WK40N3/qfBo1qW7
+ FHwVEF4RpBWtiKe85PUlg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:rah2NHWCr5o=;kEuUGIv7yyd0kT4Pxx27WQ7Mg9z
+ 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
+ QqzPmcgw=
 
-Fix the scripts/checkpatch.pl warning in
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:345
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:356
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:422
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:494
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:597
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:1167
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:1456
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:1650
+> Fix the scripts/checkpatch.pl warning in
+=E2=80=A6
+> ---
+> Changes in v2:
+=E2=80=A6
+> 	- refactor the commit title
+=E2=80=A6
 
-Signed-off-by: Khairul Anuar Romli <karom.9560@gmail.com>
----
-Changes in v2:
-	- rebase on top of 3c8a86ed002a "dmaengine: xilinx: xdma: use
-	  sg_nents_for_dma() helper"
-	- refactor the commit title
+I would prefer a stricter separation of proposed adjustments.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.19-rc5#n81
 
-Reference to v1:
-https://lore.kernel.org/all/20260104093529.40913-1-karom.9560@gmail.com/
----
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+Would another small patch series be a bit safer here?
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 493c2a32b0fe..c124ac6c8df6 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -342,8 +342,8 @@ static void axi_desc_put(struct axi_dma_desc *desc)
- 	kfree(desc);
- 	atomic_sub(descs_put, &chan->descs_allocated);
- 	dev_vdbg(chan2dev(chan), "%s: %d descs put, %d still allocated\n",
--		axi_chan_name(chan), descs_put,
--		atomic_read(&chan->descs_allocated));
-+		 axi_chan_name(chan), descs_put,
-+		 atomic_read(&chan->descs_allocated));
- }
- 
- static void vchan_desc_put(struct virt_dma_desc *vdesc)
-@@ -353,7 +353,7 @@ static void vchan_desc_put(struct virt_dma_desc *vdesc)
- 
- static enum dma_status
- dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
--		  struct dma_tx_state *txstate)
-+		   struct dma_tx_state *txstate)
- {
- 	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
- 	struct virt_dma_desc *vdesc;
-@@ -419,6 +419,7 @@ static void dw_axi_dma_set_byte_halfword(struct axi_dma_chan *chan, bool set)
- 
- 	iowrite32(val, chan->chip->apb_regs + offset);
- }
-+
- /* Called in chan locked context */
- static void axi_chan_block_xfer_start(struct axi_dma_chan *chan,
- 				      struct axi_dma_desc *first)
-@@ -491,7 +492,7 @@ static void axi_chan_start_first_queued(struct axi_dma_chan *chan)
- 
- 	desc = vd_to_axi_desc(vd);
- 	dev_vdbg(chan2dev(chan), "%s: started %u\n", axi_chan_name(chan),
--		vd->tx.cookie);
-+		 vd->tx.cookie);
- 	axi_chan_block_xfer_start(chan, desc);
- }
- 
-@@ -592,8 +593,6 @@ static void dw_axi_dma_set_hw_channel(struct axi_dma_chan *chan, bool set)
- 			(chan->id * DMA_APB_HS_SEL_BIT_SIZE));
- 	reg_value |= (val << (chan->id * DMA_APB_HS_SEL_BIT_SIZE));
- 	lo_hi_writeq(reg_value, chip->apb_regs + DMAC_APB_HW_HS_SEL_0);
--
--	return;
- }
- 
- /*
-@@ -1162,7 +1161,7 @@ static irqreturn_t dw_axi_dma_interrupt(int irq, void *dev_id)
- 		axi_chan_irq_clear(chan, status);
- 
- 		dev_vdbg(chip->dev, "%s %u IRQ status: 0x%08x\n",
--			axi_chan_name(chan), i, status);
-+			 axi_chan_name(chan), i, status);
- 
- 		if (status & DWAXIDMAC_IRQ_ALL_ERR)
- 			axi_chan_handle_err(chan, status);
-@@ -1451,7 +1450,7 @@ static int axi_req_irqs(struct platform_device *pdev, struct axi_dma_chip *chip)
- 		if (chip->irq[i] < 0)
- 			return chip->irq[i];
- 		ret = devm_request_irq(chip->dev, chip->irq[i], dw_axi_dma_interrupt,
--				IRQF_SHARED, KBUILD_MODNAME, chip);
-+				       IRQF_SHARED, KBUILD_MODNAME, chip);
- 		if (ret < 0)
- 			return ret;
- 	}
-@@ -1645,7 +1644,7 @@ static void dw_remove(struct platform_device *pdev)
- 	of_dma_controller_free(chip->dev->of_node);
- 
- 	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
--			vc.chan.device_node) {
-+				 vc.chan.device_node) {
- 		list_del(&chan->vc.chan.device_node);
- 		tasklet_kill(&chan->vc.task);
- 	}
--- 
-2.43.0
-
+Regards,
+Markus
 

@@ -1,83 +1,83 @@
-Return-Path: <dmaengine+bounces-8399-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8400-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yPJFBLhAcGnXXAAAu9opvQ
-	(envelope-from <dmaengine+bounces-8399-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Jan 2026 03:58:00 +0100
+	id 0HvTJlUEcGmUUgAAu9opvQ
+	(envelope-from <dmaengine+bounces-8400-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 23:40:21 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 440BC501E5
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Jan 2026 03:57:59 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 197C34D1C5
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 23:40:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6EFEA5E45AE
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 13:35:23 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AE2615E4BC6
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 13:35:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76176438FEF;
-	Tue, 20 Jan 2026 13:33:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04E8C439010;
+	Tue, 20 Jan 2026 13:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="J8Y9GtX2"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="V02zpTjo"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363DF42E001
-	for <dmaengine@vger.kernel.org>; Tue, 20 Jan 2026 13:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7226438FE7
+	for <dmaengine@vger.kernel.org>; Tue, 20 Jan 2026 13:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768916028; cv=none; b=cP/rzFKsWJ/kTOZGE31Uiwn3hVQtWpAbMvTirsP0UxkQzcywtveSaFzygbAV/5K4LhDWDeuOgZHIClj6KV3liWJTtSLCfFC3aJN8FTqSKXQhz7efYkZOdD8CfcWILD0w+PCAZ/i2SvfpObTVtJX5+TioZSmllEH8928PtY+JPec=
+	t=1768916029; cv=none; b=leYHM288PEOwJEKqAl6Psd/17jGmseDoWX6c7jOMUzZVOQqYt0HzZpKhzSk/kxYDrXxt03WQ8fNzRTCW+0NdLZc0uOB/5r9+f3WKTaaQJsxBo0tM7vW06DuR4KSGJ2RqXV7wgt7tAh2kUA8sjkg9W9wBj10ip5Ps4EfMUUY9ifA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768916028; c=relaxed/simple;
-	bh=W0PMYWluR4s+4ZGBLZytPjvzufu5cGFxS/9iOr9nc0Q=;
+	s=arc-20240116; t=1768916029; c=relaxed/simple;
+	bh=5mM2uTcjaYXheBt0FIVFSFgIssygZdhyDFfDja25cB0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NLeX+sUrDz3GFhWR2vvKUHMpqxMjQjcjWZPX/bO5RG0aRG+uJ1a8FxPEbuAWnGHhMHGu6KITbav7/YTR3hDZw/KB+fbXaxNV7PhnNwx3GTuMmJQyY49t8vZ2XEEq0//RsZrmwDKbsELSuAvzvH+Zdz/+zR98UIwoQvYNRzrCRe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=J8Y9GtX2; arc=none smtp.client-ip=209.85.221.42
+	 MIME-Version; b=A/b+JoeUKhVxxWAP8HBlJYPWRaClRn6rcdXsMpd+YruGUdDkVVnZNf7zZuWRXfdoapJP3MpHs/P+nAWegeNSQHGBYvaBJyq3GN8wq16J74v5K9mWYIIEAwMtFxMmcRSF4o805Ur0JcxQ82xUHBMzSz3R8b0I4PfPSoDBzg3lqw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=V02zpTjo; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-42fb0fc5aa9so3083905f8f.1
-        for <dmaengine@vger.kernel.org>; Tue, 20 Jan 2026 05:33:45 -0800 (PST)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-47f5c2283b6so35474175e9.1
+        for <dmaengine@vger.kernel.org>; Tue, 20 Jan 2026 05:33:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1768916024; x=1769520824; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1768916026; x=1769520826; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VcUa3wgqVKrSdjpDcbTNWk0MXPErhZe+CUK2K28sdgM=;
-        b=J8Y9GtX2BE1NxQK534ARSIktMOL6MgBuXAGg2HpKQin8UppVy6PtHukzsYoDM4JoA+
-         mHeRgz39cbDqocs5G3cDEAISYey62BKFqn4hE+4eXqo4IxJ8hThWubmSHHyWTMdl4TWT
-         Kl3uFdsjIl97bHBmT2emmbgvhxUbDZGApZq5zzUpsWX/3G1IslNDNR8cHHeBwKqHfSiq
-         nbyskSud+QGdQPNRBjG96hWA50pcedxsV/2xHNnkGBY/hXDTpEUT7YZaJYUi+RdaU1ay
-         OcXRnvTct1/dJHDc/ep/Zdb4KqEQ6ge8QQOgPy7cedOtj//YQITiIqk933G6RjkHTV11
-         nJKQ==
+        bh=GCRWv8BoukUYariTfudysMyZzqcHq5px1XRxiaHfVGI=;
+        b=V02zpTjoMYI5fv4nhphhgeiGxy9WYLfJzrTjT8xmmn0m1LWGJ33PhQdFFGPG2Pm0Be
+         6ezJAJbtQ3f3GmqMNZAoM+CI2ML3lffm6X5MGtP8phyAhigmOX2p0lVyEDJhwUS0bgfL
+         armNaa0kCt9BbLgWV1rkY7blGqafr9CWthSGVIfY1FMiIhvgU5xzoDLc5YAgfw3VFXlS
+         TmuQdEMlN6WC2eIIzcDuq0mx4s8P7vYlDcgkPkglJ5Q4t+a1l5lfB8xSp2NYy0r9MNJy
+         CJiKkNCAUWi8wxaxNJugbKnFPPaKGpmzScpOZTv15mZiFPtBuIY+cZGwWzzkayHb+AyV
+         KT1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768916024; x=1769520824;
+        d=1e100.net; s=20230601; t=1768916026; x=1769520826;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=VcUa3wgqVKrSdjpDcbTNWk0MXPErhZe+CUK2K28sdgM=;
-        b=pLnYlgbE01UYT6H5DqDlL6hFBFHWUDs6oRH3OPy50rQY00Ox6QfjSjYlMPbxALNSff
-         cCasFumUMMZG95AMnK41n3TGti42pza704mHvgfng5mvzurnIm04ItClDvv3UgtkmMfc
-         kYSDyKpTvCqXbSPHY1Js2SbHqHMhob1ves5yxbc3pr/kF0d/44UQCXa1QggI6ms45Ycc
-         50K9GkdQsTpr05wgs41akbV3CyAiW5yrufytCQJkI5aEe/9uyPn8j9C/WwMy7fEVHTpe
-         enFwronkf4oVgt5Oj4x67rNx+QRnilppjrfuLPxVLoSTVY6Y0RZCXK+mhaUWkIRJi53V
-         31NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/664vlQslNRFfJBEPMTTIrDx4objF75axDrFnBQeAgmzQ+pX+2cJ99Zle3ZTIq4BtVAipBKTCaxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF7eDZiK2CiNIX4kZZNN/hEZkUCRXOGj0h9c4EeTQmulV1S9Nk
-	rQUEEEHDFnKN5c0V3oe7XrG+kW+SUehGK2cwdb3qd0iD3Pi8sKRkuQiuIEEavwYr0zE=
-X-Gm-Gg: AZuq6aJYh6ofwTINpwWvjl8mk86dzxOc17gaWEVKhanGzyS95Sghhxt2V6KwO7UBlln
-	u/6qM8+Lz8432fLNF8r9zI7gSo87kLlkGj9faSNyndsdW8FLB+zkt+bK6ZJOirs3J+0GxoDvEJ1
-	6wiPDKapQFdeyFwP2HwJn+b6AnwVMpgNMMyiYq30h4gSQOHgFFz5zL/GGN6a5Df93wtXEeIrh6F
-	X9L2I6BvFM6zvdY1eIDk0TmYCcnmRMD/EJfIbWd+/qZYrGtXtsTEDEbLiMzc/KH2+NuGohUEPk5
-	05QfY/RBJ15UH8xlifSttA7EyLOPMChFssKWV3KETXfAXpL7MAwrI3EBGnhWI7jyPRs3Kt6BwvI
-	u0eetfUDHYlbIyqhvM8g2ICEdxmfgzf6L1w5DE3lDQO063LuZQbPMW7AUyiEAEabj9AknWNPtC3
-	eEi+v3leu2kNRj+s1ypSl5BZNxP9Ihe6JxAowY/zo=
-X-Received: by 2002:adf:f983:0:b0:435:6c8d:d017 with SMTP id ffacd0b85a97d-4356c8dd0d7mr16960338f8f.32.1768916024434;
-        Tue, 20 Jan 2026 05:33:44 -0800 (PST)
+        bh=GCRWv8BoukUYariTfudysMyZzqcHq5px1XRxiaHfVGI=;
+        b=lAdokTTtHvpr2oPO+rLXARkSoZOIjum3J5OS+boHY2cmzmVGcwPq+JJl6ukmNmUKwB
+         eqkx0UIGX1xLcfk//qZuyHa11tM4PBS3o6LCvVMl4op3kRzQ6fjJmN5xwlTiudQlqWxH
+         fPgb1mYZ2MexeMVp/JKmf/x3yA1ow6NQVLJ9GAKEPu0HaNsZmXr/jewWhCIcwhb/pk60
+         CMBdsyaUJfDL3ZjDv+HZT0QND+8WtXd7/Fpw3pLXEmDlv3fqmr+uU/2LYW/73VjsOvCN
+         0SvlsSocuqb06/ckdPHKnq0qndckQZjuiaJvQbcStIro4AB2CJ6zA1ur+ZZY2f9U36aw
+         XLCw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsZbfvyGeiP3uUNy1YhiKGl0aPFzouELU9dgT3F2+cxBFhCVrfLLuUnsJlyrR4mM4+p5EtHgNLNH8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3K4AsUJtdOSbE3IRfvKDFOpa5vpINGId+AeE31HxbDSwubBTJ
+	we9I2fCyrlBoOm5+nf4ni+kmwyaBL4kZwxbD3YUNqXhNm3KP5nNgx9zD//LYjXKdcTE=
+X-Gm-Gg: AY/fxX5oDO4NtWyKEs5xuxf8ViEb0azNmqBFZCF5PUhcuNuGqUkhhP8U/gY/sKxjx7Z
+	yGdGWMo3ouOeiidwg0N3BSCz3bg1jG6pGw22RpQBCu8pCeb7wAKSZM9mMY/esQE5EaAOiKHmzBE
+	i1Ui2z+oyr5RFxTHd5lwiqlyh1gS7auJ4XrmXIzb96l1/v897aFLe3HavXcGYq5dC8pm0GNQ1Gg
+	+dfGowoa5XNA905iMmeyZXbdfwxUmoLNZylKNGpByMuDDysKJg5FiFvm7J5QGxtinB/ATATH4FR
+	stw0jAr0BWO18wYU3S8m6pAELJ903kcDg1TNTYBTjQoyC143aNSUeerjTDv5vG+fApoF+vcvDt8
+	r9VUQu6J2kme7b1k8gp7+rokI8S/vipT7l4NVqHLDG7ui7B5zlywRVCwF20+ClJyUmNZ2diuU73
+	eVQ1wjlpUaiW5jRjpnqo/MfQQbIg9SS9dClgCAT/Q=
+X-Received: by 2002:a05:600c:4f8a:b0:480:3c28:838 with SMTP id 5b1f17b1804b1-4803e78ffbemr25694855e9.8.1768916025719;
+        Tue, 20 Jan 2026 05:33:45 -0800 (PST)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.31])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356996dad0sm29331439f8f.27.2026.01.20.05.33.43
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356996dad0sm29331439f8f.27.2026.01.20.05.33.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 05:33:43 -0800 (PST)
+        Tue, 20 Jan 2026 05:33:45 -0800 (PST)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: vkoul@kernel.org,
@@ -89,9 +89,9 @@ Cc: claudiu.beznea@tuxon.dev,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v8 3/8] dmaengine: sh: rz-dmac: Drop read of CHCTRL register
-Date: Tue, 20 Jan 2026 15:33:25 +0200
-Message-ID: <20260120133330.3738850-4-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v8 4/8] dmaengine: sh: rz-dmac: Drop goto instruction and label
+Date: Tue, 20 Jan 2026 15:33:26 +0200
+Message-ID: <20260120133330.3738850-5-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260120133330.3738850-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20260120133330.3738850-1-claudiu.beznea.uj@bp.renesas.com>
@@ -110,7 +110,7 @@ X-Spamd-Result: default: False [0.54 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8399-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8400-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	DMARC_NA(0.00)[tuxon.dev];
 	PRECEDENCE_BULK(0.00)[];
@@ -118,7 +118,7 @@ X-Spamd-Result: default: False [0.54 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[tuxon.dev:+];
-	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
 	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@tuxon.dev,dmaengine@vger.kernel.org];
 	RCVD_COUNT_FIVE(0.00)[5];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
@@ -127,39 +127,16 @@ X-Spamd-Result: default: False [0.54 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,renesas];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,tuxon.dev:dkim,renesas.com:email]
-X-Rspamd-Queue-Id: 440BC501E5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:email,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,bp.renesas.com:mid]
+X-Rspamd-Queue-Id: 197C34D1C5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-The CHCTRL register has 11 bits that can be updated by software. The
-documentation for all these bits states the following:
-- A read operation results in 0 being read
-- Writing zero does not affect the operation
+There is no need to jump to the done label just to return.
+Return immediately.
 
-All bits in the CHCTRL register accessible by software are set and clear
-bits.
-
-The documentation for the CLREND bit of CHCTRL states:
-Setting this bit to 1 can clear the END bit of the CHSTAT_n/nS register.
-Also, the DMA transfer end interrupt is cleared. An attempt to read this
-bit results in 0 being read.
-1: Clears the END bit.
-0: Does not affect the operation.
-
-Since writing zero to any bit in this register does not affect controller
-operation and reads always return zero, there is no need to perform
-read-modify-write accesses to set the CLREND bit. Drop the read of the
-CHCTRL register.
-
-Also, since setting the CLREND bit does not interact with other
-functionalities exposed through this register and only clears the END
-interrupt, there is no need to lock around this operation. Add a comment
-to document this.
-
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
 
@@ -167,41 +144,36 @@ Changes in v8:
 - none
 
 Changes in v7:
-- collected tags
+- none
 
 Changes in v6:
 - none, this patch is new
 
- drivers/dma/sh/rz-dmac.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/dma/sh/rz-dmac.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index c0f1e77996bd..bb9ca19cf784 100644
+index bb9ca19cf784..cc540b35dc29 100644
 --- a/drivers/dma/sh/rz-dmac.c
 +++ b/drivers/dma/sh/rz-dmac.c
-@@ -697,7 +697,7 @@ static void rz_dmac_irq_handle_channel(struct rz_dmac_chan *channel)
- {
- 	struct dma_chan *chan = &channel->vc.chan;
- 	struct rz_dmac *dmac = to_rz_dmac(chan->device);
--	u32 chstat, chctrl;
-+	u32 chstat;
+@@ -706,7 +706,7 @@ static void rz_dmac_irq_handle_channel(struct rz_dmac_chan *channel)
  
- 	chstat = rz_dmac_ch_readl(channel, CHSTAT, 1);
- 	if (chstat & CHSTAT_ER) {
-@@ -709,8 +709,11 @@ static void rz_dmac_irq_handle_channel(struct rz_dmac_chan *channel)
- 		goto done;
+ 		scoped_guard(spinlock_irqsave, &channel->vc.lock)
+ 			rz_dmac_ch_writel(channel, CHCTRL_DEFAULT, CHCTRL, 1);
+-		goto done;
++		return;
  	}
  
--	chctrl = rz_dmac_ch_readl(channel, CHCTRL, 1);
--	rz_dmac_ch_writel(channel, chctrl | CHCTRL_CLREND, CHCTRL, 1);
-+	/*
-+	 * No need to lock. This just clears the END interrupt. Writing
-+	 * zeros to CHCTRL is just ignored by HW.
-+	 */
-+	rz_dmac_ch_writel(channel, CHCTRL_CLREND, CHCTRL, 1);
- done:
- 	return;
+ 	/*
+@@ -714,8 +714,6 @@ static void rz_dmac_irq_handle_channel(struct rz_dmac_chan *channel)
+ 	 * zeros to CHCTRL is just ignored by HW.
+ 	 */
+ 	rz_dmac_ch_writel(channel, CHCTRL_CLREND, CHCTRL, 1);
+-done:
+-	return;
  }
+ 
+ static irqreturn_t rz_dmac_irq_handler(int irq, void *dev_id)
 -- 
 2.43.0
 

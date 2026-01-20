@@ -1,139 +1,248 @@
-Return-Path: <dmaengine+bounces-8390-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8391-lists+dmaengine=lfdr.de@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CD2ED3BDF0
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 04:29:13 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36CA2D3C42A
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 10:53:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BFFA04E4AE0
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 03:29:11 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 8A9405275CF
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 09:38:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2FAC1A238F;
-	Tue, 20 Jan 2026 03:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 327743D522B;
+	Tue, 20 Jan 2026 09:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YdISQSpx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ls33aKIc"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD6F32827A
-	for <dmaengine@vger.kernel.org>; Tue, 20 Jan 2026 03:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8E33D5223;
+	Tue, 20 Jan 2026 09:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768879748; cv=none; b=OJTbydB8TSjzRBgC/T7+m3cmqbdShfK5FzA0sjzgaRwlynoR+AquKzJIecvrykbCtSShyOJAsxVw2zbBdAegToDzrVssrEu5oM/rgxQfHqXvWgH9Qfby8mu5nRmwKgYJ6E0OlGqajoR9s6IUbmWQhPYdQK4RT6/f8xe/x8ibrQY=
+	t=1768901587; cv=none; b=rIjWSqQZcjrzwFdx3xly+zP+f8wC9sveOsptFitrNiO8S5hAA4u5wNffCoyZyOCpnP/wHcdLMs1C56sZhF05oEwyNiM8GF8wVdzt4N0j0oYvGlpWJypztBJBPXyGhp5EH2EynG4SLwi0YPutmF8NfP9qReEQae2/YzqkML/q6Bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768879748; c=relaxed/simple;
-	bh=TnrWvLiHpwdAR1oIsgz5dmEGTJ7Pw1ADVefNWrpsJwk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PLqdvTdbWvSb08vDmJK0SPe5DyQ0y34fW3X05QpmA9SPrnpuYy8wMArVyAYA44TLbmLDO9nrIc4evdYgec8Db/nUiwpFGA06yTdAe5RMFVSC+SckeF7zDZ94jc1WfuJukQNH9vQT6wciAx2u+VG+i94hQcrn2q1O/ZiLSeLVCBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YdISQSpx; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-89461ccc46eso4988756d6.2
-        for <dmaengine@vger.kernel.org>; Mon, 19 Jan 2026 19:29:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768879744; x=1769484544; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hlh3awqwpSDVfosrs2ZgXu5CLF0C481abnvSQYVV+dg=;
-        b=YdISQSpxC4Uvh1tbXH2Ra90LH90G1xjkZjHuxwNUbYNlZzzGU+eFvmloiepoxZJbIm
-         ga8MqGoErX4zn2tcC2N6V9gn06oip0jj9BdtDypPaLNdGCnPWVL/9Aczby0jEaUDnhJG
-         /eDbxQ9cmZ+YbkO5RGhcoVW0RR/eLMJAD08d1qHPncKrXbXRGin9JO/MlsLItCdDfmfw
-         urAyd/C4nn5Y0IIQYs0tUfqk41a6m2ApfqMsdaI/K02bqUyttWMl9kWAWqF0Moqffhjt
-         uW7glr4Y6EvmcXK9WB1SJfI8qMwcBej0nhxSC9xeQED786iUBoMeYWIbY+9IIJ96xu2V
-         zN9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768879744; x=1769484544;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hlh3awqwpSDVfosrs2ZgXu5CLF0C481abnvSQYVV+dg=;
-        b=cy/EUL6sYYee1Yd1GLFB1pLTDgCJUNl3tithK4v25kWEYV2AYKB9RgGEzWsr0XJLLH
-         MmmlVOkfpjniVqabfozOH6kKvWynYXQICiFMUhemOs5f8cOONzzNJ2ve9dP+pn/10eeV
-         vJ67Lx5Ir9OQFGrvrYyqG2sVQcfemq6i87/VDmZKxCaxktYY/HvlIKFuhnhQYnhmKKw5
-         5sFaJuldYu+XPTKs58NU7Lb8iUctD9RRvwyo0dUZST6+XSnYyyj6actVcURPgMNWj59k
-         9/jqG5O/xgX9gHdHi61KZd2Ikyvn4xqSN0X3nwE21uSRu4EJ6WlY0VldtCwQy1pcABZC
-         VNdA==
-X-Gm-Message-State: AOJu0Yz76fSPHQFgGBEB0NFaRnEvPm5Cw2HB4D3q3rxwZSlSlfOs1w2G
-	4trGGbOJra4IlpObpQjuyvO0TptVZ+SE2jNYGiNUTftsG0iUdFXG8aAmWTa7jZ7c
-X-Gm-Gg: AY/fxX5P1IKC7Y/UAQi9GCeZ86LoCGTcojJWnX4KGB254XycKd7HYlOav719TogybPX
-	6kk1UXrPSuGoCC8kCVlmlhzYxwmhEAc7NeAV2HwAFUPTuIJa9sC3ZbD8ovfDf/ajrs+R3eqfQS3
-	DAbEt9J6AR2c9+vDlEAc7ZEQ2Uto84/+qEt5CBZCh50bUTKaVe/VM3ZtxJrVo3ke+ATCR8LbD62
-	BZZ0f3URqP78DzBmgwRLiq6G5DD3axRIWk+fz3fFvXtp0SbyHOVjKGMlzre7xQYpYVpfpq9SXpc
-	LznscBWgyCHkc/Si+qejHFMcnNIUGIDmwSYGSwdQYeLau8XIATceQneoUgzHCGIsbNbPxn2ES6x
-	hZVV98BPTZlbKyVN5/AQqT46gy8VUNqKBAiHTRUHv+/w22HxNXJClEut/PvcNrtP1qpl6bH+DUr
-	5OB7wItUkklOK7gpGJaDpN
-X-Received: by 2002:a05:7300:6c89:b0:2ae:4f61:892e with SMTP id 5a478bee46e88-2b6b4eaddf6mr9178898eec.36.1768873045971;
-        Mon, 19 Jan 2026 17:37:25 -0800 (PST)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b6b36550dfsm15337344eec.25.2026.01.19.17.37.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 17:37:25 -0800 (PST)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Longbin Li <looong.bin@gmail.com>,
-	Ze Huang <huangze@whut.edu.cn>
-Cc: dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	Yixun Lan <dlan@gentoo.org>,
-	"Anton D. Stavinskii" <stavinsky@gmail.com>
-Subject: [PATCH v3 3/3] riscv: dts: sophgo: cv180x: Allow the DMA multiplexer to set channel number for DMA controller
-Date: Tue, 20 Jan 2026 09:37:05 +0800
-Message-ID: <20260120013706.436742-4-inochiama@gmail.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260120013706.436742-1-inochiama@gmail.com>
-References: <20260120013706.436742-1-inochiama@gmail.com>
+	s=arc-20240116; t=1768901587; c=relaxed/simple;
+	bh=qsJ+9HSE/FVfk7sc+DoEC7vqHjHmibKBwHR30pNYUes=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R4koG2JeaVAvlxOMC3HDovBriVxASZk3KnObh26y8TG/7knpHqdz16ChYMr//VLduiHQx0IxotGCZk4k0rDIFJJgwXQO/m5pVV/9xw42+6NZTXSvPJaDCMW2jgb0CsmvwACiWFm36sKg0ryxeENywRtWiVO4xv/dlj7iH6gq+YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ls33aKIc; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768901585; x=1800437585;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=qsJ+9HSE/FVfk7sc+DoEC7vqHjHmibKBwHR30pNYUes=;
+  b=Ls33aKIc66q1biKSVbeq7yBaHt0rRDloUyuFjPmaasJIculS4CnBF7zK
+   z/6cR+6FRYcT+fnorVAcUZh7VeRzqMhVAS4FK7wF3cm3JlLwC/dlQfE+D
+   9LkWRZ3DjNU7/rMMScho9GwDy4TQjDgo+32E2Q8fBd6GYrya0w/WLhr4r
+   Iv3PgHd03QfNWAeoP5vsDuD72dVClLafZxHulyNL9GnpPNSzWWTbix97S
+   3jGqtUnPtwtr+u+27J3oWEDDpDLE31Pc0jBbsjOcoABs2FOT+za7BZwK3
+   pS+xA1GrkRjQWMVaLDWJeMzo0UjeVRTSXkOg432pr79QJemGk3XCKMA3f
+   Q==;
+X-CSE-ConnectionGUID: 0xoB101/QSmo8ZFw+fH7NA==
+X-CSE-MsgGUID: YqocQeVEQqOCrf2Kfgv39w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="81214703"
+X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
+   d="scan'208";a="81214703"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 01:33:04 -0800
+X-CSE-ConnectionGUID: nSFDWnAmTJ2CkibDoXdUYg==
+X-CSE-MsgGUID: XL23t75OQrW6P15MHNJRhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
+   d="scan'208";a="205325840"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.179])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 01:33:03 -0800
+Date: Tue, 20 Jan 2026 11:33:00 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: correctmost <cmlists@sent.com>
+Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev,
+	vkoul@kernel.org, linux-i2c@vger.kernel.org,
+	mika.westerberg@linux.intel.com
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
+ when idma64 is present in initramfs
+Message-ID: <aW9LzBIOIePu59zV@smile.fi.intel.com>
+References: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
+ <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
+ <69f5dea3-17b0-4d3a-9de7-eb54f8f0f5cd@app.fastmail.com>
+ <aWoM3JibLSBdGHeH@smile.fi.intel.com>
+ <aWoUc_GJuZ8SuYCM@smile.fi.intel.com>
+ <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
+ <aW4J6bmHn2dLuOxo@smile.fi.intel.com>
+ <aW4MUisgI6d2Efbr@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aW4MUisgI6d2Efbr@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Change the DMA controller compatible to the sophgo,cv1800b-axi-dma,
-which supports setting DMA channel number in DMA phandle args.
+On Mon, Jan 19, 2026 at 12:49:59PM +0200, Andy Shevchenko wrote:
+> On Mon, Jan 19, 2026 at 12:39:41PM +0200, Andy Shevchenko wrote:
+> > On Fri, Jan 16, 2026 at 07:25:54PM -0500, correctmost wrote:
+> > > On Fri, Jan 16, 2026, at 5:35 AM, Andy Shevchenko wrote:
+> > > > On Fri, Jan 16, 2026 at 12:03:12PM +0200, Andy Shevchenko wrote:
+> > > >> On Thu, Jan 15, 2026 at 05:50:36PM -0500, correctmost wrote:
+> > > >> > On Mon, Jan 12, 2026, at 9:35 AM, Andy Shevchenko wrote:
+> > > >> > > On Tue, Dec 16, 2025 at 12:57:10PM -0500, correctmost wrote:
+> > > >> > >
+> > > >> > >> The following commit
+> > > >> > >
+> > > >> > > No, it's false positive. The reality is that something else is going on
+> > > >> > > there on this and other similar laptops.
+> > > >> > >
+> > > >> > >> causes my Lenovo IdeaPad touchpad not to work when
+> > > >> > >> kernel/drivers/dma/idma64.ko.zst is present in the initramfs image:
+> > > >> > >> 
+> > > >> > >> #regzbot introduced: 9140ce47872bfd89fca888c2f992faa51d20c2bc
+> > > >> > >> 
+> > > >> > >> "idma64: Don't try to serve interrupts when device is powered off"
+> > > >> > >
+> > > >> > > So, the touchpad is an I²C device, which is connected to an Intel SoC.
+> > > >> > > The I²C host controller is Synopsys DesignWare. On Intel SoCs the above
+> > > >> > > mentioned IP is generated with private DMA engine, that's called Intel
+> > > >> > > iDMA 64-bit. Basically it's two devices under a single PCI hood.
+> > > >> > > The problem here is that when PCI device is in D3, both devices are
+> > > >> > > powered off, but something sends an interrupt and it's not recognized
+> > > >> > > being the one, send by a device (touchpad).
+> > > >> > >
+> > > >> > > There is one of the following potential issues (or their combinations):
+> > > >> > >
+> > > >> > > - the I²C host controller hardware got off too early
+> > > >> > > - the line is shared with something else that generates interrupt storm
+> > > >> > > - the BIOS does weird (wrong) things at a boot time, like not properly
+> > > >> > >   shutting down and disabling interrupt sources; also may have wrong
+> > > >> > >   pin control settings
+> > > >> > > - the touchpad is operating on higher frequency like 400kHz (because
+> > > >> > >   BIOS told to use that one instead of 100kHz) than the HW is designed
+> > > >> > >   for and hence unreliable with all possible side effects
+> > > >> > > - the touchpad firmware behaves wrongly on some sequences (see also
+> > > >> > >   note about the bus speed above), try to upgrade touchpad FW
+> > > >> > >
+> > > >> > > With my experience with the case of the above mentioned commit that it
+> > > >> > > may be BIOS thingy. Also consider the bus speed, there are quirks in
+> > > >> > > the kernel for that.
+> > > >> > 
+> > > >> > Thank you for the detailed notes.  I will see if I can update my BIOS and
+> > > >> > experiment with different quirks values, though I won't be able to do that
+> > > >> > until late next week.
+> > > >> 
+> > > >> You're welcome!
+> > > >> 
+> > > >> > >> Here are the related logs:
+> > > >> > >> 
+> > > >> > >> ---
+> > > >> > >> 
+> > > >> > >> irq 27: nobody cared (try booting with the "irqpoll" option)
+> > > >> > >
+> > > >> > > Almost all below is not so interesting.
+> > > >> > >
+> > > >> > > ...
+> > > >> > >
+> > > >> > >> handlers:
+> > > >> > >> [<00000000104a7621>] idma64_irq [idma64]
+> > > >> > >> [<00000000bd8d08e9>] i2c_dw_isr
+> > > >> > >> Disabling IRQ #27
+> > > >> > >
+> > > >> > > Yes, this line at least shared between those two and might be more.
+> > > >> > >
+> > > >> > > ...
+> > > >> > >
+> > > >> > >> i2c_designware i2c_designware.0: controller timed out
+> > > >> > >> hid (null): reading report descriptor failed
+> > > >> > >> i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
+> > > >> > >> i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed with error -110
+> > > >> > >
+> > > >> > > Yes, sounds familiar with the speed settings. Try to down it to 100kHz in case
+> > > >> > > it's confirmed to be 400kHz.
+> > > >> > >
+> > > >> > >> ---
+> > > >> > >
+> > > >> > > Any pointers to that thread, please?
+> > > >> > 
+> > > >> > The following threads have users who were able to restore touchpad
+> > > >> > functionality by undoing the idma64 change in initramfs:
+> > > >> 
+> > > >> Yes, = "they have hidden the existing problem". No value in that, sorry.
+> > > >> What is the exact link that refer to the thread you previously mentioned?
+> > > >> 
+> > > >> ...
+> > > >> 
+> > > >> > Lastly, I saw another bug report that mentions the "probe with driver
+> > > >> > i2c_hid_acpi failed with error -110" error.  It seems to state that the error
+> > > >> > only occurs when a power cable is connected during boot:
+> > > >> > 
+> > > >> > - https://bugzilla.altlinux.org/57094
+> > > >> >   - Huawei Matebook D15 BOD-WXX9-PCB-B4
+> > > >> >   - i2c-GXTP7863:00
+> > > >> > 
+> > > >> > >> so I don't think this is a hardware issue with my individual laptop.
+> > > >> > >
+> > > >> > > I don't know how this conclusion is came here. You mean HW as laptop model?
+> > > >> > > But are the involved components the same (I²C host controller + touchpad)?
+> > > >> > 
+> > > >> > Sorry for the confusion.  I meant the individual machine in my possession and
+> > > >> > not the laptop model as a whole.
+> > > >> 
+> > > >> Yeah, something here is common and I can't say for sure this all about Synaptic
+> > > >> touchpads...
+> > > >
+> > > > So, what I think I need to understand this more is the following
+> > > > (all information should be gathered under root user) for working
+> > > > and non-working cases:
+> > > >
+> > > > - `cat /proc/interrupts`
+> > > > - `dmesg`
+> > > >    # with `initcall_debug ignore_loglevel` added to the kernel command line
+> > > > - `cat /sys/kernel/debug/pinctrl/.../pins`
+> > > >    # ... should be something like INTC1234:00
+> > > >
+> > > > And just once these:
+> > > > - `acpidump -o tables.dat` # the tables.dat file
+> > > > - `grep -H 15 /sys/bus/acpi/devices/*/status`
+> > > > - `lspci -nk -vv`
+> > > 
+> > > The tables.dat file and the dmesg logs seemed too big to post inline, so I
+> > > ended up zipping all of the files (attached).
+> > 
+> > Thanks for the files. The same suspicion as in the original report
+> > https://lore.kernel.org/all/e3f2debf-c762-48d9-876e-bcb60841f909@gmail.com/
+> > 
+> > Have you read it in full?
+> > 
+> > My understanding that the pin 3 on GPIO might be wrongly configured
+> > by BIOS.  The difference with the original case is that your GPIO device
+> > is locked against modifications and until you unlock it (usually
+> > it's done in BIOS in some debug menu) it may not be fixable without OEM
+> > fixing the issue themselves. In any case you can try the workaround
+> > (see https://lore.kernel.org/all/ZftTcSA5dn13eAmr@smile.fi.intel.com/).
+> > But I am skeptical about it.
+> 
+> Just in case, this https://hansdegoede.dreamwidth.org/25589.html might be
+> also useful.
 
-Fixes: 514951a81a5e ("riscv: dts: sophgo: cv18xx: add DMA controller")
-Reported-by: Anton D. Stavinskii <stavinsky@gmail.com>
-Closes: https://github.com/sophgo/linux/issues/9
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-Tested-by: Anton D. Stavinskii <stavinsky@gmail.com>
----
- arch/riscv/boot/dts/sophgo/cv180x.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+FWIW, seems familiar:
+https://bugzilla.kernel.org/show_bug.cgi?id=219799
 
-diff --git a/arch/riscv/boot/dts/sophgo/cv180x.dtsi b/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-index 1b2b1969a648..e1b515b46466 100644
---- a/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-+++ b/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-@@ -417,7 +417,7 @@ sdhci1: mmc@4320000 {
- 		};
- 
- 		dmac: dma-controller@4330000 {
--			compatible = "snps,axi-dma-1.01a";
-+			compatible = "sophgo,cv1800b-axi-dma";
- 			reg = <0x04330000 0x1000>;
- 			interrupts = <SOC_PERIPHERAL_IRQ(13) IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk CLK_SDMA_AXI>, <&clk CLK_SDMA_AXI>;
+Have you tried similar steps described there? (Id est turning PM off and
+see if it affects the case. In your case it might be needed to comment out
+the dev_pm_ops assignment in the LPSS driver drivers/mfd/intel-lpss*.c and
+recompile the kernel / modules).
+
 -- 
-2.52.0
+With Best Regards,
+Andy Shevchenko
+
 
 

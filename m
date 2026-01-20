@@ -1,100 +1,106 @@
-Return-Path: <dmaengine+bounces-8403-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8394-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YMnXJhmkb2n0DgAAu9opvQ
-	(envelope-from <dmaengine+bounces-8403-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 16:49:45 +0100
+	id cN4bMa/Db2lsMQAAu9opvQ
+	(envelope-from <dmaengine+bounces-8394-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 19:04:31 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 299F346B7B
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 16:49:45 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71FB6490C4
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 19:04:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 773098C0A47
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 13:36:49 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D9F1E6A75C7
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jan 2026 12:55:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F05843CECE;
-	Tue, 20 Jan 2026 13:33:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58C3F427A09;
+	Tue, 20 Jan 2026 12:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="LRkkn/5S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3jWciWk"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C4F43C056
-	for <dmaengine@vger.kernel.org>; Tue, 20 Jan 2026 13:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B34F4266A1
+	for <dmaengine@vger.kernel.org>; Tue, 20 Jan 2026 12:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768916034; cv=none; b=QWhU8YVrRvxc/X4FRD2iSUKmo9uJlciZ8I8frPcYy2zDYGS1Jl4CHjGutjpkdXLBd/LT0ut3CsxJl84qIp2BGx5sz8rGwORfqLg6YE28heSGBYjXd+1hZQb8gE88RtTPgRTR1fzGmBI3vLIc7z6Lvko6egQx11fWcX8ut6sI+ZQ=
+	t=1768913559; cv=none; b=ALytUGKrsiOe1ILXajurqgWmIfj8Fv7UliH8rCi2oqSFHybrSemRmuxlSgMkFeoggW/zM2i8l3nvzwCPPD2LaVzf3VWIOQeMBhEXksnbWvUwgL4FCWeR8TzPTXZmbvxFN7Q14L47xo3dYTdHuOzzwfOM1GtoMozSMlLToQauSag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768916034; c=relaxed/simple;
-	bh=o4M2IWsmqIIAFJgMEBDJzmV4HRAbRJRDwcspKwKckv8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=udYpOFwIv3BLbUT8fAtjR4RNRsorS/jgIglveMmOy7p+B53YLgMdtdPHcQBDPAePuvdyeqBM4k1ViQHy0ZINS9n7FVkCGU8F/qN/YXPs0Q0UwhWqUVgCok/7xGcXPs1UUHYgPT45D1pDY7b+5ID8wutfpvFlnDBtsUk+bSR+MAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=LRkkn/5S; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4801d21c411so18886725e9.3
-        for <dmaengine@vger.kernel.org>; Tue, 20 Jan 2026 05:33:51 -0800 (PST)
+	s=arc-20240116; t=1768913559; c=relaxed/simple;
+	bh=dLT4BztcJUHlJv2mbKW05XmD97+BUruAVhf1PrnKC0s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y5zDwx0ZJNlUa2PGP6Ol2x/KWBK9MPZuZsLg/XzDewLjZWFNRapB7uSUQ7gB09PBZec5rFMTQa42WY9Z77L/LcXK0T6GHQwkB50+TuSGqKv4mcQoF2DzGRbUAKclQgn21BqYxHbwO5tIZ7qnwbj+6y2r5jyOfk6nzxbuZ0v84NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c3jWciWk; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b8768225837so758161266b.2
+        for <dmaengine@vger.kernel.org>; Tue, 20 Jan 2026 04:52:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1768916029; x=1769520829; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qf5FXhcean7d3UoIj1n4atOkrjx5heNNBTiKucMvKis=;
-        b=LRkkn/5SUHp9VcMiHYOxOlbhMdOQ3ogbp6qkc/PM2vdW6Efehmg6xyP2T7MNPQwOGa
-         KcBJllZV1tUVfHkJhA+vRt03TjWRu3UlVKUNj1BdVy8g2zFx7ddwHbt9+yRUVoty4uuH
-         pDbIP7QIW2+wZJjS/nyB54I+P+BzEmD5bTEf9jm8y81jvvrC5fPFkiO8OUjNUNi+HJ1j
-         fQ0uBIgyYbMhleCjFh8xvXzUv9Ohqvy7xEPRzBrpLMiotiVDDq6ZBBWlS7EHm7xYf1AO
-         1ieBw1mQQrvOesyzMrWZJrZxzmMaSpUpGcYzO6JWvWZzkfY+ud4WJ/gRCcBFMiCMdAY/
-         T6fA==
+        d=gmail.com; s=20230601; t=1768913556; x=1769518356; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ttQo/ynjtoD9vPtncN+5aFty4ApifbhAAoI8HwtRUw=;
+        b=c3jWciWkuZUsvfBQhPCwCkmAwn4UcWt4E0D9OSmWVlN6M/tyYN3Jw8yoe/CZQJc4W6
+         4CnmXCrhl2RhzXfsK8mQ1zI4eV1j0KnJh9ZxLYstNe2cHIKDVBQb+sCOQB7aKuxQZl+s
+         /kaD36AxieB5fVBP6RlAzaB4rx7oGu8YOUFM9j5WuUb37jSqYxFq+qSFfQY5oSuQvMPO
+         oCTDGsA3zeciiKOT9IXpFACDJLWgLwiTXt7fZsuMlqg+uxU25VFztDPGaxrcpEoXOz2p
+         8jwomSStQerQ1CSLunDVgX4hwT7IQ7imHz72vjlxF84U2jDKC7YYZOBJC9hFzEwDfsar
+         +fgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768916029; x=1769520829;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qf5FXhcean7d3UoIj1n4atOkrjx5heNNBTiKucMvKis=;
-        b=rWD9b4KJ/QhVIRQzrYSOEIz9mCVc5GzWOGF8yhGsxTPrMqxHzr0nHz5F91yDmS8Ioc
-         eImTdwu1snpA2Wacga/cnYEYoPyDZ7qH+kU8kLJ6O9m6DuQJK1k2eQGIoNVJxHMr8sq8
-         jtNEj0qSJO7Y0JGoCaAdU2LOtz0NmkFfu+cNWB6Bst+v51GrjUe71c4n9PzMdZw3mU+7
-         29TEBt9kFQ86FftVY29BDfH+MzD/LlfRSTntLQfAfp+doHiDmRgJT28LE4nEX9wCBeY+
-         q/FGI8wa+m16wUUib+aeIz4tKTFwrhyzJIyXnMiFsZQ8GzVxLYwNowiMA/U71itvB9c8
-         FNqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUkh9yyySx6fnGY10aBVI2A7LqNIWSoE81XoCuZz5RHJV02jDCfP6XwIhYf5XxKJW5hNS2Pe9BId8Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpnCTNXeCQFYPM0gujG7Nw/MeGlKML7HDrF+H5gLXAKqjZ+VKp
-	SvrYHWj6Oe3O0XzDtMe8Vp/rUJVNg7H6mYfVCK/LJx7LYkD1GeJhM2gzE3A1wRmX2aE=
-X-Gm-Gg: AY/fxX4Bab2Gp8njuLNaUqBta9LLWt5Ie4W1JgM7Is3cyybGgTgBKYQ2nnT2cdWaPmR
-	eT3ALp6+7iZPJMiL+ZuHNpcqOYMJRMapzWA2BJpUI6dqZbQwZj1PFIgjWc6yFmlkFPFLZvAgeWa
-	X3Sy+ilmu+DpwjPqsHU86k6Uxfhumj+puRTTx6KjYRvShbraGQVvOMzFU5ULr5XxS/rcRWOKJm8
-	2ypGtpeDIHeYVsfeBLMOPWRcTv+KiQjMRrVF6tZ8MEB3mDlHMi5ILFFVCem8fSErRn4yFquaMO0
-	sc3gHubKyNviYvWjcdAPdymUNljD0kWaom9+fhTZG+2Uf26204eFhrkNnmfeUe7Ox++yFCBnKbZ
-	bvmpV092mvMZbUhWuUKxUdzSdQlAdIj7B/E5nETGCtUtdOFN3jSQkIaYYBjilL94DGSsJNJ6hlq
-	mLzcaPqgmgmByO4M4cCxt19E1LwlvXCrAR0kNisCc=
-X-Received: by 2002:a05:600c:35d2:b0:47e:f481:24b7 with SMTP id 5b1f17b1804b1-4801e33a871mr246126415e9.17.1768916029549;
-        Tue, 20 Jan 2026 05:33:49 -0800 (PST)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.31])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4356996dad0sm29331439f8f.27.2026.01.20.05.33.48
+        d=1e100.net; s=20230601; t=1768913556; x=1769518356;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ttQo/ynjtoD9vPtncN+5aFty4ApifbhAAoI8HwtRUw=;
+        b=t1/nSsx5D2hIWmu85RoNOVglzM0XVCGWo4TUZ7euZFFbhZMhyMSikZQm3Wrza7DTX5
+         X2T6lfmKMri3QaZelyWsiZE79yGom4bhBzfYhxC0N6Px3LWOClvgqrDDhHHbV6zgSi51
+         k1BKCi28/6jAE6lfTU6DqTu82PmtwYBE1cLTxiJVpic+BRpfiUjbAgAw5f7G41Sprc+b
+         lyLtPnrYhhA0cbMcgki2UEWebib2QWwvANwCd+l7mJw/ZTgm5nMeINLTR//QUIZTBTo8
+         F1EcCjY9BtxRU08ci1Bim8q5zrAWQJLO6byskybpfGHoFKxcHcXcEMc1mY3AcMI46584
+         hWJA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRnB3f6R7OrKySskFLUFRAzzvByBxzF2Ysix3B7oVPENb8oXjDDz3nQBQgTwmHQLnaoIVGh5Cl5EI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyRmY2olJ49jxurmmbTjvbLdTYdtzG/JSTSxr+VJ8mMc5JH3VV
+	pzrAhUR4gK6cTMWxL97oVIAhygH3EmQZdqx7bB/6mMh/VjtU0SRlv2l4
+X-Gm-Gg: AY/fxX7XSgyzGfzwIbnPyyOR8gZa6xCSY1WFzcKfYKmBdz4oJNKuRlpXGowDjvYMA68
+	Dhcu01/FqsdLJj/CWY9OXrUZayFwlywgrjdgRfOQkZXZl+4b2OJ5VbRJEIO8vLwt0mhzy9pBcm0
+	mSekyRfvIcURfs0P0IMe8Kcs7HuR5yFcyPTY4lZgavd/diqw0qj+AArDpAu/CuA4ZVBYOK30zHT
+	ZVh8HM8fqRJ7DIF892MeTxv5R5Fxogb/GmO5pQcb0MeD5NZMfI9dm+Grt8gB3blvCTkqJ6fW4lZ
+	KFl1LHoOPL/iEF9Rt4FtmNjtK5w4RuvFz5FUptOOD3iuJIg/W9pnkjgPIx6ooArzYA/tLmyCbYH
+	tQWx7t/wXJWdZ0oYEBKv+66nHAr2vbE4FRe+t8rXgD9X/BnywmMyC69VYMat8J4KiiwGVclXDNn
+	abTplDx02M8/LWqmeqhT6OUgTCEkVp3cu/1cNGuC2wwUyMhg==
+X-Received: by 2002:a17:906:209c:b0:b87:d255:39ff with SMTP id a640c23a62f3a-b87d2553c76mr452807266b.32.1768913555294;
+        Tue, 20 Jan 2026 04:52:35 -0800 (PST)
+Received: from localhost.localdomain ([2a00:23c4:a758:8a01:c8c7:2ef6:8ac5:5556])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b87959ca32esm1420626066b.41.2026.01.20.04.52.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 05:33:49 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: vkoul@kernel.org,
-	geert+renesas@glider.be,
-	biju.das.jz@bp.renesas.com,
-	fabrizio.castro.jz@renesas.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com
-Cc: claudiu.beznea@tuxon.dev,
-	dmaengine@vger.kernel.org,
+        Tue, 20 Jan 2026 04:52:35 -0800 (PST)
+From: Biju <biju.das.au@gmail.com>
+X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
 	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v8 7/8] dmaengine: sh: rz-dmac: Add device_tx_status() callback
-Date: Tue, 20 Jan 2026 15:33:29 +0200
-Message-ID: <20260120133330.3738850-8-claudiu.beznea.uj@bp.renesas.com>
+	linux-serial@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Biju Das <biju.das.au@gmail.com>
+Subject: [PATCH 00/12] Add support for Renesas RZ/G3L SoC and SMARC-EVK platform
+Date: Tue, 20 Jan 2026 12:52:11 +0000
+Message-ID: <20260120125232.349708-1-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260120133330.3738850-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20260120133330.3738850-1-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -102,268 +108,196 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.54 / 15.00];
+X-Spamd-Result: default: False [0.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[tuxon.dev:s=google];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8403-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[tuxon.dev];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-8394-lists,dmaengine=lfdr.de];
+	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,baylibre.com,glider.be,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[tuxon.dev:+];
-	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
-	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@tuxon.dev,dmaengine@vger.kernel.org];
-	RCVD_COUNT_FIVE(0.00)[5];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[bp.renesas.com,vger.kernel.org,gmail.com];
+	DMARC_POLICY_ALLOW(0.00)[gmail.com,none];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tuxon.dev:dkim,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,renesas.com:email]
-X-Rspamd-Queue-Id: 299F346B7B
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[bijudasau@gmail.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	TAGGED_RCPT(0.00)[dmaengine,dt,renesas];
+	RCVD_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,renesas.com:email,bp.renesas.com:mid]
+X-Rspamd-Queue-Id: 71FB6490C4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Biju Das <biju.das.jz@bp.renesas.com>
 
-Add support for device_tx_status() callback as it is needed for
-RZ/G2L SCIFA driver.
+Hi all,
 
-Based on a patch in the BSP similar to rcar-dmac by
-Long Luu <long.luu.ur@renesas.com>.
+This patch series adds initial support for the Renesas RZ/G3L SoC and
+RZ/G3L SMARC EVK platform. The RZ/G3L device is a general-purpose
+microprocessor with a quad-core CA-55, single core CM-33, Mali-G31
+3-D Graphics and other peripherals.
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-[claudiu.beznea:
- - post-increment lmdesc in rz_dmac_get_next_lmdesc() to allow the next
-   pointer to advance
- - use 'lmdesc->nxla != crla' comparison instead of
-   '!(lmdesc->nxla == crla)' in rz_dmac_calculate_residue_bytes_in_vd()
- - in rz_dmac_calculate_residue_bytes_in_vd() use '++i >= DMAC_NR_LMDESC'
-   to verify if the full lmdesc list was checked
- - drop rz_dmac_calculate_total_bytes_in_vd() and use desc->len instead
- - re-arranged comments so they span fewer lines and are wrapped to ~80
-   characters
- - use u32 for the residue value and the functions returning it
- - use u32 for the variables storing register values
- - fixed typos]
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
+Support for the below list of blocks is added in the SoC DTSI (r9a08g046.dtsi):
 
-Changes in v8:
-- populated engine->residue_granularity
+ - EXT CLK
+ - 4X CA55
+ - SCIF
+ - CPG
+ - GIC
+ - ARMv8 Timer
 
-Changes in v7:
-- none
-
-Changes in v6:
-- s/byte/bytes in comment from rz_dmac_chan_get_residue()
-
-Changes in v5:
-- post-increment lmdesc in rz_dmac_get_next_lmdesc() to allow the next
-  pointer to advance
-- use 'lmdesc->nxla != crla' comparison instead of
-  '!(lmdesc->nxla == crla)' in rz_dmac_calculate_residue_bytes_in_vd()
-- in rz_dmac_calculate_residue_bytes_in_vd() use '++i >= DMAC_NR_LMDESC'
-  to verify if the full lmdesc list was checked
-- drop rz_dmac_calculate_total_bytes_in_vd() and use desc->len instead
-- re-arranged comments so they span fewer lines and are wrapped to ~80
-  characters
-- use u32 for the residue value and the functions returning it
-- use u32 for the variables storing register values
-- fixed typos
-
- drivers/dma/sh/rz-dmac.c | 145 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 144 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index 4602f8b7408a..27c963083e29 100644
---- a/drivers/dma/sh/rz-dmac.c
-+++ b/drivers/dma/sh/rz-dmac.c
-@@ -125,10 +125,12 @@ struct rz_dmac {
-  * Registers
-  */
+This series also adds SCIF support for the RZ/G3L SMARC EVK board (r9a08g046l68-smarc.dts).
  
-+#define CRTB				0x0020
- #define CHSTAT				0x0024
- #define CHCTRL				0x0028
- #define CHCFG				0x002c
- #define NXLA				0x0038
-+#define CRLA				0x003c
- 
- #define DCTRL				0x0000
- 
-@@ -684,6 +686,146 @@ static void rz_dmac_device_synchronize(struct dma_chan *chan)
- 	rz_dmac_set_dma_req_no(dmac, channel->index, dmac->info->default_dma_req_no);
- }
- 
-+static struct rz_lmdesc *
-+rz_dmac_get_next_lmdesc(struct rz_lmdesc *base, struct rz_lmdesc *lmdesc)
-+{
-+	struct rz_lmdesc *next = ++lmdesc;
-+
-+	if (next >= base + DMAC_NR_LMDESC)
-+		next = base;
-+
-+	return next;
-+}
-+
-+static u32 rz_dmac_calculate_residue_bytes_in_vd(struct rz_dmac_chan *channel)
-+{
-+	struct rz_lmdesc *lmdesc = channel->lmdesc.head;
-+	struct dma_chan *chan = &channel->vc.chan;
-+	struct rz_dmac *dmac = to_rz_dmac(chan->device);
-+	u32 residue = 0, crla, i = 0;
-+
-+	crla = rz_dmac_ch_readl(channel, CRLA, 1);
-+	while (lmdesc->nxla != crla) {
-+		lmdesc = rz_dmac_get_next_lmdesc(channel->lmdesc.base, lmdesc);
-+		if (++i >= DMAC_NR_LMDESC)
-+			return 0;
-+	}
-+
-+	/* Calculate residue from next lmdesc to end of virtual desc */
-+	while (lmdesc->chcfg & CHCFG_DEM) {
-+		residue += lmdesc->tb;
-+		lmdesc = rz_dmac_get_next_lmdesc(channel->lmdesc.base, lmdesc);
-+	}
-+
-+	dev_dbg(dmac->dev, "%s: VD residue is %u\n", __func__, residue);
-+
-+	return residue;
-+}
-+
-+static u32 rz_dmac_chan_get_residue(struct rz_dmac_chan *channel,
-+				    dma_cookie_t cookie)
-+{
-+	struct rz_dmac_desc *current_desc, *desc;
-+	enum dma_status status;
-+	u32 crla, crtb, i;
-+
-+	/* Get current processing virtual descriptor */
-+	current_desc = list_first_entry(&channel->ld_active,
-+					struct rz_dmac_desc, node);
-+	if (!current_desc)
-+		return 0;
-+
-+	/*
-+	 * If the cookie corresponds to a descriptor that has been completed
-+	 * there is no residue. The same check has already been performed by the
-+	 * caller but without holding the channel lock, so the descriptor could
-+	 * now be complete.
-+	 */
-+	status = dma_cookie_status(&channel->vc.chan, cookie, NULL);
-+	if (status == DMA_COMPLETE)
-+		return 0;
-+
-+	/*
-+	 * If the cookie doesn't correspond to the currently processing virtual
-+	 * descriptor then the descriptor hasn't been processed yet, and the
-+	 * residue is equal to the full descriptor size. Also, a client driver
-+	 * is possible to call this function before rz_dmac_irq_handler_thread()
-+	 * runs. In this case, the running descriptor will be the next
-+	 * descriptor, and will appear in the done list. So, if the argument
-+	 * cookie matches the done list's cookie, we can assume the residue is
-+	 * zero.
-+	 */
-+	if (cookie != current_desc->vd.tx.cookie) {
-+		list_for_each_entry(desc, &channel->ld_free, node) {
-+			if (cookie == desc->vd.tx.cookie)
-+				return 0;
-+		}
-+
-+		list_for_each_entry(desc, &channel->ld_queue, node) {
-+			if (cookie == desc->vd.tx.cookie)
-+				return desc->len;
-+		}
-+
-+		list_for_each_entry(desc, &channel->ld_active, node) {
-+			if (cookie == desc->vd.tx.cookie)
-+				return desc->len;
-+		}
-+
-+		/*
-+		 * No descriptor found for the cookie, there's thus no residue.
-+		 * This shouldn't happen if the calling driver passes a correct
-+		 * cookie value.
-+		 */
-+		WARN(1, "No descriptor for cookie!");
-+		return 0;
-+	}
-+
-+	/*
-+	 * We need to read two registers. Make sure the hardware does not move
-+	 * to next lmdesc while reading the current lmdesc. Trying it 3 times
-+	 * should be enough: initial read, retry, retry for the paranoid.
-+	 */
-+	for (i = 0; i < 3; i++) {
-+		crla = rz_dmac_ch_readl(channel, CRLA, 1);
-+		crtb = rz_dmac_ch_readl(channel, CRTB, 1);
-+		/* Still the same? */
-+		if (crla == rz_dmac_ch_readl(channel, CRLA, 1))
-+			break;
-+	}
-+
-+	WARN_ONCE(i >= 3, "residue might not be continuous!");
-+
-+	/*
-+	 * Calculate number of bytes transferred in processing virtual descriptor.
-+	 * One virtual descriptor can have many lmdesc.
-+	 */
-+	return crtb + rz_dmac_calculate_residue_bytes_in_vd(channel);
-+}
-+
-+static enum dma_status rz_dmac_tx_status(struct dma_chan *chan,
-+					 dma_cookie_t cookie,
-+					 struct dma_tx_state *txstate)
-+{
-+	struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
-+	enum dma_status status;
-+	u32 residue;
-+
-+	status = dma_cookie_status(chan, cookie, txstate);
-+	if (status == DMA_COMPLETE || !txstate)
-+		return status;
-+
-+	scoped_guard(spinlock_irqsave, &channel->vc.lock)
-+		residue = rz_dmac_chan_get_residue(channel, cookie);
-+
-+	/* if there's no residue, the cookie is complete */
-+	if (!residue)
-+		return DMA_COMPLETE;
-+
-+	dma_set_residue(txstate, residue);
-+
-+	return status;
-+}
-+
- /*
-  * -----------------------------------------------------------------------------
-  * IRQ handling
-@@ -1007,6 +1149,7 @@ static int rz_dmac_probe(struct platform_device *pdev)
- 	engine = &dmac->engine;
- 	dma_cap_set(DMA_SLAVE, engine->cap_mask);
- 	dma_cap_set(DMA_MEMCPY, engine->cap_mask);
-+	engine->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
- 	rz_dmac_writel(dmac, DCTRL_DEFAULT, CHANNEL_0_7_COMMON_BASE + DCTRL);
- 	rz_dmac_writel(dmac, DCTRL_DEFAULT, CHANNEL_8_15_COMMON_BASE + DCTRL);
- 
-@@ -1014,7 +1157,7 @@ static int rz_dmac_probe(struct platform_device *pdev)
- 
- 	engine->device_alloc_chan_resources = rz_dmac_alloc_chan_resources;
- 	engine->device_free_chan_resources = rz_dmac_free_chan_resources;
--	engine->device_tx_status = dma_cookie_status;
-+	engine->device_tx_status = rz_dmac_tx_status;
- 	engine->device_prep_slave_sg = rz_dmac_prep_slave_sg;
- 	engine->device_prep_dma_memcpy = rz_dmac_prep_dma_memcpy;
- 	engine->device_config = rz_dmac_config;
+Test logs:
+/ #uname -r
+6.19.0-rc6-next-20260119-g31b78275d04b
+/ # cat /proc/cpuinfo
+processor       : 0
+BogoMIPS        : 48.00
+Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+
+processor       : 1
+BogoMIPS        : 48.00
+Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+
+processor       : 2
+BogoMIPS        : 48.00
+Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+
+processor       : 3
+BogoMIPS        : 48.00
+Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x2
+CPU part        : 0xd05
+CPU revision    : 0
+
+/ # cat /proc/interrupts
+           CPU0       CPU1       CPU2       CPU3
+ 11:        262        109        324         98    GICv3  27 Level     arch_timer
+ 14:          0          0          0          0    GICv3 185 Edge      error
+ 15:          0          0          0          0    GICv3 186 Edge      11820000.dma-controller:0
+ 16:          0          0          0          0    GICv3 187 Edge      11820000.dma-controller:1
+ 17:          0          0          0          0    GICv3 188 Edge      11820000.dma-controller:2
+ 18:          0          0          0          0    GICv3 189 Edge      11820000.dma-controller:3
+ 19:          0          0          0          0    GICv3 190 Edge      11820000.dma-controller:4
+ 20:          0          0          0          0    GICv3 191 Edge      11820000.dma-controller:5
+ 21:          0          0          0          0    GICv3 192 Edge      11820000.dma-controller:6
+ 22:          0          0          0          0    GICv3 193 Edge      11820000.dma-controller:7
+ 23:          0          0          0          0    GICv3 194 Edge      11820000.dma-controller:8
+ 24:          0          0          0          0    GICv3 195 Edge      11820000.dma-controller:9
+ 25:          0          0          0          0    GICv3 196 Edge      11820000.dma-controller:10
+ 26:          0          0          0          0    GICv3 197 Edge      11820000.dma-controller:11
+ 27:          0          0          0          0    GICv3 198 Edge      11820000.dma-controller:12
+ 28:          0          0          0          0    GICv3 199 Edge      11820000.dma-controller:13
+ 29:          0          0          0          0    GICv3 200 Edge      11820000.dma-controller:14
+ 30:          0          0          0          0    GICv3 201 Edge      11820000.dma-controller:15
+ 31:          0          0          0          0    GICv3 418 Level     100ac000.serial:rx err
+ 32:          4          0          0          0    GICv3 420 Level     100ac000.serial:rx full
+ 33:        206          0          0          0    GICv3 421 Level     100ac000.serial:tx empty
+ 34:          0          0          0          0    GICv3 419 Level     100ac000.serial:break
+ 35:         13          0          0          0    GICv3 422 Level     100ac000.serial:rx ready
+IPI0:        23         26         19         22       Rescheduling interrupts
+IPI1:       237        385        152         90       Function call interrupts
+IPI2:         0          0          0          0       CPU stop interrupts
+IPI3:         0          0          0          0       CPU stop NMIs
+IPI4:         0          0          0          0       Timer broadcast interrupts
+IPI5:         0          0          0          0       IRQ work interrupts
+IPI6:         0          0          0          0       CPU backtrace interrupts
+IPI7:         0          0          0          0       KGDB roundup interrupts
+/ # cat /proc/meminfo
+MemTotal:        1887948 kB
+MemFree:         1849056 kB
+MemAvailable:    1816424 kB
+
+/ # cat /sys/devices/soc0/family
+RZ/G3L
+/ # cat /sys/devices/soc0/machine
+Renesas SMARC EVK version 2 based on r9a08g046l48
+/ # cat /sys/devices/soc0/soc_id
+r9a08g046
+/ # cat /sys/devices/soc0/revision
+0
+
+
+Biju Das (12):
+  dt-bindings: serial: renesas,scif: Document RZ/G3L SoC
+  dt-bindings: dma: rz-dmac: Document RZ/G3L SoC
+  dt-bindings: soc: renesas: Document Renesas RZ/G3L SoC variants
+  dt-bindings: soc: renesas: Document RZ/G3L SMARC SoM and Carrier-II
+    EVK
+  dt-bindings: soc: renesas: renesas,rzg2l-sysc: Document RZ/G3L SoC
+  soc: renesas: rz-sysc: Add SoC identification for RZ/G3L SoC
+  dt-bindings: clock: Document RZ/G3L SoC
+  clk: renesas: Add support for RZ/G3L SoC
+  arm64: dts: renesas: Add initial DTSI for RZ/G3L SoC
+  arm64: dts: renesas: Add initial support for RZ/G3L SMARC SoM
+  arm64: dts: renesas: renesas-smarc2: Move usb3 nodes to board DTS
+  arm64: dts: renesas: Add initial device tree for RZ/G3L SMARC EVK
+    board
+
+ .../bindings/clock/renesas,rzg2l-cpg.yaml     |   1 +
+ .../bindings/dma/renesas,rz-dmac.yaml         |   1 +
+ .../bindings/serial/renesas,scif.yaml         |   1 +
+ .../soc/renesas/renesas,rzg2l-sysc.yaml       |   1 +
+ .../bindings/soc/renesas/renesas.yaml         |  13 +
+ arch/arm64/boot/dts/renesas/Makefile          |   2 +
+ arch/arm64/boot/dts/renesas/r9a08g046.dtsi    | 219 +++++++++++
+ .../boot/dts/renesas/r9a08g046l48-smarc.dts   |  41 +++
+ arch/arm64/boot/dts/renesas/r9a08g046l48.dtsi |  13 +
+ .../boot/dts/renesas/r9a09g047e57-smarc.dts   |   6 +
+ .../boot/dts/renesas/renesas-smarc2.dtsi      |   8 -
+ .../boot/dts/renesas/rzg3l-smarc-som.dtsi     |  22 ++
+ drivers/clk/renesas/Kconfig                   |   7 +-
+ drivers/clk/renesas/Makefile                  |   1 +
+ drivers/clk/renesas/r9a08g046-cpg.c           | 137 +++++++
+ drivers/clk/renesas/rzg2l-cpg.c               |   6 +
+ drivers/clk/renesas/rzg2l-cpg.h               |   1 +
+ drivers/soc/renesas/Kconfig                   |  12 +
+ drivers/soc/renesas/Makefile                  |   1 +
+ drivers/soc/renesas/r9a08g046-sysc.c          |  91 +++++
+ drivers/soc/renesas/rz-sysc.c                 |   3 +
+ drivers/soc/renesas/rz-sysc.h                 |   1 +
+ include/dt-bindings/clock/r9a08g046-cpg.h     | 339 ++++++++++++++++++
+ 23 files changed, 918 insertions(+), 9 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a08g046.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a08g046l48-smarc.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a08g046l48.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/rzg3l-smarc-som.dtsi
+ create mode 100644 drivers/clk/renesas/r9a08g046-cpg.c
+ create mode 100644 drivers/soc/renesas/r9a08g046-sysc.c
+ create mode 100644 include/dt-bindings/clock/r9a08g046-cpg.h
+
 -- 
 2.43.0
 

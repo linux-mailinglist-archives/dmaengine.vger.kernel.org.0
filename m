@@ -1,322 +1,202 @@
-Return-Path: <dmaengine+bounces-8424-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8425-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WN2oK8OacGlyYgAAu9opvQ
-	(envelope-from <dmaengine+bounces-8424-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Jan 2026 10:22:11 +0100
+	id aHxmHj61cGndZAAAu9opvQ
+	(envelope-from <dmaengine+bounces-8425-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 21 Jan 2026 12:15:10 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C20F54489
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Jan 2026 10:22:11 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2195155D44
+	for <lists+dmaengine@lfdr.de>; Wed, 21 Jan 2026 12:15:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 28D77824AAF
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Jan 2026 09:14:28 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 7687452A122
+	for <lists+dmaengine@lfdr.de>; Wed, 21 Jan 2026 11:08:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF98B1367;
-	Wed, 21 Jan 2026 09:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA65E3E8C76;
+	Wed, 21 Jan 2026 11:08:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YE1p8ltA"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="joYaf2n1";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="fim8HzB+"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638FE346FBC;
-	Wed, 21 Jan 2026 09:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7396B2D8DDD
+	for <dmaengine@vger.kernel.org>; Wed, 21 Jan 2026 11:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768986822; cv=none; b=G2Vp8htidO2JTjHQ4IWDBRSYHIm8d3WmfN1meLOzPAnJa6CErlxnvZHOFqjj60+67DoKY1VVlKpUBcHNI9S+K90++GGYtBKcEdLGC0iLzXcJxRUm4wIWFrsDXfGCdNerP/4AvWspZNWjvN5b5MNNDf0+C+slMlfW8wVafEFunSs=
+	t=1768993729; cv=none; b=AyzGaQQimDAd4UZlSzBqsPBF8AFd73x6Z3kzzRKzDl6duXNEdn2X5SvNmXx5WX28YUFFd3/W86BVKfXdjzXq9tTCRjBS7l52ZQqvSO/Qgy+xsCPbjG/Lx1I0VsYciucvy3npvb0Na8poxcFVIjKJHIAar1SSdpl2BYxPxJDAkY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768986822; c=relaxed/simple;
-	bh=fzd4LZJfsbgavj/li4H7ZY/5uafPy9wpMW2RXV7mj/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BPD+oc3UOBJKmQCwcg8oX3wOaKHG+JQ8myl2X0hp1JQwQhQtS8Aqkc5PjWxzkoQw5Z8dfX1QjARnWwT5mm1lA5wlicaogcGHLWe+iNMrDtKqDCaBseKKr/Og7wiJphc/2s5G24aHUIZlpd3KXBX5fcGxI321Y7H2HbOkQUznk+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YE1p8ltA; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768986820; x=1800522820;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=fzd4LZJfsbgavj/li4H7ZY/5uafPy9wpMW2RXV7mj/4=;
-  b=YE1p8ltAx7PUdrbxfU0kMUaxO/VDZKYhsWJhFiYrFp6uUICD9BPxQtCU
-   cLxCfoYPMn/dbk9h29RvlMjedstVvXWCDJtJ84CLKXNemcKSn6Bn5Hnqf
-   SnfYhakeoUbH5eFr5GLRv0p7VK2/lCSi7te8QRGNlKd6XyRrjKuQegjPi
-   29uugqcEjWq2StFWRAk5OZUOdwHTuJnkTKXeIds9THyJTr7F+vTsWM70C
-   2dk6RjofedwRst7GYUzdPs1dK6r/OqBREnXYkJmR3ATAbrEhxAi9xx39Q
-   zjP1uRrW+gM98GGPM1bVMCUq4tCTRb3A8nV5J3E/n2hjfrCN19NJ7Q8pK
-   g==;
-X-CSE-ConnectionGUID: qgZwWo+ST3+WIIKFtrwgmA==
-X-CSE-MsgGUID: sRl7IZ7AQASXSn7xRRsmlw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11677"; a="95682402"
-X-IronPort-AV: E=Sophos;i="6.21,242,1763452800"; 
-   d="scan'208";a="95682402"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 01:13:40 -0800
-X-CSE-ConnectionGUID: M3Q3oyIRQwaruqbQ7Goc+Q==
-X-CSE-MsgGUID: L4KcMM3qTm2qj+IeG2Q5+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,242,1763452800"; 
-   d="scan'208";a="210848204"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.73])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 01:13:38 -0800
-Date: Wed, 21 Jan 2026 11:13:36 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: correctmost <cmlists@sent.com>
-Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev,
-	vkoul@kernel.org, linux-i2c@vger.kernel.org,
-	mika.westerberg@linux.intel.com
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <aXCYwBMTwkHZPYsi@smile.fi.intel.com>
-References: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
- <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
- <69f5dea3-17b0-4d3a-9de7-eb54f8f0f5cd@app.fastmail.com>
- <aWoM3JibLSBdGHeH@smile.fi.intel.com>
- <aWoUc_GJuZ8SuYCM@smile.fi.intel.com>
- <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
- <aW4J6bmHn2dLuOxo@smile.fi.intel.com>
- <aW4MUisgI6d2Efbr@smile.fi.intel.com>
- <aW9LzBIOIePu59zV@smile.fi.intel.com>
- <d7627ea0-0965-4469-83c2-e2a15edd58a9@app.fastmail.com>
+	s=arc-20240116; t=1768993729; c=relaxed/simple;
+	bh=ttuuT4a/yce/hPwLos4F6FaJOgKfFvjfty/guaeo2rU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Sm23+DM8c9Uv3BN7AJYT/hM8p+daBw82BopO/cYtcViqTk3l8+qF+NcAf8ECZfvFbUrLVzTdzSiZEbpVtRfA0VbWlBtpae+0zZX+fSeibOlgDAZl+SccOJMEnVVsQaQN/MI+G597KERnM2LdPDPlNigffNix1/zPiSjrwYfggUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=joYaf2n1; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=fim8HzB+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60L9fngm3991329
+	for <dmaengine@vger.kernel.org>; Wed, 21 Jan 2026 11:08:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=rqxtMdegpYHYw32YRg3oTU8jud9UIt7Jz7U
+	y2WsI7vo=; b=joYaf2n1I6RHD6BrSYOOGLveaD/gwN+poHv3cj6vjJXNp1CD4eU
+	Fz5TPuiiOv9BGhdvrAzxObJmZRZhGta4G3nvwbcVBxGHuiBHDk3Y42iVvJMFTPKg
+	jmtHwtfa92VlolG2BztubCoMYeB9JlyYbaa+86IVLv8IIlAUj+c63WWhXinwYdk3
+	LJ/pXQLR4ABnHKzWRzcWiCV0fzQZCzjN9TVuHFnc3wEvg8vtcmhiB3oREm3Q0e96
+	69E/quqtP7QiSCzOkwPSr+VHozMAcl3794tTKz6fGwpUkVCUIHdxcYQNNb4fBf+A
+	69qH+temF6Q7AZpS6O/CPPlF+vJP54B7Q3Q==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4btpm41vwn-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Wed, 21 Jan 2026 11:08:46 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-81e9d0c656fso10802351b3a.0
+        for <dmaengine@vger.kernel.org>; Wed, 21 Jan 2026 03:08:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1768993726; x=1769598526; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rqxtMdegpYHYw32YRg3oTU8jud9UIt7Jz7Uy2WsI7vo=;
+        b=fim8HzB+PjOcVH7E5lxY6sF2+pnmI+qqq/ujOErIka0iwPVnzNhRecI2tu64PIEchg
+         2lg1zJS7HhtRfUYtC5ZvKoj1WU9gBqShoRJZf3sNk5TtqG0qdvJAaNazCjf5gF3W/m2h
+         fbcSquBCMDXd+E3tDbGz+4ojCaEcCOqu511fHXuAj/jmeG7tFblHD4LMxEl7DwFEtKiK
+         Giqdw5H2qchTyAmYglEKOTNCJ0mNbZWHFcNPSiZFlDYc8nHkFtLoNY6oMgefIgXn/bOB
+         IJvpMXHqo9LPvMppvfuZnztdFT0MIM4dOHRALD9CZbUOIlhc7Lh75RYY2L1zOlWv0ewo
+         OLFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768993726; x=1769598526;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rqxtMdegpYHYw32YRg3oTU8jud9UIt7Jz7Uy2WsI7vo=;
+        b=vTMtDGVnVokJFfiPYdvBTmBx0XSXpNjM/X7cbmqid9NEd1duPbAPaN42QcXaz3k4OL
+         l9NP+sbwIUMT8MsWOsiJmpoLNqb2V9G3cwO+t/P1DgcwYJAb90iA8L99VhRGJsqsIRsF
+         kzE7/SxIPQYwWaCoAMlylYHlZivQry5+c0pPxpCxPKuGXwbUimBkPZxOn8oYvuyMKQ+1
+         Kh3dU2ZRdf+ynQi1g8nv5CV55eJrR2zwITj8HkB6mJ7nOeVn9Ok9vNJ6rZdQ29s2k4sP
+         SXR7XvGwIjG8VIVpprugwt1ZDQOXIbJRezJbrzSvzbu7ImSYsL62VU4kZw6dsHaQ2pck
+         XRDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdnFtAfVUuyMCqaNj9K9Ph+g+Jf1HnhJB6JYjrJf+w0tGx0j1x8k9jLQcglGatMEqwe9mG/abSWdc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr5QchqsPQiuMVrgs/gxe7hXYFlKX7n7Drfs3riYscdfElGlcM
+	TpHAf/LdZIK1yHyT5ttJQsvH2MojuXhIO9dN6lHqMimb8DZWP1V4JVah466uYBcgIjvMKRNdrZl
+	MJCJHhSk+ANyFSsHzSP5qxp5JYkOVRMGdm0k5CKA2/4gKksaxrXDWdW/8QEvOHCLNmRiTx/A=
+X-Gm-Gg: AZuq6aJJotVHFwR4yVpRb6O2P+rC7rfe8kisseeDkiwkUUvzqDI2WQV/gZFDS3kvzMs
+	3RUf0k4ZfuX8N/luCDyh2QHuOZDWg1puP1NInlWfU6zJdyLFdJTb5+566VjABQdO+sLCWqg40n7
+	FkNpn1V3oUQ3aGT82PsrFiX6tH9+SP45EvchYkT9FmV7hCXyk45GfnUrwW1yfHND9CMH13JtoH/
+	Cuht1T688/hHvRph+/TN76QjcF8LV6NZxT4z6+amW2IMpgl4rJVnnWQUkh/iw+e6dmaTBqNTyJv
+	r3je09hmNrY+z7P3InyfDM6hl3dWKzmn7MyHsR6SIY9KrcOUwS5zbn0TfevW6KuJunVG4U8kXuA
+	hoThp+3xWnioaVGNH05wT4V5ZPhov/4IAGNkoXCM+8SS6/IrezfCDCmNBm4CRt18w14B48/u1sq
+	rCxBuniOS6WaDaOr58prDLmGrpBM+RGQ==
+X-Received: by 2002:a05:6a00:4299:b0:81f:4a06:702 with SMTP id d2e1a72fcca58-81fa036a8fcmr14849566b3a.40.1768993725974;
+        Wed, 21 Jan 2026 03:08:45 -0800 (PST)
+X-Received: by 2002:a05:6a00:4299:b0:81f:4a06:702 with SMTP id d2e1a72fcca58-81fa036a8fcmr14849527b3a.40.1768993724828;
+        Wed, 21 Jan 2026 03:08:44 -0800 (PST)
+Received: from hu-pankpati-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-81fddd12fcasm6511788b3a.0.2026.01.21.03.08.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jan 2026 03:08:44 -0800 (PST)
+From: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
+To: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sibi.sankar@oss.qualcomm.com
+Subject: [PATCH v2] dt-bindings: dma: qcom,gpi: Update max interrupt lines to 16
+Date: Wed, 21 Jan 2026 16:38:28 +0530
+Message-Id: <20260121110828.2267061-1-pankaj.patil@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768993708; l=1046; i=pankaj.patil@oss.qualcomm.com; s=20251121; h=from:subject; bh=ttuuT4a/yce/hPwLos4F6FaJOgKfFvjfty/guaeo2rU=; b=S5bWQ4+twbQlCFWR9QTl+iQPLNv3ciPUN+kcDCA2ER7x+ku1Q11XZ/4oJhKQalFs0fDAsaoD2 60RqhWVlwRqCVXjYFaGTSocz0TYkIB1XduluSbDUdtbqh8sXNj71WND
+X-Developer-Key: i=pankaj.patil@oss.qualcomm.com; a=ed25519; pk=pWpEq/tlX6TaKH1UQolvxjRD+Vdib/sEkb8bH8AL6gc=
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d7627ea0-0965-4469-83c2-e2a15edd58a9@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Spamd-Result: default: False [-1.96 / 15.00];
+X-Authority-Analysis: v=2.4 cv=Jv38bc4C c=1 sm=1 tr=0 ts=6970b3be cx=c_pps
+ a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=9a_DUlnzXuJTuH-cha4A:9
+ a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-GUID: d_m3mwHNYE4mfSI6XwXNqbi6KlEPMYmG
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTIxMDA5MyBTYWx0ZWRfXxTTx4e+/ziCl
+ pEAtX/Et9EpAvviTILltBd0I/7WI+Rszl6ssQM7HRucEto3Jy01vrH+cRiortrKAvES01qGW443
+ H61JOZjp6l8NMXabTxKS3rT23MN/OAFrsDgNh40YBh+o7wPjpe1Z4gXW+pkcwGmascII2rW8CEc
+ v6iGHLRi2zhL02Sbri+EbtJZhC4M5I1iIMhtxU6uQy3BSXLm//1Ivc3qLtaIDK4BvOmHw+UeYvL
+ cNjxwcFbXYxIOQirMxB93FMBowwe34woqcHYMJ4qyrnaBZ7HkWSrsIEGPxYhEJ4x/jcoMxWeW+5
+ FPfllq4ez5g5aM/TBicUz0lUAvmqP5K8htVDN0a4qiqxAvsHtveE/AmoYwPK12gsDnFIdvT85cZ
+ D3/66i51yeb4WEosnnyJeM72UMUlsBvz1A64vvrKBXHvFu/GS+gWb8JlbdDp2eCe0b6YlsZojB6
+ 91zgbekN+bJFod9mu0A==
+X-Proofpoint-ORIG-GUID: d_m3mwHNYE4mfSI6XwXNqbi6KlEPMYmG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
+ definitions=2026-01-21_01,2026-01-20_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 bulkscore=0 clxscore=1011 spamscore=0 lowpriorityscore=0
+ suspectscore=0 malwarescore=0 adultscore=0 priorityscore=1501 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2601210093
+X-Spamd-Result: default: False [-0.46 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8424-lists,dmaengine=lfdr.de];
-	HAS_ORG_HEADER(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[sent.com];
-	MIME_TRACE(0.00)[0:+];
-	DMARC_POLICY_ALLOW(0.00)[intel.com,none];
-	DKIM_TRACE(0.00)[intel.com:+];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[dmaengine];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,intel.com:dkim,dreamwidth.org:url,altlinux.org:url]
-X-Rspamd-Queue-Id: 2C20F54489
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	DMARC_POLICY_ALLOW(0.00)[qualcomm.com,reject];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8425-lists,dmaengine=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[pankaj.patil@oss.qualcomm.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:dkim,ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 2195155D44
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Jan 20, 2026 at 11:56:15PM -0500, correctmost wrote:
-> On Tue, Jan 20, 2026, at 4:33 AM, Andy Shevchenko wrote:
-> > On Mon, Jan 19, 2026 at 12:49:59PM +0200, Andy Shevchenko wrote:
-> >> On Mon, Jan 19, 2026 at 12:39:41PM +0200, Andy Shevchenko wrote:
-> >> > On Fri, Jan 16, 2026 at 07:25:54PM -0500, correctmost wrote:
-> >> > > On Fri, Jan 16, 2026, at 5:35 AM, Andy Shevchenko wrote:
-> >> > > > On Fri, Jan 16, 2026 at 12:03:12PM +0200, Andy Shevchenko wrote:
-> >> > > >> On Thu, Jan 15, 2026 at 05:50:36PM -0500, correctmost wrote:
-> >> > > >> > On Mon, Jan 12, 2026, at 9:35 AM, Andy Shevchenko wrote:
-> >> > > >> > > On Tue, Dec 16, 2025 at 12:57:10PM -0500, correctmost wrote:
+Update interrupt maxItems to 16 from 13 per GPI instance to support
+Glymur
 
-...
+Fixes: b729eed5b74ee ("dt-bindings: dma: qcom,gpi: Document GPI DMA engine for Kaanapali and Glymur SoCs")
+Signed-off-by: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
+---
+Changes in v2:
+- Added Fixes tag
+- Link to v1: https://lore.kernel.org/all/20251231133114.2752822-1-pankaj.patil@oss.qualcomm.com/
 
-> >> > > >> > >> The following commit
-> >> > > >> > >
-> >> > > >> > > No, it's false positive. The reality is that something else is going on
-> >> > > >> > > there on this and other similar laptops.
-> >> > > >> > >
-> >> > > >> > >> causes my Lenovo IdeaPad touchpad not to work when
-> >> > > >> > >> kernel/drivers/dma/idma64.ko.zst is present in the initramfs image:
-> >> > > >> > >> 
-> >> > > >> > >> #regzbot introduced: 9140ce47872bfd89fca888c2f992faa51d20c2bc
-> >> > > >> > >> 
-> >> > > >> > >> "idma64: Don't try to serve interrupts when device is powered off"
-> >> > > >> > >
-> >> > > >> > > So, the touchpad is an I²C device, which is connected to an Intel SoC.
-> >> > > >> > > The I²C host controller is Synopsys DesignWare. On Intel SoCs the above
-> >> > > >> > > mentioned IP is generated with private DMA engine, that's called Intel
-> >> > > >> > > iDMA 64-bit. Basically it's two devices under a single PCI hood.
-> >> > > >> > > The problem here is that when PCI device is in D3, both devices are
-> >> > > >> > > powered off, but something sends an interrupt and it's not recognized
-> >> > > >> > > being the one, send by a device (touchpad).
-> >> > > >> > >
-> >> > > >> > > There is one of the following potential issues (or their combinations):
-> >> > > >> > >
-> >> > > >> > > - the I²C host controller hardware got off too early
-> >> > > >> > > - the line is shared with something else that generates interrupt storm
-> >> > > >> > > - the BIOS does weird (wrong) things at a boot time, like not properly
-> >> > > >> > >   shutting down and disabling interrupt sources; also may have wrong
-> >> > > >> > >   pin control settings
-> >> > > >> > > - the touchpad is operating on higher frequency like 400kHz (because
-> >> > > >> > >   BIOS told to use that one instead of 100kHz) than the HW is designed
-> >> > > >> > >   for and hence unreliable with all possible side effects
-> >> > > >> > > - the touchpad firmware behaves wrongly on some sequences (see also
-> >> > > >> > >   note about the bus speed above), try to upgrade touchpad FW
-> >> > > >> > >
-> >> > > >> > > With my experience with the case of the above mentioned commit that it
-> >> > > >> > > may be BIOS thingy. Also consider the bus speed, there are quirks in
-> >> > > >> > > the kernel for that.
-> >> > > >> > 
-> >> > > >> > Thank you for the detailed notes.  I will see if I can update my BIOS and
-> >> > > >> > experiment with different quirks values, though I won't be able to do that
-> >> > > >> > until late next week.
-> >> > > >> 
-> >> > > >> You're welcome!
-> >> > > >> 
-> >> > > >> > >> Here are the related logs:
-> >> > > >> > >> 
-> >> > > >> > >> ---
-> >> > > >> > >> 
-> >> > > >> > >> irq 27: nobody cared (try booting with the "irqpoll" option)
-> >> > > >> > >
-> >> > > >> > > Almost all below is not so interesting.
-> >> > > >> > >
-> >> > > >> > > ...
-> >> > > >> > >
-> >> > > >> > >> handlers:
-> >> > > >> > >> [<00000000104a7621>] idma64_irq [idma64]
-> >> > > >> > >> [<00000000bd8d08e9>] i2c_dw_isr
-> >> > > >> > >> Disabling IRQ #27
-> >> > > >> > >
-> >> > > >> > > Yes, this line at least shared between those two and might be more.
-> >> > > >> > >
-> >> > > >> > > ...
-> >> > > >> > >
-> >> > > >> > >> i2c_designware i2c_designware.0: controller timed out
-> >> > > >> > >> hid (null): reading report descriptor failed
-> >> > > >> > >> i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
-> >> > > >> > >> i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed with error -110
-> >> > > >> > >
-> >> > > >> > > Yes, sounds familiar with the speed settings. Try to down it to 100kHz in case
-> >> > > >> > > it's confirmed to be 400kHz.
-> >> > > >> > >
-> >> > > >> > >> ---
-> >> > > >> > >
-> >> > > >> > > Any pointers to that thread, please?
-> >> > > >> > 
-> >> > > >> > The following threads have users who were able to restore touchpad
-> >> > > >> > functionality by undoing the idma64 change in initramfs:
-> >> > > >> 
-> >> > > >> Yes, = "they have hidden the existing problem". No value in that, sorry.
-> >> > > >> What is the exact link that refer to the thread you previously mentioned?
-> >> > > >> 
-> >> > > >> ...
-> >> > > >> 
-> >> > > >> > Lastly, I saw another bug report that mentions the "probe with driver
-> >> > > >> > i2c_hid_acpi failed with error -110" error.  It seems to state that the error
-> >> > > >> > only occurs when a power cable is connected during boot:
-> >> > > >> > 
-> >> > > >> > - https://bugzilla.altlinux.org/57094
-> >> > > >> >   - Huawei Matebook D15 BOD-WXX9-PCB-B4
-> >> > > >> >   - i2c-GXTP7863:00
-> >> > > >> > 
-> >> > > >> > >> so I don't think this is a hardware issue with my individual laptop.
-> >> > > >> > >
-> >> > > >> > > I don't know how this conclusion is came here. You mean HW as laptop model?
-> >> > > >> > > But are the involved components the same (I²C host controller + touchpad)?
-> >> > > >> > 
-> >> > > >> > Sorry for the confusion.  I meant the individual machine in my possession and
-> >> > > >> > not the laptop model as a whole.
-> >> > > >> 
-> >> > > >> Yeah, something here is common and I can't say for sure this all about Synaptic
-> >> > > >> touchpads...
-> >> > > >
-> >> > > > So, what I think I need to understand this more is the following
-> >> > > > (all information should be gathered under root user) for working
-> >> > > > and non-working cases:
-> >> > > >
-> >> > > > - `cat /proc/interrupts`
-> >> > > > - `dmesg`
-> >> > > >    # with `initcall_debug ignore_loglevel` added to the kernel command line
-> >> > > > - `cat /sys/kernel/debug/pinctrl/.../pins`
-> >> > > >    # ... should be something like INTC1234:00
-> >> > > >
-> >> > > > And just once these:
-> >> > > > - `acpidump -o tables.dat` # the tables.dat file
-> >> > > > - `grep -H 15 /sys/bus/acpi/devices/*/status`
-> >> > > > - `lspci -nk -vv`
-> >> > > 
-> >> > > The tables.dat file and the dmesg logs seemed too big to post inline, so I
-> >> > > ended up zipping all of the files (attached).
-> >> > 
-> >> > Thanks for the files. The same suspicion as in the original report
-> >> > https://lore.kernel.org/all/e3f2debf-c762-48d9-876e-bcb60841f909@gmail.com/
-> >> > 
-> >> > Have you read it in full?
-> >> > 
-> >> > My understanding that the pin 3 on GPIO might be wrongly configured
-> >> > by BIOS.  The difference with the original case is that your GPIO device
-> >> > is locked against modifications and until you unlock it (usually
-> >> > it's done in BIOS in some debug menu) it may not be fixable without OEM
-> >> > fixing the issue themselves. In any case you can try the workaround
-> >> > (see https://lore.kernel.org/all/ZftTcSA5dn13eAmr@smile.fi.intel.com/).
-> >> > But I am skeptical about it.
-> 
-> I tested commit c03e9c42ae8 with the following patch and still saw the "probe
-> with driver i2c_hid_acpi failed" error:
+Signed-off-by: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
+---
+ Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yeah, that was expected (see remarks in [] in the pins file, they are fully locked).
-
-> >> Just in case, this https://hansdegoede.dreamwidth.org/25589.html might be
-> >> also useful.
-> 
-> Thanks, I will try to find out if my laptop allows access to advanced BIOS options.
-> 
-> The Lenovo support site lists some BIOS updates for my laptop, though the
-> release notes do not mention any touchpad fixes.  The updates are not
-> available via fwupd, so I probably won't be able to update anytime soon.
-> 
-> > FWIW, seems familiar:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=219799
-> >
-> > Have you tried similar steps described there? (Id est turning PM off and
-> > see if it affects the case. In your case it might be needed to comment out
-> > the dev_pm_ops assignment in the LPSS driver drivers/mfd/intel-lpss*.c and
-> > recompile the kernel / modules).
-> 
-> I tested commit c03e9c42ae8 with the following changes and still saw the
-> "probe with driver i2c_hid_acpi failed" error:
-
-Yeah, also was kinda expected...
-
-> I also tried booting Arch's 6.18.5 kernel with the power cord unplugged to
-> see if that helped, but I still saw the "i2c_hid_acpi failed" error.
-
-Yes, this just confirms a long standing issue most likely related to how HW
-behaves (and we kinda know this already).
-
-> It seems like the next step is to try to enable GPIO unlocking in the BIOS.
-
-Yes, and communicate to vendor of the BIOS / laptop to ask them for the pin
-configurations. If you have time and skills you can try to analyse what windows
-driver does. The main question if the interrupt in question is also storming
-there (they might have simply disable it at boot time or somehow, I know 0
-about windows guts).
-
-Mika, do you have any other insights, suggestions, comments?
-
+diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+index 4cd867854a5f..fde1df035ad1 100644
+--- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
++++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+@@ -60,7 +60,7 @@ properties:
+     description:
+       Interrupt lines for each GPI instance
+     minItems: 1
+-    maxItems: 13
++    maxItems: 16
+ 
+   "#dma-cells":
+     const: 3
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
 

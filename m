@@ -1,85 +1,68 @@
-Return-Path: <dmaengine+bounces-8461-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8462-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gLrGIWIbc2mwsAAAu9opvQ
-	(envelope-from <dmaengine+bounces-8461-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Jan 2026 07:55:30 +0100
+	id aNpEKHRRc2kDuwAAu9opvQ
+	(envelope-from <dmaengine+bounces-8462-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Jan 2026 11:46:12 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA21F713D0
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Jan 2026 07:55:29 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03D2F74894
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Jan 2026 11:46:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 30A7A300F249
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Jan 2026 06:54:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 07662312245D
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Jan 2026 10:42:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E5EC34A3DC;
-	Fri, 23 Jan 2026 06:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B33D037472E;
+	Fri, 23 Jan 2026 10:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZNik+zHF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K88/W9CP"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E44B33D6D6;
-	Fri, 23 Jan 2026 06:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE3B36B065;
+	Fri, 23 Jan 2026 10:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769151239; cv=none; b=nffUHA97bWUWWsKPjQLe4svwQw5F2meUL62FFM+wY5nD8IUMFVvlcltY3EYliMVbZiu4MjsWjF+7XBypAaHibGK7hnLYPaau7j9hr6lZUyLdcutpLjqe7HgN8aN9vtZI9laax8aH0RYoESLVb4uhWUNV+MTKDXCFFGXZnXpD5OY=
+	t=1769164920; cv=none; b=IOi4WulMeOYjTz6lD8QE6PzZU/VgXkQgHWXZTgMFV4Me5YoiWz30WxZZgbmXK0IhyVo8g53u/LLS4jDy21w4MBWlUF+Ezb+P0XpXyOxIpBNW6uJ5NddIVroobGX4cTL5maUUavz9xnXT/q05vwNZNN4yNo9oRa5Ud7hvAcKPfBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769151239; c=relaxed/simple;
-	bh=42gUiI1ZqYMbUsEspGleDV/f+8xy3ciRajpf+AzMI1k=;
+	s=arc-20240116; t=1769164920; c=relaxed/simple;
+	bh=HLrViGVqTC3/G0gsvexqTtXtxspwQxSEDDyxgTv7J0E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V82Pjn4q41mVrWDQejNUM8XTnfFLXLJs/i9SFAZ1Kl1wzeGloiEUCBl8uEhtc9gFB9awY4qI/72TWSAaDjjWJbbvwMp2uChIQnQdzBC5nkPT59XjSXxiytXXoUpCYCrC93m1bYy477OakPxRPj2ZnlpGh2Ui5dUqYQ3bjYKGG9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZNik+zHF; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769151236; x=1800687236;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=42gUiI1ZqYMbUsEspGleDV/f+8xy3ciRajpf+AzMI1k=;
-  b=ZNik+zHFV1oeSnyDtxmJDvOK2SvHJGG1fzgiCF2MsNYht3HvG7FhYMSq
-   1Z6NRoFP7Gsn2+dZkfHQqoULHByxMEbMgKWdFgr0UBc8ONA4C90qV7mSI
-   sLYMQCSbM9zC6+z0oHewoVfIhN+6O0LN0V9zLownnvbMh7JP75APqCVg1
-   w4JZByufXKYlZF+r/DZ0dKyWUEYG042hNDGvW4SC0WI77iubzAmlV/7JO
-   O0VtHC9IT/1ma/YWIOgVuJqYVv0eF2ZORXVV2IXQ/ld5ZLkGCaXzb4j45
-   myk4dSICorKMv+8aqygmnAq2hg0Zd9tj2pAXP+g96Zow4CTZa7T/mUGuO
-   A==;
-X-CSE-ConnectionGUID: XT9gKCHGRQ65EtMXxAa4Aw==
-X-CSE-MsgGUID: cC0qo8dASbGzinfMliupaQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11679"; a="70462645"
-X-IronPort-AV: E=Sophos;i="6.21,248,1763452800"; 
-   d="scan'208";a="70462645"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 22:53:54 -0800
-X-CSE-ConnectionGUID: 11HnK7FxSCWEVttt57MoJw==
-X-CSE-MsgGUID: b8zPJSN7StCmBtbv1A3NsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,247,1763452800"; 
-   d="scan'208";a="206066158"
-Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.112])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 22:53:52 -0800
-Date: Fri, 23 Jan 2026 08:53:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: correctmost <cmlists@sent.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	dmaengine@vger.kernel.org, regressions@lists.linux.dev,
-	vkoul@kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <aXMa_VH0j1BzonCV@smile.fi.intel.com>
-References: <aW4MUisgI6d2Efbr@smile.fi.intel.com>
- <aW9LzBIOIePu59zV@smile.fi.intel.com>
- <d7627ea0-0965-4469-83c2-e2a15edd58a9@app.fastmail.com>
- <aXCYwBMTwkHZPYsi@smile.fi.intel.com>
- <20260121135803.GM2275908@black.igk.intel.com>
- <aXDos20kksml8wdU@smile.fi.intel.com>
- <20260121150256.GN2275908@black.igk.intel.com>
- <aXDuddwBCelAVouQ@smile.fi.intel.com>
- <20260122110021.GO2275908@black.igk.intel.com>
- <a6474592-87db-4fdc-958c-8b09d324df1e@app.fastmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TBj0Sxg/0rRPFPncLgDap7TI/zrUmiH2mcGRR1z9wMjciZ1o8+cW44UfV8qs9w/mxQC+Td2XKNlW5d7U2ooiEscWe5kbbKKWdHGHGdZbL7rprDErrfyHA2cdQ8AYU1OoX49Ed2lwohlXscx39nBScZu9FVh0nWBLwy7QjXG4q48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K88/W9CP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD424C4CEF1;
+	Fri, 23 Jan 2026 10:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769164920;
+	bh=HLrViGVqTC3/G0gsvexqTtXtxspwQxSEDDyxgTv7J0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K88/W9CP38VNlsvsGY4cizpdtUmca1k9hFtwHK6PhgaPrnWH2CuKqJNx2ce/1927M
+	 z23lyd1zE8UmSTz14bfD0pUa+rz3qzLSS3Gejq+50Di+KpU/4d5+UwtA2hPwwcKCQw
+	 kfIBJcXPFtTQrxF11z1ZKTAgs+14yWjmqzr6G8gaUCSb7GY8R+LvDYI/JTEXRpG4xY
+	 T563JVc+Z6dfwEZml6RKjN6FWTXb0TDprK6z1oRVCxsnbpX7vAUDYAHQCWqGTqzWW/
+	 dIY1/0GXJC4d0etgGilNFSXTaohdoNdfOvXOnorf7evKJdma7+vkcUuZfBooAn9fJp
+	 yREIVdvmIZieg==
+Date: Fri, 23 Jan 2026 11:41:54 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-nvme@lists.infradead.org, Damien Le Moal <dlemoal@kernel.org>,
+	imx@lists.linux.dev
+Subject: Re: [PATCH RFT 4/5] dmaengine: dw-edma: Dynamitc append new request
+ during dmaengine running
+Message-ID: <aXNQcowVEMaE1xr5@ryzen>
+References: <20260109-edma_dymatic-v1-0-9a98c9c98536@nxp.com>
+ <20260109-edma_dymatic-v1-4-9a98c9c98536@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -88,96 +71,95 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a6474592-87db-4fdc-958c-8b09d324df1e@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20260109-edma_dymatic-v1-4-9a98c9c98536@nxp.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8461-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[sent.com];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
+	TAGGED_FROM(0.00)[bounces-8462-lists,dmaengine=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-0.998];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cassel@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[dmaengine];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: DA21F713D0
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:email]
+X-Rspamd-Queue-Id: 03D2F74894
 X-Rspamd-Action: no action
 
-On Thu, Jan 22, 2026 at 05:29:38PM -0500, correctmost wrote:
-> On Thu, Jan 22, 2026, at 6:00 AM, Mika Westerberg wrote:
-> > On Wed, Jan 21, 2026 at 05:19:17PM +0200, Andy Shevchenko wrote:
-> >> > Well I mean if touchpads actually worked prior this idma64 commit and now
-> >> > they don't isn't that a regression?
-> >> 
-> >> I don't think so, because commit did the right thing and just revealed an issue
-> >> that was rather hidden. Reverting is not an option.
-> >
-> > I now looked at both working and non-working /proc/interrupts and when it
-> > is working there is no interrupt flood at all:
-> >
-> >  27:          0          0          0          0       2277          0  
-> >         0          0          0          0          0          0 
-> > IR-IO-APIC   27-fasteoi   idma64.0, i2c_designware.0
-> >
-> > This makes me think that perhaps the toucpad is powered off and that causes
-> > the issue until I2C HID probes and resets it. I looked at the ACPI tables
-> > but I did not (yet) find anything that stands out.
-> >
-> > I wonder if it was tried to put i2c-designware*.ko and i2c-hid.ko into the
-> > initramfs, and does work it around? I would expect so.
+On Fri, Jan 09, 2026 at 03:13:28PM -0500, Frank Li wrote:
+> This use PCS-CCS-CB-TCB Producer-Consumer Synchronization module, which
+> support append new DMA request during dmaengine runnings.
 > 
-> I don't see an i2c-designware module loaded when my touchpad works:
-
-It's most likely built-in. This is the requirement when kernel wants to support
-some of the (old) Intel hardware. If you see it in `cat /proc/interrupts`, or
-in the output of `lspci -nk`, it's there.
-
-> $ grep -i i2c /proc/modules 
-> i2c_i801 40960 0 - Live 0x0000000000000000
-> i2c_smbus 20480 1 i2c_i801, Live 0x0000000000000000
-> i2c_mux 16384 1 i2c_i801, Live 0x0000000000000000
-> i2c_hid_acpi 12288 0 - Live 0x0000000000000000
-> i2c_hid 45056 1 i2c_hid_acpi, Live 0x0000000000000000
-> i2c_algo_bit 24576 2 xe,i915, Live 0x0000000000000000
+> Append new request during dmaengine runnings.
 > 
-> I tried adding all of the following modules to my initramfs image and I still
-> encountered the touchpad failure:
+> But look like hardware have bug, which missed doorbell when engine is
+> running. So add workaround to push doorbelll again when found engine stop.
 > 
-> drivers/dma/idma64.ko.zst
-> drivers/hid/i2c-hid/i2c-hid-acpi.ko.zst
-> drivers/hid/i2c-hid/i2c-hid.ko.zst
-> drivers/i2c/i2c-mux.ko.zst
-> drivers/i2c/i2c-smbus.ko.zst
-> drivers/i2c/busses/i2c-i801.ko.zst
-> drivers/mfd/intel-lpss.ko.zst
-> drivers/mfd/intel-lpss-pci.ko.zst
+> Get more than 10% performance gain.
 > 
-> (The drivers/i2c/algos/i2c-algo-bit.ko.zst module was already present in
-> the working image, so I didn't have to add it.)
+> The before
+>   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=33.4k, BW=130MiB/s (137MB/s)
+> 
+> After
+>   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=38.8k, BW=151MiB/s (159MB/s)
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
 
--- 
-With Best Regards,
-Andy Shevchenko
+Hello Frank,
+
+First of all, I hope that your:
+[PATCH v3 0/9] dmaengine: Add new API to combine configuration and descriptor preparation
+series will make it to the upcoming 6.20/7.0 merge window.
 
 
+This RFT series however breaks pci-epf-test:
+
+Before:
+#  RUN           pci_ep_data_transfer.dma.READ_TEST ...
+#            OK  pci_ep_data_transfer.dma.READ_TEST
+ok 14 pci_ep_data_transfer.dma.READ_TEST
+#  RUN           pci_ep_data_transfer.dma.WRITE_TEST ...
+#            OK  pci_ep_data_transfer.dma.WRITE_TEST
+ok 15 pci_ep_data_transfer.dma.WRITE_TEST
+
+After:
+#  RUN           pci_ep_data_transfer.dma.READ_TEST ...
+# READ_TEST: Test terminated by timeout
+#          FAIL  pci_ep_data_transfer.dma.READ_TEST
+not ok 14 pci_ep_data_transfer.dma.READ_TEST
+#  RUN           pci_ep_data_transfer.dma.WRITE_TEST ...
+# WRITE_TEST: Test terminated by timeout
+#          FAIL  pci_ep_data_transfer.dma.WRITE_TEST
+not ok 15 pci_ep_data_transfer.dma.WRITE_TEST
+
+
+After a bisect, first bad commit:
+commit 352fd8d5ed468ea616eb4974b5ac19203528b207
+Author: Frank Li <Frank.Li@nxp.com>
+Date:   Fri Jan 9 15:13:28 2026 -0500
+
+    dmaengine: dw-edma: Dynamitc append new request during dmaengine running
+
+
+
+Kind regards,
+Niklas
 

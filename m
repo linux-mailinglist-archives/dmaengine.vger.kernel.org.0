@@ -1,112 +1,78 @@
-Return-Path: <dmaengine+bounces-8459-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8460-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UPFQIpelcmmMoQAAu9opvQ
-	(envelope-from <dmaengine+bounces-8459-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Jan 2026 23:32:55 +0100
+	id KHQHB+0Wc2mwsAAAu9opvQ
+	(envelope-from <dmaengine+bounces-8460-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Jan 2026 07:36:29 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26EAB6E2F8
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Jan 2026 23:32:50 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89BE6710CA
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Jan 2026 07:36:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C6DE1300AB0A
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Jan 2026 22:32:48 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7C1AF300E5ED
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Jan 2026 06:36:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 941FA3612DE;
-	Thu, 22 Jan 2026 22:32:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 454BD32ED3C;
+	Fri, 23 Jan 2026 06:36:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="lvykA7IL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fxna4hgU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O5HHOy5S"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF9C32254E;
-	Thu, 22 Jan 2026 22:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80AD3112C1;
+	Fri, 23 Jan 2026 06:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769121166; cv=none; b=DPx2YTyY7yk/KuIEWOSx8QTc6OoKi0nt30jQpA8uQQcH0clFiO+LeSRBfaLxhwoqcOLES1WO+lzgC594nAZJaKY96gTWCK0QBmZL9Svt2F8chIv7uPm/WotKdFEJf3nHgL58jekPj15Cpfnt4i9VXmyFEQ19nxBzj0FoP7yGXh0=
+	t=1769150186; cv=none; b=rrpK7/xvsNa2H6qXeOn3LVEmHuilxw29B90wdFVWN36yxe2/OJq0twkjBLqbLIm6TlqmpkClBpxlprhL470CiIu8weCH26tRjo/Qpa5mz19woqGNBVuA0qzojg9y68knYcD26sMZuDZuquRNhrkyFxw6C4F7oy0gsOSxy+QlRkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769121166; c=relaxed/simple;
-	bh=NOAclorXp0xk/AletFeCwImesuzw6pMoIT+Mo/HvVvI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=k11GkDtsk5/8KaE/Lfl4y+Z6BC/eirdV2fzMSiOelAEiSTmhYnAHR9eibbDXhLCAPDgl9tylJTJB4DyawwUZyUzUOfqJJQ5yF7MZa2TtXHFQa/tA9629pXSfEvkwu0jnSqn3Eb1moN+Xzdmvbm0BInut4f+7+QPM2F2GR048p18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=lvykA7IL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fxna4hgU; arc=none smtp.client-ip=202.12.124.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 485817A12AA;
-	Thu, 22 Jan 2026 17:32:37 -0500 (EST)
-Received: from phl-imap-04 ([10.202.2.82])
-  by phl-compute-03.internal (MEProxy); Thu, 22 Jan 2026 17:32:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1769121157;
-	 x=1769207557; bh=zQRMWdGZbciyHZ89+it2gFuutzz7AH0pjJZIPfqd0bU=; b=
-	lvykA7ILot/Xh+M6roE+fi+6Imaqa7buXBZsCL68ixhK3AYa1aAsEgb3UKUtfjzW
-	9hB7psAOszxi3+yURSNEtEraMMwoAU9spL2KYSx2x4RNs2hkqgPaCT/FJeowRx+R
-	0wFKjMxMC9QZfPlpxSvw2Lqemsvw+j7pRzfQS74+5QUzhcmqyK6pVWDlcNX/ktaf
-	PAmsJXPSLvts43Xg/7BYxH+b+QZMowV/8lHpTXbmjaaPopTUq3nYW2x8i7gnG/j1
-	eLJyYpJHx/D2dSjPEZ9Tfs0mO8FBPn9k2qG0wOAnVlnpmlAvMVge1izxfhLDgxUh
-	5NiWstwQxNkQAZ8pq4zoLg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1769121157; x=
-	1769207557; bh=zQRMWdGZbciyHZ89+it2gFuutzz7AH0pjJZIPfqd0bU=; b=f
-	xna4hgUNfV6Zyy5w3zSezYLab9gylWvBAY2yYyY7bDTaOQz0o/yo/dg+j6CxbViL
-	Ozz9Cfg3hR0l01efi1wuSxMotuMJg/3BohJLOfnY97Tsw9b7/6fiIuUoxHXX1OQX
-	xtyFNAeVUqJU4ZoDzCZhYQGREz8eskf57N0qSmp8Kul6Ltby9S7+RhjcutS5V2jw
-	zKQZXkyEY0cHiabaDKvJxw+7CuUla/QXxI3a59nrEV0Icl5jr6kp1nj+HsqPKM84
-	nVU7jBL5qwbe/5j6dAFVHAtOsAoktuqRaqmxdcbK+4a20h91luMHFc+w3rkq8VD8
-	m1sRQgjeKmHjdgQv2d+JQ==
-X-ME-Sender: <xms:hKVyaX5H3ivQLh2Df439nHeLXkQa5YGkcgQrDfkau11nc-FuHDovow>
-    <xme:hKVyaXt4lmnouzgkB37D2CPiGrYulbTEqniuocwBQUVszVQVh6o-4X5a6sRYh0Nz1
-    CmrRjEt9LlE9PM_Hvahh4P088t9f5jWyyxr35v3JsPUnN86-B49Unc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddugeejfeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpegtohhrrhgv
-    tghtmhhoshhtuceotghmlhhishhtshesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrh
-    hnpeejleevhedvjefhtdfhueffhfefgedtvddtgfegfeeiveffhfeffeelgffgffegleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegtmhhlih
-    hsthhssehsvghnthdrtghomhdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtohepvhhkohhulheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprg
-    hnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgt
-    phhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtoh
-    hmpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggv
-    vhdprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:hKVyaVg8Dl4WgUcEGSI0LXkw6l-pEG76UUcWYM7P1w-Sox__CCr0vA>
-    <xmx:hKVyaUEhtBnRfJcDyK22kvMYG-eyGtGkM31jUKT0kf6A2KcB21xkIw>
-    <xmx:hKVyaU_qWEF9KxBGlfHf8EI3oqHKeNh32IiV3_PWekO0lh5hHXg2kA>
-    <xmx:hKVyaby4m8Z_iSZ4GvMjBOVu07gAjdj2j2Qh6MEUUqaeHLXp6iKuFg>
-    <xmx:haVyachMuLRgpCAngAQl3CX0LtLhqUVsA1msLZR3BIdHIWG2EemRPL6J>
-Feedback-ID: i87314915:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2A761B6006E; Thu, 22 Jan 2026 17:32:36 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-Precedence: bulk
-X-Mailing-List: dmaengine@vger.kernel.org
-List-Id: <dmaengine.vger.kernel.org>
-List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ThreadId: AwebR64VcaZc
-Date: Thu, 22 Jan 2026 17:29:38 -0500
-From: correctmost <cmlists@sent.com>
-To: "Mika Westerberg" <mika.westerberg@linux.intel.com>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev, vkoul@kernel.org,
- linux-i2c@vger.kernel.org
-Message-Id: <a6474592-87db-4fdc-958c-8b09d324df1e@app.fastmail.com>
-In-Reply-To: <20260122110021.GO2275908@black.igk.intel.com>
-References: <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
- <aW4J6bmHn2dLuOxo@smile.fi.intel.com> <aW4MUisgI6d2Efbr@smile.fi.intel.com>
+	s=arc-20240116; t=1769150186; c=relaxed/simple;
+	bh=m8Uzyh3MRWYmNRd5LZIWnm3aGcvRJjfy+JkFJkChTAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ajvBcbnh1AhIiR+SaeltGNvZ+/mHmqnsjme9U4t5eEs9A3Il8SpfXPhhOHIgr8opx2PktzNKAUTQ6qNqwhKv0Af2I1AJ9q46+47bgQvpWl1szsn502DDyULfRicq8zApzmM6r+SK4LyUmQNgjpwd+if0G/8JP6b1G/Stqm7foZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O5HHOy5S; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769150184; x=1800686184;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=m8Uzyh3MRWYmNRd5LZIWnm3aGcvRJjfy+JkFJkChTAE=;
+  b=O5HHOy5S8tPA/dOSJsJeDimWm1GSEXFkAlRPHlmUCjPVBngcF0LnLrNS
+   1Ni9b+QTU0CH8eor72mddK5m6vyax6zDSTwrGpWsvF0nCmQi4Tavy8JLw
+   z00t3oKgmRDCIwsmUGcz5QWvrxKApRNAZMf78BaWKZzwpvNK41efdE15E
+   tIf/M/AhQgMh5XW792yHl/w9pLzFGcO27TnJTCCWhzf9XPO0/SquVJpK1
+   mTOiatcLASA5sTbooulWl5ei6cP+Q3G1oUFDan25HbQYp6V20uDlxqfOd
+   hBhzla+TIeBS/XHSyxc+sNep1CJbHxUGvBk1IlIQK8n+j4ki6W+fnSC1L
+   w==;
+X-CSE-ConnectionGUID: 8t4fIzg1Rr2Wb464Zap8HA==
+X-CSE-MsgGUID: Q+JPhvrZSte62QZ3m3T5Hw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11679"; a="81772363"
+X-IronPort-AV: E=Sophos;i="6.21,247,1763452800"; 
+   d="scan'208";a="81772363"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 22:36:24 -0800
+X-CSE-ConnectionGUID: 4eG0LOGLR/2bt5BD0p3LFg==
+X-CSE-MsgGUID: lxib6WJ3RFixgpnShOPxNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,247,1763452800"; 
+   d="scan'208";a="211454639"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa004.jf.intel.com with ESMTP; 22 Jan 2026 22:36:22 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 5BE9D95; Fri, 23 Jan 2026 07:36:21 +0100 (CET)
+Date: Fri, 23 Jan 2026 07:36:21 +0100
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: correctmost <cmlists@sent.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	dmaengine@vger.kernel.org, regressions@lists.linux.dev,
+	vkoul@kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
+ when idma64 is present in initramfs
+Message-ID: <20260123063621.GP2275908@black.igk.intel.com>
+References: <aW4MUisgI6d2Efbr@smile.fi.intel.com>
  <aW9LzBIOIePu59zV@smile.fi.intel.com>
  <d7627ea0-0965-4469-83c2-e2a15edd58a9@app.fastmail.com>
  <aXCYwBMTwkHZPYsi@smile.fi.intel.com>
@@ -115,83 +81,91 @@ References: <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
  <20260121150256.GN2275908@black.igk.intel.com>
  <aXDuddwBCelAVouQ@smile.fi.intel.com>
  <20260122110021.GO2275908@black.igk.intel.com>
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work when idma64
- is present in initramfs
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+ <a6474592-87db-4fdc-958c-8b09d324df1e@app.fastmail.com>
+Precedence: bulk
+X-Mailing-List: dmaengine@vger.kernel.org
+List-Id: <dmaengine.vger.kernel.org>
+List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <a6474592-87db-4fdc-958c-8b09d324df1e@app.fastmail.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[sent.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[sent.com:s=fm2,messagingengine.com:s=fm2];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8460-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8459-lists,dmaengine=lfdr.de];
-	FREEMAIL_FROM(0.00)[sent.com];
+	FREEMAIL_TO(0.00)[sent.com];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RBL_SEM_FAIL(0.00)[172.234.253.10:query timed out];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cmlists@sent.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[sent.com:+,messagingengine.com:+];
+	DKIM_TRACE(0.00)[intel.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
 	TAGGED_RCPT(0.00)[dmaengine];
-	NEURAL_HAM(-0.00)[-1.000];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sent.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,messagingengine.com:dkim]
-X-Rspamd-Queue-Id: 26EAB6E2F8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:dkim,black.igk.intel.com:mid]
+X-Rspamd-Queue-Id: 89BE6710CA
 X-Rspamd-Action: no action
 
-On Thu, Jan 22, 2026, at 6:00 AM, Mika Westerberg wrote:
-> On Wed, Jan 21, 2026 at 05:19:17PM +0200, Andy Shevchenko wrote:
->> > Well I mean if touchpads actually worked prior this idma64 commit and now
->> > they don't isn't that a regression?
->> 
->> I don't think so, because commit did the right thing and just revealed an issue
->> that was rather hidden. Reverting is not an option.
->
-> I now looked at both working and non-working /proc/interrupts and when it
-> is working there is no interrupt flood at all:
->
->  27:          0          0          0          0       2277          0  
->         0          0          0          0          0          0 
-> IR-IO-APIC   27-fasteoi   idma64.0, i2c_designware.0
->
-> This makes me think that perhaps the toucpad is powered off and that causes
-> the issue until I2C HID probes and resets it. I looked at the ACPI tables
-> but I did not (yet) find anything that stands out.
->
-> I wonder if it was tried to put i2c-designware*.ko and i2c-hid.ko into the
-> initramfs, and does work it around? I would expect so.
+On Thu, Jan 22, 2026 at 05:29:38PM -0500, correctmost wrote:
+> On Thu, Jan 22, 2026, at 6:00 AM, Mika Westerberg wrote:
+> > On Wed, Jan 21, 2026 at 05:19:17PM +0200, Andy Shevchenko wrote:
+> >> > Well I mean if touchpads actually worked prior this idma64 commit and now
+> >> > they don't isn't that a regression?
+> >> 
+> >> I don't think so, because commit did the right thing and just revealed an issue
+> >> that was rather hidden. Reverting is not an option.
+> >
+> > I now looked at both working and non-working /proc/interrupts and when it
+> > is working there is no interrupt flood at all:
+> >
+> >  27:          0          0          0          0       2277          0  
+> >         0          0          0          0          0          0 
+> > IR-IO-APIC   27-fasteoi   idma64.0, i2c_designware.0
+> >
+> > This makes me think that perhaps the toucpad is powered off and that causes
+> > the issue until I2C HID probes and resets it. I looked at the ACPI tables
+> > but I did not (yet) find anything that stands out.
+> >
+> > I wonder if it was tried to put i2c-designware*.ko and i2c-hid.ko into the
+> > initramfs, and does work it around? I would expect so.
+> 
+> I don't see an i2c-designware module loaded when my touchpad works:
+> 
+> $ grep -i i2c /proc/modules 
+> i2c_i801 40960 0 - Live 0x0000000000000000
+> i2c_smbus 20480 1 i2c_i801, Live 0x0000000000000000
+> i2c_mux 16384 1 i2c_i801, Live 0x0000000000000000
+> i2c_hid_acpi 12288 0 - Live 0x0000000000000000
+> i2c_hid 45056 1 i2c_hid_acpi, Live 0x0000000000000000
+> i2c_algo_bit 24576 2 xe,i915, Live 0x0000000000000000
 
-I don't see an i2c-designware module loaded when my touchpad works:
+Well it must be there. This is from your working log:
 
-$ grep -i i2c /proc/modules 
-i2c_i801 40960 0 - Live 0x0000000000000000
-i2c_smbus 20480 1 i2c_i801, Live 0x0000000000000000
-i2c_mux 16384 1 i2c_i801, Live 0x0000000000000000
-i2c_hid_acpi 12288 0 - Live 0x0000000000000000
-i2c_hid 45056 1 i2c_hid_acpi, Live 0x0000000000000000
-i2c_algo_bit 24576 2 xe,i915, Live 0x0000000000000000
+[   27.686842] input: ELAN06FA:00 04F3:327E Mouse as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-13/i2c-ELAN06FA:00/0018:04F3:327E.0001/input/input6
+[   27.689119] input: ELAN06FA:00 04F3:327E Touchpad as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-13/i2c-ELAN06FA:00/0018:04F3:327E.0001/input/input8
+[   27.691257] hid-generic 0018:04F3:327E.0001: input,hidraw0: I2C HID v1.00 Mouse [ELAN06FA:00 04F3:327E] on i2c-ELAN06FA:00
 
-I tried adding all of the following modules to my initramfs image and I still encountered the touchpad failure:
+I suspect you have it built-in to the kernel image and that's why it does
+not show in the module listing. Can you change that to m:
 
-drivers/dma/idma64.ko.zst
-drivers/hid/i2c-hid/i2c-hid-acpi.ko.zst
-drivers/hid/i2c-hid/i2c-hid.ko.zst
-drivers/i2c/i2c-mux.ko.zst
-drivers/i2c/i2c-smbus.ko.zst
-drivers/i2c/busses/i2c-i801.ko.zst
-drivers/mfd/intel-lpss.ko.zst
-drivers/mfd/intel-lpss-pci.ko.zst
+CONFIG_I2C_DESIGNWARE_CORE=m
+CONFIG_I2C_DESIGNWARE_PLATFORM=m
 
-(The drivers/i2c/algos/i2c-algo-bit.ko.zst module was already present in the working image, so I didn't have to add it.)
+and put to the initramfs? Does that make it work?
 

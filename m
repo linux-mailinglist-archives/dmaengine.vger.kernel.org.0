@@ -1,90 +1,90 @@
-Return-Path: <dmaengine+bounces-8469-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8470-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8Cl3HmcydGmm3AAAu9opvQ
-	(envelope-from <dmaengine+bounces-8469-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 24 Jan 2026 03:45:59 +0100
+	id 6FabEY4ydGmm3AAAu9opvQ
+	(envelope-from <dmaengine+bounces-8470-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 24 Jan 2026 03:46:38 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35C5D7C3D9
-	for <lists+dmaengine@lfdr.de>; Sat, 24 Jan 2026 03:45:59 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0A237C3F6
+	for <lists+dmaengine@lfdr.de>; Sat, 24 Jan 2026 03:46:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4D27F3006681
-	for <lists+dmaengine@lfdr.de>; Sat, 24 Jan 2026 02:45:57 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0E960303968B
+	for <lists+dmaengine@lfdr.de>; Sat, 24 Jan 2026 02:46:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F083223DFB;
-	Sat, 24 Jan 2026 02:45:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2235226863;
+	Sat, 24 Jan 2026 02:45:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKvEMG/q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlDteU7x"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B1561668
-	for <dmaengine@vger.kernel.org>; Sat, 24 Jan 2026 02:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD62217F33
+	for <dmaengine@vger.kernel.org>; Sat, 24 Jan 2026 02:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769222750; cv=none; b=oyVAvxToMBkRiN4V9IklXMQ2HPLwGQAZ8ODZoA/S4So+UN0aPbEwnRE9nkSwbXhO105BQ25LcSzgwIpw5DTZ4YRZV9gHFh/kge5iJfrvFpxxQPFBfC64xRhUYvcDtRLlNzTpX50aKGLa0jV6c98U8Z2tLNQfKpe4sMbPehBdP1s=
+	t=1769222752; cv=none; b=XxZ69HbeiRHRipnBoxRpvxfF9S8v77X8qeCE6xcZW7USr3S+zhjVLkkjBaahho0qoAhKD2UcAl353Wu6IAvbbYyjV38ZWf5Q8kwDRnZY7jDhVfdkNA5rDMEYZuWPynjdUwygiTkVQlk1EWmfZm8O19bFnI6L4Nhi8xBV3XMSX04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769222750; c=relaxed/simple;
-	bh=6qNe7alfoLaNkb6A2ucPP3PR2IONBpr3FT69Eohp1pU=;
+	s=arc-20240116; t=1769222752; c=relaxed/simple;
+	bh=7kIYCT/CsNfKsrwpWxONV+yvNh3NM5fdoFMTV9HU2OI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h4f0YzNIxFQ6MzdfDoKwVpawIlYZhBpcXkOtYdAI/0yARpx0dT7U+RrSA7LZSvRRDlqKGOMhJm4c1V2A8F3eYezoorrKJQ9oekPyOjDIt79lcBoFGXmoaUXzV65nVcBPWHtdbTAlfM8EpkzdsLilKWgs3JJThPDmVhZSOAML8EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SKvEMG/q; arc=none smtp.client-ip=209.85.210.171
+	 MIME-Version; b=cQUAPmZJE0h9vScO1SjIzQuKRKFtMn7O4ceDtTGlcq89W6fOrg1+jvTZIl6NJEU7JN8Yu/snaiqulirJKUb+99768DWk2VPQgaNhqcDauThmuIg+SjTBxLL5tLGrKdM4edhS+eKqUYpW4U5WqGfphCeLitu+0kJi/s/XkjLe/NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UlDteU7x; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-823075fed75so1520086b3a.1
-        for <dmaengine@vger.kernel.org>; Fri, 23 Jan 2026 18:45:49 -0800 (PST)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-81ecbdfdcebso1551145b3a.1
+        for <dmaengine@vger.kernel.org>; Fri, 23 Jan 2026 18:45:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769222749; x=1769827549; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1769222751; x=1769827551; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OdDjbq1xjg18vF2UkMDVffVrXUmHaDZL8tdcqunWuEo=;
-        b=SKvEMG/qYj93lrUdq93HkHGwg6EU/fBE4AdoAWdcUlFgjJiF2MYOrYbNXpp5ubPUvm
-         I/FFu/orvS5vpFLrZYyPYBp4iAA/Cl/2cKHRP2P+7wPg52NQEJ0tJ8PBeJ5CcJwIGNjv
-         Rajaaz1PLobqHC1gDDXPE4oJvrLlrVDUm6H7mI+ln+8jaBdEwJYBJdSAndHpmZrHWW+C
-         woHXSmC66QSdpAlHYwNwWGwwyq+Op3ZRyQKqYu7urqu47IFkQIDnazUu17ygdRiqiJgU
-         hmsW+cJgCFiQ3H+moUz84SibpG6IzGRtjVhckET31pT/yVRgKkFFR3bCqERD1H7QLpGM
-         UX4A==
+        bh=g5idsE3kyWrOGo2nrRKbAdnFEr6dvFU7Gg/6HS06H7Y=;
+        b=UlDteU7x7NxJ3Tnt9kR+h97bF3Btwp8DslcGIhGT9v49MX8cltk94GM2Wd2NIa8FhZ
+         egU7+BRWt6wEl1EjQ6PwsQhH5VJhmY1WO4zPbB7destAFsTh0dqfX003as+shWBD9t5k
+         KfCxYuSqZpfvB/dyHFAEST4CSv0b4skiKHSLvY6zZlE5fDVnPl1OK9KmiIuLQzcQ3M/l
+         vCViSTGQyxZptzl74BWjomKvjuaazEfZAIR9/1lXsybJOP596M2A4JOLzvKJDzrMLzxT
+         gPYQ31R8vSJ5mfhYhBXQTbXa89DqG3T453GZnCENojDvLIGwtC+/xMuJv7Lv31LO/1h4
+         lAjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769222749; x=1769827549;
+        d=1e100.net; s=20230601; t=1769222751; x=1769827551;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=OdDjbq1xjg18vF2UkMDVffVrXUmHaDZL8tdcqunWuEo=;
-        b=R9hzXzxfbSmBFAiZTuhwDiZDVxyBqzXOgjCLBg9iY1g9TdlLWbuk4OkmNPopCYZxZm
-         1LWLp2UCV9TAgGf2bkKgT7RqJqxDYhY1pfVQTcmny/+sjU6A9XNg8vJORkVeCMltA8Ly
-         oRfQNCq6cI4RH3I6wpSLA1vhFluihzNsnXAhA4Mt5zGs59vpvOk/WM21oKr+kRm7qheh
-         qdaUMbN7UUdFYP5NNY4NG4hKP/dO1nUNGTBBYVF+ni2ao02XW/XKb3mqbG7JOT+COj3B
-         GQnvHhNJq+f4THPURpon0zr5XeARHP9G5OuAPBY/4uLQJaTP3K9VN8RVmcC6F1mjN/ev
-         V87g==
-X-Forwarded-Encrypted: i=1; AJvYcCXYQeHNeVejUdmKmPOWHUQE/Fxugbg7VstR3zmNjMjxuXitI8mUZLJCxeHm2KsLTI6qbVFnyW2BXkg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH3+XaxbTONAm2qE2wDK2WwYznK5v7kmVqh4wTMEdnfCku9SsJ
-	7aRW60i5oL59Jo6MgcG35oLwL6s92AWUSKCUGWEBMRNJF0VcGMfwEZWp
-X-Gm-Gg: AZuq6aKk5TGXrNGgn+M2M10GnLgFPUvg102wJcZHrAxQq24KXRPa0ZPLzvSFYDcNfOJ
-	J85YkzbAEOWXNl13jeFKvo8RSjejWE7wDdcgeHZz8aV5fchgXAB8gCKnpWCUqpaG76YYXTBtteE
-	OKm8F03tswQSugGhLmDvHnMe5tYRnmbnyzNK5VnJCmZf/ntoDZuCAicPjFCxOzrAJfiR9SE07Gi
-	AdAxRhDhUZq7zwAU6nzyrqylPkRluzRCkXMUUWcrz2wotMvT+A4sGTrVQGv/L26kIMnXGhTkZzn
-	ewToA4ueIz4TivBajG4BZDukAgQN8yUbqqg3UwHY3nBUonTowSJLn2WgKXpSwGjB150mUakNHck
-	SZ2TkvBZH1LTGgrXLawuj2N6clIFW2na1+kQQ4W3aijauZqb+8aB68WzXKW9NZaarZP34RYSAHA
-	e0f+j7WjC0LynVuxQOINltN/30JNwwLJbtl9oN1Q6zVl6rMg==
-X-Received: by 2002:a05:6a00:c91:b0:7e8:3fcb:bc3d with SMTP id d2e1a72fcca58-82317b01bd4mr4645708b3a.18.1769222748554;
-        Fri, 23 Jan 2026 18:45:48 -0800 (PST)
+        bh=g5idsE3kyWrOGo2nrRKbAdnFEr6dvFU7Gg/6HS06H7Y=;
+        b=NdpBmQD44F/l0eWecE0PqpfY25J/2SXkkfRDfNNxPQt/Osprt1FV1sh1lXpeq3voep
+         gIHHoFnYZ1eR5oPbMg7hi9ib0BjofZjApPCYPusxo+EZWNC8Qtnl+K44z9QWUFbsMGjs
+         fGppqiKWBAiUDQmbww0mhpPa9iUVzb6HdttuMpDr1+om16KGn/Aiub1f3ahDXJX/n555
+         pQgSmLerentvw3HtkYN4TyiFUqVBy1uaIeq590Ef+G2Zh2RiHQd0SBAWxcvgctxXSf6r
+         MwWx61V2TnbaQmFsIc4MWW+Vuyng9Ic4i9kam+vXOxJWge4CJ7fFZdYPuu5gPwWuRJzc
+         XD2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUXBsbS65HV+h6rwNnAeHymWZWe0hqItqrHTbm2PqKWi9y8u3kiNMDt4CceSq6MWCgZNFUx/2REY70=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf9CXaVnm+brPtteL05+r4YlnL819B8VMqkwrPPXt4UV8+keIm
+	fgh6jn9/31PNlDP+NEe45U5LG3VbsEbWG5dix1OTJbkHVRpyq4cGYFB8
+X-Gm-Gg: AZuq6aJ4Hbm3BwxbT3se2dLTnLWV8znEUSklR/rF0l1lofnyIL41HyvkWJ5P+85uGJL
+	uqZs0Wz4+YKmQ+IW3ksnLzqfb6nwVYUIOLVTketoTnEJGsj1qgBc5LCV6dza/CM8Fe5qX4eHJiu
+	tUH3/f4QFiGIYmF0zDKeQlnA4N85BbmNBgG0cInwYbLYVJeF0w08D+E/yOGehGku1L39AKpTrZ6
+	eIRAuGTwan0ujoe9Zl/Nsus2iD9RSeACspM/Eow26H3uBIudyBTtKnn931l2WH9H+osuI0EWc9e
+	VZc9cwKFshOsg1uf32sPQ5SeR4WK+T445esMIMH0l3TUtYNBRy1FDBg2XsfjFRNUoR7sC3d98nJ
+	0AflJ7xTGT5sDb4ZorYskz/WVQQJwilCxZU91wtepkdTWPUFMPdfwJG4LUb9LIuC4zxuWJDSnId
+	s39NeOdB+BbLIATN5fxOBaw1QCh4ejVnyynrw=
+X-Received: by 2002:a05:6a00:4b06:b0:81f:3f03:6832 with SMTP id d2e1a72fcca58-82317e1e716mr4465903b3a.44.1769222750757;
+        Fri, 23 Jan 2026 18:45:50 -0800 (PST)
 Received: from localhost.localdomain ([60.51.11.72])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82318644989sm3279598b3a.13.2026.01.23.18.45.46
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82318644989sm3279598b3a.13.2026.01.23.18.45.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jan 2026 18:45:48 -0800 (PST)
+        Fri, 23 Jan 2026 18:45:50 -0800 (PST)
 From: Khairul Anuar Romli <karom.9560@gmail.com>
 To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
 	Vinod Koul <vkoul@kernel.org>,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Khairul Anuar Romli <karom.9560@gmail.com>
-Subject: [PATCH v3 2/3] dmaengine: dw-axi-dmac: Add blank line after function
-Date: Sat, 24 Jan 2026 10:45:38 +0800
-Message-ID: <20260124024539.21110-3-karom.9560@gmail.com>
+Subject: [PATCH v3 3/3] dmaengine: dw-axi-dmac: Remove not useful void return function statements
+Date: Sat, 24 Jan 2026 10:45:39 +0800
+Message-ID: <20260124024539.21110-4-karom.9560@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260124024539.21110-1-karom.9560@gmail.com>
 References: <20260124024539.21110-1-karom.9560@gmail.com>
@@ -101,38 +101,36 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8469-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[synopsys.com,kernel.org,vger.kernel.org,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8470-lists,dmaengine=lfdr.de];
+	FREEMAIL_TO(0.00)[synopsys.com,kernel.org,vger.kernel.org,gmail.com];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[karom9560@gmail.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[karom9560@gmail.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 35C5D7C3D9
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: F0A237C3F6
 X-Rspamd-Action: no action
 
 scripts/checkpatch.pl --strict throws
-CHECK: Please use a blank line after function/struct/union/enum
-declarations:
-drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:422
+void function return statements are not generally useful:
+drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:598
 
 Signed-off-by: Khairul Anuar Romli <karom.9560@gmail.com>
 ---
@@ -147,22 +145,23 @@ Changes in v2:
 Reference to v1:
 https://lore.kernel.org/all/20260104093529.40913-1-karom.9560@gmail.com/
 ---
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 1 +
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 17 ++++++++---------
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 8bb97fb8fd4c..e59725376f8e 100644
+index e59725376f8e..c124ac6c8df6 100644
 --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
 +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -419,6 +419,7 @@ static void dw_axi_dma_set_byte_halfword(struct axi_dma_chan *chan, bool set)
- 
- 	iowrite32(val, chan->chip->apb_regs + offset);
+@@ -593,8 +593,6 @@ static void dw_axi_dma_set_hw_channel(struct axi_dma_chan *chan, bool set)
+ 			(chan->id * DMA_APB_HS_SEL_BIT_SIZE));
+ 	reg_value |= (val << (chan->id * DMA_APB_HS_SEL_BIT_SIZE));
+ 	lo_hi_writeq(reg_value, chip->apb_regs + DMAC_APB_HW_HS_SEL_0);
+-
+-	return;
  }
-+
- /* Called in chan locked context */
- static void axi_chan_block_xfer_start(struct axi_dma_chan *chan,
- 				      struct axi_dma_desc *first)
+ 
+ /*
 -- 
 2.43.0
 

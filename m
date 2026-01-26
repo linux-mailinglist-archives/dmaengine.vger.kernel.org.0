@@ -1,547 +1,216 @@
-Return-Path: <dmaengine+bounces-8499-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8500-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EBmuFCtKd2mkdwEAu9opvQ
-	(envelope-from <dmaengine+bounces-8499-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Jan 2026 12:04:11 +0100
+	id QG0mNlFMd2msdwEAu9opvQ
+	(envelope-from <dmaengine+bounces-8500-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Jan 2026 12:13:21 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E604787781
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Jan 2026 12:04:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 369718787C
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Jan 2026 12:13:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 38AA4301779E
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Jan 2026 11:04:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 283CB3015447
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Jan 2026 11:12:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F00C9331A5D;
-	Mon, 26 Jan 2026 11:04:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18EA3330B36;
+	Mon, 26 Jan 2026 11:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="tljOAZk5"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ReS2TnnT"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011055.outbound.protection.outlook.com [40.107.74.55])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E41B331A40;
-	Mon, 26 Jan 2026 11:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769425445; cv=fail; b=Ui+EyEIvZPMzOUwkfH5bh81xkf5X2B+wT95SjjjiDpu/XR7bW4p2qumi01O2NSGHBYbM98u2Af1JeUFdLTjum3b724prv4Iypn0D9mDlR/2+JU373PvgZ3ggvIJIKhHbOfXzhTfISqFP+f37TsCjiGbGjk1YpyvAo0B9+/v3M08=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769425445; c=relaxed/simple;
-	bh=AIFs/U+/Nbm673LiQgyvELNRsU8rucfNKofqhlgE9UA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=j47imyPicdJ9NY26Sa3yTczQ+thw6ltu3RR+ud3zB3F9IN7mM1NW7BjaLjFpQnvkEuZ9VOw+Y2/72PsEe5a1pZbXwZtoPFeM4QQPWeYFixS4JGPaMzDHKoX4wdTLvwbXfXY2XoOkAX+dO4Y8H5+W3PInEReC6/9FI9Drd9YgrpM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=tljOAZk5; arc=fail smtp.client-ip=40.107.74.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hMnFg7M4gGBJtBE1jt4xoILglh7aQYuJvOrtBIAQ0dddCbHX6bGzwa9NzWw8odidkjPk2822xCvlCnbHid3DcsgF3CSdMY24Ab3DKWPIZbWWtjUUQQ3b4nS5fDid29HhwQe1kWRanQDoe2HgFsM08Da5zNN5/90YPEd+JCLeppJXly9opW/v59z9izh83Z8fAh+xaCPDNYz8cbXdvg1PTPQKAZ9CDmHWukX/xsi7O1T1fv7hPNIPOR7wGDNvSOuj24LUrBePnibTsu5u3EAB55ZfLC0EqlT8xuZxklk3eA8BYHB24tqvTbUMiWgHVtZFMdxJ+gUCxJ5/NcY4OUUvkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=av2hF1Oyp66q0lfIMlflnDkUlPTV0jxwrGcQM3MGvZw=;
- b=iZda5B4lOkKYHVsowzdEZu2eL4MV9dFXBOeg0PS7Qle5ifa7COheZAjR0CunxwvXpEIZLt1druEcdpL0ybkfDYWxXGZIOnmDXCIh5mC2gjrs53ilPDf8RmgjWtbXVeZaEdiDbneRjLMHnE0+K/iCmLaXqKLnW2ABg8ekouhCnfP/9EatqRs2EOAPKemJpCOf3PAkY5Fe5aXFHJjeLdftpnPDD8ruu816Te/7yZc9q92EEmmZoGfSCbeJBBzh7KsjLnMFPq5i7+/O66/wpE23hZIgo0odk01/bE4dKfI6PINpu7v6Qu2LrF6p1CR3NQFOSZTc+QTa9RBrdb7NshPu2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=av2hF1Oyp66q0lfIMlflnDkUlPTV0jxwrGcQM3MGvZw=;
- b=tljOAZk5nt1AfxcIk5bRuL3QPksvGxelbV7jmI7p575jMl2tjcmY/DqM04b3jzjBt0XSfLfzFerfwMn976XoseHx7kKhOlxYhFGcVfJMHuqK3mrpsEjb83+9ct07gJDoeXJNe+br+dMBC25H0rQRMXwg1Ff13BTBjglDY7SpIuI=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by TYWPR01MB11147.jpnprd01.prod.outlook.com (2603:1096:400:3f4::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.15; Mon, 26 Jan
- 2026 11:03:56 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1%6]) with mapi id 15.20.9542.015; Mon, 26 Jan 2026
- 11:03:51 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Claudiu.Beznea <claudiu.beznea@tuxon.dev>, "vkoul@kernel.org"
-	<vkoul@kernel.org>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>, "lgirdwood@gmail.com"
-	<lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>,
-	"perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "geert+renesas@glider.be"
-	<geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-CC: Claudiu.Beznea <claudiu.beznea@tuxon.dev>, "dmaengine@vger.kernel.org"
-	<dmaengine@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-sound@vger.kernel.org"
-	<linux-sound@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>, Claudiu Beznea
-	<claudiu.beznea.uj@bp.renesas.com>
-Subject: RE: [PATCH 5/7] dmaengine: sh: rz-dmac: Add suspend to RAM support
-Thread-Topic: [PATCH 5/7] dmaengine: sh: rz-dmac: Add suspend to RAM support
-Thread-Index: AQHcjq8LxgsLnLJrc0+4TWo3c3gckrVkQ4/Q
-Date: Mon, 26 Jan 2026 11:03:51 +0000
-Message-ID:
- <TY3PR01MB113461F734BA087B60605C6FC8693A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20260126103155.2644586-1-claudiu.beznea.uj@bp.renesas.com>
- <20260126103155.2644586-6-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20260126103155.2644586-6-claudiu.beznea.uj@bp.renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TYWPR01MB11147:EE_
-x-ms-office365-filtering-correlation-id: 08395b1b-a02e-48c8-b0fa-08de5cca96c9
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700021|921020;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?/EKrgIDLPQ9FBwQqua22cj2pj39Tss8r+suSUuJ5JkCRdJrrvwtXKCrDDvOj?=
- =?us-ascii?Q?RXxwuFMmL0WnjSG3Hm1SVYJ6d8r0zhKSLlFfGNF74/agrjWRF+epHdIK8ORp?=
- =?us-ascii?Q?QBJ33QbDwLV36mG0y0JfaXmvEMczlLQwulpGBNmhSM+IsPF1/9sqzafTfsgv?=
- =?us-ascii?Q?bMMgChrtx7lQZ+0EUYr9+9EMyq66zCpk2fqPe/Z3om4dZX77auJ+6Svo7JoA?=
- =?us-ascii?Q?XJk7MBpWwTYD7c4USIwXEc/P2uHLg6r9QF3TtszsoMqBghRkrvI05beft+vN?=
- =?us-ascii?Q?RMARhXXHrMnss3kPUUEUDtovnYU2jnXB0EebiNWe48y7lQ787AtIeo9iJvwO?=
- =?us-ascii?Q?Nh+c5wmWxkOsuwed+qlwgYtynx5SlNrVDtBod9BDBmsOuWUdwJDj8r3Knipn?=
- =?us-ascii?Q?zXaqDYcALvYxlwqTnCVYZXQRveK9JUXwM2OSk2CwOLaoaNeiGUKGEzZ90DdM?=
- =?us-ascii?Q?BPriaiclckmUsefPZJXi0hNVGwfON9KNxWIvclQUAcCKCOsT7Mg/tCsBQ1Lb?=
- =?us-ascii?Q?s/AtPbdSAki/x7Rw5nWI3BhZvI3+SvZzOVpjpsdcZoL+A2ZL4cwMLkmydyjh?=
- =?us-ascii?Q?3DVo2xD3T+jOab/JSS+o2pMUeXlEZlET2O8SQBR//nt61HNwyaUaAZ97dSX/?=
- =?us-ascii?Q?M22puK/kofdj1AavHGt8uNzS+FJxv47uJVeBCdZdtd4L2M6KUhy3Fku1MrQQ?=
- =?us-ascii?Q?qT9UD7gKn23FwfB6lXE6m8HdS0P9veWUUnbld1+VcC9ewLM50Mo0FcSa/Qwq?=
- =?us-ascii?Q?6ZspGq2Vxvy5uaAL8OZS4qAJ36+zQ4QSsutSf6aeyauS2HMtV6cROxCES3iB?=
- =?us-ascii?Q?+Vp2b+swQmVb0cFVC6Xk+4+1HfNH05bhbcAOn+FXoyrF18RrfK8B2UpuLgSL?=
- =?us-ascii?Q?B8uZxI0Cr8NDrNwdn7EHGVyXLLlMStoU7wOhM+2NNY2YKiFqo45/R+z38kOj?=
- =?us-ascii?Q?JTMAolB4WO2e1mUe13hLPC834QkmU8ARLCqYvwRBQWKcx4sUoETVSqJacmby?=
- =?us-ascii?Q?pRpohCYNr0MHCHV9XWUo818M3a7IHS1ajQ1AsslQpJo4cbf2TDEtZ19S1UOp?=
- =?us-ascii?Q?0pMFHlniBUM+SJBPVS02KZPr7e52EFcAZ4livCwKTjmLgL2lzWq4f0J8RbUi?=
- =?us-ascii?Q?WvQN9D3Fj9zsAaqAW3FOauXCNeTxdgCNpK60FACXXr4pdCnV454LeYJd8r1W?=
- =?us-ascii?Q?fOdZ19KLVeaOsZ70nv0hnarLPKz2pJ3DZ5cOt9JtF1qW/E/Pds3Wxuxc3OLp?=
- =?us-ascii?Q?e1zGLCVuDWbFGY3GL6fUOeA6zOzRPBE5YLWVORwz3Ujt1ZxDDN3wI8fzg68D?=
- =?us-ascii?Q?UOvy9rMBSlFiZlCJ2iTTk+TO7CklPQPdbhvlJW0JgbWwQIcXux+Xyoie3PQ2?=
- =?us-ascii?Q?86jZwtSmSrvGu9YqK509z+aW01p/70ZVshziJosy/Ci7Dwvp+RkjPtOK3biW?=
- =?us-ascii?Q?41izGCTaUhlNGkCPK6BYtD2VTmtQjzJf3Cou4hpwN4ow5woI0Iph7enbR0LH?=
- =?us-ascii?Q?Db+c5TM2xBUP/BsrcomzzPk9V5z0Mcib+PFNWC6mdg95ZdZifB9jgOLQiwdh?=
- =?us-ascii?Q?VUx0Si495j4/KzQltwVIdkWh0FB6yBfLqabk1kM0/G2QHEokpyJ1k3ufq6w2?=
- =?us-ascii?Q?4K+3/0dVVjkqfj0+RLwosdySsxT8IqD6H0BXpya8ch3Y?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700021)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?zKdv1/Phj+uVJqM0LfIL63Omq3RDrsBp6Xs7g/vLu3e1t3B2wmk/+WVSLU0b?=
- =?us-ascii?Q?m6EkdKGkvShCzkienMUxZcbr0fyVd7aaGVXsmPYop4Ag5Nx7oy5b988EJyTZ?=
- =?us-ascii?Q?RkQ6zkO8ULvdt74jf3diX8gvD65oSL3MULE1KPmuU/r8BnK1UAPcYtFEvKLf?=
- =?us-ascii?Q?UMlelFBZOp2diZTaD+tyl6xovtFjQvwwL5UN4DwdyBZBxdfrCZX68oNZXm1Z?=
- =?us-ascii?Q?wyifBG1Fx+tZ3nyYM1kQWdRgckWfJ1Kutud4jbFuENgyfbW2qxx3+csYu8Pu?=
- =?us-ascii?Q?frbjoq56u+edAqbuC02O021O+LHP9as6QN4+NwTORSV02gEQUMuBe4Khqs29?=
- =?us-ascii?Q?o1xHmc+05HE43DrypxPLzvIy/wxRnsG++kurm+o0f0Za2UYEoWil4F+QFzdD?=
- =?us-ascii?Q?RSXefmzEoMFb/tPDbhGI7XvJLvcW3H7QYPQvg9Twh/oRwzvIRpY++91YvhEd?=
- =?us-ascii?Q?BjbI5Z7HhfzI6jNvILlbuKH2KCzlDQCroy4iZyX5qersNAYJ1p7oLax6El1F?=
- =?us-ascii?Q?EOJpmb7n3GkqHfmK8Wui/cqV+xsGlRvMmi59big0oD3DnRpmIb1+dj5+NKRO?=
- =?us-ascii?Q?/m553GYxE5703mZ+/l95722mWRRK1nJK4iUXKg7ge+WbyMbJm0TtgjHhajZU?=
- =?us-ascii?Q?wtHIERnA/DzdEx/bF4rKc3Mgz1el3cDSoDHeYL2Z6y1P3KObTrChFjP7BDXn?=
- =?us-ascii?Q?r3DFkd9hg559erKtCT2IOUvTnWPwiMPW3E5/C5NNpUZW4Vq9wafgau6UWbF6?=
- =?us-ascii?Q?ilG+zZaeu3V7Fnr0BIgXm0JOm7zRDoW+ESWdjWQimWlFCVgUzIkdQFjaSmBD?=
- =?us-ascii?Q?jafyOFkdLHQy790d+mv3Pb52J6MuGQ9ajWPMmFwqEx6nSW+UZzKLQVVONrCf?=
- =?us-ascii?Q?idHrUMw8W70kuvogh8vUphrzAAL/2MsA6L9xYxivmXi5LwYkYYuu7j6FLInO?=
- =?us-ascii?Q?ILrLJP+Pz3YqlWooIHTonvjjscWnbg0CslfzEts6XGA0zI+Hdn9m27fLTTXQ?=
- =?us-ascii?Q?+wDxiQhPHdWfNBmqzPhFfzBnhgyrdvRg4nMcKVZsjGmXtwZuWuidFxR2YZ4/?=
- =?us-ascii?Q?aoZLWrWHdDamyDYtkubslInF+ku6m6G7Ydk0gVGf9UHnQB3a+v73whTFX3Kj?=
- =?us-ascii?Q?v25Jktgod2JBWIPb2QnoJL+wwu97XqidNwiXZYIDHrdV7ufE8IjGPIWrURVJ?=
- =?us-ascii?Q?4PPMW6HTfXEuPrnMYs/xfDYxP1iu4FMW8dmq13stlTYx2e4CwzuCQ6qcMATC?=
- =?us-ascii?Q?48bqXbl+u1VEP8SiE21SU6ciSvSEG2w7y9r9J8wbmHA5hE9PXR/ks0MYBvye?=
- =?us-ascii?Q?gz7vMCSq3MNx7SfyxFQ85xQPcA8ZD/evUQLIPy5+ZThqPbwBssa558Z3JCh2?=
- =?us-ascii?Q?23JZICtAO156U0hDCVkBQvwdDS7Ug+ztYR+7iMtrsBrt2q2n8F0Cs/T9kAMK?=
- =?us-ascii?Q?waPZICkU7nvPpJFgZB7NBb5JaKUViEo5lNJPkdzW9niE/ia6DtG8t6Rwm0/w?=
- =?us-ascii?Q?GWL4VH8i44/mqSL42xjXa0uTdpwxgThOg1xhpGxQU6ByFcYxmTliMq/z/EDb?=
- =?us-ascii?Q?PN398K+uMwPfkfGlfLLj8fc2yiPOfQBgwUr2tRtDjI7w2wDTFoQyIyopL1IS?=
- =?us-ascii?Q?86H4gS0+M8RFJwPQojWCxSRxH74vasc0w8yMpNvbpB8529d7T4fMAmp6Jg3T?=
- =?us-ascii?Q?2RKgU36uwk0BdvdCmMhRIPaYH6st0bZGDNCSW5GSOk3q40I56JnvTdDuTBiu?=
- =?us-ascii?Q?O/jShbTnhg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253F2255F5E;
+	Mon, 26 Jan 2026 11:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769425972; cv=none; b=PO27Kok1isPyk71mpicJ1Go5eE0xA25FCDEJLmvFdOAlEU+H6Nl+SY1ERcSOYeSOGEPGYu2obEzhs3KeYrRdYlcHbR4IoTBO1ecUBNuVzIyh2JOg4W4+eoyo/9+VBb7ukNmiM4nRvoLCTOP4KJi2FO/DwWwh3lcS5aNZFcBTX28=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769425972; c=relaxed/simple;
+	bh=98h7xXq/h2U+g4+Hr6nSZSxhE4H7VOtTEv+txphZmmo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=lcVRlr8YANpdBTkaipw35osp8xAx74VOkdZsl2/aA2jNXQWuyiEzdqQADgSzDn/E8klrg/3iGQ3s5h4QvtuvwzWE66c9PRkqudGYBnZ97JYDkqnp3PgJV/q+3LljBn0pD4VwXSC2SOOLIFZzau9TlyN6G46co0fRHnaO+wvcADw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ReS2TnnT; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1769425948; x=1770030748; i=markus.elfring@web.de;
+	bh=o36WgUHPbrLkgmub2Bb1Eqxy7VvIXOvJkl7UKQPiY3Y=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:Cc:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ReS2TnnTAd2+Dh1Hee7CZhqsgrvMGoqAae2cBWz4swDQu66VfTlUvNhPDDWM49nV
+	 ZPCYIfGNzAPHYXSE476RIVgvhWIYUjskXTTe66pDs/lGcb5Gj5yyJKkAxwtTiJm12
+	 A75N/S0A+ee3HRgA1fw8ib5hTpE4Af7aXpSphkiOhsSJyE+4PChFOD1SRoFXjBW8h
+	 L/tSGNR19ORbYVLyI9k1GS5RhVqOcwhxUPsKqDD98Fj0pvtNolRRDNKwdwSEf0+Br
+	 +hyFSg8xoyai/r1NkY4mqNE1vyKnfzQNQGbwiOJW+kJD4gQJWO463hXTtUxjDZbSx
+	 NSwg9Lqr+A7og4z6Rw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.92.253]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N9479-1vmvP91V6F-0169P4; Mon, 26
+ Jan 2026 12:12:28 +0100
+Message-ID: <425fd53d-9b97-4d4d-ba21-ef35d821c89b@web.de>
+Date: Mon, 26 Jan 2026 12:12:26 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08395b1b-a02e-48c8-b0fa-08de5cca96c9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jan 2026 11:03:51.5624
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2jgYmtfBtBshjOiVe/HduDtQxCoTv3oh5SZII6jNOlP3+AgKfgFvbYpYzuZ5+JM8t/4RUK3yGtxM4UCfcimbM9hmj84yUZaRXio/t2pXnwU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB11147
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/3] dmaengine: dw-axi-dmac: fix Alignment should match
+ open parenthesis
+To: Khairul Anuar Romli <karom.9560@gmail.com>, dmaengine@vger.kernel.org,
+ Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>
+References: <20260126103652.5033-1-karom.9560@gmail.com>
+ <20260126103652.5033-2-karom.9560@gmail.com>
+Content-Language: en-GB, de-DE
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20260126103652.5033-2-karom.9560@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:I6ITziasMKVN+eVNRO3Kw34tVDqDyttT/EsHAKUPI6po6KCnYpo
+ T5mNYoJ30p9Aq9RlwlffODuNsc8BpWdsAICaWGrSYbWQQZh7jWcrVEbzug/wHaeh0UJB4qB
+ ZZptQV0aKeQg3lMyU93H85LYtWAlWIYAA+b6aU+ecUrZFwnWISy3mLqYgc06n8aeF1drUtP
+ zgof+DmQSj4Xhs+ADngTQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:GYHmF4dxgrs=;YzDd1HRN+wYt7U8gsIQ756flzHs
+ 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
+ 9Rl0kKPE=
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
-	R_DKIM_ALLOW(-0.20)[bp.renesas.com:s=selector1];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[web.de,quarantine];
+	R_DKIM_ALLOW(-0.20)[web.de:s=s29768273];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8499-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8500-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[tuxon.dev,kernel.org,bp.renesas.com,gmail.com,perex.cz,suse.com,pengutronix.de,glider.be,renesas.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org,synopsys.com,kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[web.de];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[biju.das.jz@bp.renesas.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[bp.renesas.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	NEURAL_HAM(-0.00)[-1.000];
-	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Markus.Elfring@web.de,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[web.de:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tuxon.dev:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bp.renesas.com:dkim,smarc-rzg3l:email,renesas.com:email]
-X-Rspamd-Queue-Id: E604787781
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,checkpatch.pl:url]
+X-Rspamd-Queue-Id: 369718787C
 X-Rspamd-Action: no action
 
-Hi Claudiu,
+> Correct alignment issue so that continuation lines properly match the
+> position of the opening parenthesis.
 
-Thanks for the patch.
-
-> -----Original Message-----
-> From: Claudiu <claudiu.beznea@tuxon.dev>
-> Sent: 26 January 2026 10:32
-> Subject: [PATCH 5/7] dmaengine: sh: rz-dmac: Add suspend to RAM support
->=20
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->=20
-> The Renesas RZ/G3S SoC supports a power saving mode in which power to mos=
-t SoC components is turned
-> off, including the DMA IP. Add suspend to RAM support to save and restore=
- the DMA IP registers.
->=20
-> Cyclic DMA channels require special handling. Since they can be paused an=
-d resumed during system
-> suspend and resume, the driver restores additional registers for these ch=
-annels during the resume
-> phase. If a channel was not explicitly paused during suspend, the driver =
-ensures that it is paused and
-> resumed as part of the system suspend/resume flow. This might be the case=
- of a serial device being
-> used with no_console_suspend.
->=20
-> For non-cyclic channels, the dev_pm_ops::prepare callback waits for all o=
-ngoing transfers to complete
-> before allowing suspend-to-RAM to proceed.
->=20
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->  drivers/dma/sh/rz-dmac.c | 183 +++++++++++++++++++++++++++++++++++++--
->  1 file changed, 175 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c index ab=
-5f49a0b9f2..8f3e2719e639
-> 100644
-> --- a/drivers/dma/sh/rz-dmac.c
-> +++ b/drivers/dma/sh/rz-dmac.c
-> @@ -69,11 +69,15 @@ struct rz_dmac_desc {
->   * enum rz_dmac_chan_status: RZ DMAC channel status
->   * @RZ_DMAC_CHAN_STATUS_ENABLED: Channel is enabled
->   * @RZ_DMAC_CHAN_STATUS_PAUSED: Channel is paused though DMA engine call=
-backs
-> + * @RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL: Channel is paused through
-> + driver internal logic
-> + * @RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED: Channel was prepared for system
-> + suspend
->   * @RZ_DMAC_CHAN_STATUS_CYCLIC: Channel is cyclic
->   */
->  enum rz_dmac_chan_status {
->  	RZ_DMAC_CHAN_STATUS_ENABLED,
->  	RZ_DMAC_CHAN_STATUS_PAUSED,
-> +	RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL,
-> +	RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED,
->  	RZ_DMAC_CHAN_STATUS_CYCLIC,
->  };
->=20
-> @@ -94,6 +98,10 @@ struct rz_dmac_chan {
->  	u32 chctrl;
->  	int mid_rid;
->=20
-> +	struct {
-> +		u32 nxla;
-> +	} pm_state;
-> +
->  	struct list_head ld_free;
->  	struct list_head ld_queue;
->  	struct list_head ld_active;
-> @@ -1002,10 +1010,17 @@ static int rz_dmac_device_pause(struct dma_chan *=
-chan)
->  	return rz_dmac_device_pause_set(channel, RZ_DMAC_CHAN_STATUS_PAUSED);  =
-}
->=20
-> +static int rz_dmac_device_pause_internal(struct rz_dmac_chan *channel)
-> +{
-> +	lockdep_assert_held(&channel->vc.lock);
-> +
-> +	return rz_dmac_device_pause_set(channel,
-> +RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL);
-> +}
-> +
->  static int rz_dmac_device_resume_set(struct rz_dmac_chan *channel,
->  				     enum rz_dmac_chan_status status)  {
-> -	u32 val;
-> +	u32 val, chctrl;
->  	int ret;
->=20
->  	lockdep_assert_held(&channel->vc.lock);
-> @@ -1013,14 +1028,33 @@ static int rz_dmac_device_resume_set(struct rz_dm=
-ac_chan *channel,
->  	if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_PAUSED)))
->  		return 0;
->=20
-> -	rz_dmac_ch_writel(channel, CHCTRL_CLRSUS, CHCTRL, 1);
-> -	ret =3D read_poll_timeout_atomic(rz_dmac_ch_readl, val,
-> -				       !(val & CHSTAT_SUS), 1, 1024, false,
-> -				       channel, CHSTAT, 1);
-> -	if (ret)
-> -		return ret;
-> +	if (channel->status & BIT(RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED)) {
-> +		/*
-> +		 * We can be after a sleep state with power loss. If power was
-> +		 * lost, the CHSTAT_SUS bit is zero. In this case, we need to
-> +		 * enable the channel directly. Otherwise, just set the CLRSUS
-> +		 * bit.
-> +		 */
-> +		val =3D rz_dmac_ch_readl(channel, CHSTAT, 1);
-> +		if (val & CHSTAT_SUS)
-> +			chctrl =3D CHCTRL_CLRSUS;
-> +		else
-> +			chctrl =3D CHCTRL_SETEN;
-> +	} else {
-> +		chctrl =3D CHCTRL_CLRSUS;
-> +	}
-> +
-> +	rz_dmac_ch_writel(channel, chctrl, CHCTRL, 1);
->=20
-> -	channel->status &=3D ~BIT(status);
-> +	if (chctrl & CHCTRL_CLRSUS) {
-> +		ret =3D read_poll_timeout_atomic(rz_dmac_ch_readl, val,
-> +					       !(val & CHSTAT_SUS), 1, 1024, false,
-> +					       channel, CHSTAT, 1);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	channel->status &=3D ~(BIT(status) |
-> +BIT(RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED));
->=20
->  	return 0;
->  }
-> @@ -1034,6 +1068,13 @@ static int rz_dmac_device_resume(struct dma_chan *=
-chan)
->  	return rz_dmac_device_resume_set(channel, RZ_DMAC_CHAN_STATUS_PAUSED); =
- }
->=20
-> +static int rz_dmac_device_resume_internal(struct rz_dmac_chan *channel)
-> +{
-> +	lockdep_assert_held(&channel->vc.lock);
-> +
-> +	return rz_dmac_device_resume_set(channel,
-> +RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL);
-> +}
-> +
->  /*
->   * ---------------------------------------------------------------------=
---------
->   * IRQ handling
-> @@ -1438,6 +1479,131 @@ static void rz_dmac_remove(struct platform_device=
- *pdev)
->  	pm_runtime_disable(&pdev->dev);
->  }
->=20
-> +static int rz_dmac_suspend_prepare(struct device *dev) {
-> +	struct rz_dmac *dmac =3D dev_get_drvdata(dev);
-> +
-> +	for (unsigned int i =3D 0; i < dmac->n_channels; i++) {
-> +		struct rz_dmac_chan *channel =3D &dmac->channels[i];
-> +
-> +		guard(spinlock_irqsave)(&channel->vc.lock);
-> +
-> +		/* Wait for transfer completion, except in cyclic case. */
-> +		if (channel->status & BIT(RZ_DMAC_CHAN_STATUS_ENABLED) &&
-> +		    !(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC)))
-> +			return -EAGAIN;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void rz_dmac_suspend_recover(struct rz_dmac *dmac) {
-> +	for (unsigned int i =3D 0; i < dmac->n_channels; i++) {
-> +		struct rz_dmac_chan *channel =3D &dmac->channels[i];
-> +
-> +		guard(spinlock_irqsave)(&channel->vc.lock);
-> +
-> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC)))
-> +			continue;
-> +
-> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL)))
-> +			continue;
-> +
-> +		rz_dmac_device_resume_internal(channel);
-> +	}
-> +}
-> +
-> +static int rz_dmac_suspend(struct device *dev) {
-> +	struct rz_dmac *dmac =3D dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	for (unsigned int i =3D 0; i < dmac->n_channels; i++) {
-> +		struct rz_dmac_chan *channel =3D &dmac->channels[i];
-> +
-> +		guard(spinlock_irqsave)(&channel->vc.lock);
-> +
-> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC)))
-> +			continue;
-> +
-> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_PAUSED))) {
-> +			ret =3D rz_dmac_device_pause_internal(channel);
-> +			if (ret) {
-> +				dev_err(dev, "Failed to suspend channel %s\n",
-> +					dma_chan_name(&channel->vc.chan));
-> +				continue;
-> +			}
-> +		}
-> +
-> +		channel->pm_state.nxla =3D rz_dmac_ch_readl(channel, NXLA, 1);
-> +		channel->status |=3D BIT(RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED);
-> +	}
-> +
-> +	pm_runtime_put_sync(dmac->dev);
-> +
-> +	ret =3D reset_control_assert(dmac->rstc);
-> +	if (ret) {
-> +		pm_runtime_resume_and_get(dmac->dev);
-> +		rz_dmac_suspend_recover(dmac);
-> +	}
-> +
+Line break?
 
 
-This patch breaks, s2idle in RZ/G3L as it turns off DMA ACLK and IRQ's
-are not routed to CPU for wakeup.
+>                                      This alignment issue were detected
 
-DMA ACLK is required for routing IRQ to CPU, without this CPU won't get any=
- interrupts.
-
-If we make this CLK as critical clock, s2idle fails, as the DMA ALCK turned=
- off during suspend
-and there is no IRQ to wake up the system.
-
-LOGS:
-root@smarc-rzg3l:~# echo enabled > /sys/class/tty/ttySC3/power/wakeup
-echo N > /sys/module/printk/parameters/console_suspend
-root@smarc-rzg3l:~# echo N > /sys/module/printk/parameters/console_suspend
-root@smarc-rzg3l:~# echo 7 > /proc/sys/kernel/printk
-root@smarc-rzg3l:~# echo freeze > /sys/power/state
-[   41.601992] PM: suspend entry (s2idle)
-[   41.605979] Filesystems sync: 0.000 seconds
-[   41.611261] Freezing user space processes
-[   41.614848] Freezing user space processes completed (elapsed 0.003 secon=
-ds)
-[   41.622676] OOM killer disabled.
-[   41.625908] Freezing remaining freezable tasks
-[   41.631642] Freezing remaining freezable tasks completed (elapsed 0.001 =
-seconds)
-[   41.640137] renesas-gbeth 11c30000.ethernet end0: Link is Down
+                                       This issue was?
 
 
-On my testing shows on RZ/G3L, we need to make DMA ACLK as non-PM clk for
-Making both s2idle and str to work on RZ/G3L.
+> with the help of the checkpatch.pl analysis tool with --strict --file
+> option.
 
-if (pm_suspend_target_state =3D=3D PM_SUSPEND_TO_IDLE)
-you need this check in suspend/resume not to turn off DMAACLK during s2idle=
-.
-
-Also, the callback has to be in non_irq phase so that CPU start getting IRQ=
-'s
-During sleep phase.
-
-Cheers,
-Biju
+Would it be nicer to put such information into another paragraph?
 
 
-> +	return ret;
-> +}
-> +
-> +static int rz_dmac_resume(struct device *dev) {
-> +	struct rz_dmac *dmac =3D dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret =3D reset_control_deassert(dmac->rstc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D pm_runtime_resume_and_get(dmac->dev);
-> +	if (ret) {
-> +		reset_control_assert(dmac->rstc);
-> +		return ret;
-> +	}
-> +
-> +	rz_dmac_writel(dmac, DCTRL_DEFAULT, CHANNEL_0_7_COMMON_BASE + DCTRL);
-> +	rz_dmac_writel(dmac, DCTRL_DEFAULT, CHANNEL_8_15_COMMON_BASE + DCTRL);
-> +
-> +	for (unsigned int i =3D 0; i < dmac->n_channels; i++) {
-> +		struct rz_dmac_chan *channel =3D &dmac->channels[i];
-> +
-> +		guard(spinlock_irqsave)(&channel->vc.lock);
-> +
-> +		rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
-> +
-> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC))) {
-> +			rz_dmac_ch_writel(&dmac->channels[i], CHCTRL_DEFAULT, CHCTRL, 1);
-> +			continue;
-> +		}
-> +
-> +		rz_dmac_ch_writel(channel, channel->pm_state.nxla, NXLA, 1);
-> +		rz_dmac_ch_writel(channel, channel->chcfg, CHCFG, 1);
-> +		rz_dmac_ch_writel(channel, CHCTRL_SWRST, CHCTRL, 1);
-> +		rz_dmac_ch_writel(channel, channel->chctrl, CHCTRL, 1);
-> +
-> +		if (channel->status & BIT(RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL)) {
-> +			ret =3D rz_dmac_device_resume_internal(channel);
-> +			if (ret) {
-> +				dev_err(dev, "Failed to resume channel %s\n",
-> +					dma_chan_name(&channel->vc.chan));
-> +				continue;
-> +			}
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops rz_dmac_pm_ops =3D {
-> +	.prepare =3D rz_dmac_suspend_prepare,
-> +	SYSTEM_SLEEP_PM_OPS(rz_dmac_suspend, rz_dmac_resume) };
-> +
->  static const struct rz_dmac_info rz_dmac_v2h_info =3D {
->  	.icu_register_dma_req =3D rzv2h_icu_register_dma_req,
->  	.default_dma_req_no =3D RZV2H_ICU_DMAC_REQ_NO_DEFAULT, @@ -1464,6 +1630=
-,7 @@ static struct
-> platform_driver rz_dmac_driver =3D {
->  	.driver		=3D {
->  		.name	=3D "rz-dmac",
->  		.of_match_table =3D of_rz_dmac_match,
-> +		.pm	=3D pm_sleep_ptr(&rz_dmac_pm_ops),
->  	},
->  	.probe		=3D rz_dmac_probe,
->  	.remove		=3D rz_dmac_remove,
-> --
-> 2.43.0
+> - 'commit 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")'
+> - 'commit e32634f466a9 ("dma: dw-axi-dmac: support per channel
+>    interrupt")'
 
+Is there a need to reformat such details a bit more?
+
+
+How do you think about to refine the summary phrase another bit?
+
+Regards,
+Markus
 

@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-8620-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8621-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aLenFeDPfGlbOwIAu9opvQ
-	(envelope-from <dmaengine+bounces-8620-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 16:36:00 +0100
+	id AJpuGizQfGlbOwIAu9opvQ
+	(envelope-from <dmaengine+bounces-8621-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 16:37:16 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCB0DBC134
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 16:35:59 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF062BC153
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 16:37:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id AF5F8300DD74
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 15:35:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9B6BD3039889
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 15:36:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 922A033031C;
-	Fri, 30 Jan 2026 15:35:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B97F3382DC;
+	Fri, 30 Jan 2026 15:36:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="PRfahCM4"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XRbeBehR"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010045.outbound.protection.outlook.com [52.101.84.45])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011062.outbound.protection.outlook.com [52.101.65.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F48322A;
-	Fri, 30 Jan 2026 15:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893993358B8;
+	Fri, 30 Jan 2026 15:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.62
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769787356; cv=fail; b=FA0+ulElXv/8Kgw6iwer7j83dGhytqNFSA9jq/6s1Sb1D1ejuwJDRZ2a/k76IG4xcxnq5FtCWrQQdQORg4XZ+3gvadcMGISVHNe0cL1zgRBrSxa+ZtxllPVRPKJGRrgKder3qnFcNQm9bd6YPHTU6fgOC8UdmUN/Yw8r+xW3Xwc=
+	t=1769787407; cv=fail; b=Z+kqXUiUYUlolSnEDwgmLf1urQXsEI8J0wzL40mZhVudiPisYxdhmq3uuktjsK7fc8ldcYnoN8dPs0eenyl0cjGzMHLH0V4CDrAJp8WnJpGrSy8ac7pAqbk5qtrCFxeDUg/gA4eyaPgjKRNRdhwL50an+m4hcaXAB/G1SyCc/nU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769787356; c=relaxed/simple;
-	bh=CiwTH7IEllmjjBy/sroCBZkknvAqedWmub2JTIEnEL0=;
+	s=arc-20240116; t=1769787407; c=relaxed/simple;
+	bh=cCgXgdgFmEiJ5TtEl4KmC719jrFs8ecCZJXuWOGRafw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Tik5TteHU+tKgupRbYoXpY96RXeYFwsDQ0hje6PGLXYfKQ+mFvEQIN/CuHcsXNEnW4e8q5Q7LBoKcPhz+J1GTO+b4N1hEJIouXvKi5xZhrJsQOPfwNV443aIPddvOVR1bk/evhLtQVuoTD5A3Lo1H3W48ShD5gsP8C35xH0PaYA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=PRfahCM4; arc=fail smtp.client-ip=52.101.84.45
+	 Content-Disposition:In-Reply-To:MIME-Version; b=H2tVQZZT9DFPv/+pKg3UMJKySB9o4pRkJKpG+alR8WhL6r7z72kWhUpx7YiCU2EFP2MbV/1Z3Tw1CsmeubE1xgH5+zFLQV7rdezJD8lJbxDRAeWQadWLZxDrxG44QcKuXznFC5EiDAiavrTY6HhtKwHGv5PWd1Q00vFwi3ilKVs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XRbeBehR; arc=fail smtp.client-ip=52.101.65.62
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VscJ0c19S3okYQXu99v191ryQQ7V725cRi11uqiy1Ixm12B4/UqtMGBmUygMdnClzbFIH1R9eAapwoaQxZNIunKUrbqvBC84GEjjoa1yUNk/J7kbRfTDm8CTuTF4Ey4HL6ykW6sk863wjIV7gLvKLaJ6fUOrp5iSTQe7RStQKXhy7HKDhDiCTRVlOIeDLFukkmaizU5nmHKhc8cSGTCRub+phFxQUcgfzrA2YY75XIWV1mGZDiSi51hMsCoGAk6zXI1Oi9yvIwlZ6pvhRluc4r/aV/z9CTNlji6Ia9Rjx/Og8SjyhH0/ImZQbJ8L2HUohJAXBiJRJ8XlcfNAfY6ELA==
+ b=kGF8PARyhqoDhUQfh3wEmAyD60Z92fJOXimHdHe12FptJlam0sBdyNzmU1bV72hQGOMtZRqRD+f5Yy8+VgOM3/0fTCh0XpoRZM2rOIB+5FgIWnYKsYtZaKCmlVddTUIoty43sUSe5V7VC3MGHvviLp0dlN0aJGZqcXc/SZ+M26ThNALpPbP7amqnv0raUiFbbsODzfROIFA+i9tIVQ2QJJRyLKu6argDAvDjvLFRapeRpuH3TBU3xaRLvDlhWIBxmZvi7ZQaOq8KcVWe9brZjDHwFI7Of3O4lBUiQpYrYNP5n1GI+NtARQV6XquEFnTrtreJAqROnFhfvRCzXuyuQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9ULI9+srsSxK1DV2k9hNeHg9FgXLhXmByrsrefOEEPs=;
- b=jw4w5Cd/KuQPfNpUPpwMv80J+X3HoulYPq1dprIUt3THoGENOKy02/Ih+ybMpq9TQ/FpigOB879JjfrizzKYu5oR3KYywtlbY/bhPghWuxo4HNUfeyAYd91KYaSEDCnspxLhvcxV+ua0mRre/m/uncgpf+O6o5cYTqeWdVKXwBSxrQNlibh94cc+rD9K49wnty1A9uiJhGVRdSyiHa4+8va9zCM2dqsmU57BR19TQgt0cRGQ30fcDDDYaR+yEl9K6eiMCbIfk/Xc4eGWmVF0NtM+NXtSduAJd7a0KKVzqUT19mceZp2+nvwdoFjpX85LOsPbjhhcdBvH62S6jCbWuQ==
+ bh=lB334Jx8Wj24ySRAczvLwNrshoT3QRNsEFF16auvqNQ=;
+ b=x1YGwboceR3q90PfXhmHa9fFWRZdigJ3wfIFUiN+JULl9MH+6rDRtWYMBR+52wKy0TNzje2v5KKUKoyEc8QLTq+/9SGA3AQq/lOjYh90NGjLtRa7GvpiiqDC9gWK+24oH4qUVO20HG6lmqYS89ZEiJTeVx9DqJtKKBO6aqTC3bXHrIQay+90/HN5ZTOhsz9eDMABuMLHV76wFDIXnJ7yoampKsum13n8Rd5DQzWtfCGcRC0gYzHsoaSoo3xWQ3xg3xTceNdgnCofuBpDz6QDLzmTQ3Wll2Mm0Fo3fbE0SqOcUm3hMYx/MNcp8CgRu8EwYmWQq1L1OCcqoWd3+arasQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9ULI9+srsSxK1DV2k9hNeHg9FgXLhXmByrsrefOEEPs=;
- b=PRfahCM4AdnJ/hUGbZxOVBcu+FBeHGQuMcgUehASBECsA67fAqkT5Gnq277LOsOM2ukGCkWIPfsNpswb+UuuRUO7KbY8fhoGFFul3PVUOpTw5fA9pJwNxE+gXk4COOCUuON7BPhVtDPPsA+4d76NRMj5DFAbHdbhJpvnONe7/jzW8zCnxnH8RoNN0DqX97D8sCrAlUEd+4XyKaKDNjza0QpQRoXS78J1Bf6XA7DNA6T0wJqTAzKIkbJs9Jslwe0qjPJeobPpYsFEH26pO6oqG4Pvx2q8umhvsvUHcvwK2WZXzI6zsIN3kpC0YL9ZRqZ2h3ioDljUfXX0xdldBf6EQA==
+ bh=lB334Jx8Wj24ySRAczvLwNrshoT3QRNsEFF16auvqNQ=;
+ b=XRbeBehRwbfUZdts33W7PaPRHALj6V6ESbMQukZ69LxOBrCDCZqu5O2YQViybwyrxocdN7sSyE0wXf3EtJhyUCYEZEhk382xOs5AbN5DxaS2Ckgt/hlgaskveN2zGQNWGi6PClWMSuL/teTsR4i32gtfuOiCP2Zf4mo07nFSfYOwpZU5lKXuKrwkr9OHQE5NlRNZeEZ99qZjmpNd7MrToduEOhptYdNUvriJB+jwpnLh2jPqguE1pws5J3Dv/4CtFwAwAE0xbqFsWgXiuwDko6cQKfKEuNzUKlo2rQxiBbVWgfDD4WkUbWG+t2RWK6z6MAXqPU8Zg+AzCpqMl1aXWg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
  by VI1PR04MB9811.eurprd04.prod.outlook.com (2603:10a6:800:1d3::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Fri, 30 Jan
- 2026 15:35:51 +0000
+ 2026 15:36:42 +0000
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9564.010; Fri, 30 Jan 2026
- 15:35:51 +0000
-Date: Fri, 30 Jan 2026 10:35:43 -0500
+ 15:36:42 +0000
+Date: Fri, 30 Jan 2026 10:36:35 -0500
 From: Frank Li <Frank.li@nxp.com>
 To: Sai Sree Kartheek Adivi <s-adivi@ti.com>
 Cc: peter.ujfalusi@gmail.com, vkoul@kernel.org, robh@kernel.org,
@@ -68,15 +68,16 @@ Cc: peter.ujfalusi@gmail.com, vkoul@kernel.org, robh@kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, vigneshr@ti.com,
 	r-sharma3@ti.com, gehariprasath@ti.com
-Subject: Re: [PATCH v4 12/19] dt-bindings: dma: ti: Add K3 BCDMA V2
-Message-ID: <aXzPz/Kq1d7i1iWM@lizhi-Precision-Tower-5810>
+Subject: Re: [PATCH v4 01/19] dmaengine: ti: k3-udma: move macros to header
+ file
+Message-ID: <aXzQA1a3DVz2Jmcg@lizhi-Precision-Tower-5810>
 References: <20260130110159.359501-1-s-adivi@ti.com>
- <20260130110159.359501-13-s-adivi@ti.com>
+ <20260130110159.359501-2-s-adivi@ti.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260130110159.359501-13-s-adivi@ti.com>
-X-ClientProxiedBy: PH2PEPF00003850.namprd17.prod.outlook.com
- (2603:10b6:518:1::72) To PA4PR04MB9366.eurprd04.prod.outlook.com
+In-Reply-To: <20260130110159.359501-2-s-adivi@ti.com>
+X-ClientProxiedBy: PH7P220CA0164.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:33b::7) To PA4PR04MB9366.eurprd04.prod.outlook.com
  (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -86,255 +87,294 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|VI1PR04MB9811:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4a3b28a2-05d2-49e2-b44e-08de60153fe3
+X-MS-Office365-Filtering-Correlation-Id: c190315f-23ed-4a54-d68f-08de60155e39
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|52116014|19092799006|7053199007|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Ac632sEh/qfQSUOJyiOuFXux8tB7ItBp/mpXbPnGecmnfwJo+AGa9HHZh5a5?=
- =?us-ascii?Q?Swxz0Xi/J4YBMGn4UgJztTStvNhN+UqPtCBbqMAfqURkt+QuJ86kFJMxMX8b?=
- =?us-ascii?Q?HFprSfevP4tlwMbT7kNUIeZsbftOk+RhqNh4rd/bQM1yBNrd7qe13yCfmD8n?=
- =?us-ascii?Q?I81Eizl+BHk2SWwXspk3qKi2iE/mTXgByYivWVt6XuQfYpVlK7nM0z1jhxgK?=
- =?us-ascii?Q?CmFsURSeliO4SosunBVMgdCx12RBKcyzBe7rGytdRp7zoK4Yoqwt5uWAUPa0?=
- =?us-ascii?Q?rZtH6Fhzs5uQEj9qRDRp89f9hn5ANHfq+EjldOL18UdqwHwdxgncG88E/BU2?=
- =?us-ascii?Q?ucUUqoaCOPJ/mEcer1Ur2Bl//MinjWUyu/Y9XcxEZyVv4e4xBmzHSXIuR0kk?=
- =?us-ascii?Q?Q0RWSfiWl+Cg7KX4mbea1GEaQlT3r1O2samrRoPK/lFBhFoOyODfV3WE4VaM?=
- =?us-ascii?Q?xZEjgTSFPJTcoCJH9E59IpUQixcZs5KGhSVeSOYu/eM28/Eh+ZX/r2u61a16?=
- =?us-ascii?Q?AmH4EKoVLFSzKSe3vG0x6bTSsDpbDTrW5tZxU5yapRfSqu2YCyYDDIgYEbQ1?=
- =?us-ascii?Q?xlt1ZVvTWDzrVwJyTCoCEAaYNAzkq8Pckj3xRopkm0nCLNaIU6qWL0XbDxEp?=
- =?us-ascii?Q?IxQkfJEChTJ1FGYvIslZbKhNGX9B3ZfopGVuKntAKO4wzyxdYqGvYyv02oY7?=
- =?us-ascii?Q?MJLsvs2cbaMPeNvrJ4RLDMv/sWAkztQIajTxs97rCtrzuL2td8QOMnVKt1zq?=
- =?us-ascii?Q?uxFv+uKJKIiFzGK0rYxmDwARg8BfSrDV6HbLb4i8cL3TYJBU8KJ/vQTgRDzz?=
- =?us-ascii?Q?XuXmJu9iuAILphlq2m/LbiHyN+0Aml0XTymxGHPs84pD8tAyEkl1k3xCTJO2?=
- =?us-ascii?Q?ERhx67rA63Um6qjtioqaEQfmn0YvdiNNp9APAmM7vruTKfKBtGFBSYH9jftE?=
- =?us-ascii?Q?IgopT/U9MskaM73aj6ZwPXgeg7JncbeGVnyp8kZF2XH68TxVTgGalb+efa+q?=
- =?us-ascii?Q?EpoXV8k5uUWyFu9cGCSj+TaMOZph1uH5u5f8DlB2H2MrZLMStK75HQSxDDH7?=
- =?us-ascii?Q?+dLCBDar0vUvDfMrL/HOjkZuU8Eq55TD7/NyeVXMtKH1K6Xjx+PYDpac43Pf?=
- =?us-ascii?Q?5MhMuMSP3KPAsHjQQ1Oym7bYfR6pNsyeDFPHE5ilsGgmMBCZFW/eZFnfWr6+?=
- =?us-ascii?Q?Ov4HSCnqN26Lct6HKelY8//OX7lCzl1lc9mkm2RWDgT27eYZ9LL3Q8SuG3ID?=
- =?us-ascii?Q?TRrPPVjOCPb5vrEHlc2r0roO1GYq9yVwo6L4/t9kt6AI3VXfLnsUGvfLhSK2?=
- =?us-ascii?Q?HLHDA8VqBvDi9JiNiPs4PPz9Sr7cyITGQaydreVHfFjy7LnupKtqgIEeAzFb?=
- =?us-ascii?Q?9QHcS5Pzln6daAzaq/T97k+Hr98n4W8ycwHwQ0VKdZyjNWeEOj29JgLUpiTK?=
- =?us-ascii?Q?y8LXOBzqQMVvZP6JY9/fALr+PClxVqU21vJM2jRM57c63t4sd6yFHzOsm6bU?=
- =?us-ascii?Q?AssKBo5Y/LFB/8w6U222MR4Jk5zBDWIHvT35xYCHidhwsWrPD74CTzC9Yc+n?=
- =?us-ascii?Q?cRdJnv4+6HHr1+BuJcag/T3c871dRrakebApoHgb?=
+	=?us-ascii?Q?iMr7qehUrSTWOMB5+R2S+N8YFTzlbWypgwU7RPkMeAE7KMGMUO/3M2VTPm9f?=
+ =?us-ascii?Q?xfYM3AYzORgPCKVRPPlwIzA9PP31kk9lgBiMAkTF2Fa1f8Ew0jy4n9GTPU+5?=
+ =?us-ascii?Q?jBeQ/K/lM6cDwySi+W7DKkZfWoHdI2NxXuQsvMj/5QIn2g/ctXezvlThm1hR?=
+ =?us-ascii?Q?aQF68fBLVNmHoF07XHsY0zzT5q5GPbcuQXEhRHLgJlBxa7pvXfDPyrbT7cUB?=
+ =?us-ascii?Q?pPrp97X1opoxhp4yUCMum/iLsG3kop6diSdsyfngczsdNgmeI/bVdPubwKg1?=
+ =?us-ascii?Q?dzYgcmPwgWTgZvDaqUvdeKekvA7DpyJ715iEySOAm0QLyo2TJBbC8vbduNxD?=
+ =?us-ascii?Q?RaWvPPlxKSU/6GyGhi5Y9GKs4zgwqKssTMrzYJuxYiEIWBiUr3feZMCzKE1s?=
+ =?us-ascii?Q?LwYyHniI/qpbIr92vlsKa3Zh21Moej0Tm3jhnt2KZrMyYCCbihHh+/ArDJWt?=
+ =?us-ascii?Q?7rApXfo9H2/vREWvf1oHY5+dQchONgOmdiPJkaikC+bU5Cvj1GJTI/icUdUn?=
+ =?us-ascii?Q?pgAWbNMEUkE2EnWU6uIEbb2YwhWmgFWlvqAfbTN7zzmr9z/gQRC4HqRShA1l?=
+ =?us-ascii?Q?PbSmah3dARECNttaYR0m+uwyKtRccHjTocy4rfcXYOoJvoB5gnzkq5BXTzIu?=
+ =?us-ascii?Q?OIT56ZIOjLUkZr8oi2poFTUWh+Ww+gfu+eesrivZIdbQf1azX+qrrP+EafX6?=
+ =?us-ascii?Q?E4bvsbS9Hp/BJYRAhl0A0NOErRZc4O3SxZ/sA7/dNexinB+Y/CK41E98Exb8?=
+ =?us-ascii?Q?bYvpSIY4G/ze+ngRUywGqOOHggnZaOqRnkaAXfGLkK3WTJn414xWS8vsgcR7?=
+ =?us-ascii?Q?R7sQ1u465aehvp8OV9P4DXOkAkM7ket7RsTSif68dG9QnJqY6cFm4/Pw5P1n?=
+ =?us-ascii?Q?iJzlveU8llfbYDrw2HCOvXkMwKiwPsOqrtrMASgckR9PWQvZKpkzsg+iy1FP?=
+ =?us-ascii?Q?jBhuhcR6B5crmffyPwARQEnKslG0bNk/zRH9zguqWLPQo1bwMuQ2w6FqDWoZ?=
+ =?us-ascii?Q?r03vxK9/Zojt8KI7d4opf1fLPp+tWdoChlTvdIMYVOkhNmjm/LkA8yCNOUIV?=
+ =?us-ascii?Q?+htHVa5eCtmMAvL8PIfnYFeIDAERbokFfwczP8i+GAGyc/EXfCsKDzTA7BvK?=
+ =?us-ascii?Q?ZJ+qUHzFXVoBUd6yBvzFmPJm6aLyb++t3dIgCmy4TM+p2Jrg4ibjwowQxUgk?=
+ =?us-ascii?Q?Rt2qaRHLSR8S4FzUsPaj+62XPlowTBW3Oc+EgyKkedv0HXe/qk0U8L+x91kM?=
+ =?us-ascii?Q?2RQDkTdYuBoCG41sBVs+9GQLjowixOktw2gjbpjGQmbdPccxB9CY+RkE4Ljk?=
+ =?us-ascii?Q?eU8qSfBnsBTPfX/go8Iwfzmh2wkj2BDitxoSte78JVq1i7hMht1PKrUgD1wY?=
+ =?us-ascii?Q?PmoOOZC+hNCf5sJYQbHEqNA5DJkcAUHkOC+3/Xp1sBKyS77w1+jpJTaZnkto?=
+ =?us-ascii?Q?Uzg2EyUv9nk2DHDBCHPXehRTkxvIwxOreZelP6wmxmjKhc/nc82qA2sq4n9L?=
+ =?us-ascii?Q?pZhJBs/OxG7TBo84Atx08h/7TPEs9eTdnnHm9ogIPtAjqqBeuYe6CE4qXx/3?=
+ =?us-ascii?Q?0u5Zvt12qghRa1nKmiNzSi00aAoPVLgUySZsIlJb9X01TD+DCpVaXCs8KWWs?=
+ =?us-ascii?Q?FsRRJ77SV1t+ejZeO5kZtio=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(52116014)(19092799006)(7053199007)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eWsTERWQ0IvayEr+o97o6gOCW08foGzsZO79SfJflHBbS6vTgARDQ3UQ24L+?=
- =?us-ascii?Q?Krr2cYurX6IVRTsx1DeGQtH/QIbKmcHt2yyvpV+HEG0npw1n2iHYO6o+VFDv?=
- =?us-ascii?Q?pentee0lami6IDZXzP3pIZH/xt1KUzwATHvJhyJvnlRMdGsibCHbkWQReI55?=
- =?us-ascii?Q?H2VkCSpJsbRR4qEqxV10PTfVV6D7jsKDELcLqwVScTSWdstGutgoTlGBxud7?=
- =?us-ascii?Q?jbjvHOzLdYIpb/BmJPXYUN80wPLsnqEot7Mh8vhMxoKhKEiweST48keczZSU?=
- =?us-ascii?Q?jfvwSCSnmddTs/FDMJzNQxWJthg3RluYqxwPwj7uHugcpeScYolMYnnWFMXr?=
- =?us-ascii?Q?Ct5wgpEnDarLx9dWsRTJZ5DauUq+KNuezgRJ1vd3vxAoR89zx68ZIN8ybHd9?=
- =?us-ascii?Q?vzKKwHVazT2YcuuL1JVtPdAMQqyTvK9nau52zk1x9jgGB2NYbIOTjxNUm8Sj?=
- =?us-ascii?Q?TIzzJ3Rsp8+P6l5AIIoT3ODEa6u4NLa3iOt+LbhuZvBiSyReCMktKQTOvH0i?=
- =?us-ascii?Q?89EBYJhY+4vfcMAc5mn4pjDz4oa0oUkvUiwVMl1kSOt/SiCx0kTgnTDgiRu5?=
- =?us-ascii?Q?f9wLfE50wIg6ku8XIftdBOq7kBm2DMC0BV/4ZkEbvdCVF3OReDEITEdyU2p6?=
- =?us-ascii?Q?a3BwZZPrLLIQSPZqH78e6JdovHZSuz6jsrXmETEdopY2w9Xs7KaXb/JjvKxV?=
- =?us-ascii?Q?NxtRrRNQZ3oz8vIUJYmJA8vQWSVglIAiQ5kcDamXoHx9+EUygVBqgJ4fh8DY?=
- =?us-ascii?Q?Zc8sN6Q3gI3vjvBHf55Ue4ZUhsjblRSInAl+9m8Nz5Hx1ehQ3eKjAtXabVxD?=
- =?us-ascii?Q?tpW5VQ+wC/TP+ppFFHq57IW1OVJuCzZ4n4gJkRHn78EjSoCt4rNVDV/48VFw?=
- =?us-ascii?Q?IbxJR9TrgtN+LgqvZMNmWbLRIxfZ0l1S8TfesVnHcPZVHl9Y9Kv3JhQ0suxe?=
- =?us-ascii?Q?eH9LLRGMAkf6QD45WBMYPlljNdtGBcN1gss5JFAXzz1VR0KKGMnTvyQp8wWL?=
- =?us-ascii?Q?uRTd+JgVYv1d6npUwx9aeQYg8FZarLSp6Ts6X9tv14nmg5fGIn+5uahqNYge?=
- =?us-ascii?Q?O4K/pfQHc/QX3Zt6AYi1D4p67vTl6Iu1xZyG0nI6fe10qLop4kqcOtRKlDdy?=
- =?us-ascii?Q?1p4EO1N2zszpwpHRRwcZfDF9V4IJFdEg05c1U4rZp7Iox2AqnLxAFcsW2JQJ?=
- =?us-ascii?Q?gDsAACLk4EcD1sPghpJHk7iz//Bvr9yr0Wp7cRu2UBYrbevrxXl4sTV5ElNT?=
- =?us-ascii?Q?xY7LmmuZ5EYvIl7RkUhd+QZgjZQ/XofjIVLPBSpgZgdjF41VKmMkwYy+pPuG?=
- =?us-ascii?Q?Fi/PiMcHH2iec8x3Q4dSpmCxF2nOmUcMYLcC9hujmUHKMygSEi9Q0ok/dB/9?=
- =?us-ascii?Q?ABxtgmrI2P/aAuLdPeEX9T+fW1qwKUO/bDtG6/CU7KS79A+d0WXXT4DRluM4?=
- =?us-ascii?Q?UKeocafFsiEb0o5ExMUE4+EspKymhIi09ws0NsLW3uVaxwh3duPEYVdXx5eG?=
- =?us-ascii?Q?KmAp/gXxkKDr+KmhsJzO8ifqFphMkAU7fA88c1n5uJW1ro8Kzlz9uzApDy43?=
- =?us-ascii?Q?CCT8zR9bDr4o7XXxkxwpK+doeLLdTotxZ2DIJErTT2ZSQvVKtRCZprdaZMH7?=
- =?us-ascii?Q?lkYnf//bOQiXM0IT5bSwJ3HDCHFzgRh9GlH5B8tYuKwYwEvGSOWPAHwWDswd?=
- =?us-ascii?Q?lRXcjr5H5Mqe9GYyng787oWIqiIr0sXzvev1hE5Eh7ffff0aQlfqt2j9tzJn?=
- =?us-ascii?Q?eTrUtZ4lng=3D=3D?=
+	=?us-ascii?Q?Mg+WWV4+cx6ql+TECw1t9ON516EW+m7/2Imv4P5ECHg1R1iazaw9+31Qr61v?=
+ =?us-ascii?Q?Dn/ECGsxBfznqviVRR7kC175JwzkOXZX7gl7IsUu0oOUqze7cGs/yQiWx6xJ?=
+ =?us-ascii?Q?gM4wnk3T4UjichU3bedZxH/Jbk7Zf7WJEAH+fVarMZQYhCxAgYp0T796mml2?=
+ =?us-ascii?Q?4GzuPRwKSCubHiEA6e7Oh8RsRGx6bAXN7VckTWUrAXdm0dFbM7y32Aa31IBI?=
+ =?us-ascii?Q?wrRjEgQcEwIWl/ImS47x1BGWNFxByFzniGCFU4qmDACmyhls1r9+QOpkv7dY?=
+ =?us-ascii?Q?XB9+n3+jpB5AAG9YENa82rvRQ+U3IUpyGspkENDUcT1Du2vj6r3B1SjwcZ9z?=
+ =?us-ascii?Q?lbyhg1ecdxODpq64zhKuvNbejwYAJ6cDBem9T5q1MzWhQjW4v1CRE/h3EM/U?=
+ =?us-ascii?Q?B4vl/TtQxLUBNXRxB9l++UST6XocOJz1N4PSQgGmser694Teg5lbEBqhIO3T?=
+ =?us-ascii?Q?hC2NFWYxNK4YGFQ0c2Ryze0xYxtvUPJp/Nwn06a1DDM/zv984trDprqjr/Q7?=
+ =?us-ascii?Q?mopzuTfDDuBPvSotgmzCGTilxS7O5HL6o5VR+Tpiswqg1aEaiDNUVfNMH1Bp?=
+ =?us-ascii?Q?CuTuKU+YlbBCAdj+VMm0Sq4UtzhB/Fr8687bCqNphP+ujxm+7CJD8Qvcr24L?=
+ =?us-ascii?Q?iL0G+GFYCW/RsIVVuvYVoyEhanNRKWCRml+a2vn8oHXlyjRm/vxBw6cNpo9S?=
+ =?us-ascii?Q?YJ2iMlZ8y5/JnaVV7GPW9EFzjlEPAfeojku+071aFIPKiRCBwIZsJyUqufiv?=
+ =?us-ascii?Q?9n9iKHrSSsGXeNIkKxFwOKsJUdyKfYRj2Y5WNuy84H4g7IFLpg6Jz8gpVs6E?=
+ =?us-ascii?Q?0vidwt8GRvGwns+X0+pHtS332EGDHNI0QmaNm/QbIdjo4LUFShVjRkbmIddz?=
+ =?us-ascii?Q?0TpdSh0ajdqZMElUetXEIjO38rBYEE67EMZHoRU+tiWBgK3t8/qFSn3Vpbo+?=
+ =?us-ascii?Q?j/TXbn+5mZOoxBfjfyMs0a6S0bxVe34oXZUsE13Hl33IDctppssxA06OFfm2?=
+ =?us-ascii?Q?3nks8GraPGAVaWFvKjFElDOWGjpaIRqHR3O0QfrNTTC8ZBJW8l6L/zW9IyLL?=
+ =?us-ascii?Q?J6QMl1yqBkzT+06v5GcRM4N91EKKQKReQyzlMSSJ6nIJ1P72ZnQ3EFcbAuCp?=
+ =?us-ascii?Q?pL6WMVG63Hxty8c6udrSmJ3Yam0L8HvSjo+I+8OVgOaMQ9r5L8YNjnVbDJhE?=
+ =?us-ascii?Q?PkxNP4pFJIkataC5e3jQUWR7BV+NAfK9UbQAO1rpMzDEXW4IT82CLB0NuMyy?=
+ =?us-ascii?Q?K/s20wLFjTLVrJr1io8Xcp6t+bDylCmczq8Cs1LDMhOuLwFq5rMbrRGXzInW?=
+ =?us-ascii?Q?J89JtrqBHCUTJc3vJjF4R0gJNiA1dljpsFHZ3soZ6hzC1IfP7gjU7Pms75mg?=
+ =?us-ascii?Q?qVc9MGcuoPI0HrhQrkJlDeXGVNIaD1d7D5zcwZ3O2y0vJ0IRKNyJR0y4cUkC?=
+ =?us-ascii?Q?gA48bGLVmdkHg4cjTzm1WZJU9c/voSTvDbQtCrQWOzAdb36Ng3Kt/nko/VxO?=
+ =?us-ascii?Q?emnv3vUTFBR5w/XJytCQxImN1HKsINZGhsw21v3cz1/yU9eE7cgJtYabNpxA?=
+ =?us-ascii?Q?qNH5Kl7IwyYZ6mpvUtdo6q4CT3ZysQ1HMtWatjcUf5PEvERO+jgUZi6uFdBZ?=
+ =?us-ascii?Q?JnD/0dJONEokT3Vc2iNTKpo30nsLmaU6II/A6TdLtNLHP+ylAwjIebbyHrut?=
+ =?us-ascii?Q?IgiIzB1BvFhiS0HNh6OSzMJz/uf+N8Ers/aswag2/AeQrrXQ?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a3b28a2-05d2-49e2-b44e-08de60153fe3
+X-MS-Exchange-CrossTenant-Network-Message-Id: c190315f-23ed-4a54-d68f-08de60155e39
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2026 15:35:51.7876
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2026 15:36:42.6909
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: p950VfXPX5J/il97xZS5jq+oOnwY8JsfNRH6rKynbusa9EUw+eaCDG8V/NFi+Ed8On7Ja4z3Yi+Sk6EZj2ZLLg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: pxLos5H79ULOhEy8s0VpwQp5QtAqEmlaewg47zeGcX6/TMY1fQElpOC9QAU+KdTV4wdrHJ0u3orLPE5RU3DwRg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9811
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8620-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[gmail.com,kernel.org,ti.com,vger.kernel.org,lists.infradead.org];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-8621-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[nxp.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,devicetree.org:url,ti.com:email,485c4000:email,2.110.143.0:email]
-X-Rspamd-Queue-Id: BCB0DBC134
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: CF062BC153
 X-Rspamd-Action: no action
 
-On Fri, Jan 30, 2026 at 04:31:52PM +0530, Sai Sree Kartheek Adivi wrote:
-> New binding document for
-> Texas Instruments K3 Block Copy DMA (BCDMA) V2.
+On Fri, Jan 30, 2026 at 04:31:41PM +0530, Sai Sree Kartheek Adivi wrote:
+> Move macros defined in k3-udma.c to k3-udma.h for better separation and
+> re-use.
 >
-> BCDMA V2 is introduced as part of AM62L.
->
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
 > ---
->  .../bindings/dma/ti/ti,k3-bcdma-v2.yaml       | 116 ++++++++++++++++++
->  1 file changed, 116 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/ti/ti,k3-bcdma-v2.yaml
+
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+>  drivers/dma/ti/k3-udma.c | 62 ---------------------------------------
+>  drivers/dma/ti/k3-udma.h | 63 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 63 insertions(+), 62 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/dma/ti/ti,k3-bcdma-v2.yaml b/Documentation/devicetree/bindings/dma/ti/ti,k3-bcdma-v2.yaml
-> new file mode 100644
-> index 0000000000000..b0bfb19ba863a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/ti/ti,k3-bcdma-v2.yaml
-> @@ -0,0 +1,116 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2024-2025 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/ti/ti,k3-bcdma-v2.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> index aa2dc762140f6..4cc64763de1f6 100644
+> --- a/drivers/dma/ti/k3-udma.c
+> +++ b/drivers/dma/ti/k3-udma.c
+> @@ -39,21 +39,6 @@ struct udma_static_tr {
+>  	u16 bstcnt; /* RPSTR1 */
+>  };
+>
+> -#define K3_UDMA_MAX_RFLOWS		1024
+> -#define K3_UDMA_DEFAULT_RING_SIZE	16
+> -
+> -/* How SRC/DST tag should be updated by UDMA in the descriptor's Word 3 */
+> -#define UDMA_RFLOW_SRCTAG_NONE		0
+> -#define UDMA_RFLOW_SRCTAG_CFG_TAG	1
+> -#define UDMA_RFLOW_SRCTAG_FLOW_ID	2
+> -#define UDMA_RFLOW_SRCTAG_SRC_TAG	4
+> -
+> -#define UDMA_RFLOW_DSTTAG_NONE		0
+> -#define UDMA_RFLOW_DSTTAG_CFG_TAG	1
+> -#define UDMA_RFLOW_DSTTAG_FLOW_ID	2
+> -#define UDMA_RFLOW_DSTTAG_DST_TAG_LO	4
+> -#define UDMA_RFLOW_DSTTAG_DST_TAG_HI	5
+> -
+>  struct udma_chan;
+>
+>  enum k3_dma_type {
+> @@ -118,15 +103,6 @@ struct udma_oes_offsets {
+>  	u32 pktdma_rchan_flow;
+>  };
+>
+> -#define UDMA_FLAG_PDMA_ACC32		BIT(0)
+> -#define UDMA_FLAG_PDMA_BURST		BIT(1)
+> -#define UDMA_FLAG_TDTYPE		BIT(2)
+> -#define UDMA_FLAG_BURST_SIZE		BIT(3)
+> -#define UDMA_FLAGS_J7_CLASS		(UDMA_FLAG_PDMA_ACC32 | \
+> -					 UDMA_FLAG_PDMA_BURST | \
+> -					 UDMA_FLAG_TDTYPE | \
+> -					 UDMA_FLAG_BURST_SIZE)
+> -
+>  struct udma_match_data {
+>  	enum k3_dma_type type;
+>  	u32 psil_base;
+> @@ -1837,38 +1813,6 @@ static int udma_alloc_rx_resources(struct udma_chan *uc)
+>  	return ret;
+>  }
+>
+> -#define TISCI_BCDMA_BCHAN_VALID_PARAMS (			\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_EXTENDED_CH_TYPE_VALID)
+> -
+> -#define TISCI_BCDMA_TCHAN_VALID_PARAMS (			\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID)
+> -
+> -#define TISCI_BCDMA_RCHAN_VALID_PARAMS (			\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID)
+> -
+> -#define TISCI_UDMA_TCHAN_VALID_PARAMS (				\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_EINFO_VALID |	\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_PSWORDS_VALID |	\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |		\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID |	\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |		\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |		\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID)
+> -
+> -#define TISCI_UDMA_RCHAN_VALID_PARAMS (				\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |		\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |		\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |		\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_SHORT_VALID |	\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_LONG_VALID |	\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_START_VALID |	\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_CNT_VALID |	\
+> -	TI_SCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID)
+> -
+>  static int udma_tisci_m2m_channel_config(struct udma_chan *uc)
+>  {
+>  	struct udma_dev *ud = uc->ud;
+> @@ -5398,12 +5342,6 @@ static enum dmaengine_alignment udma_get_copy_align(struct udma_dev *ud)
+>  	}
+>  }
+>
+> -#define TI_UDMAC_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
+> -				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
+> -				 BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
+> -				 BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | \
+> -				 BIT(DMA_SLAVE_BUSWIDTH_8_BYTES))
+> -
+>  static int udma_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *navss_node = pdev->dev.parent->of_node;
+> diff --git a/drivers/dma/ti/k3-udma.h b/drivers/dma/ti/k3-udma.h
+> index 9062a237cd167..750720cd06911 100644
+> --- a/drivers/dma/ti/k3-udma.h
+> +++ b/drivers/dma/ti/k3-udma.h
+> @@ -97,6 +97,69 @@
+>  /* Address Space Select */
+>  #define K3_ADDRESS_ASEL_SHIFT		48
+>
+> +#define K3_UDMA_MAX_RFLOWS		1024
+> +#define K3_UDMA_DEFAULT_RING_SIZE	16
 > +
-> +title: Texas Instruments K3 DMSS BCDMA V2
+> +/* How SRC/DST tag should be updated by UDMA in the descriptor's Word 3 */
+> +#define UDMA_RFLOW_SRCTAG_NONE		0
+> +#define UDMA_RFLOW_SRCTAG_CFG_TAG	1
+> +#define UDMA_RFLOW_SRCTAG_FLOW_ID	2
+> +#define UDMA_RFLOW_SRCTAG_SRC_TAG	4
 > +
-> +maintainers:
-> +  - Sai Sree Kartheek Adivi <s-adivi@ti.com>
+> +#define UDMA_RFLOW_DSTTAG_NONE		0
+> +#define UDMA_RFLOW_DSTTAG_CFG_TAG	1
+> +#define UDMA_RFLOW_DSTTAG_FLOW_ID	2
+> +#define UDMA_RFLOW_DSTTAG_DST_TAG_LO	4
+> +#define UDMA_RFLOW_DSTTAG_DST_TAG_HI	5
 > +
-> +description: |
-> +  The BCDMA V2 is intended to perform similar functions as the TR mode channels
-> +  of K3 UDMA-P. BCDMA V2 includes block copy channels and Split channels.
+> +#define UDMA_FLAG_PDMA_ACC32		BIT(0)
+> +#define UDMA_FLAG_PDMA_BURST		BIT(1)
+> +#define UDMA_FLAG_TDTYPE		BIT(2)
+> +#define UDMA_FLAG_BURST_SIZE		BIT(3)
+> +#define UDMA_FLAGS_J7_CLASS		(UDMA_FLAG_PDMA_ACC32 | \
+> +					 UDMA_FLAG_PDMA_BURST | \
+> +					 UDMA_FLAG_TDTYPE | \
+> +					 UDMA_FLAG_BURST_SIZE)
 > +
-> +  Block copy channels mainly used for memory to memory transfers, but with
-> +  optional triggers a block copy channel can service peripherals by accessing
-> +  directly to memory mapped registers or area.
+> +#define TI_UDMAC_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
+> +				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
+> +				 BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
+> +				 BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | \
+> +				 BIT(DMA_SLAVE_BUSWIDTH_8_BYTES))
 > +
-> +  Split channels can be used to service PSI-L based peripherals. The peripherals
-> +  can be PSI-L native or legacy, non PSI-L native peripherals with PDMAs. PDMA
-> +  is tasked to act as a bridge between the PSI-L fabric and the legacy peripheral.
+> +/* TI_SCI Params */
+> +#define TISCI_BCDMA_BCHAN_VALID_PARAMS (			\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_EXTENDED_CH_TYPE_VALID)
 > +
-> +allOf:
-> +  - $ref: /schemas/dma/dma-controller.yaml#
+> +#define TISCI_BCDMA_TCHAN_VALID_PARAMS (			\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID)
 > +
-> +properties:
-> +  compatible:
-> +    const: ti,am62l-dmss-bcdma
+> +#define TISCI_BCDMA_RCHAN_VALID_PARAMS (			\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID)
 > +
-> +  reg:
-> +    items:
-> +      - description: BCDMA Control /Status
-> +      - description: Block Copy Channel Realtime
-> +      - description: Channel Realtime
-> +      - description: Ring Realtime
+> +#define TISCI_UDMA_TCHAN_VALID_PARAMS (				\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_EINFO_VALID |	\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_PSWORDS_VALID |	\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |		\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID |	\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |		\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |		\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID)
 > +
-> +  reg-names:
-> +    items:
-> +      - const: gcfg
-> +      - const: bchanrt
-> +      - const: chanrt
-> +      - const: ringrt
+> +#define TISCI_UDMA_RCHAN_VALID_PARAMS (				\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |	\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |		\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |		\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |		\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_SHORT_VALID |	\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_LONG_VALID |	\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_START_VALID |	\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_CNT_VALID |	\
+> +	TI_SCI_MSG_VALUE_RM_UDMAP_CH_ATYPE_VALID)
 > +
-> +  "#dma-cells":
-> +    const: 4
-
-look like only this difference compare v3. can you consider to combine to
-one file
-
-Frank
-> +    description: |
-> +      cell 1: Channel operation mode
-> +        0 - split channel / no trigger
-> +        1 - internal channel event
-> +        2 - external signal
-> +        3 - timer manager event
-> +
-> +      cell 2: parameter for the trigger:
-> +        if cell 1 is 0 (disable / no trigger):
-> +          Unused, ignored
-> +        if cell 1 is 1 (internal channel event):
-> +          channel number whose TR event should trigger the current channel.
-> +        if cell 1 is 2 or 3 (external signal or timer manager event):
-> +          index of global interfaces that come into the DMA.
-> +
-> +          Please refer to the device documentation for global interface indexes.
-> +
-> +      cell 3: Channel identification for the peripheral
-> +        if cell 1 is 0 (split channel / no trigger):
-> +          PSI-L thread ID of the remote (to BCDMA) end.
-> +          Valid ranges for thread ID depends on the data movement direction:
-> +          for source thread IDs (rx): 0 - 0x7fff
-> +          for destination thread IDs (tx): 0x8000 - 0xffff
-> +
-> +          Please refer to the device documentation for the PSI-L thread map and
-> +          also the PSI-L peripheral chapter for the correct thread ID.
-> +
-> +        if cell 1 is 1 or 2 or 3 (MEM_TO_MEM and/or trigger type):
-> +          Unused, provide 0.
-> +
-> +      cell 4: ASEL value for the channel
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - "#dma-cells"
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    main {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        main_bcdma: dma-controller@485c4000 {
-> +            compatible = "ti,am62l-dmss-bcdma";
-> +            reg = <0x00 0x485c4000 0x00 0x4000>,
-> +                  <0x00 0x48880000 0x00 0x10000>,
-> +                  <0x00 0x48800000 0x00 0x80000>,
-> +                  <0x00 0x47000000 0x00 0x200000>;
-> +            reg-names = "gcfg", "bchanrt", "chanrt", "ringrt";
-> +            #dma-cells = <4>;
-> +        };
-> +
-> +        crypto@40800000 {
-> +            compatible = "ti,am62l-dthev2";
-> +            reg = <0x00 0x40800000 0x00 0x14000>;
-> +
-> +            dmas = <&main_bcdma 0 0 0x4700 0>,
-> +                   /* rx: Split channel, no trigger, PSI-L thread id, ASEL value */
-> +                   <&main_bcdma 0 0 0xc701 0>,
-> +                   /* tx1: Split channel, no trigger, PSI-L thread id, ASEL value */
-> +                   <&main_bcdma 0 0 0xc700 0>;
-> +                   /* tx2: Split channel, no trigger, PSI-L thread id, ASEL value */
-> +            dma-names = "rx", "tx1", "tx2";
-> +        };
-> +    };
+>  struct udma_dev;
+>  struct udma_tchan;
+>  struct udma_rchan;
 > --
 > 2.34.1
 >

@@ -1,261 +1,302 @@
-Return-Path: <dmaengine+bounces-8630-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8632-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qMo9JyL7fGmYPgIAu9opvQ
-	(envelope-from <dmaengine+bounces-8630-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 19:40:34 +0100
+	id qKeaFXcEfWmRPwIAu9opvQ
+	(envelope-from <dmaengine+bounces-8632-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 20:20:23 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3D93BDE76
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 19:40:33 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E184BE11F
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 20:20:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 79E3E30036F7
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 18:40:32 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B7A71300B508
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Jan 2026 19:20:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E04F73806C3;
-	Fri, 30 Jan 2026 18:40:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDEBD3876B0;
+	Fri, 30 Jan 2026 19:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WPfVrfn8"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="LUzqOzfs"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013036.outbound.protection.outlook.com [52.101.72.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6B837F8DA;
-	Fri, 30 Jan 2026 18:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769798431; cv=none; b=SOa2OjQXVzfMbgXmzsfOmTwmZSGsOFlF8wjvoZiI6KegUyrCw5vIQaJ6JeA+9DjtsdyHOhF7eQ/lfbNsj+eWGDtJnQbm6srSA4+RTacGPGGc1FQThNDOZy2v3QvPyZm7+P5V+8UDxDSO0zZcH9JsohdW8L4+0KkPJB+BLNPHplI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769798431; c=relaxed/simple;
-	bh=tdYUurL5ykgqzwtJvM1Vb/0AXGJhvoo4rsvBT1P9Wfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WLnvgWlBLRGiJQRjsa10kDjqDga0M8RdIpp3vv/cx9mu4RzVObbi5JdtgdXU7ClepmGQ/9DlF4dR1/Pe6fx0H7ehvE3YqiShH8SNGCN4aubwKbSIh9JtU7Gf2shKAWtuMTh0odN6VqM3DMDjnMRKIAgGKU9OWLPsFUfgcJpsbc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WPfVrfn8; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769798429; x=1801334429;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tdYUurL5ykgqzwtJvM1Vb/0AXGJhvoo4rsvBT1P9Wfs=;
-  b=WPfVrfn8jx3VPKl6BeutT2y+VfZK/q13ExEdxt3xaW9Wt42ubX/rYXzy
-   LkwTcmo2VklqziMqyqJxIYrBAW8ilyOgDMQ6STBssft2Pjo317aZVNVWE
-   BT3VG0gtZcGHFdh9o7jBH7Ut4gd/fVjrxUM8O2zeO+5H9gIM7y0wj6Lmx
-   jq2Pcx3t//C1A9QwY/pokp6i/wOoGkQZPrqQGxKNIlA1Kz57ISfylAsox
-   1xWFkM80YAPfX09tTcTyJcnSh192KpLq0dwWLBwhQK4AI/03HTYnkhi4z
-   Tldc+ov/Cfi/a4JZbCCA8ZKtbq0OdkjksKVTRlXOCKHmJTijYfVBWKo7f
-   Q==;
-X-CSE-ConnectionGUID: XZo5j7kFSzOAnVxH/HLp6w==
-X-CSE-MsgGUID: Vr9Qr1c3Q9CEIBVJF4ixFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11687"; a="70255712"
-X-IronPort-AV: E=Sophos;i="6.21,263,1763452800"; 
-   d="scan'208";a="70255712"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2026 10:40:28 -0800
-X-CSE-ConnectionGUID: Ph0KVDZSTo2PUpRjqqCdLA==
-X-CSE-MsgGUID: j46FwpDzTFO/aiIoMrR87w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,263,1763452800"; 
-   d="scan'208";a="213421699"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 30 Jan 2026 10:40:25 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vltPq-00000000dEI-015O;
-	Fri, 30 Jan 2026 18:40:22 +0000
-Date: Sat, 31 Jan 2026 02:40:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sai Sree Kartheek Adivi <s-adivi@ti.com>, peter.ujfalusi@gmail.com,
-	vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	vigneshr@ti.com
-Cc: oe-kbuild-all@lists.linux.dev, r-sharma3@ti.com, gehariprasath@ti.com
-Subject: Re: [PATCH v4 11/19] drivers: soc: ti: k3-ringacc: handle absence of
- tisci
-Message-ID: <202601310246.hIZd2WuJ-lkp@intel.com>
-References: <20260130110159.359501-12-s-adivi@ti.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DE23431EF;
+	Fri, 30 Jan 2026 19:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.36
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769800816; cv=fail; b=FhrI53bMer+8UmO+yuSY+uVzlb+lMG422wpmtUWSknhshqeE6g/F2xrf9IeeBhE7i9IDeOwRZGq7ujOTdN1TGinPGxOIm5B3KB7GdnuJpTEZq2qmGd4F75Pe10A30uZsBv0mEVeAeMu4fTYdbm7QRFkpPzyW/SBuUt3ha6FBOV8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769800816; c=relaxed/simple;
+	bh=AU7PhcDfPbWo00/XV5xVb8CD8NNaQOQtcgp1UHWUMJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=p+RYkTx9LB5w7mJnciIV3tck1Zi0DcQ6hAORomg7yCjc1d0hyAGATJJks2xtSwni0/9RBLFxuBcCT9E4jXr5+8gCx77LGWILcL2lXAVuojh8vxBfb9oubdPCMRlX2fIXjpyZNL0KE6hL8Sjxe5dhJVJwmD2nuXz1MZOsWtKkWqc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=LUzqOzfs; arc=fail smtp.client-ip=52.101.72.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HPLVli/TYdsMZl0pVgx10OpMbB7etSUEAMfsL4iSbwnb+JN/jS5mIthSXui5sRApSeVWqX6QUfgmIooCwROyNpzLsF8m1Ja5Ek5vvzhJ4PESDTGkXrq4ucmHS4vVbrgQKg8TU8wMXof68XxCuv2U9kiHYAVeBVOi3SCri/4qK8MhZcY7ikjuP1/HtxXqhwpSy34ivOeNbFuDKJbPAGAfLCmdf7rlc1dJn/opw4wMCEO8aKyaSHAGsyevdokerdPRK54gvMwWhRDufopXQrlhlRAJjn/ZQwNCnyM5Aoj+nBHJ91jUiF+MPTWACvzYYi9ot4HVepM+pG+Mjl3AlSWVJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3iXcfhUO+aNfRWufSV2ZwHFJ41ttxSrK/r+nuEgOr0c=;
+ b=OOe+QLkLlyPC8QjcaHchnxgp6LzkUd+vZl16hBndr84yaNhHyeq2jbPtnvFc374I5fY/zywGwo1O2u/Hb7z2vZe6oDF4EK9Cno8g6pbg0/SBKCNcP+uNAdDcfgrLz99vTDj6qln38aPu+gQQGPf9/JDr6IYP+dSIBKtsX4PVZaVmRatD6cSXuj31OBEma7cxY6xQo3oq/v+yci2jM1JP7AZXD8mieMxRub7hyIBF8vR6HuR9Y4gNh0exwPXVdgLvxnSZTm9ZqW0yUNW9lT+ioOkBKydu3oTeMoPgP0DjazK3kWd58lU0VE30B+9ccr3QMyH4n+B/9XUWhcVdEh387Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3iXcfhUO+aNfRWufSV2ZwHFJ41ttxSrK/r+nuEgOr0c=;
+ b=LUzqOzfs2FrJPyBapphgA6OS9ZcbEgrtysu5z/MXxb5hSTqQlbTHCpC1KtFbjyRcrBLI/oR6JHyCkCVZrI7EyzyzR/nygwkdYeYOIOj409wxuIAIn2YfwegyzjkzytYQxN9krU+npmh8DSe0ZL4HZoBGbYjpvUXJu874RYuqd+OHtQQ4J/7TRF908yuT5IILs8C9lANzYQxWs9vG3UiGzsHRLM8wZgfiLUB7Dbu+JIgkx0mEDXzrBZuZd+5ZgEW9N4NKQKKhcRVz1VaRQ5xwzWd+A9JM1i8+OokIkxXQUzdC5Ssz9c1xVLj1uM+I0Fzq7iU/4XWb4JPmyU3dgkzNOw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by PAXPR04MB8157.eurprd04.prod.outlook.com (2603:10a6:102:1cf::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.8; Fri, 30 Jan
+ 2026 19:20:11 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9564.010; Fri, 30 Jan 2026
+ 19:20:10 +0000
+Date: Fri, 30 Jan 2026 14:19:58 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Vinod Koul <vkoul@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Koichiro Den <den@valinux.co.jp>, Niklas Cassel <cassel@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH v3 0/9] dmaengine: Add new API to combine configuration
+ and descriptor preparation
+Message-ID: <aX0EXjM4LlO3Hygd@lizhi-Precision-Tower-5810>
+References: <20260105-dma_prep_config-v3-0-a8480362fd42@nxp.com>
+ <aXD/EYqhhRJEN8oy@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aXD/EYqhhRJEN8oy@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: SJ0PR13CA0173.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c7::28) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260130110159.359501-12-s-adivi@ti.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PAXPR04MB8157:EE_
+X-MS-Office365-Filtering-Correlation-Id: be7e65d5-5353-429c-cf85-08de603495cc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|52116014|19092799006|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cpIrGDs650IFBa+361QfFtXyupR0UnPXKYODFK8o6swbKS6RMKN3qI85ggS9?=
+ =?us-ascii?Q?TMa4xVNAFyy0WzpwBKJvDrXwuwK1JpC22gcHL0vYfLu/ErCOMpP7zHAuxDgn?=
+ =?us-ascii?Q?zmT0Mhyrxvd9pZKZ1LW3VqIc+V5mShJw9vMU+s2fkJL7bOIcdbYoJHc0P4kx?=
+ =?us-ascii?Q?iFOl5JU6Z/QOMRUEJKApTxsPfL6Kf6tnVeTCkd0lpRMk4nb2hGMAquRu5Ous?=
+ =?us-ascii?Q?HpmAE1GF/oPme0Wy6kw/6lMX9xjKaHNfrNURIjHQKtY3RTtmgh5+24JKpk4C?=
+ =?us-ascii?Q?GuNRoBj9hbd7jCO+C8Th9h0SZKlRsXy+C1OnpaWFQmeEXXfagL8aiJh6+VGU?=
+ =?us-ascii?Q?ZsfRGgtu+5DpPpGep4RL4rv12CegdKv9R8RChsxAaRCCYD1NCRzGfjaZpuKD?=
+ =?us-ascii?Q?xPXd5IUDfuW8oKyKceyZwwP8DhXZgULQQvrr8o8CZ08G3+fPOB/0wlCmlBxg?=
+ =?us-ascii?Q?ajPk4Woo4NmL846h5lCBFMRDBLK3sb+vvMuw6bYxNv15aosdZz+cuLyyjq9T?=
+ =?us-ascii?Q?m3b1H5ErJMFprm5eNO4QjR0gTv1Sxb8RCAybzE31M/3sY2J0MhBagzTA2GfX?=
+ =?us-ascii?Q?OWgUrVxLXJ4uvkjRog41F2Iv6MR+opJtdkDVe3L85N+iw0RHCiRF+E15l9z4?=
+ =?us-ascii?Q?dpYmFHfo/s4Hm2kDkXOxPyV9LIq9C19rbrV3rk9jEU4NY6Mdigf+cR015pgP?=
+ =?us-ascii?Q?VIwvpVKTvMqcruOviGmN7L3BJL6xSBzmXO5ggXbZo+5PbsVoFyEM9hDlFIxh?=
+ =?us-ascii?Q?oLqilljQOduPJs8/fcyo7KT9m4g+u0lXr9qle2wm0tES7KEgJwASliN2vqLS?=
+ =?us-ascii?Q?kUXSGR9YBD1Cce7VfjnWGRXexveUaUZqoKzXc4OCDXtm7HgUxLPO8WUbmiJX?=
+ =?us-ascii?Q?ze0CddRz4pIMrKDdwPhMt0NXSS1leozwaIVQ6Y0VySAPvAvM4fy9yjZlDKUM?=
+ =?us-ascii?Q?pdxXAoeTKRKoX652EjmrXJMbLGi/Hi3Quscf9yoRd2MF5hfnsTQ2kDlAuTvz?=
+ =?us-ascii?Q?ATnbGXukDPKYYT00wRb4bjw8/IwFCfXPt25zO83feVsAtdHUBZfMv14usHoI?=
+ =?us-ascii?Q?x51p3/bSCO+hIOQvE+I6XkmWkJuW5kpf8gka/QjSkD5d+l2RT6s2NU6Peyx8?=
+ =?us-ascii?Q?enSyqp7HrKR4gW760/mGzxzdGhIbtEmJK1gpb9IZS9qi3Jxe7PKy3bhk1dt3?=
+ =?us-ascii?Q?wUXyEqyQW4Xi8BVReIWH3iPFrMU076PoYBEe+h2q8/rwvyUWGPrH22PO2VUV?=
+ =?us-ascii?Q?h0wWbeYmjnVz7H7lLYHgCj02CHJFkE5dERGNGUjZmDSYRJG8NBdVoUL6A58Q?=
+ =?us-ascii?Q?1os2GqWe2GNOh2QpmoQSgunY/JrorzFfRmcHu3pYLdqL9FBz0V18nvS7WUJ9?=
+ =?us-ascii?Q?M1/OaUHJYAK8oXkS+IA2eOe/l71EKLI3/UNVkItjRujXQPmOnVKH3B5Fw34O?=
+ =?us-ascii?Q?1LS9jadC1MZzzj8hDEGOUgQ8sOWKoYzLhyJDyQ8GMDvPQ2dgeW4ul47h8ZTy?=
+ =?us-ascii?Q?gtXPfgzUamNajKyueV4ZYWJw6d9uWX0AsohhzDt9jl5CGkN+NzgPM9ILOtzY?=
+ =?us-ascii?Q?Q0h79YyiVJ2tTMvTPqh6daevp40lRYNh9GnBFC8pbj5C0KzzvOCXU0uw0y6e?=
+ =?us-ascii?Q?G/WvFdq7dt5luTX4oRjAQfciHxNqG5yTB5Gp9M/kwbzO?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(52116014)(19092799006)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?OaCmW+A1hWR5RORcRGK6LhMkCJ7ztVPBEgOhYX1Z+UaHWlMweTFB+cz59u6C?=
+ =?us-ascii?Q?LoETk2nXqPWz1stbVffhRRKjxRCZR58pw9BWksB/CrnbGqMG1f50r15rlh1D?=
+ =?us-ascii?Q?5OYJqna1C7XniewY1b1SjHz7//61BvPfXqtoK1AmfPFSTxH2ATx9d3ptCwyq?=
+ =?us-ascii?Q?oeLzEoddkggKQtEYr93ytlqWB9pPtraRaXCYVKdwaAX/YmUM9XxfQnPqSyVc?=
+ =?us-ascii?Q?kWhGzBPi4kOd+vDCMIy5V4NeOu6MmeNg8qlNf1Mj4JLoN3ShpmWcC/6cuznF?=
+ =?us-ascii?Q?5JZFKGu15buKFD+RqcuM8i3Uh7nUhL+1Zz5aimMjv6S1Ffh1PjU8IwAWKhof?=
+ =?us-ascii?Q?2k8uhpZSBCeHNkVO1CcNKKhpqsx8/3AIXIZUUflJMU5uEAoSovXuPxmJwhyF?=
+ =?us-ascii?Q?1+RTZ+fUj7I2H0mBi8UXX8oUtxcUEQrXRqlucWAkKp2X9Uj/KM38ZhrKZict?=
+ =?us-ascii?Q?q5SAWFoVozh0j2hf9V+sliXhvtUBP4TfRov2crgLSG83m3bTwO4KpEoIQJXb?=
+ =?us-ascii?Q?5M7uvYb8b74FxQKOfg+Q1oAYPEeMy6rxXfy+CYQxQxbaoI041SOiC5flh10g?=
+ =?us-ascii?Q?XTZLPrF8szNLUkV7WW1HsSO7me6v4Dt2P92TN4ossFwqKrzaj1tpETe2Z48S?=
+ =?us-ascii?Q?Le/diSmvc32JRDUoLgb+J3QQD83Ti+pieY0/y7lZ26ibwwWVunbVErhADXNr?=
+ =?us-ascii?Q?hwdbBG1nrNDDqfZ9mmepTc6kQDoDC6+AuQ8sxmkjMkB9q+9BwDeTUTPkT4LB?=
+ =?us-ascii?Q?0un7Tq9iHKWJhUh9EQtT9GaYeYv4oAaO/71NfzY/RjV9PAWvtdoSid0SrfSN?=
+ =?us-ascii?Q?E4b6+Wg/n5vgPXYF0fSo6w0+ItykKvf2MKb+svv97WLLE7wMkqv28sxPf0yo?=
+ =?us-ascii?Q?rad/dccJyTh3iY2Ean073qtrg1Ht2/QYV34YWnhvxUL7eIp1mDutaaGoco5V?=
+ =?us-ascii?Q?ysox2iebMOOyexLjczckAkuwlQmtDUTl7MHgVFVnO8B3doS+X0T22TCMyvbH?=
+ =?us-ascii?Q?qAgFEC9Jqp/7t55+M18hMNRmZ+E4IcGvleaLIaXn3zKWpUse4D9Ws1KdGF3x?=
+ =?us-ascii?Q?2UM7XZ0jO5unzKHkgCIQtUON1d7tFjoJJDtUizpjkXqnElNysNyXcNorfxFw?=
+ =?us-ascii?Q?2jpA23PnI0VJlbJgnaDzlGwsTEnjOf2x4P79qGH9rGUY8cllTf6qQw/UOjFA?=
+ =?us-ascii?Q?8baSfH2nLqlTT/P3Nfoy5q6sO1rAWMaH4+8FoenRcccOsbxruw3r+oRruD1S?=
+ =?us-ascii?Q?lU8CWdWUYuY2ZBJvJJMbF2mvfTp1FlpVGEp9O8fWICiEqQCBiOGOG7QK1tW5?=
+ =?us-ascii?Q?+uxRsPmevOzXHJz2/rWguCFcsqhKosTKNst66NoKOHVYT12vvK+mcrQEJwhZ?=
+ =?us-ascii?Q?MJdPGzs6V6/Osh+RdC56LVhGcTsAXsVSlYGaBnlFm6A2q4xl/3qO0tBr/4MC?=
+ =?us-ascii?Q?E8dbVOJQZorc5aOqy5g8WqrcGni/WXKHYRo2reL3SPdYb+oAHvwluK876Ztx?=
+ =?us-ascii?Q?hruNqaigS+vUBpdS4RUgUY1zfKMkWQIkZ/8r7xggMMJhf5Fi2EXYgtP0unmm?=
+ =?us-ascii?Q?vT7C0jxW2endfu/gzC9G6MQXiPZto4zpV9qsv4Zg6faBPoKadcZc81Ju6p0r?=
+ =?us-ascii?Q?jc6btpCh9yF5rVQpAOiW0cn1z/Wzt6NJL3Um2nDBYJ7LLCtkaLozi119QkuB?=
+ =?us-ascii?Q?tAFOigFBYCCscp96SHDb6t4aQaWsDfZsnmHcwHDOBNFXmVBn?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: be7e65d5-5353-429c-cf85-08de603495cc
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2026 19:20:10.6238
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CZn5laUxKyzZ0mwl/dXHRU3jly5x64lZPm5J5sxD5qbHYfFVHkmKEKnxXTgPt4aHpHxNl2/MFBYUR24jCNvrPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8157
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8630-lists,dmaengine=lfdr.de];
-	FREEMAIL_TO(0.00)[ti.com,gmail.com,kernel.org,vger.kernel.org,lists.infradead.org];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-8632-lists,dmaengine=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[25];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
+	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[nxp.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: F3D93BDE76
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 6E184BE11F
 X-Rspamd-Action: no action
 
-Hi Sai,
+On Wed, Jan 21, 2026 at 11:30:09AM -0500, Frank Li wrote:
+> On Mon, Jan 05, 2026 at 05:46:50PM -0500, Frank Li wrote:
+> > Previously, configuration and preparation required two separate calls. This
+> > works well when configuration is done only once during initialization.
+> >
+> > However, in cases where the burst length or source/destination address must
+> > be adjusted for each transfer, calling two functions is verbose.
+> >
+> > 	if (dmaengine_slave_config(chan, &sconf)) {
+> > 		dev_err(dev, "DMA slave config fail\n");
+> > 		return -EIO;
+> > 	}
+> >
+> > 	tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
+> >
+> > After new API added
+> >
+> > 	tx = dmaengine_prep_config_single(chan, dma_local, len, dir, flags, &sconf);
+> >
+> > Additional, prevous two calls requires additional locking to ensure both
+> > steps complete atomically.
+> >
+> >     mutex_lock()
+> >     dmaengine_slave_config()
+> >     dmaengine_prep_slave_single()
+> >     mutex_unlock()
+> >
+> > after new API added, mutex lock can be moved. See patch
+> >      nvmet: pci-epf: Use dmaengine_prep_config_single_safe() API
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+>
+> Vinod:
+> 	Can you take care these patches? At least first 2 patches! So
+> I can did more clean up at next kernel release.
 
-kernel test robot noticed the following build errors:
+Vinod Koul:
 
-[auto build test ERROR on vkoul-dmaengine/next]
-[also build test ERROR on next-20260129]
-[cannot apply to linus/master v6.19-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+	Do you have chance to pick up (at least first 2 patches) for 6.20?
+So I can start do more cleanup work.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sai-Sree-Kartheek-Adivi/dmaengine-ti-k3-udma-move-macros-to-header-file/20260130-191306
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-patch link:    https://lore.kernel.org/r/20260130110159.359501-12-s-adivi%40ti.com
-patch subject: [PATCH v4 11/19] drivers: soc: ti: k3-ringacc: handle absence of tisci
-config: nios2-allmodconfig (https://download.01.org/0day-ci/archive/20260131/202601310246.hIZd2WuJ-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260131/202601310246.hIZd2WuJ-lkp@intel.com/reproduce)
+	There are two serial depend on this one
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601310246.hIZd2WuJ-lkp@intel.com/
+https://lore.kernel.org/dmaengine/20251212-edma_ll-v1-0-fc863d9f5ca3@nxp.com/
+https://lore.kernel.org/dmaengine/aWT4p7RnFykJnuOz@ryzen/
 
-All error/warnings (new ones prefixed by >>):
+Frank
 
-   In file included from drivers/soc/ti/k3-ringacc.c:17:
->> include/linux/soc/ti/ti_sci_inta_msi.h:17:43: warning: 'struct msi_domain_info' declared inside parameter list will not be visible outside of this definition or declaration
-      17 |                                    struct msi_domain_info *info,
-         |                                           ^~~~~~~~~~~~~~~
-   drivers/soc/ti/k3-ringacc.c: In function 'k3_ringacc_init':
->> drivers/soc/ti/k3-ringacc.c:1506:17: error: 'struct dev_msi_info' has no member named 'domain'
-    1506 |         dev->msi.domain = of_msi_get_domain(dev, dev->of_node,
-         |                 ^
-   drivers/soc/ti/k3-ringacc.c:1508:22: error: 'struct dev_msi_info' has no member named 'domain'
-    1508 |         if (!dev->msi.domain)
-         |                      ^
---
-   In file included from k3-ringacc.c:17:
->> include/linux/soc/ti/ti_sci_inta_msi.h:17:43: warning: 'struct msi_domain_info' declared inside parameter list will not be visible outside of this definition or declaration
-      17 |                                    struct msi_domain_info *info,
-         |                                           ^~~~~~~~~~~~~~~
-   k3-ringacc.c: In function 'k3_ringacc_init':
-   k3-ringacc.c:1506:17: error: 'struct dev_msi_info' has no member named 'domain'
-    1506 |         dev->msi.domain = of_msi_get_domain(dev, dev->of_node,
-         |                 ^
-   k3-ringacc.c:1508:22: error: 'struct dev_msi_info' has no member named 'domain'
-    1508 |         if (!dev->msi.domain)
-         |                      ^
-
-
-vim +1506 drivers/soc/ti/k3-ringacc.c
-
-95e7be062aea6d Grygorii Strashko  2020-09-11  1497  
-40a2a7c395cf5d Grygorii Strashko  2020-07-24  1498  static int k3_ringacc_init(struct platform_device *pdev,
-40a2a7c395cf5d Grygorii Strashko  2020-07-24  1499  			   struct k3_ringacc *ringacc)
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1500  {
-95e7be062aea6d Grygorii Strashko  2020-09-11  1501  	const struct soc_device_attribute *soc;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1502  	void __iomem *base_fifo, *base_rt;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1503  	struct device *dev = &pdev->dev;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1504  	int ret, i;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1505  
-34fff62827b254 Thomas Gleixner    2021-12-10 @1506  	dev->msi.domain = of_msi_get_domain(dev, dev->of_node,
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1507  					    DOMAIN_BUS_TI_SCI_INTA_MSI);
-e50a76355c1d85 Jayesh Choudhary   2023-07-28  1508  	if (!dev->msi.domain)
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1509  		return -EPROBE_DEFER;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1510  
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1511  	ret = k3_ringacc_probe_dt(ringacc);
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1512  	if (ret)
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1513  		return ret;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1514  
-95e7be062aea6d Grygorii Strashko  2020-09-11  1515  	soc = soc_device_match(k3_ringacc_socinfo);
-95e7be062aea6d Grygorii Strashko  2020-09-11  1516  	if (soc && soc->data) {
-95e7be062aea6d Grygorii Strashko  2020-09-11  1517  		const struct k3_ringacc_soc_data *soc_data = soc->data;
-95e7be062aea6d Grygorii Strashko  2020-09-11  1518  
-95e7be062aea6d Grygorii Strashko  2020-09-11  1519  		ringacc->dma_ring_reset_quirk = soc_data->dma_ring_reset_quirk;
-95e7be062aea6d Grygorii Strashko  2020-09-11  1520  	}
-95e7be062aea6d Grygorii Strashko  2020-09-11  1521  
-f9dbb99748bab0 Zhang Zekun        2023-08-09  1522  	base_rt = devm_platform_ioremap_resource_byname(pdev, "rt");
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1523  	if (IS_ERR(base_rt))
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1524  		return PTR_ERR(base_rt);
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1525  
-f9dbb99748bab0 Zhang Zekun        2023-08-09  1526  	base_fifo = devm_platform_ioremap_resource_byname(pdev, "fifos");
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1527  	if (IS_ERR(base_fifo))
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1528  		return PTR_ERR(base_fifo);
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1529  
-f9dbb99748bab0 Zhang Zekun        2023-08-09  1530  	ringacc->proxy_gcfg = devm_platform_ioremap_resource_byname(pdev, "proxy_gcfg");
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1531  	if (IS_ERR(ringacc->proxy_gcfg))
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1532  		return PTR_ERR(ringacc->proxy_gcfg);
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1533  
-f9dbb99748bab0 Zhang Zekun        2023-08-09  1534  	ringacc->proxy_target_base = devm_platform_ioremap_resource_byname(pdev,
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1535  									   "proxy_target");
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1536  	if (IS_ERR(ringacc->proxy_target_base))
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1537  		return PTR_ERR(ringacc->proxy_target_base);
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1538  
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1539  	ringacc->num_proxies = readl(&ringacc->proxy_gcfg->config) &
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1540  				     K3_RINGACC_PROXY_CFG_THREADS_MASK;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1541  
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1542  	ringacc->rings = devm_kzalloc(dev,
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1543  				      sizeof(*ringacc->rings) *
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1544  				      ringacc->num_rings,
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1545  				      GFP_KERNEL);
-a8eba8dde5fbf0 Christophe JAILLET 2021-12-23  1546  	ringacc->rings_inuse = devm_bitmap_zalloc(dev, ringacc->num_rings,
-a8eba8dde5fbf0 Christophe JAILLET 2021-12-23  1547  						  GFP_KERNEL);
-a8eba8dde5fbf0 Christophe JAILLET 2021-12-23  1548  	ringacc->proxy_inuse = devm_bitmap_zalloc(dev, ringacc->num_proxies,
-a8eba8dde5fbf0 Christophe JAILLET 2021-12-23  1549  						  GFP_KERNEL);
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1550  
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1551  	if (!ringacc->rings || !ringacc->rings_inuse || !ringacc->proxy_inuse)
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1552  		return -ENOMEM;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1553  
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1554  	for (i = 0; i < ringacc->num_rings; i++) {
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1555  		ringacc->rings[i].rt = base_rt +
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1556  				       K3_RINGACC_RT_REGS_STEP * i;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1557  		ringacc->rings[i].fifos = base_fifo +
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1558  					  K3_RINGACC_FIFO_REGS_STEP * i;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1559  		ringacc->rings[i].parent = ringacc;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1560  		ringacc->rings[i].ring_id = i;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1561  		ringacc->rings[i].proxy_id = K3_RINGACC_PROXY_NOT_USED;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1562  	}
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1563  
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1564  	ringacc->tisci_ring_ops = &ringacc->tisci->ops.rm_ring_ops;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1565  
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1566  	dev_info(dev, "Ring Accelerator probed rings:%u, gp-rings[%u,%u] sci-dev-id:%u\n",
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1567  		 ringacc->num_rings,
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1568  		 ringacc->rm_gp_range->desc[0].start,
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1569  		 ringacc->rm_gp_range->desc[0].num,
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1570  		 ringacc->tisci_dev_id);
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1571  	dev_info(dev, "dma-ring-reset-quirk: %s\n",
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1572  		 ringacc->dma_ring_reset_quirk ? "enabled" : "disabled");
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1573  	dev_info(dev, "RA Proxy rev. %08x, num_proxies:%u\n",
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1574  		 readl(&ringacc->proxy_gcfg->revision), ringacc->num_proxies);
-40a2a7c395cf5d Grygorii Strashko  2020-07-24  1575  
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1576  	return 0;
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1577  }
-3277e8aa2504d9 Grygorii Strashko  2020-01-15  1578  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> Frank
+>
+> > Changes in v3:
+> > - collect review tags
+> > - create safe version in framework
+> > - Link to v2: https://lore.kernel.org/r/20251218-dma_prep_config-v2-0-c07079836128@nxp.com
+> >
+> > Changes in v2:
+> > - Use name dmaengine_prep_config_single() and dmaengine_prep_config_sg()
+> > - Add _safe version to avoid confuse, which needn't additional mutex.
+> > - Update document/
+> > - Update commit message. add () for function name. Use upcase for subject.
+> > - Add more explain for remove lock.
+> > - Link to v1: https://lore.kernel.org/r/20251208-dma_prep_config-v1-0-53490c5e1e2a@nxp.com
+> >
+> > ---
+> > Frank Li (9):
+> >       dmaengine: Add API to combine configuration and preparation (sg and single)
+> >       dmaengine: Add safe API to combine configuration and preparation
+> >       PCI: endpoint: pci-epf-test: Use dmaenigne_prep_config_single() to simplify code
+> >       dmaengine: dw-edma: Use new .device_prep_config_sg() callback
+> >       dmaengine: dw-edma: Pass dma_slave_config to dw_edma_device_transfer()
+> >       nvmet: pci-epf: Remove unnecessary dmaengine_terminate_sync() on each DMA transfer
+> >       nvmet: pci-epf: Use dmaengine_prep_config_single_safe() API
+> >       PCI: epf-mhi: Use dmaengine_prep_config_single() to simplify code
+> >       crypto: atmel: Use dmaengine_prep_config_single() API
+> >
+> >  Documentation/driver-api/dmaengine/client.rst |   9 ++
+> >  drivers/crypto/atmel-aes.c                    |  10 +--
+> >  drivers/dma/dmaengine.c                       |   3 +
+> >  drivers/dma/dw-edma/dw-edma-core.c            |  41 ++++++---
+> >  drivers/nvme/target/pci-epf.c                 |  21 ++---
+> >  drivers/pci/endpoint/functions/pci-epf-mhi.c  |  52 ++++--------
+> >  drivers/pci/endpoint/functions/pci-epf-test.c |   8 +-
+> >  include/linux/dmaengine.h                     | 117 ++++++++++++++++++++++++--
+> >  8 files changed, 177 insertions(+), 84 deletions(-)
+> > ---
+> > base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+> > change-id: 20251204-dma_prep_config-654170d245a2
+> >
+> > Best regards,
+> > --
+> > Frank Li <Frank.Li@nxp.com>
+> >
 

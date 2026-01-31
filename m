@@ -1,159 +1,182 @@
-Return-Path: <dmaengine+bounces-8637-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8638-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SFv2JKZlfmkPYQIAu9opvQ
-	(envelope-from <dmaengine+bounces-8637-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 31 Jan 2026 21:27:18 +0100
+	id oNw5FzGUfml6awIAu9opvQ
+	(envelope-from <dmaengine+bounces-8638-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sun, 01 Feb 2026 00:45:53 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56142C3E0D
-	for <lists+dmaengine@lfdr.de>; Sat, 31 Jan 2026 21:27:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB293C4666
+	for <lists+dmaengine@lfdr.de>; Sun, 01 Feb 2026 00:45:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F1E9F301C97C
-	for <lists+dmaengine@lfdr.de>; Sat, 31 Jan 2026 20:27:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3718A300F9F3
+	for <lists+dmaengine@lfdr.de>; Sat, 31 Jan 2026 23:45:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96DE33783D0;
-	Sat, 31 Jan 2026 20:27:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 875DA3793B7;
+	Sat, 31 Jan 2026 23:45:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0kQKbDY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SwNT5w5P"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701333783B6;
-	Sat, 31 Jan 2026 20:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455B436606F
+	for <dmaengine@vger.kernel.org>; Sat, 31 Jan 2026 23:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769891227; cv=none; b=mJzXyMkDTnuPQr9C5eSHcIKann+jBJrWfyh/8F1QPJC/6AfXuuRhomu1CNO/kZ2XxRRWCaXrSCLGMRbGNWTAs3ttro545TsiT/YE5x44M0BTOCOOoklqOl/O4kFMlBlviCzsvatozzt/ZmlX3i5gPqFRqr3Ih6GaJEvh4HzwKoM=
+	t=1769903150; cv=none; b=IMgITj1q1ZMQ8r7PPNpxyUoBDOyGlpntR0orGLw6ZZcf8yks7bh9/iygV2blI26TkDM1XVdxXjuv/LYZL0Pzu4yp1/QFyu/NvNyWNCM7gZAuPijsQceoU4Px5fL48gvdSXvubxJT2iIyhlp1bfmnTD0ia+DgOBnfIFT528rMHA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769891227; c=relaxed/simple;
-	bh=CDgRm36EUq0CocOGCQ7R89LdOQTptLSRwd5aeLsc1EU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E2ysMwEi7d0YtJd6GNK1JPIim7cjfRNWpfvAybgUQS9hn/sxAKWsEYENWpPzGFmCbsZWuETEoK6TKPnTHlQ4ofG1J7NFziJzumn4ENLo9BuhJbGeprISvoVGCbktRTJz5QFgKMtxwW/qA84bM2TzCaT6wldhVjn8xjO0zdraGL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0kQKbDY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733AFC4CEF1;
-	Sat, 31 Jan 2026 20:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769891227;
-	bh=CDgRm36EUq0CocOGCQ7R89LdOQTptLSRwd5aeLsc1EU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u0kQKbDYGrDVBRlFazJMrJWhLC5iULxzrDsVeiYiPveT1T/CJ1rVIvZkjF3tOsas4
-	 Y1gCXqBgPqjVTcgj5RgGcjKhSGfAAq13o6uQQbAkIIuId+Hzi9O8oJs+v4sFV0S0/r
-	 Nws2wUkB9BXO/Mpb8yfEMpec8tkOc8Vpulfl20XdoimdiER8bWqrkvjLQkZ5NTJv+3
-	 N7LjOX82T47VPJUO1Rp5YUt2KBinhpKwC1Dfxh+dkxNezsak9AYPWTElcLMUfChEGo
-	 5dsKlDy0+dXZLRPQoLl9TUMP/RWfeu24/ax2eSJ+gAoXFPwv95BYNl9MiBzH8/qd9L
-	 q+gYkWuCEM9Xw==
-Date: Sat, 31 Jan 2026 20:27:03 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: Eugeniy.Paltsev@synopsys.com, vkoul@kernel.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Khairul Anuar Romli <khairul.anuar.romli@altera.com>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: dma: snps,dw-axi-dmac: add dma-coherent
- property
-Message-ID: <20260131-subtly-education-e13320fe0486@spud>
-References: <20260131172856.29227-1-dinguyen@kernel.org>
+	s=arc-20240116; t=1769903150; c=relaxed/simple;
+	bh=qUSf9IUvM3UWnjG2he8D9NxofEc2DeZj8uFahKBUGcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cG+ep5PJW2XSN7slbm0hEFY+y2g0a5cVJ4MXdUgvsk2LkJJU/TfAB1B80Ox6VXxiz9P440HBWKh8TZx0SrAZlJpsC2rW2Zjh2oebJ2/YUy+0PyC92Ownv4vATrpS9qFPpF4DXjur/oSD1TNRiFYFnlJXhkieKT6TLsQnxpgqiBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SwNT5w5P; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2a8ff2ca490so1530905ad.2
+        for <dmaengine@vger.kernel.org>; Sat, 31 Jan 2026 15:45:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769903149; x=1770507949; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AebPf6wzOUYbhJVXcB2xVvZD1Ipk4JRrvUBmn/9b2L0=;
+        b=SwNT5w5PDIb3lH7EGqnVEYAEMRT9cCR4u+bBfxrIwUtGccEy8Bs+mnAZHdJHVJBzqx
+         jkYUOkIKtNbUHavXp/A814uwNlG4GH43IjNrBYiaPd3y4BqT/4RlKLG4tZLW11t0a31D
+         ST3CTMbYQ7S4CC8JnkTohIcfbIIxDImDRlVIG/7XK/Kv0Fl9vpnfi2gKSUWYcQV04mwc
+         76msB2ulek3V/+12OK+vDHGWQWtOK4rDRuxAj15jX4totiAZ3vhXjPe4V5wuAWqARPmt
+         SjA29RQxtWNGZuGxtKnEZ2ufyeeeDlucXVUGCts5BOzvpnbmBMYu22ARoEK/NHHaYynj
+         NJJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769903149; x=1770507949;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AebPf6wzOUYbhJVXcB2xVvZD1Ipk4JRrvUBmn/9b2L0=;
+        b=Dj6KgFKW06H21C/j60YE/dSNK4JI9IYMcujPiS+72vOuDejByEUQNkI8wZi6xQmNYy
+         dTA7tsP523z+9PXaJjbGoVcWuFiRjYpFDyPAirwRDPWeUWtyNcfW1nXSnY8G1ovb2iS1
+         a/e6oYl9PJEqE8lIF328uYp0glmB5DpsBc7d+sypreLIMhB4AgZAKHNaZQ05Wg9ONC6x
+         4ZsQvBm+qeHWmVk7Jy7Oxe9caoO+8bIlQgE+g4L4lCHTM2gzkWQg3wZhqSip2+hoXby8
+         bdmanGEUJLE9cLat5LrEZEZRLwJnpc5ohvZMtSn4IV7qOrAVFcmE0NhXHHMPFA0s5eLc
+         yrPA==
+X-Forwarded-Encrypted: i=1; AJvYcCXORWHn9XIIIhB9AQSIoyC0wrzR519PNog4MMiSTJOMwwf0f3/rNKdH5jou2qGQzuCnky9HMjsP20g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/9PMjvJRk35yTqGoJaWpCmF1pT6oEDoUqEr7e1TPq36mvrxxT
+	QygE9QgmTWBv1J3ew0kJLxRJOHQ8QTz8OTrwOqe1tmHAr8gmmn5AGHSr
+X-Gm-Gg: AZuq6aI0noCcDTBtURLIQltET9/SN7uojXFmMglYmYBrQY2ETgIFFl7cmtCQG/y3dVY
+	03P7/VAec/mcyxYY7T5YzcprBLIyGMChKDxkBgDbY2JdzLeUoD0DIZqmex5SYzt2Gj2YjA+Q2VT
+	/ZhB7vYZq0Ek08Vh1dPEWEod3GYxBxg17a2nONq9r+M3E/B64C1WFTIbveefW0iW15pOWZTGveU
+	D/X0WXY4zgPYiGZet6uIlPvmUYPLDM+oQgdVz/RlFR8/9JnBYnWx4SKh8QkUdCKrJT8+Tt5YNLx
+	fhQpemoZt2oz5ZrCGu++eXvbZIdLtASr1jOdMQtiao57xVLa5Y///mJfKI2gVvGL7DC4C2flO9v
+	W5pCrbJrSM/pSXVSzi4jFeWzqZMPe7fsnmxwhIL3o2R102MzUZKbTpVQyR664SsXjn0PXENSL1t
+	KpgfQmnoEy9PJBFsh/nfVbnikA3ByR2UegBGLjcQ==
+X-Received: by 2002:a17:903:1ac8:b0:2a0:d728:2e79 with SMTP id d9443c01a7336-2a8d7ed9bcbmr74402635ad.16.1769903148639;
+        Sat, 31 Jan 2026 15:45:48 -0800 (PST)
+Received: from [192.168.0.214] ([60.51.11.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a88b414fc4sm110818935ad.32.2026.01.31.15.45.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 31 Jan 2026 15:45:48 -0800 (PST)
+Message-ID: <4ae74b54-971a-4e92-8155-ef3fb00ccbda@gmail.com>
+Date: Sun, 1 Feb 2026 07:45:45 +0800
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Rp3BASSQTT0TeGSl"
-Content-Disposition: inline
-In-Reply-To: <20260131172856.29227-1-dinguyen@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/3] dmaengine: dw-axi-dmac: fix Alignment should match
+ open parenthesis
+To: Markus Elfring <Markus.Elfring@web.de>, dmaengine@vger.kernel.org,
+ Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20260126103652.5033-1-karom.9560@gmail.com>
+ <20260126103652.5033-2-karom.9560@gmail.com>
+ <425fd53d-9b97-4d4d-ba21-ef35d821c89b@web.de>
+Content-Language: en-US
+From: Khairul Anuar Romli <karom.9560@gmail.com>
+In-Reply-To: <425fd53d-9b97-4d4d-ba21-ef35d821c89b@web.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-3.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8637-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8638-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[web.de,vger.kernel.org,synopsys.com,kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,altera.com:email]
-X-Rspamd-Queue-Id: 56142C3E0D
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[karom9560@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[dmaengine];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,checkpatch.pl:url]
+X-Rspamd-Queue-Id: AB293C4666
 X-Rspamd-Action: no action
 
+On 26/1/2026 7:12 pm, Markus Elfring wrote:
+>> Correct alignment issue so that continuation lines properly match the
+>> position of the opening parenthesis.
+> 
+> Line break?
 
---Rp3BASSQTT0TeGSl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure.
+> 
+> 
+>>                                       This alignment issue were detected
+> 
+>                                         This issue was?
+> 
+Will put it in the next version
 
-On Sat, Jan 31, 2026 at 11:28:56AM -0600, Dinh Nguyen wrote:
-> From: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
->=20
-> The Synopsys DesignWare AXI DMA Controller on Agilex5, the controller
-> operates on a cache-coherent AXI interface, where DMA transactions are
-> automatically kept coherent with the CPU caches. In previous generations
-> SoC (Stratix10 and Agilex) the interconnect was non-coherent, hence there
-> is no need for dma-coherent property to be presence. In Agilex 5, the
-> architecture has changed. It  introduced a coherent interconnect that
-> supports cache-coherent DMA.
->=20
-> Signed-off-by: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> 
+>> with the help of the checkpatch.pl analysis tool with --strict --file
+>> option.
+> 
+> Would it be nicer to put such information into another paragraph?
+> 
+Yeah, I will do this.
 
-Why does this v1 have an ack?
+> 
+>> - 'commit 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")'
+>> - 'commit e32634f466a9 ("dma: dw-axi-dmac: support per channel
+>>     interrupt")'
+> 
+> Is there a need to reformat such details a bit more?
+> 
+We are going back in the circle. I already put the details in the form 
+of line and code but you mentioned I shall not list all the effected 
+line before.
 
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> ---
->  Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml =
-b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> index 216cda21c538..e12a48a12ea4 100644
-> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> @@ -68,6 +68,8 @@ properties:
-> =20
->    dma-noncoherent: true
-> =20
-> +  dma-coherent: true
-> +
->    resets:
->      minItems: 1
->      maxItems: 2
-> --=20
-> 2.42.0.411.g813d9a9188
->=20
->=20
+> 
+> How do you think about to refine the summary phrase another bit?
 
---Rp3BASSQTT0TeGSl
-Content-Type: application/pgp-signature; name="signature.asc"
+I'll refine it.
 
------BEGIN PGP SIGNATURE-----
+> 
+> Regards,
+> Markus
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaX5llwAKCRB4tDGHoIJi
-0uMZAQCg7i9k1xXsciMd67gAFFDYk07DED/QWtRml7eJWCvTowD9FCpalgSSpWhV
-EM1OuiWi8G0wRBa41pTDW/QLzeAn6wg=
-=aA6T
------END PGP SIGNATURE-----
 
---Rp3BASSQTT0TeGSl--
+Thanks.
+
+Regards,
+Khairul
 

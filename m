@@ -1,81 +1,81 @@
-Return-Path: <dmaengine+bounces-8657-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8658-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0Kl4Jhg+gGkY5QIAu9opvQ
-	(envelope-from <dmaengine+bounces-8657-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 07:03:04 +0100
+	id CX5lF/89gGkd5QIAu9opvQ
+	(envelope-from <dmaengine+bounces-8658-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 07:02:39 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04291C871E
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 07:03:03 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA168C86FB
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 07:02:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2EB403014C11
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Feb 2026 06:02:34 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 785F63003D3B
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Feb 2026 06:02:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBC7F194AD7;
-	Mon,  2 Feb 2026 06:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 204432F12C6;
+	Mon,  2 Feb 2026 06:02:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3fdE3vS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBxZXvnC"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE362F39D7
-	for <dmaengine@vger.kernel.org>; Mon,  2 Feb 2026 06:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC60B19006B
+	for <dmaengine@vger.kernel.org>; Mon,  2 Feb 2026 06:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770012153; cv=none; b=C15IVxwWu8K8d4SZ6wazw0rZHmbP0+NFd1BnMN4FOamxTjUS5Mhq4Y6lKgUJbyf/VkVKEJBeEl8A/XYMsktRF+vRk8LnvR/Pd0fWJdyc4QjSz8xffdW2VwDaaLX6ImqzdIiswUhw2+IEsZj3VDZpcHxfMMck4wACVKa54fGOtmM=
+	t=1770012156; cv=none; b=LSs04hZzI2baNfyEUKzs38yv8aW79cbvR+TZ51/8mVzhH/LrOUlTkFk6TC0Qa4UyXhiFnbQcG4SC7DNguXVktfntq7Js3kMlwiYfTdabRd4lFwYuUi17CXDtawXpbNUdc8hmnbd/nGDr18zn+gftx6mftNWW1teWVUzukbUe6pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770012153; c=relaxed/simple;
-	bh=I5B7AJbCH7As2yEWsbVpfdFdE5fOiK/B2fNAmT3r6kM=;
+	s=arc-20240116; t=1770012156; c=relaxed/simple;
+	bh=t/R2UaNXcS31oB2v+9aA9x+KjXAVXVSekUlsLcapVVE=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m4Avnnaa+r14S901+D9COqcnDiOEGWsMhJ85rz6FMchTRkTGcBiX4cD7tf8xJz6xoUkToQw+qwln+W+tk/8gmUNyH5YwVBfhAmprMDVDDq08PpQnMUfHfWSsC2EK3L14PGTTiee+tDZsAfkZq/9pfTlvhmrfTlUmne5fLy/d57g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3fdE3vS; arc=none smtp.client-ip=209.85.216.47
+	 MIME-Version; b=YUkW3koqkn0Y8Oj1khB+0NTWsZxj33egbUfQlTrRHWrJ/69OznzR65NaBV4SIZUo2UMzPEqqql1tUWRWAFzc7bOeoKVS2u9vgZSAQI+6FE6TEp3DFnvZkBaxdNYDQYlqBVcz9VKzwml4SWvEPEBtvf7XOpyPF/pwAADyQP2gIcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nBxZXvnC; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-34c718c5481so2517764a91.3
-        for <dmaengine@vger.kernel.org>; Sun, 01 Feb 2026 22:02:32 -0800 (PST)
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-34c21417781so2057217a91.3
+        for <dmaengine@vger.kernel.org>; Sun, 01 Feb 2026 22:02:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770012152; x=1770616952; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1770012154; x=1770616954; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UaSd5xHb0x3sp927EpfrEVbqVinwErLxbtJRKDKA/uQ=;
-        b=E3fdE3vSmi5Tgx+0GGgNake8qSv2pd+rIBr2/wS9H7ruPKUYXZ5TgBtgyTXTiI7CtW
-         1NCi5iY40LvMpFi59Ts9l/PH3NqIFhF9KBfiK62HzsBomZnLHLsiw/VxMWx+WusUOT2V
-         wG4ac5+JxnN5NEJPHyUb3z3Q1jrw3GkDuGKY/76Pxq4jIEkmoVW+rPaICrkZ2N9qmWD5
-         UhDyIGC6ymvCYGj5Z4gU50MlFSgwENXF7hxtarIHbaWkfiBoRbhEW133tmhjUJ3HfaLR
-         XaBOgIPbAvoer3lldvIAD/lJFk4nyyyz2DUVJUglkaJ/LqSZHSJacLFd9rMhXS90FL/U
-         7I3A==
+        bh=VBAZZg6DWx3jZgd0edGfy3lxQmykPlUP+fMCaeAJK54=;
+        b=nBxZXvnCB0GVzmCf1t+/yWdsexGj/mFbvdCPCz3hPLC2+JE6wzBkW3cWri3OEsObjD
+         Jp3Q94mij6mA22f2kHl6TRP77bNnTQD6oxVBV7mLKX1uZ6aUZIAJBvn7tHyeQ30q34Aw
+         FoESoNxi2SpRzTz32FF0ckDeqMkKB8JXhYYvexnemSIg7eEuWs1+vO6HBHE6Iw0zU48N
+         fokQGcm7Dge9r2f56nkwKGWwOujg0X/PWh9EUnj25ra5JXAq3uuwwf/M2UqwTgu8f9mY
+         D4Sel09tS/UPKFZ4aweG84lCGEO6K2DTntPfgUoPr3vjde77Gxm8DAkXkw7hZMourYcv
+         Y5uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770012152; x=1770616952;
+        d=1e100.net; s=20230601; t=1770012154; x=1770616954;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=UaSd5xHb0x3sp927EpfrEVbqVinwErLxbtJRKDKA/uQ=;
-        b=CUXnOvSjh+VizVEMqFmeSzBFTv5yWIGF5mvE7jdPszUt3xSLxI/Di1Rs0CutttdKLp
-         SRlhmYW+Xu7lU/kockq4KteIPp8ZDtjM+lFbUQHNmtRKb3VkI4SSZTJ21ECemqQD7kD1
-         4LBKfq6NwBACV1OCv5l9X2CmW1H0xMjRslFNCJTvZLxQ4qkaG3cAswbUy8s5Yo1yHetu
-         j7UrdHOl1F2ucvcV3J/l+SA9IbdhtT2hW5vm1WxmdafRDG9ly9qN+N+tJhUHNrIZo/D4
-         GB+zgR+6Cn5eGWjwDVi5grBYPzi3ctRDHr4NS09BjiO06rD3XYHX+hkLnItdA7l6U3mO
-         I5pg==
-X-Forwarded-Encrypted: i=1; AJvYcCViYt/Gl/ay3w7xFi77EwQUAIy+eMQXsep8G3bYq3Q6hMs2Du/BwpYtV8jRRY7aeVCe0lUPLxE0E7Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzC5qnuHjPyC0Tf1YO56OdQe23BrjB/65SOvblpKcgrXL8pyfW
-	ubcqMqQLfZi/SN+Mbn0AXeAGbwosP+AEqpru106qpV/AsSDsaQ+g1ZmH
-X-Gm-Gg: AZuq6aIO5y1NmVJ5uAoL4Q6cAg1ZOQbfo3XADQOaaG69DXOfqWSQs5h3WIZaabK1eFi
-	euXnk+Vlf0afEvGuWtH6DcAAK5OXUj9vsPXh5FiN1BZmMUsJPKGxk+RDtl3TphCxyI9xLjP02jS
-	KsMrtHUd0dMbpm49eP/iGHyHEyLUM8jrcn6G3EXvj8i2jqtnkh4YAD3BWCGCvmXRRRfAzg6DJiN
-	WLl3GX7iQoj0BjOggR5X0r291I/TUuB0E4lzN8tk7EE5d7w0t2sz4YZ45UZDezAPwTQe1t+adGh
-	qefyAZOc6vpPkunfBATkagYQ/X6A/nSK+mW+bchJfFV+veEHkXKhvKnT+t5dnrAeuKdgYAuDGee
-	RwLhUepA4NDgTA2qEXex0pC6LRiUenBn7Kb2n5PN7MCCYhEke+sdDDyQwfnmqR/+lLJyxA64VjA
-	iwCnP+jZECLoqlzHGnVP51pHukJCeK88zT8IE=
-X-Received: by 2002:a17:90b:264c:b0:34c:75d1:6f90 with SMTP id 98e67ed59e1d1-3543b395b8fmr10327607a91.17.1770012151621;
-        Sun, 01 Feb 2026 22:02:31 -0800 (PST)
+        bh=VBAZZg6DWx3jZgd0edGfy3lxQmykPlUP+fMCaeAJK54=;
+        b=PpSKJ4cEmXuxFwLsULCLg5jxt96cnTxi332V9jDk+WWxlogD9Vcc4b/sYqlhZttGrG
+         Ao9WGyGzFLzpt4pUXXF5tl03mRozOptkgGBIoEr2606McLr5ZQ1xeWOYFzf3BcnLj8pK
+         F8jAW1Y/KAzRS4KobCaS9ertudwOgz7xMjAhvNdruFJdh4RfrjgUKJSK8WNbKPDFAnJG
+         Nqc7HieNLocbxKhvIXQSkQbMKjRhm66xqtm1u5xk3MF0Q7seA8meWMD57SPR3FwMukO1
+         AwFDzCgfvnmLDNotuT27cZTQTF8kLJKOwkoDAVn+SPaw1QYAS6ZqjLIF+tx1lpsgQcBT
+         oe3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXV0n46BYFjdkCIW8dOyA8YTKvim2qvRn3zogbsVZadDwgimmIcmdJ3VEb+Tg+tvhjM1lEoJcbDpZc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7rGPnGhyBBGYyo0+jd5gmaM4ibrVQB+4/Pwd5qGdC2KMJUlKD
+	NzcRd6jljuATIzTNvjeDLW13282nbg5HO+kcGI6hzlQjiBSr0cWFni3D
+X-Gm-Gg: AZuq6aJXy4SKL8G17cDP7cd6gLLIDxWNMfMFcY2/RplR/5O1+TJ2Y/miJvL7r2+YOB7
+	v/95kc8jFqrwrjY7YacT5htl/tq4LPgAVexAvF0P4qHw+d56HvF5BU5quVnsILg0pTCECDf6QKJ
+	ZsZ8O2NcXKiCcmT/BiCAtGpdktBiEFicD7JuvtdqBMfV5ZULEzWId5BPEwkaLmKb3kc7xf9WVoQ
+	W7dXYKSRigfXmWhvpMxDQ+SPho+8fpqakcn1+AW1WiBWbgKcj9PDYz78JUyeJQ6wEPrvWUdm3+6
+	vLF9yg+Qcd8dStVcxmam6vcPn+HIeTkT2RkwH9/Wkph8GiLa9qqKjW6IHBhScOgJCpliMq4/+Gl
+	87QWqifeIQBARM5G1GQCSVaLbCVMrKLpN/RHguH/BZOpllhc45gOf4EQHQ8r95J0oxxhzapIgbm
+	deyJyAJSn1X7Nb+Heq95iFuIcWLa8uv4mMyRs=
+X-Received: by 2002:a17:90b:4a8b:b0:340:2a16:94be with SMTP id 98e67ed59e1d1-3543b313144mr10089523a91.4.1770012154139;
+        Sun, 01 Feb 2026 22:02:34 -0800 (PST)
 Received: from localhost.localdomain ([60.51.11.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3540f17955asm14212294a91.0.2026.02.01.22.02.29
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3540f17955asm14212294a91.0.2026.02.01.22.02.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Feb 2026 22:02:31 -0800 (PST)
+        Sun, 01 Feb 2026 22:02:33 -0800 (PST)
 From: Khairul Anuar Romli <karom.9560@gmail.com>
 To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
 	Vinod Koul <vkoul@kernel.org>,
@@ -83,9 +83,9 @@ To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
 	linux-kernel@vger.kernel.org,
 	Markus.Elfring@web.de,
 	Khairul Anuar Romli <karom.9560@gmail.com>
-Subject: [PATCH v7 1/3] dmaengine: dw-axi-dmac: fix Alignment should match open parenthesis
-Date: Mon,  2 Feb 2026 14:02:17 +0800
-Message-ID: <20260202060224.12616-2-karom.9560@gmail.com>
+Subject: [PATCH v7 2/3] dmaengine: dw-axi-dmac: Add blank line after function
+Date: Mon,  2 Feb 2026 14:02:18 +0800
+Message-ID: <20260202060224.12616-3-karom.9560@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260202060224.12616-1-karom.9560@gmail.com>
 References: <20260202060224.12616-1-karom.9560@gmail.com>
@@ -102,12 +102,12 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8657-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8658-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[synopsys.com,kernel.org,vger.kernel.org,web.de,gmail.com];
 	MIME_TRACE(0.00)[0:+];
@@ -115,7 +115,7 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[karom9560@gmail.com,dmaengine@vger.kernel.org];
@@ -126,101 +126,49 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[checkpatch.pl:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 04291C871E
+	DBL_BLOCKED_OPENRESOLVER(0.00)[checkpatch.pl:url,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EA168C86FB
 X-Rspamd-Action: no action
 
-checkpatch.pl --strict reports a CHECK warning in dw-axi-dmac-platform.c:
+checkpatch.pl reports a CHECK warning in dw-axi-dmac-platform.c:
 
-  CHECK: Alignment should match open parenthesis
+  CHECK: Please use a blank line after function/struct/union/enum
+  declarations
+  drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:
 
-This warning occurs when multi-line function calls or expressions have
-continuation lines that don't properly align with the opening parenthesis
-position.
+The Linux kernel coding style [Documentation/process/coding-style.rst]
+requires a blank line after function definitions to provide visual
+separation between distinct code elements.
 
-This patch fixes all instances in dw-axi-dmac-platform.c where continuation
-lines were indented with an inconsistent number of spaces/tabs that neither
-matched the parenthesis column nor followed a standard indent pattern.
-Proper alignment improves code readability and maintainability by making
-parameter lists visually consistent across the kernel codebase.
+This patch inserts the required blank line after the closing brace of the
+function definition after dw_axi_dma_set_byte_halfword(), placing it
+before the contextual comment that describes the locking requirements.
 
-Fixes: 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")
-Fixes: e32634f466a9 ("dma: dw-axi-dmac: support per channel interrupt")
+Fixes: 82b5c9d6d4de ("dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA BYTE and HALFWORD registers")
 Signed-off-by: Khairul Anuar Romli <karom.9560@gmail.com>
 ---
 v6 -> v7:
-    - Add more details in the commit message.
-    - Moves the fixes from v6 to Fixes:
-    - Remove quote.
+    - Refine the details that was not included in v6.
+    - Add Fixes that was not mentioned earlier.
 
 Reference to v6:
-https://lore.kernel.org/all/20260201000500.11882-2-karom.9560@gmail.com/
-Reference to v1:
-https://lore.kernel.org/all/20260104093529.40913-1-karom.9560@gmail.com/
+https://lore.kernel.org/all/20260201000500.11882-3-karom.9560@gmail.com/
 ---
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 493c2a32b0fe..8bb97fb8fd4c 100644
+index 8bb97fb8fd4c..e59725376f8e 100644
 --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
 +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -342,8 +342,8 @@ static void axi_desc_put(struct axi_dma_desc *desc)
- 	kfree(desc);
- 	atomic_sub(descs_put, &chan->descs_allocated);
- 	dev_vdbg(chan2dev(chan), "%s: %d descs put, %d still allocated\n",
--		axi_chan_name(chan), descs_put,
--		atomic_read(&chan->descs_allocated));
-+		 axi_chan_name(chan), descs_put,
-+		 atomic_read(&chan->descs_allocated));
+@@ -419,6 +419,7 @@ static void dw_axi_dma_set_byte_halfword(struct axi_dma_chan *chan, bool set)
+ 
+ 	iowrite32(val, chan->chip->apb_regs + offset);
  }
- 
- static void vchan_desc_put(struct virt_dma_desc *vdesc)
-@@ -353,7 +353,7 @@ static void vchan_desc_put(struct virt_dma_desc *vdesc)
- 
- static enum dma_status
- dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
--		  struct dma_tx_state *txstate)
-+		   struct dma_tx_state *txstate)
- {
- 	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
- 	struct virt_dma_desc *vdesc;
-@@ -491,7 +491,7 @@ static void axi_chan_start_first_queued(struct axi_dma_chan *chan)
- 
- 	desc = vd_to_axi_desc(vd);
- 	dev_vdbg(chan2dev(chan), "%s: started %u\n", axi_chan_name(chan),
--		vd->tx.cookie);
-+		 vd->tx.cookie);
- 	axi_chan_block_xfer_start(chan, desc);
- }
- 
-@@ -1162,7 +1162,7 @@ static irqreturn_t dw_axi_dma_interrupt(int irq, void *dev_id)
- 		axi_chan_irq_clear(chan, status);
- 
- 		dev_vdbg(chip->dev, "%s %u IRQ status: 0x%08x\n",
--			axi_chan_name(chan), i, status);
-+			 axi_chan_name(chan), i, status);
- 
- 		if (status & DWAXIDMAC_IRQ_ALL_ERR)
- 			axi_chan_handle_err(chan, status);
-@@ -1451,7 +1451,7 @@ static int axi_req_irqs(struct platform_device *pdev, struct axi_dma_chip *chip)
- 		if (chip->irq[i] < 0)
- 			return chip->irq[i];
- 		ret = devm_request_irq(chip->dev, chip->irq[i], dw_axi_dma_interrupt,
--				IRQF_SHARED, KBUILD_MODNAME, chip);
-+				       IRQF_SHARED, KBUILD_MODNAME, chip);
- 		if (ret < 0)
- 			return ret;
- 	}
-@@ -1645,7 +1645,7 @@ static void dw_remove(struct platform_device *pdev)
- 	of_dma_controller_free(chip->dev->of_node);
- 
- 	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
--			vc.chan.device_node) {
-+				 vc.chan.device_node) {
- 		list_del(&chan->vc.chan.device_node);
- 		tasklet_kill(&chan->vc.task);
- 	}
++
+ /* Called in chan locked context */
+ static void axi_chan_block_xfer_start(struct axi_dma_chan *chan,
+ 				      struct axi_dma_desc *first)
 -- 
 2.43.0
 

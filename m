@@ -1,180 +1,180 @@
-Return-Path: <dmaengine+bounces-8655-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8656-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qGjNIAY8gGmD5AIAu9opvQ
-	(envelope-from <dmaengine+bounces-8655-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 06:54:14 +0100
+	id LcB1Ovk9gGkY5QIAu9opvQ
+	(envelope-from <dmaengine+bounces-8656-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 07:02:33 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95FA9C8617
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 06:54:13 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 604E8C86F2
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 07:02:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 854BA3001187
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Feb 2026 05:54:09 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C64603008E15
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Feb 2026 06:02:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80FEA245008;
-	Mon,  2 Feb 2026 05:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12716280335;
+	Mon,  2 Feb 2026 06:02:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dU2yG3B/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5kQPB3u"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449B121FF21
-	for <dmaengine@vger.kernel.org>; Mon,  2 Feb 2026 05:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCADE1A58D
+	for <dmaengine@vger.kernel.org>; Mon,  2 Feb 2026 06:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770011646; cv=none; b=Cs9DqoXrTU3gxYLlLNpmcNXD2hIZeEueKGKTeK0vAvn7/NoCpc1SB51/wsYOjEcqMIoMXn0sQZB6+v4AdEBWiUpEuTFRlkGE9Rwl37jGdvR1ZAb54ACjdyx4pc2ASOwl4nxi+ssYzGU8JxekaMXaaZmI4ywIM/+4B+jpW4vFhtw=
+	t=1770012151; cv=none; b=kVcSGCJRwAvj/i/mdtUN9+laAxvD+REznxn26uD8VRrrbI2yAbPb7W5//X7i1f1wf1QyL2qSgx2Tv94KOFmpiPQvtCdi71Xzso/qckTxBb0HgffhzfwomhA8plRETJuKhlrxcn3CDBr8Ls6U+mjcdNmTVId66qY+0X/OoeXnUBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770011646; c=relaxed/simple;
-	bh=wOG+XZyfJ1ECBp3bdpMqJuYFU9m98cCaqUKQHSPHqOI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JVMxLiI6Ly6exAyB1z4V90kCMoqqDpYHEj/jh39KhRcL8mV/Ibkm/17sGajiqXh9/D3birQkQuSKpvw3EOMvcw5HbAvggss8Fa74fshUOvpx//DvgOkspXprC7oFhJ1qRGFwnSw5u29YtgHc3cCS2rIS9uJo0vFBALlxs9ZG38s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dU2yG3B/; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1770012151; c=relaxed/simple;
+	bh=XcKG05EIplQ/ZD1tcJ0z/cX1en3jUHLrzx1Vqn76jrs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YWM1Z5tWBcKG9LquWk2A+XzgNkNfZjlcv8lVvSjev0s7t9WCOxENOHCAN0FrqelenKYV+k4UU4u5PCXEIJddCwXi7jZR+o3CIfZnAX7dfWcg65k/Tljgp0M05uy8YYseGAydSmkAkIDbpT/I/vtgF8dhoD5Z+cq7bsXEevzTePo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V5kQPB3u; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2a09757004cso33075205ad.3
-        for <dmaengine@vger.kernel.org>; Sun, 01 Feb 2026 21:54:05 -0800 (PST)
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-34c2f335681so2070705a91.1
+        for <dmaengine@vger.kernel.org>; Sun, 01 Feb 2026 22:02:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770011644; x=1770616444; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q5teP0ad/u/RJjO/iZ2u1LHked4QjrPKeg2T8iSxlEY=;
-        b=dU2yG3B/wkuak7c7wy14/m0o2moTTYQ5dE69CRrXPTVQV3POp/1QzaNncTxdwTNcpw
-         DZbvBrnDZz9a+sZhRhIAYU1Wcz6jdkS1ukPcmluZ/ete6f3N5YA9FnyGTL1SKqk6spxP
-         thAel5XpmWDuMhFyw6cOVN8/ctae3FuHdaPEUKqLEaDL1UJJ3XiZ88Ztk3gtGcz5G9AH
-         5ZkWggWZnIwwtOq1OUrAQHCxIHNKqkm8S5JLYJlT89dg1SZUt2zUoQ5+K5TJVUDxtV7l
-         GRFwgO7D2M3rODvYQKQ9sUmUj4MnNTwOD5U4C+DVaShgnoK2mTrKJpkRjoBK3XS38q48
-         yGdw==
+        d=gmail.com; s=20230601; t=1770012149; x=1770616949; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4GO09mCp5MHqRJ57Thq9GngZEU4mPDO9VDFh/q9/vc4=;
+        b=V5kQPB3ujmwCa6LH4heSvs5lopZj1ToayPpNM9HwqmbEjWy1/FsDu3DJV3U/Wf1TeN
+         0fnrCHjmF6qZz6sradnIbR8fSskf88qCRWqf9ECMd4QUyF9kOGLRJpcA/LviPfH+6jRj
+         dfpRrLkalbonIZI9ScIqnx6cqbW7g7r///YvIcuQD6ykwyXg2jh873HQMIrSuoUP/ki8
+         K+9UJu5qcUo+FPJbsSIGZeG0M8nDMA/vEGWhkkBbKxmpQg2QRhDvVhcffymPCKBJsYBZ
+         BVMazRDGAV4U8RsPSFuC5G28z5PoL3mO729Kes/ynscCZcWm55dJqnzz1p8gpWHNoaHS
+         HY4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770011644; x=1770616444;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q5teP0ad/u/RJjO/iZ2u1LHked4QjrPKeg2T8iSxlEY=;
-        b=GzS1OdRDceKVMXD+803mrlyhl4Rj+QZAZRa3di5lW/x8AFG94T+EQZoYu+2xx+qutj
-         4Lg4lQYTq6gDcHqgrh7PBCHxAx4GR61qB7UTdQd7I6dgXdqD0FkKUG20zVpYoXwWlqen
-         XUFr+DWicLAuVx/K4Fqv1JMlbkxAq2YjkIDEVxxu0qSFG6cya8gCb7G/O0BDZec7ivhL
-         Y8egvT4NZvCLpuH21hUhdBjmTookKJoHhY4LVyoTA1qFSxjLm7qoKJe+bTCVlojJ6rSU
-         6Ssy2bVwDt083ZxFcvpAKQ2k7Ar2RmN7QOKysz1enK9CNcXhOwYOtMKYUK2KmFbim+HW
-         w3qw==
-X-Forwarded-Encrypted: i=1; AJvYcCVk7Xg4VaCbOqo5kb7uFIY2efMH6/y42tHrrUlYpK2blzAtYGlWnvD/oubjz9OxbRC5rsuV8da9PFI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqdwvYE3qKb5F2/MFZNsFnOVKLFfttrzTmINGEQCG0BqyuAeo6
-	2DbfNqeceNWzZu0wYmUfRQ40KCKBYQ9tPdPuDbbqoPI0pbtTVhfWJ9Ni
-X-Gm-Gg: AZuq6aLgTJr96AhpbjziMZ8QiNby4aQCatdEtdRtw1EPy7UGewlhEFeZ7HMypMqJ6nh
-	5sD37/qe96wgNSCJeOktxt1oj5XtDn9MAvLN3qHe5EGa0NdXYloTDWb8In80X8DKyyejtPCnhnZ
-	MbcxpGr6tsHjAgdowHEaycWuyN/oOnP1VIg+xkmkh1MpMXQkbX3k1OAcGEkSbvi4FJOpzah5xmH
-	sPez09nnWB3MtMzEsGVzLW+HEpYKj1FaW+X1vTh3bvFXem1+sg6m5qpyCKywKo7HPXaIaIzEMlX
-	YCw5yGC2iAd5PnUEaz0ryo8A6kx9oRUqQWQ6nAoEMr9hTx/taOrlomi3kK+iM+LZvYwFQv785Nm
-	N2DqBtN+q7his4Wn45SyTb7L/pqCFH3vbCdgbDdMq44SFAFyFUNfG+HtH/0mhPkltiPJc9RQe92
-	tPVCs5eBzHo6AM5aemSjiaHIMzzBkQ8Q==
-X-Received: by 2002:a17:903:8c6:b0:2a7:a6b1:4f8d with SMTP id d9443c01a7336-2a8d9931d2emr119297595ad.40.1770011644538;
-        Sun, 01 Feb 2026 21:54:04 -0800 (PST)
-Received: from localhost.localdomain ([171.88.165.217])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a8bd7654dasm108066645ad.81.2026.02.01.21.54.01
+        d=1e100.net; s=20230601; t=1770012149; x=1770616949;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4GO09mCp5MHqRJ57Thq9GngZEU4mPDO9VDFh/q9/vc4=;
+        b=U5vFVxaziyHynfoZoytYjqbVjPD3dWsRaWcGioamuveqr/7Xtd8NakICHcs/briNDW
+         xCCJpFnwTsJCEVSH13LOIvgsEscYAHwReghCe92MobgPigY7EN8VNJJIi3FYMeQInyMl
+         UcZaF8OLRMbsMds2XA9bV/TUkd0nxtE4Z2mULFDtHwNwXZIzpXCQRMSHXFHOXPpyPGIV
+         qurv9Fy8RjjHsgIJUmEfo5vXwSDag4OQoW+V18MU5/J5QVx791jjFDEX73jQALXWOrKh
+         cy5CXFc2CPCns7zUkWuFnQxo54ntaG2hkZ3gcPY0ETKdRHxJsNNF6rt0FXK7Iy4oXSpf
+         wWLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2g0vgImSTmuU/iC+1MH/p1WvVo/SrJE2kM2fNzX+PBbkmGseD7DxD72kFzSHxhVnaBneoLgp2uvI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiTmtrWb+SHHvt7Y7NTTwYL3eEaNBAVZ51lxIM4YfZG+FpnJgJ
+	zpgRVkO0Z/3icUa/+9jI95W0qSLdYkac8le8ozStMthrYre8DtPJXr2X
+X-Gm-Gg: AZuq6aKCLvtBK2x25+GUAqheQZ8ohVOvHdJwwzGK7HUGQvsWgKtEP0w+0KxPkROkhTo
+	l3WccGPHfZWUNnaxuM1YP2OJESzIKnAI1oBHHjpszrquFW4crQl7Ul2a1mwg+YOV6pf155mOQCH
+	/4YMRurxgQ1Lyf7bTCXEwKpq4gxIwvgbDnopGgv2DAbBTVggHGMaPkMhyK7oKN2fLjraI6lQT3d
+	nJ+XqW8kXJRSkzqR7PDH/qDqIpgBfYXkbQPKiuuEN/4WmWsSdt1juOt8SY0eCCl7Amt1o+gaZti
+	qQUKebeZJB5y9aP/UHe4AfcPj6JRkuKHa7mds5XhwAWV3aP9AUGPOAoITDMGJybdF9cRGZTg5s4
+	aaVFvih7yDPjkLwkGRv1pBp4Serf9Jy+5mKgy6YikV6/6JcOXZXuAK8nbvYUc/SmTSBFH3iwm68
+	k8DB4wwz+GCBlj/PNQhCJt1o6Iov0qwaU1IgSn1A0TUhsqbQ==
+X-Received: by 2002:a17:90b:3b8b:b0:336:b60f:3936 with SMTP id 98e67ed59e1d1-3543b30ad93mr10104391a91.12.1770012149163;
+        Sun, 01 Feb 2026 22:02:29 -0800 (PST)
+Received: from localhost.localdomain ([60.51.11.72])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3540f17955asm14212294a91.0.2026.02.01.22.02.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Feb 2026 21:54:04 -0800 (PST)
-From: Shi-Shenghui <ssh.mediatek@gmail.com>
-X-Google-Original-From: Shi-Shenghui <brody.shi@m2semi.com>
-To: Frank.Li@nxp.com,
-	vkoul@kernel.org
-Cc: manivannan.sadhasivam@linaro.org,
+        Sun, 01 Feb 2026 22:02:28 -0800 (PST)
+From: Khairul Anuar Romli <karom.9560@gmail.com>
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Vinod Koul <vkoul@kernel.org>,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	brody.shi@m2semi.com,
-	kevin.song@m2semi.com,
-	qixiang.zhong@m2semi.com,
-	tom.hu@m2semi.com,
-	richard.yang@m2semi.com
-Subject: [PATCH v5] dmaengine: dw-edma: fix MSI data programming for multi-IRQ case
-Date: Mon,  2 Feb 2026 13:53:44 +0800
-Message-ID: <20260202055344.1395-1-brody.shi@m2semi.com>
-X-Mailer: git-send-email 2.49.0.windows.1
+	Markus.Elfring@web.de,
+	Khairul Anuar Romli <karom.9560@gmail.com>
+Subject: [PATCH v7 0/3] dmaengine: dw-axi-dmac: Coding style cleanups
+Date: Mon,  2 Feb 2026 14:02:16 +0800
+Message-ID: <20260202060224.12616-1-karom.9560@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[sshmediatek@gmail.com,dmaengine@vger.kernel.org];
-	TO_DN_NONE(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8655-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8656-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[dmaengine];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[synopsys.com,kernel.org,vger.kernel.org,web.de,gmail.com];
 	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 95FA9C8617
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[karom9560@gmail.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[dmaengine];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,checkpatch.pl:url]
+X-Rspamd-Queue-Id: 604E8C86F2
 X-Rspamd-Action: no action
 
-From: Shenghui Shi <brody.shi@m2semi.com>
+This series contains a patches that fix minor coding style issues in the
+Synopsys DesignWare AXI DMA Controller platform driver. This adjustment
+possibilities were detected with the help of the analysis tool
+“checkpatch.pl".
 
-When using MSI (not MSI-X) with multiple IRQs, the MSI data value
-must be unique per vector to ensure correct interrupt delivery.
-Currently, the driver fails to increment the MSI data per vector,
-causing interrupts to be misrouted.
+These changes are purely cosmetic:
+- Adjust indentation of function arguments and debug messages
+- Remove an unnecessary `return;` statement
+- Add a blank line for readability between functions
 
-Fix this by caching the base MSI data and adjusting each vector's
-data accordingly during IRQ setup.
+These updates improve code readability and maintain consistency with
+kernel coding style guidelines. No functional changes are introduced.
 
-Fixes: e63d79d1ff04 ("dmaengine: dw-edma: Add Synopsys DesignWare eDMA IP core driver")
-
-Signed-off-by: Shenghui Shi <brody.shi@m2semi.com>
 ---
- drivers/dma/dw-edma/dw-edma-core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Notes:
+This patch series is applied on dmaengine maintainer's tree
+https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git/log/?h=next
 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 8e5f7defa6b6..dccc686b7a3e 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -844,6 +844,7 @@ static int dw_edma_irq_request(struct dw_edma *dw,
- {
- 	struct dw_edma_chip *chip = dw->chip;
- 	struct device *dev = dw->chip->dev;
-+	struct msi_desc *msi_desc;
- 	u32 wr_mask = 1;
- 	u32 rd_mask = 1;
- 	int i, err = 0;
-@@ -895,9 +896,15 @@ static int dw_edma_irq_request(struct dw_edma *dw,
- 					  &dw->irq[i]);
- 			if (err)
- 				goto err_irq_free;
-+			msi_desc = irq_get_msi_desc(irq);
-+			if (msi_desc) {
-+				bool is_msi;
- 
--			if (irq_get_msi_desc(irq))
- 				get_cached_msi_msg(irq, &dw->irq[i].msi);
-+				is_msi = msi_desc && !msi_desc->pci.msi_attrib.is_msix;
-+				if (is_msi)
-+					dw->irq[i].msi.data = dw->irq[0].msi.data + i;
-+			}
- 		}
- 
- 		dw->nr_irqs = i;
+Changes in v7:
+	- Refine summary on every patches in the series.
+Changes in v6:
+	- Refine commit message on the patches.
+Changes in v5:
+	- Refine the commit message of each patch to mention the use of
+          checkpatch.pl analysis tool for the fix.
+Changes in v4:
+	- Improve the description on every patch.
+	- Mentioned the commit the patches addressed.
+Changes in v3:
+	- Split into smaller patches based on warning type
+Changes in v2:
+	- Rebase on top of newer merge commit
+v1:
+https://lore.kernel.org/all/20260104093529.40913-1-karom.9560@gmail.com/
+---
+Subject: [PATCH 0/3] *** SUBJECT HERE ***
+
+*** BLURB HERE ***
+
+Khairul Anuar Romli (3):
+  dmaengine: dw-axi-dmac: fix Alignment should match open parenthesis
+  dmaengine: dw-axi-dmac: Add blank line after function
+  dmaengine: dw-axi-dmac: Remove unnecessary return statement from void
+    function
+
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
 -- 
-2.49.0.windows.1
+2.43.0
 
 

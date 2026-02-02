@@ -1,199 +1,222 @@
-Return-Path: <dmaengine+bounces-8660-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8661-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IIh5BqNEgGkE5gIAu9opvQ
-	(envelope-from <dmaengine+bounces-8660-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 07:30:59 +0100
+	id 6C6PIu9ZgGns6wIAu9opvQ
+	(envelope-from <dmaengine+bounces-8661-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 09:01:51 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 468F7C8B7F
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 07:30:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 93CA7C9722
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Feb 2026 09:01:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 97C83303181A
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Feb 2026 06:27:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 226CC301A724
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Feb 2026 07:51:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A8182F744F;
-	Mon,  2 Feb 2026 06:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 563322BEC20;
+	Mon,  2 Feb 2026 07:51:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="YIIcz0Nq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bey8T7+O"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8C62D8DB1;
-	Mon,  2 Feb 2026 06:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4822BDC16;
+	Mon,  2 Feb 2026 07:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770013646; cv=none; b=RWgdrt4Ab4DcA5QsKjpVXY/ldVccGJVszzcG+RP9igvBvefqsfDrnu8KWPG+tj439+qAukrskZKHW+lHviG+nUU8n1NiqQbVFQN55LyiaP697AAbzUmFE/EbvhdsC4rLT7UD/fN6OicgAC3qasxEaxsc1jR761+kqBJGi/Wvnrs=
+	t=1770018683; cv=none; b=CZuCdkMczsmwV0P2Xn/t8Idc+xi+2dQV0j79BokZki1M40QRC5NFCX9xsTFnNh6ost0v20V0p9kObsm3STPG/KCRGUPdge9+/V9Qpe1+l2v5Rjo+Y5fcODmDoIEtuD67EyXs/lqL/VQCegZSfjJvhzLpLxJ3Njvx3Z6bkF3m2To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770013646; c=relaxed/simple;
-	bh=Nu9Iyypi8FJ1v4FxmPbyKQxydq1uqa1i6Rs2iebBKpo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=gWjVw3e4IKapPMm3DjZaM0eQg3JRGSy6RrjdryRv3zJ9QjrgitEJB91N76htb5jd5yuTFShGgcX9TfjhsqtXKWCx7HKfL2PAw0nyemqMJnNmwdMCCfAD7/7nYQsY7KOtrlcD67j/MPXD9Aqp26r7WwouFhjdhHRhDKuJ+St3mRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=YIIcz0Nq; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1770013631; x=1770618431; i=markus.elfring@web.de;
-	bh=Nu9Iyypi8FJ1v4FxmPbyKQxydq1uqa1i6Rs2iebBKpo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:Cc:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=YIIcz0NqWjzzndN919+LVnSwEjMjSwEjuYpPmOWIlXblK4FGfv2s8qazObGxgGaR
-	 oMT8vipFTyBk8gX2hgNpyyJIXKJIp40F31zgVs7asdNFCaE+6y1AIODpPgbVhrMxU
-	 5KbtzL0wt6mfiEVpyPGFkV18hEGThbnUWqPEY9K2/DnhYkbI5jG2lCN6XAB5mqfWs
-	 s+JQiUUfBn1sRVQmyzO4FEnZ1SPSkmBhGMpm5hH8doDgLi0PtzoQPyrk+pR7h3P+Y
-	 Iqa92hDglrt+OQ40b61E31vblpxP7C1lTcKxttxJwV5CrWm8p2El7h0W+KUKL5Skz
-	 Q9jydrgnjkJ9z+Io8Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.223]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mi4yz-1vIQSU0lzF-00jaeG; Mon, 02
- Feb 2026 07:27:11 +0100
-Message-ID: <ac172a42-5480-4538-bc59-c17c71eb6b66@web.de>
-Date: Mon, 2 Feb 2026 07:26:44 +0100
+	s=arc-20240116; t=1770018683; c=relaxed/simple;
+	bh=cE1vERJlb9tOat0t1vGBuv/pgNjdAg98DSSNpmxp6c8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AaZS3JOWlFXshCpcPIHcGhmfXQpdZJECSjajPcaU5pCG692q7KEKCzQBLHeKb+1TLrqJ0+M4C9HXa1FLomY7rklrMlTKRVUgmruh7ikG6EJNtwvmOl9ZSU3ESxqMoZRE6NIpnMqclo3FehiLQhW1eKSCZJiEugnN+5BYDkHu23I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bey8T7+O; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770018682; x=1801554682;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cE1vERJlb9tOat0t1vGBuv/pgNjdAg98DSSNpmxp6c8=;
+  b=bey8T7+OM4qtrjsY1ScXawPPF9cEyQzxq+udml8jkz8/hPj7osVxX7pn
+   GFy1iHsZqtlLNxjcAcG0YpFZM8qvJh40zBFoSvbQ/kb4dbEMvOv4MU9Lk
+   Sxu2ySkWGtHJgl8qNxVsj+uRQoIlCEuyuem2Ieorx9yyeeUrm8IVO3fS5
+   Yq06TiUYm5l3Czj9ldJYXpvl3C7FTuMSKyPiQuOhafvudYf4zZ7dfCOpM
+   59bDiP7SRKVhmD7ViuuC6u8i91/ayNuxRBa36nFyY16qA5+D2MjNovCCn
+   sGd9WysuuU/ka1Xfrmdx9sVyCw23ZFnjCsnsegqNPizEaX6dsw2u298yP
+   Q==;
+X-CSE-ConnectionGUID: 65VeYfGcRXKqkD8wlelg0Q==
+X-CSE-MsgGUID: JY7ToGbFSi2C5onykebpEg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11689"; a="82598542"
+X-IronPort-AV: E=Sophos;i="6.21,268,1763452800"; 
+   d="scan'208";a="82598542"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2026 23:51:22 -0800
+X-CSE-ConnectionGUID: hl/iWMbCRx6JPDrEph5Wxg==
+X-CSE-MsgGUID: hbW1C4V2QB2c3RTLAC23/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,268,1763452800"; 
+   d="scan'208";a="232386427"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa002.fm.intel.com with ESMTP; 01 Feb 2026 23:51:19 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id B208D95; Mon, 02 Feb 2026 08:51:18 +0100 (CET)
+Date: Mon, 2 Feb 2026 08:51:18 +0100
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: correctmost <cmlists@sent.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	dmaengine@vger.kernel.org, regressions@lists.linux.dev,
+	vkoul@kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
+ when idma64 is present in initramfs
+Message-ID: <20260202075118.GY2275908@black.igk.intel.com>
+References: <aXnYJQJW4wypkkPC@smile.fi.intel.com>
+ <0d93a56c-e452-4cd0-abb4-09c9f916274a@app.fastmail.com>
+ <20260128123135.GM2275908@black.igk.intel.com>
+ <e94cc7af-4696-4ea6-8231-26f693272004@app.fastmail.com>
+ <20260129065837.GT2275908@black.igk.intel.com>
+ <513c490f-c433-4298-ae66-6e165aa7b299@app.fastmail.com>
+ <20260129115609.GV2275908@black.igk.intel.com>
+ <7d966d39-aa5a-4a0f-a115-a4b90632a26c@app.fastmail.com>
+ <20260130072620.GW2275908@black.igk.intel.com>
+ <53bd143f-525d-4748-af93-3460c9f59d1a@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/3] dmaengine: dw-axi-dmac: fix Alignment should match
- open parenthesis
-To: Khairul Anuar Romli <karom.9560@gmail.com>, dmaengine@vger.kernel.org
-References: <20260202060224.12616-1-karom.9560@gmail.com>
- <20260202060224.12616-2-karom.9560@gmail.com>
-Content-Language: en-GB, de-DE
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, Vinod Koul <vkoul@kernel.org>
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20260202060224.12616-2-karom.9560@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:aEO1dX3T+0gxhNk1zh4xQGyC1DBcB1ogF/3/D4kWSLGF4wRpLp4
- g+Zc+43M01kvPuvllTJaUoqhMi0HDdEjVJuJ6YExPSEXlcoOTRy2Rvt3qxH8qVV59Ow/B/b
- HHDISAqTMjVTDl0mRP3F8Q7ItCsVSWhE+e/9tnveA7Mp9uEa91HQFHJwgna62KW0aASJ3/K
- RQle1W61L1Wf809vaE53Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:B2QAOfNnC48=;bHksfOZCX0fYyB8BjP52aJeR2Xb
- 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
- Nw29noCwUVlLT3arZEaH/RRs5p/HH
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <53bd143f-525d-4748-af93-3460c9f59d1a@app.fastmail.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[web.de,quarantine];
-	R_DKIM_ALLOW(-0.20)[web.de:s=s29768273];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8660-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8661-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
+	FREEMAIL_TO(0.00)[sent.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[web.de];
 	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Markus.Elfring@web.de,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[web.de:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
+	DKIM_TRACE(0.00)[intel.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 468F7C8B7F
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[dmaengine];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[black.igk.intel.com:mid,intel.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 93CA7C9722
 X-Rspamd-Action: no action
 
-=E2=80=A6> This patch fixes =E2=80=A6
+On Fri, Jan 30, 2026 at 03:18:05AM -0500, correctmost wrote:
+> > Lets try this: block LPSS runtime PM. I know you did it in the past but
+> > this one does it slightly differently (you commented out the ops, this one
+> > prevents the LPSS from runtime suspending). Can you replace previous hack
+> > patch with the below?
+> 
+> After applying that patch, I still see the IRQ message and the touchpad
+> doesn't work (full log attached).
+> 
+> I'm not sure if this is helpful, but it seems like a similar IRQ issue was discussed in the past:
+> - https://lore.kernel.org/all/20251102190921.30068-1-hansg@kernel.org/
+> - https://github.com/alexpevzner/hotfix-kvadra-touchpad
+> - https://bbs.archlinux.org/viewtopic.php?id=302348
 
-See also once more:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.19-rc8#n94
+Yeah, I think Andy has been part of many of those discussions.
 
-Did anything hinder you to use imperative mood for improved change descrip=
-tions?
+I went through again the logs that you have sent and tried to figure if
+there is something we are missing. I noticed couple of things actually.
+First of all it seems that even if we get the interrupt storm the I2C works
+fine until the touchpad has been reset. Second is that the Linux interrupt
+number is different when it "works". This itself does not say much because
+it is just a number (not HW number) but since they are allocated sequently
+maybe something messes up with that.
 
-Regards,
-Markus
+The working case:
+
+i2c_hid_acpi i2c-ELAN06FA:00: HID Descriptor: 1e 00 00 01 a3 02 02 00 03 00 1f 00 04 00 00 00 05 00 06 00 f3 04 7e 32 04 00 00 00 00 00
+i2c_hid_acpi i2c-ELAN06FA:00: Requesting IRQ: 156
+i2c_hid_acpi i2c-ELAN06FA:00: entering i2c_hid_parse
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_start_hwreset
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_set_power
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=05 00 00 08
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=05 00 00 01
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_finish_hwreset: waiting...
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_finish_hwreset: finished.
+i2c_hid_acpi i2c-ELAN06FA:00: asking HID report descriptor
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=02 00
+i2c_hid_acpi i2c-ELAN06FA:00: Report Descriptor: 05 01 09 02 a1 01 85 01 09 01 a1 00 05 09 19 01 29 02 15 00 25 01 75 01 95 02 81 02 95 06 81 03 05 01 09 30 09 31 15 81 25 7f 75 08 95 02 81 06 75 08 95 05 81 03 c0 06 00 ff 09 01 85 0e 09 c5
+
+the non-working case:
+
+i2c_hid_acpi i2c-ELAN06FA:00: HID Descriptor: 1e 00 00 01 a3 02 02 00 03 00 1f 00 04 00 00 00 05 00 06 00 f3 04 7e 32 04 00 00 00 00 00
+i2c_hid_acpi i2c-ELAN06FA:00: Requesting IRQ: 155
+i2c_hid_acpi i2c-ELAN06FA:00: entering i2c_hid_parse
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_start_hwreset
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_set_power
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=05 00 00 08
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=05 00 00 01
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_finish_hwreset: waiting...
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_finish_hwreset: finished.
+i2c_hid_acpi i2c-ELAN06FA:00: asking HID report descriptor
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=02 00
+i2c_designware i2c_designware.0: i2c_dw_xfer: msgs: 2
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x10
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: controller timed out
+hid (null): reading report descriptor failed
+i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
+i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed with error -110
+
+Both cases the HID descriptor read over I2C works fine. It's just after the
+reset when reading the HID report descriptor things stall. I left the debug
+there above it shows for I2C that MASTER_ON_HOLD is set which means the TX
+fifo is empty and the controller is holding the bus which, I think should
+not happen.
+
+Notice also IRQ 155 vs 156.
+
+Can you run one more test so that you have the latest debug patch but
+comment out in the idma64.c this part:
+
+static irqreturn_t idma64_irq(int irq, void *dev)
+{
+	struct idma64 *idma64 = dev;
+	u32 status = dma_readl(idma64, STATUS_INT);
+	u32 status_xfer;
+	u32 status_err;
+	unsigned short i;
+
+#if 0
+	/* Since IRQ may be shared, check if DMA controller is powered on */
+	if (status == GENMASK(31, 0))
+		return IRQ_NONE;
+#endif
+
+	dev_vdbg(idma64->dma.dev, "%s: status=%#x\n", __func__, status);
+
+
+I would like to see what's the difference in "working" wrt. I2C-HD messages
+above. If you can provide full dmesg again? Thanks!
 

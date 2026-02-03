@@ -1,84 +1,84 @@
-Return-Path: <dmaengine+bounces-8678-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8679-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UGWWNsuagWl/HAMAu9opvQ
-	(envelope-from <dmaengine+bounces-8678-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 03 Feb 2026 07:50:51 +0100
+	id wE1zEOWYgWl/HAMAu9opvQ
+	(envelope-from <dmaengine+bounces-8679-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 03 Feb 2026 07:42:45 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12831D5763
-	for <lists+dmaengine@lfdr.de>; Tue, 03 Feb 2026 07:50:51 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05E18D569C
+	for <lists+dmaengine@lfdr.de>; Tue, 03 Feb 2026 07:42:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C5FAC300B520
-	for <lists+dmaengine@lfdr.de>; Tue,  3 Feb 2026 06:36:24 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 21122302B7D4
+	for <lists+dmaengine@lfdr.de>; Tue,  3 Feb 2026 06:41:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D580A37AA80;
-	Tue,  3 Feb 2026 06:36:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E494C37F72E;
+	Tue,  3 Feb 2026 06:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGEnkydS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOHm9TqQ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA853793D7
-	for <dmaengine@vger.kernel.org>; Tue,  3 Feb 2026 06:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B574537F0F2
+	for <dmaengine@vger.kernel.org>; Tue,  3 Feb 2026 06:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770100581; cv=none; b=dt++zDQHF5TtoxAfSAeG3KI5ZS21dyTywKxukRp+UtwCqXgSIyK4An33P5UUf8dVYYkrl/BKSUSlejSZatJGGlNGPhYWJzsITiLBndOtr2SLrOdPcvwv080gSCmvk12P8QaiT4mfDruR6GXT8ayDjPnk5WN/XT0Gf/yJuV8GBzI=
+	t=1770100876; cv=none; b=C5K5y/f8PxoBvanLD3VBRyMV1Am08f90VxHly/AcePkepVZLvxchGH1IjAVILlCv329mSFtfCE0s2lnOptcFWuAAQz2dqzCkOhW610VdbIcDGwDXe1+1rxF1BdOboLVIJ97c+2f+kIHkOLDiRXUgTXPvXMc36BBoZDvdDIZSM6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770100581; c=relaxed/simple;
-	bh=WIOfbh0WJE+TekDH/9Lq1OM/hLN3hJjCAli1fyDbuXo=;
+	s=arc-20240116; t=1770100876; c=relaxed/simple;
+	bh=oUP4qXDiIOWsqn/Wh2InSd/J5eOo2q9gQZJPEHI06xs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KGBjRHqznZmV8vksbWDUDty9ZyKDotnaLrTmBZqPDSA0nS8B96PIc9g7Y6H5U8jj9BRzB9q4Jm2sGC0D6wvmOVIF31R0uCPfUU7Fz4wUKyHvyvX9ER9gAGzroAYG3DCeUI1FqVZWJ97aEOMYTVmk02879GYVQ5iTLRqVUjSCK4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NGEnkydS; arc=none smtp.client-ip=209.85.167.44
+	 In-Reply-To:Content-Type; b=W16i7nBp97/KeWvGra1Nq6+tYibrxH7dUHhwYmGFBIO4udhSJd5QdunYVtTqdY4ICjKOdXze3hSBoylorJDtULh9yeKLnFWSMuRE7eyfH1hiNYyM4gNJj1nIFUR37Ru1eGFWhB5lFFJV+Emq3gGzHYYeJKz9oDIZYafptNAn5Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kOHm9TqQ; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-59de38466c2so6575763e87.0
-        for <dmaengine@vger.kernel.org>; Mon, 02 Feb 2026 22:36:19 -0800 (PST)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-59de2d1fc2cso7970190e87.2
+        for <dmaengine@vger.kernel.org>; Mon, 02 Feb 2026 22:41:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770100578; x=1770705378; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1770100873; x=1770705673; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=B8GrinKDGOqbbFlvjaosDEAsZcli0GS5u0koOnCbV+4=;
-        b=NGEnkydSeoBde0mzHhv1AMuCA73LYd/rBaz0aNflZ5f7G9qYFhwPXggQswWhXuVzum
-         G65wrLXisy5nTiiFlyKKBIiElLPwO7QTQlXUoDyPUI1LdzXrDgCVB2ytRtr0jQSEgFxl
-         qOEvXbm6nsNFLgepifmpj54bAQWKEwYqd02bNmIrYa4LsNanapFw3FuLQcf/eU4FOnqD
-         7ouk0hduslZOFUnFPC0uIbjsvWuZmUIVHZ63/aHk9/x8cfPozJydaXIMTLflLUhNTOs4
-         ZdZqjE5tw0u+usnnYMvDyeAJoMWwlqqtxluxLn3V/bYrDAjzkcsswOSKLRd1FSsshzhz
-         ct6w==
+        bh=EgJ2Ll3/CgFXhoIE6ohHknq/XdBboRec408Sf48XFuQ=;
+        b=kOHm9TqQ7nxUNqyCVYfMSfIiolWJoy7yo+kK1bZUlV68J1DEtIhtkTFwAj3+sCnFlg
+         1OSZu9b9ZvnMr5jNnYbc7RZc+I/7QM8HpuKqJnZ4VJd4owzHp+PbuokHzEZF9pqbHc9M
+         1wLrdS3v4UDUGe5n0ag5AyfCJRXii6QYH3aDHk6OigqNUUeEavIqh9l4ekxx2QoyfGK8
+         jJb7EoKKSpQqIjr1GGOdGKcN/PqJLMPcxP2RJi0kavkVbGzOHafE0lXumi2R9a9Z/Blk
+         7iPZ7F5EBmdZVTFN/mdnEnvJ4Qq90Q9eqx8f9yWDsg5KpAL4Knt+pxhF7PN3j6TsorZU
+         x+ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770100578; x=1770705378;
+        d=1e100.net; s=20230601; t=1770100873; x=1770705673;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=B8GrinKDGOqbbFlvjaosDEAsZcli0GS5u0koOnCbV+4=;
-        b=rGbtpc5Bvz5/g8SRGNnByr3FNX3Rsn1IDY4mWzv/ajb0VGTf6VdcS7bEuDGpmifOr+
-         cADEvgOiMcO1bDuid9iX0cINX5M1R30yIDdPtGh7ClhUQ3ua6fDi5V2WNWU+D6FW97Hf
-         XlFe10omWYLzwF+7m9sYDKidRvKfE0GNaZjZ7aHrNrP7PoSRELniEAGKuMUJo12+FhzF
-         OzZ47PkTIGXVjJL2k2clPY+TD9E+6UsYEL36HVemIdgn90QNYs+zM9KGHrbvul+HoIUj
-         DFmmGsuh55eeLYIjbG3s6EZcvWiKyV1apZmenuPR0j3V9XAH7FY6UHPbepMsAEsTGpN4
-         p62g==
-X-Forwarded-Encrypted: i=1; AJvYcCXG7lD1amw8f7B6ql/U9BvWok4sswdACgCgIIb3zzt4AANAoM73PSoG6HRJWx6eaNz1CyZ2Rk6Bgk4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlFG/cahADTHMC5LUJUSGGsh5Z840138bH1fAoVmG02KfbwMxv
-	KgavOQNzGFpwkJI/isNwk2hk0FsQ0yVEyQTZRJLGqFxSEh/9mfRGI43f
-X-Gm-Gg: AZuq6aIo88Mr5SFho5WxUy+NKPaVTeHHEonA11sRRHjfd/gabbcuA1PxRjOXV7N9gdx
-	kvTUZnxVL3qNdIXsDwZuSmhEtUB57ScDyO1mn74n5V3hpWhAFQRERTMbJWREqK4ak51kYrz6Af8
-	5A36ixfcpfC3AM5x/Ud+KKyRX40oeuxm2wyFSQzEyK6ZrzMeIWeyunfRG8LWPy3h3SDFyzQ5AzE
-	rlVxlzAzQ8b9EY7NUPPInVON1pdcvI1lQVoB3Oz+WSbwU7XycJ9Ap0+lD6HeuDhoJImF8TwohFW
-	knUIdX01oNo1IwVWA+Bj28LxrpUNtNCeM0NwttA4cBCnljI6OBCFBa8ofXMCoOx6l+P7WDqNo+k
-	PXlqpiHqCx+qzeQape3dp9QXzHTFE8XWpv98mFDIQreNas0VtAwsRm6qOpK6KEC71RrmlDClY4l
-	6O2iJXP1Qvqf3Zu0ICcjnh1MFNCcRC4wGhMF5u2ktRjpTsjkmUTAz+FheBwCBAH9q+3Kk8BQ==
-X-Received: by 2002:ac2:4e01:0:b0:59c:bfeb:cc2d with SMTP id 2adb3069b0e04-59e163f5918mr4193887e87.2.1770100577863;
-        Mon, 02 Feb 2026 22:36:17 -0800 (PST)
+        bh=EgJ2Ll3/CgFXhoIE6ohHknq/XdBboRec408Sf48XFuQ=;
+        b=b2Fb7QZza2d0/Gy6Dy08lquOAkFq59hEPswXbysBwUKl9iCoN1droUZDpLeCSTbPs4
+         WXR8/9ymYrpo5aMc/goECHG57xruPLJM55Xzd1S77wDLGVx1sB9jr3j1ODwg7egdbqrM
+         Zia80xBaNmtIOB/vuP5cti4wgCnClx8bMKBSXgYOwLuDDS3kJvfBVSSks1GiuW511Es5
+         mztevPDWfkjV8MtxV5LAAx8lGcTfNv7WFSjbV4mcy7IdO+/OrznlmOQu6+f9JuR5BrtV
+         wsByKuvg8mM6RXr45o3nuoeQdL6Xh4B49wx7ML4dPLBlRpZ4owwELG+1KjG/1Lg8xr0p
+         ltrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTOzcYFvGedmluGBnZT2I0Ei35U/QN/k9wszsJGuCpwAtb8GkVIBvtA3blRL1PspPZwkVdCvJc/6Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzeesbZ2pwnGIg6ujhUfxqnXX9hx4s7sTc8X+yJ0HJxH6zSKVU
+	ygb+BTs9NfdYHyC8CFk8ino3jBfGS75roPxMKKup0IN9CpXdOtl3VCacuuaFeugr4OM=
+X-Gm-Gg: AZuq6aLRfr8GJoNrtuhrHLYnqw1+5s+Eon8/lJkpHSdxTEs77eUJOD8ttWjBup6iEmT
+	x5NssFQj6kimsq0yMwGRvlTWu8im1omrL7+MH7YdfPJSySk+fhoE1xu9brNWnCvE+pIIB/jEBlf
+	ToDJcXfkA/35Gu6Z8YFVGI6PJF4F5Yb7hyoIE28EbS4I/ooTA9cN4ducTFxo/5OohpdTvkuiHmn
+	8SWETpAJ/rLFyLWdzLk/dc2HDwvJfYgDBUbLGjrzilrUdv/eRqjK+qBRhPWnxGE6AHU6XGdc8rW
+	SVTzHDie6nlcNWvm+qQboe86t7JecBjROnwv3HihZtNpgGlPJT9pbNYSm5sDGZ66YzwFrFrCN5+
+	cWbHyN/tLnD38TbxaAgU9/eu9tB3N9h1pxYB0SNQO77IzLPBhHlepwwJ9uhr9U+oHHfRbJt3uKb
+	IwiFkR1uyeqsDXj1ZJwr4pvXxfZz6uzQIezMJe4Not+xrj+I7lZQvkhmEnxkE=
+X-Received: by 2002:a05:6512:159c:b0:598:853e:4866 with SMTP id 2adb3069b0e04-59e164314f1mr5253830e87.51.1770100872754;
+        Mon, 02 Feb 2026 22:41:12 -0800 (PST)
 Received: from [10.0.0.100] (host-185-69-74-59.kaisa-laajakaista.fi. [185.69.74.59])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59e08e7e0d6sm3844554e87.62.2026.02.02.22.36.16
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59e07481b72sm4048059e87.11.2026.02.02.22.41.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Feb 2026 22:36:17 -0800 (PST)
-Message-ID: <98c254c5-94c1-49b0-b361-617639b781d8@gmail.com>
-Date: Tue, 3 Feb 2026 08:37:29 +0200
+        Mon, 02 Feb 2026 22:41:12 -0800 (PST)
+Message-ID: <030ae04b-68b4-4570-90b3-1dfc6f31b4e5@gmail.com>
+Date: Tue, 3 Feb 2026 08:42:24 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -86,8 +86,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 15/19] dmaengine: ti: k3-udma-v2: New driver for K3
- BCDMA_V2
+Subject: Re: [PATCH v4 00/19] dmaengine: ti: Add support for BCDMA v2 and
+ PKTDMA v2
 To: Sai Sree Kartheek Adivi <s-adivi@ti.com>, vkoul@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, nm@ti.com,
  ssantosh@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
@@ -95,22 +95,21 @@ To: Sai Sree Kartheek Adivi <s-adivi@ti.com>, vkoul@kernel.org,
  vigneshr@ti.com
 Cc: r-sharma3@ti.com, gehariprasath@ti.com
 References: <20260130110159.359501-1-s-adivi@ti.com>
- <20260130110159.359501-16-s-adivi@ti.com>
 From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
 Content-Language: en-US
-In-Reply-To: <20260130110159.359501-16-s-adivi@ti.com>
+In-Reply-To: <20260130110159.359501-1-s-adivi@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8678-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8679-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -123,199 +122,126 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[peterujfalusi@gmail.com,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 12831D5763
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 05E18D569C
 X-Rspamd-Action: no action
 
-
+Hi
 
 On 30/01/2026 13:01, Sai Sree Kartheek Adivi wrote:
-> Add support for BCDMA_V2.
+> This series adds support for the BCDMA_V2 and PKTDMA_V2 which is
+> introduced in AM62L.
 > 
-> The BCDMA_V2 is different than the existing BCDMA supported by the
-> k3-udma driver.
-> 
-> The changes in BCDMA_V2 are:
-> - Autopair: There is no longer a need for PSIL pair and AUTOPAIR bit
->   needs to set in the RT_CTL register.
+> The key differences between the existing DMA and DMA V2 are:
+> - Absence of TISCI: Instead of configuring via TISCI calls, direct
+>   register writes are required.
+> - Autopair: There is no longer a need for PSIL pair and instead AUTOPAIR
+>   bit needs to set in the RT_CTL register.
 > - Static channel mapping: Each channel is mapped to a single peripheral.
 > - Direct IRQs: There is no INT-A and interrupt lines from DMA are
 >   directly connected to GIC.
 > - Remote side configuration handled by DMA. So no need to write to PEER
 >   registers to START / STOP / PAUSE / TEARDOWN.
+
+I think this looks really good overall, I have few nitpicks around
+variable declaration order and one bigger ask for the possibility of
+introducing version member to struct udma_match_data to cut down on
+changes and have more targeted handling of the differences between the
+two variants.
+
 > 
-> Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
-> ---
->  drivers/dma/ti/Kconfig            |   16 +-
->  drivers/dma/ti/Makefile           |    1 +
->  drivers/dma/ti/k3-udma-common.c   |   75 +-
->  drivers/dma/ti/k3-udma-v2.c       | 1283 +++++++++++++++++++++++++++++
->  drivers/dma/ti/k3-udma.h          |  117 +--
->  include/linux/soc/ti/k3-ringacc.h |    3 +
->  6 files changed, 1429 insertions(+), 66 deletions(-)
+> Changes from v3 to v4:
+> - Rename the dt-binding files to add "ti," prefix.
+> - Update cell description in dt-bindings and add client examples.
+> - Update k3_ring_intr_regs reg names
+> - Rename soc specific data to bcdma_v2_data and pktdma_v2_data to
+>   bcdma_v2_am62l_data and pktdma_v2_am62l_data.
+> - Add a new patch [18/19] to fix a null pointer dereference issue when
+>   trying to reserve a channel id that is out of bounds in
+>   udma_reserve_##res macro. Also fix logging issues in this macro.
+> - Add a new patch [19/19] to switch to synchronous descriptor freeing to
+>   avoid running out of memory during stress tests.
+> - Fix checkpatch warnings.
+> link to v3:
+> https://lore.kernel.org/linux-arm-kernel/20250623053716.1493974-1-s-adivi@ti.com
+> 
+> Changes from v2 to v3:
+> - Fix checkpatch errors & spellings.
+> link to v2:
+> https://lore.kernel.org/linux-arm-kernel/20250612071521.3116831-1-s-adivi@ti.com
+> 
+> Changes from v1 to v2:
+> - Split refactoring of k3-udma driver into multiple commits
+> - Fix bcdma v2 and pktdma v2 dt-binding examples
+> - Fix compatibles in k3-udma-v2.c
+> - move udma_is_desc_really_done to k3-udma-common.c as the difference
+>   between k3-udma and k3-udma-v2 implementation is minor.
+> - remove udma_ prefix to function pointers in udma_dev
+> - reorder the commits to first refactor the existing code completely and
+>   then introduce k3-udma-v2 related commits.
+> - remove redundant includes in k3-udma-common.c
+> - remove ti_sci_ dependency for k3_ringacc in Kconfig
+> - refactor setup_resources functions to remove ti_sci_ code from common
+>   logic.
+> link to v1:
+> https://lore.kernel.org/linux-arm-kernel/20250428072032.946008-1-s-adivi@ti.com
+> 
+> Sai Sree Kartheek Adivi (19):
+>   dmaengine: ti: k3-udma: move macros to header file
+>   dmaengine: ti: k3-udma: move structs and enums to header file
+>   dmaengine: ti: k3-udma: move static inline helper functions to header
+>     file
+>   dmaengine: ti: k3-udma: move descriptor management to k3-udma-common.c
+>   dmaengine: ti: k3-udma: move ring management functions to
+>     k3-udma-common.c
+>   dmaengine: ti: k3-udma: Add variant-specific function pointers to
+>     udma_dev
+>   dmaengine: ti: k3-udma: move udma utility functions to
+>     k3-udma-common.c
+>   dmaengine: ti: k3-udma: move resource management functions to
+>     k3-udma-common.c
+>   dmaengine: ti: k3-udma: refactor resource setup functions
+>   dmaengine: ti: k3-udma: move inclusion of k3-udma-private.c to
+>     k3-udma-common.c
+>   drivers: soc: ti: k3-ringacc: handle absence of tisci
+>   dt-bindings: dma: ti: Add K3 BCDMA V2
+>   dt-bindings: dma: ti: Add K3 PKTDMA V2
+>   dmaengine: ti: k3-psil-am62l: Add AM62Lx PSIL and PDMA data
+>   dmaengine: ti: k3-udma-v2: New driver for K3 BCDMA_V2
+>   dmaengine: ti: k3-udma-v2: Add support for PKTDMA V2
+>   dmaengine: ti: k3-udma-v2: Update glue layer to support PKTDMA V2
+>   dmaengine: ti: k3-udma: Validate resource ID and fix logging in
+>     reservation
+>   dmaengine: ti: k3-udma: switch to synchronous descriptor freeing
+> 
+>  .../bindings/dma/ti/ti,k3-bcdma-v2.yaml       |  116 +
+>  .../bindings/dma/ti/ti,k3-pktdma-v2.yaml      |   90 +
+>  drivers/dma/ti/Kconfig                        |   21 +-
+>  drivers/dma/ti/Makefile                       |    5 +-
+>  drivers/dma/ti/k3-psil-am62l.c                |  132 +
+>  drivers/dma/ti/k3-psil-priv.h                 |    1 +
+>  drivers/dma/ti/k3-psil.c                      |    1 +
+>  drivers/dma/ti/k3-udma-common.c               | 2577 ++++++++++++++
+>  drivers/dma/ti/k3-udma-glue.c                 |   91 +-
+>  drivers/dma/ti/k3-udma-private.c              |   48 +-
+>  drivers/dma/ti/k3-udma-v2.c                   | 1472 ++++++++
+>  drivers/dma/ti/k3-udma.c                      | 3095 +----------------
+>  drivers/dma/ti/k3-udma.h                      |  583 ++++
+>  drivers/soc/ti/Kconfig                        |    1 -
+>  drivers/soc/ti/k3-ringacc.c                   |  188 +-
+>  include/linux/soc/ti/k3-ringacc.h             |   20 +
+>  16 files changed, 5402 insertions(+), 3039 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/ti/ti,k3-bcdma-v2.yaml
+>  create mode 100644 Documentation/devicetree/bindings/dma/ti/ti,k3-pktdma-v2.yaml
+>  create mode 100644 drivers/dma/ti/k3-psil-am62l.c
+>  create mode 100644 drivers/dma/ti/k3-udma-common.c
 >  create mode 100644 drivers/dma/ti/k3-udma-v2.c
 > 
-> diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
-> index 712e456015459..ada2ea8aca4b0 100644
-> --- a/drivers/dma/ti/Kconfig
-> +++ b/drivers/dma/ti/Kconfig
-> @@ -49,6 +49,18 @@ config TI_K3_UDMA
->  	  Enable support for the TI UDMA (Unified DMA) controller. This
->  	  DMA engine is used in AM65x and j721e.
->  
-> +config TI_K3_UDMA_V2
-> +	tristate "Texas Instruments K3 UDMA v2 support"
-> +	depends on ARCH_K3
-> +	select DMA_ENGINE
-> +	select DMA_VIRTUAL_CHANNELS
-> +	select TI_K3_UDMA_COMMON
-> +	select TI_K3_RINGACC
-> +	select TI_K3_PSIL
-> +        help
-> +	  Enable support for the TI UDMA (Unified DMA) v2 controller. This
-> +	  DMA engine is used in AM62L.
-> +
->  config TI_K3_UDMA_COMMON
->  	tristate
->  	default n
-> @@ -56,14 +68,14 @@ config TI_K3_UDMA_COMMON
->  config TI_K3_UDMA_GLUE_LAYER
->  	tristate "Texas Instruments UDMA Glue layer for non DMAengine users"
->  	depends on ARCH_K3 || COMPILE_TEST
-> -	depends on TI_K3_UDMA
-> +	depends on TI_K3_UDMA || TI_K3_UDMA_V2
-
-At this point the glue layer should not have dependency on UDMA_V2 as it
-only receives BCDMA support, which is not used by the glue?
-
->  	help
->  	  Say y here to support the K3 NAVSS DMA glue interface
->  	  If unsure, say N.
->  
->  config TI_K3_PSIL
->         tristate
-> -       default TI_K3_UDMA
-> +       default TI_K3_UDMA || TI_K3_UDMA_V2
->  
->  config TI_DMA_CROSSBAR
->  	bool
-> diff --git a/drivers/dma/ti/Makefile b/drivers/dma/ti/Makefile
-> index 41bfba944dc6c..296aa3421e71b 100644
-> --- a/drivers/dma/ti/Makefile
-> +++ b/drivers/dma/ti/Makefile
-> @@ -3,6 +3,7 @@ obj-$(CONFIG_TI_CPPI41) += cppi41.o
->  obj-$(CONFIG_TI_EDMA) += edma.o
->  obj-$(CONFIG_DMA_OMAP) += omap-dma.o
->  obj-$(CONFIG_TI_K3_UDMA) += k3-udma.o
-> +obj-$(CONFIG_TI_K3_UDMA_V2) += k3-udma-v2.o
->  obj-$(CONFIG_TI_K3_UDMA_COMMON) += k3-udma-common.o
->  obj-$(CONFIG_TI_K3_UDMA_GLUE_LAYER) += k3-udma-glue.o
->  k3-psil-lib-objs := k3-psil.o \
-> diff --git a/drivers/dma/ti/k3-udma-common.c b/drivers/dma/ti/k3-udma-common.c
-> index 0ffc6becc402e..ba0fc048234ac 100644
-> --- a/drivers/dma/ti/k3-udma-common.c
-> +++ b/drivers/dma/ti/k3-udma-common.c
-> @@ -171,8 +171,13 @@ bool udma_is_desc_really_done(struct udma_chan *uc, struct udma_desc *d)
->  	    uc->config.dir != DMA_MEM_TO_DEV || !(uc->config.tx_flags & DMA_PREP_INTERRUPT))
->  		return true;
->  
-> -	peer_bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_PEER_BCNT_REG);
-> -	bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_BCNT_REG);
-> +	if (uc->ud->match_data->type >= DMA_TYPE_BCDMA_V2) {
-> +		peer_bcnt = udma_chanrt_read(uc, UDMA_CHAN_RT_PERIPH_BCNT_REG);
-> +		bcnt = udma_chanrt_read(uc, UDMA_CHAN_RT_BCNT_REG);
-> +	} else {
-> +		peer_bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_PEER_BCNT_REG);
-> +		bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_BCNT_REG);
-> +	}
->  
->  	/* Transfer is incomplete, store current residue and time stamp */
->  	if (peer_bcnt < bcnt) {
-> @@ -319,6 +324,7 @@ udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
->  	size_t tr_size;
->  	int num_tr = 0;
->  	int tr_idx = 0;
-> +	u32 extra_flags = 0;
-
-nitpick: reverse christmas tree order
-
->  	u64 asel;
->  
->  	/* estimate the number of TRs we will need */
-> @@ -342,6 +348,9 @@ udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
->  	else
->  		asel = (u64)uc->config.asel << K3_ADDRESS_ASEL_SHIFT;
->  
-> +	if (dir == DMA_MEM_TO_DEV && uc->ud->match_data->type == DMA_TYPE_BCDMA_V2)
-
-I would add the evaluation order in reverse to skip checking direction
-for UDMA_V1.
-
-> +		extra_flags = CPPI5_TR_CSF_EOP;
-> +
->  	tr_req = d->hwdesc[0].tr_req_base;
->  	for_each_sg(sgl, sgent, sglen, i) {
->  		dma_addr_t sg_addr = sg_dma_address(sgent);
-> @@ -358,7 +367,7 @@ udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
->  
->  		cppi5_tr_init(&tr_req[tr_idx].flags, CPPI5_TR_TYPE1, false,
->  			      false, CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
-> -		cppi5_tr_csf_set(&tr_req[tr_idx].flags, CPPI5_TR_CSF_SUPR_EVT);
-> +		cppi5_tr_csf_set(&tr_req[tr_idx].flags, CPPI5_TR_CSF_SUPR_EVT | extra_flags);
->  
->  		sg_addr |= asel;
->  		tr_req[tr_idx].addr = sg_addr;
-> @@ -372,7 +381,7 @@ udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
->  				      false, false,
->  				      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
->  			cppi5_tr_csf_set(&tr_req[tr_idx].flags,
-> -					 CPPI5_TR_CSF_SUPR_EVT);
-> +					 CPPI5_TR_CSF_SUPR_EVT | extra_flags);
->  
->  			tr_req[tr_idx].addr = sg_addr + tr0_cnt1 * tr0_cnt0;
->  			tr_req[tr_idx].icnt0 = tr1_cnt0;
-> @@ -632,7 +641,8 @@ int udma_configure_statictr(struct udma_chan *uc, struct udma_desc *d,
->  			d->static_tr.bstcnt = d->residue / d->sglen / div;
->  		else
->  			d->static_tr.bstcnt = d->residue / div;
-> -	} else if (uc->ud->match_data->type == DMA_TYPE_BCDMA &&
-> +	} else if ((uc->ud->match_data->type == DMA_TYPE_BCDMA ||
-> +		   uc->ud->match_data->type == DMA_TYPE_BCDMA_V2) &&
-
-Have you thought of adding a version member to struct udma_match_data
-and use that instead of distinct different types for BCDMA/PKTDMA?
-
-Here for example you would not need any change as the code is common for
-both v1 and v2.
-
->  		   uc->config.dir == DMA_DEV_TO_MEM &&
->  		   uc->cyclic) {
->  		/*
-...
-
-> diff --git a/drivers/dma/ti/k3-udma-v2.c b/drivers/dma/ti/k3-udma-v2.c
-> new file mode 100644
-> index 0000000000000..af06d25fd598b
-> --- /dev/null
-> +++ b/drivers/dma/ti/k3-udma-v2.c
-
-...
-
-> +static bool udma_v2_dma_filter_fn(struct dma_chan *chan, void *param)
-> +{
-> +	struct udma_chan_config *ucc;
-> +	struct psil_endpoint_config *ep_config;
-> +	struct udma_v2_filter_param *filter_param;
-> +	struct udma_chan *uc;
-> +	struct udma_dev *ud;
-
-nitpick: reverse christmas tree order
-also in few other places.
 
 -- 
 Péter

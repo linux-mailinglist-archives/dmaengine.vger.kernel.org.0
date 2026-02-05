@@ -1,106 +1,83 @@
-Return-Path: <dmaengine+bounces-8766-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8767-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6BAiNY3ShGlo5gMAu9opvQ
-	(envelope-from <dmaengine+bounces-8766-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 18:25:33 +0100
+	id +HQVMmjWhGlo5gMAu9opvQ
+	(envelope-from <dmaengine+bounces-8767-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 18:42:00 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E768F5E10
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 18:25:33 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C134F6122
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 18:41:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3BE583016C89
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Feb 2026 17:20:58 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id F42223003824
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Feb 2026 17:41:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B431E30B513;
-	Thu,  5 Feb 2026 17:20:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5E512FA0C6;
+	Thu,  5 Feb 2026 17:41:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="ib21pSIc"
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="KNGklGY2"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010041.outbound.protection.outlook.com [52.101.229.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3472FC037
-	for <dmaengine@vger.kernel.org>; Thu,  5 Feb 2026 17:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770312056; cv=none; b=GMm6cFQr2wra3dc+dJuGgkfHwkQH2bzEvBF+h7BkBogCrH5oShsqoO7tkO0qUq7Rg5L3wY76c9oS8d4BSoaiKsdyqSrp+7025RZeAl22njcRgw8eVJlF/pRLQO361mqITZR7cttQMmyf3xsXLvrk0x6ybZl9rf0p79BwoAAVO5Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770312056; c=relaxed/simple;
-	bh=QJK1uJ/Ofymouhtx5IE+w0SZJJKRvkpRBFhbN/MqoBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kvNXRKOJlz+oZcgQdto2BQaG+IsRpgfKkGW3JvVI9VXJD6zSqoqjd/IWaoEgRgIjoahr1YJ1Z3YD1zOelGbwOrwZVk3RzQTR7h1arSbeyBK5ueGn0TWJ7oj2PiHsGqPFte4TPN/GUxGBVEf3IGFz6zpjWPHbPIUTMMIATEeh6Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=ib21pSIc; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-47ee3a63300so12983895e9.2
-        for <dmaengine@vger.kernel.org>; Thu, 05 Feb 2026 09:20:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1770312054; x=1770916854; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2hxJi4LjvJCxCRYfV2t2DUtZ8pEMp5AK+WWUAjd9I7o=;
-        b=ib21pSIc/QG98V35fTlyJQbCQmxScZQDkn1iXThhVc9wHDD4rqWZk6txGgYmOMXUtk
-         9NqtMHJktOTGBUx4ms/ENcLufjraTqEgvmHjBpoJJsUNWgfwH1zz85/C1M817bRplabo
-         6Z+Ek5gig8KQSMAG4Uyh2JWapAp9i5r+ucoAcifKKPOEc4HFZaKhPeNQTC+Ft/0d0Gi0
-         cp4SfKq2mIpNvhcYUp2NNY8X+VE9Wqen/fx/8FT1moeq/d9VkuFGpK4mhEuQpl2ycYEp
-         nnMjLILaiHnlRfKAfYMhcZwY9xFmH+P39DgW9RAXvR64W3DTjTPuAqe2mDjl6E/C8TKE
-         gawQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770312054; x=1770916854;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2hxJi4LjvJCxCRYfV2t2DUtZ8pEMp5AK+WWUAjd9I7o=;
-        b=G6m+ruEW2ES+GSXLVWEb00dcNFxTpdPk2nOeHsdlza9PckegQEDpnk54W71xCfTO3O
-         fz6o8wXDRqTdR2X0r/MKZb65xRJZh+DYSVw89pPGQHMYSRwAols5Dd0UipDWxMX2jsxt
-         Jpfmv7cGausai2l7PYFVnNJi3vK+Wfdmc/Ht78Lm6KiEgct06m/6SO66PE2trjSZwWHX
-         QT2fJbG3uiTL2A3Uux7qO5ibqzrGNiLtXT1vXlYivwhRv2r0++HoR1uPVgadBQz6ZRn2
-         sSqF2dzyovf4bDjzPOy3pvW7OE2ZlDlite+zu0cJpqgWi2+2DhIIMTXGaSnISom8CRmW
-         X+IA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnU3k8NBchVDpIcCnAJP6zGXQqnVXsOn+8jOt6GjB6WeCslwBh9hV46uHv1pD80btxE99OK2QaL+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzKV0/zfVHTB4Y3Wd0N6Q10PPrIkATLhxllMgACkw4PDb/qC2E
-	2vlLcQs1+KunchGuEbg8kH7r4FkgvOY8LZz92N7vEgiEFym1NMeXuJnJgpbC0qfukwc=
-X-Gm-Gg: AZuq6aIi4OyTXuEtLvwQx3wyyh3fR2B9yrw0aurYfoYKi9004qFY16vprZ2O2t9RiAv
-	8mqlC6nlaRtkUBDmZu3mR435Oi+AbrZFZfVXjlOccWoa9hfm3/A/nA8VbPIkAgof/g2aHVeSxHw
-	Y7oOFGcpA7eg980JQQbC2rzGLCD35RnCNWD1slvZylphSIPwAubj1VHcQI1/6HANwHL4ngNKBDq
-	A5TsZpUV8fg3KZlPNZj9v5ko3jTiM3KqXMqkNULAvmhKQtkUGHG4G8qIbe4Vz4Wc0pM/F43AnsX
-	QWu1u36mEWYl2A9Ga65nJfDB4ZZDqf0DI0bRyrd1vdms7S91LAa2Wzo4otKbPNvVQ3FhCMydDgF
-	Xo+Fndbn0ju1/AVMoKTk74D3JndTEuwg3ZBPEjbVOyaI2Vf7NDdDjnWODIg5Ryriw/t2iYqdnX1
-	SeLXT4q3+L2eFCD8H4nyc=
-X-Received: by 2002:a05:600c:4f54:b0:47d:403e:9cd5 with SMTP id 5b1f17b1804b1-4832020df4emr1729315e9.11.1770312054098;
-        Thu, 05 Feb 2026 09:20:54 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.215])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4830fe567b4sm81538565e9.5.2026.02.05.09.20.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Feb 2026 09:20:53 -0800 (PST)
-Message-ID: <32ea84f2-621a-47d9-a661-9acd62d50662@tuxon.dev>
-Date: Thu, 5 Feb 2026 19:20:51 +0200
-Precedence: bulk
-X-Mailing-List: dmaengine@vger.kernel.org
-List-Id: <dmaengine.vger.kernel.org>
-List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7] dmaengine: sh: rz-dmac: Add suspend to RAM support
-To: Biju Das <biju.das.jz@bp.renesas.com>, geert <geert@linux-m68k.org>
-Cc: "vkoul@kernel.org" <vkoul@kernel.org>,
- Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
- "broonie@kernel.org" <broonie@kernel.org>, "perex@perex.cz"
- <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "geert+renesas@glider.be" <geert+renesas@glider.be>,
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64EF2F362D;
+	Thu,  5 Feb 2026 17:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770313314; cv=fail; b=g68MjBy7ZhJNaELS7Y7speDbzoppiMMPBM+t2FXFianmaZ5fjiajOpk9umDNVOJ1qYIMQS/DLtp4AEEwokxkvLU8ASs1G+nyNCjyBA/sOEltANtuj0dW8CnCJaKEvfg8HBRQtFkfhZFOY9Vt1lnz7HlThyxcG5PjfYv8pblUC3I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770313314; c=relaxed/simple;
+	bh=dxjSA06wyMRwEvrw/41Vk3srfTsamMZYmaUUaEQ0nXc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NsySHQiIjqejDztizmIHSr7zJiuWyAQ9C5s2XeLHSHDUpnqDiVLoU6ljaR6QiZzzEE6SAhq+6ae4lULds3ED3RvrfUtG63BLtCVFeBpSvzEt/9rW0nfkv5MfafIQQFtv3Iw1Z7GwgUOpeomggzX0HmqVlrfrI+X0RR79AOOj00A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=KNGklGY2; arc=fail smtp.client-ip=52.101.229.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EKF+P1Zld/SA5iJNAK09LdsBCJhItMYiAZOJIWsFz9TSrXOkXl9EXle839YBFbRsjB4GcBckXqGdW5F/+/3Hmy1dt3EDRSEvcAlTxCph5WtChAHyu7FLkot8apdSMoKMFna9u75lDLG514edUTjr0OQM64c1ytCR4kGqnARp+CnFtvo71E8W7CCqv1qPPBw2K5XYs/OV19zyBowOAwwCORI//CsEn8rDD9kmAMKmZMicDG783kYW5bW27vfDu28JTtOUYUifPq8uP9FCbFoC9bC+hxe8PZz3LBf8I96aJKwbr5ZqNU0zgSEWz5YLi6SS4pp0PDIH472RDaPczKv4sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dxjSA06wyMRwEvrw/41Vk3srfTsamMZYmaUUaEQ0nXc=;
+ b=CnSkiEs9G1tELHy4yRw+Yi5PjZHRKvZ10f7xRVnG4eAWUYIqiPmp4qSO6TVRc4LCOXEDFrGkoJukwpTBwJCNCjrGNwPKX7KTIEwqBaHXk3ekpwrW4Ht+8WjFDaUeG8cVtQgle0OloU45j6W13pey2whZWcVORcEg30ESUvWUJrowwQbuWj8BJ9aP4Fqa4BsTcI2ixpLhF5kCggx2dtqUr34xYEGpFD7wvActBmauGaVqYgapeT99TxsFa1i8gaU6sMguLR/Fqb5oOfhQxIYgTzMDUcpBfY1jHTh2/KtRg/40SM7vpvgwqKGp9caQGsG33evUaRK26Zm9FFejtFMtCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dxjSA06wyMRwEvrw/41Vk3srfTsamMZYmaUUaEQ0nXc=;
+ b=KNGklGY2rHbAZgXbc/OXdhPvAXfDlix1nEc+vhSK7W/T+cBOb83yv7nW5SLn5n2u9fa7LlgeQvAQQhJ9l2OZOkjanlxOBfKXDpCEFE0/LJxS459rR3IVq0X5J+qhCnDNSEw5zgbKnv0IG+W2cobzxctVVvSZcwR0syO1jiOyURM=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by OSCPR01MB13086.jpnprd01.prod.outlook.com (2603:1096:604:32d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.12; Thu, 5 Feb
+ 2026 17:41:48 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::87d1:4928:d55:97de]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::87d1:4928:d55:97de%4]) with mapi id 15.20.9587.013; Thu, 5 Feb 2026
+ 17:41:47 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Claudiu.Beznea <claudiu.beznea@tuxon.dev>, geert <geert@linux-m68k.org>
+CC: "vkoul@kernel.org" <vkoul@kernel.org>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>, "lgirdwood@gmail.com"
+	<lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>,
+	"perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "geert+renesas@glider.be"
+	<geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: RE: [PATCH 5/7] dmaengine: sh: rz-dmac: Add suspend to RAM support
+Thread-Topic: [PATCH 5/7] dmaengine: sh: rz-dmac: Add suspend to RAM support
+Thread-Index:
+ AQHcjq8LxgsLnLJrc0+4TWo3c3gckrVkQ4/QgAAW+wCAAAEtcIAACGyAgAAC1MCAAAUUgIAAAEvggAAlpwCAD49ggIAAByHggAACRgCAAAWpgIAAOcKAgAAETGA=
+Date: Thu, 5 Feb 2026 17:41:47 +0000
+Message-ID:
+ <TY3PR01MB113460619AE8C46BC674B28078699A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
 References: <20260126103155.2644586-1-claudiu.beznea.uj@bp.renesas.com>
  <20260126103155.2644586-6-claudiu.beznea.uj@bp.renesas.com>
  <TY3PR01MB113461F734BA087B60605C6FC8693A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
@@ -115,134 +92,219 @@ References: <20260126103155.2644586-1-claudiu.beznea.uj@bp.renesas.com>
  <TY3PR01MB11346321A9AAE93C7070C6E578699A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
  <CAMuHMdWUpq1bUbNLu4WGheovQ1pYdEJGBMN3jdb6PZqXanN_GA@mail.gmail.com>
  <TY3PR01MB1134661E4B93CE785700FC5AF8699A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <32ea84f2-621a-47d9-a661-9acd62d50662@tuxon.dev>
+In-Reply-To: <32ea84f2-621a-47d9-a661-9acd62d50662@tuxon.dev>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <TY3PR01MB1134661E4B93CE785700FC5AF8699A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OSCPR01MB13086:EE_
+x-ms-office365-filtering-correlation-id: f583bd53-fe2f-4f7f-10b3-08de64ddd62e
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700021;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?UER4OGhpTkRsSUlmNmRxamVHQ2o1L0xscnJabDVRNkZGYTBQejlQaXBkVEo2?=
+ =?utf-8?B?MWxPazRnL0FNd2w2Ynp6T204cHkrT1FMektEWnBaSW5NVnJaK2VLK0lGU1pG?=
+ =?utf-8?B?bHpKeURpU2ZIdXl3MDN0bVJFMG5kcjdPZ0JJZUlxUTlIK1NGNGVRbDdTWFJx?=
+ =?utf-8?B?SlNDZlBlRGRua05MOVF4YXVNZUhPaHlaNUVHcFB3a2dGMzVZdHdqUENENXRP?=
+ =?utf-8?B?bFllTkZnQlJCNFp2NG1ydkdYaEpaaisxbWxnMElDWFdEMCtiS212SjVCempW?=
+ =?utf-8?B?ZEpDWGlJOU1PQlFaVGV5eTVKdjkvR3NRQ0lKdU9FNUtCTk5mMWZ4WGVPYVFr?=
+ =?utf-8?B?TXBxNVZxdEVhczFjZEI1MXFlL3kvL2h3K2krRi9Ob2R4cUdiMHRPVDFkMkRm?=
+ =?utf-8?B?U0JDdDVDMGdXeXUrc0liOVBnY3VLV1A2YXZxYnpvQ3pFTXhqcXB2Wm85TzNC?=
+ =?utf-8?B?WEpSZEI4MWoxdlhZSDAwcTFDQklQYmlWR2hYaUVxQ253MG15N3h6ZkhkVDI3?=
+ =?utf-8?B?SUduS09oY3N4ckpHZllKQVYvS0E1MTg4ZVRpd3dBZlV5VU1jb3pJY2prOEor?=
+ =?utf-8?B?MngzbnFES1JWZ3owUVVGM1FaM3FHdTZsK1Y4cCs3a2lsVWRtZ0NOMXduNkln?=
+ =?utf-8?B?QUJvODVqNW5vU2hVbGt3NWRMUEtnM3M3VTVWYThFRXJnUHJZMy9Gb2c4Z21H?=
+ =?utf-8?B?Zmhicm5EQzdJTmI3NWJySllIc0NoZlhEQ29MSEZKZjN2eEVSZHc3M1RZMmUv?=
+ =?utf-8?B?NFBJL2tiT2ZUQkI2VytseG5GNENicHpFL3gzTlJjWXJwMTc5MWs4aTNDVmNu?=
+ =?utf-8?B?WE9ENVpmS0I0a09IZ0JiODNPMGNWRVhKMFJ0eU4wV3BtOXdhVVJpdnJNdHBn?=
+ =?utf-8?B?ZDlhNG9JeUpWOUoyZTFNZEo4YWVTY1RVUlZyYkxhTUhQWiswUEZyTHQvVGFy?=
+ =?utf-8?B?WUxzdkw3SjFBMUJkMFprMGpQL21RK2JFOGlkT21vQmVpSkdvMlNEdUpWWFMx?=
+ =?utf-8?B?VlBWRkQvcEczZEtzV3RXK1hINUVWLzFodXJac3ZmV2orTy9BMjlpeWNUdW9t?=
+ =?utf-8?B?SGhiU09FaVhicCsyc3hZbXBiTXc5MmQyNzNJOTJ1ZEVESDV5TVdLNzZDd29i?=
+ =?utf-8?B?UFVHRXFOaVZRdGd4NWRLTW05Y2lhR2lPTHhFU3d5dElTWW5DOEk2ZHBacU5H?=
+ =?utf-8?B?d0FZS0JxZEdNRmlTU2RVTlFwZFN6a1hydGlra1ZHUDgrM0hEejVXQ0Y4N1Nq?=
+ =?utf-8?B?T1NsMzNzSEhmNVFrR3g4RTFsNWp4dDFabkhwbGtjRjY3Y0xjdXVPWTZLaFlV?=
+ =?utf-8?B?K0RQb3dkQXZveDZuZ2RFbUpMUjlYdVd0Q3VkdnRBSUJJR3h1MzNPVER6S21Y?=
+ =?utf-8?B?LzFBOHQ2MFNtaGVvYUVZbVR6MXpTZzhmT1BlRGxIM09HVFNpTm94UmdNeGlN?=
+ =?utf-8?B?SWpKYmQzRktRUTRNMjFGOXJ5SjlVam5pOVZ5SGZ5RXZFdy9OTnVwNVlLczZD?=
+ =?utf-8?B?M0RWb0tCOEFqWkRYTDBhcDdqdUdBRE4xM3cybVh2MW5sdG5oblhFNmwwZk1o?=
+ =?utf-8?B?WXI4QjVid3lSLzZRVGkrTWdoMHJUL3c0MlFmS1ZhYU9UU1pacFdaMndqTElo?=
+ =?utf-8?B?NXFjSGtjSHZSTlpQNXhVekRZOU5BTCs5SjN6U3pKYmVVa2gzSXVKQlZ5Y2lR?=
+ =?utf-8?B?aWlPUUhDNzFTZkExd2FEbDRhKzFRejlubWE5cFh3dEZ0WDkxbkJDdEM1N01I?=
+ =?utf-8?B?MFZ5aHNXWUhHQTArVmt5TUpGZGpKRHdOc1M1SytBSW5rQkQzc0ljWVBMSGdn?=
+ =?utf-8?B?aHRIRERNMFZlKzVKNGJmNnNZSitZTzg1bGZnTEEydVJBVzdITkRJbHE4NVFV?=
+ =?utf-8?B?L2FxbkYxcGhWMUVIK1EwUk4xZzhQbVhNTGtCQ1lBc3g1R1RXYkgvNTZqTDha?=
+ =?utf-8?B?RU4rNFdXU1FOZktpN2ZINHJsUXNFYllYOXdyb0lNb0d2bGFZRDNYcmhkT255?=
+ =?utf-8?B?SVNDenRZbzg3cWpEaUN2THN4M3g3VjJ4MklYZzUxajA3TldGNEZ6ZHFDZ1N1?=
+ =?utf-8?B?Vmw3dmRKQ3UrOElyeithTmpKNk5DZllKMGNGa1ZEMUFtaWNXTm9WL3B6Njcr?=
+ =?utf-8?B?RUw1OUhweldMb0JRS0UxenE4Y2RyNHBSS0l6eTBZdThaeGNVUUNVNDYyWnNw?=
+ =?utf-8?Q?ZFwPOyx+yWQATUT9Nch3XDM=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?bVhGOUxhYkRpaHZoaFBxblVoczlEWkZ6aUpLbXRQa2F3TXQ4M1FDQnl6dStp?=
+ =?utf-8?B?Q2lwZDlEODFFK2Q0aU4xbFEwN3JGUllFQXhEWGdHMmVwNnVUWGNpNm16ZXNw?=
+ =?utf-8?B?QkRZTFVIUXZyeEFlNFZLdXo4RGhsdCtNaFdxeG5Gc0RJNHFNRUxVbllGUEtE?=
+ =?utf-8?B?ekF4blkxTEtJZmpGbm1MKzRZWXAvMlFHckNQd2dUZitJU1hMeTIzT1MvOXEy?=
+ =?utf-8?B?c3dMODNOWHkxdlpBYXJzODgzTGRtcG5XS0FKK2tiNWlRdENUb2Zla1ZKeTYx?=
+ =?utf-8?B?OEpUZUVEZCtFN05KT1JwOCttVm1NZmpueWlWNWVQcWc0Tm9kQnhVdm94UjBS?=
+ =?utf-8?B?Q0Y2bExkWUFKdHpwT0JSb3NDM0tpbVJGQlBqOFRFak41NVN5SHN6eFRVVGFz?=
+ =?utf-8?B?aHNPci9KczFvYXRodDVnVVVOaUU1K2xRVzgrV09pRnJURjRHdzl3MFVaMzZv?=
+ =?utf-8?B?bFBSUnIrRWx2Uk1ZZXhoZ3BsOFZDUmhEWXJLdEkyWDhkZCtXY2pvOGpIQWlG?=
+ =?utf-8?B?MHNWSFdNVVNuNFBzMVdtelVkYUE3aGVTNnBySS9xczNzWDhYbjk5M3VsemVJ?=
+ =?utf-8?B?eGZzd0c0U2E4bStrN1RFRmZlOXlnVDgxTERRdG1UeVM3Qkk4U2dVdXdOSlV0?=
+ =?utf-8?B?azF4aldOR28vMkJFTXJ5YkpCNUhsZFg3NkVPckZaKzBlTldkWUR2WWlOaW12?=
+ =?utf-8?B?T0tpU2dkSm9YYXVSMGpWS3FsNVVrNGhPU1g0UlJlcDh1MWhVVzRUUlRUM1ZV?=
+ =?utf-8?B?TXRFSzlVcHBmS1JDSm1BcnAvUmx5R3lrU1A5MTBiYzNWUEdUemhFK3c5TkRU?=
+ =?utf-8?B?c0JUR1N5dWFyV05RaFVQRm9QU3FEcVFmdXc5K0VLdUlTbS9wQXViNHdqSy9o?=
+ =?utf-8?B?SjFwZUs5VG0yaDlnN3ozV0kwLzc0NFZxT0hVTE1iTVI4b1JYVXVaMkdhcDdB?=
+ =?utf-8?B?NFM2RGdVWkgrdVNuYW9JbGJPZGR5TjFaSXc2ZFJOdFFPY09KNnJpWnZVcXVL?=
+ =?utf-8?B?TVFvTU5FRVIrdy9WZ3daalJlVEN6aXFHd3Q1ZjYweWlCa081VG1MUTNaS2dI?=
+ =?utf-8?B?Ris5a2IyYW1oOFNHR3R5QkQ2VGZlRjR4c09CaG0rbXY1SnNxaWU3dFFlRkVz?=
+ =?utf-8?B?ckduS3FKVnBXUnBpdmJlUVd3OWR6RkN3dGRweHhiWXQxUVN6TUJtMmlVVVdz?=
+ =?utf-8?B?d0VxTytRNGJnMnRhWkpWbE5jOFI4NDloMjNYelBnd1pSQUtnNXVyakI5ZUJt?=
+ =?utf-8?B?cEVHUkh3Mko4RmpHbXE5bGM4T28wTTNsZHROZ1dUd3lhSXMzbWhYZ2hwbUkr?=
+ =?utf-8?B?Z3psQlZrc2lPMFVYZUduMjFCLzFVUjVtaTZOMlN6amJKTXhsMjI5Q2svWnRQ?=
+ =?utf-8?B?Q1o2THMyN3F1c1hMVzFMWXdYeE8yc3dCL1BENjV0SGQ0UEtlSlJINGQreS8y?=
+ =?utf-8?B?TzRGR05sTFdPc2RqSU0veFNPOHVwbU41VzBEdE1nNTM4RERUQjJDcFRCbUtF?=
+ =?utf-8?B?Q0lsaEVuUkN1L3ZoTkdTQzltNVc5b29TT0lvVG8zbERCanpKZU1NY1V0RlVo?=
+ =?utf-8?B?WVJDRjVLajkrUmJYM3BBS3NuZCs4SWpRUkJXdHNBYnFESURXa0NqNnQrbWYr?=
+ =?utf-8?B?U1lVVHJPQlc4U0x1Ujl0YmVHRlJkZ1RKUG5ubmxlMGovNDRQVG5Jb1hiZnIr?=
+ =?utf-8?B?ZTIySHMvSWNNMmIyZUgxL29qWW16cXFNeVpVZzdXL0VRSjdrTkVwVHBXQm0y?=
+ =?utf-8?B?akgwbm9OSTd2NDVjT3d6V3B0cTNLUmVZaE0vMnJ4bFV5VU5WMGRnZndKZjk1?=
+ =?utf-8?B?dlJhKzdmbk11c25SQkNZZmIzWlB5b08xV0Z0RUtiSDR2a1htNkFuTU9TTUtm?=
+ =?utf-8?B?RDk0Q2FOY1plTC9DSFpxZWNvdXltUHhoZ25Yb0R3RjgxakZNK1ZnbzF2SDRq?=
+ =?utf-8?B?UFh0Z1R4S2J4Y3I4TXlSdzZOYkZBdEFKZ0dWZ3B2RVMwZktPTVJ0cllYVHha?=
+ =?utf-8?B?cDA2Y0szSlpqTnI0UVpmekljTC93Wk1tTzE3OFhkc0VBUDh2UDRPOFp5cS9y?=
+ =?utf-8?B?ZjVxZzBDdncwaHIreG9DWEF4T2dONEExeWxQK2ZuMHBldEVoUVpKbkgvY2Zz?=
+ =?utf-8?B?U2UwRGNFTVB2LzBrN1NKWkVoNUJveFVkeXFnN2lCTW9oeGtOQnh2aS9uZnRz?=
+ =?utf-8?B?SkRtRmQ1ZjBHU2xrb3BDZWxWaGNmcVZjVEJkTXdaZitMaVcreUtkNnBlSkFO?=
+ =?utf-8?B?VTBIQkZpenNuOGxKUFMrb1hSZnF5YTVGREVDQzJ3d2tPOW5nQkNvek9aRTJD?=
+ =?utf-8?B?TGxBRGhDYlhaazNtcVZ6WEFxSzBKZmx0d1VFeWloR3NVdWwwNmkzZz09?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Precedence: bulk
+X-Mailing-List: dmaengine@vger.kernel.org
+List-Id: <dmaengine.vger.kernel.org>
+List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f583bd53-fe2f-4f7f-10b3-08de64ddd62e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2026 17:41:47.6631
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: m6h5qA3IrITTMKuOjhqr8t3eTyROkCFmg26DPmJ8Jroa07rH6dbFu1TbBhsjTu/5Mlx9xwA8CppdRffEwFQHW668Ahsm9T5TgwTjpsPv6Yo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB13086
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [2.44 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[tuxon.dev:s=google];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[bp.renesas.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8767-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	FREEMAIL_CC(0.00)[kernel.org,bp.renesas.com,gmail.com,perex.cz,suse.com,pengutronix.de,glider.be,renesas.com,vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	DMARC_NA(0.00)[tuxon.dev];
-	TAGGED_FROM(0.00)[bounces-8766-lists,dmaengine=lfdr.de];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[tuxon.dev:+];
+	DKIM_TRACE(0.00)[bp.renesas.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@tuxon.dev,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[biju.das.jz@bp.renesas.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,renesas.com:email,tuxon.dev:email,tuxon.dev:dkim,tuxon.dev:mid]
-X-Rspamd-Queue-Id: 2E768F5E10
+	NEURAL_HAM(-0.00)[-1.000];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-m68k.org:email,tuxon.dev:email,bp.renesas.com:dkim]
+X-Rspamd-Queue-Id: 1C134F6122
 X-Rspamd-Action: no action
 
-Hi, Biju,
-
-On 2/5/26 16:06, Biju Das wrote:
-> Hi Geert,
-> 
->> -----Original Message-----
->> From: Geert Uytterhoeven <geert@linux-m68k.org>
->> Sent: 05 February 2026 13:34
->> Subject: Re: [PATCH 5/7] dmaengine: sh: rz-dmac: Add suspend to RAM support
->>
->> Hi Biju,
->>
->> On Thu, 5 Feb 2026 at 14:30, Biju Das <biju.das.jz@bp.renesas.com> wrote:
->>>> From: Claudiu Beznea <claudiu.beznea@tuxon.dev> On 1/26/26 17:28,
->>>> Biju Das wrote:
->>>>>> For s2idle issue on RZ/G3L is DMA device is in asserted state,
->>>>>> not forwarding any IRQ to cpu for wakeup.
->>>>>>
->>>>>> For S2RAM issue on RZ/G3L is during suspend hardware turns
->>>>>> DMAACLK off/ Asserted state. Clock framwork is not turning On DMAACLK as it critical clk.
->>>>>>
->>>>>> Can you please check your TF-A for the second case? First case,
->>>>>> RZ/G3S may ok for reset assert state, it can forward IRQs to CPU.
->>>>>
->>>>> Just to summarize, currently there are 2 differences identified between RZ/G3S and RZ/G3L:
->>>>>
->>>>> SoC differences for s2idle:
->>>>>
->>>>> RZ/G3S: Can wake the system if the DMA device is in the assert
->>>>> state
->>>>>
->>>>> RZ/G3L: Cannot wake the system if the DMA device is in the assert state.
->>>>>
->>>>>
->>>>> TF-A differences for s2ram:
->>>>>
->>>>> RZ/G3S: TF_A turns on DMA_ACLK during boot/resume.
->>>>>
->>>>> RZ/G3L: TF_A does not handle DMA_ACLK during boot/resume.
->>>>
->>>> I'm seeing at [1] you are addressing these differences in the
->>>> clock/reset drivers. With that, are you still considering this patch is breaking your system?
->>>
->>> Still, thinking whether to add critical reset or go with SoC quirk in DMA driver.
->>> Some SoCs need DMA should be deasserted like critical clock that can
->>> be handled either
->>>
->>> 1) Add a simple SoC quirk in DMA driver
->>>
->>> Or
->>>
->>> 2) Implement critical reset in SoC specific clock driver and check for all resets.
->>>
->>> Is simple SoC quirk in DMA driver, something can be done for RZ/G2L family SoCs?
->>
->> What if the DMA driver is not enabled?
-> 
-> The below use cases will work (patch[1] - removing the code for deassert in cpg_resume)
-> as there is no DMA driver to assert the reset.
-> 
-> 1) system will boot without DMA driver
-> 2) s2idle will work as there is no DMA driver to assert the reset.
-> 3) s2ram will work without DMA driver.
-> 
-> If DMA driver is enabled, then there is an issue with  s2idle
-> as DMA driver assert the reset and we cannot use serial console
-> as wakeup source
-
-I think we're taking here about both DMA clocks and resets.
-
-What if the DMA clocks are declared critical in Linux and clocks and resets are 
-not handled by bootloader in probe or resume? Who will restore critical clocks? 
-clk_prepare_enable() skips applying the setting to hardware as the critical 
-clock refcount cannot reach zero.
-
-> 
-> One solution is SoC quirk will prevent assert/deassert  of the DMA reset during
-> suspend/resume() for affected SoCs.
-
-This can't work w/o taking care of the DMA clocks in the clock driver resume 
-function (in case DMA clocks are critical). If so, why handling DMA clocks and 
-resets differently?
-
-> 
-> Other solution is implement the critical reset and check for all assert calls to skip
-> the DMA resets.
-
-I prefer this solution + restore the DMA critical clocks on clock driver 
-suspend/resume.
-
-Thank you,
-Claudiu
+SGkgQ2xhdWRpdSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDbGF1
+ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAdHV4b24uZGV2Pg0KPiBTZW50OiAwNSBGZWJydWFy
+eSAyMDI2IDE3OjIxDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggNS83XSBkbWFlbmdpbmU6IHNoOiBy
+ei1kbWFjOiBBZGQgc3VzcGVuZCB0byBSQU0gc3VwcG9ydA0KPiANCj4gSGksIEJpanUsDQo+IA0K
+PiBPbiAyLzUvMjYgMTY6MDYsIEJpanUgRGFzIHdyb3RlOg0KPiA+IEhpIEdlZXJ0LA0KPiA+DQo+
+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IEdlZXJ0IFV5dHRlcmhv
+ZXZlbiA8Z2VlcnRAbGludXgtbTY4ay5vcmc+DQo+ID4+IFNlbnQ6IDA1IEZlYnJ1YXJ5IDIwMjYg
+MTM6MzQNCj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSCA1LzddIGRtYWVuZ2luZTogc2g6IHJ6LWRt
+YWM6IEFkZCBzdXNwZW5kIHRvIFJBTQ0KPiA+PiBzdXBwb3J0DQo+ID4+DQo+ID4+IEhpIEJpanUs
+DQo+ID4+DQo+ID4+IE9uIFRodSwgNSBGZWIgMjAyNiBhdCAxNDozMCwgQmlqdSBEYXMgPGJpanUu
+ZGFzLmp6QGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPj4+PiBGcm9tOiBDbGF1ZGl1IEJlem5l
+YSA8Y2xhdWRpdS5iZXpuZWFAdHV4b24uZGV2PiBPbiAxLzI2LzI2IDE3OjI4LA0KPiA+Pj4+IEJp
+anUgRGFzIHdyb3RlOg0KPiA+Pj4+Pj4gRm9yIHMyaWRsZSBpc3N1ZSBvbiBSWi9HM0wgaXMgRE1B
+IGRldmljZSBpcyBpbiBhc3NlcnRlZCBzdGF0ZSwNCj4gPj4+Pj4+IG5vdCBmb3J3YXJkaW5nIGFu
+eSBJUlEgdG8gY3B1IGZvciB3YWtldXAuDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gRm9yIFMyUkFNIGlz
+c3VlIG9uIFJaL0czTCBpcyBkdXJpbmcgc3VzcGVuZCBoYXJkd2FyZSB0dXJucw0KPiA+Pj4+Pj4g
+RE1BQUNMSyBvZmYvIEFzc2VydGVkIHN0YXRlLiBDbG9jayBmcmFtd29yayBpcyBub3QgdHVybmlu
+ZyBPbiBETUFBQ0xLIGFzIGl0IGNyaXRpY2FsIGNsay4NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBDYW4g
+eW91IHBsZWFzZSBjaGVjayB5b3VyIFRGLUEgZm9yIHRoZSBzZWNvbmQgY2FzZT8gRmlyc3QgY2Fz
+ZSwNCj4gPj4+Pj4+IFJaL0czUyBtYXkgb2sgZm9yIHJlc2V0IGFzc2VydCBzdGF0ZSwgaXQgY2Fu
+IGZvcndhcmQgSVJRcyB0byBDUFUuDQo+ID4+Pj4+DQo+ID4+Pj4+IEp1c3QgdG8gc3VtbWFyaXpl
+LCBjdXJyZW50bHkgdGhlcmUgYXJlIDIgZGlmZmVyZW5jZXMgaWRlbnRpZmllZCBiZXR3ZWVuIFJa
+L0czUyBhbmQgUlovRzNMOg0KPiA+Pj4+Pg0KPiA+Pj4+PiBTb0MgZGlmZmVyZW5jZXMgZm9yIHMy
+aWRsZToNCj4gPj4+Pj4NCj4gPj4+Pj4gUlovRzNTOiBDYW4gd2FrZSB0aGUgc3lzdGVtIGlmIHRo
+ZSBETUEgZGV2aWNlIGlzIGluIHRoZSBhc3NlcnQNCj4gPj4+Pj4gc3RhdGUNCj4gPj4+Pj4NCj4g
+Pj4+Pj4gUlovRzNMOiBDYW5ub3Qgd2FrZSB0aGUgc3lzdGVtIGlmIHRoZSBETUEgZGV2aWNlIGlz
+IGluIHRoZSBhc3NlcnQgc3RhdGUuDQo+ID4+Pj4+DQo+ID4+Pj4+DQo+ID4+Pj4+IFRGLUEgZGlm
+ZmVyZW5jZXMgZm9yIHMycmFtOg0KPiA+Pj4+Pg0KPiA+Pj4+PiBSWi9HM1M6IFRGX0EgdHVybnMg
+b24gRE1BX0FDTEsgZHVyaW5nIGJvb3QvcmVzdW1lLg0KPiA+Pj4+Pg0KPiA+Pj4+PiBSWi9HM0w6
+IFRGX0EgZG9lcyBub3QgaGFuZGxlIERNQV9BQ0xLIGR1cmluZyBib290L3Jlc3VtZS4NCj4gPj4+
+Pg0KPiA+Pj4+IEknbSBzZWVpbmcgYXQgWzFdIHlvdSBhcmUgYWRkcmVzc2luZyB0aGVzZSBkaWZm
+ZXJlbmNlcyBpbiB0aGUNCj4gPj4+PiBjbG9jay9yZXNldCBkcml2ZXJzLiBXaXRoIHRoYXQsIGFy
+ZSB5b3Ugc3RpbGwgY29uc2lkZXJpbmcgdGhpcyBwYXRjaCBpcyBicmVha2luZyB5b3VyIHN5c3Rl
+bT8NCj4gPj4+DQo+ID4+PiBTdGlsbCwgdGhpbmtpbmcgd2hldGhlciB0byBhZGQgY3JpdGljYWwg
+cmVzZXQgb3IgZ28gd2l0aCBTb0MgcXVpcmsgaW4gRE1BIGRyaXZlci4NCj4gPj4+IFNvbWUgU29D
+cyBuZWVkIERNQSBzaG91bGQgYmUgZGVhc3NlcnRlZCBsaWtlIGNyaXRpY2FsIGNsb2NrIHRoYXQg
+Y2FuDQo+ID4+PiBiZSBoYW5kbGVkIGVpdGhlcg0KPiA+Pj4NCj4gPj4+IDEpIEFkZCBhIHNpbXBs
+ZSBTb0MgcXVpcmsgaW4gRE1BIGRyaXZlcg0KPiA+Pj4NCj4gPj4+IE9yDQo+ID4+Pg0KPiA+Pj4g
+MikgSW1wbGVtZW50IGNyaXRpY2FsIHJlc2V0IGluIFNvQyBzcGVjaWZpYyBjbG9jayBkcml2ZXIg
+YW5kIGNoZWNrIGZvciBhbGwgcmVzZXRzLg0KPiA+Pj4NCj4gPj4+IElzIHNpbXBsZSBTb0MgcXVp
+cmsgaW4gRE1BIGRyaXZlciwgc29tZXRoaW5nIGNhbiBiZSBkb25lIGZvciBSWi9HMkwgZmFtaWx5
+IFNvQ3M/DQo+ID4+DQo+ID4+IFdoYXQgaWYgdGhlIERNQSBkcml2ZXIgaXMgbm90IGVuYWJsZWQ/
+DQo+ID4NCj4gPiBUaGUgYmVsb3cgdXNlIGNhc2VzIHdpbGwgd29yayAocGF0Y2hbMV0gLSByZW1v
+dmluZyB0aGUgY29kZSBmb3INCj4gPiBkZWFzc2VydCBpbiBjcGdfcmVzdW1lKSBhcyB0aGVyZSBp
+cyBubyBETUEgZHJpdmVyIHRvIGFzc2VydCB0aGUgcmVzZXQuDQo+ID4NCj4gPiAxKSBzeXN0ZW0g
+d2lsbCBib290IHdpdGhvdXQgRE1BIGRyaXZlcg0KPiA+IDIpIHMyaWRsZSB3aWxsIHdvcmsgYXMg
+dGhlcmUgaXMgbm8gRE1BIGRyaXZlciB0byBhc3NlcnQgdGhlIHJlc2V0Lg0KPiA+IDMpIHMycmFt
+IHdpbGwgd29yayB3aXRob3V0IERNQSBkcml2ZXIuDQo+ID4NCj4gPiBJZiBETUEgZHJpdmVyIGlz
+IGVuYWJsZWQsIHRoZW4gdGhlcmUgaXMgYW4gaXNzdWUgd2l0aCAgczJpZGxlIGFzIERNQQ0KPiA+
+IGRyaXZlciBhc3NlcnQgdGhlIHJlc2V0IGFuZCB3ZSBjYW5ub3QgdXNlIHNlcmlhbCBjb25zb2xl
+IGFzIHdha2V1cA0KPiA+IHNvdXJjZQ0KPiANCj4gSSB0aGluayB3ZSdyZSB0YWtpbmcgaGVyZSBh
+Ym91dCBib3RoIERNQSBjbG9ja3MgYW5kIHJlc2V0cy4NCj4gDQo+IFdoYXQgaWYgdGhlIERNQSBj
+bG9ja3MgYXJlIGRlY2xhcmVkIGNyaXRpY2FsIGluIExpbnV4IGFuZCBjbG9ja3MgYW5kIHJlc2V0
+cyBhcmUgbm90IGhhbmRsZWQgYnkNCj4gYm9vdGxvYWRlciBpbiBwcm9iZSBvciByZXN1bWU/IFdo
+byB3aWxsIHJlc3RvcmUgY3JpdGljYWwgY2xvY2tzPw0KDQpQYXRjaCBbMV0gd2lsbCByZXN0b3Jl
+IGNyaXRpY2FsIGNsb2Nrcy4NCj4gDQo+ID4NCj4gPiBPbmUgc29sdXRpb24gaXMgU29DIHF1aXJr
+IHdpbGwgcHJldmVudCBhc3NlcnQvZGVhc3NlcnQgIG9mIHRoZSBETUENCj4gPiByZXNldCBkdXJp
+bmcNCj4gPiBzdXNwZW5kL3Jlc3VtZSgpIGZvciBhZmZlY3RlZCBTb0NzLg0KPiANCj4gVGhpcyBj
+YW4ndCB3b3JrIHcvbyB0YWtpbmcgY2FyZSBvZiB0aGUgRE1BIGNsb2NrcyBpbiB0aGUgY2xvY2sg
+ZHJpdmVyIHJlc3VtZSBmdW5jdGlvbiAoaW4gY2FzZSBETUENCj4gY2xvY2tzIGFyZSBjcml0aWNh
+bCkuIElmIHNvLCB3aHkgaGFuZGxpbmcgRE1BIGNsb2NrcyBhbmQgcmVzZXRzIGRpZmZlcmVudGx5
+Pw0KDQoNCldoYXQgd2lsbCB5b3UgcHJlZmVyIA0KDQphIHNpbmdsZSBjaGVjayBpbiBzdXNwZW5k
+L3Jlc3VtZSBvZiBETUEgZHJpdmVyPw0KDQpPcg0KDQpBcm91bmQgMTAwIGNoZWNrcyBpbiBzdXNw
+ZW5kL3Jlc3VtZSBpbiBjbG9jayBkcml2ZXIgZm9yIGNoZWNraW5nIGNyaXRpY2FsIHJlc2V0cyBm
+b3Igc2tpcHBpbmcgRE1BIHJlc2V0Pw0KDQpDaGVlcnMsDQpCaWp1DQo=
 

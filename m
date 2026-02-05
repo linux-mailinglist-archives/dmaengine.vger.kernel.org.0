@@ -1,186 +1,156 @@
-Return-Path: <dmaengine+bounces-8755-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8756-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2JEBIdBfhGng2gMAu9opvQ
-	(envelope-from <dmaengine+bounces-8755-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 10:16:00 +0100
+	id cJ9HIQxyhGnI2wMAu9opvQ
+	(envelope-from <dmaengine+bounces-8756-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 11:33:48 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26B08F074C
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 10:16:00 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1B42F1581
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 11:33:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7E90D30AA9F4
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Feb 2026 09:09:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 576C7304C56C
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Feb 2026 10:31:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B8C23939C6;
-	Thu,  5 Feb 2026 09:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F322E03EA;
+	Thu,  5 Feb 2026 10:31:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dov8lyKP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2iX2hr8"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466B038E5DF;
-	Thu,  5 Feb 2026 09:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3789D2C859;
+	Thu,  5 Feb 2026 10:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770282448; cv=none; b=V0+dwHlh8I2xY0XOf7QcXAZJd7d7cQxdAerq97a7hs7husw7Xu+1h/57BzRq9MuBSjYi1wtB2rz8OMRB+IkYqKA06gVfBKcYGj5jDCQEqqwp1WZ+d4sVEM8HZDNpxk2x+loY6DSBR7nYEwNfmBEpWY1uw1UnTtqBZWLayBH+3aA=
+	t=1770287492; cv=none; b=Jad2HFXtt2yGE5IiQFEecXmPdKlkCqr5rOf/eneSsF8Xc2c75ihMk7kAqVy869mPrk2iECfuJVpR7NHvNx6sUcb4KOzguEBfgA+O0OkXEnHxjARM1cfJonp0rBniAHN6qixMNGHjyfHBMHFzv3cbD8PTPYqHromLxTq/R1EjufM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770282448; c=relaxed/simple;
-	bh=uql8uFgoiXEVuMriDZhY2MyB/tFenhOYYTPRh/UgmtQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pkp/3OGBuJGRyltwtiZ9hru0yhCIMJxPwYHWQM2y4SBbVUr+6fmpBZ/d59ipp8hlqMGwx6GyRJIWN5LXiVDOaqDDP97RbQfqUVFDe+28mKIhajSO8yG4PwqNw0Bf+mzm9Ibvtd+0SEkzkTc5o8JfNaU8I1h6Ptv2ulZWGJyVXQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dov8lyKP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4551C4CEF7;
-	Thu,  5 Feb 2026 09:07:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770282448;
-	bh=uql8uFgoiXEVuMriDZhY2MyB/tFenhOYYTPRh/UgmtQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Dov8lyKPG8Mc1zgjrnm5kABTVAfnFlbW4CQ04XJaxop/1jZNnlkSuVR3BkkhTJrxA
-	 9bK00A/5ps2vVzXahXH1LmHTrIIb+YA+nwpe6BowvQVVJwa5R4y4xDNGI5p91v+x9D
-	 ZaL+9JzGD2MvX9Og7xrJJZ4WVkRjdrxSuMOfmI2kgWBJjgTNvBjtHaJ9wJ05TP5Zbb
-	 u0JWLLTN8TfZ6zinNXgHJEEkhYgcLL3eg8UfqAVCRKU7XBXGRNMhZhg6PTWkycbEEF
-	 35nq9f1cLS5FBgXx0pAD5UBWEf459huCxNtYGPt5yrSZ9Iye8vCWu47591NQuZ1jt4
-	 0JKSSJt3teNXA==
-Message-ID: <2b9edee7-cfca-4476-839c-b1b1e903c14f@kernel.org>
-Date: Thu, 5 Feb 2026 10:07:19 +0100
+	s=arc-20240116; t=1770287492; c=relaxed/simple;
+	bh=pcP3a+xDAHGsf3sLhLOsCca0XK2h9iK3CBragd6MWUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QaWgAzIW1s2EH0GKOrW8sCaNsxJrn+grHx2iajxAk68e2pKeHCMgyRE+rZREC2RTdgjgwU28kvAt7/ZPKXU/HQy0cK4sDwNUTlU9/4HtdGEB6nZmv9CZ4M97vGvTJd53MM/gnboCZM76lHjMv+ty//p0cHpBm+j3qgYW8F0H4eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i2iX2hr8; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770287492; x=1801823492;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pcP3a+xDAHGsf3sLhLOsCca0XK2h9iK3CBragd6MWUo=;
+  b=i2iX2hr8dfiR/aWb9WJsx7pe+/tQ/iangFK7TMkjChgBBsv+mbz7j4BZ
+   gHwn836fJfiNQp8hZdNCKgZGC6XP2sy4y2wqrS2vAlsBl03XT7MalmBlb
+   b5BLhGI1vVpG8p4qULhNxg67bO2JgY0MbMTueoS41uJuO3jFisp/B3pOj
+   4cPWDFvJMp59AH4efgYa0yaidSINTjMYUEVoULMVx3CUMkb+57XaU57C8
+   MJGzNEYkgi2Uh04npmlGSY2ioyplRaryIIptaxvykGMYgsKPZXGM4jSrH
+   0fbQ8JlPC5/S9PGcPIcHnU1Uhc4lTrHcn3E1i6E0ORz60DMQKkxF4iPyP
+   w==;
+X-CSE-ConnectionGUID: jVuj7dVQTR60yIYO++3Z2Q==
+X-CSE-MsgGUID: MJbKG9k9SvSU0ADwyq3gCw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="71522758"
+X-IronPort-AV: E=Sophos;i="6.21,274,1763452800"; 
+   d="scan'208";a="71522758"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2026 02:31:31 -0800
+X-CSE-ConnectionGUID: JuioupECQDCU2SpJ5cCDow==
+X-CSE-MsgGUID: WgW1uW91RQaT0EEfdeBWEQ==
+X-ExtLoop1: 1
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa003.fm.intel.com with ESMTP; 05 Feb 2026 02:31:30 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 4916F95; Thu, 05 Feb 2026 11:31:29 +0100 (CET)
+Date: Thu, 5 Feb 2026 11:31:29 +0100
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: correctmost <cmlists@sent.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	dmaengine@vger.kernel.org, regressions@lists.linux.dev,
+	vkoul@kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
+ when idma64 is present in initramfs
+Message-ID: <20260205103129.GT2275908@black.igk.intel.com>
+References: <5ed857f5-59ae-4052-8f2e-dac7fcd014cc@app.fastmail.com>
+ <20260203100452.GE2275908@black.igk.intel.com>
+ <5d134f4f-f7f4-4972-9adb-6d10ede5c1bb@app.fastmail.com>
+ <20260204123107.GN2275908@black.igk.intel.com>
+ <5ed53c66-69e9-45e1-9b89-e3d555ff412c@app.fastmail.com>
+ <aYNHeqYYa9ixrksM@smile.fi.intel.com>
+ <e7a0d992-ed5c-4435-b567-e0b873360a48@app.fastmail.com>
+ <72c71247-8b54-4820-b25d-34f659e7f957@app.fastmail.com>
+ <20260204153402.GR2275908@black.igk.intel.com>
+ <0d13a547-5f4c-4d5b-83e2-3530469d36c1@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 19/19] dmaengine: ti: k3-udma: switch to synchronous
- descriptor freeing
-To: kernel test robot <lkp@intel.com>,
- Sai Sree Kartheek Adivi <s-adivi@ti.com>, peter.ujfalusi@gmail.com,
- vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- nm@ti.com, ssantosh@kernel.org, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, vigneshr@ti.com
-Cc: oe-kbuild-all@lists.linux.dev, r-sharma3@ti.com, gehariprasath@ti.com
-References: <20260130110159.359501-20-s-adivi@ti.com>
- <202601310444.S9H39g4c-lkp@intel.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <202601310444.S9H39g4c-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0d13a547-5f4c-4d5b-83e2-3530469d36c1@app.fastmail.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8755-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[intel.com,ti.com,gmail.com,kernel.org,vger.kernel.org,lists.infradead.org];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_FROM(0.00)[bounces-8756-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[sent.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 26B08F074C
+	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[dmaengine];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,black.igk.intel.com:mid]
+X-Rspamd-Queue-Id: D1B42F1581
 X-Rspamd-Action: no action
 
-On 30/01/2026 21:37, kernel test robot wrote:
-> Hi Sai,
+On Wed, Feb 04, 2026 at 10:53:57AM -0500, correctmost wrote:
+> On Wed, Feb 4, 2026, at 10:34 AM, Mika Westerberg wrote:
+> > On Wed, Feb 04, 2026 at 10:12:57AM -0500, correctmost wrote:
+> >> > I will try to debug the config issue and retest the touchpad with the 
+> >> > proper config changes.
+> >> 
+> >> After fixing the config issue, I now see "Dynamic Preempt: voluntary" in
+> >> the dmesg output.  I also see "# CONFIG_HID_BPF is not set" in
+> >> /proc/config.gz.
+> >> 
+> >> The "probe with driver hid-generic failed with error -22" message is
+> >> still present and the touchpad doesn't work (full log attached).
+> >
+> > Thanks!
+> >
+> > I don't see any other way than adding even more debug. It really should at
+> > least be able to parse the report descriptor as that's exactly the same as
+> > in working case but let's try to figure why it fails. Can you add again on
+> > top of everything this one:
 > 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on vkoul-dmaengine/next]
-> [also build test WARNING on next-20260130]
-> [cannot apply to linus/master v6.19-rc7]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Sai-Sree-Kartheek-Adivi/dmaengine-ti-k3-udma-move-macros-to-header-file/20260130-191306
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-> patch link:    https://lore.kernel.org/r/20260130110159.359501-20-s-adivi%40ti.com
-> patch subject: [PATCH v4 19/19] dmaengine: ti: k3-udma: switch to synchronous descriptor freeing
-> config: arm64-defconfig (https://download.01.org/0day-ci/archive/20260131/202601310444.S9H39g4c-lkp@intel.com/config)
-> compiler: aarch64-linux-gcc (GCC) 15.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260131/202601310444.S9H39g4c-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202601310444.S9H39g4c-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    drivers/dma/ti/k3-udma-common.c: In function 'udma_desc_free':
->>> drivers/dma/ti/k3-udma-common.c:103:23: warning: unused variable 'flags' [-Wunused-variable]
->      103 |         unsigned long flags;
->          |                       ^~~~~
->>> drivers/dma/ti/k3-udma-common.c:100:26: warning: unused variable 'ud' [-Wunused-variable]
->      100 |         struct udma_dev *ud = to_udma_dev(vd->tx.chan->device);
->          |                          ^~
-> 
+> The attached log has the added hid debug lines.
 
-Did you compile test your own code before sending?
+Thanks!
 
-Best regards,
-Krzysztof
+I now realized that the dump of the report descriptor truncates it into 64
+bytes so it can actually contain whatever crap that the controller read and
+this is probably why the HID parser fails. My apologies.
+
+I think at this point there is not much we can do :( You have the
+workaround, to put everything in the initramfs (or built into the kernel
+image), right? We have asked schematics from Lenovo but there is no
+guarantee we get them and I think those are needed to figure out how the
+touchpad is connected.
 

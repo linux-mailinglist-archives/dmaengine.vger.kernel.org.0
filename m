@@ -1,82 +1,83 @@
-Return-Path: <dmaengine+bounces-8761-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8762-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KNA/CQfBhGnG4wMAu9opvQ
-	(envelope-from <dmaengine+bounces-8761-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 17:10:47 +0100
+	id yE9QH2XBhGnG4wMAu9opvQ
+	(envelope-from <dmaengine+bounces-8762-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 17:12:21 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77F95F5034
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 17:10:46 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15380F50A9
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Feb 2026 17:12:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D5A1C3010D86
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Feb 2026 16:04:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 76E77303A915
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Feb 2026 16:06:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D3A342EEDE;
-	Thu,  5 Feb 2026 16:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C385142314A;
+	Thu,  5 Feb 2026 16:06:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="PiwDbU5+"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cyRcOgw9"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013052.outbound.protection.outlook.com [52.101.83.52])
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013003.outbound.protection.outlook.com [52.101.83.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13447428841;
-	Thu,  5 Feb 2026 16:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356F1279DAB;
+	Thu,  5 Feb 2026 16:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.3
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770307482; cv=fail; b=JGQ5aq2W/ak+agq+aWikTAKiT0l0vSPGLi8dnTgQMoRThsbzvGwCXJHPR6gR7YbZfApC0S+OnvJDyoUdcSJFbbTrJhOFdclubqilMYviIr4cIAJr/5FwqxYebkkBAVHMi6gqOgSeI0x9s9ISitGuOrpOPZDFUeTBp0UlYVlLGgA=
+	t=1770307562; cv=fail; b=gW6Xm7H2r/zSHaxHuiYsq12i0XR3/MHOEKJ/089XEz3rs1skkjTWiz1ThOISuuraFXJPQvWX8lgQbgLmZAs1SdwEMPFY7DTBSrOMDiBI7HF6DD3W9z1kgyhjdGCtp0l0BqntB+O1HX2Phgr7E8qzTF0s9vT19ZitGf/a7oHcKfI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770307482; c=relaxed/simple;
-	bh=5MmG4So9kSW+bRUr4wBrQX2MD/reecwS89cxTQNyhw4=;
+	s=arc-20240116; t=1770307562; c=relaxed/simple;
+	bh=+Wv2CjjSnkWd4PW0w/9V20Ol7Spkmgpj/sBTcKAVD6o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IbSaVFj/nVnZiRjiO4EHHmj2IJ0rSlU6BanGeuV9aluYKzsv/+1umF3hvTKqnEN9Ib7BGh4Zgyt/X6l4sm9RYzdigmZfs9FKSr3wasj6Nq3MW1OhRA4j6jzVm0PtsGMRcdM9bxgF/QHUQPybSq9IQUMURZYld4Hz3qfVyMk+kgo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=PiwDbU5+; arc=fail smtp.client-ip=52.101.83.52
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Y4TqCyy0svyPFTFG9Ajf1qe+37dAKeQZEkt/0rVgDBG7/bIdsDnvrSJbQR6HVfHEBy9lvbXZmvWZb4zVugWx0bbiftUNCg1qGz3rxKRXotxA8Z5U71ZOZ404U16zh9inM9axKHe/LQfKCg3O+QtMsthgo/F0+t1p+E5WfrS0Qms=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cyRcOgw9; arc=fail smtp.client-ip=52.101.83.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Z+U+jBbBx6oMotJdF/m2UE+WdEM3loulSRJk+9TysrOrK2z+H2SYYrp6DR2gKzMFDdp+rfruEzTUiiVEfW4d3gNrAXrK/rWUIEpAUpgJxxXm1Ed9Fq8xTHnJxU5jqzEpFk9IFrjV65IpfAA7aVHoAlWfQaKmUEGUm2tfGLYMjh2jGZ/KElGJvhHVUqx6C4DNZbmsmdsFop7BMH6Dh8iULvapH6G8Vww45OaXezssekYLCX3jVJJnS9VZLvStGwqcd6xfRjbPJ/eFuoRDjRxj7CdKGMjlmYPisOz8Z6rVZPisMKuOF9eM4rXDEEiJlVxa+MBqO1Fcj4T+qlEZkZxa9A==
+ b=KTsLXUF8/8obyBWZswOimCgA5oGPmYweH/sLDAQBXbwH2ozhBa0TvUJRqjb2x1Htn4vXfyPd7K3f4LBjGp11DcC0pslSsAwlAtF6s+aL4QhtCL8ZGZiyjujrY6rywNTbDph9RocY42R5EvyeJVKHyfVAEwqLx+HTX2tX/9ktC+f6FzOQe+97na92Ol1NR5XavBMGM8LE3Z8Mt8FpzjDEAe54JckJEPCGildFuJhzjah1FcsiLrbL9U0WIvqXqoT0U9ZBqp/GHDDYxU0lrUFb8rY+cN+Pn6mfdlSeKe2DervsrqVEfEPf9ehfETA5TSA+1IGEyIOhuGC0RAgHLO4bdw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jvZ0mk/sLJBJeIQSLmKLH8fWMJ3DaSvA+7z5vmBTEgI=;
- b=VSptlLTtla36+C6sw+HqLf7bIfUKKcXjY+i397gJbyyEDZ555z5/PL5SgJaa3zzcBQEb17k+Nyo85NzsfpGS2amL0dzNm3lt8pNX/F95fWcoOwWSc3VWrJvSnfZHu60q35odhO6AAFMp6bPoWqDS/Wrm1q3oGhX9hRDyAHxI1y7668Q7HZP6SnFRFyFKSZZ/FJhxQdDOsqsvVpDfT86aIjvmuoFl+Y/0GXxI1l52h7EFWFwj2NMDTH+Ft0XFJrGQsG3XKuXbjVQCYOvrDxPlRGUWM/28t8//iLmQhaBo35qS7r6zi2lfPkw5QQaiTcxLla1uip8v2Z3DxK1K/pwblA==
+ bh=UuSTT2cq/G4LR+krUT8j8O84ZygPPmznG5x3yq2BVOQ=;
+ b=AxHUYbu6nwf9K9zjjKJLAK4mFYDSinEoKZ/m42iV8CMVuKao4ufAw9oXR3GcQt4zVau9SydlX+s611MPCNfjApXGYigb4uFCw4LEovyr8a1sTsfMFLyuXc18RZ87shTwvq79dIBT3SY+OTPpAA0i3JMSOElVCmYeaG3u7UealUMJ29zAny8PvMxbXq9ld78Fp51hc1mrW8/gI4psYHMutRjktx/Z4ym89SwPsdCI+xd/ANfb5tHGKtJnKZ2/PJtLbbT5UIw47Gj1oP8R101UR8WFx+vBU4Tr4we3u88l3DrvYNcvpEPTpyqBWG1sdvSmHShoUUSmugc21XfS4dIMwA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jvZ0mk/sLJBJeIQSLmKLH8fWMJ3DaSvA+7z5vmBTEgI=;
- b=PiwDbU5+AA85uYk3eomVtbQCRF4/YcHZnQTDoj4MoQ4rsRAxJvtmvu139ThVidaW0rcmhnACh+XkMLNQpUkL/V0F0lccevVjawf8CrHol2Jb1kAooytnIMo+KG8XSeJILkrDAmbc5uGA+b5iaNebqstMGm+bs72rrQX80HyOvjGYVRBOs4SU3hjuMkb623TrKjQ7dQWYjajz/BnYviCKmmrkY4pywE9LX9akRLbelr/M0e2kjQUETRlKPZLx7c3xJZFlc1iwY/8E0/VfgpGshm2kmCHR3tSqSSOfyfjQwOLLg+ima5x/7TCINHcxVEWdJm7Du9ANC7DmYpI57R+YVg==
+ bh=UuSTT2cq/G4LR+krUT8j8O84ZygPPmznG5x3yq2BVOQ=;
+ b=cyRcOgw984me/Pxovi3+h2RJiGXnQq98tsJ5J/rsQNdeQIasPYCp679mwDbmHM7vAR7hxuALxTUVaPgVIJk6mw3xrfll6tGEDGTBMbMCzTPt2jTkX42srEx0WpkrywpP46lljkKHgtAJ4PvYLx/scUEwjmwZGNZi6kNr3Pm97s3YVP7xLTKClSUHxgaO4LCgEwULXDMG7NEy3STACjZnEq51sKaXLOLw0o81h8DKoBFnfNmouCQEr/xrX7HuPgdOrRQ4xI+9Se4n5wX2l5XY8iqdRg1WB6K7UaZJG+I5e12A+SRZJcqtRjL4Gs/J5UE+7jrjmIQp4MdrYxAjrQzX7g==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
  by DUZPR04MB9899.eurprd04.prod.outlook.com (2603:10a6:10:4de::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.13; Thu, 5 Feb
- 2026 16:04:38 +0000
+ 2026 16:05:59 +0000
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9587.010; Thu, 5 Feb 2026
- 16:04:38 +0000
-Date: Thu, 5 Feb 2026 11:04:30 -0500
+ 16:05:59 +0000
+Date: Thu, 5 Feb 2026 11:05:52 -0500
 From: Frank Li <Frank.li@nxp.com>
 To: Koichiro Den <den@valinux.co.jp>
 Cc: vkoul@kernel.org, mani@kernel.org, jingoohan1@gmail.com,
 	lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org,
 	bhelgaas@google.com, dmaengine@vger.kernel.org,
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 01/11] dmaengine: Add hw_id to dma_slave_caps
-Message-ID: <aYS_jsvr5c5ZMcXJ@lizhi-Precision-Tower-5810>
+Subject: Re: [PATCH v3 03/11] dmaengine: dw-edma: Add per-channel interrupt
+ routing control
+Message-ID: <aYS_4Axy9Ts7WDDb@lizhi-Precision-Tower-5810>
 References: <20260204145440.950609-1-den@valinux.co.jp>
- <20260204145440.950609-2-den@valinux.co.jp>
- <aYOgV-dmeA8XjNyw@lizhi-Precision-Tower-5810>
- <f3byxj7aup6sixkxixtayamh4m6q3df77rweiawbmmtcsw4boh@vbfbjhufe45r>
+ <20260204145440.950609-4-den@valinux.co.jp>
+ <aYOFEe-zyu4ZHTAl@lizhi-Precision-Tower-5810>
+ <2akk754wgro2fgs6wradkqtuzu3tfq5klidvy4qhosnk6lbgqs@7c7thld5kqn3>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f3byxj7aup6sixkxixtayamh4m6q3df77rweiawbmmtcsw4boh@vbfbjhufe45r>
-X-ClientProxiedBy: PH5P222CA0010.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:510:34b::11) To PA4PR04MB9366.eurprd04.prod.outlook.com
+In-Reply-To: <2akk754wgro2fgs6wradkqtuzu3tfq5klidvy4qhosnk6lbgqs@7c7thld5kqn3>
+X-ClientProxiedBy: PH7P220CA0150.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:327::13) To PA4PR04MB9366.eurprd04.prod.outlook.com
  (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -86,97 +87,96 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|DUZPR04MB9899:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a5d2375-1e53-46c9-19a4-08de64d0435f
+X-MS-Office365-Filtering-Correlation-Id: 90728dee-8049-4eca-f19c-08de64d073dd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|19092799006|366016|1800799024|52116014|7416014|376014|7053199007|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?+9iopub7iYTZimdZl0KT33XXdkIcrzigo+9dCwrnDmjef2WxTt9qxC3bObZl?=
- =?us-ascii?Q?xh8wwfBTsCletWqHGJJ/2qiHIxf93dJSLjDa8Ercw2YsvdXW+ugXzAZw0Wku?=
- =?us-ascii?Q?PCmHRvPoAsGbEO9RRtAi5c75hnqcqS/81AeBSRqPlAqrOXXsg6iXjHlj43Hr?=
- =?us-ascii?Q?n64/KDDGl8PqSbOhvo5Ef1GsDGKCkiTZId3BpKTn3iHH1QHK2yPQfHewf9Jb?=
- =?us-ascii?Q?m3rYe9IKQPz+iQT32hgmQtq850Vs14Qw/gEvWReT5X0hO017beAcH2iVGfI5?=
- =?us-ascii?Q?GOJoZbiUAgOLf/RJsbSmezfY05u8osEsz5cYL6MUThszgudAJU2fvcp+MjCI?=
- =?us-ascii?Q?i1UPzxOQz5X7Nt/UyxyNJgpMITiZB67pDfqzLbENdYR2l3Z/WLQlNGvXjnhd?=
- =?us-ascii?Q?74TNV3ud4qbG+m2asGik/w/POvy0U4WlHDKzsXYSPq90aYRF6NbiRNrgyNnC?=
- =?us-ascii?Q?SizAb+5Hexf4WUyMEvJkogcUEE/ZuxFosid4vYkWW6kq9qhGyZ1/6VtpZlQK?=
- =?us-ascii?Q?YjrJpDCYnK0wi3c/KA7P1zwCnELu2cUV/HTyxXgPHoKiUxr3VVOGGghakOB1?=
- =?us-ascii?Q?2UN+q4Ns/riduWT+1khmswwOs26gG0a9YEqEW0tXgU9v7ouHkTFfeRkOvRvK?=
- =?us-ascii?Q?vkpPSQW4BbxOpbGqT5bZLuQxTfFwaUwglB9AYkLHctxj+eqIXI2aaI+XBE/n?=
- =?us-ascii?Q?jLq5BaBDtc53UFt7P5bNq2Ojgl6SsbQM3cTQ//+Jw+/hvZjjMOZFASmxbLJ+?=
- =?us-ascii?Q?aXIpABJASeXfGHkKLLBNI6tSYtX1LlEy8q9o/xjXEmPw3h0a+gpu6IzZ2B+5?=
- =?us-ascii?Q?Si02MyMZtu1iGv7lLa8dkN/pXM+sxEyTelzx0duZCzSw/PxZPf2BQxsOCsqo?=
- =?us-ascii?Q?YWv/Moj7JFkWkd0MVH8mo0LzES8VX09Xp2ysglnVqrI6ddHWh9PFUnFqzpTj?=
- =?us-ascii?Q?7TVECOvgbM43wOEyYAby77kGSQUULQGfHPIL3QiPBaOQ52mcVtDsU8kVC/hA?=
- =?us-ascii?Q?1aweO0Ta5kDV682xanPoP0OzkCyui7MJlkhQ/pchJPkOtOOPXxvga5Y4NLmq?=
- =?us-ascii?Q?peNNATSWyrjVWHPCkoqa224Z01itkT5Y7QX3GwYOvIynP2x7MX7Z9Wc2/Ne1?=
- =?us-ascii?Q?MM7TKN4DvhmcX50Eoog448vTb6rvvJ+N/JdaCmW+jZdqAt7PfEi3Z5nL9Kq7?=
- =?us-ascii?Q?RG7sGPxA89DYfSwWciZWXRP7CuriHoJ0+5nsbInUsgnAsN6YJDITs/jV+v0J?=
- =?us-ascii?Q?PdH6hY4Jua3E1JsGkcH4nhrn7G01W8nU1ClNDPzMcf+1yavErhO5wTtz1nEf?=
- =?us-ascii?Q?UCajb6LsLXbvLCvweQDEZmeJZRPWsnWq3Qib9Rg732HRMXz3DJ+YI5JCxzyX?=
- =?us-ascii?Q?91NW00AwlLpiwYKkH+VS4nk+hxbFF8c05AwHOAKf09oda9O+hAFIAf2+VXGk?=
- =?us-ascii?Q?tKBJnd+FIPsK7iFc7UN0Yf2IiP9TGjDuxC54s/jwylVkKX5ccW62O520ajif?=
- =?us-ascii?Q?TSJ+jypgcd9V963fgmS5iJVBVTbyMpA4vvDY5tkvzE4eTPs408IdF07+zcVU?=
- =?us-ascii?Q?FeRAGoYkd525un3kdNHNPQoVpZjUqwKySRF1mcJyz4+aFvNPe58naiTSwDGB?=
- =?us-ascii?Q?MHgyZh1OwmwMLOq2hj3BQ1g=3D?=
+	=?us-ascii?Q?9SoFLXycYNUmPj8HcfOnvaXn/bwpOIwMrFJfoc2BkTPKE+L6deWXZtVBwwbg?=
+ =?us-ascii?Q?TcBnNqoJdH8Zg5YYF17FPYTLpBfuX/i6DwqE8Vrym2et+jK0O/FweW1d1onk?=
+ =?us-ascii?Q?p8Bh4R+pidqnMpNyJlWUG79Wjj/wL21U8yV0xcgwUCvI7lJCR689CZ1F/TZ9?=
+ =?us-ascii?Q?8hhH90NclZ5I/RFt2iq/D0ccMROhFHGzzaX2kDqS2IluVw4gf3PQ0eamTvy2?=
+ =?us-ascii?Q?SF/fiwFz5W/VFToE4OyMPBMlPcxtgBJERqWCaZA5kWJ28Dxg051f+48laMws?=
+ =?us-ascii?Q?N3LMFdPQaBT3QH1Xny/vfILGCpZrJRpykoeCibWKiGQd8C0tOfmtO6H/uuCU?=
+ =?us-ascii?Q?jFionoNirqvm0SBeEz9yIB/h1OW0D5UOTIFgLkNcgYUozVwDPS4j0G9tP6HC?=
+ =?us-ascii?Q?3nLwv5PjyIHdigNBfOQ/uaIzA7Bdz1VfBXZKqzEWfASxWeEIl5CUJuvIni0a?=
+ =?us-ascii?Q?/i/80oZSXv784NzXXAtktWnC+jYrN4Tlr2FLPg0DY5+gKeawFCBJx9FMOcCf?=
+ =?us-ascii?Q?qIRBq08pVjI5N3JD6DYjqRnsUu4VyUbkC6lb+oADRr9m87phffBMzmOewYKI?=
+ =?us-ascii?Q?sS5qJeuop/8/A06uWFo+r5BhdWi2Xj71/0uQcgo27ufFQKwff1dn1KfiuKaV?=
+ =?us-ascii?Q?GYMy+wNA5Wa5sWWWZyUItyl39p/cqDBhm6sbHc+CUUlq1cCnePwIDZe++8Pd?=
+ =?us-ascii?Q?On5iNT2ior1q28axpWFcBMm5Q+BnrGwIbHw9zcPlXYKX2/DmzuKB+4SiH2/u?=
+ =?us-ascii?Q?aZpYkK/c4rGIE6X969j5hWKMk/ypKjkUjeYfIzTzhGkc5IVIdVptqAez5Zo5?=
+ =?us-ascii?Q?U2NrVn1o9uDXk0gSscpVvkZQNNhj57+ybgsgWLiPYbV0bSAWYtHId5yGQs8u?=
+ =?us-ascii?Q?3L3lxOQKCm+PaKVnqJybszEscBeSSINrkQADbeRI1zxHDm/W1+UF50ge1zrw?=
+ =?us-ascii?Q?+ldfySJ+MoLFwg+nFyw9O5YFils0SKAXlmck+dUuFBV+L8mq4IdhXzkjAF74?=
+ =?us-ascii?Q?9801WWyvC5HYDUFxT4l2u/nQmdkYVXFUyyH+z0Yz42EzHqx3hEzf+tY76rko?=
+ =?us-ascii?Q?ODbSbv8NFiXbypZ9QasHnNlkcfUAkZesSrOKm62+EPPWSKwS4QufUioEpyTX?=
+ =?us-ascii?Q?G/uyJ4BbMMC3rJBdOy6wAlNlFfSg89NmDeNFH3K3s33mie9NQjFncua7Grnd?=
+ =?us-ascii?Q?iRcq/astpnkvCuYsgC69Hm67C8I4VnuQRgoZnipq0NQi04svk+ixtN0QwdX9?=
+ =?us-ascii?Q?BAmHLWyb0rX6BVLQQmhuviYT6/zO0RyOOOIu6TXxT9MM2P7E9iaZd36ZuWHr?=
+ =?us-ascii?Q?wPDK+HT3GjTOm5vkbxOlP9dTn3cpy+2zi5m3plHl90Y0gizqXkXdI9GnXK9f?=
+ =?us-ascii?Q?OAuRZMl/pDxJTroGU3g8Ua5a1fuZVSeKMHFgsfbME2C6CT59wDjRK95zGn3I?=
+ =?us-ascii?Q?ZA6ot/choRkzoSWWnJ84CLlar58Kza19Zihws7YbELHPuh0XKuHbIMzmFJE0?=
+ =?us-ascii?Q?hqLazlb6cw+boJDzW0Emp2/ny3Wi6K1kJ64nEnp7k8Tjj0pj6/ycQtwvRjqV?=
+ =?us-ascii?Q?UAiJYSjk9+2z0zeQK4Z5VmPqrXYYqeVDmTv5+YJ0eLYS/bMTMOkfpETK2W/x?=
+ =?us-ascii?Q?2l7xuU1llgkhc1d/RudDH6w=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(1800799024)(52116014)(7416014)(376014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QRUQUcRSgNFdLJ/lzZhRl0GrPzNdvPrdgjLbwcVkAIEOl02oy0t8p/o10RRV?=
- =?us-ascii?Q?Y+MymA5D8yJoDMctn99s871cl20ss7FKGNSMKCI2iKaMRzPzzQSUCbRqT/c/?=
- =?us-ascii?Q?jbz8Pu24qdBGuqTE9f6c/dSaT683eWuyE0w9egnesA1ZtqgyhINNJfzfHglZ?=
- =?us-ascii?Q?cZycMCWN6Qhoi+uVklHUuC29GqwN+a7BrVdOot0ysF5PXo2xiiPOKanxTOio?=
- =?us-ascii?Q?OVTgHPNMB0rCfk0M/qLqwQNcVSOmFm4vhVQ19eNq+yZGA1VRL7wftlsICrY9?=
- =?us-ascii?Q?J77sFUV2uxw7qkts5+2Z03uFHmoNIZtbeY/M2jzCcGuFuSTmNUiqLDi7Objp?=
- =?us-ascii?Q?givr0VLGkoToDrGNVDExCL1iJa3Py1iDL11cLYmP8Y1ba7ROZGZrWqXuEESQ?=
- =?us-ascii?Q?eAzS9wb7Z6lvNq02GuA17Gcrcy7O0A01VMMwbGKK3Qug5dEx+iWij5bph3ze?=
- =?us-ascii?Q?QPLIkuPsGOfbc+vmoQdz1NKxbYQL2BfUHXrEUM/FWXK642fXuVqgdaUILU1V?=
- =?us-ascii?Q?G+0/wH1SzNjggXp3BLJFIsPgIPZgYqdZnzJjmxtE7Y2pfNPy3YgmZFD02+2D?=
- =?us-ascii?Q?YY20ckZboge7sqH9r0EppXqE8KTMmS9uOHQVtUXim+Cbi3Qev92qnwH29jXB?=
- =?us-ascii?Q?aWxLTZh8HURtWWKKSCewHGH7lrZDetSEkVMRqKYLCxYtkMNE54YgJqnDT8fc?=
- =?us-ascii?Q?o+lGhPG5N00j1v9dQHwhUea2Qe/708ufKIrmOA4nWwe6IjZpBW6KLxqNUm4H?=
- =?us-ascii?Q?gbI4qkSRpmd22qJnD2odJIQ88/kO2QHd4C9UmY+MJ+an4FNEs9PG+ntoAlDp?=
- =?us-ascii?Q?SyuknFyE5yeU5VLEXB78uraZWaPB9i8mt/APgxqi7+JreyY3FXzg+5CAJXIg?=
- =?us-ascii?Q?IXvZYx3RUGSpNJRCOUhoxJMj5fmHulQgbvakJX+2UwcdJcE6WtmHyjlwqNDL?=
- =?us-ascii?Q?bc87yI4+WRUrQfCQ0tzigtsarFIOf+Mk5hiOWhXA/cOQzbfiFOuAbHOSXLzW?=
- =?us-ascii?Q?1lqXIVzt81ma07lvxVmYMaQZIzcVlor8X/b8dw6G97cHXIoe4By0tibpCWET?=
- =?us-ascii?Q?YU0OmoLpZyaxncfdJjLBqHFGO+6gAELYdNuC85gwHByQl1VXjdj5CapkdKN1?=
- =?us-ascii?Q?fae90O2ojK8XmIxEPNuNKXaOWpNtoUgPso0fukATSgM2zjRIUSX3wygBV9bF?=
- =?us-ascii?Q?+ofGoSsA6Q+jYlZx21p86/sp3f0DNYzDX7jcdOQrH+eeI7bBPMxPi2thlZZJ?=
- =?us-ascii?Q?qu7qNOuS6vhpjJD1WiYw2wRwkqPcUrPBc3xuZka9PHhToBP/6k+USvxYUY/s?=
- =?us-ascii?Q?3Y/7cvylzePJQIu/Nat6u4P0qdo7vkxNnY9+2axDYkK0N1bOoR1fyF8JDr8M?=
- =?us-ascii?Q?vrdp2D8oQIX6OhtvRKW28F0jMT2vopognRhzFVl+EqPLYXxH4U2TyVKJpu/5?=
- =?us-ascii?Q?xHHekNuHaLrgftp/mfdBuyMRUpVAR1kWfSrfv+uvj7FGgLyV8fF0ArwKuFsw?=
- =?us-ascii?Q?TCyFZ5CmAiPOrDXscg0VmfpNLi9tIQi5mf4KkrXA8GKiMT2VYJscuI5A8z/t?=
- =?us-ascii?Q?qSVuM2Gh80JjESQ7NeaJUO1WYvNa0x9P1XhTMy+Pim8IlkrWd5g54WcB5rDO?=
- =?us-ascii?Q?yrBigNUaF4zX12JsbrPPFcDlo0GBN3y4GWSj2LBHqMSxgvs8B9N4ugbhW3hC?=
- =?us-ascii?Q?jC3Ci4kDn+a5ND6gCrk8mBwN9yZp9BxGU4PqtyzmU6thec3UMvGkIEoc6ZWc?=
- =?us-ascii?Q?J2Twyg0yCA=3D=3D?=
+	=?us-ascii?Q?xYKWzcVqwZF1m99RKbA4R6iNc9oLulVH6hb7ATf0M0EKc3AUJCLojTnuGQE3?=
+ =?us-ascii?Q?GSS/85jxQQy2BGFAWUoavOUZjNuS1i/tjbLAzUMmSptqeLwqdKlG3O5Ty8wK?=
+ =?us-ascii?Q?XfDFdi77UUxD7ZLsGqqTXJbUI3u/L9F/n3fIblBnbZSEq0SFuIuE/Dbwq43k?=
+ =?us-ascii?Q?nAevSNRHSoqLttk6n1k2XXhPVc3izUNDxG1hk1wIDj2pkIQePDumGInI3m+D?=
+ =?us-ascii?Q?CVUkfbqn/qn+h/xGFbMd8RAwm7r+VmxNxwnlMhktTkmVJPSY2WFD/Fb0NdNM?=
+ =?us-ascii?Q?gbLfXPjfIU9iCg6SQWSkaPWbGxlaTl+7yrcSpjFd8Cx1TgP+Ume+4PtMK+P9?=
+ =?us-ascii?Q?LFzNMYpvSotYbICI/GkIm9xNKXuhNRTTQc2OzG55ez6AIBxC0mMuf/QF6u1T?=
+ =?us-ascii?Q?LMKmjx5M00aQXkEH2TN2B4x4UqXDmQaq2YtO7WHCjrgYofZ61aE3j4BgdrvP?=
+ =?us-ascii?Q?ToD7kR5xf3LVwCAb30lFxAqmEkrDKczAHrAkaYHiLznQx8U1hlEfHKgMzCYZ?=
+ =?us-ascii?Q?RprxT15+4nEKdrGFxNCifOw2ES2xtxdhs4MMxv1FXzGixzbKPYsGqgBmIwQC?=
+ =?us-ascii?Q?efEMXD/nZt45tF6NJIsDpOF8EsnhGCZ14RSmZTu2GDK1R4tUqnzLXktVdJUf?=
+ =?us-ascii?Q?SssNfCcJw+oVOVi9dxyXaykYOj9uMo37MiOg5V9LpcQGpxWaRerOwUopw6kK?=
+ =?us-ascii?Q?Ns+0AMtjmjAkkFTHRGuE3w0izkhIOb7CwW15As4tvqjdbX26tb0mJEfHEnNC?=
+ =?us-ascii?Q?kkU5PBI80f0H8tDq9aLty7d8MU31+E0kFlP97rnVvefeFkSxFh7w7QwuixjU?=
+ =?us-ascii?Q?G5YVVlHRY2y5eqV/NUewSGIFFnI9yEU4vUVeg+M03uDwCXFSCXzmxtUz1mDI?=
+ =?us-ascii?Q?tET+LClYNAQno6+ppX3Znogti06nxct/bPSDdnPmMZ6basJez5CqtGMHe4Q8?=
+ =?us-ascii?Q?bAJxkPxKTrqLXmRYx1Qv4o79/oR6IKEFifZmBGztAQalU+9cw25Reb8ZYpJ3?=
+ =?us-ascii?Q?VKjL1BG2awma09RX7onIITYnF9Ywtu4f4sMwkssxs5a6CuOK/99Goe7Y2cxt?=
+ =?us-ascii?Q?AZaKUqLQEIMQTUX1mJLhCUKvMPAXh7ffl/Ne9lW8gmzmX8bNLcBV4ZU8foAz?=
+ =?us-ascii?Q?ir21eGnyrg5nWIOhXMnXQt4h+z5rHikRvGkf61zgcuAn1OLf2d8T0gpO+SKU?=
+ =?us-ascii?Q?2Ef+93sBMhZYcKCIz9pT3k6YEMjf8sVRrmDj8jm5Usn0xFY/lNjvDpejs8Tm?=
+ =?us-ascii?Q?IDXbKj0BUkkPZUP1LBeISbYTG5wgizV+gkJozKLcqSR++nnFRmGpNA3CWIVP?=
+ =?us-ascii?Q?Tj3CwHiAO1NK6aGJCOY73Aj/+NadRQIAgfsNvgOAeTrsrnUElxdCXq/lWsWh?=
+ =?us-ascii?Q?Gc5/I5YGtyX9kwm8pAnH9ISaotT+ESA76a9dZF0TPlHCjL5FUDno85YSyHoo?=
+ =?us-ascii?Q?IY8EZULt7ne6UhFwYTzjeVw+/x9es5g8h8qVmaIXb2xnj/TabyJb9I7wReEI?=
+ =?us-ascii?Q?lGfuWtxva8bFjTKcZuCVyaa4wyOglDf4KVnJHKStv4EtgAOc7HymJQIRWVVa?=
+ =?us-ascii?Q?Xf5pOiCgjLlrssTIi5ICcS4k5+tlZK/pRtQZ7QUvFBbRd140mL40pSV1rxnZ?=
+ =?us-ascii?Q?Yud+LNLYEjWdBeqtHY+Ij5R29lIzTU8j8HER4jFjQooItO8Xbi86/ytyiv53?=
+ =?us-ascii?Q?JeGG5KXDqG9CsaiGKrqcPNOXbsuHmxsLyFcr2BDcg1MTFq7s?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a5d2375-1e53-46c9-19a4-08de64d0435f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90728dee-8049-4eca-f19c-08de64d073dd
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2026 16:04:38.1005
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2026 16:05:59.4813
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2iZXAK6qvIGSaKr+pGvaHkrZaPKpw1E5y6vMPybhT+3H1KDpqwL6tFzY66cXzOJN3y6G5N8nSwFs7PmNTGZHWQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: wWBVdNteheJUknVdh3hdJdy0cuVbCX44vlU18GmCKmdLYt9fqDFsWDKJVrhaK+IHUruap6R4jsJpxjKWQU06uA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB9899
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[kernel.org,gmail.com,google.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-8761-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8762-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -191,106 +191,160 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine];
 	RCPT_COUNT_SEVEN(0.00)[11];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[valinux.co.jp:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:dkim]
-X-Rspamd-Queue-Id: 77F95F5034
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,valinux.co.jp:email,nxp.com:dkim]
+X-Rspamd-Queue-Id: 15380F50A9
 X-Rspamd-Action: no action
 
-On Thu, Feb 05, 2026 at 03:46:37PM +0900, Koichiro Den wrote:
-> On Wed, Feb 04, 2026 at 02:39:03PM -0500, Frank Li wrote:
-> > On Wed, Feb 04, 2026 at 11:54:29PM +0900, Koichiro Den wrote:
-> > > Remote DMA users may need to map or otherwise correlate DMA resources on
-> > > a per-hardware-channel basis (e.g. DWC EP eDMA linked-list windows).
-> > > However, struct dma_chan does not expose a provider-defined hardware
-> > > channel identifier.
+On Thu, Feb 05, 2026 at 03:48:30PM +0900, Koichiro Den wrote:
+> On Wed, Feb 04, 2026 at 12:42:41PM -0500, Frank Li wrote:
+> > On Wed, Feb 04, 2026 at 11:54:31PM +0900, Koichiro Den wrote:
+> > > DesignWare EP eDMA can generate interrupts both locally and remotely
+> > > (LIE/RIE). Remote eDMA users need to decide, per channel, whether
+> > > completions should be handled locally, remotely, or both. Unless
+> > > carefully configured, the endpoint and host would race to ack the
+> > > interrupt.
 > > >
-> > > Add an optional dma_slave_caps.hw_id field to allow DMA engine drivers
-> > > to report a provider-specific hardware channel identifier to clients.
-> > > Initialize the field to -1 in dma_get_slave_caps() so drivers that do
-> > > not populate it continue to behave as before.
+> > > Introduce a dw_edma_peripheral_config that holds per-channel interrupt
+> > > routing mode. Update v0 programming so that RIE and local done/abort
+> > > interrupt masking follow the selected mode. The default mode keeps the
+> > > original behavior, so unless the new peripheral_config is explicitly
+> > > used and set, no functional changes.
+> > >
+> > > For now, HDMA is not supported for the peripheral_config. Until the
+> > > support is implemented and validated, explicitly reject it for HDMA to
+> > > avoid silently misconfiguring interrupt routing.
 > > >
 > > > Signed-off-by: Koichiro Den <den@valinux.co.jp>
 > > > ---
-> > >  drivers/dma/dmaengine.c   | 1 +
-> > >  include/linux/dmaengine.h | 2 ++
-> > >  2 files changed, 3 insertions(+)
+> > >  drivers/dma/dw-edma/dw-edma-core.c    | 24 +++++++++++++++++++++++
+> > >  drivers/dma/dw-edma/dw-edma-core.h    | 13 +++++++++++++
+> > >  drivers/dma/dw-edma/dw-edma-v0-core.c | 26 +++++++++++++++++--------
+> > >  include/linux/dma/edma.h              | 28 +++++++++++++++++++++++++++
+> > >  4 files changed, 83 insertions(+), 8 deletions(-)
 > > >
-> > > diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> > > index ca13cd39330b..b544eb99359d 100644
-> > > --- a/drivers/dma/dmaengine.c
-> > > +++ b/drivers/dma/dmaengine.c
-> > > @@ -603,6 +603,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
-> > >  	caps->cmd_pause = !!device->device_pause;
-> > >  	caps->cmd_resume = !!device->device_resume;
-> > >  	caps->cmd_terminate = !!device->device_terminate_all;
-> > > +	caps->hw_id = -1;
-> > >
-> > >  	/*
-> > >  	 * DMA engine device might be configured with non-uniformly
-> > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> > > index 99efe2b9b4ea..71bc2674567f 100644
-> > > --- a/include/linux/dmaengine.h
-> > > +++ b/include/linux/dmaengine.h
-> > > @@ -507,6 +507,7 @@ enum dma_residue_granularity {
-> > >   * @residue_granularity: granularity of the reported transfer residue
-> > >   * @descriptor_reuse: if a descriptor can be reused by client and
-> > >   * resubmitted multiple times
-> > > + * @hw_id: provider-specific hardware channel identifier (-1 if unknown)
-> > >   */
-> > >  struct dma_slave_caps {
-> > >  	u32 src_addr_widths;
-> > > @@ -520,6 +521,7 @@ struct dma_slave_caps {
-> > >  	bool cmd_terminate;
-> > >  	enum dma_residue_granularity residue_granularity;
-> > >  	bool descriptor_reuse;
-> > > +	int hw_id;
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > > index 38832d9447fd..b4cb02d545bd 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > > @@ -224,6 +224,29 @@ static int dw_edma_device_config(struct dma_chan *dchan,
+> > >  				 struct dma_slave_config *config)
+> > >  {
+> > >  	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+> > > +	const struct dw_edma_peripheral_config *pcfg;
+> > > +
+> > > +	/* peripheral_config is optional, default keeps legacy behaviour. */
+> > > +	chan->irq_mode = DW_EDMA_CH_IRQ_DEFAULT;
+> > > +
+> > > +	if (config->peripheral_config) {
+> > > +		if (chan->dw->chip->mf == EDMA_MF_HDMA_NATIVE)
+> > > +			return -EOPNOTSUPP;
+> > > +
+> > > +		if (config->peripheral_size < sizeof(*pcfg))
+> > > +			return -EINVAL;
 > >
-> > I have not see where use it? Does src_id of struct dma_chan work?
+> > It is good to check here.
+> >
+> > > +
+> > > +		pcfg = config->peripheral_config;
+> >
+> > save whole peripheral_config in case need more special peripheral
+> > configuration in future.
 >
-> There is no direct user of hw_id in this series. The intended flow is:
->   1. obtain dma channels to expose via the standard dma_request_channel()
->   2. get 'hw_id' for each obtained channel (with this patch, Patch v3 1/11)
->   3. call the pci_epc_get_remote_resources() API (introduced in Patch v3 6/11)
->   4. iterate the resource list obtained in step 3, and find a resource whose
->      .type is PCI_EPC_RR_DMA_CHAN_DESC and .u.dma_chan_desc.hw_chan_id
->      matches 'hw_id' obtained in step 2.
->
-> By the way, I couldn't find any 'src_id' field in struct dma_chan.
-> Did you mean dma_chan.chan_id? If so, it's explicitly a sysfs ID and is
-> allocated by the dmaengine core (from dma_device->chan_ida), so it doesn't
-> correlate with the provider's HW channel numbering.
+> Ok, while I initially thought a deep copy (snapshot) was unnecessary for
+> now, I agree it makes future extensions easier. I'll do so.
 
-Yes, I think it'd better to align HW channel numberring, we should extent
-API to allow set it to hardware id or add hw_id in struct dma_chan.
-
-hw_id is not caps.
 
 >
-> (Also, correction to my note in the previous v2 thread:
->  https://lore.kernel.org/all/zqcu3awadvqbtil3vudcmgjyjpku7divrhqyox72k43nfzcoo7@hflaengfjy27/
->  There I wrote that the low-level dma channel id would become unnecessary,
->  but that was incorrect because dma_request_channel() does not provide any
->  guarantee that channels are allocated in hw channel order: other,
->  unrelated components may have requested dma channels earlier or in
->  parallel, so the set of channels obtained by a given user cannot be
->  assumed to map cleanly to hw-level channel IDs starting from 0. So this v3 still
->  includes this patch. That said, since there are no direct users in this
->  series, I am open to dropping Patch v3 1/11-2/11 if you think that would
->  be preferable.)
+> >
+> > > +		switch (pcfg->irq_mode) {
+> > > +		case DW_EDMA_CH_IRQ_DEFAULT:
+> > > +		case DW_EDMA_CH_IRQ_LOCAL:
+> > > +		case DW_EDMA_CH_IRQ_REMOTE:
+> > > +			chan->irq_mode = pcfg->irq_mode;
+> > > +			break;
+> > > +		default:
+> > > +			return -EINVAL;
+> > > +		}
+> > > +	}
+> >
+> > use helper function to get irq_mode. [...]
+>
+> Ok, my current plan is to keep chan->irq_mode as sticky per-channel state,
+> and factor out the parsing/validation of irq_mode (from
+> config->peripheral_config) into a small helper used by
+> dw_edma_device_config() and the new prep_config path.
+>
+> Does this match what you meant by "helper function"?
 
-I think struct dma_chan should carry hardware id information.
+yes.
 
 Frank
 >
-> Thanks,
+> > [...] I posted combine config and prep by
+> > one call.
+> >
+> > https://lore.kernel.org/dmaengine/20260105-dma_prep_config-v3-0-a8480362fd42@nxp.com/
+> >
+> > So we use such helper to get irq node after above patch merge. It is not
+> > big deal, I can change it later. If provide helper funtions, it will be
+> > slice better.
+> >
+> > >
+> > >  	memcpy(&chan->config, config, sizeof(*config));
+> > >  	chan->configured = true;
+> > > @@ -750,6 +773,7 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
+> > >  		chan->configured = false;
+> > >  		chan->request = EDMA_REQ_NONE;
+> > >  		chan->status = EDMA_ST_IDLE;
+> > > +		chan->irq_mode = DW_EDMA_CH_IRQ_DEFAULT;
+> > >
+> > >  		if (chan->dir == EDMA_DIR_WRITE)
+> > >  			chan->ll_max = (chip->ll_region_wr[chan->id].sz / EDMA_LL_SZ);
+> > ...
+> > >
+> > > +/*
+> > > + * enum dw_edma_ch_irq_mode - per-channel interrupt routing control
+> > > + * @DW_EDMA_CH_IRQ_DEFAULT:   LIE=1/RIE=1, local interrupt unmasked
+> > > + * @DW_EDMA_CH_IRQ_LOCAL:     LIE=1/RIE=0
+> >
+> > keep consistent after "," for each enum
+>
+> Ok, will add ", local interrupt unmasked" for it.
+>
+> Thanks for the review,
 > Koichiro
 >
 > >
 > > Frank
 > >
-> > >  };
-> > >
-> > >  static inline const char *dma_chan_name(struct dma_chan *chan)
+> > > + * @DW_EDMA_CH_IRQ_REMOTE:    LIE=1/RIE=1, local interrupt masked
+> > > + *
+> > > + * Some implementations require using LIE=1/RIE=1 with the local interrupt
+> > > + * masked to generate a remote-only interrupt (rather than LIE=0/RIE=1).
+> > > + * See the DesignWare endpoint databook 5.40, "Hint" below "Figure 8-22
+> > > + * Write Interrupt Generation".
+> > > + */
+> > > +enum dw_edma_ch_irq_mode {
+> > > +	DW_EDMA_CH_IRQ_DEFAULT	= 0,
+> > > +	DW_EDMA_CH_IRQ_LOCAL,
+> > > +	DW_EDMA_CH_IRQ_REMOTE,
+> > > +};
+> > > +
+> > > +/**
+> > > + * struct dw_edma_peripheral_config - dw-edma specific slave configuration
+> > > + * @irq_mode: per-channel interrupt routing control.
+> > > + *
+> > > + * Pass this structure via dma_slave_config.peripheral_config and
+> > > + * dma_slave_config.peripheral_size.
+> > > + */
+> > > +struct dw_edma_peripheral_config {
+> > > +	enum dw_edma_ch_irq_mode irq_mode;
+> > > +};
+> > > +
+> > >  /**
+> > >   * struct dw_edma_chip - representation of DesignWare eDMA controller hardware
+> > >   * @dev:		 struct device of the eDMA controller
 > > > --
 > > > 2.51.0
 > > >

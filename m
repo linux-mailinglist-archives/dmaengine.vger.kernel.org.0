@@ -1,80 +1,84 @@
-Return-Path: <dmaengine+bounces-8806-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8807-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MDkPFIFBhmmoLQQAu9opvQ
-	(envelope-from <dmaengine+bounces-8806-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 20:31:13 +0100
+	id QOXvJsZChmmbLQQAu9opvQ
+	(envelope-from <dmaengine+bounces-8807-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 20:36:38 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6991B102C27
-	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 20:31:12 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E63E102D1F
+	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 20:36:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D1FBD3004607
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Feb 2026 19:31:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5CFFC300874F
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Feb 2026 19:33:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E3122857C1;
-	Fri,  6 Feb 2026 19:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70387305E01;
+	Fri,  6 Feb 2026 19:33:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Kjsy5FAP"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Uc4XQWRd"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012014.outbound.protection.outlook.com [52.101.66.14])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013028.outbound.protection.outlook.com [40.107.162.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B25584A35;
-	Fri,  6 Feb 2026 19:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4C32857C1;
+	Fri,  6 Feb 2026 19:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.28
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770406268; cv=fail; b=fjTeZvBBYqf4GqHJfRjI1jJ0OUWSmOP9EH+TvTv73S4RuKanYOliowL1eedoJhQiCPohSn/T2XRSoDtegKVfepIjR/V61oMI7W1hTm4u2/sqxbGs3tYmu5YycnDZw0eGGvZ+QX0vMfOvDXl75FNvaXs+NJRAjRekUJBC++87enY=
+	t=1770406433; cv=fail; b=by4LbT+l0XDt2IZBbWN8kmPIgV8C+b5vAZXmyFd3WvEa82gN7d95akzxcmvx4qrttCn1HX1fVJ/mZuFZlLPcHQkZGVuVenjI17LpOK5bTXfYRSEwLcsiHJdk1rk5lBA6A6Qe/SW/2/NE5T+69cZM1H+S7HdeanzanJCjJiTkgJw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770406268; c=relaxed/simple;
-	bh=jcKMFm5j4GKkAA6PM/dy/Qe2JkZpM1pT+5KmTB5A1Qw=;
+	s=arc-20240116; t=1770406433; c=relaxed/simple;
+	bh=FS/4KB6/muSEu1Qlkf/lNXnG6WuMco6QBUVionJEHZM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=u6iNjsgQjKHLJ0S/+vYr8s09lxE1AwplA/kXxQ3RtM+x6Gl/PM8OzKh5/oYDdNwbyqA/QB5vemiwQ+TT/Iy8+PmqR/2inXx1IsCUIFRx1acjQXKKnB/10RSy9y8H4rdAFZZ6hlY0lg5CqmJfqZvnLTpPVRdlyDyS/C2cMxiz7AE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Kjsy5FAP; arc=fail smtp.client-ip=52.101.66.14
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Dsnmj/IIbY0gjPVaER2o8qYzq5xyc+nhDKUxeg43L5l76x67XJX3KMX8SQsagj0LJyou+lb1E32sVMO9WqKX6m+VTWlcnIr6Q4MHqpOyty5aXKjiRG8xlTw+6cJXiw1Oqx/veqCOIl+cNUXtlmUMpgv/Ime7XFiX9hLE+SX2am8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Uc4XQWRd; arc=fail smtp.client-ip=40.107.162.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=X+HAMSjzDt0+Vc4lY5yg4AZ08ZX9hvZb5imxHP1fI++3y1uZdiU7CNU7gwfOirf0K/bpLQwEr2Rby40vrTFhjA5Y7yaZTqxFBGWdhvAxerZqTzSBSxZGyCyVvkH/3FplaLOewNaIkeqjB9xTbDyT9sv/YRXvp2iFtuRxItKxEm+lRTnXn1O4Jw4FDS6IsTwNO7KzbbBSBlI09SbUNTA28726gRQzQZ/uEIAj5BdsEKRKWS3SUDxcAx2Nn1Y86hLdp+nk0VRX/yYraRZ9JC6OJzQtEvYcsxqTvSvXY+2lJ8Bu+ldjTimM/qxsxXZGfmF3xwKxDL10YfHNV0NeTDblYg==
+ b=vBk3wiZBdiK32wBm+6xLiRu2zxio0FwlafUAnRu2OCyGh+nh8TF6x3HuunSAOsWRZi1bXOBomOXQYKtFm6RG2DYKbP/ri8/rEfiqhWhJ6HAGLI2qP3Corh2os25i0T/lxJX7YxmYAZ/d7I1Mrw06h820vYPppHuGnrb74oO1LvYdkEXGNGNEPdJwhIk2ob3EZwgk5LRzluWEWThnARszpJTR415vKebC2whnpRqwGZN3gnlBbmHr6/LhISI+Q0TF7J93vRb1emz23khjWgkbImu/ckIn5GZiTTrtaZdX3KKW68a1wZs6uhuTuWp5GE9zwjXJpnbS074f6fAiNR8UdA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SZqSUzR9Dgq1s/6HsOSp1d3uhQDcXGZwchMUQqXPBQc=;
- b=AHN61ofT2VvjCSn8BI7fUG8zUgzD7xQvnPOdShG2jNUFokr91pG6KGj4J4fAwxR/akmJI1N6m4FG0DoDz3IlU3pzaLcQ/O0Ozb1aJbyFRhsMtl8j2zNvJiXNkrg4jkSiltQldO3U/jr8QbWzUsz7IijyZqcLcMU56H1xMY9MRuNBWngzqPjHD6DN/qzPvnG18OBAWXCace9MOG12hdzo4yrWJKAwA4wapy+TguEVXRj2uCA/nv9vOXwr06fLF8LvGHoVZczngZt7wZITK54WjFJSQGvjGX36cWJonfIp6w6r5eleo6SaJV6qZUIJer5pw5U1fnAig31zFifkTrw+yw==
+ bh=PudXe6rihN3gvmtagqexciBMxRyb7Ovtz94K2Ik7Igw=;
+ b=MGBwRUclY6HujQdXJpp0dPgMF4aoqeMO7SMRyjxmvvhCBVxvR1P19lJcGzVAn4F2r2M2RFUW4lzzdam7HREtNdRgQtxAMMA/SQtPOgJlOOE8ih3prJ6jc72kS3PhRfq8S+8jxgOjVO3fWasLnBwLOJ12Bp76JcEoDoJZO9D+TCXKxXuxRN2iyhpXZEzNl1YLpikMb2Ghvt/fIesjiVQMw9/gSgpfuaSGdPy+P6LdFIWbVCqpukW7v2321xjSNLEee6Ac74FRmRlWJzYtWsDXlP3EW9VyogxslfKceCR8W0OeasINuQ7CEpFNljFhPtvW420FoDLv7dkB/v/4JBJS+w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SZqSUzR9Dgq1s/6HsOSp1d3uhQDcXGZwchMUQqXPBQc=;
- b=Kjsy5FAP55X9ZsN3fyxerb9rye4UTnzrfMIm49QFuqS5i5VhyKObHhtHjA+7O/2H7fJJ/XjGmcZAnR+2RxyjpCnhk69rFd9z9GGKL+7XF7UO9BlYo2wOeY33KCxHLNsQOq71z+FcKpRVFNXONJELrudkw/3wE3a53MMhR0ZrgMubW4EXKLw21wkIpOjDAUqhVXYryLqRB39EmUSfOwAzXcTUGjJwTX/zgtNdt4yPBCyRp3iKwyTJh5FZIeU9EOtrHGx7tps3kTEhOLmLKhtjXbMdd3kDHqfmlauOhrD8kzH5ZPXh/NGmc8ZMQpYnln3IWEKZkmcVz6PytrXCr/9NKQ==
+ bh=PudXe6rihN3gvmtagqexciBMxRyb7Ovtz94K2Ik7Igw=;
+ b=Uc4XQWRdew0P4yt/d9fOqEORp4p7W2AHLDDMgxRNEzzU2yqH2s6DSnrlc461WHTRDZHu4ASkQvYXu4jxD2o4Q0j8UhFdzFBqOB+kUWtbjAns3VUDCYUDY1Bi/8YthHN7CUBBYcbj1JnbMs9nmY7vobNU5YOrj1Jhz88sn7kgxnEe1MSf1tpBhsIZGaQFcyM7sd4Scr9g8OBq7C8jR4kC+y8aaXgs9W+iRo2VbV4Okg0/yq95as3Q5tzkvaDEiO39DqotOdlMO4l701xuTeJmgtnpBtzlm7sGru/FB9v57l3GVEro3EglQoApZISBCfRPxYyMH4UKtjCo/+nLmSFa4g==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
  by DB8PR04MB6971.eurprd04.prod.outlook.com (2603:10a6:10:113::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.15; Fri, 6 Feb
- 2026 19:31:02 +0000
+ 2026 19:33:50 +0000
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9587.010; Fri, 6 Feb 2026
- 19:31:02 +0000
-Date: Fri, 6 Feb 2026 14:30:53 -0500
+ 19:33:50 +0000
+Date: Fri, 6 Feb 2026 14:33:42 -0500
 From: Frank Li <Frank.li@nxp.com>
-To: Pat Somaru <patso@likewhatevs.io>
-Cc: Tejun Heo <tj@kernel.org>, Sven Peter <sven@kernel.org>,
-	Janne Grunau <j@jannau.net>, Vinod Koul <vkoul@kernel.org>,
-	Neal Gompa <neal@gompa.dev>, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma: apple-admac: Convert from tasklet to BH workqueue
-Message-ID: <aYZBbfktpZyu5u1k@lizhi-Precision-Tower-5810>
-References: <20260206090137.1127897-1-patso@likewhatevs.io>
-Content-Type: text/plain; charset=us-ascii
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: dma: Add Amlogic A9 SoC DMA
+Message-ID: <aYZCFiI0PbAhabj8@lizhi-Precision-Tower-5810>
+References: <20260206-amlogic-dma-v3-0-56fb9f59ed22@amlogic.com>
+ <20260206-amlogic-dma-v3-1-56fb9f59ed22@amlogic.com>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260206090137.1127897-1-patso@likewhatevs.io>
-X-ClientProxiedBy: SJ0PR05CA0144.namprd05.prod.outlook.com
- (2603:10b6:a03:33d::29) To PA4PR04MB9366.eurprd04.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260206-amlogic-dma-v3-1-56fb9f59ed22@amlogic.com>
+X-ClientProxiedBy: BY1P220CA0025.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:5c3::12) To PA4PR04MB9366.eurprd04.prod.outlook.com
  (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -84,242 +88,219 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|DB8PR04MB6971:EE_
-X-MS-Office365-Filtering-Correlation-Id: 47b423f3-034f-4812-1288-08de65b6432a
+X-MS-Office365-Filtering-Correlation-Id: b3262186-948c-4892-4aca-08de65b6a771
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|376014|19092799006|7416014|366016|1800799024|38350700014|7053199007;
+	BCL:0;ARA:13230040|1800799024|52116014|376014|19092799006|7416014|366016|7053199007|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?L4l+Tijn+v5gX8j0pB7TQ+pwbI+olFqd9WMLQzatixsdeo0LxW5Lfa2ZQ8o3?=
- =?us-ascii?Q?gB5r6O0Ovor6AzrlxILnYDDObmYUVtmESY8ZpoWVbP/UYEMi7dILOU3RZsoO?=
- =?us-ascii?Q?9Wc1hVsAc9wEohDLPIEuMyAr6FB5Vi5S1KXsnoc8xbA3+9MsLCQIsxHUbKkT?=
- =?us-ascii?Q?jWpfePG3+Q/KxRD4uf7vocP6pZzYMS2mb0xqCKErTRE2Al69dkJMJlLBzEmb?=
- =?us-ascii?Q?kuASo6DXMPhl3hzwJwb54cZXDGswylPG7sS+mct8TsKKt+En2Msj2ahGA3Vj?=
- =?us-ascii?Q?RRaA9kzYQXB4JLilD7yfulN/22pJvvO0nD1xGD87kCvhSY1pFinSNQiQDlsG?=
- =?us-ascii?Q?cRRWq0LK0cplJVCIJL+0vcnLfu2wPYiC6xCBFmXoEq7we9dybBzt6FGEs0iC?=
- =?us-ascii?Q?QX+JiHeHJmVe0UL0uRtdy7mFgCJV1RKilsdzxyG8LVmEG3oqlwe2WVeIt4c3?=
- =?us-ascii?Q?E4rYC+kydYykIcazRXkidIdBxZDxy4QR/wVdjaGU07+pQ4fTaYQ3SZw6DcyT?=
- =?us-ascii?Q?PLasXHQzRFxsFAAVRj39KNEmm6Xl/VmfuU8TyjIboI2r2nrLxYs8TLukXq9z?=
- =?us-ascii?Q?mgIh3zjmZFF9wfn7lOU7FYd8XIe5L8pOY8ilWhz2ql1/ho++jKZ9DT7BVY6k?=
- =?us-ascii?Q?lux8ab2WBlkKntYFzi2wqgxXSX9qzkLqEMKCAaaT1k3qaXKk8QROqSnjcApr?=
- =?us-ascii?Q?ArPNCgWg5E+dHAf6NqekXmItiAx9VyTz7u3yXs/aLpdu/S3WRBGSRGLb0g9O?=
- =?us-ascii?Q?n8ay7h9uJVCJD7nbjZChTuHq2bEe8mEYRjj8eNQAV1hl9iR4aYuXxTyl044Z?=
- =?us-ascii?Q?Wj6EugJz8+pjYMvw2FT5+MeD8es0EiBHv+y70afNYgIrEX8saJRYMFzMTcCc?=
- =?us-ascii?Q?RB2/gJGww+ktdZtL5pWwOXr9wy2lda+PyGKyN9wsZ8KZ3FowTDAwDK6XTsyT?=
- =?us-ascii?Q?TRGzNx97gitw0MILWK4R45ODlu6d6WhaN8BUCL5xEpQn82xfaET+VXV+70X6?=
- =?us-ascii?Q?MxOVC4FSeI35eTR+60vt1UPZkjzfDFoPb5fj59iC0BZprFZxhXF+wruhw86S?=
- =?us-ascii?Q?ZEq89SNp/7/XOIcDwcBIGowr1Gp0g+RYa4d6pONdzFPVidluC0gvxu8iVW4B?=
- =?us-ascii?Q?ShgQU+Vml3ssiN9So5sFC/AA3kxulKExgnRSkdlIJ8cj5gQSU0/RRRWC2Rnr?=
- =?us-ascii?Q?tmpt+zq/GWpu5PccjmTqABMq6lSgMstfsXP5KPqEEYBsn1HpmjuUsiHtxLIm?=
- =?us-ascii?Q?I0U8c0/5ZussmTJ2Qt1SWkvUniY70fOpxF0lIuskEzUUeUqQhMBV0Xnp+aBY?=
- =?us-ascii?Q?T0kw+J0faUHMwC1stFdV10aNBZhG0IMgeIhu/M8DBm77ItY8VDxwaW68FjiS?=
- =?us-ascii?Q?B1N2cWh3dVGWSV8gs8FvfmP6F8QLP6X/GhZUMQwLdY4r7fLVFaO/7dWrhckv?=
- =?us-ascii?Q?KtybsPqoi/x2TDJcZxPl3/ka/RF6ic1zi1+b04U7OAfNX7eP3v4Rk2rTxjab?=
- =?us-ascii?Q?13vOYsXOr7WUyoUd5t+Js4oS1jNxtj40ctXSALB4lKyOPNLrnMSzx3MEtcUg?=
- =?us-ascii?Q?IA5Jltq3BJ76hMeXrCHbKNBJ0wXR7ZSBwkIb/1XeR38ik9kjYuZIu/eqe1gU?=
- =?us-ascii?Q?MDau84/oIUPL/d+chzW8Ays=3D?=
+	=?utf-8?B?dndrRnhTWkJXdG1VbjlJNklqWnVRZTJzOTBESFZiOHMzUTN4YTc1M3BsTjd1?=
+ =?utf-8?B?ZVBUcjR4dEVLQVd3eVk5bE9yaE4yYmsxak1relk3SEd5dXhLL2pPM2twcGRz?=
+ =?utf-8?B?a3p2RHhyVTU4L3RNQVVQV0JRS3lqTmgvR1JnQWJYZDQ0K3JsL0xsa3doUWZt?=
+ =?utf-8?B?MmtFNG1vdGpRUWZVcW9FRUgwV2xtQTJqZVduamFodWlkOUExMytjZmt1bjhB?=
+ =?utf-8?B?S2tyQ2U0bk5CRDk4SW1Sc0VoTkE3UXFrWSt5N2ZySWxyb3NwTHJlcTNhRE5R?=
+ =?utf-8?B?Y1B2bk5yVjFrSXlxMEozQzgvWDJaTmJQb3ZId3ZpbklkVkV4ZVRpQVZTdGdO?=
+ =?utf-8?B?eFZGdjlLQWZrUWtTWUc3UTFzMEJHb3hQUDk0Q0RGdzdXQ3NlaitvT3NCYm56?=
+ =?utf-8?B?eGVCWGl1alErSFhPU1VuTlZiQjM3QUJZYlcwY0NBZHRYRDFLTU9MTk5uQ2R1?=
+ =?utf-8?B?UFd6Skx2U1MxSEFlb3RhWkZCaTJiU2lBOG9rQ0h0MWZIT21OaEFzdC9pZUlT?=
+ =?utf-8?B?UDlxQ2pRa0RSR0pCKzEwem5mODNDWGZRd1lyWEFPOUtoN0ZLZE1jdU9IYTNm?=
+ =?utf-8?B?YWM5VnFpTGthS2NHaHdydU53OStkNHkvU2tiT2lkY1dab1lkK1BGellibXJO?=
+ =?utf-8?B?WEZRZWpOZHBNdFE4V0VzcVFOZlNHWlRYTmpCRzhSTzdjK1RsRHkwd2lCRXBq?=
+ =?utf-8?B?T0NFRmZlQWd0d2Z6NTJ1Qng4WkxDV1R5Y1NPbzAyaDFzd01RcDBzUkRucXhU?=
+ =?utf-8?B?MWVFTjQ3THduL0kvU1Z0RVVwQi9BdGluKzJzYUo2R29NOStOQTZWeWgzdUhs?=
+ =?utf-8?B?S1BpbnNUTGV6dTcwS3hWRDZnN2g4TmptSnZQcWsyNGpPL0UzdEpNYjZjemt4?=
+ =?utf-8?B?UXczUHMxb1c4SkZDRXY3K25OYkRqZ0V4S2xpLzRSSG1CUkM0dU1SOC82ZjUw?=
+ =?utf-8?B?Y3hFWWdxTU40bUdNSVBJQThRdXdQYThNR2ZwZ1FFZ1BCVjBEMVN2L0poUHhp?=
+ =?utf-8?B?eWF2akFFb2ZsRU9PZTRKclBYNkIzUjVLVzZSM29nZlBTWWdnRFROcmlPS0ti?=
+ =?utf-8?B?L1N6YjM0WnVhSDY0OHFOVlVOS2F2M2pWMVA0ck9XWmRCeUQ2L3I4c2M5MjZq?=
+ =?utf-8?B?dmJ0eTVaYTE1YTRLN1B6aDdaaGQ2My96ZWpZU2VSbTRLaU00NGUwUTNsZVdU?=
+ =?utf-8?B?TzVZaWU4bi8xNWNQUm51OXpHdE5LbUx3emNZT3FMa1hJOWgvbDRTTjAxYzVZ?=
+ =?utf-8?B?MGFUdFZyS1JzeWVSVkJyMHdpOXFHelhKeVJWS09BRmRhWldSWlR6d2p3V1da?=
+ =?utf-8?B?TWJvL3ZvRHFMcEk4dDZSanhoNWV5SXFjVXpQcVNTUTBqbU1TNHZqeU5qMHZS?=
+ =?utf-8?B?cmRzYTgwalVEbWhxekZqVXliaVpPY1VGZkRvQk9ha0YyNGRSalRCVDN2UVZi?=
+ =?utf-8?B?MURlQWRSaEM0TldncWpTYXFnWjBtbmQwNnRsR1l5NHZuRUtvbFptYk9YTVNv?=
+ =?utf-8?B?MTVoNElzT2V6UG9YbmxlUW9oN29vRUp6R3pxck0vM1c2eis4eS9oa2xmTUNl?=
+ =?utf-8?B?U2hwVGc3a1l2RHRpNkJCYjFVWGtuai9aVDdaVGQrbzBDeWY3bnE4a0lISnJS?=
+ =?utf-8?B?OXFQaXJaU1ZRL2dYWFR0S3cwUjQrQ2I5QklLNmpabFJhR1d2c21KTktZeGVm?=
+ =?utf-8?B?ZUNrVTZlSGEzakRDeU5rSkNaNFFaWUxyN3BJTnJjdDVTRHpQVlNCRzVRVGh3?=
+ =?utf-8?B?eFJTbFpMd3c2Y3YvU1I4WGYveWdjbWcvV1YxSzd0QW5OUCt4Lzc1RWh0MVZq?=
+ =?utf-8?B?bUF2VlhqcTZVNWxzS0VsSWYzUUdud3VpNi94UjNtbWNSanpIZjIzZUFlazJE?=
+ =?utf-8?B?cnkycXlpcnVUcXRqTUUxdVpveUJpdm1IUHI0R01Va1EyUHdRRHk4UGUydmkx?=
+ =?utf-8?B?OFY5RmZjTFBaWGI2RlVzUTZlRlQwcnFjcmVwZTlhUlF1cWdMSE00M3dwaS9k?=
+ =?utf-8?B?b3UyNGVSMmV3bUpCcGNTektXbW8yMGQzTWdnanZBK1ZzUFhpQStlRlN2RVRN?=
+ =?utf-8?B?VlV2enpWMGlIL1pteS95TzVvcVQyaGZwSFBPU0JORTdLVk1ZUXFwK3JrWUtK?=
+ =?utf-8?B?V0tNMmNQOVI1RkJ3R01QaVgxWVFBOVJwOGdGSkM1aWtLd2R0bGs2bGNOcXNY?=
+ =?utf-8?Q?tP8mQoKFuEPSmIqVIePKFX708SPHvEfg7GltQQXp5UFH?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(19092799006)(7416014)(366016)(1800799024)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(19092799006)(7416014)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?dDCD+S3fJgp7Pl/3Whyw9Dw/c1L85sZZy9wrml61Nlen/hwPgEh0zTce1cxa?=
- =?us-ascii?Q?bjEsRZtwZRSb59b/2K2aaRFQRag7eHIzsYjcebp3jNKi3WdXI4cs38K8TY8i?=
- =?us-ascii?Q?cptHxS6nB3kpABb6W9bqRBaenBf9UL+xms0d2mXZbVfO/wVY55cZf9eB770Q?=
- =?us-ascii?Q?nGo/Y72ZYSVu2JUN23vz8UBaOVI9aNgaTfihpm/eU48EAgeuCgqJPgnHDE+y?=
- =?us-ascii?Q?1lD7znKp+SNPQtZbgEKZlF1Cnwx0wqXupyA3oS7/+TGfhuUWBXQv9+/+N8kZ?=
- =?us-ascii?Q?CFDGD648bTd2lI2u8/kVwVMU6sppzObztqUKHZYD6PGPIZ3X+Oc/cRRxCOKu?=
- =?us-ascii?Q?XGmR0bo+jNZiIkYqkLb5msapG3b/qxg5QnlYbZ/ntr2trU9yzZRMFaG3mnPn?=
- =?us-ascii?Q?9GHDYy79GWy35sefv/HOC5In0qSA8+kHTplTp6UcbX/48vk3bY01qlz9KmJz?=
- =?us-ascii?Q?HUED3idHQWPA5c1bwRYy0QhfXP2puApp7P4OdC/j5mA+yCW1eo+Ygt75Ipik?=
- =?us-ascii?Q?t4TLVYoffOBEqGw0OVtII6yVM0miWmE6nguXHdVVE9W7dBhkj7ArvveNpFXL?=
- =?us-ascii?Q?G7qFt4iXteUld2h0quFaLLvfggXMJbS4rM5TzjMQwLNa0uIS7kSRlKLmcUAo?=
- =?us-ascii?Q?IqqdVqR5AMD63pvhkAPuOepCHKnbpD4REIkASIQlndEvZKEc177pzYGQ9RdI?=
- =?us-ascii?Q?kVtv1vrb7mPah2FhY+F2Nc9a9hwHAJDfY28KvxlCPvZRHfJBaW+NvTcWpwUZ?=
- =?us-ascii?Q?7752r0hboeyFKDVmJI9nXF5UEtnmqBn2JEpbWVAk8wIVbDy8gkwgsMF/bM39?=
- =?us-ascii?Q?x7Vxk01tP5y64zFTv5bvHMesHbBJSanlCG1EQzjmwa0mlK5rTUf+QK+F8Znh?=
- =?us-ascii?Q?oGNqEf/drXjtpXLdM8MC9QEekIVvWrafzSk96BZq6uRCcsl7ou/nYFjNFk3m?=
- =?us-ascii?Q?CnNaxT1FD1QG4ymZDitK8Z1Vgje9KzY94xKHPkanIq9go4inqHxywJr4TQFa?=
- =?us-ascii?Q?lDrB2Lteuyh96DavpTqxsJp/lh2528NrGW+HvblEvhcR7GW6Leqw3JL/toZ6?=
- =?us-ascii?Q?tlm7de4JdlC3KNEyh8tXPE/eK64T63ys8OgUDLw5BHNmfJdfetIPvTrjbDLR?=
- =?us-ascii?Q?cYcA8XOvnuulwET8/VObkE2++4rxeJYidTY9UscEhgjjwViJCz090TYEMwNC?=
- =?us-ascii?Q?FczBIkihBJrJFi4Mfjob7XdixfIlASPVr5M/c1MhovDDsicFB4c169Izxyh4?=
- =?us-ascii?Q?IRSLhsrrXuKH108/O3uYS1EmS8LrJl5nuKWN0pq94Do7M4fgxgGae9kYb3KW?=
- =?us-ascii?Q?Q8CELe1RQWynCDiJ+bw3uJYEUVSkl2ckE5A9gsHmdjD48wprkLftJCcSUoDi?=
- =?us-ascii?Q?QaP2bbQgnGuyoAl91IQLIxWgAIHVhahzBpO/U9yV8o1b7hawV+/bLaV7Gqbj?=
- =?us-ascii?Q?t31VID+lkDLcwsFUCnWFMLTFZZb69m3qZMKES8VAf/paX5RyQ/CkoXmHL1EE?=
- =?us-ascii?Q?kQVAYOOnzF8vXinaeMjsSmLK25dswrk8NL4UVSvLhpH5ol4ILmv1d2rnHrJ0?=
- =?us-ascii?Q?qPUhEPyVhQy+k7yH0/CCCxpPJOhTUMy37ZiO7/wOqhsuQkbO0L0AgQtITqDs?=
- =?us-ascii?Q?/EVmbp4tLo0nZ/4nsIuLomIExyHW22ZPhazInZmUASDhldim+x1+dj8oBoVY?=
- =?us-ascii?Q?vyJtu/9wvGXiEb5zMXhl5DkyYYaHg2HK+/gQGTt/hsgK8AU1?=
+	=?utf-8?B?OG4yMnJobUJjd0RPUXc1a2dJckNESkJTVDFmcWdGVUFLc1RYUnBTTW51alA5?=
+ =?utf-8?B?aEVaVkFOcVBpbWpFVUx2bjhacHVRV2RyS3ZPZ1VPdEJVWWFJSjN6bHl4ZzBs?=
+ =?utf-8?B?S1JMckx1V1NaVjlhSmtxMjBPWmxXNktjZEp0SmI5Q3hNYk5jeFhFTTA3eldX?=
+ =?utf-8?B?cmltN0k4M1YxVnBlUkNQc1gzRklvSGNUQnY3TXRlQVNDS3M2WjZDWS9iTWdJ?=
+ =?utf-8?B?TW5QbnFLVUtWNnUwNSswcHFGVm1hNk9Sdi8zNUIrRWFJWXVhbmcxblQ5WWJj?=
+ =?utf-8?B?a1pscTVpZ0xqK0V2enVvY0N2TklvcFJoa1VBb1VTNEVkT2NVVTNCSm9Denlm?=
+ =?utf-8?B?bEpFY3V3bitMM3EwcmFvajJCelRYVFZVV3BlVVB6cUQ4RGhCVUhPRk1jTmtu?=
+ =?utf-8?B?WDlmcUk3OFJSNzdBNDdvSkNhWnpkOGdFSWpDRHJrZHdUaHZFNXBIR3J0WXZi?=
+ =?utf-8?B?SnF0L1pEcG00MFQ2SDloVml1bVVXaDN1ZG9nMXB0czQ0NVZIZmkvYlQ3Q0Na?=
+ =?utf-8?B?SXBHTzZtSjJEZHJHM3FsUWdMOGtlMzlnaldSOVRNbUxqM3ZVc0NzT1QxOTc4?=
+ =?utf-8?B?bm5TTUQ3akFQYUZlL0liV2huZmV2Z3FDc1RZWkZnRTUxK0xQY3RtVVQrTXl2?=
+ =?utf-8?B?aHo3OUVBTktPZGZqMVBRcFRVYTJTZUQ3c0FQM3ZVbVV6aEViZ2Y0ZjVHZG04?=
+ =?utf-8?B?dnpyVEdra3NlMW5MTTNZNGtTckpzNm5WTDRHc1VzNENoY2s0MXRjK0ZWOVVM?=
+ =?utf-8?B?Z3pjMDF3R01hTUNNREYvOTduZEp1N2R1bHJsaHFnY1FadGlSejNFYUcwejMr?=
+ =?utf-8?B?TE1ZbFRuNURJTGQyNUVtKzNXZEtpaHM4MnQ3eWkvVkR2aTZKS2YydmQ4blNQ?=
+ =?utf-8?B?MEJnMEpoc0dMU1NIVzl4WHVIYXdzUmQ3b1lnNGp3b0x2QlhHZ1JYOVVwU3ha?=
+ =?utf-8?B?TC9xMGFhUlZyak9WdEExMTZWNmVVVzE0MERZcFVZOU5iKzRRc0oyUVFQM1dP?=
+ =?utf-8?B?Z3VvbUN6emNLeWM5U0NZSjBZTkhKREVIWUVnK0JMcW5SZXoxMDZndzVya2dH?=
+ =?utf-8?B?UGh1cEJHbHhuSDZvMHNsWXI2NlBYVFVNV2tLeG1iRm16UnJnSjFNSlUxWkh0?=
+ =?utf-8?B?bkFoelBiTTNGbnBDRVdON2JZak1ocVJzZEtIZEowY3BJZFQwUThDV3QwTXIy?=
+ =?utf-8?B?cFo0MjdTbXJ0cFh0YkJFNUpIWGpnYWFZdGRSSlpSUWI5SWlkY3VpQzdLNjIy?=
+ =?utf-8?B?clUwemJjSEJ5cnRHa2VBU2tTOHZtZ21udytJYVhtejJOM2E1TzAydi94cWJJ?=
+ =?utf-8?B?NGM0eHdBZkQvT0hwRzdJS2VEaXRCdTZGUVd1aDU4T2xCYmc0YzBqSVNEL2Nu?=
+ =?utf-8?B?bzY3Zzl1MWJ0djJBMHE0RG1oL0pCZ2IzRURYRUNjNzhpV0d1QkpFRmZqZktX?=
+ =?utf-8?B?Z3BXZXhYOGhRMDNMT0YyOWN5cXZjelhtWmpiWEl1ZUZqZHoxYmFaT3VGQ1J3?=
+ =?utf-8?B?WHI3aEkyQnoyNWlnbHY0bzVvYW42YmoybDR1TmFaRUZRbjJlNEF2b0FXTUVY?=
+ =?utf-8?B?c0FGWGFQZlpEMWNZSFFiV2Q2RnhJOEVvY3Y3U0Y2N2hmaFdvN296bnZTVkJI?=
+ =?utf-8?B?NFpoYnE2enlkWWg1RDJ3cDgvQzlmSDV0ZWdIZEFIZUJwOGhoTUpnSXAvK1RS?=
+ =?utf-8?B?VmxoM0c0Z0xOeTFyRGZhOEl0Y1J5U0lNRGxUek1LcDZ5akdjOVRiK3VzNU5m?=
+ =?utf-8?B?RU1qTmNCM2hTSTE5ZGsxaU9PNXlSU3JpRFBwdHdiajdwNE1HS1hMamdPZXFt?=
+ =?utf-8?B?ZUs1L0c5akNEUXBmMmF3NU1OaUFDcWRhd3U1NEVXeEM0b1hQRmo3RFJQZUpn?=
+ =?utf-8?B?Um9xVnc0cjRVUjdwdW9UQTJSY1FVNnJXTGpjUjdiMkYyZld4RXlaVnpBT2l5?=
+ =?utf-8?B?R2cwcFV1MllFcTNNZGlEcVRKYXM5MExhdTF3TTF4STFBUExhYkl3ektvTGJR?=
+ =?utf-8?B?a2d2WGttc3VvQ2MvY0x0SDgwMTM3VTR1K0xKVi8vVDNBTXFodXZNL0NaNWlw?=
+ =?utf-8?B?V0thSjc2d20wdWNSUGRJYmR6bTd6T01FV0R6UkEyeHQxZW9FZUR4WktWMVB2?=
+ =?utf-8?B?RTdobHNjbXlTdkNjZmlDNUUwYVN3SjMrS0RKVjVSS3IxSHkvQXlhM0dUbmUr?=
+ =?utf-8?B?dFFlRUp5Y0NCQnRLNGNlQkhSeU1ia094Sk51RzdhNkJUcDZXM3dJZzFJVXpE?=
+ =?utf-8?B?N2RibjRzbjBuMFRseGF5UU5FMkdPWjJJc08vb1oxbmlWdUhFWGhxWHJicDZZ?=
+ =?utf-8?Q?xmahQabTi5cqQIbSSn?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47b423f3-034f-4812-1288-08de65b6432a
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3262186-948c-4892-4aca-08de65b6a771
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2026 19:31:01.9439
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2026 19:33:50.2130
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8++kKjweCyYtZ633teaRDo3G0c0HavRUeoopJ8/k2KCzbJb3TTRu5YXrPUeyWkvzSO0Fp6q8fxKe3Y78mgBDVA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: We2tTZpTO19CGdaTmZB1A8aD5Nf0KFB9ZLeMvV0m1g8+6bBmTX2y4Ops+h9ZavBYVx1VtTCIhsJy+yD5gFOHcQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6971
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-Spamd-Result: default: False [1.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8806-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[nxp.com:+];
+	TAGGED_FROM(0.00)[bounces-8807-lists,dmaengine=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[nxp.com:+];
+	NEURAL_HAM(-0.00)[-0.973];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
 	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	NEURAL_HAM(-0.00)[-0.998];
-	TAGGED_RCPT(0.00)[dmaengine];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 6991B102C27
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,fe400000:email,amlogic.com:email]
+X-Rspamd-Queue-Id: 9E63E102D1F
 X-Rspamd-Action: no action
 
-On Fri, Feb 06, 2026 at 04:01:37AM -0500, Pat Somaru wrote:
-> The only generic interface to execute asynchronously in the BH context
-> is tasklet; however, it's marked deprecated and has some design flaws
-> such as the execution code accessing the tasklet item after the
-> execution is complete which can lead to subtle use-after-free in certain
-> usage scenarios and less-developed flush and cancel mechanisms.
+On Fri, Feb 06, 2026 at 09:02:32AM +0000, Xianwei Zhao wrote:
+> Add documentation describing the Amlogic A9 SoC DMA.
 >
-> To replace tasklets, BH workqueue support was recently added. A BH
-> workqueue behaves similarly to regular workqueues except that the queued
-> work items are executed in the BH context.
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+>  .../devicetree/bindings/dma/amlogic,a9-dma.yaml    | 66 ++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
 >
-> This patch converts drivers/dma/apple-admac.c from tasklet to BH
-> workqueue.
+> diff --git a/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml b/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml
+> new file mode 100644
+> index 000000000000..3158d99a3195
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/amlogic,a9-dma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic general DMA controller
+> +
+> +description:
+> +  This is a general-purpose peripheral DMA controller. It currently supports
+> +  major peripherals including I2C, I3C, PIO, and CAN-BUS. Transmit and receive
+> +  for the same peripheral use two separate channels, controlled by different
+> +  register sets. I2C and I3C transfer data in 1-byte units, while PIO and
+> +  CAN-BUS transfer data in 4-byte units. From the controller’s perspective,
+> +  there is no significant difference.
+> +
+> +maintainers:
+> +  - Xianwei Zhao <xianwei.zhao@amlogic.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: amlogic,a9-dma
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: sys
+> +
+> +  '#dma-cells':
+> +    const: 2
+> +
+> +  dma-channels:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-Avoid use words "This patch",
-
-Convert apple-admac.c from tasklet to BH workqueue
-
-
->
-> The Apple ADMAC driver uses a per-channel tasklet to invoke DMA
-> completion callbacks for cyclic transactions. This conversion maintains
-> the same execution semantics while using the modern BH workqueue
-> infrastructure.
->
-...
-
-> This patch was tested by:
->     - Building with allmodconfig: no new warnings (compared to v6.18)
->     - Building with allyesconfig: no new warnings (compared to v6.18)
->     - Booting defconfig kernel via vng and running `uname -a`:
->     Linux virtme-ng 6.18.0-virtme #1 SMP PREEMPT_DYNAMIC 0 x86_64 GNU/Linux
->
-
-Should move after ---,
-
-> Semantically, this is an equivalent conversion and there shouldn't be
-> any user-visible behavior changes. The BH workqueue implementation uses
-> the same softirq infrastructure, and performance-critical networking
-> conversions have shown no measurable performance impact.
-
->
-> Maintainers can apply this directly to the DMA subsystem tree or ack it
-> for the workqueue tree to carry.
-
-This private talk to maintainer, put after ---
-
-Sorry, the same comments for
-
-https://lore.kernel.org/dmaengine/aYYm2pA6l-ksXvkk@lizhi-Precision-Tower-5810/T/#t
+Needn't it, which is standard proptery.
 
 Frank
+> +    maximum: 64
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - '#dma-cells'
+> +  - dma-channels
+> +
+> +allOf:
+> +  - $ref: dma-controller.yaml#
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    dma-controller@fe400000{
+> +        compatible = "amlogic,a9-dma";
+> +        reg = <0xfe400000 0x4000>;
+> +        interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
+> +        clocks = <&clkc 45>;
+> +        #dma-cells = <2>;
+> +        dma-channels = <28>;
+> +    };
 >
-> Signed-off-by: Pat Somaru <patso@likewhatevs.io>
-> ---
->  drivers/dma/apple-admac.c | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/dma/apple-admac.c b/drivers/dma/apple-admac.c
-> index bd49f0374291..8a0e100d5aaf 100644
-> --- a/drivers/dma/apple-admac.c
-> +++ b/drivers/dma/apple-admac.c
-> @@ -16,6 +16,7 @@
->  #include <linux/reset.h>
->  #include <linux/spinlock.h>
->  #include <linux/interrupt.h>
-> +#include <linux/workqueue.h>
->
->  #include "dmaengine.h"
->
-> @@ -89,7 +90,7 @@ struct admac_chan {
->  	unsigned int no;
->  	struct admac_data *host;
->  	struct dma_chan chan;
-> -	struct tasklet_struct tasklet;
-> +	struct work_struct work;
->
->  	u32 carveout;
->
-> @@ -522,8 +523,8 @@ static int admac_terminate_all(struct dma_chan *chan)
->  		adchan->current_tx = NULL;
->  	}
->  	/*
-> -	 * Descriptors can only be freed after the tasklet
-> -	 * has been killed (in admac_synchronize).
-> +	 * Descriptors can only be freed after the work
-> +	 * has been cancelled (in admac_synchronize).
->  	 */
->  	list_splice_tail_init(&adchan->submitted, &adchan->to_free);
->  	list_splice_tail_init(&adchan->issued, &adchan->to_free);
-> @@ -543,7 +544,7 @@ static void admac_synchronize(struct dma_chan *chan)
->  	list_splice_tail_init(&adchan->to_free, &head);
->  	spin_unlock_irqrestore(&adchan->lock, flags);
->
-> -	tasklet_kill(&adchan->tasklet);
-> +	cancel_work_sync(&adchan->work);
->
->  	list_for_each_entry_safe(adtx, _adtx, &head, node) {
->  		list_del(&adtx->node);
-> @@ -662,7 +663,7 @@ static void admac_handle_status_desc_done(struct admac_data *ad, int channo)
->  		tx->reclaimed_pos %= 2 * tx->buf_len;
->
->  		admac_cyclic_write_desc(ad, channo, tx);
-> -		tasklet_schedule(&adchan->tasklet);
-> +		queue_work(system_bh_wq, &adchan->work);
->  	}
->  	spin_unlock_irqrestore(&adchan->lock, flags);
->  }
-> @@ -712,9 +713,9 @@ static irqreturn_t admac_interrupt(int irq, void *devid)
->  	return IRQ_HANDLED;
->  }
->
-> -static void admac_chan_tasklet(struct tasklet_struct *t)
-> +static void admac_chan_work(struct work_struct *work)
->  {
-> -	struct admac_chan *adchan = from_tasklet(adchan, t, tasklet);
-> +	struct admac_chan *adchan = from_work(adchan, work, work);
->  	struct admac_tx *adtx;
->  	struct dmaengine_desc_callback cb;
->  	struct dmaengine_result tx_result;
-> @@ -886,7 +887,7 @@ static int admac_probe(struct platform_device *pdev)
->  		INIT_LIST_HEAD(&adchan->issued);
->  		INIT_LIST_HEAD(&adchan->to_free);
->  		list_add_tail(&adchan->chan.device_node, &dma->channels);
-> -		tasklet_setup(&adchan->tasklet, admac_chan_tasklet);
-> +		INIT_WORK(&adchan->work, admac_chan_work);
->  	}
->
->  	err = reset_control_reset(ad->rstc);
 > --
 > 2.52.0
 >

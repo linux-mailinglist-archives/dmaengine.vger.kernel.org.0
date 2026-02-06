@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-8782-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8783-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iE40Do+8hWmOFgQAu9opvQ
-	(envelope-from <dmaengine+bounces-8782-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 11:03:59 +0100
+	id YDdKCty9hWnEFwQAu9opvQ
+	(envelope-from <dmaengine+bounces-8783-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 11:09:32 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5566FC699
-	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 11:03:58 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BE55FC82C
+	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 11:09:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2757B3019D5B
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Feb 2026 10:03:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BE94F3094A66
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Feb 2026 10:03:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18889366559;
-	Fri,  6 Feb 2026 10:02:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA93E3644BF;
+	Fri,  6 Feb 2026 10:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Uj+hcb2K"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="X8c1woaA"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42203612EC;
-	Fri,  6 Feb 2026 10:02:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B813612EC;
+	Fri,  6 Feb 2026 10:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770372176; cv=none; b=kxHdT4Z+FrjjshoY4FL6mojGH5Hkm6K1MUdyUrVuWD/5U6GaJP2UCOIaadvRpra9jJiFcXrJjnkN5bp2q7HrWSz3DCAXyvUt4UbrOEzSvHW7bDhsJfy1eEGkfO36EgugHO3JxX0iFyJQ7w8gFNY8y/Ep8GecVYa9Dp9r2m2F060=
+	t=1770372180; cv=none; b=Ubbn+Xz8KnywJ1ujgemoqMnGXruwGndPLMFsjr1SbjbNCGmQdg4o2kAbXUCikyXJLnJl+aBJsqHMFIZHY798bQWuUneSDan1KiJeHFYboW8i8n1tkms03tJm5GlERUjUGqjfNBKnjIzC8evkFPTwIzn7TY1ST3bMlinjstFhs4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770372176; c=relaxed/simple;
-	bh=S3k4BjRlS5wP4pujErKb7ZWGChsCGkt3VLlMXaO22Ww=;
+	s=arc-20240116; t=1770372180; c=relaxed/simple;
+	bh=jkYB8BssoioRYHyuCDt6FyexN3rHFQ1cQ8BB4b+UjBM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mcNv0z3EoeIkRN4SUxFvr1pZEXNS6aaSC4EGPQqMuXUdtYFHYF6HomOtv1wGb1xKMGGr+3tIqYtcOINZ7bc77qORR7N6qXQvpOZmgsDOzoapy3jw/4XYU9skAAgpW/d2UPdHuwe88Zqd2mhuNI/MXHBfFke3lyHDNENR3bvOoFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Uj+hcb2K; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=e3f52jnm1DPP3ZEXQ9OUXvrYZqlIBUOf7xbjUpRIRdbsj+fZtp/JngbbRS0Rmy6vnLbRubHeRtn4/4peSkoK7N5kV9SNfTtnAYXZ/Eln5OMnOeiPcyyhb8ZG6por8HRiDCLDRV5G5sTiBCKvhS1EBrj1RYtxqbPBAfKDKrOxthI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=X8c1woaA; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6168IqiE1419630;
-	Fri, 6 Feb 2026 10:02:52 GMT
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6168ZCr71988468;
+	Fri, 6 Feb 2026 10:02:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2pWTG0gCQWUbaDz24Q3iEGRr8yV3I2tnk7zTONXjsdw=; b=Uj+hcb2K5xMaayeg
-	KOCKum+NMvCRzkv2GJSWUDbDuH3pJyynsCRsuv4buQbNa8RCfWMK1oIVbs7ljEAg
-	4gqkvBqPKOgY3uzI+xKwL0FhFLoMStgcrQMBWEGj6JtM2yr/QA2wch13QWvRyZ+N
-	ccDb/P0BPrlTSBIhSX0Ra0zHOZkbRSwqtC5Im0i2vHGHf0RwQ14bCbKAx7lVvq0B
-	l1kgo5lGdHZ+Z9HuSDgIe+e1W7k0Ne2TqefX53YZcdmCtkqVlGKiQ+1MZaswn7LQ
-	xMgFnv65BkuqSvD/2rKo+jYjsaXx05gjHg+nfx6xlYS6P0RjUFHaWQtImAzxpqXK
-	AL+nMw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c50a9au5k-1
+	rKRJafa6ySD1hTQ3NhRNuellFDiTNtgs02y1e/7E/rA=; b=X8c1woaAPilEjcqj
+	lsKIroJuiDZqcz4hL5eqL10DYqJZiSyYeGM1ijPCYPlHkSHjUj5sCHPt/KdBm3Dv
+	mM75kfyrX8atle3F5pt36K3ldPBhxgyCgOg+PlIrXj7LzmFDTR8zlQioHam90mRG
+	g4TXYB8hDEcRBuZH3QFMCJtKwBJeWHlM1h6RrJPQDE2rJMRz312ih3wnvrW1hV3Y
+	piviMLh4jYudOHdsbQpV4WAJdKHA6mR3Dik9+GpWtA7xqhAhoKU1dYgaRFV8taGc
+	EjGHj3LitTjdXsAKqB6wJzQ7VOWt8owq52Z4Lbz2Dy6P2Sp4mJmtdTeLzk98xp5N
+	riTY+Q==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c4t0p4508-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Feb 2026 10:02:52 +0000 (GMT)
+	Fri, 06 Feb 2026 10:02:56 +0000 (GMT)
 Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 616A2pGb002631
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 616A2tT3028748
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 6 Feb 2026 10:02:51 GMT
+	Fri, 6 Feb 2026 10:02:56 GMT
 Received: from hu-mdalam-blr.qualcomm.com (10.80.80.8) by
  nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Fri, 6 Feb 2026 02:02:46 -0800
+ 15.2.2562.17; Fri, 6 Feb 2026 02:02:51 -0800
 From: Md Sadre Alam <quic_mdalam@quicinc.com>
 To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
@@ -66,9 +66,9 @@ To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <dmaengine@vger.kernel.org>
 CC: <quic_mdalam@quicinc.com>, <quic_varada@quicinc.com>
-Subject: [PATCH v4 6/7] arm64: dts: qcom: ipq5424-rdp466: Remove eMMC support
-Date: Fri, 6 Feb 2026 15:32:01 +0530
-Message-ID: <20260206100202.413834-7-quic_mdalam@quicinc.com>
+Subject: [PATCH v4 7/7] arm64: dts: qcom: ipq5332-rdp442: Remove eMMC support
+Date: Fri, 6 Feb 2026 15:32:02 +0530
+Message-ID: <20260206100202.413834-8-quic_mdalam@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260206100202.413834-1-quic_mdalam@quicinc.com>
 References: <20260206100202.413834-1-quic_mdalam@quicinc.com>
@@ -84,27 +84,27 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01a.na.qualcomm.com (10.52.223.231)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: MmbQq33jDw1a6boqC1AVSbe_kqdAPmE-
-X-Proofpoint-ORIG-GUID: MmbQq33jDw1a6boqC1AVSbe_kqdAPmE-
-X-Authority-Analysis: v=2.4 cv=e6ALiKp/ c=1 sm=1 tr=0 ts=6985bc4c cx=c_pps
+X-Authority-Analysis: v=2.4 cv=ItITsb/g c=1 sm=1 tr=0 ts=6985bc51 cx=c_pps
  a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
  a=GEpy-HfZoHoA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
  a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=QIVe3DVYhI_-bwApSWIA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA2MDA2NyBTYWx0ZWRfX+LvTLJOg5FA0
- EUWDq8U6zMdhSYsc8YUaaNOnSIpPPmZ6RyWvH9imF4rz0PMuUQmm6O72zQ9mWvVEqAHZFNQKB8L
- mfMIbehaeK/YRktEPM12hOgJtdA9tHrbPMc2RzgTWn7/lN1EfSe0hF6L/pLLIQQngddOYtmqT7r
- mQbbYKCCs1XN7U8aKsa8uNMm03Sz0zWsSHLpRnNNAGLny5V12goBL4evERRjbXjH1CxggtxGqb4
- 3SUaWK+kVbJw5XzgKIfFOTHJlTvsxh2Kt3m3jw2UtgKYmYnZJ4G3XgMuUoL1C2hWDAIvfn+6Lzn
- oQg+6eEsxpNkB2hGqP0e9oLvJTsIv+VMlt5l0YKxRRHDVGrmBnJggyPqso8LSO04HPFKqEi4jnK
- n8XTNWykjdjUj4BqM59Kk4Sj8ny7qPs6AVj4Qaaqhd/n27A/A+UgqEzUIAMhoADU2xTuyEo6sPz
- bZ6/UxYGkDYCooG+Shw==
+ a=COk6AnOGAAAA:8 a=fuWxvNZPvO_ztXA3lyEA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: Ds6UkQn9OTMPbkBvPaoEELMhIICb0VNI
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA2MDA2NyBTYWx0ZWRfX8O1HltXhNcqd
+ dwhqsY38+nhv+HqGTvbAsAzKGp8xfNlrCE9+AoaK9iDmsezmvrlQSkRL8k2eNu4ADHyWr8ET75M
+ FM1+9P5lyZ6n4oit6HPh5U5njMvoHch8ZtzSyFo736lRvd00Co+3qr+M1jry4x3ImVgWO4IuSfZ
+ 8GSm2Xaa+GOeUAN0NtYKDywHg02kxYDwxJDCnz79xyYYo1L50rtF1wiKkjBCTy3jltNRbpeEEve
+ HWnR6pM8d84bMq84dOjT6NID69syJdhsVxFw/tinis/lFsWIdW82Kuw06FmFMWciXQxpatB9Wmo
+ ESDSwNEBSLC/v5M6Tg9O6ObiV/W0YtvNBiQJb0IraNrqlj97vjEIorfOoShDdDsAyDBp9dJYLaK
+ Pjq7p796plldOwV6Bn24giaYvrx0lrE9gEEwhU0qAoxbAPZz9T1chmVUlWU0HMpzuXd3V/DwhYT
+ 0hO6LSovUZ9d++748kQ==
+X-Proofpoint-GUID: Ds6UkQn9OTMPbkBvPaoEELMhIICb0VNI
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-02-06_03,2026-02-05_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 adultscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0
- suspectscore=0 phishscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ clxscore=1015 bulkscore=0 spamscore=0 lowpriorityscore=0 adultscore=0
+ suspectscore=0 malwarescore=0 priorityscore=1501 impostorscore=0 phishscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602060067
 X-Rspamd-Server: lfdr
@@ -115,35 +115,35 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[quicinc.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[quicinc.com:s=qcppdkim1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_NEQ_ENVFROM(0.00)[quic_mdalam@quicinc.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8782-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8783-lists,dmaengine=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	DKIM_TRACE(0.00)[quicinc.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,quicinc.com:email,quicinc.com:dkim,quicinc.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[0.0.0.0:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,quicinc.com:email,quicinc.com:dkim,quicinc.com:mid];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCPT_COUNT_TWELVE(0.00)[13];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: D5566FC699
+X-Rspamd-Queue-Id: 7BE55FC82C
 X-Rspamd-Action: no action
 
-Remove eMMC support from the IPQ5424 RDP466 board configuration to
-resolve GPIO pin conflicts with SPI NAND interface.
+Remove eMMC support from the IPQ5332 RDP442 board configuration to
+align with the board's default NOR+NAND boot mode design.
 
-The IPQ5424 RDP466 board is designed with NOR + NAND as the default boot
-mode configuration. The eMMC controller and SPI NAND controller share
-the same GPIO pins, creating a hardware conflict:
+The IPQ5332 RDP442 board is designed with NOR+NAND as the default boot
+mode configuration. The eMMC and SPI NAND interface share
+same GPIO
 
 Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
@@ -165,57 +165,61 @@ Change in [v1]
 
 * Removed eMMC node
 
- arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 30 ---------------------
- 1 file changed, 30 deletions(-)
+ arch/arm64/boot/dts/qcom/ipq5332-rdp442.dts | 34 ---------------------
+ 1 file changed, 34 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-index 7c32fb8f9f73..de71b72ae6dc 100644
---- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-@@ -124,13 +124,6 @@ &qusb_phy_1 {
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/qcom/ipq5332-rdp442.dts b/arch/arm64/boot/dts/qcom/ipq5332-rdp442.dts
+index ed8a54eb95c0..6e2abde9ed89 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5332-rdp442.dts
++++ b/arch/arm64/boot/dts/qcom/ipq5332-rdp442.dts
+@@ -35,17 +35,6 @@ flash@0 {
+ 	};
  };
  
 -&sdhc {
+-	bus-width = <4>;
+-	max-frequency = <192000000>;
+-	mmc-ddr-1_8v;
+-	mmc-hs200-1_8v;
+-	non-removable;
 -	pinctrl-0 = <&sdc_default_state>;
 -	pinctrl-names = "default";
--
 -	status = "okay";
 -};
 -
- &sleep_clk {
- 	clock-frequency = <32000>;
- };
-@@ -201,29 +194,6 @@ mosi-pins {
- 		};
+ &tlmm {
+ 	i2c_1_pins: i2c-1-state {
+ 		pins = "gpio29", "gpio30";
+@@ -54,29 +43,6 @@ i2c_1_pins: i2c-1-state {
+ 		bias-pull-up;
  	};
  
 -	sdc_default_state: sdc-default-state {
 -		clk-pins {
--			pins = "gpio5";
+-			pins = "gpio13";
 -			function = "sdc_clk";
 -			drive-strength = <8>;
 -			bias-disable;
 -		};
 -
 -		cmd-pins {
--			pins = "gpio4";
+-			pins = "gpio12";
 -			function = "sdc_cmd";
 -			drive-strength = <8>;
 -			bias-pull-up;
 -		};
 -
 -		data-pins {
--			pins = "gpio0", "gpio1", "gpio2", "gpio3";
+-			pins = "gpio8", "gpio9", "gpio10", "gpio11";
 -			function = "sdc_data";
 -			drive-strength = <8>;
 -			bias-pull-up;
 -		};
 -	};
 -
- 	qpic_snand_default_state: qpic-snand-default-state {
- 		clock-pins {
- 			pins = "gpio5";
+ 	spi_0_data_clk_pins: spi-0-data-clk-state {
+ 		pins = "gpio14", "gpio15", "gpio16";
+ 		function = "blsp0_spi";
 -- 
 2.34.1
 

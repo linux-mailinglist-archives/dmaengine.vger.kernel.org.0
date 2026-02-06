@@ -1,82 +1,80 @@
-Return-Path: <dmaengine+bounces-8803-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8804-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WEPTNvdAhmmbLQQAu9opvQ
-	(envelope-from <dmaengine+bounces-8803-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 20:28:55 +0100
+	id 4NkWAjBBhmmbLQQAu9opvQ
+	(envelope-from <dmaengine+bounces-8804-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 20:29:52 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8894E102BE6
-	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 20:28:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 771DB102BF7
+	for <lists+dmaengine@lfdr.de>; Fri, 06 Feb 2026 20:29:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 248413004228
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Feb 2026 19:24:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5F8023009F82
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Feb 2026 19:25:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 427093093A7;
-	Fri,  6 Feb 2026 19:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 797172FF651;
+	Fri,  6 Feb 2026 19:25:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="LsS8s50s"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="TgBXMLkp"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013060.outbound.protection.outlook.com [40.107.159.60])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011056.outbound.protection.outlook.com [52.101.65.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45C4302CBA;
-	Fri,  6 Feb 2026 19:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1557A23BF9F;
+	Fri,  6 Feb 2026 19:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770405882; cv=fail; b=DvN1KzMxZyDQYaejq7k3o2awMT5ApEzN1RsqY70hltKhbRD3DmzfJsue3Zf/vRxZvcw4hXgBiASxfPfCctl4uUnl+bi0nPq1VxNKXw5hUW2jSKwCZQ5+Wm22RvXSsl0HCEEp40BNW3rJsP2demBFUn3eMW7PmDImftRIxQJl8fc=
+	t=1770405948; cv=fail; b=tcf7CL/r2zpav2gU0GlOzrWwGrZa0F63QcfgAk7O4RKsh6RU0sJoeoj51wZQhguC2LCSDxLwE6cogn5ksP4iVBy7OkGzpjd5J7eQn7porSi7V0dEz+9tdwVIO5EZL2nEWKR24egJgmDsiorsCYV/U572pUhVxWibksMbc2xhnJ0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770405882; c=relaxed/simple;
-	bh=sbHs4uQ3q1K/Qocrc9vtjA6ZoeeCxXHPcHpDuXPs9Ok=;
+	s=arc-20240116; t=1770405948; c=relaxed/simple;
+	bh=l0fvriboSo7hU3TJUzxrchUVzMSL3j6z6PXsVVrjO/Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ruUBfDmG3cxodMkovg6pRUSVitc0a+XBJ/QmdZ01kM0ceIssNgvLA9IrgpUhC8xyQtnFL5IL2yZj0JxprGCG4GrYJvIC1Xr/kq90rShUKXBl18q7x3MV4pDyEgsgZbemosC/EmoOs2hiznPz/Ad9hl3P8nRDlGJ3gKTSvkzFS3Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=LsS8s50s; arc=fail smtp.client-ip=40.107.159.60
+	 Content-Disposition:In-Reply-To:MIME-Version; b=AU8c0bagYvNU3/5jecTp4iNs7+91qEnRL2bKdv+0+ZXdWH8kluhAQhRXNP3OVKkYJ8xSPkQE+JwjyPX02vzcIPZ0ijeu3cY+YTLa1rY8InbMqdMWSIxAMHzJ1DjAH9BZ0q/wmO0iTj766q3VN8TOsf4ipwPxpd+3GML/y0Rul+s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=TgBXMLkp; arc=fail smtp.client-ip=52.101.65.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MQd7uWfqP2GweoelBCUSesYT6bYgHkzehDCog7ZbcYoUToGjwb9yW11fHXtcw4NVpQjBKTE0wE8qo8E9VWuPUfcz4kbHhjaQvAzgf4rf/b+TFriZlh/CjbnaqAv/aJmoIveHEQDFvSnvYf8Z6zB000NUam6mbGkFBxT6DwWNd/8kLu3KnhzaopwIj0L/3YydWYmLLZ85wTjHOGjU47poIfFFatuq20r9e6IDSxhkuwHuMHDxvqJts8s69eayxiz9ujUoIaIVq66aCM8ciKb7ejsckK2GJl1vpu6lm59gb3XLoVgdHwT3ldJ9TEASdEQk5rFcEecbamiyGZ8UHaP1eA==
+ b=l+XlCiq5UVFbpklZ/ufySJxe5SHS4emOca/NPFpMpaCddrbScUJ9s59f5sqldaAVa1O4BD1aPvQWyUKKcQIUZQ+XpTCRtGzeNpAcgtL9KtsQ1MGtc8IT/sZlsKZgF3Hbx+P4xs2cbzRWGmMnhPTXk3sWsRhmVCMQeyASWQY8AUfadrCnDJSQ3EQeGJH7VZczKLmLKVs9nZHDEVIwb4ZxjVK9C2+vAvp5GbfkgW7EuNFfwfr7eaWa2svKahhoZ7d6cuCJe1a2AVMquOstt61RhRYo9FP4ukBO0x0wHGPigJLC6OoZKFWBqaao+cOjrMGPlAIAyNdyNLOfNWb4iPoK9Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1EvuhBNQK6DTDG1Le8Xam3LIRzr1H4LhR5FGvoX4GGU=;
- b=Csxee6t3eiflUC95Q2kW1lcJepywbdptmYan0YqPD/ZFe/CbFdhJ5CvUlilGZRicAEyxV2q9giKdqePcVef4hOazcDOwxOHq0ra4V3clkEjL85RL7AuTUzZZONzpy3/htY/d4u5MDdPklwWzZUwW4JtOcrbMYuF/hevgabSFcC59961xaYXX+QztJ0SXd2wxc+0ciz9hsYxjmMrMW4XRthqMKwgNmCP+Zyx4LxJfQWFn7Vc4Fxxk/wdvvulwlhi/Ou7mO5+OdK2cZZLw4hgF9VzNl9v1UdUxqAQLR5QFBWZlF8hWOVnyoFfl293dZNGgQR3vWrMu0gYfqNLv2isWuw==
+ bh=s1WBAjUR4A0qGikeGK5VJ75j8l+n1Ieo6GoAx3jvZLw=;
+ b=WJr6soVVCSvE2acs73GceZDhQD9NoIfFFIV+9VSfP64OvrH/LgCUvQrgztJoWXXOf5HkNuuCmfZoZggUB0LxxNU9aN9ib5oyNG18bR0bb2DYBrwIuTWb7heoPj/aeg9k7ap2IUT+LZ7BebaEjjumwAkNqGVjDvlJzvtLpJc6/jKJUMd/DjxyPmWwfEHXTFbYrWd+jFNkDBUK/266cneosOoysnFUs+7tuP/hXyHeDTlUGZzkTqTSsxOM08ZWQ4aSxSk96ztxVawo1n+IV8S8WdN+dkEh0Qu98m+y05SEqOm9Af8P8+YGi/C8dUJfnLvcznNmfpX3XoAWq/4GKzhndQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1EvuhBNQK6DTDG1Le8Xam3LIRzr1H4LhR5FGvoX4GGU=;
- b=LsS8s50sNChUweEHvZqJZIsSpdn+jbJ4of/a4GYGuSYhgSxUMX3C22bG6V9jDMJDpOdEFACQH4FycnO75OcmEcFE2bUI9hF2gxGCPoMyX3sUbdVRh+FFgk3EIW5ZjzlqZqDDfqCCiYBjGVdm31w7F22w+s9pylJuxxo/JBu1wR2MSSleeKYP0F3cVd2kUVVTTtAwIdXs1QPmlOF9VxZkAyShKDEeY142YOcnrkISsPElIfWOBTxlX0NNi7m02cDTpDQHITQsSN2ZeFhwWXrYZIJ8JJ72cb2aRCwk3xlnkZglf+IJM0Sco8rPjVvNOl0hSa+y9pvdrKAPuBhdYJ10qA==
+ bh=s1WBAjUR4A0qGikeGK5VJ75j8l+n1Ieo6GoAx3jvZLw=;
+ b=TgBXMLkpd0VSekpYeWSI10Xx4VKCdrtxTAytp94lxxrJd4ps4FQUySOLpRlVNNqgvgNyolGkWtqLygF/Ma7fKqIfjyGX+6RCnImECxpLOeFprBv7aejfzUoYI7/39KO3CbVofzI5t9emAdTlzHSiqC7GgmwD5bmR9gyhhixeZAXBthPbHa2fHJkp1WrqJFg1y+i+AagA6dMzrzF22iKpkKd0Fz3iNylK9ShLwekESQEcVzFk+APA3DaHtqgeT+ht/QXad5frtUndRt7zTKfU3om8gVUf98aDLcuXua/SgkhCHYeWpvsiYp8LF1Qbj5LNpzW5WFKuS2BhZHcb/5bwbQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
  by DU4PR04MB10402.eurprd04.prod.outlook.com (2603:10a6:10:55b::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.13; Fri, 6 Feb
- 2026 19:24:39 +0000
+ 2026 19:25:45 +0000
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9587.010; Fri, 6 Feb 2026
- 19:24:39 +0000
-Date: Fri, 6 Feb 2026 14:24:31 -0500
+ 19:25:45 +0000
+Date: Fri, 6 Feb 2026 14:25:36 -0500
 From: Frank Li <Frank.li@nxp.com>
-To: Md Sadre Alam <quic_mdalam@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
-	Frank.Li@kernel.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org, quic_varada@quicinc.com
-Subject: Re: [PATCH v4 1/7] dma: qcom: bam_dma: Fix command element mask
- field for BAM v1.6.0+
-Message-ID: <aYY_72kT63lH1h2r@lizhi-Precision-Tower-5810>
-References: <20260206100202.413834-1-quic_mdalam@quicinc.com>
- <20260206100202.413834-2-quic_mdalam@quicinc.com>
+To: Pat Somaru <patso@likewhatevs.io>
+Cc: Tejun Heo <tj@kernel.org>, Sven Peter <sven@kernel.org>,
+	Janne Grunau <j@jannau.net>, Vinod Koul <vkoul@kernel.org>,
+	Neal Gompa <neal@gompa.dev>, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dma: apple-admac: Convert from tasklet to BH workqueue
+Message-ID: <aYZAMPX8tLU0fV1v@lizhi-Precision-Tower-5810>
+References: <20260206090137.1127897-1-patso@likewhatevs.io>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260206100202.413834-2-quic_mdalam@quicinc.com>
-X-ClientProxiedBy: PH1PEPF000132ED.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:518:1::32) To PA4PR04MB9366.eurprd04.prod.outlook.com
+In-Reply-To: <20260206090137.1127897-1-patso@likewhatevs.io>
+X-ClientProxiedBy: SJ0PR03CA0377.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a1::22) To PA4PR04MB9366.eurprd04.prod.outlook.com
  (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -86,222 +84,226 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|DU4PR04MB10402:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7f0d43f3-767e-4365-4ba2-08de65b55ee2
+X-MS-Office365-Filtering-Correlation-Id: e90a0ef3-c13b-43b0-82da-08de65b58641
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|19092799006|366016|38350700014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?91oKj6M0v5tMeRLQzDKuAHICWmVV+ZNwQ+RCYR6Wc9zItfeEcywNrXX6akfM?=
- =?us-ascii?Q?b9dbAit3FqTq7k9iKJcEO0Gc0PMAGPJ5D6Yc3nv0IAbLndVmQ9eg9FMzXJoV?=
- =?us-ascii?Q?MZESW4aqSvy6FrXQch3Io8NsLlIojcXSOyNKx2Lhq2mppPHdFlhEIDs1GtjV?=
- =?us-ascii?Q?TUE/DW0XSegMI9WRVmKyFCfy8hIOKIePkIR4IkVRFmdjYy4/4d0bNe6bQycK?=
- =?us-ascii?Q?4zhzLkLWmW8h1NfKnXC1ehGAyTe/7mouJzT0wfGri9O/ZFbu1cUfWEGxRhfJ?=
- =?us-ascii?Q?zhlD2dyq1xsVtqZpJe7CSk37nPW2QgLaXsQr7Rtj04st8SSgNZMCy0nBJ/9S?=
- =?us-ascii?Q?8s3TTAzMiwTrGp/vwT5Zfw303A8KPSyJY3Y5rgWII2fnIWQfPzriTvVQA3Jx?=
- =?us-ascii?Q?p0znMmdIz8EBXx25oG0aAgP/Sx1aP8vvTjIc1wbpym8FA2xI5EEZahH85u9y?=
- =?us-ascii?Q?/R74kV4OU3QK0PIPnEIrb/u979Txh/L3yd77X0h7gBv7HTOkuMrnVuDFum4s?=
- =?us-ascii?Q?5VWKMepHpIIJuROgAxh8xDBj0D6JVVmhx8yoJ4pR6Q7oj3BxmIbSVWdjKe8c?=
- =?us-ascii?Q?LDv+p4OXGTHpHkOpWkIwHV9e5t9jLQ9WXsBbcAOAG5MoJF7JkllTe0Nrl+N9?=
- =?us-ascii?Q?ZaxtVmIfr4IJ0q58i3eV0dTOzCKqPsgzXWXepR901u87adhrBMRiPjoKZ4ym?=
- =?us-ascii?Q?64X9Ha40l2UrHf3aCNekHZX+w9zz4pFZjF+1QHfA2r5lqIkLPHER85bgYkZy?=
- =?us-ascii?Q?aG3oGot1rZ6wjQ21agxwxBgi7M0Y0gewkr6pO0y8sivmkSHwJuaHu9zAxSPC?=
- =?us-ascii?Q?2BDqtE8Rdc8+S9hKxLqGWw+0iJyDiKFg0DyD/tdQiNfuMUZdfV5Pv/Z1qKO2?=
- =?us-ascii?Q?mFPZmy6Jv3hNNj3TK7gn4que1eil+73cY7FfI9fiy0pq3Dq+xKu82fHtzFn8?=
- =?us-ascii?Q?8UKPjpJ6czqoNp6CYK3M3nnG8Y2lB9l3ZEiyTyjBBLvWduv0kGDSHMMb0XXW?=
- =?us-ascii?Q?gD/hAYz5na69AcNQKkVEbkyVZguJ6KCeOQZMrH0/KhFuYBglXzsx3RHQmKMb?=
- =?us-ascii?Q?jN7YVX57ngjNuUlV55YBU7R7b6FSOrGu6ISSM4RYm69kAxVZk5VbF1+1qweE?=
- =?us-ascii?Q?fhAov0ffi2widnNgEaGtcoLZaOxnlcBIlr/eOI+bGYxUtWiuvN1yqW8xU8WB?=
- =?us-ascii?Q?DwLxTgiKrkPJ5EvzYfpRN3x/pb2zCJs9ubq8DJ57UWGHcg6cQrNoocF58EwE?=
- =?us-ascii?Q?17voe3f0MiSms21mHbXrRPT5jG3pzMxGrf5q7MXe2b3b8QmhtaFcs5Jl0Hch?=
- =?us-ascii?Q?gjUtjJaw2TDboO+0xdWQd4IXMSxJ+xbzQzkR+uBtDocPRNLgm7UlW+KC6R8E?=
- =?us-ascii?Q?/LPkEHN5qAj780NZVDW6LxXp3w8YGGXX2cWZPaF4bUQOTGCZHmxkTM0hCLjV?=
- =?us-ascii?Q?UlWTvFTfKYlUozuOpTvRssqM+3fT1BGIvKdnW/6oRAHdk41ax3Iw3GDGHBQI?=
- =?us-ascii?Q?3pB4H4+TRKLFLiDflM0b7IExlNlUNmjShja4QH8uWqi8veerkSg0PLhI53Io?=
- =?us-ascii?Q?VnIuhf2S/vtVLZrlgvmEM/V7Ur7AFPasssRiUxJjJW/EAGIhs6qbAtLZbzkK?=
- =?us-ascii?Q?btvn/IapTN/QdToF0TQbqEg=3D?=
+	=?us-ascii?Q?bTa5A1xPT3GbQk6b6M4DgoFj+DNJp6uqosygtlZ8N0qiOy0lUJlriH/wnywN?=
+ =?us-ascii?Q?uCBFt+yqNIiNzS2zUxh8xd1tSyw5YnEcVIq2q0KPo2pGspuppCnzGOy2Vk4P?=
+ =?us-ascii?Q?9kMXS56hpBg6HDljRu3V7cUbjZcf4Nlj/rWZJUL9wGX7/QhoqDI4jGDMKXCe?=
+ =?us-ascii?Q?HwDcnkgEVK6Xg4N14ymE4bt4muD0Q/0N+DVp55srUtCnfbm0rpZjXtSgDrbD?=
+ =?us-ascii?Q?+9Iys44IAF1kzW3W65RCZJ/O4BpcYa09whtTWqoINd6gJZY4Z1CYP5mBgCwc?=
+ =?us-ascii?Q?E/4jsYv0sCCO2M4ePaqQo5Q5sI3bydo7qoh19sUa3Px35FeqrAN+EAVI3fQP?=
+ =?us-ascii?Q?UndKM5/4fbMeDaz2xUI/ngLwCaG3HQ4QA4tLWrgFbB1pn6Ge9Hi71c0ZnpNo?=
+ =?us-ascii?Q?WIFKjq91GlX7gGecLJnU0L5c4Wj5lUAe5ktHR8CsNjErD1z9FnKQ9aBbCjum?=
+ =?us-ascii?Q?Uu7NPmkSGTJsL5FPt9S8k7UHP5GGNFZkuF1mQBNcWcon8zzfdXxARdrroF+A?=
+ =?us-ascii?Q?DgDG6Y9E9//dryGeyGGeANvhgP22gP5CB+CPTy3bYoE5eK9zJX0/RSKYsYcw?=
+ =?us-ascii?Q?IU/nNUxULo37LWcVLIMsLBp8LQ+aBjhBNzjbCyrsBBHqKqMZnehlym0LVQpl?=
+ =?us-ascii?Q?9cvAhvI1yEmgJF3PSiSg5vkDwaTdyVlErRErCRptdPWY/rxTbuN83vlxByON?=
+ =?us-ascii?Q?ZDDZ3P+KmsCpegYk2y0B25NBlQGkQBUo/6JXBlAQXu2jmZ5xGI9dFSfw9l8v?=
+ =?us-ascii?Q?cdQGZbkqUAjxaS3QOfpkjjWzDhLw+y6dFLKE98Rlwt4iT4lNwg1F20EKIKS4?=
+ =?us-ascii?Q?7UKwWN3TYuIOSM8zRVo6p4v1uDVMXRXIMC9qI9lAa0zZ7RepmbJDYKLNuoHk?=
+ =?us-ascii?Q?Vds+Zo9Z93DDCk7w7nDEr3xOtrvhamwrVicRihq+KYb6nte8103Rr7+612XF?=
+ =?us-ascii?Q?T7Q7G9oNvWnhzDkiIbcVmKPDVOCE53SCd7Gfw1ELTaeHKAjQUxVNoYIE2Irw?=
+ =?us-ascii?Q?wysPs1lgSua03ogFrYRsHJGuVnyqOQT2tI/NzJbwVnTbamctDslj8jGt2tlz?=
+ =?us-ascii?Q?wef2eREWBtf1WZjv8BTsSF2xDShmPBLGS//21CXvdFPZ/Gz9e157GzyFSoAk?=
+ =?us-ascii?Q?ShppGVvPeA6Bpc0xZW3+dmfSxg56Wcj16EIP7snnuDKjA46FPT2O2CAETRqg?=
+ =?us-ascii?Q?OrLRmGmcWwXbjyzpOD3M11a/BbNAmX31TZx2lM0gWgzG0dh5G3ox7fzr8+8U?=
+ =?us-ascii?Q?PytURza8u4zD7CX5NIMJvaxZ9gxkidcppMK5SYX7ekCG/KjbQ1EO5KqXmuSG?=
+ =?us-ascii?Q?OFD2PAs/0RbvlLhwPhinUh5HwCg82rBGPAtbkvMTXy1hxU31Imk8MRGo2ISi?=
+ =?us-ascii?Q?E8rAEwlNdvsUm46IpGMDb6g618SjwliVpAUKFz45XCaLmCRbEKwZdLnOhnZp?=
+ =?us-ascii?Q?0A+zYAJUR7itQprMWfvLhO2zqhjxE8xHbUk5ehi+rI2Uff1TnfZnRPSwhBaK?=
+ =?us-ascii?Q?iFlQDQ0cpbNjL5vLpV6PFdKVzYzpMm7wOWMr7k1TDST0PGYgH/urye9PXaVA?=
+ =?us-ascii?Q?3owb45DyWaGDpfMUvfYfzJC4ekQ8x+3PWcqChFtmCgdANYj/hlPs29Ry9B+N?=
+ =?us-ascii?Q?hN64ao3yi1bVAhMafsKNw/s=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(19092799006)(366016)(38350700014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?o81GObGtU8QSnAbq24iOtgrDla5v8nvjYCgT9BZhA3HTsjXaLPulXWwVP6Ud?=
- =?us-ascii?Q?9FQ4KatA9NMEoFzvnVKrRRpaJJ/sgC76Mlw4Vf/miyibG2T2s0QgUm6q7Jnc?=
- =?us-ascii?Q?zBRyiB02NFi/fnuurisM/M1rH0PsoDPfXHplrbnmZ4BoNthK8WhXE19/s4jj?=
- =?us-ascii?Q?4EbZlZo1rN115AWg/QkaUg85ZJbURhMS9k/j77s+l5Yop+5trrC7BnKhww9R?=
- =?us-ascii?Q?QaTY8EZSXXOPyfj3ASqUBG/kp69ASE3N+tHM69ZJ5Io2jV5Vlj3drm3p/k7y?=
- =?us-ascii?Q?QYic5DJrQsW1K1FJfRrsnAxhw+lOD3OjXO5y2CjKIpuH1WYK3F4Ggryudsq1?=
- =?us-ascii?Q?6YjsfDlLtNXsA9hP3WsaEZRJAbYp7hKlvGyNsWeW/2oCYB09U1BoxKwxXs5R?=
- =?us-ascii?Q?nQrb+xflxMfBvXBAKmJH8UdOMFuKPpnmphsFltgpoC0jCMQVwM77bZc3eh97?=
- =?us-ascii?Q?qIx1FnmSMI99HCpUjldWRJNB3Www2NnNEGf/uv9dDtpIJgOGC/EM+vjI6hyd?=
- =?us-ascii?Q?1LtWg57zBvy0dAq3ScqIsRDxFOPa8JGlXR7yhaLqgbAD9bxQyGE+c7eyZGAs?=
- =?us-ascii?Q?cgh8QEM+G1UXoxyTUP+BTu0ZydD2AW+YD6et0Ja8LltYtvzqhXXAXh2AbeQW?=
- =?us-ascii?Q?TewEZYM57J02kiLJ1vihGloNKXSSUpM2APRFZz71A4u1QttGpGCWEbBs8oBg?=
- =?us-ascii?Q?zf6zKmF+Nq55Cu4gpkQW1E7DgOYPFL0hDarxQhCRHmEYOLTZ1KczKp6vdTBY?=
- =?us-ascii?Q?LlNtLykRK7C3L6Dhew03wJly4IM+R1XUxwRqBJ1yVQ/x8OMZMJYEJAj9pc6L?=
- =?us-ascii?Q?pWJXa/CzjYyN2ZWKNnMXCNrI081P8LKcrwLCAAYWVaM/CzTlwkn0Xg7+itRh?=
- =?us-ascii?Q?sIq6XPCbQ9jbSDSbaRwMDZVzRdyn8W7MoMra/nZXy+DiF6Hy47j14mgpJemd?=
- =?us-ascii?Q?58bBW3rEwyUVHQHOG/WMY68mvvzPdJcu5+W0WODeba6guxT5kCKJ/TDYUN1b?=
- =?us-ascii?Q?Sq91VPD4wMmAZRtmn5x3a5hC6RKJUrUEHruUkEpfRbYkM5i3wimRu+LhbzhL?=
- =?us-ascii?Q?8RfD1vWww4e3LdpKCALYAJ7C4+tNumz/KgEWB6zHSGkLsgj+kvQURErt2z56?=
- =?us-ascii?Q?pUSAFiE6JNYpORh52CBDJ2HknRi49LQfb504DrLFxJ5H+W2IM4V4q+Tbmpc5?=
- =?us-ascii?Q?VU7fopsZosFK2HEUi148mRkwsQCXR69BA5m77wjpkBK9iQ3mOBFDkxwBFiYf?=
- =?us-ascii?Q?LOHCQi2hbatjKU2XKb46V6GXUuKSB6Chct+NMR1aiDjTXerO5GHI7DxdCst3?=
- =?us-ascii?Q?x3W1BFWsELjBcwh1/YDky91SErpKbgqik84CKGkgHk+YrOYaOo4+SoBXUBkk?=
- =?us-ascii?Q?XpBjQCF/t2BNgUmbOw5lTQIYI//79VjEpmtRq/xJh0l6HoQT/yjj1rRxab1Z?=
- =?us-ascii?Q?HItchuxpmi43mNx8fGZUttc5xFz1or6X6H4LFcR3XagZHc90IBFvqufecQHp?=
- =?us-ascii?Q?6T41DS405xDiKi2c2G4eJOGS1q3bzoMv3mDruOOTSruiyyRT4M/S56ozQFkx?=
- =?us-ascii?Q?3k6nmWNpCDiOMpwykv7ISxVdlwZnYJQrEjKGISYYMMOAOmLo284/nzSCzzbm?=
- =?us-ascii?Q?j7AcTLt0aIIbYFwlMacs6lns8VS/pP9Oxe0Tv3xaKjOKuTAespK690TUwsyQ?=
- =?us-ascii?Q?XNqDuVjq51osOnDWKrzrCJw/0ST9B3p0w6DBMSJK8q5zRt5c?=
+	=?us-ascii?Q?N8xpAWPxSm7Pgo0RM7ylYRMAwxvixAxWQ6zftWVaVcRub3QSCjbRQahiCaQv?=
+ =?us-ascii?Q?gaM8m+VIGDghuaL94MAeV54mocTCNuSi7UiWzX/D8X6dkr+D+L0juEZ9KyMv?=
+ =?us-ascii?Q?qhVwEXHGt1ca3Hmg6YCZF4uAQecv0eGXpMF9r202paOdG++IiWRyatxyW3SE?=
+ =?us-ascii?Q?5Sy1Aa+SP0W1XYLe+H3a0n5gEfz1VFCEqxXttEkfeha1lfRnUw1lSpcaTisl?=
+ =?us-ascii?Q?j2F9zDSifeusRezc5Pso6mIkWLu1UhAKh/8zt6UyjFqjqjedx3mN/b5VKpVC?=
+ =?us-ascii?Q?mWKZn5Xk+ammv9+aGCf1l0bkd9i6e2qq4CBa1uIhyUb45qzkZk1cD32uWF5N?=
+ =?us-ascii?Q?DerpBpTsfKpuW8lw1Ov2T1UxeATm9aSl7OKo3Mp4VqGJP1eS4iVKRmawzrX3?=
+ =?us-ascii?Q?X9AIg7o2qFg9SkhOIeiU0ct5MOWACBrIiJNE+OpXOdsZwLcP0wj4g6MnET/i?=
+ =?us-ascii?Q?ydaqgnCQXh/evWLLXYIYC39PXFjW6Kw7+h06V/P1WkJlgyn7qq17D1fKZnIQ?=
+ =?us-ascii?Q?hszjochfuDexmfh+YXJOz7IQ0JYQKRtOwalLBfSI6whEtel6+6/wE0jHtzc2?=
+ =?us-ascii?Q?54Shc76IltVPdcB4ggB70WNJ0gi3RCnzC143cWj/8oQaZqRVKD1Ly+8zO1IF?=
+ =?us-ascii?Q?B39fGiY8sxbpFAkLikSTVOV8IlYnWum7zyAKm4wXhfHdEhUWZ0SIw56jihLg?=
+ =?us-ascii?Q?iT4JPdkbW4pKZ3CgkpDFqc0O5/qNIq+4tfWnabGmytA4y28P6uT8NnAiVseb?=
+ =?us-ascii?Q?uauyx0UfVglneyiIbtC/cKUVBFM/+U0Lv4YujPsWDf+1/VJrROVYhENkF2Oq?=
+ =?us-ascii?Q?xCOE3QkS4qPjT9AUySTEzMKg1CMDetb1P1iSXKBdhLcKE2Tg6o2d856mEY75?=
+ =?us-ascii?Q?7X+ICyOrl5vk3HdPTS1yFOmn/f7DRiNpRl7chGs/o5y34Ict9s71le37e9zr?=
+ =?us-ascii?Q?IXXY5KJswHnoZQt9VMWifsI9Qqr0lLCKMcHiUpx4/2hrO3Kgv8znAg1SetCV?=
+ =?us-ascii?Q?ecqdyhRLqkqfJNTwPpII1IaWGxn3WTsooSlzlJ7/tphcUzJmDre44ItgB9WJ?=
+ =?us-ascii?Q?1YJDLXpdEdIstsz3MnBw+vq6RbMjjjnjSfAdQnMamAAI0vN9s/qxwaKMqVPE?=
+ =?us-ascii?Q?kDno4FVVyyPEOWrnkEegVcXbANsWLL9ElRtHT7j0CKj0OlW4eXuRl713sS/T?=
+ =?us-ascii?Q?wUmjEFBx0jjPJnuX7YTB0fd5NmQ5VRLDj9b8q3clKamqiBNgdQ0M/QRMwgsw?=
+ =?us-ascii?Q?2Av9dcCW0GsbJ+lU0fsKumqYIY+Z92xvAGHe5q7lltJG7JGORIJj33dXdB8Q?=
+ =?us-ascii?Q?WX3DKWrJPtXoskW/cPuyZqgIZZyfvt5rQpQyM5LfzJT7L8lliT3rrWtF71bR?=
+ =?us-ascii?Q?ONY6C1947/8nVcqE7MLGrKa1+6KrI4gIbAT1tKANzjYPuTwJYbzuE/mXOr9H?=
+ =?us-ascii?Q?GWj2fKvGcoeUHgdDZER3wC1eJ5UD7hnmOKNuM+rHBv+C5M92lm0DVH8CMMEj?=
+ =?us-ascii?Q?gy6TWCQqaN5xKEA3koNCDsox+kzCV/OSUlmUBny/E+CQoGvPNco+kb3S4yjF?=
+ =?us-ascii?Q?6I8rEg6HISW+R3oCtQNiZy0zUju3fB7kCHmyr/HRhyw6syU19gIq7ErKySPb?=
+ =?us-ascii?Q?E7rbRlKGd80zHM3TvOp6cyksHL0rYZCGaEk6IJA3XPgjWSrQGhhcPtDs8sEM?=
+ =?us-ascii?Q?2nRWrZF2CkGPAEmBD15SrQU7wWudG2dlwoAYgmbRkdk+bxpNyiKgugLjuYCf?=
+ =?us-ascii?Q?Y6YsBRTMDQ=3D=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f0d43f3-767e-4365-4ba2-08de65b55ee2
+X-MS-Exchange-CrossTenant-Network-Message-Id: e90a0ef3-c13b-43b0-82da-08de65b58641
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2026 19:24:39.0246
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2026 19:25:45.0941
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NgqBMppN0F6gz3XAg8zUXk7dLNhKY5McYegIs+XsopgNgw4YrB8JEn5BoQIIoZnWDY4p1LDPw5WG/zHEx9MlIw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: QqgzuEK4loeU+gSey8zkqEU3wz02iKrjLqDJlW4GX1c6OgjfOm1vRYGS2k7F1zjBwmpzNV6w4JuI1J70CR+yuQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10402
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [0.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8803-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-8804-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[nxp.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[nxp.com:+];
-	NEURAL_HAM(-0.00)[-0.956];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,nxp.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8894E102BE6
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.996];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,nxp.com:dkim,likewhatevs.io:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 771DB102BF7
 X-Rspamd-Action: no action
 
-On Fri, Feb 06, 2026 at 03:31:56PM +0530, Md Sadre Alam wrote:
-> BAM version 1.6.0 and later changed the behavior of the mask field in
-> command elements for read operations. In newer BAM versions, the mask
-> field for read commands contains the upper 4 bits of the destination
-> address to support 36-bit addressing, while for write commands it
-> continues to function as a traditional write mask.
+On Fri, Feb 06, 2026 at 04:01:37AM -0500, Pat Somaru wrote:
+> The only generic interface to execute asynchronously in the BH context
+> is tasklet; however, it's marked deprecated and has some design flaws
+> such as the execution code accessing the tasklet item after the
+> execution is complete which can lead to subtle use-after-free in certain
+> usage scenarios and less-developed flush and cancel mechanisms.
 >
-> This change causes NAND enumeration failures on platforms like IPQ5424
-> that use BAM v1.6.0+, because the current code sets mask=0xffffffff
-> for all commands. For read commands on newer BAM versions, this results
-> in the hardware interpreting the destination address as 0xf_xxxxxxxx
-> (invalid high memory) instead of the intended 0x0_xxxxxxxx address.
+> To replace tasklets, BH workqueue support was recently added. A BH
+> workqueue behaves similarly to regular workqueues except that the queued
+> work items are executed in the BH context.
 >
-> Fixed this issue by:
-> 1. Updating the bam_cmd_element structure documentation to reflect the
->    dual purpose of the mask field
-> 2. Modifying bam_prep_ce_le32() to set appropriate mask values based on
->    command type:
->    - For read commands: mask = 0 (32-bit addressing, upper bits = 0)
->    - For write commands: mask = 0xffffffff (traditional write mask)
-> 3. Maintaining backward compatibility with older BAM versions
+> This patch converts drivers/dma/apple-admac.c from tasklet to BH
+> workqueue.
 >
-> This fix enables proper NAND functionality on IPQ5424 and other platforms
-> using BAM v1.6.0+ while preserving compatibility with existing systems.
+> The Apple ADMAC driver uses a per-channel tasklet to invoke DMA
+> completion callbacks for cyclic transactions. This conversion maintains
+> the same execution semantics while using the modern BH workqueue
+> infrastructure.
 >
-> Tested-by: Lakshmi Sowjanya D <quic_laksd@quicinc.com>
-> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+> This patch was tested by:
+>     - Building with allmodconfig: no new warnings (compared to v6.18)
+>     - Building with allyesconfig: no new warnings (compared to v6.18)
+>     - Booting defconfig kernel via vng and running `uname -a`:
+>     Linux virtme-ng 6.18.0-virtme #1 SMP PREEMPT_DYNAMIC 0 x86_64 GNU/Linux
+>
+> Semantically, this is an equivalent conversion and there shouldn't be
+> any user-visible behavior changes. The BH workqueue implementation uses
+> the same softirq infrastructure, and performance-critical networking
+> conversions have shown no measurable performance impact.
+>
+> Maintainers can apply this directly to the DMA subsystem tree or ack it
+> for the workqueue tree to carry.
+>
+> Signed-off-by: Pat Somaru <patso@likewhatevs.io>
 > ---
->
-> Change in [v4]
-
 Reviewed-by: Frank Li <Frank.Li@nxp.com>
+>  drivers/dma/apple-admac.c | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
 >
-> * No change
+> diff --git a/drivers/dma/apple-admac.c b/drivers/dma/apple-admac.c
+> index bd49f0374291..8a0e100d5aaf 100644
+> --- a/drivers/dma/apple-admac.c
+> +++ b/drivers/dma/apple-admac.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/reset.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/workqueue.h>
 >
-> Change in [v3]
+>  #include "dmaengine.h"
 >
-> * Added Tested-by tag
+> @@ -89,7 +90,7 @@ struct admac_chan {
+>  	unsigned int no;
+>  	struct admac_data *host;
+>  	struct dma_chan chan;
+> -	struct tasklet_struct tasklet;
+> +	struct work_struct work;
 >
-> Change in [v2]
+>  	u32 carveout;
 >
-> * No change
+> @@ -522,8 +523,8 @@ static int admac_terminate_all(struct dma_chan *chan)
+>  		adchan->current_tx = NULL;
+>  	}
+>  	/*
+> -	 * Descriptors can only be freed after the tasklet
+> -	 * has been killed (in admac_synchronize).
+> +	 * Descriptors can only be freed after the work
+> +	 * has been cancelled (in admac_synchronize).
+>  	 */
+>  	list_splice_tail_init(&adchan->submitted, &adchan->to_free);
+>  	list_splice_tail_init(&adchan->issued, &adchan->to_free);
+> @@ -543,7 +544,7 @@ static void admac_synchronize(struct dma_chan *chan)
+>  	list_splice_tail_init(&adchan->to_free, &head);
+>  	spin_unlock_irqrestore(&adchan->lock, flags);
 >
-> Change in [v1]
+> -	tasklet_kill(&adchan->tasklet);
+> +	cancel_work_sync(&adchan->work);
 >
-> * Updated bam_prep_ce_le32() to set the mask field conditionally based on
->   command type
+>  	list_for_each_entry_safe(adtx, _adtx, &head, node) {
+>  		list_del(&adtx->node);
+> @@ -662,7 +663,7 @@ static void admac_handle_status_desc_done(struct admac_data *ad, int channo)
+>  		tx->reclaimed_pos %= 2 * tx->buf_len;
 >
-> * Enhanced kernel-doc comments to clarify mask behavior for BAM v1.6.0+
->
->  include/linux/dma/qcom_bam_dma.h | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/dma/qcom_bam_dma.h b/include/linux/dma/qcom_bam_dma.h
-> index 68fc0e643b1b..d9d07a9ab313 100644
-> --- a/include/linux/dma/qcom_bam_dma.h
-> +++ b/include/linux/dma/qcom_bam_dma.h
-> @@ -13,9 +13,12 @@
->   * supported by BAM DMA Engine.
->   *
->   * @cmd_and_addr - upper 8 bits command and lower 24 bits register address.
-> - * @data - for write command: content to be written into peripheral register.
-> - *	   for read command: dest addr to write peripheral register value.
-> - * @mask - register mask.
-> + * @data - For write command: content to be written into peripheral register.
-> + *	   For read command: lower 32 bits of destination address.
-> + * @mask - For write command: register write mask.
-> + *	   For read command on BAM v1.6.0+: upper 4 bits of destination address.
-> + *	   For read command on BAM < v1.6.0: ignored by hardware.
-> + *	   Setting to 0 ensures 32-bit addressing compatibility.
->   * @reserved - for future usage.
->   *
->   */
-> @@ -42,6 +45,10 @@ enum bam_command_type {
->   * @addr: target address
->   * @cmd: BAM command
->   * @data: actual data for write and dest addr for read in le32
-> + *
-> + * For BAM v1.6.0+, the mask field behavior depends on command type:
-> + * - Write commands: mask = write mask (typically 0xffffffff)
-> + * - Read commands: mask = upper 4 bits of destination address (0 for 32-bit)
->   */
->  static inline void
->  bam_prep_ce_le32(struct bam_cmd_element *bam_ce, u32 addr,
-> @@ -50,7 +57,11 @@ bam_prep_ce_le32(struct bam_cmd_element *bam_ce, u32 addr,
->  	bam_ce->cmd_and_addr =
->  		cpu_to_le32((addr & 0xffffff) | ((cmd & 0xff) << 24));
->  	bam_ce->data = data;
-> -	bam_ce->mask = cpu_to_le32(0xffffffff);
-> +	if (cmd == BAM_READ_COMMAND)
-> +		bam_ce->mask = cpu_to_le32(0x0); /* 32-bit addressing */
-> +	else
-> +		bam_ce->mask = cpu_to_le32(0xffffffff); /* Write mask */
-> +	bam_ce->reserved = 0;
+>  		admac_cyclic_write_desc(ad, channo, tx);
+> -		tasklet_schedule(&adchan->tasklet);
+> +		queue_work(system_bh_wq, &adchan->work);
+>  	}
+>  	spin_unlock_irqrestore(&adchan->lock, flags);
+>  }
+> @@ -712,9 +713,9 @@ static irqreturn_t admac_interrupt(int irq, void *devid)
+>  	return IRQ_HANDLED;
 >  }
 >
->  /*
-> @@ -60,7 +71,7 @@ bam_prep_ce_le32(struct bam_cmd_element *bam_ce, u32 addr,
->   * @bam_ce: BAM command element
->   * @addr: target address
->   * @cmd: BAM command
-> - * @data: actual data for write and dest addr for read
-> + * @data: actual data for write and destination address for read
->   */
->  static inline void
->  bam_prep_ce(struct bam_cmd_element *bam_ce, u32 addr,
+> -static void admac_chan_tasklet(struct tasklet_struct *t)
+> +static void admac_chan_work(struct work_struct *work)
+>  {
+> -	struct admac_chan *adchan = from_tasklet(adchan, t, tasklet);
+> +	struct admac_chan *adchan = from_work(adchan, work, work);
+>  	struct admac_tx *adtx;
+>  	struct dmaengine_desc_callback cb;
+>  	struct dmaengine_result tx_result;
+> @@ -886,7 +887,7 @@ static int admac_probe(struct platform_device *pdev)
+>  		INIT_LIST_HEAD(&adchan->issued);
+>  		INIT_LIST_HEAD(&adchan->to_free);
+>  		list_add_tail(&adchan->chan.device_node, &dma->channels);
+> -		tasklet_setup(&adchan->tasklet, admac_chan_tasklet);
+> +		INIT_WORK(&adchan->work, admac_chan_work);
+>  	}
+>
+>  	err = reset_control_reset(ad->rstc);
 > --
-> 2.34.1
+> 2.52.0
 >
 

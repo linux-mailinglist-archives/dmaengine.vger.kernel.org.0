@@ -1,174 +1,379 @@
-Return-Path: <dmaengine+bounces-8838-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8839-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +HaxESHXiWnZCAAAu9opvQ
-	(envelope-from <dmaengine+bounces-8838-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 09 Feb 2026 13:46:25 +0100
+	id eCfOHsrYiWlUCQAAu9opvQ
+	(envelope-from <dmaengine+bounces-8839-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 09 Feb 2026 13:53:30 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFF0A10EED1
-	for <lists+dmaengine@lfdr.de>; Mon, 09 Feb 2026 13:46:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2412010F22E
+	for <lists+dmaengine@lfdr.de>; Mon, 09 Feb 2026 13:53:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D027A300D32B
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Feb 2026 12:06:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4DB673010B99
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Feb 2026 12:53:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B38337106C;
-	Mon,  9 Feb 2026 12:06:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 169C9372B38;
+	Mon,  9 Feb 2026 12:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eq7moNxT"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="QfO7rpYV"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11020117.outbound.protection.outlook.com [52.101.228.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403E436BCDB;
-	Mon,  9 Feb 2026 12:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770638811; cv=none; b=tqQmBI8ZB9fGWYi2+G1BOaAJmmXoV2XWzgD4M/918565CmimPoyATIQ1eFxw9j9Psyo1FjATW+UqgwfiynEUd3kK2kG7hGKrMx1DIjbAU0pJblEAkfBGztvdszIx5R7CgjaooKUSY0wHwbxOTIn6gWevV40FD9MXKbETJa5818k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770638811; c=relaxed/simple;
-	bh=jGutqw+MrVe0P1zO13xHGI+b7BeDA71RHy2XWlq4zTI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VmddCdLRF9KfaHp1tcOhubcsCq74T49npWKV4H4ryuqjuQoyag5T/LrRmkN2rW6hlKG3Xsa+mZC24FHvXKjDPCvitorRpXQ/RVSRe++ql57y/C9fEIVEVXVZuXrtejcVSx4wvSueQ1J7hP+2b2wJ1SZlvTo7O79sAgyBvgBiTHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eq7moNxT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1EF5C116C6;
-	Mon,  9 Feb 2026 12:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770638810;
-	bh=jGutqw+MrVe0P1zO13xHGI+b7BeDA71RHy2XWlq4zTI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Eq7moNxTS/ilKb0uGpYIg9hCt/Qv6pNFkVnAiAZ9S7z31q46/da1JWNCTpNeBA9Di
-	 4w7cWsi6vBSm+3V+0jSwo5RYPpRCGaWmol1XFjfmP52rQAi1zFxW5VxNnUkgSwK1ce
-	 jFVm7cDQaKX8bpEOuyRumu7+DgUNgRXQmkH3BMFtixGUVxWxLlb9PzQ5bC4NJOXlzW
-	 DaGPAcftYEe0fu6hsTLG1Na+Y/wW+CYw0woRwq44AWtty1mAxSET58hL6jm49DgX84
-	 1PBdrWIlRfamKw3WKnhluv0EbehqKQqzAtTMSXzab4/5lKzxh/DqG9gHUhwTDcwJB1
-	 eThEYLsWsz/bw==
-Message-ID: <3d3a3b14-e305-439a-b6bd-2339202ad66d@kernel.org>
-Date: Mon, 9 Feb 2026 13:06:45 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E48037106C;
+	Mon,  9 Feb 2026 12:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770641603; cv=fail; b=DZKMeAeAuJdMXMboNct1mAvAMqt1etwudkw3xO9apEBuyM9NOYogYGFgkf0CC9Vbb3n3XaqtZ05uhArkDEC31Ys2mZBhKR595s6I89A5MvHS/gL1mVe8ZlWjbGz6+DRIac5dQqUP19jKCxt9IxDdQdHTSgkzEB1xL//UL+2USbs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770641603; c=relaxed/simple;
+	bh=skEwvxfiIxQm0wDNcNgEu7Oc71wzHjFfSaK+g2VezxE=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=YXepWnX/azDX8SRw52gzaS8oPXgaCvWDRn0g59f3pWyBei//1bmezs5rfm0HpfqxWUKV55Qg6u2KhN697NlDqR1WUIMO0ibip4mf+ymRUKgUYnGszR9yTd+5SHFmPj7oFaZdXkxZv/qayfZOMYkegUCVlyJ9Fald5jPF1x0htrY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=QfO7rpYV; arc=fail smtp.client-ip=52.101.228.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=c2PL4GpjlMWmuzwM4kjzqQAFHqWKevt2VNOzbo89hJDgbMec9suiI8CkSmmjPAOnh5ZrVy7PZgSiJ8yPf4DSqLG98n15ijPM1PRkQByAxkPSZiukbSNXmYO416PTi3Trh8xgOCo298F9j60p5WPUbKQAqYqSmyj45sNPHIFGa3mq7fE/2qfqG3L9/FXslzJthhLDaRkJOxp/TdANYPcAUhPA+YQJfKdlMSxNFWvFe7XDsB08wJNiqJvO3C7W4dbsgmI/l4TagMf29GiNc3MfwXCF1nglewA0nONcJj/u48Ecqc1bQ400RznkWewKXgd9tWUrsdMejz7adoglN3icvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OpbPy/YJ6QIFkMp1RFEUO9w/IQxUFqDvUjOBPkTd4YQ=;
+ b=B9qvt5Inz8XiuQ4lCEDXOL+7/Y0+Dp0/NgRn/4p/9Pzu3Y6/dYArxHU5HkiYwFMT3poGGdfLe5m/koEUedw5JLXjZQD7BEHtZSoL3f6L75N6rkcP9HEtLY8fp/vti6bPRPXGuIraZ+AqPTEByjxaY4uYUGKFkvgKJdeXSyqL1Y2HGNfwuucFuALc1/ogZIzvTcfOklRh68/OmiM0jJ1ljOD89pQmmaOJ6sziWTzDRiJhqxJbywWDtB8AVKTZbFAqv/2N3rCiDdR/Yq9Vfu0KcKiMehYFG9ZNQ/bo3VL5m1Rf9IzG536iDgPK0QyhotYzA8U5ooj1MEC6z3mnDdn7TA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OpbPy/YJ6QIFkMp1RFEUO9w/IQxUFqDvUjOBPkTd4YQ=;
+ b=QfO7rpYV2TFYIovRfuZ8ARdncdADznsZeRRSeX1RqcukbV1IZxVy4OFKnPKa31Z5PiMwNA3fsC+mjAZxSH/kPkDkwIgRgBeFdMHqbf6qjQGJNiBq974WkSlkErXi5iAk6QeHH9OX8pcG26+JGlD+AX0kX4buagTl9toy12z5M8c=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=valinux.co.jp;
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
+ by OS7P286MB3742.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:237::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.18; Mon, 9 Feb
+ 2026 12:53:20 +0000
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.20.9587.017; Mon, 9 Feb 2026
+ 12:53:18 +0000
+From: Koichiro Den <den@valinux.co.jp>
+To: vkoul@kernel.org,
+	mani@kernel.org,
+	Frank.Li@nxp.com,
+	cassel@kernel.org,
+	jingoohan1@gmail.com,
+	lpieralisi@kernel.org,
+	kwilczynski@kernel.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	kishon@kernel.org,
+	jdmason@kudzu.us,
+	allenbh@gmail.com
+Cc: dmaengine@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	ntb@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/8] PCI: endpoint: pci-ep-msi: Add embedded doorbell fallback
+Date: Mon,  9 Feb 2026 21:53:08 +0900
+Message-ID: <20260209125316.2132589-1-den@valinux.co.jp>
+X-Mailer: git-send-email 2.51.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP286CA0266.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:455::19) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/7] dma: qcom: bam_dma: Fix command element mask field
- for BAM v1.6.0+
-To: Md Sadre Alam <quic_mdalam@quicinc.com>, andersson@kernel.org,
- konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, vkoul@kernel.org, Frank.Li@kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Cc: quic_varada@quicinc.com
-References: <20260206100202.413834-1-quic_mdalam@quicinc.com>
- <20260206100202.413834-2-quic_mdalam@quicinc.com>
- <409c2e5f-1bf2-44ed-9c0f-df762320e068@kernel.org>
- <153241e9-f71a-970c-c929-53b195807259@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <153241e9-f71a-970c-c929-53b195807259@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|OS7P286MB3742:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4556711e-bbd7-44a6-4042-08de67da32d2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|376014|7416014|366016|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Jf0y3ALx7DRvvxXtKzf9wdbXFlb719D8WemiWzLxwH+paIWW49HeCRXiJsnP?=
+ =?us-ascii?Q?KLwP5ei1nWldU3+IVwta18lp+lhzGrEo6dwvg8I/X3tvAzeX/Ov8gvzqGei8?=
+ =?us-ascii?Q?6X842YGFl4hsuEgxOhA3IZPgaslCSfz+l8zXTAdnHkWAKJYD5BLRU7P+ezpW?=
+ =?us-ascii?Q?gEzfYqjwnbhRBIEYRWw5rO3iepdZ8LdqBBqwb2nB/7s457quKEsSC4h9L9tr?=
+ =?us-ascii?Q?GzHcPRAY/uCErHWTHgmNKzc/yM8i/gNCCy1eJVItYf6QGnUQC3fhVewWRwJ0?=
+ =?us-ascii?Q?5M0NugsgIM/5lF4cozbL35PQR8uh8gOLo7RxyF7YNeFfMXp36MKMsIkNB4yc?=
+ =?us-ascii?Q?LiRxtq5ejua99kl4Qaj/W2oODobUtBUdxc56GoVQIhWXojzRVXOxzW+1LIx0?=
+ =?us-ascii?Q?wmyZbtVTxyaiOqPbA7M+Mjr77RJ+zCQrY+YTK4tOwPBU4/zGd0l0lZMCsFlk?=
+ =?us-ascii?Q?54Axzk4b2y5GyCntdIut3Zb2ULOi3vsIVWMzPxiA8wueqjzE0a6dXPxGwJWB?=
+ =?us-ascii?Q?U+uEfIvj+JDqQ3jzMG2P9BeJ6AmRFe/pwGML8/NdJFzd/8iDawDDam11FYPr?=
+ =?us-ascii?Q?T9xGzeapDIz58vsk9lsDQzv4AMcLBNWO23lin1n8RIy+uVlpTU3Af+xccyAg?=
+ =?us-ascii?Q?Jt6tUYUwZcWn1qSPE/+Cwr9LQ07RyD8zjTd0k5brPnD7+IsXinAlvD/1Wn2G?=
+ =?us-ascii?Q?fg1J1YpeU+B211UkMhpFUoiKigS4OYkSzNbLVGZ8TG6BMwbHM2dYTOxhsxhP?=
+ =?us-ascii?Q?qNuAHzfd1eCPOQNhQklij1G1VId6ycWgNirxNl4meFSApc7xT3vLa4hjpXua?=
+ =?us-ascii?Q?4q4M+MSkMOoSVjFOYDpQx6QZlxUpJC0NCnsGdyUqhFFgN6VSKPoutSgwj7wF?=
+ =?us-ascii?Q?MBHxO7nr7RkW1aENJQqXHJj7NDNg+0ZOLdYlIgsLhmM5NsSe6vUQiDjsI9XP?=
+ =?us-ascii?Q?hFOHavuqvpsR8YceQ4AKbAWBzauXUS49wIBUEDKiKmOr6rIb5mxDq3X/7MOn?=
+ =?us-ascii?Q?G2uJnTfVrXnzgstfZLQgKMk1bJ9DwtOiqJLS7dp1GHDmf+TNTY+kp6rqimDF?=
+ =?us-ascii?Q?6YK9kFIf2DFtoR0un6RmYryjfxDlFbgM7xVPVqIYRKTuL8BleasVr1CT0GFD?=
+ =?us-ascii?Q?9siIfUkXzIAtn73FfbTUEDzXZnUctOOMLmYEadq/pyzoNahPCZAuA3LQ/X8x?=
+ =?us-ascii?Q?k0OLz/S3PojcAk5QdbmAWrJ6fRnF1X08/l1ikvzgonHDq2HKRnGHE6rpYrZX?=
+ =?us-ascii?Q?tuLrxAXsBZdBkeJ+zlbpXOcGOI0TUcvmTaaM+ymK/q/HzxvtOfN8YPhBzPUL?=
+ =?us-ascii?Q?TBWvbb5Gj/J9lCCaTt3XNNn7MVtHkYeSfjMR12RBeCB5aV+bSu1PyQQeXr4X?=
+ =?us-ascii?Q?+o7pE1exIuzSC6oi9do5o+6rk48M+p7iQSaRoQvXSXRauhBnk5w5JBoP16o2?=
+ =?us-ascii?Q?t4BaprkE5JloGWdcqkjnBdPGX7dQMhcx4CMiraIRaRsuLeJ7921iZg0Ee5V8?=
+ =?us-ascii?Q?eYgxhIKJXFVmYXyC0WkfeWRxn0IkAZt+t2JH2I54J324VD1fOH8uVVihLyBZ?=
+ =?us-ascii?Q?3Ona+CLc/iOw1AKbV/s0bUgjwx01m9fkC/lpRqThRkcniWv3uzmwScWDxXDq?=
+ =?us-ascii?Q?c0H965I2Fpdz6ewc5yquwuE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(7416014)(366016)(1800799024)(921020);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ghJzRqhhi2WeyA6lVjsZX8OA4BDvutS6bDIKMpi1DAEpL2oeYD557Vr1E8Xg?=
+ =?us-ascii?Q?9AQhxIVN0RAuJFF+ayxiJWqqnMkDd84uT/4Zahv1y5FSuFoy62UIHbPYLvZ0?=
+ =?us-ascii?Q?BMnlY/x3rk2qXwv1Qjgh0QDAMjMShiv5/CmXETL28UnhXRoGiNYs2tLqXjBE?=
+ =?us-ascii?Q?arbxQ/ysABMuBLPsNKh/NOmYJhb6VH84wRif+/LtsLDDc4c4QGSrweUi9s4r?=
+ =?us-ascii?Q?Y9Yrk5U4ErE7ssvM+bSMHDjUMkKFo60j4PS9GJz1Z+cksLFbNgE2eE9qQNEU?=
+ =?us-ascii?Q?CW2INKVFEKxYzLKdsVV364wBVw8ZzyRhS7nu3YVSqH6elq0xwFHaK0SAWGOr?=
+ =?us-ascii?Q?WyT+VhS+cNXm/BtL2ozNVdnYuJ9DN94yk4DJLj9yPlq0zXgTufXfrQ5bqT/y?=
+ =?us-ascii?Q?OqlZ0edlNgqLHTPRKa6Rl+05llOe+nbFMEIoMEEywn+qPBUMq1+O9gltt047?=
+ =?us-ascii?Q?7Ei/gKhUoD2intiTnkjWuIiYyQk2Evv3isxvN3UmjRqPkrzcV7v1HQwe7/wD?=
+ =?us-ascii?Q?3XvYO4tZt9JbxxYXI/H5cGtbCMDhOCsXFj1scj72ywIlIWlywcnwdh22KafF?=
+ =?us-ascii?Q?90HDEmaSfV16gj2cIuDxONjNv3Tn18nsjDkr6JyLrNUjIjDeW3oOg/0kgHw+?=
+ =?us-ascii?Q?APngrPNq0LvX97EJbTncXcPdpYNAphgK4wk/X8lRiu6BmUBob1htW16Smbti?=
+ =?us-ascii?Q?yO6LbSCabG3mtezABns1uF4VrVjlUdHdy78x25/Xi3agzbKZGuwXtMYe1CRm?=
+ =?us-ascii?Q?hHNYcxDSpGanDYTRg3JEScV8Z8m1iNA0rNxcV1YxH6LDQDe8xRoBjNQ/82A7?=
+ =?us-ascii?Q?wFBqV9dag9AyuQ43QldayftpxTYvXAzlLr2n2zuXF4OSwSVCQjgLSpajm96A?=
+ =?us-ascii?Q?+7VZw0EK3HEO1noGxPJXsPaQnOb8x//bcdatQ/aXHjnpztUeJqNi0+/Kal1n?=
+ =?us-ascii?Q?kPHaCZABNdfoLoQWH74acUvuWyBGfTgYj3D7upv5XV2Nu3GMMOkHXKszF7Ae?=
+ =?us-ascii?Q?HSV3W5Dqhgexd/iuwbZslQ4IMnmjPEjAkFtEnz+uLCKXn7/4y8SWucC1D2Jk?=
+ =?us-ascii?Q?WyTk2CeLlCbIHmYvqxlMXbGH/MSitmgcW0oLT+dAfuhhtwat8s+8btjqjYpZ?=
+ =?us-ascii?Q?2+UWgtlaxP/FQjaScutxOrVg9261s+jbbMnpHMIEoDYEWOemrVQ0BSPlbAsu?=
+ =?us-ascii?Q?IVPjhm5JqNvTlR1BD1HABfb6U5uotafPsT408SrVl1sUPS6I4M4ccvdDEWnA?=
+ =?us-ascii?Q?mLMactwhN/sJRi8ub9KZj+P2eo7ArcPulWYOcpgOBRuEN5KhZKBguXIulTE8?=
+ =?us-ascii?Q?KAAHrAbhcincbUpAM/SyyFRhUv2fvKlke7Gtk0DNCF3rVLBnpccdzXVn+1x7?=
+ =?us-ascii?Q?QU/ZVGdU3MBZCis4xU+B6+J/o+lRc/waNgzN7PxHsvfBY3G9rSdjK9ZBcmBS?=
+ =?us-ascii?Q?BDwYfZlnpO8PVefyQgWo6wuQtntGnnK4818VyvQ0szDvI16dIbifX1Qegnd1?=
+ =?us-ascii?Q?UHuvVBzgMzZypl02uXAYEYmjyIG8N7IB94GP4zGXb3tnBxqfthLQyS+5FrdC?=
+ =?us-ascii?Q?TKMkf7NQIB3ZltTJukAvZ9wVkfsQbKYgnMwzEofggR/Lf2sat2zKqdyAWm13?=
+ =?us-ascii?Q?Gow/8PEpaU9S6+U7RgxWsoqtB3mBCFxMVnFE50bD2i63+6VrQfZyl/RpvZ+a?=
+ =?us-ascii?Q?GbaLpKfkP051sWD/YDwpqUf+G3ThCqHroU06vw0FfxhWOwVePQryaUmM2VNw?=
+ =?us-ascii?Q?8Cp06o4GFFV+4uKaeDxWfj0TunmL/1c9bxQp+mpT0GZajbLxsN0H?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4556711e-bbd7-44a6-4042-08de67da32d2
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2026 12:53:18.7169
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RouwRf2N3LvSxIRAdzOc+espV6cPj3KRaFpLqsFXkPJporVVvqJzLuehIZ0s7z3zIwxxB5Ud93r3R/qw1qxrvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7P286MB3742
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
+	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8838-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-8839-lists,dmaengine=lfdr.de];
+	FREEMAIL_TO(0.00)[kernel.org,nxp.com,gmail.com,google.com,kudzu.us];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[valinux.co.jp:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[dmaengine];
+	TO_DN_NONE(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: DFF0A10EED1
+X-Rspamd-Queue-Id: 2412010F22E
 X-Rspamd-Action: no action
 
-On 09/02/2026 12:43, Md Sadre Alam wrote:
->>> that use BAM v1.6.0+, because the current code sets mask=0xffffffff
->>> for all commands. For read commands on newer BAM versions, this results
->>> in the hardware interpreting the destination address as 0xf_xxxxxxxx
->>> (invalid high memory) instead of the intended 0x0_xxxxxxxx address.
->>>
->>> Fixed this issue by:
->>> 1. Updating the bam_cmd_element structure documentation to reflect the
->>>     dual purpose of the mask field
->>> 2. Modifying bam_prep_ce_le32() to set appropriate mask values based on
->>>     command type:
->>>     - For read commands: mask = 0 (32-bit addressing, upper bits = 0)
->>>     - For write commands: mask = 0xffffffff (traditional write mask)
->>> 3. Maintaining backward compatibility with older BAM versions
->>>
->>> This fix enables proper NAND functionality on IPQ5424 and other platforms
->>> using BAM v1.6.0+ while preserving compatibility with existing systems.
->>
->> Fixes tag? CC-stable?
-> 
-> This patch is not fixing an existing commit. This is to address the 
-> update in the newer version of the hardware.
+Hi,
 
-Then "this fix" is misleading. Either you fix or not fix.
+Some DesignWare PCIe endpoint platforms integrate a DesignWare eDMA
+instance alongside the PCIe controller. In remote eDMA use cases, the host
+needs access to the eDMA register block and the per-channel linked-list
+(LL) regions via PCIe BARs, while the endpoint may still boot with a
+standard EP configuration (and may also use dw-edma locally).
+
+This series focuses on using DesignWare eDMA emulated interrupt doorbell as
+a pci-ep-msi fallback, in a generalized manner without exporting any
+DesignWare eDMA-specific API.
+
+  * dmaengine:
+
+    1. Add explicit deassert handling for eDMA interrupt emulation in the
+       IRQ handler so level-triggered/shared IRQ lines don't remain stuck.
+       => Patch 01/08
+
+    2. Cache per-channel IRQ number and an interrupt-emulation doorbell
+       register offset, so integrated-controller drivers can expose these
+       to EPF users via the auxiliary resource metadata.
+       => Patch 02/08
+
+  * pci/endpoint:
+
+    1. Add a generic auxiliary resource enumeration API
+       (pci_epc_get_aux_resources()) for EPF drivers to discover
+       controller-owned resources that can be mapped into BAR space (e.g.
+       an integrated DMA MMIO window and per-channel LL regions metadata).
+       => Patch 03/08 - 05/08
+
+    2. Add an "embedded (DMA) doorbell" fallback to pci_epf_alloc_doorbell()
+       (used when platform MSI doorbells are unavailable/unusable), and
+       update in-tree users (pci-epf-test, pci-epf-vntb) to request IRQs
+       correctly (shared IRQ constraints, required flags).
+       => Patch 06/08 - 08/08
+
+Note: As discussed in the v4 thread, v4 Patch 01/09 (dw-edma per-channel
+interrupt routing control via dma_slave_config.peripheral_config) is
+dropped from this series for now, so the series contains only what's needed
+by the current, concrete consumer.
+
+This series evolved out of:
+https://lore.kernel.org/linux-pci/20260118135440.1958279-1-den@valinux.co.jp/
 
 
-Best regards,
-Krzysztof
+Kernel base
+===========
+
+Patches 1-8 cleanly apply to pci.git 'controller/dwc':
+Commit 43d324eeb08c ("PCI: dwc: Fix missing iATU setup when ECAM is enabled")
+
+
+Tested on
+=========
+
+I tested the embedded (DMA) doorbell fallback path (via pci-epf-test) on
+R-Car Spider boards:
+
+  $ ./pci_endpoint_test -t DOORBELL_TEST
+  TAP version 13
+  1..1
+  # Starting 1 tests from 1 test cases.
+  #  RUN           pcie_ep_doorbell.DOORBELL_TEST ...
+  #            OK  pcie_ep_doorbell.DOORBELL_TEST
+  ok 1 pcie_ep_doorbell.DOORBELL_TEST
+  # PASSED: 1 / 1 tests passed.
+  # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
+
+with the following message observed on the EP side:
+
+  [   80.464653] pci_epf_test pci_epf_test.0: Using embedded (DMA) doorbell fallback
+
+(Note: for the test to pass on R-Car Spider, one of the following was required:
+ - echo 1048576 > functions/pci_epf_test/func1/pci_epf_test.0/bar2_size
+ - apply https://lore.kernel.org/all/20251023072217.901888-1-den@valinux.co.jp/)
+
+
+Changelog
+=========
+
+* v5->v6 changes:
+  - Fix a double-free in v5 Patch 8/8 caused by mixing __free(kfree) with
+    an explicit kfree(). This is a functional bug (detectable by KASAN),
+    hence the respin solely for this fix. Sorry for the noise. No other
+    changes.
+
+* v4->v5 changes:
+  - Change the series subject now that the series has evolved into a
+    consumer-driven set focused on the embedded doorbell fallback and its
+    in-tree users (epf-test and epf-vntb).
+  - Drop [PATCH v4 01/09] (dw-edma per-channel interrupt routing control)
+    from this series for now, so the series focuses on what's needed by the
+    current consumer (i.e. the doorbell fallback implementation).
+  - Replace the v4 embedded-doorbell "test variant + host/kselftest
+    plumbing" with a generic embedded-doorbell fallback in
+    pci_epf_alloc_doorbell(), including exposing required IRQ request flags
+    to EPF drivers.
+  - Two preparatory fix patches (Patch 6/8 and 7/8) to clean up error
+    handling and state management ahead of Patch 8/8.
+  - Rename *_get_remote_resource() to *_get_aux_resources() and adjust
+    relevant variable namings and kernel docs. Discussion may continue.
+  - Rework dw-edma per-channel metadata exposure to cache the needed info
+    in dw_edma_chip (IRQ number + emulation doorbell offset) and consume it
+    from the DesignWare EPC auxiliary resource provider without calling back
+    to dw-edma.
+
+* v3->v4 changes:
+  - Drop dma_slave_caps.hw_id and the dmaengine selfirq callback
+    registration API. Instead, add a dw-edma specific dw_edma_chan_info()
+    helper and extend the EPC remote resource metadata accordingly.
+  - Add explicit acking for eDMA interrupt emulation and adjust the
+    dw-edma IRQ path for embedded-doorbell usage.
+  - Replace the previous EPC API smoke test with an embedded doorbell
+    test variant (pci-epf-test + pci_endpoint_test/selftests).
+  - Rebase onto pci.git controller/dwc commit 43d324eeb08c.
+
+* v2->v3 changes:
+  - Replace DWC-specific helpers with a generic EPC remote resource query API.
+  - Add pci-epf-test smoke test and host/kselftest support for the new API.
+  - Drop the dw-edma-specific notify-only channel and polling approach
+    ([PATCH v2 4/7] and [PATCH v2 5/7]), and rework notification handling
+    around a generic dmaengine_(un)register_selfirq() API implemented
+    by dw-edma.
+
+* v1->v2 changes:
+  - Combine the two previously posted series into a single set (per Frank's
+    suggestion). Order dmaengine/dw-edma patches first so hw_id support
+    lands before the PCI LL-region helper, which assumes
+    dma_slave_caps.hw_id availability.
+
+v5: https://lore.kernel.org/all/20260209062952.2049053-1-den@valinux.co.jp/
+v4: https://lore.kernel.org/all/20260206172646.1556847-1-den@valinux.co.jp/
+v3: https://lore.kernel.org/all/20260204145440.950609-1-den@valinux.co.jp/
+v2: https://lore.kernel.org/all/20260127033420.3460579-1-den@valinux.co.jp/
+v1: https://lore.kernel.org/dmaengine/20260126073652.3293564-1-den@valinux.co.jp/
+    +
+    https://lore.kernel.org/linux-pci/20260126071550.3233631-1-den@valinux.co.jp/
+
+Thanks for reviewing,
+
+
+Koichiro Den (8):
+  dmaengine: dw-edma: Deassert emulated interrupts in the IRQ handler
+  dmaengine: dw-edma: Cache per-channel IRQ and emulation doorbell
+    offset
+  PCI: endpoint: Add auxiliary resource query API
+  PCI: dwc: Record integrated eDMA register window
+  PCI: dwc: ep: Report integrated eDMA resources via EPC aux-resource
+    API
+  PCI: endpoint: pci-epf-test: Don't free doorbell IRQ unless requested
+  PCI: endpoint: pci-ep-msi: Fix error unwind and prevent double alloc
+  PCI: endpoint: pci-ep-msi: Add embedded doorbell fallback
+
+ drivers/dma/dw-edma/dw-edma-core.c            |  57 +++++++-
+ drivers/dma/dw-edma/dw-edma-core.h            |  19 +++
+ drivers/dma/dw-edma/dw-edma-v0-core.c         |  22 +++
+ drivers/dma/dw-edma/dw-hdma-v0-core.c         |   8 ++
+ .../pci/controller/dwc/pcie-designware-ep.c   |  78 +++++++++++
+ drivers/pci/controller/dwc/pcie-designware.c  |   4 +
+ drivers/pci/controller/dwc/pcie-designware.h  |   2 +
+ drivers/pci/endpoint/functions/pci-epf-test.c |  38 ++++-
+ drivers/pci/endpoint/functions/pci-epf-vntb.c |   3 +-
+ drivers/pci/endpoint/pci-ep-msi.c             | 130 ++++++++++++++++--
+ drivers/pci/endpoint/pci-epc-core.c           |  41 ++++++
+ include/linux/dma/edma.h                      |  17 +++
+ include/linux/pci-epc.h                       |  46 +++++++
+ include/linux/pci-epf.h                       |  17 ++-
+ 14 files changed, 460 insertions(+), 22 deletions(-)
+
+-- 
+2.51.0
+
 

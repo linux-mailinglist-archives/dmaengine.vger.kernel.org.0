@@ -1,50 +1,50 @@
-Return-Path: <dmaengine+bounces-8880-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8881-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aDZmGWhdi2mYUAAAu9opvQ
-	(envelope-from <dmaengine+bounces-8880-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 17:31:36 +0100
+	id qOkLKx9fi2msUAAAu9opvQ
+	(envelope-from <dmaengine+bounces-8881-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 17:38:55 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C323A11D31D
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 17:31:35 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DE5E11D595
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 17:38:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3C2613068BC2
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 16:30:17 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E9CC4300F10D
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 16:38:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C09ED2D979C;
-	Tue, 10 Feb 2026 16:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85DC130EF94;
+	Tue, 10 Feb 2026 16:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUAL34mu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2LI7R6A"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95478283C89;
-	Tue, 10 Feb 2026 16:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE5A30CD80;
+	Tue, 10 Feb 2026 16:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770741016; cv=none; b=otlMAEiHVwOjMmFW6ARHiftrAb0bRTCsBptnosM6MQBCQ0NNHOtnf5d53YfIiVpc5k1V9Pz6OfrmOwSESaL5Us1bZiYIjrhkvAJ9T8KN7Rbx0pNiXAh7qelr+l15ctemUXCWbkXyQLEaP+D5C/RB3D5VSZT/cPwmH4pcDWTO0+o=
+	t=1770741505; cv=none; b=JVjm1fDcC9huOWWcp22Ooupwx0ow3GB+g1HIuhkTR3GvVeyRnoIUrxZS3SI4renRvT0a0KH/zlzqaaJPg78g43D1MDbjdpjJYXqkr4zmGmIJZztcmApFcXpLhH9R4YnBaOBTmCdM0biW2QIFZTHRCMfyV0u8vpbjapDA5PblUP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770741016; c=relaxed/simple;
-	bh=SQSIBRF8RgnCHZnc0WIK4l3+PaDqumSEoXhF3Q+r67o=;
+	s=arc-20240116; t=1770741505; c=relaxed/simple;
+	bh=ee9fB6bIjiVMrs4NtEF4Te4n44P3upDDcYNINlYRaXs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OlRZ504IYJR3rJYvUqeMPk8JRuCBdOG3Sy/4Cw7Vx0QSH/OddsCJcyb8qXGHb68YysVrjiu4w5flLE2q6EezycRQ6Fgi5Q8MD0CifHjNayh6Me84Izkzwoxgydp75nYbPAqjrxc4gr9+sC754zl+EAEmC0jI7084CNzi4qUIU7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUAL34mu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDFDDC116C6;
-	Tue, 10 Feb 2026 16:30:12 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=C4aREGuMaLxBBnezDkUy7HfTfnx8RTFft1Q83t7EjQLdv2DQAkeYfxPkJ2h4vFjd3TzK7WI2tnwuNRnt9OvCL1O6kv2GV/FhCALbVoky87G42DScdL6Zm6c1EL6FhIyjVwl6GGH93xY1cq5DbBOkvVIbNbNgqGDeXS3YA6zO3ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2LI7R6A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D7D9C116C6;
+	Tue, 10 Feb 2026 16:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770741016;
-	bh=SQSIBRF8RgnCHZnc0WIK4l3+PaDqumSEoXhF3Q+r67o=;
+	s=k20201202; t=1770741505;
+	bh=ee9fB6bIjiVMrs4NtEF4Te4n44P3upDDcYNINlYRaXs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eUAL34muUDzanBqL4aRDcCr/OMF8OdU7Y4phHZU1AtQE2mNhuoTFgYkHz3JDSyLNe
-	 OB8NOIwt9FWx0G4YCnOevuyn9cTSHUF2c4oN5ey3MxuTEHhevfKXRiXgBCLpnVHC9d
-	 FRGN+L1Q6HYOLAZp7XvvH7/apuh2raoGujSuG7/tzbCuNR654rma7SuDYPj68v7hS8
-	 iQHLdRvDoSjAZ9rSX6XPUfXIHi5mkX1AiPdag5TJI50zEgAWAinzDIIO8UJpIUTJ8Z
-	 0/zR6iloKQRmPbkA5vzbYFJdHLIav2CZjSBu5Sd1JlQl/D23kXUo1xbKsmZJ5vxc6q
-	 vGU6bK0QC3C5A==
-Date: Tue, 10 Feb 2026 17:30:10 +0100
+	b=E2LI7R6AU7iLNsiFgF6B1QPKsM5HrW5y6elh1V5WaTnkEVzoixNq+sugTsZ0BmClL
+	 b1ZgVQ6XsmZwx+49hFJUvyHmGQT/n/Tyv1QYflQO1zwwwB20x1vnMRCVsR9NN0KkJi
+	 AlS9msH4zbk1r2Rq1oYnhHHmLvfeEEuS6xlLWD3Pu1EKekJTzdcAUjhjced1NPpQYs
+	 nPYn4xSlbwyweoPMeaWpUPTJ7a4603/ue9AeIt8/MLAo9MEHfQNdD4qu2YgqqU0jW+
+	 5MdRNiEdY4PN0ufKmKMQhh8mm2lj7gGYTBPnech0onVxiLEIzNYfFIC/LGN7u1kUQh
+	 N2olMWyd4MHnA==
+Date: Tue, 10 Feb 2026 17:38:19 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Koichiro Den <den@valinux.co.jp>
 Cc: vkoul@kernel.org, mani@kernel.org, Frank.Li@nxp.com,
@@ -53,12 +53,13 @@ Cc: vkoul@kernel.org, mani@kernel.org, Frank.Li@nxp.com,
 	jdmason@kudzu.us, allenbh@gmail.com, dmaengine@vger.kernel.org,
 	linux-pci@vger.kernel.org, ntb@lists.linux.dev,
 	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/8] PCI: endpoint: pci-ep-msi: Add embedded doorbell
- fallback
-Message-ID: <aYtdEnZM5mnmcgtY@ryzen>
+Subject: Re: [PATCH v6 6/8] PCI: endpoint: pci-epf-test: Don't free doorbell
+ IRQ unless requested
+Message-ID: <aYte-7hTxb7kXNlQ@ryzen>
 References: <20260209125316.2132589-1-den@valinux.co.jp>
- <aYsjfTtA0EsXwh69@ryzen>
- <2lii3hhzie5n2kkoan7hvittid2bo2jgvkb2fndyscc527xglp@dubt3ie7exdq>
+ <20260209125316.2132589-7-den@valinux.co.jp>
+ <aYsmTbSmn94J6uN0@ryzen>
+ <uvuugqkiaravp6gmn6o7x5koyvo5zkmbwwbhdq6ctvvdtdhoyd@rnxwhlysqs7d>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -67,156 +68,124 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2lii3hhzie5n2kkoan7hvittid2bo2jgvkb2fndyscc527xglp@dubt3ie7exdq>
+In-Reply-To: <uvuugqkiaravp6gmn6o7x5koyvo5zkmbwwbhdq6ctvvdtdhoyd@rnxwhlysqs7d>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8880-lists,dmaengine=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-8881-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_CC(0.00)[kernel.org,nxp.com,gmail.com,google.com,kudzu.us,vger.kernel.org,lists.linux.dev];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,nxp.com,gmail.com,google.com,kudzu.us,vger.kernel.org,lists.linux.dev];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cassel@kernel.org,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: C323A11D31D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,valinux.co.jp:email]
+X-Rspamd-Queue-Id: 8DE5E11D595
 X-Rspamd-Action: no action
 
-On Tue, Feb 10, 2026 at 11:07:16PM +0900, Koichiro Den wrote:
-> On Tue, Feb 10, 2026 at 01:24:29PM +0100, Niklas Cassel wrote:
-> > On Mon, Feb 09, 2026 at 09:53:08PM +0900, Koichiro Den wrote:
-> > > Tested on
-> > > =========
+On Tue, Feb 10, 2026 at 10:54:20PM +0900, Koichiro Den wrote:
+> On Tue, Feb 10, 2026 at 01:36:29PM +0100, Niklas Cassel wrote:
+> > On Mon, Feb 09, 2026 at 09:53:14PM +0900, Koichiro Den wrote:
+> > > pci_epf_test_enable_doorbell() allocates a doorbell and then installs
+> > > the interrupt handler with request_threaded_irq(). On failures before
+> > > the IRQ is successfully requested (e.g. no free BAR,
+> > > request_threaded_irq() failure), the error path jumps to
+> > > err_doorbell_cleanup and calls pci_epf_test_doorbell_cleanup().
 > > > 
-> > > I tested the embedded (DMA) doorbell fallback path (via pci-epf-test) on
-> > > R-Car Spider boards:
+> > > pci_epf_test_doorbell_cleanup() unconditionally calls free_irq() for the
+> > > doorbell virq, which can trigger "Trying to free already-free IRQ"
+> > > warnings when the IRQ was never requested.
 > > > 
-> > >   $ ./pci_endpoint_test -t DOORBELL_TEST
-> > >   TAP version 13
-> > >   1..1
-> > >   # Starting 1 tests from 1 test cases.
-> > >   #  RUN           pcie_ep_doorbell.DOORBELL_TEST ...
-> > >   #            OK  pcie_ep_doorbell.DOORBELL_TEST
-> > >   ok 1 pcie_ep_doorbell.DOORBELL_TEST
-> > >   # PASSED: 1 / 1 tests passed.
-> > >   # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
+> > > Track whether the doorbell IRQ has been successfully requested and only
+> > > call free_irq() when it has.
 > > > 
-> > > with the following message observed on the EP side:
+> > > Fixes: eff0c286aa91 ("PCI: endpoint: pci-epf-test: Add doorbell test support")
+> > > Signed-off-by: Koichiro Den <den@valinux.co.jp>
+> > > ---
+> > >  drivers/pci/endpoint/functions/pci-epf-test.c | 9 ++++++++-
+> > >  1 file changed, 8 insertions(+), 1 deletion(-)
 > > > 
-> > >   [   80.464653] pci_epf_test pci_epf_test.0: Using embedded (DMA) doorbell fallback
-> > > 
-> > > (Note: for the test to pass on R-Car Spider, one of the following was required:
-> > >  - echo 1048576 > functions/pci_epf_test/func1/pci_epf_test.0/bar2_size
-> > >  - apply https://lore.kernel.org/all/20251023072217.901888-1-den@valinux.co.jp/)
+> > > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > index 6952ee418622..23034f548c90 100644
+> > > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > @@ -86,6 +86,7 @@ struct pci_epf_test {
+> > >  	bool			dma_private;
+> > >  	const struct pci_epc_features *epc_features;
+> > >  	struct pci_epf_bar	db_bar;
+> > > +	bool			db_irq_requested;
+> > >  	size_t			bar_size[PCI_STD_NUM_BARS];
+> > >  };
+> > >  
+> > > @@ -715,7 +716,10 @@ static void pci_epf_test_doorbell_cleanup(struct pci_epf_test *epf_test)
+> > >  	struct pci_epf_test_reg *reg = epf_test->reg[epf_test->test_reg_bar];
+> > >  	struct pci_epf *epf = epf_test->epf;
+> > >  
+> > > -	free_irq(epf->db_msg[0].virq, epf_test);
+> > > +	if (epf_test->db_irq_requested && epf->db_msg) {
+> > > +		free_irq(epf->db_msg[0].virq, epf_test);
+> > > +		epf_test->db_irq_requested = false;
+> > > +	}
+> > >  	reg->doorbell_bar = cpu_to_le32(NO_BAR);
+> > >  
+> > >  	pci_epf_free_doorbell(epf);
+> > > @@ -741,6 +745,8 @@ static void pci_epf_test_enable_doorbell(struct pci_epf_test *epf_test,
+> > >  	if (bar < BAR_0)
+> > >  		goto err_doorbell_cleanup;
+> > >  
+> > > +	epf_test->db_irq_requested = false;
+> > > +
+> > >  	ret = request_threaded_irq(epf->db_msg[0].virq, NULL,
+> > >  				   pci_epf_test_doorbell_handler, IRQF_ONESHOT,
+> > >  				   "pci-ep-test-doorbell", epf_test);
 > > 
-> > I applied this series on top of branch pci/controller/dwc
-> > on Rock 5B (pcie-dw-rockchip.c).
+> > Another bug in pci_epf_test_enable_doorbell():
 > > 
-> > On EP side:
-> > [   39.218533] pci_epf_test pci_epf_test.0: Can't find MSI domain for EPC
-> > [   39.219125] pci_epf_test pci_epf_test.0: Using embedded (DMA) doorbell fallback
+> > Since we reuse the BAR size, and use dynamic inbound mapping,
+> > what if the returned DB offset is larger than epf->bar[bar].size ?
 > > 
-> > On RC side:
-> > #  RUN           pcie_ep_doorbell.DOORBELL_TEST ...
-> > [   40.297892] pci-endpoint-test 0000:01:00.0: Failed to trigger doorbell in endpoint
-> > # pci_endpoint_test.c:279:DOORBELL_TEST:Expected 0 (0) == ret (-22)
-> > # pci_endpoint_test.c:279:DOORBELL_TEST:Test failed for Doorbell
+> > I think we need something like this before calling pci_epc_set_bar():
 > > 
-> > # DOORBELL_TEST: Test failed
-> > #          FAIL  pcie_ep_doorbell.DOORBELL_TEST
-> > not ok 23 pcie_ep_doorbell.DOORBELL_TEST
-> > 
-> > Any suggestions?
-> > 
-> > (All BARs in pcie-dw-rockchip.c is marked as BAR_RESIZABLE.)
+> > if (reg->doorbell_offset >= epf->bar[bar].size)
+> >     goto err_doorbell_cleanup;
 > 
-> Thank you for testing.
+> Right, I remember this coming up in another thread.
 > 
-> If the failure was observed in a scenario other than a plain
-> `./pci_endpoint_test -t DOORBELL_TEST`, could you please try again with [1]
-> applied as well?
-> 
-> [1] https://lore.kernel.org/linux-pci/20260202145407.503348-1-den@valinux.co.jp/
+> If there are no objections from either of you, I'm happy to include a fix
+> patch for this in v7.
 
-I applied that series, but I got the same problem.
-
-I added debug, and the EP side does use the correct address for the eDMA:
-[   26.279457] msg_addr: 0xa403800a0
-[   26.279898] phys_addr: 0xa40300000 offset: 0x800a0
+No objection from me.
 
 
-If I write to the msg_addr directly on the EP using devmem, I do see the print
-that I added in the IRQ handler:
-# devmem 0xa403800a0 32 0
-[  155.861989] dw_edma_interrupt_emulated:696
-# devmem 0xa403800a0 32 0
-[  158.809160] dw_edma_interrupt_emulated:696
-[  158.809543] pci_epf_test_doorbell_primary:729
-# [  158.809986] pci_epf_test_doorbell_handler:703
-# devmem 0xa403800a0 32 0
-[  161.241326] dw_edma_interrupt_emulated:696
-# devmem 0xa403800a0 32 0
-[  163.466054] dw_edma_interrupt_emulated:696
-# devmem 0xa403800a0 32 0
-[  167.378662] dw_edma_interrupt_emulated:696
-[  167.379045] pci_epf_test_doorbell_primary:729
-# [  167.379512] pci_epf_test_doorbell_handler:703
-# devmem 0xa403800a0 32 0
-[  168.880179] dw_edma_interrupt_emulated:696
-# devmem 0xa403800a0 32 0
-[  170.492176] dw_edma_interrupt_emulated:696
-# devmem 0xa403800a0 32 0
-[  171.729154] dw_edma_interrupt_emulated:696
-# devmem 0xa403800a0 32 0
-[  173.481271] dw_edma_interrupt_emulated:696
-# devmem 0xa403800a0 32 0
-[  174.985787] dw_edma_interrupt_emulated:696
-# devmem 0xa403800a0 32 0
-[  176.517131] dw_edma_interrupt_emulated:696
-[  176.517511] pci_epf_test_doorbell_primary:729
-# [  176.517963] pci_epf_test_doorbell_handler:703
+Ideally I would also like:
 
-But not on every write....
+	if (!(test->ep_caps & CAP_DYNAMIC_INBOUND_MAPPING))
+		return -EOPNOTSUPP;
 
-I'm not sure, but could this perhaps be because we are missing this patch:
-https://lore.kernel.org/dmaengine/20260105075904.1254012-1-den@valinux.co.jp/
-
-# dmesg | grep eDMA
-[    1.243339] rockchip-dw-pcie a40000000.pcie-ep: eDMA: unroll T, 2 wr, 2 rd
-
-# cat /proc/interrupts | grep edma
- 53:          8          0          0          0          0          0          0          0    GICv3 303 Level     dw-edma-core:a40000000.pcie-ep, pci-ep-test-doorbell
- 54:          7          0          0          0          0          0          0          0    GICv3 304 Level     dw-edma-core:a40000000.pcie-ep
- 55:         15          0          0          0          0          0          0          0    GICv3 301 Level     dw-edma-core:a40000000.pcie-ep
- 56:          7          0          0          0          0          0          0          0    GICv3 302 Level     dw-edma-core:a40000000.pcie-ep
+and that the pci_endpoint_test selftest would return skip on -EOPNOTSUPP,
+since the doorbell test currently relies on CAP_DYNAMIC_INBOUND_MAPPING,
+but that might make your series too big.
 
 
-
-Anyway, I was still curious why this did never worked when writing from the
-host side, even when running the test case many, many times.
-AFAICT, the inbound translation looks correct.
-
-RK3588 (pcie-dw-rockchip.c) exposes the DMA registers in BAR4 by default.
-If I hack pci-epf-test on top of your patch to unconditionally return BAR4 with
-offset 0xa0, it works. So my best guess is that the fixed inbound translation
-in BAR4 (to the eDMA registers) somehow messes with the inbound translation if
-another BAR tries to use an inbound translation to the eDMA registers as well.
+Thus, I'm happy if you add a safety check for:
+reg->doorbell_offset >= epf->bar[bar].size
 
 
 Kind regards,

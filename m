@@ -1,50 +1,50 @@
-Return-Path: <dmaengine+bounces-8872-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8873-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +JKDCoYji2lyQQAAu9opvQ
-	(envelope-from <dmaengine+bounces-8872-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 13:24:38 +0100
+	id mHZ3KVgmi2mYQQAAu9opvQ
+	(envelope-from <dmaengine+bounces-8873-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 13:36:40 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9CA111ABD9
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 13:24:37 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22D0E11AE69
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 13:36:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2C280300BBA1
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 12:24:37 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1D47C302D95E
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 12:36:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10D2C327C0C;
-	Tue, 10 Feb 2026 12:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19DDC145A1F;
+	Tue, 10 Feb 2026 12:36:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3SXTl8W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLuRfnSy"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16932E8B94;
-	Tue, 10 Feb 2026 12:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F7F3A8F7;
+	Tue, 10 Feb 2026 12:36:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770726276; cv=none; b=ZAzuMo9YqNqk/V1EBd6aN1CUC5Yb7jOMKBw5uFEBCVlpAb77UdJaCNCkCoKtyPeCOOVIS75Clb1/l85bfHXXUVtfkUdc7CsySujI6bpUZG0rfI7RI3zo8G2nCFI3Y0WUsGpTx/XZ3h+fisL50duJ1KtJDlaJqTtbVH4FqRET1DA=
+	t=1770726996; cv=none; b=T9LkRUe3h1cTtCB1uHDq7eFayVw7x338rml9qHmktMqHPVMTol6aGmSYEw5z+13xIPKH5zpPL88eEexBbbf8QqpMFVGk643rEyIB4CkYtHbC8ZbUbnWzikik5CkrkqX30g6s5mCQHfOmapTYfm6CxAcb82Zbv1o91MWRdpCAPLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770726276; c=relaxed/simple;
-	bh=FLQWelYjH6J1n+nBExy9QSwJEf2Zi8oQm4rmyPVVcOU=;
+	s=arc-20240116; t=1770726996; c=relaxed/simple;
+	bh=gzH2YGvZRc9iV5d+RW89R0NxYY96RI7zn+dgQ4Iw8Wg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DqqxRFFK6qgyb7fQncVQ6iIbW/jujmHqpU5OoBKcxeZ+8iw56SsytKOfFP9N5D6htSpkDl8I6rZQ3naOtr0ipvDCu5K7vUd6sM1mELtA2GceUGpTVpX5TCzL+7X1Y0LjbbK6lcJNs3d8wPFKTCOWL5JJ5NVISSiXIyetHB2fEZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3SXTl8W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0488EC116C6;
-	Tue, 10 Feb 2026 12:24:31 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ci/TeL59/zf3JQDMAD9s3fVuHlyi29IGW/zLokKbGJPocS+Yh7/4R9tyH518ko1gfNdy9TnUMAKPSaBYXK6MvKQTiQBI2ORcFSRriHZG+61bP0kywOqKKIPsp521pqqbZ7DHYLGbV3a4B6ZqpKm7yT08rc7E14QXS69zdQgWAJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLuRfnSy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A888C116C6;
+	Tue, 10 Feb 2026 12:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770726275;
-	bh=FLQWelYjH6J1n+nBExy9QSwJEf2Zi8oQm4rmyPVVcOU=;
+	s=k20201202; t=1770726995;
+	bh=gzH2YGvZRc9iV5d+RW89R0NxYY96RI7zn+dgQ4Iw8Wg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g3SXTl8WawiMrGnByBlZdG7fqTMzmtHd4U30kqoanm19yddGD7yXphRq74NITWtXd
-	 LkpCWVZLgZrSiKdU1w11mte+U/yw/AYCbFva5fRbgZI8iocHtCTYlJ3POacYMU3J7y
-	 +4gS6UnDToI1fV+BIKSoCWaY7/zsqqnF7wyTzq1kfU2C0ttqO8ZaleaV2AzZZgw24M
-	 v3O9ObfiO+GMSir+j/T4yOPDzn3O3qNRnERN3KpYpkRQrH93JGVnHI+iqrbFtd3FyD
-	 wOvyd/TV1iFo//sNyPHgwKP7TykxZdKXtxSpQKVhPk6G/6uftYxvMzmQSJKcwTvxSn
-	 5aPAV1KyK9G9A==
-Date: Tue, 10 Feb 2026 13:24:29 +0100
+	b=nLuRfnSyt3b6YxGjiBXA0qXmaewKKdJ2NbcH9G7Tw04N4Pk9HtXZJT+M8pK4QfOxM
+	 x32Ezkv0H+gRZrnfBr1HqfKrLIMrlrtW6p6RkVBqycsS0oU0hjVcmnkXRGHVwEWo4o
+	 vL7N7dcp2J1g9G+Zjmcu5k54PxwJuiXFVbLjjkAjYsBXZR0VJ85B2qauMMEXj9RVGY
+	 uG8D90P5bKHgByMr/bGkV9obU0jEK/vWX8I+8vas3QbBQzpYiCjHs40SSEtaqNi5Ap
+	 tXapki1uRBWBkAqMlU2DW2ZTvN3GKknO95KfPGb6Q3uLwFhyVZYL7Af2lzYethc4lU
+	 GAQkeKJ3G+MRA==
+Date: Tue, 10 Feb 2026 13:36:29 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Koichiro Den <den@valinux.co.jp>
 Cc: vkoul@kernel.org, mani@kernel.org, Frank.Li@nxp.com,
@@ -53,10 +53,11 @@ Cc: vkoul@kernel.org, mani@kernel.org, Frank.Li@nxp.com,
 	jdmason@kudzu.us, allenbh@gmail.com, dmaengine@vger.kernel.org,
 	linux-pci@vger.kernel.org, ntb@lists.linux.dev,
 	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/8] PCI: endpoint: pci-ep-msi: Add embedded doorbell
- fallback
-Message-ID: <aYsjfTtA0EsXwh69@ryzen>
+Subject: Re: [PATCH v6 6/8] PCI: endpoint: pci-epf-test: Don't free doorbell
+ IRQ unless requested
+Message-ID: <aYsmTbSmn94J6uN0@ryzen>
 References: <20260209125316.2132589-1-den@valinux.co.jp>
+ <20260209125316.2132589-7-den@valinux.co.jp>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -65,19 +66,19 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260209125316.2132589-1-den@valinux.co.jp>
+In-Reply-To: <20260209125316.2132589-7-den@valinux.co.jp>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8872-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8873-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -90,58 +91,77 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[cassel@kernel.org,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B9CA111ABD9
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,valinux.co.jp:email]
+X-Rspamd-Queue-Id: 22D0E11AE69
 X-Rspamd-Action: no action
 
-On Mon, Feb 09, 2026 at 09:53:08PM +0900, Koichiro Den wrote:
-> Tested on
-> =========
+On Mon, Feb 09, 2026 at 09:53:14PM +0900, Koichiro Den wrote:
+> pci_epf_test_enable_doorbell() allocates a doorbell and then installs
+> the interrupt handler with request_threaded_irq(). On failures before
+> the IRQ is successfully requested (e.g. no free BAR,
+> request_threaded_irq() failure), the error path jumps to
+> err_doorbell_cleanup and calls pci_epf_test_doorbell_cleanup().
 > 
-> I tested the embedded (DMA) doorbell fallback path (via pci-epf-test) on
-> R-Car Spider boards:
+> pci_epf_test_doorbell_cleanup() unconditionally calls free_irq() for the
+> doorbell virq, which can trigger "Trying to free already-free IRQ"
+> warnings when the IRQ was never requested.
 > 
->   $ ./pci_endpoint_test -t DOORBELL_TEST
->   TAP version 13
->   1..1
->   # Starting 1 tests from 1 test cases.
->   #  RUN           pcie_ep_doorbell.DOORBELL_TEST ...
->   #            OK  pcie_ep_doorbell.DOORBELL_TEST
->   ok 1 pcie_ep_doorbell.DOORBELL_TEST
->   # PASSED: 1 / 1 tests passed.
->   # Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
+> Track whether the doorbell IRQ has been successfully requested and only
+> call free_irq() when it has.
 > 
-> with the following message observed on the EP side:
+> Fixes: eff0c286aa91 ("PCI: endpoint: pci-epf-test: Add doorbell test support")
+> Signed-off-by: Koichiro Den <den@valinux.co.jp>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
->   [   80.464653] pci_epf_test pci_epf_test.0: Using embedded (DMA) doorbell fallback
-> 
-> (Note: for the test to pass on R-Car Spider, one of the following was required:
->  - echo 1048576 > functions/pci_epf_test/func1/pci_epf_test.0/bar2_size
->  - apply https://lore.kernel.org/all/20251023072217.901888-1-den@valinux.co.jp/)
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 6952ee418622..23034f548c90 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -86,6 +86,7 @@ struct pci_epf_test {
+>  	bool			dma_private;
+>  	const struct pci_epc_features *epc_features;
+>  	struct pci_epf_bar	db_bar;
+> +	bool			db_irq_requested;
+>  	size_t			bar_size[PCI_STD_NUM_BARS];
+>  };
+>  
+> @@ -715,7 +716,10 @@ static void pci_epf_test_doorbell_cleanup(struct pci_epf_test *epf_test)
+>  	struct pci_epf_test_reg *reg = epf_test->reg[epf_test->test_reg_bar];
+>  	struct pci_epf *epf = epf_test->epf;
+>  
+> -	free_irq(epf->db_msg[0].virq, epf_test);
+> +	if (epf_test->db_irq_requested && epf->db_msg) {
+> +		free_irq(epf->db_msg[0].virq, epf_test);
+> +		epf_test->db_irq_requested = false;
+> +	}
+>  	reg->doorbell_bar = cpu_to_le32(NO_BAR);
+>  
+>  	pci_epf_free_doorbell(epf);
+> @@ -741,6 +745,8 @@ static void pci_epf_test_enable_doorbell(struct pci_epf_test *epf_test,
+>  	if (bar < BAR_0)
+>  		goto err_doorbell_cleanup;
+>  
+> +	epf_test->db_irq_requested = false;
+> +
+>  	ret = request_threaded_irq(epf->db_msg[0].virq, NULL,
+>  				   pci_epf_test_doorbell_handler, IRQF_ONESHOT,
+>  				   "pci-ep-test-doorbell", epf_test);
 
-I applied this series on top of branch pci/controller/dwc
-on Rock 5B (pcie-dw-rockchip.c).
+Another bug in pci_epf_test_enable_doorbell():
 
-On EP side:
-[   39.218533] pci_epf_test pci_epf_test.0: Can't find MSI domain for EPC
-[   39.219125] pci_epf_test pci_epf_test.0: Using embedded (DMA) doorbell fallback
+Since we reuse the BAR size, and use dynamic inbound mapping,
+what if the returned DB offset is larger than epf->bar[bar].size ?
 
-On RC side:
-#  RUN           pcie_ep_doorbell.DOORBELL_TEST ...
-[   40.297892] pci-endpoint-test 0000:01:00.0: Failed to trigger doorbell in endpoint
-# pci_endpoint_test.c:279:DOORBELL_TEST:Expected 0 (0) == ret (-22)
-# pci_endpoint_test.c:279:DOORBELL_TEST:Test failed for Doorbell
+I think we need something like this before calling pci_epc_set_bar():
 
-# DOORBELL_TEST: Test failed
-#          FAIL  pcie_ep_doorbell.DOORBELL_TEST
-not ok 23 pcie_ep_doorbell.DOORBELL_TEST
+if (reg->doorbell_offset >= epf->bar[bar].size)
+    goto err_doorbell_cleanup;
 
-Any suggestions?
-
-(All BARs in pcie-dw-rockchip.c is marked as BAR_RESIZABLE.)
 
 
 Kind regards,

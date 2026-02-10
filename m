@@ -1,358 +1,425 @@
-Return-Path: <dmaengine+bounces-8859-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8860-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gOoSFIyJimmPLgAAu9opvQ
-	(envelope-from <dmaengine+bounces-8859-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 02:27:40 +0100
+	id 8JD+FmeOimmwLwAAu9opvQ
+	(envelope-from <dmaengine+bounces-8860-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 02:48:23 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7713115FB0
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 02:27:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB721116125
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 02:48:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 10E2A300CA39
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 01:27:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9D4253012258
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Feb 2026 01:48:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FFE7264617;
-	Tue, 10 Feb 2026 01:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22B3B28466C;
+	Tue, 10 Feb 2026 01:48:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoIFJ9gD"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="Tnqw1Maw"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11021104.outbound.protection.outlook.com [40.107.74.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1650525524C
-	for <dmaengine@vger.kernel.org>; Tue, 10 Feb 2026 01:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3132035898;
+	Tue, 10 Feb 2026 01:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.104
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770686857; cv=pass; b=Tf4M4zGQGywxYnsqk0RV3kTsIBtYbaiHzUGVL3/d5Yf/eXtG4uP7rTiK3cyT9j4/yQ4TM5AObLQ0Tu47S4ZHQ5UEB/0uUN5khMYq14UNYfGe4yF6vqTwe6GLnj4Po1MpcesMvSHzi0AlPR5mn856QO6g6r+ezhYQEJcIBTAwkjY=
+	t=1770688088; cv=fail; b=NmeswKczaYb7Z1LEpvWJYDn/4NFZw+aQZY5CeOC6f8P2bw/hji1t5ZX0G8RYLjs3ttpw1Uf2WA+ev0s1BkMx4DKbcx6EMWAtMpYgqzDCHdEW1JR6q52/iCRII2W68ULIv/21sapEOt+vbG+mf/vNn0RxJ1+cIixQNKeAKzVkdEE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770686857; c=relaxed/simple;
-	bh=SCjo7Ef55zh44/8UoLsoSqyzqn7OjE/L4/11ImGPxkA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r+FsxFjCc/r9tstmUq5r+YHrpmbYEGuCJNtwd6uUMJjUBKQOM6uhfGc81gmTP6nu0S3jU4prsuyEl3jGdTK44LV5QMpZ0FR9B06r5c55KeFAaUp9dwHuEQhdeO3L5aO09Qdx4qp5jWkOXk9x3ypfNC9re/d8YHYF/KF2gOXbN1M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CoIFJ9gD; arc=pass smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-65941c07fb4so7939986a12.3
-        for <dmaengine@vger.kernel.org>; Mon, 09 Feb 2026 17:27:34 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770686853; cv=none;
-        d=google.com; s=arc-20240605;
-        b=bMnjLg2RIvyoirA04LTv3vHrNzTQS1ad6llhdlYzqanEbxjLoaRQC2XYMXt8Msl36G
-         gqIk0s+Zlv9fXKMpwIxJaW6Hc3eBCa0Maz7dNWbcAs6XhdO6rLIGb6rgA3+WieOernyd
-         6fkTXq19itcRWeyAFy4sSRIkIEeWwpziWNSAkrxJc7pijd8eDc54yHIX/ufykNfjrGm4
-         XThY9vecU5hlkNJmEm9V/hvkUjyVvWpMajqFCbRtESiMbafbWmhb9UoUoGAGrNWx+KWP
-         sCn4EnTwPZStFuOC08eaaKSIDJXNtrpzvNPGlhqzQG+9PijrJwQyzxcOLD0wf7PAljIO
-         oc9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=sePhY3+7FDed9E+NZqtmjotVtiqisjqNp0aqjZx4AYw=;
-        fh=HvVN5GPwQXiSrZwb9HQPEf5Mix6Uhyu55QMg5GrG+Js=;
-        b=lPetNasT46YffjPvMU4xszBHpme34nPTCmGI+H9TIQTDKhpj6+I3A4JGnnG6VgJlWr
-         jEZbXoI0dHO+yPfWGU9H4Mtz82DdvsBHMDVjObNRJkoyo0Z7pr8fli9uwD9j6NxYULcj
-         qFn8Q2P9IUeMAwE4TTeMaksZCYF0Fvx2/dlpj28PSZXzKPTwRz2Fu64ByLy+hnhiVFmg
-         Y4NH91FLqqv28aCLmgO0hqae49kUoWv7LxhsKMtyJBUqsQJiGyX3PoD1Uwvri6WEQOFU
-         zCk/pkvPNN7WMv1VO2yR4BXjdErv6XINUgJ9whcbfCgAYpN07g51US35IKF31YmG1cZf
-         Jr9A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770686853; x=1771291653; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sePhY3+7FDed9E+NZqtmjotVtiqisjqNp0aqjZx4AYw=;
-        b=CoIFJ9gDPxnEy/IQ6n+DanE1VXPJcqJphNumKDAHbajCxINzPPBXL+f57llOLxYQvZ
-         slB9+UHFhMGisndnoEvirRug0Q8D/7OXjb62hSh3hAvNW/ptQ7vCh7cwEJkn0onkKU3L
-         O92gWqLEuEbcVFW2/EV+2EJFscIR3fjHoPpaqLHhclzcfxZAZryVWttcwmQj2CguiWoI
-         JKZVdUEcAqvAIKY4AB2ecrhErMiIPTwfWq/IO9ZopfE6ORzZx3gDJ2yhEVMSMXo7uwrR
-         K62NUQXHTtlX5zq75znJ/OJCgX3G8YqoRuZR639HVCwi3QDjm+wlHx0sj4drp3kj5qBT
-         YOvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770686853; x=1771291653;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=sePhY3+7FDed9E+NZqtmjotVtiqisjqNp0aqjZx4AYw=;
-        b=Tipil3loWAClIsN2ztkJHqaCqnR4Ye7hG2tYVNcZMfd9OQw52XiwtVGSs2r1j17/QL
-         JdFL+gWDIHYqK/yMQdNt1Sx/OLJLlT0DBJ8FFr74Oddcm41DP0bHH15y8Ch0tW3cXg7D
-         qDPzllWqICmgoZaQFV+ZpUhGayDEo58uU5BaS0zL76YWbq/v3cqGxqq4mbDyS9qCohSR
-         wCBiljBIgrWMs7eUzVbhRRCl7Jj1jbF3vba0kHuHuyG312VvrRfcq5i0MTK6lwEYEifm
-         j4GpoocLEpePE0I0a2h2cqUrHg/C82jKSfCO8uIWP7TocWFnyTwnNCPi8ACnKZFVq5Oj
-         j+NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYzNd92fEuB5nVVkJN+21pP9SYsPWJUhV199XVUXTlY2wZZzDFg6RAd6UV4zwLQlKR/Hq/cCFiD04=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLxgn4eivbzUF8BRqSs3qyA/Q0fe5uVNpUhf9YZkwxp/lLFjGM
-	DNXaIV2OlGcgYLMfZQazKQuXSoZTE/6eIT8T31oH8ZiRzh+/QHzZUTAwuI85gUYG4MpD3+/mpPM
-	KOXWoGbGzuSk1/630q5foew4GtY97XUs=
-X-Gm-Gg: AZuq6aKr3Zye1HFscTYY9JhfbSFva3qVy0OZnM2SxIxIGRZjlQOUAny2N+GeLnDufGP
-	79fE/XCxFpqPIRsXRm39eFde8qI895zyMRoAIxyVbj/wopcsXJgnZFo1f8AnmAMm7hPjPqAzlpv
-	+GLqxJIK0oZCGS1Y3xC8Avlp3OJpeiI/Hy8JPp4aQP/5Ewjhn5YfNY4yc/mlFN4BHJo6bPQSGt8
-	IJH+fDdq80sMshLYpfU2OeBOcpdCcklC/tGle8/xU+2TOXrJ8qVU9EB4unHC9TRfQiyYxUx
-X-Received: by 2002:a05:6402:146b:b0:658:1528:669 with SMTP id
- 4fb4d7f45d1cf-65a0d144dcbmr262464a12.9.1770686853202; Mon, 09 Feb 2026
- 17:27:33 -0800 (PST)
+	s=arc-20240116; t=1770688088; c=relaxed/simple;
+	bh=BpGFMhU0/MiH0NbXB0jk3eANN0ZM9IZ1qdN7+L10Yu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=X4Q8wAjeYSNAlzCqBsntKbI15z5RfKOT95C+q6iAJWFnaENvbvAkup4V9BXb6ag8XCVr7bhFtCCqD0CAxHKD0prsZ1Jg7AQFMJg4QmX2ArMbfMFvAVdivhwlHXPFXDT2NKJbW/wZWd6JPbOu3Gg5VcHaIddf0ASxEkqb/JNE9OE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=Tnqw1Maw; arc=fail smtp.client-ip=40.107.74.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VwlLY6LAoR59WkRwgxXPLZ7nOMIVvoMIIy2oKsMj3DhNUqXD0+WTSS8kbmN7nn0vYeaKJljJwKp4DZ631ApObsoNUqNASzCMDzkJsVtrHKsGrIyWfsaZxoWtSsUO2BIqWTiuoZp0rmwZ4wBRf6baBmJGEHQZbt04xSfx1Bu2BNtvmMIvxG+wqowD7yAsCu8LhhP3HTxGMQE7VS7JI5wfzkm0bb2p5qhJrd1L3QjmYvYxrVXhX0NTiq6dpfRk+MY+c/IxyHruD/42pB+jKvBDMPfjSpD3afKWYo9GTfGHGWoZGeI2PSalqPsAtu8otbS5DoSx/CG2P3IwUDiCmHqVhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FymbhbVCFR5x8tHVuIDtry0jghGs9Lk9lvJA2qyRbIo=;
+ b=DPM9NZbr1fky7AgpX1VPBHbC/P51J8E2zZCKL6RzBjGljLK25rF3WL5Tcze8lWWLOeBHS355BXt7e3QV/1AmV0CX1Uu9nFnXMXAoz23O9cQXeN42N7I7xbW0E6E26PbOTBMXpIQ9NEXyulSX80aX43Ab2qElEtiu1V7dpfXMi+/ytTFLSXnjBC2fPpY1Db184YIeNDHgYix1cJTffypEngLrourgr5BpYnL+51f39iH7OnV+DP6cE5uBtLY3/uTQqO4NdM1yaXDxx/lX3afbq7Wr2RDExSrwuyJxd4ply8jTuuVh2HfwwJbWTs8yvU3KBdTPv7h5q3BEx9KAKOltAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FymbhbVCFR5x8tHVuIDtry0jghGs9Lk9lvJA2qyRbIo=;
+ b=Tnqw1MawEacfrUhpfrFPQ6i6w+kGzABKR1oQ73eFIge3tbTEKK1XHW9Ll2LI0DmQGXArXEZ/CNia6NM+uSdo+BFBzY+KHXRlowhrsMsykFifoqg7N+B12dNJaLozv2oL6yHHKsCYUHofNo0kM1AVyeggdBvyrae5ojOGBwXPpRo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=valinux.co.jp;
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
+ by OS9P286MB4317.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:2c2::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.19; Tue, 10 Feb
+ 2026 01:48:03 +0000
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.20.9587.017; Tue, 10 Feb 2026
+ 01:48:03 +0000
+Date: Tue, 10 Feb 2026 10:48:01 +0900
+From: Koichiro Den <den@valinux.co.jp>
+To: Frank Li <Frank.li@nxp.com>
+Cc: vkoul@kernel.org, mani@kernel.org, cassel@kernel.org, 
+	jingoohan1@gmail.com, lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
+	bhelgaas@google.com, kishon@kernel.org, jdmason@kudzu.us, allenbh@gmail.com, 
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, ntb@lists.linux.dev, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/8] dmaengine: dw-edma: Cache per-channel IRQ and
+ emulation doorbell offset
+Message-ID: <5qagzbpffis6mpv2efpdk4fn35i4jcfdzuggvqoagqjpjxiogt@dzcdo3qwhrtj>
+References: <20260209125316.2132589-1-den@valinux.co.jp>
+ <20260209125316.2132589-3-den@valinux.co.jp>
+ <aYoHtP5dsEHQEm7c@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aYoHtP5dsEHQEm7c@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: TYWP286CA0001.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:178::12) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1770605931.git.zhoubinbin@loongson.cn> <d62faafc653efab602c8d6bfcdcee1cb217171b9.1770605931.git.zhoubinbin@loongson.cn>
- <aYoPyWS7o27G-AHh@lizhi-Precision-Tower-5810>
-In-Reply-To: <aYoPyWS7o27G-AHh@lizhi-Precision-Tower-5810>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 10 Feb 2026 09:27:21 +0800
-X-Gm-Features: AZwV_Qi5_a-cKTFI06iITBG5Gu1YQfAyT8X0Ih3cxfFWjkoclvcfYBubQp9RiT0
-Message-ID: <CAMpQs4+NHVQTcxdsBYp6H7c4FZpsuTo=QpKKY09sgpppDEiuNA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dmaengine: loongson: New directory for Loongson
- DMA controllers drivers
-To: Frank Li <Frank.li@nxp.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, 
-	Xiaochuang Mao <maoxiaochuan@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	Keguang Zhang <keguang.zhang@gmail.com>, linux-mips@vger.kernel.org, jeffbai@aosc.io
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|OS9P286MB4317:EE_
+X-MS-Office365-Filtering-Correlation-Id: 767bcb21-7181-4ee5-276f-08de68466d3a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?RQt7K8ZqR0jICkMadCNG8UabEXouYyykdHLnESrCRO84OWO1U8q40SaYQs6w?=
+ =?us-ascii?Q?ckuVy2ObIQeFVTAWHwCQ4mEKSRKcDcbRn/ljF0G+3unn6KMDZIgC/WVPeI4E?=
+ =?us-ascii?Q?aAVBW59Tl0eLYHRsKid/CsDZDbqJd5zbiBU0Ct+h70CmW5wssZMNz3oTXs/7?=
+ =?us-ascii?Q?HGMh837O8eKFhiU+lBGUN5LiceCG1EyqTbCF7IyFw5IG6WY5iCRKlrJSGD6H?=
+ =?us-ascii?Q?j9oB6LndxIbxDg6QRaBI5B6/WPFTKEMD/AgKK647UGDT9mZMOxkxmDTgsDnN?=
+ =?us-ascii?Q?9lxEypIpDYf6Mxmzu2wfrwAZQL/lQHw1dJhXTwtv8AWQD4z2cZ+MGGRD6FCN?=
+ =?us-ascii?Q?ybZHiZShkuIR9cMdwIlcxycbpeL5L4OvirgbaK+ftqKveabOgu0C+Pzl1hiw?=
+ =?us-ascii?Q?Lld8e7P3ct9f0jusrCLhGxYavza6pBjwZceMPn64w7pQfefr8WkLl3qTyRO2?=
+ =?us-ascii?Q?1AmeRxqlNFJi3SMKnVAjEAl168XHCs4r5YrrVCgrC1ifC1Y0sdiAtoLUfBUz?=
+ =?us-ascii?Q?kMdanV/o0GRtT222C25SKT7unUtilT8z/grP+1RQ1R3yrXKB9rh2fvxlxDqu?=
+ =?us-ascii?Q?kYScYZFO7tuALXU676RGwn50lgxm5V0k5dMN+1SCdZGcoYaTUKFAFbbftAds?=
+ =?us-ascii?Q?lJsISMpFkRLDvCx9Fj22IPr++I+ebW+vCVtxNpSl1OOtCOW9+Hqh0pzWrWWz?=
+ =?us-ascii?Q?vP4V0DS67PavckUwyaC053137tPaAPhMmcwzf12qNSAWb+EnYLlsaFnn8P8E?=
+ =?us-ascii?Q?cjzlMFMa/dLSDEdIXTm5S7kagHxVvL+4gKYTMInmouHHT0aSeQi5vTI/WLvj?=
+ =?us-ascii?Q?cui4bZU48BiAwzhRXYvcJzTBKZdnmTpQSA+7ISJBNhsCC3/JcZjd/k6gKILW?=
+ =?us-ascii?Q?M7FtBcDoeGJSUePBFyrEiKwSbTEW6OMw8RkOH1rAXIUfx3drEZNuEwbLLsN+?=
+ =?us-ascii?Q?2n9ioNa2tNHFENUIFt8S/4yBW0mShhTUzhHICk/SYeAdxO55GoALsoSDMNCX?=
+ =?us-ascii?Q?iJWCKyDky0sB0gh3myNSMV+3dnmMK/xeVkN0FJBZ5NFqw04g6cAdHKKgnMta?=
+ =?us-ascii?Q?aa0KOp788sbfLIw0Td8D/JuswUuTPbwz+6y21z5a4DjV0omYmVMmZhb2RXQ1?=
+ =?us-ascii?Q?rWCg2oQVUOtHsZEPzuQy7YRKV6NZSbv9d8pld0g53MUaC+jAQg6oIybX3acn?=
+ =?us-ascii?Q?5XQUuouArCs2QiR2MzEjEt89aWJ7V4URybfI6lkm6XYC5mvgVndlfXt5o3eD?=
+ =?us-ascii?Q?sy8TAhji98UQNG5aSBlDo/1/+p1ccxBviyw8tSYfza4pG+NjHOrv5hupUJw3?=
+ =?us-ascii?Q?Jrv7Sv7aRPXjnecojZaeDrFKy50cBIqc1OSGc/rnYPNMuvOcIixTazk0kieq?=
+ =?us-ascii?Q?rPX+izOyYYERCj7eNB+803Bj3xUdmshBvyNBtngGpj1BCRWlcs9s47tDZ3bU?=
+ =?us-ascii?Q?54AZuGbe1g3ZDSaOMr8zSQ8hcGRDRJMfMSqhSyBLEg7++OPtdvUq1YBybsbi?=
+ =?us-ascii?Q?Uw5TVQ3f9QN6PUb2MwHJCvE/D8TdBA5j3SQNz48oGhFXR6GqAZYrS/sAB77e?=
+ =?us-ascii?Q?CuczTqQ2pR+gHgGAhcA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?JlJB7VNQMs5BpvNlFyfVSftJ463q0GkXTbeVZYQilv2OvnSLV5WPEGOerX0P?=
+ =?us-ascii?Q?Obk7dr9JStyhwESWhzUHkXYxpk/Y/kzNWxvkkj+thjlWjchrm1RiAy0IGDur?=
+ =?us-ascii?Q?sfxQ+h8jq3UMlps1ZQotmKXsnzfaCLz9owAAsafP9/sDC0mS7STxx6NOusJR?=
+ =?us-ascii?Q?kDXmiopobv6S9q6Yrh4Kr/FhW/Vp8xzC79ibptVas3FiTbJYwI3OX0o+Oh/v?=
+ =?us-ascii?Q?xGGejkEEaEZaOtx+y4KvmompxYvRl2ctsTV9PsGCWl80o7MJfL0NxRGiiNd5?=
+ =?us-ascii?Q?rhu5j3CCiJMxg+rNUtEtkp7xprB82AAUOJJd0dKT/p8Y4udPSTS1CGReMSJO?=
+ =?us-ascii?Q?GaaWpIW9X+2625K3Nnx1JwfTfEiT9PHdgS8FwTT23IY9xXPX0R0yYq5QsZXe?=
+ =?us-ascii?Q?OeXhf83gquxbGRVYZGvygA1z+kS1eE0RyRBuanP9xx8gi5uzUJIfSHF6uoi0?=
+ =?us-ascii?Q?v23m9v8O4c0vn7rKVBogNsmQ/l4nBf+40xMG7oolkJp4EeDVkefCDYwOB2ca?=
+ =?us-ascii?Q?SPKkvE54a9omeVFQWvCSLeiy4lpaHD3NjTKxLFzTI24gCX/NNtKoBXLwQUjv?=
+ =?us-ascii?Q?qVUIEhWKAzupm0SpoMZHLV2u7tlKUFHxc3ju0z7UYmGbLIqfUAPEUOSPZoJt?=
+ =?us-ascii?Q?ebhrSYByYpN/zLNQG1Xrb7m7YkWRaA3ZeW3FWlRtrz3iNsUcE0Si59clg2KE?=
+ =?us-ascii?Q?u5HvX09C939CEM3/tbrxSfmpSb+x2L0q0PYUurBGLbENjQK2NNp4sLHLKbzJ?=
+ =?us-ascii?Q?dZbScP+ir8pBMiOITCkwHauttV8VFpKNDJH8pY4BHDjidChWOELLFF/QpHHX?=
+ =?us-ascii?Q?P9zAR1RC0rO+Uk6iQevcKuDmoZw7UugPqB7gwKISHFK8L1TBx5EgPWgl/zrI?=
+ =?us-ascii?Q?HOqIdIe9ox9Ii2G3TnGVPSEt+8/0yFqXgz1jS/FmWbVKwwMC+SR/JFAyYKHW?=
+ =?us-ascii?Q?sA/WCvBjKG7+XZStgh8XlmuYhkKGzBgZWlpeRgugP441VacqyzRGKSoPMChq?=
+ =?us-ascii?Q?ZpMj+GM5l+q3bpamwMBcCso/jUmtcXAUnWadUpoQ04xYhiVuKYoX45v/Slop?=
+ =?us-ascii?Q?xRPH4LaY0a+GeTkZfoop+WidKZrBNXGdQ02bHyFgN+pVAeAT9vamkRbbF8AX?=
+ =?us-ascii?Q?4Yz5iBXvIDK+fBVZr274SlfSybmcXZGzlYBwr9KPI0g51OyllKkeB1RQfdZ2?=
+ =?us-ascii?Q?JaYu/ch13dE1IDQFQ4sp8XHyZ+gkSd6Upr+4AkL6CaFA+RjlKuNyytvN0DED?=
+ =?us-ascii?Q?sdta1q/Z7JruPmC+Fbxm6qscNTre5DAaJQvIFbU9ERO4xDpQQ/OFcN+Q+izM?=
+ =?us-ascii?Q?DDXG1mzKHRF+mknKFqouXuDPR5E+tyYJ78IqYCQHCnfoKagUxw5nd/csxtd0?=
+ =?us-ascii?Q?YEOoPJrVvTGDVVVmut8UAZhqYFJfMTTlWYti4ipM/459UCoXZ3Pos/h425uW?=
+ =?us-ascii?Q?qaqYqdyhpYhLg0+9NkIhFQMRqmSFL7M+V/s9M5tseceiGfDHFkpe/kKnMpe7?=
+ =?us-ascii?Q?rS2V6PSXPDV14wy+2KxSXEY1uCll9tCgZL5rmuATiqWYw6xzakI+SkjCh6oX?=
+ =?us-ascii?Q?xHlGr6T6vLE4cpMSkDLHiE6Vy8INbM/ccZLs2lcoDmzJcJisaMUeConCZhG3?=
+ =?us-ascii?Q?s/qQqbBQOPCExo28stjHqvb29jtH1BdfKof+CLyoG4ZPvxqOXlRDXLaYpDcw?=
+ =?us-ascii?Q?SMvgQjyN4OK1aRftFWnQyH0gnva1TBjD/r6F0YZV7Pqgruuf78AwkVFusPpo?=
+ =?us-ascii?Q?7G7TYseeChSkU9wC29nmREyTkZOL83GSR0kSUcemTtriYJ8q6Bf7?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 767bcb21-7181-4ee5-276f-08de68466d3a
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2026 01:48:02.8256
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vdvJ/J0jibGad+wDNLxlP1Cv6a8AvdYSyEqxCS0O7x11OziE/CaqaXKgb0og2d8MXZFQdeHV55HT0MvFtQoWcw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9P286MB4317
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8859-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-8860-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zhoubbaaron@gmail.com,dmaengine@vger.kernel.org];
-	FREEMAIL_CC(0.00)[loongson.cn,kernel.org,vger.kernel.org,xen0n.name,lists.linux.dev,gmail.com,aosc.io];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,google.com,kudzu.us,vger.kernel.org,lists.linux.dev];
+	DKIM_TRACE(0.00)[valinux.co.jp:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,nxp.com:email,loongson.cn:email]
-X-Rspamd-Queue-Id: C7713115FB0
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,valinux.co.jp:email,valinux.co.jp:dkim]
+X-Rspamd-Queue-Id: BB721116125
 X-Rspamd-Action: no action
 
-Hi Frank:
-
-On Tue, Feb 10, 2026 at 12:48=E2=80=AFAM Frank Li <Frank.li@nxp.com> wrote:
->
-> On Mon, Feb 09, 2026 at 11:04:18AM +0800, Binbin Zhou wrote:
-> > Gather the Loongson DMA controllers under drivers/dma/loongson/
+On Mon, Feb 09, 2026 at 11:13:40AM -0500, Frank Li wrote:
+> On Mon, Feb 09, 2026 at 09:53:10PM +0900, Koichiro Den wrote:
+> > Some DesignWare PCIe endpoint controllers integrate a DesignWare
+> > eDMA/HDMA instance. In remote eDMA use cases (e.g. exposing the eDMA
+> > MMIO window and per-channel linked-list regions to a peer via BARs),
+> > consumers need a stable way to discover:
+> >   - the Linux IRQ number associated with a given channel's interrupt
+> >     vector,
+> >   - an offset within the eDMA register window that can be used as an
+> >     interrupt-emulation doorbell for that channel.
 > >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > Store the requested Linux IRQ number in struct dw_edma_irq at IRQ
+> > request time and cache per-channel metadata in struct dw_edma_chip
+> > (ch_info_wr/rd) during channel setup. Add a core callback, .ch_info(),
+> > to fill core-specific metadata such as the doorbell register offset;
+> > implement it for the v0 eDMA core (use rd_int_status as a suitable
+> > doorbell target) and provide a placeholder for HDMA until the correct
+> > offset is known.
+> >
+> > No functional change for normal DMA operation. This only makes the
+> > metadata available to controller/platform drivers that need to expose or
+> > consume eDMA-related resources.
+> >
+> > Signed-off-by: Koichiro Den <den@valinux.co.jp>
 > > ---
-> >  MAINTAINERS                                   |  3 +-
-> >  drivers/dma/Kconfig                           | 25 ++---------------
-> >  drivers/dma/Makefile                          |  3 +-
-> >  drivers/dma/loongson/Kconfig                  | 28 +++++++++++++++++++
-> >  drivers/dma/loongson/Makefile                 |  3 ++
-> >  .../dma/{ =3D> loongson}/loongson1-apb-dma.c    |  4 +--
-> >  .../dma/{ =3D> loongson}/loongson2-apb-dma.c    |  4 +--
-> >  7 files changed, 40 insertions(+), 30 deletions(-)
-> >  create mode 100644 drivers/dma/loongson/Kconfig
-> >  create mode 100644 drivers/dma/loongson/Makefile
-> >  rename drivers/dma/{ =3D> loongson}/loongson1-apb-dma.c (99%)
-> >  rename drivers/dma/{ =3D> loongson}/loongson2-apb-dma.c (99%)
+> >  drivers/dma/dw-edma/dw-edma-core.c    |  9 +++++++++
+> >  drivers/dma/dw-edma/dw-edma-core.h    |  9 +++++++++
+> >  drivers/dma/dw-edma/dw-edma-v0-core.c | 11 +++++++++++
+> >  drivers/dma/dw-edma/dw-hdma-v0-core.c |  8 ++++++++
+> >  include/linux/dma/edma.h              | 17 +++++++++++++++++
+> >  5 files changed, 54 insertions(+)
 > >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index f630328ca6ae..27f77b68d596 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -14777,7 +14777,7 @@ M:    Binbin Zhou <zhoubinbin@loongson.cn>
-> >  L:   dmaengine@vger.kernel.org
-> >  S:   Maintained
-> >  F:   Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
-> > -F:   drivers/dma/loongson2-apb-dma.c
-> > +F:   drivers/dma/loongson/loongson2-apb-dma.c
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index fe131abf1ca3..bd5ff4a4431a 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -760,6 +760,7 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
+> >  {
+> >  	struct dw_edma_chip *chip = dw->chip;
+> >  	struct device *dev = chip->dev;
+> > +	struct dw_edma_ch_info *info;
+> >  	struct dw_edma_chan *chan;
+> >  	struct dw_edma_irq *irq;
+> >  	struct dma_device *dma;
+> > @@ -779,9 +780,11 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
+> >  		if (i < dw->wr_ch_cnt) {
+> >  			chan->id = i;
+> >  			chan->dir = EDMA_DIR_WRITE;
+> > +			info = &chip->ch_info_wr[chan->id];
+> >  		} else {
+> >  			chan->id = i - dw->wr_ch_cnt;
+> >  			chan->dir = EDMA_DIR_READ;
+> > +			info = &chip->ch_info_rd[chan->id];
+> >  		}
 > >
-> >  LOONGSON LS2X I2C DRIVER
-> >  M:   Binbin Zhou <zhoubinbin@loongson.cn>
-> > @@ -17515,6 +17515,7 @@ F:    arch/mips/boot/dts/loongson/loongson1*
-> >  F:   arch/mips/configs/loongson1_defconfig
-> >  F:   arch/mips/loongson32/
-> >  F:   drivers/*/*loongson1*
-> > +F:   drivers/dma/loongson/loongson1-apb-dma.c
-> >  F:   drivers/mtd/nand/raw/loongson-nand-controller.c
-> >  F:   drivers/net/ethernet/stmicro/stmmac/dwmac-loongson1.c
-> >  F:   sound/soc/loongson/loongson1_ac97.c
-> > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> > index 66cda7cc9f7a..1b84c5b11654 100644
-> > --- a/drivers/dma/Kconfig
-> > +++ b/drivers/dma/Kconfig
-> > @@ -376,29 +376,6 @@ config K3_DMA
-> >         Support the DMA engine for Hisilicon K3 platform
-> >         devices.
+> >  		chan->configured = false;
+> > @@ -807,6 +810,10 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
 > >
-> > -config LOONGSON1_APB_DMA
-> > -     tristate "Loongson1 APB DMA support"
-> > -     depends on MACH_LOONGSON32 || COMPILE_TEST
-> > -     select DMA_ENGINE
-> > -     select DMA_VIRTUAL_CHANNELS
-> > -     help
-> > -       This selects support for the APB DMA controller in Loongson1 So=
-Cs,
-> > -       which is required by Loongson1 NAND and audio support.
-> > -
-> > -config LOONGSON2_APB_DMA
-> > -     tristate "Loongson2 APB DMA support"
-> > -     depends on LOONGARCH || COMPILE_TEST
-> > -     select DMA_ENGINE
-> > -     select DMA_VIRTUAL_CHANNELS
-> > -     help
-> > -       Support for the Loongson2 APB DMA controller driver. The
-> > -       DMA controller is having single DMA channel which can be
-> > -       configured for different peripherals like audio, nand, sdio
-> > -       etc which is in APB bus.
-> > -
-> > -       This DMA controller transfers data from memory to peripheral fi=
-fo.
-> > -       It does not support memory to memory data transfer.
-> > -
-> >  config LPC18XX_DMAMUX
-> >       bool "NXP LPC18xx/43xx DMA MUX for PL080"
-> >       depends on ARCH_LPC18XX || COMPILE_TEST
-> > @@ -774,6 +751,8 @@ source "drivers/dma/fsl-dpaa2-qdma/Kconfig"
+> >  		irq = &dw->irq[pos];
 > >
-> >  source "drivers/dma/lgm/Kconfig"
-> >
-> > +source "drivers/dma/loongson/Kconfig"
+> > +		/* cache channel-specific info */
+> > +		dw_edma_core_ch_info(dw, chan, info);
+> > +		info->irq = irq->irq;
 > > +
-> >  source "drivers/dma/stm32/Kconfig"
+> >  		if (chan->dir == EDMA_DIR_WRITE)
+> >  			irq->wr_mask |= BIT(chan->id);
+> >  		else
+> > @@ -910,6 +917,7 @@ static int dw_edma_irq_request(struct dw_edma *dw,
+> >  		if (irq_get_msi_desc(irq))
+> >  			get_cached_msi_msg(irq, &dw->irq[0].msi);
 > >
-> >  # clients
-> > diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> > index a54d7688392b..a1c73415b79f 100644
-> > --- a/drivers/dma/Makefile
-> > +++ b/drivers/dma/Makefile
-> > @@ -49,8 +49,6 @@ obj-$(CONFIG_INTEL_IDMA64) +=3D idma64.o
-> >  obj-$(CONFIG_INTEL_IOATDMA) +=3D ioat/
-> >  obj-y +=3D idxd/
-> >  obj-$(CONFIG_K3_DMA) +=3D k3dma.o
-> > -obj-$(CONFIG_LOONGSON1_APB_DMA) +=3D loongson1-apb-dma.o
-> > -obj-$(CONFIG_LOONGSON2_APB_DMA) +=3D loongson2-apb-dma.o
-> >  obj-$(CONFIG_LPC18XX_DMAMUX) +=3D lpc18xx-dmamux.o
-> >  obj-$(CONFIG_LPC32XX_DMAMUX) +=3D lpc32xx-dmamux.o
-> >  obj-$(CONFIG_MILBEAUT_HDMAC) +=3D milbeaut-hdmac.o
-> > @@ -88,6 +86,7 @@ obj-$(CONFIG_INTEL_LDMA) +=3D lgm/
+> > +		dw->irq[0].irq = irq;
+> >  		dw->nr_irqs = 1;
+> >  	} else {
+> >  		/* Distribute IRQs equally among all channels */
+> > @@ -936,6 +944,7 @@ static int dw_edma_irq_request(struct dw_edma *dw,
 > >
-> >  obj-y +=3D amd/
-> >  obj-y +=3D mediatek/
-> > +obj-y +=3D loongson/
->
-> keep alphabet order
+> >  			if (irq_get_msi_desc(irq))
+> >  				get_cached_msi_msg(irq, &dw->irq[i].msi);
+> > +			dw->irq[i].irq = irq;
+> >  		}
+> >
+> >  		dw->nr_irqs = i;
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+> > index 50b87b63b581..82f8f3b38752 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.h
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.h
+> > @@ -93,6 +93,7 @@ struct dw_edma_irq {
+> >  	u32				wr_mask;
+> >  	u32				rd_mask;
+> >  	struct dw_edma			*dw;
+> > +	int				irq;
+> >  };
+> >
+> >  struct dw_edma {
+> > @@ -127,6 +128,7 @@ struct dw_edma_core_ops {
+> >  	void (*ch_config)(struct dw_edma_chan *chan);
+> >  	void (*debugfs_on)(struct dw_edma *dw);
+> >  	void (*ack_emulated_irq)(struct dw_edma *dw);
+> > +	void (*ch_info)(struct dw_edma_chan *chan, struct dw_edma_ch_info *info);
+> >  };
+> >
+> >  struct dw_edma_sg {
+> > @@ -216,4 +218,11 @@ static inline int dw_edma_core_ack_emulated_irq(struct dw_edma *dw)
+> >  	return 0;
+> >  }
+> >
+> > +static inline void
+> > +dw_edma_core_ch_info(struct dw_edma *dw, struct dw_edma_chan *chan,
+> > +		     struct dw_edma_ch_info *info)
+> > +{
+> > +	dw->core->ch_info(chan, info);
+> > +}
+> > +
+> >  #endif /* _DW_EDMA_CORE_H */
+> > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > index 82b9c063c10f..0b8d4b6a5e26 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > @@ -519,6 +519,16 @@ static void dw_edma_v0_core_ack_emulated_irq(struct dw_edma *dw)
+> >  	SET_BOTH_32(dw, int_clear, 0);
+> >  }
+> >
+> > +static void dw_edma_v0_core_ch_info(struct dw_edma_chan *chan,
+> > +				    struct dw_edma_ch_info *info)
+> > +{
+> > +	/*
+> > +	 * rd_int_status is chosen arbitrarily, but wr_int_status would be
+> > +	 * equally suitable.
+> > +	 */
+> > +	info->db_offset = offsetof(struct dw_edma_v0_regs, rd_int_status);
+> > +}
+> > +
+> >  static const struct dw_edma_core_ops dw_edma_v0_core = {
+> >  	.off = dw_edma_v0_core_off,
+> >  	.ch_count = dw_edma_v0_core_ch_count,
+> > @@ -528,6 +538,7 @@ static const struct dw_edma_core_ops dw_edma_v0_core = {
+> >  	.ch_config = dw_edma_v0_core_ch_config,
+> >  	.debugfs_on = dw_edma_v0_core_debugfs_on,
+> >  	.ack_emulated_irq = dw_edma_v0_core_ack_emulated_irq,
+> > +	.ch_info = dw_edma_v0_core_ch_info,
+> >  };
+> >
+> >  void dw_edma_v0_core_register(struct dw_edma *dw)
+> > diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > index e3f8db4fe909..1076b394c45f 100644
+> > --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> > @@ -283,6 +283,13 @@ static void dw_hdma_v0_core_debugfs_on(struct dw_edma *dw)
+> >  	dw_hdma_v0_debugfs_on(dw);
+> >  }
+> >
+> > +static void dw_hdma_v0_core_ch_info(struct dw_edma_chan *chan,
+> > +				    struct dw_edma_ch_info *info)
+> > +{
+> > +	/* Implement once the correct offset is known. */
+> > +	info->db_offset = ~0;
+> > +}
+> > +
+> >  static const struct dw_edma_core_ops dw_hdma_v0_core = {
+> >  	.off = dw_hdma_v0_core_off,
+> >  	.ch_count = dw_hdma_v0_core_ch_count,
+> > @@ -291,6 +298,7 @@ static const struct dw_edma_core_ops dw_hdma_v0_core = {
+> >  	.start = dw_hdma_v0_core_start,
+> >  	.ch_config = dw_hdma_v0_core_ch_config,
+> >  	.debugfs_on = dw_hdma_v0_core_debugfs_on,
+> > +	.ch_info = dw_hdma_v0_core_ch_info,
+> >  };
+> >
+> >  void dw_hdma_v0_core_register(struct dw_edma *dw)
+> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> > index 3080747689f6..921250204a08 100644
+> > --- a/include/linux/dma/edma.h
+> > +++ b/include/linux/dma/edma.h
+> > @@ -60,6 +60,19 @@ enum dw_edma_chip_flags {
+> >  	DW_EDMA_CHIP_LOCAL	= BIT(0),
+> >  };
+> >
+> > +/**
+> > + * struct dw_edma_ch_info - DW eDMA channel metadata
+> > + * @irq:	Linux IRQ number used by this channel's interrupt vector
+> > + * @db_offset:	offset within the eDMA register window that can be used as
+> > + *		an interrupt-emulation doorbell for this channel
+> > + */
+> > +struct dw_edma_ch_info {
+> > +	int			irq;
+> > +
+> > +	/* Fields below are filled in by dw_edma_core_ops->ch_info() */
+> > +	resource_size_t		db_offset;
+> > +};
+> > +
+> >  /**
+> >   * struct dw_edma_chip - representation of DesignWare eDMA controller hardware
+> >   * @dev:		 struct device of the eDMA controller
+> > @@ -96,6 +109,10 @@ struct dw_edma_chip {
+> >  	struct dw_edma_region	dt_region_wr[EDMA_MAX_WR_CH];
+> >  	struct dw_edma_region	dt_region_rd[EDMA_MAX_RD_CH];
+> >
+> > +	/* cached channel info */
+> > +	struct dw_edma_ch_info	ch_info_wr[EDMA_MAX_WR_CH];
+> > +	struct dw_edma_ch_info	ch_info_rd[EDMA_MAX_RD_CH];
+> > +
+> 
+> suppose this info only used in side dw edma driver, so it should be in
+> dw_edma.
+> 
+> dw_edma_chip is useful to exchange informaiton between EPC/PCI controller
+> and dma engine when call dw_edma_probe().
 
-Sorry, I'll fix it in the next version.
->
-> Frank
-> >  obj-y +=3D qcom/
-> >  obj-y +=3D stm32/
-> >  obj-y +=3D ti/
-> > diff --git a/drivers/dma/loongson/Kconfig b/drivers/dma/loongson/Kconfi=
-g
-> > new file mode 100644
-> > index 000000000000..9dbdaef5a59f
-> > --- /dev/null
-> > +++ b/drivers/dma/loongson/Kconfig
-> > @@ -0,0 +1,28 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +#
-> > +# Loongson DMA controllers drivers
-> > +#
-> > +if MACH_LOONGSON32 || MACH_LOONGSON64 || COMPILE_TEST
-> > +
-> > +config LOONGSON1_APB_DMA
-> > +     tristate "Loongson1 APB DMA support"
-> > +     select DMA_ENGINE
-> > +     select DMA_VIRTUAL_CHANNELS
-> > +     help
-> > +       This selects support for the APB DMA controller in Loongson1 So=
-Cs,
-> > +       which is required by Loongson1 NAND and audio support.
-> > +
-> > +config LOONGSON2_APB_DMA
-> > +     tristate "Loongson2 APB DMA support"
-> > +     select DMA_ENGINE
-> > +     select DMA_VIRTUAL_CHANNELS
-> > +     help
-> > +       Support for the Loongson2 APB DMA controller driver. The
-> > +       DMA controller is having single DMA channel which can be
-> > +       configured for different peripherals like audio, nand, sdio
-> > +       etc which is in APB bus.
-> > +
-> > +       This DMA controller transfers data from memory to peripheral fi=
-fo.
-> > +       It does not support memory to memory data transfer.
-> > +
-> > +endif
-> > diff --git a/drivers/dma/loongson/Makefile b/drivers/dma/loongson/Makef=
-ile
-> > new file mode 100644
-> > index 000000000000..6cdd08065e92
-> > --- /dev/null
-> > +++ b/drivers/dma/loongson/Makefile
-> > @@ -0,0 +1,3 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +obj-$(CONFIG_LOONGSON1_APB_DMA) +=3D loongson1-apb-dma.o
-> > +obj-$(CONFIG_LOONGSON2_APB_DMA) +=3D loongson2-apb-dma.o
-> > diff --git a/drivers/dma/loongson1-apb-dma.c b/drivers/dma/loongson/loo=
-ngson1-apb-dma.c
-> > similarity index 99%
-> > rename from drivers/dma/loongson1-apb-dma.c
-> > rename to drivers/dma/loongson/loongson1-apb-dma.c
-> > index 255fe7eca212..e99247cf90c1 100644
-> > --- a/drivers/dma/loongson1-apb-dma.c
-> > +++ b/drivers/dma/loongson/loongson1-apb-dma.c
-> > @@ -16,8 +16,8 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/slab.h>
+These cached values are consumed on the EPC side, while struct dw_edma is
+opaque there. Putting them into struct dw_edma would require an exported
+accessor (again), which I was hoping to avoid. Does that sound reasonable
+to you?
+
+Thanks for the review,
+Koichiro
+
+> 
+> Frand
+> 
+> >  	enum dw_edma_map_format	mf;
 > >
-> > -#include "dmaengine.h"
-> > -#include "virt-dma.h"
-> > +#include "../dmaengine.h"
-> > +#include "../virt-dma.h"
-> >
-> >  /* Loongson-1 DMA Control Register */
-> >  #define LS1X_DMA_CTRL                0x0
-> > diff --git a/drivers/dma/loongson2-apb-dma.c b/drivers/dma/loongson/loo=
-ngson2-apb-dma.c
-> > similarity index 99%
-> > rename from drivers/dma/loongson2-apb-dma.c
-> > rename to drivers/dma/loongson/loongson2-apb-dma.c
-> > index c528f02b9f84..0cb607595d04 100644
-> > --- a/drivers/dma/loongson2-apb-dma.c
-> > +++ b/drivers/dma/loongson/loongson2-apb-dma.c
-> > @@ -17,8 +17,8 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/slab.h>
-> >
-> > -#include "dmaengine.h"
-> > -#include "virt-dma.h"
-> > +#include "../dmaengine.h"
-> > +#include "../virt-dma.h"
-> >
-> >  /* Global Configuration Register */
-> >  #define LDMA_ORDER_ERG               0x0
+> >  	struct dw_edma		*dw;
 > > --
-> > 2.52.0
+> > 2.51.0
 > >
-
---=20
-Thanks.
-Binbin
 

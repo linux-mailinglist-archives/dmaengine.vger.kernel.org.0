@@ -1,50 +1,50 @@
-Return-Path: <dmaengine+bounces-8931-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8932-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6G2OFsy1lGlbGgIAu9opvQ
-	(envelope-from <dmaengine+bounces-8931-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 19:39:08 +0100
+	id 6DVyONe1lGlbGgIAu9opvQ
+	(envelope-from <dmaengine+bounces-8932-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 19:39:19 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B260314F3E8
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 19:39:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5202D14F3F9
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 19:39:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F3B48301053C
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 18:38:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D9ACC303717E
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 18:38:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65F2F372B31;
-	Tue, 17 Feb 2026 18:38:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CCE5374179;
+	Tue, 17 Feb 2026 18:38:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OB2OCfcm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YdaoN8ZP"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4293A36E49A;
-	Tue, 17 Feb 2026 18:38:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6A8374172;
+	Tue, 17 Feb 2026 18:38:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771353515; cv=none; b=tyMutikaz+Xp55n2SkHfWaJlVYzAANBMOOj169BwNU07bRI9d4+lgx4E6xNOPKBVw3pve8zOBbyUOnqKSYOPrQY+Ds5nrN5cTI2g7ylvbTqxYQgTt5kHZDnxmJTpxDHFKOfWbjgW4WVB2/Fs051D2MPjVn02L2MFFH5U5agPQp8=
+	t=1771353516; cv=none; b=R0n7DV1pVuEi32DgaKVfUWMxcnOs7vUEM0pFxkCCaaFOXe8qeXYUz3aHbPqjt/IPaP7RHK8xw9NSmow0ax9AtXCFjvb7TTHQ8FIQI1EguAtfBHxw0MeIcDjF3tm5AYrldQOLDjRAFwDnLCFf4tq5pmjwNHbRnu9IXSBigZtAYas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771353515; c=relaxed/simple;
-	bh=xSpRZfzsx0iDj2wjAiZITo0O7m06D91RNQSPqHc+JxM=;
+	s=arc-20240116; t=1771353516; c=relaxed/simple;
+	bh=AYuxvwWhaYeh+vB7UiqzVAiMuX4Y0gt1B0SePHmkRR4=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=B6HTQMRSAaZM6KxdbGATZc6sMZk+wIAiWyu9rVApwHTf3G+aZ5cECGbSxygwIvxzNaQPeq/rXhNQVE6Ax6x05MPcLtCDPwdYZfehiHJh8XmhfGF1ecu9a8PlshlNHJpvJYUVc2skJ+IVyQJdJ8MCAvtltOZLq+v0gKZWCc0F98U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OB2OCfcm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A05D2C4CEF7;
-	Tue, 17 Feb 2026 18:38:34 +0000 (UTC)
+	 Message-Id:Subject; b=mIXB7r5lvL/FirUsGuIzjazIw/Er5saJtz/5CKT9gR3ismVpn8NUfQCkYf1ctyrXqF3ec6g1Vu1xF34d3NdeDcuHVhMFWJBhH3eoetV16ymo5qhioFB91aRGGFnQpnNvXBdhRQST0NQGX+5+RoTcw1nrDaAGROJO/iyEjCCq8Oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YdaoN8ZP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4DBFC2BC87;
+	Tue, 17 Feb 2026 18:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771353514;
-	bh=xSpRZfzsx0iDj2wjAiZITo0O7m06D91RNQSPqHc+JxM=;
+	s=k20201202; t=1771353515;
+	bh=AYuxvwWhaYeh+vB7UiqzVAiMuX4Y0gt1B0SePHmkRR4=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=OB2OCfcm8aY0wLH+Gp7tApzcaQbQJpXPvVz/eZRKWk3SC4uhz388WBNHahHr156O8
-	 9j8lx6061pDEuvkkO0uIGT8y13dxHCdPP8jp9pWKS5I/Zmh190bQHYqsbQ3fFAmWs/
-	 erJW9mwX18C2UKn++GfCUJWElxBJSHmaNXC66YzNDblqMRhHYOtTK0FYWBmovbwKiR
-	 8bMveoJ191UVH8iNtkzwsc6p5/I1AyHD/1LS0yxqOaJJMj6Ny9kBGcTgJ6D0GK7/9T
-	 /RX2UM3KyNUmKvKbvp9Sk/XDLC5E5zAlf9CO5tnRx2L8ee0q1+KDyVFyNosIPRcX1c
-	 YHi5h+XlSloBw==
-Date: Tue, 17 Feb 2026 12:38:33 -0600
+	b=YdaoN8ZPFu99IdiYk6foIezePV7w5agyRs8v4Puqh/mt91+0wFzuHxPv+wrC0c8og
+	 GUFyTdRk5ByWZKnv7l1Wm3koo8kw58WWMfE+EVumEztOd5IpKNj3OlSFZuRdOw8Lfj
+	 9Bvmxd0o19oeJCtvSLOkde5DpXA8X5eO/yMyy1xVUk9YWFtXMfuquhbObI7FfORDsJ
+	 pV3lhAuDplrhsnCApV6wgPZM2KSYLRq70/eo3/bUCOX7K5dqH7YiTSWcxw67K6glbi
+	 8zmdEzFLBG13cj70zUxjqplmiUMXA2qsW1ca8JAJr4mK64kYriRUOMEDGhb4kMaxb5
+	 V2ubX/tC4B1kA==
+Date: Tue, 17 Feb 2026 12:38:34 -0600
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -54,17 +54,17 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, krzk+dt@kernel.org, 
- devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
- Frank.Li@kernel.org, thierry.reding@gmail.com, conor+dt@kernel.org, 
- jonathanh@nvidia.com, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de
+Cc: linux-tegra@vger.kernel.org, thierry.reding@gmail.com, vkoul@kernel.org, 
+ p.zabel@pengutronix.de, dmaengine@vger.kernel.org, conor+dt@kernel.org, 
+ devicetree@vger.kernel.org, jonathanh@nvidia.com, Frank.Li@kernel.org, 
+ krzk+dt@kernel.org, linux-kernel@vger.kernel.org
 To: Akhil R <akhilrajeev@nvidia.com>
-In-Reply-To: <20260217173457.18628-2-akhilrajeev@nvidia.com>
+In-Reply-To: <20260217173457.18628-3-akhilrajeev@nvidia.com>
 References: <20260217173457.18628-1-akhilrajeev@nvidia.com>
- <20260217173457.18628-2-akhilrajeev@nvidia.com>
-Message-Id: <177135351257.3689107.9046186711900610115.robh@kernel.org>
-Subject: Re: [PATCH 1/8] dt-bindings: dma: nvidia,tegra186-gpc-dma: Add
- iommu-map property
+ <20260217173457.18628-3-akhilrajeev@nvidia.com>
+Message-Id: <177135351368.3689181.14732835775232393327.robh@kernel.org>
+Subject: Re: [PATCH 2/8] dt-bindings: dma: nvidia,tegra186-gpc-dma: Make
+ reset optional
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.16 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
@@ -75,8 +75,8 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com,nvidia.com,pengutronix.de];
-	TAGGED_FROM(0.00)[bounces-8931-lists,dmaengine=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,kernel.org,pengutronix.de,nvidia.com];
+	TAGGED_FROM(0.00)[bounces-8932-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[12];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -92,22 +92,22 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B260314F3E8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,devicetree.org:url]
+X-Rspamd-Queue-Id: 5202D14F3F9
 X-Rspamd-Action: no action
 
 
-On Tue, 17 Feb 2026 23:04:50 +0530, Akhil R wrote:
-> Add iommu-map property which helps when each channel requires its own
-> stream ID for the transfer. Use iommu-map to specify separate stream
-> ID for each channel. This enables each channel to be in its own iommu
-> domain and keeps the memory isolated from other devices sharing the
-> same DMA controller.
+On Tue, 17 Feb 2026 23:04:51 +0530, Akhil R wrote:
+> In Tegra264 and Tegra234, GPCDMA reset control is not exposed to Linux
+> and is handled by BPMP. In Tegra234 BPMP supported a dummy reset which
+> just return success on reset without doing an actual reset. This as well
+> is not supported in Tegra264 BPMP. Therefore mark 'reset' and 'reset-names'
+> property as required only for devices prior to Tegra234.
 > 
 > Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
 > ---
->  .../devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml  | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  .../bindings/dma/nvidia,tegra186-gpc-dma.yaml | 19 ++++++++++++++-----
+>  1 file changed, 14 insertions(+), 5 deletions(-)
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -115,80 +115,16 @@ My bot found errors running 'make dt_binding_check' on your patch:
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/virtio/pci-iommu.example.dtb: pcie@40000000: iommu-map:0: [0, 1, 0, 8, 9, 1, 9, 65527] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iommu/riscv,iommu.example.dtb: pcie@30000000: iommu-map:0: [0, 4, 0, 8, 9, 4, 9, 65527] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.example.dtb: pcie@1c00000 (qcom,pcie-sc8180x): iommu-map:0: [0, 4294967295, 7552, 1, 256, 4294967295, 7553, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sc8180x.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.example.dtb: pcie@1c00000 (qcom,pcie-sc8180x): Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'dma-coherent', 'interconnect-names', 'interconnects', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', 'linux,pci-domain', 'num-lanes', 'phy-names', 'phys', 'power-domains', 'ranges' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sc8180x.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sc8180x.example.dtb: pcie@1c00000 (qcom,pcie-sc8180x): iommu-map:0: [0, 4294967295, 7552, 1, 256, 4294967295, 7553, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.example.dtb: pcie@1c00000 (qcom,pcie-sm8150): iommu-map:0: [0, 4294967295, 7552, 1, 256, 4294967295, 7553, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8150.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.example.dtb: pcie@1c00000 (qcom,pcie-sm8150): Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', 'linux,pci-domain', 'num-lanes', 'perst-gpios', 'phy-names', 'phys', 'power-domains', 'ranges', 'wake-gpios' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8150.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.example.dtb: pcie@1c00000 (qcom,pcie-sm8150): iommu-map:0: [0, 4294967295, 7552, 1, 256, 4294967295, 7553, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.example.dtb: pcie@1c08000 (qcom,pcie-sc7280): iommu-map:0: [0, 4294967295, 7296, 1, 256, 4294967295, 7297, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sc7280.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.example.dtb: pcie@1c08000 (qcom,pcie-sc7280): Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'dma-coherent', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', 'linux,pci-domain', 'num-lanes', 'pcie@0', 'power-domains', 'ranges', 'vddpe-3v3-supply' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sc7280.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.example.dtb: pcie@1c08000 (qcom,pcie-sc7280): iommu-map:0: [0, 4294967295, 7296, 1, 256, 4294967295, 7297, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.example.dtb: pcie@1c08000 (qcom,pcie-x1e80100): iommu-map:0: [0, 4294967295, 5120, 1, 256, 4294967295, 5121, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.example.dtb: pcie@1c08000 (qcom,pcie-x1e80100): Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'dma-coherent', 'interconnect-names', 'interconnects', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', 'linux,pci-domain', 'num-lanes', 'perst-gpios', 'phy-names', 'phys', 'power-domains', 'ranges', 'wake-gpios' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-x1e80100.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.example.dtb: pcie@1c08000 (qcom,pcie-x1e80100): iommu-map:0: [0, 4294967295, 5120, 1, 256, 4294967295, 5121, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.example.dtb: pcie@1c00000 (qcom,pcie-sa8775p): iommu-map:0: [0, 4294967295, 0, 1, 256, 4294967295, 1, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.example.dtb: pcie@1c00000 (qcom,pcie-sa8775p): Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'dma-coherent', 'interconnect-names', 'interconnects', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', 'linux,pci-domain', 'num-lanes', 'perst-gpios', 'phy-names', 'phys', 'power-domains', 'ranges', 'wake-gpios' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.example.dtb: pcie@1c00000 (qcom,pcie-sa8775p): iommu-map:0: [0, 4294967295, 0, 1, 256, 4294967295, 1, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8350.example.dtb: pcie@1c00000 (qcom,pcie-sm8350): iommu-map:0: [0, 4294967295, 7168, 1, 256, 4294967295, 7169, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8350.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8350.example.dtb: pcie@1c00000 (qcom,pcie-sm8350): Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', 'linux,pci-domain', 'num-lanes', 'perst-gpios', 'phy-names', 'phys', 'power-domains', 'ranges', 'wake-gpios' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8350.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8350.example.dtb: pcie@1c00000 (qcom,pcie-sm8350): iommu-map:0: [0, 4294967295, 7168, 1, 256, 4294967295, 7169, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.example.dtb: pcie@1c00000 (qcom,pcie-sm8450-pcie0): iommu-map:0: [0, 4294967295, 7168, 1, 256, 4294967295, 7169, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8450.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.example.dtb: pcie@1c00000 (qcom,pcie-sm8450-pcie0): Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', 'linux,pci-domain', 'max-link-speed', 'msi-map', 'msi-map-mask', 'num-lanes', 'perst-gpios', 'phy-names', 'phys', 'power-domains', 'ranges', 'wake-gpios' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8450.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.example.dtb: pcie@1c00000 (qcom,pcie-sm8450-pcie0): iommu-map:0: [0, 4294967295, 7168, 1, 256, 4294967295, 7169, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/apple,pcie.example.dtb: pcie@690000000 (apple,t8103-pcie): iommu-map:0: [256, 4294967295, 1, 1, 512, 4294967295, 1, 1, 768, 4294967295, 1, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/apple,pcie.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/apple,pcie.example.dtb: pcie@690000000 (apple,t8103-pcie): Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'bus-range', 'device_type', 'pci@0,0', 'pci@1,0', 'pci@2,0' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/apple,pcie.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/apple,pcie.example.dtb: pcie@690000000 (apple,t8103-pcie): iommu-map:0: [256, 4294967295, 1, 1, 512, 4294967295, 1, 1, 768, 4294967295, 1, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.example.dtb: pcie@1c00000 (qcom,pcie-sm8550): iommu-map:0: [0, 4294967295, 5120, 1, 256, 4294967295, 5121, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8550.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.example.dtb: pcie@1c00000 (qcom,pcie-sm8550): Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'dma-coherent', 'interconnect-names', 'interconnects', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', 'linux,pci-domain', 'num-lanes', 'perst-gpios', 'phy-names', 'phys', 'power-domains', 'ranges', 'wake-gpios' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8550.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.example.dtb: pcie@1c00000 (qcom,pcie-sm8550): iommu-map:0: [0, 4294967295, 5120, 1, 256, 4294967295, 5121, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8250.example.dtb: pcie@1c00000 (qcom,pcie-sm8250): iommu-map:0: [0, 4294967295, 7168, 1, 256, 4294967295, 7169, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8250.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8250.example.dtb: pcie@1c00000 (qcom,pcie-sm8250): Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'dma-coherent', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', 'linux,pci-domain', 'num-lanes', 'perst-gpios', 'phy-names', 'phys', 'power-domains', 'ranges', 'wake-gpios' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8250.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8250.example.dtb: pcie@1c00000 (qcom,pcie-sm8250): iommu-map:0: [0, 4294967295, 7168, 1, 256, 4294967295, 7169, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.example.dtb: pci@1c00000 (qcom,pcie-sa8255p): iommu-map:0: [0, 4294967295, 0, 1, 256, 4294967295, 1, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8255p.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.example.dtb: pci@1c00000 (qcom,pcie-sa8255p): Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 'linux,pci-domain', 'pcie@0' were unexpected)
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8255p.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sa8255p.example.dtb: pci@1c00000 (qcom,pcie-sa8255p): iommu-map:0: [0, 4294967295, 0, 1, 256, 4294967295, 1, 1] is too long
-	from schema $id: http://devicetree.org/schemas/pci/pci-iommu.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml: allOf:1: 'then' is a dependency of 'if'
+	hint: Keywords must be a subset of known json-schema keywords
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml: allOf:1:if: 'if' is a dependency of 'then'
+	hint: Keywords must be a subset of known json-schema keywords
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.kernel.org/project/devicetree/patch/20260217173457.18628-2-akhilrajeev@nvidia.com
+See https://patchwork.kernel.org/project/devicetree/patch/20260217173457.18628-3-akhilrajeev@nvidia.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.

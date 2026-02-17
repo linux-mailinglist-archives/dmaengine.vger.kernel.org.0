@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-8924-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-8925-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +C/dHbWnlGkRGQIAu9opvQ
-	(envelope-from <dmaengine+bounces-8924-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 18:39:01 +0100
+	id 2JwPDc6nlGkRGQIAu9opvQ
+	(envelope-from <dmaengine+bounces-8925-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 18:39:26 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EFA714EAD5
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 18:39:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88D3F14EAF4
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 18:39:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 973A5305C8FC
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 17:36:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4E8223063610
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Feb 2026 17:37:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B50B936F436;
-	Tue, 17 Feb 2026 17:36:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C4D37105B;
+	Tue, 17 Feb 2026 17:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="a2qr8Wbr"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Lq17AAYy"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012045.outbound.protection.outlook.com [52.101.43.45])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012062.outbound.protection.outlook.com [40.93.195.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B2536F429;
-	Tue, 17 Feb 2026 17:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD43334C31;
+	Tue, 17 Feb 2026 17:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.62
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771349817; cv=fail; b=PZxpZAiZyc7FTTkN5HHwgCdEEELl+kEsRZk4TAEGHimkZAAhLo0Fnvo9yadSZ+mXmFIzHsEZESnuhWCajQemQ2WBQ/8defF3k5/+raOFwbwZqMYvYLmQazDLbw3EjgIHZrXx7kobg1eFPTKKulH+rtbRFFpL6kg0xuGlgfyJG0I=
+	t=1771349826; cv=fail; b=DqBep4cHIPR6kD2f6fQynWDDCtSVdAfSuo/EpUzegTcOLZFS4z3NRj9l+a/r9tbE2aQdQb+6MIz4B8eJfmV10NvWlM3dBOEBhrD5xzZPBpvwjxnQzZlE34JPeCIfcZXakJsX3ACRXbuWpkoW9hk+FT9vicHsY6l0dF+fj/0MSso=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771349817; c=relaxed/simple;
-	bh=aqYUbKVAuw0ZI5PxgMTfy26AYPwuRM323tUiwRAeMGY=;
+	s=arc-20240116; t=1771349826; c=relaxed/simple;
+	bh=kcR9AycOO4tJTvFi1ZLLXINB1Y8R5P0hUmmjyRKE7y8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FeI5QqRAFoRnmYyZ0AHMcOo3UfVZmegOUzpVWcD/x0C9C6j/guNaQ0VEszeks5vK4rn6v8N1LjEm6/D2o6kISSrGispKA9wAOE6R8ocEV/4ZOgGBIWbqU19mHxaazpQAZwfToFE9JARAPFGi+659r6WrM43/FGmdibHJZDVnowE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=a2qr8Wbr; arc=fail smtp.client-ip=52.101.43.45
+	 MIME-Version:Content-Type; b=ptM64ZLjtCRWY7IOX10FWZ2L0CmDRnMOFOzgmLe0g/UxWKeZyU4V4cwQRoAV5JEq7k7vKvlCL1HVnO9ZM24pnVhuukeWSbl4EAAGdvGPEKgSB5PxQmVGzRGefIevvfDCVKs9smBT7BgBU1L6rJ79ZB2YQospVvJBhdojZBnPkdM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Lq17AAYy; arc=fail smtp.client-ip=40.93.195.62
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=prSwV4yvqid1pTCoXL2T4D21nsxEenopsYgSK2nA9EQwhs7gbQLByFP66pH/Kqy/JyWm7eE4ZAB7YW8+zf1NKgUH4vssbHZhho5qQ7i9wky+Ro8sBzoEKPFTMzclj2d5HPCnYIeiFS3y4yf2Ohlajd0FkhJnk6IXUh0rUjkcBT31rRL6Y3Zzv+hmEBMHfl2ASRst9lScC+lkFKOM5zjafTpYQvjbjqDfvkZDcRCPSSuyDd24wBLKrRaH7o5TVsfK5PGPToDnHcru0tH4DnKnUcEQAxCXsJRf1BEtieFKVoUPrB7DOhDYR5Jjgk0eB+mahMQMPye2IfW75QkV4jtC7g==
+ b=BnXSV7dk6Qt5bsF6p3j8R5nI5pp6il08htgXGajjlYC4pta6ccCIHdfHntzyFMLGJRajx8qxpzjjT0uqOHUolp3Bq4dm0E9dQ4l+vvRiIEZ84hYDKZ1KDIOHmk97dwmc7AYmDtVCEH82PA24hm6MBQtNV90gYI6jyvZ9PCzlrsD4b74IemsPQsMNdLnR661m+8sX2jGvgOdHRMz7iV0AE1q3KOw0Fslv7ZBN8Q9chmsy41x8/aue1N0om5g3p7x2i7ja+ncWHjpI12+NUr8xlMHfPVLIjnGwRn1Bl0VGiEdFDZwSfGXpSegIvpRfohJ9zudXHEWygvZekdFckLecnA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mFQd2Ev64x7D09kHnQdfgp78Oh22jqiNa3RblKctvRk=;
- b=grPF7CvunW0z3v2VO9E1aziv5Ixaq4g0H7o8IVzFqYsIeXra0vV/EmFeR/2P/qIfT6GdNWgwMcSPCV8Q8d918pN1c9zglHDfQubAYgPZjkqwt5ds2ZeS7A1ht83roS+OndDQE6wrFvk61GK0azbM4f+CFhDH3NS40woPSDUR29YwY/LdJxEiqaXogY27NA6kl7n94Ovxxf0HKbYznUpsbIE173W4Ask51Q47GoVHXDBZLT5qabYXeLBwXCZkujiLkfkqtPhS+HNvuDT4d6WMZ/16Aroju0IaFBLZa1gcHNXPVs3eDNZEnr5n4vzwgsw4veEqWh1JvYmPlWAVWbYCfg==
+ bh=ur9TOd4T2tMKSG+j+RDQn8awnSOB9Fc4GKrozVR+qsc=;
+ b=CVRpkYJkYaWVz057DDIO2WGI89uN5abC4G3b8NsxA7auE+kwZWdhBEK6tQCTrFaI4QPt1Gplfk/7XpW8NR+cnhgB6WLgZ9VInCzmtfsCuGVxgqlXoR9Fm4AuV1wt0iWP1rMMlk8HE83vJjlIGqdNN8dbPW2+llrCmNekoMyq3q+qozCA+heQ2aqfX/mZXLuPCdgZxnMX7ZZvlwIZHcjXoudgUbV5wcGyilbdhKnoHHoNLS5JrhrnatU9BrfdXGW8HsnMuZh2UVGiJdlUh6TeaQ7d6bHZu/4PZW7c82Ii6irBSNzlgp1jVG3rAwvTQAAtd0p2Gc46j2XMOCToW7Y1MA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.118.232) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -48,18 +48,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mFQd2Ev64x7D09kHnQdfgp78Oh22jqiNa3RblKctvRk=;
- b=a2qr8Wbr2jBHdj16Y2TKKc7aPJUnlJQPs47/Bqk1Ed8pMflumuwH/s+/ATwT9vZvCc8jYg5IZ+KIcHrgsSZiCY+OD0MvdnOlXElZe2xyO+EDw3x/pwL7yVL1eGEYWWS4IUCQpYV27+PjCARoiCHzRee1HdiUqNQzIyFw+LaCeJ0dk2a/2WbGOLblUY213Op0Nj+b9iv2tUMQrOIAeu2Jj5Ym2NETzwMz4jqOuV6jmWQOzu3GZ+0scqoxbkrWKgyCdHK5gAHHPq9si7pM0ZcfnwvjXnQaoCVx3R6sKNKXxMVYH/olXGSFS+tLHyGH1by3mi65lwpcFE+/kIp8R8qq1w==
-Received: from MN2PR08CA0022.namprd08.prod.outlook.com (2603:10b6:208:239::27)
- by LV2PR12MB5845.namprd12.prod.outlook.com (2603:10b6:408:176::13) with
+ bh=ur9TOd4T2tMKSG+j+RDQn8awnSOB9Fc4GKrozVR+qsc=;
+ b=Lq17AAYyJkqb3EKlWbkSmrHqcNaEQNxGjoOrCx63rKs3sZ3swZkLqVpW15iera3PYKfVANHi+Ymc/1bmhu+taU2EwR5a9DGFsZTzCtdKu60+vp5tQxN3AmLePx8Tv+w6Wjv5XBjMzhOJd/xa5GJuR5+wwfatkaTKnjWcn2WA6AoH/AMYQNMlt7hUIR8dcxlF9+9JEbIK4omVRy81DriVkuEepXMfKi4ZJUdrvXTzp88OobIWhSEys4lCWfS8i/JC+TvTQkAhI7lGyxn+mtbTov/T1WZ/nwhAqS7uhDPXKW1Q/iK0iw8ll9WmDZq0Z+dvZxDRXbE5WbUp3kr9UKU6Vw==
+Received: from MN2PR08CA0025.namprd08.prod.outlook.com (2603:10b6:208:239::30)
+ by MN0PR12MB5810.namprd12.prod.outlook.com (2603:10b6:208:376::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.13; Tue, 17 Feb
- 2026 17:36:48 +0000
+ 2026 17:36:57 +0000
 Received: from BL02EPF0001A0FB.namprd03.prod.outlook.com
- (2603:10b6:208:239:cafe::10) by MN2PR08CA0022.outlook.office365.com
- (2603:10b6:208:239::27) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:208:239:cafe::27) by MN2PR08CA0025.outlook.office365.com
+ (2603:10b6:208:239::30) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.13 via Frontend Transport; Tue,
- 17 Feb 2026 17:36:46 +0000
+ 17 Feb 2026 17:36:57 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -69,18 +69,18 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
 Received: from mail.nvidia.com (216.228.118.232) by
  BL02EPF0001A0FB.mail.protection.outlook.com (10.167.242.102) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Tue, 17 Feb 2026 17:36:46 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ 15.20.9632.12 via Frontend Transport; Tue, 17 Feb 2026 17:36:57 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
  (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 17 Feb
- 2026 09:36:28 -0800
+ 2026 09:36:39 -0800
 Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Tue, 17 Feb 2026 09:36:27 -0800
+ 15.2.2562.20; Tue, 17 Feb 2026 09:36:38 -0800
 Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.9) by mail.nvidia.com
  (10.126.190.181) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
- Transport; Tue, 17 Feb 2026 09:36:24 -0800
+ Transport; Tue, 17 Feb 2026 09:36:35 -0800
 From: Akhil R <akhilrajeev@nvidia.com>
 To: <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>
 CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -88,9 +88,9 @@ CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <thierry.reding@gmail.com>,
 	<jonathanh@nvidia.com>, <p.zabel@pengutronix.de>, Akhil R
 	<akhilrajeev@nvidia.com>
-Subject: [PATCH 5/8] dmaengine: tegra: Support address width > 40 bits
-Date: Tue, 17 Feb 2026 23:04:54 +0530
-Message-ID: <20260217173457.18628-6-akhilrajeev@nvidia.com>
+Subject: [PATCH 6/8] dmaengine: tegra: Use iommu-map for stream ID
+Date: Tue, 17 Feb 2026 23:04:55 +0530
+Message-ID: <20260217173457.18628-7-akhilrajeev@nvidia.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260217173457.18628-1-akhilrajeev@nvidia.com>
 References: <20260217173457.18628-1-akhilrajeev@nvidia.com>
@@ -106,58 +106,58 @@ Content-Type: text/plain
 X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FB:EE_|LV2PR12MB5845:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0008f1f-2f72-480c-88ef-08de6e4b1fa1
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FB:EE_|MN0PR12MB5810:EE_
+X-MS-Office365-Filtering-Correlation-Id: fc90049f-e5b3-4872-0595-08de6e4b2626
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|7416014|376014;
+	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?douy/2z2iT2xqmcgfeLfhixEActiNihk++jaA09pU70T6Yo+3iS2QQfehJPb?=
- =?us-ascii?Q?1l2bxZXI1myK65WJHoMnFIsxEjdsyLTdjB3Xc1+DTN+oZ0+6dCQ++VHAiIyc?=
- =?us-ascii?Q?1Fh5pJFy2gC33oWf/cbV2ZQfPf9NBPFVzNWtMFOaHh0shbJhlncbDwjcqe19?=
- =?us-ascii?Q?NlRpxEbcAj60r+QHGWjo4KmG0bqfnyavwHQ74ICeyuZtYdwGqGEbd3HVVw+T?=
- =?us-ascii?Q?PLJc+BJ47mK3KUzjIloqUts5rOscxz2etZsmEo7nwaKz39vsYG6MfD8cc2Yw?=
- =?us-ascii?Q?ecso/tUv8nNr6D3eRD2OgTs7H8S43Vlo7g2Ak068tj/5QsSi3dRIuUVROHXt?=
- =?us-ascii?Q?Mmj7f7IPbdttevhLG+J/atSXMof3BzsKZnFxInogrjEtHjbpCYWD6fNLc2Um?=
- =?us-ascii?Q?VVW545g16QIIf8GVARO4R3UkHch++iYwqNxkFtvFy0mV/u2tDkSAan5/oK+I?=
- =?us-ascii?Q?ysxnLwnLElx6wEOv98wAt9f/beUdWVgdD1dhBWcFxmbXn9CvpfYsN8fg3W8A?=
- =?us-ascii?Q?w6og5XGv12X3NIeVTRoklJIMU/vil8IlEuNSKXQDeO5JkSwLpxGPwkZ4xUY4?=
- =?us-ascii?Q?+mafQM0YEWUjVZHY5YkhxE0LjNh7NFUw94+ujvlufqgdVx7bfMyaS0Cbl5ka?=
- =?us-ascii?Q?oMLGguwg3VYFOTBDXGQ9ObZT2o7AqdK9j8EveCXt5GIbXosYvvKzbPc9DqwE?=
- =?us-ascii?Q?ZEXqMBWi8z2AwloDcJkGo254+sifeDYidcn3iR8R0f8FIDVHqpr4XnBTxqWr?=
- =?us-ascii?Q?z9C/Lj61hW/8bqlejAI8K9Ic0N6pnQRJVsZjrkj2QKkHxox522BxsK2CaqkR?=
- =?us-ascii?Q?chxcMwHLJkLBD225fONflQ5QBHnnWMQVGaXOTQWNRP7/KOhHPhQMaXJidDcX?=
- =?us-ascii?Q?4ZwPRJyXdzD7KFaDJcRMAGGIxCRocuIETBWjGXnWFBoFXlUBgdlr+vFJQDTd?=
- =?us-ascii?Q?eN4zLxHkl2KXcbiDSzIfh+j9L9TQWYLnuSzaWHc/Sf9XjmB8UOg6u4OxVg/K?=
- =?us-ascii?Q?zDMmakGrF+Wer/qf5MTJhMCPKGqrsJ8aGKfAT/NSWh93Zw+7KMjHp8X15xfw?=
- =?us-ascii?Q?XaquMh8rBXkklS3sh2Ip5XurhlHnxJe/4GXJylGPLfJID1nZgtBNkuYbKFLh?=
- =?us-ascii?Q?1xNuFiP6mbGXfuJIgLlzGzp+Cd2MJacKNWvTQwlm2hjaJPyY9NnoHI8YXVgT?=
- =?us-ascii?Q?S2XziJBM/fBllfePOobBZ8223TxmEeLz52SanrgB5M0uZGV0XeeOd2CiRap8?=
- =?us-ascii?Q?nSVsf1rtneCpvKjLEn8ULwzJeQRogzjB31zqjfBhsfy5U7wDvWQOTWZwdIos?=
- =?us-ascii?Q?k/wGlTfR/oROwIod8opIXjC6VuQEWgSDWU5y+hOx+aro0O9aDmjvYt1LIcRH?=
- =?us-ascii?Q?TIphxpcpBh8IJ9TYiiC0yZAMcLbEte8jj8gcMvDCDdIGD2xPauwzG2gGtgJc?=
- =?us-ascii?Q?cqFX8vpM93TWuFZJReMi6zcwtQsm554rZtqWdfgsB1IURSmo/Ruu3VS9FJZt?=
- =?us-ascii?Q?AxTG3L/QL104IEBn1Mjrc03oU5gl+YHT724tuMKtQB7DALofc2tDB/pN1JyY?=
- =?us-ascii?Q?XuAjGtOweqqglToyc9QI7X2rIvprIwzXSgRtm1JDnPd4mdZ5a/GmG6ynQGRv?=
- =?us-ascii?Q?ft3GwW0vVYPjiglIZZe7kdxhc0smnICDAp/76GJ3JgOvgjQAqXjb7XCdLhNK?=
- =?us-ascii?Q?orgdCA=3D=3D?=
+	=?us-ascii?Q?xPbzGxLeI5NfQp4pN5KVrGcSQe6lDKhqxktbAy4SsVHxW+ysSix4YGhgKNXB?=
+ =?us-ascii?Q?YT9fqhxgMqUvM35Wzf0x5KULKRKRzf+QugbXbtLbRrtY0CPORdCLyOluNAtV?=
+ =?us-ascii?Q?H2oTTP8Lpu23EY86u1HObQasp2P5SBo9GnZh2NcwnUCKcodvdhcrKZznlxTJ?=
+ =?us-ascii?Q?68HyrkeIi2AAxzIjyK3JpzHnXPZJ9P3Lr0Uh9ov2QRJfuRDZs9tnzJUwcVxq?=
+ =?us-ascii?Q?8tH3vxIg43UQtRP8Sazvk/r7YEtSpiWophXkk97IPxdOVQtJnxUwhRFDF3Qv?=
+ =?us-ascii?Q?Qma80j8ORduN3aXJGqhUCeEuOHouQhQO/FDTx1+h0jGW3C9QptW4ZxEdsF+p?=
+ =?us-ascii?Q?KiDRqZ9+kIn7Q3jEhcMj3kjTTzNm+TIluRdqnU3X5NSUPg+jSrh9EXb3mno0?=
+ =?us-ascii?Q?y0yF1VwPRhwtsOf5Xzjruda3bFNkm6V/SLZjFLBc3uegERccR2EQ74fckF6h?=
+ =?us-ascii?Q?axeE09V070Mhh5ShDTfYm0G4FkHPM9Hnwswur5PWQ3HogDtbRB/k1bkYTlGe?=
+ =?us-ascii?Q?nSliuxQVtmH909pHVPS8KOdyB6D3ZzD8m04vVLXbxlBih8YnvzAjK8mytO9E?=
+ =?us-ascii?Q?l3RPKrbw9T0J3y8quenhUqli/trpBNX1FdKym+7e1f1dDOTRc6mMUBWDUx/V?=
+ =?us-ascii?Q?FiHCs2/ThzygrhsPLVEnQwQ1uSlrUpb6r+Uh7ubcumg6fvOVY3wOCQJy9RV2?=
+ =?us-ascii?Q?Ypv5EH0nuW2/5LlrVPoqe0rAfSeVGi2Vgqbk2wdtf9f64SCnQBz7zhfpM/ro?=
+ =?us-ascii?Q?1W4fCiBJH7ZT6f3H6E2qQBptNgzGEgn0EjGawTIpxMr2WdBfuq0/2lfbep+j?=
+ =?us-ascii?Q?dvu4S5CnUMBA3fM3MoB+LIzYwAlaP8F7sSoD8BeB4of2ddUeolgRj1H0KqU1?=
+ =?us-ascii?Q?CzivtzJshrTKgBkboAPO7fXxRBrh5qaTUyBCspVXqo9R3Uqo9EVq2MIf9GQt?=
+ =?us-ascii?Q?FkpZr9xWUmxbBIQb4lkuYxmy4PQuNPxyWbJGZFmEXYfHO6WV5XOPTMLob0WG?=
+ =?us-ascii?Q?w4jbZG2GQh07+800mJKDcAU6HvJyRZMfZS5mo5EJU52crHIjBzCiIrpOYYlJ?=
+ =?us-ascii?Q?PvjuFO3jQDaijeDp8HCXpZJdjry1yDjSJDbrhgHew9NrXMLaGVJRsVuMIiII?=
+ =?us-ascii?Q?wZkSDyGWcL/BihXy4bVG5b8GcqbfuXQByK7weHW4ZNXiz2Q94Dnl1w1YdMdI?=
+ =?us-ascii?Q?6YCDiFfHKA3MKG6vqzEveu7W0fIx7vZYWot6RsDP9h3s3MnqDBt4OWc9S5w/?=
+ =?us-ascii?Q?tFOnT2Cn+mZ/wNlkbX8W3G2pJmhrYOYj+2AAklgxm7vX7ZQyOxO4bNt41pFt?=
+ =?us-ascii?Q?/fHcxUtJorbDaHn/0DIgEPIoEgyFEecoBwSBkjuN9m6fwrowWjhRE4cTZYiv?=
+ =?us-ascii?Q?fI/bbFUQNTPiFRorJs5oTckDBytiYuuKUFu3gBUARyYwK2ePmsGGs+kPeKCr?=
+ =?us-ascii?Q?oZZIWJreQJVH7fyOvX1/Uwz5ZO2MF0HQwqJ3OCG/d1nHyBPQciNnCiJbvtpz?=
+ =?us-ascii?Q?zZxBErWyluD0yOWQubRl8dpvP6kGOCEDXMOWMp7Ng2cBwiIix75wsY24ZD1/?=
+ =?us-ascii?Q?iFbNk1SSS9RxyMYG3mp+695nym7Kp6pf/L3U6aF91X2zak2feiAZQdGBgWMM?=
+ =?us-ascii?Q?cWEEdc0hKs/mW6OK5g+onEUEdURC+7uTLrm6GN4Vx9ptQvIwPMlt5LvPmXN8?=
+ =?us-ascii?Q?sIebcw=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	0dVxRW7lbQh2WYNl8JwVWV8snVkXze8o4OVLxYk6OXZDU4YZGJ7Q/WvAeApeOZP5UPD3iebUlNs6E6bwCG6T4ALnsnCZEGuhfUk5R5oGalKVdcnDmY93sNsRZLZrL/Oqu7zRqRe+RI12yxg+rsD3+eH1iUZ2+n5CqcQJ0Vvi8ifPPdSTjLRstbvQ6hkMMJbKcNb+rRppVdsqjY8twQjfFxMxeKAbtWq8kdBm7QKtfsKY9kvaESTkLtrkEoMN+iU4SyhDbWiZucX3RXCEbiB7Qc7LCpUMAnNUuBzdlOgu2ahVhH9ZkXRU02OVVI2HfB0/28/c8ZukEUBixtsuZNB2eGju0FkXYOWeljY8gieoq36QVufBb8ZNI7u0o8o889EvZkggdgKl36GQwT344yiNzQaiworl6RsXb6DKDNiDp6sP1/ztb9jADZbYFYQwVe1n
+	KbLZhO28FX1Ffb3PM3ej2VJlHl0/TbXKZIdskq4VhedwY1F0iy49mhdcMaBUK/chCroneN0iKTa75Caa1iM3GiAH4TnsJ7bcpMjsUvCE3QSaiQfhspfM/C4QC7TMh4g5h/9zdrKvkw2EARyr6id9/zcXx3RjF5BANgLXOLpEV1heMgOHyGgLaDaF6ZFTx/0/2fhbrA/UoU2yzV1z0+Y566drq6PN5EEWVgiGzKi2r8EFIlcxPHacRezipvMGTc4M6+sySyplWR08dJBjxJDwbafvvqHWpvxGSUc1DWpn92l53jg9G0BNcQGoUrOVdAaP1uhT54jaNiXiaHkfYN8PepDk/QNKgd4zENaTJvPZ9dsScLrZQuAMsLXUWF9ekeycAEGz+G1EJO2272z3i0APY2GNUdQSo81+q56OzZZWoPR71FABVttAm/IH9t+DrxAj
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2026 17:36:46.3644
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2026 17:36:57.2989
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0008f1f-2f72-480c-88ef-08de6e4b1fa1
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc90049f-e5b3-4872-0595-08de6e4b2626
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	BL02EPF0001A0FB.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5845
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5810
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
@@ -174,7 +174,7 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[13];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8924-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8925-lists,dmaengine=lfdr.de];
 	DKIM_TRACE(0.00)[Nvidia.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[akhilrajeev@nvidia.com,dmaengine@vger.kernel.org];
@@ -185,280 +185,141 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,Nvidia.com:dkim];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[9]
-X-Rspamd-Queue-Id: 1EFA714EAD5
+X-Rspamd-Queue-Id: 88D3F14EAF4
 X-Rspamd-Action: no action
 
-Tegra264 supports address width of 41 bits and has a separate register
-to accommodate the high address. Add a device data property to specify
-the number of address bits supported on a device and use that to
-program the required registers.
+Use iommu-map, when provided, to get the stream ID to be programmed
+for each channel. Register each channel separately for allowing it
+to use a separate IOMMU domain for the transfer.
+
+Channels will continue to use the same global stream ID if iommu-map
+property is not present in the device tree.
 
 Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
 ---
- drivers/dma/tegra186-gpc-dma.c | 129 +++++++++++++++++++++------------
- 1 file changed, 82 insertions(+), 47 deletions(-)
+ drivers/dma/tegra186-gpc-dma.c | 62 +++++++++++++++++++++++++++-------
+ 1 file changed, 49 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
-index 72701b543ceb..ce3b1dd52bb3 100644
+index ce3b1dd52bb3..b8ca269fa3ba 100644
 --- a/drivers/dma/tegra186-gpc-dma.c
 +++ b/drivers/dma/tegra186-gpc-dma.c
-@@ -151,6 +151,7 @@ struct tegra_dma_channel;
-  */
- struct tegra_dma_chip_data {
- 	bool hw_support_pause;
-+	unsigned int addr_bits;
- 	unsigned int nr_channels;
- 	unsigned int channel_reg_size;
- 	unsigned int max_dma_count;
-@@ -166,6 +167,8 @@ struct tegra_dma_channel_regs {
- 	u32 src;
- 	u32 dst;
- 	u32 high_addr;
-+	u32 src_high;
-+	u32 dst_high;
- 	u32 mc_seq;
- 	u32 mmio_seq;
- 	u32 wcount;
-@@ -189,7 +192,8 @@ struct tegra_dma_sg_req {
- 	u32 csr;
- 	u32 src;
- 	u32 dst;
--	u32 high_addr;
-+	u32 src_high;
-+	u32 dst_high;
- 	u32 mc_seq;
- 	u32 mmio_seq;
- 	u32 wcount;
-@@ -273,6 +277,41 @@ static inline struct device *tdc2dev(struct tegra_dma_channel *tdc)
- 	return tdc->vc.chan.device->dev;
- }
- 
-+static void tegra_dma_program_addr(struct tegra_dma_channel *tdc,
-+				   struct tegra_dma_sg_req *sg_req)
-+{
-+	tdc_write(tdc, tdc->regs->src, sg_req->src);
-+	tdc_write(tdc, tdc->regs->dst, sg_req->dst);
-+
-+	if (tdc->tdma->chip_data->addr_bits > 40) {
-+		tdc_write(tdc, tdc->regs->src_high,
-+			  sg_req->src_high);
-+		tdc_write(tdc, tdc->regs->dst_high,
-+			  sg_req->dst_high);
-+	} else {
-+		tdc_write(tdc, tdc->regs->high_addr,
-+			  sg_req->src_high | sg_req->dst_high);
-+	}
-+}
-+
-+static void tegra_dma_configure_addr(struct tegra_dma_channel *tdc,
-+				     struct tegra_dma_sg_req *sg_req,
-+				phys_addr_t src, phys_addr_t dst)
-+{
-+	sg_req->src = lower_32_bits(src);
-+	sg_req->dst = lower_32_bits(dst);
-+
-+	if (tdc->tdma->chip_data->addr_bits > 40) {
-+		sg_req->src_high = upper_32_bits(src);
-+		sg_req->dst_high = upper_32_bits(dst);
-+	} else {
-+		sg_req->src_high = FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_SRC_PTR,
-+					      upper_32_bits(src));
-+		sg_req->dst_high = FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_DST_PTR,
-+					      upper_32_bits(dst));
-+	}
-+}
-+
- static void tegra_dma_dump_chan_regs(struct tegra_dma_channel *tdc)
+@@ -15,6 +15,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_dma.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+ #include <linux/slab.h>
+@@ -1403,9 +1404,12 @@ static int tegra_dma_program_sid(struct tegra_dma_channel *tdc, int stream_id)
+ static int tegra_dma_probe(struct platform_device *pdev)
  {
- 	dev_dbg(tdc2dev(tdc), "DMA Channel %d name %s register dump:\n",
-@@ -282,11 +321,22 @@ static void tegra_dma_dump_chan_regs(struct tegra_dma_channel *tdc)
- 		tdc_read(tdc, tdc->regs->status),
- 		tdc_read(tdc, tdc->regs->csre)
- 	);
--	dev_dbg(tdc2dev(tdc), "SRC %x DST %x HI ADDR %x\n",
--		tdc_read(tdc, tdc->regs->src),
--		tdc_read(tdc, tdc->regs->dst),
--		tdc_read(tdc, tdc->regs->high_addr)
--	);
-+
-+	if (tdc->tdma->chip_data->addr_bits > 40) {
-+		dev_dbg(tdc2dev(tdc), "SRC %x SRC HI %x DST %x DST HI %x\n",
-+			tdc_read(tdc, tdc->regs->src),
-+			tdc_read(tdc, tdc->regs->src_high),
-+			tdc_read(tdc, tdc->regs->dst),
-+			tdc_read(tdc, tdc->regs->dst_high)
-+		);
-+	} else {
-+		dev_dbg(tdc2dev(tdc), "SRC %x DST %x HI ADDR %x\n",
-+			tdc_read(tdc, tdc->regs->src),
-+			tdc_read(tdc, tdc->regs->dst),
-+			tdc_read(tdc, tdc->regs->high_addr)
-+		);
-+	}
-+
- 	dev_dbg(tdc2dev(tdc), "MCSEQ %x IOSEQ %x WCNT %x XFER %x WSTA %x\n",
- 		tdc_read(tdc, tdc->regs->mc_seq),
- 		tdc_read(tdc, tdc->regs->mmio_seq),
-@@ -490,9 +540,7 @@ static void tegra_dma_configure_next_sg(struct tegra_dma_channel *tdc)
- 	sg_req = &dma_desc->sg_req[dma_desc->sg_idx];
+ 	const struct tegra_dma_chip_data *cdata = NULL;
++	struct tegra_dma_channel *tdc;
++	struct tegra_dma *tdma;
++	struct dma_chan *chan;
++	bool use_iommu_map = false;
+ 	unsigned int i;
+ 	u32 stream_id;
+-	struct tegra_dma *tdma;
+ 	int ret;
  
- 	tdc_write(tdc, tdc->regs->wcount, sg_req->wcount);
--	tdc_write(tdc, tdc->regs->src, sg_req->src);
--	tdc_write(tdc, tdc->regs->dst, sg_req->dst);
--	tdc_write(tdc, tdc->regs->high_addr, sg_req->high_addr);
-+	tegra_dma_program_addr(tdc, sg_req);
+ 	cdata = of_device_get_match_data(&pdev->dev);
+@@ -1433,9 +1437,12 @@ static int tegra_dma_probe(struct platform_device *pdev)
  
- 	/* Start DMA */
- 	tdc_write(tdc, tdc->regs->csr,
-@@ -520,11 +568,9 @@ static void tegra_dma_start(struct tegra_dma_channel *tdc)
+ 	tdma->dma_dev.dev = &pdev->dev;
  
- 	sg_req = &dma_desc->sg_req[dma_desc->sg_idx];
- 
-+	tegra_dma_program_addr(tdc, sg_req);
- 	tdc_write(tdc, tdc->regs->wcount, sg_req->wcount);
- 	tdc_write(tdc, tdc->regs->csr, 0);
--	tdc_write(tdc, tdc->regs->src, sg_req->src);
--	tdc_write(tdc, tdc->regs->dst, sg_req->dst);
--	tdc_write(tdc, tdc->regs->high_addr, sg_req->high_addr);
- 	tdc_write(tdc, tdc->regs->fixed_pattern, sg_req->fixed_pattern);
- 	tdc_write(tdc, tdc->regs->mmio_seq, sg_req->mmio_seq);
- 	tdc_write(tdc, tdc->regs->mc_seq, sg_req->mc_seq);
-@@ -829,7 +875,7 @@ static unsigned int get_burst_size(struct tegra_dma_channel *tdc,
- 
- static int get_transfer_param(struct tegra_dma_channel *tdc,
- 			      enum dma_transfer_direction direction,
--			      u32 *apb_addr,
-+			      dma_addr_t *apb_addr,
- 			      u32 *mmio_seq,
- 			      u32 *csr,
- 			      unsigned int *burst_size,
-@@ -908,10 +954,7 @@ tegra_dma_prep_dma_memset(struct dma_chan *dc, dma_addr_t dest, int value,
- 	dma_desc->sg_count = 1;
- 	sg_req = dma_desc->sg_req;
- 
--	sg_req[0].src = 0;
--	sg_req[0].dst = dest;
--	sg_req[0].high_addr =
--			FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_DST_PTR, (dest >> 32));
-+	tegra_dma_configure_addr(tdc, &sg_req[0], 0, dest);
- 	sg_req[0].fixed_pattern = value;
- 	/* Word count reg takes value as (N +1) words */
- 	sg_req[0].wcount = ((len - 4) >> 2);
-@@ -977,12 +1020,7 @@ tegra_dma_prep_dma_memcpy(struct dma_chan *dc, dma_addr_t dest,
- 	dma_desc->sg_count = 1;
- 	sg_req = dma_desc->sg_req;
- 
--	sg_req[0].src = src;
--	sg_req[0].dst = dest;
--	sg_req[0].high_addr =
--		FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_SRC_PTR, (src >> 32));
--	sg_req[0].high_addr |=
--		FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_DST_PTR, (dest >> 32));
-+	tegra_dma_configure_addr(tdc, &sg_req[0], src, dest);
- 	/* Word count reg takes value as (N +1) words */
- 	sg_req[0].wcount = ((len - 4) >> 2);
- 	sg_req[0].csr = csr;
-@@ -1002,7 +1040,8 @@ tegra_dma_prep_slave_sg(struct dma_chan *dc, struct scatterlist *sgl,
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
- 	unsigned int max_dma_count = tdc->tdma->chip_data->max_dma_count;
- 	enum dma_slave_buswidth slave_bw = DMA_SLAVE_BUSWIDTH_UNDEFINED;
--	u32 csr, mc_seq, apb_ptr = 0, mmio_seq = 0;
-+	u32 csr, mc_seq, mmio_seq = 0;
-+	dma_addr_t apb_ptr = 0;
- 	struct tegra_dma_sg_req *sg_req;
- 	struct tegra_dma_desc *dma_desc;
- 	struct scatterlist *sg;
-@@ -1087,17 +1126,10 @@ tegra_dma_prep_slave_sg(struct dma_chan *dc, struct scatterlist *sgl,
- 		mmio_seq |= get_burst_size(tdc, burst_size, slave_bw, len);
- 		dma_desc->bytes_req += len;
- 
--		if (direction == DMA_MEM_TO_DEV) {
--			sg_req[i].src = mem;
--			sg_req[i].dst = apb_ptr;
--			sg_req[i].high_addr =
--				FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_SRC_PTR, (mem >> 32));
--		} else if (direction == DMA_DEV_TO_MEM) {
--			sg_req[i].src = apb_ptr;
--			sg_req[i].dst = mem;
--			sg_req[i].high_addr =
--				FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_DST_PTR, (mem >> 32));
--		}
-+		if (direction == DMA_MEM_TO_DEV)
-+			tegra_dma_configure_addr(tdc, &sg_req[i], mem, apb_ptr);
-+		else if (direction == DMA_DEV_TO_MEM)
-+			tegra_dma_configure_addr(tdc, &sg_req[i], apb_ptr, mem);
- 
- 		/*
- 		 * Word count register takes input in words. Writing a value
-@@ -1120,7 +1152,8 @@ tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_l
- 			  unsigned long flags)
- {
- 	enum dma_slave_buswidth slave_bw = DMA_SLAVE_BUSWIDTH_UNDEFINED;
--	u32 csr, mc_seq, apb_ptr = 0, mmio_seq = 0, burst_size;
-+	u32 csr, mc_seq, mmio_seq = 0, burst_size;
-+	dma_addr_t apb_ptr = 0;
- 	unsigned int max_dma_count, len, period_count, i;
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
- 	struct tegra_dma_desc *dma_desc;
-@@ -1209,17 +1242,10 @@ tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_l
- 	/* Split transfer equal to period size */
- 	for (i = 0; i < period_count; i++) {
- 		mmio_seq |= get_burst_size(tdc, burst_size, slave_bw, len);
--		if (direction == DMA_MEM_TO_DEV) {
--			sg_req[i].src = mem;
--			sg_req[i].dst = apb_ptr;
--			sg_req[i].high_addr =
--				FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_SRC_PTR, (mem >> 32));
--		} else if (direction == DMA_DEV_TO_MEM) {
--			sg_req[i].src = apb_ptr;
--			sg_req[i].dst = mem;
--			sg_req[i].high_addr =
--				FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_DST_PTR, (mem >> 32));
--		}
-+		if (direction == DMA_MEM_TO_DEV)
-+			tegra_dma_configure_addr(tdc, &sg_req[i], mem, apb_ptr);
-+		else if (direction == DMA_DEV_TO_MEM)
-+			tegra_dma_configure_addr(tdc, &sg_req[i], apb_ptr, mem);
- 		/*
- 		 * Word count register takes input in words. Writing a value
- 		 * of N into word count register means a req of (N+1) words.
-@@ -1317,6 +1343,7 @@ static const struct tegra_dma_channel_regs tegra186_reg_offsets = {
- 
- static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
- 	.nr_channels = 32,
-+	.addr_bits = 40,
- 	.channel_reg_size = SZ_64K,
- 	.max_dma_count = SZ_1G,
- 	.hw_support_pause = false,
-@@ -1326,6 +1353,7 @@ static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
- 
- static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
- 	.nr_channels = 32,
-+	.addr_bits = 40,
- 	.channel_reg_size = SZ_64K,
- 	.max_dma_count = SZ_1G,
- 	.hw_support_pause = true,
-@@ -1335,6 +1363,7 @@ static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
- 
- static const struct tegra_dma_chip_data tegra234_dma_chip_data = {
- 	.nr_channels = 32,
-+	.addr_bits = 41,
- 	.channel_reg_size = SZ_64K,
- 	.max_dma_count = SZ_1G,
- 	.hw_support_pause = true,
-@@ -1446,6 +1475,12 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 		tdc->stream_id = stream_id;
+-	if (!tegra_dev_iommu_get_stream_id(&pdev->dev, &stream_id)) {
+-		dev_err(&pdev->dev, "Missing iommu stream-id\n");
+-		return -EINVAL;
++	use_iommu_map = of_property_present(pdev->dev.of_node, "iommu-map");
++	if (!use_iommu_map) {
++		if (!tegra_dev_iommu_get_stream_id(&pdev->dev, &stream_id)) {
++			dev_err(&pdev->dev, "Missing iommu stream-id\n");
++			return -EINVAL;
++		}
  	}
  
-+	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(cdata->addr_bits));
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to set DMA mask: %d\n", ret);
-+		return ret;
+ 	ret = device_property_read_u32(&pdev->dev, "dma-channel-mask",
+@@ -1449,7 +1456,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 
+ 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
+ 	for (i = 0; i < cdata->nr_channels; i++) {
+-		struct tegra_dma_channel *tdc = &tdma->channels[i];
++		tdc = &tdma->channels[i];
+ 
+ 		/* Check for channel mask */
+ 		if (!(tdma->chan_mask & BIT(i)))
+@@ -1469,10 +1476,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 
+ 		vchan_init(&tdc->vc, &tdma->dma_dev);
+ 		tdc->vc.desc_free = tegra_dma_desc_free;
+-
+-		/* program stream-id for this channel */
+-		tegra_dma_program_sid(tdc, stream_id);
+-		tdc->stream_id = stream_id;
+ 	}
+ 
+ 	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(cdata->addr_bits));
+@@ -1517,20 +1520,53 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	list_for_each_entry(chan, &tdma->dma_dev.channels, device_node) {
++		struct device *chdev = &chan->dev->device;
++
++		tdc = to_tegra_dma_chan(chan);
++		if (use_iommu_map) {
++			chdev->coherent_dma_mask = pdev->dev.coherent_dma_mask;
++			chdev->dma_mask = &chdev->coherent_dma_mask;
++			chdev->bus = pdev->dev.bus;
++
++			ret = of_dma_configure_id(chdev, pdev->dev.of_node,
++						  true, &tdc->id);
++			if (ret) {
++				dev_err(chdev, "Failed to configure IOMMU for channel %d: %d\n",
++					tdc->id, ret);
++				goto err_unregister;
++			}
++
++			if (!tegra_dev_iommu_get_stream_id(chdev, &stream_id)) {
++				dev_err(chdev, "Failed to get stream ID for channel %d\n",
++					tdc->id);
++				goto err_unregister;
++			}
++
++			chan->dev->chan_dma_dev = true;
++		}
++
++		/* program stream-id for this channel */
++		tegra_dma_program_sid(tdc, stream_id);
++		tdc->stream_id = stream_id;
 +	}
 +
- 	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_MEMCPY, tdma->dma_dev.cap_mask);
+ 	ret = of_dma_controller_register(pdev->dev.of_node,
+ 					 tegra_dma_of_xlate, tdma);
+ 	if (ret < 0) {
+ 		dev_err_probe(&pdev->dev, ret,
+ 			      "GPC DMA OF registration failed\n");
+-
+-		dma_async_device_unregister(&tdma->dma_dev);
+-		return ret;
++		goto err_unregister;
+ 	}
+ 
+-	dev_info(&pdev->dev, "GPC DMA driver register %lu channels\n",
++	dev_info(&pdev->dev, "GPC DMA driver registered %lu channels\n",
+ 		 hweight_long(tdma->chan_mask));
+ 
+ 	return 0;
++
++err_unregister:
++	dma_async_device_unregister(&tdma->dma_dev);
++	return ret;
+ }
+ 
+ static void tegra_dma_remove(struct platform_device *pdev)
 -- 
 2.50.1
 

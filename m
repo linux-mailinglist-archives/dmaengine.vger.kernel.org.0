@@ -1,76 +1,76 @@
-Return-Path: <dmaengine+bounces-9003-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9004-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2A6MCtKxmWnlWAMAu9opvQ
-	(envelope-from <dmaengine+bounces-9003-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Feb 2026 14:23:30 +0100
+	id wAfuNeixmWnlWAMAu9opvQ
+	(envelope-from <dmaengine+bounces-9004-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 21 Feb 2026 14:23:52 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A36E816CE6D
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Feb 2026 14:23:29 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78ED216CE7D
+	for <lists+dmaengine@lfdr.de>; Sat, 21 Feb 2026 14:23:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5F86C302000F
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Feb 2026 13:22:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 104333029E54
+	for <lists+dmaengine@lfdr.de>; Sat, 21 Feb 2026 13:22:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22DBE1B6CE9;
-	Sat, 21 Feb 2026 13:22:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BDD01C3314;
+	Sat, 21 Feb 2026 13:22:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZkVA2x+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTIxvzvA"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659B27082F
-	for <dmaengine@vger.kernel.org>; Sat, 21 Feb 2026 13:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEE01B4F0A
+	for <dmaengine@vger.kernel.org>; Sat, 21 Feb 2026 13:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771680174; cv=none; b=lNcM9pGI/JPanah5xgAfXZiEcPOKKvixNktDCpguitZ4UVwm79nJlCF/CHQT/u4OOipNnnY3dWXbG6gY9vKUzomfmgu9PWRwpgTdJpGBC265kjOf6QnPy1ypLOctgLgQFXjGnmUhEbhLH0vFTCaA3FDwIRMbg8mkyUPERV1mjPs=
+	t=1771680175; cv=none; b=b2HMKrJah2XRqD2SxRCy8DW9UR7X/Q+7bQr/O6OclU1kRuB5Um3uTG5TO3crLg1Gw5lNihEOFpHtvfaeBKDelkBQUCByfiTZIlGgd8ZYMXbf6f8HW6s08J0gFl15smbj/M4xS7AaME/JdAhzNS95irfZEsVEgVl66exzY1pzSwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771680174; c=relaxed/simple;
-	bh=4WaT+SLTA5E2qENtPUwbbJ6yGcs0q8qkWKWbbfS7YHo=;
+	s=arc-20240116; t=1771680175; c=relaxed/simple;
+	bh=MfRtKlsPf92cvmknWCNpjHH1UFJaCSWtJaLIWhAYOwo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BW0uHyhevpb6Nkk3lHAGTTswOgdT1B8KEEiPWGK8y39mjuTNriyFPe0lA/Ew/Wr84/Ur30voWlRRqcQg/lTEOqwQzsiNgXBC0N8y8cSFKcUVT1bWVd5y3cJCkRl8x+jeIqnB7YNbvVZlNlMdgwIGBxtkGQeVmbQesSpFLl4frfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eZkVA2x+; arc=none smtp.client-ip=209.85.221.66
+	 MIME-Version; b=fVpOjfwzFOe5NB0qJooJ2ri/s2WO90kf+0s3xpl/22ckhOfNGO/VkXkwgDrvWmB2wGU8fGklHl9A8F6+0Q8iOOZ5xN+mgsAzFbTG6m2kI/nhjWk7nr+xrWtnOcE1swehUSoVpHmRQWWmhZ1Ua4RLs5rBo9igJntjahOEo4r6908=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NTIxvzvA; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-436317c80f7so2629535f8f.1
-        for <dmaengine@vger.kernel.org>; Sat, 21 Feb 2026 05:22:52 -0800 (PST)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-4358fb60802so2162815f8f.1
+        for <dmaengine@vger.kernel.org>; Sat, 21 Feb 2026 05:22:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771680171; x=1772284971; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1771680172; x=1772284972; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mW2mqb4iYYLGxYXz3pBe0gQX7nYgSCJZQBErENVSksc=;
-        b=eZkVA2x+u/39+yidrbcztofQubsI561elfwtzMCEUDNAbUykmRYz0vegb6oQ+o9phD
-         +R3ydDf+MIGnhq+zw731E+xO9bZf6RawkSq/YIsHeEx7n+qRpukIvc6TNlGte5sfzL3I
-         IYGRkz4904Ob32WJ4pwD+HfxH0j3+z6ump3E8iB+o9tL5BEDl8PS8aVvzyhQ+aa/cA/h
-         jHRyrWrQetpt/26+rN7tYvRFAo/UyKqoYEWZjyM/RzTpAb59I5c6n3nlo9Ey/gqraMJv
-         4xqWEiSzsB5G5fcprRjYGqUaakS7IB2O8mAuIyH1Rlqf2qhA1mfinrveJWah9OAh2Olr
-         zRtg==
+        bh=ZXZPKH4BTRjso/DEzKLoghC1KYJGYJFp04pWZ2xgxCc=;
+        b=NTIxvzvAbR6ikJTt1s/hMryMiongd2zW4Xv/uO/DK8/VJ7F8RkSXReG9XmxBcf4U+l
+         qbrIOCTWEPAeaO9Jl53GQkcx6DnZoskSlrCwTRJW7JqfR7I8Jv0jynLPxmLv/7oKSXEz
+         ZOU4UnxhuFEHjcICo+sdYOGbF53zNJKDb+pnEHEysNyLdHTdJDinjZU7d+2oxSi4bl/5
+         ALGrXRPnesEogYT2YUjNmZ4anIbliL3U2MHdccR1m8RboxXv8tfQeYcThBdddtzXor/j
+         X5UB0rUKXzCg4M6/VlKmntehkpkLhC8+go5g8os119Nbcz1VjlaifE6ClIpawCbXvqD+
+         Pgng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771680171; x=1772284971;
+        d=1e100.net; s=20230601; t=1771680172; x=1772284972;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=mW2mqb4iYYLGxYXz3pBe0gQX7nYgSCJZQBErENVSksc=;
-        b=AxHGtHGR4TSqMB8zYVAkzoi0jzcrrCZqkd7U1LRuZ+kWEMOl3atZp9vkR64gN8fFFA
-         SjQjQtpKaM3ZI2upjrQ61ug/YKmRW6vi32nLOBEtY5nl1SsVlyP5FucL9/SJY/P0KW0m
-         zM+nvPcgguz3TlG/ULkyCB+e7uTs5B7LSpWr4Z58fO4MVb0MoAuZIwsY/JZkjniq1nHM
-         q1eSRob3hDaLS6OtFcM1LL1jehdhR3wMBgRspDd0WIZ4oA3cZ0mwjc0Y+r5tAk51vfzZ
-         Wie855gWB6WFLzZBt9BhjDRG7WZaLxkcyeO6pwVYyWIHfJ03QLso3QZtfC6+CXqXFkBb
-         Hpow==
-X-Gm-Message-State: AOJu0YzRgoF/nnZHA5Bpr8XRf+PA2c0NzxIPK7qk307MrJ9IwqoZXcua
-	l2iSZuwBykOBnlTzwJ0gPNuT1FEOwyhF+JT0NIc1SoXXrjofz9vvHsa3xBkJ61xYbak=
-X-Gm-Gg: AZuq6aKg+9H/MeeCTlTxLXmmdLP3s68fNFkUKrkWyOyVLEmKQaCxl3uA/zmQzWtMpGD
-	GKcis9wdxgRcjlQZGFfSOun7u9Z/VhWZ5gV8dKpxbjRtkEngzTvDzo0CgqydlNLABz+MpF7xcSy
-	6ZGmgedTc7P4udcFxhHGcFXda14/JFAg3y7FakbqJ8ENGVeElnIptOh4okGG+UTTEobpS0DtXSu
-	U2bHyqJQQo2YFqYD2zAw30qb0GG06eXvcdxLMYqm3uRDN7zz8o6gupFzDvgEdd6mWEV171ZTsDc
-	yvjy97M6mRMn09c6jamRfSjObXgEwdd75muyoVT5n559lSNkPGPyN/tKNBQSsUSMDHBW5UAO55N
-	KBiBMJOvrRnRQLtT9u1CLMfJihlkJzjszPfnuuFuHDi30EH7bl5akcL0gdCXYQkmTCmCcIFFxyG
-	Hz6b9O5q7oK3o7bwQz1sXOLc/V9fY=
-X-Received: by 2002:a05:6000:26ce:b0:437:7719:ca82 with SMTP id ffacd0b85a97d-4396fd9bda4mr5318534f8f.3.1771680170611;
-        Sat, 21 Feb 2026 05:22:50 -0800 (PST)
+        bh=ZXZPKH4BTRjso/DEzKLoghC1KYJGYJFp04pWZ2xgxCc=;
+        b=q/Qn6UYsUi4OGNSm1UKwO7xJbfSh1VDbiUu7W66Izbdzp9QbwZy5x/YB3hc8I71lPr
+         MnenDUK6J9JTtWulJp7o3mKuye3xEHLofrG0BsB3g/IibxgXWhjL4+1zB58qn1UVH22O
+         GBB7s/TsrW5kA3S1GdN/mC4xjDG8rZ5oQWdtuI3IQNtI5gEv0sJjgCldl/fZgw69K58O
+         ggzxlr0MUXMJ1gOo9HtEdg8QceJeZdFgt4MMaIeUt+DQbbN7FROheack2iEXEIRtBYYL
+         uH4QUp2rUXNtlpObkAgOevfBrk+kVe3xkIF7BA+NiBG1Dzu69ZHb5BD2FHKc2wfo6sTC
+         vZEQ==
+X-Gm-Message-State: AOJu0YzCs/7jlPfIFD/xWYQ5yUW6JnzN/o3Ojk8txZaXZGNNxYGdBDIS
+	N7u4Ov75cDKiPX2KrYGeKQXGR8pnu3QLsKXvSKQSLlgZ/SW/DoyXbI3K
+X-Gm-Gg: AZuq6aL8qL99kk6YoKSQNWE422wMCaMc1ozrqcn/Gy4TakWb595foievP36FpiBDrnz
+	gdeLHsM351ADGglG2vs7TaMRTINRKWi+y4xxiQn8Sgcf00Al0qQi0vAm1sqcNUVjSpYvyLzt5DJ
+	NxACHUgfdubdlBCTuYdSG0R7KiSDMNs8iblus97QZOm4dSyECkbC1/SoUeAo6vvOzkdpR4UY8O8
+	kqo9GH10YRAF4uMBGZ6D1Sb40tMKmNsA6GBWpGHmL3xoVASc2kUZvupcaWpPCqjDAhvzNBQhliP
+	68whbirkYHTAWaD+y4YJz7T+CNtdZF3/9qQT+rWNHX9vQEgum/j7ftSHYnuqQgfMNghpyGQ71bj
+	9uuVqJHYoZ7FB7e9zAvH5BxjHYpe1satmOiTDhci7SwK7oS240uux/MbtGWdwBKJTI3NhoJ5I2T
+	tJ4wZAx21HkwjnkaTme86MgID/X1Q=
+X-Received: by 2002:a05:6000:2505:b0:435:a135:777d with SMTP id ffacd0b85a97d-4396fda9bafmr5128784f8f.9.1771680171999;
+        Sat, 21 Feb 2026 05:22:51 -0800 (PST)
 Received: from ideapad ([2a02:8070:a483:bca0:8c22:565c:f0a8:cd41])
         by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43970bfa1bdsm4645071f8f.3.2026.02.21.05.22.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
@@ -79,9 +79,9 @@ From: Alexander Gordeev <a.gordeev.box@gmail.com>
 To: Vinod Koul <vkoul@kernel.org>
 Cc: dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/2] dmaengine/dma-slave: DMA slave device xfer passthrough driver
-Date: Sat, 21 Feb 2026 14:22:47 +0100
-Message-ID: <20260221132248.17721-2-a.gordeev.box@gmail.com>
+Subject: [RFC PATCH 2/2] tools/dma-slave: DMA slave device transfer utility
+Date: Sat, 21 Feb 2026 14:22:48 +0100
+Message-ID: <20260221132248.17721-3-a.gordeev.box@gmail.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260221132248.17721-1-a.gordeev.box@gmail.com>
 References: <20260221132248.17721-1-a.gordeev.box@gmail.com>
@@ -97,13 +97,13 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9003-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9004-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -111,7 +111,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FROM_NEQ_ENVFROM(0.00)[agordeevbox@gmail.com,dmaengine@vger.kernel.org];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -121,353 +121,449 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	TAGGED_RCPT(0.00)[dmaengine];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A36E816CE6D
+X-Rspamd-Queue-Id: 78ED216CE7D
 X-Rspamd-Action: no action
 
-This is a driver to help bringing up or debug DMA slave devices.
-A target device should expose itself as DMA_SLAVE to be able get
-found by dma_request_channel() service. It is located by the name
-as exposed in /sys/class/dma.
+A utility to pass user data through a DMA slave device. It is
+intended for bringing up and debugging DMA devices.
 
-The ioctl() caller is expected to map a file in user space and
-provide the mapping address along with DMA transfer parameters.
-The driver sets up and triggers a single the DMA transfer using
-zero-copy approach.
+The tool writes the contents of a binary file to, or reads from,
+the companion dma-slave device driver, which must be loaded.
 
-The DMA transfer parameters are not sanitized in any way and the
-ioctl() caller is expected to be the device-aware.
+The contents of an input file to be transferred can be prepared
+to trigger specific target device behavior on writes.
 
-In other words, considering the DMA transfer parameters and the
-data itself this introduces a DMA passthrough driver.
+For read operations, the output file contents can be examined using
+user-level tools to detect transfer integrity issues.
+
+The DMA transfer parameters are provided via command-line arguments
+and are not sanitized in any way. These parameters are used as-is to
+initialize a dma_slave_config instance passed to dmaengine_slave_config().
+
+An additional file may be provided as peripheral configuration data for
+the DMA transfer. In this case, dma_slave_config::peripheral_config and
+dma_slave_config::peripheral_size members are populated from the file
+contents and its size.
 
 Signed-off-by: Alexander Gordeev <a.gordeev.box@gmail.com>
 ---
- drivers/dma/Kconfig            |   7 +
- drivers/dma/Makefile           |   1 +
- drivers/dma/dma-slave.c        | 246 +++++++++++++++++++++++++++++++++
- include/uapi/linux/dma-slave.h |  30 ++++
- 4 files changed, 284 insertions(+)
- create mode 100644 drivers/dma/dma-slave.c
- create mode 100644 include/uapi/linux/dma-slave.h
+ tools/Makefile        |  11 +-
+ tools/dma/Makefile    |  20 +++
+ tools/dma/dma-slave.c | 321 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 347 insertions(+), 5 deletions(-)
+ create mode 100644 tools/dma/Makefile
+ create mode 100644 tools/dma/dma-slave.c
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 4d0946f92edf..03808df52f4b 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -801,6 +801,13 @@ config DMATEST
- 	  Simple DMA test client. Say N unless you're debugging a
- 	  DMA Device driver.
+diff --git a/tools/Makefile b/tools/Makefile
+index c31cbbd12c45..2c52bf7bc899 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -14,6 +14,7 @@ help:
+ 	@echo '  counter                - counter tools'
+ 	@echo '  cpupower               - a tool for all things x86 CPU power'
+ 	@echo '  debugging              - tools for debugging'
++	@echo '  dma                    - DMA tools'
+ 	@echo '  firewire               - the userspace part of nosy, an IEEE-1394 traffic sniffer'
+ 	@echo '  firmware               - Firmware tools'
+ 	@echo '  freefall               - laptop accelerometer program for disk protection'
+@@ -69,7 +70,7 @@ acpi: FORCE
+ cpupower: FORCE
+ 	$(call descend,power/$@)
  
-+config DMA_SLAVE
-+	tristate "DMA Slave Test client"
-+	depends on DMA_ENGINE
-+	help
-+	  Simple DMA Passthrough Slave test client. Say N unless you're
-+	  debugging a DMA Device driver.
-+
- config DMA_ENGINE_RAID
- 	bool
+-counter firewire hv guest bootconfig spi usb virtio mm bpf iio gpio objtool leds wmi firmware debugging tracing: FORCE
++counter firewire hv guest bootconfig spi usb virtio mm bpf iio gpio objtool leds wmi firmware debugging tracing dma: FORCE
+ 	$(call descend,$@)
  
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index a6535b2310bb..f52a2d525e8b 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_DMA_OF) += of-dma.o
+ bpf/%: FORCE
+@@ -122,7 +123,7 @@ kvm_stat: FORCE
+ ynl: FORCE
+ 	$(call descend,net/ynl)
  
- #dmatest
- obj-$(CONFIG_DMATEST) += dmatest.o
-+obj-$(CONFIG_DMA_SLAVE) += dma-slave.o
+-all: acpi counter cpupower gpio hv firewire \
++all: acpi counter cpupower dma gpio hv firewire \
+ 		perf selftests bootconfig spi turbostat usb \
+ 		virtio mm bpf x86_energy_perf_policy \
+ 		tmon freefall iio objtool kvm_stat wmi \
+@@ -134,7 +135,7 @@ acpi_install:
+ cpupower_install:
+ 	$(call descend,power/$(@:_install=),install)
  
- #devices
- obj-$(CONFIG_ALTERA_MSGDMA) += altera-msgdma.o
-diff --git a/drivers/dma/dma-slave.c b/drivers/dma/dma-slave.c
+-counter_install firewire_install gpio_install hv_install iio_install perf_install bootconfig_install spi_install usb_install virtio_install mm_install bpf_install objtool_install wmi_install debugging_install tracing_install:
++counter_install firewire_install gpio_install hv_install iio_install perf_install bootconfig_install spi_install usb_install virtio_install mm_install bpf_install objtool_install wmi_install debugging_install tracing_install dma_install:
+ 	$(call descend,$(@:_install=),install)
+ 
+ selftests_install:
+@@ -165,7 +166,7 @@ ynl_install:
+ 	$(call descend,net/$(@:_install=),install)
+ 
+ install: acpi_install counter_install cpupower_install gpio_install \
+-		hv_install firewire_install iio_install \
++		hv_install firewire_install iio_install dma_install \
+ 		perf_install selftests_install turbostat_install usb_install \
+ 		virtio_install mm_install bpf_install x86_energy_perf_policy_install \
+ 		tmon_install freefall_install objtool_install kvm_stat_install \
+@@ -178,7 +179,7 @@ acpi_clean:
+ cpupower_clean:
+ 	$(call descend,power/cpupower,clean)
+ 
+-counter_clean hv_clean firewire_clean bootconfig_clean spi_clean usb_clean virtio_clean mm_clean wmi_clean bpf_clean iio_clean gpio_clean objtool_clean leds_clean firmware_clean debugging_clean tracing_clean:
++counter_clean hv_clean firewire_clean bootconfig_clean spi_clean usb_clean virtio_clean mm_clean wmi_clean bpf_clean iio_clean gpio_clean objtool_clean leds_clean firmware_clean debugging_clean tracing_clean dma_clean:
+ 	$(call descend,$(@:_clean=),clean)
+ 
+ libapi_clean:
+diff --git a/tools/dma/Makefile b/tools/dma/Makefile
 new file mode 100644
-index 000000000000..c8671ade2ef6
+index 000000000000..c92a260ccf36
 --- /dev/null
-+++ b/drivers/dma/dma-slave.c
-@@ -0,0 +1,246 @@
++++ b/tools/dma/Makefile
+@@ -0,0 +1,20 @@
++# SPDX-License-Identifier: GPL-2.0
++PREFIX ?= /usr
++SBINDIR ?= sbin
++INSTALL ?= install
++CFLAGS += -Wall -Wextra -I../../include/uapi -D__EXPORTED_HEADERS__
++
++TARGET = dma-slave
++
++all: $(TARGET)
++
++%: %.c
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $<
++
++clean:
++	$(RM) $(TARGET)
++
++install: $(TARGET)
++	$(INSTALL) -D -m 755 $(TARGET) $(DESTDIR)$(PREFIX)/$(SBINDIR)/$(TARGET)
++
++.PHONY: all clean install
+diff --git a/tools/dma/dma-slave.c b/tools/dma/dma-slave.c
+new file mode 100644
+index 000000000000..e1256779ccd3
+--- /dev/null
++++ b/tools/dma/dma-slave.c
+@@ -0,0 +1,321 @@
 +// SPDX-License-Identifier: GPL-2.0
 +// Copyright (C) 2026 Alexander Gordeev <a.gordeev.box@gmail.com>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/miscdevice.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-direction.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/string.h>
-+#include <linux/uaccess.h>
-+#include <uapi/linux/dma-slave.h>
++#include <unistd.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <fcntl.h>
++#include <errno.h>
++#include <string.h>
++#include <getopt.h>
++#include <sys/ioctl.h>
++#include <sys/stat.h>
++#include <sys/uio.h>
++#include <sys/mman.h>
++#include <linux/types.h>
++#include <linux/dma-slave.h>
 +
-+static bool filter(struct dma_chan *chan, void *filter_param)
++static void dump_mem(const void *mem, size_t mem_len)
 +{
-+	const char *name = dma_chan_name(chan);
++	unsigned int i;
 +
-+	if (!name)
-+		return false;
-+	return !strcmp(name, (char *)filter_param);
++	if (mem_len > 16)
++		mem_len = 16;
++	printf("[ ");
++	for (i = 0; i < mem_len; i++)
++		printf("%02X ", ((const unsigned char *)mem)[i]);
++	printf("]\n");
 +}
 +
-+static struct dma_chan *dma_slave_request_chan(char *channel_name)
++static bool check_args(unsigned int cmd, const char *file, struct dma_slave_config_uapi *ucfg)
 +{
-+	dma_filter_fn filter_fn = NULL;
-+	struct dma_chan *chan;
-+	dma_cap_mask_t mask;
-+
-+	dma_cap_zero(mask);
-+	dma_cap_set(DMA_SLAVE, mask);
-+
-+	if (channel_name[0])
-+		filter_fn = filter;
-+	chan = dma_request_channel(mask, filter_fn, channel_name);
-+	if (!chan)
-+		return ERR_PTR(-ENODEV);
-+
-+	return chan;
-+}
-+
-+static void dma_slave_release_chan(struct dma_chan *chan)
-+{
-+	dma_release_channel(chan);
-+}
-+
-+static int dma_slave_setup_config(unsigned int cmd,
-+				  struct dma_slave_config *cfg,
-+				  struct dma_slave_config_uapi *ucfg,
-+				  enum dma_data_direction *dir)
-+{
-+	if (!IS_ALIGNED((unsigned long)ucfg->data.iov_base, PAGE_SIZE))
-+		return -EINVAL;
-+	if (!ucfg->data.iov_len)
-+		return -EINVAL;
-+	if (strnlen(ucfg->channel_name, sizeof(ucfg->channel_name)) >= sizeof(ucfg->channel_name))
-+		return -EINVAL;
-+
-+	if (ucfg->peripheral_config.iov_len) {
-+		cfg->peripheral_config = kmalloc(ucfg->peripheral_config.iov_len, GFP_KERNEL);
-+		if (!cfg->peripheral_config)
-+			return -ENOMEM;
-+		if (copy_from_user(cfg->peripheral_config,
-+				   (void __user *)ucfg->peripheral_config.iov_base,
-+				   ucfg->peripheral_config.iov_len)) {
-+			kfree(cfg->peripheral_config);
-+			return -EFAULT;
-+		}
-+		cfg->peripheral_size = ucfg->peripheral_config.iov_len;
-+	}
 +	if (cmd == IOCTL_DMA_SLAVE_READ) {
-+		cfg->direction		= DMA_DEV_TO_MEM;
-+		*dir			= DMA_FROM_DEVICE;
++		if (!ucfg->data.iov_len)
++			return false;
++		if (!ucfg->src_addr)
++			return false;
++	} else if (cmd == IOCTL_DMA_SLAVE_WRITE) {
++		if (!ucfg->dst_addr)
++			return false;
 +	} else {
-+		cfg->direction		= DMA_MEM_TO_DEV;
-+		*dir			= DMA_TO_DEVICE;
++		return false;
 +	}
-+	cfg->src_addr			= ucfg->src_addr;
-+	cfg->dst_addr			= ucfg->dst_addr;
-+	cfg->src_addr_width		= ucfg->src_addr_width;
-+	cfg->dst_addr_width		= ucfg->dst_addr_width;
-+	cfg->src_maxburst		= ucfg->src_maxburst;
-+	cfg->dst_maxburst		= ucfg->dst_maxburst;
-+	cfg->src_port_window_size	= ucfg->src_port_window_size;
-+	cfg->dst_port_window_size	= ucfg->dst_port_window_size;
-+	cfg->device_fc			= ucfg->device_fc;
-+
-+	return 0;
++	if (!file)
++		return false;
++	return true;
 +}
 +
-+static void dma_slave_teardown_config(struct dma_slave_config *cfg)
++static int read_peripheral_config(const char *conf, struct iovec *peripheral_config)
 +{
-+	kfree(cfg->peripheral_config);
-+}
++	struct stat stat;
++	void *buf;
++	int fd;
++	int ret;
 +
-+static void dma_slave_callback(void *callback_param)
-+{
-+	complete((struct completion *)callback_param);
-+}
++	if (!conf)
++		return 0;
 +
-+static long dma_slave_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	struct dma_async_tx_descriptor *desc;
-+	struct dma_slave_config_uapi ucfg;
-+	struct dma_slave_config cfg = {};
-+	enum dma_data_direction dir;
-+	struct page **pages;
-+	unsigned long nr_pages;
-+	struct dma_chan *chan;
-+	struct sg_table sgt;
-+	unsigned int foll;
-+	dma_cookie_t tx;
-+	struct completion completion;
-+	long ret;
-+	int i;
-+
-+	switch (cmd) {
-+	case IOCTL_DMA_SLAVE_READ:
-+	case IOCTL_DMA_SLAVE_WRITE:
-+		if (copy_from_user(&ucfg, (void __user *)arg, sizeof(ucfg)))
-+			return -EFAULT;
-+
-+		ret = dma_slave_setup_config(cmd, &cfg, &ucfg, &dir);
-+		if (ret)
-+			return ret;
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
-+	chan = dma_slave_request_chan(ucfg.channel_name);
-+	if (IS_ERR(chan)) {
-+		ret = PTR_ERR(chan);
-+		goto err_teardown_config;
++	fd = open(conf, O_RDONLY);
++	if (fd < 0) {
++		ret = errno;
++		goto err_ret;
++	}
++	if (fstat(fd, &stat) < 0) {
++		ret = errno;
++		goto err_close_fd;
++	}
++	buf = malloc(stat.st_size);
++	if (!buf) {
++		ret = errno;
++		goto err_close_fd;
++	}
++	if (read(fd, buf, stat.st_size) < 0) {
++		ret = errno;
++		goto err_free;
 +	}
 +
-+	ret = dmaengine_slave_config(chan, &cfg);
-+	if (ret)
-+		goto err_release_chan;
++	peripheral_config->iov_base = buf;
++	peripheral_config->iov_len = stat.st_size;
++	ret = 0;
 +
-+	nr_pages = DIV_ROUND_UP(ucfg.data.iov_len, PAGE_SIZE);
-+	pages = kmalloc_array(nr_pages, sizeof(pages[0]), GFP_KERNEL);
-+	if (!pages) {
-+		ret = -ENOMEM;
-+		goto err_release_chan;
-+	}
-+
-+	foll = 0;
-+	if (cmd == IOCTL_DMA_SLAVE_READ)
-+		foll |= FOLL_WRITE;
-+	mmap_read_lock(current->mm);
-+	ret = pin_user_pages((unsigned long)ucfg.data.iov_base, nr_pages, foll, pages);
-+	if (ret < 0)
-+		goto err_mmap_unlock;
-+	if (ret != nr_pages) {
-+		nr_pages = ret;
-+		ret = -EFAULT;
-+		goto err_unpin_pages;
-+	}
-+
-+	ret = sg_alloc_table_from_pages(&sgt, pages, nr_pages, 0, ucfg.data.iov_len, GFP_KERNEL);
-+	if (ret)
-+		goto err_unpin_pages;
-+
-+	ret = dma_map_sgtable(chan->device->dev, &sgt, dir, 0);
-+	if (ret)
-+		goto err_free_sgt;
-+
-+	desc = dmaengine_prep_slave_sg(chan, sgt.sgl, sgt.nents, cfg.direction,
-+				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	if (!desc) {
-+		ret = -ENOMEM;
-+		goto err_unmap_sgt;
-+	}
-+	init_completion(&completion);
-+	desc->callback = dma_slave_callback;
-+	desc->callback_param = &completion;
-+
-+	tx = dmaengine_submit(desc);
-+	ret = dma_submit_error(tx);
-+	if (ret < 0)
-+		goto err_unmap_sgt;
-+
-+	dma_async_issue_pending(chan);
-+
-+	ret = wait_for_completion_interruptible(&completion);
-+	if (ret)
-+		goto err_term_sync;
-+
-+	if (dma_async_is_tx_complete(chan, tx, NULL, NULL) != DMA_COMPLETE) {
-+		ret = -EIO;
-+		goto err_term_sync;
-+	}
-+
-+	if (cmd == IOCTL_DMA_SLAVE_READ) {
-+		for (i = 0; i < nr_pages; i++)
-+			set_page_dirty_lock(pages[i]);
-+	}
-+
-+	goto err_unmap_sgt;
-+
-+err_term_sync:
-+	dmaengine_terminate_sync(chan);
-+err_unmap_sgt:
-+	dma_unmap_sgtable(chan->device->dev, &sgt, dir, 0);
-+err_free_sgt:
-+	sg_free_table(&sgt);
-+err_unpin_pages:
-+	unpin_user_pages(pages, nr_pages);
-+err_mmap_unlock:
-+	mmap_read_unlock(current->mm);
-+	kfree(pages);
-+err_release_chan:
-+	dma_slave_release_chan(chan);
-+err_teardown_config:
-+	dma_slave_teardown_config(&cfg);
-+
++err_free:
++	free(buf);
++err_close_fd:
++	close(fd);
++err_ret:
 +	return ret;
 +}
 +
-+static const struct file_operations dma_slave_fops = {
-+	.owner		= THIS_MODULE,
-+	.unlocked_ioctl	= dma_slave_ioctl,
-+};
-+
-+struct miscdevice misc_dev = {
-+	.minor		= MISC_DYNAMIC_MINOR,
-+	.name		= DMA_SLAVE_DEVICE,
-+	.nodename	= DMA_SLAVE_DEVICE,
-+	.fops		= &dma_slave_fops,
-+	.mode		= 0600,
-+};
-+
-+static int __init dma_slave_init(void)
++static void print_usage(void)
 +{
-+	return misc_register(&misc_dev);
++	printf("A utility to transfer the contents of a file to a DMA slave device.\n");
++	printf("Requires the companion 'dma-slave' device driver to be loaded.\n\n");
++
++	printf("Usage:\n");
++	printf("  dma-slave [OPTIONS]\n\n");
++
++	printf("Transfer direction (required, select one):\n");
++	printf("  -r, --read                     Perform DMA read (device to file)\n");
++	printf("  -w, --write                    Perform DMA write (file to device)\n\n");
++
++	printf("Transfer address (required):\n");
++	printf("  -S, --src-addr <addr>          Source address (hex,dec,oct)\n");
++	printf("  -D, --dst-addr <addr>          Destination address (hex,dec,oct)\n\n");
++
++	printf("Transfer size (required on read, optional on write):\n");
++	printf("  -s, --size <bytes>             Transfer size in bytes\n\n");
++
++	printf("Transfer parameters (optional):\n");
++	printf("      --src-addr-width <n>       Source address width\n");
++	printf("      --dst-addr-width <n>       Destination address width\n");
++	printf("      --src-maxburst <n>         Source max burst size\n");
++	printf("      --dst-maxburst <n>         Destination max burst size\n");
++	printf("      --src-port-window-size <n> Source port window size\n");
++	printf("      --dst-port-window-size <n> Destination port window size\n");
++	printf("      --device-fc                Enable device flow control\n");
++	printf("  -p, --peripheral-config <file> Peripheral configuration file (raw)\n\n");
++
++	printf("User stored data (recreated on read, must exist on write):\n");
++	printf("  -f, --file <file>              Transfer contents (raw)\n\n");
++
++	printf("Target DMA channel (optional, auto-selected if not provided):\n");
++	printf("  -c, --channel-name <name>      DMA channel name (in /sys/class/dma)\n");
++
++	printf("Advanced parameters (optional):\n");
++	printf("  -d, --dump                     Dump transferred data (16 bytes at most)\n\n");
++
++	printf("Examples:\n");
++	printf("  dma-slave --read  -c dma0chan0 -S 0x20000000 --file output.bin -s 4096\n");
++	printf("  dma-slave --write -c dma0chan0 -D 0x10000000 --file input.bin\n");
 +}
-+late_initcall(dma_slave_init);
 +
-+static void __exit dma_slave_exit(void)
-+{
-+	misc_deregister(&misc_dev);
-+}
-+module_exit(dma_slave_exit);
-+
-+MODULE_AUTHOR("Alexander Gordeev <a.gordeev.box@gmail.com>");
-+MODULE_DESCRIPTION("DMA slave passthrough driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/uapi/linux/dma-slave.h b/include/uapi/linux/dma-slave.h
-new file mode 100644
-index 000000000000..e3da14d4224e
---- /dev/null
-+++ b/include/uapi/linux/dma-slave.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Copyright (C) 2026 Alexander Gordeev <a.gordeev.box@gmail.com>
-+ */
-+#ifndef _UAPI_LINUX_DMA_SLAVE_H__
-+#define _UAPI_LINUX_DMA_SLAVE_H__
-+
-+#define DMA_SLAVE_DEVICE		"dma-slave"
-+
-+struct dma_slave_config_uapi {
-+	struct iovec data;
-+	struct iovec peripheral_config;
-+	__u64 src_addr;
-+	__u64 dst_addr;
-+	__u32 src_addr_width;
-+	__u32 dst_addr_width;
-+	__u32 src_maxburst;
-+	__u32 dst_maxburst;
-+	__u32 src_port_window_size;
-+	__u32 dst_port_window_size;
-+	bool device_fc;
-+	char channel_name[32];
++enum {
++	OPT_SRC_ADDR_WIDTH,
++	OPT_DST_ADDR_WIDTH,
++	OPT_SRC_MAXBURST,
++	OPT_DST_MAXBURST,
++	OPT_SRC_PORT_WINDOW_SIZE,
++	OPT_DST_PORT_WINDOW_SIZE,
++	OPT_DEVICE_FC,
 +};
 +
-+#define DMA_SLAVE_SIG 'S'
++static const struct option long_opts[] = {
++	{ "help",			no_argument,		NULL, 'h' },
++	{ "read",			no_argument,		NULL, 'r' },
++	{ "write",			no_argument,		NULL, 'w' },
++	{ "dump",			no_argument,		NULL, 'd' },
++	{ "channel-name",		required_argument,	NULL, 'c' },
++	{ "peripheral-config",		required_argument,	NULL, 'p' },
++	{ "file",			required_argument,	NULL, 'f' },
++	{ "size",			required_argument,	NULL, 's' },
++	{ "src-addr",			required_argument,	NULL, 'S' },
++	{ "dst-addr",			required_argument,	NULL, 'D' },
++	{ "src-addr-width",		required_argument,	NULL, OPT_SRC_ADDR_WIDTH },
++	{ "dst-addr-width",		required_argument,	NULL, OPT_DST_ADDR_WIDTH },
++	{ "src-maxburst",		required_argument,	NULL, OPT_SRC_MAXBURST },
++	{ "dst-maxburst",		required_argument,	NULL, OPT_DST_MAXBURST },
++	{ "src-port-window-size",	required_argument,	NULL, OPT_SRC_PORT_WINDOW_SIZE },
++	{ "dst-port-window-size",	required_argument,	NULL, OPT_DST_PORT_WINDOW_SIZE },
++	{ "device-fc",			no_argument,		NULL, OPT_DEVICE_FC },
++	{ NULL,				0,			NULL, 0  }
++};
 +
-+#define IOCTL_DMA_SLAVE_READ		_IOR(DMA_SLAVE_SIG, 0, struct dma_slave_config_uapi)
-+#define IOCTL_DMA_SLAVE_WRITE		_IOW(DMA_SLAVE_SIG, 1, struct dma_slave_config_uapi)
++int main(int argc, char **argv)
++{
++	char *file = NULL, *conf = NULL, *endptr;
++	struct dma_slave_config_uapi ucfg = {};
++	int fd, fd_dev;
++	unsigned int cmd = 0;
++	bool dump = false;
++	struct stat stat;
++	char opt;
++	int ret;
 +
-+#endif
++	if (argc == 1) {
++print_usage:
++		print_usage();
++		return 0;
++	}
++
++	while ((opt = getopt_long(argc, argv, "hrwdc:s:p:f:S:D:", long_opts, NULL)) != -1) {
++		switch (opt) {
++		case 'h':
++			goto print_usage;
++		case 'r':
++			if (cmd == IOCTL_DMA_SLAVE_WRITE)
++				goto err_args;
++			cmd = IOCTL_DMA_SLAVE_READ;
++			break;
++		case 'w':
++			if (cmd == IOCTL_DMA_SLAVE_READ)
++				goto err_args;
++			cmd = IOCTL_DMA_SLAVE_WRITE;
++			break;
++		case 'd':
++			dump = true;
++			break;
++		case 'c':
++			strncpy(ucfg.channel_name, optarg, sizeof(ucfg.channel_name) - 1);
++			break;
++		case 'p':
++			conf = optarg;
++			break;
++		case 'f':
++			file = optarg;
++			break;
++		case 's':
++			ucfg.data.iov_len = strtoull(optarg, &endptr, 0);
++			if (endptr[0])
++				goto err_args;
++			break;
++		case 'S':
++			ucfg.src_addr = strtoull(optarg, &endptr, 0);
++			if (endptr[0])
++				goto err_args;
++			break;
++		case 'D':
++			ucfg.dst_addr = strtoull(optarg, &endptr, 0);
++			if (endptr[0])
++				goto err_args;
++			break;
++		case OPT_SRC_ADDR_WIDTH:
++			ucfg.src_addr_width = strtoul(optarg, &endptr, 10);
++			if (endptr[0])
++				goto err_args;
++			break;
++		case OPT_DST_ADDR_WIDTH:
++			ucfg.dst_addr_width = strtoul(optarg, &endptr, 10);
++			if (endptr[0])
++				goto err_args;
++			break;
++		case OPT_SRC_MAXBURST:
++			ucfg.src_maxburst = strtoul(optarg, &endptr, 10);
++			if (endptr[0])
++				goto err_args;
++			break;
++		case OPT_DST_MAXBURST:
++			ucfg.dst_maxburst = strtoul(optarg, &endptr, 10);
++			if (endptr[0])
++				goto err_args;
++			break;
++		case OPT_SRC_PORT_WINDOW_SIZE:
++			ucfg.src_port_window_size = strtoul(optarg, &endptr, 10);
++			if (endptr[0])
++				goto err_args;
++			break;
++		case OPT_DST_PORT_WINDOW_SIZE:
++			ucfg.dst_port_window_size = strtoul(optarg, &endptr, 10);
++			if (endptr[0])
++				goto err_args;
++			break;
++		case OPT_DEVICE_FC:
++			ucfg.device_fc = true;
++			break;
++		default:
++			goto err_args;
++		}
++	}
++
++	ret = read_peripheral_config(conf, &ucfg.peripheral_config);
++	if (ret)
++		return ret;
++
++	if (!check_args(cmd, file, &ucfg)) {
++err_args:
++		print_usage();
++		return EINVAL;
++	}
++
++	fd_dev = open("/dev/" DMA_SLAVE_DEVICE, O_RDWR);
++	if (fd_dev < 0)
++		return errno;
++
++	switch (cmd) {
++	case IOCTL_DMA_SLAVE_READ:
++		fd = open(file, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
++		if (fd < 0)
++			return errno;
++		if (ftruncate(fd, ucfg.data.iov_len) < 0)
++			return errno;
++		ucfg.data.iov_base = mmap(NULL, ucfg.data.iov_len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
++		if (ucfg.data.iov_base == MAP_FAILED) {
++			ret = errno;
++			unlink(file);
++			return ret;
++		}
++		close(fd);
++		break;
++
++	case IOCTL_DMA_SLAVE_WRITE:
++		fd = open(file, O_RDONLY);
++		if (fd < 0)
++			return errno;
++		if (fstat(fd, &stat) < 0)
++			return errno;
++		if (!stat.st_size)
++			return EINVAL;
++		if (!ucfg.data.iov_len || (size_t)stat.st_size < ucfg.data.iov_len)
++			ucfg.data.iov_len = stat.st_size;
++		ucfg.data.iov_base = mmap(NULL, ucfg.data.iov_len, PROT_READ, MAP_SHARED, fd, 0);
++		if (ucfg.data.iov_base == MAP_FAILED)
++			return errno;
++		close(fd);
++		if (dump)
++			dump_mem(ucfg.data.iov_base, ucfg.data.iov_len);
++		break;
++	}
++
++	if (ioctl(fd_dev, cmd, &ucfg) < 0) {
++		ret = errno;
++		if (cmd == IOCTL_DMA_SLAVE_READ)
++			unlink(file);
++		return ret;
++	}
++
++	if (cmd == IOCTL_DMA_SLAVE_READ && dump)
++		dump_mem(ucfg.data.iov_base, ucfg.data.iov_len);
++
++	munmap(ucfg.data.iov_base, ucfg.data.iov_len);
++	close(fd_dev);
++
++	return 0;
++}
 -- 
 2.51.0
 

@@ -1,570 +1,349 @@
-Return-Path: <dmaengine+bounces-9004-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9019-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wAfuNeixmWnlWAMAu9opvQ
-	(envelope-from <dmaengine+bounces-9004-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Feb 2026 14:23:52 +0100
+	id cGmZAFshnWnuMwQAu9opvQ
+	(envelope-from <dmaengine+bounces-9019-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Feb 2026 04:56:11 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78ED216CE7D
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Feb 2026 14:23:52 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5657E1817E7
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Feb 2026 04:56:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 104333029E54
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Feb 2026 13:22:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A13F0304C7E1
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Feb 2026 03:56:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BDD01C3314;
-	Sat, 21 Feb 2026 13:22:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32FAD1C5F11;
+	Tue, 24 Feb 2026 03:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTIxvzvA"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="jy81/F5N"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m1973176.qiye.163.com (mail-m1973176.qiye.163.com [220.197.31.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEE01B4F0A
-	for <dmaengine@vger.kernel.org>; Sat, 21 Feb 2026 13:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADB619E97F;
+	Tue, 24 Feb 2026 03:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771680175; cv=none; b=b2HMKrJah2XRqD2SxRCy8DW9UR7X/Q+7bQr/O6OclU1kRuB5Um3uTG5TO3crLg1Gw5lNihEOFpHtvfaeBKDelkBQUCByfiTZIlGgd8ZYMXbf6f8HW6s08J0gFl15smbj/M4xS7AaME/JdAhzNS95irfZEsVEgVl66exzY1pzSwY=
+	t=1771905364; cv=none; b=OCKVPLunGXdApGoqxMBCsyiWW85UfYrQmmRUpFhgAbNMYCKFjEGZqqBF4i8eDMs6s2Ym2kpCCHu/MXIRG88I+pKAmbMmK6akpf1TQRlfpFHWG4sGPXFCVrRWzRS94pDgKewgGJXoGLQ9AmwGlcVVOYPHYw0dOdJxnEAqXEt1lU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771680175; c=relaxed/simple;
-	bh=MfRtKlsPf92cvmknWCNpjHH1UFJaCSWtJaLIWhAYOwo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fVpOjfwzFOe5NB0qJooJ2ri/s2WO90kf+0s3xpl/22ckhOfNGO/VkXkwgDrvWmB2wGU8fGklHl9A8F6+0Q8iOOZ5xN+mgsAzFbTG6m2kI/nhjWk7nr+xrWtnOcE1swehUSoVpHmRQWWmhZ1Ua4RLs5rBo9igJntjahOEo4r6908=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NTIxvzvA; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-4358fb60802so2162815f8f.1
-        for <dmaengine@vger.kernel.org>; Sat, 21 Feb 2026 05:22:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771680172; x=1772284972; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZXZPKH4BTRjso/DEzKLoghC1KYJGYJFp04pWZ2xgxCc=;
-        b=NTIxvzvAbR6ikJTt1s/hMryMiongd2zW4Xv/uO/DK8/VJ7F8RkSXReG9XmxBcf4U+l
-         qbrIOCTWEPAeaO9Jl53GQkcx6DnZoskSlrCwTRJW7JqfR7I8Jv0jynLPxmLv/7oKSXEz
-         ZOU4UnxhuFEHjcICo+sdYOGbF53zNJKDb+pnEHEysNyLdHTdJDinjZU7d+2oxSi4bl/5
-         ALGrXRPnesEogYT2YUjNmZ4anIbliL3U2MHdccR1m8RboxXv8tfQeYcThBdddtzXor/j
-         X5UB0rUKXzCg4M6/VlKmntehkpkLhC8+go5g8os119Nbcz1VjlaifE6ClIpawCbXvqD+
-         Pgng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771680172; x=1772284972;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZXZPKH4BTRjso/DEzKLoghC1KYJGYJFp04pWZ2xgxCc=;
-        b=q/Qn6UYsUi4OGNSm1UKwO7xJbfSh1VDbiUu7W66Izbdzp9QbwZy5x/YB3hc8I71lPr
-         MnenDUK6J9JTtWulJp7o3mKuye3xEHLofrG0BsB3g/IibxgXWhjL4+1zB58qn1UVH22O
-         GBB7s/TsrW5kA3S1GdN/mC4xjDG8rZ5oQWdtuI3IQNtI5gEv0sJjgCldl/fZgw69K58O
-         ggzxlr0MUXMJ1gOo9HtEdg8QceJeZdFgt4MMaIeUt+DQbbN7FROheack2iEXEIRtBYYL
-         uH4QUp2rUXNtlpObkAgOevfBrk+kVe3xkIF7BA+NiBG1Dzu69ZHb5BD2FHKc2wfo6sTC
-         vZEQ==
-X-Gm-Message-State: AOJu0YzCs/7jlPfIFD/xWYQ5yUW6JnzN/o3Ojk8txZaXZGNNxYGdBDIS
-	N7u4Ov75cDKiPX2KrYGeKQXGR8pnu3QLsKXvSKQSLlgZ/SW/DoyXbI3K
-X-Gm-Gg: AZuq6aL8qL99kk6YoKSQNWE422wMCaMc1ozrqcn/Gy4TakWb595foievP36FpiBDrnz
-	gdeLHsM351ADGglG2vs7TaMRTINRKWi+y4xxiQn8Sgcf00Al0qQi0vAm1sqcNUVjSpYvyLzt5DJ
-	NxACHUgfdubdlBCTuYdSG0R7KiSDMNs8iblus97QZOm4dSyECkbC1/SoUeAo6vvOzkdpR4UY8O8
-	kqo9GH10YRAF4uMBGZ6D1Sb40tMKmNsA6GBWpGHmL3xoVASc2kUZvupcaWpPCqjDAhvzNBQhliP
-	68whbirkYHTAWaD+y4YJz7T+CNtdZF3/9qQT+rWNHX9vQEgum/j7ftSHYnuqQgfMNghpyGQ71bj
-	9uuVqJHYoZ7FB7e9zAvH5BxjHYpe1satmOiTDhci7SwK7oS240uux/MbtGWdwBKJTI3NhoJ5I2T
-	tJ4wZAx21HkwjnkaTme86MgID/X1Q=
-X-Received: by 2002:a05:6000:2505:b0:435:a135:777d with SMTP id ffacd0b85a97d-4396fda9bafmr5128784f8f.9.1771680171999;
-        Sat, 21 Feb 2026 05:22:51 -0800 (PST)
-Received: from ideapad ([2a02:8070:a483:bca0:8c22:565c:f0a8:cd41])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43970bfa1bdsm4645071f8f.3.2026.02.21.05.22.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Feb 2026 05:22:50 -0800 (PST)
-From: Alexander Gordeev <a.gordeev.box@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 2/2] tools/dma-slave: DMA slave device transfer utility
-Date: Sat, 21 Feb 2026 14:22:48 +0100
-Message-ID: <20260221132248.17721-3-a.gordeev.box@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260221132248.17721-1-a.gordeev.box@gmail.com>
-References: <20260221132248.17721-1-a.gordeev.box@gmail.com>
+	s=arc-20240116; t=1771905364; c=relaxed/simple;
+	bh=KoW38T6cNEmKidxotZXPZubVy4KOQgupYxDAJ1370F0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Y5XubMPPbLGeHX8Fh2KZBVr3SxsA4/y5kqFIPvxtjD4X15XdyT4B0OWriZv2zm+E9bCaqByqmDMQY3u6N9M3p3w9TgwvdEOZgdlgPAqu8ka8a9cr3Dx7TDNNkLZvlaJL+THNv3ge+6Fih+5pvABqlZMaTf8aX7L0eqRQgZefC14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=jy81/F5N; arc=none smtp.client-ip=220.197.31.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 34b37f769;
+	Mon, 23 Feb 2026 23:31:09 +0800 (GMT+08:00)
+From: Shawn Lin <shawn.lin@rock-chips.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	"Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>,
+	Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
+	Even Xu <even.xu@intel.com>,
+	Xinpeng Sun <xinpeng.sun@intel.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Zhou Wang <wangzhou1@hisilicon.com>,
+	Longfang Liu <liulongfang@huawei.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Jijie Shao <shaojijie@huawei.com>,
+	Jian Shen <shenjian15@huawei.com>,
+	Sunil Goutham <sgoutham@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	Maciej Falkowski <maciej.falkowski@linux.intel.com>,
+	Karol Wachowski <karol.wachowski@linux.intel.com>,
+	Min Ma <mamin506@gmail.com>,
+	Lizhi Hou <lizhi.hou@amd.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Tomasz Jeznach <tjeznach@rivosinc.com>,
+	Will Deacon <will@kernel.org>,
+	Xinliang Liu <xinliang.liu@linaro.org>,
+	Tian Tao <tiantao6@hisilicon.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Srujana Challa <schalla@marvell.com>,
+	Bharat Bhushan <bbhushan2@marvell.com>,
+	Antoine Tenart <atenart@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Raag Jadav <raag.jadav@intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-input@vger.kernel.org,
+	linux-i3c@lists.infradead.org,
+	dmaengine@vger.kernel.org,
+	Philipp Stanner <phasta@kernel.org>,
+	netdev@vger.kernel.org,
+	nic_swsd@realtek.com,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-usb@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-cxl@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	mhi@lists.linux.dev,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>,
+	linux-i2c@vger.kernel.org,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	linux-spi@vger.kernel.org,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 0/37] PCI/MSI: Enforce explicit IRQ vector management by removing devres auto-free
+Date: Mon, 23 Feb 2026 23:29:39 +0800
+Message-Id: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9c8b20307709cckunm6946b3c79862a6
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0oaHlZPHx5OTE0YQkJPHxlWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUJDQ0
+	xVSktLVUtZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=jy81/F5Ni9q9/bSyZWlJabD1XxAXELPL9UhibFZyMz9WyzEiB5iEDVH0Ye8gCgDrz+TXTgJ8mWQ6QgQDO5+xpeOsxh+rOYDNTZc0JKdQU/fj9M+S4Jnb31IUAfPQnG6b/8K1G5LiNjlbXGROoXvc1DCKurZLBq/IoT1lOI+FLR8=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=BcUR/HoijHqinvoMXUQVA7vidPdOPQAH0voVT1QIHOY=;
+	h=date:mime-version:subject:message-id:from;
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[rock-chips.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[rock-chips.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9004-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9019-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[google.com,microchip.com,intel.com,linux.intel.com,kernel.org,bootlin.com,hisilicon.com,huawei.com,marvell.com,lunn.ch,gmail.com,davemloft.net,oss.qualcomm.com,amd.com,rivosinc.com,linaro.org,stgolabs.net,gondor.apana.org.au,linuxfoundation.org,microsemi.com,deltatee.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[arndb.de,kernel.org,vger.kernel.org,lists.infradead.org,realtek.com,lists.freedesktop.org,lists.linux.dev,gmail.com,ffwll.ch,linux.intel.com,semihalf.com,zonque.org,linux.dev,rock-chips.com];
+	DKIM_TRACE(0.00)[rock-chips.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[shawn.lin@rock-chips.com,dmaengine@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FROM_NEQ_ENVFROM(0.00)[agordeevbox@gmail.com,dmaengine@vger.kernel.org];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_THREE(0.00)[3];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_GT_50(0.00)[87];
+	TAGGED_RCPT(0.00)[dmaengine,netdev];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 78ED216CE7D
+X-Rspamd-Queue-Id: 5657E1817E7
 X-Rspamd-Action: no action
 
-A utility to pass user data through a DMA slave device. It is
-intended for bringing up and debugging DMA devices.
+This patch series addresses a long-standing design issue in the PCI/MSI
+subsystem where the implicit, automatic management of IRQ vectors by
+the devres framework conflicts with explicit driver cleanup, creating
+ambiguity and potential resource management bugs.
 
-The tool writes the contents of a binary file to, or reads from,
-the companion dma-slave device driver, which must be loaded.
+==== The Problem: Implicit vs. Explicit Management ====
+Historically, `pcim_enable_device()` not only manages standard PCI resources
+(BARs) via devres but also implicitly triggers automatic IRQ vector management
+by setting a flag that registers `pcim_msi_release()` as a cleanup action.
 
-The contents of an input file to be transferred can be prepared
-to trigger specific target device behavior on writes.
+This creates an ambiguous ownership model. Many drivers follow a pattern of:
+1. Calling `pci_alloc_irq_vectors()` to allocate interrupts.
+2. Also calling `pci_free_irq_vectors()` in their error paths or remove routines.
 
-For read operations, the output file contents can be examined using
-user-level tools to detect transfer integrity issues.
+When such a driver also uses `pcim_enable_device()`, the devres framework may
+attempt to free the IRQ vectors a second time upon device release, leading to
+a double-free. Analysis of the tree shows this hazardous pattern exists widely,
+while 35 other drivers correctly rely solely on the implicit cleanup.
 
-The DMA transfer parameters are provided via command-line arguments
-and are not sanitized in any way. These parameters are used as-is to
-initialize a dma_slave_config instance passed to dmaengine_slave_config().
+==== The Solution: Making Management Explicit ====
+This series enforces a clear, predictable model:
+1.  New Managed API (Patch 1/37): Introduces pcim_alloc_irq_vectors() and
+    pcim_alloc_irq_vectors_affinity(). Drivers that desire devres-managed IRQ
+    vectors should use these functions, which set the is_msi_managed flag and
+    ensure automatic cleanup.
+2.  Patches 2 through 36 convert each driver that uses pcim_enable_device() alongside
+    pci_alloc_irq_vectors() and relies on devres for IRQ vector cleanup to instead
+    make an explicit call to pcim_alloc_irq_vectors().
+3.  Core Change (Patch 37/37): With the former cleanup, now modifies pcim_setup_msi_release()
+    to check only the is_msi_managed flag. This decouples automatic IRQ cleanup from
+    pcim_enable_device(). IRQ vectors allocated via pci_alloc_irq_vectors*()
+    are now solely the driver's responsibility to free with pci_free_irq_vectors().
 
-An additional file may be provided as peripheral configuration data for
-the DMA transfer. In this case, dma_slave_config::peripheral_config and
-dma_slave_config::peripheral_size members are populated from the file
-contents and its size.
+With these changes, we clear ownership model: Explicit resource management eliminates
+ambiguity and follows the "principle of least surprise." New drivers choose one model and
+be consistent.
+- Use `pci_alloc_irq_vectors()` + `pci_free_irq_vectors()` for explicit control.
+- Use `pcim_alloc_irq_vectors()` for devres-managed, automatic cleanup.
 
-Signed-off-by: Alexander Gordeev <a.gordeev.box@gmail.com>
----
- tools/Makefile        |  11 +-
- tools/dma/Makefile    |  20 +++
- tools/dma/dma-slave.c | 321 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 347 insertions(+), 5 deletions(-)
- create mode 100644 tools/dma/Makefile
- create mode 100644 tools/dma/dma-slave.c
+==== Testing And Review ====
+1. This series is only compiled test with allmodconfig.
+2. Given the substantial size of this patch series, I have structured the mailing
+   to facilitate efficient review. The cover letter, the first patch and the last one will be sent
+   to all relevant mailing lists and key maintainers to ensure broad visibility and
+   initial feedback on the overall approach. The remaining subsystem-specific patches
+   will be sent only to the respective subsystem maintainers and their associated
+   mailing lists, reducing noise.
 
-diff --git a/tools/Makefile b/tools/Makefile
-index c31cbbd12c45..2c52bf7bc899 100644
---- a/tools/Makefile
-+++ b/tools/Makefile
-@@ -14,6 +14,7 @@ help:
- 	@echo '  counter                - counter tools'
- 	@echo '  cpupower               - a tool for all things x86 CPU power'
- 	@echo '  debugging              - tools for debugging'
-+	@echo '  dma                    - DMA tools'
- 	@echo '  firewire               - the userspace part of nosy, an IEEE-1394 traffic sniffer'
- 	@echo '  firmware               - Firmware tools'
- 	@echo '  freefall               - laptop accelerometer program for disk protection'
-@@ -69,7 +70,7 @@ acpi: FORCE
- cpupower: FORCE
- 	$(call descend,power/$@)
- 
--counter firewire hv guest bootconfig spi usb virtio mm bpf iio gpio objtool leds wmi firmware debugging tracing: FORCE
-+counter firewire hv guest bootconfig spi usb virtio mm bpf iio gpio objtool leds wmi firmware debugging tracing dma: FORCE
- 	$(call descend,$@)
- 
- bpf/%: FORCE
-@@ -122,7 +123,7 @@ kvm_stat: FORCE
- ynl: FORCE
- 	$(call descend,net/ynl)
- 
--all: acpi counter cpupower gpio hv firewire \
-+all: acpi counter cpupower dma gpio hv firewire \
- 		perf selftests bootconfig spi turbostat usb \
- 		virtio mm bpf x86_energy_perf_policy \
- 		tmon freefall iio objtool kvm_stat wmi \
-@@ -134,7 +135,7 @@ acpi_install:
- cpupower_install:
- 	$(call descend,power/$(@:_install=),install)
- 
--counter_install firewire_install gpio_install hv_install iio_install perf_install bootconfig_install spi_install usb_install virtio_install mm_install bpf_install objtool_install wmi_install debugging_install tracing_install:
-+counter_install firewire_install gpio_install hv_install iio_install perf_install bootconfig_install spi_install usb_install virtio_install mm_install bpf_install objtool_install wmi_install debugging_install tracing_install dma_install:
- 	$(call descend,$(@:_install=),install)
- 
- selftests_install:
-@@ -165,7 +166,7 @@ ynl_install:
- 	$(call descend,net/$(@:_install=),install)
- 
- install: acpi_install counter_install cpupower_install gpio_install \
--		hv_install firewire_install iio_install \
-+		hv_install firewire_install iio_install dma_install \
- 		perf_install selftests_install turbostat_install usb_install \
- 		virtio_install mm_install bpf_install x86_energy_perf_policy_install \
- 		tmon_install freefall_install objtool_install kvm_stat_install \
-@@ -178,7 +179,7 @@ acpi_clean:
- cpupower_clean:
- 	$(call descend,power/cpupower,clean)
- 
--counter_clean hv_clean firewire_clean bootconfig_clean spi_clean usb_clean virtio_clean mm_clean wmi_clean bpf_clean iio_clean gpio_clean objtool_clean leds_clean firmware_clean debugging_clean tracing_clean:
-+counter_clean hv_clean firewire_clean bootconfig_clean spi_clean usb_clean virtio_clean mm_clean wmi_clean bpf_clean iio_clean gpio_clean objtool_clean leds_clean firmware_clean debugging_clean tracing_clean dma_clean:
- 	$(call descend,$(@:_clean=),clean)
- 
- libapi_clean:
-diff --git a/tools/dma/Makefile b/tools/dma/Makefile
-new file mode 100644
-index 000000000000..c92a260ccf36
---- /dev/null
-+++ b/tools/dma/Makefile
-@@ -0,0 +1,20 @@
-+# SPDX-License-Identifier: GPL-2.0
-+PREFIX ?= /usr
-+SBINDIR ?= sbin
-+INSTALL ?= install
-+CFLAGS += -Wall -Wextra -I../../include/uapi -D__EXPORTED_HEADERS__
-+
-+TARGET = dma-slave
-+
-+all: $(TARGET)
-+
-+%: %.c
-+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $<
-+
-+clean:
-+	$(RM) $(TARGET)
-+
-+install: $(TARGET)
-+	$(INSTALL) -D -m 755 $(TARGET) $(DESTDIR)$(PREFIX)/$(SBINDIR)/$(TARGET)
-+
-+.PHONY: all clean install
-diff --git a/tools/dma/dma-slave.c b/tools/dma/dma-slave.c
-new file mode 100644
-index 000000000000..e1256779ccd3
---- /dev/null
-+++ b/tools/dma/dma-slave.c
-@@ -0,0 +1,321 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2026 Alexander Gordeev <a.gordeev.box@gmail.com>
-+#include <unistd.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <fcntl.h>
-+#include <errno.h>
-+#include <string.h>
-+#include <getopt.h>
-+#include <sys/ioctl.h>
-+#include <sys/stat.h>
-+#include <sys/uio.h>
-+#include <sys/mman.h>
-+#include <linux/types.h>
-+#include <linux/dma-slave.h>
-+
-+static void dump_mem(const void *mem, size_t mem_len)
-+{
-+	unsigned int i;
-+
-+	if (mem_len > 16)
-+		mem_len = 16;
-+	printf("[ ");
-+	for (i = 0; i < mem_len; i++)
-+		printf("%02X ", ((const unsigned char *)mem)[i]);
-+	printf("]\n");
-+}
-+
-+static bool check_args(unsigned int cmd, const char *file, struct dma_slave_config_uapi *ucfg)
-+{
-+	if (cmd == IOCTL_DMA_SLAVE_READ) {
-+		if (!ucfg->data.iov_len)
-+			return false;
-+		if (!ucfg->src_addr)
-+			return false;
-+	} else if (cmd == IOCTL_DMA_SLAVE_WRITE) {
-+		if (!ucfg->dst_addr)
-+			return false;
-+	} else {
-+		return false;
-+	}
-+	if (!file)
-+		return false;
-+	return true;
-+}
-+
-+static int read_peripheral_config(const char *conf, struct iovec *peripheral_config)
-+{
-+	struct stat stat;
-+	void *buf;
-+	int fd;
-+	int ret;
-+
-+	if (!conf)
-+		return 0;
-+
-+	fd = open(conf, O_RDONLY);
-+	if (fd < 0) {
-+		ret = errno;
-+		goto err_ret;
-+	}
-+	if (fstat(fd, &stat) < 0) {
-+		ret = errno;
-+		goto err_close_fd;
-+	}
-+	buf = malloc(stat.st_size);
-+	if (!buf) {
-+		ret = errno;
-+		goto err_close_fd;
-+	}
-+	if (read(fd, buf, stat.st_size) < 0) {
-+		ret = errno;
-+		goto err_free;
-+	}
-+
-+	peripheral_config->iov_base = buf;
-+	peripheral_config->iov_len = stat.st_size;
-+	ret = 0;
-+
-+err_free:
-+	free(buf);
-+err_close_fd:
-+	close(fd);
-+err_ret:
-+	return ret;
-+}
-+
-+static void print_usage(void)
-+{
-+	printf("A utility to transfer the contents of a file to a DMA slave device.\n");
-+	printf("Requires the companion 'dma-slave' device driver to be loaded.\n\n");
-+
-+	printf("Usage:\n");
-+	printf("  dma-slave [OPTIONS]\n\n");
-+
-+	printf("Transfer direction (required, select one):\n");
-+	printf("  -r, --read                     Perform DMA read (device to file)\n");
-+	printf("  -w, --write                    Perform DMA write (file to device)\n\n");
-+
-+	printf("Transfer address (required):\n");
-+	printf("  -S, --src-addr <addr>          Source address (hex,dec,oct)\n");
-+	printf("  -D, --dst-addr <addr>          Destination address (hex,dec,oct)\n\n");
-+
-+	printf("Transfer size (required on read, optional on write):\n");
-+	printf("  -s, --size <bytes>             Transfer size in bytes\n\n");
-+
-+	printf("Transfer parameters (optional):\n");
-+	printf("      --src-addr-width <n>       Source address width\n");
-+	printf("      --dst-addr-width <n>       Destination address width\n");
-+	printf("      --src-maxburst <n>         Source max burst size\n");
-+	printf("      --dst-maxburst <n>         Destination max burst size\n");
-+	printf("      --src-port-window-size <n> Source port window size\n");
-+	printf("      --dst-port-window-size <n> Destination port window size\n");
-+	printf("      --device-fc                Enable device flow control\n");
-+	printf("  -p, --peripheral-config <file> Peripheral configuration file (raw)\n\n");
-+
-+	printf("User stored data (recreated on read, must exist on write):\n");
-+	printf("  -f, --file <file>              Transfer contents (raw)\n\n");
-+
-+	printf("Target DMA channel (optional, auto-selected if not provided):\n");
-+	printf("  -c, --channel-name <name>      DMA channel name (in /sys/class/dma)\n");
-+
-+	printf("Advanced parameters (optional):\n");
-+	printf("  -d, --dump                     Dump transferred data (16 bytes at most)\n\n");
-+
-+	printf("Examples:\n");
-+	printf("  dma-slave --read  -c dma0chan0 -S 0x20000000 --file output.bin -s 4096\n");
-+	printf("  dma-slave --write -c dma0chan0 -D 0x10000000 --file input.bin\n");
-+}
-+
-+enum {
-+	OPT_SRC_ADDR_WIDTH,
-+	OPT_DST_ADDR_WIDTH,
-+	OPT_SRC_MAXBURST,
-+	OPT_DST_MAXBURST,
-+	OPT_SRC_PORT_WINDOW_SIZE,
-+	OPT_DST_PORT_WINDOW_SIZE,
-+	OPT_DEVICE_FC,
-+};
-+
-+static const struct option long_opts[] = {
-+	{ "help",			no_argument,		NULL, 'h' },
-+	{ "read",			no_argument,		NULL, 'r' },
-+	{ "write",			no_argument,		NULL, 'w' },
-+	{ "dump",			no_argument,		NULL, 'd' },
-+	{ "channel-name",		required_argument,	NULL, 'c' },
-+	{ "peripheral-config",		required_argument,	NULL, 'p' },
-+	{ "file",			required_argument,	NULL, 'f' },
-+	{ "size",			required_argument,	NULL, 's' },
-+	{ "src-addr",			required_argument,	NULL, 'S' },
-+	{ "dst-addr",			required_argument,	NULL, 'D' },
-+	{ "src-addr-width",		required_argument,	NULL, OPT_SRC_ADDR_WIDTH },
-+	{ "dst-addr-width",		required_argument,	NULL, OPT_DST_ADDR_WIDTH },
-+	{ "src-maxburst",		required_argument,	NULL, OPT_SRC_MAXBURST },
-+	{ "dst-maxburst",		required_argument,	NULL, OPT_DST_MAXBURST },
-+	{ "src-port-window-size",	required_argument,	NULL, OPT_SRC_PORT_WINDOW_SIZE },
-+	{ "dst-port-window-size",	required_argument,	NULL, OPT_DST_PORT_WINDOW_SIZE },
-+	{ "device-fc",			no_argument,		NULL, OPT_DEVICE_FC },
-+	{ NULL,				0,			NULL, 0  }
-+};
-+
-+int main(int argc, char **argv)
-+{
-+	char *file = NULL, *conf = NULL, *endptr;
-+	struct dma_slave_config_uapi ucfg = {};
-+	int fd, fd_dev;
-+	unsigned int cmd = 0;
-+	bool dump = false;
-+	struct stat stat;
-+	char opt;
-+	int ret;
-+
-+	if (argc == 1) {
-+print_usage:
-+		print_usage();
-+		return 0;
-+	}
-+
-+	while ((opt = getopt_long(argc, argv, "hrwdc:s:p:f:S:D:", long_opts, NULL)) != -1) {
-+		switch (opt) {
-+		case 'h':
-+			goto print_usage;
-+		case 'r':
-+			if (cmd == IOCTL_DMA_SLAVE_WRITE)
-+				goto err_args;
-+			cmd = IOCTL_DMA_SLAVE_READ;
-+			break;
-+		case 'w':
-+			if (cmd == IOCTL_DMA_SLAVE_READ)
-+				goto err_args;
-+			cmd = IOCTL_DMA_SLAVE_WRITE;
-+			break;
-+		case 'd':
-+			dump = true;
-+			break;
-+		case 'c':
-+			strncpy(ucfg.channel_name, optarg, sizeof(ucfg.channel_name) - 1);
-+			break;
-+		case 'p':
-+			conf = optarg;
-+			break;
-+		case 'f':
-+			file = optarg;
-+			break;
-+		case 's':
-+			ucfg.data.iov_len = strtoull(optarg, &endptr, 0);
-+			if (endptr[0])
-+				goto err_args;
-+			break;
-+		case 'S':
-+			ucfg.src_addr = strtoull(optarg, &endptr, 0);
-+			if (endptr[0])
-+				goto err_args;
-+			break;
-+		case 'D':
-+			ucfg.dst_addr = strtoull(optarg, &endptr, 0);
-+			if (endptr[0])
-+				goto err_args;
-+			break;
-+		case OPT_SRC_ADDR_WIDTH:
-+			ucfg.src_addr_width = strtoul(optarg, &endptr, 10);
-+			if (endptr[0])
-+				goto err_args;
-+			break;
-+		case OPT_DST_ADDR_WIDTH:
-+			ucfg.dst_addr_width = strtoul(optarg, &endptr, 10);
-+			if (endptr[0])
-+				goto err_args;
-+			break;
-+		case OPT_SRC_MAXBURST:
-+			ucfg.src_maxburst = strtoul(optarg, &endptr, 10);
-+			if (endptr[0])
-+				goto err_args;
-+			break;
-+		case OPT_DST_MAXBURST:
-+			ucfg.dst_maxburst = strtoul(optarg, &endptr, 10);
-+			if (endptr[0])
-+				goto err_args;
-+			break;
-+		case OPT_SRC_PORT_WINDOW_SIZE:
-+			ucfg.src_port_window_size = strtoul(optarg, &endptr, 10);
-+			if (endptr[0])
-+				goto err_args;
-+			break;
-+		case OPT_DST_PORT_WINDOW_SIZE:
-+			ucfg.dst_port_window_size = strtoul(optarg, &endptr, 10);
-+			if (endptr[0])
-+				goto err_args;
-+			break;
-+		case OPT_DEVICE_FC:
-+			ucfg.device_fc = true;
-+			break;
-+		default:
-+			goto err_args;
-+		}
-+	}
-+
-+	ret = read_peripheral_config(conf, &ucfg.peripheral_config);
-+	if (ret)
-+		return ret;
-+
-+	if (!check_args(cmd, file, &ucfg)) {
-+err_args:
-+		print_usage();
-+		return EINVAL;
-+	}
-+
-+	fd_dev = open("/dev/" DMA_SLAVE_DEVICE, O_RDWR);
-+	if (fd_dev < 0)
-+		return errno;
-+
-+	switch (cmd) {
-+	case IOCTL_DMA_SLAVE_READ:
-+		fd = open(file, O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
-+		if (fd < 0)
-+			return errno;
-+		if (ftruncate(fd, ucfg.data.iov_len) < 0)
-+			return errno;
-+		ucfg.data.iov_base = mmap(NULL, ucfg.data.iov_len, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-+		if (ucfg.data.iov_base == MAP_FAILED) {
-+			ret = errno;
-+			unlink(file);
-+			return ret;
-+		}
-+		close(fd);
-+		break;
-+
-+	case IOCTL_DMA_SLAVE_WRITE:
-+		fd = open(file, O_RDONLY);
-+		if (fd < 0)
-+			return errno;
-+		if (fstat(fd, &stat) < 0)
-+			return errno;
-+		if (!stat.st_size)
-+			return EINVAL;
-+		if (!ucfg.data.iov_len || (size_t)stat.st_size < ucfg.data.iov_len)
-+			ucfg.data.iov_len = stat.st_size;
-+		ucfg.data.iov_base = mmap(NULL, ucfg.data.iov_len, PROT_READ, MAP_SHARED, fd, 0);
-+		if (ucfg.data.iov_base == MAP_FAILED)
-+			return errno;
-+		close(fd);
-+		if (dump)
-+			dump_mem(ucfg.data.iov_base, ucfg.data.iov_len);
-+		break;
-+	}
-+
-+	if (ioctl(fd_dev, cmd, &ucfg) < 0) {
-+		ret = errno;
-+		if (cmd == IOCTL_DMA_SLAVE_READ)
-+			unlink(file);
-+		return ret;
-+	}
-+
-+	if (cmd == IOCTL_DMA_SLAVE_READ && dump)
-+		dump_mem(ucfg.data.iov_base, ucfg.data.iov_len);
-+
-+	munmap(ucfg.data.iov_base, ucfg.data.iov_len);
-+	close(fd_dev);
-+
-+	return 0;
-+}
+Please help review it, much thanks!
+
+
+
+Shawn Lin (37):
+  PCI/MSI: Add Devres managed IRQ vectors allocation
+  mmc: cavium: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  media: ipu6: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  gpio: merrifield: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  PCI: switchtec: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  PCI: vmd: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  spi: spi-pci1xxxx: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  spi: pxa2xx: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  i2c: amd-mp2: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  i2c: mchp-pci1xxxx: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  i2c: thunderx: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  i2c: designware: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  bus: mhi: host: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  serial: 8250_mid: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  serial: 8250_exar: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  platform/x86/intel: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  crypto: safexcel: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  crypto: octeontx2: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  cxl/pci: Replace pci_alloc_irq_vectors() with pcim_alloc_irq_vectors()
+  drm/hisilicon/hibmc: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  iommu/riscv: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  thunderbolt: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  accel/amdxdna: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  accel/ivpu: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  accel/qaic: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  net: stmmac: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  r8169: Replace pci_alloc_irq_vectors() with pcim_alloc_irq_vectors()
+  net: thunder_bgx: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  net: hibmcge: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  mfd: intel-lpss: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  dmaengine: hsu: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  dmaengine: hisilicon: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  i3c: mipi-i3c-hci-pci: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  HID: intel-ish-ipc: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  HID: Intel-thc-hid: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  misc: microchip: pci1xxxx: Replace pci_alloc_irq_vectors() with
+    pcim_alloc_irq_vectors()
+  PCI/MSI: Only check is_msi_managed in pcim_setup_msi_release()
+
+ drivers/accel/amdxdna/aie2_pci.c                   |  2 +-
+ drivers/accel/ivpu/ivpu_drv.c                      |  2 +-
+ drivers/accel/qaic/qaic_drv.c                      |  4 ++--
+ drivers/bus/mhi/host/pci_generic.c                 |  3 ++-
+ drivers/crypto/inside-secure/safexcel.c            |  8 +++----
+ drivers/crypto/marvell/octeontx2/otx2_cptpf_main.c |  2 +-
+ drivers/crypto/marvell/octeontx2/otx2_cptvf_main.c |  4 ++--
+ drivers/cxl/pci.c                                  |  8 ++-----
+ drivers/dma/hisi_dma.c                             |  3 +--
+ drivers/dma/hsu/pci.c                              |  2 +-
+ drivers/gpio/gpio-merrifield.c                     |  2 +-
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c    |  4 ++--
+ drivers/hid/intel-ish-hid/ipc/pci-ish.c            |  2 +-
+ .../intel-thc-hid/intel-quicki2c/pci-quicki2c.c    |  2 +-
+ drivers/i2c/busses/i2c-amd-mp2-pci.c               |  2 +-
+ drivers/i2c/busses/i2c-designware-pcidrv.c         |  2 +-
+ drivers/i2c/busses/i2c-mchp-pci1xxxx.c             |  2 +-
+ drivers/i2c/busses/i2c-thunderx-pcidrv.c           |  2 +-
+ drivers/i3c/master/mipi-i3c-hci/mipi-i3c-hci-pci.c |  2 +-
+ drivers/iommu/riscv/iommu-pci.c                    |  4 ++--
+ drivers/media/pci/intel/ipu6/ipu6.c                |  2 +-
+ drivers/mfd/intel-lpss-pci.c                       |  2 +-
+ drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c      |  2 +-
+ drivers/mmc/host/cavium-thunderx.c                 |  2 +-
+ drivers/net/ethernet/cavium/thunder/thunder_bgx.c  |  4 ++--
+ drivers/net/ethernet/hisilicon/hibmcge/hbg_irq.c   |  4 ++--
+ drivers/net/ethernet/realtek/r8169_main.c          |  2 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c  |  6 ++---
+ drivers/pci/controller/vmd.c                       |  4 ++--
+ drivers/pci/msi/api.c                              | 26 ++++++++++++++++++++++
+ drivers/pci/msi/msi.c                              |  4 +---
+ drivers/pci/switch/switchtec.c                     |  6 ++---
+ drivers/platform/x86/intel/ehl_pse_io.c            |  2 +-
+ drivers/spi/spi-pci1xxxx.c                         |  4 ++--
+ drivers/spi/spi-pxa2xx-pci.c                       |  2 +-
+ drivers/thunderbolt/nhi.c                          |  6 ++---
+ drivers/tty/serial/8250/8250_exar.c                |  2 +-
+ drivers/tty/serial/8250/8250_mid.c                 |  2 +-
+ include/linux/pci.h                                | 22 ++++++++++++++++++
+ 39 files changed, 104 insertions(+), 62 deletions(-)
+
 -- 
-2.51.0
+2.7.4
 
 

@@ -1,41 +1,41 @@
-Return-Path: <dmaengine+bounces-9014-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9015-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sOS4G3/DnGnJKAQAu9opvQ
-	(envelope-from <dmaengine+bounces-9014-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Feb 2026 22:15:43 +0100
+	id eMPGGwzUnGkJLAQAu9opvQ
+	(envelope-from <dmaengine+bounces-9015-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Feb 2026 23:26:20 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 932A217D706
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Feb 2026 22:15:42 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2C2217E506
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Feb 2026 23:26:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3BB7130138D2
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Feb 2026 21:15:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D47F83011C51
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Feb 2026 22:22:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1649D2853F7;
-	Mon, 23 Feb 2026 21:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15D7E37A48D;
+	Mon, 23 Feb 2026 22:22:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="hesEBWpu"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="J1HZWCee"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-m2489.xmail.ntesmail.com (mail-m2489.xmail.ntesmail.com [45.195.24.89])
+Received: from mail-m93191.xmail.ntesmail.com (mail-m93191.xmail.ntesmail.com [103.126.93.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A52F4F1;
-	Mon, 23 Feb 2026 21:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.24.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD183EBF10;
+	Mon, 23 Feb 2026 22:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.126.93.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771881338; cv=none; b=XIzvgnF5YHIvLQ5rvQ2Fp6GSRNSTOuJl0gWB9tA80rI7ELoF7VP5JGCNCpwHs3mZXu/mZ5VeXVDovRe0X7fpK6fwEAQD6p1xoZigHWiFviMeXVkTtpj5AhsZB6eGNv8oV032o//jIPER2lrAMgzIyThwyzLr7uEXs9TmPcIJdag=
+	t=1771885366; cv=none; b=ndeyUiXWPVUaCxED0IuZOUAMnThCbYaIqRZTfBf+wgUeOlJ33vlYrJCtH6KWnkuQhm3Iksaxe+bRe4INalNmT/6yXNqypst6s0yj76xa5o+eTML8uA3AFRNPCZ2z16dNen/50OMwJo2FZ4fuR8N7VCFFgKHrTyUtZ5q4Wz++5jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771881338; c=relaxed/simple;
-	bh=Zq2IirUyfEPFzMu6m9iwUulfmXx1dT5LTcM+Mxmn32U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=dsFWsyABv064nHcTNUQ6KXGD+JLy6v2oGHDMVluIPYUfcq/t0OvUwiuRNhF1P+d0ysqUlxao3g9emPtNMdyj65954rNAVQQb1THqCzAnbj1w0z/wOqLoBeGofYeorsnkWCp1Qcx3ikE9PRCQS9tFncv66UvJ+5Ed1ikQdGcNv9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=hesEBWpu; arc=none smtp.client-ip=45.195.24.89
+	s=arc-20240116; t=1771885366; c=relaxed/simple;
+	bh=pEHlMOLcrVLHxBcPS3mtO3QtuhosaoNFXUoSgyCErug=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=JGx7pqFucmfttBbDUpLUj6WUCmA/rAwj7UHXRxbaN9kDcY/qlcb/l02+OfGTe8yay9kM/av+KedM53QB7/w38IigeLzGcQTAk04zDHUz4/xUIVgQ2feW3kyIu9xYggnqIb9El2m5xRyfNG4VBduMRmk0qPc70gtADCqaK1ZzAks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=J1HZWCee; arc=none smtp.client-ip=103.126.93.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 34b37f77f;
-	Mon, 23 Feb 2026 23:31:55 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id 34b37f78d;
+	Mon, 23 Feb 2026 23:32:12 +0800 (GMT+08:00)
 From: Shawn Lin <shawn.lin@rock-chips.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	"Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>,
@@ -124,20 +124,20 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	linux-media@vger.kernel.org,
 	linux-mmc@vger.kernel.org,
 	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 01/37] PCI/MSI: Add Devres managed IRQ vectors allocation
-Date: Mon, 23 Feb 2026 23:29:40 +0800
-Message-Id: <1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
+Subject: [PATCH 37/37] PCI/MSI: Only check is_msi_managed in pcim_setup_msi_release()
+Date: Mon, 23 Feb 2026 23:29:41 +0800
+Message-Id: <1771860581-82092-3-git-send-email-shawn.lin@rock-chips.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
 References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
-X-HM-Tid: 0a9c8b20e63209cckunm6946b3c7986369
+X-HM-Tid: 0a9c8b212c0009cckunm6946b3c79863ba
 X-HM-MType: 1
 X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGh5JGFYdQhpNQ0tOHx8aQhpWFRQJFh
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQhgZH1ZOH09CTx0eHktKTkpWFRQJFh
 	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZS1VLVUtVS1kG
 DKIM-Signature: a=rsa-sha256;
-	b=hesEBWpuUfkngcgz1f2Ig1nlGmmzRwW4WQwqVSHNJo/8mDrQHyi2jBXfpRejbQ5213Bi/x3y5ZKsO4yPdU29saCaBfjZuhiQPZrXuFi/nfbjzR0kpb+gL5Eft5gNlVXtMsgoBjIOykghNIgFG4xZvqITu8wqjNed5lf17v/+SjU=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=j3H95hgVRLs6dldnhhXVuqSGrPI2yynu10KTCXrGKLk=;
+	b=J1HZWCeeOmW/gPw++byO+If0KMsTHKVVYVc+2zdeVL1H5nIla64EyAzpDmlGGJ/eIDuENwuD2fBNa7HfxIU6b+XJAPDHnUDppaUZRyCFQ58kMzK1cryURHmQKr6oTWiT4pmL+kQoThKmImm/C2O+XaXoGL4RlgFyNJGe+/RTrvE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=RhsG8KOx2Km4SCjZjnMyUXQspsA9GMfP8flaFf9OQp4=;
 	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -152,13 +152,13 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[rock-chips.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[rock-chips.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[arndb.de,kernel.org,vger.kernel.org,lists.infradead.org,realtek.com,lists.freedesktop.org,lists.linux.dev,gmail.com,ffwll.ch,linux.intel.com,semihalf.com,zonque.org,linux.dev,rock-chips.com];
-	TAGGED_FROM(0.00)[bounces-9014-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9015-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[google.com,microchip.com,intel.com,linux.intel.com,kernel.org,bootlin.com,hisilicon.com,huawei.com,marvell.com,lunn.ch,gmail.com,davemloft.net,oss.qualcomm.com,amd.com,rivosinc.com,linaro.org,stgolabs.net,gondor.apana.org.au,linuxfoundation.org,microsemi.com,deltatee.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -172,99 +172,66 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCPT_COUNT_GT_50(0.00)[87];
 	TAGGED_RCPT(0.00)[dmaengine,netdev];
 	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[rock-chips.com:mid,rock-chips.com:dkim,rock-chips.com:email]
-X-Rspamd-Queue-Id: 932A217D706
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,rock-chips.com:mid,rock-chips.com:dkim,rock-chips.com:email]
+X-Rspamd-Queue-Id: C2C2217E506
 X-Rspamd-Action: no action
 
-pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() are created for
-pci device drivers which rely on the devres machinery to help cleanup the IRQ
-vectors.
+The function pcim_enable_device() sets the is_managed flag, which
+causes the device's IRQ vectors to be automatically managed and released
+by the devres framework. If a driver subsequently calls
+pci_free_irq_vectors() manually, it can lead to a double-free of the
+interrupt resources.
+
+Analysis reveals most PCI drivers call pci_free_irq_vectors()
+while also using pcim_enable_device(), making them susceptible to this
+double-free issue. In contrast, 35 drivers follow the pattern of
+relying on devres to handle the cleanup.
+
+To address this inconsistency and enforce explicit, driver-managed
+control of IRQ vectors, this patch removes the pci_is_managed() check
+from pcim_setup_msi_release() and let devres help cleanup if is_msi_managed
+is true. This change ensures that interrupt vectors are not automatically
+freed by the devres machinery when pcim_enable_device() is used, placing
+the responsibility for their release squarely on the driver logic via
+pci_free_irq_vectors(). If the driver need devres to help cleanup, newly added
+pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() helpers could be used.
 
 Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+
 ---
 
- drivers/pci/msi/api.c | 26 ++++++++++++++++++++++++++
- include/linux/pci.h   | 22 ++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+ drivers/pci/msi/msi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pci/msi/api.c b/drivers/pci/msi/api.c
-index c18559b..2362fca 100644
---- a/drivers/pci/msi/api.c
-+++ b/drivers/pci/msi/api.c
-@@ -297,6 +297,32 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index 81d24a2..0727a0a 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -70,7 +70,6 @@ static void pcim_msi_release(void *pcidev)
+ {
+ 	struct pci_dev *dev = pcidev;
  
- /**
-+ * pcim_alloc_irq_vectors() - devres managed pci_alloc_irq_vectors()
-+ * Interrupt vectors are automatically freed by the devres machinery
-+ */
-+int pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-+			   unsigned int max_vecs, unsigned int flags)
-+{
-+	return pcim_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
-+					       flags, NULL);
-+}
-+EXPORT_SYMBOL(pcim_alloc_irq_vectors);
-+
-+/**
-+ * pcim_alloc_irq_vectors_affinity() - devres managed pci_alloc_irq_vectors_affinity()
-+ * Interrupt vectors are automatically freed by the devres machinery
-+ */
-+int pcim_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
-+				   unsigned int max_vecs, unsigned int flags,
-+				   struct irq_affinity *affd)
-+{
-+	dev->is_msi_managed = true;
-+	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
-+					      flags, affd);
-+}
-+EXPORT_SYMBOL(pcim_alloc_irq_vectors_affinity);
-+
-+/**
-  * pci_irq_vector() - Get Linux IRQ number of a device interrupt vector
-  * @dev: the PCI device to operate on
-  * @nr:  device-relative interrupt vector index (0-based); has different
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index d5ec0f8..ae58f70 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1764,6 +1764,12 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 				   unsigned int max_vecs, unsigned int flags,
- 				   struct irq_affinity *affd);
- 
-+int pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-+			  unsigned int max_vecs, unsigned int flags);
-+int pcim_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
-+				   unsigned int max_vecs, unsigned int flags,
-+				   struct irq_affinity *affd);
-+
- bool pci_msix_can_alloc_dyn(struct pci_dev *dev);
- struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
- 				     const struct irq_affinity_desc *affdesc);
-@@ -1806,6 +1812,22 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
- 					      flags, NULL);
+-	dev->is_msi_managed = false;
+ 	pci_free_irq_vectors(dev);
  }
  
-+static inline int
-+pcim_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
-+			       unsigned int max_vecs, unsigned int flags,
-+			       struct irq_affinity *aff_desc)
-+{
-+	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
-+					      flags, aff_desc);
-+}
-+static inline int
-+pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-+		      unsigned int max_vecs, unsigned int flags)
-+{
-+	return pcim_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
-+					      flags, NULL);
-+}
-+
- static inline bool pci_msix_can_alloc_dyn(struct pci_dev *dev)
- { return false; }
- static inline struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
+@@ -92,14 +91,13 @@ static int pcim_setup_msi_release(struct pci_dev *dev)
+ {
+ 	int ret;
+ 
+-	if (!pci_is_managed(dev) || dev->is_msi_managed)
++	if (!dev->is_msi_managed)
+ 		return 0;
+ 
+ 	ret = devm_add_action(&dev->dev, pcim_msi_release, dev);
+ 	if (ret)
+ 		return ret;
+ 
+-	dev->is_msi_managed = true;
+ 	return 0;
+ }
+ 
 -- 
 2.7.4
 

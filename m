@@ -1,41 +1,41 @@
-Return-Path: <dmaengine+bounces-9019-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9014-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cGmZAFshnWnuMwQAu9opvQ
-	(envelope-from <dmaengine+bounces-9019-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Feb 2026 04:56:11 +0100
+	id sOS4G3/DnGnJKAQAu9opvQ
+	(envelope-from <dmaengine+bounces-9014-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Feb 2026 22:15:43 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5657E1817E7
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Feb 2026 04:56:10 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 932A217D706
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Feb 2026 22:15:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A13F0304C7E1
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Feb 2026 03:56:05 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3BB7130138D2
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Feb 2026 21:15:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32FAD1C5F11;
-	Tue, 24 Feb 2026 03:56:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1649D2853F7;
+	Mon, 23 Feb 2026 21:15:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="jy81/F5N"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="hesEBWpu"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-m1973176.qiye.163.com (mail-m1973176.qiye.163.com [220.197.31.76])
+Received: from mail-m2489.xmail.ntesmail.com (mail-m2489.xmail.ntesmail.com [45.195.24.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADB619E97F;
-	Tue, 24 Feb 2026 03:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A52F4F1;
+	Mon, 23 Feb 2026 21:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.24.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771905364; cv=none; b=OCKVPLunGXdApGoqxMBCsyiWW85UfYrQmmRUpFhgAbNMYCKFjEGZqqBF4i8eDMs6s2Ym2kpCCHu/MXIRG88I+pKAmbMmK6akpf1TQRlfpFHWG4sGPXFCVrRWzRS94pDgKewgGJXoGLQ9AmwGlcVVOYPHYw0dOdJxnEAqXEt1lU8=
+	t=1771881338; cv=none; b=XIzvgnF5YHIvLQ5rvQ2Fp6GSRNSTOuJl0gWB9tA80rI7ELoF7VP5JGCNCpwHs3mZXu/mZ5VeXVDovRe0X7fpK6fwEAQD6p1xoZigHWiFviMeXVkTtpj5AhsZB6eGNv8oV032o//jIPER2lrAMgzIyThwyzLr7uEXs9TmPcIJdag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771905364; c=relaxed/simple;
-	bh=KoW38T6cNEmKidxotZXPZubVy4KOQgupYxDAJ1370F0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Y5XubMPPbLGeHX8Fh2KZBVr3SxsA4/y5kqFIPvxtjD4X15XdyT4B0OWriZv2zm+E9bCaqByqmDMQY3u6N9M3p3w9TgwvdEOZgdlgPAqu8ka8a9cr3Dx7TDNNkLZvlaJL+THNv3ge+6Fih+5pvABqlZMaTf8aX7L0eqRQgZefC14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=jy81/F5N; arc=none smtp.client-ip=220.197.31.76
+	s=arc-20240116; t=1771881338; c=relaxed/simple;
+	bh=Zq2IirUyfEPFzMu6m9iwUulfmXx1dT5LTcM+Mxmn32U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=dsFWsyABv064nHcTNUQ6KXGD+JLy6v2oGHDMVluIPYUfcq/t0OvUwiuRNhF1P+d0ysqUlxao3g9emPtNMdyj65954rNAVQQb1THqCzAnbj1w0z/wOqLoBeGofYeorsnkWCp1Qcx3ikE9PRCQS9tFncv66UvJ+5Ed1ikQdGcNv9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=hesEBWpu; arc=none smtp.client-ip=45.195.24.89
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 34b37f769;
-	Mon, 23 Feb 2026 23:31:09 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id 34b37f77f;
+	Mon, 23 Feb 2026 23:31:55 +0800 (GMT+08:00)
 From: Shawn Lin <shawn.lin@rock-chips.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	"Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>,
@@ -124,225 +124,147 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	linux-media@vger.kernel.org,
 	linux-mmc@vger.kernel.org,
 	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 0/37] PCI/MSI: Enforce explicit IRQ vector management by removing devres auto-free
-Date: Mon, 23 Feb 2026 23:29:39 +0800
-Message-Id: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+Subject: [PATCH 01/37] PCI/MSI: Add Devres managed IRQ vectors allocation
+Date: Mon, 23 Feb 2026 23:29:40 +0800
+Message-Id: <1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+X-HM-Tid: 0a9c8b20e63209cckunm6946b3c7986369
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGh5JGFYdQhpNQ0tOHx8aQhpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZS1VLVUtVS1kG
+DKIM-Signature: a=rsa-sha256;
+	b=hesEBWpuUfkngcgz1f2Ig1nlGmmzRwW4WQwqVSHNJo/8mDrQHyi2jBXfpRejbQ5213Bi/x3y5ZKsO4yPdU29saCaBfjZuhiQPZrXuFi/nfbjzR0kpb+gL5Eft5gNlVXtMsgoBjIOykghNIgFG4xZvqITu8wqjNed5lf17v/+SjU=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=j3H95hgVRLs6dldnhhXVuqSGrPI2yynu10KTCXrGKLk=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9c8b20307709cckunm6946b3c79862a6
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0oaHlZPHx5OTE0YQkJPHxlWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUJDQ0
-	xVSktLVUtZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=jy81/F5Ni9q9/bSyZWlJabD1XxAXELPL9UhibFZyMz9WyzEiB5iEDVH0Ye8gCgDrz+TXTgJ8mWQ6QgQDO5+xpeOsxh+rOYDNTZc0JKdQU/fj9M+S4Jnb31IUAfPQnG6b/8K1G5LiNjlbXGROoXvc1DCKurZLBq/IoT1lOI+FLR8=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=BcUR/HoijHqinvoMXUQVA7vidPdOPQAH0voVT1QIHOY=;
-	h=date:mime-version:subject:message-id:from;
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[rock-chips.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[rock-chips.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9019-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[google.com,microchip.com,intel.com,linux.intel.com,kernel.org,bootlin.com,hisilicon.com,huawei.com,marvell.com,lunn.ch,gmail.com,davemloft.net,oss.qualcomm.com,amd.com,rivosinc.com,linaro.org,stgolabs.net,gondor.apana.org.au,linuxfoundation.org,microsemi.com,deltatee.com];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[arndb.de,kernel.org,vger.kernel.org,lists.infradead.org,realtek.com,lists.freedesktop.org,lists.linux.dev,gmail.com,ffwll.ch,linux.intel.com,semihalf.com,zonque.org,linux.dev,rock-chips.com];
-	DKIM_TRACE(0.00)[rock-chips.com:+];
+	TAGGED_FROM(0.00)[bounces-9014-lists,dmaengine=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[google.com,microchip.com,intel.com,linux.intel.com,kernel.org,bootlin.com,hisilicon.com,huawei.com,marvell.com,lunn.ch,gmail.com,davemloft.net,oss.qualcomm.com,amd.com,rivosinc.com,linaro.org,stgolabs.net,gondor.apana.org.au,linuxfoundation.org,microsemi.com,deltatee.com];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[shawn.lin@rock-chips.com,dmaengine@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[rock-chips.com:+];
 	RCPT_COUNT_GT_50(0.00)[87];
 	TAGGED_RCPT(0.00)[dmaengine,netdev];
 	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5657E1817E7
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[rock-chips.com:mid,rock-chips.com:dkim,rock-chips.com:email]
+X-Rspamd-Queue-Id: 932A217D706
 X-Rspamd-Action: no action
 
-This patch series addresses a long-standing design issue in the PCI/MSI
-subsystem where the implicit, automatic management of IRQ vectors by
-the devres framework conflicts with explicit driver cleanup, creating
-ambiguity and potential resource management bugs.
+pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() are created for
+pci device drivers which rely on the devres machinery to help cleanup the IRQ
+vectors.
 
-==== The Problem: Implicit vs. Explicit Management ====
-Historically, `pcim_enable_device()` not only manages standard PCI resources
-(BARs) via devres but also implicitly triggers automatic IRQ vector management
-by setting a flag that registers `pcim_msi_release()` as a cleanup action.
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
 
-This creates an ambiguous ownership model. Many drivers follow a pattern of:
-1. Calling `pci_alloc_irq_vectors()` to allocate interrupts.
-2. Also calling `pci_free_irq_vectors()` in their error paths or remove routines.
+ drivers/pci/msi/api.c | 26 ++++++++++++++++++++++++++
+ include/linux/pci.h   | 22 ++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
-When such a driver also uses `pcim_enable_device()`, the devres framework may
-attempt to free the IRQ vectors a second time upon device release, leading to
-a double-free. Analysis of the tree shows this hazardous pattern exists widely,
-while 35 other drivers correctly rely solely on the implicit cleanup.
-
-==== The Solution: Making Management Explicit ====
-This series enforces a clear, predictable model:
-1.  New Managed API (Patch 1/37): Introduces pcim_alloc_irq_vectors() and
-    pcim_alloc_irq_vectors_affinity(). Drivers that desire devres-managed IRQ
-    vectors should use these functions, which set the is_msi_managed flag and
-    ensure automatic cleanup.
-2.  Patches 2 through 36 convert each driver that uses pcim_enable_device() alongside
-    pci_alloc_irq_vectors() and relies on devres for IRQ vector cleanup to instead
-    make an explicit call to pcim_alloc_irq_vectors().
-3.  Core Change (Patch 37/37): With the former cleanup, now modifies pcim_setup_msi_release()
-    to check only the is_msi_managed flag. This decouples automatic IRQ cleanup from
-    pcim_enable_device(). IRQ vectors allocated via pci_alloc_irq_vectors*()
-    are now solely the driver's responsibility to free with pci_free_irq_vectors().
-
-With these changes, we clear ownership model: Explicit resource management eliminates
-ambiguity and follows the "principle of least surprise." New drivers choose one model and
-be consistent.
-- Use `pci_alloc_irq_vectors()` + `pci_free_irq_vectors()` for explicit control.
-- Use `pcim_alloc_irq_vectors()` for devres-managed, automatic cleanup.
-
-==== Testing And Review ====
-1. This series is only compiled test with allmodconfig.
-2. Given the substantial size of this patch series, I have structured the mailing
-   to facilitate efficient review. The cover letter, the first patch and the last one will be sent
-   to all relevant mailing lists and key maintainers to ensure broad visibility and
-   initial feedback on the overall approach. The remaining subsystem-specific patches
-   will be sent only to the respective subsystem maintainers and their associated
-   mailing lists, reducing noise.
-
-Please help review it, much thanks!
-
-
-
-Shawn Lin (37):
-  PCI/MSI: Add Devres managed IRQ vectors allocation
-  mmc: cavium: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  media: ipu6: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  gpio: merrifield: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  PCI: switchtec: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  PCI: vmd: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  spi: spi-pci1xxxx: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  spi: pxa2xx: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  i2c: amd-mp2: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  i2c: mchp-pci1xxxx: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  i2c: thunderx: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  i2c: designware: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  bus: mhi: host: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  serial: 8250_mid: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  serial: 8250_exar: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  platform/x86/intel: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  crypto: safexcel: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  crypto: octeontx2: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  cxl/pci: Replace pci_alloc_irq_vectors() with pcim_alloc_irq_vectors()
-  drm/hisilicon/hibmc: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  iommu/riscv: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  thunderbolt: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  accel/amdxdna: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  accel/ivpu: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  accel/qaic: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  net: stmmac: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  r8169: Replace pci_alloc_irq_vectors() with pcim_alloc_irq_vectors()
-  net: thunder_bgx: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  net: hibmcge: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  mfd: intel-lpss: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  dmaengine: hsu: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  dmaengine: hisilicon: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  i3c: mipi-i3c-hci-pci: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  HID: intel-ish-ipc: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  HID: Intel-thc-hid: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  misc: microchip: pci1xxxx: Replace pci_alloc_irq_vectors() with
-    pcim_alloc_irq_vectors()
-  PCI/MSI: Only check is_msi_managed in pcim_setup_msi_release()
-
- drivers/accel/amdxdna/aie2_pci.c                   |  2 +-
- drivers/accel/ivpu/ivpu_drv.c                      |  2 +-
- drivers/accel/qaic/qaic_drv.c                      |  4 ++--
- drivers/bus/mhi/host/pci_generic.c                 |  3 ++-
- drivers/crypto/inside-secure/safexcel.c            |  8 +++----
- drivers/crypto/marvell/octeontx2/otx2_cptpf_main.c |  2 +-
- drivers/crypto/marvell/octeontx2/otx2_cptvf_main.c |  4 ++--
- drivers/cxl/pci.c                                  |  8 ++-----
- drivers/dma/hisi_dma.c                             |  3 +--
- drivers/dma/hsu/pci.c                              |  2 +-
- drivers/gpio/gpio-merrifield.c                     |  2 +-
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c    |  4 ++--
- drivers/hid/intel-ish-hid/ipc/pci-ish.c            |  2 +-
- .../intel-thc-hid/intel-quicki2c/pci-quicki2c.c    |  2 +-
- drivers/i2c/busses/i2c-amd-mp2-pci.c               |  2 +-
- drivers/i2c/busses/i2c-designware-pcidrv.c         |  2 +-
- drivers/i2c/busses/i2c-mchp-pci1xxxx.c             |  2 +-
- drivers/i2c/busses/i2c-thunderx-pcidrv.c           |  2 +-
- drivers/i3c/master/mipi-i3c-hci/mipi-i3c-hci-pci.c |  2 +-
- drivers/iommu/riscv/iommu-pci.c                    |  4 ++--
- drivers/media/pci/intel/ipu6/ipu6.c                |  2 +-
- drivers/mfd/intel-lpss-pci.c                       |  2 +-
- drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c      |  2 +-
- drivers/mmc/host/cavium-thunderx.c                 |  2 +-
- drivers/net/ethernet/cavium/thunder/thunder_bgx.c  |  4 ++--
- drivers/net/ethernet/hisilicon/hibmcge/hbg_irq.c   |  4 ++--
- drivers/net/ethernet/realtek/r8169_main.c          |  2 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c  |  6 ++---
- drivers/pci/controller/vmd.c                       |  4 ++--
- drivers/pci/msi/api.c                              | 26 ++++++++++++++++++++++
- drivers/pci/msi/msi.c                              |  4 +---
- drivers/pci/switch/switchtec.c                     |  6 ++---
- drivers/platform/x86/intel/ehl_pse_io.c            |  2 +-
- drivers/spi/spi-pci1xxxx.c                         |  4 ++--
- drivers/spi/spi-pxa2xx-pci.c                       |  2 +-
- drivers/thunderbolt/nhi.c                          |  6 ++---
- drivers/tty/serial/8250/8250_exar.c                |  2 +-
- drivers/tty/serial/8250/8250_mid.c                 |  2 +-
- include/linux/pci.h                                | 22 ++++++++++++++++++
- 39 files changed, 104 insertions(+), 62 deletions(-)
-
+diff --git a/drivers/pci/msi/api.c b/drivers/pci/msi/api.c
+index c18559b..2362fca 100644
+--- a/drivers/pci/msi/api.c
++++ b/drivers/pci/msi/api.c
+@@ -297,6 +297,32 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
+ 
+ /**
++ * pcim_alloc_irq_vectors() - devres managed pci_alloc_irq_vectors()
++ * Interrupt vectors are automatically freed by the devres machinery
++ */
++int pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
++			   unsigned int max_vecs, unsigned int flags)
++{
++	return pcim_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
++					       flags, NULL);
++}
++EXPORT_SYMBOL(pcim_alloc_irq_vectors);
++
++/**
++ * pcim_alloc_irq_vectors_affinity() - devres managed pci_alloc_irq_vectors_affinity()
++ * Interrupt vectors are automatically freed by the devres machinery
++ */
++int pcim_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
++				   unsigned int max_vecs, unsigned int flags,
++				   struct irq_affinity *affd)
++{
++	dev->is_msi_managed = true;
++	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
++					      flags, affd);
++}
++EXPORT_SYMBOL(pcim_alloc_irq_vectors_affinity);
++
++/**
+  * pci_irq_vector() - Get Linux IRQ number of a device interrupt vector
+  * @dev: the PCI device to operate on
+  * @nr:  device-relative interrupt vector index (0-based); has different
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index d5ec0f8..ae58f70 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1764,6 +1764,12 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 				   unsigned int max_vecs, unsigned int flags,
+ 				   struct irq_affinity *affd);
+ 
++int pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
++			  unsigned int max_vecs, unsigned int flags);
++int pcim_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
++				   unsigned int max_vecs, unsigned int flags,
++				   struct irq_affinity *affd);
++
+ bool pci_msix_can_alloc_dyn(struct pci_dev *dev);
+ struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
+ 				     const struct irq_affinity_desc *affdesc);
+@@ -1806,6 +1812,22 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+ 					      flags, NULL);
+ }
+ 
++static inline int
++pcim_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
++			       unsigned int max_vecs, unsigned int flags,
++			       struct irq_affinity *aff_desc)
++{
++	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
++					      flags, aff_desc);
++}
++static inline int
++pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
++		      unsigned int max_vecs, unsigned int flags)
++{
++	return pcim_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs,
++					      flags, NULL);
++}
++
+ static inline bool pci_msix_can_alloc_dyn(struct pci_dev *dev)
+ { return false; }
+ static inline struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
 -- 
 2.7.4
 

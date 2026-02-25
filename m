@@ -1,61 +1,58 @@
-Return-Path: <dmaengine+bounces-9077-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9078-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2L+NOQvcnmltXgQAu9opvQ
-	(envelope-from <dmaengine+bounces-9077-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Feb 2026 12:24:59 +0100
+	id 6OKPHSDcnmltXgQAu9opvQ
+	(envelope-from <dmaengine+bounces-9078-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Feb 2026 12:25:20 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 317411966B9
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Feb 2026 12:24:59 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6C301966E7
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Feb 2026 12:25:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B7ED430372E7
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Feb 2026 11:24:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 355D9303D7D7
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Feb 2026 11:24:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B958C394469;
-	Wed, 25 Feb 2026 11:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1682139448C;
+	Wed, 25 Feb 2026 11:24:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GuS2kFH+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cI+R8v/E"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95FCE39447A;
-	Wed, 25 Feb 2026 11:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E828539448A;
+	Wed, 25 Feb 2026 11:24:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772018651; cv=none; b=lj/H7BntDKh5GgoYGDRL9wIsVrb8kVWHZSGOLZPFgoFt0uqB4Ku78MJ2Z6S+Oj6Floi9IoFsTWone6oLxIwnwYG50fXNXySvKjJJA6Cq7VSRJT1xc41MqldgvAJOzjZXWoIfhHbl6sFoS0WGbRSKhDegGUSfeJGwEJjCJ8rDVDk=
+	t=1772018654; cv=none; b=bY8vTFlPB8prFUXAHRH9u2mtcVK1zO85P7nRKGl+eQAndtfE8JhO8akoFRZbj084DUIIpCeKdU5aqxq/NyALQ3SMiPk4ah4XM9YV16WiRPGrQXApTUSMAieKQV06LTdb4n1k34DQWmdELq3Qd/e2aLqdRC+VLJ1ZRY2RsDmFjjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772018651; c=relaxed/simple;
-	bh=w0t3HBg39hkW5eN5XKWeIPxBe+jpBk6uZWfkmh6G+RQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AYDkB2kkJ+J8lRMuPEAGnFlFWk+iSetifhAd1OLPKAn7gQGp8Cu01dCAM7LhBQi2xfLJzx3XoKztfPTCefLvmizLKZRbS1U6VXWPiXVgw+kfK3eE/4uGcNQF0CVeVRL84BY+59g28HSjSGtEeFwG3uwKLq0E8LJi2FBFgNVbh7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GuS2kFH+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82725C19421;
-	Wed, 25 Feb 2026 11:24:09 +0000 (UTC)
+	s=arc-20240116; t=1772018654; c=relaxed/simple;
+	bh=sW1A9+1O+zA+cWsz9P6vjjJCuOo181YvignuZFEVKIs=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Qy40kpKjVjhZd/llmUc92EJOXc4USxkGXShBnLU2JljPy1R0AtT4Cw/tq71kj7lnBzbKy3Tw6nt5idNag1PKwyydTy+THEepulg89ti5nWzJJQaFrjTS4EJNOhN45O2e2j9UqezVH7EvcPe5Drg+UamgDwcV6BT76921tnltePE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cI+R8v/E; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1819AC116D0;
+	Wed, 25 Feb 2026 11:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772018651;
-	bh=w0t3HBg39hkW5eN5XKWeIPxBe+jpBk6uZWfkmh6G+RQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=GuS2kFH+vGonAASw5cpR7VH3zLk/OXtq5pfZDHsMXD2uuu/YjsZgXp/+G26J/znQJ
-	 UPYxvVmNzAG8inht9RBWtWsTxiFk2hPbucuzF/Z73oYUbA0kR/9EYEElY/rVDn9bBy
-	 STDqEWsMW38pZT/IjYNBs9gr6FycFcIH6cY+S5ZpkOMxskSXs61T5oEb4LQyOpaysL
-	 44PWRTZxB5bhk9xjBganTt1PRMHzosNFdgGeDTN1VnY6nLpe20vzPXdpUCvK/TJ/3L
-	 YanJ+2eXBkZj+M+tXOy97ImyaJugZuR+IH4HqeRmMtZG0kxip6IRaehFo/Jf6wosmV
-	 49o/8HmCAlg7Q==
+	s=k20201202; t=1772018653;
+	bh=sW1A9+1O+zA+cWsz9P6vjjJCuOo181YvignuZFEVKIs=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=cI+R8v/ENv6r09g2SNUB4jd98Ye3cXikDQxUJLSNKhpzZUdhv7+bWBR7N6dIKLGOF
+	 OMZ2N4Ll5uO+9Q01dC8+wOHdHmUB15kJzeW6qpFhWhIAPxTLeMObVq2GImk3tB1aru
+	 DHV7S4kE/DEoiw+QGJkqD+aHScnleBzXuyIzmggH6yMnUdK4AUH6/RVRpV6xN+WEcj
+	 jpHyjTB+F3AhtgYJYNKZUC0KOiTTvIoGWFJaqTfQuNG6sucFetPZNKQy6OzODS1uPc
+	 eIxoEiuld+qh20B9cdRUkltLOlP32kBZQTwl9Lv+oN73ksjlhUnMUpMhMD2EFd6nsn
+	 EiN6fa55mqAFg==
 From: Vinod Koul <vkoul@kernel.org>
-To: Eugeniy.Paltsev@synopsys.com, Dinh Nguyen <dinguyen@kernel.org>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Khairul Anuar Romli <khairul.anuar.romli@altera.com>, 
- Rob Herring <robh@kernel.org>
-In-Reply-To: <20260131172856.29227-1-dinguyen@kernel.org>
-References: <20260131172856.29227-1-dinguyen@kernel.org>
-Subject: Re: [PATCH] dt-bindings: dma: snps,dw-axi-dmac: add dma-coherent
- property
-Message-Id: <177201864915.93331.2089924813116515907.b4-ty@kernel.org>
-Date: Wed, 25 Feb 2026 16:54:09 +0530
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Markus.Elfring@web.de, Khairul Anuar Romli <karom.9560@gmail.com>
+In-Reply-To: <20260202060224.12616-1-karom.9560@gmail.com>
+References: <20260202060224.12616-1-karom.9560@gmail.com>
+Subject: Re: [PATCH v7 0/3] dmaengine: dw-axi-dmac: Coding style cleanups
+Message-Id: <177201865172.93331.8302213117386942261.b4-ty@kernel.org>
+Date: Wed, 25 Feb 2026 16:54:11 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -63,54 +60,62 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.13.0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9077-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-9078-lists,dmaengine=lfdr.de];
+	FREEMAIL_TO(0.00)[synopsys.com,vger.kernel.org,web.de,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 317411966B9
+X-Rspamd-Queue-Id: C6C301966E7
 X-Rspamd-Action: no action
 
 
-On Sat, 31 Jan 2026 11:28:56 -0600, Dinh Nguyen wrote:
-> The Synopsys DesignWare AXI DMA Controller on Agilex5, the controller
-> operates on a cache-coherent AXI interface, where DMA transactions are
-> automatically kept coherent with the CPU caches. In previous generations
-> SoC (Stratix10 and Agilex) the interconnect was non-coherent, hence there
-> is no need for dma-coherent property to be presence. In Agilex 5, the
-> architecture has changed. It  introduced a coherent interconnect that
-> supports cache-coherent DMA.
+On Mon, 02 Feb 2026 14:02:16 +0800, Khairul Anuar Romli wrote:
+> This series contains a patches that fix minor coding style issues in the
+> Synopsys DesignWare AXI DMA Controller platform driver. This adjustment
+> possibilities were detected with the help of the analysis tool
+> “checkpatch.pl".
+> 
+> These changes are purely cosmetic:
+> - Adjust indentation of function arguments and debug messages
+> - Remove an unnecessary `return;` statement
+> - Add a blank line for readability between functions
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: dma: snps,dw-axi-dmac: add dma-coherent property
-      commit: ff7cbcca2b32c6e079941e577c41c74036861d5a
+[1/3] dmaengine: dw-axi-dmac: fix Alignment should match open parenthesis
+      commit: 6c5883a9ba296d2797437066592d15b2d202de7a
+[2/3] dmaengine: dw-axi-dmac: Add blank line after function
+      commit: a1adb6de361be08352badb45cce3214b8cd6abed
+[3/3] dmaengine: dw-axi-dmac: Remove unnecessary return statement from void function
+      commit: 704eb9b17a6178b01b20e16ff8d36337bd90e429
 
 Best regards,
 -- 

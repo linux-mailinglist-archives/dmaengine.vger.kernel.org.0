@@ -1,133 +1,146 @@
-Return-Path: <dmaengine+bounces-9124-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9125-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iNq2LFzWn2kYeQQAu9opvQ
-	(envelope-from <dmaengine+bounces-9124-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 06:13:00 +0100
+	id cMq7CQDxn2lwfAQAu9opvQ
+	(envelope-from <dmaengine+bounces-9125-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 08:06:40 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 037821A0FEE
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 06:12:59 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFCC21A19F4
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 08:06:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 377B43015724
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 05:12:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 35D5E3018C0E
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 07:05:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7253389DE0;
-	Thu, 26 Feb 2026 05:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9399A38E100;
+	Thu, 26 Feb 2026 07:05:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oxJn+/FQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVOUerUr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024A9287253;
-	Thu, 26 Feb 2026 05:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700FE2DEA74;
+	Thu, 26 Feb 2026 07:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772082745; cv=none; b=BJVc375YTEU5W2Rx/fd/bGP3CeWcgRHuy9xLE31kvhpnk01EOS/d2eSh/w7OAOSXV/mMs5eJ48/2ujgMD2yZ9IjMOvQx1JrsB8QkOxcTLiNC60hhUSDQevGEFKXK/GXqD0YUmQSXlAADo0FqXeoq0OGVYPp0lXFAwPJ7GMraWoE=
+	t=1772089554; cv=none; b=E63OTjZR0WQVVmAiu++p/egwprugRi82t/AnVj4Kf9JjhLhvSnYz/5XTj6YNgKQCi6REuK0RS6QgmMOXqU3XH5iS9lO63YwL7tBBheKn15p8cjD0vYX8Bc86WzEi0F4Wez92E1wlVme7TKyNfXDBqO62kuiRqO1Ev4jqRuegYJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772082745; c=relaxed/simple;
-	bh=ylk3+PwGHSF4af3iWtOwVBcvgxKwhdl4uCvtpQxJrtg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aU2dnzKo2rNku6LtDIV5BiGbTdpveQ8tiywNI8SZ/MxICOtxBsxhFYmQD38QYl7GQR513dq/4AvYJepsuRJKlVb1MStAlvtEUyTmfxxkWOH/exHSQRWLoKmoTE/fSELhORQRnj1GmScj5qHG7EOG1IWlHVzIf8MbR8jm4XzPplo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oxJn+/FQ; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=MBwNyNwsAXcXiZseHhSAbS6xtXvxrsrDgwhLAPWdzLQ=; b=oxJn+/FQmqNLZSXcQwhq5Xnapg
-	Yau/9KheZ0Rx8Uo47rpSBB19BxPoto/C6qLsOYpqd+S40TygLNxmxde1aAMUcgkNJJE/ExHo2dbu/
-	tZoWp+wtIFzEo1qqKDso/dHM5owNNZ/WaoyhG1xXDtzacrZMMERuZfOoyh2YV0U0Q55Org4CncY03
-	boJoMdqzoiMMsFJQugMUbDviOVD1ndHSXrxwhEFTKKv+ao7B7LbCsSe9rqs5/HlmMTccHA7u2NhTj
-	lR9cWSYt3Q5svQKyzd/SkID1RR7E81nv/eHSLR9LH7uS1C9NnI82mj8tufIb/OsGw3Y3OObUY97Lh
-	xAftGVhQ==;
-Received: from [50.53.43.113] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vvTfh-00000005PKh-0yCG;
-	Thu, 26 Feb 2026 05:12:21 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	imx@lists.linux.dev,
-	dmaengine@vger.kernel.org,
-	Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH] dmaengine: fsl-edma: fix all kernel-doc warnings
-Date: Wed, 25 Feb 2026 21:12:20 -0800
-Message-ID: <20260226051220.548566-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1772089554; c=relaxed/simple;
+	bh=r8kkku+RUrykKo8TzZsoSH0+1fI5bqsKXvST33G+y+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ME+fH82b5cgMnW7ms2W2oPe2e7aNNOMHh7dLENGeTtfpeUrTm1KIKfofY1cH7+J8PM9nMvgd0QMk+oS9GMU/uOBWrVOsdhm5NVnosQyKoWLDM6k+i/kYQM2/dykHTUvxAkvWViNC0R2l9yTj6+kyZO7SgDrrVxzcL+MiDBc/SG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVOUerUr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61791C19425;
+	Thu, 26 Feb 2026 07:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772089554;
+	bh=r8kkku+RUrykKo8TzZsoSH0+1fI5bqsKXvST33G+y+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fVOUerUrp1sd8OJYr/FayxxGSv+keS2OvEIftB8YxZm/B44KcMB+dWGzHdh+iJtgO
+	 Edo8ini3/qBAM2bn5TmdJj1j1rKeleWMYfuWf9rV6KV+pb0cmS/SmKMS6eW/uit2lo
+	 HqJI9P4wGKuDz+rWyZxJUIMD3I6LQ9Dy0rw2afNEhI5apJgSZerdALhTDfs2N+bl/C
+	 UwLL1W9rU91dKI3UICn0T4lNP4Etpj+B/RJ7YFjHXr+iwSmFk3j4+mroZ/61Hpc2uu
+	 hPfPqiMDaJxOAqPFA3jdRN/Njbu7Q8AemmGO4mMTjtWKanxil+gsr5tJHfWYOSs4Cw
+	 gURkzrb31HbDQ==
+Date: Thu, 26 Feb 2026 12:35:50 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Longbin Li <looong.bin@gmail.com>, Ze Huang <huangze@whut.edu.cn>,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, sophgo@lists.linux.dev,
+	linux-riscv@lists.infradead.org, Yixun Lan <dlan@kernel.org>
+Subject: Re: (subset) [PATCH v3 0/3] riscv: sophgo: allow DMA multiplexer set
+ channel number for DMA controller
+Message-ID: <aZ_wziVgEPGOSAd3@vaman>
+References: <20260120013706.436742-1-inochiama@gmail.com>
+ <177201865381.93331.6104381063514168222.b4-ty@kernel.org>
+ <aZ9z0gV8ZrfpL2JG@inochi.infowork>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aZ9z0gV8ZrfpL2JG@inochi.infowork>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9124-lists,dmaengine=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9125-lists,dmaengine=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[gmail.com];
 	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rdunlap@infradead.org,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
+	FREEMAIL_CC(0.00)[synopsys.com,kernel.org,outlook.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,gmail.com,whut.edu.cn,vger.kernel.org,lists.linux.dev,lists.infradead.org];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:mid,infradead.org:dkim,infradead.org:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:email,linux.dev:email]
-X-Rspamd-Queue-Id: 037821A0FEE
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: CFCC21A19F4
 X-Rspamd-Action: no action
 
-Use the correct kernel-doc format and struct member names to eliminate
-these kernel-doc warnings:
+On 26-02-26, 06:13, Inochi Amaoto wrote:
+> On Wed, Feb 25, 2026 at 04:54:13PM +0530, Vinod Koul wrote:
+> > 
+> > On Tue, 20 Jan 2026 09:37:02 +0800, Inochi Amaoto wrote:
+> > > As the DMA controller on Sophgo CV1800 series SoC only has 8 channels,
+> > > the SoC provides a dma multiplexer to reuse the DMA channel. However,
+> > > the dma multiplexer also controlls the DMA interrupt multiplexer, which
+> > > means that the dma multiplexer needs to know the channel number.
+> > > 
+> > > Change the DMA phandle args parsing logic so it can use handshake
+> > > number as channel number if necessary.
+> > > 
+> > > [...]
+> > 
+> > Applied, thanks!
+> > 
+> > [1/3] dt-bindings: dma: snps,dw-axi-dmac: Add CV1800B compatible
+> >       commit: 5eda5f42d2fee87127b568206a9fcc07a2f6eab6
+> > [2/3] dmaengine: dw-axi-dmac: Add support for CV1800B DMA
+> >       commit: 02a380ea7ed2d737a42693d7957ec8c33a92d9fd
+> > 
+> > Best regards,
+> > -- 
+> > ~Vinod
+> > 
+> > 
+> 
+> Hi, Vinod
+> 
+> I guess you applied the version 4, but replied to the version 3?
 
-Warning: include/linux/platform_data/dma-mcf-edma.h:35 struct member
- 'dma_channels' not described in 'mcf_edma_platform_data'
-Warning: include/linux/platform_data/dma-mcf-edma.h:35 struct member
- 'slave_map' not described in 'mcf_edma_platform_data'
-Warning: include/linux/platform_data/dma-mcf-edma.h:35 struct member
- 'slavecnt' not described in 'mcf_edma_platform_data'
+Nope, I had already picked 3. so reply went on that.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
----
-Cc: Frank Li <Frank.Li@nxp.com>
-Cc: imx@lists.linux.dev
-Cc: dmaengine@vger.kernel.org
-Cc: Vinod Koul <vkoul@kernel.org>
-
- include/linux/platform_data/dma-mcf-edma.h |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
---- linux-next-20260225.orig/include/linux/platform_data/dma-mcf-edma.h
-+++ linux-next-20260225/include/linux/platform_data/dma-mcf-edma.h
-@@ -26,8 +26,9 @@ bool mcf_edma_filter_fn(struct dma_chan
- /**
-  * struct mcf_edma_platform_data - platform specific data for eDMA engine
-  *
-- * @ver			The eDMA module version.
-- * @dma_channels	The number of eDMA channels.
-+ * @dma_channels:	The number of eDMA channels.
-+ * @slave_map:		Slave device map
-+ * @slavecnt:		Number of entries in @slave_map
-  */
- struct mcf_edma_platform_data {
- 	int dma_channels;
+-- 
+~Vinod
 

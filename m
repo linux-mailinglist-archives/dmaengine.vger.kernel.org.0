@@ -1,273 +1,298 @@
-Return-Path: <dmaengine+bounces-9122-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9123-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id x9NHB3uun2nvdAQAu9opvQ
-	(envelope-from <dmaengine+bounces-9122-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 03:22:51 +0100
+	id QP1iKG7Ln2nDdwQAu9opvQ
+	(envelope-from <dmaengine+bounces-9123-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 05:26:22 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D3981A0136
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 03:22:50 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D1CE1A0D6B
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 05:26:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AF45D301F9E8
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 02:22:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2626E30530FB
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 04:26:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2767530E0F8;
-	Thu, 26 Feb 2026 02:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F022B389E1D;
+	Thu, 26 Feb 2026 04:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="EZZHcRmY"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="riUud2EM"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11021081.outbound.protection.outlook.com [52.101.125.81])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012023.outbound.protection.outlook.com [40.93.195.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E87278753;
-	Thu, 26 Feb 2026 02:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7025F3876B9;
+	Thu, 26 Feb 2026 04:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.23
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772072568; cv=fail; b=C7r/uvgYopOlX/UDkmEqnsyyqwcn21jMLLXOzX6EhodSRcaTrbmGndybld+oa6tWRzPt9CQAKL77WshiBzB0UEFPPxw8ER10cFw6Yyl8g57ANWZ7WetF9rGGvcZ2HKGHrAF8wmAtlYm4UOrvnL3+ktF03EjCNs3VRnjFcJM0OD0=
+	t=1772079977; cv=fail; b=QSibykqtxrkms0jmEMcMj4D6vNlDeiCLN8WxOY3+UxWvG/5nmu5gfZ2U3guvfiJeiQkPATcEZIckcW7Kc0/YO/A+x1w7XCQRyxWBDO84db58SENd3FGmWoBuu3vUvXr7k5sSUiZN+5NFykmXXg2Zuv8nlQ2CJKhgD42mdc1mKkk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772072568; c=relaxed/simple;
-	bh=Q5oTp51x6kkhUCf5jMtDv66EiyDUTk8xrxGrzj+TKOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=r1ja6LhdYcQASRONBprdnymz3rrsF93UJBQxswBDsSD+hKeOJkrh7ZQ8Xryq+PjcP5xXKy3F1fzoOA41XmJDikeLuZz4l58Jlg5W7A5apGlDsm0psRIIpvwc3vymSVNRugAzLBdRWb/YjasKvQXCMMJQ0FupCroHw9lkvD16S3w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=EZZHcRmY; arc=fail smtp.client-ip=52.101.125.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
+	s=arc-20240116; t=1772079977; c=relaxed/simple;
+	bh=eFLMKFNewOrZSZJghNHfcWamL7iDC4V5a5yNIzzerCA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SIrWSDLC1SJdSrz8ZDhLqKjjSuCvUwC5i6SK7nDDtGpSPbCUKAL+qgKnJEXFEKzuSecJ60SZLiK19SmvJsOr3vWljH7jbCvjtbGl6/JE0o/JNVsjvNiG3xWaxJlQq+RX6/Nd8haeo/LGDSHWB34u4oD8mGJNpTqdwEBBGSjs3CQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=riUud2EM; arc=fail smtp.client-ip=40.93.195.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IUtCz0c2pNc41OKQ2McQFShrmjF+nSb+IU3Q26F9xYDLWh5pFV5yAMM4XbcBAVemePapW1MFvCLkDDsk2antGZrO7HzDESmQk0/11f4wYN0132AohNF3wYXJMgAySnPx9hz3SYkhWqjIaj7TsEwrWxCNUr6+EeoFaRJsvW/NHWG/YFSUXbypfYnKAk0OVoDTB0jEaj0ogGej+Mpg6OzS4ubyw3Vagxx1V1a6xug6GCATsa4cXA2jgD2FCpGF92CrZFoF+tFmlU/QO94wc5L7ry2CmpTBfQ0Pmixfv8jrNPJuMMN7AwVhcd/M9dVu7Z4tDmSJspkLUrtA3RijbVaEKw==
+ b=PLUpyvSbPZPlnpWygsTGIdX7F8Rl2/XaU0Ol9A09zxskfpEaxbe7Z1lHry56SqVRg3a1mVF1Es8QR9TFP1h+UbblrQhR2r+Mp8EQywlp82m9P8T6YShfvfLwO6wq2Jfpc5j8SaVjDEWpQlH3FSgDenEZoJH18196lZuWjQdq79ThLx61mwdlZE30xVZIc9C96ftMU8djGdFP1jOIYY4qicKSK5Dezsd+oTE25LNiKt7MDYcfviDyfffWOT+L76OVVo0dqc7PEbhwdKhMTTCcJQUVDtBHN7eRiGV/qWyVy8IBxi6lgJ5AA3gOQtkd0548P4jXGYT6DBgDAdlSiHucrg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6qOiChlAXH1FzXwCLqBw2AijsvpzWjMCUwfsn8OzPyw=;
- b=XD8ycj/jcB/i9JvnUN1NOdMeauSqZjBKvn9ecL18P2cIXZllC+IH5QJjPxwa5wyzxj6CJfQ+yDqLhILEAMMvvcjFJHTUz+jk7ptLd6f8xUmNuSJVkNt8cDnD8hat0qisv5V0sb0nzSwvYdKwaqZfmu84hHB8AQlnXrB9w+Mqks3msRw4cT3F8uogSo8zpcCRmFGilr3ij4MP+KceQj+VMKpljgvQU5Kn9INGWlhcPXPq0tyCBSmtBAo0HP5cc6753v65MKduzoif6M7D65FE4mGpG9k/wtBxLt8sLSZDCg5OFYnxZhE4skcIMhDEmypdFyt4D264QdRnrgGd6bjFyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
- header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
- s=selector1;
+ bh=Hj/YcneALDAihNyDc6HbJGPYU3niOFioRafpN17mLgw=;
+ b=S8NyKLStrR8RzVRhB/0Iee/Ni//kFZ/nUWq7CkPm8w7npZQgTFsqvwwrVqtp/O3rlu0UH1+3AvwkiQJTbYcXvrUzten309Ucz7XbXA2Sdf5iExG1ddhEipALYUbQf7IiKpBdObQZlK2c/68a3smygoHwETvV4wYozf4r4CsNkVF8UARy0t/fWciGhsOfA+r05w5uu2PwL0apOplTLqyaGRD26TI9gAmrN0d3Tt3nTFKbJjnPbq4ugtMfOqajKlB/9cAQ6uFePa61+tH9wns9w561sw7uJQlNs5axpXnmiy0vZsAW6gfm5rUdY73c7R+qfsCqPM9vkBwTgS7LYzM+Sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6qOiChlAXH1FzXwCLqBw2AijsvpzWjMCUwfsn8OzPyw=;
- b=EZZHcRmYWasUrRARe+vRqQyNXLH/AfZRS3abfzO/vfK/mKFVs49Qj6jFaNktLq2KbkrowzsRe9cWbLSBuuC+p4aHkjdSYikoDp+8UTZ8ECZYplySIvQpWMggNpa+Y+QrI5yWvXy9RjmpJGJ65BUDqvUNCP6ZG9QgoMzSPcCPe6c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=valinux.co.jp;
-Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
- by TYTP286MB3452.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:3a2::9) with
+ bh=Hj/YcneALDAihNyDc6HbJGPYU3niOFioRafpN17mLgw=;
+ b=riUud2EM72eaePb2XWJXDDyMR2ESJzFQL81JKImf8IgMnHlI3TrcGk8evxd8bxwFzLM3tiIOGwcpshPJvbHc8mF47RZnL+R2UQAbwN4MLPD1usc92RgB2NaWGkAaHzYdGBsj7THlF8+oUo08b2wFLOAuKBRz5I4xy5qkbNKzlJ+SWlgZz2mL9c921QDecZFImo5U2fnUXGpYV12OWmwREs88yCoTndDyk5udLOy14RQmXrKueXJrt6JHHzytapPNbhkCmuEAcTWG3lZpVtQ4GWM2btqOO+V7S073uNaYizkC1GqxCR6CMk6puQWw5VxdaoZ7JQmX2vCW7H8xvm/11w==
+Received: from BYAPR05CA0037.namprd05.prod.outlook.com (2603:10b6:a03:74::14)
+ by IA1PR12MB6602.namprd12.prod.outlook.com (2603:10b6:208:3a2::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.13; Thu, 26 Feb
- 2026 02:22:43 +0000
-Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.20.9632.017; Thu, 26 Feb 2026
- 02:22:43 +0000
-Date: Thu, 26 Feb 2026 11:22:41 +0900
-From: Koichiro Den <den@valinux.co.jp>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Christoph Hellwig <hch@lst.de>, Niklas Cassel <cassel@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, imx@lists.linux.dev
-Subject: Re: [PATCH v2 01/11] dmaengine: dw-edma: Add spinlock to protect
- DONE_INT_MASK and ABORT_INT_MASK
-Message-ID: <jjklzlblwbqleshgnhiedqioxskt45awph5rlkh5bymvitk3fq@blisaiwi3zor>
-References: <20260109-edma_ll-v2-0-5c0b27b2c664@nxp.com>
- <20260109-edma_ll-v2-1-5c0b27b2c664@nxp.com>
- <d7mh5d2amod6uzmzib4qnun46al73r77uljzhizq2v6w5ame4v@et65inoxhexa>
- <aZ8aUcV4RN2EL5n3@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aZ8aUcV4RN2EL5n3@lizhi-Precision-Tower-5810>
-X-ClientProxiedBy: TY4P286CA0093.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:405:369::9) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:405:38f::10)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.11; Thu, 26 Feb
+ 2026 04:26:09 +0000
+Received: from SJ1PEPF000026C7.namprd04.prod.outlook.com
+ (2603:10b6:a03:74:cafe::50) by BYAPR05CA0037.outlook.office365.com
+ (2603:10b6:a03:74::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.0 via Frontend Transport; Thu,
+ 26 Feb 2026 04:26:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ SJ1PEPF000026C7.mail.protection.outlook.com (10.167.244.104) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9632.12 via Frontend Transport; Thu, 26 Feb 2026 04:26:09 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 25 Feb
+ 2026 20:25:58 -0800
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.20; Wed, 25 Feb 2026 20:25:57 -0800
+Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
+ Transport; Wed, 25 Feb 2026 20:25:54 -0800
+From: Akhil R <akhilrajeev@nvidia.com>
+To: <jonathanh@nvidia.com>
+CC: <Frank.Li@kernel.org>, <akhilrajeev@nvidia.com>, <conor+dt@kernel.org>,
+	<devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+	<frank.li@nxp.com>, <krzk+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-tegra@vger.kernel.org>, <p.zabel@pengutronix.de>, <robh@kernel.org>,
+	<thierry.reding@gmail.com>, <vkoul@kernel.org>
+Subject: Re: [PATCH 6/8] dmaengine: tegra: Use iommu-map for stream ID
+Date: Thu, 26 Feb 2026 09:55:52 +0530
+Message-ID: <20260226042553.51940-1-akhilrajeev@nvidia.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <ffbcc3e4-d116-4b23-a584-0e9fc864461f@nvidia.com>
+References: <ffbcc3e4-d116-4b23-a584-0e9fc864461f@nvidia.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TYTP286MB3452:EE_
-X-MS-Office365-Filtering-Correlation-Id: af2fd275-3d20-43f6-e244-08de74ddec13
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C7:EE_|IA1PR12MB6602:EE_
+X-MS-Office365-Filtering-Correlation-Id: f15a7603-4a26-4927-1466-08de74ef2a8c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|10070799003|7416014|1800799024|7053199007;
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7416014;
 X-Microsoft-Antispam-Message-Info:
-	BLE7sOxPQQw8jPe5MMCWhgDT8lqBtYEaOT284U+ztr4/uS86vsKuttJw/1pFNzqnAYvB16tLePGjWRfPbtaOF0MQfpoMQJmlg5W3HDSQDS5EC6NFemThqmQ3mssSjcn4ghFeHZri+khK3vU1s0pKgnzcIADDyHIVK/r5zQj5Z+w1e8oltevbzqqF8MKGHyPGVKUWMaKR8+d7gKGCtgQP/V1pl5IjyZAanAdn0UXwQRrOinEtZacUHd5vTEAQdfbVplNW9r3vqHgBF8mES+XQDRtmv+omggQgu3KLF3tEDUuumgL/wXc/p+jzgOSlzSRie2+AIw8pNfULerg5VOE6Mryu9tEjlQwHHukoneixGeO+zHQYICCN89R59o9kTZHYhrvtvVtOn3CG2/G0DsZyNPF0MZZcwLrU+TpEtcy7/FnrdjiLXzwy1HDwCV76apzu2zl7B1eLvMQIZBFVGJ28RwjckAuPhuSFPvRccotl6mBBKJsDnCHt/BCL9hhQE1rmY5Lsdxayj9Nqdavz4/XHoL17ctCxMz89WFq00eb5LVb07ZzaTyYlJBAk6sHg5Vs6SRA4hiTOf8M5DKNbclfyiQVtNIYvXx5K0OAK0l3J9niz4RPXl4HhKHGYVZNrDS8mS6+wFV3NE7ZCOBMxKQ3IsbU5ABxRdGR/sPRu/Qe317dwQO1Bt0sbvoB8l/mISxeFY2cDlZUYG3PRFcmDTmGj1SKgUfDYTl5rkhUNtidU0Fs=
+	4J2qytndZy5a54uGX0cGwRpiqChapPaglptIIJbueWSaNGF71oB7uCB9cmMIzUlv8AzT5QAXvo6lLr4IgpRBZuTbEI7RCAZkacPJj1fKcf8ixcjCd5ovveQEYP1wn9y1jBNj39v7O6WcgX4fiCiq8BUUBitV3CAEFv7i1mFpLvc50sTQg2IO07hOLoeJG9dbmjILX4rMu1AE+FGO9M3HzNqqcihN5tzZnZ3bP6oCeUsqaW7ZGPfR/G4Z7OlGCxdUFbkJeZutg9bUMMDzsHejl6pJ2xqZ0XYp7cN/36HxHkemVpD8M1jljlMiHaxUZX/UY+mVo1VdW+6e3/xyqaugErIYCj3uT1Em5FRSys06E9BiLVwDEgFd6WtYDtcf16Vjz3lHdorZLcS5jM8ORxa60v2t8FYTNPdenmsXQ2CNbmq3CehwopJAD1+tQrDqv5Ek24XMvRjfKrWIfTORxFp3HuApXizQp+q55xP1zOTDRPXY6pSLTcPqRFBuTMo8+wXTUBE0qVRvT+5M0GM6U3xkAV1GNiX+ZDcWjBIW9D+1IG4Lc7UAQHMDQXzy8NTqt7MHdovxx+1MYsIpzd8SZMEKpzm6YhBGDqhoDTq3WEk+z744ioKspizDlmm1SsKIk3CU0OVhmzHh4ADs1w150mXmt68KZRe1H6nNW2MJcsa8DvWi/l/IGM67MeWOGVVwcJY7oVyjTskFwsuWEwsuR3jkW9SSkx6W8iEbbcicuaYwNoJSu24sH4pE4TmJwYCtQunDetSp1f/FM3qkKnnldOw2GI91L+4GpCaObAJ3JtW7kh7+wi/xIW+lMKWO3fIE4T5otla5SgXqfX/JHT/tG8W5fQ==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(10070799003)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1102;
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?w0UHzdeTRAUEZ3z0DiAJWG9i1GwjIQu2zf4kTyzEcNJ101CCaI6+FTVb2dXM?=
- =?us-ascii?Q?F/UV2UIGDOSBycNfMRrq3FooC/KES8zV0Z9g84Lc3qnV3VLZsPBbSy2cIQ8o?=
- =?us-ascii?Q?X3SaFze9W6oD2uFzlZpdF000fSsBNQovkdynorcUOJsAhw7WJqv2qt510hj0?=
- =?us-ascii?Q?XDPSk3mqIMi5dhCowuhd/+DTt85swtmM+fhyGHBiatrYhyeRyJOgV+f4rUKy?=
- =?us-ascii?Q?rwJDMogtltg4MFjsoA8IHtmY7rYQQMAljiJmqfXPY61c8bjLjqHwYI1/Yt0h?=
- =?us-ascii?Q?n2/FfQNhEFmnUCB2eUM9FPCLAFYQyDFBk6abvBea4UKSy2w5UpHRwpbaDmlp?=
- =?us-ascii?Q?rLHiGMBv+paw0NqdpGDvaci220LX9ey2mCNlFzEP/Xje85VMMts47yCt2pJS?=
- =?us-ascii?Q?/qMKWXgk2lhMPabYFjvwv2Lt6PxPZO49eWtB/2V4GVI1bC4y91c72ksCEaCA?=
- =?us-ascii?Q?q/0wlCihuriujPflGVlz1g3WfR29Eb2O5amDz92fJbTXGMarP1ZTJme4XV2j?=
- =?us-ascii?Q?mp+nXNS2e+DSx+3knMuK26s0gfSdLHWl+hgW6CpWW97z4Y1bgKC1ZADRbSFp?=
- =?us-ascii?Q?7GqiV5C/O24Tw/zEQy5FhvBZW4mq7gD8vFaOAKBbshJ7fAjLxT+qX5cmIunb?=
- =?us-ascii?Q?F75F6SZRSVRciIBcGmUhCoRtXu03JJmj70gTpwA4ccJg75fCtvogZO//sQPk?=
- =?us-ascii?Q?5PrTHK53gjz6gMKaTzsXkIt4qAt0SbvpaCuSRaOZSg2l/R3ZRt7MvI9rDnJd?=
- =?us-ascii?Q?VBnW6qIJURxFlUA3Bf9wiyCR3/tzeXw+ToCzq6QFL1kBzilLQITcZ6jCuE/T?=
- =?us-ascii?Q?cFxe2qwkOpoZ/0BliisHDQeA7TQB+mgZEXtiFTo62fGKUxMHL2KoGSTMRibl?=
- =?us-ascii?Q?nPm1vESSi5rPd5G0IpJbDdflCxZfKlfSFk7MdXeltWKk43htF/J3TMnBsk3Z?=
- =?us-ascii?Q?lrGzanXueERN331VBZzfwcGH5ZLi4q2v9PXO7b5K9EJ6AnjeJZBo+oaaLMch?=
- =?us-ascii?Q?YlvtjInDxzsAakVeQfH3wr4iTm84W7mhdZxhRCWVfAZKBUzWA8zk7CzMMHY/?=
- =?us-ascii?Q?mOsNK6wkHytB7GHxmKz8MX41c5QqE5S+kGp2OLwUEYa5UcxlRdeHLh8waRgw?=
- =?us-ascii?Q?EeYWtEjc5yMcC0OdqFRuEiUvqsjpNepAFbPhxNwGPMF4QD4ywReZG7wM1Dp2?=
- =?us-ascii?Q?0dYfUdITClSYtIwvVxFC6v+K1PQ8QpTh4opattQDsVD1EcWpaHdugpAPC5SS?=
- =?us-ascii?Q?LyyfumtQIfzzH85j8fXab3a5s/MZ2QLotc8k4TdTU8LBFRrtwvT7e+vOW8wa?=
- =?us-ascii?Q?gCIrP/wg9jzgPNpPSDwqEzlTkR0xEQfqDNypa9JmZCqbXxojb7eLddU3+vEv?=
- =?us-ascii?Q?YWRetlcXESq/0RbJTuGRTwsPXYyg8nMNfU8f/hP3XYput2Kg3g71TcUVrvtV?=
- =?us-ascii?Q?3aj+nC5QlKNk32tvw8edgmi3SPUsxv/4gmhMgg6QExuEbk+WnkvQVX2ehF2J?=
- =?us-ascii?Q?M14Vaz/KkrszdXS0V082jZBAD5o28X0ONy7IdOBbGt6YzB248ZIkYFXKCbYk?=
- =?us-ascii?Q?0FY/mU4T0xPD8H0kLkzZ9vbbv86Spkw49ZTKhNpJk2yl2UJMbq786SkLJpRM?=
- =?us-ascii?Q?wsQfseZtVGGJrAO+oCi8sNUg+PV4KTo8ZJ7yLV0cP85RFgrNRsHIao+J5kor?=
- =?us-ascii?Q?JMBhlkqZ8yKatkg75zxqgWlo3JAMliGYV7/+bAHioQVWCMVZik7DZ50Fi2DL?=
- =?us-ascii?Q?zGsImcTC0N83HLVaZQOdnRK69srJjKmdqeX4FoX4dJx0G0UvEUVi?=
-X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: af2fd275-3d20-43f6-e244-08de74ddec13
-X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 02:22:43.1179
+	InXXOpn1jTFkmqes4+0gXxPFNAn4ppiGtVwpHiG6NXPM3cM6Pf3je1QL4KZz3KehoVqQ9FZ0QMrfoV2zhf21oIWgJTJGDrVfL6CjyimEESHY805pW2RWunHgFMxtll//lED4Vury84Oy433SGTYchTxLuVXm/JENuXzNKeYTo+sWzNTr41JPYJ91Iy3uYYvQCgppu1t9HM7YfmLHEBCFHrMbz1RW4U6FVnQ7SH3+0yvX6cHtffc4k1SyRvL0MOoiPJ9Dhv8WdiearU2afRv2uOE6vFrHwy+IiTcrw+kPpZGiqelJeMSo3KpZqwfclhFVLVSYL7IwCiHvuFYSXDsXeZuIlKOXzLLzGnLNpPp6m58P39Ujx5YJ/ZNhLrt5wwaPKg/ZgsxUabUWmvNpxDBh0nMuf0OJDp2+adVv/I1OJwyicc5Dg6TAbdlIwtmUOV0l
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 04:26:09.2689
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S7w6Z+9DVZ0p+WF39PQ1j3TriZvYRUvpTmJc2XYvDqa+jKZfsmeTHvTL3Kh8JajVBk86Qs/rB+gb34DkJFsA4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYTP286MB3452
+X-MS-Exchange-CrossTenant-Network-Message-Id: f15a7603-4a26-4927-1466-08de74ef2a8c
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000026C7.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6602
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-Spamd-Result: default: False [2.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9122-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,nvidia.com,vger.kernel.org,nxp.com,pengutronix.de,gmail.com];
+	TAGGED_FROM(0.00)[bounces-9123-lists,dmaengine=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[valinux.co.jp:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:email,valinux.co.jp:dkim]
-X-Rspamd-Queue-Id: 5D3981A0136
+	FROM_NEQ_ENVFROM(0.00)[akhilrajeev@nvidia.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[Nvidia.com:+];
+	TO_DN_NONE(0.00)[];
+	NEURAL_HAM(-0.00)[-0.975];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,Nvidia.com:dkim];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	RCVD_COUNT_SEVEN(0.00)[9]
+X-Rspamd-Queue-Id: 0D1CE1A0D6B
 X-Rspamd-Action: no action
 
-On Wed, Feb 25, 2026 at 10:50:41AM -0500, Frank Li wrote:
-> On Wed, Feb 25, 2026 at 05:26:02PM +0900, Koichiro Den wrote:
-> > On Fri, Jan 09, 2026 at 10:28:21AM -0500, Frank Li wrote:
-> > > The DONE_INT_MASK and ABORT_INT_MASK registers are shared by all DMA
-> > > channels, and modifying them requires a read-modify-write sequence.
-> > > Because this operation is not atomic, concurrent calls to
-> > > dw_edma_v0_core_start() can introduce race conditions if two channels
-> > > update these registers simultaneously.
-> > >
-> > > Add a spinlock to serialize access to these registers and prevent race
-> > > conditions.
-> > >
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > > vc.lock protect should be another problem. This one just fix register
-> > > access for difference DMA channel.
-> > >
-> > > Other improve defer to dynamtic append descriptor works later.
-> > > ---
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> >
-> > Hi Frank,
-> >
-> > I'm very interested in seeing the work toward the "dynamic append" series land,
-> > but in my opinion this one can be submitted independently.
+On Wed, 25 Feb 2026 11:23:08 +0000 Jon Hunter wrote:
+> On 25/02/2026 10:27, Akhil R wrote:
+>> On Tue, 24 Feb 2026 16:59:44 -0500 Frank Li wrote:
+>>> On Tue, Feb 24, 2026 at 11:55:43AM +0530, Akhil R wrote:
+>>>> On Tue, 17 Feb 2026 14:52:17 -0500, Frank Li wrote:
+>>>>> On Tue, Feb 17, 2026 at 11:04:55PM +0530, Akhil R wrote:
+>>>>>> Use iommu-map, when provided, to get the stream ID to be programmed
+>>>>>> for each channel. Register each channel separately for allowing it
+>>>>>> to use a separate IOMMU domain for the transfer.
+>>>>>>
+>>>>>> Channels will continue to use the same global stream ID if iommu-map
+>>>>>> property is not present in the device tree.
+>>>>>>
+>>>>>> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+>>>>>> ---
+>>>>>>   drivers/dma/tegra186-gpc-dma.c | 62 +++++++++++++++++++++++++++-------
+>>>>>>   1 file changed, 49 insertions(+), 13 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
+>>>>>> index ce3b1dd52bb3..b8ca269fa3ba 100644
+>>>>>> --- a/drivers/dma/tegra186-gpc-dma.c
+>>>>>> +++ b/drivers/dma/tegra186-gpc-dma.c
+>>>>>> @@ -15,6 +15,7 @@
+>>>>>>   #include <linux/module.h>
+>>>>>>   #include <linux/of.h>
+>>>>>>   #include <linux/of_dma.h>
+>>>>>> +#include <linux/of_device.h>
+>>>>>>   #include <linux/platform_device.h>
+>>>>>>   #include <linux/reset.h>
+>>>>>>   #include <linux/slab.h>
+>>>>>> @@ -1403,9 +1404,12 @@ static int tegra_dma_program_sid(struct tegra_dma_channel *tdc, int stream_id)
+>>>>>>   static int tegra_dma_probe(struct platform_device *pdev)
+>>>>>>   {
+>>>>>>   	const struct tegra_dma_chip_data *cdata = NULL;
+>>>>>> +	struct tegra_dma_channel *tdc;
+>>>>>> +	struct tegra_dma *tdma;
+>>>>>> +	struct dma_chan *chan;
+>>>>>> +	bool use_iommu_map = false;
+>>>>>>   	unsigned int i;
+>>>>>>   	u32 stream_id;
+>>>>>> -	struct tegra_dma *tdma;
+>>>>>>   	int ret;
+>>>>>>
+>>>>>>   	cdata = of_device_get_match_data(&pdev->dev);
+>>>>>> @@ -1433,9 +1437,12 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>>>>>>
+>>>>>>   	tdma->dma_dev.dev = &pdev->dev;
+>>>>>>
+>>>>>> -	if (!tegra_dev_iommu_get_stream_id(&pdev->dev, &stream_id)) {
+>>>>>> -		dev_err(&pdev->dev, "Missing iommu stream-id\n");
+>>>>>> -		return -EINVAL;
+>>>>>> +	use_iommu_map = of_property_present(pdev->dev.of_node, "iommu-map");
+>>>>>> +	if (!use_iommu_map) {
+>>>>>> +		if (!tegra_dev_iommu_get_stream_id(&pdev->dev, &stream_id)) {
+>>>>>> +			dev_err(&pdev->dev, "Missing iommu stream-id\n");
+>>>>>> +			return -EINVAL;
+>>>>>> +		}
+>>>>>>   	}
+>>>>>>
+>>>>>>   	ret = device_property_read_u32(&pdev->dev, "dma-channel-mask",
+>>>>>> @@ -1449,7 +1456,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>>>>>>
+>>>>>>   	INIT_LIST_HEAD(&tdma->dma_dev.channels);
+>>>>>>   	for (i = 0; i < cdata->nr_channels; i++) {
+>>>>>> -		struct tegra_dma_channel *tdc = &tdma->channels[i];
+>>>>>> +		tdc = &tdma->channels[i];
+>>>>>>
+>>>>>>   		/* Check for channel mask */
+>>>>>>   		if (!(tdma->chan_mask & BIT(i)))
+>>>>>> @@ -1469,10 +1476,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>>>>>>
+>>>>>>   		vchan_init(&tdc->vc, &tdma->dma_dev);
+>>>>>>   		tdc->vc.desc_free = tegra_dma_desc_free;
+>>>>>> -
+>>>>>> -		/* program stream-id for this channel */
+>>>>>> -		tegra_dma_program_sid(tdc, stream_id);
+>>>>>> -		tdc->stream_id = stream_id;
+>>>>>>   	}
+>>>>>>
+>>>>>>   	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(cdata->addr_bits));
+>>>>>> @@ -1517,20 +1520,53 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>>>>>>   		return ret;
+>>>>>>   	}
+>>>>>>
+>>>>>> +	list_for_each_entry(chan, &tdma->dma_dev.channels, device_node) {
+>>>>>> +		struct device *chdev = &chan->dev->device;
+>>>>>>
+>>>>> why no use
+>>>>> 	for (i = 0; i < cdata->nr_channels; i++) {
+>>>>> 		struct tegra_dma_channel *tdc = &tdma->channels[i];
+>>>>
+>>>> I thought this would ensure that we try to configure only the channels
+>>>> where the chan_dev and vchan are initialized. I understand that it is
+>>>> not probable in the current implementation that we will have channels
+>>>> which are uninitialized, but I felt this a better approach.
+>>>> Do you see any disadvantage in using the channels list?
+>>>
+>>> not big issue, just strange, previous code use
+>>> for (i = 0; i < cdata->nr_channels; i++) {
+>>> }
+>>>
+>>> why need enumerate it again and use difference method.
+>> 
+>> I think we will not get to use chan->dev->device before
+>> async_device_register() and thats why I added a separate loop to
+>> configure the channels.
 > 
-> This patch serial is actually straight forwards. we can ask vnod pick first
-> one in case have other problems. put together to reduce patch's dependency.
+> I assume that this needs to be done after the async_device_register()? 
+> If so we should note that in the commit message to explain that we need 
+> a 2nd loop. Unless we can move the 1st loop after the 
+> async_device_register() and just have one loop?
 
-Yes, I see.
-
-My understanding is that the originally planned dependency chain was:
-
-  #1->#2->#3
-
-#1 [PATCH v2 0/8] dmaengine: Add new API to combine onfiguration and descriptor preparation
-   https://lore.kernel.org/dmaengine/20251218-dma_prep_config-v2-0-c07079836128@nxp.com/
-#2 (this series)
-#3 [PATCH RFT 0/5] dmaengine: dw-edma: support dynamtic add link entry during dma engine running
-   https://lore.kernel.org/dmaengine/20260109-edma_dymatic-v1-0-9a98c9c98536@nxp.com/
-
-I'm not sure whether #1 will proceed, as the thread appears to have stalled. I
-might be missing something, though. In any case, #1 is semantically orthogonal
-to #2, so I believe #2 can be considered independently.
-
-Thanks,
-Koichiro
+dma_dev.channels is populated by vchan_init(). So, the first loop must
+exist before async_device_register(). If we have to restrict to one loop,
+we would need to use dma_async_device_channel_register() to register the
+channels within this driver directly. I feel having a second loop is
+better than trying to restrict it to one.
 
 > 
-> Frank
-> >
-> > Even in the current mainline, under concurrent multi-channel load, this race can
-> > already be triggered.
-> >
-> > Also, with this patch, dw->lock is no longer "Only for legacy", so we should
-> > probably update the comment in dw-edma-core.h.
-> >
-> > Best regards,
-> > Koichiro
-> >
-> > >
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > index b75fdaffad9a4ea6cd8d15e8f43bea550848b46c..2850a9df80f54d00789144415ed2dfe31dea3965 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > @@ -364,6 +364,7 @@ static void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> > >  {
-> > >  	struct dw_edma_chan *chan = chunk->chan;
-> > >  	struct dw_edma *dw = chan->dw;
-> > > +	unsigned long flags;
-> > >  	u32 tmp;
-> > >
-> > >  	dw_edma_v0_core_write_chunk(chunk);
-> > > @@ -408,6 +409,8 @@ static void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> > >  			}
-> > >  		}
-> > >  		/* Interrupt unmask - done, abort */
-> > > +		raw_spin_lock_irqsave(&dw->lock, flags);
-> > > +
-> > >  		tmp = GET_RW_32(dw, chan->dir, int_mask);
-> > >  		tmp &= ~FIELD_PREP(EDMA_V0_DONE_INT_MASK, BIT(chan->id));
-> > >  		tmp &= ~FIELD_PREP(EDMA_V0_ABORT_INT_MASK, BIT(chan->id));
-> > > @@ -416,6 +419,9 @@ static void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> > >  		tmp = GET_RW_32(dw, chan->dir, linked_list_err_en);
-> > >  		tmp |= FIELD_PREP(EDMA_V0_LINKED_LIST_ERR_MASK, BIT(chan->id));
-> > >  		SET_RW_32(dw, chan->dir, linked_list_err_en, tmp);
-> > > +
-> > > +		raw_spin_unlock_irqrestore(&dw->lock, flags);
-> > > +
-> > >  		/* Channel control */
-> > >  		SET_CH_32(dw, chan->dir, chan->id, ch_control1,
-> > >  			  (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
-> > >
-> > > --
-> > > 2.34.1
-> > >
+>> I can add a comment on why we need this loop. Do you suggest
+>> changing it to a for-loop itself? Let me know your thoughts.
+> 
+> If using the list avoids the following check, then probably good to keep 
+> as is, but yes explain why we do it this way.
+> 
+>   /* Check for channel mask */
+>   if (!(tdma->chan_mask & BIT(i)))
+>           continue;
+
+Yes. Using dma_dev.channels avoids the above check. I will describe this
+better in the commit message and as comments.
+
+Regards,
+Akhil
 

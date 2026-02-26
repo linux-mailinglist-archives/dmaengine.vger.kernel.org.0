@@ -1,157 +1,154 @@
-Return-Path: <dmaengine+bounces-9135-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9136-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6KnjG3OioGlVlAQAu9opvQ
-	(envelope-from <dmaengine+bounces-9135-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 20:43:47 +0100
+	id 4NyVDEmpoGnilQQAu9opvQ
+	(envelope-from <dmaengine+bounces-9136-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 21:12:57 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8593D1AE965
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 20:43:46 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 880E71AEEBA
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 21:12:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D51703002B67
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 19:43:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 299AF3130FC4
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 20:07:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF7A942B737;
-	Thu, 26 Feb 2026 19:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73FE44657F9;
+	Thu, 26 Feb 2026 20:06:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBUstrVD"
+	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="h9S+qVYj"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5570D3B5303
-	for <dmaengine@vger.kernel.org>; Thu, 26 Feb 2026 19:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23435472773;
+	Thu, 26 Feb 2026 20:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772135022; cv=none; b=u5CLrA9OU2OcKo037Qx28ED7emX0mh6xmE0GewdWKmniS0Qbd+JpmL7/pv8rFImG8GxU2/YtKi6m/Ol+2yfkVe0n+8uENrNUdA/R7Xx62mkPKthXndEE52S7W/R+X4FIBt5wcLZE8xa9Pxpj4VAXdfaxSzss7DtZ4kE92rirkcg=
+	t=1772136394; cv=none; b=qBm8j0xrF/bDNqs0qMyXyZAcwNFH2YWLsmbhejDqT5aHVA5OgfWpiCzKukSNQ4SfSJnHyiJNCNK5dyFRAyOV2AEWKCdsyiD8p9C9ASNpCJv5myxfCbX5F6rUzhQNEHg11++hzBSzzBKIEwaSuq/brmWkwqREucUSqimtIkqzzkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772135022; c=relaxed/simple;
-	bh=KsIDUmCbm8ycOJF0wmH++ZInq+LAYBBS4hDDp4hu1Y8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aZ5X4BAkSSXHJuK0oRZOXQ3zsXQoQ9wxknz83mKsWQTg3VPZ80g5HG+TIsWgmIQ9uCJaVKnK7aVWBJbkbAauz/5jFKeNZN3aHwBg1GcyFFoOIXO2mTDj1B+WWQBMTjepGSdcr7782htQiyvvpRedpVmqk7LlvWcPFhUMplV+rO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBUstrVD; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-4398913af88so1122635f8f.2
-        for <dmaengine@vger.kernel.org>; Thu, 26 Feb 2026 11:43:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772135020; x=1772739820; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IVb2KwRi5Vzg4eql9FYlq5xGm1WE+ci+AdR3AsLLeHc=;
-        b=HBUstrVDBuIlAwmiQBFwl/u/oJH/KMV4w5Hc8TvMcqKWj6Jsu9bjlemJbmGNl5RBPL
-         OxXXvyEbqtTOSUmM99lQFgQQTr4uhx6yesWRpWA4xJUi/hfM0U2dPIoqL1oCiPlHE4lL
-         PF2jS2+rdWJVL0vraqCahhPZWYt/ZNDQ4z3Qhide9DS1LEkVVrJJtrcL+z0eepU7NsXW
-         vttTLaKBbmeo6RANvMMJ8w70DqgOwFhlHoS23iwfRuiyezTfCZF/qUIYP+EuGzhk57N+
-         EhRRPg6N6T8OBeqr9XhZRjULQflflCqyj5HLzX4TR0P/yR4lNIzPwtIJKwGdW8Xil5P0
-         /zBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772135020; x=1772739820;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IVb2KwRi5Vzg4eql9FYlq5xGm1WE+ci+AdR3AsLLeHc=;
-        b=m3tbShyDeXEhpO0tR7FMIx4aJOIWI1NlJA2+xzphRserYK+gfeASoLd+7M7jovYz4z
-         0YTcGXOEiWtlChKaggQaB9KOXIHKYZ8Vo67fC9xtS1GXWC3RoZRZnHGKW7xVBFaeZGP7
-         XE6bNqlMfaAIFs23m6boc3KxNR8j7Ju16ydTxkE3TRsct+8Lt7Zqid7XYI6345669o+C
-         mx5Pwbbg3on3vgsKm3XCdkJ39bzuWi/BvZS5N6wsAlUKkIsRmkp4x8TDf8X9C2d51Jci
-         HcAskwQIjkRJhx5y5G1hfdTtwwbXmnHw8bmFMEpWqqp3enxh9xXBUm9B9QAAC0dEiHYt
-         L3UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWEuglZoVbCpgva7lbsQTwrTHHcn/4VlbIomJMgKXR3u5tOMnukYdS+pVYQ2gahziKy1ulZfsr/ipU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIcRypmsSp6e5aOxgmRHf1TYJQuLeszkiQeV0zz0fJZZb9GcYD
-	Y2zqxKqLfG3HvCMksIua+QizrMkW9/KBuJe3G6ed48v1HrsOprx+0oLh
-X-Gm-Gg: ATEYQzwCoSuR/xsL3KJF/t5U068JDKZSOJGW1OruQG+gdn9K4VTGi2Cvc+Qe8okvcpL
-	z1qy8BhzKrb3W3yoveUe51gPt8SrNY/Nq1jJPTdBtAqi0/ng+8CixOevj6H+usye31fT9A1VYdJ
-	ebCtMStLeBf6rXVa07YsxBRXDjxZOWLyqgmmVZejbOVo6gKhK2xvW81NGDczxmrnPndgSejKXJg
-	SD9K5BmDZMUp3qpl5Art4lBuRF0/r9g7XzhYKbN5oNXW3d+Gu/PHbcJR0qFPsTe1nO5RmWpiIZt
-	BrTpVbG6/qNjOsfw5nbs61MUTBOsF07gzcNYdnMVCUiri4sAVAOWTSFzDPZW/oYkJgdL3UbuoJe
-	qpPRClLegTZwVdPW2cs9vMf4m4ZYrl1LJHC63Hj62EmUKDRlNSzSWb6P/I3syUH/XwGIEDXxXXw
-	mktE1qDQ2Y5pxv6JIFv20Sj8EDLnMGlP0hDfs+4u8iGqCljcPqX/lIAPShZ4RiCYZ+CH3ZSR5+
-X-Received: by 2002:a5d:584f:0:b0:430:f985:a7b2 with SMTP id ffacd0b85a97d-4399de38167mr18364f8f.51.1772135019469;
-        Thu, 26 Feb 2026 11:43:39 -0800 (PST)
-Received: from ideapad (ip-095-222-030-189.um34.pools.vodafone-ip.de. [95.222.30.189])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4399c70e8e8sm1532704f8f.10.2026.02.26.11.43.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Feb 2026 11:43:39 -0800 (PST)
-Date: Thu, 26 Feb 2026 20:43:36 +0100
-From: Alexander Gordeev <a.gordeev.box@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Frank Li <Frank.li@nxp.com>, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] dma: DMA slave device bringup tool
-Message-ID: <aaCiaMi5HV3dJNv7@ideapad>
-References: <20260221132248.17721-1-a.gordeev.box@gmail.com>
- <aZ4njFwdYsMLTcSa@lizhi-Precision-Tower-5810>
- <aZ7CwvrgPMkzMouW@vaman>
- <aZ9lL6-Q07PryHqN@ideapad>
- <aZ_xQ8jk049d1OgW@vaman>
+	s=arc-20240116; t=1772136394; c=relaxed/simple;
+	bh=rbEs8dxzXbyXsx8YK4dlXjrGx2Ow+1Um/bUSwRd3lJE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=N2kTxbkAFlKN8M0QCkUYGrEvQ0eOMkYJn0gx4XidZ+UVWklsFWsEFAb9f36m8mE+GRQEzKxk7KjilNZ8vgyyTZ3XwtDo8KsPis259zOKuWj0z6JVOZSi5vSqTroOP71is4MMGr2Wpg9ON701+zWeSSM64v2FqAuZ9xzszru/gZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=h9S+qVYj; arc=none smtp.client-ip=195.201.215.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=folker-schwesinger.de; s=default2212; h=In-Reply-To:References:To:From:Cc:
+	Subject:Message-Id:Date:Content-Type:Content-Transfer-Encoding:Mime-Version:
+	Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=eCF8FWWOPs/3jZyvVWyjhhPvbHufnb1Suj0O602BVrM=; b=h9S+qVYjNEMQ6kGtSE0q8TcTUh
+	BGyh8q1C4GjmMVF0102QFSNsuohfUtgqn5fgkgjC9ui/Q1fvua51GzqsFnm/ZAlQkgTr4tJlJhQeK
+	kA9whG67+KnM0jGqdjiEB8Yp337rBz2YegWRzyG8YrRidZ1DGR7NQw1gXoMG+Xl5h/hc2/TMJyzvM
+	wxwHkkdTx39ifFTymK744ARG3V/Ct/GEZzLB811u+tVQSFUDaZ4EkKL5pCjx9Ug/y2M8PbmBruCMC
+	zZ8EYCt+6dMjgL8wWjDNoI9w1k4r4WBVHsTHqcqiBpPNlFoO42qlC2E5XiFW9HwLuBcn8/9sMtWfC
+	DIwEYbUw==;
+Received: from sslproxy07.your-server.de ([78.47.199.104])
+	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1vvhci-000PKH-1n;
+	Thu, 26 Feb 2026 21:06:12 +0100
+Received: from localhost ([127.0.0.1])
+	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1vvhcg-0009t4-2f;
+	Thu, 26 Feb 2026 21:06:11 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aZ_xQ8jk049d1OgW@vaman>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 26 Feb 2026 20:06:07 +0000
+Message-Id: <DGP5WW6SNUHY.2E1CSUTEDRM4M@folker-schwesinger.de>
+Subject: Re: [RFC PATCH] dmaengine: xilinx_dma: Fix per-channel direction
+ reporting via device_caps
+Cc: "Rahul Navale" <rahul.navale@ifm.com>, <dmaengine@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <vkoul@kernel.org>, <Frank.Li@kernel.org>, <michal.simek@amd.com>,
+ <suraj.gupta2@amd.com>, <thomas.gessler@brueckmann-gmbh.de>,
+ <radhey.shyam.pandey@amd.com>, <tomi.valkeinen@ideasonboard.com>,
+ <marex@nabladev.com>, <marex@denx.de>
+From: "Folker Schwesinger" <dev@folker-schwesinger.de>
+To: "Rahul Navale" <rahulnavale04@gmail.com>
+X-Mailer: aerc 0.21.0-119-g0a449d4a7ff3
+References: <DGHGTCJRRZCW.9TGXQW44V6RR@folker-schwesinger.de>
+ <20260226073512.4595-1-rahulnavale04@gmail.com>
+In-Reply-To: <20260226073512.4595-1-rahulnavale04@gmail.com>
+X-Virus-Scanned: Clear (ClamAV 1.4.3/27924/Thu Feb 26 08:24:13 2026)
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[folker-schwesinger.de,none];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[folker-schwesinger.de:s=default2212];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9135-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9136-lists,dmaengine=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	DKIM_TRACE(0.00)[folker-schwesinger.de:+];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[agordeevbox@gmail.com,dmaengine@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dev@folker-schwesinger.de,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8593D1AE965
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,folker-schwesinger.de:mid,folker-schwesinger.de:dkim]
+X-Rspamd-Queue-Id: 880E71AEEBA
 X-Rspamd-Action: no action
 
-On Thu, Feb 26, 2026 at 12:37:47PM +0530, Vinod Koul wrote:
-> > I likely missing something, but how this differs from dmatest, which also
-> > lacks any controller-specific setup?
-> 
-> slave dma needs a peripheral to test. For example a spi/i2c etc
-> dmaengine in slave mode will not work untill unless there is some
-> signalling for dmaengine from peripheral to push/pull data.
+Hi Rahul,
 
-Well, the idea is to trigger xfers using custom out-of-band tooling.
+On Thu Feb 26, 2026 at 8:35 AM CET, Rahul Navale wrote:
+> root@pdm3:~# aplay closetoyou.wav
+> Playing WAVE 'closetoyou.wav' : Signed 16 bit Little Endian, Rate 48000 H=
+z, Stereo
+>
+> aplay: pcm_write:2178: write error: Interrupted system call
+> root@pdm3:~# aplay closetoyou.wav root@pdm3:~# dmesg | grep xilinx_dma_de=
+vice_caps
+> [    0.318827] xilinx_dma_device_caps: caps->directions =3D 0x00000001
+> [    0.318832] xilinx_dma_device_caps: caps->directions =3D 0x00000001
+> [    0.319170] xilinx_dma_device_caps: caps->directions =3D 0x00000002
+> [    0.319175] xilinx_dma_device_caps: caps->directions =3D 0x00000002
+> [    6.375745] xilinx_dma_device_caps: caps->directions =3D 0x00000001
+> [    6.375762] xilinx_dma_device_caps: caps->directions =3D 0x00000001
+> [  133.401497] xilinx_dma_device_caps: caps->directions =3D 0x00000001
+> [  133.401513] xilinx_dma_device_caps: caps->directions =3D 0x00000001
+> [  167.802636] xilinx_dma_device_caps: caps->directions =3D 0x00000001
+> [  167.802651] xilinx_dma_device_caps: caps->directions =3D 0x00000001
 
-> > I tested it on Avalon-MM Interface on Arria 10 FPGA and found it super-
-> > useful - thus an attempt to share.
-> 
-> Which driver is that? Seems more like a memcpy masked as slave to me
+Looks like direction aggregation does not actually happen in your case.
+Probably because you have two distinct DMA devices with a single
+channel each. Could you confirm this from your DT?
 
-Yes, one could say so. It transfers off-CPU memory in one of FPGA
-implementations, which does not need any xfer setup.
+This suggests, that direction aggregation is not the actual root cause
+of the regression you're seeing. Maybe 7e01511443c3 exposes/triggers
+another subtle flaw in the ASoC or DMA layers or your driver. But that's
+speculation at this point.
 
-When attached to a camera however the xfer is triggered using a private
-tool that uses i2c - exactly as you guys noticed.
+I'm not sure how to proceed from here. I think the patch itself is
+functional, but it does not address the actual issue.
 
-The dmaengine driver for Avalon-MM Interface is not upstreamed yet.
-
-> ~Vinod
-
-Thanks!
+There's however one other thing you could test: Could you keep the RFC
+patch with the printks in place, but revert 7e01511443c3, rerun and post
+the logs?
 

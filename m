@@ -1,201 +1,335 @@
-Return-Path: <dmaengine+bounces-9160-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9128-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eGkjD684pWnt5wUAu9opvQ
-	(envelope-from <dmaengine+bounces-9160-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 08:13:51 +0100
+	id gI4uBDj/n2n3fAQAu9opvQ
+	(envelope-from <dmaengine+bounces-9128-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 09:07:20 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9154E1D3B5C
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 08:13:50 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DD5D1A2460
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 09:07:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 83013301829D
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Mar 2026 07:13:14 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id CFB063013DE1
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 08:07:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F04E42F7AB0;
-	Mon,  2 Mar 2026 07:13:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ACB1393DC1;
+	Thu, 26 Feb 2026 08:07:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rf6VPKt9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="StagU9uF"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA16430BAC
-	for <dmaengine@vger.kernel.org>; Mon,  2 Mar 2026 07:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B043939D1
+	for <dmaengine@vger.kernel.org>; Thu, 26 Feb 2026 08:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772435593; cv=none; b=GHUkkd65s2DP8Z43WEA3tdX6OUhdgky94r6kJm+4US5qhouD7i+c0RD8T/nkU6Q9bNWn1lRu0xAv44Q9RyX+Jds79Yjddlz0HPSJYfi7d65gf9VXGLb3qkREocxJExMIFXM6ILZdiH43bMMS4P0UZTdNkOrCBz+2QvR0iokyQ3M=
+	t=1772093237; cv=none; b=m5A6ZI0q9UXwcQD+HkJ1N4WMXYVgkaiELBpuVTxHX4QqN0bna1MTj7+JHYl2g4lrtGfDITv/3ZaY4RANW9b3RIcPkZLLanRaB97at1KvndqdL/bAzLWqwIBEwInSOmtCIslqbgcyY4/0yzKPVtiq+zX/wk7IF02tCJ1j70Dmb/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772435593; c=relaxed/simple;
-	bh=ilkeyD8qZQOpsW+Xq7gCWaAiuV38Fp1tAggTNiSYlQ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mz6yyOaNbCamK47eZuVb0YTyVDQPuBE5DjO2SxjKyOGREoLzLioqTfSAa905hE4uMIufpqSuhpp01/w8wcBykZS5C67xxL0/x4Yk9mvRa2blMJrTbntvYn57Y1lnoJ36uFj1drLiRDrYBztKYatSgr2OuuTa7n3wkZoOch65fwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rf6VPKt9; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-c06cb8004e8so1595667a12.0
-        for <dmaengine@vger.kernel.org>; Sun, 01 Mar 2026 23:13:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772435592; x=1773040392; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RwUZOQ2ZJ7lWBPCWroaNir22y89SjANnXegT9KI0WTU=;
-        b=Rf6VPKt99dCqZRvhejum2RMxh1Vdt1TbXcUYPHM82xFQkFeYy1/P3rG6V+akymz1VJ
-         hVRp03CkIzs2w3mnQltOpCdzdoKPD+T8qeXfe3bpzv2ENPrsgk1EpMa8niVTiCnQGFpG
-         aivIc7cCOU5CORYQQR+lcFpVpHOZ1ZOYoKcBc1RzFi82dMzRAldoCGe+KD3tp0ImJAeI
-         b13V035fZzwB2zJaNhqJZCQ1bHvq17+NiAYFw6uLisvt2892XdTXN7Up7NwfZmpZQVF+
-         7cROY/qVxWQqJPHQRzomaldrw+V+FBlLvmfhCGoiDbnSRN+uIPW0WCa0zxhDJaniY4mD
-         Inrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772435592; x=1773040392;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=RwUZOQ2ZJ7lWBPCWroaNir22y89SjANnXegT9KI0WTU=;
-        b=tUbrXByXRXGv7y3OqVmZqG3Ci+J+D8aRVfVTe3k0yJLYrvwJ1TGUrZoKdcZJ6tlBaW
-         Nd7MWJnL8y6v3GAGDkdOmcYgw+ajkNIfRTLfs+hKp7GL9IhccKaXnSI1KFMdnGN7pOty
-         FCE60a6k60hxWV64nllV/l2+xf4WdgHoaZzA0Q38g4TRhSYt09NAqNffENqa9KLNp3AT
-         Ci2ndzI7WehZztc/i6eY/+LlsEMUhU5sj6zwXBwfWuLJt68MBthsCfqZM1urrECHKsMz
-         duMwQbIBNq7M5vDMYRbSxFQUQO5ujIdtzSKUpOoPeup6j0A/5AUsRGPrb5+FJXETMm9R
-         mVmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2vGZuuLgQErGGi2u+/vU/NmS7Q2XA7W23p+xbdCiuhjXIJHBAWofwsKBXGWl9VfIuB5az4jKfPvE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEP+h4NypS5cGR/MRLNNfnaZ/zpvW0OrDQ02Ocz1Hj26TADjlb
-	BOIHnZu8Yr4Qef9ITabQXa7ZG25n0vFS1vRlcECfy+jZLi/wsxibSKAy
-X-Gm-Gg: ATEYQzwwhlwegfOV9Xu6jumSAMdjzGoLiu2ACbBhCT9A1puPig1ggTlfikJuvRMTCF5
-	fe63HBTzuZ/nlMMdDvkTfcW8oRvqrTqv873BRLmU/f/8ZPlmBrEqC3xCyNHt9BdybM14tWGf1vb
-	ZNV/T8X/egkqJ6f1WYqnITV6SATqIc6S8TRRs/rGK9uWMGvhyzPVp6RzmN0JF6MQNvSdqK8XrcT
-	CTE7mOn/+dxk+nd6zUP0+MViw3XLvwbfAHS5Cab5vVG53LmRW3S3lAEYno46RiZ9HGs3LD4E32W
-	t19RsloI0tqbRbRBDKo0uCUUk//RuZj3YB2FDbUv6oTJ1xgwUh1yhvMfv4sBHans85F30JS/mIQ
-	C1+x965eWH005yfB3RTs4vvONTihdaYt8ntVd0j0F2t0vWwZ6nMnHKtreFbPLnkvxLXFN+O8i6s
-	V4RzyTKTcURoeDiqTxIzrveKzZ
-X-Received: by 2002:a17:902:ce09:b0:2ae:508d:fc33 with SMTP id d9443c01a7336-2ae508e0117mr17613475ad.43.1772435592070;
-        Sun, 01 Mar 2026 23:13:12 -0800 (PST)
-Received: from bsp.. ([2401:4900:52bb:cde9:66f7:69ca:84dd:3745])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae492e6901sm36069455ad.65.2026.03.01.23.13.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2026 23:13:11 -0800 (PST)
-From: Rahul Navale <rahulnavale04@gmail.com>
-To: Folker Schwesinger <dev@folker-schwesinger.de>
-Cc: Rahul Navale <rahul.navale@ifm.com>,
-	dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	vkoul@kernel.org,
-	Frank.Li@kernel.org,
-	michal.simek@amd.com,
-	suraj.gupta2@amd.com,
-	thomas.gessler@brueckmann-gmbh.de,
-	radhey.shyam.pandey@amd.com,
-	tomi.valkeinen@ideasonboard.com,
-	rahulnavale04@gmail.com,
-	marex@nabladev.com,
-	marex@denx.de
-Subject: Re: [RFC PATCH] dmaengine: xilinx_dma: Fix per-channel direction reporting via device_caps
-Date: Thu, 26 Feb 2026 13:32:48 +0530
-Message-ID: <20260226080249.3632-1-rahulnavale04@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <DGHGTCJRRZCW.9TGXQW44V6RR@folker-schwesinger.de>
-References: <DGHGTCJRRZCW.9TGXQW44V6RR@folker-schwesinger.de>
+	s=arc-20240116; t=1772093237; c=relaxed/simple;
+	bh=K0n8HxF6lOZqrVlB8vEJwgYuzkOQryDbQZJNjlhSba8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c1kudwbT34Qc4S47z8CX3dYIqJsmOGBu+8ZTutKQTIswaXwRknKXN0iCIadAIkgiFR27ggtHzEvKedB7scE4ozN2SvsC3gz+DYsAOvi68r4mYyy+gHkayTqpYDIMLiW4hgrL0miMlUzzKBUVCS8hm3QAeGD/wUB9qywPu8DUmPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=StagU9uF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD67DC19422
+	for <dmaengine@vger.kernel.org>; Thu, 26 Feb 2026 08:07:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772093236;
+	bh=K0n8HxF6lOZqrVlB8vEJwgYuzkOQryDbQZJNjlhSba8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=StagU9uFt5bPoZAOY2hlmDGJqVsdjf1LQSED/+Dih0bYvRA6DReAF7ai7BKAvy25U
+	 1//p+EjDttuvF1KYh0Aq8Wr2DOjaqkjFOJ2njQTTbQy6U5S3/O/yt4yoDSO1cZFGtN
+	 HobCxRFEQJJ+dZewDILJCAv3v2QEL2mpWLQzV3v+5gzWGOfCd/MUSrMqcxwqv7i4ty
+	 q5xj6s5DlQarW6bhA0d8RuDM4/kJy/zzGdn8UWeUM5gOG3ROFUCwD1xRzqcW9eIs9w
+	 ltYmnFHfW56/3+ZQUWJRNmiSMA3GPdguSt/458bHdaTI/AVr6+MyxGLsL8GHHOHanC
+	 yO0BkPZ1a33tw==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-65faaa8b807so1244852a12.3
+        for <dmaengine@vger.kernel.org>; Thu, 26 Feb 2026 00:07:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVYoUwf/wggNjjGfxm10DDrPsyGjJl71qGMhandpIEHumMauGJKpY/okc452RwE7PiIEhLfBWl4bQs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySJ5c96liFVbe8nuknATWH+KTTwiq6lxTt22yQTdlJoTZTMSM1
+	I9X7O7u88vJRH2B3ph9TMpPOLlC0PxZF9zWTmW5s4kh/yvvdE18wj/Bf3u6OlBlCi4T4PchSU+A
+	BVl1pndu14HUYk0OosUUch934p5Ayx+o=
+X-Received: by 2002:a05:6402:2692:b0:659:4554:2dbd with SMTP id
+ 4fb4d7f45d1cf-65fa476ebfamr2133550a12.7.1772093235170; Thu, 26 Feb 2026
+ 00:07:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1770605931.git.zhoubinbin@loongson.cn> <d62faafc653efab602c8d6bfcdcee1cb217171b9.1770605931.git.zhoubinbin@loongson.cn>
+ <aYoPyWS7o27G-AHh@lizhi-Precision-Tower-5810> <CAMpQs4+NHVQTcxdsBYp6H7c4FZpsuTo=QpKKY09sgpppDEiuNA@mail.gmail.com>
+In-Reply-To: <CAMpQs4+NHVQTcxdsBYp6H7c4FZpsuTo=QpKKY09sgpppDEiuNA@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 26 Feb 2026 16:07:17 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5ODRYLC=cmhWzkkxAMNJK1SRT9b-L+eQEqzhJKtmENhQ@mail.gmail.com>
+X-Gm-Features: AaiRm53wN3tuv3Fr6JhWHeaXk9ZvsrAGSuLaFtOSYLHZz0Hr2Lq5IiPjFj5GUhA
+Message-ID: <CAAhV-H5ODRYLC=cmhWzkkxAMNJK1SRT9b-L+eQEqzhJKtmENhQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dmaengine: loongson: New directory for Loongson
+ DMA controllers drivers
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Frank Li <Frank.li@nxp.com>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	dmaengine@vger.kernel.org, Xiaochuang Mao <maoxiaochuan@loongson.cn>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	Keguang Zhang <keguang.zhang@gmail.com>, linux-mips@vger.kernel.org, jeffbai@aosc.io
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
-	DATE_IN_PAST(1.00)[95];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[ifm.com,vger.kernel.org,lists.infradead.org,kernel.org,amd.com,brueckmann-gmbh.de,ideasonboard.com,gmail.com,nabladev.com,denx.de];
+	TAGGED_FROM(0.00)[bounces-9128-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[nxp.com,loongson.cn,kernel.org,vger.kernel.org,xen0n.name,lists.linux.dev,gmail.com,aosc.io];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	TAGGED_FROM(0.00)[bounces-9160-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rahulnavale04@gmail.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[dmaengine];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[chenhuacai@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ifm.com:email,a0100000:email,a0110000:email]
-X-Rspamd-Queue-Id: 9154E1D3B5C
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,loongson.cn:email,nxp.com:email,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 8DD5D1A2460
 X-Rspamd-Action: no action
 
-From: Rahul Navale <rahul.navale@ifm.com>
+Hi, Binbin.
 
-Hi Folker,
+On Tue, Feb 10, 2026 at 9:27=E2=80=AFAM Binbin Zhou <zhoubb.aaron@gmail.com=
+> wrote:
+>
+> Hi Frank:
+>
+> On Tue, Feb 10, 2026 at 12:48=E2=80=AFAM Frank Li <Frank.li@nxp.com> wrot=
+e:
+> >
+> > On Mon, Feb 09, 2026 at 11:04:18AM +0800, Binbin Zhou wrote:
+> > > Gather the Loongson DMA controllers under drivers/dma/loongson/
+> > >
+> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > > ---
+> > >  MAINTAINERS                                   |  3 +-
+> > >  drivers/dma/Kconfig                           | 25 ++---------------
+> > >  drivers/dma/Makefile                          |  3 +-
+> > >  drivers/dma/loongson/Kconfig                  | 28 +++++++++++++++++=
+++
+> > >  drivers/dma/loongson/Makefile                 |  3 ++
+> > >  .../dma/{ =3D> loongson}/loongson1-apb-dma.c    |  4 +--
+> > >  .../dma/{ =3D> loongson}/loongson2-apb-dma.c    |  4 +--
+> > >  7 files changed, 40 insertions(+), 30 deletions(-)
+> > >  create mode 100644 drivers/dma/loongson/Kconfig
+> > >  create mode 100644 drivers/dma/loongson/Makefile
+> > >  rename drivers/dma/{ =3D> loongson}/loongson1-apb-dma.c (99%)
+> > >  rename drivers/dma/{ =3D> loongson}/loongson2-apb-dma.c (99%)
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index f630328ca6ae..27f77b68d596 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -14777,7 +14777,7 @@ M:    Binbin Zhou <zhoubinbin@loongson.cn>
+> > >  L:   dmaengine@vger.kernel.org
+> > >  S:   Maintained
+> > >  F:   Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
+> > > -F:   drivers/dma/loongson2-apb-dma.c
+> > > +F:   drivers/dma/loongson/loongson2-apb-dma.c
+> > >
+> > >  LOONGSON LS2X I2C DRIVER
+> > >  M:   Binbin Zhou <zhoubinbin@loongson.cn>
+> > > @@ -17515,6 +17515,7 @@ F:    arch/mips/boot/dts/loongson/loongson1*
+> > >  F:   arch/mips/configs/loongson1_defconfig
+> > >  F:   arch/mips/loongson32/
+> > >  F:   drivers/*/*loongson1*
+> > > +F:   drivers/dma/loongson/loongson1-apb-dma.c
+> > >  F:   drivers/mtd/nand/raw/loongson-nand-controller.c
+> > >  F:   drivers/net/ethernet/stmicro/stmmac/dwmac-loongson1.c
+> > >  F:   sound/soc/loongson/loongson1_ac97.c
+> > > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> > > index 66cda7cc9f7a..1b84c5b11654 100644
+> > > --- a/drivers/dma/Kconfig
+> > > +++ b/drivers/dma/Kconfig
+> > > @@ -376,29 +376,6 @@ config K3_DMA
+> > >         Support the DMA engine for Hisilicon K3 platform
+> > >         devices.
+> > >
+> > > -config LOONGSON1_APB_DMA
+> > > -     tristate "Loongson1 APB DMA support"
+> > > -     depends on MACH_LOONGSON32 || COMPILE_TEST
+> > > -     select DMA_ENGINE
+> > > -     select DMA_VIRTUAL_CHANNELS
+> > > -     help
+> > > -       This selects support for the APB DMA controller in Loongson1 =
+SoCs,
+> > > -       which is required by Loongson1 NAND and audio support.
+> > > -
+> > > -config LOONGSON2_APB_DMA
+> > > -     tristate "Loongson2 APB DMA support"
+> > > -     depends on LOONGARCH || COMPILE_TEST
+> > > -     select DMA_ENGINE
+> > > -     select DMA_VIRTUAL_CHANNELS
+> > > -     help
+> > > -       Support for the Loongson2 APB DMA controller driver. The
+> > > -       DMA controller is having single DMA channel which can be
+> > > -       configured for different peripherals like audio, nand, sdio
+> > > -       etc which is in APB bus.
+> > > -
+> > > -       This DMA controller transfers data from memory to peripheral =
+fifo.
+> > > -       It does not support memory to memory data transfer.
+> > > -
+> > >  config LPC18XX_DMAMUX
+> > >       bool "NXP LPC18xx/43xx DMA MUX for PL080"
+> > >       depends on ARCH_LPC18XX || COMPILE_TEST
+> > > @@ -774,6 +751,8 @@ source "drivers/dma/fsl-dpaa2-qdma/Kconfig"
+> > >
+> > >  source "drivers/dma/lgm/Kconfig"
+> > >
+> > > +source "drivers/dma/loongson/Kconfig"
+> > > +
+> > >  source "drivers/dma/stm32/Kconfig"
+> > >
+> > >  # clients
+> > > diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> > > index a54d7688392b..a1c73415b79f 100644
+> > > --- a/drivers/dma/Makefile
+> > > +++ b/drivers/dma/Makefile
+> > > @@ -49,8 +49,6 @@ obj-$(CONFIG_INTEL_IDMA64) +=3D idma64.o
+> > >  obj-$(CONFIG_INTEL_IOATDMA) +=3D ioat/
+> > >  obj-y +=3D idxd/
+> > >  obj-$(CONFIG_K3_DMA) +=3D k3dma.o
+> > > -obj-$(CONFIG_LOONGSON1_APB_DMA) +=3D loongson1-apb-dma.o
+> > > -obj-$(CONFIG_LOONGSON2_APB_DMA) +=3D loongson2-apb-dma.o
+> > >  obj-$(CONFIG_LPC18XX_DMAMUX) +=3D lpc18xx-dmamux.o
+> > >  obj-$(CONFIG_LPC32XX_DMAMUX) +=3D lpc32xx-dmamux.o
+> > >  obj-$(CONFIG_MILBEAUT_HDMAC) +=3D milbeaut-hdmac.o
+> > > @@ -88,6 +86,7 @@ obj-$(CONFIG_INTEL_LDMA) +=3D lgm/
+> > >
+> > >  obj-y +=3D amd/
+> > >  obj-y +=3D mediatek/
+> > > +obj-y +=3D loongson/
+> >
+> > keep alphabet order
+>
+> Sorry, I'll fix it in the next version.
+> >
+> > Frank
+> > >  obj-y +=3D qcom/
+> > >  obj-y +=3D stm32/
+> > >  obj-y +=3D ti/
+> > > diff --git a/drivers/dma/loongson/Kconfig b/drivers/dma/loongson/Kcon=
+fig
+> > > new file mode 100644
+> > > index 000000000000..9dbdaef5a59f
+> > > --- /dev/null
+> > > +++ b/drivers/dma/loongson/Kconfig
+> > > @@ -0,0 +1,28 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > +#
+> > > +# Loongson DMA controllers drivers
+> > > +#
+> > > +if MACH_LOONGSON32 || MACH_LOONGSON64 || COMPILE_TEST
+> > > +
+> > > +config LOONGSON1_APB_DMA
+> > > +     tristate "Loongson1 APB DMA support"
+> > > +     select DMA_ENGINE
+> > > +     select DMA_VIRTUAL_CHANNELS
+I think "depends on MACH_LOONGSON32 || COMPILE_TEST" is still needed,
+otherwise it can be compiled for MACH_LOONGSON64.
 
->Could you confirm this from your DT?
+> > > +     help
+> > > +       This selects support for the APB DMA controller in Loongson1 =
+SoCs,
+> > > +       which is required by Loongson1 NAND and audio support.
+> > > +
+> > > +config LOONGSON2_APB_DMA
+> > > +     tristate "Loongson2 APB DMA support"
+> > > +     select DMA_ENGINE
+> > > +     select DMA_VIRTUAL_CHANNELS
+The same, "depends on MACH_LOONGSON64 || COMPILE_TEST" is needed.
 
-DT for the audio AXI DMA is below. We indeed have two distinct
-AXI DMA devices, each instantiated with a single fixed-direction channel:
+Huacai
 
-  axi_dma0: MM2S-only (playback / DMA_MEM_TO_DEV)
-  axi_dma1: S2MM-only (capture  / DMA_DEV_TO_MEM)
-
-axi_dma0: axidma@a0100000 {
-        compatible = "xlnx,axi-dma-1.00.a";
-        #dma-cells = <1>;
-        reg = <0 0xa0100000 0 0x10000>;
-        clocks = <&aclk>;
-        clock-names = "s_axi_lite_aclk";
-        xlnx,addrwidth = <32>;
-
-        dma-channel {
-                compatible = "xlnx,axi-dma-mm2s-channel";
-                interrupt-parent = <&axi_intc>;
-                interrupts = <14>;
-                xlnx,datawidth = <32>;
-        };
-};
-
-axi_dma1: axidma@a0110000 {
-        compatible = "xlnx,axi-dma-1.00.a";
-        #dma-cells = <1>;
-        reg = <0 0xa0110000 0 0x10000>;
-        clocks = <&aclk>;
-        clock-names = "s_axi_lite_aclk";
-        xlnx,addrwidth = <32>;
-
-        dma-channel {
-                compatible = "xlnx,axi-dma-s2mm-channel";
-                interrupt-parent = <&axi_intc>;
-                interrupts = <15>;
-                xlnx,datawidth = <32>;
-        };
-};
-
-This confirms your suspicion: direction aggregation via
-xdev->common.directions |= chan->direction does not end up combining
-different directions within a single dma_device instance in our setup,
-because each dma_device only has one channel and one direction.
-
->There's however one other thing you could test: Could you keep the RFC
->patch with the printks in place, but revert 7e01511443c3, rerun and post
->the logs?
-
-Debug results with your RFC patch kept, but 7e01511443c3 reverted:
-- Audio playback works (aplay plays normally)
-- No xilinx_dma_device_caps printk output at all:
-# dmesg | grep xilinx_dma_device_caps
-<no output>
-
+> > > +     help
+> > > +       Support for the Loongson2 APB DMA controller driver. The
+> > > +       DMA controller is having single DMA channel which can be
+> > > +       configured for different peripherals like audio, nand, sdio
+> > > +       etc which is in APB bus.
+> > > +
+> > > +       This DMA controller transfers data from memory to peripheral =
+fifo.
+> > > +       It does not support memory to memory data transfer.
+> > > +
+> > > +endif
+> > > diff --git a/drivers/dma/loongson/Makefile b/drivers/dma/loongson/Mak=
+efile
+> > > new file mode 100644
+> > > index 000000000000..6cdd08065e92
+> > > --- /dev/null
+> > > +++ b/drivers/dma/loongson/Makefile
+> > > @@ -0,0 +1,3 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > +obj-$(CONFIG_LOONGSON1_APB_DMA) +=3D loongson1-apb-dma.o
+> > > +obj-$(CONFIG_LOONGSON2_APB_DMA) +=3D loongson2-apb-dma.o
+> > > diff --git a/drivers/dma/loongson1-apb-dma.c b/drivers/dma/loongson/l=
+oongson1-apb-dma.c
+> > > similarity index 99%
+> > > rename from drivers/dma/loongson1-apb-dma.c
+> > > rename to drivers/dma/loongson/loongson1-apb-dma.c
+> > > index 255fe7eca212..e99247cf90c1 100644
+> > > --- a/drivers/dma/loongson1-apb-dma.c
+> > > +++ b/drivers/dma/loongson/loongson1-apb-dma.c
+> > > @@ -16,8 +16,8 @@
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/slab.h>
+> > >
+> > > -#include "dmaengine.h"
+> > > -#include "virt-dma.h"
+> > > +#include "../dmaengine.h"
+> > > +#include "../virt-dma.h"
+> > >
+> > >  /* Loongson-1 DMA Control Register */
+> > >  #define LS1X_DMA_CTRL                0x0
+> > > diff --git a/drivers/dma/loongson2-apb-dma.c b/drivers/dma/loongson/l=
+oongson2-apb-dma.c
+> > > similarity index 99%
+> > > rename from drivers/dma/loongson2-apb-dma.c
+> > > rename to drivers/dma/loongson/loongson2-apb-dma.c
+> > > index c528f02b9f84..0cb607595d04 100644
+> > > --- a/drivers/dma/loongson2-apb-dma.c
+> > > +++ b/drivers/dma/loongson/loongson2-apb-dma.c
+> > > @@ -17,8 +17,8 @@
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/slab.h>
+> > >
+> > > -#include "dmaengine.h"
+> > > -#include "virt-dma.h"
+> > > +#include "../dmaengine.h"
+> > > +#include "../virt-dma.h"
+> > >
+> > >  /* Global Configuration Register */
+> > >  #define LDMA_ORDER_ERG               0x0
+> > > --
+> > > 2.52.0
+> > >
+>
+> --
+> Thanks.
+> Binbin
 

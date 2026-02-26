@@ -1,70 +1,60 @@
-Return-Path: <dmaengine+bounces-9125-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9126-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cMq7CQDxn2lwfAQAu9opvQ
-	(envelope-from <dmaengine+bounces-9125-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 08:06:40 +0100
+	id 4HEsHX7yn2kyfAQAu9opvQ
+	(envelope-from <dmaengine+bounces-9126-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 08:13:02 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFCC21A19F4
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 08:06:39 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1D341A1B24
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 08:13:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 35D5E3018C0E
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 07:05:58 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 47B96307E844
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Feb 2026 07:07:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9399A38E100;
-	Thu, 26 Feb 2026 07:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A56638E110;
+	Thu, 26 Feb 2026 07:07:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVOUerUr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q04UTGbf"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700FE2DEA74;
-	Thu, 26 Feb 2026 07:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1737E38BF94;
+	Thu, 26 Feb 2026 07:07:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772089554; cv=none; b=E63OTjZR0WQVVmAiu++p/egwprugRi82t/AnVj4Kf9JjhLhvSnYz/5XTj6YNgKQCi6REuK0RS6QgmMOXqU3XH5iS9lO63YwL7tBBheKn15p8cjD0vYX8Bc86WzEi0F4Wez92E1wlVme7TKyNfXDBqO62kuiRqO1Ev4jqRuegYJg=
+	t=1772089671; cv=none; b=YdNsLnTt7DhEsbYjEIo6ILBAfH1oCpUlhzPOas33Z8dxadojuX+0fVeBSldx/ISC0KMufLr/JL8NgJB0KLO8K/SAxM6tI4X4PCTyApUKTmUr3gPjw2WxdrYEJInmUMjsHLG0qPDv6vIB3Wfz2LE5ONRcZ+7QHFKdqftAFhTq7Qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772089554; c=relaxed/simple;
-	bh=r8kkku+RUrykKo8TzZsoSH0+1fI5bqsKXvST33G+y+Q=;
+	s=arc-20240116; t=1772089671; c=relaxed/simple;
+	bh=RT93O7jTBol1YGqh80blX9bj2WHRyJuArkFn2VBcPEI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ME+fH82b5cgMnW7ms2W2oPe2e7aNNOMHh7dLENGeTtfpeUrTm1KIKfofY1cH7+J8PM9nMvgd0QMk+oS9GMU/uOBWrVOsdhm5NVnosQyKoWLDM6k+i/kYQM2/dykHTUvxAkvWViNC0R2l9yTj6+kyZO7SgDrrVxzcL+MiDBc/SG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVOUerUr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61791C19425;
-	Thu, 26 Feb 2026 07:05:53 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=p9/6rjuE/cXCXs5HRGR1Q6FaN3oBEQw/fLe6ssoqlkxZmIc3x/VdJSiRE35OH9al5Y+c0VXw4hLCs2AQX5yT5sQwKFSkn1DTDjWUJG1x0fJ3MlKISM6G3D33R18yCpNpD4zWzXaAO9lEARlSIbGK2LuVW6RgLvb2JCU8OwCspjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q04UTGbf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48F10C19422;
+	Thu, 26 Feb 2026 07:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772089554;
-	bh=r8kkku+RUrykKo8TzZsoSH0+1fI5bqsKXvST33G+y+Q=;
+	s=k20201202; t=1772089670;
+	bh=RT93O7jTBol1YGqh80blX9bj2WHRyJuArkFn2VBcPEI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fVOUerUrp1sd8OJYr/FayxxGSv+keS2OvEIftB8YxZm/B44KcMB+dWGzHdh+iJtgO
-	 Edo8ini3/qBAM2bn5TmdJj1j1rKeleWMYfuWf9rV6KV+pb0cmS/SmKMS6eW/uit2lo
-	 HqJI9P4wGKuDz+rWyZxJUIMD3I6LQ9Dy0rw2afNEhI5apJgSZerdALhTDfs2N+bl/C
-	 UwLL1W9rU91dKI3UICn0T4lNP4Etpj+B/RJ7YFjHXr+iwSmFk3j4+mroZ/61Hpc2uu
-	 hPfPqiMDaJxOAqPFA3jdRN/Njbu7Q8AemmGO4mMTjtWKanxil+gsr5tJHfWYOSs4Cw
-	 gURkzrb31HbDQ==
-Date: Thu, 26 Feb 2026 12:35:50 +0530
+	b=q04UTGbfGv4R3KRDHg3m8AYKAE5kCykWSpG9ZTuAxAHmas7jGfgOPqpct4D2U4mAd
+	 v2MEFMqJfX6SBuITztQmsZU4OTLEemutnAFlhDwUURnIUg3gS1kibO85xMDsP1E2cR
+	 PlIQowYBAw3YtGvdGuxzHSR5/YAbTyggXQU7TTbO1JEqpBcuRp3Bfw6UthqPZ2IOzl
+	 SSqqRwouAV/CBvHC6gl3ldbTFd4XjP4jBImNO8nYYxMtQHMd+Gnwimr44zo9kxc7KA
+	 ErDGzmuIYrH+M0Q/x8EYlbAUX5rpdLu7SvyoBFRM9qtIdNeHcmV+XzBf3CxT1z35S+
+	 o9UfPx6r8y6iA==
+Date: Thu, 26 Feb 2026 12:37:47 +0530
 From: Vinod Koul <vkoul@kernel.org>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Longbin Li <looong.bin@gmail.com>, Ze Huang <huangze@whut.edu.cn>,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, sophgo@lists.linux.dev,
-	linux-riscv@lists.infradead.org, Yixun Lan <dlan@kernel.org>
-Subject: Re: (subset) [PATCH v3 0/3] riscv: sophgo: allow DMA multiplexer set
- channel number for DMA controller
-Message-ID: <aZ_wziVgEPGOSAd3@vaman>
-References: <20260120013706.436742-1-inochiama@gmail.com>
- <177201865381.93331.6104381063514168222.b4-ty@kernel.org>
- <aZ9z0gV8ZrfpL2JG@inochi.infowork>
+To: Alexander Gordeev <a.gordeev.box@gmail.com>
+Cc: Frank Li <Frank.li@nxp.com>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] dma: DMA slave device bringup tool
+Message-ID: <aZ_xQ8jk049d1OgW@vaman>
+References: <20260221132248.17721-1-a.gordeev.box@gmail.com>
+ <aZ4njFwdYsMLTcSa@lizhi-Precision-Tower-5810>
+ <aZ7CwvrgPMkzMouW@vaman>
+ <aZ9lL6-Q07PryHqN@ideapad>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -73,73 +63,68 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aZ9z0gV8ZrfpL2JG@inochi.infowork>
+In-Reply-To: <aZ9lL6-Q07PryHqN@ideapad>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9125-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-9126-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	FREEMAIL_CC(0.00)[synopsys.com,kernel.org,outlook.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,gmail.com,whut.edu.cn,vger.kernel.org,lists.linux.dev,lists.infradead.org];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CFCC21A19F4
+X-Rspamd-Queue-Id: E1D341A1B24
 X-Rspamd-Action: no action
 
-On 26-02-26, 06:13, Inochi Amaoto wrote:
-> On Wed, Feb 25, 2026 at 04:54:13PM +0530, Vinod Koul wrote:
-> > 
-> > On Tue, 20 Jan 2026 09:37:02 +0800, Inochi Amaoto wrote:
-> > > As the DMA controller on Sophgo CV1800 series SoC only has 8 channels,
-> > > the SoC provides a dma multiplexer to reuse the DMA channel. However,
-> > > the dma multiplexer also controlls the DMA interrupt multiplexer, which
-> > > means that the dma multiplexer needs to know the channel number.
-> > > 
-> > > Change the DMA phandle args parsing logic so it can use handshake
-> > > number as channel number if necessary.
-> > > 
-> > > [...]
-> > 
-> > Applied, thanks!
-> > 
-> > [1/3] dt-bindings: dma: snps,dw-axi-dmac: Add CV1800B compatible
-> >       commit: 5eda5f42d2fee87127b568206a9fcc07a2f6eab6
-> > [2/3] dmaengine: dw-axi-dmac: Add support for CV1800B DMA
-> >       commit: 02a380ea7ed2d737a42693d7957ec8c33a92d9fd
-> > 
-> > Best regards,
-> > -- 
-> > ~Vinod
-> > 
-> > 
+On 25-02-26, 22:10, Alexander Gordeev wrote:
+> On Wed, Feb 25, 2026 at 03:07:06PM +0530, Vinod Koul wrote:
 > 
-> Hi, Vinod
+> Hi Vinod, Frank,
 > 
-> I guess you applied the version 4, but replied to the version 3?
+> > > I am not sure if it can work for general dma engine because it slave setting
+> > > is tight coupling with FIFO settings and timing, some periphal require
+> > > start dma firstly, then enable DMA. some perphial require enable DMA first
+> > > then queue dma transfer.
+> > > 
+> > > burst len is also related with FIFO 's watermark settings.
+> > 
+> > Correct!
+> > 
+> > I like the idea but it is not practical. Every dmaengine is tied to the
+> > peripheral for setting up the transfer. It is not a memcpy! How did you
+> > test it, which controller was used ..?
+> 
+> I likely missing something, but how this differs from dmatest, which also
+> lacks any controller-specific setup?
 
-Nope, I had already picked 3. so reply went on that.
+slave dma needs a peripheral to test. For example a spi/i2c etc
+dmaengine in slave mode will not work untill unless there is some
+signalling for dmaengine from peripheral to push/pull data.
+
+> I tested it on Avalon-MM Interface on Arria 10 FPGA and found it super-
+> useful - thus an attempt to share.
+
+Which driver is that? Seems more like a memcpy masked as slave to me
 
 -- 
 ~Vinod

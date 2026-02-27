@@ -1,213 +1,199 @@
-Return-Path: <dmaengine+bounces-9151-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9152-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sEAhFpNpoWkUsgQAu9opvQ
-	(envelope-from <dmaengine+bounces-9151-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Feb 2026 10:53:23 +0100
+	id OEdKE+2QoWlZuQQAu9opvQ
+	(envelope-from <dmaengine+bounces-9152-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Feb 2026 13:41:17 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B81611B595C
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Feb 2026 10:53:22 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E995D1B741E
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Feb 2026 13:41:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D10183152F7F
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Feb 2026 09:49:09 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 27E8A300683E
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Feb 2026 12:41:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 066E230F951;
-	Fri, 27 Feb 2026 09:49:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE7BF3E8C5A;
+	Fri, 27 Feb 2026 12:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="wSWzmf0s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKMe5PdK"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022129.outbound.protection.outlook.com [52.101.126.129])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7F02D73AD;
-	Fri, 27 Feb 2026 09:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.129
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772185748; cv=fail; b=adLj/lxOSISg0RN3YKoahK+BP/V8TViYb7HvbS95scz365NCmonol/mpVIlcBqMEy/R21jpPo/E0LXP9cGoWdUG5Yfpu0WMii7oetisW+8ikd0q9J8vhRwMcZnAPk1HpdSw/4IgeRS12ffMe2WHDGDXqUm+dkeBll1pxWw2hkrw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772185748; c=relaxed/simple;
-	bh=Y+pCJYhlk/CRCda6KlARD2wOYQuVkeKfdGvQbIpFZqA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DfYrALl8vUxfhSKu+3HHoZYzIMeEOaSUCWO1CQd/N7RHHmWQ7UpFbr3RuMU4vsdvF3pAZCg1Fzx6sh74ViiDkxZ/k4UYZ5D74x3rII1F9TUjdxCr33PuwSEd+6OXaGfg732sEL2dMS2UZOk4vDq3jV4AtpyYntJhFmzAobLzqgY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=wSWzmf0s; arc=fail smtp.client-ip=52.101.126.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OE1u49a+pnedE//E+AbitRLQL0n9sUuxbF2ADXd26JZRgPQ3zbMkC/Hbi2tbdKu78p7r8Qn5vVx1ga8f0EX0ioOrU2nF74AjGbWZX9eij3D4T+NDQlf6OFcHwpyVtN8TDW72VF+XTVgwaE7aEVRwLzLK2r+BUoWAirvVSFhNx1Fxrla61zs4j5QdSNcEQnHtnMTmL/1o8QPSmzHs+W7zacrNuvWs7fgvi1ev+Vl+K+ZVnhn0A4P38uwvTDL0tG1V2KMXnY5ksyQfn8vZx0vF2PcOht2cbHHmDtWgozQBClrI59t+cMceQZ2uuVd9TelfY0YTTKBXdehB51O+9XRGaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=24D92vMmn+hLpGXpbcBoI3ixwLQjFsC9tqRVUAGpXL0=;
- b=CT3e2MqdJ/EJLsun3JbO6HVo+o3yf3rusAhNV96rZB9V+qcSz2ZIxOnxB0jK4S1Vt5xP7ZxwO19piTEK6xxaqTiUa32Y819OfbaPWKk6+dreG8uhmEvfIcLrfw2pUWf/nwkRS8/gL6igv+qbBvnlC0tyvu++p4pi+Uoy/gr41xwmfpNR9sCap5XdbPrw9lwdA1X+8I1bYUI8D0CbXhf6ilry72v/cDEGMv4/KOmYanEMEg5GrSUeMOKB7+Y5vsUkM9dJp6OUy389CTK223lzzl1MH7G/onXHS0pjLA8bcBB4NWajch4RAAZSBMUhhQdeOLda+alDIWNe705zMwIg0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=24D92vMmn+hLpGXpbcBoI3ixwLQjFsC9tqRVUAGpXL0=;
- b=wSWzmf0s5dXPI3aNG/j6UY3n6N/YlQpfRrZNjokdu5eX25QMVeQ8wVJckSMOqmA10u7LlrP8/jCJgG4j2Q03Pjq6Zw/2564nMW7erlUgd2fsy+faLRqxTUe7TQpLohitCJttAVxAmbDz6IlXNkZxRdbySqXAMwdckQp/KK5u0ShxtCMi+nSUanSO4fxkYCbCzqXSgZwlqwfuWkCU5BYBUiwImRVldUvYk3bAoZSXH/83OtMJwp7EzmXGMDF170ARnWiWLgUldWUXQBvLszcJ96y5LECMwDvUSJcmUeYKgtod/LIVvteL6hU44WEWvhGkZ8cSbtqNDo4JAjmU/YsBtA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
- by TYSPR03MB7708.apcprd03.prod.outlook.com (2603:1096:400:432::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.13; Fri, 27 Feb
- 2026 09:49:04 +0000
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::78d4:9dee:2e32:d1e4]) by TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::78d4:9dee:2e32:d1e4%6]) with mapi id 15.20.9654.013; Fri, 27 Feb 2026
- 09:49:04 +0000
-Message-ID: <c47d44f6-3d0d-482e-b45c-7f6e98d9ac4e@amlogic.com>
-Date: Fri, 27 Feb 2026 17:49:00 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] dt-bindings: dma: Add Amlogic A9 SoC DMA
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20260227-amlogic-dma-v4-0-f25e4614e9b7@amlogic.com>
- <20260227-amlogic-dma-v4-1-f25e4614e9b7@amlogic.com>
- <20260227-crafty-just-cheetah-7ef8a2@quoll>
- <4fa16352-5f74-473c-a568-406e3ca24395@amlogic.com>
- <9a5e2241-8343-4854-88c0-56022f8a76da@kernel.org>
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-In-Reply-To: <9a5e2241-8343-4854-88c0-56022f8a76da@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR02CA0004.apcprd02.prod.outlook.com
- (2603:1096:4:194::14) To TYZPR03MB6896.apcprd03.prod.outlook.com
- (2603:1096:400:289::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DAA3D4115
+	for <dmaengine@vger.kernel.org>; Fri, 27 Feb 2026 12:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772196074; cv=none; b=fxUnCHSJFfDTgiRL1ogZnfIObGZ690z0QuyP9a8qksqF/HSECqGy/osA57SWXnRWrraCvXBvP4RXUF+u/z5Qafk9eyJXgJRXp3UZdCu0jBMLydxfy2JWHItwSciPuVgKf3L+Pq+0gwYMm/BKMadsU9STAkRHCx0UMTTfkErxVKY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772196074; c=relaxed/simple;
+	bh=bu6LksbaTJ+xcwDED2umTKgJQSgKu+bRRvIX7chKhdk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=phquI9yRGUAF1zjXWASCl8Yb5s55bjkeKuGcmVXh7jbJwiiUeE7IkLrlOeem9Xu2o0kbSWm/PuFbs6lHcukVAzNzybhRRbNeD6C/gPRi4uP/yqd+B2NSqGpZUuoZptOpoYxHsp5NRMqmSfjYNZfifPYZs7DvMtGEuEARIEJuu4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gKMe5PdK; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-4376acce52eso1381276f8f.1
+        for <dmaengine@vger.kernel.org>; Fri, 27 Feb 2026 04:41:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772196072; x=1772800872; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bu6LksbaTJ+xcwDED2umTKgJQSgKu+bRRvIX7chKhdk=;
+        b=gKMe5PdKARs0tn8G47AUt4Ta12u8TCAdVNh3c4hnXwfDwRl/nPNNnEHMTdKhzCwfsl
+         ehBbGsv8k34YxE1ecWrfyZ6jBiLu/X/+C0fIBZmxQJyfOOgbHAC73v/FeyQuNjHT9xoW
+         ihtMEhD6SHq25/LQW3Y+eTT1z49B81uXPMN5EZNWZYjUvMeOvi20WQaPe09OmtB8pSqm
+         nfYwcZL5snCehMKEBHipDZ5fTO+mNJ+saSUF4k7O5C95by1rJeoOAV8a1BFA6Xxs6Ud/
+         V+k+tRb3WES7LHIZ1YZcnJCVC0ySS2utWrBrEp+u1h1jPCCSxHaUY/Ej3S9Z7ZWna9AZ
+         0ZJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772196072; x=1772800872;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bu6LksbaTJ+xcwDED2umTKgJQSgKu+bRRvIX7chKhdk=;
+        b=F4mDbrtY5RSnAdrXovgIRJ40jL2g/YZYZ7Quk1VLDjIS5STgGgp2cSZEP7srIoz7aw
+         E7NbcvuZk+xiAXJg1SDw87XMGaKu6WO7Ap0YuGF+T7G9LJ4+q/QABfuGJXhHshSoG59V
+         KDd9wgfmpmtPwNGdAaCRJKMlvNrpvttV/Dt1QxVgkcdYEouYiMGz4r42Q3gj8PlYlRC6
+         TrVR9sDBNZpimQ2+MYAAM6VilX07/1O31zbnF1DmH/34iMlapyPXVRO9es2Vs7UxPD7i
+         35HO7tP/G7STxPBUxZVTecfphPios7SRbP7myXYm3PYQjR5Yheo3cDwZubvsVWeGJubO
+         CSwA==
+X-Gm-Message-State: AOJu0YywkAixQfSAPEEC7bzYXTjwbe8nZP7uRe6Mt5ENtz6zGshuFQKC
+	b0hnKV0S0OFFo1d7/Eal1a0TpJkELeFOKAQl+J2ZiSvHY0cdTgQjvZpk
+X-Gm-Gg: ATEYQzxh7jySiUz8J3ajz1d/qpgtx6NhMiyL5AUNNsMFshTAptktSNvxNV7iybgN/MM
+	lDX4pqd2tz29R5B6M9l2/gsEXVXe9Ba8JRZmEpsh8jJ8Rv7zZruhJrUpBr0R0o3tba5Ph6pj5Fz
+	WOu4lhwmgiJ5GW+VdJdY346VVrXnGvb7mGw2pfqW1QTzuGp7XBPiZoXUKAH44ktImgNAhOxP/Er
+	FLc4N4bYFvkRvZ1NgOwNw9sT2LH1FrAPoAdHP+MnqYOTgYfyUEcncwSzjS+KdXM56PyahfuxxlW
+	gVhHrKZgD8rJuP/OhGZNc++Gp1x1KKBVGs+7ufXgNmxrJftSbHvaz+5NW69xZfcu8ASPeVVxp/G
+	Z/bIbgyC2N3fwyYpHOO0LOyEjWcjCUeDVg6hRCVvN9qYkh72ovQCnEDV+vfQrfzNmxKp/dSiAsQ
+	e1ZcYtwE2q6L1u2QbssXduMUCxcNB5Dmg=
+X-Received: by 2002:a05:6000:40ca:b0:435:e47b:e746 with SMTP id ffacd0b85a97d-4399de206ccmr4523998f8f.36.1772196061155;
+        Fri, 27 Feb 2026 04:41:01 -0800 (PST)
+Received: from [192.168.1.187] ([148.63.225.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4399c75b327sm7164780f8f.20.2026.02.27.04.41.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Feb 2026 04:41:00 -0800 (PST)
+Message-ID: <00863862d66cbb3393576d5dfbede9200f323b9d.camel@gmail.com>
+Subject: Re: [PATCH 0/5] dma: dma-axi-dmac: Add cyclic transfer support and
+ graceful termination
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?= via B4 Relay
+	 <devnull+nuno.sa.analog.com@kernel.org>
+Cc: dmaengine@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
+Date: Fri, 27 Feb 2026 12:41:45 +0000
+In-Reply-To: <aaD-xxghRKAhS8Yc@vaman>
+References: <20260127-axi-dac-cyclic-support-v1-0-b32daca4b3c7@analog.com>
+	 <aaD-xxghRKAhS8Yc@vaman>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|TYSPR03MB7708:EE_
-X-MS-Office365-Filtering-Correlation-Id: fc0ce31f-1b8e-4b50-cc68-08de75e5716b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	krpfMEtKO3pXhEAoD/rS9BSb8/Vv7fiMlVmIRNu9pJmcKVpqd5ZotAcFfkwMNMVNgFYcIp1xAluigzpTbudLb6YTXzQAg/lVwX0ujOdapC0aoGddlwh4Rhi2Zuvs6c+NiTvdHlx06LEN0D6Cb5JgTPg45EWxnt3trhJ5z4M2akEy2JTPgU5ovV44vJNI+Zn9yML/iZKJXgl/hoX7pEQoDdrClNwT8Q7P/7XKk0USXCkE1IYtT+uLmWGqcyNjiJneYe/vNqJs/zv9jN8lUUKYEUQoQbKU/XJCoKQz9JS/3whpkY9EbL8rnvTQDYgdgZx51kYRvC6dghkTQ5xQpAoqelTx6IY38PogYJxnAHTxIc8ATXKmhjsrXHBrQ+jMhpx1LQ4Mb5IKN4aT0aZfEBaij9mHfHR9KDMnSx/fEh7GtWob5GjVB6AirZH0iS9gyG4sG8dmS5Kp2Y6xUXvjFFxGBqhmR0/GatlOLggmCZIQgF5bX5RzSUTLBjhzw0uxnuIwDAFZV6HON3BuSVeahwgl56zCqSyIin81ePva4Q8A3T5zQ438KouI5lT+UG74w5TPIa6ClVzMlAzNiOOgzg+Zq3SRGvVckj9ZGJtsF7kvX46RNG67/IOjdebrZpJc9ovSvCdqEp/ZEMQx/D/AtaOLYN6Brb7Elvdc9Wf4Brj4BakxRNSyPY6hZCub//aWFDSpipWeuwYZJNh50rOIp+WNQ2N6XlxtCxo9hY2N89Ftajs=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cGowS05Pam5tUlQ2L2p2UC84b3pMbEJlMHh0ZEhQanUzN0ZkNUZIMSswOE9P?=
- =?utf-8?B?a0NNT1ZpK21IT3FKcjBpYUVRQUc2N3BLNjVmaG05QnJ0bjR5YnFFRVU4YVNo?=
- =?utf-8?B?bzlMRU0rVjFuWnJLcGVjeU9VYkdGK093MXlYUGVmYWJvNzh6bytzaTRMM0w2?=
- =?utf-8?B?K0I1U0h0YytCZWhSWHdvb2x5UWVEd3U3YXlia29yQTFYTU5WalhhY1RQSUdY?=
- =?utf-8?B?N1UwWFUrTVZwUEYzK1JERnk5dkR3ek5FS21sMmJReFQxbWVFdGQzZENOOGlG?=
- =?utf-8?B?QXhvZ3VQc0ZBQzBqQk9ERlE2ZWFyNW8wUTFGeDhPd2V6d2x2WVNvVWlOS0l0?=
- =?utf-8?B?K25aTjduYU1xUC9GY0xZVlZESUhxMW9ZQm9ERVI4YmszYjdNU2hjSnkrZmRo?=
- =?utf-8?B?NGpHN1o5cElkM3ZjNnJYNkJ4UVBXaG1ITGxtTFdCTko4Z0NJUkJtSVZEdWxH?=
- =?utf-8?B?YTIvdVRzTEFLVnpPUlhFamJnS0d6Q041Q281ZW8xMU1hZ1hSNVpkK2JPUDJE?=
- =?utf-8?B?K05JbmExcUlRQ0tReFMvVzRlNVZaTS9mS21TQVpzeFR3c0FCQ1V6NnEzNUNx?=
- =?utf-8?B?VitLTlFmUEFYblZsRWFaaE55WFk4ZlJZZnVBZUdxYUR2VXgwVEw4WUhybzZ3?=
- =?utf-8?B?bzdDbXdqbUYvV0lza2lrcFY3WnlZczBiK1Q4U1JZaU5SQ2Jtcmw1N3RKYmJY?=
- =?utf-8?B?UVE2V09QOEp3c0daTEYvMmU3K01yMjVQN2ZSc1NlbVNnZkZiNHdvUjI1cXY1?=
- =?utf-8?B?VUxnd3FPUHVWZEwzeGU1cThQWXd3SnJzTjJZVzR0aHY5emxNMWltS2pHa0s0?=
- =?utf-8?B?dUpTNjE3ZDVDT05ESktyRmthV3A2SmRVU1lTMGpLcUNwTU5sSzVQUXBPRGNX?=
- =?utf-8?B?RzdibS9teUlqaWtKcWRCclNSSVREbkJHalpwZVhQSVhCOURJUVdUaURxWGE3?=
- =?utf-8?B?Y3RpL0NvRUpoMk5tb0dLSVZJY1hhMzFoeStsdHdrRWtRMmVXTC9KZWtBUGk1?=
- =?utf-8?B?NlZPN21qWm1lMEFIU2I2cDBaTitiWXR6SlpTODFVYnhndW5pYUorYjhhUHI5?=
- =?utf-8?B?V1krNHhkNlpxd2ZqVE9RcjVMT3c2bmQ0NVprVU9GNWp5Q3hkcFV3QUFscjJw?=
- =?utf-8?B?Y2s3QkxFaUVkMVBxWjlBY0s4c2sxYksreHBwS2FXbkJEcEpWbnMzVE1RNFJr?=
- =?utf-8?B?SDRMQnFBY0RmUDFFOFpSMFl4R3NPUzZES2EwOVpqR1FqRFRGclBBenBVR1FL?=
- =?utf-8?B?S1BRVnBKNldVNmZjNUZLdDhtaDlRb2tpSXhlSDRKOWdOYzY1NkVINmVjN0pM?=
- =?utf-8?B?blZOMUZSSXBHK1dSallCY2xYTG51aWRpeWQ5YktRSERoRHh3ZUppZ0ZFMVJi?=
- =?utf-8?B?UTN6Qm9EdnZldEMrODV4V1hLRThXMVNWUzJJczQ2SmYrc3BSRUk2a1UwWm80?=
- =?utf-8?B?eEhqTXJEbS9QSDMyYUFmaERzMk44N0NGRnlwWm1GUm9iSGJDREZsdkdBOTVi?=
- =?utf-8?B?Q1NjN0ZVQ1Fnd2Q0ejFUYVFFR2V6bExxUlFnK2hFaU1Ta2hxeTJSWU5Bdlhn?=
- =?utf-8?B?b0FBQ2N1c093S0gzQjJUcVY0a2ptRHFFeFdEb0JkOEpkYmRVOEkxWlU0bllB?=
- =?utf-8?B?UFBMQTN6RWJWSFN2YXVaYmx2VUVZd0xOUmxjQkNmMlhIZ3MxNVExZ0tONjdv?=
- =?utf-8?B?MmtNNFYvYjN4c2hibXFrV25UZ2hUVzJHNUkvYWRDeUJjbGgrVzhVckxFSUFU?=
- =?utf-8?B?TE02eUR3NDV0NjVoU2JnRTh6VVd3ai91RDdQRFZJWkR2ZFl4dDlhejZyemtP?=
- =?utf-8?B?RnFDOWFKNXN5OEtDNGJDby9KRjJNYmZEVUF4VS84NXk2aC9JN0QzdU0vVEpu?=
- =?utf-8?B?NGFucHRsNzh6akg3UEdpM1A1R3JwckV2c1JwWnZhd2pON2lpTklRL0hNSVIx?=
- =?utf-8?B?S2o0a2xDYmtrelZNVmY5L2dSR1BHZU5sTnR6bURqOS81cUtNVUFnenp5Njly?=
- =?utf-8?B?WTRySGVxRkdYUkQ5cUNwanhGa2dzbFhaWjVsamEvRmhKOTRvSEFQQTJ3Vytk?=
- =?utf-8?B?ZUVCQkJBRDErVFVEY1NoTit5cUNBdG93VDd4WlRaRE5hK3BoVzl0ektBSFp4?=
- =?utf-8?B?ZDJGNnBpK0pYN3dyTVJTVGFGTGRDOXpMR1orSUxMYUlyQStXWlpzNDJJZ2Ix?=
- =?utf-8?B?WGY4NURhcUJPbjA2RHF0NmQrTVVXa1lHWDV1MGhlZmg1d1I2NVpjZ3FwbkJx?=
- =?utf-8?B?bHdJR2szZlgvVFRZZU5xcnFJNXUwWGhNb2w4MXVQazNmWHJpU055OVhPalpT?=
- =?utf-8?B?NElaVVJibTRoQ0pxVXFSZCtwQ1NkTW9PV2ZnRy8vU01hOUlXWXdlZz09?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc0ce31f-1b8e-4b50-cc68-08de75e5716b
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2026 09:49:04.5687
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +mlEsYscv/L3z77YudJ403J7YBBzk3dU6ffM6n/6wDBomI+ruelWlQEG0COrSYIbBFfTh4KoG0C4QxWKIZfaD+symUNx83pN1KGDHKGrjQY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR03MB7708
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[amlogic.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[amlogic.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9151-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	DKIM_TRACE(0.00)[amlogic.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[xianwei.zhao@amlogic.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9152-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[nonamenuno@gmail.com,dmaengine@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_RCPT(0.00)[dmaengine,nuno.sa.analog.com];
 	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amlogic.com:mid,amlogic.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B81611B595C
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E995D1B741E
 X-Rspamd-Action: no action
 
+On Fri, 2026-02-27 at 07:47 +0530, Vinod Koul wrote:
+> On 27-01-26, 14:28, Nuno S=C3=A1 via B4 Relay wrote:
+> > This series adds support for cyclic transfers in the .device_prep_perip=
+heral_dma_vec()
+> > callback and implements graceful termination of cyclic transfers using =
+the
+> > DMA_PREP_LOAD_EOT flag. Using DMA_PREP_REPEAT and DMA_PREP_LOAD_EOT is
+> > based on the discussion in [1].
+> >=20
+> > Currently, the only way to stop a cyclic transfer is through brute forc=
+e using
+> > .device_terminate_all(), which terminates all pending transfers. This s=
+eries
+> > introduces a mechanism to gracefully terminate individual cyclic transf=
+ers when
+> > a new transfer flagged with DMA_PREP_LOAD_EOT is queued.
+> >=20
+> > We need two different approaches:
+> >=20
+> > 1. Software-managed cyclic transfers: These generate EOT (End-Of-Transf=
+er)
+> > =C2=A0=C2=A0 interrupts for each cycle. Hence, termination can be handl=
+ed directly
+> > =C2=A0=C2=A0 in the interrupt handler when the EOT interrupt fires, mak=
+ing the
+> > =C2=A0=C2=A0 transition to the next transfer straightforward.
+> >=20
+> > 2. Hardware-managed cyclic transfers: These are optimized to avoid inte=
+rrupt
+> > =C2=A0=C2=A0 overhead by suppressing EOT interrupts. Since there are no=
+ EOT interrupts,
+> > =C2=A0=C2=A0 termination must be detected at SOF (Start-Of-Frame) when =
+new transfers
+> > =C2=A0=C2=A0 are being considered. The transfer is marked for terminati=
+on and the
+> > =C2=A0=C2=A0 hardware is configured to end the current cycle gracefully=
+.
+> >=20
+> > For HW-managed cyclic mode, the series handles both scatter-gather and =
+non-SG
+> > variants. With SG support, the last segment flags are modified to trigg=
+er EOT.
+> > Without SG, the CYCLIC flag is cleared to allow natural completion. A w=
+orkaround
+> > is included for older IP cores (pre-4.6.a) that can prefetch data incor=
+rectly
+> > when clearing the CYCLIC flag, requiring a core disable/enable cycle.
+> >=20
+> > [1]: https://lore.kernel.org/dmaengine/ZhJW9JEqN2wrejvC@matsya/
+> >=20
+> > ---
+> > Nuno S=C3=A1 (5):
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dmaengine: Document cyclic transfer for =
+dmaengine_prep_peripheral_dma_vec()
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dma: dma-axi-dmac: add cyclic transfers =
+in .device_prep_peripheral_dma_vec()
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dma: dma-axi-dmac: add helper for gettin=
+g next desc
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dma: dma-axi-dmac: Gracefully terminate =
+SW cyclic transfers
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dma: dma-axi-dmac: gracefully terminate =
+HW cyclic transfers
+>=20
+> Please be consistent in naming, it should dmaengine: dma-axi-dmac: xxx
+> everywhere!
 
+Ahh sure! Sorry, not sure how I did not noticed such an obvious thing!
 
-On 2026/2/27 17:44, Krzysztof Kozlowski wrote:
-> On 27/02/2026 10:43, Xianwei Zhao wrote:
->>>> new file mode 100644
->>>> index 000000000000..025ecc42e395
->>>> --- /dev/null
->>>> +++ b/include/dt-bindings/dma/amlogic-dma.h
->>>> @@ -0,0 +1,8 @@
->>>> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
->>>> +
->>>> +#ifndef __DT_BINDINGS_DMA_AMLOGIC_DMA_H__
->>>> +#define __DT_BINDINGS_DMA_AMLOGIC_DMA_H__
->>>> +
->>>> +#define AML_DMA_TYPE_TX              0
->>>> +#define AML_DMA_TYPE_RX              1
->>> You sure you need AML prefix? Your clock constants do not have AML
->>> prefixes. What other constants do you expect here?
->>>
->> I will delete AML prefix in next version.
-> I assume this is an argument to "dma" phandle (cells), so maybe should
-> be "DMA_TX/RX"?
-> 
-
-Thank you for your suggestion. I'll use it.
-
-> Best regards,
-> Krzysztof
+- Nuno S=C3=A1
 

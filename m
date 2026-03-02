@@ -1,220 +1,315 @@
-Return-Path: <dmaengine+bounces-9158-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9159-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6ERXCJFLpGmQcwUAu9opvQ
-	(envelope-from <dmaengine+bounces-9158-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sun, 01 Mar 2026 15:22:09 +0100
+	id 6OIqGXAmpWm14AUAu9opvQ
+	(envelope-from <dmaengine+bounces-9159-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 06:56:00 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A9531D0313
-	for <lists+dmaengine@lfdr.de>; Sun, 01 Mar 2026 15:22:08 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 256911D34BF
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 06:56:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C7629301725C
-	for <lists+dmaengine@lfdr.de>; Sun,  1 Mar 2026 14:22:06 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8843B300D1CD
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Mar 2026 05:55:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1CE132D0DE;
-	Sun,  1 Mar 2026 14:22:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F28833803EF;
+	Mon,  2 Mar 2026 05:55:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ClLK3Nsx";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="QRaSJnX3"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="H6kYlp36"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010022.outbound.protection.outlook.com [52.101.193.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B292B31715F
-	for <dmaengine@vger.kernel.org>; Sun,  1 Mar 2026 14:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772374925; cv=none; b=XtAgQzRitCCrcfxPmXbg2XJi8zipg1humfWpUwx+zGPmT0rLNgaozFvY7p6QB8l3Hv/rTrrxQyqLXFOWKZctQX7rI1sxXSVOsp0CzEEE/y1lm9MNSjUMfEoaJxhu06Xvciq5syzZPHBHNCGTozg+/DQ8eyz8DwBZ/mhsw/0CT54=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772374925; c=relaxed/simple;
-	bh=iD96boLQ8I7RchyAagC/taDWPsWnNpqMCY0MPFRwPm0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nHegcfj0ZYXPYmoG/LwRP+3W764Fw2Ymw1+oSKmytbvESVkdZhMT4L4OHh8d38hGZupLmXkFAyz//+qvX+1g5SPNj5L2J0V0UFJn0+vWkKP+CecCVrydG/YnGm/9PCOvPp0pMcOsWC9XwvcT4aMk3WcPPABKLtYsdoHQUmcZels=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ClLK3Nsx; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=QRaSJnX3; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62130onw4148349
-	for <dmaengine@vger.kernel.org>; Sun, 1 Mar 2026 14:22:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=b5jdYQ+rQNyWXtGUdSfK8sVn9Lf075zpZKN
-	QNsmNl6s=; b=ClLK3NsxB0auTZTw3SJdKebOvuF9GyJ6b1CAeNjCRU/2rLIWo9o
-	VMjLjic2OlEV6zOaiiI/iJS8dBcaOeQxVcUw8OGXE6kv2IGAQp39bdwwbgN59l71
-	sqZE52k3gw03c5I2RXRf/F21YCIbOKtDF2sYVmjXFHDNaVrivqdgacL+nCtkuqDs
-	Z1Y51NpC9nOr5Eh0vEj8kHJYdCZpjDx9pNbzA3+yOTxIt3hI0cTL0Kk2E+KfLknW
-	GznlcdMA0ESorKey4QNAZ7R4J4f1GGv8GN1jRVXl0gqihjf/J4ZezM56jPCQDAYh
-	dXjbI5QgW39Tzd4EPBNa5YKciMFx400Y1Cg==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cksg72quk-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Sun, 01 Mar 2026 14:22:03 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8cb3d11b913so3111746185a.1
-        for <dmaengine@vger.kernel.org>; Sun, 01 Mar 2026 06:22:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1772374923; x=1772979723; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=b5jdYQ+rQNyWXtGUdSfK8sVn9Lf075zpZKNQNsmNl6s=;
-        b=QRaSJnX3La5EUbr/FIqDU1m4u5g5STcD9I6JX7Nhvfqr3eVoHaE+fiNhZnQUcfxnWA
-         t7UIqHLGU1Q3Dcx1udu/cuBbNgkkRbpqWYoUqQexjwQx6UAVHXZ5I2oRlA7/gHBs67Lm
-         igOgkEAisyzvZkL6yKEzG3c7BuGG+EGOcAaJ4p6V94CAZdqCPPswX201Rkld73n+F4zi
-         XGeu8MIfO/su2CXVvYtI+7WmS2GGk1mS509h2ncEkai24DA/+cImLyOMSNMzFZkaRuik
-         kkurEScdtL78iaRJMIYrto4iyXkDj+pKsZfgVPT7XETApamgHmh2r/J3CuTGY/XNwf3a
-         9W7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772374923; x=1772979723;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b5jdYQ+rQNyWXtGUdSfK8sVn9Lf075zpZKNQNsmNl6s=;
-        b=Fy1/stNqY6lz8iAwEiWXjUv3ETm4UBkvjWtU3+c8RpTVglFoqzAw+SDGYOr8kz9HH3
-         mUD2keu92zcbRrx2Vq7iUmnzKuwGd49oLu5O97ZMKEd484OI6tYi3GY+IDCD3jy4U8Zt
-         b2PhDIILrs8kaXXuYb2lPL4ZnjXOFLzGAJXNykTcWjIacsGEcs7PRepbrMr5+LrtJbQ3
-         sItt7z1SdQhwAlHwGuc7XsBnwuFZmfTNWkzaiZOQh/ejFaXxa85lz+8TyNbfx5APLRYu
-         Acq4B4mxsBlxobYHgy7EY0UsE/hMgQQCzX6V4OZ2nnTCBpEq5+Ubl4A0/N5WMMXNCGn9
-         JUYA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/FmVuNCNapor6oLGY7Bi5FB0kYrdLysLvmwaKL7RF5nQPFJAyEi140MqYvAmcuo7cuPihTotQRBo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLMVrT+ggIaM+yGg/mQeRGo4a7eyHDqEuHQXCTgOVKN4hGr/7n
-	cUuli9ReEnaHLYnhij87Se48iHULRcVAApIW7cQjsoH7IJdU5F9FFFrwZQ0FJkIj0DNhDEqtkcM
-	kUZFdPY48ICORszj6TmmiaSypTdw3wgE6IFYBEBKfJCXm2NqUP1onmB3+VWVW2ew=
-X-Gm-Gg: ATEYQzz1fGnz0hy5z1r4oP4vLMDK8RsQ49+BtP0hXP+aWadIQn7dVRHRBbzIfI4GAOq
-	+uz97GWVp/AZOcmVdHvp4MAOngsbhZORYxtvyRlkp3b3dMqJSK+dddRbzyyFQe0xS3B/Qhlhulc
-	WVboHX2uJIbnaoTWnWg3Z7y2oSbAxoGumnFvQwor+5D0xWYWUJlSn4vjAeVVeV68AFCSRWBlbtY
-	VRdZQCMQ1yex1n2bMTTQR1bOKXX86GPNGTBTvSSMSDOP6IQVzSheUH4BaZ6jz0pyttGdlmm2YDT
-	bW7rAO525vWgqeIy/fJhZukCtDa72DsM5Ms4BHYwZf7njKr1+mS0iGWX/EnHE7sPOLJFQBNZRzC
-	UcDAOwxhV5sUkHEFKGev5ozRG2YklIaxkbCLy
-X-Received: by 2002:a05:620a:254f:b0:8b2:ea2b:923c with SMTP id af79cd13be357-8cbc8dc2b70mr1097922585a.14.1772374922934;
-        Sun, 01 Mar 2026 06:22:02 -0800 (PST)
-X-Received: by 2002:a05:620a:254f:b0:8b2:ea2b:923c with SMTP id af79cd13be357-8cbc8dc2b70mr1097919585a.14.1772374922544;
-        Sun, 01 Mar 2026 06:22:02 -0800 (PST)
-Received: from quoll ([178.197.219.94])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483c3b346ccsm206693745e9.2.2026.03.01.06.22.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Mar 2026 06:22:01 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-        Michal Simek <michal.simek@amd.com>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Subject: [PATCH RESEND] dmaengine: xilinx: Simplify with scoped for each OF child loop
-Date: Sun,  1 Mar 2026 15:21:59 +0100
-Message-ID: <20260301142158.90319-2-krzysztof.kozlowski@oss.qualcomm.com>
-X-Mailer: git-send-email 2.51.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20452366055;
+	Mon,  2 Mar 2026 05:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772430952; cv=fail; b=IwcUhdaul8xDvdEuZUYy2PGb2fwRTzcXK6JT7F65lS5nKyjuOPWXsX4Gdf3wDPnSFDIsRf21dvrcV9iL8zUUTGvBKRVQ4Khqf7yHVc79sW8tYCnJTNUP0EZkOE1pGlsTTWh1YgYiwgtJQv/d/8NakfN1QP2lFFnQXeohS3nTG4M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772430952; c=relaxed/simple;
+	bh=JD0hsVNT385GGX48UOv460QLoiydEDrzAwfbtqjzvEY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=WD6N4YuPs4pcjwxCt+xbVrG2DEoYHPYIu0y55G7+r3dhoMZms8lVc0v+EZcD4Fajg8OKnJWXqBf5wa+qmQ5GQEOtNzNCRaWbIjLqjV/jHC5x0cxwLwuw/NPA6rVx/E42OT9jbhxU89+qebfMSojAshHL52z1v1DIDyf4onoB/pw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=H6kYlp36; arc=fail smtp.client-ip=52.101.193.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cqM/EgYpsth58kWdMk/IQNPTOsRLawynMnHkxdE67QM6bmOTVCV0pODQxV2cqcgnPcUZ0F6kfooo2Ct8JP3gw3+NheuTq3wgDu8aAUtIdWjJ1iYkMySYMcawQgMJeGhvNqP/rAc8CufijSMtTx6WvAMl2cvirmSaKEKMVdHpEB4fnl4BEBDVWTRjWxV7CQDQLTsoYAt0UTza7zTIH94lZd2+ZO21LvllOEgaEGVIhHq+SBAfqOJ/qa6a768jYmRDmQHwD5eQzDwrdeD7+jvK32dpoAIROiXj50p37T4MUd5gHs4IwlynWR7rSzdLk4Vx0gfOC81ExUctn6s65AyBNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0Xxv8Ku8w8FshHSmCpl/jcNgy2dJu2WFk4xwhvOgSWc=;
+ b=dkDuRooAv5o24fh2M1JDfoAePctiTetVy//hs0QsDbVVmLP4TrfDdMAX1gKKi9Sce0wWVj16qNf4B5rqma/67PREdBtKmRkGXO+EsKG7+PEUDD0GcrQ4sT9sSKsiNSospQSCuhjHt2WGCl7J1AzqHN/wyu2RnQtkSe3urswmhYrO/p6OVYKl2NJlCPeaLYXcC9vXv3V4FYBH5h4DqPEvWjmGS+dYE2VxLkb13fLOdtAOzMq3Kkv6cDt6cTNJJKifRERsRcs32zn7+Ur0GHjZhs0RQZKwdVjMR9Cxt1P6RVWjae1RXwT1+KnUy8f/b/awXT3ZWklg5kw27XE9OemzjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Xxv8Ku8w8FshHSmCpl/jcNgy2dJu2WFk4xwhvOgSWc=;
+ b=H6kYlp36j4/RRW4taelxfMpLsF37kEHNEE4TnHcxetRSXvnPBZjdvz71P5Fe2DYOYKa0Ly2Oz1qwoVZt2DIXT5gOnDbMVTqS7vfskBcvgp3e7Du9jGXJm2Xtwpt3GSdpAvz7gDrZkuy8Vp+yq/nDMeXNfSywm1lglMJZqLTRuYw=
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com (2603:10b6:806:331::16)
+ by DS7PR12MB5984.namprd12.prod.outlook.com (2603:10b6:8:7f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.20; Mon, 2 Mar
+ 2026 05:55:39 +0000
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::2fd:1a4e:2042:7dd3]) by SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::2fd:1a4e:2042:7dd3%5]) with mapi id 15.20.9654.020; Mon, 2 Mar 2026
+ 05:55:39 +0000
+From: "Verma, Devendra" <Devendra.Verma@amd.com>
+To: Frank Li <Frank.li@nxp.com>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "mani@kernel.org"
+	<mani@kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
+ Michal" <michal.simek@amd.com>, "Verma, Devendra" <Devendra.Verma@amd.com>
+Subject: RE: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL mode
+Thread-Topic: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL mode
+Thread-Index:
+ AQHcnzLWCO8+PlOBsUyeigW/SoG/H7WFuzkAgACmYXCAALfggIABEsjwgABxvwCAAOnmsIAAvjoAgAEKjvCAAHWzAIAEwNdwgAHz+ACAAMV0oIAHkzFA
+Date: Mon, 2 Mar 2026 05:55:39 +0000
+Message-ID:
+ <SA1PR12MB81209A9579FB1BD980DB8004957EA@SA1PR12MB8120.namprd12.prod.outlook.com>
+References: <aZNz3DxDdzuIf2Ar@lizhi-Precision-Tower-5810>
+ <SA1PR12MB8120CDACB96008B2BD4246D3956DA@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZSZrROMrvt8jHvw@lizhi-Precision-Tower-5810>
+ <SA1PR12MB812019D701E0B188611DFE7D956AA@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZXfmKs5_KzCDSPq@lizhi-Precision-Tower-5810>
+ <SA1PR12MB8120DC54060E415153AA8CDE956BA@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZdDYJIUuceu0guJ@lizhi-Precision-Tower-5810>
+ <SA1PR12MB8120F99F2A675C17B1F649EA9568A@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZiFtgcMzs-U2MkN@lizhi-Precision-Tower-5810>
+ <SA1PR12MB8120E7C753B717E4C8B9E7819577A@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZ4l4IHqObEP8DfP@lizhi-Precision-Tower-5810>
+ <SA1PR12MB81203E3A32F0670DB15D63059575A@SA1PR12MB8120.namprd12.prod.outlook.com>
+In-Reply-To:
+ <SA1PR12MB81203E3A32F0670DB15D63059575A@SA1PR12MB8120.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2026-02-25T10:14:27.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB8120:EE_|DS7PR12MB5984:EE_
+x-ms-office365-filtering-correlation-id: 4fc568ba-e5d3-4ce5-42ca-08de78205550
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700021;
+x-microsoft-antispam-message-info:
+ HKPjaGV7qaI3BKaO9Tro5atFvzOsGjTNDGrf4LjSz0WcUa58Sjj7vKMT2PwPnQH21nkPYB0MHa9adJKSthoj50NKR9PisArSCk4idIQtSi3HHD+zXqkncdrSCCrTeSZTmatxwNUpFqUcSc1DCvwcPoHdv9YGmOhoZKU3gcvZ8zsPGDvqq4ieMiaFM6THVhPdX3qYWBUs2tSu/zI2to4aW0JXEtSBRBLxFBShlD/BiPMv2JRVEUW2cDoKudRWHJ5ZkOe6+Q5IzTR5HqqbOnRyNjEekHDHSjocvozRXZknyMPeZMUzQo9GRyFYLU30t5kyz3gJ3RJiB08J2rw3FwA+hQZwjm9DyJ7gpc9nyyRrvCzOFa3ZITTzETVeE+FZkxXDnpCypaZ/Zuy5FYEcH7Yx3/oug5pqg9pYA+IBQrAviNPTNr8tY1P91KOQsyhGV3mR/QuIfxpZHdBBEOtdsDhYLy4yF/KqGGutPJTWOg/FVzyNATz/YeiqDXsHx39Hz+vWlsHy/hbo3eci+vSaGpsyxKPb4+NwtyT8EeF6g2OxcULTfJSFcgodJ/arR93zB8/Ers38KKMI3tgkKLYOqWcDYdCiFUMFR4kOCmdAarUhdhS3dUQG3tOOWgvCHhWIG7NxuiMpfcLlUoYL64Xri/ApLW2I+C/F2dmYj3uHY5dX094yjB9JdZeWGI1wEL9ADgr84OR23icfjb0ihZO8KZLZE9et7q/ZZxp2hB5WbBksdI660AIQansAfQE2ZfkJXxTIcjwJnJqbve1/susQdPQcomvWtxaDJn0+qr7Bnbxj2Sw=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8120.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?wI3gpqat/KmprMTv15MiYNtjgYZsmU8QRU0ves4pl3s5snrMTR+2ZbabOTtI?=
+ =?us-ascii?Q?6TZGQUw6CrvFzEH41DnviDSK61mrlvk8HyDlCGrGiyDrONzwEl/6h1yX76/M?=
+ =?us-ascii?Q?P90WRkmru6LC1JE4scLPaWq4rpIRTRulBhCR5YSUdNY1Z/ItJY9Hg8bV2px/?=
+ =?us-ascii?Q?Z8OChQl9JDO7TgQ7Nm8tio9RwDw3Mg8n4vhxfwpL8H1yJIYjqOd4eSuIg4oq?=
+ =?us-ascii?Q?+DCeTlAWzcIxNFFIttKt7XZcAkzhWAFfmihF3pBKJDkt0NS00KkQKY3uotAB?=
+ =?us-ascii?Q?jo/w7ufK4eaWwoVBewVrYUYsNhBdrqXzao3YHeyLouQf7yTQzxwh69ZFd3eC?=
+ =?us-ascii?Q?Vut/zHTum5ODghUe+wOh1bZkytZYUuSNGiL5xdIsvqJzJi7igzoGaDviXTqR?=
+ =?us-ascii?Q?+XD4TUwTSxVMbDJI0Yt4d+r9Wwnj7v3AYij8JNHYtT24nIxzv+7AT0NMbTwW?=
+ =?us-ascii?Q?t6YfqiIN8ndi3VkaCTN3AGPLPTKvQNA2M5357TcdOq7GD41KS7CjvSBpbCs9?=
+ =?us-ascii?Q?murj469a4ndCA8CFPq3lOJblar084hNzQacs31ulAwqjcA49dmCh13AmiswU?=
+ =?us-ascii?Q?DOpBddcVtMm+9Xt68vHHxWOQczQTlVBrhB4T/ln8eYdtChVt1vMWRuOBui08?=
+ =?us-ascii?Q?WiIhwoAArYDldvhGV8Fchw9l7zx2YpGiN2fC3DjcE8Wc8dic+g8evsLg1zN0?=
+ =?us-ascii?Q?bt83+iUZTMcdLQLi2dhMLGDdpQe9pw1nkB3j/6UwE14LTT/WSJVhGnLENn/k?=
+ =?us-ascii?Q?Y0yFwuoUvB+/5fo9iESTAnbUXBraa8XqGd1mqk28a9p+gLphYdCTw0KPxMae?=
+ =?us-ascii?Q?mdVdFpjYbGBW8KBh27l45G3lkiABFzKMMOQg86AjjOiv4GeZPXRY6SLfvS9/?=
+ =?us-ascii?Q?6ihmOLuSddPtHeyhdyLRWcxPUnullDOx24Zdu7Q1D9DsYjuJpkMx0v9eFkLw?=
+ =?us-ascii?Q?PvFkYiHBYqK6bgOzkYSsMSB9eznlej569cNRsVz28dJq7oVlJqCBZndVAamY?=
+ =?us-ascii?Q?PXcaWEEtXT6GImzUZUsayfamH3SQNskQ1UuoAGsEvqN5HAUpRn8llL+UhKt6?=
+ =?us-ascii?Q?jqeL9ZUnyP9ztTjARAENFoV2P81ObAdoMkUHmJ3kMEIYI+JMcbLbwP83bDSL?=
+ =?us-ascii?Q?gzttAmxMCleFFTwsP6xT+BCIj931pDZm02VJyjEDYuVlzb1a5aBC+o0l5CXF?=
+ =?us-ascii?Q?w2IiucxUAukBFpvF8NfFmvDVs0nSSziRcytA8ev27SCXMWoeXyp668diIy+h?=
+ =?us-ascii?Q?sngO3IJDRUdVf+GK17gpGyAvQhfZ2bcpAhJmxfwiQkvEaJdlpglLqvtk2Rgy?=
+ =?us-ascii?Q?Fy04IP/XHiPK3ajOYrWQSZkYzNkp7SNXBeEBEi/QYGyXOGn0wB3HJ4EJuvL1?=
+ =?us-ascii?Q?YY6ddfNvzzYjeWVt6Yl2iP9lHFplBb9t1kQjEo+/cIhsbEj0iIcLzYIGBzwl?=
+ =?us-ascii?Q?UcaPR4R005BC0YE69J+KGy0MBKvyekPTagl7ryGO7HNjFjxOLHbYoa4DSKFO?=
+ =?us-ascii?Q?mz62AqUaFOpG3V3TXm8lDHw8+Dg5zpSK7My3TPASdqRQ7FdJtuhaFECoGQzd?=
+ =?us-ascii?Q?8dd9POCKueKNGvOG4355VFWdA1uVDGsB67L5QR/FEP5rqv1TAxA1DsaWJjp5?=
+ =?us-ascii?Q?e2cW9A1dElEo+p08TaShgB/EpqIBnIKIhm6fdUUXXPotUzvt9wPq7sOlnv3H?=
+ =?us-ascii?Q?e3A3NxdzMigV7z/jbsY3kGmwT18Dm1tueqeyTO6rS+drb2FS?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1303; i=krzysztof.kozlowski@oss.qualcomm.com;
- h=from:subject; bh=iD96boLQ8I7RchyAagC/taDWPsWnNpqMCY0MPFRwPm0=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBppEuGvKheUVxqafvMaRtg/VGTXqOo0lrgZIjYS
- RE+h4O4tSeJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaaRLhgAKCRDBN2bmhouD
- 15OFD/0Rr93m1y8RAkpwIS/Hf2Z/RLrcEJ0bYZY8sNP3qXtcZa9FvpQLyJ5gak0+FBkzpfBL1ET
- 47YsR6mRjuqhg+R6qfVF46HG39K+T/Xe/DFu8DoahA3zua/874kK3zwAdsI9bXvD7p4TgO0AdQY
- WBJIHDOPW1KaXpuoLhLC8pjNeNNIVc3Z1xfHADVEtCg81FOJvblEpSeQamsJBFW35p1RxSMooKc
- a0QL5RCQ//DGlADy5eX8vEbTNE/Z52Lu/FOh7B52zOOD1Ae0IX9joLH2uzgHCuJnwgLlQKl++ga
- HGvewysDtPuNXr3ZO8k62wZMjKqd4Vh4jM/hrudsANd5wwOGrvkZzMY7IIN95XYKpgoHP1pRj0o
- f/W8KWBob4JZlG9TI4kc4K6ZaUr7OGhfRwliL7aK2xKPxB/cI0qUjNiQIAHJRu+cUrgJ58iVDAb
- XcZTYyKNqls1VZ8ws/bXAvyKOx7+oMTmhuNRdALUlDo5CV/BVhf3fU8mzw8NTKqMPVVRiyvOVJS
- foShfF6yvrWO3UJOvNVu7Yw5vLYGS/jB2Qn+j2k4J1W/tDHTorZ+YaX5sFolk2Srv7YgmIAq7Zm
- raT/1EgbUM1e/e13S2ETfTI5JyZBIQ0e/348MJF+ytTEvhQ4j7p/+f+rPTvRQWIbXzw2hTISWNC joedJ4Bl7UHNROw==
-X-Developer-Key: i=krzysztof.kozlowski@oss.qualcomm.com; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: exHUQL9Je-Dia7SVAOTQQ2RvfTfo57mr
-X-Proofpoint-GUID: exHUQL9Je-Dia7SVAOTQQ2RvfTfo57mr
-X-Authority-Analysis: v=2.4 cv=FaA6BZ+6 c=1 sm=1 tr=0 ts=69a44b8b cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=gOEeR9iKwsj33Yj5oN/cWg==:17
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22 a=EUspDBNiAAAA:8
- a=f0Vwk3E23dc-4RkOOFYA:9 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzAxMDEzMCBTYWx0ZWRfX8XWF9tawTqjN
- DJs4mDoPh4qtSTjsJAhspEMmrXVU2G4hN3mBOL2Eaj92KCNlr6hxSkD/aXS6NM+KnOfgNeouAlT
- MIycC/kL3O0FYrHyRJbXvc8YVhhTfMFHo1Wlm3Lw4fva2zlOQguCYG4QN6/IaBxLI8dliITvlfH
- zcxXmzvhQ4hkqyOVdZBEFpxEwrxbh18UB5LYNLoIZLbL+1IS9yGug1nJdd85OJ7ygunPv+0/A2Q
- wCo5pEzH4EBJUpxQj+VptSodTi48cLur1T25XQQ6S4PR4EWYdut0prK6QFcfqYHiHuufjio59aG
- vtOuiS+byBe5qHSS9qh2Dz3jls475ML1Oc12WhPBZHzqd4bhuG9OZnesFz1RZH7CKy1+Fr2pDvn
- BWtwb8mUBHQZzpNsUlYEWlhb4As6gHzs1bHHQUt7Tm9XsJzfDiWXtQMolrcQ3T8lQ4ESeZjs0+I
- jFApAmwK12D0Grb8mRw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-01_02,2026-02-27_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
- priorityscore=1501 spamscore=0 bulkscore=0 adultscore=0 malwarescore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2602130000
- definitions=main-2603010130
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8120.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4fc568ba-e5d3-4ce5-42ca-08de78205550
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2026 05:55:39.8182
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TDZp+3C960R9aL/tsCo91PA4WScrXHSssKjyE1VCPr6rJwXRi1aifv+Ui6P2C1g1YeFv0yuLdvFyXSX2lxJ/8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5984
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9158-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9159-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzysztof.kozlowski@oss.qualcomm.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:dkim];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	NEURAL_HAM(-0.00)[-1.000];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[amd.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Devendra.Verma@amd.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 7A9531D0313
+	RCPT_COUNT_SEVEN(0.00)[9];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,amd.com:email,amd.com:dkim,SA1PR12MB8120.namprd12.prod.outlook.com:mid]
+X-Rspamd-Queue-Id: 256911D34BF
 X-Rspamd-Action: no action
 
-Use scoped for-each loop when iterating over device nodes to make code a
-bit simpler.
+[AMD Official Use Only - AMD Internal Distribution Only]
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
----
- drivers/dma/xilinx/xilinx_dma.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Hi Frank
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index b53292e02448..02a05f215614 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -3180,7 +3180,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 					= axivdma_clk_init;
- 	struct device_node *node = pdev->dev.of_node;
- 	struct xilinx_dma_device *xdev;
--	struct device_node *child, *np = pdev->dev.of_node;
-+	struct device_node *np = pdev->dev.of_node;
- 	u32 num_frames, addr_width = XILINX_DMA_DFAULT_ADDRWIDTH, len_width;
- 	int i, err;
- 
-@@ -3320,12 +3320,10 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, xdev);
- 
- 	/* Initialize the channels */
--	for_each_child_of_node(node, child) {
-+	for_each_child_of_node_scoped(node, child) {
- 		err = xilinx_dma_child_probe(xdev, child);
--		if (err < 0) {
--			of_node_put(child);
-+		if (err < 0)
- 			goto error;
--		}
- 	}
- 
- 	if (xdev->dma_config->dmatype == XDMA_TYPE_VDMA) {
--- 
-2.51.0
+Could you provide your inputs on this?
 
+Regards,
+Dev
+
+> -----Original Message-----
+> From: Verma, Devendra
+> Sent: Wednesday, February 25, 2026 5:36 PM
+> To: 'Frank Li' <Frank.li@nxp.com>
+> Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>; Verma,
+> Devendra <Devendra.Verma@amd.com>
+> Subject: RE: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL
+> mode
+>
+> > -----Original Message-----
+> > From: Frank Li <Frank.li@nxp.com>
+> > Sent: Wednesday, February 25, 2026 3:58 AM
+> > To: Verma, Devendra <Devendra.Verma@amd.com>
+> > Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> > dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> > Subject: Re: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL
+> > mode
+> >
+> > Caution: This message originated from an External Source. Use proper
+> > caution when opening attachments, clicking links, or responding.
+> >
+> >
+> > On Mon, Feb 23, 2026 at 04:40:07PM +0000, Verma, Devendra wrote:
+> > > [AMD Official Use Only - AMD Internal Distribution Only]
+> > >
+> > > > -----Original Message-----
+> > > > From: Frank Li <Frank.li@nxp.com>
+> > > > Sent: Friday, February 20, 2026 9:33 PM
+> > > > To: Verma, Devendra <Devendra.Verma@amd.com>
+> > > > Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> > > > dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> > > > kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> > > > Subject: Re: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL
+> > > > mode
+> > > >
+> > ...
+> > > > > But if it about writing a new function to check the LL mode
+> > > > > support then I think the current variable is good enough which
+> > > > > provides good readability and do not create any ambiguity
+> > > > > compared to the ll region size
+> > > > comparison.
+> > > >
+> > > > It is not big deal,  use 'bool cap_non_ll: 1' in dw_edma_chip. So
+> > > > we add more cap flags in future.
+> > > >
+> > > > Frank
+> > > >
+> > >
+> > > Hi Frank, could you elaborate what you mean by adding the cap flag?
+> > > How it is going To help identify the overall chip state?
+> > > I do not understand what is being implied here.
+> >
+> > non_ll in chan means current status, which indicate one channel work
+> > at non_ll mode or ll mode.
+> >
+> > here dw_edma_chip means hardware's captiblity, indicate if hardware
+> > support ll mode.
+> >
+> > Distingiush hardware limition or current working mode.
+> >
+> > Frank
+>
+> Thanks for the explanation!
+> Hardware supports the LL mode / non-LL mode, just that there is no piece =
+of
+> code available which can perform the non-LL mode as only one mode was
+> supported initially by the respective developers.
+> So, providing it as capability does not look justified as in any scenario
+> hardware is capable of non-LL mode. Theoretically, non-LL mode should hav=
+e
+> been the default mode.
+>
+> The non-LL mode is not a hardware limitation either. LL mode needs extra
+> configurations and in the absence of that, interpretation could be, enabl=
+e the
+> supported other mode which is non-LL mode.
+>
+> With the current non_ll inside the dw_edma_chip, when non_ll =3D false,
+> indicates It supports both the modes LL and non-LL, but requires user inp=
+uts
+> to enable it.
+> With non_ll =3D true, the dw_edma_chip or the hardware has no choice but =
+to
+> work in non-LL mode only. This is the interpretation for the flag in non_=
+ll.
+>
+> With the capability, would it not make the statement, that if non_ll =3D =
+true, it
+> supports non-LL mode but that does not mean to be mutually exclusive and
+> not support LL mode at the same time?
+> If there is a requirement regarding the capability then it can be taken a=
+s a
+> separate update but I am not sure what purpose it can serve wrt non-LL
+> functionality.
+> Please let me know your thoughts on this and lets conclude.
+>
+> Thanks!
+>
+> > >
+> > > - Regards,
+> > > Devendra
+> > >
+> > > > >
+> > > > > > Frank
+> > > > > > >
+> > > > > > > > >
+> > > > > > > > > > > >
+> > > > > > > > > > > > Frank
+> > > > > > > > > > > > >  };
+> > > > > > > > > > > > >
+> > > > > > > > > > > > >  /* Export to the platform drivers */
+> > > > > > > > > > > > > --
+> > > > > > > > > > > > > 2.43.0
+> > > > > > > > > > > > >
 

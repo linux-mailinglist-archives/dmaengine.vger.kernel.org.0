@@ -1,219 +1,378 @@
-Return-Path: <dmaengine+bounces-9172-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9173-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yHkBK+aEpWkCDAYAu9opvQ
-	(envelope-from <dmaengine+bounces-9172-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 13:39:02 +0100
+	id OCoLBo6VpWmPEQYAu9opvQ
+	(envelope-from <dmaengine+bounces-9173-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 14:50:06 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48ACE1D8C6A
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 13:39:02 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3E0D1DA1DE
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 14:50:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 445B03035F65
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Mar 2026 12:37:06 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id CA981301DF67
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Mar 2026 13:50:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 717CB373BE5;
-	Mon,  2 Mar 2026 12:36:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85292379EE1;
+	Mon,  2 Mar 2026 13:50:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jQTCPOUo"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="W89NMauy"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012008.outbound.protection.outlook.com [40.107.209.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307C036E48B;
-	Mon,  2 Mar 2026 12:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772455017; cv=fail; b=caCEOPxYt5vyAyR8kk6S9o1rICV607gfKDjdg2qK4T1Fcme7KWgcRcElO7nuZBoMXx7VIt59ADexqH8piyu4+n4VhhvxAkI9J5Kt3PrARwuuEF1HB/QY/nZPb/s0l457hOlp0ckWHaDhEbnlPofYhYnvf0JQwEcLMDZcy43WafM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772455017; c=relaxed/simple;
-	bh=NDcN5ScAigBowCNQiSmrSxANmDvZo0U7Oj7yR28muVM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kj1eEgyGz5iSfteyw/kmS6q3Md1Tyy5h5btfxY31X6+Pwul/hBMn3wHuRBOVb5xpSOnC/srW3mboGjK1mm7YQY1kjKL/frJEm8vCz8++giU81ySNQ3G8aDvWhcDp44TDqMZRpfL9RkjgDg6dWMTOcr7R7TNnwJSBqksBBSftWxM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jQTCPOUo; arc=fail smtp.client-ip=40.107.209.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tyA1jWdg3xiMakvP1ZlOq77DvIHhQbUr1GUHqmAU7HaySpM0CZapfZmEs/NLDBQEQYSvLEQUrzUXfxUn2iX7Dn4Ba3vS8IYODhSJd6e/BAd9KD1RGTiIB/RKaFDun07hkGCYgYu3W8yMM8PQx90JwSIQIXrZyYA5MQ0/Y9dWPW1CQGnv60h+y7ya600jBfxgwGtSaalJSB5Qa3q9ucrdcraiwO/Vkx8VXBH/RAyh378Tw/GIBUHk/5NqsqPdbX6uPUGVYVYg2SBYRdCxUlo3RIdb2bE1psjD+LpMmpWzQDUYHIKVxOe+eJ6fyyjdjdMmuWDBLESyORlgeb8yW2pfBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WXQV5yMCUUOGlqMBdeGR3r793DKFDWhvQo7TpCmc1G8=;
- b=vFuKG9Q/AexOHclwSdcPBMrd4/J00xU5va8QOdBwpsNEt/wf7S76aIkJ4BKD+aRyqmS0mW5PijMdEP4vqPIwIuCf8//D4hBCnfwaDa642iQtG3gk68ITA8ylZIdP62IjvAdjamtWIl5N7gHIqQ20/ERAZ5VcZdyWTsqF0gJ7r8PLWJB4a1LXuLHLX1IBVJqbm7UujVMDCXxYQZi6bnufGTJUMSawU7FPfYRn9b2BDctIYLnTAaThRMARjBygYFYX7rFeAnTry15GYzYgwZVNUyle/eFV6PaQLsCNLa8ohkz5g4ayztrfs0SYPjC4sBEPkoNSLdF5svIotWSJkLAeCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WXQV5yMCUUOGlqMBdeGR3r793DKFDWhvQo7TpCmc1G8=;
- b=jQTCPOUoUKdFdcI8yQ0SB4GiIGemg2x9EnGkb1/SAJTTZ24jRAOhs75W+Bgz45KF+yK9WciMlWQz/Sh862UU3krKUDCEv6wxWV9RuvmrRqUDiLvTRvqlkXSVK+3eczgLMzAVoe/NyYQwWC3Is6hC+uZl+Oz25mlfjUH+d7BLZE3EHWI8DEk8YoB8myWm3MDXWZan/E17b3HOFIWchFtY7jlpSRXq9cif3Wrcfkcb4Hbbzafwyb/ym4/4RbYaLQeEDCpgCDjxhYIXPzhSBiPOpIDolfSsr+9GfyrKRcGi4rvOEAUDw5IjnSNbkz0ryJbv15lqQy0c2rJ23fhI7SGMEw==
-Received: from CH0PR03CA0270.namprd03.prod.outlook.com (2603:10b6:610:e5::35)
- by BN7PPF49208036B.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6cf) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.16; Mon, 2 Mar
- 2026 12:36:53 +0000
-Received: from DS2PEPF000061C3.namprd02.prod.outlook.com
- (2603:10b6:610:e5:cafe::7d) by CH0PR03CA0270.outlook.office365.com
- (2603:10b6:610:e5::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.21 via Frontend Transport; Mon,
- 2 Mar 2026 12:36:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- DS2PEPF000061C3.mail.protection.outlook.com (10.167.23.70) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9654.16 via Frontend Transport; Mon, 2 Mar 2026 12:36:52 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 2 Mar
- 2026 04:36:32 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 2 Mar
- 2026 04:36:32 -0800
-Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
- Transport; Mon, 2 Mar 2026 04:36:27 -0800
-From: Akhil R <akhilrajeev@nvidia.com>
-To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Thierry Reding <thierry.reding@kernel.org>, "Jonathan
- Hunter" <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>, <dmaengine@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Akhil R <akhilrajeev@nvidia.com>
-Subject: [PATCH v2 9/9] arm64: tegra: Add iommu-map and enable GPCDMA in Tegra264
-Date: Mon, 2 Mar 2026 18:02:39 +0530
-Message-ID: <20260302123239.68441-10-akhilrajeev@nvidia.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260302123239.68441-1-akhilrajeev@nvidia.com>
-References: <20260302123239.68441-1-akhilrajeev@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C5D33ADBF
+	for <dmaengine@vger.kernel.org>; Mon,  2 Mar 2026 13:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772459401; cv=none; b=Zi2h/FQnn86U0+kNqzls0xgFlIZuN/WXDfRFnHHa51SRcChexV43yLgaDToYDSuT/iHLR4iR0NEfxzqeYhfQjYEJ8PUB4XXwabNtn9M8I0OI5n7wXGpDesil7U8DQNDwzeb5FrHzna1BQ797kI1e6J9cxeBcBVOMM4RpmiTKDNI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772459401; c=relaxed/simple;
+	bh=6rxitJML5el8SD7x2bLQQ2FRCVMs9yxv6zhxa8ylm0s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WqScvkGnDzceGqX5MSWa/Q+rySNL4RrrJ5B5NQkBMEWicWGXyR+cpti/8Iy0AKrFtGdL4cD/W67AD6+n911iaBTQkSQ0bHvttValb4SLweG9DbeeNoQtexyEfq3Tu1Pfd20LrvWL7le3ApiFaL1bsG7TjrELD3FVcuMLQq484e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=W89NMauy; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4837634de51so18375485e9.1
+        for <dmaengine@vger.kernel.org>; Mon, 02 Mar 2026 05:49:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1772459398; x=1773064198; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uOGfBSF1Yzv+515EEkVwpjnn8h91APdHFmvLcZC+dMw=;
+        b=W89NMauy/1z7mF+rIJ9SjSnsgrMYuU+3C6Pt8Zy1sGw9B1UmJnGOOgR1GjiBZU1YYM
+         XFQWaVTG5lgRg4xgkzWKEF3HKbmkjfuq5hM3ZspgGErQUI3232yoDG0LhP4E/zvz7IsS
+         Pq4qT0b1nybdtvAK5gCy/JdJKqn/KrvIoKwTK+/MWJRNOPU7DMH3Hn8ndDPha+DZ2CH8
+         84qSOmbhR0++KBTpvqR+eQf4XTPBgO0bQtQfbWCITLEz4tG6eQ3/pbYTVkTcDqaifYHp
+         rupRSQP9Jqi0j8KG4xHtZsF0ySYs7zY2IjYgaNXgVOBsFHQqrL/QBUDJgLaP9IG+LJXY
+         DEwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772459398; x=1773064198;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uOGfBSF1Yzv+515EEkVwpjnn8h91APdHFmvLcZC+dMw=;
+        b=Ln8IaF2eb14gXdoF9jpA/lkCFyRjVisVZJJRlh4S+WBZdFI+CVn7kfHaayTDIgCv+8
+         X91FJPMB1BBtafPqo6Xp5bZnINc5ken3bkG/k5vJoVN0LM07AWooVqBNjFX7aSL2mx/X
+         KV1Gd+Fv5igzEnFwE6MqZcSz5/1Jku7pmQ9QaO2IwuVP4qHSFpdQyTfk7Pdb0xDuVYWr
+         Nlq8UK5KloMhqOKFm66b9AIkdlW0z+q65FlgnZ/KC2sEKib9H9BsBGM4xruMkDIKrZXn
+         v2JtlNQjQyv2JlN//h/Fwy33VettnVN9D+aSm9jGQIq/LaSFVym7+GVeuX/lMzSnHj5N
+         Gn/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXlI3X93GSm4p46h/8vQrrtULZ6KuZORipdbT7a3iRKn4Pwk67MX3p1dJqzRr7Z/t59tNySbxPswrQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywabe4m9v6iUznsJ2pXShfGbzyh97xXBpgCWx3z2j3CP0phwObF
+	TWYsb/4NnqH5P8L0oED+bFtfxBEq8ZUURr23OeAtwYplEGf1plZ+yKBkGeWXiXrIg5c=
+X-Gm-Gg: ATEYQzyAMip8436Z7rhJ903+jJ85p78QcnsZ/nAkE5Y+yrDuCer82Z2TK1xxz0YpPXC
+	sh7mGsvOzmu27Lpx7Qs/e3Kcovo+mH6x6Jf/ZilSnIlgaV+mcUKpcDXchVdknHUHNb37YvxTkah
+	p7NxK/P0O6uPvlLdL5KmetQ2M76EuICr5VhddO80rbcWW2ZcOsRIYHRMoK7UaOdbz24H9CbrNmh
+	6t6RVbr7l8C989EI+epN3oEwPsxTT5f0gBXuFYs6EalqJHh0aVOJawmzk6zIoInyWu/8eI6nOkv
+	iyNaj927pVfo+XjTeFfaOJW0oCz4pPwnM9pVL+9b2Pi73+w8Bc3U/vsODmlrwV+Os4MP6J75zuD
+	CU1xfoX4nJ34qwzJlUSFy3huulHafBd+/nmHubv7jz+dwwDx0MDPwJIM69PPrC146aUIx71u0XY
+	wu1qRGNtUpxvceFxQNtcmKMptkq1rZmjkW19OF
+X-Received: by 2002:a05:600c:1c28:b0:471:14af:c715 with SMTP id 5b1f17b1804b1-483c9bc5643mr221946815e9.3.1772459397277;
+        Mon, 02 Mar 2026 05:49:57 -0800 (PST)
+Received: from [172.19.170.194] ([213.233.104.147])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483bd6f3124sm414496905e9.1.2026.03.02.05.49.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2026 05:49:56 -0800 (PST)
+Message-ID: <f33622bd-ac12-41d0-adea-6946e88815a8@tuxon.dev>
+Date: Mon, 2 Mar 2026 15:49:54 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF000061C3:EE_|BN7PPF49208036B:EE_
-X-MS-Office365-Filtering-Correlation-Id: f6c78b01-3482-4b34-0698-08de785861f8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|7416014|376014|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	NdkcmNli6kFdqjmoNVL+hGM0/6ECxwU7mJGC+fv+xHL5knYKL+TIuqxA5S0fKIAoalSDKHhvvZmYqgTRXidZZ/As27PIN3wD+CUMtoGSRvRnX81qTqy3iML8y4DB93jjlsGQ1NNRwNsDam9u0whwy0j55vy/cXmdguTYXdzq6SZHYzq1eDXGGPfXoZHb1uPJ+JtrYgiQu8JwGeOaSgujMcBt8JSqScJaU0Gp0zYjlxnF0wPjFZxbvIbIkdwS1IXlebiNxtcTGPApmtzCenf33+NJzI88SgqH8AEYFQ71mRX8z+SuT3yPVU5tkd9SKcuZE6UIL8optZHWgrliz61d5eU+DURp+oRnaa5+TreGsNFfZEY84ywYltKxEE91bTfEOi4bTq+/i/ow0wVWFIp/XTEeFCNlkyEy55d5FXl4YUNSbXdAA077RA99p8se6DPnuXgBHc3+U2p9BcuTcUDcn3nyR4oX6xMmPQ+ciWtD9q6KcK3XA+G8HWZcZt6JYFifOQmOg695dehioinfzMgE2E4cPr8WHwU9pHcVzHvE85MT/kghOqXkUtwKRnEkavCeR8SFimusGenEY5pLeucDTFPLOasl4etWVoBKipWz5frsShIzDzAmAwP9fSgYOwP93y0PH/gK8WgS/dqgj57hV88PeFzFwT4S/rTv5zr3x1iOP+xnzhk62l2pSxijFtTS4S8H925hh3P02hbcX/x/ov+HiHImW52vXSV91YCdhucwohRLg0AVbUAfZvP06rP7bil/eeBE5g85wA1xnu0ncs1Cy6OszKvDi4082jtAODySBhCx1XaMB/65d3UBCu1AYsNoA6M2/7dUfgrJh4QEkxAkUnj1g0WOT3ubCplbKQ4=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	FFWxFNbKp6c5JFybksUmUTGzgtrvMozgIHheDV/VEMYFnS/GcFJ6rBelEhDaQVtsVtmIZWFHn/B2Xv6x/IklpV01xePBeME8TR6X3VgDTCKO1TACa8HMn5E91WHY0Ab6JD9DjSTd11TpeWsjOgVDRnx1TUjFA+WF1kotu28WvO7nMMJly+uVju4s34sSACkRoNODLOA8GxsU2QMFfYuAnoFZz9BXHY9G8c9XLYM6mNU8GP4+CMXGFOnLzFar0/6fYQdOwIKgXB8V4Zzn+gHKf5YdfhxSGjF+5OQGc46u3eMxAlTyi3PvjT93WOHpkeFW/SAqTOXEPj5aX5XfCn3dD9GnP4ROd0IVkk1y0O1bFF6xJeEQ2z9SJLqKq20sWa6XzPmhbk9ywjv9mnymg4RWrrVgA2HnsDgKGU8NqefLeXcp1C4TPNdPP78Y8/xaQ/DO
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2026 12:36:52.7717
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6c78b01-3482-4b34-0698-08de785861f8
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF000061C3.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF49208036B
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 7/8] dmaengine: sh: rz-dmac: Add device_tx_status()
+ callback
+To: Frank Li <Frank.li@nxp.com>
+Cc: vkoul@kernel.org, geert+renesas@glider.be, biju.das.jz@bp.renesas.com,
+ fabrizio.castro.jz@renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20260120133330.3738850-1-claudiu.beznea.uj@bp.renesas.com>
+ <20260120133330.3738850-8-claudiu.beznea.uj@bp.renesas.com>
+ <aZ8mpBwOJ-opyKWi@lizhi-Precision-Tower-5810>
+Content-Language: en-US
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <aZ8mpBwOJ-opyKWi@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_DKIM_ALLOW(-0.20)[tuxon.dev:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
+	DKIM_TRACE(0.00)[tuxon.dev:+];
+	TAGGED_FROM(0.00)[bounces-9173-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[tuxon.dev];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-9172-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[akhilrajeev@nvidia.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim,nvidia.com:mid,nvidia.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,c4e0000:email,99b0000:email,0.128.44.128:email];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@tuxon.dev,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_PROHIBIT(0.00)[226.204.49.0:email];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	RCVD_COUNT_SEVEN(0.00)[9]
-X-Rspamd-Queue-Id: 48ACE1D8C6A
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,tuxon.dev:mid,tuxon.dev:dkim]
+X-Rspamd-Queue-Id: A3E0D1DA1DE
 X-Rspamd-Action: no action
 
-Add iommu-map the GPCDMA controller node so that each channel uses a
-separate stream ID and gets its own IOMMU domain for memory. Enable
-GCPDMA as well.
+Hi, Frank,
 
-Also remove the fallback compatible string "nvidia,tegra186-gpcdma".
-Tegra186 compatible cannot work on Tegra264 because of the register
-offset changes and absence of reset property.
+On 2/25/26 18:43, Frank Li wrote:
+> On Tue, Jan 20, 2026 at 03:33:29PM +0200, Claudiu wrote:
+>> From: Biju Das <biju.das.jz@bp.renesas.com>
+>>
+>> Add support for device_tx_status() callback as it is needed for
+>> RZ/G2L SCIFA driver.
+>>
+>> Based on a patch in the BSP similar to rcar-dmac by
+>> Long Luu <long.luu.ur@renesas.com>.
+> 
+> If you want to give credit to Long Luu, any public link?
 
-Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra264-p3834.dtsi | 4 ++++
- arch/arm64/boot/dts/nvidia/tegra264.dtsi       | 3 ++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+No public link as far as I'm aware. Anyway, I'll add his SoB + Co-developed-by.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra264-p3834.dtsi b/arch/arm64/boot/dts/nvidia/tegra264-p3834.dtsi
-index 7e2c3e66c2ab..c8beb616964a 100644
---- a/arch/arm64/boot/dts/nvidia/tegra264-p3834.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra264-p3834.dtsi
-@@ -16,6 +16,10 @@ serial@c4e0000 {
- 		serial@c5a0000 {
- 			status = "okay";
- 		};
-+
-+		dma-controller@8400000 {
-+			status = "okay";
-+		};
- 	};
- 
- 	bus@8100000000 {
-diff --git a/arch/arm64/boot/dts/nvidia/tegra264.dtsi b/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-index 7644a41d5f72..9821d085c766 100644
---- a/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-@@ -3208,7 +3208,7 @@ agic_page5: interrupt-controller@99b0000 {
- 		};
- 
- 		gpcdma: dma-controller@8400000 {
--			compatible = "nvidia,tegra264-gpcdma", "nvidia,tegra186-gpcdma";
-+			compatible = "nvidia,tegra264-gpcdma";
- 			reg = <0x0 0x08400000 0x0 0x210000>;
- 			interrupts = <GIC_SPI 584 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 585 IRQ_TYPE_LEVEL_HIGH>,
-@@ -3244,6 +3244,7 @@ gpcdma: dma-controller@8400000 {
- 				     <GIC_SPI 615 IRQ_TYPE_LEVEL_HIGH>;
- 			#dma-cells = <1>;
- 			iommus = <&smmu1 0x00000800>;
-+			iommu-map = <1 &smmu1 0x801 31>;
- 			dma-coherent;
- 			dma-channel-mask = <0xfffffffe>;
- 			status = "disabled";
--- 
-2.50.1
+> 
+>>
+>> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+>> [claudiu.beznea:
+>>   - post-increment lmdesc in rz_dmac_get_next_lmdesc() to allow the next
+>>     pointer to advance
+>>   - use 'lmdesc->nxla != crla' comparison instead of
+>>     '!(lmdesc->nxla == crla)' in rz_dmac_calculate_residue_bytes_in_vd()
+>>   - in rz_dmac_calculate_residue_bytes_in_vd() use '++i >= DMAC_NR_LMDESC'
+>>     to verify if the full lmdesc list was checked
+>>   - drop rz_dmac_calculate_total_bytes_in_vd() and use desc->len instead
+>>   - re-arranged comments so they span fewer lines and are wrapped to ~80
+>>     characters
+>>   - use u32 for the residue value and the functions returning it
+>>   - use u32 for the variables storing register values
+>>   - fixed typos]
+> 
+> Suppose needn't this section
 
+Just followed the process. I can drop it.
+
+> 
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>> ---
+>>
+>> Changes in v8:
+>> - populated engine->residue_granularity
+>>
+>> Changes in v7:
+>> - none
+>>
+>> Changes in v6:
+>> - s/byte/bytes in comment from rz_dmac_chan_get_residue()
+>>
+>> Changes in v5:
+>> - post-increment lmdesc in rz_dmac_get_next_lmdesc() to allow the next
+>>    pointer to advance
+>> - use 'lmdesc->nxla != crla' comparison instead of
+>>    '!(lmdesc->nxla == crla)' in rz_dmac_calculate_residue_bytes_in_vd()
+>> - in rz_dmac_calculate_residue_bytes_in_vd() use '++i >= DMAC_NR_LMDESC'
+>>    to verify if the full lmdesc list was checked
+>> - drop rz_dmac_calculate_total_bytes_in_vd() and use desc->len instead
+>> - re-arranged comments so they span fewer lines and are wrapped to ~80
+>>    characters
+>> - use u32 for the residue value and the functions returning it
+>> - use u32 for the variables storing register values
+>> - fixed typos
+>>
+>>   drivers/dma/sh/rz-dmac.c | 145 ++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 144 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+>> index 4602f8b7408a..27c963083e29 100644
+>> --- a/drivers/dma/sh/rz-dmac.c
+>> +++ b/drivers/dma/sh/rz-dmac.c
+>> @@ -125,10 +125,12 @@ struct rz_dmac {
+>>    * Registers
+>>    */
+>>
+>> +#define CRTB				0x0020
+>>   #define CHSTAT				0x0024
+>>   #define CHCTRL				0x0028
+>>   #define CHCFG				0x002c
+>>   #define NXLA				0x0038
+>> +#define CRLA				0x003c
+>>
+>>   #define DCTRL				0x0000
+>>
+>> @@ -684,6 +686,146 @@ static void rz_dmac_device_synchronize(struct dma_chan *chan)
+>>   	rz_dmac_set_dma_req_no(dmac, channel->index, dmac->info->default_dma_req_no);
+>>   }
+>>
+>> +static struct rz_lmdesc *
+>> +rz_dmac_get_next_lmdesc(struct rz_lmdesc *base, struct rz_lmdesc *lmdesc)
+>> +{
+>> +	struct rz_lmdesc *next = ++lmdesc;
+>> +
+>> +	if (next >= base + DMAC_NR_LMDESC)
+>> +		next = base;
+>> +
+>> +	return next;
+>> +}
+>> +
+>> +static u32 rz_dmac_calculate_residue_bytes_in_vd(struct rz_dmac_chan *channel)
+>> +{
+>> +	struct rz_lmdesc *lmdesc = channel->lmdesc.head;
+>> +	struct dma_chan *chan = &channel->vc.chan;
+>> +	struct rz_dmac *dmac = to_rz_dmac(chan->device);
+>> +	u32 residue = 0, crla, i = 0;
+>> +
+>> +	crla = rz_dmac_ch_readl(channel, CRLA, 1);
+>> +	while (lmdesc->nxla != crla) {
+>> +		lmdesc = rz_dmac_get_next_lmdesc(channel->lmdesc.base, lmdesc);
+>> +		if (++i >= DMAC_NR_LMDESC)
+>> +			return 0;
+>> +	}
+>> +
+>> +	/* Calculate residue from next lmdesc to end of virtual desc */
+>> +	while (lmdesc->chcfg & CHCFG_DEM) {
+>> +		residue += lmdesc->tb;
+>> +		lmdesc = rz_dmac_get_next_lmdesc(channel->lmdesc.base, lmdesc);
+>> +	}
+> 
+> can use one loop
+> 
+> for (int i=0; i<DMAC_NR_LMDESC; i++) {
+> 	if (lmdesc->nxla == crla)
+> 		residue = 0; 	//reset to 0;
+> 
+> 	if (lmdesc->chcfg & CHCFG_DEM)
+> 		residue += lmdesc->tb;
+> 
+> 	lmdesc = rz_dmac_get_next_lmdesc(channel->lmdesc.base, lmdesc);
+
+I'm not sure this will work as the descriptors list is cyclic and resetting the 
+residue to zero when lmdesc->nxla == crla and then start acumulating from there 
+will not work if there are descriptors enqueued for the current transfers at the 
+end and the beginning of the list, e.g:
+
+descriptors list:
+
+| d3 | d5 | d6 | ... | d0 | d1 | d2 |
+
+^				    ^
+start			 	   end
+(index 0)			(index DMAC_NR_LMDESC-1)
+
+> }
+> 
+> return residue;
+> 
+>> +
+>> +	dev_dbg(dmac->dev, "%s: VD residue is %u\n", __func__, residue);
+>> +
+>> +	return residue;
+>> +}
+>> +
+>> +static u32 rz_dmac_chan_get_residue(struct rz_dmac_chan *channel,
+>> +				    dma_cookie_t cookie)
+>> +{
+>> +	struct rz_dmac_desc *current_desc, *desc;
+>> +	enum dma_status status;
+>> +	u32 crla, crtb, i;
+>> +
+>> +	/* Get current processing virtual descriptor */
+>> +	current_desc = list_first_entry(&channel->ld_active,
+>> +					struct rz_dmac_desc, node);
+>> +	if (!current_desc)
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * If the cookie corresponds to a descriptor that has been completed
+>> +	 * there is no residue. The same check has already been performed by the
+>> +	 * caller but without holding the channel lock, so the descriptor could
+>> +	 * now be complete.
+>> +	 */
+>> +	status = dma_cookie_status(&channel->vc.chan, cookie, NULL);
+>> +	if (status == DMA_COMPLETE)
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * If the cookie doesn't correspond to the currently processing virtual
+>> +	 * descriptor then the descriptor hasn't been processed yet, and the
+>> +	 * residue is equal to the full descriptor size. Also, a client driver
+>> +	 * is possible to call this function before rz_dmac_irq_handler_thread()
+>> +	 * runs. In this case, the running descriptor will be the next
+>> +	 * descriptor, and will appear in the done list. So, if the argument
+>> +	 * cookie matches the done list's cookie, we can assume the residue is
+>> +	 * zero.
+>> +	 */
+>> +	if (cookie != current_desc->vd.tx.cookie) {
+>> +		list_for_each_entry(desc, &channel->ld_free, node) {
+>> +			if (cookie == desc->vd.tx.cookie)
+>> +				return 0;
+>> +		}
+>> +
+>> +		list_for_each_entry(desc, &channel->ld_queue, node) {
+>> +			if (cookie == desc->vd.tx.cookie)
+>> +				return desc->len;
+>> +		}
+>> +
+>> +		list_for_each_entry(desc, &channel->ld_active, node) {
+>> +			if (cookie == desc->vd.tx.cookie)
+>> +				return desc->len;
+>> +		}
+>> +
+>> +		/*
+>> +		 * No descriptor found for the cookie, there's thus no residue.
+>> +		 * This shouldn't happen if the calling driver passes a correct
+>> +		 * cookie value.
+>> +		 */
+>> +		WARN(1, "No descriptor for cookie!");
+>> +		return 0;
+>> +	}
+>> +
+>> +	/*
+>> +	 * We need to read two registers. Make sure the hardware does not move
+>> +	 * to next lmdesc while reading the current lmdesc. Trying it 3 times
+>> +	 * should be enough: initial read, retry, retry for the paranoid.
+>> +	 */
+>> +	for (i = 0; i < 3; i++) {
+>> +		crla = rz_dmac_ch_readl(channel, CRLA, 1);
+>> +		crtb = rz_dmac_ch_readl(channel, CRTB, 1);
+>> +		/* Still the same? */
+>> +		if (crla == rz_dmac_ch_readl(channel, CRLA, 1))
+>> +			break;
+>> +	}
+>> +
+>> +	WARN_ONCE(i >= 3, "residue might not be continuous!");
+>> +
+>> +	/*
+>> +	 * Calculate number of bytes transferred in processing virtual descriptor.
+>> +	 * One virtual descriptor can have many lmdesc.
+>> +	 */
+>> +	return crtb + rz_dmac_calculate_residue_bytes_in_vd(channel);
+> 
+> you don't use varible 'ctra' here, so retry 3 become useless. suppose
+> rz_dmac_calculate_residue_bytes_in_vd(channel, ctra)
+> 
+> and avoid rz_dmac_ch_readl(channel, CRLA, 1) in
+> rz_dmac_calculate_residue_bytes_in_vd() to keep ctra and ctrb reflect the
+> correct hardware state.
+
+Good point, I'll update it.
+
+Thank you for your review,
+Claudiu
 

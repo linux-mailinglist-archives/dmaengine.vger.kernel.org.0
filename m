@@ -1,416 +1,429 @@
-Return-Path: <dmaengine+bounces-9196-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9194-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +M+kKToMpmkJJgAAu9opvQ
-	(envelope-from <dmaengine+bounces-9196-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 23:16:26 +0100
+	id +CCVH9MLpmkJJgAAu9opvQ
+	(envelope-from <dmaengine+bounces-9194-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 23:14:43 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA9121E51F8
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 23:16:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D98771E510F
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 23:14:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D8311308510C
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Mar 2026 21:42:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 55B80330BF30
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Mar 2026 21:40:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10CF4358384;
-	Mon,  2 Mar 2026 21:22:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20E7439F17A;
+	Mon,  2 Mar 2026 21:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="qYk85lSq"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="jrO25vSc"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013065.outbound.protection.outlook.com [52.101.72.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B65B35839A
-	for <dmaengine@vger.kernel.org>; Mon,  2 Mar 2026 21:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772486571; cv=none; b=BjgXIUUyfqzsz+WsBijvmSaIfti2njR8RxV+ni5EKyEXH7Q+2soAEQqKv6wKXwVWZE5PSO6hd1Kt+dCtKsQkg8bq01MoMDrp+yAXmy1xcOgXztO51tCvEy4/2li7DrtEJ0TXee/BamPF2K5cgI/ZD4eJvRwbUTg3hKIzB4Dc0cc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772486571; c=relaxed/simple;
-	bh=2BfOfl9K0LjywpBNitFEqbBsH0ctL9aQItwt5RGJ+/M=;
-	h=From:To:Cc:Date:Message-ID:In-Reply-To:References:MIME-Version:
-	 Subject; b=IqPbvHX/+oZpImLwpI9suLAZFWeTM+aroqNl9JADjYayNx4o6kWIZgC7ZzJeCM095oJc7dtQiaQIJ1VDjLNad8613st1Xc75Ax9PN3r7fHKpwQ14MWS+7fWUimshLxqTFvH3LMb2MoppgeJP9NyQI1Rr1X8fmNtVIfujCtC4KhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=qYk85lSq; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Cc:To:From:content-disposition;
-	bh=NwUcFg9CPES0m8KmGLX0+Aq6seZjD24uZLCl0Yy4qRo=; b=qYk85lSqGvPx5vP7J7LAoGm9H0
-	GaKHg2a6SWWWGNAQM5qab1gpZc3PPvqrgR3TkJOOnYQbDpydD5zsQFk/8F5Pz4jKqBckICENWwDFN
-	oTnIFs2HlLiQ1MewKddcwyE1Y3u7fjoNX5iAhaQG9vxAjL7h3GQ87n3GLsCS08UIYdBLhe7JwWmvf
-	kc4E+DfLd7NHES8/R9bDo6qKXaZ7IUQKTm/1+s7qsC/rBMsL5NKMCONtTLOBSuiWX6djS+tXMzqBD
-	bwSSXaLSF/0LgzwEemcqbvk4orAFDynQFaaaFmJlzMb+3udBZY0qZ2B9XOlzTtTKbiqpQ5tkdZaBB
-	+0pglETA==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-	by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <gunthorp@deltatee.com>)
-	id 1vxARX-00000005EPo-0AOJ;
-	Mon, 02 Mar 2026 14:04:43 -0700
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.98.2)
-	(envelope-from <gunthorp@deltatee.com>)
-	id 1vxARE-000000000xT-3cBk;
-	Mon, 02 Mar 2026 14:04:24 -0700
-From: Logan Gunthorpe <logang@deltatee.com>
-To: dmaengine@vger.kernel.org,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Kelvin Cao <kelvin.cao@microchip.com>,
-	George Ge <George.Ge@microchip.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-	George Ge <george.ge@microchip.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Logan Gunthorpe <logang@deltatee.com>
-Date: Mon,  2 Mar 2026 14:04:19 -0700
-Message-ID: <20260302210419.3656-4-logang@deltatee.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260302210419.3656-1-logang@deltatee.com>
-References: <20260302210419.3656-1-logang@deltatee.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B3E388E79;
+	Mon,  2 Mar 2026 21:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772486080; cv=fail; b=YFISX1o5WveVC+AkeDxqfiwA+Bbb4S6O8lzBSSivhdkTIBuTiXEtSht3YyFFsQSgWg+TlEUbn8eoYWfioQ6R5EXS72Wsos3n2KB9yPIMOOjccR4p5LZ3JLmmQUqzlrW7TD72YQ9kEzSjtecjMRspnkOJLqppakGp+dnFuBx+Cak=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772486080; c=relaxed/simple;
+	bh=m0ifbLyOY5oM351k4QIpRxIqFq0JEBeVpUsqYKMotNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KJp0SeT0W7JGEbI2hl8oU2ID89zC2UcBhMz90jRmoliLgvwRd/hJd7o4lI/FaIYwc/mQba4HRjBoF26eHaVtqsrSi03wpVZNmenW6jH8ayC7XaW4i+bVH3MS9upgUeKAyiRwHg8VtVKI4RyzuSOh2oqOjrhNA3rr08OHMk3JCog=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=jrO25vSc; arc=fail smtp.client-ip=52.101.72.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=brc5XszxH4peYVtNpZftDf6GTfAsrgmuUmUAO8yt0iz3pWemeh3kQfCtNO4fwGLZGpS8wZ196NycXxweGMPLOEAsZDzJsFGlsWLdgeoxNNMxYmKwqfGOwhOKp7MZpIFimYDB1Ml2G+qnWyzTy2G6sw/lC2HqC5MnLeZj+gWfuI2IqSSIthx21D0LLtRRwIcHurIKfT6YFXM3kkxDmaPu5vs8CPvaL0GGQJvRIe6O0gjjENU0RksaMuLBzovr4o46e6rDZdzES8Sl7H7xiPE+mrdrWAlVf1nbEhb3WH920HqJX+Ld5kckmGyHkBDeso11V5pvSTt22MQnMCZJ/fq0Vg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AueXEUvfb8faKZk3L1uws7lstA96auNi1n2MgBR/xlc=;
+ b=MyuLVhI1uYEa/uBSoZrQ/BJJFs3wdpxjkAfBsymlCi16wp2RGEhC74L1Hya5bSYgkT6duwk+Noe3RXy5pQ5K+ISstTT029jpwFHSyDIeBcSMb8ppFA5z5xrlyGaknw/nQag9qLn+iCk5ghHGuopF8x+poOOXDQk/yMtZ+EziDQhp29jlNBxy8m5FSDJK0RoEp5UEbfaXfVphDqp2lI/MmaHqaVoQ3iwlmYFETczCQCCjrP0N3CSrsl3EuL5Akjt6tI/Ht+aMhNVTOclcN2RHeypi1+ZEHRtdMHXroYAbVsegz+RhlLUPzMLjhNE74eB2d4fEonz/QCuJEDhoHNCD5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AueXEUvfb8faKZk3L1uws7lstA96auNi1n2MgBR/xlc=;
+ b=jrO25vScnAb2pKZSXgyl9PMiUHh7HceDVERUhjVFocIhUStZ2t1niFAKDI7a5T6DPmof78naufe20bTXuv/KK4qG0tjtHLn2EOtLxPnegYqiaBiRF73Cin1QkOi6IwBKljcO67R3Mxli/EBHGtGEYHjqb6l0guJUe1OGnbcMiqQ7wt/7r3cuEV+qtOwZjXmhYE0dUA2M9GU7VrASf4yylcIoyg/CzSykqFG2GKV7Kss2uV96ETepWesQ4RP/anWnOICYYEpgzk2Dg1k1UWuXkPI5cmi9U3zsFh4iehi4UudQ4JoILO5zrYc3glmKXrH6aFeKYDP+TuOrd0pcNJQKlg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by DB9PR04MB9889.eurprd04.prod.outlook.com (2603:10a6:10:4ef::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.21; Mon, 2 Mar
+ 2026 21:14:34 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9654.020; Mon, 2 Mar 2026
+ 21:14:34 +0000
+Date: Mon, 2 Mar 2026 16:14:25 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Akhil R <akhilrajeev@nvidia.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/9] dmaengine: tegra: Support address width > 39 bits
+Message-ID: <aaX9sfdDORWIqYos@lizhi-Precision-Tower-5810>
+References: <20260302123239.68441-1-akhilrajeev@nvidia.com>
+ <20260302123239.68441-6-akhilrajeev@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260302123239.68441-6-akhilrajeev@nvidia.com>
+X-ClientProxiedBy: SJ0PR13CA0090.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::35) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: dmaengine@vger.kernel.org, vkoul@kernel.org, hch@infradead.org, christophe.jaillet@wanadoo.fr, kelvin.cao@microchip.com, George.Ge@microchip.com, george.ge@microchip.com, hch@lst.de, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Level: 
-Subject: [PATCH v14 3/3] dmaengine: switchtec-dma: Implement descriptor submission
-X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
-X-Rspamd-Queue-Id: EA9121E51F8
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|DB9PR04MB9889:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6a4af5c2-8c7b-4823-8c61-08de78a0b3f2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|19092799006|366016|376014|7416014|52116014|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	/2QVINHh9HLVVdCA4fi9fQhHzQ6NxDfzBLDHqA/vEVtxmNtkaHOuWMamSag7n8gb4ZTVQyqOMtvgoc7kauI8JRmSExoQUMW1P+F2QWK7r8JTlz3G3IdhmfZIq0P/pqIAZd2kv+p6q/vAchqpz4VVFRQLMSUdIc6UU3OhcfH7X1gWi8BUKDhlWWU0NYuURZxvBOLPn+OrbCg/+uzDOSU/jfy3CZA9TM+vbEUucVCmTUCqoH1I5FFJd8t0nmu+WfyzPSOtBJtrNvaFuH3FfbmqezWzbn+Gk6MszEwiDAhS72qOUGnUdMeSD0fMCeZItW0enCKTJssqqjnDqPm/XJdGjhx0qvL2BQ8ZsvFxLO+XhtFlOzbhJ93kPujm/O+H5KZ0jSyRnwDMFHdAfXwyZKe28Xvju5P3ALwJvbJe2tWZSlTOkZrE8EwBtOnVuCRLV8kzkgdUZeJ7yz+QL0ur0JZZfjdVFSMLaTSufxfr41gZEz4Lc01GKoBKX4oyCS/GtNc3DyPAaZ8SwwqEZfsBrw2uX9O9VLkUfYrEQ4GsWgV78DZonTDcX3r5SkYAABCc1HdVzyK1AuTPyJZ8LC7mfv1dx6G/NBbsOLgzUW6cPTsD2n8t43fEgNSpqBaOjhp1f3jCazIGI81DqJA+N3BwfPAeG9ODJofFFbdoepqUQKC6fdvwsvz3bjNX3lLJwd297pMFzBkRSHfMOJYjTpaUbIpRnWjPoytgSue09e2A0FemvAmgJ/s9lBb7+87G8FyoXiSYnDELuDtn7/hWxv9F6iOd7DqNCEdLAfB2vgD9ObG3lHI=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(366016)(376014)(7416014)(52116014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?IazcVo2AHqp8jeyGSuB5yb189sggutYELVdNo6EALR2kAjpOv+6DLy2iDObV?=
+ =?us-ascii?Q?7fZMJGv8ZY3uMOd5jiyYYU75tgC/QchsSDe/IHZKNE9C9dvt9ew2VXHnkFZt?=
+ =?us-ascii?Q?hM0G6iKYV5CczFoyXyg+eHGP4U/gvnQsuV6hJjd31fyVct1hgl9S3gM5vnd4?=
+ =?us-ascii?Q?bhlXv1K/pgZQRVINMdAjK0aAvqnPbzpYm4h1bGyBTnyZxE9OILWt/cdfSzbC?=
+ =?us-ascii?Q?vP00v57KPV8GvOXmu5HLlcbF2LJiRVvljGEuI1NuTownM+EoTij0cG2jqszI?=
+ =?us-ascii?Q?Lcqj728VNNT7Wcd1JkkHfiQnCPuuNELQ3MoUie2MNn/Tq49wz1qZCAvMmOrR?=
+ =?us-ascii?Q?caiyPhhOsAzq6VY4t2PVCKBHAs/JCsYWu5O5O7evBzVY6kS+6+GuG23MymoI?=
+ =?us-ascii?Q?j60HD1MArcclyBHN5MYY9OWc/v5GDXVW10f0jgceVlBxJ8+hWwdeGX5Atbwc?=
+ =?us-ascii?Q?Iy3/t5VzWQ0M/v45LkfLMofPfDmEl5DdyTUnvRpGgCqgC3mEQ17VLD7BVvlc?=
+ =?us-ascii?Q?de+8iNzyxDtfQfbe+PGOMKVTQo4tXKOLgzSNAuPFaZrBxFqglWk9h22TtrEY?=
+ =?us-ascii?Q?3LpkkCd1f76duoxhL1rrVLjzWyCadNKfSBcLiugXfc7bDy9qdNPo7lqOal1o?=
+ =?us-ascii?Q?RDA6mKErKolCg0bmO+v4HTDJTH7yOv9tCsLEAyASrnLUslZw4YN72vrZDDHD?=
+ =?us-ascii?Q?Pit7IHrJ834rGLG0InkGpw/AEqi2P8jtPkcptaizzXhg7ZTI0dZJwWwIy43b?=
+ =?us-ascii?Q?HHlJZxwUwjEKrKotN6Vo+n7GL0q0Jf9jGwMuWa4HaP22ff687n09tqr5Ekfs?=
+ =?us-ascii?Q?IqBtmFkM3n+EvWyRIWyYbuxrk4DpjRC7f5JotWpiazI8tJ4pb1HTujI43g6V?=
+ =?us-ascii?Q?HfnP2VvW7mJRI6JXpX6qjtL7Ug1afOAeFPW1KAJWR3YzUJwTHAmScZCoYWwZ?=
+ =?us-ascii?Q?DTRjoJtpkBERGPK904y4JeCWVw2p5nVpPWPfciEu8Z70+wRDof1cTYpFS+aZ?=
+ =?us-ascii?Q?e23xfwQe03SwAuc14wsotuQ16D7XzOcxPRytsw1EvhO0R9XyyB9TC8zELUmr?=
+ =?us-ascii?Q?kccavHWTZn9SYgCzaQmljVWr4iNuKFGa6YF0UJwgB0SI/uMSKIrvLyxpV9Z8?=
+ =?us-ascii?Q?uZKLqL6sKyXOelrH7XsQ9x3oXwZ0rrKacC1asP0tr/eGqVRozxFRjz6YAktu?=
+ =?us-ascii?Q?OiTbmleDWB8ubZxmRxc9H2/LR1fDA9GtjYawNjG0gGiHIYyPcxenI5BtSxsg?=
+ =?us-ascii?Q?tBTLh641xURNQA/LWJM0gOzlRdAdu9SS5w85fo0e6omNThaNYiaODdo6B6nN?=
+ =?us-ascii?Q?/164Ge2kZVTzG7OCLyAkHmvZznMY0uoY/QvAjguzkvLSjlNlLTYnfRczD/BJ?=
+ =?us-ascii?Q?xKDrFHA/IfeK8GVJ4ndE/Uj85pPj1JCoVAWXa8XAcYEhFENJMPOGEZRpek88?=
+ =?us-ascii?Q?kT+2o5bHQXLktsVcIe7CREehz+4xeGnOnj19VFlEViU/+QEhPHfqfLxhf1yJ?=
+ =?us-ascii?Q?cJpptGOeh9LiHD/DMWh2sTXSZwtyQaGqhoC6V/gH8Ipp4RaG16If6WNQqB4h?=
+ =?us-ascii?Q?CgQnYvpBs3FGfEZfEQWq1U0ynwzZqhHsox0CZglsUbYHu447ByJ45q7KAhcS?=
+ =?us-ascii?Q?O4jdG4NP6t+jgFw//cXVdjmSThUB1yvb/2+/vSjPFCJbJOx1He7E2Vu7V24h?=
+ =?us-ascii?Q?3lAEjSalC3fx1DseJu85zTP1kaz6kJRXOvO2gdZE9T84SoI4Za9Y2eKjGbaA?=
+ =?us-ascii?Q?xvSsfo7VaQ=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a4af5c2-8c7b-4823-8c61-08de78a0b3f2
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2026 21:14:34.5978
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 31jgh3mUrYLIIi20otQ2oS8T5NmYtRBL3WoC2SQsmSVuucg4rBRHqPjzOK8vFBIO7slZB1SU4SNqChVHMzO0dw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9889
+X-Rspamd-Queue-Id: D98771E510F
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[deltatee.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[deltatee.com:s=20200525];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9196-lists,dmaengine=lfdr.de];
-	FREEMAIL_CC(0.00)[microchip.com,infradead.org,wanadoo.fr,lst.de,deltatee.com];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-9194-lists,dmaengine=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[logang@deltatee.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	NEURAL_HAM(-0.00)[-0.998];
-	DKIM_TRACE(0.00)[deltatee.com:+];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,deltatee.com:dkim,deltatee.com:email,deltatee.com:mid]
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[nxp.com:+];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,nxp.com:dkim,nxp.com:email,nvidia.com:email]
 X-Rspamd-Action: no action
 
-From: Kelvin Cao <kelvin.cao@microchip.com>
+On Mon, Mar 02, 2026 at 06:02:35PM +0530, Akhil R wrote:
+> Tegra264 supports address width of 41 bits. Unlike older SoCs which use
+> a common high_addr register for upper address bits, Tegra264 has separate
+> src_high and dst_high registers to accommodate this wider address space.
+>
+> Add an addr_bits property to the device data structure to specify the
+> number of address bits supported on each device and use that to program
+> the appropriate registers.
+>
+> Update the sg_req struct to remove the high_addr field and use
+> dma_addr_t for src and dst to store the complete addresses. Extract
+> the high address bits only when programming the registers.
+>
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> ---
+>  drivers/dma/tegra186-gpc-dma.c | 87 ++++++++++++++++++++++------------
+>  1 file changed, 56 insertions(+), 31 deletions(-)
+>
+> diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
+> index 09ba2755c06d..753e86d05a02 100644
+> --- a/drivers/dma/tegra186-gpc-dma.c
+> +++ b/drivers/dma/tegra186-gpc-dma.c
+> @@ -151,6 +151,7 @@ struct tegra_dma_channel;
+>   */
+>  struct tegra_dma_chip_data {
+>  	bool hw_support_pause;
+> +	unsigned int addr_bits;
+>  	unsigned int nr_channels;
+>  	unsigned int channel_reg_size;
+>  	unsigned int max_dma_count;
+> @@ -166,6 +167,8 @@ struct tegra_dma_channel_regs {
+>  	u32 src;
+>  	u32 dst;
+>  	u32 high_addr;
+> +	u32 src_high;
+> +	u32 dst_high;
+>  	u32 mc_seq;
+>  	u32 mmio_seq;
+>  	u32 wcount;
+> @@ -186,10 +189,9 @@ struct tegra_dma_channel_regs {
+>   */
+>  struct tegra_dma_sg_req {
+>  	unsigned int len;
+> +	dma_addr_t src;
+> +	dma_addr_t dst;
+>  	u32 csr;
+> -	u32 src;
+> -	u32 dst;
+> -	u32 high_addr;
+>  	u32 mc_seq;
+>  	u32 mmio_seq;
+>  	u32 wcount;
+> @@ -273,6 +275,25 @@ static inline struct device *tdc2dev(struct tegra_dma_channel *tdc)
+>  	return tdc->vc.chan.device->dev;
+>  }
+>
+> +static void tegra_dma_program_addr(struct tegra_dma_channel *tdc,
+> +				   struct tegra_dma_sg_req *sg_req)
+> +{
+> +	tdc_write(tdc, tdc->regs->src, lower_32_bits(sg_req->src));
+> +	tdc_write(tdc, tdc->regs->dst, lower_32_bits(sg_req->dst));
+> +
+> +	if (tdc->tdma->chip_data->addr_bits > 39) {
+> +		tdc_write(tdc, tdc->regs->src_high, upper_32_bits(sg_req->src));
+> +		tdc_write(tdc, tdc->regs->dst_high, upper_32_bits(sg_req->dst));
+> +	} else {
+> +		u32 src_high = FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_SRC_PTR,
+> +					      upper_32_bits(sg_req->src));
+> +		u32 dst_high = FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_DST_PTR,
+> +					      upper_32_bits(sg_req->dst));
+> +
+> +		tdc_write(tdc, tdc->regs->high_addr, src_high | dst_high);
+> +	}
+> +}
+> +
+>  static void tegra_dma_dump_chan_regs(struct tegra_dma_channel *tdc)
+>  {
+>  	dev_dbg(tdc2dev(tdc), "DMA Channel %d name %s register dump:\n",
+> @@ -281,10 +302,20 @@ static void tegra_dma_dump_chan_regs(struct tegra_dma_channel *tdc)
+>  		tdc_read(tdc, tdc->regs->csr),
+>  		tdc_read(tdc, tdc->regs->status),
+>  		tdc_read(tdc, tdc->regs->csre));
+> -	dev_dbg(tdc2dev(tdc), "SRC %x DST %x HI ADDR %x\n",
+> -		tdc_read(tdc, tdc->regs->src),
+> -		tdc_read(tdc, tdc->regs->dst),
+> -		tdc_read(tdc, tdc->regs->high_addr));
+> +
+> +	if (tdc->tdma->chip_data->addr_bits > 39) {
+> +		dev_dbg(tdc2dev(tdc), "SRC %x SRC HI %x DST %x DST HI %x\n",
+> +			tdc_read(tdc, tdc->regs->src),
+> +			tdc_read(tdc, tdc->regs->src_high),
+> +			tdc_read(tdc, tdc->regs->dst),
+> +			tdc_read(tdc, tdc->regs->dst_high));
+> +	} else {
+> +		dev_dbg(tdc2dev(tdc), "SRC %x DST %x HI ADDR %x\n",
+> +			tdc_read(tdc, tdc->regs->src),
+> +			tdc_read(tdc, tdc->regs->dst),
+> +			tdc_read(tdc, tdc->regs->high_addr));
+> +	}
+> +
+>  	dev_dbg(tdc2dev(tdc), "MCSEQ %x IOSEQ %x WCNT %x XFER %x WSTA %x\n",
+>  		tdc_read(tdc, tdc->regs->mc_seq),
+>  		tdc_read(tdc, tdc->regs->mmio_seq),
+> @@ -487,9 +518,7 @@ static void tegra_dma_configure_next_sg(struct tegra_dma_channel *tdc)
+>  	sg_req = &dma_desc->sg_req[dma_desc->sg_idx];
+>
+>  	tdc_write(tdc, tdc->regs->wcount, sg_req->wcount);
+> -	tdc_write(tdc, tdc->regs->src, sg_req->src);
+> -	tdc_write(tdc, tdc->regs->dst, sg_req->dst);
+> -	tdc_write(tdc, tdc->regs->high_addr, sg_req->high_addr);
+> +	tegra_dma_program_addr(tdc, sg_req);
+>
+>  	/* Start DMA */
+>  	tdc_write(tdc, tdc->regs->csr,
+> @@ -517,11 +546,9 @@ static void tegra_dma_start(struct tegra_dma_channel *tdc)
+>
+>  	sg_req = &dma_desc->sg_req[dma_desc->sg_idx];
+>
+> +	tegra_dma_program_addr(tdc, sg_req);
+>  	tdc_write(tdc, tdc->regs->wcount, sg_req->wcount);
+>  	tdc_write(tdc, tdc->regs->csr, 0);
+> -	tdc_write(tdc, tdc->regs->src, sg_req->src);
+> -	tdc_write(tdc, tdc->regs->dst, sg_req->dst);
+> -	tdc_write(tdc, tdc->regs->high_addr, sg_req->high_addr);
+>  	tdc_write(tdc, tdc->regs->fixed_pattern, sg_req->fixed_pattern);
+>  	tdc_write(tdc, tdc->regs->mmio_seq, sg_req->mmio_seq);
+>  	tdc_write(tdc, tdc->regs->mc_seq, sg_req->mc_seq);
+> @@ -826,7 +853,7 @@ static unsigned int get_burst_size(struct tegra_dma_channel *tdc,
+>
+>  static int get_transfer_param(struct tegra_dma_channel *tdc,
+>  			      enum dma_transfer_direction direction,
+> -			      u32 *apb_addr,
+> +			      dma_addr_t *apb_addr,
+>  			      u32 *mmio_seq,
+>  			      u32 *csr,
+>  			      unsigned int *burst_size,
+> @@ -904,11 +931,9 @@ tegra_dma_prep_dma_memset(struct dma_chan *dc, dma_addr_t dest, int value,
+>  	dma_desc->bytes_req = len;
+>  	dma_desc->sg_count = 1;
+>  	sg_req = dma_desc->sg_req;
+> -
+>  	sg_req[0].src = 0;
+>  	sg_req[0].dst = dest;
+> -	sg_req[0].high_addr =
+> -			FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_DST_PTR, (dest >> 32));
+> +
+>  	sg_req[0].fixed_pattern = value;
+>  	/* Word count reg takes value as (N +1) words */
+>  	sg_req[0].wcount = ((len - 4) >> 2);
+> @@ -976,10 +1001,7 @@ tegra_dma_prep_dma_memcpy(struct dma_chan *dc, dma_addr_t dest,
+>
+>  	sg_req[0].src = src;
+>  	sg_req[0].dst = dest;
+> -	sg_req[0].high_addr =
+> -		FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_SRC_PTR, (src >> 32));
+> -	sg_req[0].high_addr |=
+> -		FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_DST_PTR, (dest >> 32));
+> +
+>  	/* Word count reg takes value as (N +1) words */
+>  	sg_req[0].wcount = ((len - 4) >> 2);
+>  	sg_req[0].csr = csr;
+> @@ -999,7 +1021,8 @@ tegra_dma_prep_slave_sg(struct dma_chan *dc, struct scatterlist *sgl,
+>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>  	unsigned int max_dma_count = tdc->tdma->chip_data->max_dma_count;
+>  	enum dma_slave_buswidth slave_bw = DMA_SLAVE_BUSWIDTH_UNDEFINED;
+> -	u32 csr, mc_seq, apb_ptr = 0, mmio_seq = 0;
+> +	u32 csr, mc_seq, mmio_seq = 0;
+> +	dma_addr_t apb_ptr = 0;
+>  	struct tegra_dma_sg_req *sg_req;
+>  	struct tegra_dma_desc *dma_desc;
+>  	struct scatterlist *sg;
+> @@ -1087,13 +1110,9 @@ tegra_dma_prep_slave_sg(struct dma_chan *dc, struct scatterlist *sgl,
+>  		if (direction == DMA_MEM_TO_DEV) {
+>  			sg_req[i].src = mem;
+>  			sg_req[i].dst = apb_ptr;
+> -			sg_req[i].high_addr =
+> -				FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_SRC_PTR, (mem >> 32));
+>  		} else if (direction == DMA_DEV_TO_MEM) {
+>  			sg_req[i].src = apb_ptr;
+>  			sg_req[i].dst = mem;
+> -			sg_req[i].high_addr =
+> -				FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_DST_PTR, (mem >> 32));
+>  		}
+>
+>  		/*
+> @@ -1117,7 +1136,8 @@ tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_l
+>  			  unsigned long flags)
+>  {
+>  	enum dma_slave_buswidth slave_bw = DMA_SLAVE_BUSWIDTH_UNDEFINED;
+> -	u32 csr, mc_seq, apb_ptr = 0, mmio_seq = 0, burst_size;
+> +	u32 csr, mc_seq, mmio_seq = 0, burst_size;
+> +	dma_addr_t apb_ptr = 0;
+>  	unsigned int max_dma_count, len, period_count, i;
+>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>  	struct tegra_dma_desc *dma_desc;
+> @@ -1209,13 +1229,9 @@ tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_l
+>  		if (direction == DMA_MEM_TO_DEV) {
+>  			sg_req[i].src = mem;
+>  			sg_req[i].dst = apb_ptr;
+> -			sg_req[i].high_addr =
+> -				FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_SRC_PTR, (mem >> 32));
+>  		} else if (direction == DMA_DEV_TO_MEM) {
+>  			sg_req[i].src = apb_ptr;
+>  			sg_req[i].dst = mem;
+> -			sg_req[i].high_addr =
+> -				FIELD_PREP(TEGRA_GPCDMA_HIGH_ADDR_DST_PTR, (mem >> 32));
+>  		}
+>  		/*
+>  		 * Word count register takes input in words. Writing a value
+> @@ -1314,6 +1330,7 @@ static const struct tegra_dma_channel_regs tegra186_reg_offsets = {
+>
+>  static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
+>  	.nr_channels = 32,
+> +	.addr_bits = 39,
+>  	.channel_reg_size = SZ_64K,
+>  	.max_dma_count = SZ_1G,
+>  	.hw_support_pause = false,
+> @@ -1323,6 +1340,7 @@ static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
+>
+>  static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
+>  	.nr_channels = 32,
+> +	.addr_bits = 39,
+>  	.channel_reg_size = SZ_64K,
+>  	.max_dma_count = SZ_1G,
+>  	.hw_support_pause = true,
+> @@ -1332,6 +1350,7 @@ static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
+>
+>  static const struct tegra_dma_chip_data tegra234_dma_chip_data = {
+>  	.nr_channels = 32,
+> +	.addr_bits = 39,
+>  	.channel_reg_size = SZ_64K,
+>  	.max_dma_count = SZ_1G,
+>  	.hw_support_pause = true,
+> @@ -1443,6 +1462,12 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>  		tdc->stream_id = stream_id;
+>  	}
+>
+> +	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(cdata->addr_bits));
 
-On prep, a spin lock is taken and the next entry in the circular buffer
-is filled. On submit, the spin lock just needs to be released as the
-requests are already pending.
+when bit mask >= 32, dma_set_mask_and_coherent() never return failure. So
+needn't check return value.
 
-When switchtec_dma_issue_pending() is called, the sq_tail register
-is written to indicate there are new jobs for the dma engine to start
-on.
-
-Pause and resume operations are implemented by writing to a control
-register.
-
-Signed-off-by: Kelvin Cao <kelvin.cao@microchip.com>
-Co-developed-by: George Ge <george.ge@microchip.com>
-Signed-off-by: George Ge <george.ge@microchip.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/dma/switchtec_dma.c | 225 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 225 insertions(+)
-
-diff --git a/drivers/dma/switchtec_dma.c b/drivers/dma/switchtec_dma.c
-index 4c0dacc24608..3ef928640615 100644
---- a/drivers/dma/switchtec_dma.c
-+++ b/drivers/dma/switchtec_dma.c
-@@ -32,6 +32,8 @@ MODULE_AUTHOR("Kelvin Cao");
- #define SWITCHTEC_REG_SE_BUF_CNT	0x98
- #define SWITCHTEC_REG_SE_BUF_BASE	0x9a
- 
-+#define SWITCHTEC_DESC_MAX_SIZE		0x100000
-+
- #define SWITCHTEC_CHAN_CTRL_PAUSE	BIT(0)
- #define SWITCHTEC_CHAN_CTRL_HALT	BIT(1)
- #define SWITCHTEC_CHAN_CTRL_RESET	BIT(2)
-@@ -41,6 +43,8 @@ MODULE_AUTHOR("Kelvin Cao");
- #define SWITCHTEC_CHAN_STS_HALTED	BIT(10)
- #define SWITCHTEC_CHAN_STS_PAUSED_MASK	GENMASK(29, 13)
- 
-+#define SWITCHTEC_INVALID_HFID 0xffff
-+
- #define SWITCHTEC_DMA_SQ_SIZE	SZ_32K
- #define SWITCHTEC_DMA_CQ_SIZE	SZ_32K
- 
-@@ -204,6 +208,11 @@ struct switchtec_dma_hw_se_desc {
- 	__le16 sfid;
- };
- 
-+#define SWITCHTEC_SE_DFM		BIT(5)
-+#define SWITCHTEC_SE_LIOF		BIT(6)
-+#define SWITCHTEC_SE_BRR		BIT(7)
-+#define SWITCHTEC_SE_CID_MASK		GENMASK(15, 0)
-+
- #define SWITCHTEC_CE_SC_LEN_ERR		BIT(0)
- #define SWITCHTEC_CE_SC_UR		BIT(1)
- #define SWITCHTEC_CE_SC_CA		BIT(2)
-@@ -603,6 +612,214 @@ static void switchtec_dma_synchronize(struct dma_chan *chan)
- 	spin_unlock_bh(&swdma_chan->complete_lock);
- }
- 
-+static struct dma_async_tx_descriptor *
-+switchtec_dma_prep_desc(struct dma_chan *c, u16 dst_fid, dma_addr_t dma_dst,
-+			u16 src_fid, dma_addr_t dma_src, u64 data,
-+			size_t len, unsigned long flags)
-+	__acquires(swdma_chan->submit_lock)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(c, struct switchtec_dma_chan, dma_chan);
-+	struct switchtec_dma_desc *desc;
-+	int head, tail;
-+
-+	spin_lock_bh(&swdma_chan->submit_lock);
-+
-+	if (!swdma_chan->ring_active)
-+		goto err_unlock;
-+
-+	tail = READ_ONCE(swdma_chan->tail);
-+	head = swdma_chan->head;
-+
-+	if (!CIRC_SPACE(head, tail, SWITCHTEC_DMA_RING_SIZE))
-+		goto err_unlock;
-+
-+	desc = swdma_chan->desc_ring[head];
-+
-+	if (src_fid != SWITCHTEC_INVALID_HFID &&
-+	    dst_fid != SWITCHTEC_INVALID_HFID)
-+		desc->hw->ctrl |= SWITCHTEC_SE_DFM;
-+
-+	if (flags & DMA_PREP_INTERRUPT)
-+		desc->hw->ctrl |= SWITCHTEC_SE_LIOF;
-+
-+	if (flags & DMA_PREP_FENCE)
-+		desc->hw->ctrl |= SWITCHTEC_SE_BRR;
-+
-+	desc->txd.flags = flags;
-+
-+	desc->completed = false;
-+	desc->hw->opc = SWITCHTEC_DMA_OPC_MEMCPY;
-+	desc->hw->addr_lo = cpu_to_le32(lower_32_bits(dma_src));
-+	desc->hw->addr_hi = cpu_to_le32(upper_32_bits(dma_src));
-+	desc->hw->daddr_lo = cpu_to_le32(lower_32_bits(dma_dst));
-+	desc->hw->daddr_hi = cpu_to_le32(upper_32_bits(dma_dst));
-+	desc->hw->byte_cnt = cpu_to_le32(len);
-+	desc->hw->tlp_setting = 0;
-+	desc->hw->dfid = cpu_to_le16(dst_fid);
-+	desc->hw->sfid = cpu_to_le16(src_fid);
-+	swdma_chan->cid &= SWITCHTEC_SE_CID_MASK;
-+	desc->hw->cid = cpu_to_le16(swdma_chan->cid++);
-+	desc->orig_size = len;
-+
-+	/* return with the lock held, it will be released in tx_submit */
-+
-+	return &desc->txd;
-+
-+err_unlock:
-+	/*
-+	 * Keep sparse happy by restoring an even lock count on
-+	 * this lock.
-+	 */
-+	__acquire(swdma_chan->submit_lock);
-+
-+	spin_unlock_bh(&swdma_chan->submit_lock);
-+	return NULL;
-+}
-+
-+static struct dma_async_tx_descriptor *
-+switchtec_dma_prep_memcpy(struct dma_chan *c, dma_addr_t dma_dst,
-+			  dma_addr_t dma_src, size_t len, unsigned long flags)
-+	__acquires(swdma_chan->submit_lock)
-+{
-+	if (len > SWITCHTEC_DESC_MAX_SIZE) {
-+		/*
-+		 * Keep sparse happy by restoring an even lock count on
-+		 * this lock.
-+		 */
-+		__acquire(swdma_chan->submit_lock);
-+		return NULL;
-+	}
-+
-+	return switchtec_dma_prep_desc(c, SWITCHTEC_INVALID_HFID, dma_dst,
-+				       SWITCHTEC_INVALID_HFID, dma_src, 0, len,
-+				       flags);
-+}
-+
-+static dma_cookie_t
-+switchtec_dma_tx_submit(struct dma_async_tx_descriptor *desc)
-+	__releases(swdma_chan->submit_lock)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(desc->chan, struct switchtec_dma_chan, dma_chan);
-+	dma_cookie_t cookie;
-+	int head;
-+
-+	head = swdma_chan->head + 1;
-+	head &= SWITCHTEC_DMA_RING_SIZE - 1;
-+
-+	/*
-+	 * Ensure the desc updates are visible before updating the head index
-+	 */
-+	smp_store_release(&swdma_chan->head, head);
-+
-+	cookie = dma_cookie_assign(desc);
-+
-+	spin_unlock_bh(&swdma_chan->submit_lock);
-+
-+	return cookie;
-+}
-+
-+static enum dma_status switchtec_dma_tx_status(struct dma_chan *chan,
-+		dma_cookie_t cookie, struct dma_tx_state *txstate)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(chan, struct switchtec_dma_chan, dma_chan);
-+	enum dma_status ret;
-+
-+	ret = dma_cookie_status(chan, cookie, txstate);
-+	if (ret == DMA_COMPLETE)
-+		return ret;
-+
-+	/*
-+	 * For jobs where the interrupts are disabled, this is the only place
-+	 * to process the completions returned by the hardware. Callers that
-+	 * disable interrupts must call tx_status() to determine when a job
-+	 * is done, so it is safe to process completions here. If a job has
-+	 * interrupts enabled, then the completions will normally be processed
-+	 * in the tasklet that is triggered by the interrupt and tx_status()
-+	 * does not need to be called.
-+	 */
-+	switchtec_dma_cleanup_completed(swdma_chan);
-+
-+	return dma_cookie_status(chan, cookie, txstate);
-+}
-+
-+static void switchtec_dma_issue_pending(struct dma_chan *chan)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(chan, struct switchtec_dma_chan, dma_chan);
-+	struct switchtec_dma_dev *swdma_dev = swdma_chan->swdma_dev;
-+
-+	/*
-+	 * The sq_tail register is actually for the head of the
-+	 * submisssion queue. Chip has the opposite define of head/tail
-+	 * to the Linux kernel.
-+	 */
-+
-+	rcu_read_lock();
-+	if (!rcu_dereference(swdma_dev->pdev)) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+
-+	spin_lock_bh(&swdma_chan->submit_lock);
-+	writew(swdma_chan->head, &swdma_chan->mmio_chan_hw->sq_tail);
-+	spin_unlock_bh(&swdma_chan->submit_lock);
-+
-+	rcu_read_unlock();
-+}
-+
-+static int switchtec_dma_pause(struct dma_chan *chan)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(chan, struct switchtec_dma_chan, dma_chan);
-+	struct chan_hw_regs __iomem *chan_hw = swdma_chan->mmio_chan_hw;
-+	struct pci_dev *pdev;
-+	int ret;
-+
-+	rcu_read_lock();
-+	pdev = rcu_dereference(swdma_chan->swdma_dev->pdev);
-+	if (!pdev) {
-+		ret = -ENODEV;
-+		goto unlock_and_exit;
-+	}
-+
-+	spin_lock(&swdma_chan->hw_ctrl_lock);
-+	writeb(SWITCHTEC_CHAN_CTRL_PAUSE, &chan_hw->ctrl);
-+	ret = wait_for_chan_status(chan_hw, SWITCHTEC_CHAN_STS_PAUSED, true);
-+	spin_unlock(&swdma_chan->hw_ctrl_lock);
-+
-+unlock_and_exit:
-+	rcu_read_unlock();
-+	return ret;
-+}
-+
-+static int switchtec_dma_resume(struct dma_chan *chan)
-+{
-+	struct switchtec_dma_chan *swdma_chan =
-+		container_of(chan, struct switchtec_dma_chan, dma_chan);
-+	struct chan_hw_regs __iomem *chan_hw = swdma_chan->mmio_chan_hw;
-+	struct pci_dev *pdev;
-+	int ret;
-+
-+	rcu_read_lock();
-+	pdev = rcu_dereference(swdma_chan->swdma_dev->pdev);
-+	if (!pdev) {
-+		ret = -ENODEV;
-+		goto unlock_and_exit;
-+	}
-+
-+	spin_lock(&swdma_chan->hw_ctrl_lock);
-+	writeb(0, &chan_hw->ctrl);
-+	ret = wait_for_chan_status(chan_hw, SWITCHTEC_CHAN_STS_PAUSED, false);
-+	spin_unlock(&swdma_chan->hw_ctrl_lock);
-+
-+unlock_and_exit:
-+	rcu_read_unlock();
-+	return ret;
-+}
-+
- static void switchtec_dma_desc_task(unsigned long data)
- {
- 	struct switchtec_dma_chan *swdma_chan = (void *)data;
-@@ -721,6 +938,7 @@ static int switchtec_dma_alloc_desc(struct switchtec_dma_chan *swdma_chan)
- 		}
- 
- 		dma_async_tx_descriptor_init(&desc->txd, &swdma_chan->dma_chan);
-+		desc->txd.tx_submit = switchtec_dma_tx_submit;
- 		desc->hw = &swdma_chan->hw_sq[i];
- 		desc->completed = true;
- 
-@@ -1047,10 +1265,17 @@ static int switchtec_dma_create(struct pci_dev *pdev)
- 
- 	dma = &swdma_dev->dma_dev;
- 	dma->copy_align = DMAENGINE_ALIGN_8_BYTES;
-+	dma_cap_set(DMA_MEMCPY, dma->cap_mask);
-+	dma_cap_set(DMA_PRIVATE, dma->cap_mask);
- 	dma->dev = get_device(&pdev->dev);
- 
- 	dma->device_alloc_chan_resources = switchtec_dma_alloc_chan_resources;
- 	dma->device_free_chan_resources = switchtec_dma_free_chan_resources;
-+	dma->device_prep_dma_memcpy = switchtec_dma_prep_memcpy;
-+	dma->device_tx_status = switchtec_dma_tx_status;
-+	dma->device_issue_pending = switchtec_dma_issue_pending;
-+	dma->device_pause = switchtec_dma_pause;
-+	dma->device_resume = switchtec_dma_resume;
- 	dma->device_terminate_all = switchtec_dma_terminate_all;
- 	dma->device_synchronize = switchtec_dma_synchronize;
- 	dma->device_release = switchtec_dma_release;
--- 
-2.47.3
-
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to set DMA mask: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
+>  	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
+>  	dma_cap_set(DMA_MEMCPY, tdma->dma_dev.cap_mask);
+> --
+> 2.50.1
+>
 

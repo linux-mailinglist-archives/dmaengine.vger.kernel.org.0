@@ -1,292 +1,200 @@
-Return-Path: <dmaengine+bounces-9162-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9163-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UHNYOdBOpWnS8QUAu9opvQ
-	(envelope-from <dmaengine+bounces-9162-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 09:48:16 +0100
+	id YJuAGieFpWl+DAYAu9opvQ
+	(envelope-from <dmaengine+bounces-9163-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 13:40:07 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C7201D4DE1
-	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 09:48:16 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00FB91D8D04
+	for <lists+dmaengine@lfdr.de>; Mon, 02 Mar 2026 13:40:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C44F3303D701
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Mar 2026 08:46:19 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3F36B302FE8C
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Mar 2026 12:33:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6E0538A2A4;
-	Mon,  2 Mar 2026 08:46:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB0E236D9E4;
+	Mon,  2 Mar 2026 12:33:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bJemDSOW"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bhqUCqcZ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012020.outbound.protection.outlook.com [52.101.48.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06BD369215
-	for <dmaengine@vger.kernel.org>; Mon,  2 Mar 2026 08:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772441178; cv=none; b=RWAKi9I4yaFc+cvBUNVlNjtOc74BTRko/1ZR+QyWz9Lpb4mofSEqlBk7WeqhhI/3YxRFMIiu41IN6i+H36dTTkHBWpNGNA9dxF1qPXpROzeWqcyYF6TRRxNTHqHQCEMylSGgU2ncCHScLf4HLjZ1xLYhCVmBqXjjyVD1ScAOPYA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772441178; c=relaxed/simple;
-	bh=Q0gZk7svUBefQ/A5MPwWsKU99Yc6w3fK0LE0Qh88r7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kiYT1rO9RmyDiKh/6+FMIxnf2JgXYfNU8DRUrPKka8faWWIVe+rlg4r0+/Yo8ZyGPj2n2jlZ9VM7qsdilys/t3w7C/63hh8IxIhKD9NUyIEc95kgndTYYRdkTOiQBwxLH3Uev4PI9WmDcRifwlQHDC+4KYxUBb0lZG7OyJVTmGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bJemDSOW; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-439b6d9c981so470323f8f.1
-        for <dmaengine@vger.kernel.org>; Mon, 02 Mar 2026 00:46:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1772441175; x=1773045975; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FdlDDX8VXPcYa2UYA/DhAef+/wnl+VGalN90V2Vta0I=;
-        b=bJemDSOWCVjlP9ah5Zq6ICJ/Bhg9v9cwl17UQG9aMau6s0rg5gYnuHVscEFVBHw3BC
-         4Eeqc640uzhvLUzjN5jTPJR3z/q2dD/wMeGR2KPudbz4VVVuJYcvmnrcjwW5xFW8wTiQ
-         WvN9ujuIVxw2X/kxc5+q+qVcNYyKD0SQA2AELspz2/QeljRr5NSx1Z0P+bGVluk5hEwe
-         9WTc0AmzmMVA0hrgR1Vr3qtpS0jnYdJziXsGq03yu1vwsA3zxdrIqPvWC/NufdPMsIeh
-         YwkOebbckh42o7zAXmeqs6d/z3HGB1fuuNhPv9/FHAhSkrLWNhODQap0VmvXVr4b4535
-         HZAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772441175; x=1773045975;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FdlDDX8VXPcYa2UYA/DhAef+/wnl+VGalN90V2Vta0I=;
-        b=uUxvmRhN/U2NSJnxkLHV4uiyBTkwHqUgCIgvxGRbOlm/HJ9U7Un47AZCFKonuBjBvE
-         l0n1W9VZ3U52nJY6ucoTzscMURSzEtzrvo8iys+AAXjsLQnuFXShqgOt38aJo9OMaqnN
-         lYdhF2jm73gIifYEV0lZWrzjCf1bgHgnTjAT+pD6AxEyhNdwUBrMUSSUf1tKHPxRpNZl
-         vws8i3xARh7R4XDNRMXLlvePYuaWNFBcVszB2yw5+iF3nbkAKdUIbCvihESLbmE5y4lx
-         KvV9HncNV05tQbMlVfUxO1255helRYu8fV/u0ykvX9MCAoz93ULlZzCwhQ6OYVWCHZ5b
-         FbRg==
-X-Forwarded-Encrypted: i=1; AJvYcCULi4L0sE8U9wjkaLT9RpOFgEOlZLt3HMrKxSwwrC+dvfEw+7jWMqs/RhCOs0pjTTsruvFfwuXzEl0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwppLFReQ3GuSwbYwvpmGN61734OJwEB8h5Ix0GuRt2OfzZUb1Q
-	CvktK7QhpEzYgvA+AcO9YHzX34wMrTRmoNC0JQiBdHFtMTpCDZ3fPv98Y67a6wLbjzE=
-X-Gm-Gg: ATEYQzxJxJQi7vOLr7fAvxZijQrL5gZ5JYpBDjo7WnfMljfCTVxuXLj8ql4+4t3wMEI
-	qPJuP1F4cqtJRzjQIj2lij9GdDrFr7xA6uy12VSNCtlsROyND5JO1vjCn+jykRfcCXO0wwPm/Y2
-	MpsYX9xdDX0CT7IGsFul4We/X+sHLn/3Aac8izidKph+OQg9iYUi6DXDEJj2b6x37YOiixT6R57
-	6+9KoOpUspvAkaW0bXQg/c1RfJ38pKHgSDUfwafSQrX83esVPmP8zGbGzl+vs53WW2Jj3Tk89I4
-	zzxEbxVhvw4h1ghK+1l7S8UzeUHoN6Dse+uhpQyHc6ZYb271cXO66BtA/yq+gqBZYyyeQmp/zCd
-	TEVcuSG0pB05eR7wzOj+bsKqZpjU6Ud9qD8MP9vq+c66rHolGCB+JcugNmPZkClEq+VLP68jVfp
-	d8uxrztzNPHlbGaf4Xh9/3C4j5RFOZ
-X-Received: by 2002:a05:6000:238a:b0:439:b835:f939 with SMTP id ffacd0b85a97d-439b835fb59mr3557141f8f.19.1772441174946;
-        Mon, 02 Mar 2026 00:46:14 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439ba2a5970sm3360634f8f.33.2026.03.02.00.46.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2026 00:46:13 -0800 (PST)
-Date: Mon, 2 Mar 2026 11:46:10 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev,
-	Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Xianwei Zhao <xianwei.zhao@amlogic.com>
-Subject: Re: [PATCH v4 2/3] dma: amlogic: Add general DMA driver for A9
-Message-ID: <202603020642.3hq2CxZ7-lkp@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880EF36D504;
+	Mon,  2 Mar 2026 12:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772454835; cv=fail; b=pkQ+6977CfZJazRPWMROp7V/6RZvkRH/eCPdv1NvAq3Dgc9uZtWIxXV2wjPgdsebMvKTmw5HCn0rA528iY+c46b1kUfIBmDgbZmE7KzERLGSe24s0Y7QK69pTSTUnjo/0TwVG4Fwa6RfpmBrUEifojz5fK0TiE9AYYGaRkuyM80=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772454835; c=relaxed/simple;
+	bh=g0sUoqaafyX4CPHQ7tmPDd+nmapZ7nhnLwwt1ZQIey4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OgYoFTwg/9tXLZYzPl6pke9B6lKrmQDqC/KFU6s6FhvDZNnLWK5ljVDTfihGHQaEK+qjcmYBQmI7vwVZyAQmMA54lcEidpyfvSeBojtey9pGVrqjEd3PlpR6FgPjRlth+AP2phpAO+6slQ0pPwYa//KoE1jKtPbrPJcmEBbqzB4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bhqUCqcZ; arc=fail smtp.client-ip=52.101.48.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=f+sQGjxqP+amwXLeA+YoFH+Qtvlj83ODcvTGFoOdNdKs11dllP8OInv7wCVVX9pJiR0hoRAKiNIjtBcUyfGq+6/sTPJ+96ud1w5CbjZ8OfrFWz8kz4jsoCrlCKU4R7K/QdTKS4NJfYDd/1eq1d6yFNNZFCkns3qGgkl6f2nSHXB9mSPhwalrlsukOgDyY4WONRalvkqVtyOZagHxu4muuVPnPuu6hcJHxgwtoI0lYahOINT9BDMyaNCoNC3hNRXjETTIh8PYQ7Z1Z4OpAi2GixYLAswnFb25lJAc4dZysZ9wtA6cwf2B6ICN9omt/u1IxpXbeoCa5Rq+QnLDTJc+ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gDoFr3TbwzWA2t81KuAF2GGVgsdyyirsQUDVWA9bICM=;
+ b=Jcd5P3rb15qO9u7g7rmiJVp2Oyw5f9mz0EwCNiW985Wo/ZwVNLWKtMM+4dUK4mE4NZnjezMLXAAVh3k+jx+U8HY4ZfhEMFmROWp+aXyfcbN0gUxvuO4rakjEiSAd2H37Dmzr/8CnA+LRka9hSjMW7mDRWWT416EI05dakiazkuItuGOUL/qEH4TD4dYFMgJFCMOKrbNahbNpRKSQ4mEt8HkDfGtOds3c0NKcU4nWjZ61hK5lRyq9EwHDQoIP2GSAPEgihNBNhKp61ztZsAhMn2kzilGdRowgh1U7qolF4W5uGebFG8omsE4Oqao2vTqt7dKqetvMJOn1RKYU4qYj9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gDoFr3TbwzWA2t81KuAF2GGVgsdyyirsQUDVWA9bICM=;
+ b=bhqUCqcZSNHWspFJ7Oik3VLzdY9ShWLa8rQ0tJciB54VtYhj1+Ugx/6u0qz5JyAROzhn1KWmh8vbCss+l+P4r8yb8N+YSlhPTMJ7Cy5hdowcPmrEV1plBQoZNRr9KJ0AR5WA8GpkfYZuvSjDiDQYj1BX70YvRYw4dBOCj4fNEe3rraaTWULnlP1/NjVUvRfZ81Up7/mnz71PCWdTwQ2/uQtftlWOidPSAQsng8jTt5LRlTtsBz659M54m2hskOW9ajmOGKuLw+FlO0IChuZfVS2rMLr4jmoKqQTCYgmrbBTDgGPQEBiySmWM+a9kYMS+BN/c+G8qipcokGVsOZh7qQ==
+Received: from PH7P220CA0072.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:32c::31)
+ by SJ5PPF5D591B24D.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::994) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.21; Mon, 2 Mar
+ 2026 12:33:49 +0000
+Received: from SN1PEPF000252A2.namprd05.prod.outlook.com
+ (2603:10b6:510:32c:cafe::c0) by PH7P220CA0072.outlook.office365.com
+ (2603:10b6:510:32c::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.18 via Frontend Transport; Mon,
+ 2 Mar 2026 12:33:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SN1PEPF000252A2.mail.protection.outlook.com (10.167.242.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9654.16 via Frontend Transport; Mon, 2 Mar 2026 12:33:48 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 2 Mar
+ 2026 04:33:36 -0800
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 2 Mar
+ 2026 04:33:36 -0800
+Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
+ Transport; Mon, 2 Mar 2026 04:33:31 -0800
+From: Akhil R <akhilrajeev@nvidia.com>
+To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Thierry Reding <thierry.reding@kernel.org>, "Jonathan
+ Hunter" <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>, <dmaengine@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Akhil R <akhilrajeev@nvidia.com>
+Subject: [PATCH v2 0/9] Add GPCDMA support in Tegra264
+Date: Mon, 2 Mar 2026 18:02:30 +0530
+Message-ID: <20260302123239.68441-1-akhilrajeev@nvidia.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260227-amlogic-dma-v4-2-f25e4614e9b7@amlogic.com>
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000252A2:EE_|SJ5PPF5D591B24D:EE_
+X-MS-Office365-Filtering-Correlation-Id: 42c6173a-1440-4025-20da-08de7857f459
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	qeAczlJR0E60lXCCQq9DAfCq0+Me4zHVVODSdqrrb24eN9INDnovaIeeViuIpBaTDSg3ka7yLTMGBfyXiRmAnnO5iiGvVBiZVpGlxs78lZwy5deZ52ER35yxTj9j6nwT4n2FGjrwLLAC6GCgkE7WiuWGXkucgJaLyVZH5yM/m7ln7m0I5gRSkJ1EqJvkilVg2PycBBO07YvECJaXZ/+z8/CpfzbujZ9WAOd6hpC9wMjc2n+D8EArm6Zno3TnuAR90L9oyBGB27Om5g6vQrLAMyQJCj2u8z1NJM0RR46H7n4IQmpAcBGgRPdab4VxEDBChC/SUveKKAC11b+3JVvkCLcRkjBlQx5g7DG2enSe6q2rkE0KV/JIgrSNnIbLwhT6QjxyoRre2+5zW/pAbOyegNdYtaPNy0MztmTM8epDPtKI+f6Hw2NXxOvNNLvb6ng7eDqgUq93rtitjb2RghPcsHcs6XF2f/YvRWgg8/qzMfwALggVfK+0BOdSrToaV/glF5Wk43oRPcqe/ypug2ziPxpNOcziiXcET3xSpmL9Z0WgrGY3VyB9mUwlFWdIZdOSvd68K9k6SATP4gptcehLg9f7mMr//NoBYYkXIcAfXEXtRgTYFdgV6G5v+u/M7LXGn/QGzkuC2ZP8lLP1gOZYICHegccFOIk3v1YZh0GMFBG5pW7JLQMB2eE/4pPAR3QbIlvMMqImtDTY03HSRk+kgjFJznUAj6QJmdmswDRFncx1ztTwdgeMa/YK8JMnCDOI1mZlrZPg5QlR+v7swlD9r7MpWVK5HZzwuIK/zX7F/ZUqW1osIwf95PE7hPWVowpSuiM6G7d5WRo7gPP+M6QFX4xsJAh9w+zh4HA/cCzE/hQ=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	89kf60vtcOn4qfUUV7B11Obz0m5jvCKACvTror5NikEtdK98n7J0Iu3tm8sjeJK2nMmSa2RsEpPWhazVJ5+aWW2uGi4ZTDf/YglocdFVyXh3iAEiJW2gRdijRDkoC4AwRn6UkKOYQm5sPusP7RLCQLztGVvSWlmC1jR85TmJw5B87zaEdSVjIy5Vv87HmcK3/QfqbLpu53QbRUZkaw3j6lpPKTX2Si6XoENMokZ+MkxU9omng8aJGlEJEZh+6AwPFrQwdrBhhgDOL8sXtvssNABI1Roqn/qZyQvR0EMUUZ0/PkzF5FHwzLeM4IqE50If9RW0Z+YXs0GueLDDYFd4po2ZxEgAg/XAfEE6ir9Tf50OZFwpjdD163MDFclZnlEaTAOR1DUI7CzE5sSDfM/Bd+ubMfK+zx39L+jcub137YqrKGrZAJUxjYydiNihtsJD
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2026 12:33:48.8691
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42c6173a-1440-4025-20da-08de7857f459
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000252A2.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF5D591B24D
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
+	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9162-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	DKIM_TRACE(0.00)[linaro.org:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dan.carpenter@linaro.org,dmaengine@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-9163-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[akhilrajeev@nvidia.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[Nvidia.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,Nvidia.com:dkim,nvidia.com:mid];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,xianwei.zhao.amlogic.com,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[01.org:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linaro.org:email,linaro.org:dkim,intel.com:mid,intel.com:email]
-X-Rspamd-Queue-Id: 4C7201D4DE1
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[9]
+X-Rspamd-Queue-Id: 00FB91D8D04
 X-Rspamd-Action: no action
 
-Hi Xianwei,
+This series adds support for GPCDMA in Tegra264 with additional
+support for separate stream ID for each channel. Tegra264 GPCDMA
+controller has changes in the register offsets and uses 41-bit
+addressing for memory. Add changes in the tegra186-gpc-dma driver
+to support these.
 
-kernel test robot noticed the following build warnings:
+v1->v2:
+- Fix dt_bindings_check warnings
+- Drop fallback compatible "nvidia,tegra186-gpcdma" from Tegra264 DT
+- Use dma_addr_t for sg_req src/dst fields and drop separate high_add
+  variable and check for the addr_bits only when programming the
+  registers.
+- Update address width to 39 bits for Tegra234 and before since the SMMU
+  supports only up to 39 bits till Tegra234.
+- Add a patch to do managed DMA controller registration.
+- Describe the second iteration in the probe.
+- Update commit descriptions.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Xianwei-Zhao-via-B4-Relay/dt-bindings-dma-Add-Amlogic-A9-SoC-DMA/20260227-152743
-base:   6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
-patch link:    https://lore.kernel.org/r/20260227-amlogic-dma-v4-2-f25e4614e9b7%40amlogic.com
-patch subject: [PATCH v4 2/3] dma: amlogic: Add general DMA driver for A9
-config: arm-randconfig-r073-20260228 (https://download.01.org/0day-ci/archive/20260302/202603020642.3hq2CxZ7-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-smatch version: v0.5.0-8994-gd50c5a4c
+Akhil R (9):
+  dt-bindings: dma: nvidia,tegra186-gpc-dma: Add iommu-map property
+  dt-bindings: dma: nvidia,tegra186-gpc-dma: Make reset optional
+  dmaengine: tegra: Make reset control optional
+  dmaengine: tegra: Use struct for register offsets
+  dmaengine: tegra: Support address width > 39 bits
+  dmaengine: tegra: Use managed DMA controller registration
+  dmaengine: tegra: Use iommu-map for stream ID
+  dmaengine: tegra: Add Tegra264 support
+  arm64: tegra: Add iommu-map and enable GPCDMA in Tegra264
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202603020642.3hq2CxZ7-lkp@intel.com/
-
-New smatch warnings:
-drivers/dma/amlogic-dma.c:354 aml_dma_interrupt_handler() warn: variable dereferenced before check 'aml_chan' (see line 353)
-drivers/dma/amlogic-dma.c:483 aml_dma_probe() warn: passing zero to 'PTR_ERR'
-
-Old smatch warnings:
-drivers/dma/amlogic-dma.c:384 aml_dma_interrupt_handler() warn: variable dereferenced before check 'aml_chan' (see line 383)
-
-vim +/aml_chan +354 drivers/dma/amlogic-dma.c
-
-c01d15789f1d15b Xianwei Zhao 2026-02-27  335  static irqreturn_t aml_dma_interrupt_handler(int irq, void *dev_id)
-c01d15789f1d15b Xianwei Zhao 2026-02-27  336  {
-c01d15789f1d15b Xianwei Zhao 2026-02-27  337  	struct aml_dma_dev *aml_dma = dev_id;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  338  	struct aml_dma_chan *aml_chan;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  339  	u32 done, eoc_done, err, err_l, end;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  340  	int i = 0;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  341  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  342  	/* deal with rch normal complete and error */
-c01d15789f1d15b Xianwei Zhao 2026-02-27  343  	regmap_read(aml_dma->regmap, RCH_DONE, &done);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  344  	regmap_read(aml_dma->regmap, RCH_ERR, &err);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  345  	regmap_read(aml_dma->regmap, RCH_LEN_ERR, &err_l);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  346  	err = err | err_l;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  347  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  348  	done = done | err;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  349  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  350  	while (done) {
-c01d15789f1d15b Xianwei Zhao 2026-02-27  351  		i = ffs(done) - 1;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  352  		aml_chan = aml_dma->aml_rch[i];
-c01d15789f1d15b Xianwei Zhao 2026-02-27 @353  		regmap_write(aml_dma->regmap, CLEAR_RCH, BIT(aml_chan->chan_id));
-                                                                                                     ^^^^^^^^^^^^^^^^^^
-Move this dereference
-
-c01d15789f1d15b Xianwei Zhao 2026-02-27 @354  		if (!aml_chan) {
-                                                             ^^^^^^^^
-after this NULL check?
-
-c01d15789f1d15b Xianwei Zhao 2026-02-27  355  			dev_err(aml_dma->dma_device.dev, "idx %d rch not initialized\n", i);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  356  			done &= ~BIT(i);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  357  			continue;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  358  		}
-c01d15789f1d15b Xianwei Zhao 2026-02-27  359  		aml_chan->status = (err & (1 << i)) ? DMA_ERROR : DMA_COMPLETE;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  360  		dma_cookie_complete(&aml_chan->desc);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  361  		dmaengine_desc_get_callback_invoke(&aml_chan->desc, NULL);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  362  		done &= ~BIT(i);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  363  	}
-c01d15789f1d15b Xianwei Zhao 2026-02-27  364  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  365  	/* deal with wch normal complete and error */
-c01d15789f1d15b Xianwei Zhao 2026-02-27  366  	regmap_read(aml_dma->regmap, DMA_BATCH_END, &end);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  367  	if (end)
-c01d15789f1d15b Xianwei Zhao 2026-02-27  368  		regmap_write(aml_dma->regmap, CLEAR_W_BATCH, end);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  369  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  370  	regmap_read(aml_dma->regmap, WCH_DONE, &done);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  371  	regmap_read(aml_dma->regmap, WCH_EOC_DONE, &eoc_done);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  372  	done = done | eoc_done;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  373  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  374  	regmap_read(aml_dma->regmap, WCH_ERR, &err);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  375  	regmap_read(aml_dma->regmap, WDMA_RESP_ERR, &err_l);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  376  	err = err | err_l;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  377  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  378  	done = done | err;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  379  	i = 0;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  380  	while (done) {
-c01d15789f1d15b Xianwei Zhao 2026-02-27  381  		i = ffs(done) - 1;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  382  		aml_chan = aml_dma->aml_wch[i];
-c01d15789f1d15b Xianwei Zhao 2026-02-27  383  		regmap_write(aml_dma->regmap, CLEAR_WCH, BIT(aml_chan->chan_id));
-c01d15789f1d15b Xianwei Zhao 2026-02-27  384  		if (!aml_chan) {
-
-Same.
-
-c01d15789f1d15b Xianwei Zhao 2026-02-27  385  			dev_err(aml_dma->dma_device.dev, "idx %d wch not initialized\n", i);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  386  			done &= ~BIT(i);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  387  			continue;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  388  		}
-c01d15789f1d15b Xianwei Zhao 2026-02-27  389  		aml_chan->status = (err & (1 << i)) ? DMA_ERROR : DMA_COMPLETE;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  390  		dma_cookie_complete(&aml_chan->desc);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  391  		dmaengine_desc_get_callback_invoke(&aml_chan->desc, NULL);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  392  		done &= ~BIT(i);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  393  	}
-c01d15789f1d15b Xianwei Zhao 2026-02-27  394  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  395  	return IRQ_HANDLED;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  396  }
-
-[ snip ]
-
-c01d15789f1d15b Xianwei Zhao 2026-02-27  450  static int aml_dma_probe(struct platform_device *pdev)
-c01d15789f1d15b Xianwei Zhao 2026-02-27  451  {
-c01d15789f1d15b Xianwei Zhao 2026-02-27  452  	struct device_node *np = pdev->dev.of_node;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  453  	struct dma_device *dma_dev;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  454  	struct aml_dma_dev *aml_dma;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  455  	int ret, i, len;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  456  	u32 chan_nr;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  457  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  458  	const struct regmap_config aml_regmap_config = {
-c01d15789f1d15b Xianwei Zhao 2026-02-27  459  		.reg_bits = 32,
-c01d15789f1d15b Xianwei Zhao 2026-02-27  460  		.val_bits = 32,
-c01d15789f1d15b Xianwei Zhao 2026-02-27  461  		.reg_stride = 4,
-c01d15789f1d15b Xianwei Zhao 2026-02-27  462  		.max_register = 0x3000,
-c01d15789f1d15b Xianwei Zhao 2026-02-27  463  	};
-c01d15789f1d15b Xianwei Zhao 2026-02-27  464  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  465  	ret = of_property_read_u32(np, "dma-channels", &chan_nr);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  466  	if (ret)
-c01d15789f1d15b Xianwei Zhao 2026-02-27  467  		return dev_err_probe(&pdev->dev, ret, "failed to read dma-channels\n");
-c01d15789f1d15b Xianwei Zhao 2026-02-27  468  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  469  	len = sizeof(struct aml_dma_dev) + sizeof(struct aml_dma_chan) * chan_nr;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  470  	aml_dma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  471  	if (!aml_dma)
-c01d15789f1d15b Xianwei Zhao 2026-02-27  472  		return -ENOMEM;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  473  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  474  	aml_dma->chan_nr = chan_nr;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  475  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  476  	aml_dma->base = devm_platform_ioremap_resource(pdev, 0);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  477  	if (IS_ERR(aml_dma->base))
-c01d15789f1d15b Xianwei Zhao 2026-02-27  478  		return PTR_ERR(aml_dma->base);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  479  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  480  	aml_dma->regmap = devm_regmap_init_mmio(&pdev->dev, aml_dma->base,
-c01d15789f1d15b Xianwei Zhao 2026-02-27  481  						&aml_regmap_config);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  482  	if (IS_ERR_OR_NULL(aml_dma->regmap))
-
-This should just be if (IS_ERR(aml_dma->regmap)) since
-devm_regmap_init_mmio() can't return NULL.
-https://staticthinking.wordpress.com/2022/08/01/mixing-error-pointers-and-null/
-
-
-c01d15789f1d15b Xianwei Zhao 2026-02-27 @483  		return PTR_ERR(aml_dma->regmap);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  484  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  485  	aml_dma->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  486  	if (IS_ERR(aml_dma->clk))
-c01d15789f1d15b Xianwei Zhao 2026-02-27  487  		return PTR_ERR(aml_dma->clk);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  488  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  489  	aml_dma->irq = platform_get_irq(pdev, 0);
-c01d15789f1d15b Xianwei Zhao 2026-02-27  490  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  491  	aml_dma->pdev = pdev;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  492  	aml_dma->dma_device.dev = &pdev->dev;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  493  
-c01d15789f1d15b Xianwei Zhao 2026-02-27  494  	dma_dev = &aml_dma->dma_device;
-c01d15789f1d15b Xianwei Zhao 2026-02-27  495  	INIT_LIST_HEAD(&dma_dev->channels);
+ .../bindings/dma/nvidia,tegra186-gpc-dma.yaml |  27 +-
+ .../arm64/boot/dts/nvidia/tegra264-p3834.dtsi |   4 +
+ arch/arm64/boot/dts/nvidia/tegra264.dtsi      |   3 +-
+ drivers/dma/tegra186-gpc-dma.c                | 433 +++++++++++-------
+ 4 files changed, 298 insertions(+), 169 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.50.1
 
 

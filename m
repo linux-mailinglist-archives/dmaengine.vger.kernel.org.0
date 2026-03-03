@@ -1,55 +1,55 @@
-Return-Path: <dmaengine+bounces-9213-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9214-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KMZAFz23pmk7TAAAu9opvQ
-	(envelope-from <dmaengine+bounces-9213-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 03 Mar 2026 11:26:05 +0100
+	id KMw6Az+3pmk7TAAAu9opvQ
+	(envelope-from <dmaengine+bounces-9214-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 03 Mar 2026 11:26:07 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06ADF1ECA42
-	for <lists+dmaengine@lfdr.de>; Tue, 03 Mar 2026 11:26:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CAFF1ECA49
+	for <lists+dmaengine@lfdr.de>; Tue, 03 Mar 2026 11:26:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4409E3045A9C
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5E9EE3046B90
 	for <lists+dmaengine@lfdr.de>; Tue,  3 Mar 2026 10:24:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4728A35B63D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C6C639099A;
 	Tue,  3 Mar 2026 10:24:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="by5pO4Yk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJUgpZ66"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AA8382387
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B8738C2C8
 	for <dmaengine@vger.kernel.org>; Tue,  3 Mar 2026 10:24:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772533458; cv=none; b=pjrQyP4apEQWAo++myRviDrNC6uPaIP1415gAoB+pCu5Dvhpg/FVDc/tcTCkID/Ty3BRcl5ubMHrRqs3QsC8RlqARTTThP3pCSDMFVv4w18CLgQSm6vG/zaZ7qAVgEZa18nkY+R630WYdJWp5Hp+p7pgYQxbMtCkEstZoDK5gNQ=
+	t=1772533458; cv=none; b=fnBUr/uQPXuT2lVyVGzukpu4P2/sbF934sfpfOEbwXiowunnd0QeGMiM5MNj7HBd1RpEVYpTJYHbnzypq5ZUyxkUW/aonAZI/tQX00guF+F3/uTR5wRleyDTgTfTo5f56ae0HGqtAs/fqcWin0Lg7D9pYTNX56c2BM6/S0gkaeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1772533458; c=relaxed/simple;
-	bh=1paRApFNOfzxl76xzLpAXTJjNKszG+jG5RJYWDI0fiQ=;
+	bh=ixxLqJkz+wUT5k63WTWPfMQxCtYQrcKiMOxvpfY2DCw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OwqPREy1F1c82krIUjoe7JfOg2uGHIlEXaNMyUra0uw/mqsj5Ert+O1MOCMFMbJS6ojJ9Wl/QbJ4+brF40aKY2xihyeheMj7zn9PA77oJCpk6bSv6qWIIKnifc2+qB8OmAasLD6qffDVJDCPkB/oLWt2k5HrGp3HaQ/2unbUWHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=by5pO4Yk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D99CCC2BCB4;
+	 In-Reply-To:To:Cc; b=RcVfJT4p7Izq2LuqhL0DbUToUqdidhX4LgRSlEuzXiKPxBtp3sScBQ+c7ReDyN11AREm0/jHRd8ptwUBeGBI3jl0L6n3p9JnDnkILmUc+vSQU478RZOO6uGV4mU3blA9R7jC0RgvhXvyLVou5X/lFd6NSh0jZkVGUmaWFVlcRyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJUgpZ66; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EE005C2BCB6;
 	Tue,  3 Mar 2026 10:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772533457;
-	bh=1paRApFNOfzxl76xzLpAXTJjNKszG+jG5RJYWDI0fiQ=;
+	s=k20201202; t=1772533458;
+	bh=ixxLqJkz+wUT5k63WTWPfMQxCtYQrcKiMOxvpfY2DCw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=by5pO4Ykzoiul+iI5t13WtPgN0evaRtrNK0LBJ/8U37SWW7VFu0tROxVvG7Gl6z5F
-	 daBTW3NJxIjxhM+JcWj601cVOz1sI1OG3Vdrcq5u4X5HTXywl9iqBXvuY3x03RbZdN
-	 2C90grmAJfCYeEitZcVPUzsACEHgUQ0h/Pyy+irzMH/FNdZiNJ0qtSc/hr+kuxq/o6
-	 Hk/UoXaUINgtw/MHf0+t5bFxO532cM1OBzgyhmxDgE/tNxVGHBXK2G0ayEYTWlPLNk
-	 gcwmbClbq2gCJKTVihdZ0qYX6vXKAK/Ilp6OVsq7PZOprJinNwQTRTu1GDRHr/o5GT
-	 SEkjzPmUAyjkw==
+	b=HJUgpZ66nUVqooFQBOXooFiOKBnxWEGJgeUtqY2aK2fJgIj6GUONeQ99LHdR+etHw
+	 LR8r8AkVQnxXAKj/+WtkFFHgqVD/o2L5fVxjsn4n0o2D1qOeQe8aPFGTu20xUom06F
+	 zC6ogPTYkfpcRRdwfbB3XvWLfesi2Zcff9S/LG9Fk/sP69tOgt8n1JfnePZf8VaiQs
+	 jQyceMMT+wFqLM6gHp52g1tcLIX/ZVhNl0VxJf6+0bVh5PybdWiha/BHrIUZG4MPg6
+	 knVquwK2MFIvGSFHZ52urfKhdrGmkuZxGGrdJ+gwAHYyMGih7pfqn1eGml3yj/9g74
+	 sb8ZKWWGy869w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D321EFD006E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36E4EC1422;
 	Tue,  3 Mar 2026 10:24:17 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Tue, 03 Mar 2026 10:25:03 +0000
-Subject: [PATCH v2 4/5] dmaengine: dma-axi-dmac: Gracefully terminate SW
+Date: Tue, 03 Mar 2026 10:25:04 +0000
+Subject: [PATCH v2 5/5] dmaengine: dma-axi-dmac: Gracefully terminate HW
  cyclic transfers
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -59,34 +59,34 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260303-axi-dac-cyclic-support-v2-4-0db27b4be95a@analog.com>
+Message-Id: <20260303-axi-dac-cyclic-support-v2-5-0db27b4be95a@analog.com>
 References: <20260303-axi-dac-cyclic-support-v2-0-0db27b4be95a@analog.com>
 In-Reply-To: <20260303-axi-dac-cyclic-support-v2-0-0db27b4be95a@analog.com>
 To: dmaengine@vger.kernel.org
 Cc: Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772533501; l=2568;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772533501; l=7716;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=by16V5/NLFw/3DRhfR0r4tQVR69bWmLI/moWu8EK0w0=;
- b=ZCJTjmqmBu0fkqNoG+OfB7eMaUU/Z1l91yuLS/Oag2TdVLrMGeYmnyFH3GDwWXZAzQjZ32d6O
- HauB8Ma4x/YDyxzv3Bbw2WBzb24wco1ArcBoeCupeR4EiiN1lw4NVtc
+ bh=MZvZTb+Rp1mVwxzcFCiCv9YkMsmBeMZLgrW2LPZP0/Y=;
+ b=BSvBHwg80gjQC0g2FwALwtSjEcQLkhWzmWYK6cost4Gexl8AV9C3PPpyD0TOtx3qmvJu+ibsN
+ c7g2AdU1+vuD88VqJMByiF/BoTzxiQFXlvd+vO5Gu1cJNm2FLL6k98g
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
  auth_id=100
 X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
 Reply-To: nuno.sa@analog.com
-X-Rspamd-Queue-Id: 06ADF1ECA42
+X-Rspamd-Queue-Id: 9CAFF1ECA49
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9213-lists,dmaengine=lfdr.de,nuno.sa.analog.com];
+	TAGGED_FROM(0.00)[bounces-9214-lists,dmaengine=lfdr.de,nuno.sa.analog.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -101,7 +101,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine];
 	HAS_REPLYTO(0.00)[nuno.sa@analog.com];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,analog.com:replyto,analog.com:email,analog.com:mid]
@@ -109,77 +109,229 @@ X-Rspamd-Action: no action
 
 From: Nuno Sá <nuno.sa@analog.com>
 
-As of now, to terminate a cyclic transfer, one pretty much needs to use
-brute force and terminate all transfers with .device_terminate_all().
-With this change, when a cyclic transfer terminates (and generates an
-EOT interrupt), look at any new pending transfer with the DMA_PREP_LOAD_EOT
-flag set. If there is one, the current cyclic transfer is terminated and
-the next one is enqueued. If the flag is not set, that transfer is ignored.
+Add support for gracefully terminating hardware cyclic DMA transfers when
+a new transfer is queued and is flagged with DMA_PREP_LOAD_EOT. Without
+this, cyclic transfers would continue indefinitely until we brute force
+it with .device_terminate_all().
+
+When a new descriptor is queued while a cyclic transfer is active, mark
+the cyclic transfer for termination. For hardware with scatter-gather
+support, modify the last segment flags to trigger end-of-transfer. For
+non-SG hardware, clear the CYCLIC flag to allow natural completion.
+
+Older IP core versions (pre-4.6.a) can prefetch data when clearing the
+CYCLIC flag, causing corruption in the next transfer. Work around this
+by disabling and re-enabling the core to flush prefetched data.
+
+The cyclic_eot flag tracks transfers marked for termination, preventing
+new transfers from starting until the cyclic one completes. Non-EOT
+transfers submitted after cyclic transfers are discarded with a warning.
+
+Also note that for hardware cyclic transfers not using SG, we need to
+make sure that chan->next_desc is also set to NULL (so we can look at
+possible EOT transfers) and we also need to move the queue check to
+after axi_dmac_get_next_desc() because with hardware based cyclic
+transfers we might get the queue marked as full and hence we would not
+be able to check for cyclic termination.
 
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
- drivers/dma/dma-axi-dmac.c | 34 +++++++++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
+ drivers/dma/dma-axi-dmac.c | 104 +++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 91 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index a47e08d3dbbc..e9814d725322 100644
+index e9814d725322..45c2c8e4bc45 100644
 --- a/drivers/dma/dma-axi-dmac.c
 +++ b/drivers/dma/dma-axi-dmac.c
-@@ -233,6 +233,11 @@ static struct axi_dmac_desc *axi_dmac_get_next_desc(struct axi_dmac *dmac,
- 	struct virt_dma_desc *vdesc;
- 	struct axi_dmac_desc *desc;
+@@ -134,6 +134,7 @@ struct axi_dmac_desc {
+ 	struct axi_dmac_chan *chan;
  
-+	/*
-+	 * It means a SW cyclic transfer is in place so we should just return
-+	 * the same descriptor. SW cyclic transfer termination is handled
-+	 * in axi_dmac_transfer_done().
-+	 */
- 	if (chan->next_desc)
- 		return chan->next_desc;
+ 	bool cyclic;
++	bool cyclic_eot;
+ 	bool have_partial_xfer;
  
-@@ -411,6 +416,32 @@ static void axi_dmac_compute_residue(struct axi_dmac_chan *chan,
- 	}
+ 	unsigned int num_submitted;
+@@ -162,6 +163,7 @@ struct axi_dmac_chan {
+ 	bool hw_cyclic;
+ 	bool hw_2d;
+ 	bool hw_sg;
++	bool hw_cyclic_hotfix;
+ };
+ 
+ struct axi_dmac {
+@@ -227,11 +229,26 @@ static bool axi_dmac_check_addr(struct axi_dmac_chan *chan, dma_addr_t addr)
+ 	return true;
  }
  
-+static bool axi_dmac_handle_cyclic_eot(struct axi_dmac_chan *chan,
-+				       struct axi_dmac_desc *active)
++static struct axi_dmac_desc *axi_dmac_active_desc(struct axi_dmac_chan *chan)
 +{
-+	struct device *dev = chan_to_axi_dmac(chan)->dma_dev.dev;
-+	struct virt_dma_desc *vdesc;
-+
-+	/* wrap around */
-+	active->num_completed = 0;
-+
-+	vdesc = vchan_next_desc(&chan->vchan);
-+	if (!vdesc)
-+		return false;
-+	if (!(vdesc->tx.flags & DMA_PREP_LOAD_EOT)) {
-+		dev_warn(dev, "Discarding non EOT transfer after cyclic\n");
-+		list_del(&vdesc->node);
-+		return false;
-+	}
-+
-+	/* then let's end the cyclic transfer */
-+	chan->next_desc = NULL;
-+	list_del(&active->vdesc.node);
-+	vchan_cookie_complete(&active->vdesc);
-+
-+	return true;
++	return list_first_entry_or_null(&chan->active_descs,
++					struct axi_dmac_desc, vdesc.node);
 +}
 +
- static bool axi_dmac_transfer_done(struct axi_dmac_chan *chan,
- 	unsigned int completed_transfers)
+ static struct axi_dmac_desc *axi_dmac_get_next_desc(struct axi_dmac *dmac,
+ 						    struct axi_dmac_chan *chan)
  {
-@@ -458,7 +489,8 @@ static bool axi_dmac_transfer_done(struct axi_dmac_chan *chan,
- 			if (active->num_completed == active->num_sgs ||
- 			    sg->partial_len) {
- 				if (active->cyclic) {
--					active->num_completed = 0; /* wrap around */
-+					/* keep start_next as is, if already true... */
-+					start_next |= axi_dmac_handle_cyclic_eot(chan, active);
- 				} else {
- 					list_del(&active->vdesc.node);
- 					vchan_cookie_complete(&active->vdesc);
++	struct axi_dmac_desc *active = axi_dmac_active_desc(chan);
+ 	struct virt_dma_desc *vdesc;
+ 	struct axi_dmac_desc *desc;
++	unsigned int val;
++
++	/*
++	 * Just play safe and ignore any SOF if we have an active cyclic transfer
++	 * flagged to end. We'll start it as soon as the current cyclic one ends.
++	 */
++	if (active && active->cyclic_eot)
++		return NULL;
+ 
+ 	/*
+ 	 * It means a SW cyclic transfer is in place so we should just return
+@@ -245,11 +262,43 @@ static struct axi_dmac_desc *axi_dmac_get_next_desc(struct axi_dmac *dmac,
+ 	if (!vdesc)
+ 		return NULL;
+ 
++	if (active && active->cyclic && !(vdesc->tx.flags & DMA_PREP_LOAD_EOT)) {
++		struct device *dev = chan_to_axi_dmac(chan)->dma_dev.dev;
++
++		dev_warn(dev, "Discarding non EOT transfer after cyclic\n");
++		list_del(&vdesc->node);
++		return NULL;
++	}
++
+ 	list_move_tail(&vdesc->node, &chan->active_descs);
+ 	desc = to_axi_dmac_desc(vdesc);
+ 	chan->next_desc = desc;
+ 
+-	return desc;
++	if (!active || !active->cyclic)
++		return desc;
++
++	active->cyclic_eot = true;
++
++	if (chan->hw_sg) {
++		unsigned long flags = AXI_DMAC_HW_FLAG_IRQ | AXI_DMAC_HW_FLAG_LAST;
++		/*
++		 * Let's then stop the current cyclic transfer by making sure we
++		 * get an EOT interrupt and to open the cyclic loop by marking
++		 * the last segment.
++		 */
++		active->sg[active->num_sgs - 1].hw->flags = flags;
++		return NULL;
++	}
++
++	/*
++	 * Clear the cyclic bit if there's no Scatter-Gather HW so that we get
++	 * at the end of the transfer.
++	 */
++	val = axi_dmac_read(dmac, AXI_DMAC_REG_FLAGS);
++	val &= ~AXI_DMAC_FLAG_CYCLIC;
++	axi_dmac_write(dmac, AXI_DMAC_REG_FLAGS, val);
++
++	return NULL;
+ }
+ 
+ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
+@@ -260,14 +309,14 @@ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
+ 	unsigned int flags = 0;
+ 	unsigned int val;
+ 
+-	val = axi_dmac_read(dmac, AXI_DMAC_REG_START_TRANSFER);
+-	if (val) /* Queue is full, wait for the next SOT IRQ */
+-		return;
+-
+ 	desc = axi_dmac_get_next_desc(dmac, chan);
+ 	if (!desc)
+ 		return;
+ 
++	val = axi_dmac_read(dmac, AXI_DMAC_REG_START_TRANSFER);
++	if (val) /* Queue is full, wait for the next SOT IRQ */
++		return;
++
+ 	sg = &desc->sg[desc->num_submitted];
+ 
+ 	/* Already queued in cyclic mode. Wait for it to finish */
+@@ -309,10 +358,12 @@ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
+ 	 * call, enable hw cyclic mode to avoid unnecessary interrupts.
+ 	 */
+ 	if (chan->hw_cyclic && desc->cyclic && !desc->vdesc.tx.callback) {
+-		if (chan->hw_sg)
++		if (chan->hw_sg) {
+ 			desc->sg[desc->num_sgs - 1].hw->flags &= ~AXI_DMAC_HW_FLAG_IRQ;
+-		else if (desc->num_sgs == 1)
++		} else if (desc->num_sgs == 1) {
++			chan->next_desc = NULL;
+ 			flags |= AXI_DMAC_FLAG_CYCLIC;
++		}
+ 	}
+ 
+ 	if (chan->hw_partial_xfer)
+@@ -330,12 +381,6 @@ static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
+ 	axi_dmac_write(dmac, AXI_DMAC_REG_START_TRANSFER, 1);
+ }
+ 
+-static struct axi_dmac_desc *axi_dmac_active_desc(struct axi_dmac_chan *chan)
+-{
+-	return list_first_entry_or_null(&chan->active_descs,
+-		struct axi_dmac_desc, vdesc.node);
+-}
+-
+ static inline unsigned int axi_dmac_total_sg_bytes(struct axi_dmac_chan *chan,
+ 	struct axi_dmac_sg *sg)
+ {
+@@ -425,6 +470,35 @@ static bool axi_dmac_handle_cyclic_eot(struct axi_dmac_chan *chan,
+ 	/* wrap around */
+ 	active->num_completed = 0;
+ 
++	if (active->cyclic_eot) {
++		/*
++		 * It means an HW cyclic transfer was marked to stop. And we
++		 * know we have something to schedule, so start the next
++		 * transfer now the cyclic one is done.
++		 */
++		list_del(&active->vdesc.node);
++		vchan_cookie_complete(&active->vdesc);
++
++		if (chan->hw_cyclic_hotfix) {
++			struct axi_dmac *dmac = chan_to_axi_dmac(chan);
++			/*
++			 * In older IP cores, ending a cyclic transfer by clearing
++			 * the CYCLIC flag does not guarantee a graceful end.
++			 * It can happen that some data (of the next frame) is
++			 * already prefetched and will be wrongly visible in the
++			 * next transfer. To workaround this, we need to reenable
++			 * the core so everything is flushed. Newer cores handles
++			 * this correctly and do not require this "hotfix". The
++			 * SG IP also does not require this.
++			 */
++			dev_dbg(dev, "HW cyclic hotfix\n");
++			axi_dmac_write(dmac, AXI_DMAC_REG_CTRL, 0);
++			axi_dmac_write(dmac, AXI_DMAC_REG_CTRL, AXI_DMAC_CTRL_ENABLE);
++		}
++
++		return true;
++	}
++
+ 	vdesc = vchan_next_desc(&chan->vchan);
+ 	if (!vdesc)
+ 		return false;
+@@ -460,6 +534,7 @@ static bool axi_dmac_transfer_done(struct axi_dmac_chan *chan,
+ 	if (chan->hw_sg) {
+ 		if (active->cyclic) {
+ 			vchan_cyclic_callback(&active->vdesc);
++			start_next = axi_dmac_handle_cyclic_eot(chan, active);
+ 		} else {
+ 			list_del(&active->vdesc.node);
+ 			vchan_cookie_complete(&active->vdesc);
+@@ -1103,6 +1178,9 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
+ 		chan->length_align_mask = chan->address_align_mask;
+ 	}
+ 
++	if (version < ADI_AXI_PCORE_VER(4, 6, 0) && !chan->hw_sg)
++		chan->hw_cyclic_hotfix = true;
++
+ 	return 0;
+ }
+ 
 
 -- 
 2.53.0

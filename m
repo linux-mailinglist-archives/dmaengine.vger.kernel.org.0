@@ -1,210 +1,293 @@
-Return-Path: <dmaengine+bounces-9241-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9242-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CMafBchIqGlOrwAAu9opvQ
-	(envelope-from <dmaengine+bounces-9241-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 15:59:20 +0100
+	id OLx/OwZKqGnysQAAu9opvQ
+	(envelope-from <dmaengine+bounces-9242-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 16:04:38 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D69B20219B
-	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 15:59:19 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D0342022FF
+	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 16:04:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EF07830C4C90
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Mar 2026 14:49:44 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 83B4B3057EF5
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Mar 2026 14:53:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC6130E82D;
-	Wed,  4 Mar 2026 14:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC2803B4EB2;
+	Wed,  4 Mar 2026 14:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="ITjcx0+q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f6MmgnWD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA613A6EF1;
-	Wed,  4 Mar 2026 14:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4881425B30D;
+	Wed,  4 Mar 2026 14:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772635784; cv=none; b=oKHaZO+MKqJcsXnUjNNJQgIJaey4n6WVYQM9IsCAQdz/XaSa1aTTTE3RNS96Qcp6+BqTGlXPnw3ciTlfJK1tPkw7l1YUMuxJyDuN5susMKABXoWHUQhDuteg7a6cxsZ3kwLVHIlshmpXkctTAXJLw6HmiuZ2pIf23zevyfMMqGg=
+	t=1772636029; cv=none; b=oZscLGCV8Cle2GQBgN+iEoIfz6oy3aBAsJuLb2OTexOA7ImGSMkMkTan7ilOyhcrAv+dFCKp/UoLdrwGkE8TYwR2Unp4HXQ9b9cKu3wxh9SCd8AtoPm8WUQsy36vZi+i9rnU5geezLVJSAu4n0uTU0Mn5GGZ6ir6RdSN4L5wuQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772635784; c=relaxed/simple;
-	bh=ZKpxmFIqJZBWtAAmdnVABEDXdw9Gpnt4yabeSXMiy68=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
-	 References:In-Reply-To; b=mft+isfMJ57HsfDoHswbPYb7CDjVJfvwpsQCGw2Rnw5DVDpuenAVQgd6xU+Lmx/RWLWvVeKRRNA/0CwR073BFQPJsQly2HA70z496RxFfOojdXVXLTXQPk0d4Wa30DPkgyKACsam94vYWzRaAyXtbR9B6T3y4ntCHDnkB7uH3co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=ITjcx0+q; arc=none smtp.client-ip=195.201.215.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=folker-schwesinger.de; s=default2212; h=In-Reply-To:References:From:Cc:
-	Subject:To:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
-	Mime-Version:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=RV482GBP0cHHNRSOX9MuKnZkoH0dpIU2WIF8NIXXJig=; b=ITjcx0+qmFTwmWy/dm8QuBoNv4
-	3A2vBfpS8l1qJhhdw7eRtfU8yyTT4rutqEFjSXEeQJWLqYX9YFviyE/73T9Pl5Bd+ttCXYUL/87dd
-	ElcXlRd4Hj5Rerg5gAbsTRjvj+N328SG6pKsoZDSwmvUHW//4RdAmvq+PCEJmTQLIIdm9lEtMDsUO
-	ABsK9d5IwXuuW3HqzYI7uqseB+zIjh19p5rka0pgdzIiv0jH0zoMQd8EMkrn1eE/eMAZBLWcXBFZQ
-	/303aw/Z4gI0zR05S3qf0HtIDwQLztS2XmcQUmAueGqavD7M+wsU4YT8nZE6mwVjuZtBSNujX/yQn
-	iYsc9cdg==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1vxnXY-000F46-11;
-	Wed, 04 Mar 2026 15:49:32 +0100
-Received: from localhost ([127.0.0.1])
-	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1vxnXX-0007p3-1S;
-	Wed, 04 Mar 2026 15:49:31 +0100
+	s=arc-20240116; t=1772636029; c=relaxed/simple;
+	bh=BQ44oQAbUgWr8U493meAVTfSHv7WjBkib8olnp0zRU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fwO0KKnpLN4Mo/AyZ9xEb5p64TP+bZW9ikbmEh22bWArykB14eOoRdLKeBeswcHZL+1Dm2ZZBOfYHYRNvJoKyWScvQMKFiegpkNbY/OZygKoVqTXEbP/1EgSU5kiM0kdc8EWCMilVLFbffh6FdOlRhvuXU4r+ryhadFWyHX2PYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f6MmgnWD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4591BC4CEF7;
+	Wed,  4 Mar 2026 14:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772636028;
+	bh=BQ44oQAbUgWr8U493meAVTfSHv7WjBkib8olnp0zRU8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f6MmgnWD9JwZT5Tvq6TfWT4O2Q0Ys4L4GsXTR99rvN4VdJSfEj4ZluNmAQMjsZdxp
+	 V+DtoAa1YNw7+qyrec0lX+nJFl7SrGE4eD/3irtT21i9lHBv65L+TYP9+yAb5XnS2c
+	 ii/X5EXVyth4FxwEx9IZk5taVpjq8CK4yhqtt7WdaaM7MW8xFIZnzobXi7X3qX+/Z0
+	 VyurzjP7sF2JONPbrejSJI8uOkRAalAjh9N3ZKSMLGGDiPyWcFTMVECa3/jJjnyI0V
+	 gp3jyR/fUwsIuD+Hpo/UMOBhQXYANsZpjjQDEKWr1J392kst//oRBLVVnd9k4VL5FB
+	 oY+zrqBmrPvhg==
+Date: Wed, 4 Mar 2026 20:23:45 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Thara Gopinath <thara.gopinath@gmail.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Udit Tiwari <quic_utiwari@quicinc.com>,
+	Daniel Perez-Zoghbi <dperezzo@quicinc.com>,
+	Md Sadre Alam <mdalam@qti.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Michal Simek <michal.simek@amd.com>, Frank Li <Frank.Li@kernel.org>,
+	dmaengine@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	brgl@kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH RFC v11 12/12] dmaengine: qcom: bam_dma: add support for
+ BAM locking
+Message-ID: <aahHeR9j7q4_ynYK@vaman>
+References: <20260302-qcom-qce-cmd-descr-v11-0-4bf1f5db4802@oss.qualcomm.com>
+ <20260302-qcom-qce-cmd-descr-v11-12-4bf1f5db4802@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 04 Mar 2026 14:49:27 +0000
-Message-Id: <DGU2XPNWG24U.3V3TMZQLO1CNM@folker-schwesinger.de>
-To: "Rahul Navale" <rahulnavale04@gmail.com>
-Subject: Re: [RFC PATCH] dmaengine: xilinx_dma: Fix per-channel direction
- reporting via device_caps
-Cc: "Rahul Navale" <rahul.navale@ifm.com>, <dmaengine@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <vkoul@kernel.org>, <Frank.Li@kernel.org>, <michal.simek@amd.com>,
- <suraj.gupta2@amd.com>, <thomas.gessler@brueckmann-gmbh.de>,
- <radhey.shyam.pandey@amd.com>, <tomi.valkeinen@ideasonboard.com>,
- <marex@nabladev.com>, <marex@denx.de>
-From: "Folker Schwesinger" <dev@folker-schwesinger.de>
-X-Mailer: aerc 0.21.0-119-g0a449d4a7ff3
-References: <DGHGTCJRRZCW.9TGXQW44V6RR@folker-schwesinger.de>
- <20260304083544.4678-1-rahulnavale04@gmail.com>
-In-Reply-To: <20260304083544.4678-1-rahulnavale04@gmail.com>
-X-Virus-Scanned: Clear (ClamAV 1.4.3/27930/Wed Mar  4 08:24:08 2026)
-X-Rspamd-Queue-Id: 6D69B20219B
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260302-qcom-qce-cmd-descr-v11-12-4bf1f5db4802@oss.qualcomm.com>
+X-Rspamd-Queue-Id: 0D0342022FF
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[folker-schwesinger.de,none];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[folker-schwesinger.de:s=default2212];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-9242-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9241-lists,dmaengine=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	DKIM_TRACE(0.00)[folker-schwesinger.de:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dev@folker-schwesinger.de,dmaengine@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[lwn.net,gmail.com,gondor.apana.org.au,davemloft.net,quicinc.com,qti.qualcomm.com,kernel.org,amd.com,vger.kernel.org,lists.infradead.org,linaro.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	NEURAL_HAM(-0.00)[-1.000];
 	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,folker-schwesinger.de:dkim,folker-schwesinger.de:mid,bootlin.com:url]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,qualcomm.com:email]
 X-Rspamd-Action: no action
 
-On Wed Mar 4, 2026 at 9:35 AM CET, Rahul Navale wrote:
->
-> <4>[    0.302360] dma_slave_caps:
-> <4>[    0.302364]   src_addr_widths    =3D 0x00000000
-> <4>[    0.302368]   dst_addr_widths    =3D 0x00000000
-> <4>[    0.302371]   directions         =3D 0x00000000
-> <4>[    0.302374]   min_burst          =3D 0x00000000
-> <4>[    0.302377]   max_burst          =3D 0x00000000
-> <4>[    0.302380]   max_sg_burst       =3D 0x00000000
-> <4>[    0.302383]   cmd_pause          =3D 0x00
-> <4>[    0.302386]   cmd_resume         =3D 0x00
-> <4>[    0.302388]   cmd_terminate      =3D 0x00
-> <4>[    0.302391]   residue_granularity=3D 0x00000000
-> <4>[    0.302394]   descriptor_reuse   =3D 0x00
-> <4>[    0.302398] xilinx_dma_device_caps: caps->directions =3D 0x00000001
-> <4>[    0.302401] xilinx_dma_device_caps: caps->directions =3D 0x00000001
-> <4>[    0.302404] dma_slave_caps:
-> <4>[    0.302406]   src_addr_widths    =3D 0x00000000
-> <4>[    0.302409]   dst_addr_widths    =3D 0x00000000
-> <4>[    0.302412]   directions         =3D 0x00000001
-> <4>[    0.302415]   min_burst          =3D 0x00000000
-> <4>[    0.302418]   max_burst          =3D 0x00000000
-> <4>[    0.302421]   max_sg_burst       =3D 0x00000000
-> <4>[    0.302423]   cmd_pause          =3D 0x00
-> <4>[    0.302426]   cmd_resume         =3D 0x00
-> <4>[    0.302429]   cmd_terminate      =3D 0x01
-> <4>[    0.302431]   residue_granularity=3D 0x00000001
-> <4>[    0.302434]   descriptor_reuse   =3D 0x00
+On 02-03-26, 16:57, Bartosz Golaszewski wrote:
+> Add support for BAM pipe locking. To that end: when starting the DMA on
+> an RX channel - wrap the already issued descriptors with additional
+> command descriptors performing dummy writes to the base register
+> supplied by the client via dmaengine_slave_config() (if any) alongside
+> the lock/unlock HW flags.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> ---
+>  drivers/dma/qcom/bam_dma.c | 100 ++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 99 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+> index 83491e7c2f17d8c9d12a1a055baea7e3a0a75a53..b149cbe9613f0bdc8e26cae4f0cc6922997480d5 100644
+> --- a/drivers/dma/qcom/bam_dma.c
+> +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -28,11 +28,13 @@
+>  #include <linux/clk.h>
+>  #include <linux/device.h>
+>  #include <linux/dma-mapping.h>
+> +#include <linux/dma/qcom_bam_dma.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+> +#include <linux/lockdep.h>
+>  #include <linux/module.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_dma.h>
+> @@ -60,6 +62,8 @@ struct bam_desc_hw {
+>  #define DESC_FLAG_EOB BIT(13)
+>  #define DESC_FLAG_NWD BIT(12)
+>  #define DESC_FLAG_CMD BIT(11)
+> +#define DESC_FLAG_LOCK BIT(10)
+> +#define DESC_FLAG_UNLOCK BIT(9)
+>  
+>  struct bam_async_desc {
+>  	struct virt_dma_desc vd;
+> @@ -391,6 +395,12 @@ struct bam_chan {
+>  	struct list_head desc_list;
+>  
+>  	struct list_head node;
+> +
+> +	/* BAM locking infrastructure */
+> +	struct scatterlist lock_sg;
+> +	struct scatterlist unlock_sg;
+> +	struct bam_cmd_element lock_ce;
+> +	struct bam_cmd_element unlock_ce;
+>  };
+>  
+>  static inline struct bam_chan *to_bam_chan(struct dma_chan *common)
+> @@ -1012,14 +1022,92 @@ static void bam_apply_new_config(struct bam_chan *bchan,
+>  	bchan->reconfigure = 0;
+>  }
+>  
+> +static struct bam_async_desc *
+> +bam_make_lock_desc(struct bam_chan *bchan, struct scatterlist *sg,
+> +		   struct bam_cmd_element *ce, unsigned int flag)
+> +{
+> +	struct dma_chan *chan = &bchan->vc.chan;
+> +	struct bam_async_desc *async_desc;
+> +	struct bam_desc_hw *desc;
+> +	struct virt_dma_desc *vd;
+> +	struct virt_dma_chan *vc;
+> +	unsigned int mapped;
+> +	dma_cookie_t cookie;
+> +	int ret;
+> +
+> +	async_desc = kzalloc_flex(*async_desc, desc, 1, GFP_NOWAIT);
+> +	if (!async_desc) {
+> +		dev_err(bchan->bdev->dev, "failed to allocate the BAM lock descriptor\n");
+> +		return NULL;
+> +	}
+> +
+> +	async_desc->num_desc = 1;
+> +	async_desc->curr_desc = async_desc->desc;
+> +	async_desc->dir = DMA_MEM_TO_DEV;
+> +
+> +	desc = async_desc->desc;
+> +
+> +	bam_prep_ce_le32(ce, bchan->slave.dst_addr, BAM_WRITE_COMMAND, 0);
+> +	sg_set_buf(sg, ce, sizeof(*ce));
+> +
+> +	mapped = dma_map_sg_attrs(chan->slave, sg, 1, DMA_TO_DEVICE, DMA_PREP_CMD);
+> +	if (!mapped) {
+> +		kfree(async_desc);
+> +		return NULL;
+> +	}
+> +
+> +	desc->flags |= cpu_to_le16(DESC_FLAG_CMD | flag);
+> +	desc->addr = sg_dma_address(sg);
+> +	desc->size = sizeof(struct bam_cmd_element);
+> +
+> +	vc = &bchan->vc;
+> +	vd = &async_desc->vd;
+> +
+> +	dma_async_tx_descriptor_init(&vd->tx, &vc->chan);
+> +	vd->tx.flags = DMA_PREP_CMD;
+> +	vd->tx.desc_free = vchan_tx_desc_free;
+> +	vd->tx_result.result = DMA_TRANS_NOERROR;
+> +	vd->tx_result.residue = 0;
+> +
+> +	cookie = dma_cookie_assign(&vd->tx);
+> +	ret = dma_submit_error(cookie);
 
-I think the issue stems from the difference in residue_granularity
-(directions is set in xilinx_dma_device_caps and playback is still fixed
-and cmd_terminate is only referenced in the code by some unrelated
-driver).
+I am not sure I understand this.
 
-From a quick trace through the code I found that in the Xilinx DMA
-residue_granularity is set for AXIDMA independently from the SG setting
-of the DMA core [1].
-However, in xilinx_dma_tx_status() one of the conditions for residue
-calculations is that SG mode is enabled [2].
+At start you add a descriptor in the queue, ideally which should be
+queued after the existing descriptors are completed!
 
-Here's a quick patch that defers setting residue_granularity for the
-device into channel probe until chan->has_sg is available. Could you
-test if this fixes your issue (and of course re-activate all the caps->
-assignments in dma_get_slave_caps(), keep the debug stuff for now)?
+Also I thought you want to append Pipe cmd to descriptors, why not do
+this while preparing the descriptors and add the pipe cmd and start and
+end of the sequence when you prepare... This was you dont need to create
+a cookie like this
 
-<-->8-->
 
-diff --git i/drivers/dma/xilinx/xilinx_dma.c w/drivers/dma/xilinx/xilinx_dm=
-a.c
-index fabff602065f..adae1b37b533 100644
---- i/drivers/dma/xilinx/xilinx_dma.c
-+++ w/drivers/dma/xilinx/xilinx_dma.c
-@@ -3039,6 +3039,14 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_d=
-evice *xdev,
- 			str_enabled_disabled(chan->has_sg));
- 	}
+> +	if (ret)
+> +		return NULL;
+> +
+> +	return async_desc;
+> +}
+> +
+> +static int bam_setup_pipe_lock(struct bam_chan *bchan)
+> +{
+> +	struct bam_async_desc *lock_desc, *unlock_desc;
+> +
+> +	lock_desc = bam_make_lock_desc(bchan, &bchan->lock_sg,
+> +				       &bchan->lock_ce, DESC_FLAG_LOCK);
+> +	if (!lock_desc)
+> +		return -ENOMEM;
+> +
+> +	unlock_desc = bam_make_lock_desc(bchan, &bchan->unlock_sg,
+> +					 &bchan->unlock_ce, DESC_FLAG_UNLOCK);
+> +	if (!unlock_desc) {
+> +		kfree(lock_desc);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	list_add(&lock_desc->vd.node, &bchan->vc.desc_issued);
+> +	list_add_tail(&unlock_desc->vd.node, &bchan->vc.desc_issued);
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * bam_start_dma - start next transaction
+>   * @bchan: bam dma channel
+>   */
+>  static void bam_start_dma(struct bam_chan *bchan)
+>  {
+> -	struct virt_dma_desc *vd = vchan_next_desc(&bchan->vc);
+> +	struct virt_dma_desc *vd;
+>  	struct bam_device *bdev = bchan->bdev;
+> +	const struct bam_device_data *bdata = bdev->dev_data;
+>  	struct bam_async_desc *async_desc = NULL;
+>  	struct bam_desc_hw *desc;
+>  	struct bam_desc_hw *fifo = PTR_ALIGN(bchan->fifo_virt,
+> @@ -1030,6 +1118,16 @@ static void bam_start_dma(struct bam_chan *bchan)
+>  
+>  	lockdep_assert_held(&bchan->vc.lock);
+>  
+> +	if (bdata->pipe_lock_supported && bchan->slave.dst_addr &&
+> +	    bchan->slave.direction == DMA_MEM_TO_DEV) {
+> +		ret = bam_setup_pipe_lock(bchan);
+> +		if (ret) {
+> +			dev_err(bdev->dev, "Failed to set up the BAM lock\n");
+> +			return;
+> +		}
+> +	}
+> +
+> +	vd = vchan_next_desc(&bchan->vc);
+>  	if (!vd)
+>  		return;
+>  
+> 
+> -- 
+> 2.47.3
 
-+	/* Residue calculation is supported by only AXI DMA and CDMA */
-+	if(chan->has_sg && (
-+	   xdev->dma_config->dmatype =3D=3D XDMA_TYPE_AXIDMA ||
-+	   xdev->dma_config->dmatype =3D=3D XDMA_TYPE_CDMA)) {
-+		xdev->common.residue_granularity =3D
-+					  DMA_RESIDUE_GRANULARITY_SEGMENT;
-+	}
-+
- 	/* Initialize the tasklet */
- 	tasklet_setup(&chan->tasklet, xilinx_dma_do_tasklet);
-
-@@ -3277,15 +3285,9 @@ static int xilinx_dma_probe(struct platform_device *=
-pdev)
- 		xdev->common.device_prep_slave_sg =3D xilinx_dma_prep_slave_sg;
- 		xdev->common.device_prep_dma_cyclic =3D
- 					  xilinx_dma_prep_dma_cyclic;
--		/* Residue calculation is supported by only AXI DMA and CDMA */
--		xdev->common.residue_granularity =3D
--					  DMA_RESIDUE_GRANULARITY_SEGMENT;
- 	} else if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_CDMA) {
- 		dma_cap_set(DMA_MEMCPY, xdev->common.cap_mask);
- 		xdev->common.device_prep_dma_memcpy =3D xilinx_cdma_prep_memcpy;
--		/* Residue calculation is supported by only AXI DMA and CDMA */
--		xdev->common.residue_granularity =3D
--					  DMA_RESIDUE_GRANULARITY_SEGMENT;
- 	} else if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_AXIMCDMA) {
- 		xdev->common.device_prep_slave_sg =3D xilinx_mcdma_prep_slave_sg;
- 	} else {
-
-<--8<-->
-
-[1]: https://elixir.bootlin.com/linux/v6.19.3/source/drivers/dma/xilinx/xil=
-inx_dma.c#L3284
-[2]: https://elixir.bootlin.com/linux/v6.19.3/source/drivers/dma/xilinx/xil=
-inx_dma.c#L1293
+-- 
+~Vinod
 

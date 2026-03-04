@@ -1,173 +1,210 @@
-Return-Path: <dmaengine+bounces-9240-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9241-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mMeLGetEqGkfsAAAu9opvQ
-	(envelope-from <dmaengine+bounces-9240-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 15:42:51 +0100
+	id CMafBchIqGlOrwAAu9opvQ
+	(envelope-from <dmaengine+bounces-9241-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 15:59:20 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27BB1201CEB
-	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 15:42:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D69B20219B
+	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 15:59:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C7ADB30B62DC
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Mar 2026 14:39:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EF07830C4C90
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Mar 2026 14:49:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68CF43ACF07;
-	Wed,  4 Mar 2026 14:39:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC6130E82D;
+	Wed,  4 Mar 2026 14:49:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SZKU8NqA"
+	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="ITjcx0+q"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43435310779;
-	Wed,  4 Mar 2026 14:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA613A6EF1;
+	Wed,  4 Mar 2026 14:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772635190; cv=none; b=UCkSQye1H4iVQRQeKjRymxgS7C9lkHH6p51gmYK4qXs1yB6wwc1DjQcwhZv3iMGYitQ+EH52rwuBj8RUrJ6eNrFwc2Cz46aqWc3pHTzNwLPq5h94Pcq15FStglV8+vchqa3QJ33TFsXODn7VUOMfUff0IOe5Ac1u5ouc44Na6mY=
+	t=1772635784; cv=none; b=oKHaZO+MKqJcsXnUjNNJQgIJaey4n6WVYQM9IsCAQdz/XaSa1aTTTE3RNS96Qcp6+BqTGlXPnw3ciTlfJK1tPkw7l1YUMuxJyDuN5susMKABXoWHUQhDuteg7a6cxsZ3kwLVHIlshmpXkctTAXJLw6HmiuZ2pIf23zevyfMMqGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772635190; c=relaxed/simple;
-	bh=c9P1MJrJ5iSgDeKJm2NK7T0A2RucQmD2Vtmr+HlkX3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s/2rQraPlSf3o64aVONeAP1xuN+9kR9XokXI8xbyeKO4+qf0xw2TnV++w1TY6EaaK6gpTbECCBqMEaoI7FvCRSsPT56Dg2CxZobB1mB2dYNvXbyISu3peD/9qjG0pjGGHRl3YL2dbUdFww4VEMg8CaVh8Bz13KF1l76PwCXD1fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SZKU8NqA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F371C2BC9E;
-	Wed,  4 Mar 2026 14:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772635189;
-	bh=c9P1MJrJ5iSgDeKJm2NK7T0A2RucQmD2Vtmr+HlkX3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SZKU8NqA2W9FxhntXn0JhnExzE2aPOPFnhX203q5ThWEX3Jvx4XduNtRzD/QksrPa
-	 oMZ+/mMEeXN6hqUmheqwvSrgdEdh3PzriZ68n353S4FvbSMqzipYmBlnVPRBhI6pNE
-	 kdxLjT3tLl1SfLcsJ1jh+46HLzdU66Ey4yP6I1i+brkPoar3PWRX0V0sJ7oWim0F/8
-	 JAk8HbtQ1mXHUTRZQgBrCEAsi08vAgbdqHzlnKhDXpC75w+/rsEsGvNWYKlCmZ/Xt9
-	 1mCD1AjNcjak/1lTyXyJt5KjtzPezIyuihcVM89GKR4sZGSXmTJ0S7rVbWMP3mB+nm
-	 lmm+UaOtjWHmw==
-Date: Wed, 4 Mar 2026 20:09:46 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Thara Gopinath <thara.gopinath@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Udit Tiwari <quic_utiwari@quicinc.com>,
-	Daniel Perez-Zoghbi <dperezzo@quicinc.com>,
-	Md Sadre Alam <mdalam@qti.qualcomm.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Michal Simek <michal.simek@amd.com>, Frank Li <Frank.Li@kernel.org>,
-	dmaengine@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	brgl@kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH RFC v11 07/12] crypto: qce - Communicate the base
- physical address to the dmaengine
-Message-ID: <aahEMjjBRINXL5zC@vaman>
-References: <20260302-qcom-qce-cmd-descr-v11-0-4bf1f5db4802@oss.qualcomm.com>
- <20260302-qcom-qce-cmd-descr-v11-7-4bf1f5db4802@oss.qualcomm.com>
+	s=arc-20240116; t=1772635784; c=relaxed/simple;
+	bh=ZKpxmFIqJZBWtAAmdnVABEDXdw9Gpnt4yabeSXMiy68=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
+	 References:In-Reply-To; b=mft+isfMJ57HsfDoHswbPYb7CDjVJfvwpsQCGw2Rnw5DVDpuenAVQgd6xU+Lmx/RWLWvVeKRRNA/0CwR073BFQPJsQly2HA70z496RxFfOojdXVXLTXQPk0d4Wa30DPkgyKACsam94vYWzRaAyXtbR9B6T3y4ntCHDnkB7uH3co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=ITjcx0+q; arc=none smtp.client-ip=195.201.215.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=folker-schwesinger.de; s=default2212; h=In-Reply-To:References:From:Cc:
+	Subject:To:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
+	Mime-Version:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=RV482GBP0cHHNRSOX9MuKnZkoH0dpIU2WIF8NIXXJig=; b=ITjcx0+qmFTwmWy/dm8QuBoNv4
+	3A2vBfpS8l1qJhhdw7eRtfU8yyTT4rutqEFjSXEeQJWLqYX9YFviyE/73T9Pl5Bd+ttCXYUL/87dd
+	ElcXlRd4Hj5Rerg5gAbsTRjvj+N328SG6pKsoZDSwmvUHW//4RdAmvq+PCEJmTQLIIdm9lEtMDsUO
+	ABsK9d5IwXuuW3HqzYI7uqseB+zIjh19p5rka0pgdzIiv0jH0zoMQd8EMkrn1eE/eMAZBLWcXBFZQ
+	/303aw/Z4gI0zR05S3qf0HtIDwQLztS2XmcQUmAueGqavD7M+wsU4YT8nZE6mwVjuZtBSNujX/yQn
+	iYsc9cdg==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1vxnXY-000F46-11;
+	Wed, 04 Mar 2026 15:49:32 +0100
+Received: from localhost ([127.0.0.1])
+	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <dev@folker-schwesinger.de>)
+	id 1vxnXX-0007p3-1S;
+	Wed, 04 Mar 2026 15:49:31 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260302-qcom-qce-cmd-descr-v11-7-4bf1f5db4802@oss.qualcomm.com>
-X-Rspamd-Queue-Id: 27BB1201CEB
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 04 Mar 2026 14:49:27 +0000
+Message-Id: <DGU2XPNWG24U.3V3TMZQLO1CNM@folker-schwesinger.de>
+To: "Rahul Navale" <rahulnavale04@gmail.com>
+Subject: Re: [RFC PATCH] dmaengine: xilinx_dma: Fix per-channel direction
+ reporting via device_caps
+Cc: "Rahul Navale" <rahul.navale@ifm.com>, <dmaengine@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <vkoul@kernel.org>, <Frank.Li@kernel.org>, <michal.simek@amd.com>,
+ <suraj.gupta2@amd.com>, <thomas.gessler@brueckmann-gmbh.de>,
+ <radhey.shyam.pandey@amd.com>, <tomi.valkeinen@ideasonboard.com>,
+ <marex@nabladev.com>, <marex@denx.de>
+From: "Folker Schwesinger" <dev@folker-schwesinger.de>
+X-Mailer: aerc 0.21.0-119-g0a449d4a7ff3
+References: <DGHGTCJRRZCW.9TGXQW44V6RR@folker-schwesinger.de>
+ <20260304083544.4678-1-rahulnavale04@gmail.com>
+In-Reply-To: <20260304083544.4678-1-rahulnavale04@gmail.com>
+X-Virus-Scanned: Clear (ClamAV 1.4.3/27930/Wed Mar  4 08:24:08 2026)
+X-Rspamd-Queue-Id: 6D69B20219B
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[folker-schwesinger.de,none];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[folker-schwesinger.de:s=default2212];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9240-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9241-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[lwn.net,gmail.com,gondor.apana.org.au,davemloft.net,quicinc.com,qti.qualcomm.com,kernel.org,amd.com,vger.kernel.org,lists.infradead.org,linaro.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	DKIM_TRACE(0.00)[folker-schwesinger.de:+];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[dev@folker-schwesinger.de,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,folker-schwesinger.de:dkim,folker-schwesinger.de:mid,bootlin.com:url]
 X-Rspamd-Action: no action
 
-On 02-03-26, 16:57, Bartosz Golaszewski wrote:
-> In order to let the BAM DMA engine know which address is used for
-> register I/O, call dmaengine_slave_config() after requesting the RX
-> channel and use the config structure to pass that information to the
-> dmaengine core. This is done ahead of extending the BAM driver with
-> support for pipe locking, which requires performing dummy writes when
-> passing the lock/unlock flags alongside the command descriptors.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/crypto/qce/core.c | 3 ++-
->  drivers/crypto/qce/dma.c  | 8 ++++++++
->  2 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
-> index 2667fcd67fee826a44080da8f88a3e2abbb9b2cf..f6363d2a1231dcee0176824135389c42bec02153 100644
-> --- a/drivers/crypto/qce/core.c
-> +++ b/drivers/crypto/qce/core.c
-> @@ -211,6 +211,8 @@ static int qce_crypto_probe(struct platform_device *pdev)
->  	if (IS_ERR(qce->base))
->  		return PTR_ERR(qce->base);
->  
-> +	qce->base_phys = res->start;
-> +
->  	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
->  	if (ret < 0)
->  		return ret;
-> @@ -260,7 +262,6 @@ static int qce_crypto_probe(struct platform_device *pdev)
->  	qce->dma_size = resource_size(res);
->  	qce->base_dma = dma_map_resource(dev, res->start, qce->dma_size,
->  					 DMA_BIDIRECTIONAL, 0);
-> -	qce->base_phys = res->start;
->  	ret = dma_mapping_error(dev, qce->base_dma);
->  	if (ret)
->  		return ret;
-> diff --git a/drivers/crypto/qce/dma.c b/drivers/crypto/qce/dma.c
-> index ba7a52fd4c6349d59c075c346f75741defeb6034..86f22c9a11f8a9e055c243dd8beaf1ded6f88bb9 100644
-> --- a/drivers/crypto/qce/dma.c
-> +++ b/drivers/crypto/qce/dma.c
-> @@ -109,7 +109,9 @@ void qce_write_dma(struct qce_device *qce, unsigned int offset, u32 val)
->  int devm_qce_dma_request(struct qce_device *qce)
->  {
->  	struct qce_dma_data *dma = &qce->dma;
-> +	struct dma_slave_config cfg = { };
->  	struct device *dev = qce->dev;
-> +	int ret;
->  
->  	dma->txchan = devm_dma_request_chan(dev, "tx");
->  	if (IS_ERR(dma->txchan))
-> @@ -121,6 +123,12 @@ int devm_qce_dma_request(struct qce_device *qce)
->  		return dev_err_probe(dev, PTR_ERR(dma->rxchan),
->  				     "Failed to get RX DMA channel\n");
->  
-> +	cfg.dst_addr = qce->base_phys;
-> +	cfg.direction = DMA_MEM_TO_DEV;
+On Wed Mar 4, 2026 at 9:35 AM CET, Rahul Navale wrote:
+>
+> <4>[    0.302360] dma_slave_caps:
+> <4>[    0.302364]   src_addr_widths    =3D 0x00000000
+> <4>[    0.302368]   dst_addr_widths    =3D 0x00000000
+> <4>[    0.302371]   directions         =3D 0x00000000
+> <4>[    0.302374]   min_burst          =3D 0x00000000
+> <4>[    0.302377]   max_burst          =3D 0x00000000
+> <4>[    0.302380]   max_sg_burst       =3D 0x00000000
+> <4>[    0.302383]   cmd_pause          =3D 0x00
+> <4>[    0.302386]   cmd_resume         =3D 0x00
+> <4>[    0.302388]   cmd_terminate      =3D 0x00
+> <4>[    0.302391]   residue_granularity=3D 0x00000000
+> <4>[    0.302394]   descriptor_reuse   =3D 0x00
+> <4>[    0.302398] xilinx_dma_device_caps: caps->directions =3D 0x00000001
+> <4>[    0.302401] xilinx_dma_device_caps: caps->directions =3D 0x00000001
+> <4>[    0.302404] dma_slave_caps:
+> <4>[    0.302406]   src_addr_widths    =3D 0x00000000
+> <4>[    0.302409]   dst_addr_widths    =3D 0x00000000
+> <4>[    0.302412]   directions         =3D 0x00000001
+> <4>[    0.302415]   min_burst          =3D 0x00000000
+> <4>[    0.302418]   max_burst          =3D 0x00000000
+> <4>[    0.302421]   max_sg_burst       =3D 0x00000000
+> <4>[    0.302423]   cmd_pause          =3D 0x00
+> <4>[    0.302426]   cmd_resume         =3D 0x00
+> <4>[    0.302429]   cmd_terminate      =3D 0x01
+> <4>[    0.302431]   residue_granularity=3D 0x00000001
+> <4>[    0.302434]   descriptor_reuse   =3D 0x00
 
-So is this the address of crypto engine address where dma data is
-supposed to be pushed to..?
+I think the issue stems from the difference in residue_granularity
+(directions is set in xilinx_dma_device_caps and playback is still fixed
+and cmd_terminate is only referenced in the code by some unrelated
+driver).
 
--- 
-~Vinod
+From a quick trace through the code I found that in the Xilinx DMA
+residue_granularity is set for AXIDMA independently from the SG setting
+of the DMA core [1].
+However, in xilinx_dma_tx_status() one of the conditions for residue
+calculations is that SG mode is enabled [2].
+
+Here's a quick patch that defers setting residue_granularity for the
+device into channel probe until chan->has_sg is available. Could you
+test if this fixes your issue (and of course re-activate all the caps->
+assignments in dma_get_slave_caps(), keep the debug stuff for now)?
+
+<-->8-->
+
+diff --git i/drivers/dma/xilinx/xilinx_dma.c w/drivers/dma/xilinx/xilinx_dm=
+a.c
+index fabff602065f..adae1b37b533 100644
+--- i/drivers/dma/xilinx/xilinx_dma.c
++++ w/drivers/dma/xilinx/xilinx_dma.c
+@@ -3039,6 +3039,14 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_d=
+evice *xdev,
+ 			str_enabled_disabled(chan->has_sg));
+ 	}
+
++	/* Residue calculation is supported by only AXI DMA and CDMA */
++	if(chan->has_sg && (
++	   xdev->dma_config->dmatype =3D=3D XDMA_TYPE_AXIDMA ||
++	   xdev->dma_config->dmatype =3D=3D XDMA_TYPE_CDMA)) {
++		xdev->common.residue_granularity =3D
++					  DMA_RESIDUE_GRANULARITY_SEGMENT;
++	}
++
+ 	/* Initialize the tasklet */
+ 	tasklet_setup(&chan->tasklet, xilinx_dma_do_tasklet);
+
+@@ -3277,15 +3285,9 @@ static int xilinx_dma_probe(struct platform_device *=
+pdev)
+ 		xdev->common.device_prep_slave_sg =3D xilinx_dma_prep_slave_sg;
+ 		xdev->common.device_prep_dma_cyclic =3D
+ 					  xilinx_dma_prep_dma_cyclic;
+-		/* Residue calculation is supported by only AXI DMA and CDMA */
+-		xdev->common.residue_granularity =3D
+-					  DMA_RESIDUE_GRANULARITY_SEGMENT;
+ 	} else if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_CDMA) {
+ 		dma_cap_set(DMA_MEMCPY, xdev->common.cap_mask);
+ 		xdev->common.device_prep_dma_memcpy =3D xilinx_cdma_prep_memcpy;
+-		/* Residue calculation is supported by only AXI DMA and CDMA */
+-		xdev->common.residue_granularity =3D
+-					  DMA_RESIDUE_GRANULARITY_SEGMENT;
+ 	} else if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_AXIMCDMA) {
+ 		xdev->common.device_prep_slave_sg =3D xilinx_mcdma_prep_slave_sg;
+ 	} else {
+
+<--8<-->
+
+[1]: https://elixir.bootlin.com/linux/v6.19.3/source/drivers/dma/xilinx/xil=
+inx_dma.c#L3284
+[2]: https://elixir.bootlin.com/linux/v6.19.3/source/drivers/dma/xilinx/xil=
+inx_dma.c#L1293
 

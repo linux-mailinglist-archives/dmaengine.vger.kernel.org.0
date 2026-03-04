@@ -1,440 +1,204 @@
-Return-Path: <dmaengine+bounces-9234-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9235-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4KvcBfPup2mWlwAAu9opvQ
-	(envelope-from <dmaengine+bounces-9234-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 09:36:03 +0100
+	id 2I2GBI4LqGn2nQAAu9opvQ
+	(envelope-from <dmaengine+bounces-9235-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 11:38:06 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46E491FCB10
-	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 09:36:02 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEF771FE764
+	for <lists+dmaengine@lfdr.de>; Wed, 04 Mar 2026 11:38:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 37A723007B15
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Mar 2026 08:35:59 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E50FB303461A
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Mar 2026 10:38:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 047DA3914FA;
-	Wed,  4 Mar 2026 08:35:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ACA93A4531;
+	Wed,  4 Mar 2026 10:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCf5/Rb3"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="q77tDMyd"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011027.outbound.protection.outlook.com [52.101.57.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E894390C9A
-	for <dmaengine@vger.kernel.org>; Wed,  4 Mar 2026 08:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772613357; cv=none; b=l4VWdGrOUVTJtt7uGE/cctkCaqsndbC/Jp9jdFZdvbe5UlFMq7AS4hPMS7QjmGSX3PqtNQEsjoclOsPBRNHrU1UVMvfUPyLi6uAK9BDpLjCIjhaTZDvmfmFv4PmHi6pNQDM0WwgWVOgppkGACaEdcAzjch5YlkomfJX1EO7PeSo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772613357; c=relaxed/simple;
-	bh=SgvvOrah8fZSj+O/2RkiQnrYYSEZebPTIHGL1SGZKdk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uEq4n8TtHjoRCfSiZkWXpXDu2RHiPagfWGmnYbB0BN30qdN+eDrPNLZTkoCAfEvXKFltQ7QEoDHa7JxkCB5qFfB5ji5oNImjcakdejupF4QfwWF0VSYqbYUQJ5k8EMpa7k/P1P+r29GjVNY0DdfYTT76pC6Krmhgh7zKuhglVzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VCf5/Rb3; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-c7384f5a9cdso20357a12.0
-        for <dmaengine@vger.kernel.org>; Wed, 04 Mar 2026 00:35:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772613356; x=1773218156; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1F70gqq+I/R3vfvEbag3BV7G6giBsrWU60bsrhlpfOk=;
-        b=VCf5/Rb34YnBoCthbQy2mh91H9Sem0SUkyYdhwTun7+yMJyUfut4Y8ZIMSyndW8fCg
-         qWhWylqomsOi8l8DttVaTuNwJ8XU/TfXH04UQ62ce35gpBXW0RRJZG2G65L6st4GzQ8+
-         WVUz/UEUYrgii+RMAK67Bgzoxx/eqPL5zOwTMMFb8Pk+bMGLWXePEW+dyxVxAzOq/7RW
-         +8XSoIVfkVmCBQ7hxpCCOiQmA+xNMMWUqq1ORoisqDR0j5OGkj4IDw5p0NfxfaZaxaYa
-         wuv2NpxD8vXpcOTZYn4C2wJM4b5gS4yziLaee21gJFEJAPheTPgGHchslmhUQsKmH6cd
-         fB/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772613356; x=1773218156;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1F70gqq+I/R3vfvEbag3BV7G6giBsrWU60bsrhlpfOk=;
-        b=C1OfXGkmvuExhlMINsYGXdzILKGlntGX8NHOLB8KfjVimkwWF3WYTmL5RiCNWdk+Dw
-         2IZEIQjRjkA+fbmf3+60JCmkmNXGOTcLnndUJLIHsuzuMi2nhCsU450oCwrZJejISbVG
-         XtUg5yHXYDBdjtai67wMrQIGq9BKRCdhd6EryJoKkPVBYOyeogtetZ6HfSzCMwjZp050
-         /bTi+hxR+YxZiX6j4GQD/M8YFp26mCZMaEiDb6HaBC1Tw3gBR//+rvYXSXUBM8AJTcck
-         WdltyG03XI4uog2YmIOHj/+2ntNKOSISYuBgZUJ3MkxS1XdGkB/WPSFZhGFK/PKXTgre
-         Zz5A==
-X-Forwarded-Encrypted: i=1; AJvYcCX4l0jDJLf1IsFQcvcWP+A9eAYwwv4mCsdvTP09CdUSXfjDUyaKI0GJsjgHN+buxb42pDw1fGdYn/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDfKrwqI2nFi+jqUtj7kpopehqTmQGOQ2xhfXM9yPnIHqDssO2
-	iue28pRF6mVig3AvY7UHIYk6jK+R5GotUyEOyyL3tn2U8QDCqZb+cWPhcF5MO3yD
-X-Gm-Gg: ATEYQzyTBkbkO2nhxZ9otwqKYtUthVFqLsW/KMERhViGcs4ylTovTl+NebvEFcY1FFF
-	hQp0ytIGBH7OSxU8wALPjZf1KtFPx0+b52n7sNR2czwfWb6i9HhBMXiiNRrq65KUAjgivkAarIa
-	mFXK9lkDvOZj0GQdQIfFUcCfYu75WWtLOMzTlb7zZyGUOjHQrZyLtd/CnWKvUF6CzmFMH/dYlMC
-	plc7VhZ3ACquQmG70dfgkbY1+Y7PI2pNymJqVrffVDEX2gIzWsSvzWW2JUk1tEH8reNLnHLS6dM
-	oJ1YRtO+lCBut27p9Fk16fShr6r7mOhnVbCo9V/NOQRmue6wtaN2bpMWW5gAF9JOQbIoT8EXcSb
-	xqwWzO2rooumiKVoUgMVxMrNReYG4WumD3kCGv/r1yRdPEDZ66RqFTPkp0jeGqMul7IVOswk7PP
-	QjeMIErP4r4aFFjSEzJXeKdpg=
-X-Received: by 2002:a17:903:3bc7:b0:2ad:b22f:c697 with SMTP id d9443c01a7336-2ae6aa06ec0mr14432465ad.19.1772613355649;
-        Wed, 04 Mar 2026 00:35:55 -0800 (PST)
-Received: from bsp.. ([2401:4900:1b90:2d8b:ea7c:4506:5697:f9c8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae3e4e34fesm120624245ad.28.2026.03.04.00.35.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2026 00:35:55 -0800 (PST)
-From: Rahul Navale <rahulnavale04@gmail.com>
-To: Folker Schwesinger <dev@folker-schwesinger.de>
-Cc: Rahul Navale <rahul.navale@ifm.com>,
-	dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	vkoul@kernel.org,
-	Frank.Li@kernel.org,
-	michal.simek@amd.com,
-	suraj.gupta2@amd.com,
-	thomas.gessler@brueckmann-gmbh.de,
-	radhey.shyam.pandey@amd.com,
-	tomi.valkeinen@ideasonboard.com,
-	rahulnavale04@gmail.com,
-	marex@nabladev.com,
-	marex@denx.de
-Subject: Re: [RFC PATCH] dmaengine: xilinx_dma: Fix per-channel direction reporting via device_caps
-Date: Wed,  4 Mar 2026 14:05:41 +0530
-Message-ID: <20260304083544.4678-1-rahulnavale04@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <DGHGTCJRRZCW.9TGXQW44V6RR@folker-schwesinger.de>
-References: <DGHGTCJRRZCW.9TGXQW44V6RR@folker-schwesinger.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146B239FCD8;
+	Wed,  4 Mar 2026 10:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.27
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772620682; cv=fail; b=Cu7Gnpc3yhzWKwkp9dPRhJ/7nSgi1Q18cRINVdu2TfNyaTuoreLyVHm12/pmBUDjWZ2zfo69b95143BSi1onJfUVF4NEGYgpRCPpuZ88yM9b+xelZGfzW+IXF3WM/HidpNWiIL0A3L48vOSL8zOxgBA9NjFG7NWI5FIUZg4XEB0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772620682; c=relaxed/simple;
+	bh=C/BLrmVea6XS6Hx3g/eG349HLRNrwVGTSx2kIIL+b+k=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YXI4mvDLtEH/L/JvEerejwvG/MRS0jBBQjwaYKDpEDH2iswTplo9759fbGZb0WwiW/+4SoqmdB3NbRj70g3rKnT6XpO2ZD1rV4QJoxohbsZM6sCNUeMzrSgkoIlLHx38vMcJchR2+TktlTHfnZ83MH6EbvAVNH7VJXMGfFmyWGI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=q77tDMyd; arc=fail smtp.client-ip=52.101.57.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gVh0NjIVaqMQ0VuFIjKtQ7feCX+IRgcWgehuyvN8XhBL6m/TqEqXoqCnk5QiM+kmwY5kZKYIy/Zu9jaghmSnR2AyQiYDRWUgpTM/fGpa1S4Ihr8224URdrxnz0OG7F1xvTc3bUEPANXU57XTrjkQxBvvjln4sBP0g82noR1rJWsYsDp17lQ1XpNQZ4bgLbrlfHYW4rbWhRfZP/Jp1Qdz5k9eZQSc/Nf+Ce/okBGmuPrPenbd6OB6PXJja6B2WBZanh26Jx4goHwb/Ah6TOFahn+umJ7HN62vXsihqZMPOwWNMvpJRhZQ8R/5UTtwwMO76ZqNzoB29x0r/M5X0b/XFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6nyIfHurOoeAxDCIORF+sBteAqgNMhO2d27pH0SJ1dw=;
+ b=eHN6O1BmZw2jvvQic4lLhl70SEpkksI/eTF2LjIbWvJE3SReUDysVEujYXoLRIycvZxAOoNHJiny17F8bi/w5ddjb+1/zoHtJYFA5OPnucDE6t/TR+FSUXDneQKbW5rETC/zUNGjCYNJoxShDOUdCjRLz3gll0thhhEZo64tvoNcT3GAyDoQJLdV/PaNO/LjkiWrifApBLVuRzXH4rI/6cgtYDAINpf9Lbz67Vvq+gVUd2o4q5jj7jGvbEZ/97ftecSnFM6BQM7uzvZt2E4yRRtnnbE13E9a2i3e4RBnDgghjuADFBPnm6085r0rsdq4gu7kFGfZ2sQdNQNy0770zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6nyIfHurOoeAxDCIORF+sBteAqgNMhO2d27pH0SJ1dw=;
+ b=q77tDMydUqAEz70w1EzPHLmibqYY1TYaFCnAHnvkeIC9S5SQMuyhGSimABklfs9MVJxPUzBRUYa302LZ+AvswpJ2HbYpxB0pVTsxB8mjvsIxYsM//59H0pkdu8gyP3Bv3mJqpEI7AIM0/2d59qgyJjZiCUykoYzZeaoAT/HHIn3nW8+2xbQXiOBOCB6yrmPuVbEvojAt3KJoMd7p5VwfJoNcWMV1TdjFC1mooQ3AEN63aAmmERadBsmDGhG14ilY5wM6KwiWl/wdFdn7Ed62pNV8cJLWw/GRAwTl95v9o1UQr11BV+HsNy+XXUDBVRtpYlCB2Zsv6Ynq4b8OOe7ewA==
+Received: from DS7PR03CA0056.namprd03.prod.outlook.com (2603:10b6:5:3b5::31)
+ by DS0PR12MB7875.namprd12.prod.outlook.com (2603:10b6:8:14d::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.22; Wed, 4 Mar
+ 2026 10:37:49 +0000
+Received: from CH3PEPF00000014.namprd21.prod.outlook.com
+ (2603:10b6:5:3b5:cafe::21) by DS7PR03CA0056.outlook.office365.com
+ (2603:10b6:5:3b5::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9654.21 via Frontend Transport; Wed,
+ 4 Mar 2026 10:37:32 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CH3PEPF00000014.mail.protection.outlook.com (10.167.244.119) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9700.0 via Frontend Transport; Wed, 4 Mar 2026 10:37:49 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 4 Mar
+ 2026 02:37:31 -0800
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 4 Mar
+ 2026 02:37:30 -0800
+Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
+ Transport; Wed, 4 Mar 2026 02:37:26 -0800
+From: Akhil R <akhilrajeev@nvidia.com>
+To: <jonathanh@nvidia.com>
+CC: <Frank.Li@kernel.org>, <akhilrajeev@nvidia.com>, <conor+dt@kernel.org>,
+	<devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+	<krzk+dt@kernel.org>, <krzk@kernel.org>, <ldewangan@nvidia.com>,
+	<linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+	<p.zabel@pengutronix.de>, <robh@kernel.org>, <thierry.reding@kernel.org>,
+	<vkoul@kernel.org>
+Subject: Re: [PATCH v2 1/9] dt-bindings: dma: nvidia,tegra186-gpc-dma: Add iommu-map property
+Date: Wed, 4 Mar 2026 16:07:25 +0530
+Message-ID: <20260304103725.64228-1-akhilrajeev@nvidia.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <361e0146-c5af-4f16-a946-14d1df85f99b@nvidia.com>
+References: <361e0146-c5af-4f16-a946-14d1df85f99b@nvidia.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 46E491FCB10
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF00000014:EE_|DS0PR12MB7875:EE_
+X-MS-Office365-Filtering-Correlation-Id: f461025a-e65c-4cdc-bcc9-08de79da14ca
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	1nGy67L4i/3m8bf/qVTPfzHtGwi9tN4abKAJk40k6xkvDaKpYlP5ty4GG/9fRky3rfnqyZ+9OgzQJitHdnA2SrBiDMr3n8aqEfSbl+Xt5MV+8xnZyawZTyu5HnzBSa4HEfWV5tKl6BPs3ACQAUkUgVEB+wVUQhT1N8l7ZXgSKKFqb6E9v2uRlrjxtl5nfVpzQ/EhZMT83vTBXoKpTwbXzUeqCfjJbjwHnBD754C+457mnEFR6p9iFKLFueKdTw2BFXQhMit2r12/eOxw/lUq0FodkdmIRPBVIMlSY1StttxUwoMYnD1zFmMoDpCpKIjJDshrc8O50v9bGtb2DE0kJ2fByJUWIfwkcyYL3uMprO2T9W/eWSKFxctNzbQ8Pd8MlRtcp19zJeyTnbS6GF07ZJtz5eUXjQak92Q9I9mv9Y5Y1YihyHbgd2Z8eMG0ERV6Yq+7QZT1H03CITwxcF2DyCaHj2cop80uCTfG2XPPvzkx2mnuoBXimI9krCtaAu/0lztLx1Wmt4jc0/Rsuz9f9psxGpRRpB50GcA2jSfBJgm3VjpdDdsB0HEBOqs4QzcgBvvTLeYL5/6TDUKaGDsd1WqmgYFEAqvBmB8zgvIINDtszsCzFZEOVQBa1rXaUoRSwOQSioHV5CATzH+aC9Ouq6goqud3f4o0ab0lJiSa7/Ro/aGQO/OoY9df/GjxCMpz7SHfUiAZqdjb0uEjfZiZuFfHZiQz2NqHZuUm9anJk5Gma1lzHN1F9SkJn8WzkYKADBM90DggZm2DyAM6LXFyug==
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	yx8CbQbzddXlgirXIr48l4GOz/wNtvY812Wlb5r+IXZ8BvXWZ6cC+SDgCt+onmmN6JooyDmnx3Gh9wWsOtpvv5OHpglxoLitPHJNhfNvQFX4P384nQXLOuqOpoLTcp5ZMVOAY1XGOn5rhS3YDW6VzjqdVjhyQrnndmt9Pe1SYc1bkY8GWg3mfy6szqG3hTjqUjVnWHFkKn5iz0VfEDfhFwMKncJo/Nh+2ogMRcPG6GHrCofk7JvJqG7o990PlzERfgsw5jXTPUKaT9BkCG8KITicEFB4ULMI4zPnpscJzhAaRG2lpZNBnmqQPI27vxnGZYYj/gMbHVhT+r5ZwUVEbtzMnfmsIpxqQRSycOiaAmeYZ7VdxlZHM4mD62CKfdNyqsBmGdsb72cq5mzVxpyMxE+OUiPsoYGsoYVoAB8mXG5Qp29zGAXyEilmftYk6v8k
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2026 10:37:49.0136
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f461025a-e65c-4cdc-bcc9-08de79da14ca
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF00000014.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7875
+X-Rspamd-Queue-Id: BEF771FE764
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
+X-Spamd-Result: default: False [2.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9234-lists,dmaengine=lfdr.de];
-	FREEMAIL_CC(0.00)[ifm.com,vger.kernel.org,lists.infradead.org,kernel.org,amd.com,brueckmann-gmbh.de,ideasonboard.com,gmail.com,nabladev.com,denx.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-9235-lists,dmaengine=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[Nvidia.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[akhilrajeev@nvidia.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rahulnavale04@gmail.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	TO_DN_NONE(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,pdm3:email,ifm.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,Nvidia.com:dkim,nvidia.com:mid];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	RCVD_COUNT_SEVEN(0.00)[9]
 X-Rspamd-Action: no action
 
-From: Rahul Navale <rahul.navale@ifm.com>
+On Tue, 3 Mar 2026 17:34:00 +0000, Jon Hunter wrote:
+> On 03/03/2026 17:14, Akhil R wrote:
+>> On Tue, 3 Mar 2026 13:09:00 +0000, Jon Hunter wrote:
+>>> On 03/03/2026 08:40, Akhil R wrote:
+>>>
+>>> ...
+>>>
+>>>>> Why is this flexible? If it is, means usually items are distinctive, so
+>>>>> I would expect defining/listing them. If they are not distinctive,
+>>>>> commit msg is incorrect. If the list is as simple as 1-to-1 channel
+>>>>> mapping, just add it in the description how they are ordered.
+>>>>
+>>>> Yes, it is a 1-to-1 channel mapping to an IOMMU ID. The intent of making
+>>>> it flexible is to allow non-consecutive IOMMU ID assignments as well.
+>>>> This is particularly needed in virtualised environments where the
+>>>> hypervisor may reserve certain stream IDs, and the guest VM can map only
+>>>> the permitted ones. Shall I add a description here mentioning this
+>>>> use-case?
+>>>
+>>> Isn't this already handled by the 'dma-channel-mask' property? The
+>>> driver will skip over any channels that are not in specified by the mask.
+>> 
+>> dma-channel-mask would not help if a channel is exposed, and the
+>> corresponding IOMMU ID is not exposed. For instance say channel 15 is
+> available for a VM, but not the stream ID 0x80f.
+>
+> Is that a valid configuration? Above we said it is a 1-to-1 mapping 
+> which would imply the mapping is always constant. Ie. same channels maps 
+> to name SID. Is that not the case?
 
-Hi Folker,
+I think the hypervisor configuration can determinte which stream IDs
+are assigned to each VM, so the mapping can vary across platforms.
+By 1-to-1, I meant that each channel maps to one IOMMU ID, but the
+specific IDs themselves may not be fixed. If we prefer a constant
+mapping instead, we could document that only IDs in the range 0x801 to
+0x81f should be allocated to a Linux VM. Happy to go either way. Let me
+know your thoughts.
 
-Thanks — I followed your suggested debugging steps.
-
->For the next debugging step I suggest that we focus on (2) but also on
->getting some insight into the callers. Could you please reapply
->7e01511443c3, keep the RFC patch in place and additionally apply the
->below patch? 
-
->This will exercise your bad case, print the differences for caps, and
->also print the call stacks for all calls to dma_get_slave_caps().
-
-I have applied 7e01511443c3, kept RFC patch(xilinx_dma_device_caps + printk)
-and dmaengine.c debug patch applied (dma_slave_caps_printk() + dump_stack())
-
-Observation: Issue still persists. cyclic playback fails after the first buffer period.
-logs:
-root@pdm3:~# dmesg | grep xilinx_dma_device_caps
-[    0.302398] xilinx_dma_device_caps: caps->directions = 0x00000001
-[    0.302401] xilinx_dma_device_caps: caps->directions = 0x00000001
-[    0.303124] xilinx_dma_device_caps: caps->directions = 0x00000002
-[    0.303128] xilinx_dma_device_caps: caps->directions = 0x00000002
-[    7.762354] xilinx_dma_device_caps: caps->directions = 0x00000001
-[    7.762358] xilinx_dma_device_caps: caps->directions = 0x00000001
-root@pdm3:~# aplay closetoyou.wav 
-Playing WAVE 'closetoyou.wav' : Signed 16 bit Little Endian, Rate 48000 Hz, Stereo
-^CAborted by signal Interrupt...
-aplay: pcm_write:2178: write error: Interrupted system call
-root@pdm3:~# ^C
-root@pdm3:~# ^C
-root@pdm3:~# dmesg | grep xilinx_dma_device_caps
-[    0.302398] xilinx_dma_device_caps: caps->directions = 0x00000001
-[    0.302401] xilinx_dma_device_caps: caps->directions = 0x00000001
-[    0.303124] xilinx_dma_device_caps: caps->directions = 0x00000002
-[    0.303128] xilinx_dma_device_caps: caps->directions = 0x00000002
-[    7.762354] xilinx_dma_device_caps: caps->directions = 0x00000001
-[    7.762358] xilinx_dma_device_caps: caps->directions = 0x00000001
-[   44.792624] xilinx_dma_device_caps: caps->directions = 0x00000001
-[   44.792628] xilinx_dma_device_caps: caps->directions = 0x00000001
-
-<4>[    0.302360] dma_slave_caps:
-<4>[    0.302364]   src_addr_widths    = 0x00000000
-<4>[    0.302368]   dst_addr_widths    = 0x00000000
-<4>[    0.302371]   directions         = 0x00000000
-<4>[    0.302374]   min_burst          = 0x00000000
-<4>[    0.302377]   max_burst          = 0x00000000
-<4>[    0.302380]   max_sg_burst       = 0x00000000
-<4>[    0.302383]   cmd_pause          = 0x00
-<4>[    0.302386]   cmd_resume         = 0x00
-<4>[    0.302388]   cmd_terminate      = 0x00
-<4>[    0.302391]   residue_granularity= 0x00000000
-<4>[    0.302394]   descriptor_reuse   = 0x00
-<4>[    0.302398] xilinx_dma_device_caps: caps->directions = 0x00000001
-<4>[    0.302401] xilinx_dma_device_caps: caps->directions = 0x00000001
-<4>[    0.302404] dma_slave_caps:
-<4>[    0.302406]   src_addr_widths    = 0x00000000
-<4>[    0.302409]   dst_addr_widths    = 0x00000000
-<4>[    0.302412]   directions         = 0x00000001
-<4>[    0.302415]   min_burst          = 0x00000000
-<4>[    0.302418]   max_burst          = 0x00000000
-<4>[    0.302421]   max_sg_burst       = 0x00000000
-<4>[    0.302423]   cmd_pause          = 0x00
-<4>[    0.302426]   cmd_resume         = 0x00
-<4>[    0.302429]   cmd_terminate      = 0x01
-<4>[    0.302431]   residue_granularity= 0x00000001
-<4>[    0.302434]   descriptor_reuse   = 0x00
-<4>[    0.302437] <stack>
-<4>[    0.302442] CPU: 3 UID: 0 PID: 40 Comm: kworker/u20:0 Not tainted 6.12.74-stable-standard-00032-g4c3d957ee56f #1
-<4>[    0.302453] Hardware name: pdm3_10_001-2 (DT)
-<4>[    0.302459] Workqueue: events_unbound deferred_probe_work_func
-<4>[    0.302479] Call trace:
-<4>[    0.302482]  dump_backtrace+0xd0/0x108
-<4>[    0.302498]  show_stack+0x14/0x1c
-<4>[    0.302510]  dump_stack_lvl+0x5c/0x78
-<4>[    0.302521]  dump_stack+0x14/0x1c
-<4>[    0.302530]  dma_get_slave_caps+0xf8/0x114
-<4>[    0.302544]  dmaengine_pcm_new+0x190/0x29c
-<4>[    0.302557]  snd_soc_pcm_component_new+0x50/0x88
-<4>[    0.302566]  soc_new_pcm+0x520/0x618
-<4>[    0.302575]  snd_soc_bind_card+0x6cc/0xa48
-<4>[    0.302585]  snd_soc_register_card+0xec/0x100
-<4>[    0.302593]  devm_snd_soc_register_card+0x48/0x88
-<4>[    0.302603]  simple_probe+0x370/0x380
-<4>[    0.302611]  platform_probe+0x64/0xb0
-<4>[    0.302623]  really_probe+0x18c/0x32c
-<4>[    0.302633]  __driver_probe_device+0x120/0x138
-<4>[    0.302643]  driver_probe_device+0x38/0xf0
-<4>[    0.302653]  __device_attach_driver+0x100/0x114
-<4>[    0.302664]  bus_for_each_drv+0xac/0xd4
-<4>[    0.302673]  __device_attach+0xe4/0x164
-<4>[    0.302683]  device_initial_probe+0x10/0x18
-<4>[    0.302693]  bus_probe_device+0x38/0x9c
-<4>[    0.302702]  deferred_probe_work_func+0xc8/0xdc
-<4>[    0.302712]  process_scheduled_works+0x18c/0x23c
-<4>[    0.302725]  worker_thread+0x140/0x1c0
-<4>[    0.302736]  kthread+0xd8/0xe8
-<4>[    0.302747]  ret_from_fork+0x10/0x20
-<4>[    0.302756] </stack>
-<4>[    0.303089] dma_slave_caps:
-<4>[    0.303092]   src_addr_widths    = 0x00000000
-<4>[    0.303096]   dst_addr_widths    = 0x00000000
-<4>[    0.303099]   directions         = 0x00000000
-<4>[    0.303102]   min_burst          = 0x00000000
-<4>[    0.303105]   max_burst          = 0x00000000
-<4>[    0.303107]   max_sg_burst       = 0x00000000
-<4>[    0.303110]   cmd_pause          = 0x00
-<4>[    0.303113]   cmd_resume         = 0x00
-<4>[    0.303116]   cmd_terminate      = 0x00
-<4>[    0.303119]   residue_granularity= 0x00000000
-<4>[    0.303121]   descriptor_reuse   = 0x00
-<4>[    0.303124] xilinx_dma_device_caps: caps->directions = 0x00000002
-<4>[    0.303128] xilinx_dma_device_caps: caps->directions = 0x00000002
-<4>[    0.303131] dma_slave_caps:
-<4>[    0.303133]   src_addr_widths    = 0x00000000
-<4>[    0.303135]   dst_addr_widths    = 0x00000000
-<4>[    0.303138]   directions         = 0x00000002
-<4>[    0.303141]   min_burst          = 0x00000000
-<4>[    0.303144]   max_burst          = 0x00000000
-<4>[    0.303147]   max_sg_burst       = 0x00000000
-<4>[    0.303149]   cmd_pause          = 0x00
-<4>[    0.303152]   cmd_resume         = 0x00
-<4>[    0.303155]   cmd_terminate      = 0x01
-<4>[    0.303158]   residue_granularity= 0x00000001
-<4>[    0.303161]   descriptor_reuse   = 0x00
-<4>[    0.303163] <stack>
-<4>[    0.303176] Hardware name: pdm3_10_001-2 (DT)
-.....
-.....
-.....
-<6>[    7.102399] macb ff0c0000.ethernet eth1: Link is Up - 100Mbps/Full - flow control tx
-<3>[    7.458535] lima fd4b0000.gpu: resume clk fail -13
-<6>[    7.683306] input: PDM3 virtual keyboard as /devices/virtual/input/input3
-<4>[    7.762300] dma_slave_caps:
-<4>[    7.762316]   src_addr_widths    = 0x00000000
-<4>[    7.762322]   dst_addr_widths    = 0x00000000
-<4>[    7.762325]   directions         = 0x00000000
-<4>[    7.762328]   min_burst          = 0x00000000
-<4>[    7.762331]   max_burst          = 0x00000000
-<4>[    7.762334]   max_sg_burst       = 0x00000000
-<4>[    7.762337]   cmd_pause          = 0x00
-<4>[    7.762341]   cmd_resume         = 0x00
-<4>[    7.762344]   cmd_terminate      = 0x00
-<4>[    7.762347]   residue_granularity= 0x00000000
-<4>[    7.762350]   descriptor_reuse   = 0x00
-<4>[    7.762354] xilinx_dma_device_caps: caps->directions = 0x00000001
-<4>[    7.762358] xilinx_dma_device_caps: caps->directions = 0x00000001
-<4>[    7.762361] dma_slave_caps:
-<4>[    7.762364]   src_addr_widths    = 0x00000000
-<4>[    7.762366]   dst_addr_widths    = 0x00000000
-<4>[    7.762370]   directions         = 0x00000001
-<4>[    7.762373]   min_burst          = 0x00000000
-<4>[    7.762376]   max_burst          = 0x00000000
-<4>[    7.762379]   max_sg_burst       = 0x00000000
-<4>[    7.762382]   cmd_pause          = 0x00
-<4>[    7.762385]   cmd_resume         = 0x00
-<4>[    7.762387]   cmd_terminate      = 0x01
-<4>[    7.762390]   residue_granularity= 0x00000001
-<4>[    7.762394]   descriptor_reuse   = 0x00
-<4>[    7.762397] <stack>
-<4>[    7.762416] Hardware name: pdm3_10_001-2 (DT)
-<4>[    7.762422] Call trace:
-<4>[    7.762425]  dump_backtrace+0xd0/0x108
-<4>[    7.762447]  show_stack+0x14/0x1c
-<4>[    7.762459]  dump_stack_lvl+0x5c/0x78
-<4>[    7.762471]  dump_stack+0x14/0x1c
-<4>[    7.762480]  dma_get_slave_caps+0xf8/0x114
-<4>[    7.762495]  snd_dmaengine_pcm_refine_runtime_hwparams+0x60/0x15c
-<4>[    7.762510]  dmaengine_pcm_open+0x180/0x1a8
-<4>[    7.762524]  snd_soc_component_open+0x50/0x5c
-<4>[    7.762532]  __soc_pcm_open+0x84/0x3a4
-<4>[    7.762542]  soc_pcm_open+0x28/0x44
-<4>[    7.762550]  snd_pcm_open_substream+0x4ec/0x750
-<4>[    7.762560]  snd_pcm_open+0xb8/0x1ec
-<4>[    7.762568]  snd_pcm_playback_open+0x48/0x70
-<4>[    7.762576]  snd_open+0x150/0x15c
-<4>[    7.762587]  chrdev_open+0x170/0x198
-<4>[    7.762601]  do_dentry_open+0x2f8/0x3a4
-<4>[    7.762613]  vfs_open+0x24/0x44
-<4>[    7.762621]  path_openat+0x8cc/0xa04
-<4>[    7.762629]  do_filp_open+0x60/0xd0
-<4>[    7.762636]  do_sys_openat2+0xa0/0xec
-<4>[    7.762644]  do_sys_open+0x44/0x6c
-<4>[    7.762652]  __arm64_sys_openat+0x1c/0x24
-<4>[    7.762659]  invoke_syscall+0x68/0xf0
-<4>[    7.762671]  el0_svc_common.constprop.0+0xb0/0xcc
-<4>[    7.762682]  do_el0_svc+0x18/0x20
-<4>[    7.762693]  el0_svc+0x18/0x44
-<4>[    7.762705]  el0t_64_sync_handler+0x80/0x124
-<4>[    7.762717]  el0t_64_sync+0x14c/0x150
-<4>[    7.762726] </stack>
-.....
-.....
-.....
-<5>[   40.293549] audit: type=1327 audit(1772610878.644:23): proctitle=737368643A20726F6F74205B707269765D
-<4>[   44.792575] dma_slave_caps:
-<4>[   44.792589]   src_addr_widths    = 0x00000000
-<4>[   44.792593]   dst_addr_widths    = 0x00000000
-<4>[   44.792596]   directions         = 0x00000000
-<4>[   44.792599]   min_burst          = 0x00000000
-<4>[   44.792602]   max_burst          = 0x00000000
-<4>[   44.792606]   max_sg_burst       = 0x00000000
-<4>[   44.792609]   cmd_pause          = 0x00
-<4>[   44.792612]   cmd_resume         = 0x00
-<4>[   44.792614]   cmd_terminate      = 0x00
-<4>[   44.792618]   residue_granularity= 0x00000000
-<4>[   44.792621]   descriptor_reuse   = 0x00
-<4>[   44.792624] xilinx_dma_device_caps: caps->directions = 0x00000001
-<4>[   44.792628] xilinx_dma_device_caps: caps->directions = 0x00000001
-<4>[   44.792631] dma_slave_caps:
-<4>[   44.792633]   src_addr_widths    = 0x00000000
-<4>[   44.792636]   dst_addr_widths    = 0x00000000
-<4>[   44.792639]   directions         = 0x00000001
-<4>[   44.792642]   min_burst          = 0x00000000
-<4>[   44.792645]   max_burst          = 0x00000000
-<4>[   44.792648]   max_sg_burst       = 0x00000000
-<4>[   44.792651]   cmd_pause          = 0x00
-<4>[   44.792654]   cmd_resume         = 0x00
-<4>[   44.792656]   cmd_terminate      = 0x01
-<4>[   44.792659]   residue_granularity= 0x00000001
-<4>[   44.792662]   descriptor_reuse   = 0x00
-<4>[   44.792665] <stack>
-<4>[   44.792671] CPU: 3 UID: 0 PID: 1225 Comm: aplay Not tainted 6.12.74-stable..
-<4>[   44.792684] Hardware name: pdm3_10_001-2 (DT)
-<4>[   44.792689] Call trace:
-<4>[   44.792692]  dump_backtrace+0xd0/0x108
-<4>[   44.792713]  show_stack+0x14/0x1c
-<4>[   44.792725]  dump_stack_lvl+0x5c/0x78
-<4>[   44.792737]  dump_stack+0x14/0x1c
-<4>[   44.792746]  dma_get_slave_caps+0xf8/0x114
-<4>[   44.792761]  snd_dmaengine_pcm_refine_runtime_hwparams+0x60/0x15c
-<4>[   44.792775]  dmaengine_pcm_open+0x180/0x1a8
-<4>[   44.792788]  snd_soc_component_open+0x50/0x5c
-<4>[   44.792796]  __soc_pcm_open+0x84/0x3a4
-<4>[   44.792805]  soc_pcm_open+0x28/0x44
-<4>[   44.792813]  snd_pcm_open_substream+0x4ec/0x750
-<4>[   44.792822]  snd_pcm_open+0xb8/0x1ec
-<4>[   44.792830]  snd_pcm_playback_open+0x48/0x70
-<4>[   44.792838]  snd_open+0x150/0x15c
-<4>[   44.792849]  chrdev_open+0x170/0x198
-<4>[   44.792863]  do_dentry_open+0x2f8/0x3a4
-<4>[   44.792875]  vfs_open+0x24/0x44
-<4>[   44.792882]  path_openat+0x8cc/0xa04
-<4>[   44.792890]  do_filp_open+0x60/0xd0
-<4>[   44.792897]  do_sys_openat2+0xa0/0xec
-<4>[   44.792905]  do_sys_open+0x44/0x6c
-<4>[   44.792912]  __arm64_sys_openat+0x1c/0x24
-<4>[   44.792920]  invoke_syscall+0x68/0xf0
-<4>[   44.792931]  el0_svc_common.constprop.0+0xb0/0xcc
-<4>[   44.792942]  do_el0_svc+0x18/0x20
-<4>[   44.792953]  el0_svc+0x18/0x44
-<4>[   44.792964]  el0t_64_sync_handler+0x80/0x124
-<4>[   44.792977]  el0t_64_sync+0x14c/0x150
-<4>[   44.792985] </stack>
-
-
->To quickly test theory (2), you could then comment out the caps->
->assignments in dma_get_slave_caps() and check if this fixes your issue
->or not.
-
-I have applied 7e01511443c3, kept RFC patch(xilinx_dma_device_caps + printk)
-and dmaengine.c debug patch applied (dma_slave_caps_printk() + dump_stack())
-and comment out the caps->assignments in dma_get_slave_caps() 
-
-Observation:Audio works normally.
-logs:
-root@pdm3:~# dmesg | grep xilinx_dma_device_caps
-[    0.301728] xilinx_dma_device_caps: caps->directions = 0x00000000
-[    0.301731] xilinx_dma_device_caps: caps->directions = 0x00000001
-[    0.302421] xilinx_dma_device_caps: caps->directions = 0x00000000
-[    0.302424] xilinx_dma_device_caps: caps->directions = 0x00000002
-[    5.882992] xilinx_dma_device_caps: caps->directions = 0x00000000
-[    5.882996] xilinx_dma_device_caps: caps->directions = 0x00000001
-root@pdm3:~# 
-root@pdm3:~# aplay closetoyou.wav 
-Playing WAVE 'closetoyou.wav' : Signed 16 bit Little Endian, Rate 48000 Hz, Stereo
-root@pdm3:~# aplay closetoyou.wav 
-Playing WAVE 'closetoyou.wav' : Signed 16 bit Little Endian, Rate 48000 Hz, Stereo
-root@pdm3:~# aplay closetoyou.wav 
-Playing WAVE 'closetoyou.wav' : Signed 16 bit Little Endian, Rate 48000 Hz, Stereo
-^X^X^CAborted by signal Interrupt...
-root@pdm3:~# dmesg | grep xilinx_dma_device_caps
-[    0.301728] xilinx_dma_device_caps: caps->directions = 0x00000000
-[    0.301731] xilinx_dma_device_caps: caps->directions = 0x00000001
-[    0.302421] xilinx_dma_device_caps: caps->directions = 0x00000000
-[    0.302424] xilinx_dma_device_caps: caps->directions = 0x00000002
-[    5.882992] xilinx_dma_device_caps: caps->directions = 0x00000000
-[    5.882996] xilinx_dma_device_caps: caps->directions = 0x00000001
-[  324.413686] xilinx_dma_device_caps: caps->directions = 0x00000000
-[  324.413689] xilinx_dma_device_caps: caps->directions = 0x00000001
-[  348.022906] xilinx_dma_device_caps: caps->directions = 0x00000000
-[  348.022910] xilinx_dma_device_caps: caps->directions = 0x00000001
-[  402.654943] xilinx_dma_device_caps: caps->directions = 0x00000000
-[  402.654946] xilinx_dma_device_caps: caps->directions = 0x00000001
-[  423.598936] xilinx_dma_device_caps: caps->directions = 0x00000000
-[  423.598940] xilinx_dma_device_caps: caps->directions = 0x00000001
-
-
+Regards,
+Akhil
 

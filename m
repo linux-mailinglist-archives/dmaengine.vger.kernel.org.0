@@ -1,327 +1,348 @@
-Return-Path: <dmaengine+bounces-9287-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9288-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4N3wI3veqWm4GgEAu9opvQ
-	(envelope-from <dmaengine+bounces-9287-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 20:50:19 +0100
+	id yNX3N2rkqWl1HAEAu9opvQ
+	(envelope-from <dmaengine+bounces-9288-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 21:15:38 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A7AC217C71
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 20:50:19 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF92F218115
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 21:15:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C38F53045033
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Mar 2026 19:49:49 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 2CB6D30502A8
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Mar 2026 20:03:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34E3F3EBF00;
-	Thu,  5 Mar 2026 19:49:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A06D53EBF2D;
+	Thu,  5 Mar 2026 20:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VmF13nSh";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="KK3n3+tn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANJgrdQL"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913A23EB810
-	for <dmaengine@vger.kernel.org>; Thu,  5 Mar 2026 19:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A692D8376
+	for <dmaengine@vger.kernel.org>; Thu,  5 Mar 2026 20:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772740179; cv=none; b=I97xwgCX6ew2u/HlgquxjJscqavpU5csVE974DBzboh1MLnWVXqZhQWipQQg9H5pqaCQqzpEf0cJa+t8GDDF44G9+GEdGM1WejIgECbes4V32QCFopMM8kxiDzyeDme9GiKNQrwhNe57FhexyK9guDYDu35wN8mJwZ6vTDufGsQ=
+	t=1772740946; cv=none; b=MjXDOXTMMb3btl3KedRmN5DTl14U9E5GjoNiVZz7aBKYnxELznplrHSQbaMQqGGTCWjL0BzyxgwGZb5mglHjHuIg1NBDecNaIDYEsMQVagvlocgwqNUZlj2aai8w2viJwvzxu4yVcGkOnZqeZZYJ7OLPUAvZYeBZkE0+9+6tVu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772740179; c=relaxed/simple;
-	bh=WPWPlT8nmCqIZAEuv9H/d5ylOJBqMsjr7ba7VrnF/wc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AMjMZRW0umumFG5RTn7xIjwmt4Q/TUcX70iVTDM+UPNS/W5PbMVZ3HTABKvuI+EPUIQHu28AmLtz2YgqoaSODtHKlL01TY1wfOMCDrHNEgLe4nZeMwvkYz4E4YUpiVE6MVw/Yeltc47ppMY1tbQMwYRZeBzVLK3kpOKZ0VPNwo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VmF13nSh; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=KK3n3+tn; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 625INhuU1783563
-	for <dmaengine@vger.kernel.org>; Thu, 5 Mar 2026 19:49:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	W+xZbg2UcQYU0NAtEL3ooNVs0zEnn8ejUS3RGwHRvhs=; b=VmF13nShpwR94pDQ
-	zOtKvBgKFN0Du38CIX6ki/pV5RFPmMPQJzeJKpr8uaKevY3CTw6BEIe3HZpknY01
-	jspR/kdToEP4lAk6CH7IjAcI5XoQ2d85YFUCOnhpJniFBGWqMMjTKmMTd8RcNLB8
-	mGyK8USv/otuq/fKJjHn70n/FUhJXYBPT7PVmek1nSvzmjLLK+DShG0g+eYbRLCU
-	DG5krug1C1Vy1P0VhjJzV8CiqKxVclA7IGHGjkn5+46H79pKd8plfbQls8YpGYCH
-	Up0PlqdBnShiCvlqwyjYlllsWL424k3C7xeJmbQ83iAoOy6pUr/kw++qGm+F6kEd
-	AgUz/A==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cq1pk37et-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Thu, 05 Mar 2026 19:49:36 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8cb3ad1b81aso1013864585a.2
-        for <dmaengine@vger.kernel.org>; Thu, 05 Mar 2026 11:49:36 -0800 (PST)
+	s=arc-20240116; t=1772740946; c=relaxed/simple;
+	bh=6W4SDADVdclGRhqJXA+waIEDkVSrbUke5nCaxmZqT7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nE24efgYN6khWtst1npRSE15152sncn6PR/MwgZNIN8Sk83V8nfWuz2ZudXz5ldEl3Ayi5VVkVFlGnXdxbqDnV2Z2KYefBTA4P3K62EMhZmU6O+2s6t0aF3+ZjnHqU7+wI0FmiyT/yYPtsjMGUXokJlFN97b4TAAScF24nrxX4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ANJgrdQL; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4807068eacbso70998055e9.2
+        for <dmaengine@vger.kernel.org>; Thu, 05 Mar 2026 12:02:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1772740176; x=1773344976; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=W+xZbg2UcQYU0NAtEL3ooNVs0zEnn8ejUS3RGwHRvhs=;
-        b=KK3n3+tn0e3ihjdVdh+pdnkRKNQiiyjnCwcJi1ZitXjI/O14g1YiSSd7W03eVEyzqa
-         1A0RpJ9ViLzGcKJ6qBCEzm54TyNLDJ3AnDT+SSuI8DfVcuT1d/oZqOFX1/YCsPXUMHXf
-         I46Xb6McX8t7AnPgabwOHIjMDa830k8UUEu+++c1XGtgxTSGNn5BGfM6fTWDyOxhn85x
-         I0b2cb1+DuZSi7eST/NLGZ6ZSjTZ5InYK/sYhOdj2NyosZC+ZQPiG/BiCPWLrrLefaO9
-         Q5maLrvQ1GvSZLwZEwZmKAlTA+Df+pQi90fgRb9uE7jeYFRj6LpKsCKn1w1IxA+cTD4t
-         ZRnA==
+        d=gmail.com; s=20230601; t=1772740943; x=1773345743; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hRf9pqPlxTbJUEsTWhLFNb84aM0ldImFLB7Ieng5mvo=;
+        b=ANJgrdQLwt55rdx+o6a5p1NyY4hduhtpKFAWXoTA1LXP324Sbm7oFP6G/glfTe3YYJ
+         Gw5RH9z4MjMtHVjbdf8GGmQlfYyZ+JnUnwevO1QfhhtUsZi2EfA7GDigXtFnj2FTKbxA
+         w19gckvvyCiikUvxd0nueLB9P/g9H0pmB64VFN0I4vVf3rNxowzP5h4Zms9iOm4jJ+rw
+         tNwkfeCO6PWR7m5MAJvmqLKr1mK5zoY+t9mHzBgXAS4VQAe/0g+Vb18z3DrlVenIfkHD
+         3AcToXyb088Yh8aZZUyuU50W2PbfHrMs21EdtF5c7SatTQh5MbJlKI64JuPEsEv9ZTho
+         M20Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772740176; x=1773344976;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W+xZbg2UcQYU0NAtEL3ooNVs0zEnn8ejUS3RGwHRvhs=;
-        b=d7mRmYmmqxlxH9OjRWd/hdQS9KBMRBIneKE5SByr04/i13gk1vsYRGMt9l5T5mohXe
-         8nTmAaW73Qv++R2LEjnHXITkrk16rxCm4Onw5cfsTqdOM2AMwd8ySlO/I5/wA/TFkxTT
-         V54gQJUp9MNZAH6LEX0hMx3k6KpkRQCjiDD5xeyNf/rMMRt1UqUSEcyPLW2JOiqqerDi
-         yCEJrienRjKEPlRXAArFjGGcp9sNXvfpKxy1vASFCE5kE6w8lD6JKvcCFjGjKW3JH8l3
-         lTwTsr4r8JB+9/8Y8BMIVZvh7GeF7HKtPW135stb8Gpf6JVfEfqEdvlwvuWeDKFDMpM/
-         2epg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnEdSkqqmLXDOW0EbKGxm2l+IwGhUopoJBAYI8GzZRvEXgKi13QfYvAvMERrPCYbKxrEj4OIqtjtw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQrovcw6Ju2neyY3xn8jYBp20/k03jsxxOpW60R6I7B7e/SkPe
-	CHnqNspvna6aRzeuiu8xU4v7X7bg5ZTAgLs7eKJf65pirSV0C5rntAkD4q6erSpD1vlrIiGTBQL
-	wZa2OwGLSjbhHg64rTX4VlYpNXAHxspdoG7Jjmtvr31TSjGodm2eKtQ4reVHUReg=
-X-Gm-Gg: ATEYQzz7eTBQtWsiJneTcHSDzNjJPOdC+CmCfcJUBGILDkLdjE93UAmk6tVXDW42iZk
-	4I6zbDLWot39Z4+xJRQD2HZaDSem/QjZbJqiWyBsdwmTFGCL74upRG0G3PRKfZTAmEnHn1pYc01
-	dWUuQY2vc2NkhlJCXXSL/3If7SjrnSbbiR72lfNwpjh7C6UgWlQhwnsLQYYOJvXplgdSdo9dQkJ
-	w4sBFlSqvBMlai2qvWHZeuQiHunONjTnZBn6//cVibznSSJPilOHtcHrslsxRS42Zst2EjCwCrS
-	WRtGM9NudP5dsw9rcQCoEwS+jne8K0UR8HIRTZHTMA40JxByCH9IP7KGhx7zH8frrGje/FsI+do
-	humjkXFj6dwQAZ1tF3DHXXJKFClzT5nCVesAwfhf4BgrVKtYl
-X-Received: by 2002:a05:620a:450f:b0:8cb:3bca:bb46 with SMTP id af79cd13be357-8cd5afa3a2cmr885521185a.64.1772740175839;
-        Thu, 05 Mar 2026 11:49:35 -0800 (PST)
-X-Received: by 2002:a05:620a:450f:b0:8cb:3bca:bb46 with SMTP id af79cd13be357-8cd5afa3a2cmr885516485a.64.1772740175244;
-        Thu, 05 Mar 2026 11:49:35 -0800 (PST)
-Received: from [192.168.1.29] ([178.197.219.94])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439b03db76bsm37388533f8f.18.2026.03.05.11.49.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2026 11:49:34 -0800 (PST)
-Message-ID: <7aa1e643-a557-439c-a337-20575adf1e35@oss.qualcomm.com>
-Date: Thu, 5 Mar 2026 20:49:31 +0100
+        d=1e100.net; s=20230601; t=1772740943; x=1773345743;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hRf9pqPlxTbJUEsTWhLFNb84aM0ldImFLB7Ieng5mvo=;
+        b=LuJDn3r1bM9tiEE7TvBFn1+zERhMTRe/b8kMxW7r54X+v0rOoo4ytAICWL7bVkrU7Q
+         pMGZjzdf7F20anb7mVd/i+qP7LmLfTAZA5v5eGO+UdBHnvsJ+ikYzeu8H+TSSdfXWxQi
+         yRD6EHi/uRcCNzaNg8ng66O1bxHxh3VAk32fWsEvmSbTijKjfxefF+dKrnJQtWMdLMH5
+         gLWum5qNvw7pF16iMEH2vo473pHBIp1SLOWKV2mypVslqWKs6Ki6YkLiIFJIO8S4Zaah
+         B+GkyTwmXCe0F5F57ZNy+kBOZXZvVPJ/AsNjdTkGUMTa8TwsgrtkBLG10DDmOkIiJtKh
+         8iHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTmEuGxSTJBcHNxyxAKyGlf1IjA+aMcy/FOLL4j3hlK8x3ZfLzZd0N5KTNZVKC/fqVN+6Cq4EwoaI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZPZ0vYH6Bvs9OntOi3Vi9negj+uqLW6tlOubzEILTTSB8f4ux
+	rKcCdL07w/BMhCOLXsdZg92j4aM970qpSNDdTlEuwkyuMecC9xRAkwAI
+X-Gm-Gg: ATEYQzz+bKlxA48O0UF+M2KuvcxcaE2IShrnBHfm+GmEaFHqIUGKidOvTWTNWoZBl51
+	wyOLxqkY3rVWLQJK/58DjGL+XSL2LxFJi9kVwkoZLqrZCfjp9dvbUxfejBz/FlM7tXyPk0DbRes
+	6siKCEmSjv7f91jZaieiyOvwYZAysI3Ym/3YVuibdtru4WiLGlX/fyeE90n+rnq5c/DEh/JgwxJ
+	ZuXE8GpezIhXHASh3W5/Rj0++ppIBG4AWPGz0OTF+kV8mr3i8xmyo9fUTRakdewAO51cVFvkyTp
+	WcnTFetOvC/pnoQn4UOpfkXhcDGJ23JfNRMoKuqsOMs+k9YcOt2uig7/uxvu0svyjeY/Jojq9FY
+	+yPGQK2hcauWc0adeXaTVZrjEeVDRm5MQAgr5t9RngSZt+omiN+pvHxDJ/94AgsUgcAhYc285si
+	5Fkycfs5DhQKQGb+Hl2UteMK9RG9FToXcIFKvK3fkKYpwEfAqyXraG2XjHRA==
+X-Received: by 2002:a05:600c:1550:b0:47e:e970:b4e4 with SMTP id 5b1f17b1804b1-485235fb068mr11436795e9.29.1772740942942;
+        Thu, 05 Mar 2026 12:02:22 -0800 (PST)
+Received: from localhost (dhcp-91-156.inf.ed.ac.uk. [129.215.91.156])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4851fa87e56sm61369055e9.0.2026.03.05.12.02.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2026 12:02:22 -0800 (PST)
+Date: Thu, 5 Mar 2026 20:02:21 +0000
+From: Karim Manaouil <kmanaouil.dev@gmail.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: dma: idxd: TLB translation fetch operation not supported despite
+ PCI ATS enabled
+Message-ID: <20260305200221.kp3hcwdakk5yegoe@wrangler>
+References: <20260305183206.ch43qpnof6q4lvvd@wrangler>
+ <8aac54f1-fc2f-4686-878e-456cdefccac4@intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ti: sci: Drop fake 'const' on handle pointer
-To: Andrew Davis <afd@ti.com>, Nishanth Menon <nm@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-        Thomas Gleixner <tglx@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Dave Gerlach <d-gerlach@ti.com>, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <20260223202426.566958-2-krzysztof.kozlowski@oss.qualcomm.com>
- <195cc8dc-8642-481c-8bdd-f5409ab8f5b5@ti.com>
- <5b6a4284-4766-424c-9171-feaa08c52ad1@oss.qualcomm.com>
- <2d852f07-0bd9-4076-b0dd-93425ed237f4@ti.com>
- <c768706e-f063-44bd-92cd-f3984ad3bfbc@oss.qualcomm.com>
- <aa2899ff-a8d9-4740-b256-266f7073f0a9@ti.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@oss.qualcomm.com; keydata=
- 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
- cwzYbmi/Et7T2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <aa2899ff-a8d9-4740-b256-266f7073f0a9@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: vsZ77z0RSrhFWrTbQlekvqqZG63H16p1
-X-Authority-Analysis: v=2.4 cv=Gu9PO01C c=1 sm=1 tr=0 ts=69a9de50 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=gOEeR9iKwsj33Yj5oN/cWg==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22
- a=QannFOAQAd3pVwgO2DEA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-GUID: vsZ77z0RSrhFWrTbQlekvqqZG63H16p1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA1MDE2NiBTYWx0ZWRfX6MAIfm0xQN2B
- VExFP8Roe83HZf6UTg3J+DdSgMut4Bx+FrLpi0P2oY4dFToCjXwqEYUNw8XXkIKsIsIyVTnXqtW
- m1AG3m6L0N/hURsL1409TnnUE5Owx9gT8cGQNmCKAxb+6z7FkAnSgGyZ1bS4b6h5yV0Fq0HbphS
- Z7CBjULUvwr9ru2GVhYWh0o0XQWX9+M+HXVg4x8wwO4am3hZe9D1U76rCAABYFIA7MC+0f73fLi
- +FZOi4wsqw/b6wvXTY31aKVK61cghVZXe4rMRwGAABKqAS8SyMnCDNM3KG1xB9XPJhTy++CN/71
- HuU4BrDObBsxZFKwpGNad20ba5JbTD42lLiO7Z5zIvGwK2K8us9TCsDtvLuRqdttXzY+FS9BIFv
- YcvO1A8bQkaCaZM9Ze6Uo7/FspDO+B2wxhhzoyclbx4LRKFE5Hy9McXSDtRvdVm3bABN+RO6zLW
- s61b3zr4EFl8oywXZSA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-05_05,2026-03-04_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0 adultscore=0
- impostorscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603050166
-X-Rspamd-Queue-Id: 3A7AC217C71
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8aac54f1-fc2f-4686-878e-456cdefccac4@intel.com>
+X-Rspamd-Queue-Id: DF92F218115
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9287-lists,dmaengine=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,qualcomm.com:dkim];
-	FREEMAIL_TO(0.00)[ti.com,kernel.org,baylibre.com,gmail.com,linaro.org,pengutronix.de,lists.infradead.org,vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzysztof.kozlowski@oss.qualcomm.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9288-lists,dmaengine=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	TAGGED_RCPT(0.00)[dmaengine];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kmanaouildev@gmail.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	TAGGED_RCPT(0.00)[dmaengine];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,intel.com:url]
 X-Rspamd-Action: no action
 
-On 05/03/2026 19:44, Andrew Davis wrote:
-> On 3/5/26 9:59 AM, Krzysztof Kozlowski wrote:
->> On 05/03/2026 16:52, Andrew Davis wrote:
->>>>>> The code is not correct logically, either, because functions like
->>>>>> ti_sci_get_handle() and ti_sci_put_handle() are meant to modify the
->>>>>> handle reference counting, thus they must modify the handle.
->>>>>
->>>>> The reference counting is handled outside of the ti_sci_handle struct,
->>>>> the contents of the handle are never modified after it is created.
->>>>>
->>>>> The const is only added by functions return a handle to consumers.
->>>>> We cannot return non-const to consumer drivers or then they would
->>>>> be able to modify the content without a compiler warning, which would
->>>>> be a real problem.
->>>>
->>>> This is the same argument as making pointer to const the pointer freed
->>>> via kfree() (or free() in userspace). kfree() does not modify the
->>>> contents of the pointer, right? The same as getting putting handle does
->>>> not modify the handle...
->>>>
->>>
->>> In that argument, if we wanted the consumer of the pointer to not free()
->>> it we would return a const pointer, free()'ing that would result in the
->>> warning we want (discards const qualifier).
->>>
->>> If you could somehow malloc() from a const area in memory then free()
->>> doesn't modify the pointed to values, only the non-const record keeping
->>> which would be stored outside of the const memory. So even in this analogy
->>> there isn't a problem.
->>
->> I am not saying about malloc. I am saying about free() which does not
->> modify the freed memory.
->>
+On Thu, Mar 05, 2026 at 11:51:19AM -0700, Dave Jiang wrote:
 > 
-> And if you look, kfree() in Linux takes a const pointer. We also do not
-
-The slub, but that's the only implementation being I believe frowned
-upon. The mistake made long time ago...
-
-> modify the content of the pointer we are given either, so we should
-> be okay using const by the same reasoning.
-
-That's a mistake so you cannot use the same reasoning. It's bogus and
-bugfree to take a pointer to const for any kfree(). Just poke MM folks...
-
-
 > 
->>>
->>>> The point is that storing the reference counter outside of handle does
->>>> not make the argument correct. Logically when you get a reference, you
->>>> increase the counter, so it is not a pointer to const. And the code
->>>> agrees, because you must drop the const.
->>>>
->>>
->>> The record keeping memory is not const and can be modified.
->>>
->>> And where do we drop the const? The outer "struct ti_sci_info" was never
->>> const to begin with, so no dropped const.
->>
->> We discuss about different points. I did not say the outer memory is
->> const. I said that you drop the const - EXPLICITLY - from the pointer to
->> handle.
->>
+> On 3/5/26 11:32 AM, Karim Manaouil wrote:
+> > Hi Vinicius, Dave and others,
+> > 
+> > I am working on a potential mm feature leveraging the Intel DSA
+> > accelerator. I am trying to get the TLB translation fetch operation
+> > to work (described in section 8.3.11 in the spec [0]). However, I keep
+> > getting error code 0x10 which correponds to "operation not supported",
+> > despite that PCIe ATS is enabled.
 > 
-> Only because container_of() forces the const to be dropped, that is out
-> of our control. But we never modify handle though the non-const parent
-> struct.
+> Have you checked the op_cap sysfs attribute (OPCAP register) and see if the platform you are using supports the opcode? From the error code you are reporting, it appears the CPU you are using does not support that op. You may need a Granite Rapids (or equivalent gen) platform for that to be available. I don't recall that OP for DSA v1.0 which is on your SPR and EMR platforms.
+>
 
-That is not true. You could use container_of_const() if you wanted to
-have const. You explicitly drop the const, code would not work without
-dropping the const and this is the problem.
+You're right. I just checked the op_cap. It's not supported on SPR and EMR. Thank you.
 
+> DJ
 > 
->> And that API which gets a handle (increases reference count) via pointer
->> to const is completely illogical, because increasing refcnt is already
->> modifying it. Just because you store the refcnt outside, does not change
->> the fact that API is simply confusing.
->>
+> > 
+> > I used idxd-config [1] and dsa-perf-micros [2] for testing as well as a
+> > kernel module. This happened both on shared and dedicated queues.
+> > 
+> > An example with [2] is given below
+> > 
+> > With [2], Create a shared queue with a single engine
+> > 
+> > # ./scripts/setup_dsa.sh -d dsa0 -w 1 -m s -e 1
+> > 
+> > Then run a 4KiB memmove job (opcode 3) with translation fetching (-X).
+> > 
+> > # dsa_perf_micros -n10 -s4k -i1 -k5 -w1 -o3 -X1
+> > dsa_perf_micros -n10 -s4k -i1 -k5 -w1 -o3 -X1
+> > blen                       4096
+> > bstride                    4096
+> > bstride                    4096
+> > nb_bufs                      10
+> > pg_size                       0
+> > wq_type                       1
+> > batch_sz                      1
+> > iter                          1
+> > nb_cpus                       1
+> > var_mmio                      0
+> > dma                           1
+> > verify                        1
+> > misc_flags                    0
+> > access_op[0]               Write
+> > access_op[1]               Write
+> > place_op[0]              Memory
+> > place_op[1]              Memory
+> > flags_cmask            ffffffff
+> > flags_smask                   0
+> > flags_nth_desc                1
+> > nb_numa_node                  1
+> > cpu_desc_work                 0
+> > Memory affinity
+> > CPUs in node 0:         -1 -1
+> > Buffer Offsets          0 0
+> > dsa_perf_micros: check_comp: desc[0] error
+> > desc addr: 0x7adf31986000
+> > desc[0]: 0x0a00000c00000000
+> > desc[1]: 0x00007adf31987000
+> > desc[2]: 0x0000650dabb381c0
+> > desc[3]: 0x0000000000000000
+> > desc[4]: 0x000000000000a000
+> > desc[5]: 0x0000000000000000
+> > desc[6]: 0x0000000000000000
+> > desc[7]: 0x0000000000000000
+> > dsa_perf_micros: print_status: Comp status 0x10
+> > dsa_perf_micros: main: test run failed
+> > 
+> > As you can see, it fails with completion status 0x10.
+> > 
+> > I also tried submitting this directly from the kernel on top of idxd. I
+> > prepared and submitted a dsa_hw_desc as follows (roughly)
+> > 
+> > struct dsa_hw_desc *hw;
+> > 
+> > hw->flags = 0;
+> > hw->opcode = DSA_OPCODE_TRANSL_FETCH;
+> > hw->transl_fetch_addr = sg_dma_address(&sg[i]);
+> > hw->region_size = sg_dma_len(&sg[i]);
+> > hw->region_stride = 4096;
+> > hw->priv = 0;
+> > 
+> > rc = idxd_submit_desc(wq, desc);
+> > 
+> > and I got the same error code 0x10 in the completion record.
+> > 
+> > I am on Linux kernel 6.17 on Ubuntu and I tried this on two different
+> > systems
+> > 
+> > 1) Dual socket Intel Sapphire Rapids 4th Gen Xeon(R) Gold 5418N
+> > 2) Single socket Intel Emerald Rapids 5th Gen Xeon(R) Gold 5512U
+> > 
+> > I had the same error on both.
+> > 
+> > lspci shows that PCI ATS features is enabled for DSA on both. As an
+> > example, on system (2):
+> > 
+> > # lspci -vvv -s 0000:f2:01.0
+> >         Capabilities: [220 v1] Address Translation Service (ATS)
+> >                 ATSCap: Invalidate Queue Depth: 00
+> >                 ATSCtl: Enable+, Smallest Translation Unit: 00
+> >         Capabilities: [230 v1] Process Address Space ID (PASID)
+> >                 PASIDCap: Exec- Priv+, Max PASID Width: 14
+> >                 PASIDCtl: Enable+ Exec- Priv+
+> >         Capabilities: [240 v1] Page Request Interface (PRI)
+> >                 PRICtl: Enable+ Reset-
+> >                 PRISta: RF- UPRGI- Stopped+
+> >                 Page Request Capacity: 00000200, Page Request Allocation: 00000200
+> >         Kernel driver in use: idxd
+> >         Kernel modules: idxd
+> > 
+> > And this is the output of accel-config list on system (2) for the example above
+> > 
+> > [
+> >   {
+> >     "dev":"dsa0",
+> >     "read_buffer_limit":0,
+> >     "max_groups":4,
+> >     "max_work_queues":8,
+> >     "max_engines":4,
+> >     "work_queue_size":128,
+> >     "numa_node":0,
+> >     "op_cap":"00000000,00000000,00000000,00000000,00000000,00000000,00000001,003f027d",
+> >     "gen_cap":"0x40915f0107",
+> >     "version":"0x100",
+> >     "state":"enabled",
+> >     "max_read_buffers":96,
+> >     "max_batch_size":1024,
+> >     "configurable":1,
+> >     "pasid_enabled":1,
+> >     "cdev_major":235,
+> >     "clients":0,
+> >     "groups":[
+> >       {
+> >         "dev":"group0.0",
+> >         "read_buffers_reserved":0,
+> >         "use_read_buffer_limit":0,
+> >         "read_buffers_allowed":96,
+> >         "grouped_workqueues":[
+> >           {
+> >             "dev":"wq0.0",
+> >             "mode":"shared",
+> >             "size":128,
+> >             "group_id":0,
+> >             "priority":10,
+> >             "block_on_fault":0,
+> >             "max_batch_size":512,
+> >             "max_transfer_size":2097152,
+> >             "cdev_minor":0,
+> >             "type":"user",
+> >             "name":"app0",
+> >             "driver_name":"user",
+> >             "threshold":128,
+> >             "ats_disable":0,
+> >             "state":"enabled",
+> >             "clients":0
+> >           }
+> >           }
+> >         ],
+> >         "grouped_engines":[
+> >           {
+> >             "dev":"engine0.0",
+> >             "group_id":0
+> >           }
+> >         ]
+> >       },
+> >       {
+> >         "dev":"group0.1",
+> >         "read_buffers_reserved":0,
+> >         "use_read_buffer_limit":0,
+> >         "read_buffers_allowed":96
+> >       },
+> >       {
+> >         "dev":"group0.2",
+> >         "read_buffers_reserved":0,
+> >         "use_read_buffer_limit":0,
+> >         "read_buffers_allowed":96
+> >       },
+> >       {
+> >         "dev":"group0.3",
+> >         "read_buffers_reserved":0,
+> >         "use_read_buffer_limit":0,
+> >         "read_buffers_allowed":96
+> >       }
+> >     ],
+> >     "ungrouped_engines":[
+> >       {
+> >         "dev":"engine0.1"
+> >       },
+> >       {
+> >         "dev":"engine0.2"
+> >       },
+> >       {
+> >         "dev":"engine0.3"
+> >       }
+> >     ]
+> >   }
+> > ]
+> > 
+> > I tried to debug a bit in the kernel, and IOMMU code in the kernel successfully calls
+> > pci_enable_ats() function at initialisation time. So I assume nothing is wrong with
+> > IOMMU, PCI root complex and BIOS options.
+> > 
+> > Do you have any clue how to get this to work? Or will it ever work in
+> > the first place on these systems? This is not documented anywhere.
+> > 
+> > Cheers
+> > 
+> > [0] https://cdrdv2-public.intel.com/857060/341204-006-intel-data-streaming-accelerator-spec.pdf
+> > [1] https://github.com/intel/idxd-config
+> > [2] https://github.com/intel/dsa-perf-micros/tree/main
 > 
-> If the refcnt is not inside the const struct, then the contents are not
-> changed, therefor const is still correct. Even if the content of handle
-> were in fixed ROM, nothing would break here.
 
-I am talking about API and again you go into memory correctness. So
-again, very simple: any refcnt get taking const data is bogus.
-
-
-Best regards,
-Krzysztof
+-- 
+~karim
 

@@ -1,87 +1,80 @@
-Return-Path: <dmaengine+bounces-9282-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9283-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mPBpIRatqWn+CAEAu9opvQ
-	(envelope-from <dmaengine+bounces-9282-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 17:19:34 +0100
+	id yKsYClOuqWn+CAEAu9opvQ
+	(envelope-from <dmaengine+bounces-9283-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 17:24:51 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 933E921553F
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 17:19:33 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB9E2215647
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 17:24:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id CFCF83008D22
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Mar 2026 16:16:59 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3902C302E12E
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Mar 2026 16:24:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9F7A3CF662;
-	Thu,  5 Mar 2026 16:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AC253A4F49;
+	Thu,  5 Mar 2026 16:24:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="UoTgnlRZ"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="DU+zr0lm"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011003.outbound.protection.outlook.com [52.101.65.3])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013060.outbound.protection.outlook.com [52.101.72.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282323CE4A5;
-	Thu,  5 Mar 2026 16:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5119539FCA6;
+	Thu,  5 Mar 2026 16:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772727414; cv=fail; b=VkNWEleJ+HNuJ+/2dGae53+75y1Z5Nch4nmFTJwdr3+Tl2UAh/inWiatJHXXI6rxZZ2Ku1DH/qoBIn5gtPgXpIKH6xixGR3mQMoR1PgU1L3pbBx03ggx45Ex6QVxmDZMAVv2KbpJL9ZKDFpnLOdf0u6njwkZd5tXVUAXfjri8hc=
+	t=1772727889; cv=fail; b=swwO2USAZWGUvIk/EEFjMbkRWU4VSsISNnNPklRHsNkF/MlhMZAofu6ZXcIXR0pSnt4z9mpBMqFje9+ZglHU9xc1tXUigoqZU/nvY3fKC4ivYLhlwgzt9Bx4NelnYlJ+WqwvIrhxoFu72bgg9ptu5BWeZUJlcTaWLXBBgtdLVxQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772727414; c=relaxed/simple;
-	bh=7naslfmRV7xzD3JaAazZ1Yb3Eiq8lC/iGJYclng0F74=;
+	s=arc-20240116; t=1772727889; c=relaxed/simple;
+	bh=r4iAfdzfJ0xdjufsBk/of7I5VHr6RAnFLrdEyJrTHnw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=P+878rHRs9mngj9/pZ//KdhxinTEVHHq/XodzIlViz8PxdUHelzAGKaqgnrm6SSHfOSJ7qPxOIWtrU57jGOyk/6/3nhKJwBheJ0aEP56YZlnFFCtwb+VBdCT+Arb/H/AcGrG9yA2/e3G0fKRyCPxIHvTVswCsx2OIAahueeX3NI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=UoTgnlRZ; arc=fail smtp.client-ip=52.101.65.3
+	 Content-Disposition:In-Reply-To:MIME-Version; b=lgsBGL0tmfmaUf4ePUOY0if7cl4GgnfXKSwLjBXtFf4bPLz09miFgD+owlhZbdGgMaRDPh+fRi5rgw63YIN/zhXk6Qnp2Z09uV0WSOSZoR8TphTX2lw3GnSASvTG7eZTMQpoAfxjfZrdOb8LsBt4I8438fSTyNOrHt/WtsOqSc0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=DU+zr0lm; arc=fail smtp.client-ip=52.101.72.60
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CrBYkNCRNDx7qwe9KeD7D1uw0TvZ7ZTG+86SIgZx8WpclB4EQJlst+Q0HHvJCugCWO/5vYvJPqpFNpWIRRiDpHUzu5/p1HD+LLxoP3poXvJbMSG7rOCecLaxMAoxvz263j88Jn4sGL0ehryxkIQpUyS5NjG9dKExzGQOKSkYs3wE/O+BI2cmgVKCOLfxwJBjeAk4waPyPOysHx1P0Cqg/XSTVLtj910Qc/0w0gjLifrocfWjR7taAZYFm0Hs7fgtXj1l0tU5myLlR6St4m6W99GJKGb3COhxqpVqoRWirFnIthQ7ctvFlzlgP2d54B3YxiRChkI2Bl5eLsbAvHMoBw==
+ b=xdyZ+M5MjA+lNW/3u8wlBRJZw94Avto1OZuR15rtvDz69d/aeEViD363GOxqJbd+KrLSxyzwHgNIrRWY1LdEm7DEoJXck5VbIYQm5547undAC844r2P81+HjEJUDRU9NBBl5NDxf4mZQ2nUnJcnB8MkNdOu3vXY+/dT30W1m65gV6Gr5k6NxrYMZgBGtAstXkSIKqaPgcKD1EFrIMp7PKcO51z/LlqVwGmosc1kIkJA+cBP/ZDyG315QQdbfTog9FKbl6tAUQeFRv2V+IRQR4AZWNhgLpcYp9iwGk9upLQTWPkLr7UdenZa3PwFaYUyF+q/vlT9AemjHaaicm1ygXA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UguG3F9WbH0cTZLDlKuoeL5LnyqjqyOWFgujgljKLmU=;
- b=opq/34vFqRqAemNMbA554bolbCvg/5pBEmennsh4WmDTQuJCZhg8q1d9Z27uhDqDgh5WodS3L1HyNEcWvUWPb6HJ9UoyEPYCtoQHcR32UlLwk8c2KJOq90RvtRPMRuI/sm8efWxlpNJcxankyzsoZvr+KjrPcfBr9AsN2KxXONyoI+qqqPaWckL+EVQfWv3jzqnajUs9qB39Xrx+lxyJV7NZKASV03pOiowsit/7IZJMswC+3Mj9PBNN5AHcPanup6l/VcUjaTVdlESx26GJXS4Oh7eMckzVzcV+cu+69xvg3+N7FRr3cjL01viP6kzOuWzSohPZJ0ofgHV3WOxiyA==
+ bh=U7kIez0CI/HMbKpKYUI72o1FQGwDef8viWHIH7PjsuY=;
+ b=Xvonbx50QDZWUzwCI3TKKTpkAGqkWy0Kf6cSaHSt6woInB7c621RsamvVBjU7w1yrpE8I5ougnFJXk+yYSVfv81Tp4jkR6OSkkrhgc97BUpCm1Qx0SrGOmH944yIIrra8Lb0g4nNdE7nauE6UZWulGa5PJIE8l/HhQdj6ilwAmksmPrqUTWwxQ6FzZRK7AqIMeTfOKCWRIaNKN0ZhVtL9iD79xnJ+jDLhIWAqz52nBkae580aWwYjl1/IE8D94kGbxwuHitTw5L1A+oYLNpRa2bul5H8GZbfg93j2/1gPArdUggVvuzHDBK8mzpPpVex6f8a9kNY9NEPxWE8DIzeJg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UguG3F9WbH0cTZLDlKuoeL5LnyqjqyOWFgujgljKLmU=;
- b=UoTgnlRZ3TxZjYfHfNqK+SAPRNGtoWHJULcXv6eRv6mqjiykHnjgxUD+fB0vmdSoeMWDoJXJC1uY+GFmhy5e2/iAYelTIPLGeo4a6NdXZSfSV6wkHyxM0rWvrAUGogywCYHxrmizRz7AOGTVrGHAV4fjzOdvvxOWc69ri0qHXBOGq2bMB/2t8QUfROQ7luul5HOcnC+X25D6sPhNhX7UxhMFi/07TXxB06l5h93B6yQF/A/GO2lTOFbv8oqtEz9DDBOcMc5Ck+1CCsEqEmKu5oAGuI0s26fZe7tIh1R8m29a1/WksEQjFglOA5iFCXju0X5dhN+0d2qiFKP1ZCTabQ==
+ bh=U7kIez0CI/HMbKpKYUI72o1FQGwDef8viWHIH7PjsuY=;
+ b=DU+zr0lmc8W3SycNzLOAJk5q8QCo8AszFzJrBndrX/cGBPR52l5E93JSFDEotypKQx+n6DHIFYkAwM94+rm6M6K5V5ky8rvZ6ovq2mVujHqg9gBt5P3tf/jjF6p+rgIfAvD6ssfuMxZKns0GKGdhT9XSBnK0WQ6DKiIJCb0VlOAVPQxY5txMXClimSNHVAZUZKaNBdFhv0Jrsm6kFwdzpDO4GLspYPqghIYHiODtPS/riwaXyrHAjZfLAZjimIvEaAhGDyaLYXdOQaKMoOo6UXkg/SAE71f6AnZUBYZLO1xX8L+HFKF8ty564x4KZkhBAgpKzH0hVbNgrXX/Rvdeew==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by DBBPR04MB7722.eurprd04.prod.outlook.com (2603:10a6:10:207::24) with
+ by GV1PR04MB10968.eurprd04.prod.outlook.com (2603:10a6:150:20c::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.18; Thu, 5 Mar
- 2026 16:16:50 +0000
+ 2026 16:24:42 +0000
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9654.020; Thu, 5 Mar 2026
- 16:16:50 +0000
-Date: Thu, 5 Mar 2026 11:16:43 -0500
+ 16:24:42 +0000
+Date: Thu, 5 Mar 2026 11:24:35 -0500
 From: Frank Li <Frank.li@nxp.com>
-To: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] dmaengine: amlogic: Add general DMA driver for A9
-Message-ID: <aamsa9Dj6I2kas6H@lizhi-Precision-Tower-5810>
-References: <20260304-amlogic-dma-v5-0-aa453d14fd43@amlogic.com>
- <20260304-amlogic-dma-v5-2-aa453d14fd43@amlogic.com>
- <aahUTp3T6QWbZiaz@lizhi-Precision-Tower-5810>
- <501fe36e-a3b1-475d-ad79-8b6523fe95e7@amlogic.com>
- <aakDyNdKhXdh-bnH@lizhi-Precision-Tower-5810>
- <7ee33032-586f-4b6c-8bd8-d55a18ed923e@amlogic.com>
+To: LUO Haowen <luo-hw@foxmail.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dmaengine: dw-edma: Fix multiple times setting of the
+ CYCLE_STATE and CYCLE_BIT bits for HDMA.
+Message-ID: <aamuQwFDJnJf0jyg@lizhi-Precision-Tower-5810>
+References: <20260304025049.324220-1-luo-hw@foxmail.com>
+ <tencent_CB11AA9F3920C1911AF7477A9BD8EFE0AD05@qq.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7ee33032-586f-4b6c-8bd8-d55a18ed923e@amlogic.com>
-X-ClientProxiedBy: SA9P223CA0020.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:806:26::25) To PA4PR04MB9366.eurprd04.prod.outlook.com
+In-Reply-To: <tencent_CB11AA9F3920C1911AF7477A9BD8EFE0AD05@qq.com>
+X-ClientProxiedBy: PH8PR02CA0010.namprd02.prod.outlook.com
+ (2603:10b6:510:2d0::21) To PA4PR04MB9366.eurprd04.prod.outlook.com
  (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -90,297 +83,150 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|DBBPR04MB7722:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ebb776e-e360-473c-22af-08de7ad29b76
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|GV1PR04MB10968:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8574e3d3-5970-43b4-8403-08de7ad3b4a4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|19092799006|366016|1800799024|376014|52116014|7416014|38350700014|7053199007;
+	BCL:0;ARA:13230040|19092799006|366016|1800799024|376014|52116014|38350700014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	oSbuEaDyQ+ZpLJ4uIAIiDBNw/IzXeGd2vc2Y99mLRp/ReFvjpuZifOYvpvgoxvN4SHLi6tQSeOLQMz+9HXUMMY0v0U/Al1koTxK3lDbS8+Bxmq/WewEwktvBCLFEPAPq8zMzuFCvJpK9/Ow31NJpNfZ/EGgFNA9Tu0DQ2XzltJv3/V5eSw0DvcKZCSnGy9B6aObJ7DAevvcG0aEqcoe9fEkTzX/tvNfkp6xqz0F+2Q9lCHXwsMupTNah+YH0PwJ50pwiqALyzko5FO9hDMh9lRLZdRK+rUCsxao1z3z5isTfmWFxuAKMviJiSGtaw6sivgJcG2VUkVhWSMCpjpJmokp4eKOQbI0Ebt5Tr6sqjIobsY43Xc4ovcO8wyoiDGRbBKrXB0TYG4QVqz71OQU8IECgSB5H5+RGynye4DcaBCEVhQj6PHQKgdFbKYWyKT2dNdZlsbxefnq6WOciLgWLk4T4LbwSW6/7zDooRzKFQQelXLQMfVHv/D8nsPJ4uPq6GGhnFLlU4N0y7AYFwxB6F/kVsiPsGZurGT/pA18HHYR/rtn29CausJw/8s2TbVFKFlT5XeHTpuPj69B0pazQ9/CXR2c8CqMomxfp78HeKYOcxHYDwEylRfP66OJ13wMml85xUgpb/E60mVDaKI1HF5BQ2Tgx/PAJuGahPVaT27VOv9yUFY+0ILi4P5TDzzNlzGurOx6QGnPjqEuLpC6TfznX6Szyo2NDdAGgjPqapcEAeNCL/W0yVJjhT4geeoparSpne5vRT2wQCp69X8H/AlwkiAH7R42F/v4tVGTpcJE=
+	vOWvR36+clHJ+oHJbbS+xXr9TpzocjRQ3E0Z6VnOw+BT+ozGWGfkFVD32Y1EbnWEZNYKEl0xZ9yJBSQOuErKhD4+cPXuZ2juraq5swyMATqbLEGSjbKncB2k+RQ/BQtSVT5A1mfuOjjYXnlrY0FSLyvXdu5/NV2I+5tOOxKuEQbrZqR38oKV6EhHZNhqMN7nQFtSqgYcgQB47L9NiAf3rCT1Ctu6WKq5GassDD613rWGuju3mosW4mg9eZ3L3gNCdUy1MsPK/VvP0JWD4cs+n+2Ux9efCmZeBsD5ZnA/eoNlncGnwHEh5LS5+EVcn27ykEL0Mkw6y5MoT2TuSDwGgG2x3nBXQTB/TeGIMSZv4RXgCjO9O6jiquxzYXjrMbnlleECf1oc1gOYAaiwBG+blkvNuDNQHCi77cdZOY+M+kEh/h+rdkhIRCd4mmPINknU95BxPFYD0Lm5QJbqC5fGJRR5litB9WM50GcbiqcoHE/DxE99lCv8WAmx2112mFl3HB7+HDd1f3hqX7y+ptkM5sMASjk4mdNTdmPTOfcizaJMuE7c+QhCcavXpGbXvHehhoNFmS2pkGj9jAMq9x9FMseIhYT7Gb+7kOR+eOwM3L4s0qzJgqEi5dqlGMwyqD+LkORL8YyHoOkeTiG2km0CxfT8hE2QUCWJm6vjyRJ3VbZdOZvpvs2v4CVBr7dUi/Ya3iAoW/HZFmuTn2THuvx9l2OEeG4I4F/bj3iZqMDHq9vZBn/ZMLveQbKY5WF0uT5MazBp9gAVe1vY2FV43W4h3QpV2t0MuOf3HNI5jIxtjpg=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(1800799024)(376014)(52116014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IQ8VivVBJmTMG0x6kpwSY99ctKFmUbVZnEUjqwfEm+URziF8c0AYbA3CchIl?=
- =?us-ascii?Q?PvnsGuuin8+Q+zXcV5KXF3hQkVPLMXBeHkidhMZouOMJa1p0746GQ0qa0RAx?=
- =?us-ascii?Q?5V8LMCsgRBTBX7TKE6snMwjBanWGiL47z+Pt4sI7ZPWIQtj/qZPAaVS7vnhD?=
- =?us-ascii?Q?KJljBtTOY13Z8+L5aql5c+YgIOgrWgNVqPK2W00H+mgOdpyeaXO/A4fUtpkK?=
- =?us-ascii?Q?l4vO1uAwQtINPejCjh3jclJCiXDVwFae2kYzSftVrGMdIYMNwGROG5kE+B7i?=
- =?us-ascii?Q?xTQ+Wf3ifQ8pi0776Zgj4twCNWafO37n2Uk3p3QFfi6iyb02OdIzYbHgsXgy?=
- =?us-ascii?Q?6NfOrHkbB/NjKmuH7GSqArajoHSh7MQNPHP39EI9bG67OrYViiJPYl9dlKuz?=
- =?us-ascii?Q?+Jg16dT1xMq+019Ic9XgDe5MRbgQ0L/aucO7hrBKVC4PxMnoH43cybKSyXSO?=
- =?us-ascii?Q?loFsjDD68eIMXOeVKkGQoC56Blfpfe+itnLOMYLWLT6kdLZSn7laFtE+rwUz?=
- =?us-ascii?Q?hNAtT1h7ea21FfCcWqs1xMXSdMaE6rhf9lqzv/wbobBkZcN9gaVkELLmpIX9?=
- =?us-ascii?Q?BoXMm0cZVX4KjmLZ444gq4z2XCzkIBmEoMFA2C0xHxg9RdK2XiPwSAyzxguT?=
- =?us-ascii?Q?jUQpqEOy5AUsh3mX8V/pVEH1Qi22idp1Q6UiVtf1wvvkXnlzOpltZwbh8NGf?=
- =?us-ascii?Q?nwyxSIcT4n7h5gOLNz01gYzABjmFXTnaj9JJwosrXNUmy0TrQTja4fBTiERT?=
- =?us-ascii?Q?4/M0dgvVhEoh1yc7dQ9BFFWAsDBiyX2jjCy/yi6kps0zQtzyJ0o+eTLoH1z7?=
- =?us-ascii?Q?i+fY+NJD/QGYkjd8zQv2ZUnf6abULxLQFlBJjuVACi9lntyO0DCNDV7timGT?=
- =?us-ascii?Q?nRP8tYAauiBsGd1jpzFHBzmRU3fQHxfHeX9wKxBiAtYwIu2D21OZtN/b/9x8?=
- =?us-ascii?Q?8w2gWakc9iFAjjeese/n1vJgeurQ6qT43dD2RI45IZU5HmgPDukBhuJj6P3T?=
- =?us-ascii?Q?sZn1tRTlt0A1GRnaZbAUo3vxGQM6Zqm4s3nD1NDe3mQlT4AtB87otrp6JAeb?=
- =?us-ascii?Q?sz33xbthctxGnMOxRm/SN5qZWR4LoXYIJ39xT17ad5h6cLxKLqRZVFAdeAmk?=
- =?us-ascii?Q?CDak+D34olHwLbRD5t6SXLkQWoWcicIF2zJxOP4EvEHlzM9V+lCjA9pnl200?=
- =?us-ascii?Q?x7/TU7+A830l6e61J3pWS28tIyrbupj8S8+px614Xxjif0pvO2T6KOiPvdyZ?=
- =?us-ascii?Q?jRnKCu/8KuIAKL4WuImq6fvYS7UFt6wsrGlmRvIB5nHctAo7ieZIGBqmTmG0?=
- =?us-ascii?Q?bio5bWAvHI1t/H3efL5FBvkO09VQaaYtjfO8diJByseA7vYyjv5WHeLF/byZ?=
- =?us-ascii?Q?s1iTepl+0JCI9T0dHHKVJaIGXMomksW6/gUg5PLF5Axurfiup9joe6URT1Mc?=
- =?us-ascii?Q?swcMsIocpeZ9RXVwpxewIOOdIUtSJ3BnjL8Ljc2X50duF/f7TqHcwNvoyNeG?=
- =?us-ascii?Q?dnnfZOcnid+5xqqjcZRqghc3DQkvLymB+kHxs1hbtQUD/oxhtD9asEewSda5?=
- =?us-ascii?Q?AobpGstPmD86TvdLVIN4bqhMlOOJ1HhrJiPY22e0QcSOg9B2lSShl3VRt5F0?=
- =?us-ascii?Q?jzy8O5XgNpH7pGIFzTQajDhJLYHnfKXyJCHnt+9ROqT2g5DiGFelxbN+fEHR?=
- =?us-ascii?Q?OwPorXhvn9v0vTPPnudj09fIDQSF4N0OKd0x/L+qGOqnKUbM?=
+	=?us-ascii?Q?AVAJbmdGrAJcCwdS7O8ppKBgdus8nbWgd9V9k4GfhErHmPA1zvkjZWSjID0w?=
+ =?us-ascii?Q?Qn7yFk/3e0Q94dD4yCu6pQrOZN8zs7q99kyvSzqdllDAy7L8lS0C3uIA385v?=
+ =?us-ascii?Q?SdytSU+b3rn+PEOHOdicg0SMGwFQiD9QG3sS1zedBXs8+PYOnq79RnB91rvV?=
+ =?us-ascii?Q?S+UW61XAsWjSUno6pLpbxngs3yAvVUucM9Elc2AM+T9amHN7zkPzjLUY3IhB?=
+ =?us-ascii?Q?vpSr9AXOlhBGK6Z3FQil3VZxdlHZZCZqDOcz7MYAvMfYbL/HrXlXXrQtCPQS?=
+ =?us-ascii?Q?KKZOk0HYoQ11QQGe0wJJDp4sTUdGLMH708h0NUrjhUH/G0nNRV+rS5F32i18?=
+ =?us-ascii?Q?IM+q+yjOUUzvus5L2Wp9jdTzEszk75p9p4b8p37HwTcrodSL7hH4hRQ2Xnxh?=
+ =?us-ascii?Q?wQ9N62jnEFeCl6C0riZIAe3RGubUif7mQD1hril2RTxiIVM48K8TyWPz5qS9?=
+ =?us-ascii?Q?w1Yf48PVxzfIUnlQyHTLGPkp/QNRmmhb0xnUEj6RpzPb6wH0ftCiS9XCdfmA?=
+ =?us-ascii?Q?39aSNmtvJ1JsJW9jIOLyOlTjzcSp50vPVl7R9eZVtn+TwF8xAFeBOt7OSw1Y?=
+ =?us-ascii?Q?dNEMyqfNdWviK8gW4Pld3J9dUIUC9PlQjiBtFZHJIcC15jBdKPj0z/fNCArA?=
+ =?us-ascii?Q?rFfFVoVDTr2qqdPjS80caMYpDdjgv5btGaFUtZUYYJ7Ksc0mZN+vCK57hJEu?=
+ =?us-ascii?Q?q0GE1gzrGDWf0tyWM6zB7S9IlM560BTIFVxecyLBCi7Vu/eWS11GVcK8afT0?=
+ =?us-ascii?Q?X4z+q+z5HZ085Z1fqAanD3cGkk9187iY49KojlX7tnr1+QTFPK/qXXzYpF4Z?=
+ =?us-ascii?Q?HG9t/a4iuTyI/pUa/3CPsaCsoPoZqK1zv7D9sPCfpNEwl/kc/wmOs9tkdngQ?=
+ =?us-ascii?Q?9B/vIviFdT2FKxTDa0VTlCYBx2rxGIIjbHPzKQ6I25gC77U8EBflH1pVQQWe?=
+ =?us-ascii?Q?om8UHADplMoYXezNM0I62Ns0o46akFxm487SzdpHAkLdIR+2ZsZZCFjy2YmV?=
+ =?us-ascii?Q?mW5DPGgy68BUiCbEjEGfIZli2uWUqi/YqsM2pRNs8q7zvvGAWDVFzG8GlMy4?=
+ =?us-ascii?Q?gh+IP3Ju+WQ19E1CP+6ADlKICtLQAuOIDuMkqR9Gh9SnaORgTp0ApimLtvcV?=
+ =?us-ascii?Q?3/+aVybevUsL0Aa1jynk3Cec5ODsjLTXZxDp+JUkDaAy7HkbyUoPmiPc9/E8?=
+ =?us-ascii?Q?u8Loo5i45hN0mwgrA5+DNELnfsFvIPJBlRed+hAdIOIN9Zy+nmzm90Ht5/9Q?=
+ =?us-ascii?Q?4dzWxIf5u7PdtH49bkClsYXnnbPFcpeaolHnmzakDO8z9DM6nek8+Yd5sOHP?=
+ =?us-ascii?Q?4ZDWkZQH5f7kNrSmPSNOiTqx0vTOb3F/cSgd+92M86K6gOpQsz0NgujzbTJx?=
+ =?us-ascii?Q?C0b5Gi6bF9aWwnhdF+4GVPspA6rpwp1lt8jCAxlOZwZZ20dFp2osfgl/NCSU?=
+ =?us-ascii?Q?ltw1wlBdNSdTZq6SanBvnTFR5s6ON5X88dbp2qd3kVDsZARtVTFYOwkOFVhz?=
+ =?us-ascii?Q?SMEjii/j3Y0eXpIY4MWOWIr7nyTK752uMVQ3ImvxpL2bQumFX0efNaXyUZy2?=
+ =?us-ascii?Q?TiStzTpin5Ev00hYXDX93+c0XSpw4VL1AXJ8HyZS5AQxG1UZHCRChc9O9iFS?=
+ =?us-ascii?Q?BcZDUbT8E1gWQA8U3/wBaYMokJ1b5y8Dcma6avDMVXlxnYrC7IJrRefTN8gk?=
+ =?us-ascii?Q?bn76xrv+x4xH5YAT0Vb+ClQ88ZVtMqihOTdVryQVRjfe3gtU/cuILQQhA5/I?=
+ =?us-ascii?Q?K72J5KCiOA=3D=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ebb776e-e360-473c-22af-08de7ad29b76
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8574e3d3-5970-43b4-8403-08de7ad3b4a4
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2026 16:16:50.5001
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2026 16:24:42.2373
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: q+ya11xoxYVmV17GfbPZ9EEPLhGIT8AQKXvV2Phy77kPmBEGedQSgJ9T9E0UTc3B4ChYyE08qwIBUfVr2jCUVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7722
-X-Rspamd-Queue-Id: 933E921553F
+X-MS-Exchange-CrossTenant-UserPrincipalName: dt/ZnlyRVI+TaSxx+HigQEw1pCRXcYrbRnsNXh7rfSsnVDp/ONL+f3n3x+zFT969tq34toZrI/oPHkVR0/NNCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10968
+X-Rspamd-Queue-Id: BB9E2215647
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [0.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9282-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[12];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9283-lists,dmaengine=lfdr.de];
+	FREEMAIL_TO(0.00)[foxmail.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[nxp.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	NEURAL_HAM(-0.00)[-0.994];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:dkim,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,nxp.com:dkim,nxp.com:email,gxmicro.cn:email]
 X-Rspamd-Action: no action
 
-On Thu, Mar 05, 2026 at 01:21:27PM +0800, Xianwei Zhao wrote:
+On Wed, Mar 04, 2026 at 02:45:09PM +0800, LUO Haowen wrote:
+> Others have submitted this issue (https://lore.kernel.org/dmaengine/
+> 20240722030405.3385-1-zhengdongxiong@gxmicro.cn/),
+> but it has not been fixed yet. Therefore, more supplementary information
+> is provided here.
 >
+> As mentioned in the "PCS-CCS-CB-TCB" Producer-Consumer Synchronization of
+> "DesignWare Cores PCI Express Controller Databook, version 6.00a":
 >
-> On 2026/3/5 12:17, Frank Li wrote:
-> > On Thu, Mar 05, 2026 at 11:35:15AM +0800, Xianwei Zhao wrote:
-> > > Hi Frank,
-> > >     Thanks for your review.
-> > >
-> > > On 2026/3/4 23:48, Frank Li wrote:
-> > > > On Wed, Mar 04, 2026 at 06:14:13AM +0000, Xianwei Zhao wrote:
-> > > > > Amlogic A9 SoCs include a general-purpose DMA controller that can be used
-> > > > > by multiple peripherals, such as I2C PIO and I3C. Each peripheral group
-> > > > > is associated with a dedicated DMA channel in hardware.
-> > > > >
-> > > > > Signed-off-by: Xianwei Zhao<xianwei.zhao@amlogic.com>
-> > > > > ---
-> > > > >    drivers/dma/Kconfig       |   9 +
-> > > > >    drivers/dma/Makefile      |   1 +
-> > > > >    drivers/dma/amlogic-dma.c | 585 ++++++++++++++++++++++++++++++++++++++++++++++
-> > > > >    3 files changed, 595 insertions(+)
-> > > > >
-> > > > ...
-> > > > > +
-> > > > > +static int aml_dma_alloc_chan_resources(struct dma_chan *chan)
-> > > > > +{
-> > > > > +     struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> > > > > +     struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> > > > > +     size_t size = size_mul(sizeof(struct aml_dma_sg_link), DMA_MAX_LINK);
-> > > > > +
-> > > > > +     aml_chan->sg_link = dma_alloc_coherent(aml_dma->dma_device.dev, size,
-> > > > > +                                            &aml_chan->sg_link_phys, GFP_KERNEL);
-> > > > > +     if (!aml_chan->sg_link)
-> > > > > +             return  -ENOMEM;
-> > > > > +
-> > > > > +     /* offset is the same RCH_CFG and WCH_CFG */
-> > > > > +     regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_CLEAR, CFG_CLEAR);
-> > > > regmap_set_bits()
-> > > >
-> > > > > +     aml_chan->status = DMA_COMPLETE;
-> > > > > +     dma_async_tx_descriptor_init(&aml_chan->desc, chan);
-> > > > > +     aml_chan->desc.tx_submit = aml_dma_tx_submit;
-> > > > > +     regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_CLEAR, 0);
-> > > > regmap_clear_bits();
-> > > >
-> > > > > +
-> > > > > +     return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static void aml_dma_free_chan_resources(struct dma_chan *chan)
-> > > > > +{
-> > > > > +     struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> > > > > +     struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> > > > > +
-> > > > > +     aml_chan->status = DMA_COMPLETE;
-> > > > > +     dma_free_coherent(aml_dma->dma_device.dev,
-> > > > > +                       sizeof(struct aml_dma_sg_link) * DMA_MAX_LINK,
-> > > > > +                       aml_chan->sg_link, aml_chan->sg_link_phys);
-> > > > > +}
-> > > > > +
-> > > > ...
-> > > > > +
-> > > > > +static struct dma_async_tx_descriptor *aml_dma_prep_slave_sg
-> > > > > +             (struct dma_chan *chan, struct scatterlist *sgl,
-> > > > > +             unsigned int sg_len, enum dma_transfer_direction direction,
-> > > > > +             unsigned long flags, void *context)
-> > > > > +{
-> > > > > +     struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> > > > > +     struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> > > > > +     struct aml_dma_sg_link *sg_link;
-> > > > > +     struct scatterlist *sg;
-> > > > > +     int idx = 0;
-> > > > > +     u64 paddr;
-> > > > > +     u32 reg, link_count, avail, chan_id;
-> > > > > +     u32 i;
-> > > > > +
-> > > > > +     if (aml_chan->direction != direction) {
-> > > > > +             dev_err(aml_dma->dma_device.dev, "direction not support\n");
-> > > > > +             return NULL;
-> > > > > +     }
-> > > > > +
-> > > > > +     switch (aml_chan->status) {
-> > > > > +     case DMA_IN_PROGRESS:
-> > > > > +             dev_err(aml_dma->dma_device.dev, "not support multi tx_desciptor\n");
-> > > > > +             return NULL;
-> > > > > +
-> > > > > +     case DMA_COMPLETE:
-> > > > > +             aml_chan->data_len = 0;
-> > > > > +             chan_id = aml_chan->chan_id;
-> > > > > +             reg = (direction == DMA_DEV_TO_MEM) ? WCH_INT_MASK : RCH_INT_MASK;
-> > > > > +             regmap_update_bits(aml_dma->regmap, reg, BIT(chan_id), BIT(chan_id));
-> > > > > +
-> > > > > +             break;
-> > > > > +     default:
-> > > > > +             dev_err(aml_dma->dma_device.dev, "status error\n");
-> > > > > +             return NULL;
-> > > > > +     }
-> > > > > +
-> > > > > +     link_count = sg_nents_for_dma(sgl, sg_len, SG_MAX_LEN);
-> > > > > +
-> > > > > +     if (link_count > DMA_MAX_LINK) {
-> > > > > +             dev_err(aml_dma->dma_device.dev,
-> > > > > +                     "maximum number of sg exceeded: %d > %d\n",
-> > > > > +                     sg_len, DMA_MAX_LINK);
-> > > > > +             aml_chan->status = DMA_ERROR;
-> > > > > +             return NULL;
-> > > > > +     }
-> > > > > +
-> > > > > +     aml_chan->status = DMA_IN_PROGRESS;
-> > > > > +
-> > > > > +     for_each_sg(sgl, sg, sg_len, i) {
-> > > > > +             avail = sg_dma_len(sg);
-> > > > > +             paddr = sg->dma_address;
-> > > > > +             while (avail > SG_MAX_LEN) {
-> > > > > +                     sg_link = &aml_chan->sg_link[idx++];
-> > > > > +                     /* set dma address and len  to sglink*/
-> > > > > +                     sg_link->address = paddr;
-> > > > > +                     sg_link->ctl = FIELD_PREP(LINK_LEN, SG_MAX_LEN);
-> > > > > +                     paddr = paddr + SG_MAX_LEN;
-> > > > > +                     avail = avail - SG_MAX_LEN;
-> > > > > +             }
-> > > > > +             sg_link = &aml_chan->sg_link[idx++];
-> > > > > +             /* set dma address and len  to sglink*/
-> > > > > +             sg_link->address = paddr;
-> > > > Support here dma_wmb() to make previous write complete before update
-> > > > OWNER BIT.
-> > > >
-> > > > Where update OWNER bit to tall DMA engine sg_link ready?
-> > > >
-> > > This DMA hardware does not have OWNER BIT.
-> > >
-> > > DMA working steps:
-> > > The first step is to prepare the corresponding link memory.
-> > > (This is what the aml_dma_prep_slave_sg work involves.)
-> > >
-> > > The second step is to write link phy address into the control register, and
-> > > data length into the control register. THis will trigger DMA work.
-> > Is data length total transfer size?
-> >
+> 1. The Consumer CYCLE_STATE (CCS) bit in the register only needs to be
+> initialized once; the value will update automatically to be
+> ~CYCLE_BIT (CB) in the next chunk.
+> 2. The Consumer CYCLE_BIT bit in the register is loaded from the LL
+> element and tested against CCS. When CB = CCS, the data transfer is
+> executed. Otherwise not.
 >
-> Yes.
+> The current logic sets customer (HDMA) CS and CB bits to 1 in each chunk
+> while setting the producer (software) CB of odd chunks to 0 and even
+> chunks to 1 in the linked list. This is leading to a mismatch between
+> the producer CB and consumer CS bits.
 >
-> > then DMA decrease when process one item in link?
+> This issue can be reproduced by setting the transmission data size to
+> exceed one chunk. By the way, in the EDMA using the same "PCS-CCS-CB-TCB"
+> mechanism, the CS bit is only initialized once and this issue was not
+> found. Refer to
+> drivers/dma/dw-edma/dw-edma-v0-core.c:dw_edma_v0_core_start.
 >
-> Yes. When the link with the LINK_EOC flag is processed, the DMA  will stop,
-> and rasie a interrupt.
+> So fix this issue by initializing the CYCLE_STATE and CYCLE_BIT bits
+> only once.
+>
+> Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
+> Signed-off-by: LUO Haowen <luo-hw@foxmail.com>
+> ---
 
-Okay, so dma_wmb() is not necessary for your case, you can omit this one.
-
-Frank
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> v2:
+> - Add Fixes tag as suggested by maintainer
 >
-> >
-> > Frank
-> >
-> > > For the memory-to-device channel, an additional register needs to be written
-> > > to trigger the transfer
-> > > (This part is implemented in aml_enable_dma_channel function.)
-> > >
-> > > In v1 and v2 I placed dma_wmb() at the beginning of aml_enable_dma_channel.
-> > > You said it was okay not to use it, so I drop it.
-> > >
-> > > > > +             sg_link->ctl = FIELD_PREP(LINK_LEN, avail);
-> > > > > +
-> > > > > +             aml_chan->data_len += sg_dma_len(sg);
-> > > > > +     }
-> > > > > +     aml_chan->sg_link_cnt = idx;
-> > > > > +
-> > > > > +     return &aml_chan->desc;
-> > > > > +}
-> > > > > +
-> > > > > +static int aml_dma_pause_chan(struct dma_chan *chan)
-> > > > > +{
-> > > > > +     struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> > > > > +     struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> > > > > +
-> > > > > +     regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_PAUSE, CFG_PAUSE);
-> > > > regmap_set_bits(), check others
-> > > >
-> > > > > +     aml_chan->pre_status = aml_chan->status;
-> > > > > +     aml_chan->status = DMA_PAUSED;
-> > > > > +
-> > > > > +     return 0;
-> > > > > +}
-> > > > > +
-> > > > ...
-> > > > > +
-> > > > > +     dma_set_max_seg_size(dma_dev->dev, SG_MAX_LEN);
-> > > > > +
-> > > > > +     dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
-> > > > > +     dma_dev->device_alloc_chan_resources = aml_dma_alloc_chan_resources;
-> > > > > +     dma_dev->device_free_chan_resources = aml_dma_free_chan_resources;
-> > > > > +     dma_dev->device_tx_status = aml_dma_tx_status;
-> > > > > +     dma_dev->device_prep_slave_sg = aml_dma_prep_slave_sg;
-> > > > > +
-> > > > > +     dma_dev->device_pause = aml_dma_pause_chan;
-> > > > > +     dma_dev->device_resume = aml_dma_resume_chan;
-> > > > align callback name, aml_dma_chan_resume()
-> > > >
-> > > > > +     dma_dev->device_terminate_all = aml_dma_terminate_all;
-> > > > > +     dma_dev->device_issue_pending = aml_dma_enable_chan;
-> > > > aml_dma_issue_pending()
-> > > >
-> > > > Frank
-> > > > > +     /* PIO 4 bytes and I2C 1 byte */
-> > > > > +     dma_dev->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | BIT(DMA_SLAVE_BUSWIDTH_1_BYTE);
-> > > > > +     dma_dev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-> > > > > +     dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-> > > > > +
-> > > > ...
-> > > > > --
-> > > > > 2.52.0
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> index e3f8db4fe..ce8f7254b 100644
+> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> @@ -252,10 +252,10 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+>  			  lower_32_bits(chunk->ll_region.paddr));
+>  		SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+>  			  upper_32_bits(chunk->ll_region.paddr));
+> +		/* Set consumer cycle */
+> +		SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
+> +			HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
+>  	}
+> -	/* Set consumer cycle */
+> -	SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
+> -		  HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
+>
+>  	dw_hdma_v0_sync_ll_data(chunk);
+>
+> --
+> 2.34.1
+>
 

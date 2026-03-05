@@ -1,88 +1,81 @@
-Return-Path: <dmaengine+bounces-9261-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9262-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OECnHOj6qGnVzwAAu9opvQ
-	(envelope-from <dmaengine+bounces-9261-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 04:39:20 +0100
+	id 2IOkIgP7qGnVzwAAu9opvQ
+	(envelope-from <dmaengine+bounces-9262-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 04:39:47 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C844D20A9C5
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 04:39:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A6D520A9D4
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 04:39:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C36693048B08
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Mar 2026 03:35:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 41FE83049169
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Mar 2026 03:36:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A4D3263F4A;
-	Thu,  5 Mar 2026 03:35:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7EB523BCFD;
+	Thu,  5 Mar 2026 03:36:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="aNADtNHa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="hXr60fMk"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023081.outbound.protection.outlook.com [40.107.44.81])
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013011.outbound.protection.outlook.com [52.101.83.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47FF23BCFD;
-	Thu,  5 Mar 2026 03:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5123B221540;
+	Thu,  5 Mar 2026 03:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772681725; cv=fail; b=oiIYW8PW1FeOjtRdRugCa69PXrZyHeg1KI6bjEgY7uUafYG6pKDXgPtTz9R95fkSSm7SudFovnlfeicgeKP7k8fNHDiUzgQQ8Xt9e+nbGGqpyKiNDNIpmPEf32aX8xP7OS2nCJoh+jBOdkFzf6R+pTWce5I2ReMgas1NRGrkMqs=
+	t=1772681778; cv=fail; b=NHOA8SuZa8JfM5CB9Vr+3xJC0U7nT/BuX91iX1LZiOht975qj2QbVgfdtGwEY9TpV3tdhnb0a3uIMbvOsS3TYUN9Zmf/gwF82p3PTyVyQviorv8wI6UospBWv4tsjZsMOc4UzcVwvIuGvdzvGBx5P6hX9f3yaabB9T7GODlHtEc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772681725; c=relaxed/simple;
-	bh=R8eVmzjwawiOFoyL0qa1zLoHD9nXzi37fDGxf86fgoA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HwVdJRhNayqrQ4aebVkpucXkvLdubwRxVtAaUcOWgcdm3Bs0xkQ/j7ITMxIm2QDUjffLITb+26wHl06WdKBvA0GwDpylmouzd6EIHXn2mX7z8yajd0ZJNNEeSr5H3BDV7/FZCV9hgeVb4oYyFic530IW4H5oaT0gpw3r0lWpDjs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=aNADtNHa; arc=fail smtp.client-ip=40.107.44.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+	s=arc-20240116; t=1772681778; c=relaxed/simple;
+	bh=83qLfESSAynFnOGtgr7D97zU5LELXuRM0GKbwisK72Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=rFvX7Dx/DEdrFLi5ZQCzR2Eqzg+4vbOG1K5rrDtC8tEXrCzoQLssfNTgeKggmklxzOBuGLPXztTAqym0cna0/HNFtAutZj1rWV77IjzUpfKnM9dxKmKr0KNL0XhZGTYAUXJmLK1omqOexNhV+dTErWbYHaAp3DzULKZyoKZ/lwc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=hXr60fMk reason="signature verification failed"; arc=fail smtp.client-ip=52.101.83.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NX1jXLhY+pLcnNi8sm2JEv2h6Og3NYe8xDzpmdhVxCz7lS9jxDsjk78GAFxi92DUfMXRmZFrL7xo3rotlRE03pRoMu8bupki+/jnjycm6PybQQ8FMexkGjPMUhPN40s7g92GjMr1oP2Vf3tBs1fpFx4wwLQYWxZBre4fO8ps4Psf9vA5rZ/nGokTUzIFpSWPru/r/FNcUb75lTv4ggR/2Gaxj39Iv8rTu8U0KiShR2cwbttkgFJ/rCSGIdkm8Fu5YLdUQlGTfYbidQ8x525F9m93jlNOtfK/IBCiwYb0lPWktjio3lHdBcGiImSqpPaqYvgcmsV6glz1aARbGpjq3Q==
+ b=Ehq3eIwb+1r924YCLzPVlvxYP3llLpzVN2cWAXrGILJGXAXAfOP2RXIu+E6+VKMWLHWRYVX66YBbOv81bealb/E7snp2qEUq0NMi3VtdfLwbo2ooFfvSZn3KnQP6XjcaOpOk2pd/rY1ET5PwEtNg3of+DXeuiDqT/C+SAoahO6dVp+n8unKXdfgWXsP+iozglb46umcZKopXbsNBtHqV/3jwqsgf7o5K+yen2N7HCbdM+yNV53e4RT5OBEJi0qnE0iwWCJx6eFcwCPU3kIiB06m7YtJJt4on0gdr1n7VRwi/yxEHAFpPVdFo3u00Dgl7dbf9o4MylN1qTXfs8hTpLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hlvQvNbgQ6CYLZ9+k+IhssPTHQmFgWNUWTtx2c4+OXM=;
- b=KO724JoKC7rWNSJ5it9NfF77inkazl2JC965VrrknaHTw40MyLOTdN96jeBx40NXTz0wsLQbf9INhszUxtdhzRBV7doiHA6S7Q+BysnGhVC8nClE3hokj+hdFTF6lynpAh+1TVjb/DsTw6Tv97OpQXBQOqqnXy016hQHhhZKY9svFr67Lh0Irpbx2RdC3GxSRPGmH0fjpmR4ULniXfkn36PdrHMzyjrkxKXC67N9Ne6ilYXnQbx3cUjf9fdxldYoZx8Lf25vrUG07rWbsse69m/53GD7t/uZNGoQufeOM8LiYvsCXWqXMLAljtIrYCIiRld8i9rWEctVS3yxR4tFnQ==
+ bh=u/Vbm4zZe9E6f23MiuzdOf2dJBXosmrsewapTogQgVE=;
+ b=tDnsjPir3jVMuQSbC7LzMn6izKJBk6XXHFGf2UwTeCY51kuwJCeo3kRkE/Zyuhd1K7EYy0e6Wb+cX9CB8FdEa9aC+VA93IiZ0neb8JSjBOAdGpW6qW04HPVw4wbCQdpsnH3VZTWv/csDRNcJmES0ERb65QX6xxiQO8SaojACrwyyFoNx7OLFRarxzX0mLXzFs01R3F3+iKAMC/zWHNthaGBzauIcHGiV1W0uBjTpqPzqMeMl0rCvn5DBKm3VJL5V0a87DlIP+5Ee9KGJSnsYp6kJc42KFlD7YPP7p4ccAiLSygpzOTDwYBM17Eeu+Rh1Kr7UMOSJw+ERDmnHX9PUyw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hlvQvNbgQ6CYLZ9+k+IhssPTHQmFgWNUWTtx2c4+OXM=;
- b=aNADtNHaUX/9ax04Y7MpOC/AZsS+Ah2/uOKaqor9xbtMxjtOzLoVFcGhD2XMiC7FJIkXAo2oywTFESraP5F2EbSZSxyt7KzWAEv7SNoGG8yiKlNfjtITBxgL/Wiuy+uxqJ6AdKxFkyJ+rT4gt4uRBbmCOAia0vvCRf7FmBhO72B09E81ueaZbl4Yc/ZKknhGX+FxDRV7PQmwGXQGtDIOs5tgR5Gew1VuJjAYTvB5Cp4w9R3Z/o6oqrDyKBI9oB4Rs2GQ9PeChGy2MNYgNqawEoDNups/fWl4yZhfv4ck+T1dOu2h1HNOD88DxtHvsI7nHsK8U8VaoklIiypJy5bU8w==
+ bh=u/Vbm4zZe9E6f23MiuzdOf2dJBXosmrsewapTogQgVE=;
+ b=hXr60fMk4QRGqZ6DDWT/xUCD27Gz1OoMVP5QD5SsXFO82KDHIYcM6yzfhzjdqsL2VnCt+tq2sptLrOb0WtRLAW0CcoPRu4VABPHAe4zgKtgXVG9IgJ1r6sKLa5wd7uafyqZGZw+Tmhgi3LXCIrEr9INBgjYP0WH3xskPcCy6NKe7g9jj6WQ2ttenn4iTY4i3hykuqBHqxUDRzkrVYCwohwrzPhZ0npw+fvW0Zg6IFSUWaCSGMAxzCovm7edMx+Q31C8nNbIjHjAD6KuAq+5s5Z+l08aO9yoe5u80/S4DhPOZbzNdfurer2nN3F9NQbaHRodNNw/TrObWHzj5kBXztA==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
- by TYZPR03MB8190.apcprd03.prod.outlook.com (2603:1096:405:25::8) with
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by PAXPR04MB8541.eurprd04.prod.outlook.com (2603:10a6:102:214::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.22; Thu, 5 Mar
- 2026 03:35:20 +0000
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::78d4:9dee:2e32:d1e4]) by TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::78d4:9dee:2e32:d1e4%6]) with mapi id 15.20.9678.016; Thu, 5 Mar 2026
- 03:35:19 +0000
-Message-ID: <501fe36e-a3b1-475d-ad79-8b6523fe95e7@amlogic.com>
-Date: Thu, 5 Mar 2026 11:35:15 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/3] dmaengine: amlogic: Add general DMA driver for A9
-To: Frank Li <Frank.li@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20260304-amlogic-dma-v5-0-aa453d14fd43@amlogic.com>
- <20260304-amlogic-dma-v5-2-aa453d14fd43@amlogic.com>
- <aahUTp3T6QWbZiaz@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-In-Reply-To: <aahUTp3T6QWbZiaz@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2P153CA0006.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::22) To TYZPR03MB6896.apcprd03.prod.outlook.com
- (2603:1096:400:289::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.17; Thu, 5 Mar
+ 2026 03:36:14 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9654.020; Thu, 5 Mar 2026
+ 03:36:14 +0000
+Date: Wed, 4 Mar 2026 22:36:06 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v2 4/4] dmaengine: ioatdma: make sysfs attributes const
+Message-ID: <aaj6JtGjAszUlmRu@lizhi-Precision-Tower-5810>
+References: <20260304-sysfs-const-ioat-v2-0-b9b82651219b@weissschuh.net>
+ <20260304-sysfs-const-ioat-v2-4-b9b82651219b@weissschuh.net>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260304-sysfs-const-ioat-v2-4-b9b82651219b@weissschuh.net>
+X-ClientProxiedBy: SJ0PR03CA0112.namprd03.prod.outlook.com
+ (2603:10b6:a03:333::27) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -90,284 +83,181 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|TYZPR03MB8190:EE_
-X-MS-Office365-Filtering-Correlation-Id: 320b5dad-0bc1-4bf1-62b5-08de7a6839b1
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PAXPR04MB8541:EE_
+X-MS-Office365-Filtering-Correlation-Id: d0b70932-e179-4408-9a0c-08de7a685a1b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|19092799006|366016|1800799024|38350700014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	uIXc/IP0Yq6EPrWnamAwZ6tFfPfMATGAVwYKFDW//B7cbcfLigz8+50I8Yu/4pv1v8U0HVIuQeV584Su9Em+JOCh2iChb5/Mb7+j2TWPSttbhwnKo9JnA07uwsNRZH9GGYyifyu/OkQVQGaKbZUyhCYOvpaAxNKAbP05e3sOjv05VfpRD+iIYohXawwpwUh0NunDFwEx9xkZB1TPrgiQxpPJeOvU9OgwXtgtFbgEqkBIrEjgrs5zt/PdU46H3n0UMVWo6LA4foU7KLPHmQXiJX12JJUtTPINbbWxFUBK0yE4lnF2/Ud3qdOJVzuTx6XwWop2On+0YlRUKZf9i6ewKPMrxI9A1AJSAyxUOM20GSFrAmOOGZetvVhIWr4d5Z3b3y05Jhx9ks7yJH7BnzFlL4INMGLFj1gnMQ1nYABKWLTnIcItbHiDopcU31YzwdqeRhBhXhZ08qBXfjoo9wpm4zdnK1d5gOaijFQKwqN8aZkJAoqk7akuTjHvclJSHOb9oKXPO/8lksjjdBEdjAK6PwLl/vB+KdwX/uMwW8Zy5cXDVKdK1XIe3PNSDuSstRnqJWD7T+1fxqKWyLh71Zr57jDPW7S8dllL+uXJq807/6O4dpp27ozI103zMsqgewiwMbU888r5yqNY8tO/fK1h3VuE+ZEndocoUSZVoj4iN8M2zwJmReaFvcvrDEtlAVMZvmaLcJFwANF34tHmVR0ZgavBBTASa88ZTNy7wMhOyOc=
+	ggRN20hq9UrmE2CZzF8hX+pziuJyI5VXCQJZfGxWU06rBxYFRCBbP93pCLlvkv8tc3DpEWEz3NLT9lpcInszCUHKPqJVeXMwAGmF5zSldMh2//tCfVI0PVGmet9I9cuaixbjn65wuiB6WQ6AS29n1bGseXp6PTzkRzVV3s3BGfTsrSmo39q9fmlJ+WZRw99RSfQH8+9aW1jcimUfXmA+rNgoUsKRdfEuiFX19ZSl/sahpkNNoVdAFTwnR5RBBUTCKKKCysexkZVdMVVCRvxChkGdmNEK3RSij4xOhQfH8g6X5ug8H2QffOTOjz8xjsTCPMbRvtjdW4Zpq6P/PNju1H5VIoNJxejh/jXwgkdcE5ssQgpCLf2zEJBxTucp93xJFk9G99fAI0v+cjP3KDavYPzrHpfl9C9NMhE0WcRr5K72hHt1Zb0f8sGzqHKWzcjxT7ssa9sbG+XAJbzcZPQw08I1xA6lDpQHyw0ippPs+XXfUhvGEPCOEWz20MXHyMWWHv5rdeml/gt/911D0YV4LD0CBqxJc6YFwfg7Rtpq+wPA2bWUXefYPs2RyvnYGolMP2Q0gXVjvigJ5pFTauZnFLnyqHCy74xIHdclN+scvXEcPpGhUMB2C4dSCklApbvX+3buYw78xpxejbhn8qsjx52mbCts+pj6HBlhyHJzStjsixgIaSY75dGuNyXumDNBIhFoQm3sZjQTfnbgxVeHiV4svUqcw/mAKBJqMhnpTngpJpwVPRNJKwlhGyutAKl54XgEBBokWaVtY+yebfHSgcjzv1Lr3KrJn1zphc+jceo=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(19092799006)(366016)(1800799024)(38350700014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S3VPeHlUTVAwUHlJYlplQXpRckZ1aXBGcHh6Rzk0UjJnMVVpbS92WVg0TVlr?=
- =?utf-8?B?eVNjK09FZ0JRNFhobE9JOFRnMld5dWwzcXZFbWJMN0xDcnlEQkJqdU9SYkc0?=
- =?utf-8?B?cTVzMUxjTitxZXVvc0Q3Zkh2dm56VlRURmNKdFdWYmhPSGVJaWd6VUs1UUZp?=
- =?utf-8?B?clZYT1I2aDNOOUYxRXoxeWhJQ3RyV0svcU1EaWFNQUt4bEpJd2J3czFVeTRo?=
- =?utf-8?B?UHNvaFplUmg5MzhiNWhGaVFzZVF0dCszODZwRVZ5aXlSaW9aZFhURy9WQzB4?=
- =?utf-8?B?ZXc2OHdZeldwdUV2Y0ZUSnorK0x5WW9hM2dldis5aTcwN0c3ZUNwdG1kOU1K?=
- =?utf-8?B?ZW8xN3AvTWY5bm1rc251R0NRVjQ1dW5SS0tIRUE1OHNnZWhzdEdoQnFsdytp?=
- =?utf-8?B?Nnd3cGtjdnovWXJrYlM3NEt1T1E4VFdjUTFidjJOSTZuWXRid2d2TWJUNXJ6?=
- =?utf-8?B?UGc5VVFQcmNDZlRlUG9JOXIyc01mTm1oeEQ2N2hQNk1IQXdISEhnU1lPb2kw?=
- =?utf-8?B?RWNJZ09PTW1oR1FIcDNvc3JhcGQ0Tm0yanF5azRqanl2US9CSmo3OFBxd2xP?=
- =?utf-8?B?MlhZL0xHYXBFd3pPOGxocGJNOEEvZjVHMEZqdlFJUjNiNzBuanZuSXRpeW1G?=
- =?utf-8?B?YllEdDBGYXpncU1qRU5tN3BwbE04bHEzSlowblNrcmVZaFhuTjNKRk93L3Vl?=
- =?utf-8?B?a2l4WDl2VEdXUVRsMXk3T3lTTFIwdVFVVHVoUHBlS0xFZXB2Vy9sbHAzMU5X?=
- =?utf-8?B?MzVtaFVmV2VuNkZVOVk2WGJhNzJMYjJRc0N1MG1oUTJRODhFSWNsVUdlTk96?=
- =?utf-8?B?bVcrSHBBeWhnMDk4UUhXemlRSnBxZ2o1bFdlRFh5OHFKYWR1NURQTVFkTnNU?=
- =?utf-8?B?eXgzbFhmajEyZmhJaDNnall3YndXUkNmeURONWxSRDdWVUxlN2s4TzNTZTlM?=
- =?utf-8?B?YmZMUmt6Y0NrRHZzdXdGbFN0ZTVybWtJNVBhRmtEeC9aUDAvdS8wZVd1MGdP?=
- =?utf-8?B?ZzErY2U0aDJhYnBCaUdJZXluT3p2ZHNYUzUwTmQxWGZRTzhEWEZpR0lUTGZp?=
- =?utf-8?B?SVZaRE9uc2RzWkZ2UE9xZERWaE9oZ0h0YVA5aWswMnJZbDc0T2piUUhDd3c0?=
- =?utf-8?B?djRmZU9kQVJPY3NVSkZ0dlZ2VEFIdnVUU1RYQWMxaFBNam5ZZVJ5VFROc3M1?=
- =?utf-8?B?M1NreHYvYnVHWXdKRGNsaGZWeEZlV2ZHSmdrRFVXNm5Tb2dWSkk1VlB3Zys4?=
- =?utf-8?B?WDB3cGJud3V5c0krUWwxYm9HaHdJeThlREFQZEtWVUFvMWs0ZXdvK2UyR2o0?=
- =?utf-8?B?dWhhSUY1Uk9VUGd3ZGdiWGY1RkRJTDdJdnE1VHJsa1FPYWFXM2RGQzc4S2gw?=
- =?utf-8?B?dmxxRnVYRmZCS1NuYkVsMHBVekVRN1RLaVBDQ0tRZ0JqdllPZUVoQ1RiQyt0?=
- =?utf-8?B?aE1KaEErRlYyVDJFblcrQ3JTeHRpcERsSFNoL0FZYjlmWDRlUUNrNGVKYTYv?=
- =?utf-8?B?bEtwZTNyNFVWRXZBYTZGS29hd0ZBOWVNWndidTZmQk9zbkRrbTZsa0ZzcTNP?=
- =?utf-8?B?Tnp0eU5QbWIxWHkyeWZ4ZHF4Slhvc291WXFCdm1rYWY3Vi8wRzF5U3NXWTln?=
- =?utf-8?B?OU1MKzVVTjB0QWNEcS9RRUtrQmlPVVdjYVQ0WmNXcEVST3hkYzZDMGpCd0U5?=
- =?utf-8?B?MExZTVpTdTd2S3ZHaHQyMmx4eHUxaVBtK1NRNUpteUphUlVobDdWRlBMaHJK?=
- =?utf-8?B?WVlscC9kUFJWNjVlUngvN2FhamhmbDBVYzAxbGlUUkNxRjU1NVlhbGdNdGFj?=
- =?utf-8?B?aVR2ZVdkTExtTG1KWmVVQU9LWm9TM1FnZ2pJWE5lK242ZnRHOFRWV2VjUTQw?=
- =?utf-8?B?UExRU1pyaDJTcU1xMVk0aVVjbytRS0d6b0tDdWhyeCtYcjlJYXlmOUdET0dQ?=
- =?utf-8?B?b3oxRll2WTBsSVdqQU00eXFxSWxYMGNkVFNUaHk2Sm5rSDRsSHVKSzdTQ0hm?=
- =?utf-8?B?Nkx4Yk9QcnN0QUVmbGxPY1h6U2xSd3VBMm9sWUdsV256bE83bk5GWHUrNU0x?=
- =?utf-8?B?bmJHaTdwMDBBeFREaHQ5Q2MyKzlXSnlhTzR4bkVZdERrWG9hZzhieTlJbk51?=
- =?utf-8?B?ODVIVmNsOWVtdGZzbkRhcXBmd095NkNLQU9lOHBiaWdTcVNySXBkbmpHSFZv?=
- =?utf-8?B?MExBVDcxZG1LUjBiUzl3Tm52c3pKRlBkOVk1ZkJub0JpVXp1dGhNaE4yYUJo?=
- =?utf-8?B?SjJtRzJLSVJHb2Q3Z0hHd0cwUjhWNmt3UjdEOUU4QXQxdWxUQXZSeUExNTZh?=
- =?utf-8?B?T2NuUzRtT2dtRVFjT2NJYkIrZDRHRGp0b1BoTFo3bTNwUWN5OVhQZz09?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 320b5dad-0bc1-4bf1-62b5-08de7a6839b1
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+	=?iso-8859-1?Q?4GnhDJnprXtNw7gFKZ72l+r052ctlRV59sHnmlFiLZ+v7NSqGpxSssT04U?=
+ =?iso-8859-1?Q?lOCYNq6RnwlGTxJM81n5DWQf6HPMRWCC0YYCKs7cBtxlL24lzq13mzlM6g?=
+ =?iso-8859-1?Q?1o5/jmCX1XopvxB7LoDnQ08axEhaZtPUYzLop6RPKPpLOB/1O6H1oJghGN?=
+ =?iso-8859-1?Q?2VcEAyeBCIQaSI4vJWS3yVrbIEw3yfqhSyxZc04wIpyv08YVmlSeDOglho?=
+ =?iso-8859-1?Q?QK3zDv9s5klPPmcFzHmsDVNXcdx/kJYWevV3xPF26KXgH+xflrKCNUoP9O?=
+ =?iso-8859-1?Q?E/DDdBy4izfh+XJ/D2Y6ygahwFYIdMmxQHAgVl3d5g8F6JszY3GDbZqind?=
+ =?iso-8859-1?Q?5KOhuOnlKULvt9bMfYTgS/TkTnUZMxTwhPhd3+a7kmYjGzG48Kb7QyjDBS?=
+ =?iso-8859-1?Q?FzDC0h9IUkJH27G1+/FmCixy8JU2XNDeVFHVpp99kq0qP6yOylfJIdHwEv?=
+ =?iso-8859-1?Q?l84xP+kvdv5mGy9nljW6P9iQTpspjLGNshAqf9j6BZ/x5xEf4CowDDQE07?=
+ =?iso-8859-1?Q?N0jxS42ZgRqlXT7V8sv6cYeceHhaX25BrNY3qpC8qyqYRrMZrp5sZpNYDq?=
+ =?iso-8859-1?Q?DvQcAxnTf2TOY7NrUyhLOhTpFrcGsaDKbeX6Qv4YWRTf/6Kkog7iKX5ftX?=
+ =?iso-8859-1?Q?iKRM6uHf2LD6FXYekJ1uMsTLrDIGUwpHwOHt+adMRbjCHz+ZoYHP+IasrF?=
+ =?iso-8859-1?Q?SDZmCNvU+cGr0vV7eOCiGIU1NzgNf0G8s32gYqFHBA25KEWV0OYSLy7Ghp?=
+ =?iso-8859-1?Q?LtzGXPaiJ1ZycW1s1X/DWPpFr5VXIzu1La5dhs2SREddyi4umMB6qEEP3F?=
+ =?iso-8859-1?Q?/U3n+O4QZ/R66gE/MXVHLoe8sNzKRFdUbuH0WmHnIkzIp3MiWfPLiyvYRU?=
+ =?iso-8859-1?Q?AAVANrfgxic+9Hn7A8Pr8NtDn9uhMEyd4TdNs3cE/AOi2Oz1cwqlxW64Fh?=
+ =?iso-8859-1?Q?GQT8VtaqdqAJbVvFLCUbZNUYkxZ6UJCZHNtoZSIkjn/Fzqpk7RFq4KD7Pt?=
+ =?iso-8859-1?Q?L6Ibb8j8YDKw2M/QecSnSbd35D2uxm4GrhcJf60iBjLRSzFUWY9g7tKdoI?=
+ =?iso-8859-1?Q?I789+g3LnnAOZvU0Lxu4Ouo0qk5zlGij5yumaW57R/gdPbhrmcph9ECJzW?=
+ =?iso-8859-1?Q?SoxjY6rUspP7rEz2Kdg3qiCRFcdQVhbMKMtLQjeBih26JO1iVfZq8+vyUu?=
+ =?iso-8859-1?Q?VpNtib1fG/6cAbr0rjFlRyxrjPWVKrzOGSmBeCKVPH7kV+epNeUIhEA1pe?=
+ =?iso-8859-1?Q?iajfXIKbNzfmCmNifayaP5dTFL0b4Zz1xz2Ee1dJHzaiyHLPOkRxlFHma4?=
+ =?iso-8859-1?Q?OX486RUiMdbwEUSH+5nzA2CJC4mbbvp5vN5+i5VKfZqpdh0elCB3TOOBCq?=
+ =?iso-8859-1?Q?aqQRIMYVKVV9sX/o49DIjKdDnMVJRnKPO3jRdj4PdUgBcYPRxJVuWte8Ec?=
+ =?iso-8859-1?Q?8uj9dqfUAnph/wwJQM42NTQC1XD4/R+K10avpybYZH6Mfj242+mSPsnnWS?=
+ =?iso-8859-1?Q?WnMq8ksjqisDcG0sr9T98comn9KcqKGtQ77vFZ/pLnYoP46zVNyfTBvvUf?=
+ =?iso-8859-1?Q?m4QUi97hYlwhwZWNC4LgoCu67FiG9SdQ+xP4Vhem/oIQwIKtoKmqmPdymJ?=
+ =?iso-8859-1?Q?LRVXAnNyro9G6LOFj9IQwqfV9mtDV0YPpqFeE8jhTrtU/m40MQo+U3qOKa?=
+ =?iso-8859-1?Q?2aHD5rBoaM58tPc9qNl+v5OafVqC6t0Z2VUUM4A7B9eBSsazk9F+WkmDUT?=
+ =?iso-8859-1?Q?X9Z7yenaNy4A+ewFgk1cp2RmILIpl2M/dCotj5Cifd38Yb0bYzeHLWpweT?=
+ =?iso-8859-1?Q?jJ0djPpMKQ=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0b70932-e179-4408-9a0c-08de7a685a1b
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2026 03:35:19.8343
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2026 03:36:14.2759
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mSRb3VLTVTM/i2ooYHRQPjyLS3YRhNiue0LIDrl9/WFQlio+pyZu7EALt3nBqhSLn2lvgrg3uB5lmJBRT8O/ECEXbndy1ttg3iDR1S7/PI4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB8190
-X-Rspamd-Queue-Id: C844D20A9C5
+X-MS-Exchange-CrossTenant-UserPrincipalName: NdaVf4QRLrQMR6B1DMaof1W8kLCJ4ivnO7q5ygBG3qKi8px5Z/AiElKPOwrRtJ6PMBzOrSCsASr4Gv768JQGpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8541
+X-Rspamd-Queue-Id: 0A6D520A9D4
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [2.14 / 15.00];
+	R_DKIM_REJECT(1.00)[nxp.com:s=selector1];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[amlogic.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[amlogic.com:s=selector1];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TAGGED_FROM(0.00)[bounces-9261-lists,dmaengine=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9262-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[xianwei.zhao@amlogic.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[amlogic.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[nxp.com:-];
+	TAGGED_RCPT(0.00)[dmaengine];
+	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amlogic.com:dkim,amlogic.com:email,amlogic.com:mid]
+	NEURAL_SPAM(0.00)[0.283];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,nxp.com:email,weissschuh.net:email]
 X-Rspamd-Action: no action
 
-Hi Frank,
-    Thanks for your review.
+On Wed, Mar 04, 2026 at 10:44:40PM +0100, Thomas Weiﬂschuh wrote:
+> The ioat_sysfs_entry structures are never modified, mark them as
+> read-only.
 
-On 2026/3/4 23:48, Frank Li wrote:
-> On Wed, Mar 04, 2026 at 06:14:13AM +0000, Xianwei Zhao wrote:
->> Amlogic A9 SoCs include a general-purpose DMA controller that can be used
->> by multiple peripherals, such as I2C PIO and I3C. Each peripheral group
->> is associated with a dedicated DMA channel in hardware.
->>
->> Signed-off-by: Xianwei Zhao<xianwei.zhao@amlogic.com>
->> ---
->>   drivers/dma/Kconfig       |   9 +
->>   drivers/dma/Makefile      |   1 +
->>   drivers/dma/amlogic-dma.c | 585 ++++++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 595 insertions(+)
->>
-> ...
->> +
->> +static int aml_dma_alloc_chan_resources(struct dma_chan *chan)
->> +{
->> +     struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
->> +     struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
->> +     size_t size = size_mul(sizeof(struct aml_dma_sg_link), DMA_MAX_LINK);
->> +
->> +     aml_chan->sg_link = dma_alloc_coherent(aml_dma->dma_device.dev, size,
->> +                                            &aml_chan->sg_link_phys, GFP_KERNEL);
->> +     if (!aml_chan->sg_link)
->> +             return  -ENOMEM;
->> +
->> +     /* offset is the same RCH_CFG and WCH_CFG */
->> +     regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_CLEAR, CFG_CLEAR);
-> regmap_set_bits()
-> 
->> +     aml_chan->status = DMA_COMPLETE;
->> +     dma_async_tx_descriptor_init(&aml_chan->desc, chan);
->> +     aml_chan->desc.tx_submit = aml_dma_tx_submit;
->> +     regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_CLEAR, 0);
-> regmap_clear_bits();
-> 
->> +
->> +     return 0;
->> +}
->> +
->> +static void aml_dma_free_chan_resources(struct dma_chan *chan)
->> +{
->> +     struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
->> +     struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
->> +
->> +     aml_chan->status = DMA_COMPLETE;
->> +     dma_free_coherent(aml_dma->dma_device.dev,
->> +                       sizeof(struct aml_dma_sg_link) * DMA_MAX_LINK,
->> +                       aml_chan->sg_link, aml_chan->sg_link_phys);
->> +}
->> +
-> ...
->> +
->> +static struct dma_async_tx_descriptor *aml_dma_prep_slave_sg
->> +             (struct dma_chan *chan, struct scatterlist *sgl,
->> +             unsigned int sg_len, enum dma_transfer_direction direction,
->> +             unsigned long flags, void *context)
->> +{
->> +     struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
->> +     struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
->> +     struct aml_dma_sg_link *sg_link;
->> +     struct scatterlist *sg;
->> +     int idx = 0;
->> +     u64 paddr;
->> +     u32 reg, link_count, avail, chan_id;
->> +     u32 i;
->> +
->> +     if (aml_chan->direction != direction) {
->> +             dev_err(aml_dma->dma_device.dev, "direction not support\n");
->> +             return NULL;
->> +     }
->> +
->> +     switch (aml_chan->status) {
->> +     case DMA_IN_PROGRESS:
->> +             dev_err(aml_dma->dma_device.dev, "not support multi tx_desciptor\n");
->> +             return NULL;
->> +
->> +     case DMA_COMPLETE:
->> +             aml_chan->data_len = 0;
->> +             chan_id = aml_chan->chan_id;
->> +             reg = (direction == DMA_DEV_TO_MEM) ? WCH_INT_MASK : RCH_INT_MASK;
->> +             regmap_update_bits(aml_dma->regmap, reg, BIT(chan_id), BIT(chan_id));
->> +
->> +             break;
->> +     default:
->> +             dev_err(aml_dma->dma_device.dev, "status error\n");
->> +             return NULL;
->> +     }
->> +
->> +     link_count = sg_nents_for_dma(sgl, sg_len, SG_MAX_LEN);
->> +
->> +     if (link_count > DMA_MAX_LINK) {
->> +             dev_err(aml_dma->dma_device.dev,
->> +                     "maximum number of sg exceeded: %d > %d\n",
->> +                     sg_len, DMA_MAX_LINK);
->> +             aml_chan->status = DMA_ERROR;
->> +             return NULL;
->> +     }
->> +
->> +     aml_chan->status = DMA_IN_PROGRESS;
->> +
->> +     for_each_sg(sgl, sg, sg_len, i) {
->> +             avail = sg_dma_len(sg);
->> +             paddr = sg->dma_address;
->> +             while (avail > SG_MAX_LEN) {
->> +                     sg_link = &aml_chan->sg_link[idx++];
->> +                     /* set dma address and len  to sglink*/
->> +                     sg_link->address = paddr;
->> +                     sg_link->ctl = FIELD_PREP(LINK_LEN, SG_MAX_LEN);
->> +                     paddr = paddr + SG_MAX_LEN;
->> +                     avail = avail - SG_MAX_LEN;
->> +             }
->> +             sg_link = &aml_chan->sg_link[idx++];
->> +             /* set dma address and len  to sglink*/
->> +             sg_link->address = paddr;
-> Support here dma_wmb() to make previous write complete before update
-> OWNER BIT.
-> 
-> Where update OWNER bit to tall DMA engine sg_link ready?
+Nit: if there are chance to respin it, s/read-only/const/
+
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 >
-
-This DMA hardware does not have OWNER BIT.
-
-DMA working steps:
-The first step is to prepare the corresponding link memory.
-(This is what the aml_dma_prep_slave_sg work involves.)
-
-The second step is to write link phy address into the control register, 
-and data length into the control register. THis will trigger DMA work.
-For the memory-to-device channel, an additional register needs to be 
-written to trigger the transfer
-(This part is implemented in aml_enable_dma_channel function.)
-
-In v1 and v2 I placed dma_wmb() at the beginning of 
-aml_enable_dma_channel. You said it was okay not to use it, so I drop it.
-
->> +             sg_link->ctl = FIELD_PREP(LINK_LEN, avail);
->> +
->> +             aml_chan->data_len += sg_dma_len(sg);
->> +     }
->> +     aml_chan->sg_link_cnt = idx;
->> +
->> +     return &aml_chan->desc;
->> +}
->> +
->> +static int aml_dma_pause_chan(struct dma_chan *chan)
->> +{
->> +     struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
->> +     struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
->> +
->> +     regmap_update_bits(aml_dma->regmap, aml_chan->reg_offs + RCH_CFG, CFG_PAUSE, CFG_PAUSE);
-> regmap_set_bits(), check others
-> 
->> +     aml_chan->pre_status = aml_chan->status;
->> +     aml_chan->status = DMA_PAUSED;
->> +
->> +     return 0;
->> +}
->> +
-> ...
->> +
->> +     dma_set_max_seg_size(dma_dev->dev, SG_MAX_LEN);
->> +
->> +     dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
->> +     dma_dev->device_alloc_chan_resources = aml_dma_alloc_chan_resources;
->> +     dma_dev->device_free_chan_resources = aml_dma_free_chan_resources;
->> +     dma_dev->device_tx_status = aml_dma_tx_status;
->> +     dma_dev->device_prep_slave_sg = aml_dma_prep_slave_sg;
->> +
->> +     dma_dev->device_pause = aml_dma_pause_chan;
->> +     dma_dev->device_resume = aml_dma_resume_chan;
-> align callback name, aml_dma_chan_resume()
-> 
->> +     dma_dev->device_terminate_all = aml_dma_terminate_all;
->> +     dma_dev->device_issue_pending = aml_dma_enable_chan;
-> aml_dma_issue_pending()
-> 
-> Frank
->> +     /* PIO 4 bytes and I2C 1 byte */
->> +     dma_dev->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | BIT(DMA_SLAVE_BUSWIDTH_1_BYTE);
->> +     dma_dev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
->> +     dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
->> +
-> ...
->> --
->> 2.52.0
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> Acked-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/dma/ioat/sysfs.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/dma/ioat/sysfs.c b/drivers/dma/ioat/sysfs.c
+> index da616365fef5..e796ddb5383f 100644
+> --- a/drivers/dma/ioat/sysfs.c
+> +++ b/drivers/dma/ioat/sysfs.c
+> @@ -32,7 +32,7 @@ static ssize_t cap_show(struct dma_chan *c, char *page)
+>  		       dma_has_cap(DMA_INTERRUPT, dma->cap_mask) ? " intr" : "");
+>
+>  }
+> -static struct ioat_sysfs_entry ioat_cap_attr = __ATTR_RO(cap);
+> +static const struct ioat_sysfs_entry ioat_cap_attr = __ATTR_RO(cap);
+>
+>  static ssize_t version_show(struct dma_chan *c, char *page)
+>  {
+> @@ -42,15 +42,15 @@ static ssize_t version_show(struct dma_chan *c, char *page)
+>  	return sprintf(page, "%d.%d\n",
+>  		       ioat_dma->version >> 4, ioat_dma->version & 0xf);
+>  }
+> -static struct ioat_sysfs_entry ioat_version_attr = __ATTR_RO(version);
+> +static const struct ioat_sysfs_entry ioat_version_attr = __ATTR_RO(version);
+>
+>  static ssize_t
+>  ioat_attr_show(struct kobject *kobj, struct attribute *attr, char *page)
+>  {
+> -	struct ioat_sysfs_entry *entry;
+> +	const struct ioat_sysfs_entry *entry;
+>  	struct ioatdma_chan *ioat_chan;
+>
+> -	entry = container_of(attr, struct ioat_sysfs_entry, attr);
+> +	entry = container_of_const(attr, struct ioat_sysfs_entry, attr);
+>  	ioat_chan = container_of(kobj, struct ioatdma_chan, kobj);
+>
+>  	if (!entry->show)
+> @@ -62,10 +62,10 @@ static ssize_t
+>  ioat_attr_store(struct kobject *kobj, struct attribute *attr,
+>  const char *page, size_t count)
+>  {
+> -	struct ioat_sysfs_entry *entry;
+> +	const struct ioat_sysfs_entry *entry;
+>  	struct ioatdma_chan *ioat_chan;
+>
+> -	entry = container_of(attr, struct ioat_sysfs_entry, attr);
+> +	entry = container_of_const(attr, struct ioat_sysfs_entry, attr);
+>  	ioat_chan = container_of(kobj, struct ioatdma_chan, kobj);
+>
+>  	if (!entry->store)
+> @@ -120,7 +120,7 @@ static ssize_t ring_size_show(struct dma_chan *c, char *page)
+>
+>  	return sprintf(page, "%d\n", (1 << ioat_chan->alloc_order) & ~1);
+>  }
+> -static struct ioat_sysfs_entry ring_size_attr = __ATTR_RO(ring_size);
+> +static const struct ioat_sysfs_entry ring_size_attr = __ATTR_RO(ring_size);
+>
+>  static ssize_t ring_active_show(struct dma_chan *c, char *page)
+>  {
+> @@ -129,7 +129,7 @@ static ssize_t ring_active_show(struct dma_chan *c, char *page)
+>  	/* ...taken outside the lock, no need to be precise */
+>  	return sprintf(page, "%d\n", ioat_ring_active(ioat_chan));
+>  }
+> -static struct ioat_sysfs_entry ring_active_attr = __ATTR_RO(ring_active);
+> +static const struct ioat_sysfs_entry ring_active_attr = __ATTR_RO(ring_active);
+>
+>  static ssize_t intr_coalesce_show(struct dma_chan *c, char *page)
+>  {
+> @@ -154,9 +154,9 @@ size_t count)
+>  	return count;
+>  }
+>
+> -static struct ioat_sysfs_entry intr_coalesce_attr = __ATTR_RW(intr_coalesce);
+> +static const struct ioat_sysfs_entry intr_coalesce_attr = __ATTR_RW(intr_coalesce);
+>
+> -static struct attribute *ioat_attrs[] = {
+> +static const struct attribute *const ioat_attrs[] = {
+>  	&ring_size_attr.attr,
+>  	&ring_active_attr.attr,
+>  	&ioat_cap_attr.attr,
+>
+> --
+> 2.53.0
+>
 

@@ -1,313 +1,363 @@
-Return-Path: <dmaengine+bounces-9279-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9280-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4N37NqioqWlSBwEAu9opvQ
-	(envelope-from <dmaengine+bounces-9279-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 17:00:40 +0100
+	id 4ELLKuepqWlSBwEAu9opvQ
+	(envelope-from <dmaengine+bounces-9280-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 17:05:59 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E6812150EF
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 17:00:40 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15DF2215199
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 17:05:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9D7A930C3F4B
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Mar 2026 15:59:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1A8033068246
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Mar 2026 16:04:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 873E4366803;
-	Thu,  5 Mar 2026 15:59:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 725103793DB;
+	Thu,  5 Mar 2026 16:04:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="k726zjVG";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ceTl3w7l"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="gNZfztZY"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013015.outbound.protection.outlook.com [52.101.83.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBE73C1985
-	for <dmaengine@vger.kernel.org>; Thu,  5 Mar 2026 15:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772726360; cv=none; b=oZs2Sh275r9H3/+UI79SFtF5D6jTrJgq650M+sNnxsnW1fyI8aRw4jdXnKBEbxCFOeVm3hUMt8Djxk6cjdpqome6Aq+l7DlGnpG4PVyLgtmIxJlXnBy8luL6iayuhDCD99rzTUI12oV8S9CZF7zoqCgvvH5D0Z52ySt84vj7bTY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772726360; c=relaxed/simple;
-	bh=nsz4kgvAEf+0wvPBtAtgWX1ce/NBoJxyIvXI/GBZp/I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YUBKe3EWcBxFjLC4//jtdNuxKVhLFDuPpGwWk3GXLaZBOENCJ3VRT1VT5ezjNZd8eGDrEV5G0Zi0c/JDpphioh5yfZiBbckY+8Ov4u0Y9HCFVjyIvqXIcUwxjZvIwwPxPbLfrhLOgKUn2swd464hVfzmYfYBkQ9EnrVUL745uQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=k726zjVG; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ceTl3w7l; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 625AFfhx916979
-	for <dmaengine@vger.kernel.org>; Thu, 5 Mar 2026 15:59:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	gJfVH6ArqBR8VxIevRdjDVBkwzQbm4lnsd8aP92U7Tg=; b=k726zjVGqsDbltY6
-	l3mDbNIktlyZSUcmAHUEUQ9uj9BxbnOjPARzrXKAuCz2a5Z3/sK1HRm8X/2ZGHwP
-	f9qFwRA8hR0SLE7YPYEvDXd4vvaAM75wEB6SkgEhe8zvBjiUw/Y9MMJ0VmTf3fGK
-	SPRQs4Bcyr6LD0EcG48CUlW1dYweV+9uOvcYLAq3bK24abFvULob5ylriq+tdbqT
-	JrEoHHjZVU455RWI58rLBltSuH2/CAeM7Eo6VnKih1baStv01C/tk6XvYcCwcmXy
-	3zDCnF6kEOzm92tDwusjV06gjC520oc9YM6apvuvKdhnpT2KOusd/vFNv2PVDsgr
-	pt2NkQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cq380t43x-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Thu, 05 Mar 2026 15:59:17 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8c711251ac5so4688550085a.1
-        for <dmaengine@vger.kernel.org>; Thu, 05 Mar 2026 07:59:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1772726356; x=1773331156; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=gJfVH6ArqBR8VxIevRdjDVBkwzQbm4lnsd8aP92U7Tg=;
-        b=ceTl3w7lvUe5U5b3Kh6zob/PjuYpym6th8ctFsktrwwphl6MK9XtY7P56+gLYv8Og/
-         CZPITVhWGxTEOp5XJuIA5T+1gOxn0n7q6wsaNLhNoIszo/l562nkTPFVCUa0D8SGATGT
-         opsdegMzEtXzXjqtL3+9ebnGKjy865pfbAWJuQlavlKa0XDxbuwSmWVNHXF1WN4d41PS
-         izLcGwgqpOMT7tDto2aUZ3ve54ya3dOLEFlariGYWSfp2NGqMNhBWZSPc09S/hWjoTu3
-         7u5ELgotgmlbmwjm4VD1VOeljTbUCwg9yZfHE5wC70ytNNHkUib4uS2qLy2SrWFEfgzD
-         iJUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772726356; x=1773331156;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gJfVH6ArqBR8VxIevRdjDVBkwzQbm4lnsd8aP92U7Tg=;
-        b=ZJ/R3OZnccKbXSlvwz6jFEh+UupRVEOKKk6MMvXe0LfEerXUtlTXArglsb26Bz+zdT
-         YaU8Ei8GIIA5k/n2Eig0uLY4SejspF3qorSE+3R4c3PDbadOTCMjQAUcG+C/rxhmNq5E
-         DJ9P7DorLi/SMBOdUsXeFG3WqflWStRZ6TA1U+T3zJk7WC/iF94YtbaGQt6A5WshKQX4
-         DK32oOFnL14LH9j3OTsmWucja4tIwTBksFfu3G4HwYTHp5l0yHCYqYH/4JwfaV6V8jWh
-         Zr84ge/+xckukWBvR1jy+HOGQKbalv4a3Ur8pJ3Eo8IJMgH60AYf275igwxY9Usa7vw4
-         Qcog==
-X-Forwarded-Encrypted: i=1; AJvYcCX0xhJigN24/NNdvB9r4wgWTY1iuz9MezJI1HCmlteZUH5tCLIWv1mS7eehuoEScOBuhvDLnDxO9VQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7c7ipwhdzGsX9Cfa5gZVQTci/BLJk73yoeYQw1Er+AgvSTrTA
-	1fCkiF7sY4i/KmMmBxRm95wgYeA8uAr89qyHGGwF1/iFepxjR6XEl09sboD3ApyjswnGJC+xi+p
-	ue3AC/fT1PZQuAcXlx1UeVEiALqeIl7BPJwUv3ZbeZ9LB1Qx/zeqI5S5KgG1Ss2E=
-X-Gm-Gg: ATEYQzx68abDf2hSw5yc02GKavPU+OCRSa3YU1qzeg5mPim/LtI2ldnePD9WGwUT5xj
-	bREFSTqy8l6EA3P7GWoN0+QHJb9GeOOjVHDnrPKG6X+Hwa6m+hd53G0a7BkfuJawKNxzEKmyfSy
-	lh4EZ8wCMurKl4MtlZHN6014tdO4Y3zldAc2e5L4FmYErD7WaVjpsU+TT+U1veBgO35DP1xfmOH
-	9osgaqbTv1rp8SsysE0QivH9iG1QbJulvgKMipO6aY87fTehpJMPugLh27Oxzc7MDb+zPW5uyF/
-	QYWp+LqE/L10wZoU5dN1mndgabmqZUL3FbzEeoAx/nXSzHnyYalpUIg270uJyy4Yb3TCy+Zxz+l
-	mEQWvzCBt9xL4Pbvz1gVNaJFYV9xC7tTcJIGbNeHI/FwvHDKR
-X-Received: by 2002:a05:620a:4096:b0:8b2:74e5:b36 with SMTP id af79cd13be357-8cd5afa5ad6mr741187585a.68.1772726356000;
-        Thu, 05 Mar 2026 07:59:16 -0800 (PST)
-X-Received: by 2002:a05:620a:4096:b0:8b2:74e5:b36 with SMTP id af79cd13be357-8cd5afa5ad6mr741182085a.68.1772726355454;
-        Thu, 05 Mar 2026 07:59:15 -0800 (PST)
-Received: from [192.168.1.29] ([178.197.219.94])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4851fae00absm46179485e9.4.2026.03.05.07.59.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2026 07:59:14 -0800 (PST)
-Message-ID: <c768706e-f063-44bd-92cd-f3984ad3bfbc@oss.qualcomm.com>
-Date: Thu, 5 Mar 2026 16:59:12 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B620A28506B;
+	Thu,  5 Mar 2026 16:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772726640; cv=fail; b=AwqBmUgS9eHs16iKMWGuf9gztl4cnJZ8V/C6dXbRllltJCQ0CnCf4JBeg3JMseAdYGM4FB3Lxd88F84AXw6yTRbwK5gFMLzoiapZOdIsDVQiTL1Do3TTkEudwedlrZ0hwhuXqU8aPQZdUk/lJ59O4DUkFNR3c9XeIU45i7kdxlM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772726640; c=relaxed/simple;
+	bh=DOvVIv6VzmwnEJWcCIieq8jieaNQ+DjoRQDFUqvxGJY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tD62oOv8StJDrCMue4XNIa4fq9lO7E+pGKYTf/Sw1u+xEZMq4B5nl4N09n4cGBBdBao6G9Ktehx4PBj8lIxn0TklsZKLiA4hiFo0Bex858TY6KvvBZrTKxMbVhgYtLqxNep5eLgEQYHADOfUJlfaH/fj8s/5+uxEghpLsZzR3Zk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=gNZfztZY; arc=fail smtp.client-ip=52.101.83.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cfuZ42xU5cMGlU2cAvyue7/CyJs9+dSP26pmTlFjOkQyTX3hU50WTgK8QYrcFKaeNH0J55w7C3z0Wt4vNf6dtHzvuX+fKPK5aGOdbJsM8Fjor7XawnYKxMUNTkiFvwqgqf0vkzyVIVUB2TOlIX0urqW87TWCYSK0JuwiThy/sAt3Rz6fXWW0iP40IVZEzgYjgIQ6QybK5JEx6HnzcODwwUW8Uim9i7N/iwn3AhDxtD1rNu9e8sefNBLJSJ+gj5/RGtjguzUDgL7h+KPLDT5FB67Kg1pV0iBqrgpPxoHy3iD78aiRNlNT/1qRkKnegm0ytCtavpvTV2tXdtBPfWRXOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tTclqpw+i3KX76YrcvQ84XC49WE9kjnpC7aBlzZD0p8=;
+ b=l4Dage/1y0A2TKgtUP4ZP+vSyiEyl2sri0s/XxOOd8hXvLQkb7islo060xOhM1HIQmwEsTG8ZfVJ8KhU7sHqYWBXq7gS/64sh0o23g4mnLOD2RiUmEe3XsvJ+kZcYIkZEIVSTMQAlrNGWKxjbwfh90UD+XpcA3oBMnVg9kWqKNQnX4sFub2LgLtnb1WoOW+j/q9DDaYc5cnpr3l4gx2Zc4GPdOaPWVI1me98qpKT4ZU3TuCQ8q2sZRbBEtVTZxDUBIkHI4vIeKFg9RqWdypDT5saV+opp53DPkxmrTyeFl5fRBzqo87KziGOgRMRNQ79vxTvo2gNFb2j2jIcH6BnDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tTclqpw+i3KX76YrcvQ84XC49WE9kjnpC7aBlzZD0p8=;
+ b=gNZfztZY4SzdrCoJBhKgspj3UtOP7Mb2LRPtf78yrdF8Olg+/Mr/YzGmhcaKu2taEA0p9XaNgL8T73bPw0sdO/pFk3si709jdqStgPqKeHLZX3s6yYK3OM1Qi15gEvF2o26sUlkU8vysg1isJrBawI2KBMpGzRbpI5LiByXaxVA2F5jVL4PSPb/+7HjKBm5sSImj8AQd9mSCMcNrNZ+ZHa1GsAaTG+iawTB1+CvIfNsrg0tPUQSdV25fRU/gYaA/5nIMedJtslC/Wj8078HZXz1F6YIXSxyR2UhQauy+dTTP9XWfe967JYCQJcRoNyCKm1nR687uaXYGKDBehTIS4g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by PA1PR04MB10748.eurprd04.prod.outlook.com (2603:10a6:102:485::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.22; Thu, 5 Mar
+ 2026 16:03:55 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9654.020; Thu, 5 Mar 2026
+ 16:03:55 +0000
+Date: Thu, 5 Mar 2026 11:03:48 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: "Verma, Devendra" <Devendra.Verma@amd.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"vkoul@kernel.org" <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Simek, Michal" <michal.simek@amd.com>
+Subject: Re: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL mode
+Message-ID: <aampZJo-9UgzpIV1@lizhi-Precision-Tower-5810>
+References: <aZXfmKs5_KzCDSPq@lizhi-Precision-Tower-5810>
+ <SA1PR12MB8120DC54060E415153AA8CDE956BA@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZdDYJIUuceu0guJ@lizhi-Precision-Tower-5810>
+ <SA1PR12MB8120F99F2A675C17B1F649EA9568A@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZiFtgcMzs-U2MkN@lizhi-Precision-Tower-5810>
+ <SA1PR12MB8120E7C753B717E4C8B9E7819577A@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZ4l4IHqObEP8DfP@lizhi-Precision-Tower-5810>
+ <SA1PR12MB81203E3A32F0670DB15D63059575A@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aahkKZ9EBwWfwy95@lizhi-Precision-Tower-5810>
+ <SA1PR12MB8120CE2DB5EB97512E51F76B957DA@SA1PR12MB8120.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SA1PR12MB8120CE2DB5EB97512E51F76B957DA@SA1PR12MB8120.namprd12.prod.outlook.com>
+X-ClientProxiedBy: PH7P220CA0044.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:32b::22) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ti: sci: Drop fake 'const' on handle pointer
-To: Andrew Davis <afd@ti.com>, Nishanth Menon <nm@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-        Thomas Gleixner <tglx@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Dave Gerlach <d-gerlach@ti.com>, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <20260223202426.566958-2-krzysztof.kozlowski@oss.qualcomm.com>
- <195cc8dc-8642-481c-8bdd-f5409ab8f5b5@ti.com>
- <5b6a4284-4766-424c-9171-feaa08c52ad1@oss.qualcomm.com>
- <2d852f07-0bd9-4076-b0dd-93425ed237f4@ti.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@oss.qualcomm.com; keydata=
- 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
- cwzYbmi/Et7T2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <2d852f07-0bd9-4076-b0dd-93425ed237f4@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=I5Johdgg c=1 sm=1 tr=0 ts=69a9a855 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=gOEeR9iKwsj33Yj5oN/cWg==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
- a=bHzazS_3SF2oTeVDu9QA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: Ka1ecl2TFYf3uWJ7SDjL_3x0KD-eoViZ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA1MDEyOCBTYWx0ZWRfX0FA/dgfCBx7Z
- vfkAxgGa3u4XTDjz0LjqIheenVgPQeEESLlBWbprHsVZqNSLCFefuAFOfZ1Q9dgVc32Ogm+/WVe
- pCPeIoSWgRhebpI2ul+b4EZKiDNbmbU/gA5YYuy14/I5RGSzjBgfts/JPyXG8/sRYB6r4MFQ30P
- UyYXgjNoxI2ttxEqvSAuQCcmDamkSqLNHw7Qjco6LpjAxUD45LsEEpuF2WtTj/q+ETn61Ldgj1z
- WGoVmBbdh7zbcbSL8Vg0uGY4+7Ofmme5IQpqbcGl1MELiE5hKVVxBPspA8/MFgD9F9lW98RN/B6
- H5/VkwXH38inrToQNuJ6VHKNjd0fJv6kTFvht4MbPkCgzzmRYY1YTAveEHXYcLf6XQUubXS5Rzu
- KomlGTH8qznuis2mgqYl3VY4J2MfIcjt0rPSLAMw3sT4dLXrk1+8+3QcaDHhgfZ5mJLSpXL13bu
- /CGfVlT3JeqzLRz/Thg==
-X-Proofpoint-GUID: Ka1ecl2TFYf3uWJ7SDjL_3x0KD-eoViZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-05_04,2026-03-04_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 bulkscore=0 malwarescore=0 suspectscore=0
- adultscore=0 clxscore=1015 impostorscore=0 spamscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603050128
-X-Rspamd-Queue-Id: 7E6812150EF
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PA1PR04MB10748:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0fcc6d06-547d-4829-6ae4-08de7ad0cd98
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|366016|52116014|19092799006|1800799024|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	mKLs3GjTnCzvAfPsZJHtgXeey+A5QvjJcl3bMe2qcWYeiZG1/sGZVe2JC5fCf/xzrCmQhotjMFd4pYKAYykPKZ4TRBKcIHC7ubJGPl7VQY6ZFiXUtloirTsgj8C2erGsS3Am+0qYV3fO7V4j34iC0lWMPCrqdGIs65MMGFg3v01Qf7sGD2MRqyEHNJ4horYxCEHZJEQUCR+ZU8I2Z21Ddzj2NZEQWa/T29Ri4Jt9qrdNqM4Izuxkv0IK3++mMFQHtOJULHj3NV90hMlW27b/VJnbcT2ZhDLCJooQmVY18+xe7Ei+EB6lQNARN8oKsdhTvmQRPa4CDW2Ah9DsJpdqllvt8GjKvSDOUZg6kOnmWohQGjHRG0G+rfxWipT5BC5JUhEqccAf8BNQUP7TG12cIOR1dQZKGeu1Iw38RG9SVzZWMOPyGj8tyegzzsT6uLmGC0+jIB+WhCr1PxMvZh++RW+hDAICQlEV/78Yv+kSf8RO+5IZ3VBAkzCgqVwQfhqborF643HAz/nyEqn4QzLZ3Wq4lGC0SS7yYNXagJWG3KcUHhw1f+nd8BMc727vSWLzXveCL9AORX/i+uji5vxntwz8EYHUDrvz5Tggmf4P5rx413+Rg9omRAgY3pellFTQVdH89xYI+vpVzgsZ4SxEGkdiJ4yBSWkcj44ZLEyGUvhzo+WuTnlUle10zx0BKq1E8iFYxlydK4NwO0zbD5R3KhhizEomgYDTm9JcqlysL0BA1MGUxiKpZ/nnUvCAHIqP38VIBWs+xJ856xgDGiEs25jl000v1OKIf2kx9rjcXT8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(52116014)(19092799006)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?LpfaWbm8XfYMCMrHQYvbqMeNjEiqmwoJ503g+Ywq2YadW5ksKnJcX9klYUzK?=
+ =?us-ascii?Q?JsSoWbE9hKAtlDxagaUXtKS+ixTKtfrWNZlJjab/mIN9ng3ehLEEVyFvRhpL?=
+ =?us-ascii?Q?p5Zpz0AByAIPDaJB6IIYXHdRuaSuk6F3vU+IzBmWHwDm1OitgdR5opcCUo6f?=
+ =?us-ascii?Q?V+KuefyyFLFrJ7cIAvKUJDpfJMB+m8tSmdjqbVsJbJguegpbmqgn8Ufl2mDX?=
+ =?us-ascii?Q?hVwv1E8Xmt7CkpjHUWoD3cN+I+sXSxra7f5jPHosC7qN+7UDbv97UMhEjL46?=
+ =?us-ascii?Q?CmG/QhE27UockDxDN29S+WYASpdTIkKOUKYRI/OOSTByiVUDpYLUCLbjPtdD?=
+ =?us-ascii?Q?X1jtOoC3Pk75b8p6vsRr5BYsqnpVDb0jsBM38QKMzpjzFufgzEKCuVdjJrDA?=
+ =?us-ascii?Q?7FHIOPwz7FTp1It7aMm7+6ODrwe1iFLChEuXDmG5x5RW1PBtXoHkBguXWYzQ?=
+ =?us-ascii?Q?P0P5uAnXETRf9sy45vYBjOL3+Y8QXHexHFbupWdsrxNPx2wibNs6sH3fJLxl?=
+ =?us-ascii?Q?1m/2mvGbuIyaCO/jqyXf3iUZB6Re0q2htHoy+yHY9u4srKPkOMGekFuP9V0T?=
+ =?us-ascii?Q?BHNWc/msJ4MsZIdeIMizzpEdtafgmFh/Bwx88dgddvxjcxm/4StYAAdaOn+E?=
+ =?us-ascii?Q?kTFjVX2qBVSjxDNhsJz8Xy8gE3Z1gtppSNpOR+guVCvBDXqHh3aF2UbeTXtE?=
+ =?us-ascii?Q?j9lNnsRolfAN1SZKFeNJtVcC2rmoAUFn4P8dJh2CpAOp+dAxSqhOjlnAfJlD?=
+ =?us-ascii?Q?fAgIv+kDYlAxO36psNECm/F1j2cYfw+zq2YHSYkcQwCjrGH/FXK3P77cDb60?=
+ =?us-ascii?Q?98BwkeABswaYl2IsvyveuZy4PZBzMo37jxmiTYfYtROoKAsdhbkg5ybH10MX?=
+ =?us-ascii?Q?bGi/ZC3NNb5djb6mny/B33L5TO2Ls5rNvWmT9ge7XW9JGmUAXBVwaHO35Ehu?=
+ =?us-ascii?Q?jUkW2+PeQEc9eA6gPsZC5o/qhJkHYKgGSYRl6zuy7p7DUEZdjWaNABvxcHTM?=
+ =?us-ascii?Q?xgEdzjfBf5vtUpWELCib55mk6k0szQJIneKEjDlhojC0Oon0Q29GBs3IxivT?=
+ =?us-ascii?Q?DzNecxyUsXs1VYeP0N1uceV2Bh9ce7wYQ5BkVZLbXjhGgByx2A6ai+VF5UAA?=
+ =?us-ascii?Q?fXoIrfORXuJT4eclFydCrkbY5idFlEb6u4POzUNYg8OA2wVvrcEOorn11LD2?=
+ =?us-ascii?Q?p9EsO3yVc7rVKlHqFMVa7usXypfq4JmASd08JLjSXFWyI7hdPPbhm790xwOR?=
+ =?us-ascii?Q?br/7DhUAVLx+NItCHT4rzSpLS/9+kqoMejCi+uJTgMiaT2In/RtsD13/Bwbp?=
+ =?us-ascii?Q?oz8cepc7tuT8BnCpERF8kikYUe81RzgKIOwkQ+ibmkDBvUWqEo9UnkljfOmq?=
+ =?us-ascii?Q?rzSdFolHQluovPhydpIVm5g2tJvxxKXpY/IG8ytuNnmBsbRiWyCUcb0ePQKM?=
+ =?us-ascii?Q?7mpAIQ7iq+65Dy3voy/1UBOfUisF/ZBI2bFVTZF3sh74MWnD+Qo7kI5kFIO1?=
+ =?us-ascii?Q?2Yugzf0B7jkVWxNf+BdQHQRzUSkD1JGTSCTvFXYvPA6eI939mnUsn+0W60kd?=
+ =?us-ascii?Q?U31gVcGXgXYsUb/S9DyWABc+2LU0OBEZmd6Wd1WGttkt+xh0BmpRMOWP0HFy?=
+ =?us-ascii?Q?jeS+yW+FqlTb0jGPo65kRTrCOCg8uxNXNM1bW0IWjBDYPGv5qjUrIUHPFjRn?=
+ =?us-ascii?Q?TTgUDBJcYhMupLmIREu8fajUgXvqwWcxnTl0VYlyoR94D/1u?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fcc6d06-547d-4829-6ae4-08de7ad0cd98
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2026 16:03:55.5863
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KT8Tt+z2rhMdEEfBuxeIuD8sA/VNLypPc7w+K1Klltw8JwaWENPb/hygkVSSY+tVa2u3DLIrXEC46ZOwq0XE3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10748
+X-Rspamd-Queue-Id: 15DF2215199
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9279-lists,dmaengine=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:dkim,oss.qualcomm.com:dkim,oss.qualcomm.com:mid];
-	FREEMAIL_TO(0.00)[ti.com,kernel.org,baylibre.com,gmail.com,linaro.org,pengutronix.de,lists.infradead.org,vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9280-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzysztof.kozlowski@oss.qualcomm.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[nxp.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amd.com:email,nxp.com:dkim,nxp.com:email]
 X-Rspamd-Action: no action
 
-On 05/03/2026 16:52, Andrew Davis wrote:
->>>> The code is not correct logically, either, because functions like
->>>> ti_sci_get_handle() and ti_sci_put_handle() are meant to modify the
->>>> handle reference counting, thus they must modify the handle.
->>>
->>> The reference counting is handled outside of the ti_sci_handle struct,
->>> the contents of the handle are never modified after it is created.
->>>
->>> The const is only added by functions return a handle to consumers.
->>> We cannot return non-const to consumer drivers or then they would
->>> be able to modify the content without a compiler warning, which would
->>> be a real problem.
->>
->> This is the same argument as making pointer to const the pointer freed
->> via kfree() (or free() in userspace). kfree() does not modify the
->> contents of the pointer, right? The same as getting putting handle does
->> not modify the handle...
->>
-> 
-> In that argument, if we wanted the consumer of the pointer to not free()
-> it we would return a const pointer, free()'ing that would result in the
-> warning we want (discards const qualifier).
-> 
-> If you could somehow malloc() from a const area in memory then free()
-> doesn't modify the pointed to values, only the non-const record keeping
-> which would be stored outside of the const memory. So even in this analogy
-> there isn't a problem.
+On Thu, Mar 05, 2026 at 12:15:41PM +0000, Verma, Devendra wrote:
+> [Public]
+>
+> > -----Original Message-----
+> > From: Frank Li <Frank.li@nxp.com>
+> > Sent: Wednesday, March 4, 2026 10:26 PM
+> > To: Verma, Devendra <Devendra.Verma@amd.com>
+> > Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> > dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> > Subject: Re: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL
+> > mode
+> >
+> > Caution: This message originated from an External Source. Use proper
+> > caution when opening attachments, clicking links, or responding.
+> >
+> >
+> > On Wed, Feb 25, 2026 at 12:06:12PM +0000, Verma, Devendra wrote:
+> > > [AMD Official Use Only - AMD Internal Distribution Only]
+> > >
+> > > > -----Original Message-----
+> > > > From: Frank Li <Frank.li@nxp.com>
+> > > > Sent: Wednesday, February 25, 2026 3:58 AM
+> > > > To: Verma, Devendra <Devendra.Verma@amd.com>
+> > > > Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> > > > dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> > > > kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> > > > Subject: Re: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL
+> > > > mode
+> > > >
+> > > > Caution: This message originated from an External Source. Use proper
+> > > > caution when opening attachments, clicking links, or responding.
+> > > >
+> > > >
+> > > > On Mon, Feb 23, 2026 at 04:40:07PM +0000, Verma, Devendra wrote:
+> > > > > [AMD Official Use Only - AMD Internal Distribution Only]
+> > > > >
+> > > > > > -----Original Message-----
+> > > > > > From: Frank Li <Frank.li@nxp.com>
+> > > > > > Sent: Friday, February 20, 2026 9:33 PM
+> > > > > > To: Verma, Devendra <Devendra.Verma@amd.com>
+> > > > > > Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> > > > > > dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> > > > > > kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> > > > > > Subject: Re: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add
+> > > > > > non-LL mode
+> > > > > >
+> > > > ...
+> > > > > > > But if it about writing a new function to check the LL mode
+> > > > > > > support then I think the current variable is good enough which
+> > > > > > > provides good readability and do not create any ambiguity
+> > > > > > > compared to the ll region size
+> > > > > > comparison.
+> > > > > >
+> > > > > > It is not big deal,  use 'bool cap_non_ll: 1' in dw_edma_chip.
+> > > > > > So we add more cap flags in future.
+> > > > > >
+> > > > > > Frank
+> > > > > >
+> > > > >
+> > > > > Hi Frank, could you elaborate what you mean by adding the cap flag?
+> > > > > How it is going To help identify the overall chip state?
+> > > > > I do not understand what is being implied here.
+> > > >
+> > > > non_ll in chan means current status, which indicate one channel work
+> > > > at non_ll mode or ll mode.
+> > > >
+> > > > here dw_edma_chip means hardware's captiblity, indicate if hardware
+> > > > support ll mode.
+> > > >
+> > > > Distingiush hardware limition or current working mode.
+> > > >
+> > > > Frank
+> > >
+> > > Thanks for the explanation!
+> > > Hardware supports the LL mode / non-LL mode, just that there is no
+> > > piece of code available which can perform the non-LL mode as only one
+> > > mode was supported initially by the respective developers.
+> > > So, providing it as capability does not look justified as in any
+> > > scenario hardware is capable of non-LL mode. Theoretically, non-LL
+> > > mode should have been the default mode.
+> > >
+> > > The non-LL mode is not a hardware limitation either. LL mode needs
+> > > extra configurations and in the absence of that, interpretation could
+> > > be, enable the supported other mode which is non-LL mode.
+> >
+> > Yes, that's reason why I don't want to add non-ll in dw_edma_chip, which
+> > should provide hardware's information.  non-ll actually miss ll_region
+> > information.
+> >
+>
+> I think, non_ll can be interpreted without using the ll-region related information
+> as well. My view regarding the dw_edma_chip struct is slightly different,
+> it does not provide the hardware capability rather stores a snapshot of
+> configuration based on information provided by different means,
+> please take a look at my comment below related to this.
+>
+> > >
+> > > With the current non_ll inside the dw_edma_chip, when non_ll = false,
+> > > indicates It supports both the modes LL and non-LL, but requires user
+> > inputs to enable it.
+> > > With non_ll = true, the dw_edma_chip or the hardware has no choice but
+> > > to work in non-LL mode only. This is the interpretation for the flag in non_ll.
+> >
+> > we need distingiush current state and HW/SW captiblity. in dma_chan, non_ll
+> > means current working state.
+> >
+> > but the same words 'non_ll' in dw_edma_chip is HW/SW capablity.
+> >
+> > dma_chan: non_ll       means current channel use LL OR non LL.
+> > dma_edma_chips: non_ll means only support non LL mode OR both.
+> >
+> > The same words "non_ll" means difference. We should try to avoid this case.
+> >
+> > if you want to add field in dw_edma_chip, avoid use the same words because
+> > their means is difference.
+> >
+> > Frank
+>
+> Can we please simplify this interpretation, the non_ll in all the scenarios should mean non-LL mode
+> only if set to true.
+> dw_edma_chip : non_ll = true, it shall mean that all the channel, at chip level, can work in non-LL mode ONLY.
+> dw_edma_chan: non_ll = true, it shall mean that individual channel is configured for a transaction in non-LL mode.
 
-I am not saying about malloc. I am saying about free() which does not
-modify the freed memory.
+When read "a->non_ll", need good back check what type of a to know which
+one.  if use difference name
+	a->non_ll;
+	b->cfg_no_ll;
 
-> 
->> The point is that storing the reference counter outside of handle does
->> not make the argument correct. Logically when you get a reference, you
->> increase the counter, so it is not a pointer to const. And the code
->> agrees, because you must drop the const.
->>
-> 
-> The record keeping memory is not const and can be modified.
-> 
-> And where do we drop the const? The outer "struct ti_sci_info" was never
-> const to begin with, so no dropped const.
+It will not think more about what is a/b.
 
-We discuss about different points. I did not say the outer memory is
-const. I said that you drop the const - EXPLICITLY - from the pointer to
-handle.
+>
+> Above all, a nice comment related to the flag shall be good enough to make the understanding clear, at the
+> places where declared.
+> Since the beginning my emphasis is that 'non_ll' flag should be treated for what it implies, i.e non-LL mode.
+> It was included in two different sets of structs to show the hierarchy how it could affect the overall functionality
+> depending upon where 'non_ll' is set to true.
 
-And that API which gets a handle (increases reference count) via pointer
-to const is completely illogical, because increasing refcnt is already
-modifying it. Just because you store the refcnt outside, does not change
-the fact that API is simply confusing.
+> Coming to the dw_edma_chip struct, I do not understand why the dw_edma_chip struct is about
+> hardware capability, it is more about the configuration of the chip which is filled anyway at the time
+> of probe() function calling. This struct does not provide any capability information at the time of probe() calling
+> rather it is filled based on the params configured by user either as static info (eg: snps_edda_data) or by reading
+> the capability registers (eg: VSEC and channels enabled by reading config space).
+> I hope this clears the doubt. Please let me know if any further information required related to the non_ll flag
+> Interpretation.
 
-> 
-> If the issue is that the handle is not const inside that outer struct
-> we could fix that,
-> 
-> struct ti_sci_info {
-> ...
-> -	struct ti_sci_handle handle;
-> +	const struct ti_sci_handle handle;
-> ...
-> };
-> 
-> And with that change even your original commit message example issue
-> goes away,
-> 
-> struct ti_sci_info *info = handle_to_ti_sci_info(handle);
-> info->handle.version.abi_major = 0;
-> 
-> would now fail to work to compile.
+I don't want to take more time at this kind small stuff. I am fine if
+vnod Or mani (who pick up these patches) think it is okay.
 
-But you cannot do that for other reasons in your code because you DO
-modify the handle in all the APIs which you call "pointer to const".
+Frank
 
-
-Best regards,
-Krzysztof
+>
+> Regards,
+> Devendra
+>
+> > >
+> > > With the capability, would it not make the statement, that if non_ll =
+> > > true, it supports non-LL mode but that does not mean to be mutually
+> > > exclusive and not support LL mode at the same time?
+> > > If there is a requirement regarding the capability then it can be
+> > > taken as a separate update but I am not sure what purpose it can serve wrt
+> > non-LL functionality.
+> > > Please let me know your thoughts on this and lets conclude.
+> >
+> > >
+> > > Thanks!
+> > >
+> > > > >
+> > > > > - Regards,
+> > > > > Devendra
+> > > > >
+> > > > > > >
+> > > > > > > > Frank
+> > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Frank
+> > > > > > > > > > > > > > >  };
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > >  /* Export to the platform drivers */
+> > > > > > > > > > > > > > > --
+> > > > > > > > > > > > > > > 2.43.0
+> > > > > > > > > > > > > > >
 

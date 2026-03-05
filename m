@@ -1,205 +1,373 @@
-Return-Path: <dmaengine+bounces-9272-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9273-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sJeqHG5xqWnH7AAAu9opvQ
-	(envelope-from <dmaengine+bounces-9272-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 13:05:02 +0100
+	id MPLQByp0qWl77wAAu9opvQ
+	(envelope-from <dmaengine+bounces-9273-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 13:16:42 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2758C211349
-	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 13:05:02 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B173921172D
+	for <lists+dmaengine@lfdr.de>; Thu, 05 Mar 2026 13:16:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 84DE23071716
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Mar 2026 12:01:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7A76730CC7B6
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Mar 2026 12:15:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4667839EF38;
-	Thu,  5 Mar 2026 12:00:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5008339A805;
+	Thu,  5 Mar 2026 12:15:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YAq1R3xx"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oHnBnCpI"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012014.outbound.protection.outlook.com [52.101.43.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A403D39B4A9
-	for <dmaengine@vger.kernel.org>; Thu,  5 Mar 2026 11:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772712001; cv=none; b=cw8YhzDR9u74ZPd2g71e9tLExPJSAEuv2jE06qaPL06tRbNXiOHpuXpfKWv9Fb0sIDvf/AUtfG1+6yobtFQTgxn1rgSd//gooUXV0yyrATiwZPOonOpP67fUXf3T8GIttWvZRwLgHA1j/wAn/qzF09CB21bQvfRQQkKcodHGS+Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772712001; c=relaxed/simple;
-	bh=JjDjRMzh2S/8YB/HCuTF4SumXBtbSBGAlMdISgp8C0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c40ayo2QfiO+TO0rtxBKtKTcoyQNLwzBMZ9DL4oru31M8PBffHDuf0dpvwA9huSvnG3k4JJ5mr6VMSg/5H2xvWAWufMUNQkWZlkxrh7Lojo52LcdC5zMtuGkj75LwcjycR3BnG1rXuAIYr2Q2WMh8qRMn6m+IQLrrzNk9zaCgmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YAq1R3xx; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4834826e5a0so90548475e9.2
-        for <dmaengine@vger.kernel.org>; Thu, 05 Mar 2026 03:59:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1772711998; x=1773316798; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gCREg50bz8e+v9Ahd+19Jw+eYOKRxSn1rxNuRLV4cFo=;
-        b=YAq1R3xxVSTOHOmBAwtBH6/y61jQ0vDIyps5+UMuERYYQHuwJUWle7przFQT5vVrFv
-         3xoFtPx0YchAjcnpIKXsEhZyhdNJnJynfwRAuaXoV9Q20fYdsrTXVHAiR8XUDRBQonTY
-         gJYtXbytwHhySW4i3gizDvN4E2kAUYYzLy4MvNGAUYLKytPbV9/LRXS/c5V6Xspdx0pn
-         Y/RaDkXhCHvhjgtBqzV7uve5ZPj22y3uhpe9XEZIkWue8rFqOlvOE7BigeOh/CICYIBk
-         +w7JVk0aHFoA1l1uu/62xalO8JgwvCtqHpcjkF0/8c1lv4QjEma1tSlvcn9q/QqYZXMl
-         Ppxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772711998; x=1773316798;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gCREg50bz8e+v9Ahd+19Jw+eYOKRxSn1rxNuRLV4cFo=;
-        b=K7xRQkEb0TIesPJ5r3zHJqleFp0n7OZB5NVaqN5FR/6BgJItpynehcDTvQzTjnZTb1
-         OYwnXK+vrJQU+r/Pc90IidSnUQwaAVwvKYMwk8lF120q8xM4b7kOigXDOUUOr6NgaFU6
-         O4v+stQnIlloET6t/J0EaLY4fxZQqYsyKpoyGlOqJfL2HiPmHKfKfoV52HSSMuidvq3o
-         gqNDmuu1xGqDEsH97iodSU+6H0t8K679pFHXzDnD5eSkZIxQwesTuspm/IuBbCXaWXqN
-         Pc9z4BH/zTPZbqrRdAcywLzq+kyVBQmpOXtN5uuR9wJFAmHY7Ps2x4eqmNcGgop1zTfu
-         1Wrw==
-X-Forwarded-Encrypted: i=1; AJvYcCUotZ70M+lRWkCOhGeJwl/ouuYi5gLgCncah+ey0UdCLMprE6R7m5DqcTdRfcxsAJMvgqIZIGc1/Nc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS6wsFppnHrtfwNSYC9Y/er+UMUhPXx3gCdJ3oTr7HEFxGUfLK
-	mR27OUpCGpuNSn8vkdafl+12qR5+CgWyZo+Lgq8EB7FYm3y3mvd5paCR804S/cod0ts=
-X-Gm-Gg: ATEYQzwCPtr2njk5KbYsXqPEPDpYPVkMtTOd2kSIWfmYBL6BBpm57Oz0/DxtHFOayAg
-	77QMfEBkv4xo4prFlhudZdDiX4a6C8LfrfDC9XyHXOJuAv7m7+Otqv2Q9lbj0QOCqAnTGKV/Pp6
-	eT2z/S8Re3Ddgx4GjbXNVPHs14qnOaGkV11/jrLn8VBFJdXfUCvuvgqh4a06A6PQei/bVn+PPjB
-	2IgWUmbeM3mVSzA0XBHQS3nugWnXSyRph+lt0++xR44jxyjkIDJJeQt622pqIlqsNwOAe2EVAcM
-	WCV3xhjl7+Y2ofuEyj0XvuDqrtyiFrqSVJK5vCqWFabkMRyzD96/KyNggfp+9CV/Dcj0V0eSD2v
-	P0PcVtbq/qTm3wQQ+HEhjn4g+vDjipsNkWPxyhHMylKn4vG5wK9daUIyi/5faxx/DSzJo9tSYV4
-	QgA7oBhGF0TbPHEK71595d2kWlO7h4
-X-Received: by 2002:a05:600c:1d05:b0:485:17a7:b9cc with SMTP id 5b1f17b1804b1-48519888633mr100850055e9.18.1772711997970;
-        Thu, 05 Mar 2026 03:59:57 -0800 (PST)
-Received: from linaro.org ([77.64.146.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439b8807a4esm29845684f8f.4.2026.03.05.03.59.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2026 03:59:57 -0800 (PST)
-Date: Thu, 5 Mar 2026 12:59:47 +0100
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Thara Gopinath <thara.gopinath@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Udit Tiwari <quic_utiwari@quicinc.com>,
-	Daniel Perez-Zoghbi <dperezzo@quicinc.com>,
-	Md Sadre Alam <mdalam@qti.qualcomm.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Michal Simek <michal.simek@amd.com>, Frank Li <Frank.Li@kernel.org>,
-	dmaengine@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH RFC v11 00/12] crypto/dmaengine: qce: introduce BAM
- locking and use DMA for register I/O
-Message-ID: <aalwMwN3qMlzrql5@linaro.org>
-References: <20260302-qcom-qce-cmd-descr-v11-0-4bf1f5db4802@oss.qualcomm.com>
- <scr5qvxa7f7k22pms4c6k5gwiky7lhssrw6qryfngexlek44g2@rayinnnwqgbt>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7FB39B4B2;
+	Thu,  5 Mar 2026 12:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772712947; cv=fail; b=XnmfRtkNdYDUnqtb2hCD/Y8HzNPS84qrH+iFa6xNyxWn52N4uBPorQ7Kb+AdJ2xN2bs6305qY3s08qNeajQ5fTfL/3K2xP6XcFoCRZkpSr1YZwhwIkPqthsbMP421fRxseReJ0u0UHnuv1CY8RGOAjYEnsr7DmQ8Mj6Ze0mY7W8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772712947; c=relaxed/simple;
+	bh=K8CxyaF4n5UqyfeRuxmmEZO/x2AkKMBgjdnBnr63mo4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=mkglzbeORYm4ymBY5yEqjsQ7jmLr0IOKJpk7O+8P2DTuScqsjIHEDfaE0EzcAEYjT514+Ob23GQf4QBz81TCFvbKy3rBh2sYhLvCle1ysHv7a6vAkbyHXUGjfeMdmmy3cC/rABWZqPj0mXHos3MhAuxgKJgrX3Pat9R1W2InzQc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oHnBnCpI; arc=fail smtp.client-ip=52.101.43.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WnNX66XjUldA1FLLaoufEfe8EkXpJ7jGHgLurs6QzrZknxuTq4sBXg/p4+NESETZMFXg5JKrkaaTVqFqu1WTr94yB4r4FJpQGXNEP6727tgdbGuS1k0BqUoIWrXdVzasgN8Y+SgXrkWyyXmQhBdEeQm/QLdowJWA/gSvvgUxyhfA9ajL1vckGLCECKy2rwCs2wUHuVHV1tNiXV20OucTXk/MJDSZ/zaa8szxRScElC3JbknyM0KKTVY7WP+45Qzti0iAwEjSgLO8UUvoyHA9W3vg8yzsygsNWiFcwnxHYoASnOsVQD9vKFSkxtrc6qWiyxj5l+ZPX98IqsYRpmN/Bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0ktaAu0pFFxlXj/FylERZqpwBAy7Tnt8Dw+D07eCe90=;
+ b=FUMbCGg6+ddoQkuFGu3WUfFyymp7RMQBkccR9s+/dYoItL81yvQG6I0wC8NDbjTR/iz1ARixUf0UzoeYq/UrEt2xOBjC+dA0Hl+qJ94QA51OSDrV6Ry6g6mp0QCqMgP5gLSptNBY2OMI+ApJqzyZ1FSdpCK87WQZ17KuxWVYjD8TfLNkw5ZqwnY2Rw6P+o9wNPig8l5gq7Nr2tU/DvIcmr0oc1V9r7o5c1EPzPaXiDRBwzbVfxRsdXP+ZjEMIBI8dyLys7syR1zpcpkp03wP0cQqqsfWl8IHkBmX/0cCtWi/rr5B1F/vO6Gx/jy3mu1h23EvicXbYdOy7dFXQuiJcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0ktaAu0pFFxlXj/FylERZqpwBAy7Tnt8Dw+D07eCe90=;
+ b=oHnBnCpIGhWrYfZi8urg9nsSItEcrU3EHQvVGFkumN8QDnr45szHMY7hZG/POxymLeC1jrFxb4ITxEiQyJ9142ITze6B9dOAKLl+XG6QIdRHZpBOAK6CfqO73ne2tqoeGV2jbGBlMJd7DwLM5tFspfYyyURp44AtNbsHtaP8f/c=
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com (2603:10b6:806:331::16)
+ by CY5PR12MB6297.namprd12.prod.outlook.com (2603:10b6:930:22::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.21; Thu, 5 Mar
+ 2026 12:15:41 +0000
+Received: from SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::2fd:1a4e:2042:7dd3]) by SA1PR12MB8120.namprd12.prod.outlook.com
+ ([fe80::2fd:1a4e:2042:7dd3%5]) with mapi id 15.20.9678.017; Thu, 5 Mar 2026
+ 12:15:41 +0000
+From: "Verma, Devendra" <Devendra.Verma@amd.com>
+To: Frank Li <Frank.li@nxp.com>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "mani@kernel.org"
+	<mani@kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
+ Michal" <michal.simek@amd.com>, "Verma, Devendra" <Devendra.Verma@amd.com>
+Subject: RE: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL mode
+Thread-Topic: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL mode
+Thread-Index:
+ AQHcnzLWCO8+PlOBsUyeigW/SoG/H7WFuzkAgACmYXCAALfggIABEsjwgABxvwCAAOnmsIAAvjoAgAEKjvCAAHWzAIAEwNdwgAHz+ACAAMV0oIALcI6AgAE65FA=
+Date: Thu, 5 Mar 2026 12:15:41 +0000
+Message-ID:
+ <SA1PR12MB8120CE2DB5EB97512E51F76B957DA@SA1PR12MB8120.namprd12.prod.outlook.com>
+References: <aZSZrROMrvt8jHvw@lizhi-Precision-Tower-5810>
+ <SA1PR12MB812019D701E0B188611DFE7D956AA@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZXfmKs5_KzCDSPq@lizhi-Precision-Tower-5810>
+ <SA1PR12MB8120DC54060E415153AA8CDE956BA@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZdDYJIUuceu0guJ@lizhi-Precision-Tower-5810>
+ <SA1PR12MB8120F99F2A675C17B1F649EA9568A@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZiFtgcMzs-U2MkN@lizhi-Precision-Tower-5810>
+ <SA1PR12MB8120E7C753B717E4C8B9E7819577A@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aZ4l4IHqObEP8DfP@lizhi-Precision-Tower-5810>
+ <SA1PR12MB81203E3A32F0670DB15D63059575A@SA1PR12MB8120.namprd12.prod.outlook.com>
+ <aahkKZ9EBwWfwy95@lizhi-Precision-Tower-5810>
+In-Reply-To: <aahkKZ9EBwWfwy95@lizhi-Precision-Tower-5810>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Enabled=True;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_SetDate=2026-03-05T12:03:37.0000000Z;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Name=Open
+ Source;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_ContentBits=3;MSIP_Label_f265efc6-e181-49d6-80f4-fae95cf838a0_Method=Privileged
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR12MB8120:EE_|CY5PR12MB6297:EE_
+x-ms-office365-filtering-correlation-id: db1e5f95-d8b2-4501-9be0-08de7ab0eb4c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700021;
+x-microsoft-antispam-message-info:
+ ij3ox6M0/HbthNbeXDB9qfdof7EgKhhrTLzIsWiPta+9fkVAFIWIhc8lNG0YL7y2CXd9YNagre8a3mDBef0gkSeyi3Ybwm4+wou/2Q3vQfqGqqAJeT9Z3VSXy3pDSNSTdtoFnKYaO27dXoSrhst7gxVLmXnIS3GinB6Yalnb5LtQOAEnFTJSWweLcnn/zYlj2ZU4eZu/jJXBd73UBxJViIZpmVTmdiUsKZfCDrF0Tji7cxrrjdBVhabXUjPvVs100TyKRUy+uVH+VlQOvnJeD+kZSdZulc2oHfN5ntfrpUH4LVo7yux5cklk08zKuFsVYyvZ7YzbFst4DhONmvTBoaKCGswReBQOIcJZEsNkqdfqFsQxX3hTcUo07By3uF0YLxoFwiVglk8vZL32gJAYWLcjOCyM3NCK93oZlPotB8tVD5yshreX4L9RZDRaNOjU3dTcnw8lz13mTJU8bzJKKdd8UpDmK0ptLEGwPnzOUrnGRMM2/Kr7ScT9c13CAAsacvYrghqULveF0UTvZcVqPp7GwzE4eAMgt2198/EzIkyB8M6D80+D0dwwgCg/k12XxTnfAXhIetqJf3qdx16Ua1rJYTW44ENLoTdusjLpG7bM4zXzTmEl0d71olxI8/uhFx3meIP95lWhHyhAsOo9TPT9eXi0eq0oIoNLYq+8wyCtxDqi3zRzXodJEAu9uOjjnoJ63H1OhJdOgIaaL0Tz2RRUt2Vt41p+Gt+gDbLtf6xq4svpLPr+3+GHI8HvZkQqCAbv9YEne7i5BcrLVO6zkWiu3HHa41UNIdayrY0T084=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB8120.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?iKtO/Ax5MWJ8sqeD85dXUVfqHsbL0LTXbCPCuNJ175mk/zxgQRsShvfb6jQD?=
+ =?us-ascii?Q?8nR37TAMEY1NnnOp70BWXuWtgGYm9UhhMTpmcjJlamd+RDSk1ZBnyuVVYeLq?=
+ =?us-ascii?Q?pWgkAejqwY4SjhEYuHlcPiYpqSjB2YEPTmnabIGTRAfFhjCO4U8AR+EO2pAk?=
+ =?us-ascii?Q?6mr6UbYIAtRBxFG/pOq1pRPGEmllDj5B2m+lrkMertooxTLD2afhpLxhKuCv?=
+ =?us-ascii?Q?RagzeHe2zaBTekwAqAG4at+wFd/e/xAEZP2zNoyc7Q0B5LM4rrytTmkgldjI?=
+ =?us-ascii?Q?wQMzQbqjcQBuUfoP9wFd1oJM62dlOIHxs7wdvhIK8/H8xLha7rscKVu0/g9R?=
+ =?us-ascii?Q?VSOXJ26+reRNIDrzC78gqqh1vSPfaBimgkvcIc3PgZUxB91CY9HJ+Uth0kgq?=
+ =?us-ascii?Q?H8P0vdeChAK6xZNNhxbl55II/pDNzpM4YL73duxRCgc10d4jEFeMk1WIKVSP?=
+ =?us-ascii?Q?ee04rPpxJb82F1IVkuzkIhm2p8Myns0oOd2h7muF2WEP5pYecTGycin8YJoH?=
+ =?us-ascii?Q?nFRX/wZhQJHgsXUhgsCIVPll73UaXH/YoVjKpwfSYECPrt23mTgOMcqAdUMG?=
+ =?us-ascii?Q?fXJs3l82JOm1hpdk3lNpTq0h4MnDo8SO7HyR/0QoUV9ZGLS0v4dpgUr+aN7n?=
+ =?us-ascii?Q?jtD5vqlo0D9Bh0Pdu8PYBfkYxE044uOy5jj/GSJOk2a0m2g+JR/oXCroy+Kn?=
+ =?us-ascii?Q?zqDzG+gQqiAhW9pjaTJbKc1j1TmE4kTFNAHh0lbbf74nTurgeO2yMAMmevq/?=
+ =?us-ascii?Q?f0qw8Xw7eLAWO/AHRmtvniAZSntvYU/FnR67fjbNzSOP3WsjvODxnsB0VexK?=
+ =?us-ascii?Q?kCh9dohSB59vNFYL6TeIHob3Ttbsz1jULV20Pk527lSlVs6mHTWU8d9bFHKX?=
+ =?us-ascii?Q?j8/uv9s/dVjYc2aMwSdJS4QYswELW7DXvVQ/Zt/BV6tZEo6NpEpkSBLaurOf?=
+ =?us-ascii?Q?rDyB0YiP9qDQdyXI+FzIr1bwxWIj5NyBjgbrhVyLTjdIptw6YJ4z7ACvuJM+?=
+ =?us-ascii?Q?gDXTMqgVcKxyTkY3zAu60p7fwG/+LlDVldOSbZIYNA9VK505gTSAdf1XujlY?=
+ =?us-ascii?Q?fT0WoKa6UNILm+zaHxR0orcF0UA/2yAM6cZo6xYeHYlYCrHmBvE1+rHfJ6t3?=
+ =?us-ascii?Q?JhLdidYYKP9f/064inhMKySOsgAdESKsABWfWujuKnESkpsnnIoHmdLEn+at?=
+ =?us-ascii?Q?6vBWwtt/7W3b1T0qxgOlm6d7BfALClV2CIdBldWkBSjan0/E2ucVT7FeAK5O?=
+ =?us-ascii?Q?PZw2TzPoM3MUGRy3UhSfpku0CBAdcDSeDVdVunCfPk25PbspwvHf3xrM7SIl?=
+ =?us-ascii?Q?xSUXphugxxl9Syf7ChvFgUYqOd7MmK7sLU6fNLgEw2Xw+2vkGlXu7Fo63R4e?=
+ =?us-ascii?Q?lIINe3Pnlp2+9o55QgMnnloV1uLxKvxj2coOZ8PSYL5pv1JaKMKrbIwHqvbI?=
+ =?us-ascii?Q?CquT7hnMcOAjlMcvgXuhf689lKDHFJqoFA5kdu14evaqf6kUsk0fatjgsjHJ?=
+ =?us-ascii?Q?cuKIz9kdp5HGTzT4qWRS/Qk79WYgCIr3L5VCHEitilOrpvDOb/aTgfsfq4f7?=
+ =?us-ascii?Q?bm73cIIh9SOY+t3BtnkYziVGxW0y4reMMFOk1yubWk/TXdAmU8QgzgNp9kOx?=
+ =?us-ascii?Q?jRrZ0WL1YJgK7znVbQcVdAamzXt9D114QAT/KpgE9ldPKCLZ2NY+ACxwPzgx?=
+ =?us-ascii?Q?1s40pwyAnbC6qvVzQeDeX1IsAa+RsEipdRKBQ2tD97zc1ZcV?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <scr5qvxa7f7k22pms4c6k5gwiky7lhssrw6qryfngexlek44g2@rayinnnwqgbt>
-X-Rspamd-Queue-Id: 2758C211349
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB8120.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db1e5f95-d8b2-4501-9be0-08de7ab0eb4c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2026 12:15:41.3441
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7/JEXnd6Clhq7V5ImIhvOCPG4+OD2LCE833rOAsO5hcVDkg2doDxdyNPIF8gtjpuaxbnVtKwIj6sJzSkzP4dAg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6297
+X-Rspamd-Queue-Id: B173921172D
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[oss.qualcomm.com,kernel.org,lwn.net,gmail.com,gondor.apana.org.au,davemloft.net,quicinc.com,qti.qualcomm.com,amd.com,vger.kernel.org,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-9272-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9273-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[linaro.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[amd.com:+];
 	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[stephan.gerhold@linaro.org,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[Devendra.Verma@amd.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,linaro.org:dkim,linaro.org:mid,codelinaro.org:url]
+	RCPT_COUNT_SEVEN(0.00)[9];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,nxp.com:email,amd.com:dkim,amd.com:email,SA1PR12MB8120.namprd12.prod.outlook.com:mid]
 X-Rspamd-Action: no action
 
-On Tue, Mar 03, 2026 at 06:13:56PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Mar 02, 2026 at 04:57:13PM +0100, Bartosz Golaszewski wrote:
-> > NOTE: Please note that even though this is version 11, I changed the
-> > prefix to RFC as this is an entirely new approach resulting from
-> > discussions under v9. I AM AWARE of the existing memory leaks in the
-> > last patch of this series - I'm sending it because I want to first
-> > discuss the approach and get a green light from Vinod as well as Mani
-> > and Bjorn. Especially when it comes to communicating the address for the
-> > dummy rights from the client to the BAM driver.
-> > /NOTE
-> > 
-> > Currently the QCE crypto driver accesses the crypto engine registers
-> > directly via CPU. Trust Zone may perform crypto operations simultaneously
-> > resulting in a race condition. To remedy that, let's introduce support
-> > for BAM locking/unlocking to the driver. The BAM driver will now wrap
-> > any existing issued descriptor chains with additional descriptors
-> > performing the locking when the client starts the transaction
-> > (dmaengine_issue_pending()). The client wanting to profit from locking
-> > needs to switch to performing register I/O over DMA and communicate the
-> > address to which to perform the dummy writes via a call to
-> > dmaengine_slave_config().
-> > 
-> 
-> Thanks for moving the LOCK/UNLOCK bits out of client to the BAM driver. It looks
-> neat now. I understand the limitation that for LOCK/UNLOCK, BAM needs to perform
-> a dummy write to an address in the client register space. So in this case, you
-> can also use the previous metadata approach to pass the scratchpad register to
-> the BAM driver from clients. The BAM driver can use this register to perform
-> LOCK/UNLOCK.
-> 
-> It may sound like I'm suggesting a part of your previous design, but it fits the
-> design more cleanly IMO. The BAM performs LOCK/UNLOCK on its own, but it gets
-> the scratchpad register address from the clients through the metadata once.
-> 
-> It is very unfortunate that the IP doesn't accept '0' address for LOCK/UNLOCK or
-> some of them cannot append LOCK/UNLOCK to the actual CMD descriptors passed from
-> the clients. These would've made the code/design even more cleaner.
-> 
+[Public]
 
-I was staring at the downstream drivers for QCE (qce50.c?) [1] for a bit
-and my impression is that they manage to get along without dummy writes.
-It's a big mess, but it looks like they always have some commands
-(depending on the crypto operation) that they are sending anyway and
-they just assign the LOCK/UNLOCK flag to the command descriptor of that.
+> -----Original Message-----
+> From: Frank Li <Frank.li@nxp.com>
+> Sent: Wednesday, March 4, 2026 10:26 PM
+> To: Verma, Devendra <Devendra.Verma@amd.com>
+> Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> Subject: Re: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL
+> mode
+>
+> Caution: This message originated from an External Source. Use proper
+> caution when opening attachments, clicking links, or responding.
+>
+>
+> On Wed, Feb 25, 2026 at 12:06:12PM +0000, Verma, Devendra wrote:
+> > [AMD Official Use Only - AMD Internal Distribution Only]
+> >
+> > > -----Original Message-----
+> > > From: Frank Li <Frank.li@nxp.com>
+> > > Sent: Wednesday, February 25, 2026 3:58 AM
+> > > To: Verma, Devendra <Devendra.Verma@amd.com>
+> > > Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> > > dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> > > kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> > > Subject: Re: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add non-LL
+> > > mode
+> > >
+> > > Caution: This message originated from an External Source. Use proper
+> > > caution when opening attachments, clicking links, or responding.
+> > >
+> > >
+> > > On Mon, Feb 23, 2026 at 04:40:07PM +0000, Verma, Devendra wrote:
+> > > > [AMD Official Use Only - AMD Internal Distribution Only]
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Frank Li <Frank.li@nxp.com>
+> > > > > Sent: Friday, February 20, 2026 9:33 PM
+> > > > > To: Verma, Devendra <Devendra.Verma@amd.com>
+> > > > > Cc: bhelgaas@google.com; mani@kernel.org; vkoul@kernel.org;
+> > > > > dmaengine@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> > > > > kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>
+> > > > > Subject: Re: [PATCH RESEND v10 2/2] dmaengine: dw-edma: Add
+> > > > > non-LL mode
+> > > > >
+> > > ...
+> > > > > > But if it about writing a new function to check the LL mode
+> > > > > > support then I think the current variable is good enough which
+> > > > > > provides good readability and do not create any ambiguity
+> > > > > > compared to the ll region size
+> > > > > comparison.
+> > > > >
+> > > > > It is not big deal,  use 'bool cap_non_ll: 1' in dw_edma_chip.
+> > > > > So we add more cap flags in future.
+> > > > >
+> > > > > Frank
+> > > > >
+> > > >
+> > > > Hi Frank, could you elaborate what you mean by adding the cap flag?
+> > > > How it is going To help identify the overall chip state?
+> > > > I do not understand what is being implied here.
+> > >
+> > > non_ll in chan means current status, which indicate one channel work
+> > > at non_ll mode or ll mode.
+> > >
+> > > here dw_edma_chip means hardware's captiblity, indicate if hardware
+> > > support ll mode.
+> > >
+> > > Distingiush hardware limition or current working mode.
+> > >
+> > > Frank
+> >
+> > Thanks for the explanation!
+> > Hardware supports the LL mode / non-LL mode, just that there is no
+> > piece of code available which can perform the non-LL mode as only one
+> > mode was supported initially by the respective developers.
+> > So, providing it as capability does not look justified as in any
+> > scenario hardware is capable of non-LL mode. Theoretically, non-LL
+> > mode should have been the default mode.
+> >
+> > The non-LL mode is not a hardware limitation either. LL mode needs
+> > extra configurations and in the absence of that, interpretation could
+> > be, enable the supported other mode which is non-LL mode.
+>
+> Yes, that's reason why I don't want to add non-ll in dw_edma_chip, which
+> should provide hardware's information.  non-ll actually miss ll_region
+> information.
+>
 
-It is similar for the second relevant user of the LOCK/UNLOCK flags, the
-QPIC NAND driver (msm_qpic_nand.c in downstream [2], qcom_nandc.c in
-mainline), it is assigned as part of the register programming sequence
-instead of using a dummy write. In addition, the UNLOCK flag is
-sometimes assigned to a READ command descriptor rather than a WRITE.
+I think, non_ll can be interpreted without using the ll-region related info=
+rmation
+as well. My view regarding the dw_edma_chip struct is slightly different,
+it does not provide the hardware capability rather stores a snapshot of
+configuration based on information provided by different means,
+please take a look at my comment below related to this.
 
-@Bartosz: Can we get by without doing any dummy writes?
-If not, would a dummy read perhaps be less intrusive than a dummy write?
+> >
+> > With the current non_ll inside the dw_edma_chip, when non_ll =3D false,
+> > indicates It supports both the modes LL and non-LL, but requires user
+> inputs to enable it.
+> > With non_ll =3D true, the dw_edma_chip or the hardware has no choice bu=
+t
+> > to work in non-LL mode only. This is the interpretation for the flag in=
+ non_ll.
+>
+> we need distingiush current state and HW/SW captiblity. in dma_chan, non_=
+ll
+> means current working state.
+>
+> but the same words 'non_ll' in dw_edma_chip is HW/SW capablity.
+>
+> dma_chan: non_ll       means current channel use LL OR non LL.
+> dma_edma_chips: non_ll means only support non LL mode OR both.
+>
+> The same words "non_ll" means difference. We should try to avoid this cas=
+e.
+>
+> if you want to add field in dw_edma_chip, avoid use the same words becaus=
+e
+> their means is difference.
+>
+> Frank
 
-Thanks,
-Stephan
+Can we please simplify this interpretation, the non_ll in all the scenarios=
+ should mean non-LL mode
+only if set to true.
+dw_edma_chip : non_ll =3D true, it shall mean that all the channel, at chip=
+ level, can work in non-LL mode ONLY.
+dw_edma_chan: non_ll =3D true, it shall mean that individual channel is con=
+figured for a transaction in non-LL mode.
 
-[1]: https://git.codelinaro.org/clo/la/platform/vendor/qcom/opensource/securemsm-kernel/-/blob/sec-kernel.lnx.14.16.r4-rel/crypto-qti/qce50.c
-[2]: https://git.codelinaro.org/clo/la/kernel/msm-5.15/-/blob/kernel.lnx.5.15.r46-rel/drivers/mtd/devices/msm_qpic_nand.c#L542-562
+Above all, a nice comment related to the flag shall be good enough to make =
+the understanding clear, at the
+places where declared.
+Since the beginning my emphasis is that 'non_ll' flag should be treated for=
+ what it implies, i.e non-LL mode.
+It was included in two different sets of structs to show the hierarchy how =
+it could affect the overall functionality
+depending upon where 'non_ll' is set to true.
+Coming to the dw_edma_chip struct, I do not understand why the dw_edma_chip=
+ struct is about
+hardware capability, it is more about the configuration of the chip which i=
+s filled anyway at the time
+of probe() function calling. This struct does not provide any capability in=
+formation at the time of probe() calling
+rather it is filled based on the params configured by user either as static=
+ info (eg: snps_edda_data) or by reading
+the capability registers (eg: VSEC and channels enabled by reading config s=
+pace).
+I hope this clears the doubt. Please let me know if any further information=
+ required related to the non_ll flag
+Interpretation.
+
+Regards,
+Devendra
+
+> >
+> > With the capability, would it not make the statement, that if non_ll =
+=3D
+> > true, it supports non-LL mode but that does not mean to be mutually
+> > exclusive and not support LL mode at the same time?
+> > If there is a requirement regarding the capability then it can be
+> > taken as a separate update but I am not sure what purpose it can serve =
+wrt
+> non-LL functionality.
+> > Please let me know your thoughts on this and lets conclude.
+>
+> >
+> > Thanks!
+> >
+> > > >
+> > > > - Regards,
+> > > > Devendra
+> > > >
+> > > > > >
+> > > > > > > Frank
+> > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Frank
+> > > > > > > > > > > > > >  };
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > >  /* Export to the platform drivers */
+> > > > > > > > > > > > > > --
+> > > > > > > > > > > > > > 2.43.0
+> > > > > > > > > > > > > >
 

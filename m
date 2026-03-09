@@ -1,182 +1,231 @@
-Return-Path: <dmaengine+bounces-9354-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9355-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AOR4OR/wrmmFKgIAu9opvQ
-	(envelope-from <dmaengine+bounces-9354-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 17:06:55 +0100
+	id 0M+PL4z/rmkLLgIAu9opvQ
+	(envelope-from <dmaengine+bounces-9355-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 18:12:44 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E769723C6DF
-	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 17:06:54 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6815B23D72B
+	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 18:12:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A1D1130B18F6
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Mar 2026 15:50:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C8EA5303B7F1
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Mar 2026 17:06:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8C523E0C51;
-	Mon,  9 Mar 2026 15:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8BA1377541;
+	Mon,  9 Mar 2026 17:06:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="GBMAup7e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geuaaSQv"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011057.outbound.protection.outlook.com [52.101.65.57])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783733D7D6D;
-	Mon,  9 Mar 2026 15:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773071444; cv=fail; b=fjmcWxMQXV19hjE5TRIXeKDbQnz7WldYXVGAukz7kQnZxATG3gVoS3x/kPOr3VcYVLJap2qTxtzAwTKQcwvRlZGwHdl8P8M0QyiKvZyh/djY0lUFESQvdhcYmCaf8xoJ5FU4shzmEmnTRqnIDahZbE1YPpcWK65dz0hy4HZrnXo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773071444; c=relaxed/simple;
-	bh=TTLHUxxuOjv6lt5zt80FKmnS0lRR42uZ9XX37SUnK+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=pxve9jpsWiQIeVgW1J7vvIXefWeCtByujI/W9u2FyGoUqXFUKcsQmgX9uvw91s09pmVEmvqsGFJYRkyetaialNXS66A5XfPnOJ8J0SOQTGx2JEC8syxSPIWVZiyhHA2Ft3gWHXVpE+lPm3UoR4qRms2swCI7mq3ojmfzbDPpOc4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=GBMAup7e; arc=fail smtp.client-ip=52.101.65.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UGKvVDBwUwreS0RSorlRPop360Mm2eg2xfwv5DHshp6qMbIiVniCAfHrdCCRx62QOjxrGWzOEwJT+/7pRzk134mzNPXF6zy0cPrwnGZjJmBtHsr3D0KY2fl4o+ML895vnTaNXGrd5ZZ87VfyhmKnNbMewlAdy5uC9jK6IwNs+gXgmhmUVsZ4LyygW/oXEflroebcQ0GOsPpoBOB7hKpQgqGjcwuJM5fHLZwXmJjlcICLecmJ4p8xfwr0dsfP533SZ1aK0O1meq1UXpMDxLxwfHuyGxvgnSPA4JTf4Dw/W2htApkqVFQVhb14j25qLK2zdpBPkTGN15yt14HkAO9/KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TTLHUxxuOjv6lt5zt80FKmnS0lRR42uZ9XX37SUnK+w=;
- b=DyWd3ZzTCHyIaPrCFEeVvhkUYBMStHbBBHi9JQ2LV4NwD//RyENU7vfbQIF0C+pZGwImaVXRMOekPJSdqmvxq2ZC3UUU0FAx31c6r5OIqB8oD69Ac76kGZiEBAGZYSpQFM2F7QFjpPAzJiLRTEIJLVnIRgAjPeV3OPWOkhrO9Yp8Xve6PVbiMaRxMobhLcxu1GQULwbPhI0xB8kWSeE6hk28cRcJ1J7QFdmaB8/OD24ajfHLZJ3/iMaD9UnOb6QHS/X04TZM2EuHlZBuNgo2BoDEvuXQyVFjl7IktCdTHqu0ppwUnbJ1CA9TdgvvPSHweJanFqLoThHq37WoaUt7Tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TTLHUxxuOjv6lt5zt80FKmnS0lRR42uZ9XX37SUnK+w=;
- b=GBMAup7e8Wx7j8O7PRzbemS9TwjvhmNugyzetNXrLIM8vcUzN7lPSTm019J+PQTJ0K8wB4I8rvMGnlpYPWklxHkHZtLpHqssYw5Bh/RCYpg/3PeFfkTB/c1fcEPvNgVIDft5KVDlSS576r9jT7uEMJVKluu/j3d+BMe9F226uG/n/6W++jKe8T07u68ZFh402PyD0/HkrGtBBIT50rvb564HLhbt/TWWhUzxirQFML3Dre0tqamhhJwg0Bj2F+BzCWpEUTkFfz2ss/eceI+R3OBV/ItAo+/mBC/zfLCHRyhvnKkJUb1lECYLjH6VqVXIoAPJ4nWd/Q+gnz5qcDJg8A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by AS1PR04MB9310.eurprd04.prod.outlook.com (2603:10a6:20b:4de::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.22; Mon, 9 Mar
- 2026 15:50:40 +0000
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9678.017; Mon, 9 Mar 2026
- 15:50:38 +0000
-Date: Mon, 9 Mar 2026 11:50:30 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: xianwei.zhao@amlogic.com
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>, linux-amlogic@lists.infradead.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] dmaengine: amlogic: Add general DMA driver for A9
-Message-ID: <aa7sRockHl9uBybj@lizhi-Precision-Tower-5810>
-References: <20260309-amlogic-dma-v6-0-63349d23bd4b@amlogic.com>
- <20260309-amlogic-dma-v6-2-63349d23bd4b@amlogic.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260309-amlogic-dma-v6-2-63349d23bd4b@amlogic.com>
-X-ClientProxiedBy: PH8PR20CA0006.namprd20.prod.outlook.com
- (2603:10b6:510:23c::11) To PA4PR04MB9366.eurprd04.prod.outlook.com
- (2603:10a6:102:2a9::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E06F3B52F4
+	for <dmaengine@vger.kernel.org>; Mon,  9 Mar 2026 17:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773075962; cv=none; b=QsNeEOyZntsvJwXTJQ6NzFiKGuA7whYoNQHlC3z2VHvavxRc0tE4sY7QyVnrU/v7QIBz5rfCrg2LqvYYMib4yNDXpyZv0OgAR706YqgEzBVoIWdwXwmUQFfwDFJ3Hf3iy7LwnFtQAk72KelufE4ZvEKpzeMEjBQjVq3OzrlWKDA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773075962; c=relaxed/simple;
+	bh=Nl4HOblw010V5+pE2S/P/QX3P3lziK39Je/lLiEZbvE=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gp5YTeeIfC3LmEwIhjs57KGejcvk7bIMYg9ODnPvn21P0YX3oEdB+lMJdkGABXWn/q6RANIQvhd/rLwvNIX09KMa94sjT2blaEklUykR6uxyMIR68XhbaSI++FE+a3PoYffe3erubxBopxdAKZYWZrXiWio3uJPzmuuMTj8Ud4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geuaaSQv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02CE8C2BCB1
+	for <dmaengine@vger.kernel.org>; Mon,  9 Mar 2026 17:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773075962;
+	bh=Nl4HOblw010V5+pE2S/P/QX3P3lziK39Je/lLiEZbvE=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=geuaaSQvhOJNX357Z9w1wt3tQulaQ2XrNbaryqjHB41cQrIEKqI/vZq5TaPrTTZU+
+	 M9vyJ9dq4ijyvChbTm7rBXIN+xqp7/7Zg+LweUoaGQQCyIzdQIbX7vO9RmCBO6SNh0
+	 HCkM2f6NvmQE+cjtgjISXrFdntTFS+KmP8R7IFEr9MshUvtq11+rZDb9ytOF4jZPhy
+	 KjfxZqgFqENm7BRNZg+fcqG3/PRG0xYL6KOoxcXbrxqFB9eNIaHOcjgrNo6H5NQrFp
+	 r+IQpXqjhjyxflvNd5G53edsKI7lnL8xnAnY+13IpRtz43P5qHajtmAGju844wD7nb
+	 WMU6swPIGVMOA==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-38a38ccc217so32464631fa.0
+        for <dmaengine@vger.kernel.org>; Mon, 09 Mar 2026 10:06:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXfuYQTyhddAFs0MCFZac1dmfmSLoq6ZyZ8CK5LEq4L+qmDstv1tU9EZXvhxUXuh9VbKXwX+UOnZOY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQxjuIPcw2nrpJ9y0YvP9Di5K0hundMJFvJtRjVZsqWqC8SCVI
+	zgdWXRfH2YZ0CXGrdjdW8lAhChPZVrn+m178YpDfQCdBFrLt0nL0Rz1Fd4I/HLR7gSZvPIiiAe9
+	1OWRuQ+AvAjhpgRm+2yip03KKyTM1YXVqpDWmJy+KpQ==
+X-Received: by 2002:a05:651c:2212:b0:38a:42ec:9f84 with SMTP id
+ 38308e7fff4ca-38a42ec9ffcmr33518861fa.4.1773075960460; Mon, 09 Mar 2026
+ 10:06:00 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 9 Mar 2026 10:05:59 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 9 Mar 2026 10:05:59 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <aayLkmDRLMuTzXZv@vaman>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|AS1PR04MB9310:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ab0f491-73ef-446b-aa12-08de7df39c39
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|52116014|19092799006|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	wdznjPJi5AEJgMoIuCd6cY4kZ8Vjs079Xry23isixugrFKmdpMvdHG91Zki2+Xoc7jjJ/v6q4yVJP72ZY45t6uubky2W2y5J2j4mofWDzCMxZ4e5LDXXUxA7SuDWMfYnqPcmioW0lPbC0sNZu7ik4HDiutwa+r2DKGIxzwNG+bvIELLzPeO1WWVeDv0uvYp+IbPeFcGydpCKy3iKS5zIugTWr46C5a+omYC+AhtKcGcnUlgzlo1zG/MWW4lwwDoIOUGvAT6DLABRxiAuKt5L7lDKCgtxOdwNVYT3sbK2PawMND1sCR/UYJxzDrnsW0YIsbOur8c+6O1Pyf0NcStCJe/2quWkO1gIDggBUoILtwI8i8wAmFF9uJqnrYvEEmxuizG3/5I8URfABOAbPr0lyMKLxOejhbvgXLiCV6DLnaMSfotveHnJFqY0rKXV2eIeOuiPmrPsEJy1wiNXiGkYSZUg/CBEi1D1dgH2Fn61vGb9CZ9tuDBysra77Ldc8/sd+3nluD9uavHjqHtJYa3phFf32adC87bBxlbKLEL4em4uQeXMEPNJ2+dOA+oGPaoZTBlxcJehOYKUjyRNBnyHrTDNUWY4Rpe2aZDgd3udGFkybjyq77svXoHYuN40fXnnrMJPousmzu9Bn5+lKOQDddFhSwJmIY8Asj5zyywEFKL+Wm0Mox5BW0/9Q/QTT8BWodx01nB52s6eN4A7ZcskZZmt+F2q7BwUf2QmLo5C6YbonIyQzISdu0jWOBCkxKXPnTSS7ghD0+zh66TYT5Cb4HsdHXN6rVzyABPUluJVrdY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(52116014)(19092799006)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?llDRp1yHS0KiwNn70I1wUCuQsjEf1DQQB7US32s3Ah0B30DY4c5EAe11QgrV?=
- =?us-ascii?Q?oSx+/pMTVgrFym7Vg/ZXnQslSTBLgYOKnWjy9kKs6WnS/FnOOSrVPgKuuiWd?=
- =?us-ascii?Q?ddS0npSK0K7mW0pcpJaKSdXnEjY7GWKFD/bFE0DnXaP9is61Q1EXSwsfJ4rO?=
- =?us-ascii?Q?YteE9R0AqmG3oHthEQrzlEn23n1E3rct+bzVjKGXXt49PZ3h3HUPPZNgFy8L?=
- =?us-ascii?Q?lTlbDXwBfX/dBjCsB3+swPRdoo1/4Ods1+RrdZZ/etTLkZSG4+YtOpEbZLQ1?=
- =?us-ascii?Q?eBno0iPdbq8Bldnc5xFWXyKJJFBtV8ki61aFJVVH5+nvpKEICb3LUglVkmwg?=
- =?us-ascii?Q?TOP9xnEm7MOOFOVX/uzHXIpFh0YrIyXFWL92wZqvritZuXf+oh1lFJWfvg8v?=
- =?us-ascii?Q?CHO+2nXc9PsaYDGNSMK1UONZji6keye3r+FbtdDbsSglMAerf0buIyR1kJ3H?=
- =?us-ascii?Q?1sDdqSSDH51LSaqAkSZroZW4ziP28lt3fD/elVt860aQSqx9fFvT7S8bqtQ7?=
- =?us-ascii?Q?TY7nBIuH9snIrUgVY2EUZiBDnsKI2iNraiKwlDi/oj87VkcDphOitkYYWBgA?=
- =?us-ascii?Q?FO2Oi10qVvH5Hk+WSQs7NqLXK+B+8gesEmtSBVscCicdTBjKEAIB4L2XoG+7?=
- =?us-ascii?Q?WnMQQHJrcFA0UV1lWAGOKfR1FIH22nBkeZPf4U1eoEd5gWs0wBCsMLCrlqTf?=
- =?us-ascii?Q?eBtMCNPgHAi/gVrqMYd2zKoiTitrw7deiv/XKH4GFu0L0xW2wCypb7noOKnY?=
- =?us-ascii?Q?eQP97uhxlL4pPWWfmvYRM1A6zJyiLBqPsxoo1hZm9eybG+uZ9O3RfjpiQhrw?=
- =?us-ascii?Q?YlsrHObR0XoxQbOUOmoHt7qMFIMmMN1iyf9//lNmhBejF91yOiuXxhPZGGCt?=
- =?us-ascii?Q?0g2oQ1BhlMEbB3FXdNOMStEQ5oDJVMfzKAynEzxUHpuo+368FFPoE6xYP2Eg?=
- =?us-ascii?Q?CBuT9NZOaZJmwrdV6RTFWqx5U5p6E1w15ZztEAmN9edoLfd+mFiFC05xzahy?=
- =?us-ascii?Q?SY7eGeCJLr5M/EMzel1/OmlXlP2fcH2TCVWe8UTUkcj4Oti9KsWjfe5uSvFB?=
- =?us-ascii?Q?01qCMJtCb2lGoI4mjO99Nkf2wOL6EtewZYlntifwk+RpVVSLomg/GpZgDrwx?=
- =?us-ascii?Q?7qDAsgS6NybpZSqweuEHQE5mpIpm/O6JpaZu6CH52jkCIPajUKbVMI7OJLiV?=
- =?us-ascii?Q?CQRH6NJYIr7yAcwsAD43uqxNFJe97uAm67lrWbkIBirVaMOjCfPigUWfy2A/?=
- =?us-ascii?Q?1+It/ortYRqX+fd5zmPM7AUaqAo0qNm47KNRKfUY6YjsRFLue7iC4jPBgKmq?=
- =?us-ascii?Q?ECYbTfcefPe3qpWQtGCbk+mCDvuWr27ulMKU+HTVAkdn3aDkT3Ke3Kz2FQDn?=
- =?us-ascii?Q?3GwHYSirJFGpFIwWsYdPrie39s3QJgnkTayd/Cs2YD1foEB2M8pRXHeOggJ9?=
- =?us-ascii?Q?sthYVdGebGBaI4xxH43gkPFr/3NpRYz0jsIFX1R/wgFmJ0sqhHDOmKRlu45p?=
- =?us-ascii?Q?AR/+bp0Ab80iQZ3qIEzNrz0PNQ9sm7GHLEadl+uyPoQZqySs6V9DJmSD9w0r?=
- =?us-ascii?Q?YSed6+GngO/XGeA6lfjCIdVs+aj/8Muc9yMtesxqUBMrgC/iz4iacxHHqEED?=
- =?us-ascii?Q?WF0NG4JuIWN4I4ChB4tgzeibnODIT13Q2MlNe41qfbSP2mIaJYyR6emvdhZw?=
- =?us-ascii?Q?Ja8i62FzHumfnttWrGhQX7Zln3NrEOF2HsY0ZPxLHANTmyf0?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ab0f491-73ef-446b-aa12-08de7df39c39
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2026 15:50:38.7588
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tmkoX2jS+yWlOfrtXjVLl2dmxw/f/CrYdgMYKh7M1U2gEeqvjIbwDq9V7Kr4yOFtKCyA+yGghSLf/xIKONaetQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9310
-X-Rspamd-Queue-Id: E769723C6DF
+References: <20260302-qcom-qce-cmd-descr-v11-0-4bf1f5db4802@oss.qualcomm.com>
+ <20260302-qcom-qce-cmd-descr-v11-12-4bf1f5db4802@oss.qualcomm.com>
+ <aahHeR9j7q4_ynYK@vaman> <CAMRc=Mc48+NyMPkFRa8GPv-odCe=r9WXJWUZYkTsaY53Ev_stQ@mail.gmail.com>
+ <aayLkmDRLMuTzXZv@vaman>
+Date: Mon, 9 Mar 2026 10:05:59 -0700
+X-Gmail-Original-Message-ID: <CAMRc=MeJNQq8AF9SrJYY=CNOF62UXpaX7Tzuk5VSfaXoWSCGRg@mail.gmail.com>
+X-Gm-Features: AaiRm52AwUikzvApltwtSp3ZuI8KyckqNAj_xcMnQHdUmblkYlZhjv-tlMSJcGs
+Message-ID: <CAMRc=MeJNQq8AF9SrJYY=CNOF62UXpaX7Tzuk5VSfaXoWSCGRg@mail.gmail.com>
+Subject: Re: [PATCH RFC v11 12/12] dmaengine: qcom: bam_dma: add support for
+ BAM locking
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Thara Gopinath <thara.gopinath@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Udit Tiwari <quic_utiwari@quicinc.com>, 
+	Daniel Perez-Zoghbi <dperezzo@quicinc.com>, Md Sadre Alam <mdalam@qti.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
+	Michal Simek <michal.simek@amd.com>, Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Bartosz Golaszewski <brgl@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 6815B23D72B
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.84 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9354-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9355-lists,dmaengine=lfdr.de];
+	FREEMAIL_CC(0.00)[oss.qualcomm.com,lwn.net,gmail.com,gondor.apana.org.au,davemloft.net,quicinc.com,qti.qualcomm.com,kernel.org,amd.com,vger.kernel.org,lists.infradead.org,linaro.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[nxp.com:+];
-	NEURAL_HAM(-0.00)[-0.978];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,amlogic.com:email,nxp.com:dkim,nxp.com:email]
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-On Mon, Mar 09, 2026 at 06:33:53AM +0000, Xianwei Zhao via B4 Relay wrote:
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On Sat, 7 Mar 2026 21:33:22 +0100, Vinod Koul <vkoul@kernel.org> said:
+> On 04-03-26, 16:27, Bartosz Golaszewski wrote:
+>> On Wed, Mar 4, 2026 at 3:53=E2=80=AFPM Vinod Koul <vkoul@kernel.org> wro=
+te:
+>> >
+>> > On 02-03-26, 16:57, Bartosz Golaszewski wrote:
+>> > > Add support for BAM pipe locking. To that end: when starting the DMA=
+ on
+>> > > an RX channel - wrap the already issued descriptors with additional
+>> > > command descriptors performing dummy writes to the base register
+>> > > supplied by the client via dmaengine_slave_config() (if any) alongsi=
+de
+>> > > the lock/unlock HW flags.
+>> > >
+>> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm=
+.com>
+>>
+>> [snip]
+>>
+>> > > +static struct bam_async_desc *
+>> > > +bam_make_lock_desc(struct bam_chan *bchan, struct scatterlist *sg,
+>> > > +                struct bam_cmd_element *ce, unsigned int flag)
+>> > > +{
+>> > > +     struct dma_chan *chan =3D &bchan->vc.chan;
+>> > > +     struct bam_async_desc *async_desc;
+>> > > +     struct bam_desc_hw *desc;
+>> > > +     struct virt_dma_desc *vd;
+>> > > +     struct virt_dma_chan *vc;
+>> > > +     unsigned int mapped;
+>> > > +     dma_cookie_t cookie;
+>> > > +     int ret;
+>> > > +
+>> > > +     async_desc =3D kzalloc_flex(*async_desc, desc, 1, GFP_NOWAIT);
+>> > > +     if (!async_desc) {
+>> > > +             dev_err(bchan->bdev->dev, "failed to allocate the BAM =
+lock descriptor\n");
+>> > > +             return NULL;
+>> > > +     }
+>> > > +
+>> > > +     async_desc->num_desc =3D 1;
+>> > > +     async_desc->curr_desc =3D async_desc->desc;
+>> > > +     async_desc->dir =3D DMA_MEM_TO_DEV;
+>> > > +
+>> > > +     desc =3D async_desc->desc;
+>> > > +
+>> > > +     bam_prep_ce_le32(ce, bchan->slave.dst_addr, BAM_WRITE_COMMAND,=
+ 0);
+>> > > +     sg_set_buf(sg, ce, sizeof(*ce));
+>> > > +
+>> > > +     mapped =3D dma_map_sg_attrs(chan->slave, sg, 1, DMA_TO_DEVICE,=
+ DMA_PREP_CMD);
+>> > > +     if (!mapped) {
+>> > > +             kfree(async_desc);
+>> > > +             return NULL;
+>> > > +     }
+>> > > +
+>> > > +     desc->flags |=3D cpu_to_le16(DESC_FLAG_CMD | flag);
+>> > > +     desc->addr =3D sg_dma_address(sg);
+>> > > +     desc->size =3D sizeof(struct bam_cmd_element);
+>> > > +
+>> > > +     vc =3D &bchan->vc;
+>> > > +     vd =3D &async_desc->vd;
+>> > > +
+>> > > +     dma_async_tx_descriptor_init(&vd->tx, &vc->chan);
+>> > > +     vd->tx.flags =3D DMA_PREP_CMD;
+>> > > +     vd->tx.desc_free =3D vchan_tx_desc_free;
+>> > > +     vd->tx_result.result =3D DMA_TRANS_NOERROR;
+>> > > +     vd->tx_result.residue =3D 0;
+>> > > +
+>> > > +     cookie =3D dma_cookie_assign(&vd->tx);
+>> > > +     ret =3D dma_submit_error(cookie);
+>> >
+>> > I am not sure I understand this.
+>> >
+>> > At start you add a descriptor in the queue, ideally which should be
+>> > queued after the existing descriptors are completed!
+>> >
+>> > Also I thought you want to append Pipe cmd to descriptors, why not do
+>> > this while preparing the descriptors and add the pipe cmd and start an=
+d
+>> > end of the sequence when you prepare... This was you dont need to crea=
+te
+>> > a cookie like this
+>> >
+>>
+>> Client (in this case - crypto engine) can call
+>> dmaengine_prep_slave_sg() multiple times adding several logical
+>> descriptors which themselves can have several hardware descriptors. We
+>> want to lock the channel before issuing the first queued descriptor
+>> (for crypto: typically data descriptor) and unlock it once the final
+>> descriptor is processed (typically command descriptor). To that end:
+>> we insert the dummy command descriptor with the lock flag at the head
+>> of the queue and the one with the unlock flag at the tail - "wrapping"
+>> the existing queue with lock/unlock operations.
 >
-> Amlogic A9 SoCs include a general-purpose DMA controller that can be used
-> by multiple peripherals, such as I2C PIO and I3C. Each peripheral group
-> is associated with a dedicated DMA channel in hardware.
+> Why not do this per prep call submitted to the engine. It would be
+> simpler to just add lock and unlock to the start and end of transaction.
 >
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> ---
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+
+Becuase then we'd have:
+
+  [LOCK] [DATA] [UNLOCK] [LOCK] [CMD] [UNLOCK]
+
+while what we want is:
+
+  [LOCK] [DATA] [CMD] [UNLOCK]
+
+Bartosz
 

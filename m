@@ -1,149 +1,167 @@
-Return-Path: <dmaengine+bounces-9327-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9328-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aMUgOf1prmkGEAIAu9opvQ
-	(envelope-from <dmaengine+bounces-9327-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 07:34:37 +0100
+	id qCWHAIRyrmkCEgIAu9opvQ
+	(envelope-from <dmaengine+bounces-9328-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 08:11:00 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F3E32343DE
-	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 07:34:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DEC4234AC0
+	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 08:10:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D9A1D3039CAD
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Mar 2026 06:33:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 70A493011F29
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Mar 2026 07:10:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B87D135D5FC;
-	Mon,  9 Mar 2026 06:33:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFAF7364024;
+	Mon,  9 Mar 2026 07:10:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABFdHHwo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9xDRAyW"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F48835AC0A;
-	Mon,  9 Mar 2026 06:33:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD7D364020;
+	Mon,  9 Mar 2026 07:10:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773038036; cv=none; b=VdaxESx0GsfAnQIN8P1dAknRaAjNymoKNf91Au30ZGBb2Vesb2ZBPSzryo/l0y9ZKI7ROsp6wQgZhvLvH48WLsQPNJNh/LaG8lSZAaQpR4IWb3QFzwi2wDJfZ6AHM9laWvAArtL7UETnY7l9ox6DFzORmYI4O/IkgpDfyLMj0N4=
+	t=1773040235; cv=none; b=VyNNnxrEaE/DNVPEWyrmj4agcieRit7EmT4oQ/7tvEE0CRIGSOIk5dxUWaObzzIWgWUf3FZiKU3+WCsGW7HqKTf90zTvBwpjhdszgg2VhXbng9j/2DrOytW93TbpbV8dmI1QbJhqnIQjJBkMvju8quSuEhwgjvz/5hgevgLSTkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773038036; c=relaxed/simple;
-	bh=kdSXp5Qbia4qiLAhNtnkaEIWENtU3D2yrCCRDU+8y4g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EdQQyaHlOG1UPfdxQvWpwBj53HeNZi0uVoMJBzT8zoa8J8Gw1AV0qJKLURdnoIyodmxSWo3m8SRjoZz+Jj+aTkc1xJthUGtx5bP69c7Dh3WNo8l/QMl1niMe1jvRkG/tCS3SzAFYKjC4tt8XjCHEAUU64vMeYA5QdAiXHAR8CSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABFdHHwo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 574EBC2BCAF;
-	Mon,  9 Mar 2026 06:33:56 +0000 (UTC)
+	s=arc-20240116; t=1773040235; c=relaxed/simple;
+	bh=Hse7aJxnrvlDuoRFVnc1ppocatR7quPw2ymU8XbhW8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lZ2QXivfx6foc7bZIWuRenXEHh+k7h+5WOE7DyqdW9RXjfH4cjiqgI1slbOSwpGxIGbmm0eoYkQfgUCkoqLkDxXqkWNex4g6S9zvNJb2o/eGP2A//a4GFXIywT5GC/2f8/xE9G1xv+0FhsBJEjPfSRLdAMWxx2IkV4c5u9/k9vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9xDRAyW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95B91C4CEF7;
+	Mon,  9 Mar 2026 07:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773038036;
-	bh=kdSXp5Qbia4qiLAhNtnkaEIWENtU3D2yrCCRDU+8y4g=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ABFdHHwoxTuS5hm4CnFs8z3xh7X/sm24v41Ttjqi5KiY6Mn1BF6Nh5OcGFL28iVhI
-	 h/gwHs+xA3zDS+VX1XEISmQCoKnz9zhI6zb0iw2rf2QaLsj9LpmDYvrtcDKGmAOJQ1
-	 XHzWKUBPJRxr2vewlcuB8A622V1ZDo/dBBF9u98ooi6LUX+hNZ1aIxnBJoX0uddb9B
-	 FPJJOJIh32wRWgpW+T2Ir8so7BbcewFMgc737GN3C+CUiEh3c03B107vU9QrTsJhov
-	 mVh1oTKLPcINXwfUHko0wV1LNBaQh+RducdP5G81iGA5njN6KO+o1V5uwpNaHfxbXd
-	 o1GC9oMSCT0XA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A89CEF36E0;
-	Mon,  9 Mar 2026 06:33:56 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Mon, 09 Mar 2026 06:33:54 +0000
-Subject: [PATCH v6 3/3] MAINTAINERS: Add an entry for Amlogic DMA driver
+	s=k20201202; t=1773040235;
+	bh=Hse7aJxnrvlDuoRFVnc1ppocatR7quPw2ymU8XbhW8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c9xDRAyWjt7dQPU36zhBt5GSaad0XjfaONFk2ujpGDkR/wM8be5/pq9G1ZHYCtU/k
+	 Eh1pjnA9XsZChuV0Y2LZjowNxfI1ZLU9U7deOHkg4PhhhwTMKDxHLC4TLRc95A7Sx9
+	 ic8+SklyJwXv32i+E7i9w1/pRH5cwTTEwYUSinirNgrroXvBIUboi5nyXMqSy5Kwrm
+	 j4LpAQA/vD/4lRkre++ACWF/fAgANqfU3Yv15+vF4h28al5ClBUAE54vScOUgqIr9u
+	 64xV8RZeU6Jn0QiXYwCMLP9FkRasXj5DnLJdNlzJTabU5bBc8qtvJ9dwOOjDTsEkbE
+	 2JFylOsRJC6yw==
+Date: Mon, 9 Mar 2026 08:10:31 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+	dmaengine@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev, devicetree@vger.kernel.org,
+	Keguang Zhang <keguang.zhang@gmail.com>, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] dmaengine: loongson: New driver for the Loongson
+ Multi-Channel DMA controller
+Message-ID: <aa5yZ6xSW8yxm9gI@vaman>
+References: <cover.1771989595.git.zhoubinbin@loongson.cn>
+ <408551399f089d10e2ebc2c0add5ba58d659a1b9.1771989596.git.zhoubinbin@loongson.cn>
+ <CAAhV-H6G6Zb7P8OpoM78FkfSW2HeLt+9xfbJyU21tdbUa8A=Ww@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260309-amlogic-dma-v6-3-63349d23bd4b@amlogic.com>
-References: <20260309-amlogic-dma-v6-0-63349d23bd4b@amlogic.com>
-In-Reply-To: <20260309-amlogic-dma-v6-0-63349d23bd4b@amlogic.com>
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Frank Li <Frank.Li@kernel.org>
-Cc: linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773038034; l=791;
- i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
- bh=3ILqFEE9mmDp095lkKeN49I2hs9aNRjaPs7y2SEtITs=;
- b=dpp+q4WX0hQqa+7YFFEA+AwJwuICD2ECPr919QZfbaonE4AGi/uNsfvHyuJYnUDPQEV2FG8uc
- JoL1CGU0GnABlUWm8WwjuuF1+6N9NXFT9UgLnFMK69KW/IYnBp+wNIW
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
- auth_id=578
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
-X-Rspamd-Queue-Id: 7F3E32343DE
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H6G6Zb7P8OpoM78FkfSW2HeLt+9xfbJyU21tdbUa8A=Ww@mail.gmail.com>
+X-Rspamd-Queue-Id: 6DEC4234AC0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-9328-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9327-lists,dmaengine=lfdr.de,xianwei.zhao.amlogic.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	HAS_REPLYTO(0.00)[xianwei.zhao@amlogic.com];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.975];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	FREEMAIL_CC(0.00)[loongson.cn,gmail.com,kernel.org,vger.kernel.org,xen0n.name,lists.linux.dev];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,infradead.org:email,amlogic.com:replyto,amlogic.com:email,amlogic.com:mid]
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.990];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On 26-02-26, 16:18, Huacai Chen wrote:
+> Hi, Binbin,
+> 
+> On Wed, Feb 25, 2026 at 3:41 PM Binbin Zhou <zhoubinbin@loongson.cn> wrote:
+> >
+> > This DMA controller appears in Loongson-2K0300 and Loongson-2K3000.
+> >
+> > It is a chain multi-channel controller that enables data transfers from
+> > memory to memory, device to memory, and memory to device, as well as
+> > channel prioritization configurable through the channel configuration
+> > registers.
+> >
+> > In addition, there are slight differences between Loongson-2K0300 and
+> > Loongson-2K3000, such as channel register offsets and the number of
+> > channels.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  MAINTAINERS                                  |   1 +
+> >  drivers/dma/loongson/Kconfig                 |  10 +
+> >  drivers/dma/loongson/Makefile                |   1 +
+> >  drivers/dma/loongson/loongson2-apb-cmc-dma.c | 729 +++++++++++++++++++
+> >  4 files changed, 741 insertions(+)
+> >  create mode 100644 drivers/dma/loongson/loongson2-apb-cmc-dma.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index aea29c28d865..af9fbb3b43e2 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -14954,6 +14954,7 @@ L:      dmaengine@vger.kernel.org
+> >  S:     Maintained
+> >  F:     Documentation/devicetree/bindings/dma/loongson,ls2k0300-dma.yaml
+> >  F:     Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
+> > +F:     drivers/dma/loongson/loongson2-apb-cmc-dma.c
+> >  F:     drivers/dma/loongson/loongson2-apb-dma.c
+> >
+> >  LOONGSON LS2X I2C DRIVER
+> > diff --git a/drivers/dma/loongson/Kconfig b/drivers/dma/loongson/Kconfig
+> > index 9dbdaef5a59f..4278fbbe8096 100644
+> > --- a/drivers/dma/loongson/Kconfig
+> > +++ b/drivers/dma/loongson/Kconfig
+> > @@ -12,6 +12,16 @@ config LOONGSON1_APB_DMA
+> >           This selects support for the APB DMA controller in Loongson1 SoCs,
+> >           which is required by Loongson1 NAND and audio support.
+> >
+> > +config LOONGSON2_APB_CMC_DMA
+> > +       tristate "Loongson2 Chain Multi-Channel DMA support"
+> > +       select DMA_ENGINE
+> > +       select DMA_VIRTUAL_CHANNELS
+> > +       help
+> > +         Support for the Loongson Chain Multi-Channel DMA controller driver.
+> > +         It is discovered on the Loongson-2K chip (Loongson-2K0300/Loongson-2K3000),
+> > +         which has 4/8 channels internally, enabling bidirectional data transfer
+> > +         between devices and memory.
+> Moving this to after LOONGSON2_APB_DMA is a little better.
 
-Add Amlogic DMA controller entry to MAINTAINERS to clarify
-the maintainers.
-
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 55af015174a5..e9c52dfba2df 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1316,6 +1316,13 @@ F:	Documentation/devicetree/bindings/perf/amlogic,g12-ddr-pmu.yaml
- F:	drivers/perf/amlogic/
- F:	include/soc/amlogic/
- 
-+AMLOGIC DMA DRIVER
-+M:	Xianwei Zhao <xianwei.zhao@amlogic.com>
-+L:	linux-amlogic@lists.infradead.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/dma/amlogic,a9-dma.yaml
-+F:	drivers/dma/amlogic-dma.c
-+
- AMLOGIC ISP DRIVER
- M:	Keke Li <keke.li@amlogic.com>
- L:	linux-media@vger.kernel.org
+Yes and we expect these files to be sorted, so this needs to be done
 
 -- 
-2.52.0
-
-
+~Vinod
 

@@ -1,206 +1,229 @@
-Return-Path: <dmaengine+bounces-9348-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9349-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oG/EMHPLrmnEIwIAu9opvQ
-	(envelope-from <dmaengine+bounces-9348-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 14:30:27 +0100
+	id 8ip0JRrMrmkDJAIAu9opvQ
+	(envelope-from <dmaengine+bounces-9349-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 14:33:14 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8DCC239C36
-	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 14:30:26 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7880E239CC7
+	for <lists+dmaengine@lfdr.de>; Mon, 09 Mar 2026 14:33:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 17BAF3010719
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Mar 2026 13:30:07 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A66DF301F6A6
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Mar 2026 13:33:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2DAB3BD622;
-	Mon,  9 Mar 2026 13:30:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA65A35C19B;
+	Mon,  9 Mar 2026 13:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVrn1Py+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4wL+B0K"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206743C1967
-	for <dmaengine@vger.kernel.org>; Mon,  9 Mar 2026 13:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D3D259CAF
+	for <dmaengine@vger.kernel.org>; Mon,  9 Mar 2026 13:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773063006; cv=none; b=ZrO8UQf1gNuY/XTO1pxxyN06cMasIO/h0QKO4j9dSFTtY/noO+CBWuRs7JuFfM1fa3o0pHKK4bnLGWQ61HtjKzUkDdtO6f8wyM5nctw2zKDHwYJ71aL6Pbl+7khj47QnMwgS5K9No6H16NpVXQIFcCA/PgyswVTluWXVHasa8/w=
+	t=1773063183; cv=none; b=CNQ6Alv+qokyECQ7+XER25CQURZjD9IHTLVkc0o8eKemMzoLSktm4Lhi4t2T1FvoRp/SYJevqb5CGvrLtGygeE6ZGvJi9HUrzZD3SJR4zSReQKq6z3rj9oxK3NUlBc6pfO/hfAJmXkcCrCN35bBC71HlUM3qR4Jiu5YecZww9z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773063006; c=relaxed/simple;
-	bh=PpfVwCq097ZFsJXcMKCNeDb8p8B+H4cRYTHSk7JIN/g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nv2iGt8q6WmSizN1uXn4fj9Hh8PNDfApVPfdXQ7OsJrac0hdV1G8RXDU9HoFEmcTZv2rerEZ5tQR1NXT+0XcG8NCXAhFYSf9IuxcZf0tm3Ay1fcoVka3Qats4HHPX8gGI9MH4pkTvYMrn90lRcY29Oow7L9hi0zHCJuIHqY0G3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QVrn1Py+; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-48529c325f0so19508765e9.0
-        for <dmaengine@vger.kernel.org>; Mon, 09 Mar 2026 06:30:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773063003; x=1773667803; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PpfVwCq097ZFsJXcMKCNeDb8p8B+H4cRYTHSk7JIN/g=;
-        b=QVrn1Py+c2CpFw2CatiLXdvI8aaeEpL/g2nROlPV9y9RXtX5FMendTw3xMd/Cacypd
-         rVt24uu6FMorjFBUKfJnKYHALEb0LjVHFRHC8bgNqKHmEjNC7lKGwPuw05D7nXATbrk0
-         vf6O55vV/hiYZn+AkUxiow6DdJ3L0qjJpEe2ELHYZ+/2LHL7hFOAeT/zOfkiyOBASqq2
-         Ui8l0VenfvLnojrdmHN2/V2YqY+KFu+fiJ5YEwZVqbyobpLjawtk9WQzf1Wkblnl5M73
-         bh8Jl/qxbZe71hDg5QUK3Ehqt+SY1hJ2awQL9G4PNPAKB2bcscBrjy28Z+4+x/1U8C5M
-         Ekhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773063003; x=1773667803;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PpfVwCq097ZFsJXcMKCNeDb8p8B+H4cRYTHSk7JIN/g=;
-        b=jake5V/h1fMI9Ny0Xo6XoAoJ1ZbGFji/EuAlSQsLyfg/KFPOqillUV9ZFmX3igJagU
-         pnMnqJSjTuk1DWIkQiqo01Gxmbr5Is9zwfFYRSOQDZgCvKfybUlFMPoUH+GnToeJw3F/
-         ROfAE/EqF57KYEUNz68D4KgluIhJPGi8Sfa9l2dSa55YCmT958qjdmgSzBc/trKOB94I
-         M90uzYUVICqK/I2lAWOf0Q8e+m3UmmQrCWf6U5wozH1h+D0C9Fe6654zm9aapkOt7z7b
-         aB3nQiNvB1N/NpiyW9c58ey962UwPm2X3fx7aCK3MPdykIr1g/MGvv80EyEIWl5MKMVL
-         RMqA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvu21ami6fFkGgCrqBe0JQl0mhzjq49Od4PEktFQsFdHUt+O0yuPdFymAqyJm40TxLPifFNMKcqsw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH22NvlUXGOjvzstyuJpiOZYvaAnk9D9GiQT1FU3az+s78WJfK
-	XGobh18khTSzZW/2bjxBp+73pPxLQdFj22p8qRzsp969k29QBIb7wIXX
-X-Gm-Gg: ATEYQzxbf0081YfeM7hfhVy1Dj3fDXkoB4L04RdbqbLsaqcxQWtozuZrJRw6DPUs1IB
-	PDygz+JuLt8BWAeM9TanUdTizpcaPd0dL/uljqAJMoGGW3f313xipihuntLEyQgKFgivmMHR8M1
-	oUVcYgE0ysyrSMTz2vk80OY8zAgjBbenq5NpULAb5NzIqJjEZdp2+SKR8CkDn3q/pgUaJZ3WkiJ
-	iuR8PXJqYxpteqHNtNikqP2sdp12wqqhmY0Po39PZ/seYxLwOdFreEoFd26Z/rLErm+RLEtiUSv
-	CD13CsiCXHy2fu0UvDu/pAdHBC6q1G0Db1HgRN0a+pzbQCNyTZk5sBwLBJmq12HJGAg+2HmI41x
-	Y4Yvy5sEPBIGuU9ZJhOIyvzEBjI149x8MrZCOoiUxbPcQJ2dfykuZA0RDtAyuLOBtcZ8sb3QoGM
-	errd2WCgBEONXMULF8A8z6KO1qC4v+nMg=
-X-Received: by 2002:a05:600d:6443:10b0:485:3bc7:a21c with SMTP id 5b1f17b1804b1-4853bc7b45dmr35528455e9.24.1773063003096;
-        Mon, 09 Mar 2026 06:30:03 -0700 (PDT)
-Received: from [192.168.1.187] ([148.63.225.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4853fcb6b92sm28637455e9.3.2026.03.09.06.30.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 06:30:02 -0700 (PDT)
-Message-ID: <c4e7e6f071ce0e7dfdd624b3b31077e2b0f4e454.camel@gmail.com>
-Subject: Re: [PATCH v2 0/5] dmaengine: dma-axi-dmac: Add cyclic transfer
- support and graceful termination
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, Nuno
- =?ISO-8859-1?Q?S=E1?=
-	 <nuno.sa@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Frank Li <Frank.Li@nxp.com>
-Date: Mon, 09 Mar 2026 13:30:48 +0000
-In-Reply-To: <177304239096.87946.15531982345548560058.b4-ty@kernel.org>
-References: <20260303-axi-dac-cyclic-support-v2-0-0db27b4be95a@analog.com>
-	 <177304239096.87946.15531982345548560058.b4-ty@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 
+	s=arc-20240116; t=1773063183; c=relaxed/simple;
+	bh=BTHtEpNf79/aZLsd9vWZFWEtV159n9Y/T5kPu0xKjDE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LykoaBR7XWDF2OzgxXcE9pW+fayfgvTACHroiShLXZZ3aGw4uzFytOvh2iptDML8ndI1r/OciG9OGtrXYqRqpxHkMVCOL5f8QGmjbeVWbxjx1PuYaeiIY91w2iNg0SLj68KnVb926PIp1LSw9ArPGGi++UUb4+AnHQV+xHjYhYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4wL+B0K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD16C2BCB6
+	for <dmaengine@vger.kernel.org>; Mon,  9 Mar 2026 13:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773063183;
+	bh=BTHtEpNf79/aZLsd9vWZFWEtV159n9Y/T5kPu0xKjDE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=V4wL+B0KN0+mkKl6jlrce5TKebjg3Y43ayQb2agA8rlsxB2L5KrJbPRM4lffmOYVv
+	 WeoCbphnvAiSn14vJApR0DkykhCZi84KdCPucmK3ODu0eGjLqok6PdyDHKytnwBgBj
+	 CbNU5aXCnZQXzrMjw6j+NcNqh0foBwzW4aeI7pggoVoZ8ohWLocNPApwbUoMo85MFY
+	 oGTTo7w0CXdRGL0nRVVZAoudiPxXEXUTap9s9O4ghOFb505d8XzBb/FUXUrxweC0Z3
+	 PaYzMaRcgmkoxPVWNRrh+XRwyJqxfXrInguSTibxttrVEWJpgfwnDvqzFQAaapkrWb
+	 n3DnV8F/mtSjQ==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-660d2e48383so188487a12.1
+        for <dmaengine@vger.kernel.org>; Mon, 09 Mar 2026 06:33:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUbHyAVtNtqm+CGKLx4QvHnM99x5ttAUE7ETkrepNdJ9xa4w0mo1jr6UgobFEzRej8dxiq9LZN7FFY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8yIdYM32LnMdR8a1lP3U7otQp13whrRPqoCb6ftdcDb1YmVce
+	Xgkj3dOEHTlZ5d4H2/f/VnDvBDNbbAVL6e9MrOnt9eUO6ehm2tOMKuBKdby5aJYoSt0vFIDYWzA
+	IlescJdmpbxLKpPeOpu/VQDs9S2wfF/Y=
+X-Received: by 2002:a05:6402:42d1:b0:661:3804:b0c2 with SMTP id
+ 4fb4d7f45d1cf-6619d51d6admr5919005a12.27.1773063181991; Mon, 09 Mar 2026
+ 06:33:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: D8DCC239C36
+References: <cover.1772853681.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1772853681.git.zhoubinbin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 9 Mar 2026 21:32:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H65H5WjRarf8KHN3zb1jSyFpGPS1By2=0Kqd1MqnVx9ow@mail.gmail.com>
+X-Gm-Features: AaiRm53ShuE-RRVpgsb6NRxueHra0ZOJThCsn08_hzoyeP4saxxF_8G4DDjsnCc
+Message-ID: <CAAhV-H65H5WjRarf8KHN3zb1jSyFpGPS1By2=0Kqd1MqnVx9ow@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] dmaengine: Add Loongson Multi-Channel DMA
+ controller support
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	Keguang Zhang <keguang.zhang@gmail.com>, linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 7880E239CC7
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9348-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9349-lists,dmaengine=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com,loongson.cn,kernel.org,vger.kernel.org,xen0n.name,lists.linux.dev];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nonamenuno@gmail.com,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-0.885];
-	TAGGED_RCPT(0.00)[dmaengine];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[chenhuacai@kernel.org,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.990];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,loongson.cn:email]
 X-Rspamd-Action: no action
 
-On Mon, 2026-03-09 at 08:46 +0100, Vinod Koul wrote:
->=20
-> On Tue, 03 Mar 2026 10:24:59 +0000, Nuno S=C3=A1 wrote:
-> > This series adds support for cyclic transfers in the .device_prep_perip=
-heral_dma_vec()
-> > callback and implements graceful termination of cyclic transfers using =
-the
-> > DMA_PREP_LOAD_EOT flag. Using DMA_PREP_REPEAT and DMA_PREP_LOAD_EOT is
-> > based on the discussion in [1].
-> >=20
-> > Currently, the only way to stop a cyclic transfer is through brute forc=
-e using
-> > .device_terminate_all(), which terminates all pending transfers. This s=
-eries
-> > introduces a mechanism to gracefully terminate individual cyclic transf=
-ers when
-> > a new transfer flagged with DMA_PREP_LOAD_EOT is queued.
-> >=20
-> > [...]
->=20
-> Applied, thanks!
->=20
-> [1/5] dmaengine: Document cyclic transfer for dmaengine_prep_peripheral_d=
-ma_vec()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 commit: 5f88899ec7531e1680b1003f32584d7da5=
-922902
-> [2/5] dmaengine: dma-axi-dmac: Add cyclic transfers in .device_prep_perip=
-heral_dma_vec()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 commit: ac85913ab71e0de9827b7f8f7fccb9f209=
-43c02f
-> [3/5] dmaengine: dma-axi-dmac: Add helper for getting next desc
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 commit: c60990ba1fb2a6c1ff2789e610aa130f30=
-47a2ff
-> [4/5] dmaengine: dma-axi-dmac: Gracefully terminate SW cyclic transfers
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 commit: ca3bf200dea50fada92ec371e9e294b18a=
-589676
-> [5/5] dmaengine: dma-axi-dmac: Gracefully terminate HW cyclic transfers
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 commit: f1d201e7e4e7646e55ce4946f0adec4b03=
-5ffb4b
->=20
-> Best regards,
+On Sat, Mar 7, 2026 at 11:25=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.cn=
+> wrote:
+>
+> Hi all:
+>
+> This patchset introduces the Loongson multi-channel DMA controller,
+> which is present in the Loongson-2K0300 and Loongson-2K3000 processors.
+>
+> It is a multi-channel controller that enables data transfers from memory
+> to memory, device to memory, and memory to device, as well as channel
+> prioritization configurable through the channel configuration registers.
+>
+> Additionally, since multiple distinct types of DMA controllers exist on
+> the Loongson platform, I have attempted to consolidate all Loongson DMA
+> drivers into a new directory named `Loongson` for easier management.
+For the whole series,
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-Hi Vinod,
-
-Thanks for applying the patches. Since I have you here and if you have 5 mi=
-n I would like to
-ask you for some clarifications. It seems there's a bit of a confusion rega=
-rding src_addr_widths
-and dst_addr_widths. For instance the docs say the following:
-
-" bit mask of src addr widths the channel supports.
-Width is specified in bytes, e.g. for a channel supporting
-a width of 4 the mask should have BIT(4) set."
-
-And I suspect that BIT(4) is leading into some confusion. Like, if I have a=
- width of 4, then my
-mask should look like 0x04 and not 0x20, right? Like the code in [1] looks =
-suspicious to me... And
-it seems that pattern is followed in a lot of other places. If I look at [2=
-], then it looks more
-with what I would expect.
-
-Like, if the correct way is 1), then it means that 64bytes is not really po=
-ssible right now given
-that BIT(64) is UB and that looks a bit limitating and odd to me. That and =
-given that the AXI_DMAC
-might also suffer from a, possible bug, made me want to clarify this.
-
-Thanks!
-- Nuno S=C3=A1
-
-[1]: https://elixir.bootlin.com/linux/v7.0-rc2/source/drivers/dma/tegra210-=
-adma.c#L1166
-[2]: https://elixir.bootlin.com/linux/v7.0-rc2/source/drivers/dma/sh/rcar-d=
-mac.c#L1841
+>
+> Thanks.
+> Binbin
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> V4:
+> - Rebase on dmaengine/next tree;
+> - Add Reviewed-by tags from Frank and Rob, thanks;
+>
+> patch(1/6):
+>  - Add `depends on` restrictions.
+>
+> patch(6/6):
+>  - Move loongson2_cmc_dma_config{..} close to its users.
+>
+> Link to V3:
+> https://lore.kernel.org/dmaengine/cover.1771989595.git.zhoubinbin@loongso=
+n.cn/
+>
+> V3:
+> - Rebase on dmaengine/next tree;
+>
+> patch(1/6):
+>  - Keep alphabet order;
+>
+> patch(2/6):
+>  - Add Reviewed-by tag from Frank, thanks;
+>
+> patch(3/6)/(4/6):
+>  - New patches, format loongson2-apb-dma driver code;
+>
+> patch(5/6):
+>  - Add description for `interrupts` property;
+>
+> patch(6/6):
+>  - Use ffs() helper make the code cleaner;
+>  - Refact loongson2_cmc_dma_chan_irq();
+>  - Simplify locking with guard() and scoped_guard();
+>  - kzalloc()->kzalloc_flex().
+>
+> Link to V2:
+> https://lore.kernel.org/all/cover.1770605931.git.zhoubinbin@loongson.cn/
+>
+> V2:
+> patch(1/4):
+>  - Update loongson1-apb-dma.c entry in MAINTAINERS.
+>
+> patch(2/4):
+>  - New patch, use dmaenginem_async_device_register() helper.
+>
+> patch(3/4):
+>  - `additionalProperties: false` replaced by
+>    `unevaluatedProperties: false`.
+>
+> patch(4/4):
+>  - Rename filename as loongson2-apb-cmc-dma.c;
+>  - Rename Kconfig item as LOONGSON2_APB_CMC_DMA;
+>  - Rename the variable prefix as `loongson2_cmc_dma`;
+>  - Use dmaenginem_async_device_register() helper;
+>  - Drop 'dma_' prefix in struct loongson2_mdma_chan_reg;
+>  - Use struct_size();
+>
+> Link to V1:
+> https://lore.kernel.org/all/cover.1770119693.git.zhoubinbin@loongson.cn/
+>
+> Binbin Zhou (6):
+>   dmaengine: loongson: New directory for Loongson DMA controllers
+>     drivers
+>   dmaengine: loongson: loongson2-apb: Convert to
+>     dmaenginem_async_device_register()
+>   dmaengine: loongson: loongson2-apb: Convert to devm_clk_get_enabled()
+>   dmaengine: loongson: loongson2-apb: Simplify locking with guard() and
+>     scoped_guard()
+>   dt-bindings: dmaengine: Add Loongson Multi-Channel DMA controller
+>   dmaengine: loongson: New driver for the Loongson Multi-Channel DMA
+>     controller
+>
+>  .../bindings/dma/loongson,ls2k0300-dma.yaml   |  81 ++
+>  MAINTAINERS                                   |   7 +-
+>  drivers/dma/Kconfig                           |  25 +-
+>  drivers/dma/Makefile                          |   3 +-
+>  drivers/dma/loongson/Kconfig                  |  41 +
+>  drivers/dma/loongson/Makefile                 |   4 +
+>  .../dma/{ =3D> loongson}/loongson1-apb-dma.c    |   4 +-
+>  drivers/dma/loongson/loongson2-apb-cmc-dma.c  | 730 ++++++++++++++++++
+>  .../dma/{ =3D> loongson}/loongson2-apb-dma.c    |  93 +--
+>  9 files changed, 903 insertions(+), 85 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/loongson,ls2k03=
+00-dma.yaml
+>  create mode 100644 drivers/dma/loongson/Kconfig
+>  create mode 100644 drivers/dma/loongson/Makefile
+>  rename drivers/dma/{ =3D> loongson}/loongson1-apb-dma.c (99%)
+>  create mode 100644 drivers/dma/loongson/loongson2-apb-cmc-dma.c
+>  rename drivers/dma/{ =3D> loongson}/loongson2-apb-dma.c (91%)
+>
+>
+> base-commit: c8e9b1d9febc83ee94944695a07cfd40a1b29743
+> --
+> 2.52.0
+>
 

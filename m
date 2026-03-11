@@ -1,189 +1,189 @@
-Return-Path: <dmaengine+bounces-9382-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9383-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QHSIIh5FsWlCtAIAu9opvQ
-	(envelope-from <dmaengine+bounces-9382-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Mar 2026 11:34:06 +0100
+	id OAhLHyFQsWlCtAIAu9opvQ
+	(envelope-from <dmaengine+bounces-9383-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Mar 2026 12:21:05 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1F7426244D
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Mar 2026 11:34:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CD50262D8E
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Mar 2026 12:21:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C1FDC3077F1F
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Mar 2026 10:32:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 297FD30378A2
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Mar 2026 11:18:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8885A3CEB9F;
-	Wed, 11 Mar 2026 10:32:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BA8D3DA7F5;
+	Wed, 11 Mar 2026 11:18:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="svl1za/v"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NcjGn0jA"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013033.outbound.protection.outlook.com [40.93.196.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A483CA4A9
-	for <dmaengine@vger.kernel.org>; Wed, 11 Mar 2026 10:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773225161; cv=none; b=fCGDpo2NgzNuXU4WX10t2aRtxz/h79rA3AsCn12paTWJ5cDTHtDvUjEXG5Xby2hi8qcIrUFBrv8Deh312nDvPjPnFAlhKxFIsEAV2ESLAJO6n7bPjnUcH6F2p1YcVFDj2q946JKXDo8unCKSDJHw2IG8FRYQpwQOz+cPRrrFzKI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773225161; c=relaxed/simple;
-	bh=RSDSTK7sEaAY8nIinSnQhpMyoUW6LnkFogAohb6WbUY=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jsF9/kX7bdDBVwK6pD0T0YUGqUzPafD63ACQMCUDP85v2VJ7W90ndluNJPQevF+sAeknUbqEkIPCNOSIcz9Q5uOfvziYdbbwDqdwLE9MYlBOqrpSwqmjWOdldB1aNTsQZHfApsvEtZ34Xcc4kxevUaWoOElUWQ6XvYmXIg6uxw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=svl1za/v; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03F3EC4CEF7
-	for <dmaengine@vger.kernel.org>; Wed, 11 Mar 2026 10:32:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773225161;
-	bh=RSDSTK7sEaAY8nIinSnQhpMyoUW6LnkFogAohb6WbUY=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=svl1za/vttGiJkEjbioKb3KXiQ//LSe5/R5KHO8HDCqwXHmXa5S1bUBWInJRchJtE
-	 toqz+x46XqtQBPPAKJZsmmBfwtFTkyjvdBDg7U35+slG/MAfya08BzK0Cjkv1eV9sN
-	 scWq5Xg5pWdVGgYj7UfDjEbN7Bzki6PWUpQhUwIRt4cBi8c5ONSsmUl/lE3pdAjJNT
-	 QCJrBfHJjB2+Fmg0P1jz89lU1ORKeV/9aZOUztobSRxVdEWosp0wEM9W/sD5rryvB4
-	 MIBGTutUMv3ARaQbl3/22HVx90lhdCihEt+B3IeIjTwYsUlHR6mWouIjMPEcWJviZ8
-	 ixpZCbJFDqK7g==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-38a32d36396so8037691fa.0
-        for <dmaengine@vger.kernel.org>; Wed, 11 Mar 2026 03:32:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXJIzjG9EQy39coVSTvYBI5zr3kE7Kn1giZMk4FEsEzgQF95ezSgqnJ91xw452DgBiOPZwZNbNoYIo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPxPsgBVFYuhamRds36ZK0A495nM1w+LKY9J6tpp/FzvA9YgHp
-	4P7VYrm/GeCV8yZGjdelVLZezb4j9zmiLXQ9rCUCTykl9OS3t+5TsebJMvEKB/S9OvT9WnqWdso
-	UyT0Z8hrEevZquvYoyFfoe7rGsAFJyRrZ0L+R5v5xSQ==
-X-Received: by 2002:a05:651c:19a9:b0:387:14c6:53e3 with SMTP id
- 38308e7fff4ca-38a67ea3ad5mr7169861fa.0.1773225159634; Wed, 11 Mar 2026
- 03:32:39 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 11 Mar 2026 03:32:38 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 11 Mar 2026 03:32:38 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <abE9RQfGN6Ycns1B@linaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9423D3DB642;
+	Wed, 11 Mar 2026 11:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773227923; cv=fail; b=mPke9x0RgL7rgJ6dQFCTNRHEQRiCV3sKotfw616JfcWCfTx2g7MSuEqURpVB2c3pzmQj9gEDW8WU+fyrC2fRcc/TLaQ2laXDSUOfRnUB1rcpJvVQ3w1xvZajL/3gUSpzjTN963NARVFVpnPWGt2lQdd5/Y6tbCnomhaxlhOD8fc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773227923; c=relaxed/simple;
+	bh=p0mh9CB04fj+4tjBHUBD1rB2VZZPmO5feyHvE/3+nyg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=myU4RqQUOshux6P2LPD2KYtU9jYYJzj0vpb92tjVFixOzN8xmkuSDp0Nihg7AO+OW9LEtfF9Uw8qPg8rLXzMNycjrNb0j9FrsUNV/211DVvjfKh9jjo1vn5jSSRZj8rn2BqmCXtTKu/Y9dk4GWSI+FN0Xz5fCYQXAkqVNqEJZDI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NcjGn0jA; arc=fail smtp.client-ip=40.93.196.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uv86Q6tKokj8+0nh0kUDyvFwpbbw+FcK2WB9eG2OG8PCxvKVClFyqvN9PXbtfVTSDPRzLvfjBCvKhnR8y4NSktAhMzNVJ6VBT1bqxz/VQJ73iT1Js/H1j3g5I37V7KNNji6tzzrrD13pikPkK2jlQdVaSk2UOPJL3CU8c4NjA++a8oC8sj3pu2Us5v8rwTZ6ijrL0Z4ZKh4FQdrPt5XCdYlg4kTbAgLGO1I3MYVHLJoSXs5tIL9QpUXuLQEGbgDNIg+1hsoJr8ZwCjk3RvELnH/HWOAOvLcRpepYLZENkPfDf8oNIW1jZ3BCvPzdzcv2WqDyJoXUEHv1btClOtbXZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tZfWF5cE6EoAP1T7y3n2sl68rWaebUdAFdH7ben1/OY=;
+ b=LEECNN84FhDkNhgqsDb3bu8dgw1NcNAMgQSytSyfry8ahYfUXxmbvxLOfw5p4mjGSJS1MwkVGizSmAAzVkZEo+p8Mr1KWmy7TlN8NehoRpNwMm/5z8tQhuN7VXaGtBlig5+XKEqRVc9RBZoTW+oDQuVumM156DTiYkrRFvcYBQsdCdrYyCqy/4NQLChaJ44eC4gchIiGA+leqtfaanZhUp2M+aYB59Av9uX1xGqtFzHsr9JtdNlTdh3WgnjaTbyg8QovHUPRoW8lRXSKXU1Agkh1kxdeDq8xT2WQkQAP+tKJISuFCxfD++lIiCbdWQE0oEHztq/rWarcSzL2pefw4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tZfWF5cE6EoAP1T7y3n2sl68rWaebUdAFdH7ben1/OY=;
+ b=NcjGn0jAH9YL49KavDIU8eT1KQtKrthcqFr5/PeXRxV3v1dp8QPDzYIYP9k+dWkNmmltNJd9Ra4Sw7sfqxRqMUtcOqxjN1a2teXj/geeVN9nwz6sJX1mHs2kkY7QKtLQaaVJDz2JGdj+A8XIHXLdOikv7T44xE5Njyr4qz14sy0=
+Received: from CH0PR03CA0343.namprd03.prod.outlook.com (2603:10b6:610:11a::14)
+ by DS0PR12MB8526.namprd12.prod.outlook.com (2603:10b6:8:163::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.11; Wed, 11 Mar
+ 2026 11:18:38 +0000
+Received: from CH2PEPF0000013E.namprd02.prod.outlook.com
+ (2603:10b6:610:11a:cafe::21) by CH0PR03CA0343.outlook.office365.com
+ (2603:10b6:610:11a::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9678.26 via Frontend Transport; Wed,
+ 11 Mar 2026 11:18:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CH2PEPF0000013E.mail.protection.outlook.com (10.167.244.70) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9678.18 via Frontend Transport; Wed, 11 Mar 2026 11:18:38 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 11 Mar
+ 2026 06:18:37 -0500
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 11 Mar
+ 2026 06:18:37 -0500
+Received: from xhddevverma40x.xilinx.com (10.180.168.240) by
+ satlexmb08.amd.com (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17
+ via Frontend Transport; Wed, 11 Mar 2026 06:18:35 -0500
+From: Devendra K Verma <devendra.verma@amd.com>
+To: <bhelgaas@google.com>, <mani@kernel.org>, <vkoul@kernel.org>
+CC: <dmaengine@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
+	<Devendra.Verma@amd.com>
+Subject: [PATCH v13 0/2] Add AMD MDB Endpoint and non-LL mode Support
+Date: Wed, 11 Mar 2026 16:48:32 +0530
+Message-ID: <20260311111834.3750297-1-devendra.verma@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260310-qcom-qce-cmd-descr-v12-0-398f37f26ef0@oss.qualcomm.com>
- <20260310-qcom-qce-cmd-descr-v12-5-398f37f26ef0@oss.qualcomm.com> <abE9RQfGN6Ycns1B@linaro.org>
-Date: Wed, 11 Mar 2026 03:32:38 -0700
-X-Gmail-Original-Message-ID: <CAMRc=MeSfFyVYSJHzHvuynRR3TWRz04tyiOy1JvqyHP0aQKPOA@mail.gmail.com>
-X-Gm-Features: AaiRm508xMUuB-wSkC9iLovtxoWoaeYCiA8Dr5gqw5VbtTTRXMZ5IKSgQiGjyZY
-Message-ID: <CAMRc=MeSfFyVYSJHzHvuynRR3TWRz04tyiOy1JvqyHP0aQKPOA@mail.gmail.com>
-Subject: Re: [PATCH v12 05/12] dmaengine: qcom: bam_dma: add support for BAM locking
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Thara Gopinath <thara.gopinath@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S. Miller" <davem@davemloft.net>, Udit Tiwari <quic_utiwari@quicinc.com>, 
-	Daniel Perez-Zoghbi <dperezzo@quicinc.com>, Md Sadre Alam <mdalam@qti.qualcomm.com>, 
-	Dmitry Baryshkov <lumag@kernel.org>, Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
-	Michal Simek <michal.simek@amd.com>, Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, brgl@kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: C1F7426244D
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000013E:EE_|DS0PR12MB8526:EE_
+X-MS-Office365-Filtering-Correlation-Id: 31220e98-a7ee-46d9-eef0-08de7f5ff154
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|376014|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	pFXhfFV21EJKn1I63GE9ezt1GQh5LKtQHROQXg4pYLnP0V4+V2WyqCoeegN6LYUVbuDtFs64ukY1uJGDT7qNxNbX3FP44XEkUpzfU34PWr3vJDriQx67ZVxkEcraszoQXNkyi8kyWSYZe9C+wbtBMWIXo2T/JeAf/CDUg48tKJ9t30tAN7N4gy7+88Syx2dCKb22NS3+Fb8Rr6J+BDv4Tp6Up7Gc6aBnc5eUlkQbn1XzD5rXcO2WldkXzu5wetqrI+PxuVTDdMXXAFih43i9AYKgENbI9RuadPZ91+wqw4IYe2j5n2DwdaOUeuKthmxKT8SmDTQK6j4Osk3IY8Gwthm8IFrNmubMLPloOdGA3HSY8DTSBQlU6xMwdwHKVICdQ+FlKODg74m5i34ajBFrG3h7LY2mfdt7rIG5+5VJWPP+XXmdzGzowFgVrEmmnKhJqza0ZcuWp7Bn67NIs/HWPw28f58e0VkzzXSjJcv8QkBEZonIViS163mW+PzUjxL0ngJEhKJTp6rf9Qp3XrfRo0elCOY7YhQpQtdr5+F8Rbxzk3lByv6xMQearOebvKREnSo4I0G/x4qkZ0FT2ZJWmVuBZmEIid7tQ00sg/D55btKITrYA04gHF4tF+oakLyYdu27DOM6cnPmZxlzoQzf/tqOzQJuOCfBs7URnizCl8YK9hdm4PWOSjs/NKk4FNvWCqa/eQU9r5nTUhjdXNfuKA8CxCAzoFQcpDSMiidojo2XJhKykMlggcTOBIOK5ZBa+dCvV0x9/nOflzaw6QrtTw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(376014)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	4DD6P4G+2BegtYHMLFXyQS96rZgmBknUdvDgla4yBk9apC/cNyPEVFbGFhhFYS26+mxBbqYEesu/Rm2RVEisNMUjtGPZoTwYcyqpVwGpUeWqocshVKXIKyaDGs4nO4ecYlJdj6IHpVgGxNw2qkdERdfLHsaSLykJBw24am8W1YDxF6wSI/tZ0e9ASn4LueXdaFsrzp1+R6c0SymgKH1BIblLAENG9LqKfOzyeiQ5VvuMzwYx5xA6+6Gw7Z8A5BqECLLyBbufGHUrpvYpQEhmVgBkPs250av0AAyYAbdH8U9myMXDmSNV7PbAEFN+JKwkt+ip8/E3+aKNE99mFeePxasB62OR9W9CQ7eYebfhEGnAD3tFmtsEkf8B5y7amiUkG6tMGSDcvMWcTeDytufqhqx84VDDgyjIsc0rzGxXl4BE2KZKyCNhMO9f+/SKXuJD
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2026 11:18:38.0140
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31220e98-a7ee-46d9-eef0-08de7f5ff154
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF0000013E.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8526
+X-Rspamd-Queue-Id: 1CD50262D8E
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9382-lists,dmaengine=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,lwn.net,gmail.com,gondor.apana.org.au,davemloft.net,quicinc.com,qti.qualcomm.com,amd.com,vger.kernel.org,lists.infradead.org,linaro.org,oss.qualcomm.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[codelinaro.org:url,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,mail.gmail.com:mid,linaro.org:email];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[amd.com:+];
+	TAGGED_FROM(0.00)[bounces-9383-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:dkim,amd.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devendra.verma@amd.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	RCVD_COUNT_SEVEN(0.00)[9]
 X-Rspamd-Action: no action
 
-On Wed, Mar 11, 2026 at 11:00=E2=80=AFAM Stephan Gerhold
-<stephan.gerhold@linaro.org> wrote:
->
-> I'm not entirely sure if this actually guarantees waiting with the
-> unlock until the transaction is "done", for two reasons:
->
->  1. &bchan->vc.desc_issued looks like a "TODO" list for descriptors we
->     haven't fully managed to squeeze into the BAM FIFO yet. It doesn't
->     tell you which descriptors have been consumed and finished
->     processing inside the FIFO.
->
->     Consider e.g. the following case: The client has issued a number of
->     descriptors, they all fit into the FIFO. The first descriptor has a
->     callback assigned, so we ask the BAM to send us an interrupt when it
->     has been consumed. We get the interrupt for the first descriptor and
->     process_channel_irqs() marks it as completed, the rest of the
->     descriptors are still pending. &bchan->vc.desc_issued is empty, so
->     you queue the unlock command before the rest of the descriptors have
->     finished.
->
+This series of patch support the following:
 
-Thanks for looking into it. Good catch, I think you're right.
+ - AMD MDB Endpoint Support, as part of this patch following are
+   added:
+   o AMD supported device ID and vendor ID (Xilinx)
+   o AMD MDB specific driver data
+   o AMD specific VSEC capabilities to retrieve the base of
+     phys address of MDB side DDR
+   o Logic to assign the offsets to LL and data blocks if
+     more number of channels are enabled than configured
+     in the given pci_data struct.
 
->  2. From reading the BAM chapter in the APQ8016E TRM I get the
->     impression that by default an interrupt for a descriptor just tells
->     you that the descriptor was consumed by the BAM (and forwarded to
->     the peripheral). If you want to guarantee that the transaction is
->     actually done on the peripheral side before allowing writes into
->     config registers, you would need to set the NWD (Notify When Done)
->     bit (aka DMA_PREP_FENCE) on the last descriptor before the unlock
->     command.
->
->     NWD seems to stall descriptor processing until the peripheral
->     signals completion, so this might allow you to immediately queue the
->     unlock command like in v11. The downside is that you would need to
->     make assumptions about the set of commands submitted by the client
->     again... The downstream driver seems to set NWD on the data
->     descriptor immediately before the UNLOCK command [1].
->
+ - Addition of non-LL mode
+   o The IP supported non-LL mode functions
+   o Flexibility to choose non-LL mode via dma_slave_config
+     param peripheral_config, by the client for all the vendors
+     using HDMA IP.
+   o Allow IP utilization if LL mode is not available
 
-If what we have in the queue is:
+Devendra K Verma (2):
+  dmaengine: dw-edma: Add AMD MDB Endpoint Support
+  dmaengine: dw-edma: Add non-LL mode
 
-  [DATA] [DATA] [DATA] [CMD]
+ drivers/dma/dw-edma/dw-edma-core.c    |  47 +++++-
+ drivers/dma/dw-edma/dw-edma-core.h    |   1 +
+ drivers/dma/dw-edma/dw-edma-pcie.c    | 220 +++++++++++++++++++++++---
+ drivers/dma/dw-edma/dw-hdma-v0-core.c |  65 +++++++-
+ drivers/dma/dw-edma/dw-hdma-v0-regs.h |   1 +
+ include/linux/dma/edma.h              |   1 +
+ 6 files changed, 313 insertions(+), 22 deletions(-)
 
-And we want to extend it with LOCK/UNLOCK like so:
+-- 
+2.43.0
 
-  [LOCK] [DATA] [DATA] [DATA] [CMD] [UNLOCK]
-
-Should the NWD go with the last DATA descriptor or the last descriptor peri=
-od
-whether data or command?
-
-It's, again, not very clear from reading tha part.
-
-Bart
-
->     The chapter in the APQ8016E TRM kind of contradicts itself
->     sometimes, but there is this sentence for example: "On the data
->     descriptor preceding command descriptor, NWD bit must be asserted in
->     order to assure that all the data has been transferred and the
->     peripheral is ready to be re-configured."
->
-> Thanks,
-> Stephan
->
-> [1]: https://git.codelinaro.org/clo/la/platform/vendor/qcom/opensource/se=
-curemsm-kernel/-/blob/fa55a96773d3fbfcd96beb2965efcaaae5697816/crypto-qti/q=
-ce50.c#L5361-5362
 

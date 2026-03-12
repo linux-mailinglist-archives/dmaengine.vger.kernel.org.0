@@ -1,314 +1,550 @@
-Return-Path: <dmaengine+bounces-9392-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9393-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ePJjBLmRsml5NgAAu9opvQ
-	(envelope-from <dmaengine+bounces-9392-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 11:13:13 +0100
+	id yIhVJ5+xsmmYOwAAu9opvQ
+	(envelope-from <dmaengine+bounces-9393-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 13:29:19 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 394F22702C5
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 11:13:12 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 480F4271C26
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 13:29:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0C8213175B83
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 10:07:19 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1103E303D493
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 12:27:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B66B3BED2D;
-	Thu, 12 Mar 2026 10:07:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FF942E888C;
+	Thu, 12 Mar 2026 12:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="L+MzvhDX"
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="qhMWte9G"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010019.outbound.protection.outlook.com [52.101.229.19])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011017.outbound.protection.outlook.com [52.101.125.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4540B37F000;
-	Thu, 12 Mar 2026 10:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3243126D7;
+	Thu, 12 Mar 2026 12:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773310038; cv=fail; b=i6NhWuv0WTzoQYL6YWnqIc03GwROsTrREXrymiRWDdbAms4RW0LbNhs7pHMqKcirYnj4QBgysCUsO8iisCJJEGVxKlu+4VfnSaDdob3cw/thZ+rN/fDAjjbT6+k4pV/o0urC7ePX+5K5L5lvUHPWjyUdF4A67rldFwNvlEoenpc=
+	t=1773318411; cv=fail; b=tmUVKHYfLIs1eD7v9xcDn+qCr26REcSFgIU2/yzs67z/9AiBanQnViMK1HZL3ugiys5BEo823F/Kz0iLvLBmWpXuDj2yvRsZhkMwl1WfQXVt8+7qD8h1kuPEw9M/So3y1Xajh0fyc9X6MSBUgC1I8SbQwuJUxT8qukGcERylUHc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773310038; c=relaxed/simple;
-	bh=RxEGwhqvMABDLbL5LIG+UXEpEvUV+DYeUsWGHJKOiHI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=tV1Pyuqiyb6bAM+hfKs/20geP/H0A3CecrKYwPuv02Q5MfBx7Bp6mB0/LkpPemhhAlx8m7fYmnfoEEpuZzvGtXx8/e9F9rvSvL+vvmOIQ0I27KEu1hSdTFZ/eQk12pgTmBow02++YvQK85OxY/hLTYjFvCVydjYC2GrMP6wYqYI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=L+MzvhDX; arc=fail smtp.client-ip=52.101.229.19
+	s=arc-20240116; t=1773318411; c=relaxed/simple;
+	bh=Bt7e+bBIvh2OaQgJIGbiPqyil3phXDRZh00j2krXCaQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=B90v8+F6iawwguIKCxOVkQMUhh+Cm5uSaGuWAD5EKS0r8ZD/SmEwj5sYqyCk5/1jJlRpyR4XJybrd8/h1hFdeY3+FI6axFQdHlKUxmLjTgOWqG78cjktZ3e8j+Nv8HKKlFdl/KSaaEPm9lEZ3xGg6DguesNltvmuwELtMqQ4RKk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=qhMWte9G; arc=fail smtp.client-ip=52.101.125.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TRe6BNykMty7Pg+FVReOAGnUtESERaOOkpI/WOe3c8F1kmguxbYxMBfivrhgLk9bOpZ80PCAfQ0awDB2l41wz/KYj43g6eZzktBdBxS248NY1z4aSOGcLg/Kuo619OGHs7Jin9zFkD+YKuKkFHmATL2L/Epyu+GvenMSp0EE+0hh2cSJZIk/OvPmvOSqfXCF+vkYoybWiRZG7rS72LWTKEE4cRZ2qXMB2a1LsQsgJG9gKH9/e81wN9kbPOGbj7Y5xc64SWJKakTHqYzp2CFZi+5n9r/OtjAgcLPyCkywO6PZ73Q58xjcJILsm0I1lO/lVN9X+a/TP+PTvjoCZbPGpw==
+ b=jtxGKawHx75au63S4kFVB5cqEtwCxzcRut+J7AWF+pHPGMv/MIq6WEc0kLuORzDba0aGw8U5K18C0RWOPsUq7M3nJNKZ4cuYid5BuYmzeDpbc/BmH2Am7qyZyG22IajB0PpPsAXAMjgxsvAtODU94ZihcwWt6yMVoG9Pcw5/YGSSdze+ua+6VOcdkuYOO7ISvCD+CHoe3MH4y7cyh4VcquaY+ccw9ezFuKhgqgtuE9ZcP3DJF4beaupmTC4kcsh/GJvffTtbo/BvYapIEj9qIxOgKNoeA8f9u1sThP7D+RNtmpTkgv2rg4A5yzvNQAGMrMm0dWFs5kZB8AFj/EPBQQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RxEGwhqvMABDLbL5LIG+UXEpEvUV+DYeUsWGHJKOiHI=;
- b=T3eKdao3Cy9jn/qyCh9bWJ7J5FZ9QOvm1ukHJaH7IffEhwdQdqcM/82wN8IVF109KV9AWlf7H3AItYC9EnNJrwVqdG182lkCc74gaQj8l/KSwe0/1AnX21mgdupQKTRJM1kWjHB5P21TUB72XRBDWlu+HBk2XiXcnqquKK2kC08DHjfdmGmDnaj0nv+AQYkvP4JEx4z2SP/xYtGeVeZVIkR66CuzYl+oh7MidH9bhi1w5ewmwUzHZX5a5zUcb6u/LfBVh+TwIzkgSHXABnJFrF2cLOJP2uX2XsZlIac09+G0FPCA6H+gOv6I12snXG+ZtwCQ1r5ADUFgglEMZ/8Hrw==
+ bh=1HwS5cmqcycGdcmtZ68ClqjTljZiRxpPJ72fJbQZfa8=;
+ b=fEoOdl2RsOvJIpacoH6k/I52gYcr4GXrC/fpAYayoQBZiCQGB7yOJNI/LSZi+tofVZRSWpiEc5FQ+6D+GfUSk4XnAL4scY9SV/SgT2+5myg7vY2xB3zXoGF4APpCLWvWFBPgsRYWCSFtXqSQzR4JBZmBb/wvBtGnOPllGbD19WFRkPnupyyKxfnr8vJUPln5GCyu7a++Y1PV6EFRHAIa+NxmA1vmcdek+6bLOWSb1/4LSlAoGMuCJQzjMySsJfWbXJJD06Ooikv6fhyhvWTzxGljDVAgR51E9xtunuFJDzc5uElGDnBomrIDaetfOhffdfDpiE2bFPKn+6WjUq6c1w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
  header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RxEGwhqvMABDLbL5LIG+UXEpEvUV+DYeUsWGHJKOiHI=;
- b=L+MzvhDXulOWR4dBAcS8LJvmNpu4KUqVb73c3giv1enjuRmKRezt2RSWfeu7WbXG7xkuXzgcCFjdC0ypva4wU3py7W4Df60OR5Wq1ONE3nh51OYzodVSktubRZDW76NBEzOLEwGTLfXrMt3xwvzarb6ae1nwfRj17NeLPe2p7w0=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by OS7PR01MB11836.jpnprd01.prod.outlook.com (2603:1096:604:23c::12) with
+ bh=1HwS5cmqcycGdcmtZ68ClqjTljZiRxpPJ72fJbQZfa8=;
+ b=qhMWte9GXLPLMDNE5ntd/MPAmrL+vwaMb+NRKoFjlyD9VfKKs0BCnMNjMX9zXWVh2QMBwAMeIq8PfR148yO/VGeYrW7XxTLK1DPxd/1BeqQy7jLJJ8nHsChoFkKqXs0FamPOGMRuo76/fclBvrEFUxmeOgHOuDZ0oIuKRAP07OQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+Received: from TYCPR01MB11947.jpnprd01.prod.outlook.com (2603:1096:400:3e1::6)
+ by OSZPR01MB8864.jpnprd01.prod.outlook.com (2603:1096:604:15d::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.15; Thu, 12 Mar
- 2026 10:07:06 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::87d1:4928:d55:97de]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::87d1:4928:d55:97de%4]) with mapi id 15.20.9700.013; Thu, 12 Mar 2026
- 10:07:08 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Claudiu.Beznea <claudiu.beznea@tuxon.dev>, geert <geert@linux-m68k.org>
-CC: "vkoul@kernel.org" <vkoul@kernel.org>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>, "lgirdwood@gmail.com"
-	<lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>,
-	"perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "geert+renesas@glider.be"
-	<geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+ 2026 12:26:40 +0000
+Received: from TYCPR01MB11947.jpnprd01.prod.outlook.com
+ ([fe80::33f1:f7cd:46be:e4d8]) by TYCPR01MB11947.jpnprd01.prod.outlook.com
+ ([fe80::33f1:f7cd:46be:e4d8%5]) with mapi id 15.20.9700.015; Thu, 12 Mar 2026
+ 12:26:39 +0000
+Date: Thu, 12 Mar 2026 13:26:24 +0100
+From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: vkoul@kernel.org, biju.das.jz@bp.renesas.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, lgirdwood@gmail.com,
+	broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+	p.zabel@pengutronix.de, geert+renesas@glider.be,
+	fabrizio.castro.jz@renesas.com, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: RE: [PATCH 5/7] dmaengine: sh: rz-dmac: Add suspend to RAM support
-Thread-Topic: [PATCH 5/7] dmaengine: sh: rz-dmac: Add suspend to RAM support
-Thread-Index:
- AQHcjq8LxgsLnLJrc0+4TWo3c3gckrVkQ4/QgAAW+wCAAAEtcIAACGyAgAAC1MCAAAUUgIAAAEvggAAlpwCAD49ggIAAByHggAACRgCAAAWpgIAAOcKAgAAETGCAARKLAIA1cEHA
-Date: Thu, 12 Mar 2026 10:07:08 +0000
-Message-ID:
- <TY3PR01MB11346A3E071BEC86EA6CA96528644A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Subject: Re: [PATCH 5/7] dmaengine: sh: rz-dmac: Add suspend to RAM support
+Message-ID: <abKw8GKjaWHR5RtU@tom-desktop>
 References: <20260126103155.2644586-1-claudiu.beznea.uj@bp.renesas.com>
- <16a6f14a-93e6-472c-8718-d46972f0ac5e@tuxon.dev>
- <TY3PR01MB113463BE8A4B1A40DBB0860538693A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <5438ccc8-ed5a-4dd6-8995-e8e9926883a5@tuxon.dev>
- <TY3PR01MB11346325F46C2BCA6B2B181D08693A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <ad752abc-275b-43ca-aec3-188c1a69c50b@tuxon.dev>
- <TY3PR01MB113460006A458AB2F8B96542C8693A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <TY3PR01MB11346C8AD27554E40EC5746E38693A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <7f0305f6-ae2d-4069-b53a-d2a81e75d164@tuxon.dev>
- <TY3PR01MB11346321A9AAE93C7070C6E578699A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <CAMuHMdWUpq1bUbNLu4WGheovQ1pYdEJGBMN3jdb6PZqXanN_GA@mail.gmail.com>
- <TY3PR01MB1134661E4B93CE785700FC5AF8699A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <32ea84f2-621a-47d9-a661-9acd62d50662@tuxon.dev>
- <TY3PR01MB113460619AE8C46BC674B28078699A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <4dd522fe-8143-4423-b428-2774a185ad73@tuxon.dev>
-In-Reply-To: <4dd522fe-8143-4423-b428-2774a185ad73@tuxon.dev>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OS7PR01MB11836:EE_
-x-ms-office365-filtering-correlation-id: b50db65a-fe66-4b93-4ee0-08de801f1eca
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|376014|7416014|22082099003|56012099003|18002099003|38070700021;
-x-microsoft-antispam-message-info:
- UyUUImbi3odZvLQjA4WMyq/4Z//AHDU4iXON0CMKQmGTeaDntXFdfyEie6CcdQhvQ5rVJzzKuRvtTzMFzUNdFBY6ZiUOqSckJdeaX+4ePchRdxe/2rvO/KY9FJ8PqPG6lc2+eIH+gNZP8glpLQCnQVjRQub2bpD15X0sTfGx+0up/Q8ZxXgj1zLlJBb2KiTqrVOQ8Y7Vs5yaKNFJwyNhCK0n7mpREerqF11mJa1s8Y8ubiWFMwIpOZNIR5qlmk27jvYNgMe6WqubxXubbRwoErRTSezDQ3A6M4Y7cYY/8p9VlcUcUKnwU9o0JguosGwRQ+3PfDvH+rYlFFvvKoHQb4pNhVTHLyX8GoUegbHAcyeVEdZOOS5Q5j86+/EsD2mKc8Y4Xv2IhRFi9hksX1HrqP7Xb2CaVz2Gd0LmKWCUvvB734yyu5v43OuMs6hrYVFRmPCF9kcE3kzJ1oZnpNkj3Pj4ZXzVK8L59bsy2odEp1BkQGbMa5y28oq3c3eSVK5HE/+y5pYSPFfSEF9WNxZD8iLfO8WVpDhbkWtP2Qz83N1dC+5x8wVZQ/DJKKVFMwr4UmJurDeEkQpq6dn5dqwPTzNFNLeNjlhLT9uLjCoJcpILEpix/Z1ssOtrYzB6R2HyNwYfe8a5dmpLD3umGZn1YmTvpMW0/FG6CxGPgTwybv2niCjXUdBOQCZLRORrKki93YvR9aS4ztoU7cupLc8Scn95DEm7QyyYYlnNQD6s7FG5oVcS+ZzvR9NlWDXKpwBG9kvI4qsZIGB7B4T64Y8wFg7TOABsBd4tA73cHlgdDq8=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(22082099003)(56012099003)(18002099003)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?OTcvK2taV2dhaW5tVndhUGZUY0lveDQwOGFQQWxJK1UwR21ma0pUZ0M2TVh2?=
- =?utf-8?B?UE05WnV5aGJ4L2wxTW5JczJiS0ZjUTVjRG5PUlYwY2dwa0lwcXJseUVVTTVk?=
- =?utf-8?B?akRjbmY2NU1wZ3pNbkR5ckVCRDdhU0hCblMrWm13ZUMwcWVnNS93czdLR1Nx?=
- =?utf-8?B?OUZwSlpzckU2NkpmV0VnREdaNVRoMkxWMTVYRUNSbnFDR0ZPdDlXSjlnTlV6?=
- =?utf-8?B?RkFtSVdMQ1JZaCtLM3FCSDgzYndTRjEyZzdBRnlpdDdpNmZDb3ZteGgvYlJs?=
- =?utf-8?B?bjFIcFRFQU1Sc3ZyYVRkVHFxSkpVV3gzdXNiajdQcUJkS1dUUUcrekNuNzdv?=
- =?utf-8?B?QXBzYmtnVktCS1lwTGkxeSs0VHVTK2lkYSt1V1FJUHpnTzhWMENiU1JpWm1L?=
- =?utf-8?B?TXZ1TVVzaEdzS0NxZUdlYVpUNTJUcllOZzN1bmxmSGhzYVhSQmtiazBFRW15?=
- =?utf-8?B?TE1RalI2ellaMDRtZVJLdEg4YnlTU1A2YXJ2cStwRUdyMjVMZXAwWHhHemJQ?=
- =?utf-8?B?THR0Mk1RRjdDWkY5WTR4VFoyQ3h5SXY5OVV0S2dNbW5HR0ZUOFVNdzhvQVlD?=
- =?utf-8?B?QlUrWVgrTWV1ZGxZRFNTSXEySEE4Q3BqNUtsNjZ6Sjh5UDY0NFRRaGZOOFJI?=
- =?utf-8?B?VEp4STc0dXltbzRRM1pEWTN1d3MzcldBYTlTSEtKV3lkRmh3NEgzeTI5MjNH?=
- =?utf-8?B?ZUltSWRaeGM5YUYxeUNWWi8zbnR0cy9oaktwcldxUnE0SzE0a2Iva3RmZSt3?=
- =?utf-8?B?MlFsOEdjUHE3OFRhUVZXdjNYeXRMY1RURDNIc3dkNE9BdEJNN3Y3cDJVakR6?=
- =?utf-8?B?aEQ5bXplZ25UbHM1WGhOb3owdEhlK2tLajQ2cStlOEhOd1p6SzI3cXZlbFMy?=
- =?utf-8?B?ODlmL2FvTFk0QzQySlA4UTJWZmMyOTNpWHRmQjB1N0QvZEFSU0ZxTlRPeWg0?=
- =?utf-8?B?dnN1Y2VaVHZrUFpzbnJESnhTS1NBejBoT0trNk9kR2pVNHRzSzVqajVvQ1lP?=
- =?utf-8?B?Q0JuWkpYbElMYnJ5dWZhTmFqUmZPQ0xUN0tCWTdwM0krYmFaM0Z6OEkrOU5X?=
- =?utf-8?B?ejE5cUMwSHNMME5FRVNmWld5VVJBZ21WSG1tQWlWbzMwbHVSU2M0RGZ0L3d6?=
- =?utf-8?B?YUl5M0V2TDh3cEdtd2pwQjJLZ0ZaeUIzeDZvU01NNWJlYXlxR21ON2pIcmVC?=
- =?utf-8?B?WGNobnp3cTJRd0lZeWRJZUhiTlBLRjVTNkR3azlBeGxselN1RVczRnhXMUNz?=
- =?utf-8?B?Sk0zOEk2bFJVYzF1SmJxU1VlQ0RwaEczbHBCZDJkaVcvQlVMcWowUFh4TFd3?=
- =?utf-8?B?SzY0aE1aOWxaZ3pnSUtzMWZSbUZQbCtpQ0w1SG9pMVNNWTVUeGhrWjZES0Yy?=
- =?utf-8?B?VWlnZ09lQzk3dkJJeHBWKzl2REo1L0FLNnBwY2piRjdCUHd1V2ptMG1aNlpa?=
- =?utf-8?B?T2I0NVRETTc2bEN2ZkZEYkZVUFJmdWd3MHpMZ3pQemZwZmgza2dWcWpnSWQ3?=
- =?utf-8?B?RTVCMnBlVDRsTW1NQUVXd0ZwWnArZXI1UkMrbG1tY2J2OFZUdDJQZm5tdkhZ?=
- =?utf-8?B?VDNkY2huREx4MllZRFVpTlNPT3R1UTRjckxEVjVrTytYQWNzTGpsMlluQkJR?=
- =?utf-8?B?MW5YSEpsNzFwRWJGWU9uYzhweE42eFlad21nVWVteG1HWWdWK0QzallnVnVH?=
- =?utf-8?B?OFE0QlBoTHk3ZXhidGI2M3JzT0Y5TFFYTWc5THgvTmZSUUlRZzJrV3pZS25Q?=
- =?utf-8?B?L2Y4d0V4NktUUGdxOE94TStPSFFFS0toOUsvQnRndnlFcFQvQnJrOVVFbWhn?=
- =?utf-8?B?VTc4K0RKYzhmT0F6dTVsMmluVkZSN0NhUWdSQlY4SWFrcEpYczRhTXNZcW5R?=
- =?utf-8?B?RWpXNzROSno2b3pGZnpTT0xBamtybVJaOUpyaHVXTG5JTm9KSGVmTXlQaGU0?=
- =?utf-8?B?a28xZFYyVlhtbFRhbzk3SVdWa2REVjdzM2RGUWJwYVkvVFVHY3VVMTlGK1BP?=
- =?utf-8?B?bE9WMWhvRlhIbmhlUmFrOFkwa2g5QllNaFM4YkVWb1h3cEFJRWI5cW41aHJO?=
- =?utf-8?B?QmZWWFdYK3Nza2VJLzBlKzJ5cTJjaVRPRjhMWDZkb0Q2UFNPazR1a2RqN2s1?=
- =?utf-8?B?WVBjM1NRWFc3aGNqZFg3YXBUZlN4SGNSTWZnK3FXRmhoMXB4NlhPU2R2cUky?=
- =?utf-8?B?SGk0ZTZITXEraXkydi9vQlU4Zks3clhUa0JGODVFR1dSWk1PWGVGdklpeUhK?=
- =?utf-8?B?dU9NVW1IakIrUllxMVRSTkd1WnAxYWcvRU9BanVQL29ES2ZncThnSE1haGNF?=
- =?utf-8?B?U1l0S1BOZG8yRTZDYlB1bHlOYXp4OFFEbFVsZm52RHJUaWl0MnIxUT09?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <20260126103155.2644586-6-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260126103155.2644586-6-claudiu.beznea.uj@bp.renesas.com>
+X-ClientProxiedBy: FR2P281CA0060.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:93::16) To TYCPR01MB11947.jpnprd01.prod.outlook.com
+ (2603:1096:400:3e1::6)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYCPR01MB11947:EE_|OSZPR01MB8864:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0168334b-c1ec-46a0-0ac2-08de80329c44
+X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|52116014|376014|38350700014|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	KRJyGTDqc2w1UnnGEYu1xbXkJIz5w5A4OaAKAiXWqJqtx+kCygHSN3lOF7SAsPVms/EpEqRJmzoac9C34kkayvYdhi7Ke5dC7bHn09L7Zb0T6a3rRJEX5OZaQbcLDXq245/EPxqItb+xEIw3+qiVu2Af+cgiySkJNh0gkwxoRWpiqJ0yFytZ+uwEMiyQgt6nJZ/kVADY7F9Z0cqhbS62Gaf8IcPX19DyXfsurHOrBJlzG1vwN+q1xK+quKK9StwYETUVWR/5L+c5BNiSzZf+IJoer336UBiryXENSZSqrTqIo4SL8Y3QHFq6RoPEcXtvbNd6io3NOniV7xneVP1ZyFqahxb1UHEpu93Puq4hv1F2wxIBGMHRmk3s5hKv0SwI357UHaK7WJO5Kifk5cEfHj8zwuXgJ6Qz2cg9d8n1jov8LUNi7dVbbI5+gqCxZbhNT0WPevfgagSTo/iR3I8+UgVw7eS1whe1URTZeJ37yYc5AdzMb4JxgjV6J1pq2/+3J2QUAnL6IlQH5DBZYtlLSy0H2SmmxMkBUy//DRXc+oAdyg1WeoJBwCplEMaNWJmQsyVKiUmwRETpk6aF3wcjB5puNCzgosoiVviTOMyJDo1T+oVftX7oR16YIIyLdO9+3w1K9mS+cYH6b4n+v8hyAQLu9jh6pYkVMUFfmP1CNiAzEfcCtGoVvHZsaXefl8mg7ubo1gGP2+5wrCB58VoKpJdG1I54dlzbjxbxAYGzM3/VeL07hmz3pXDlepImjQ4jLxgplNsRcC1KN8aP6HufpJ6D8YLdjuMqnA8dCIIfuRg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11947.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(52116014)(376014)(38350700014)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?2PAyuVtutSXpwaJ1ZFmBlx+g9MlD7O0kGcc2lSw/13ic3KSCMsbTKGbZfJSm?=
+ =?us-ascii?Q?MqD1WqEKn9KVpObjwOg/LKyls23qPryyWm9GsMLEv1PJuNfT0t2InXRcXA7R?=
+ =?us-ascii?Q?S1wMcJ+J/piErHy6LPTG2tn8jDzEwh+jWK0IRliQZGr9cLGMsnJvEz/Utcqn?=
+ =?us-ascii?Q?IhyfICzti9DTU9a2YLmy0G5YfwjHcmeTN9lYWJeDSMitEN+5YdHU9dHxCtZs?=
+ =?us-ascii?Q?L2TkXW2qA+6ByzIvcB2AM/rEkVwkwqmL7VHb2V5WAa58cioIPZhsiiJz6Sxu?=
+ =?us-ascii?Q?WJ1gWvVL/9wSZ0gUfxt+1d5cQgdrjTSmd3CIIS/i5xQruURVyz6YmvcNxDOU?=
+ =?us-ascii?Q?ErWxNL5FBBiHgksfB8B+QT3Ebqtyg0KfelNnJIiX3xlpGHECaEYOYOpBUHtl?=
+ =?us-ascii?Q?zh1JqqoLVmDuZW0GhGiqBMd3CaQbW3XXGJaD3L4tP+LDdrsu8aPnPAlKWRmh?=
+ =?us-ascii?Q?GMYNSxv7oPcryV/DNjvyWUq6KEzd/TykXkzWzUd9wBmAYpGErkKFKFpCXvEu?=
+ =?us-ascii?Q?K9FoW5AvdN+xBpwrWKlnxFIZWaDzn5EdC36bnU0ClRqqh3JO44gK1N6Bp/U2?=
+ =?us-ascii?Q?pt+k94KvGLB1293LLb7fziONMVMHdSuhJZUUk+yIIaYh03CV+0h9+upmoDbQ?=
+ =?us-ascii?Q?c0Xs6AHiAlNPfmZCj/griv8TZPQLCfl1okW7/aleun+JGPCMLy4wBe2jO4Sy?=
+ =?us-ascii?Q?YcYGMJIhPGsEGoQkBJqISfnkXitQx7aY8icgzNINmc2d5816B5g3l9iT5gqj?=
+ =?us-ascii?Q?O3ENxjqtg3IkEAQAp2PYQMMoG1OSEWJ9liA2qYHTnTP0hDeyUez8kZzvBU9o?=
+ =?us-ascii?Q?ViWvBu2QUNYfUEH941eQqEaDBBYubYT7ADgACRdtu/WNCyP43DBu5yMcUl+0?=
+ =?us-ascii?Q?z7BZNvIadcG+zLi0bOBG4peirE+Q+ZxyM8i5E45lh3tMA8XrH6c5IgSVlonv?=
+ =?us-ascii?Q?yD2Wcm7QFySw3rq9WzcHOTI67U/og9a8l1x3DOwO6c4Hiisrda6I0Fw2xbdn?=
+ =?us-ascii?Q?FFo3fag6ieoefmiaf26AzJbNZnpzjbX8PL2PDCZXVaaNACmKMeVZBDA3q6U8?=
+ =?us-ascii?Q?ggAO39NCU9JE/UOY0uLotP5uDziJSGlSZVm+auPYYfh6CUHoYl2spiJ+1Owr?=
+ =?us-ascii?Q?HEX2tMpOSi6wYgceMoj7l82RdYv5FcSKbuzKoO5DlgCLsma68Yas05YMzwP/?=
+ =?us-ascii?Q?nWzSfuROw2zn2MrafIBAp+ULjyffkyqGKwN4Hh73Z8TVSTvz6LkmOoN9MHOi?=
+ =?us-ascii?Q?2OSLI958X5tDhwMCuS4HqkX/dMvun7SaizhdtQUdqliDlyN9MEizdj+MbumZ?=
+ =?us-ascii?Q?vFDWAg7rGM5Odx582UJ+tY/zD5LhKsKHNv8Zrd2L1k0XnkXQI8QghCbUix4T?=
+ =?us-ascii?Q?5y/qLRHsPpmobRKX5SOuR+mFAQHacYAu4vyfa2DgqsKc58FmCjRn5Nn8ij0d?=
+ =?us-ascii?Q?IwjDwH5up0MDfY6H5t/kn8Awt9AJ2SXRjQEoiE96XZeis1QAJwljfZ6V2GQ7?=
+ =?us-ascii?Q?jsYrMw6cZUo7MIEvQSpX5fiFnkg4o55r3kEaLM3mi0RfqCmLShhREQoyHPYb?=
+ =?us-ascii?Q?pkBv2dRUeM0QViu/01NhfT0V+oCB5hR2JTFFILKgTSmEygP5rfJ4W2YipQX/?=
+ =?us-ascii?Q?KKoNc9UOMKg6xW1zuBun4h5eI4BvkRkCn8pCfLqZ1n0ixNNmxn+HngpTQyED?=
+ =?us-ascii?Q?YDVAcL+nXl701LKBz+phxjTKl6NEL7d/WhNsnELhxwUqrSZaJQK1P0ld4X5T?=
+ =?us-ascii?Q?+/IIi/vB3szn0H1oJHtgl+t3wcm/gsYBxIRQ0gE76WQoMP5+60hE?=
 X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0168334b-c1ec-46a0-0ac2-08de80329c44
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11947.jpnprd01.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b50db65a-fe66-4b93-4ee0-08de801f1eca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2026 10:07:08.1679
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 12:26:39.5101
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qOksjy83+W83m+BmhtYj/aS/8kiPLQjuOPp+NnmA5pGUYrGeZH2zYlgypT7OoUPzbM0hqsOJoclPIz/wcN7kW6uTejMWso6tmzi1RvsZ9N8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB11836
-X-Spamd-Result: default: False [1.44 / 15.00];
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dxSdEyhdSSZRCJOHzJ8FdsL9tq+ZeXPB1BlWuvUmKJ0fEfZUha9PDJEP1zH6WrQ8Po938S0uhSqNIjGaNynImVT9pe4BDKFJRto+SQO9vlvO1bUDBEEu/NhH3uaRRSlH
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZPR01MB8864
+X-Spamd-Result: default: False [1.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[bp.renesas.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-9392-lists,dmaengine=lfdr.de];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,bp.renesas.com,gmail.com,perex.cz,suse.com,pengutronix.de,glider.be,renesas.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-9393-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[biju.das.jz@bp.renesas.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FREEMAIL_CC(0.00)[kernel.org,bp.renesas.com,gmail.com,perex.cz,suse.com,pengutronix.de,glider.be,renesas.com,vger.kernel.org];
 	DKIM_TRACE(0.00)[bp.renesas.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[tommaso.merciai.xr@bp.renesas.com,dmaengine@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tuxon.dev:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux-m68k.org:email]
-X-Rspamd-Queue-Id: 394F22702C5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,renesas.com:email]
+X-Rspamd-Queue-Id: 480F4271C26
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-DQpIaSBBbGwsDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IENsYXVkaXUg
-QmV6bmVhIDxjbGF1ZGl1LmJlem5lYUB0dXhvbi5kZXY+DQo+IFNlbnQ6IDA2IEZlYnJ1YXJ5IDIw
-MjYgMDk6NTkNCj4gU3ViamVjdDogUmU6IFtQQVRDSCA1LzddIGRtYWVuZ2luZTogc2g6IHJ6LWRt
-YWM6IEFkZCBzdXNwZW5kIHRvIFJBTSBzdXBwb3J0DQo+IA0KPiBIaSwgQmlqdSwNCj4gDQo+IE9u
-IDIvNS8yNiAxOTo0MSwgQmlqdSBEYXMgd3JvdGU6DQo+ID4gSGkgQ2xhdWRpdSwNCj4gPg0KPiA+
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBDbGF1ZGl1IEJlem5lYSA8
-Y2xhdWRpdS5iZXpuZWFAdHV4b24uZGV2Pg0KPiA+PiBTZW50OiAwNSBGZWJydWFyeSAyMDI2IDE3
-OjIxDQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggNS83XSBkbWFlbmdpbmU6IHNoOiByei1kbWFj
-OiBBZGQgc3VzcGVuZCB0byBSQU0NCj4gPj4gc3VwcG9ydA0KPiA+Pg0KPiA+PiBIaSwgQmlqdSwN
-Cj4gPj4NCj4gPj4gT24gMi81LzI2IDE2OjA2LCBCaWp1IERhcyB3cm90ZToNCj4gPj4+IEhpIEdl
-ZXJ0LA0KPiA+Pj4NCj4gPj4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+Pj4+IEZy
-b206IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnRAbGludXgtbTY4ay5vcmc+DQo+ID4+Pj4gU2Vu
-dDogMDUgRmVicnVhcnkgMjAyNiAxMzozNA0KPiA+Pj4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggNS83
-XSBkbWFlbmdpbmU6IHNoOiByei1kbWFjOiBBZGQgc3VzcGVuZCB0byBSQU0NCj4gPj4+PiBzdXBw
-b3J0DQo+ID4+Pj4NCj4gPj4+PiBIaSBCaWp1LA0KPiA+Pj4+DQo+ID4+Pj4gT24gVGh1LCA1IEZl
-YiAyMDI2IGF0IDE0OjMwLCBCaWp1IERhcyA8YmlqdS5kYXMuanpAYnAucmVuZXNhcy5jb20+IHdy
-b3RlOg0KPiA+Pj4+Pj4gRnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQHR1eG9u
-LmRldj4gT24gMS8yNi8yNiAxNzoyOCwNCj4gPj4+Pj4+IEJpanUgRGFzIHdyb3RlOg0KPiA+Pj4+
-Pj4+PiBGb3IgczJpZGxlIGlzc3VlIG9uIFJaL0czTCBpcyBETUEgZGV2aWNlIGlzIGluIGFzc2Vy
-dGVkIHN0YXRlLA0KPiA+Pj4+Pj4+PiBub3QgZm9yd2FyZGluZyBhbnkgSVJRIHRvIGNwdSBmb3Ig
-d2FrZXVwLg0KPiA+Pj4+Pj4+Pg0KPiA+Pj4+Pj4+PiBGb3IgUzJSQU0gaXNzdWUgb24gUlovRzNM
-IGlzIGR1cmluZyBzdXNwZW5kIGhhcmR3YXJlIHR1cm5zDQo+ID4+Pj4+Pj4+IERNQUFDTEsgb2Zm
-LyBBc3NlcnRlZCBzdGF0ZS4gQ2xvY2sgZnJhbXdvcmsgaXMgbm90IHR1cm5pbmcgT24gRE1BQUNM
-SyBhcyBpdCBjcml0aWNhbCBjbGsuDQo+ID4+Pj4+Pj4+DQo+ID4+Pj4+Pj4+IENhbiB5b3UgcGxl
-YXNlIGNoZWNrIHlvdXIgVEYtQSBmb3IgdGhlIHNlY29uZCBjYXNlPyBGaXJzdCBjYXNlLA0KPiA+
-Pj4+Pj4+PiBSWi9HM1MgbWF5IG9rIGZvciByZXNldCBhc3NlcnQgc3RhdGUsIGl0IGNhbiBmb3J3
-YXJkIElSUXMgdG8gQ1BVLg0KPiA+Pj4+Pj4+DQo+ID4+Pj4+Pj4gSnVzdCB0byBzdW1tYXJpemUs
-IGN1cnJlbnRseSB0aGVyZSBhcmUgMiBkaWZmZXJlbmNlcyBpZGVudGlmaWVkIGJldHdlZW4gUlov
-RzNTIGFuZCBSWi9HM0w6DQo+ID4+Pj4+Pj4NCj4gPj4+Pj4+PiBTb0MgZGlmZmVyZW5jZXMgZm9y
-IHMyaWRsZToNCj4gPj4+Pj4+Pg0KPiA+Pj4+Pj4+IFJaL0czUzogQ2FuIHdha2UgdGhlIHN5c3Rl
-bSBpZiB0aGUgRE1BIGRldmljZSBpcyBpbiB0aGUgYXNzZXJ0DQo+ID4+Pj4+Pj4gc3RhdGUNCj4g
-Pj4+Pj4+Pg0KPiA+Pj4+Pj4+IFJaL0czTDogQ2Fubm90IHdha2UgdGhlIHN5c3RlbSBpZiB0aGUg
-RE1BIGRldmljZSBpcyBpbiB0aGUgYXNzZXJ0IHN0YXRlLg0KPiA+Pj4+Pj4+DQo+ID4+Pj4+Pj4N
-Cj4gPj4+Pj4+PiBURi1BIGRpZmZlcmVuY2VzIGZvciBzMnJhbToNCj4gPj4+Pj4+Pg0KPiA+Pj4+
-Pj4+IFJaL0czUzogVEZfQSB0dXJucyBvbiBETUFfQUNMSyBkdXJpbmcgYm9vdC9yZXN1bWUuDQo+
-ID4+Pj4+Pj4NCj4gPj4+Pj4+PiBSWi9HM0w6IFRGX0EgZG9lcyBub3QgaGFuZGxlIERNQV9BQ0xL
-IGR1cmluZyBib290L3Jlc3VtZS4NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBJJ20gc2VlaW5nIGF0IFsx
-XSB5b3UgYXJlIGFkZHJlc3NpbmcgdGhlc2UgZGlmZmVyZW5jZXMgaW4gdGhlDQo+ID4+Pj4+PiBj
-bG9jay9yZXNldCBkcml2ZXJzLiBXaXRoIHRoYXQsIGFyZSB5b3Ugc3RpbGwgY29uc2lkZXJpbmcg
-dGhpcyBwYXRjaCBpcyBicmVha2luZyB5b3VyIHN5c3RlbT8NCj4gPj4+Pj4NCj4gPj4+Pj4gU3Rp
-bGwsIHRoaW5raW5nIHdoZXRoZXIgdG8gYWRkIGNyaXRpY2FsIHJlc2V0IG9yIGdvIHdpdGggU29D
-IHF1aXJrIGluIERNQSBkcml2ZXIuDQo+ID4+Pj4+IFNvbWUgU29DcyBuZWVkIERNQSBzaG91bGQg
-YmUgZGVhc3NlcnRlZCBsaWtlIGNyaXRpY2FsIGNsb2NrIHRoYXQNCj4gPj4+Pj4gY2FuIGJlIGhh
-bmRsZWQgZWl0aGVyDQo+ID4+Pj4+DQo+ID4+Pj4+IDEpIEFkZCBhIHNpbXBsZSBTb0MgcXVpcmsg
-aW4gRE1BIGRyaXZlcg0KPiA+Pj4+Pg0KPiA+Pj4+PiBPcg0KPiA+Pj4+Pg0KPiA+Pj4+PiAyKSBJ
-bXBsZW1lbnQgY3JpdGljYWwgcmVzZXQgaW4gU29DIHNwZWNpZmljIGNsb2NrIGRyaXZlciBhbmQg
-Y2hlY2sgZm9yIGFsbCByZXNldHMuDQo+ID4+Pj4+DQo+ID4+Pj4+IElzIHNpbXBsZSBTb0MgcXVp
-cmsgaW4gRE1BIGRyaXZlciwgc29tZXRoaW5nIGNhbiBiZSBkb25lIGZvciBSWi9HMkwgZmFtaWx5
-IFNvQ3M/DQo+ID4+Pj4NCj4gPj4+PiBXaGF0IGlmIHRoZSBETUEgZHJpdmVyIGlzIG5vdCBlbmFi
-bGVkPw0KPiA+Pj4NCj4gPj4+IFRoZSBiZWxvdyB1c2UgY2FzZXMgd2lsbCB3b3JrIChwYXRjaFsx
-XSAtIHJlbW92aW5nIHRoZSBjb2RlIGZvcg0KPiA+Pj4gZGVhc3NlcnQgaW4gY3BnX3Jlc3VtZSkg
-YXMgdGhlcmUgaXMgbm8gRE1BIGRyaXZlciB0byBhc3NlcnQgdGhlIHJlc2V0Lg0KPiA+Pj4NCj4g
-Pj4+IDEpIHN5c3RlbSB3aWxsIGJvb3Qgd2l0aG91dCBETUEgZHJpdmVyDQo+ID4+PiAyKSBzMmlk
-bGUgd2lsbCB3b3JrIGFzIHRoZXJlIGlzIG5vIERNQSBkcml2ZXIgdG8gYXNzZXJ0IHRoZSByZXNl
-dC4NCj4gPj4+IDMpIHMycmFtIHdpbGwgd29yayB3aXRob3V0IERNQSBkcml2ZXIuDQo+ID4+Pg0K
-PiA+Pj4gSWYgRE1BIGRyaXZlciBpcyBlbmFibGVkLCB0aGVuIHRoZXJlIGlzIGFuIGlzc3VlIHdp
-dGggIHMyaWRsZSBhcyBETUENCj4gPj4+IGRyaXZlciBhc3NlcnQgdGhlIHJlc2V0IGFuZCB3ZSBj
-YW5ub3QgdXNlIHNlcmlhbCBjb25zb2xlIGFzIHdha2V1cA0KPiA+Pj4gc291cmNlDQo+ID4+DQo+
-ID4+IEkgdGhpbmsgd2UncmUgdGFraW5nIGhlcmUgYWJvdXQgYm90aCBETUEgY2xvY2tzIGFuZCBy
-ZXNldHMuDQo+ID4+DQo+ID4+IFdoYXQgaWYgdGhlIERNQSBjbG9ja3MgYXJlIGRlY2xhcmVkIGNy
-aXRpY2FsIGluIExpbnV4IGFuZCBjbG9ja3MgYW5kDQo+ID4+IHJlc2V0cyBhcmUgbm90IGhhbmRs
-ZWQgYnkgYm9vdGxvYWRlciBpbiBwcm9iZSBvciByZXN1bWU/IFdobyB3aWxsIHJlc3RvcmUgY3Jp
-dGljYWwgY2xvY2tzPw0KPiA+DQo+ID4gUGF0Y2ggWzFdIHdpbGwgcmVzdG9yZSBjcml0aWNhbCBj
-bG9ja3MuDQo+ID4+DQo+ID4+Pg0KPiA+Pj4gT25lIHNvbHV0aW9uIGlzIFNvQyBxdWlyayB3aWxs
-IHByZXZlbnQgYXNzZXJ0L2RlYXNzZXJ0ICBvZiB0aGUgRE1BDQo+ID4+PiByZXNldCBkdXJpbmcN
-Cj4gPj4+IHN1c3BlbmQvcmVzdW1lKCkgZm9yIGFmZmVjdGVkIFNvQ3MuDQo+ID4+DQo+ID4+IFRo
-aXMgY2FuJ3Qgd29yayB3L28gdGFraW5nIGNhcmUgb2YgdGhlIERNQSBjbG9ja3MgaW4gdGhlIGNs
-b2NrIGRyaXZlcg0KPiA+PiByZXN1bWUgZnVuY3Rpb24gKGluIGNhc2UgRE1BIGNsb2NrcyBhcmUg
-Y3JpdGljYWwpLiBJZiBzbywgd2h5IGhhbmRsaW5nIERNQSBjbG9ja3MgYW5kIHJlc2V0cw0KPiBk
-aWZmZXJlbnRseT8NCj4gPg0KPiA+DQo+ID4gV2hhdCB3aWxsIHlvdSBwcmVmZXINCj4gPg0KPiA+
-IGEgc2luZ2xlIGNoZWNrIGluIHN1c3BlbmQvcmVzdW1lIG9mIERNQSBkcml2ZXI/DQo+ID4NCj4g
-PiBPcg0KPiA+DQo+ID4gQXJvdW5kIDEwMCBjaGVja3MgaW4gc3VzcGVuZC9yZXN1bWUgaW4gY2xv
-Y2sgZHJpdmVyIGZvciBjaGVja2luZyBjcml0aWNhbCByZXNldHMgZm9yIHNraXBwaW5nIERNQQ0K
-PiByZXNldD8NCj4gDQo+IEkgc2VlIG5vIGNvbmRpdGlvbnMgaW4geW91ciBjb2RlLiBKdXN0IHJh
-dyB3cml0ZXMgZm9yIERNQSBjbG9ja3MgYW5kIHJlc2V0cy4gSSBzdXNwZWN0IHRoZSBpbnRlbnRp
-b24NCj4gZm9yIHYyIGlzIHRvIGxvb3Agb3ZlciBhbGwgdGhlIHJlc2V0cyBpbiB0aGUgcmVzdW1l
-IHBhdGggdG8gZmluZCB0aGUgY3JpdGljYWwgb25lLg0KPiANCj4gV2hpbGUgcmV2aWV3aW5nIGl0
-IEkgYXNrZWQgdG8gYXZvaWQgYXNzZXJ0aW5nIHRoZSBETUEgcmVzZXRzIG9uIHJlc2V0IGFzc2Vy
-dCBBUEkuIFRoYXQgY291bGQgYmUNCj4gaGFuZGxlZCBlaXRoZXIgYnkgYWRkaW5nIHRoZSBjb25j
-ZXB0IG9mIGNyaXRpY2FsIGFzc2VydCBpbiB0aGUgcmVzZXQgZHJpdmVyIChvciBmcmFtZXdvcmsp
-IG9mIGJ5IGp1c3QNCj4gY2hlY2tpbmcgZGlyZWN0bHkgdGhlIHJlc2V0IElEIHRvIG1hdGNoIHRo
-ZSBETUEgcmVzZXQgSUQgKGFzIHRoaXMgaXMgdGhlIG9ubHkgY3JpdGljYWwgcmVzZXQNCj4gaWRl
-bnRpZmllZCBhdCB0aGUgbW9tZW50KS4NCj4gDQo+IFRvIGFuc3dlciB5b3UsIG15IHBlcnNvbmFs
-IHRhc3RlIHdvdWxkIGJlOg0KPiAtIHRvIGhhbmRsZSB0aGUgc2V0dXAgb2YgdGhlIGNyaXRpY2Fs
-IGNsb2NrcyBhbmQgcmVzZXRzIGluIGEgc2luZ2xlIGRyaXZlciwgZm9yDQo+ICAgIHByb2JlIGFu
-ZCBzdXNwZW5kL3Jlc3VtZSBhcyB3ZWxsDQo+IC0gdG8gaGFuZGxlIGl0IGluIGEgU29DIHNwZWNp
-ZmljIGNvZGUgYXMgdGhpcyBpcyBtaWNyby1hcmNoaXRlY3R1cmUgc3BlY2lmaWMNCj4gICAgaXNz
-dWU7IHRoaXMgcHJvYmxlbSBpcyBvbmx5IGZvciBzb21lIG9mIHRoZSBTb0NzLCBpZiBJJ20gbm90
-IHdyb25nOyB0aGUNCj4gICAgbWFudWFscyBmb3Igc29tZSBvZiB0aGUgU29DcyB1c2luZyB0aGlz
-IERNQSBkcml2ZXIgc3RhdGVzIHRoZSBmb2xsb3dpbmcNCj4gICAgKFJaL0czUyBIVyBtYW51YWws
-IFJldi4xLjIwLiwgY2hhcHRlciA4LjguMSk6DQo+IA0KPiBJbiBhZGRpdGlvbiwgbmVlZCBmb2xs
-b3dpbmcgcmVnaXN0ZXIgc2V0dGluZ3MgKmV2ZW4gaWYgRE1BIGNvbnRyb2xsZXIgaXMgbm90IHVz
-ZWQqLg0KPiANCj4g4pePIFNldCBDUEdfQ0xLT05fRE1BQ19SRUcgcmVnaXN0ZXIgdG8gc3VwcGx5
-IGEgY2xvY2sgZm9yIERNQSBDb250cm9sbGVyLg0KPiANCj4gUmVmZXIgdG8gU2VjdGlvbiA3LjIu
-NCwgQ2xvY2sgQ29udHJvbCBSZWdpc3RlciBETUFDX1JFRyBmb3IgcmVnaXN0ZXIgZGV0YWlsLg0K
-PiANCj4g4pePIFNldCBDUEdfUlNUX0RNQUMgcmVnaXN0ZXIgdG8gcmVsZWFzZSBhIHJlc2V0IGZv
-ciBETUEgQ29udHJvbGxlci4NCj4gDQo+IFJlZmVyIHRvIFNlY3Rpb24gNy4yLjQsIFJlc2V0IENv
-bnRyb2wgUmVnaXN0ZXIgRE1BQyBmb3IgcmVnaXN0ZXIgZGV0YWlsLg0KPiANCj4gR2VlcnQsIFZp
-bm9kOiBjb3VsZCB5b3UgcGxlYXNlIGxldCB1cyBrbm93IGhvdyB3b3VsZCB5b3UgbGlrZSB1cyB0
-byBoYW5kbGUgdGhpcz8NCg0KRllJLCBBIHBhdGNoIFsxXSBhbHJlYWR5IHBvc3RlZCBmb3IgDQoN
-CjEpIFN1cHBvcnRpbmcgY3JpdGljYWwgcmVzZXRzIGZvciBSWi9HMkwgZmFtaWx5DQoyKSBSZXN0
-b3JpbmcgQ3JpdGljYWwgY2xvY2tzIGR1cmluZyByZXN1bWUNCg0KIFdpdGggdGhpcyBjbGsgb24v
-b2ZmLCByZXNldCBhc3NlcnQvZGVhc3NlcnQgIGNhbiBiZSBkb25lIGZyb20gRE1BIGRyaXZlciBk
-dXJpbmcgc3VzcGVuZC9yZXN1bWUuDQoNClsxXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwv
-MjAyNjAzMDYxMzQyMjguODcxODE1LTEtYmlqdS5kYXMuanpAYnAucmVuZXNhcy5jb20vDQoNCkNo
-ZWVycywNCkJpanUNCg0KDQo=
+Hi Claudiu,
+Thanks for your patch.
+
+On Mon, Jan 26, 2026 at 12:31:53PM +0200, Claudiu wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> The Renesas RZ/G3S SoC supports a power saving mode in which power to most
+> SoC components is turned off, including the DMA IP. Add suspend to RAM
+> support to save and restore the DMA IP registers.
+> 
+> Cyclic DMA channels require special handling. Since they can be paused and
+> resumed during system suspend and resume, the driver restores additional
+> registers for these channels during the resume phase. If a channel was not
+> explicitly paused during suspend, the driver ensures that it is paused and
+> resumed as part of the system suspend/resume flow. This might be the
+> case of a serial device being used with no_console_suspend.
+> 
+> For non-cyclic channels, the dev_pm_ops::prepare callback waits for all
+> ongoing transfers to complete before allowing suspend-to-RAM to proceed.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+>  drivers/dma/sh/rz-dmac.c | 183 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 175 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+> index ab5f49a0b9f2..8f3e2719e639 100644
+> --- a/drivers/dma/sh/rz-dmac.c
+> +++ b/drivers/dma/sh/rz-dmac.c
+> @@ -69,11 +69,15 @@ struct rz_dmac_desc {
+>   * enum rz_dmac_chan_status: RZ DMAC channel status
+>   * @RZ_DMAC_CHAN_STATUS_ENABLED: Channel is enabled
+>   * @RZ_DMAC_CHAN_STATUS_PAUSED: Channel is paused though DMA engine callbacks
+> + * @RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL: Channel is paused through driver internal logic
+> + * @RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED: Channel was prepared for system suspend
+>   * @RZ_DMAC_CHAN_STATUS_CYCLIC: Channel is cyclic
+>   */
+>  enum rz_dmac_chan_status {
+>  	RZ_DMAC_CHAN_STATUS_ENABLED,
+>  	RZ_DMAC_CHAN_STATUS_PAUSED,
+> +	RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL,
+> +	RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED,
+>  	RZ_DMAC_CHAN_STATUS_CYCLIC,
+>  };
+>  
+> @@ -94,6 +98,10 @@ struct rz_dmac_chan {
+>  	u32 chctrl;
+>  	int mid_rid;
+>  
+> +	struct {
+> +		u32 nxla;
+> +	} pm_state;
+> +
+>  	struct list_head ld_free;
+>  	struct list_head ld_queue;
+>  	struct list_head ld_active;
+> @@ -1002,10 +1010,17 @@ static int rz_dmac_device_pause(struct dma_chan *chan)
+>  	return rz_dmac_device_pause_set(channel, RZ_DMAC_CHAN_STATUS_PAUSED);
+>  }
+>  
+> +static int rz_dmac_device_pause_internal(struct rz_dmac_chan *channel)
+> +{
+> +	lockdep_assert_held(&channel->vc.lock);
+> +
+> +	return rz_dmac_device_pause_set(channel, RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL);
+> +}
+> +
+>  static int rz_dmac_device_resume_set(struct rz_dmac_chan *channel,
+>  				     enum rz_dmac_chan_status status)
+>  {
+> -	u32 val;
+> +	u32 val, chctrl;
+>  	int ret;
+>  
+>  	lockdep_assert_held(&channel->vc.lock);
+> @@ -1013,14 +1028,33 @@ static int rz_dmac_device_resume_set(struct rz_dmac_chan *channel,
+>  	if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_PAUSED)))
+>  		return 0;
+>  
+> -	rz_dmac_ch_writel(channel, CHCTRL_CLRSUS, CHCTRL, 1);
+> -	ret = read_poll_timeout_atomic(rz_dmac_ch_readl, val,
+> -				       !(val & CHSTAT_SUS), 1, 1024, false,
+> -				       channel, CHSTAT, 1);
+> -	if (ret)
+> -		return ret;
+> +	if (channel->status & BIT(RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED)) {
+> +		/*
+> +		 * We can be after a sleep state with power loss. If power was
+> +		 * lost, the CHSTAT_SUS bit is zero. In this case, we need to
+> +		 * enable the channel directly. Otherwise, just set the CLRSUS
+> +		 * bit.
+> +		 */
+> +		val = rz_dmac_ch_readl(channel, CHSTAT, 1);
+> +		if (val & CHSTAT_SUS)
+> +			chctrl = CHCTRL_CLRSUS;
+> +		else
+> +			chctrl = CHCTRL_SETEN;
+> +	} else {
+> +		chctrl = CHCTRL_CLRSUS;
+> +	}
+> +
+> +	rz_dmac_ch_writel(channel, chctrl, CHCTRL, 1);
+>  
+> -	channel->status &= ~BIT(status);
+> +	if (chctrl & CHCTRL_CLRSUS) {
+> +		ret = read_poll_timeout_atomic(rz_dmac_ch_readl, val,
+> +					       !(val & CHSTAT_SUS), 1, 1024, false,
+> +					       channel, CHSTAT, 1);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	channel->status &= ~(BIT(status) | BIT(RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED));
+>  
+>  	return 0;
+>  }
+> @@ -1034,6 +1068,13 @@ static int rz_dmac_device_resume(struct dma_chan *chan)
+>  	return rz_dmac_device_resume_set(channel, RZ_DMAC_CHAN_STATUS_PAUSED);
+>  }
+>  
+> +static int rz_dmac_device_resume_internal(struct rz_dmac_chan *channel)
+> +{
+> +	lockdep_assert_held(&channel->vc.lock);
+> +
+> +	return rz_dmac_device_resume_set(channel, RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL);
+> +}
+> +
+>  /*
+>   * -----------------------------------------------------------------------------
+>   * IRQ handling
+> @@ -1438,6 +1479,131 @@ static void rz_dmac_remove(struct platform_device *pdev)
+>  	pm_runtime_disable(&pdev->dev);
+>  }
+>  
+> +static int rz_dmac_suspend_prepare(struct device *dev)
+> +{
+> +	struct rz_dmac *dmac = dev_get_drvdata(dev);
+> +
+> +	for (unsigned int i = 0; i < dmac->n_channels; i++) {
+> +		struct rz_dmac_chan *channel = &dmac->channels[i];
+> +
+> +		guard(spinlock_irqsave)(&channel->vc.lock);
+> +
+> +		/* Wait for transfer completion, except in cyclic case. */
+> +		if (channel->status & BIT(RZ_DMAC_CHAN_STATUS_ENABLED) &&
+> +		    !(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC)))
+> +			return -EAGAIN;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void rz_dmac_suspend_recover(struct rz_dmac *dmac)
+> +{
+> +	for (unsigned int i = 0; i < dmac->n_channels; i++) {
+> +		struct rz_dmac_chan *channel = &dmac->channels[i];
+> +
+> +		guard(spinlock_irqsave)(&channel->vc.lock);
+> +
+> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC)))
+> +			continue;
+> +
+> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL)))
+> +			continue;
+> +
+> +		rz_dmac_device_resume_internal(channel);
+> +	}
+> +}
+> +
+> +static int rz_dmac_suspend(struct device *dev)
+> +{
+> +	struct rz_dmac *dmac = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	for (unsigned int i = 0; i < dmac->n_channels; i++) {
+> +		struct rz_dmac_chan *channel = &dmac->channels[i];
+> +
+> +		guard(spinlock_irqsave)(&channel->vc.lock);
+> +
+> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC)))
+> +			continue;
+> +
+> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_PAUSED))) {
+> +			ret = rz_dmac_device_pause_internal(channel);
+> +			if (ret) {
+> +				dev_err(dev, "Failed to suspend channel %s\n",
+> +					dma_chan_name(&channel->vc.chan));
+> +				continue;
+> +			}
+> +		}
+> +
+> +		channel->pm_state.nxla = rz_dmac_ch_readl(channel, NXLA, 1);
+> +		channel->status |= BIT(RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED);
+> +	}
+> +
+> +	pm_runtime_put_sync(dmac->dev);
+> +
+> +	ret = reset_control_assert(dmac->rstc);
+> +	if (ret) {
+> +		pm_runtime_resume_and_get(dmac->dev);
+> +		rz_dmac_suspend_recover(dmac);
+> +	}
+> +
+> +	return ret;
+> +}
+
+Testing suspend/resume support on RZ/G3E (DMAC + RSPI) I'm seeing the
+following when suspending:
+
+rz_dmac_suspend()
+
+    [   50.657802] rz-dmac 11400000.dma-controller: PM: device_prepare(): genpd_prepare returns -11
+    [   50.667577] rz-dmac 11400000.dma-controller: PM: device_prepare(): genpd_prepare returns -11
+    [   50.675984] rz-dmac 11400000.dma-controller: PM: device_prepare(): genpd_prepare returns -11
+    [   50.684394] rz-dmac 11400000.dma-controller: PM: device_prepare(): genpd_prepare returns -11
+    [   50.692804] rz-dmac 11400000.dma-controller: PM: device_prepare(): genpd_prepare returns -11
+    [   50.701221] rz-dmac 11400000.dma-controller: PM: device_prepare(): genpd_prepare returns -11
+    [   50.709642] rz-dmac 11400000.dma-controller: PM: device_prepare(): genpd_prepare returns -11
+    [   50.718062] rz-dmac 11400000.dma-controller: PM: device_prepare(): genpd_prepare returns -11
+    [   50.726480] rz-dmac 11400000.dma-controller: PM: device_prepare(): genpd_prepare returns -11
+    [   50.734900] rz-dmac 11400000.dma-controller: PM: device_prepare(): genpd_prepare returns -11
+
+I found out that this issue can be solved by:
+
+When the IRQ handler thread completes a non-cyclic transfer and there
+are no more descriptors queued (ld_queue is empty), invalidate all
+link-mode descriptor headers and clear the RZ_DMAC_CHAN_STATUS_ENABLED
+bit into the rz_dmac_irq_handler_thread():
+
+static irqreturn_t rz_dmac_irq_handler_thread(int irq, void *dev_id)
+{
+	struct rz_dmac_chan *channel = dev_id;
+	struct rz_dmac_desc *desc = NULL;
+	unsigned long flags;
+
+	spin_lock_irqsave(&channel->vc.lock, flags);
+
+	if (list_empty(&channel->ld_active)) {
+		/* Someone might have called terminate all */
+		goto out;
+	}
+
+	desc = list_first_entry(&channel->ld_active, struct rz_dmac_desc, node);
+
+	if (channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC)) {
+		desc = channel->desc;
+		vchan_cyclic_callback(&desc->vd);
+		goto out;
+	} else {
+		vchan_cookie_complete(&desc->vd);
+	}
+
+	list_move_tail(channel->ld_active.next, &channel->ld_free);
+	if (!list_empty(&channel->ld_queue)) {
+		desc = list_first_entry(&channel->ld_queue, struct rz_dmac_desc,
+					node);
+		channel->desc = desc;
+		if (rz_dmac_xfer_desc(channel) == 0)
+			list_move_tail(channel->ld_queue.next, &channel->ld_active);
++	} else {
++		rz_dmac_invalidate_lmdesc(channel);
++		channel->status &= ~BIT(RZ_DMAC_CHAN_STATUS_ENABLED);
+	}
+out:
+	spin_unlock_irqrestore(&channel->vc.lock, flags);
+
+	return IRQ_HANDLED;
+}
+
+
+
+> +
+> +static int rz_dmac_resume(struct device *dev)
+> +{
+> +	struct rz_dmac *dmac = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = reset_control_deassert(dmac->rstc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = pm_runtime_resume_and_get(dmac->dev);
+> +	if (ret) {
+> +		reset_control_assert(dmac->rstc);
+> +		return ret;
+> +	}
+> +
+> +	rz_dmac_writel(dmac, DCTRL_DEFAULT, CHANNEL_0_7_COMMON_BASE + DCTRL);
+> +	rz_dmac_writel(dmac, DCTRL_DEFAULT, CHANNEL_8_15_COMMON_BASE + DCTRL);
+> +
+> +	for (unsigned int i = 0; i < dmac->n_channels; i++) {
+> +		struct rz_dmac_chan *channel = &dmac->channels[i];
+> +
+> +		guard(spinlock_irqsave)(&channel->vc.lock);
+> +
+> +		rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
+> +
+> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC))) {
+> +			rz_dmac_ch_writel(&dmac->channels[i], CHCTRL_DEFAULT, CHCTRL, 1);
+> +			continue;
+> +		}
+> +
+> +		rz_dmac_ch_writel(channel, channel->pm_state.nxla, NXLA, 1);
+> +		rz_dmac_ch_writel(channel, channel->chcfg, CHCFG, 1);
+> +		rz_dmac_ch_writel(channel, CHCTRL_SWRST, CHCTRL, 1);
+> +		rz_dmac_ch_writel(channel, channel->chctrl, CHCTRL, 1);
+> +
+> +		if (channel->status & BIT(RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL)) {
+> +			ret = rz_dmac_device_resume_internal(channel);
+> +			if (ret) {
+> +				dev_err(dev, "Failed to resume channel %s\n",
+> +					dma_chan_name(&channel->vc.chan));
+> +				continue;
+> +			}
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+
+Then on resume I'm seeing the following when testing DMAC + RSPI:
+
+[   52.831840] spi-nor spi0.0: SPI transfer failed: -110
+[   52.836950] spi_master spi0: failed to transfer one message from queue
+[   52.843474] spi_master spi0: noqueue transfer failed
+
+Which I found out that can be solved by moving:
+
+	rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
+
+after the cyclic check:
+
+	if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC))) {
+		rz_dmac_ch_writel(&dmac->channels[i], CHCTRL_DEFAULT, CHCTRL, 1);
+		continue;
+	}
+
++	rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
+	rz_dmac_ch_writel(channel, channel->pm_state.nxla, NXLA, 1);
+	rz_dmac_ch_writel(channel, channel->chcfg, CHCFG, 1);
+	rz_dmac_ch_writel(channel, CHCTRL_SWRST, CHCTRL, 1);
+
+In this way 
+	
+	rz_dmac_set_dma_req_no()
+
+Is only called for cyclic channels
+
+What do you think?
+
+Kind Regards,
+Tommaso
+
+> +
+> +static const struct dev_pm_ops rz_dmac_pm_ops = {
+> +	.prepare = rz_dmac_suspend_prepare,
+> +	SYSTEM_SLEEP_PM_OPS(rz_dmac_suspend, rz_dmac_resume)
+> +};
+> +
+>  static const struct rz_dmac_info rz_dmac_v2h_info = {
+>  	.icu_register_dma_req = rzv2h_icu_register_dma_req,
+>  	.default_dma_req_no = RZV2H_ICU_DMAC_REQ_NO_DEFAULT,
+> @@ -1464,6 +1630,7 @@ static struct platform_driver rz_dmac_driver = {
+>  	.driver		= {
+>  		.name	= "rz-dmac",
+>  		.of_match_table = of_rz_dmac_match,
+> +		.pm	= pm_sleep_ptr(&rz_dmac_pm_ops),
+>  	},
+>  	.probe		= rz_dmac_probe,
+>  	.remove		= rz_dmac_remove,
+> -- 
+> 2.43.0
+> 
 

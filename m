@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-9401-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9402-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yE0oAzXwsmlBRAAAu9opvQ
-	(envelope-from <dmaengine+bounces-9401-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 17:56:21 +0100
+	id oHUdIm7wsmlBRAAAu9opvQ
+	(envelope-from <dmaengine+bounces-9402-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 17:57:18 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAC0C276189
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 17:56:20 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 074B9276222
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 17:57:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2F82B313889F
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 16:51:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 667A4311578E
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 16:51:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F7593FB7E7;
-	Thu, 12 Mar 2026 16:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A4653FB7DA;
+	Thu, 12 Mar 2026 16:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="Bc8CIroU"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="cT8A+RSs"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11021104.outbound.protection.outlook.com [40.107.74.104])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11021077.outbound.protection.outlook.com [52.101.125.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507593FBEBF;
-	Thu, 12 Mar 2026 16:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D369F3FBEDA;
+	Thu, 12 Mar 2026 16:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.77
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773334238; cv=fail; b=m2sQaa9ZC+T6/ZgK4BO6mACNLSwgcjxMH0hasKUvXmR//oyMF9nN/X9f+BYPMynciYR0dcGkSLUUOpOTY8t0wFE1qhGaekFRAO45ED7r1tgOHR3hhsqNUusOlcbb+XjqtO4G2RdHO/bGex8YUwoRjAcnL4TOiW2pa3czyCL5Zrw=
+	t=1773334240; cv=fail; b=ixGmO373uQ1l/neDm9EyI4kscqcZE0o+OZoy0IbemeAi8mQVVfKkNZen9j4mlaD6D3KKyrU+5bMx3YmajtTr7lJ6BPV9cchET+QmtFWTPO66HllMKGNNQ1oOqHZXM3IANRLxjEppP+1DayCPAJuVngGZfgI+8W5M1a7x4dHjF/I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773334238; c=relaxed/simple;
-	bh=ZizYC7Zwg9hyYSKeDkKZSozZhjWwESyDYCuRwHX4Mm0=;
+	s=arc-20240116; t=1773334240; c=relaxed/simple;
+	bh=lRW1ouca4Wyzn+yAJHqiPt4DGODvY3XZUPe+mgsZpo0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=d2gIyzDQidxxpYSyB2cH80cjLv0nvs+G0SVYZHzw8k1Ws3U1MDlDdSpxdGt+tXj2KSbuXDzuS5Dtd5qN80YQZTFAkJpPFW4RiXRCSVQtFug4VHKXvj/LEiEsv642eo6ftZ5TaVHN/h+04Mhpwrx+5XjbcYwwOV1+pm63SvLTeGM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=Bc8CIroU; arc=fail smtp.client-ip=40.107.74.104
+	 Content-Type:MIME-Version; b=Hq0EISW3ndAvTLlNyxXqGPLDD63SgXIxF2Q3evpPHbEpyndMJC9adXaWygMizNSGgjwJ8JBbqYM29wCkkbRw/zkkN5NQsKP4uALXCBsGf8rT0626/KNd/Ed1BR0bSu4x8EUjhXeLC4AfRvhp8Y0WPtKB8C3x77rr9YD2yU432wA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=cT8A+RSs; arc=fail smtp.client-ip=52.101.125.77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Bjs9nyMjiI8GNGxZe1khjTtciX65dcG8pFxuTnkGQG4AWpDWwIsQyKzKYSvt6awH9sJ3TnQzpoU8R/zksYVcyB6QWb+ccgYqXtWex6Kdv5nt7Hr4PjNVnSBbdOZrYbgE/MQerYTXW0QKSth/GHtw/5BsQndcyro6qORH3MHpruMeeV1UIPz4mg043/7Rzy+FNZnriJYAfXhq4b0rORVX+0QeRQV/G/29M/YndLrqKcxgwBByOw6/3LKoVuUpcahcjAoGr8iX37mArZZQMJfhRqzdeye73OBCMqcDiLl3c9z8OePZzXR3pAA8AE2/s++DwdLE/dqSdxwGRccLnNlCEg==
+ b=dwJqzVWW81D/y/yMpgOtn+sO4H6f8zI+7EPW/+SlarijyB51UAIw7/vgZAB4gxtw9QuAg/R9HLPF8uIzuZ+0joji5G26/jJLKbnIt7OVzcSaevgTpElpJWrO6O4qsqg+rf8rJwHe5KOsnUF1LCUzMOU3cv5FuKHQF2nkmPfzR3yQN9OvZi8HCdnddoWZfS0xGw3QCjP93n/qDpitntPicB/qG3kGeq9RwfmFBxaMG+P/gj7XY/j4k/AjMu6Mlo8p1oRG8WxuqeC33tq71y1frna1X//dhzJJy1B3GXgSdFWneL5lnnTPM27lSti23/JwW2FNY2eES/DaqIMutmK23w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pbbIB9k+jZKilBIva7FK6qSuyXTmkI2tLXlEIdpWhmM=;
- b=UQ496hXG6+ZXGKNtUiOEJL4+BwQ4YQxee8vMXwqP4Vp1ilp5agXDpCswR1z9ucYkD+YWn8Jj64pjrG0eZemqGjBXdPRAFse3eFvDJUdL0u3lu9+5iZmTmi9f5FLzib4InrzfmKQaZL0qriCm/rF0a0gP3VMZAkQw7vTEzaszMHGN/moD1l0MWOFVC+H1USk7JowHVnkNhJMIyU1RBlurJjSbOs9mMLNb4ZhSYxPy+gXm7aNVj6JGKUIjMjxBL9AOFeN39fDRP1PCmyxUPP8fm8J1XPI3JWo+lgB+BZOgrikjw9I+7fF9JfjCRLwAkoTYfqD9EbIvyTw1VObf7/4YFw==
+ bh=HG5pSuEOF+ctYFpt9+jU8iX/WBKsiZ9txO/eDns/QqE=;
+ b=rZQrAKwzEXCI+6MxnkmJhLjPlxhuT4qqkDI31nARIgwnemGFqSLBb/CKDZZsWgZeLrFTCLqvhL0lq7cy81BED6sGoGB+v/X8tBsgxbxAtSa9RK4jdhc0jJHVZnMTXqkHGHRRsWeyJqYOcnT3B//J4uMpfBemfrPDg7xCDGQynNdzlaew2LwpHOoe7LZl5uvvKF82nZpe8KmPCy5JwS76ZAxrN6HkAub5HDcrCLxn02Q/f4V6uBs8uSJ7GlojCOBR3OStnV78YXxPkZrvA36cL/EO2o6W1RoXNREr9cgPrIrJBC4m4VORh7RoVZyE0QvcWOHD+qxHfjlQDEpDu8kgMg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pbbIB9k+jZKilBIva7FK6qSuyXTmkI2tLXlEIdpWhmM=;
- b=Bc8CIroUq7tmztUHWzuUJ4DGM609nKK99f/qQfi2s8iCjhkowm/H5tI4/2xIAMmZRvMOcAHMjZ/7yEKFP3ddw5ELZyMhXs3mVwpxHNpkailxkE2YKRZLHba2PKsrv41NVnJKBkW1DOafZiDLjiszJmHZa5qAT8gNe9t0CypB/BE=
+ bh=HG5pSuEOF+ctYFpt9+jU8iX/WBKsiZ9txO/eDns/QqE=;
+ b=cT8A+RSsIbZ7DWM/7Ix2je9LaH5Ogq26MLKVdDMoj6nlqk7tqXR/tQ+hx9ACOgKR88mTMx3gWK2i/g+k2l0v3NtfvJeaZuDd/tmBQ+u9n+4Ll0Q+gSbVaMkXIrVXjt6KpX7TwrTGOG8nYxtuvc+q0ksbF37uB6C9+ROk/8EcUkg=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=valinux.co.jp;
 Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
  by TYCP286MB2018.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:15e::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.15; Thu, 12 Mar
- 2026 16:50:16 +0000
+ 2026 16:50:17 +0000
 Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.20.9700.013; Thu, 12 Mar 2026
- 16:50:16 +0000
+ 16:50:17 +0000
 From: Koichiro Den <den@valinux.co.jp>
 To: Manivannan Sadhasivam <mani@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
@@ -83,16 +83,16 @@ Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	dmaengine@vger.kernel.org,
 	ntb@lists.linux.dev
-Subject: [PATCH 06/15] PCI: endpoint: pci-epf-vntb: Fold MW runtime state into a struct
-Date: Fri, 13 Mar 2026 01:49:56 +0900
-Message-ID: <20260312165005.1148676-7-den@valinux.co.jp>
+Subject: [PATCH 07/15] PCI: endpoint: Add EPC DMA channel delegation hooks
+Date: Fri, 13 Mar 2026 01:49:57 +0900
+Message-ID: <20260312165005.1148676-8-den@valinux.co.jp>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260312165005.1148676-1-den@valinux.co.jp>
 References: <20260312165005.1148676-1-den@valinux.co.jp>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TYCP286CA0098.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:2b4::19) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-ClientProxiedBy: TYCPR01CA0106.jpnprd01.prod.outlook.com
+ (2603:1096:405:4::22) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -102,69 +102,69 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TYCP286MB2018:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8832e286-dafa-4505-d6cb-08de8057700d
+X-MS-Office365-Filtering-Correlation-Id: 8eafcd0d-3eeb-4239-bf04-08de80577087
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|376014|1800799024|10070799003|366016|7416014|921020|56012099003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	TtUljG4XAVi6qGg8P8R9qWKSiAF+ZbJeAN2LPkdHo3E6Zo4Q8fTAlSuV6u3+E1h4GWyQPNhTjqFZXBMpT/B94M2r96ESl8irEQPxeS/S5YkvRBodP5vYjov7nJdRI64T5RDN1x6H704A4Or6mXKwaIYlfxFtY0h+qYxxcBFQ+esW9G/gvkYRRwov1qvnt9WTx16L+zS31jCDJMHGq43SymuadGQUrylapIo52I7guNCEjR/iiDk13M9wyPsJ5e2RlGaOWQdb/SfLJfeje8R9bUfgsoLJwO3C7sjWaJCxSys5uZb0rVnzff6KO1vdN1Iek7lNNZx+DEB5t8NMQdXQgr7vgJ9x8IikbAGTBSJLGhukj7gMd6Th5EeCWnyb5lJrr8OJBzVReFKbsKjvIJdsQimRH6YxbbEW70MvU71jHYa3fs2LFpsDofdqgsk0NOfGIKHc815gIbYgdwp6OIQ5oiQKhqhXUhgkynU26ovD/ZYwMJ+HqTyUnRiBeULZXx+gmRWC3GuQM3fJUUqr58fSPI92+KRuRZ3eUwonJLJAUm7B4DOoQ21VpwK8VzREyjFgp8rMtJR2oQD8+jAYQHD/omA/Tk0SIxQR7aGIOqiA6F45aWdK2J+kRRBeE7o0HOlRS9cvXY408Es5w2PT4q0dSr8khGTcXIS35D20aTvytDEv8WuRxZsAcOdSbPA3VGGKbdx6t32okYCH1b1hKp6hNDgKauX8enzqUozFHDZSTcdTmlZAI2vsqUjJLxuSHtBSNhn6qGPzUlURQ5IKZSUoDg==
+	5ULyGO5YCVG8vGaxSSc/TvSty1K6dtz5Dgi/Osaj5kCj9WANMkTbT3qcMw9lQ2RKrI4Z8ENTu7tezX4yfN3OFr3tebXH+k08DpfdHrjd/7qP1RPZzMv/Z33M4zWJ2b071YbjkL8Sx7rcfx9ekCG8gKfBViqkyp5O9VX3VI9nWAud23elEkuSKGOZxu35cNRspoM9DoBWB71DBHQFplrF5T2JqR4U+wMe2nL3YPWWr/3EWwelGzhV2zjXP2CD/x8U5wIL68pPtI2GDix2t+pGoAPk4sEHC5+MWBEvSlI7JwXx0lH+oI1ozRKELXffuM+HcfNCKU4K6z+ETQqqlxPLcJNjhXgaLoZA06DurUu5wWWoxFCLdyprhPYnbCdOO6nbYKcrEX8CVrfGOZDjfUNjbrKWgFIPTdrwpYRAjhjykkmzX0uvrrZmCH4lJFYRqYx8qcU9QPLML5WQkU69NLkcQ3lVAAnQCYtz1dJWM58wYQbDLZdmYTTU0UZoKSYpMar5fgkdqMMuMkRaCvx9lBtLB1ztguMXIoAZW2l/9mVtbCnOxNxkk6N7QO8g1XVRjRhWTX0YjhA8dV5t0D+MB7vr7bL7Abh6PfeZi1Puw49f1XrnV97iDSdCeFGg5+qpKs3ws+AomxoTb4bSQs5StfWKwQ7HUxjQ9UkSeEmz04Dsf/jPLA8WVEcfysvPCac+zbW7ZXsAxgJ0FyksywtMjMaTg+iYZ85R3iKR1OhoXyWHWthg9bVjfnJ0olMdgpxKf9wo76rYZMDnoQOW6Gd9pSrWoQ==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(10070799003)(366016)(7416014)(921020)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?32TZ2iAx3XK1uLng3ew5bi4mVpY0Uj6PuZcET3gLjQkyyhB5DHacc8DaP2L9?=
- =?us-ascii?Q?aOAutc0b7LAPsBN6lIcWDoTq/EkjAIunNT6iBeonafNwz2ryePmvOdqg+5/s?=
- =?us-ascii?Q?IyX0zEKVhIIrRLvNCcN0wDMEoPpNFwCf2kNrFqJ6Tp+WdKHq1VqZBARsJ7Uh?=
- =?us-ascii?Q?B+84TkQFdb6LIMeb+G4n5KRwRqziyd1YZa6uPbVptNlR9pdCcy/nU1n8+MlH?=
- =?us-ascii?Q?34x8VKkoSA+sWiuD7dTbh6IFQJV5T50SvIOxRvSz/xDjTQ1q3SiYukX5ThZt?=
- =?us-ascii?Q?TwKBf0wWmejZ0if3ivMlSJE2+rFnb6K16uXXn+SW/t0VawX5BY+QyQ7HcdJz?=
- =?us-ascii?Q?+Qw0oQejBUyihjXE5fRnDmblsuYmqAWNIHXUcAFPoxuLsomd/HE5dg1qPnQq?=
- =?us-ascii?Q?69M7jkSFahFeT9r0/5KTjplsQcjOaLPCsSC72I2XCRQY15wYfBw24co/AB0W?=
- =?us-ascii?Q?FgsJrIh2LVWh+zSZM7q3fhrelik2Jq4rV6At6JgA/fXbKjXfd1EnN6FVa/dm?=
- =?us-ascii?Q?XbN1Bk9kGicfRD5h/+y+pl1CkSBO5bdnLaSWNnNL3IfOs9/mRa7C2Py+r2Yt?=
- =?us-ascii?Q?EGniSWcIaWrTyFQlMlk/rIIKyV8ahS9KwkF+HRljy8Aqb7xMmpLnBgbi5zJi?=
- =?us-ascii?Q?XXBPxS10IyXSl86Jbqz5B+2/8Q9PwB+0FYPiYyBYeZOo0LOvWgFfBTrj5GI0?=
- =?us-ascii?Q?K61LGVNvADQZjwo7vGcH+HEjl+ioNkftpFWbqm6yaPn7nkJP9fS1c9vSAYen?=
- =?us-ascii?Q?PSzp6G+fpZQWQjYLXYhxdh8rEWkerftgJscF8+ruRPYxFuPaAG+hDwghFKlG?=
- =?us-ascii?Q?S35uRqauAKjEhEXeOwnJJMcuuC3fXojbEu04I6dpZWAdTsuC1KReKc2hYQor?=
- =?us-ascii?Q?fXvo62Rv2XpNuxYVHZnuf5NisyFk7KOFOUFfUGpwlrR8x+F43qqFTsXuTUdL?=
- =?us-ascii?Q?kWxgNqG9Tbfs4HL2LMd18OMUIe/2ZWtIlhkuzFcI3FbSvtmXl9TFmS+s0E9C?=
- =?us-ascii?Q?OJYv5MVvqxSTqBUJxF40Ahs428ZsLZGeah9CfRF3ejUTGkaR4Sd/PGXpnQXl?=
- =?us-ascii?Q?YLYIqjgJWTjheYz746EnB1mzvZ3WOyWchJJfUt7IG00lZYJ1ZMexQkFUfAQ1?=
- =?us-ascii?Q?O0OIxQWTMTnIxpjUo0fjQ7KVKk3PTlYKHUqFXcAm5kdDEiLExZvyBS/NaQQb?=
- =?us-ascii?Q?b5FL6eDDUrMdTbljTI4fwN4Oc/tfmT9nMXzbmM56mu5tP5fsfyOuwVKCqPpD?=
- =?us-ascii?Q?mSC09trw7FaQFPq8ye550CTTPWLasKV8mJGW3Xe9NK9tIOMOY/5olU1+tMe4?=
- =?us-ascii?Q?1Cr5G1AT2UACFvQ+pVnZl0VWdL7IDzI9I0pLcFnB9lpBKjD180Jk0fa0azBg?=
- =?us-ascii?Q?NtITf+VW1lGIZFnJtGYy6MUR3vKJ32jsCGVqHstN+UfpYXgiQCvo0RdtXJLT?=
- =?us-ascii?Q?PvKAQjMDiGi6kJvIMlHl4WmnecuyWoSOjsi0OJGp8o1SS3+H0zZxWzHACRG+?=
- =?us-ascii?Q?3R1qdpOFJU94pVVmPBBwTGKD+LXcJptutnzYbM5EBjV7TxGeGlMQnIVZA1tN?=
- =?us-ascii?Q?A380WUS6H23dJjAlHVvE7CM4txL8ev4FdcN1VXpqLQf3aojVg3aZsDkmuZFV?=
- =?us-ascii?Q?yPaqjeHxpUSXqK40/LPkTScs9rg7BOSifflON7hrilOCg5VwJo1R3nhyntye?=
- =?us-ascii?Q?MXT0lShyXqvsjcXmqe5Lz+ORAWlWsmteZytl7pLO7GnypOEV8T1DYJvdCoiB?=
- =?us-ascii?Q?prEqVVQ1frD+kKoyy3qRSTl/kE3bidlRATAYmIbPwaW3UmmSPtKh?=
+	=?us-ascii?Q?hQIYqW9F0gnKucBBD/0gXoTT0xnFFffJHA9Tgxcs3IrCLLeI3vqtDWDIovVt?=
+ =?us-ascii?Q?cRggbQM02B2hzeSeRN4FZIqC+/+0KnbRa1yCieXlNzrEAZjvD9mmXPxczyWS?=
+ =?us-ascii?Q?HVoU0SgM7s7Ow3uE1hTagvtHT+MllYtnJd0moz6jP2Kyf8WytrUOkNbc5qUS?=
+ =?us-ascii?Q?8t+FaiWASL6+blqIUkiGFgK415n0pjJMcN41A1M9h8X2LTcjkJjlPbnbwSyo?=
+ =?us-ascii?Q?jC8crtXkjW3DLi0Pp3iieSHWnhwYbLcyHzIzICvdy5GKEUCPc8fx0lxCXO+G?=
+ =?us-ascii?Q?b8lNMricA5AsHV/0Xe83bKRp7/UjikGzTvSO1DiA1T2y4f3ausH5gzsqjHLR?=
+ =?us-ascii?Q?dVioDahodERxXkdvqupZQrtQs2Xve6pxtpAboOIH47pHdC5CEmirnJT1zwdg?=
+ =?us-ascii?Q?oEmhi5FHKeysQuI5x0X786HgvjiPJQrdwWqqc9uGz1SsdCNX0WCAo2+Tc3ND?=
+ =?us-ascii?Q?u/G4s4xq6E2UUfps7uBHTKvlIdXNBmZEveQVGqi75BKRmnZLuTiTpiiS8e7v?=
+ =?us-ascii?Q?qvOuTnOI2l3qfDyT8lTjWEADicQMCSnM+xJ64TRlN/dJtaAZGR6hz4pstuTj?=
+ =?us-ascii?Q?QKvztwXXTPmnJw3/lR5V+bQKl9j09V1Z07BWXIL8jiAIv04JkOBFQ7QXdKId?=
+ =?us-ascii?Q?Tpkcgi5MKx8br4eC1cN7hThsh9H1xFcGlSKGGaTBDlwQeU54KVHMIvA11gn/?=
+ =?us-ascii?Q?gW91VMda3FDqXBx/uohMmzjH2MvnTWOLk5LN6qcH1c3gj8x29RBvwt7f80cK?=
+ =?us-ascii?Q?mguSUooJ5aa86qQcACG0CbS9KYIiEdvwUObbtVfWNRF6Cll4ORlq5Y+7e4Xo?=
+ =?us-ascii?Q?3I6jqNFmeeKw4DAN01Z+gaUafwM22Yh0l5SKinFlzAxwKJsDS4EBE1h8C9RM?=
+ =?us-ascii?Q?VKSVw/+W3zjhdZNPRpcra2Xy/7iZAWcnhCgPdPivuXMEUmeYBOLfG1F+2UJO?=
+ =?us-ascii?Q?XPutWqhZ/JzrtxiCPvSr6LMZIdn/GwVAUo7/Xi+1Y5N5YuIyH/o3kAV1oA8/?=
+ =?us-ascii?Q?kziGKl2Vc8Xa335QGDffk/U5d8kvs/1uNLPaZIEMNrXiLCSF0d9/xFeW0vf9?=
+ =?us-ascii?Q?u9CooFS94Gr15pEa9V4o6wFTaq+TY3KvLdItvZfElnsLtNIxDuzQ1ke9e3y5?=
+ =?us-ascii?Q?VkDj+G2cS52q9sQWP/sa641RBoiZggziIcfA5Ev1ZIQ13W/fnL1jW9Fnwo8T?=
+ =?us-ascii?Q?QkBfiAUbQVNVJeLkvzGWmZYv3bxldFN+U+zYv0ZazAvlwWlgrGHWuOPi0JQ7?=
+ =?us-ascii?Q?6UFelx4kFMtBLC8DB/DT5DkrDxafJFFm0VByI9Q+d8uCG/l3HxN05HG1DCCy?=
+ =?us-ascii?Q?aXj3sNS5+XD1giN3hpK8tPMdtY0Qkjq76gWA8aH5aidFAkUobZiFkyEqLKxI?=
+ =?us-ascii?Q?o/z3y3W7YiFnH7ecMBy1wDgtlRF+m6vd84chQTEdTqQwzaKdZiWsYfS1KEoV?=
+ =?us-ascii?Q?HCNA6v1xcZI0KwuSf+6ePW0tXjddmsN7JhRh5K6FeuadyFriN7IW4CmcZ0UL?=
+ =?us-ascii?Q?eT8gXz6MMQ9pZKzsLnF+DpV/7gPSNEMeMB4gUAGg/+jJogvoPx5NC9CqZRls?=
+ =?us-ascii?Q?B4KQFLWBu4sF4qCbq0e1Qin5Qv1M2DRgw6oz0j/Bwrqj7MSs2D3oBLozlyO6?=
+ =?us-ascii?Q?adTBYgEJSVG1kGIhNH0n7DRBgtHIrx4352yMTvEMU+BPvD3ku5ohoEYzzX/o?=
+ =?us-ascii?Q?dkKAIDPkkZqLfbPFkMNqfA3clrnyinSHGdkz5gEmmuWqR42Icy8UKSvPMaA8?=
+ =?us-ascii?Q?x/92P5kWpAwS6D6yz698RDzPFFHh52hSNwIo1SIXPdAOd7s0NhaZ?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8832e286-dafa-4505-d6cb-08de8057700d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8eafcd0d-3eeb-4239-bf04-08de80577087
 X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 16:50:16.4244
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 16:50:17.2179
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OoMs9DGDEEsaQRuNJuEbAR53lVyNnGZv1raopu9Xe+t6/G5DIM0qPwMTiqzPLriUj6JgSkU7zj0oRWfdLkxKVg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: mywHg07SsMbDILwolc7gXC3LqCrQZC2ubx1kjflkfvtNB5+FuTGAOEjdFNTlt1ofXIU4NghpSG4rg0gk7PdcqA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCP286MB2018
 X-Spamd-Result: default: False [1.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9401-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9402-lists,dmaengine=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[22];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -179,159 +179,166 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[dmaengine];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,valinux.co.jp:dkim,valinux.co.jp:email,valinux.co.jp:mid]
-X-Rspamd-Queue-Id: AAC0C276189
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[valinux.co.jp:dkim,valinux.co.jp:email,valinux.co.jp:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 074B9276222
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The next patches add per-memory-window offsets, shared BAR placement,
-and optional DMA export state. Keeping per-window state in parallel
-arrays would make that work noisy and error-prone.
+Add EPC ops and core wrappers to delegate and undelegate controller-owned
+DMA channels.
 
-Group the runtime memory-window state into struct epf_ntb_mw so
-follow-up changes can extend a single object instead of touching
-multiple arrays.
-
-No functional change intended.
+The exported DMA helper needs more than a passive "delegated" bitmap:
+it must be able to reserve channels away from local users, let the
+backend perform controller-specific setup (e.g. prevent the EP from
+racing to ack the completion interrupt for delegated channels), and
+later hand the channels back as a matched lifetime operation.
 
 Signed-off-by: Koichiro Den <den@valinux.co.jp>
 ---
- drivers/pci/endpoint/functions/pci-epf-vntb.c | 42 ++++++++++---------
- 1 file changed, 23 insertions(+), 19 deletions(-)
+ drivers/pci/endpoint/pci-epc-core.c | 84 +++++++++++++++++++++++++++++
+ include/linux/pci-epc.h             | 19 +++++++
+ 2 files changed, 103 insertions(+)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-index bd9a3380a537..16656659a9ce 100644
---- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-@@ -128,6 +128,12 @@ struct epf_ntb_ctrl {
- 	u32 db_offset[MAX_DB_COUNT];
- } __packed;
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index dc6d6ab4ea1e..892f7ccbd236 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -197,6 +197,90 @@ int pci_epc_get_aux_resources(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_get_aux_resources);
  
-+struct epf_ntb_mw {
-+	u64 size;
-+	phys_addr_t vpci_mw_phys;
-+	void __iomem *vpci_mw_addr;
-+};
++/**
++ * pci_epc_delegate_dma_channels() - reserve EPC-owned DMA channels
++ * @epc: EPC device
++ * @func_no: function number
++ * @vfunc_no: virtual function number
++ * @dir: DMA channel direction
++ * @req_chans: number of channels requested
++ * @chan_ids: output array of delegated channel IDs
++ * @max_chans: capacity of @chan_ids in entries
++ *
++ * Return:
++ *   * > 0: number of channels delegated
++ *   * -EOPNOTSUPP: backend does not support DMA delegation
++ *   * other -errno on failure
++ */
++int pci_epc_delegate_dma_channels(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
++				  enum pci_epc_aux_dma_dir dir,
++				  u32 req_chans, int *chan_ids, u32 max_chans)
++{
++	int ret;
 +
- struct epf_ntb {
- 	struct ntb_dev ntb;
- 	struct pci_epf *epf;
-@@ -136,7 +142,7 @@ struct epf_ntb {
- 	u32 num_mws;
- 	u32 db_count;
- 	u32 spad_count;
--	u64 mws_size[MAX_MW];
-+	struct epf_ntb_mw mw[MAX_MW];
- 	atomic64_t db;
- 	atomic64_t peer_db_pending;
- 	struct work_struct peer_db_work;
-@@ -159,9 +165,6 @@ struct epf_ntb {
- 
- 	u32 *epf_db;
- 
--	phys_addr_t vpci_mw_phy[MAX_MW];
--	void __iomem *vpci_mw_addr[MAX_MW];
--
- 	struct delayed_work cmd_handler;
++	if (!epc || !epc->ops)
++		return -EINVAL;
++
++	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
++		return -EINVAL;
++
++	if (!req_chans || !chan_ids || !max_chans)
++		return -EINVAL;
++
++	if (!epc->ops->delegate_dma_channels)
++		return -EOPNOTSUPP;
++
++	mutex_lock(&epc->lock);
++	ret = epc->ops->delegate_dma_channels(epc, func_no, vfunc_no, dir,
++					      req_chans, chan_ids, max_chans);
++	mutex_unlock(&epc->lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(pci_epc_delegate_dma_channels);
++
++/**
++ * pci_epc_undelegate_dma_channels() - release previously delegated channels
++ * @epc: EPC device
++ * @func_no: function number
++ * @vfunc_no: virtual function number
++ * @dir: DMA channel direction
++ * @chan_ids: array of delegated channel IDs
++ * @num_chans: number of entries in @chan_ids
++ *
++ * Return: 0 on success, negative errno otherwise.
++ */
++int pci_epc_undelegate_dma_channels(struct pci_epc *epc, u8 func_no,
++				    u8 vfunc_no,
++				    enum pci_epc_aux_dma_dir dir,
++				    const int *chan_ids, u32 num_chans)
++{
++	int ret;
++
++	if (!epc || !epc->ops)
++		return -EINVAL;
++
++	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
++		return -EINVAL;
++
++	if (!num_chans)
++		return 0;
++
++	if (!chan_ids)
++		return -EINVAL;
++
++	if (!epc->ops->undelegate_dma_channels)
++		return -EOPNOTSUPP;
++
++	mutex_lock(&epc->lock);
++	ret = epc->ops->undelegate_dma_channels(epc, func_no, vfunc_no, dir,
++						chan_ids, num_chans);
++	mutex_unlock(&epc->lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(pci_epc_undelegate_dma_channels);
++
+ /**
+  * pci_epc_stop() - stop the PCI link
+  * @epc: the link of the EPC device that has to be stopped
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 7dd2e4d5d952..db8623b84c56 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -142,6 +142,8 @@ struct pci_epc_aux_resource {
+  * @stop: ops to stop the PCI link
+  * @get_features: ops to get the features supported by the EPC
+  * @get_aux_resources: ops to retrieve controller-owned auxiliary resources
++ * @delegate_dma_channels: reserve controller-owned DMA channels for peer use
++ * @undelegate_dma_channels: release previously delegated DMA channels
+  * @owner: the module owner containing the ops
+  */
+ struct pci_epc_ops {
+@@ -176,6 +178,16 @@ struct pci_epc_ops {
+ 	int	(*get_aux_resources)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 				     struct pci_epc_aux_resource *resources,
+ 				     int num_resources);
++	int	(*delegate_dma_channels)(struct pci_epc *epc, u8 func_no,
++					 u8 vfunc_no,
++					 enum pci_epc_aux_dma_dir dir,
++					 u32 req_chans, int *chan_ids,
++					 u32 max_chans);
++	int	(*undelegate_dma_channels)(struct pci_epc *epc, u8 func_no,
++					   u8 vfunc_no,
++					   enum pci_epc_aux_dma_dir dir,
++					   const int *chan_ids,
++					   u32 num_chans);
+ 	struct module *owner;
  };
  
-@@ -227,7 +230,7 @@ static int epf_ntb_configure_mw(struct epf_ntb *ntb, u32 mw)
- 	u64 addr, size;
- 	int ret = 0;
- 
--	phys_addr = ntb->vpci_mw_phy[mw];
-+	phys_addr = ntb->mw[mw].vpci_mw_phys;
- 	addr = ntb->reg->addr;
- 	size = ntb->reg->size;
- 
-@@ -254,7 +257,7 @@ static void epf_ntb_teardown_mw(struct epf_ntb *ntb, u32 mw)
- 	pci_epc_unmap_addr(ntb->epf->epc,
- 			   ntb->epf->func_no,
- 			   ntb->epf->vfunc_no,
--			   ntb->vpci_mw_phy[mw]);
-+			   ntb->mw[mw].vpci_mw_phys);
- }
- 
- /**
-@@ -763,7 +766,7 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
- 	struct device *dev = &ntb->epf->dev;
- 
- 	for (i = 0; i < ntb->num_mws; i++) {
--		size = ntb->mws_size[i];
-+		size = ntb->mw[i].size;
- 		barno = ntb->epf_ntb_bar[BAR_MW1 + i];
- 
- 		ntb->epf->bar[barno].barno = barno;
-@@ -784,10 +787,11 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
- 		}
- 
- 		/* Allocate EPC outbound memory windows to vpci vntb device */
--		ntb->vpci_mw_addr[i] = pci_epc_mem_alloc_addr(ntb->epf->epc,
--							      &ntb->vpci_mw_phy[i],
--							      size);
--		if (!ntb->vpci_mw_addr[i]) {
-+		ntb->mw[i].vpci_mw_addr =
-+				pci_epc_mem_alloc_addr(ntb->epf->epc,
-+						       &ntb->mw[i].vpci_mw_phys,
-+						       size);
-+		if (!ntb->mw[i].vpci_mw_addr) {
- 			ret = -ENOMEM;
- 			dev_err(dev, "Failed to allocate source address\n");
- 			goto err_set_bar;
-@@ -824,9 +828,9 @@ static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws)
- 				  &ntb->epf->bar[barno]);
- 
- 		pci_epc_mem_free_addr(ntb->epf->epc,
--				      ntb->vpci_mw_phy[i],
--				      ntb->vpci_mw_addr[i],
--				      ntb->mws_size[i]);
-+				      ntb->mw[i].vpci_mw_phys,
-+				      ntb->mw[i].vpci_mw_addr,
-+				      ntb->mw[i].size);
- 	}
- }
- 
-@@ -1065,7 +1069,7 @@ static ssize_t epf_ntb_##_name##_show(struct config_item *item,		\
- 		return -ERANGE;						\
- 	}								\
- 	idx = array_index_nospec(idx, ntb->num_mws);			\
--	return sprintf(page, "%llu\n", ntb->mws_size[idx]);		\
-+	return sprintf(page, "%llu\n", ntb->mw[idx].size);		\
- }
- 
- #define EPF_NTB_MW_W(_name)						\
-@@ -1093,7 +1097,7 @@ static ssize_t epf_ntb_##_name##_store(struct config_item *item,	\
- 		return -ERANGE;						\
- 	}								\
- 	idx = array_index_nospec(idx, ntb->num_mws);			\
--	ntb->mws_size[idx] = val;					\
-+	ntb->mw[idx].size = val;					\
- 									\
- 	return len;							\
- }
-@@ -1400,10 +1404,10 @@ static int vntb_epf_peer_mw_get_addr(struct ntb_dev *ndev, int idx,
- 	struct epf_ntb *ntb = ntb_ndev(ndev);
- 
- 	if (base)
--		*base = ntb->vpci_mw_phy[idx];
-+		*base = ntb->mw[idx].vpci_mw_phys;
- 
- 	if (size)
--		*size = ntb->mws_size[idx];
-+		*size = ntb->mw[idx].size;
- 
- 	return 0;
- }
-@@ -1556,7 +1560,7 @@ static int vntb_epf_mw_get_align(struct ntb_dev *ndev, int pidx, int idx,
- 		*size_align = 1;
- 
- 	if (size_max)
--		*size_max = ntb->mws_size[idx];
-+		*size_max = ntb->mw[idx].size;
- 
- 	return 0;
- }
+@@ -403,6 +415,13 @@ const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
+ int pci_epc_get_aux_resources(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 			      struct pci_epc_aux_resource *resources,
+ 			      int num_resources);
++int pci_epc_delegate_dma_channels(struct pci_epc *epc, u8 func_no,
++				  u8 vfunc_no, enum pci_epc_aux_dma_dir dir,
++				  u32 req_chans, int *chan_ids, u32 max_chans);
++int pci_epc_undelegate_dma_channels(struct pci_epc *epc, u8 func_no,
++				    u8 vfunc_no,
++				    enum pci_epc_aux_dma_dir dir,
++				    const int *chan_ids, u32 num_chans);
+ enum pci_barno
+ pci_epc_get_first_free_bar(const struct pci_epc_features *epc_features);
+ enum pci_barno pci_epc_get_next_free_bar(const struct pci_epc_features
 -- 
 2.51.0
 

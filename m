@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-9395-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9398-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mKYWI9DvsmnAQwAAu9opvQ
-	(envelope-from <dmaengine+bounces-9395-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 17:54:40 +0100
+	id GENVHQjwsmlBRAAAu9opvQ
+	(envelope-from <dmaengine+bounces-9398-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 17:55:36 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B8A7276043
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 17:54:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 15AD2276113
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 17:55:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CF029303D31B
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 16:50:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B18E731DE336
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 16:50:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE1833F65E2;
-	Thu, 12 Mar 2026 16:50:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB3DE3F8E1A;
+	Thu, 12 Mar 2026 16:50:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="OXiyZ5Ra"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="th/edMhB"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11021104.outbound.protection.outlook.com [40.107.74.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD3E2233A;
-	Thu, 12 Mar 2026 16:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0E03932D1;
+	Thu, 12 Mar 2026 16:50:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.104
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773334219; cv=fail; b=Msxc7cwpgIjT9Q5d0Ez0NyjAkjZX8iLFMtJtZUsFeySL8X5NPh6QKPpATTFKxOxF0NwD9F026mIwR9XXwVLr0DsOyWcmDMTE5xHGw+z0ktZFwOQb2EiQm4YX4L04Ihdqo1jBjyB/h6RcmiKfzN17MRVeDbYIbDvm4+cd3zRToN0=
+	t=1773334231; cv=fail; b=uH802vM6pvChFwBvFXsoGutOogpzf5GEEgWbZ+3HUr/dOG03+yN3wxEHUW6k7VW7vJnjWKixImxS1dmIcDEQH7Bl9AKN4vM99uj+U1f65ORI9iVbn7ndttXTyAirFG0ErBc9fzBzL6XZJkxGglhj1vapvhtNRG9ATUdyjvxx3SU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773334219; c=relaxed/simple;
-	bh=uzBM3DrRb2s4I9F+YuVxR/MWL+QbwJ1CQ/uiTyoBso4=;
+	s=arc-20240116; t=1773334231; c=relaxed/simple;
+	bh=Wg3yvvSZYgfMREpJR5ThPmU7BTl+fx5Q/wKJexk+3bY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oYj9q8Etc7Y4Z7eq/NvU3v4wEteITeIGge7EZpYwAadvgbAv8t9XVxS/BKkk3T5n1JULQDGT/4kwnW+KsPGqej+vD/BFXWLOa4cEAtcwgzwxs1LqOUcnehwIhEwTywZxXQHJU8O1CPb2vbciHd1cnwgwF32OpgpmA6oUyalAQxA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=OXiyZ5Ra; arc=fail smtp.client-ip=40.107.74.104
+	 Content-Type:MIME-Version; b=C019bL1QgTy4VmH5xgThS0LgINBgXsnv15jsWiu9g2Y6WKWHvBcOddhbQLsXUsyt/SXudIfWujnuQzAlLF2IIIkyydUe6IyLdqeb0rcYp7dPGCcAxKv6franHlxqqUoTxWXkmUAR/taBct9fwpB8KcybRJEaTpFs80HHTsGCKaQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=th/edMhB; arc=fail smtp.client-ip=40.107.74.104
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EvPwpTrMW/AH49wwPBQM4JArMwcKZ6qPuT4GRXbyzfTnpPCK6FrbmyoXvCub+fVH/nBYKLnjueY3KJ4zTvLVg7Wmls1+RusCOwozZa5m4Q2Ce6hGOTz9kOAZpmRNyF/2i4+0Z3+3PISh/XRw32bHN8WZKRTUFbSt/7ZIheErYpDSPKyjMxEKhSomR2iU8KOOSG2Qjyw3Cmi8EmDREvPytn9wQD3fvXxp8X6GtVPib92ud1rZ1xidbSDcwAMOcF8i2QVjkXuQJt9WjgDGRkHWxPyHcaV7xnzt42/5c7A8/iycWlojVSjumSiYWo74FYoXRTDulUW9WvYiZpR6/OMmwQ==
+ b=otPasD63its6SdPOGhVIYwDaRX5QA9SW/dLprNAotZzHtQcUsAqX0dv7+SgZNQ4YziITEDhevpMwU7LbH45haIkWojGM0XxhT82t93mzNZS/3Vfxf/SdPnSpqc2VXlZEoezcScoi+jeavzx6FUtZabsWNLCfru5lxQRCT45pkEixv4AIVAz0rft/oXsNoJIZqMRVYCPFee5fBNCo9jbiHuJBl3ATaUmpkupvW8pA/nZn/2WRc8pTVVkfNe/im9bjIaowo0UJAoktDTPXAXVOgKvP/flCGiHIFvx7Ryhz37yycgTXl+nJ3K7TkiLqV1G/vlWUIhIAX+hAiMTE3E75Jw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X2Ojd+91uM5lBJbrfmod8NX6oNM6o9ytEhQYuhC4bJY=;
- b=GlYOYZizFrdWKHakHNgMC/Bm6FxZ17+yoGtLHtfgoTRtxRhQXUEk/TmvkcFpkkgBZjI29LhZh+/IkobmpaU9Um4IWAfxJDciqFtSCJ5w7WGHtmi+taRjk6Y0hPBMlu804jeahb/yt/jIM5tRWACBzaLbk/NvokTa9+cC4Qz1r9/RmKM1Tv9g+lyePa+xM/Dq7/nArGjAdGUqj4uGE2lG/kvzibvjn88dNlUkVD3kDUBPUVRxRa+u7k0ZzfZu+r5LRJW4/RuvV4q9OKyKlwueuhdVPIk//LSXEyw+T8r67iOG5JeAej4xl8K7pvpVGpBZ4oEGydB75Vk3HV8uTT5L7w==
+ bh=ReHTACPRqYvGvO1QsZIoKLIMWjbE/9lmCYv4bxI+X74=;
+ b=PCjxgY52Ug6W72liuxJ/m7zLNgNkaoEngnl83T7Gbf57/2fZ4CEeaFCBUNdihgzmxWwASaaldSsweRj2AD10q7X4TFeGlS8tAFLsxG25+NU4qXJxpkp6ibRaIM0IQ3/O4DcDhSzFRbABmx2z97gH0hUtvwdowolWQ0KRtMrqL5pAVJ0LwGQdo2LjXVC6f0+QUPvByh4LiM/lN2dctxcob4gPvBo2WFLS5dzIq7Yd17oQcjMXf8QT+pV4E5MYfO7bT2xEDvsH12vaj7ppI4cJTuIEmuIMNYbIQWj7uxrh5MljW1b385ewJUart+Z3MgEKCRPIGdNNUqGope5Rl3Syxg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X2Ojd+91uM5lBJbrfmod8NX6oNM6o9ytEhQYuhC4bJY=;
- b=OXiyZ5Ran9HCF9aboSp49Cs1MV6w3Ga4xyHDsxsTcuH868I2mv72q8iyrndQ5bUntDTMUa+3RNFj9KasfzC1jD31OrbmKBIlHPcsXdGnPdIvaOmIz2DKXmxwmPNdjGnMXwNqFl0XbW8wIS8SIQmzI7IrJ225WciKNF7i89Ym4QM=
+ bh=ReHTACPRqYvGvO1QsZIoKLIMWjbE/9lmCYv4bxI+X74=;
+ b=th/edMhBAs3xITQ1uUf9NIOHqYftr2X46L/UaMmidqX3NQSPncRdnCeZAbbEpRtUHBZD4+jm5/X7nylvERanjJvGu82XFSRmiYftfbeNvyLoj9ug1fjXVJgiMQn/hl6AeDxCb36Ip1y4OA08vf+SUv6zKKBC2eSA1/IoK0H+STU=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=valinux.co.jp;
 Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
  by TYCP286MB2018.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:15e::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.15; Thu, 12 Mar
- 2026 16:50:12 +0000
+ 2026 16:50:13 +0000
 Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.20.9700.013; Thu, 12 Mar 2026
- 16:50:12 +0000
+ 16:50:13 +0000
 From: Koichiro Den <den@valinux.co.jp>
 To: Manivannan Sadhasivam <mani@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
@@ -83,16 +83,16 @@ Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	dmaengine@vger.kernel.org,
 	ntb@lists.linux.dev
-Subject: [PATCH 02/15] PCI: endpoint: Add DMA channel metadata to pci_epc_aux_resource
-Date: Fri, 13 Mar 2026 01:49:52 +0900
-Message-ID: <20260312165005.1148676-3-den@valinux.co.jp>
+Subject: [PATCH 03/15] PCI: dwc: ep: Report DMA channel metadata for aux resources
+Date: Fri, 13 Mar 2026 01:49:53 +0900
+Message-ID: <20260312165005.1148676-4-den@valinux.co.jp>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260312165005.1148676-1-den@valinux.co.jp>
 References: <20260312165005.1148676-1-den@valinux.co.jp>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TY4P301CA0064.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:405:36a::16) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-ClientProxiedBy: TY4P301CA0068.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:405:36a::7) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -102,57 +102,57 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TYCP286MB2018:EE_
-X-MS-Office365-Filtering-Correlation-Id: b7192eca-7bed-41a1-5e6b-08de80576dd2
+X-MS-Office365-Filtering-Correlation-Id: c43f06a2-f14f-4c30-8836-08de80576e4c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|376014|1800799024|10070799003|366016|7416014|921020|56012099003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	viH1q2L4+E2PmPFQDVudRxa+3Y7ynLgSIYBGSUqqdYSsqX2FbBzejKDwHdHOcm1kjzBxb3iCUgcB23kKqtTWME5nBLeOGhJ5nMrRjYehfLWQlMzaxQ75eM87hfC5+7IKjvCCDvLo1Bs9Zbo04IdNAdkq9lDGPtm+4dpKY+ISzvZU7ycT1ctwrSs9XiHROLKdeYgkO25jHcg7oMqsdMpG+xDOlpH8eYx/33gS2qYSI4qExTlWBbWP8XJnAs2c/w3gjfdarJ3ACC1v4IHfHFcX8lmOiJso4tlV3GTjEfrACVCJjyQ25CYjQuH1oL9+QkZNURg18biGsoASHXIEgwNSS01qL3VXgNibTh4t5lq8IRkPrx0I5VaTOULgUyDjNELFWkAkOZJ/TeMVhpqH2DCaa73aTXI78aXQlDEe+fohhNkjWBmOasCuyF/uzSxRDNLFa9m0HnpE2drGqvVuOGad0RvDdu4CRdL0W7fIjt/IUMwrBnQiEFJssiVHUCq4324N0YqNo8l/bMLoHsqCYN6aZlFsf/qOys4lJky6R5F9p/xiztcfznE7NW2RRppPJ34di/KZgtcMhx1UScQQtFrjssXA/fzwzNtwOV9Rc7YgQHqikOnWREZlHYkbi5KvZBIJsTViGsLihtjL7/VD89dy1F5d32vzzZPLo2OV1ii+hWokbdMDyx5vSdJoYquAZPqmDFp1U3Am2IEV07vgWtyRZhUInx92X0jCE1fIwgxdNl5/yQk5UOv4UqZp5pIn+2Hy8v3UftO7nsEYBuZ2Y+JJkA==
+	Kks4HWpacUgpQ0XrtAnCQk6dbb8EMK+4IgIzGEik17Lsj3aApvMfqfL6pgJ0qOzC6BlhWv424cUm91cCo9Swo+Re8PBwSnt2PQRkOC83s4mX2dNiSD50TnSSvgRCxTq5pFLuBNqdi0lt1FMxLdmpsyQFvMgnhlpdpJB4ICMjVsNB2Yy0huLRPoUquNz/0TtAqSGVw/BYyjhNCdi2d5SUqlvpwpZX+MHPlYiK/ZcaPSExZo7KsM9krwrbRXO0oJ16YKZEBCB7ORL9FZ4oZfPKX83Vp3P0Ktpg4fPaVjHxeAcpVv79Aj843vh0zTwcwX4DYPdoiZqn6UiQfjJbwy8ndxNKr8XYh3iYUBRx3FcGAgCg1IAIdnbdTWK2J0/UQAV1D//r8QHLrFcoPnA7BdD4VAioFBesUcRXdxGGolQi+iqEsbz01EUSAqTxldBblNlvd9padX8MOK8vqt4+mBp83WKoy6DSZ/dV8NHtm/uBxtEkhh/ckrnqn3ec3+L3o5tc9c1HPFnZju6+G9LYAd0yozql9NEpAJYjB5XhL41XrgvGIxlgjrsY2DriKXT6CkR8S79BUHRMArKJMG4uf2NJb2r5G0cDHJunMXnx91B7F6ItJpjiqKPZI1WNG4eE9J5ccCGuewkO8TcfGmCVeYHLXmHfSzWVc6HovY+8OjMOzYMBMYmX62Pyyh7uJyVlt9jAWz1iA9flhNbcTv6bbjnacvePHz+JeOndtcsST5buemUc/qhPYxAwj7tttcaIS8H7JPhYpyz4MRfx69yqDezO2A==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(10070799003)(366016)(7416014)(921020)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?8N8gX51FzA4EfgWFFX8yU+pc1vSICEzfFXEy9nwE0ybqkapBtnfcLY0QM6+l?=
- =?us-ascii?Q?1Gx6agFCZcwJFd5X+stDScA2tUqjTnIWMP1Fx1UkauIvKeAPH3afq21sP6HD?=
- =?us-ascii?Q?YrO2MYT5iwxFC9wUReEr85BcEfDzhFKJ0FeO10F/nUxlsXebB2z2GtiWeAlo?=
- =?us-ascii?Q?+EM/utljdLmwl3uLx8KteEw9SfIbjEcgZXwqj9HffaMbhTOwGSLrNqIQ4FfU?=
- =?us-ascii?Q?RLor8uXl2RykfWhYZH+KvFX3t2LD6ksiOvGgPNIQPeU9Ev6znIuTXxKBK87V?=
- =?us-ascii?Q?ov8CknQinYlcH+Qmmo0MCpctHHmUkRtFdhLv63+TJEuuxxm8ziMuf5bq2ynf?=
- =?us-ascii?Q?J+SBwANjqG+BC867QkIjmzrzPAOulPqKWPzezC6jj7IEbexKTUj/jCK/EAPI?=
- =?us-ascii?Q?2iw/p4oXIFR0BRUw0Xa7QnXl30e8XR0YHOnzgu0tgqhtENuNCCl+ryC9QGsw?=
- =?us-ascii?Q?xw48eyOf+r9z67qNT2JNOj5IYg+POFBPa3F3i4mwhG4Zys29n1Db+7/FrLfA?=
- =?us-ascii?Q?nE4fh5aO2fHpQlyY2/QHJmOeMTGtYVoq2LXw9IuHbzoIw78WjHhgzxePP9Pt?=
- =?us-ascii?Q?4DnuxS/hGjCN/qx1hW5MwBVHmm7AUnc80zxtlAAYCZGuyjXhsSgNAR01v8Ym?=
- =?us-ascii?Q?pkhTeA+nBJiSjT12L3gHv5f5VeolUKdpz1VfIxJB6DeUuN0Lww/ItOWs+DGE?=
- =?us-ascii?Q?fErUyrN9OYhJkhUJrL/rCw5UrJn8Us06P5FSZKKhG9hWWVI00eaLbgnsdpVp?=
- =?us-ascii?Q?Rr7QqOGdeGiIBE4iGSDns6woTDM0XbsESey2LIn7h5csSIxysuFpn0S0aLsp?=
- =?us-ascii?Q?YVB/ySbv+MYAKJjxgg7GUBHnp4mTWBNX59QTPAvMvDiFkIvkHtryNkgOJPaN?=
- =?us-ascii?Q?A2K8vqTJUKNmMfwREfneMo3MxK3MNLi0yGIe+h8C1v7z4LqU4kDXCtzThOnF?=
- =?us-ascii?Q?4sr7SJs8AiRp8YUkPuH+5wk8Mr5/HDQlwDsGGvOoLgSqS2yCn79PbAmEuZcC?=
- =?us-ascii?Q?XNj0sYpEZoguQ4as9icFSIetKwiJIIlRJfXnD+DQqIiC9krjvZ894o3jJJJy?=
- =?us-ascii?Q?RZqLIDmESOfR8c/Z0MxzrXXFQoEsg/ngyUySloKyWASVZsnMQr1/+sFMiaaB?=
- =?us-ascii?Q?PscxdCaNKR/YfvV/2tMDm5OWir3xsymgEQIJk/DE5uKemrXFbN4icS1sPFtM?=
- =?us-ascii?Q?XSJ4/pNsrv2WJcCXRBbIs6OMMD1B80HbO4FnOkbjxNdbN3JS5ZrvwnHNH6r1?=
- =?us-ascii?Q?+J7HAFSgiYFSN/p4JtcIm3wMeUUibwiXnR1FbwHYpwxvG/PAH6MnWEmi8HFI?=
- =?us-ascii?Q?MyO8hWZcAIN52fMTioitrTtq4lS2+enStQNpEvM/me7aedzEmtLNaY0OE8da?=
- =?us-ascii?Q?N4rl78DY8kMj6+aDYSoewYJaF7yf3M4rH6lmqyQch/CZ0ouY8TkQuqSq4U0l?=
- =?us-ascii?Q?PSotmpaBlQbM5i2DVKN8hoeeSiCTmM2TEFsrPIOi54sP/YgT3SEKr5L3wZK9?=
- =?us-ascii?Q?NcqfgTlroeKzcdoa5RpMv13K7lxDGbnOaN0Do9hYDpoZ5ZUp2T22Oafok/Yn?=
- =?us-ascii?Q?SHAhi04P0oJHqOD1tbxO13+rDxrD0Qk9aFCQyKKjr4rAZ/1CMxxohgYVTZSK?=
- =?us-ascii?Q?JOnm6mx8jPMtuxMXTCv6By+5KxGhH+gMZq/UUa8chcr8Obo5e+2rtIIL2bO5?=
- =?us-ascii?Q?LlDwfGzISvUNywwer1QJspYrHERLGciONW71AxYtF7b5c1cITUk6tFPPwabh?=
- =?us-ascii?Q?je06iwURK9yHt3peP9go8eqFvejSNe7YfGd8dF8ZgxMb9qgQhfHD?=
+	=?us-ascii?Q?jmw4Sm6vAxP/FynnvJ4qTGOW+foDWpUV6rpnk458Q+gXwuj/tAZR2wBF0jsp?=
+ =?us-ascii?Q?8in26BlTEgHVsAi6+n+3zVWtbSPXtV683as6PSrZexEqk+NX+3NWcKGW13UB?=
+ =?us-ascii?Q?l465AYIzq6J5oPuAydsS5ZPxZLFJnx7qkjOcGKQEFy3/oE70vViT9+QrX9OR?=
+ =?us-ascii?Q?rF6JgvQlnBY/7/Rk6cmEE+wbC8DYs0nClHREKlkzFkmzRf0jOVDbfkgSq6Js?=
+ =?us-ascii?Q?h3FjZq8URpLQ+2cQGO9mqDzVBRujZpZFw1j29DRbtlXtTPA8sVVSqoC8wl3x?=
+ =?us-ascii?Q?yZVkeHaBYiRfCurGMd3Zd4dnYVO24nSW7e58GROlXMFp1FXxgP+/oSbQGJju?=
+ =?us-ascii?Q?Z+SRPuILhx6uNkAXVBrH5IWX87xjjwYtsKTPHo41CcSygdHrxEDhhP3ky9HT?=
+ =?us-ascii?Q?voC5ItminU8bhXYK9qAEB0xGZPwAlpjzzcpB9uNqGzBeAMOrFqbUrkzZtgCk?=
+ =?us-ascii?Q?u56eapSGMcxwgbicwkSfExQ5lGBFaOEHLujBmhaEjvT0iHOa+yoOod6b4ode?=
+ =?us-ascii?Q?vLgm9ZZ/COIsDEwAjjP7Fi3H665BQ+WVnKiLkZ54AK6thHDBSC9xOLYhPNu6?=
+ =?us-ascii?Q?P24leesVroIiQLhgRMShDPDqEXRLN6Y7PuUcIvX84siRJRzb4qmZI/R3fCWu?=
+ =?us-ascii?Q?3DdK/i6NftQ57SvNWTe0tuNrYJnxDjbcD/240Px8Mnh/cFklY0s0srOA90RF?=
+ =?us-ascii?Q?/ZA133txAPQ1NtzZjoWQqJf4FRj6iLZTY5NP6OeG4w1yc58wrqt9jPjK0Fwd?=
+ =?us-ascii?Q?TW3PRBPj5BJ1GOBsyDtR1RxSY5niyIMgZCiE34ONpY5A/pyEJoarh4xhWc9N?=
+ =?us-ascii?Q?Ww6xJ/XKWTOl1lh+eCS2iD/EFuY8o/a7xWPGG1rwAPQ4hIfRauAh7Q3YkLqS?=
+ =?us-ascii?Q?8grmxHDJgp7TUAp9qrK3xTPZKG2Vu0kyjZ8/rnni8sSfdC2LbbSKb+mTp/Zg?=
+ =?us-ascii?Q?bHCgvU5tfFQxYt8ph9FcbGLkWrRd2gtHJ5pJKH4F6Vrq7e23Wl/Z2PcvF/bm?=
+ =?us-ascii?Q?ssAC0RDNU6IWzRpujt0iruBWVy87aSuvMwGvhIsXBCYQCgBJdpI6D8mFf7x5?=
+ =?us-ascii?Q?5b7S/+uwzrUUXf1fWB44Z0hCU5RjBROGJTISj0FYln/YOCvmLRgRCUtUfk1p?=
+ =?us-ascii?Q?1Ya06vg/aGrzTpTNYqWAS/EEsFwuxbOX8CrcnktmSebs9mrxV/YLol3uCfkM?=
+ =?us-ascii?Q?Wulz+GIPf5siF2chQq/5S2R/a9xOqTRHKPANY60dlGph30zCLs0E6FUa7SCa?=
+ =?us-ascii?Q?tW20zkkDVT+btZzVsDfzcAMru9RZ0R+pN8VZQG2kN3uU4mq5DsPK/hDEbuL1?=
+ =?us-ascii?Q?W8D9njWQEnV+sYhNXTHWJ1wNi7hgp2YN4/ZI+1ShtViL+XIOhTZfXpVlpiy5?=
+ =?us-ascii?Q?0/O/mHyBiPFXqyP7YkUhuprr9hrMUoFe36X7EfYFU1iXuvxHV1wlKRKFaONH?=
+ =?us-ascii?Q?ftEFiTGVWeuDAr4WK8NClX+ED8kb4zYATnairGOaZtSZo7ukKGfKe3XjPM88?=
+ =?us-ascii?Q?cB3qjativ46n7wHlCmKGw1C1QpsrugVfuoJf1NE94xO6ZgZv7CxrXeZ2PT5h?=
+ =?us-ascii?Q?F16+1AmvGmyxPrp787SPVODQiFrK7o391laeinwbZnxN6wx/MyCnmRFip5jl?=
+ =?us-ascii?Q?Uq3qNTpgFMbNC07szxWxEd2A/MlOaQcXZNc/XbkfuCaVSClVWf0S8FpqHrhT?=
+ =?us-ascii?Q?BZEeQizU6gN9JmxDBI0jsYJTn9kJKuFHMli6Zdnz/I8pDYiYuDHJ2MQKQtss?=
+ =?us-ascii?Q?hNtLLkBkx2Wuz+ynRpZLtlyx0LUIZTQGwfTNlj0CnEGXtExEorn7?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7192eca-7bed-41a1-5e6b-08de80576dd2
+X-MS-Exchange-CrossTenant-Network-Message-Id: c43f06a2-f14f-4c30-8836-08de80576e4c
 X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 16:50:12.6710
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 16:50:13.4658
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b/MuvbP9zXIRYTOJtjuh4oRhWJIwJziGgenIk4CtSJRiGR/Jmp9681pjxx7g+mDtKpup9v/bc/KYnerv0WX+ew==
+X-MS-Exchange-CrossTenant-UserPrincipalName: lKTWeDEPSmy1oqlzC0+lIrdC6O7EZkFI4toqu+kTH45Oq6LQjwyVxtz6XdJZsGB6+p9wwaAYpTs032JihZy9eg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCP286MB2018
 X-Spamd-Result: default: False [1.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
@@ -167,7 +167,7 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[22];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-9395-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9398-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[kernel.org,google.com,lwn.net,linuxfoundation.org,kudzu.us,intel.com,gmail.com,tkos.co.il,baylibre.com];
 	DKIM_TRACE(0.00)[valinux.co.jp:+];
@@ -180,53 +180,49 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 2B8A7276043
+X-Rspamd-Queue-Id: 15AD2276113
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-A peer-visible DMA descriptor window needs a little more context than
-just address and size. In particular, a generic consumer needs to know
-which DMAEngine channel it belongs to and in which direction that
-channel operates.
+DesignWare endpoint controllers already expose the controller MMIO
+region and the per-channel linked-list descriptor windows as auxiliary
+resources. Populate the new DMA channel metadata for each
+PCI_EPC_AUX_DMA_CHAN_DESC entry using the cached channel IDs and channel
+direction.
 
-Extend struct pci_epc_aux_resource with dma_chan metadata for
-PCI_EPC_AUX_DMA_CHAN_DESC resources so controllers can expose that
-information in a uniform way.
+This lets generic consumers match delegated DMA channels to the
+descriptor windows they need to program.
 
 Signed-off-by: Koichiro Den <den@valinux.co.jp>
 ---
- include/linux/pci-epc.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index d6b0a0833e9f..7dd2e4d5d952 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -78,6 +78,11 @@ enum pci_epc_aux_resource_type {
- 	PCI_EPC_AUX_DOORBELL_MMIO,
- };
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index eec20800a745..1e584f6a6565 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -947,6 +947,10 @@ dw_pcie_ep_get_aux_resources(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 			.size = edma->ll_region_wr[i].sz,
+ 			.bar = NO_BAR,
+ 			.bar_offset = 0,
++			.u.dma_chan = {
++				.chan_id = edma->chan_ids_wr[i],
++				.dir = PCI_EPC_AUX_DMA_DIR_WRITE,
++			},
+ 		};
+ 	}
  
-+enum pci_epc_aux_dma_dir {
-+	PCI_EPC_AUX_DMA_DIR_READ = 0,
-+	PCI_EPC_AUX_DMA_DIR_WRITE = 1,
-+};
-+
- /**
-  * struct pci_epc_aux_resource - a physical auxiliary resource that may be
-  *                               exposed for peer use
-@@ -103,6 +108,13 @@ struct pci_epc_aux_resource {
- 			int irq; /* IRQ number for the doorbell handler */
- 			u32 data; /* write value to ring the doorbell */
- 		} db_mmio;
-+
-+		/* PCI_EPC_AUX_DMA_CHAN_DESC */
-+		struct {
-+			int chan_id;
-+			u8 dir;
-+			u8 reserved[3];
-+		} dma_chan;
- 	} u;
- };
+@@ -961,6 +965,10 @@ dw_pcie_ep_get_aux_resources(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 			.size = edma->ll_region_rd[i].sz,
+ 			.bar = NO_BAR,
+ 			.bar_offset = 0,
++			.u.dma_chan = {
++				.chan_id = edma->chan_ids_rd[i],
++				.dir = PCI_EPC_AUX_DMA_DIR_READ,
++			},
+ 		};
+ 	}
  
 -- 
 2.51.0

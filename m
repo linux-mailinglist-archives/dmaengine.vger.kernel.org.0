@@ -1,304 +1,247 @@
-Return-Path: <dmaengine+bounces-9420-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9421-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GCZiLUevs2lYZwAAu9opvQ
-	(envelope-from <dmaengine+bounces-9420-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Mar 2026 07:31:35 +0100
+	id MBfeKryzs2lYZwAAu9opvQ
+	(envelope-from <dmaengine+bounces-9421-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Mar 2026 07:50:36 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AEF627E29B
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Mar 2026 07:31:35 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EA6E27E559
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Mar 2026 07:50:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B9E35307BE3A
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Mar 2026 06:27:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 48F7A301A3A2
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Mar 2026 06:49:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0090F366061;
-	Fri, 13 Mar 2026 06:26:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42DDB3537F0;
+	Fri, 13 Mar 2026 06:49:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QBQyIg1W"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hJLgPv0Z";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="MjwttMt7"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010070.outbound.protection.outlook.com [52.101.201.70])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1D433D4E5;
-	Fri, 13 Mar 2026 06:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773383171; cv=fail; b=J6qKKUtXvfjZqfMNrnH6mRnc9bM+S4BrPg2yposLvpoJDZQqBa5OzDZitsXX2uRgdewKnVZF5Qjq4mlc+d/KDGv4mePPVQYIE/rrowug9y+e0b0wjoJjQGaWyTrvGdBTAysgRj8WJdAdYoQBIgqRzTBm1KsiM+0vmACMOQm1sHM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773383171; c=relaxed/simple;
-	bh=yL1ghfsDqipCgRD1ct2YQxGN2Psr/awl9psIEdVNkHc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s9DnalO1eEVK6b3bu6BWkJZ+oYMN/qnB9Hnr4w5tKLXYrH9ciGqn9b1riQoqtOidjQCNBWh8ASATsTLPrFlpQoHv+CGIrfro6JJTwEGNzo1FQ783Go5v9xRRGYwgf2Vxa5PIlU+gTk+Nt9IyV0NoyYhB8t8/XeZlAnLoABsh264=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QBQyIg1W; arc=fail smtp.client-ip=52.101.201.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C+zAZlJM0UlsXqB+REgcwtLcbWLQ6IDfa9mebfGpwth1Eq98zsXfwDtzrFaLGHgpcL2uMZmTa6Mwk+mHlUMtESsRr5vzypgU3WPL/LlaTMSk9+dNcGuOAhwR9txiIhBSkZmcQKZXZOSNWVzlQqn8mZVpKXYLRSAs3Oyh4tY8VADj4R6H8Ew7bh7kdVGYCOd/xVH4Qqpdr2VOfUvrxJ9iCTIPSUqiPm+rGY24OhekLwj0PARafkgidGE8qR+mRLB/uG9zLb88zPmVISPVNIqokmovhR/ak5HkMiXUilxdgQnswi5TDu9wySoJvHWpLuGJNK3D7HvZsZ7qezErxNtSdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sgbqRhipMDIayaFDocmfzNt0wzgprzN9K19aATD0X/A=;
- b=byEYfYLdbcObb9aI8eFQ/ezUHKqixEOGz/PCcpO/xN8/aIdejO/TIdQsbK75YFLT5/VMCkhfhUEm+g/NZXipGNV8KfivIE46csBFw0I2knHVFdT9hqT0Dn4WDNMKyW7inJVMKsoimqxPrHG54PvQOq1gzfSG4ii8XyMCJQ2BCan3bmGfktTSLv+CBtiApzc9t3jtW7q6zArFJ7fSOHnz9a4pzvKUYCphkZUGxgL7lTq4O4wKcBgqLy/U8gNCbtIp1OQBW9VLtwHtOkg6rICPIuZdiwi/i9yRZb/Ia3Gcrxmw7MSZvsAdnStYEGP9KNsSZM9CVGFKImFAZ+8/3EzUfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sgbqRhipMDIayaFDocmfzNt0wzgprzN9K19aATD0X/A=;
- b=QBQyIg1WMIaOiJgvNbffstedRJegcjfWQ66IjSnYIaOkdMmnuImR0gQC34qxFeHFnSPyK1kFFmXSP/JG5FECK8KCmVQgPpkB+8H8WbMOVYKtSkhRmZWrkiW1bjMip8wWmFVj4LdouabtxQL/7yR0VVy8zeLD5SlICS3E7lEtcpA=
-Received: from BY1P220CA0014.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:59d::9)
- by IA0PPF6E99B1BC1.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bd1) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.7; Fri, 13 Mar
- 2026 06:26:07 +0000
-Received: from SJ1PEPF000023D4.namprd21.prod.outlook.com
- (2603:10b6:a03:59d:cafe::f7) by BY1P220CA0014.outlook.office365.com
- (2603:10b6:a03:59d::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9678.29 via Frontend Transport; Fri,
- 13 Mar 2026 06:26:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- SJ1PEPF000023D4.mail.protection.outlook.com (10.167.244.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9723.1 via Frontend Transport; Fri, 13 Mar 2026 06:26:06 +0000
-Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 13 Mar
- 2026 01:26:03 -0500
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb10.amd.com
- (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 13 Mar
- 2026 01:26:02 -0500
-Received: from xhdsneeli40.xilinx.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
- Transport; Fri, 13 Mar 2026 01:25:58 -0500
-From: Srinivas Neeli <srinivas.neeli@amd.com>
-To: Vinod Koul <vkoul@kernel.org>, <git@amd.com>, <srinivas.neeli@amd.com>
-CC: Frank Li <Frank.Li@kernel.org>, Michal Simek <michal.simek@amd.com>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Suraj Gupta <suraj.gupta2@amd.com>, "Radhey
- Shyam Pandey" <radhey.shyam.pandey@amd.com>, Thomas Gessler
-	<thomas.gessler@brueckmann-gmbh.de>, Folker Schwesinger
-	<dev@folker-schwesinger.de>, Tomi Valkeinen
-	<tomi.valkeinen@ideasonboard.com>, Kees Cook <kees@kernel.org>, Abin Joseph
-	<abin.joseph@amd.com>, <dmaengine@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH V2 5/5] dmaengine: xilinx_dma: Add support for reporting transfer size to AXI DMA / MCDMA client when app fields are unavailable
-Date: Fri, 13 Mar 2026 11:55:33 +0530
-Message-ID: <20260313062533.421249-6-srinivas.neeli@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260313062533.421249-1-srinivas.neeli@amd.com>
-References: <20260313062533.421249-1-srinivas.neeli@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CC02989B5
+	for <dmaengine@vger.kernel.org>; Fri, 13 Mar 2026 06:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773384577; cv=none; b=i00D3u2XKq6k9Cvm8HUGpqalXPDTbXi5F4N70nQd9cPC6fHq+LuIPTmdGiBHkO90e1h7Z/B9amXjvJtV0UmbcpX8N054S+N741EUZXwCl+wyWQLxFSf7iwvMduaKRQulc01v+vqUa9ehWOxRRURmtsr6VVpX3yyvU3jrRMMf/DE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773384577; c=relaxed/simple;
+	bh=pvlk2gOPkIN+ITxicWXFZ618jc3EqUbu9jfuBJT+Pj8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MaadHMBAHVGcB6Pde24qD9r/xgBv3WxRwpnlR3rlHPoS4r4gfs9Pjjo3s/WYCjkhCoQapqgeFc0W/IEz4LK7wImuUN6oaLXezROKSidJE2rYMqEOQI4uyz2c29osXOehL+ANd6Zi+AEXbcMe4wZ/b6VFNnaOklffaftemyCwWdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hJLgPv0Z; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=MjwttMt7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62D5thl21014950
+	for <dmaengine@vger.kernel.org>; Fri, 13 Mar 2026 06:49:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=5AVmFAe9Ik/fE0LX/BsA8E
+	1wHztxhMYSWxglI3gqndc=; b=hJLgPv0Z4qDUBFVMEQHi0DDoGS8X4keR73BE3t
+	RKLGdEhNe7yWwXWndunp/MZkJR+6CSGY4Ke9tdGCng2D68Bpd+vEhsUfqxG2HwO7
+	ZiJlG8zfhLXxIcXG0KTwyNnjL8tF/0S0zdDsl7UKHOB5ZQjJyHvKXLZ2tpbfLglV
+	K8jiGYC0yrdyO0Eu383hfcRUAqPFoDCAHgqcbs8VwrRaFAfN+CoTk/CBnYDnapUC
+	ZXjC6iQnXBdzEhzfYSWasyBpiY2RgaAREBvHW3z9nLk5u70QOCUtywwUci/rU6cr
+	yaveQe29DY55nFQW5Ei5O3g2ASPT61JY3EmJVnHtM6lWJ9bQ==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cumvdm7k3-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Fri, 13 Mar 2026 06:49:34 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-359fe4e9ea7so1599087a91.0
+        for <dmaengine@vger.kernel.org>; Thu, 12 Mar 2026 23:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1773384573; x=1773989373; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5AVmFAe9Ik/fE0LX/BsA8E1wHztxhMYSWxglI3gqndc=;
+        b=MjwttMt7y0Tm2zBnv5PpTF80+1Yc+VQbJx0EW+i6vQeXrzPDwg1UoADP3cSUBp6Nzr
+         pqrXpG5M1vG3T8NT2/JWbO2URs01uSGmeIaQPp3YexsU0BdvrGIhU4agGTmpJe+CFcxG
+         7oRSeofL3sDoqtDKFZiyOPs9ehluvD/GznghRoVx4dJnnEhAy3ESYDIJLixSBkx3S15M
+         Bl5MN8rEFZHwy8XADvNUzuWjFhP7FCS37vxwjeRXQhWN2UC+oHBhKT/gIj9uQBNHMbSo
+         +IoH2xzko/nzjriGQilgRWs8F/mUZrxwjuYxB0drCKVtwrNm5fxlO/gwplyYLUsetgSc
+         SR1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773384573; x=1773989373;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5AVmFAe9Ik/fE0LX/BsA8E1wHztxhMYSWxglI3gqndc=;
+        b=eBI7fzl67Dalvp6PkZxVDHz7rWHwZt+aJwv8oa3/K0dwJt1Cu7hYDFdHnJn1AGyvDt
+         /S59eIodoL6K93Qa7XXxGXZ6MC9zycV5Vdqs7jMkP5lJDSuF+TtEVLxVk036G391d+X5
+         ErNePX0j8WNxLbCEqVgqIJQri1FiKxpunLPnS/3EIWuL+Iprmw1g7f8dQ47gASTrxaS+
+         lcg68rzrLQqJIBnKhQaY0eH7KWRCjTaRCvkyKemvkoOFJix7EtBT9xujnj+4iCUKLDvU
+         KHyKaQ14LHdRr2MoPRivlyViw4koouF75005mjCbMYgh6oUz7z7S7gN6EmnX4kEtKAim
+         aSxA==
+X-Gm-Message-State: AOJu0Yz+DeZyuDBShP8dQtYSAsA4vs9MnTYn515CDamm4KovTKmXY2BP
+	LDzpjqONMAmEL837jx5NLIXq2bZrsyPAMigkXOpsU0DU8/t4bEqN5lK26tXRUhQOWIXnwG3JwyQ
+	5YOgltvKW7JNyradG4Lb/sRTKrQB2oL5z0pUPvwv7kwOp6Qx2TtJsMVFezzL2W9s=
+X-Gm-Gg: ATEYQzwp/EaEGgGF/r5iEctPG69sj3Awyw3kD41t+gQc2pXOnyOMGUHY4nkOaBC/LoO
+	BdLoux8vWYCQRLmRliiZTayr4+gUUUUVQuiILjmLZJrdMolJsEkeomhNfuAaIcB+EkVzuvo71l4
+	/HmIiDDYivJ6g0Xv5B6bzmin44oFjUPMlYZkWwUtzIdGzZAUYAREE3lYkNIqvajSpYHcQcNlNLI
+	PhQsJQY18QGr4pPA7R95j38zq/52pi7zMIwaXqnkUCSrtODCvqkyEv1/Q1Cajn/ejZmNMiUcKLH
+	8SgDdnA0MUPZecn0YOCHU/hsz/qemg2E5EkUT3uZToNVAEaoMqlVy+55EdYK/nKad60mBL/Q9Np
+	WUTPaxREh+G5Fahj2iqjJlcU60y2cg9e9LFvip6C+DsOX57Y=
+X-Received: by 2002:a05:6a21:6197:b0:398:afdf:3463 with SMTP id adf61e73a8af0-398ece212b3mr1705940637.70.1773384573484;
+        Thu, 12 Mar 2026 23:49:33 -0700 (PDT)
+X-Received: by 2002:a05:6a21:6197:b0:398:afdf:3463 with SMTP id adf61e73a8af0-398ece212b3mr1705918637.70.1773384572883;
+        Thu, 12 Mar 2026 23:49:32 -0700 (PDT)
+Received: from hu-sumk-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c73eb97b41dsm936160a12.5.2026.03.12.23.49.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2026 23:49:32 -0700 (PDT)
+From: Sumit Kumar <sumit.kumar@oss.qualcomm.com>
+Subject: [PATCH 0/3] dmaengine: Add batched scatter-gather DMA support
+Date: Fri, 13 Mar 2026 12:19:24 +0530
+Message-Id: <20260313-dma_multi_sg-v1-0-8fabb0d1a759@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D4:EE_|IA0PPF6E99B1BC1:EE_
-X-MS-Office365-Filtering-Correlation-Id: 58494e2e-b0b1-495a-c236-08de80c96893
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|82310400026|1800799024|7416014|376014|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	g66BXdbgrgwR1ZAUOWxopkTcD5tvwSM4zwuHCReZcCDx9dgFsp2RT0qK6NKSGQeQ+JrkkNooAx1PmIT8nZ5hzM23cVO8mhZ1qqe1i7Mg8AKH0Pf1J2WSy84ryO3Fl5ep0HkAIcPMWZqoRCQLgEfk1LcEI+Skn6DLCkQvv4QsaZ04z3HYvP8VuQb1WqM49IhTxE3O1Omm40RXzTHNHa+TZENcRd0yi61+7EIELmwWCPDoOua7qFfAzgA43T2tca/SMMQKE1pwxAXyRvJBiSdMcWA0g5oyb2Lqk8QC1nURPlrUsXMQlwrbAng7YoraS4Dj/zj5WlhhPvtRXQF2VBaDJAKi4gId4outzfVqBrKvrTlP5tfXnfFbskhJiMoLqNaYCLpFsoTTwrZjczDQl0xsEbkDrJ/H7TgOw01887GXT8T2UGWNScmzuLPM85byRD4Y/AyT0FvL44t/RaIH1yuk+OF+s5Ynm/Z8E3/BXpRtG2mnyFY9ALVpzbGEIp9UbJa9Tk4+c4afF2U4BIrD0CsaqrJj8l2Atu9rKTmXtzJApzrW1m/yflUrLXg8CUBu+L3mMUD9rDWz3VvCRoaBVqX9cUGAHjuKiX+HmC7TT+Q7gL+fgbNHuwjv5VkbCGuhnQOohRGoS1WEl+Cj54bMbnpBQmyw9+YXA8B1FgAYdYK0nhjugDWddZhZobvCP+OMXytN6CmR9N7niX6afFVm1f2NWNVybrpYHK6iVqhMOmdM9es8BDL61sVFP2vEAzn4DoT7qjE+E0bPGbH8vi2dZxHBRA==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(1800799024)(7416014)(376014)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	N/gjkjgmWcGlLPV0dXES7G8tDXZrHRSHpv7QvO0qmDzpC3eEcP9Vr1634+zrXTY/xef6Zr8yHZEE0PKiUxAXQKIDaYUhmoN9rcvpxjNgpbQD8+u5R0N5BWagRPXRXvS21p04IhWGB0awixlTnKuUxkE1QWPDAhWha0ohkB+FkmjmSY9VuUIyKD3IbqzZAkPLTTafj/jY/Css0TxTP8H5magyfZRusiV6/VlT1gAU/8qDqPrMeVrjU1LakPVBvqDMpfgQRf+5UWAKg3eaivoKOKaMTH7fucaoMKzwaBD6oVb4Mx4ZjBAEAt0IFWEFIG8d4iXI2DVv0AqJOpvSVrvNZMOjArhDs1XS8pdputes1FFq+iSGCagkHp5qrdcqC3LvzM6Oz8vAw9KsfUiz5c/kNiLGgy3ytCcznt5pGRnYRkh4zLiUEufjF5Gz/BNgYDhX
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2026 06:26:06.3386
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58494e2e-b0b1-495a-c236-08de80c96893
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D4.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF6E99B1BC1
-X-Spamd-Result: default: False [2.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+X-B4-Tracking: v=1; b=H4sIAHSzs2kC/1WNwQ6CMBBEf4Xs2ZJuUTCe/A9DCJYFNqFUu0A0h
+ H+34snLJG+SebOCUGASuCQrBFpY2I8R8JCA7euxI8VNZDDa5Br1WTWurtw8TFxJp6zBIj/prMi
+ sgTh5BGr5tetuZeSeZfLhvdsX/LY/kdHZv2hBpRUezT2eEBXYXr1I+pzrwXrn0hhQbtv2AQN8W
+ 02vAAAA
+X-Change-ID: 20260108-dma_multi_sg-c217650373c2
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Veerabhadrarao Badiganti <veerabhadrarao.badiganti@oss.qualcomm.com>,
+        Subramanian Ananthanarayanan <subramanian.ananthanarayanan@oss.qualcomm.com>,
+        Akhil Vinod <akhil.vinod@oss.qualcomm.com>,
+        Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux.dev, linux-pci@vger.kernel.org, mhi@lists.linux.dev,
+        linux-arm-msm@vger.kernel.org,
+        Sumit Kumar <sumit.kumar@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773384567; l=2678;
+ i=sumit.kumar@oss.qualcomm.com; s=20250409; h=from:subject:message-id;
+ bh=pvlk2gOPkIN+ITxicWXFZ618jc3EqUbu9jfuBJT+Pj8=;
+ b=CJsyKHGdctf6eMe9FYY1OpAZhEpTLB18Re4kWKHiZ0+TKe0AV4X/h4B2qhl75oyvumt11XvKa
+ T/JaOl/TpY9ArzGxVUQ0/u9VR0ZLcx4FAaInJyDJiUPuxoHqhv3XDfC
+X-Developer-Key: i=sumit.kumar@oss.qualcomm.com; a=ed25519;
+ pk=3cys6srXqLACgA68n7n7KjDeM9JiMK1w6VxzMxr0dnM=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEzMDA1MyBTYWx0ZWRfX4CCxC5SenWZQ
+ mYmeD0BzoRFth4Pl2akCa2Dpws2VVAtil8MOdlJHgwnreZEH28rgB6FfxbbHJNp5/ywxnx0AJST
+ YrqTn7LHJfSbSmn9mri1pECJIcDiuWRbgwDclfMmqcDJ6z4tGoBTPAejYu9iwnDIjZRc/iFdWpY
+ 2uENXvjwaNhp7cqRbpooaYOsWky/PdFYzlZc3xLMH1i5qMFQvBdRDZbyvlCr/C/2TuFXJtQbJ7X
+ GWrOv1j8shK3gpOH2byz6gwwc8XrRo5Rp5jWRxln7OG2kJLF4TceV3jovUFpO0/QQsOKbPoJhOH
+ TT5wZBPNhAUfgNui693F1/V2VoqeVKODWEZ1kSQp0T4lS3XGIO8KBttgczrPSKQboccmn/X3aaC
+ WVQPNenPNHmzsLxbqN8LWC4ebmu3nOMgik7dja3Rdz5QqhX3KZ3Jry2+rfQmTkL2nBQiTUxZaxw
+ 7ZhUDBNDveb7sjXKhig==
+X-Proofpoint-GUID: gFgJZDLWboVkishrKEllOefRUh5dQFiA
+X-Proofpoint-ORIG-GUID: gFgJZDLWboVkishrKEllOefRUh5dQFiA
+X-Authority-Analysis: v=2.4 cv=XsT3+FF9 c=1 sm=1 tr=0 ts=69b3b37e cx=c_pps
+ a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22
+ a=EUspDBNiAAAA:8 a=f6ynY6_RdjVN_4bGfK8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=uKXjsCUrEbL0IQVhDsJ9:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-13_01,2026-03-12_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 spamscore=0 bulkscore=0 clxscore=1011 adultscore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
+ definitions=main-2603130053
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	TAGGED_FROM(0.00)[bounces-9421-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-9420-lists,dmaengine=lfdr.de];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,qualcomm.com:dkim,qualcomm.com:email];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[srinivas.neeli@amd.com,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sumit.kumar@oss.qualcomm.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[amd.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:dkim,amd.com:email,amd.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[9]
-X-Rspamd-Queue-Id: 7AEF627E29B
+	TAGGED_RCPT(0.00)[dmaengine];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 4EA6E27E559
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Suraj Gupta <suraj.gupta2@amd.com>
+Synopsys DesignWare eDMA IP supports a linked-list (LL) mode where
+each LL item carries independent source and destination addresses. This
+allows multiple independent memory transfers to be described in a single
+linked list and submitted to the hardware as one DMA transaction, without
+any CPU intervention between items. The IP processes LL items strictly
+in order, guaranteeing that scatter-gather entries are never reordered.
 
-The AXI4-stream status and control interface is optional in the AXI DMA /
-MCDMA IP design; when it is not present, app fields are not available in
-DMA descriptor. In such cases, the transferred byte count can be
-communicated to the client using the status field (bits 0-25) of
-AXI DMA / MCDMA descriptor.
+This series leverages that hardware capability to introduce a new
+dmaengine API — dmaengine_prep_batch_sg_dma() — for batching multiple
+independent buffers into a single DMA transaction. Each scatter-gather
+entry specifies both its own source (dma_address) and destination
+(dma_dst_address), enabling the eDMA hardware to process them as a
+single linked-list transaction.
 
-Add a xferred_bytes field to struct xilinx_dma_tx_descriptor to record the
-number of bytes transferred for each transaction. The value is calculated
-using the existing xilinx_dma_get_residue() function, which traverses all
-hardware descriptors associated with the async transaction descriptor,
-avoiding redundant traversal.
+The primary use case is MHI endpoint ring caching. When an MHI ring
+wraps around, data spans two non-contiguous memory regions (tail and
+head portions). Previously this required two separate DMA transactions
+with two interrupts. With this series, both regions are submitted as a
+single batched transaction, reducing submission overhead and interrupt
+count.
 
-The driver uses the xlnx,include-stscntrl-strm device tree property to
-determine if the status/control stream interface is present and selects the
-appropriate metadata source accordingly.
+The series includes:
+1. Core DMA engine API and DW eDMA driver implementation
+2. PCI EPF MHI driver support for batched transfers
+3. MHI endpoint ring caching optimization using batched reads
 
-Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
+Performance Benefits:
+--------------------
+- Reduced DMA submission overhead for multiple transfers
+- Better hardware utilization through batched operations
+- Lower latency for ring wraparound scenarios
+
+Signed-off-by: Sumit Kumar <sumit.kumar@oss.qualcomm.com>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+Sumit Kumar (3):
+      dmaengine: Add multi-buffer support in single DMA transfer
+      PCI: epf-mhi: Add batched DMA read support
+      bus: mhi: ep: Use batched read for ring caching
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 52203d44e7a4..f5ef03a1297c 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -380,6 +380,8 @@ struct xilinx_cdma_tx_segment {
-  * @cyclic: Check for cyclic transfers.
-  * @err: Whether the descriptor has an error.
-  * @residue: Residue of the completed descriptor
-+ * @xferred_bytes: Number of bytes transferred by this transaction
-+ *                 descriptor.
-  */
- struct xilinx_dma_tx_descriptor {
- 	struct xilinx_dma_chan *chan;
-@@ -389,6 +391,7 @@ struct xilinx_dma_tx_descriptor {
- 	bool cyclic;
- 	bool err;
- 	u32 residue;
-+	u32 xferred_bytes;
- };
- 
- /**
-@@ -515,6 +518,7 @@ struct xilinx_dma_config {
-  * @mm2s_chan_id: DMA mm2s channel identifier
-  * @max_buffer_len: Max buffer length
-  * @has_axistream_connected: AXI DMA connected to AXI Stream IP
-+ * @has_stsctrl_stream: AXI4-stream status and control interface is enabled
-  */
- struct xilinx_dma_device {
- 	void __iomem *regs;
-@@ -534,6 +538,7 @@ struct xilinx_dma_device {
- 	u32 mm2s_chan_id;
- 	u32 max_buffer_len;
- 	bool has_axistream_connected;
-+	bool has_stsctrl_stream;
- };
- 
- /* Macros */
-@@ -672,8 +677,12 @@ static void *xilinx_dma_get_metadata_ptr(struct dma_async_tx_descriptor *tx,
- 				       struct xilinx_axidma_tx_segment, node);
- 		metadata_ptr = seg->hw.app;
- 	}
--	*max_len = *payload_len = sizeof(u32) * XILINX_DMA_NUM_APP_WORDS;
--	return metadata_ptr;
-+	if (desc->chan->xdev->has_stsctrl_stream) {
-+		*max_len = *payload_len = sizeof(u32) * XILINX_DMA_NUM_APP_WORDS;
-+		return metadata_ptr;
-+	}
-+	*max_len = *payload_len = sizeof(desc->xferred_bytes);
-+	return (void *)&desc->xferred_bytes;
- }
- 
- static struct dma_descriptor_metadata_ops xilinx_dma_metadata_ops = {
-@@ -864,6 +873,7 @@ xilinx_dma_alloc_tx_descriptor(struct xilinx_dma_chan *chan)
- 		return NULL;
- 
- 	desc->chan = chan;
-+	desc->xferred_bytes = 0;
- 	INIT_LIST_HEAD(&desc->segments);
- 
- 	return desc;
-@@ -1014,6 +1024,7 @@ static u32 xilinx_dma_get_residue(struct xilinx_dma_chan *chan,
- 	struct xilinx_aximcdma_desc_hw *aximcdma_hw;
- 	struct list_head *entry;
- 	u32 residue = 0;
-+	u32 xferred = 0;
- 
- 	list_for_each(entry, &desc->segments) {
- 		if (chan->xdev->dma_config->dmatype == XDMA_TYPE_CDMA) {
-@@ -1031,25 +1042,32 @@ static u32 xilinx_dma_get_residue(struct xilinx_dma_chan *chan,
- 			axidma_hw = &axidma_seg->hw;
- 			residue += (axidma_hw->control - axidma_hw->status) &
- 				   chan->xdev->max_buffer_len;
-+			xferred += axidma_hw->status & chan->xdev->max_buffer_len;
- 		} else {
- 			aximcdma_seg =
- 				list_entry(entry,
- 					   struct xilinx_aximcdma_tx_segment,
- 					   node);
- 			aximcdma_hw = &aximcdma_seg->hw;
--			if (chan->direction == DMA_DEV_TO_MEM)
-+			if (chan->direction == DMA_DEV_TO_MEM) {
- 				residue +=
- 					(aximcdma_hw->control -
- 					 aximcdma_hw->s2mm_status) &
- 					chan->xdev->max_buffer_len;
--			else
-+				xferred += aximcdma_hw->s2mm_status &
-+					chan->xdev->max_buffer_len;
-+			} else {
- 				residue +=
- 					(aximcdma_hw->control -
- 					 aximcdma_hw->mm2s_status) &
- 					chan->xdev->max_buffer_len;
-+				xferred += aximcdma_hw->mm2s_status &
-+					chan->xdev->max_buffer_len;
-+			}
- 		}
- 	}
- 
-+	desc->xferred_bytes = xferred;
- 	return residue;
- }
- 
-@@ -3284,6 +3302,8 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 	    xdev->dma_config->dmatype == XDMA_TYPE_AXIMCDMA) {
- 		xdev->has_axistream_connected =
- 			of_property_read_bool(node, "xlnx,axistream-connected");
-+		xdev->has_stsctrl_stream =
-+			of_property_read_bool(node, "xlnx,include-stscntrl-strm");
- 	}
- 
- 	if (xdev->dma_config->dmatype == XDMA_TYPE_VDMA) {
+ drivers/bus/mhi/ep/ring.c                    |  43 +++++-----
+ drivers/dma/dw-edma/Kconfig                  |   1 +
+ drivers/dma/dw-edma/dw-edma-core.c           |  40 ++++++++-
+ drivers/dma/dw-edma/dw-edma-core.h           |   3 +-
+ drivers/pci/endpoint/functions/Kconfig       |   1 +
+ drivers/pci/endpoint/functions/pci-epf-mhi.c | 120 +++++++++++++++++++++++++++
+ include/linux/dmaengine.h                    |  29 ++++++-
+ include/linux/mhi_ep.h                       |   3 +
+ include/linux/scatterlist.h                  |   7 ++
+ kernel/dma/Kconfig                           |   3 +
+ 10 files changed, 224 insertions(+), 26 deletions(-)
+---
+base-commit: f0b9d8eb98dfee8d00419aa07543bdc2c1a44fb1
+change-id: 20260108-dma_multi_sg-c217650373c2
+
+Best regards,
 -- 
-2.43.0
+Sumit Kumar <sumit.kumar@oss.qualcomm.com>
 
 

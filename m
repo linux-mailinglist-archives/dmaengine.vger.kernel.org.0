@@ -1,343 +1,196 @@
-Return-Path: <dmaengine+bounces-9414-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9415-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WJQqB4Als2nMSgAAu9opvQ
-	(envelope-from <dmaengine+bounces-9414-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 21:43:44 +0100
+	id CF/RAx+vs2kvZwAAu9opvQ
+	(envelope-from <dmaengine+bounces-9415-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Mar 2026 07:30:55 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8580B27979A
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 21:43:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E76F27E268
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Mar 2026 07:30:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 24F4030B1720
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2026 20:39:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1BEC530B6C01
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Mar 2026 06:25:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97576322B6D;
-	Thu, 12 Mar 2026 20:39:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7461E345731;
+	Fri, 13 Mar 2026 06:25:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CuWAQi4C"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AZoT85VD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013020.outbound.protection.outlook.com [52.101.72.20])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010061.outbound.protection.outlook.com [52.101.56.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10763346FB3;
-	Thu, 12 Mar 2026 20:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09683431E6;
+	Fri, 13 Mar 2026 06:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773347993; cv=fail; b=KYBIqOuq2uaQ/pyukbOXYsJ/VsNDHxC5mt6GlVzdYUCxgJEA90X44btXnNpqjQe0txoWz/gcNkCuLTu2dADxSTRiIdVAGqgNFrfGYNV86C/ZnfpHW7BIT7EKqkWQEKNDkaH0k0OnirUh7ZNQHHBFK0uWt9XAN1cYRl8HhneOJkA=
+	t=1773383146; cv=fail; b=liWcJ1GmRrCD//LNeL9nk9hASPG1vlK5YYi+/eSPpiOAnsxDRy6PbLyP/MaR9gNe6XDvqCd4RHmNqQHtTvqEfJUhRu+FSN9bNZXDnp6eHey94hLvL8Fam8Kz3zs01EDFLkn2ngyyVBRImhI3bvgEeqsMRQREPvGQnTxL8dUtqHU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773347993; c=relaxed/simple;
-	bh=3MN5NtNqiCYMI2iXnWpYwrQNyEQL2f+5BOllyns7lHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=FaZ+8PwhuMCaknWmQk8TGToy0QkVOGf1S/oBnf/Qunaf2b7KeJs8ojxGKY/PIl7EY9poXglB8qDch2EPzru5MfscTmnTYt+EgkpLP2pgdUYBUrfuknxJGiN/ts3uUZbwT8PQ7rX+tJ9HOsAOLYfiMYF/MOJA384IwFKKw7pVVEk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CuWAQi4C; arc=fail smtp.client-ip=52.101.72.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1773383146; c=relaxed/simple;
+	bh=1xag35iODtRAjNwV/+wpLm3LylgWu+1S2cL/w0F1DDs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Raq7inYYIPVZcCjB6gpoIay83OvW0iav68HUeQ/p1Xf5W9NDm8vZuPOaBhakatlaznUkKPQEK/WWxHn1MbXBs1ZVRk8aeW5Od2wB8nSkDI7dkztvqEglBRKP+pTYyqIlczq4v+FA0Znqu9IOcIzCFhRXpP9amIKrgKIq6MjfQqA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AZoT85VD; arc=fail smtp.client-ip=52.101.56.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DzgBE9baPlfr7oc5xFJBSsGa9K00VwC5R/GRbcFkA9c259McAJkLdvS5xcn+6uxrqtee3vSPhActPu3PrM1XDWs87WxTXANHNNNPZyTTJVyvqX2Nt/z5qnI05SSYoTB40zeUbQm3XHnMPbtFwDJy/BnsvMtbAwFE7w81Hf6vJ31JCSzlKGJGLoL09h7jnf6mTzPJt/zhrlgF+XQ2YCy0gQMhw/4u0I2T48Ap4tLG24ee73a4llS59atIGmeK+V4hwJS6+cIzGsoz4WGKmBACQJWNsW+V656zQAV2vMih3eoL82h3sn4NFcsoHeB3mkYn2fcK5OyVo1AiolmiaElzQg==
+ b=tlEOOeN6MbqOl412eypckqtEzNarCO30cGVjjTLH37BEVVKtwRGp54l6sXOsSDI/1vtnIvgSg0UkKTh6by1zeY4G2uXbPu73HuA6AdFlZKjxQQF85oXX++rJOA/0a2+JtK8YjL4viHk+ZHivXjhMuw9e0B9VKGe1J/9HkaW8Aqo4rRWxS9G7IG88lDEPWgMXsrfC9d5ZDazedrUzrhPLscsw+du0RHMgD8pWE97X1QJWP0p47/qBwL5dHKkvqiZnIJK4WY7bUvbkMHETVtw1RqSvnKAHQQSX/t4iL9zMTkLG/GVtDgSqLKtYXbeC4HZH7dgrGUpqmheQeFUV4u87Pw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uzuUDLf2OUkws102eQLiR7Uqbeg/q34TLu9hDFL7Fo8=;
- b=aNMqdgk9SpTe26Ml7oPZZKvjuoTkRApg9CNHwMMCBJkhQxkAnfsGieeI5b32WIJgK/r4ojEEgXScCXf+J73OVQe4jggLQmNUwj+zSYsdh4Xc6CvT+rxFIaivIJRGqGA1l1yvmCskUc6QRYt5Ul93/TQk7kQEf7D3AGXf/GCyoVshPUsEmI7peLAmwUZDij3Mm6OwrtY6SUiB5MmVtmGwzzruipknUwfUVb0DD6pUoelWz3U+bptFm+niWT70rdEyLQEbGTzRrgEd5CsgeE5hgClo+9b9y325t1ZW/HvJB9DOSLwU6Wo+jeeO4kD2IDa4Dr7+KTqz6gaQJtUQEMrfxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ bh=lNPwALV0Tf2qKWYJJ3DkoHTbtblOZ1UjGKeyPm7Y1GE=;
+ b=Rw2h0zx+UfIJDX4H8CnBtBxLL/AhUz6Jgtt9PD9IgHvxi7fV7mwt+c21cAdUTx0+bDuctscC5/6sN7vbz8EcSR9VaOjtOecBtx55dDJicJqtSoAJRAP1cwFIvgJDAQgmcP2azbhVggGLFBXEh1hfTVn8UinEgGE5e4VBBYB1rvB6dUsLaCs85uXCYf5S3PgHIKqFLJkckqmw7qnVyHhFpz7Cu04MEc5td9y8ngn4EGvPxVXbEulu6cvPyhfnTl7Gp4IjwXhx4ErDklZKDrQYFEZACmwTYcbACRZT3ea2mHcTB5xXFUrDkU/uElv8NICFY/J+6yybt0zT27NpVHgnCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uzuUDLf2OUkws102eQLiR7Uqbeg/q34TLu9hDFL7Fo8=;
- b=CuWAQi4CndVkCYth/q0WV1AEUQkqY12CbmAZ4WP+n2/HvAy+YzlvpzCOSmD3DZRzc4yLHe3SiGxtL3oT4MFg+Uf1SAZbPIvcSZ/oEJkl9e+yxyuvUkiMYW3J2geGRzKkAKk9rvokmSPXg2qcq5+91TT4UlnLc7MtnWS8cDB9avcA+ggXLa1a1jQ2ytBsb8PoA/cLjVazKoYiF9wRAgEn3/u3h+hfkZbj3jGr9sWmfsGtTF5+RZCg6Ma8IWTLZVV2eSFAhjIMfG/RAI3eL+Ej0hOyQTH6jmqCeR0swWFE7hYpnBBJKjmBAEL2I96vG9+MRlYy7tQWtuUAn9pgS4PcWg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by GVXPR04MB10303.eurprd04.prod.outlook.com (2603:10a6:150:1ea::17) with
+ bh=lNPwALV0Tf2qKWYJJ3DkoHTbtblOZ1UjGKeyPm7Y1GE=;
+ b=AZoT85VDpgly9Hj6EyzJHe3cU0J++gvVt8tPbAOnjxdYxU79nWUhI8517CGTA+FBVRC+s/Z8o6qIWfvkzPpc4pI4jXfvDQ3WrQQhMM76k1SxWDlChAeFeGrMO2ETDQ4vlRWvKTIRQFDGGWPrQBH9k748h2CR6d/bfM4OLyAzJ7w=
+Received: from CH0PR13CA0034.namprd13.prod.outlook.com (2603:10b6:610:b2::9)
+ by BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.15; Thu, 12 Mar
- 2026 20:39:41 +0000
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9700.010; Thu, 12 Mar 2026
- 20:39:43 +0000
-Date: Thu, 12 Mar 2026 16:39:34 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Koichiro Den <den@valinux.co.jp>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>, Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Baruch Siach <baruch@tkos.co.il>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org, ntb@lists.linux.dev
-Subject: Re: [PATCH 07/15] PCI: endpoint: Add EPC DMA channel delegation hooks
-Message-ID: <abMkhs4Ommy8P0D9@lizhi-Precision-Tower-5810>
-References: <20260312165005.1148676-1-den@valinux.co.jp>
- <20260312165005.1148676-8-den@valinux.co.jp>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260312165005.1148676-8-den@valinux.co.jp>
-X-ClientProxiedBy: BY3PR05CA0032.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::7) To PA4PR04MB9366.eurprd04.prod.outlook.com
- (2603:10a6:102:2a9::8)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.7; Fri, 13 Mar
+ 2026 06:25:40 +0000
+Received: from CH1PEPF0000AD75.namprd04.prod.outlook.com
+ (2603:10b6:610:b2:cafe::d6) by CH0PR13CA0034.outlook.office365.com
+ (2603:10b6:610:b2::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.13 via Frontend
+ Transport; Fri, 13 Mar 2026 06:25:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CH1PEPF0000AD75.mail.protection.outlook.com (10.167.244.54) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9678.18 via Frontend Transport; Fri, 13 Mar 2026 06:25:40 +0000
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 13 Mar
+ 2026 01:25:38 -0500
+Received: from xhdsneeli40.xilinx.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Fri, 13 Mar 2026 01:25:34 -0500
+From: Srinivas Neeli <srinivas.neeli@amd.com>
+To: Vinod Koul <vkoul@kernel.org>, <git@amd.com>, <srinivas.neeli@amd.com>
+CC: Frank Li <Frank.Li@kernel.org>, Michal Simek <michal.simek@amd.com>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Suraj Gupta <suraj.gupta2@amd.com>, "Radhey
+ Shyam Pandey" <radhey.shyam.pandey@amd.com>, Thomas Gessler
+	<thomas.gessler@brueckmann-gmbh.de>, Folker Schwesinger
+	<dev@folker-schwesinger.de>, Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>, Kees Cook <kees@kernel.org>, Abin Joseph
+	<abin.joseph@amd.com>, <dmaengine@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH V2 0/5] dmaengine: xilinx_dma: MCDMA descriptor and metadata handling improvements
+Date: Fri, 13 Mar 2026 11:55:28 +0530
+Message-ID: <20260313062533.421249-1-srinivas.neeli@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|GVXPR04MB10303:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3f319259-49bd-4b71-937b-08de80777dc7
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD75:EE_|BL3PR12MB9049:EE_
+X-MS-Office365-Filtering-Correlation-Id: 23d46346-f1f0-46c6-1458-08de80c958e5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|19092799006|366016|1800799024|52116014|376014|7416014|38350700014|56012099003|18002099003|7053199007|22082099003;
+	BCL:0;ARA:13230040|82310400026|36860700016|376014|7416014|1800799024|13003099007|18002099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	MqMNJV1G7mtrnKVS5qDkhwMQT2pUpRggM+fLI0It3mRE8AKlLpug3vZ8KIxwDJQ4TbL0PcOK4T6ogOmgb6BrEwiEWnXinMjD53Sdqwo8CjX7h/XAwp0ddgEzmE66xHzgzuunQRzl8v6Aiaxb0vI5CkuBAqutPAKov5OWT8l3DxBqTG7kAz0iJP9gVw/Fr17MKAyLi3IH7rKsTisOOVGhrtUiV08ajwRjXG8re9mXu9SFzgO9oKi6iwkhfoPrKP/ETkdlRH+AoPouznjPtPxZTd7gz248yCuYaB4N4YDlngKWXi8YGpmgwAlMvBaZGaM3JK5Yyq5NgLpSz/YcA3bpgbPXzN8RdrrBk0kFnIZfGRaOoWFfmqGxVg9YfIm4ynrXlRbobbC4zHDX5l0+qnwaXdnHGMh3H/oGfNXsyudvYFs+AZCq+Z3gFX6WnRncUIAQFtwMKjfg5kytP7AfM6KQ9aCMrT60N/k32snF7LU/1jmBoF8OEgA1UUniRnN3Jr2MPLpLJT+1riMe0WgpKw0DFLzt/KJiNGKQMfJ8Pr98xNtl2hpTNTJZQm7CxFrEhKuFURaZQk54YdGwoua7+qDV8wv+kc9ce9e2pc/s/Uy2+dUcblx+/9sFdzQ/9twKKSzf91NLZHHl85RGxpNTWPNKnYfF2lT3TY7Dyr6/bK6bBP03GKsFRlHYKTDb9pH6hsiNYS2kfycIM27Cfo+IflbWJRQUIiGbwFksopb+S/RLqh2DpOpEYuXUM4JgZ6pHdaRhPiCpznrNwsH4EhGbmLi6hRAy/Lbeic47aeZhHWxsGOQ=
+	A35DDyB6xbL0V8gnW1N5w5lWdmDGkAQraqKrKbSvg9IJmzMW1m9VPrp3EbaQo0AYBkr2pnzWgJBxAZUgziIxaJ+LqCQE6X4jrl9VJZ80jC2nUEr235eMLnIKLe0u3Z/kaICtveixR/RzITZ1NR1uAbrOJJEwfuxgTqCL3Czy/aTTLswAFlhTce2kG03BttsWiDYl/EnMUQNkfKFUJI1kWBpNps2m4QRU01eqi3LNm0eWHwHBiRTYtVbWaFHE5+z2V3SkhwqeyKBW0Q3ZfSySSdh2A67mpdwnocK8BnJwU6iAytdBUpyvpsbf7lCR/JH5bg24PTbzaryHFU9keHDhbYS/emj29y8jL7CVfH98+g9VIcDcRJskntPMvgxhpbqI4D9FurjwyJZAuERQBCc/QgsyqJ9IvrQfSLG3dZTe76FN0Ihoi0eE7l5ARzD7ewyG2h6ZdgzcLxtvigLnN6cIB7qGLdKgixH6x7j26ApmqAAuYcarpLE4c0igN9nBpMkmOVzeMaWoRf+7P5aroICKyPRe17pMMQasvziRDfo3s8o5gjUTEMfnbKatSdkRQfH1lYzy5amewcflT4Oa3R+6/dfoNELRf2umPq6VIC2lg7KK63/IXp7qPy0JTnbYkry3s3Y5d9zIutcUFyi1YV/u2s/aeC5AG7juxApfzlEXdANNxhAhEQrjl5THIk03W8GJIiyy+vXyM+xvKLWW03CONeVeThj9zBhlyi8fO9myp+Jx5fRaXBS6XEzFsk3aLV0E6VkHJpNpo4LGYd/gqofoTA==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(1800799024)(52116014)(376014)(7416014)(38350700014)(56012099003)(18002099003)(7053199007)(22082099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(376014)(7416014)(1800799024)(13003099007)(18002099003)(56012099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BXWCWnbksXjcDlg7wLjy3P3WaY659lJ6kciXTwDkLQ8C95MjNtVryNQu8APQ?=
- =?us-ascii?Q?gC95E3SWK17b1Z8DdWwiMJUxP8iXXQrwIOV43yRyCozvEZVbnnRGOzk59z+B?=
- =?us-ascii?Q?F0ChxW281Auna2O0Q49yH4J4WqZEQqj6yJDKsyhcaHvfq8KM130b0PJgb/fx?=
- =?us-ascii?Q?hhkaNX1c86ghiaJ46Cu8hMA9AviC7kFqEqD/Sp5tUxh5uRtIvg61RYfS9G5a?=
- =?us-ascii?Q?ISxc/O2PymMEiL2FbLWQ3x3VFwhLR9ZQXDknUM8OrZHWWBW9JoIx8BfnSpw8?=
- =?us-ascii?Q?+liUf1AjhVQzagijE+6T2RneFKm/K5bmEwNhg56ZFE7M1LwYoP751Uk5SBSV?=
- =?us-ascii?Q?5indVfqV2B0ToDJPZrovBA9YmrrFf3BSRWUpsZn+p4zn4ng4ko0D11nX3Vn+?=
- =?us-ascii?Q?rdf4Y018p4n9xzjOZfFRI1Ih6r4di19EVnCqN2/XQOoG/qcdhTuljdIMBOjU?=
- =?us-ascii?Q?i3gkH9pQlSofweaOlNNx+xdcIiSpakYMrvaMNIGDSfMNtCi7a9XOVRXMUeiB?=
- =?us-ascii?Q?crBvakj50t2wIEuP4es2909MjReHfAzzgYv3pl2Vz23s9oToIZABJiICAuOt?=
- =?us-ascii?Q?GySgtB4I8e3KdgjfuTmazNNKoQaXCjpNRdqRZuWzZWtCEJ3PpScvuBoMFtBP?=
- =?us-ascii?Q?pqGz6Vq7MbLspa/WAtag/Z1eEGKcrR7xJnfcWZBByx52EmDWDjVWmqtaDkBm?=
- =?us-ascii?Q?mSVWVW2CQboAPVQu7P0Htro9WykkIdNDHV1MzvWWws2EdTGmUCCYMU7JJBOO?=
- =?us-ascii?Q?aoukre/UR/FDn+91Jsfz5KzsS382KTKvkM/G+EuoJaonM72gMuIrrovyTHgp?=
- =?us-ascii?Q?WibDBMD/huAdNoLvkkwNSKP6i8JGYxjbBvP0XmbX09Y5GVQ6Slfix/jAnQnl?=
- =?us-ascii?Q?gww12+T1qJEiroPB7vjQ8+4ll1pM713IDd5WxMkA7KB/ZlF+nZJUcBgBocrO?=
- =?us-ascii?Q?cRJuLg+LHdWGLlCcHaVSpFbmJDDKEN7H+1wAYoFTFv2ACKnU+tBzhYU1hbGt?=
- =?us-ascii?Q?C3A1ogGOnkjffjFHIZT3QG2DiOtW0bhG7Zolfi2f434d9RnFLcCM31oNk7c6?=
- =?us-ascii?Q?q2NfzcXK6OE8ldkFhicVztsp9qSzY40TLBBY+XGM8oYwPKAfGkTKI0IbPBUZ?=
- =?us-ascii?Q?g012lO7MGnQWeWSP1ejQiCKcp4ZCHlMqlQObcqfkUF6kgRonP8ooxb8oZh0r?=
- =?us-ascii?Q?U40Sm7P1kWJ6DH/syeOu5/NPlujLgt1+lhhWcuaTD8EuXuEJwE1sHJ0eDLox?=
- =?us-ascii?Q?rspshJ+DZVVWj5Si8C/qwnqNW9Ysgestp/ra8rZF33HUwXNb2L4zsWyjxS+/?=
- =?us-ascii?Q?rpNTp1+4WgomJ2Pnr/tZFOByArbMEFM16L6hxa30Q61jb03pv6tnXZziigVu?=
- =?us-ascii?Q?gOv+Hfy3tAry7DadER/9zFXaTosUS2aIJg1OOGQe+i46CFFWjuCBnavXdYik?=
- =?us-ascii?Q?wR7jfOGVO7AU1g8p1DhbY6hZr+l0A6w4W2f4cE4U55NeQcNTUvkX3hDFWKTq?=
- =?us-ascii?Q?4QvO9rbdGn8BfGUmfV+L2Ult7DvPczN01+iypog95Afc354URd7eHWlOPNSZ?=
- =?us-ascii?Q?EVIH9sXWbnzpq/WO6vF8qYRmJLA7BG5YmrEO5gMF2DyEe5XEgdUkgwYO5LMj?=
- =?us-ascii?Q?yZHJzTwrOx/dQU+zIwZWH1jaTTIJ4fiupKEsK+LOyvW8p8du1FwWnWd0lM5z?=
- =?us-ascii?Q?XvULweJzoIlrXhhOaBMe9z3Z2B07hkejIneAUJWTOh7dCBNv?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f319259-49bd-4b71-937b-08de80777dc7
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 20:39:43.7617
+	zUdeI0NcvzK1KDm1A8+UKMyV+dDjq1MPxEqlRmIdhkzBsIonorh5DSmGwZR/AyOqTb2v0uC5sDkAYg5cUD0zG+eXSNsqKB7CxzFeb7vK2ImlVX2KZEKtxsd7nB4atC5RCI1jHWNl0nTC4dvPwQNwX45RX8HeK1qAzE047lJ26dk62WFOgQkz9mTEpDmqABN70SN3dqtPQd9zud+XWPJoLP1X3iRMA0exx3rPjXmhpdGK7WTCaZCddw/Q/JBed9aIoVj6R3VzCsVWTHyXivi5qhw8ILckjCnm7Vj27dlU6FACp/kXg0r/smO7OYvp+vc5caFJ9Z5sW2P0r6id5xStJ2Fa7iscbNnbTDcEKer2ooQjWRIx9H1z23++dwt9su7O3F8p9d6TKreVLNz9Zmx9Je0cobXUveO3aT4ogHoxljiHJkCghtgJW9U9ykh2CpXB
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2026 06:25:40.0810
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 67Gvv5HTnxsbopffoIH4iqao2zeOtGwTZ0c1PIjYnbLyawXkhUTKnJHkm9VKEAXarmq7X5ZoqYsNOF33yuJGKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10303
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23d46346-f1f0-46c6-1458-08de80c958e5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD75.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB9049
+X-Spamd-Result: default: False [2.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9414-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,google.com,lwn.net,linuxfoundation.org,kudzu.us,intel.com,gmail.com,tkos.co.il,baylibre.com,vger.kernel.org,lists.linux.dev];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9415-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[nxp.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[srinivas.neeli@amd.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[amd.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,amd.com:dkim,amd.com:mid];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	NEURAL_HAM(-0.00)[-0.999];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8580B27979A
+	RCVD_COUNT_SEVEN(0.00)[8]
+X-Rspamd-Queue-Id: 9E76F27E268
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 13, 2026 at 01:49:57AM +0900, Koichiro Den wrote:
-> Add EPC ops and core wrappers to delegate and undelegate controller-owned
-> DMA channels.
->
-> The exported DMA helper needs more than a passive "delegated" bitmap:
-> it must be able to reserve channels away from local users, let the
-> backend perform controller-specific setup (e.g. prevent the EP from
-> racing to ack the completion interrupt for delegated channels), and
-> later hand the channels back as a matched lifetime operation.
->
-> Signed-off-by: Koichiro Den <den@valinux.co.jp>
-> ---
->  drivers/pci/endpoint/pci-epc-core.c | 84 +++++++++++++++++++++++++++++
->  include/linux/pci-epc.h             | 19 +++++++
->  2 files changed, 103 insertions(+)
->
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index dc6d6ab4ea1e..892f7ccbd236 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -197,6 +197,90 @@ int pci_epc_get_aux_resources(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_get_aux_resources);
->
-> +/**
-> + * pci_epc_delegate_dma_channels() - reserve EPC-owned DMA channels
-> + * @epc: EPC device
-> + * @func_no: function number
-> + * @vfunc_no: virtual function number
-> + * @dir: DMA channel direction
-> + * @req_chans: number of channels requested
-> + * @chan_ids: output array of delegated channel IDs
-> + * @max_chans: capacity of @chan_ids in entries
-> + *
-> + * Return:
-> + *   * > 0: number of channels delegated
-> + *   * -EOPNOTSUPP: backend does not support DMA delegation
-> + *   * other -errno on failure
-> + */
-> +int pci_epc_delegate_dma_channels(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +				  enum pci_epc_aux_dma_dir dir,
-> +				  u32 req_chans, int *chan_ids, u32 max_chans)
+This series improves the Xilinx AXI MCDMA driver's descriptor handling
+and metadata reporting. It fixes direction specific descriptor field
+usage, ensures completion is based on the hardware completion bit
+(important with delay interrupts), and extends metadata handling so APP
+fields are used when the AXI4-Stream status/control interface is enabled.
+When APP fields are unavailable, the series still reports transferred byte
+count via the status field, enabling clients to track progress in both
+configurations. Device tree bindings are updated to expose the
+status/control stream presence with a dedicated property, distinct from
+stream connectivity.
 
-Use bit mask should be simple, bit 0 for channel 0, bit 1 for channel 1
-...
+Changes in V2:
+- Rebased on the AXI DMA binding YAML conversion.
+- Added xlnx,include-stscntrl-strm in the YAML binding.
+- Clarified cover letter to reflect metadata behavior with and without
+  APP fields.
+https://lore.kernel.org/all/20260309033444.3472359-1-abin.joseph@amd.com/
 
-Frank
-> +{
-> +	int ret;
-> +
-> +	if (!epc || !epc->ops)
-> +		return -EINVAL;
-> +
-> +	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
-> +		return -EINVAL;
-> +
-> +	if (!req_chans || !chan_ids || !max_chans)
-> +		return -EINVAL;
-> +
-> +	if (!epc->ops->delegate_dma_channels)
-> +		return -EOPNOTSUPP;
-> +
-> +	mutex_lock(&epc->lock);
-> +	ret = epc->ops->delegate_dma_channels(epc, func_no, vfunc_no, dir,
-> +					      req_chans, chan_ids, max_chans);
-> +	mutex_unlock(&epc->lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_epc_delegate_dma_channels);
-> +
-> +/**
-> + * pci_epc_undelegate_dma_channels() - release previously delegated channels
-> + * @epc: EPC device
-> + * @func_no: function number
-> + * @vfunc_no: virtual function number
-> + * @dir: DMA channel direction
-> + * @chan_ids: array of delegated channel IDs
-> + * @num_chans: number of entries in @chan_ids
-> + *
-> + * Return: 0 on success, negative errno otherwise.
-> + */
-> +int pci_epc_undelegate_dma_channels(struct pci_epc *epc, u8 func_no,
-> +				    u8 vfunc_no,
-> +				    enum pci_epc_aux_dma_dir dir,
-> +				    const int *chan_ids, u32 num_chans)
-> +{
-> +	int ret;
-> +
-> +	if (!epc || !epc->ops)
-> +		return -EINVAL;
-> +
-> +	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
-> +		return -EINVAL;
-> +
-> +	if (!num_chans)
-> +		return 0;
-> +
-> +	if (!chan_ids)
-> +		return -EINVAL;
-> +
-> +	if (!epc->ops->undelegate_dma_channels)
-> +		return -EOPNOTSUPP;
-> +
-> +	mutex_lock(&epc->lock);
-> +	ret = epc->ops->undelegate_dma_channels(epc, func_no, vfunc_no, dir,
-> +						chan_ids, num_chans);
-> +	mutex_unlock(&epc->lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_epc_undelegate_dma_channels);
-> +
->  /**
->   * pci_epc_stop() - stop the PCI link
->   * @epc: the link of the EPC device that has to be stopped
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 7dd2e4d5d952..db8623b84c56 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -142,6 +142,8 @@ struct pci_epc_aux_resource {
->   * @stop: ops to stop the PCI link
->   * @get_features: ops to get the features supported by the EPC
->   * @get_aux_resources: ops to retrieve controller-owned auxiliary resources
-> + * @delegate_dma_channels: reserve controller-owned DMA channels for peer use
-> + * @undelegate_dma_channels: release previously delegated DMA channels
->   * @owner: the module owner containing the ops
->   */
->  struct pci_epc_ops {
-> @@ -176,6 +178,16 @@ struct pci_epc_ops {
->  	int	(*get_aux_resources)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  				     struct pci_epc_aux_resource *resources,
->  				     int num_resources);
-> +	int	(*delegate_dma_channels)(struct pci_epc *epc, u8 func_no,
-> +					 u8 vfunc_no,
-> +					 enum pci_epc_aux_dma_dir dir,
-> +					 u32 req_chans, int *chan_ids,
-> +					 u32 max_chans);
-> +	int	(*undelegate_dma_channels)(struct pci_epc *epc, u8 func_no,
-> +					   u8 vfunc_no,
-> +					   enum pci_epc_aux_dma_dir dir,
-> +					   const int *chan_ids,
-> +					   u32 num_chans);
->  	struct module *owner;
->  };
->
-> @@ -403,6 +415,13 @@ const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
->  int pci_epc_get_aux_resources(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  			      struct pci_epc_aux_resource *resources,
->  			      int num_resources);
-> +int pci_epc_delegate_dma_channels(struct pci_epc *epc, u8 func_no,
-> +				  u8 vfunc_no, enum pci_epc_aux_dma_dir dir,
-> +				  u32 req_chans, int *chan_ids, u32 max_chans);
-> +int pci_epc_undelegate_dma_channels(struct pci_epc *epc, u8 func_no,
-> +				    u8 vfunc_no,
-> +				    enum pci_epc_aux_dma_dir dir,
-> +				    const int *chan_ids, u32 num_chans);
->  enum pci_barno
->  pci_epc_get_first_free_bar(const struct pci_epc_features *epc_features);
->  enum pci_barno pci_epc_get_next_free_bar(const struct pci_epc_features
-> --
-> 2.51.0
->
+Srinivas Neeli (3):
+  dmaengine: xilinx_dma: Fix MCDMA descriptor fields for MM2S vs S2MM
+  dmaengine: xilinx_dma: Move descriptors to done list based on
+    completion bit
+  dt-bindings: dma: xlnx,axi-dma: Add "xlnx,include-stscntrl-strm"
+    property
+
+Suraj Gupta (2):
+  dmaengine: xilinx_dma: Extend metadata handling for AXI MCDMA
+  dmaengine: xilinx_dma: Add support for reporting transfer size to AXI
+    DMA / MCDMA client when app fields are unavailable
+
+ .../bindings/dma/xilinx/xlnx,axi-dma.yaml     |  4 +
+ drivers/dma/xilinx/xilinx_dma.c               | 93 ++++++++++++++++---
+ 2 files changed, 84 insertions(+), 13 deletions(-)
+
+-- 
+2.43.0
+
 

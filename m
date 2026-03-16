@@ -1,172 +1,213 @@
-Return-Path: <dmaengine+bounces-9428-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9430-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SHfUG0YgtWktwwAAu9opvQ
-	(envelope-from <dmaengine+bounces-9428-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 14 Mar 2026 09:45:58 +0100
+	id 0B5SCjAIuGkWYQEAu9opvQ
+	(envelope-from <dmaengine+bounces-9430-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Mar 2026 14:40:00 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2CE728C348
-	for <lists+dmaengine@lfdr.de>; Sat, 14 Mar 2026 09:45:57 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2C4629A98B
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Mar 2026 14:39:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B70673024CA9
-	for <lists+dmaengine@lfdr.de>; Sat, 14 Mar 2026 08:45:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4DFC33030B1E
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Mar 2026 13:33:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AEAF286A4;
-	Sat, 14 Mar 2026 08:45:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C83DC399358;
+	Mon, 16 Mar 2026 13:33:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="q84TXm9t"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Gl610XXE"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842C21F5EA;
-	Sat, 14 Mar 2026 08:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9973976B3
+	for <dmaengine@vger.kernel.org>; Mon, 16 Mar 2026 13:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773477931; cv=none; b=AKW6ERQ2tMiUmST8TlXv+k/C+0z/F5+TAdZ1Cm/JblXe7/BdR2u1K0w8QgIhgBQvODRpvYRd42OlmHYKsvAscqfL59662aBpHRY8F7SVWEAqgwBaqOcy8MM+Fb3z+nrhUIe9qNTbhw8p5YAmsP0tWhnCaKyrh0RJePmFyjWe5k8=
+	t=1773667985; cv=none; b=XXF+iVo75s5S87ZLco76dCKHDGZwXvjZ5fisxXRYpsaJzgg4U9+TtVCnonMYhsOUfzHZxM4cUlcYVMwGloEMSNKzFugThDhYpNj9uuKeKXTn/XEiplFrAUM5WhbvANj8K/gnxNkHDjx7QjJOgfkOG19caXU+aPlkO9ZA/R2nRVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773477931; c=relaxed/simple;
-	bh=Pg0oVFRscnlmYy+Eh/DH0v3AyH+o/BdVyC5aCHMXo/o=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=iKm8feKq2083zJlhSsf+CffP4z9iF+HvGGDm1sIPMcdkbBXj8ETBDzTeMSV7lLSzW9xudikHuCFuuInXWN2vwuyRaULHmixLracVO3CX9fzM3HfCoKHSOGWjIBeUbU7M5sU/i1gQZA5IRYzbM6rRzo1NsvVvo2avHg9Idzx3EmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=q84TXm9t; arc=none smtp.client-ip=195.201.215.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=folker-schwesinger.de; s=default2212; h=In-Reply-To:References:To:From:Cc:
-	Subject:Message-Id:Date:Content-Type:Content-Transfer-Encoding:Mime-Version:
-	Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=Pg0oVFRscnlmYy+Eh/DH0v3AyH+o/BdVyC5aCHMXo/o=; b=q84TXm9tunwc9vj6azWkRxpIy2
-	FWFOuqEtx3jMzqBnQWhpH7NpVz/H9lUPGti7Ex6ittsHQ1TZtvJlwwyCJozJweSAhyzLlO/979lBu
-	rXgeSzdPzA99Zord2OfPYzXyER2kehKQy2AyIktwzprg/yZsd93OFyr1C3yGLQbaOV5b02HnwtFY0
-	R+/Tfz15ro0putZ9g6np/gVVtolTo9gXIhmCpZSTRZI9KSzo2R5RTP91wtg0tnNP1QmDz2CwVVX/H
-	Z4BcjAHSlIVIIY2J9cRk22Lpcl1K1yGKTk++7EZ5yebeqlMbe74bRGiXMkNQhoYKYQXXKAI1f3uaj
-	oW9XTfjg==;
-Received: from sslproxy04.your-server.de ([78.46.152.42])
-	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1w1Kcg-000HtS-1S;
-	Sat, 14 Mar 2026 09:45:26 +0100
-Received: from localhost ([127.0.0.1])
-	by sslproxy04.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1w1Kcf-000M4O-0A;
-	Sat, 14 Mar 2026 09:45:25 +0100
+	s=arc-20240116; t=1773667985; c=relaxed/simple;
+	bh=5y/EAb032AMPdcOu4ynOYBjpIW7z7sKn43dms4BhIzk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pBJ5mwnytuBYuviya2Wx+o12kjLA2jRUMCpodkRsFGAGsRosy3hzq1gUnhl0PRewy4/IS4mvcgFX6jHV0UqDbSmVMiTjqH6iGMtaIp213bFDpIA7tJpEZsGBT6/iYdN/F3W62ir7ByhoDA5hP+ZfkG+OXpUj5wd2a4bXtG/BtWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Gl610XXE; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b941762394aso565692166b.1
+        for <dmaengine@vger.kernel.org>; Mon, 16 Mar 2026 06:33:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1773667982; x=1774272782; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xcNojtWEZMAv4eQbKBUIo67pydMoo7pfLvHPfp9OEOQ=;
+        b=Gl610XXEyYKh7vCeSqO3D5DbUvhPpjdUWk4mZtMGz+vAH4IOapez8N4EWURdIrp4EW
+         xMk51RcyLN5aV7913UsXHrPEeeMRChWL2SleEOJSPQiCd/fGLFt7A5bBSHqvElZO4CWI
+         ab+dbBLaqlW9G5hs/QYF1tbS8Ka1X+a/vsN74GF6L3vYyq4zcLX9fYaoPJB5DmDuLOIx
+         wIVW8IWYKEJm5WnNhPnNnlqpBHxkU7+NkQbDQnwJvD/+eVzkV4jPWfwr10SWvIaqpJ9Z
+         DzY5kibB006AjG7L4wZ63hBjAXBbqiEB/RPkgSDP84Fwvp0X3TCOZtueXJwYy+fCg+N9
+         u3lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773667982; x=1774272782;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xcNojtWEZMAv4eQbKBUIo67pydMoo7pfLvHPfp9OEOQ=;
+        b=I8DPTfISjGt3qfKprAttC+PQbm5+jff41vD9++GhJILfKqg3O4gSYMjzbJf/aqU4j2
+         vYRd0wVPaz7+N/KoED4vXbjlZesfWbxlLsqfubgWf+qJlNdnwJZVqOET1pyHuXjV4s3D
+         nXtmMkeJPQAEEhM1zp8ZwhuHAuov4zsSdgNEFW6VQQAD4FU5XEcBEaoWVsWfKmJJCgVK
+         vPwn0opku2/BgeqENK/g0UZ0ryLGuwgr48AYuYEmwPhUaErxY9GZG8uvuQsafhGII54R
+         Fp5/wlRfXSBA8SBT58Tyanu5oL+xkL/oez7M+wthgUWdRkzp5Ea8J0MIyBvKrVaFE3L6
+         Ds/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWdXM6TEbRWRtGVnVKHRFxtDas4pJQh7PRMhoNZe6HucNjjf6lZOE40SLO3BaYTUzRACClYy4xXKV8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4EeSdfY0MdH153UOOxaXrSDmTovhKfaRKqA+B8QNSqbVZOg3z
+	xcu3YyeXMzJ06np+vBVNJvT5GaFSrcXGeQAK8Moq14ZqfRcSJLOjlEoQ2CqkXyNxZwo=
+X-Gm-Gg: ATEYQzzwkulaaTaA8OwtZwB/uhzrIM8sdpTr6RfxazvUklzI68wjieYKUXPB2jfxdLW
+	3qVp0ys0sycUGAmYUHjyRdLGcJiUICr1GKFZCwexEkH0yrBkWXrjJrUBz2JKHi2/2Spi598N/7c
+	qiPJSrml6QWP8IFEZXJP5G2BZB+u1MY2MuRbmUFewxYkejHr5qloNe1dSVO0D77xEmgFtnQ4Rql
+	IbEJRGXFtz6gzd/ijETBrFziQTkJpyzM4xqlNhywQEXm/sVjWiu6ElovLMyrzr92JW1X+6vpQzN
+	PSnGPDAQ5ThtElZimGlqDql5x/g+CGdoP4vGQ7I/NLErN0UdjsjpZ9WE6irxu56phGoTsfacfCu
+	vfFfxOVnCtwo+uFWxKfNuHvM8yKkFZWBmzEgelgc+LqChQzF8vZLDer07Q/AvUnztfvjL6+eNFC
+	DsASw1Qw05OUZKYCrNBX8RBaDxmRJrmNRRaiV4QKz2sKG19xTEoMqbXv8E0kWS4sg24yHRqhUWq
+	xdD6bI=
+X-Received: by 2002:a17:907:a0c9:b0:b8f:b32e:e196 with SMTP id a640c23a62f3a-b9765141719mr785588566b.30.1773667982234;
+        Mon, 16 Mar 2026 06:33:02 -0700 (PDT)
+Received: from claudiu-TUXEDO-InfinityBook-Pro-AMD-Gen9.. ([2a02:2f04:6208:0:c5e3:3624:ad1c:6b4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b419270efsm11629888f8f.16.2026.03.16.06.33.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2026 06:33:01 -0700 (PDT)
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+To: vkoul@kernel.org,
+	Frank.Li@kernel.org,
+	geert+renesas@glider.be,
+	biju.das.jz@bp.renesas.com,
+	john.madieu.xa@bp.renesas.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com
+Cc: claudiu.beznea@tuxon.dev,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v10 0/8] dmaengine: sh: rz-dmac: Add tx_status and pause/resume support
+Date: Mon, 16 Mar 2026 15:32:44 +0200
+Message-ID: <20260316133252.240348-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 14 Mar 2026 08:45:23 +0000
-Message-Id: <DH2DGEG9CHLG.1WO05WV70B987@folker-schwesinger.de>
-Subject: Re: [RFC PATCH] dmaengine: xilinx_dma: Fix per-channel direction
- reporting via device_caps
-Cc: "Vinod Koul" <vkoul@kernel.org>, "Frank Li" <Frank.Li@kernel.org>,
- "Michal Simek" <michal.simek@amd.com>, "Suraj Gupta"
- <suraj.gupta2@amd.com>, "Thomas Gessler"
- <thomas.gessler@brueckmann-gmbh.de>, "Radhey Shyam Pandey"
- <radhey.shyam.pandey@amd.com>, "Tomi Valkeinen"
- <tomi.valkeinen@ideasonboard.com>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, "Rahul Navale" <rahulnavale04@gmail.com>
-From: "Folker Schwesinger" <dev@folker-schwesinger.de>
-To: <dmaengine@vger.kernel.org>
-X-Mailer: aerc 0.21.0-126-g9e77103592fe
-References: <DGHGTCJRRZCW.9TGXQW44V6RR@folker-schwesinger.de>
-In-Reply-To: <DGHGTCJRRZCW.9TGXQW44V6RR@folker-schwesinger.de>
-X-Virus-Scanned: Clear (ClamAV 1.4.3/27940/Sat Mar 14 07:24:47 2026)
-X-Spamd-Result: default: False [-1.66 / 15.00];
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[folker-schwesinger.de,none];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[folker-schwesinger.de:s=default2212];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[tuxon.dev:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,amd.com,brueckmann-gmbh.de,ideasonboard.com,lists.infradead.org,vger.kernel.org,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-9428-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	DKIM_TRACE(0.00)[tuxon.dev:+];
+	TAGGED_FROM(0.00)[bounces-9430-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[folker-schwesinger.de:+];
+	RCVD_TLS_LAST(0.00)[];
+	DMARC_NA(0.00)[tuxon.dev];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dev@folker-schwesinger.de,dmaengine@vger.kernel.org];
-	NEURAL_HAM(-0.00)[-1.000];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[folker-schwesinger.de:dkim,folker-schwesinger.de:email,folker-schwesinger.de:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:url,ifm.com:email]
-X-Rspamd-Queue-Id: C2CE728C348
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@tuxon.dev,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: A2C4629A98B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue Feb 17, 2026 at 7:49 PM CET, Folker Schwesinger wrote:
-> Since commit 7e01511443c3 ("dmaengine: xilinx_dma: Set dma_device
-> directions") all channel directions are aggregated into
-> dma_device.directions so that dma_get_slave_caps() works for IIO
-> DMAEngine buffers.
->
-> However, this caused a regression in ASoC audio on ZynqMP platforms,
-> that causes cyclic playback to fail after the first buffer period,
-> because ASoC dmaengine PCM expects fixed per-channel direction reporting
-> from dma_get_slave_caps().
->
-> Implement optional device_caps() callback and override caps->directions
-> with the channel's fixed direction. This keeps device-wide direction
-> reporting for IIO intact while restoring correct per-channel semantics
-> for ASoC.
-> Other dma_slave_caps fields are left unchanged from their respective
-> values initialized from dma_get_slave_caps(). In case there should ever
-> be the need to override other fields, these can be added later.
->
-> Fixes: 7e01511443c3 ("dmaengine: xilinx_dma: Set dma_device directions")
-> Cc: stable@vger.kernel.org
-> Reported-by: Rahul Navale <rahul.navale@ifm.com>
-> Closes: https://lore.kernel.org/dmaengine/20260211140051.8177-1-rahulnava=
-le04@gmail.com/T/#u
-> Closes: https://lore.kernel.org/dmaengine/CY1PR12MB96978AEBD6072FC469DFEA=
-F1B762A@CY1PR12MB9697.namprd12.prod.outlook.com/T/#u
-> Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+Hi,
 
-@Xilinx/AMD maintainers:
+Series adds tx_status and pause/resume support for the rz-dmac driver.
+Along with it were added fixes and improvements identified while working
+on the above mentioned enhancements.
 
-Even though this patch does not fix the reported regression and there
-may not be an immediate need for the implementation of the device_caps()
-callback, it might be an improvement to the Xilinx DMA driver. In case
-you see value in that addition, let me know and I resend the patch with
-the necessary editorial changes.
+Previous versions were addressed by Biju. The previous versions were
+posted here:
 
-Also during the debugging session, the following was identified:
+v4: https://lore.kernel.org/all/20240628151728.84470-1-biju.das.jz@bp.renesas.com/
+v3: https://lore.kernel.org/all/20230412152445.117439-1-biju.das.jz@bp.renesas.com/
+v2: https://lore.kernel.org/all/20230405140842.201883-1-biju.das.jz@bp.renesas.com/
+v1: https://lore.kernel.org/all/20230324094957.115071-1-biju.das.jz@bp.renesas.com/
 
-> From a quick trace through the code I found that in the Xilinx DMA
-> residue_granularity is set for AXIDMA independently from the SG setting
-> of the DMA core [1].
-> However, in xilinx_dma_tx_status() one of the conditions for residue
-> calculations is that SG mode is enabled [2].
->
-> [1]: https://elixir.bootlin.com/linux/v6.19.3/source/drivers/dma/xilinx/x=
-ilinx_dma.c#L3284
-> [2]: https://elixir.bootlin.com/linux/v6.19.3/source/drivers/dma/xilinx/x=
-ilinx_dma.c#L1293=20
+Changes in v10:
+- dropped patch "dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()"
+  and use the already available rz_lmdesc_setup() function as suggested
+  by John internally
+- rebased on top of latest next
 
-Not sure if this needs addressing, but this could have the potential for
-subtle bugs...
+Changes in v9:
+- collected tags
+- in patch 7/8 droppped contributions from the SoB list, used
+  Co-developed-by tag, and added Long Luu as well; also used
+  ctra as member of rz_dmac_calculate_residue_bytes_in_vd() to
+  avoid re-reading it again in rz_dmac_calculate_residue_bytes_in_vd()
+- adjusted the patch description for patches 7/8, 8/8
 
-Best regards
-Folker
+Changes in v8:
+- rebased on top of https://lore.kernel.org/all/20260105114445.878262-1-cosmin-gabriel.tanislav.xa@renesas.com/
+- populated engine->residue_granularity in patch 7/8
+- report proper residue in case the channel is paused in patch 8/8
+
+Changes in v7:
+- adjusted the pause/resume support
+- collected tags
+
+Changes in v6:
+- added patches:
+-- dmaengine: sh: rz-dmac: Drop read of CHCTRL register
+-- dmaengine: sh: rz-dmac: Drop goto instruction and label
+- use vc lock in IRQ handler only for the error path
+- fixed typos
+- adjusted patch
+  "dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks"
+
+Changes in v5:
+- added patches
+-- dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+-- dmaengine: sh: rz-dmac: Protect the driver specific lists
+-- dmaengine: sh: rz-dmac: Move all CHCTRL updates under spinlock
+-- dmaengine: sh: rz-dmac: Drop unnecessary local_irq_save() call
+-- dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks
+-- dmaengine: sh: rz-dmac: Add rz_dmac_invalidate_lmdesc()
+- for pause/resume used the DMA controller support to pause/resume
+  transfers compared with previous versions
+- adjusted patches:
+-- dmaengine: sh: rz-dmac: Add device_tx_status() callback
+
+Thank you,
+Claudiu
+
+Biju Das (1):
+  dmaengine: sh: rz-dmac: Add device_tx_status() callback
+
+Claudiu Beznea (6):
+  dmaengine: sh: rz-dmac: Protect the driver specific lists
+  dmaengine: sh: rz-dmac: Move CHCTRL updates under spinlock
+  dmaengine: sh: rz-dmac: Drop read of CHCTRL register
+  dmaengine: sh: rz-dmac: Drop goto instruction and label
+  dmaengine: sh: rz-dmac: Drop unnecessary local_irq_save() call
+  dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks
+
+John Madieu (1):
+  dmaengine: sh: rz-dmac: Use rz_lmdesc_setup() to invalidate
+    descriptors
+
+ drivers/dma/sh/rz-dmac.c | 281 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 231 insertions(+), 50 deletions(-)
+
+-- 
+2.43.0
+
 

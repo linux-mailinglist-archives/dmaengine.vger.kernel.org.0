@@ -1,192 +1,118 @@
-Return-Path: <dmaengine+bounces-9468-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9469-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kISGD0k4uWk8vgEAu9opvQ
-	(envelope-from <dmaengine+bounces-9468-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 12:17:29 +0100
+	id HRCsDLg6uWmKwAEAu9opvQ
+	(envelope-from <dmaengine+bounces-9469-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 12:27:52 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EF422A8982
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 12:17:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A41962A8ADB
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 12:27:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3A060300B478
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 11:13:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F3C3D302D0A7
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 11:27:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 950F93AA1A7;
-	Tue, 17 Mar 2026 11:13:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AFE03A8745;
+	Tue, 17 Mar 2026 11:27:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BN4OvIHs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/Tk4A6v"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705113A7F61;
-	Tue, 17 Mar 2026 11:13:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C162D9796;
+	Tue, 17 Mar 2026 11:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773746001; cv=none; b=IOykh/usfmX+lGgQRsiOSn8Wn8bnFqf3TUc6+Yv1c3zWKHaUWcrzUXG2w0LoHBaSdCvG/T1YoMiVvnjEh/awx570M3Wy4IfHI6KX95tYbBZayNGpi1qxhdZMjji6ZothkDgd+UkMyOECCo7eQ0KbVhMEzuTO2JY2Gnkbvy4OWs8=
+	t=1773746868; cv=none; b=laWOv4OywXBPtbZhsSe+TDS4TtLBDuELCV4RFwebeAkkAa3tnWa09Uws8t12Al7kH17lVDKLSn4oasK09SIJCBu+Z57IygSZ7WPUz5gEGOfbwwdfDuZlmmo+W1fXIrlfAiRSlfAuHd+7ZTAUpi4x6IhyBj48nxtgNg7j7k8At5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773746001; c=relaxed/simple;
-	bh=A4k44UqySYK9sBzDZ65HlwjIbkEi1C81mQWx6Wneq/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QrLvMDPCnYNJzy1bqUgtSPVWBb3kxkamJoYyzM9EbCaooWScJcpfyRSjlzNXc9j+KdcTQDZlkBjsvnTFrkFJhroJKu9LJ2nrPKTdNtpS9DkSBJDmKtGLcVtucpw47ZcYqmM5PSIw9tCnDZ9/7F2cur9BU8nxtdLFM2sTTrSUJzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BN4OvIHs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9747DC4CEF7;
-	Tue, 17 Mar 2026 11:13:20 +0000 (UTC)
+	s=arc-20240116; t=1773746868; c=relaxed/simple;
+	bh=k60n7rIsHTQCJ1JUsN0o0C8TVxX9c3H5zo5Xx7is9QE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=u3twzZnwitfpAyAHOqT7iemEEwQVn3Ju94Bb7gFIOh+n220T24qWBGETUzyatGUy1iPNFEoYbLeiIQ2xLLcU1LedgQQO6Zoy+zJYiKEfmQ/hU0KC1Ls8ZO6ucJwTgExhUCjX/6u3rc5RxWBV2MXga5KiTNeUUGBZMSjzNIbGMB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/Tk4A6v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05352C4CEF7;
+	Tue, 17 Mar 2026 11:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773746001;
-	bh=A4k44UqySYK9sBzDZ65HlwjIbkEi1C81mQWx6Wneq/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BN4OvIHsgbwLgRezuXX+qMCFE0z812uNPJ9isuRxchmBDsKjWaXzTUTLVWnM7Bfdd
-	 vMfHaG1KT8/XVIs1YNXau89CSWykOVGhdZcx+SITNe+aSiluskaWz4L7FDs0iyC/jW
-	 k0wyksijDe55/zUnE17hXYiYnQ1IDq1JU4NT4A36NApXlJcPWC/KShcBdgPE/QF4vn
-	 aUp+XeV0TFVyAd+0z6CkDTAzZLMbRGX499M4KyuWK4dtulyX9vIydWTzp6aPJU4+Ch
-	 W8BsjoO1wcKst8WwmJGQy8edFc82Kb6/mjnRFmqf1fiuG3Cb3gQ/GE/Jp458V2HcXx
-	 l5cgK8BH7vEqg==
-Date: Tue, 17 Mar 2026 16:43:17 +0530
+	s=k20201202; t=1773746867;
+	bh=k60n7rIsHTQCJ1JUsN0o0C8TVxX9c3H5zo5Xx7is9QE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=A/Tk4A6vamLp3o6wEm8v0NoGM6RZcUb6LJuMJ82n6YJx3Onntn+ciBEwiNKI2PfbF
+	 jzqNbRTNI9RPYGpm/sAIvFddG6dyL7+L2mOf3GXgut9KqFl/qVHGvVH+kBCApFALwN
+	 joFR6J56V9+KMyefcWoYI3Wc+lFMzMXsEVfF5HFBVhrpscTpij6nmGUZfWg1/5fXu1
+	 hovLIKzcqls5UqwG6uxsMxwzRDWt47XNhTBENvVoMp16W3YCKezwCza5aqlhUAVlK7
+	 Qi/7VdO29sPiOpKdIG/APECfSC/ggkNbapdiS6P5Lf+qhjDIuXza/M6OMVzVHwitzN
+	 iXkbqS9Fo133A==
 From: Vinod Koul <vkoul@kernel.org>
-To: xianwei.zhao@amlogic.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>, linux-amlogic@lists.infradead.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] dmaengine: amlogic: Add general DMA driver for A9
-Message-ID: <abk3TUTaov3zIfFm@vaman>
-References: <20260309-amlogic-dma-v6-0-63349d23bd4b@amlogic.com>
- <20260309-amlogic-dma-v6-2-63349d23bd4b@amlogic.com>
+To: dmaengine@vger.kernel.org, Marek Vasut <marex@nabladev.com>
+Cc: Michal Simek <michal.simek@amd.com>, 
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>, 
+ Rahul Navale <rahul.navale@ifm.com>, Sasha Levin <sashal@kernel.org>, 
+ Suraj Gupta <suraj.gupta2@amd.com>, 
+ Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260316221728.160139-1-marex@nabladev.com>
+References: <20260316221728.160139-1-marex@nabladev.com>
+Subject: Re: [PATCH] dmaengine: xilinx: xilinx_dma: Fix dma_device
+ directions
+Message-Id: <177374686462.337094.8706717983323051098.b4-ty@kernel.org>
+Date: Tue, 17 Mar 2026 16:57:44 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260309-amlogic-dma-v6-2-63349d23bd4b@amlogic.com>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-9469-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9468-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amlogic.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 9EF422A8982
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: A41962A8ADB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 09-03-26, 06:33, Xianwei Zhao via B4 Relay wrote:
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-> +static dma_cookie_t aml_dma_tx_submit(struct dma_async_tx_descriptor *tx)
-> +{
-> +	return dma_cookie_assign(tx);
-> +}
+On Mon, 16 Mar 2026 23:16:54 +0100, Marek Vasut wrote:
+> Unlike chan->direction , struct dma_device .directions field is a
+> bitfield. Turn chan->direction into a bitfield to make it compatible
+> with struct dma_device .directions .
+> 
+> 
 
-You lost tx, why was it not saved into a queue?
+Applied, thanks!
 
-> +static struct dma_async_tx_descriptor *aml_dma_prep_slave_sg
-> +		(struct dma_chan *chan, struct scatterlist *sgl,
-> +		unsigned int sg_len, enum dma_transfer_direction direction,
-> +		unsigned long flags, void *context)
-> +{
-> +	struct aml_dma_chan *aml_chan = to_aml_dma_chan(chan);
-> +	struct aml_dma_dev *aml_dma = aml_chan->aml_dma;
-> +	struct aml_dma_sg_link *sg_link;
-> +	struct scatterlist *sg;
-> +	int idx = 0;
-> +	u64 paddr;
-> +	u32 reg, link_count, avail, chan_id;
-> +	u32 i;
-> +
-> +	if (aml_chan->direction != direction) {
-> +		dev_err(aml_dma->dma_device.dev, "direction not support\n");
-> +		return NULL;
-> +	}
-> +
-> +	switch (aml_chan->status) {
-> +	case DMA_IN_PROGRESS:
-> +		dev_err(aml_dma->dma_device.dev, "not support multi tx_desciptor\n");
-> +		return NULL;
+[1/1] dmaengine: xilinx: xilinx_dma: Fix dma_device directions
+      commit: e9cc95397bb7da13fe8a5b53a2f23cfaf9018ade
 
-And why is that. You are preparing a descriptor and keep it ready and
-submit after the current one finishes
-
-
-> +
-> +	case DMA_COMPLETE:
-> +		aml_chan->data_len = 0;
-> +		chan_id = aml_chan->chan_id;
-> +		reg = (direction == DMA_DEV_TO_MEM) ? WCH_INT_MASK : RCH_INT_MASK;
-> +		regmap_set_bits(aml_dma->regmap, reg, BIT(chan_id));
-> +
-> +		break;
-> +	default:
-> +		dev_err(aml_dma->dma_device.dev, "status error\n");
-> +		return NULL;
-> +	}
-> +
-> +	link_count = sg_nents_for_dma(sgl, sg_len, SG_MAX_LEN);
-> +
-> +	if (link_count > DMA_MAX_LINK) {
-> +		dev_err(aml_dma->dma_device.dev,
-> +			"maximum number of sg exceeded: %d > %d\n",
-> +			sg_len, DMA_MAX_LINK);
-> +		aml_chan->status = DMA_ERROR;
-> +		return NULL;
-> +	}
-> +
-> +	aml_chan->status = DMA_IN_PROGRESS;
-> +
-> +	for_each_sg(sgl, sg, sg_len, i) {
-> +		avail = sg_dma_len(sg);
-> +		paddr = sg->dma_address;
-> +		while (avail > SG_MAX_LEN) {
-> +			sg_link = &aml_chan->sg_link[idx++];
-> +			/* set dma address and len  to sglink*/
-> +			sg_link->address = paddr;
-> +			sg_link->ctl = FIELD_PREP(LINK_LEN, SG_MAX_LEN);
-> +			paddr = paddr + SG_MAX_LEN;
-> +			avail = avail - SG_MAX_LEN;
-> +		}
-> +		sg_link = &aml_chan->sg_link[idx++];
-> +		/* set dma address and len  to sglink*/
-> +		sg_link->address = paddr;
-> +		sg_link->ctl = FIELD_PREP(LINK_LEN, avail);
-> +
-> +		aml_chan->data_len += sg_dma_len(sg);
-> +	}
-> +	aml_chan->sg_link_cnt = idx;
-
-There is no descriptor management here. You are directly writing to
-channel. This is _very_ inefficient and defeats the use of dmaengine.
-
-Please revise the driver. Implement queues to manage multiple txns and
-we have vchan to help you implement these, so take use of that
-
+Best regards,
 -- 
 ~Vinod
+
+
 

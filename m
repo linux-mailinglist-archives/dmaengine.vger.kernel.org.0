@@ -1,165 +1,127 @@
-Return-Path: <dmaengine+bounces-9465-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9466-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yAoRITYyuWnsuQEAu9opvQ
-	(envelope-from <dmaengine+bounces-9465-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 11:51:34 +0100
+	id MKutNdIyuWnsuQEAu9opvQ
+	(envelope-from <dmaengine+bounces-9466-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 11:54:10 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8B832A8466
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 11:51:33 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BCF22A84D7
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 11:54:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E98BD30576E7
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 10:49:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id F1A7A3048EF6
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 10:54:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6837A237A4F;
-	Tue, 17 Mar 2026 10:49:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23D25372ED8;
+	Tue, 17 Mar 2026 10:54:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nivb1TaT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QIRi4GRD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E17365A1C
-	for <dmaengine@vger.kernel.org>; Tue, 17 Mar 2026 10:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F103036F409;
+	Tue, 17 Mar 2026 10:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773744589; cv=none; b=l87ZbgGnOdVRS91C7rV0TSHGEt1u4BpZrvu3glFIsiFOd6kkrU4ADH9qUbVz8EGvOCg/4tCQqPuv/0cBYhP31Df8dHcdZ0fJVWFQWCBG+/zHzs8h3D4XmU2xqwJtyauRZf2XnZ0XNrSnbRuw5Xq3iRN3ZhP2y2bn/HrYiLdm8Pc=
+	t=1773744845; cv=none; b=NMrmd42Y75iS+JWW4W3plRJBfuUrbOjhl7wJ1e6tFXzfyrjLrCYdmefcPYO4X1dVOfB7DZqLouYS1CMlxT5RcHCy4jNWh4TFkqoeTpZF9mP2bFG8kJWtmBMpyKmwkR9+f4b5sUnNolP6KYjFUVWwd+NqKvOQ1KkoIx4Ol1apiHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773744589; c=relaxed/simple;
-	bh=+cfs0t0LmSJY4mOioX92eiqEvpcsRdD7gJt43vu6FJI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mef0FnE8AgKpxe8ClRoo9HAyFwjkfqqxZIX6O5Wc+6xNIE9pk16lcCe1Y+pcJtqc/9CHjGc2vosRr3s5hGWzxbh1h9FQnO3L03myyHIGlmteNd4QjDs/7BvjCZSiB3munZ5Cxq+ALuqm+ZkBrVdDKrdNF4hOWuRD853d+zRbIPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nivb1TaT; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-35b97ed057cso1334207a91.1
-        for <dmaengine@vger.kernel.org>; Tue, 17 Mar 2026 03:49:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773744588; x=1774349388; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+cfs0t0LmSJY4mOioX92eiqEvpcsRdD7gJt43vu6FJI=;
-        b=Nivb1TaTLo/XQZgubyoOxkSYr4GN7Rt53d3YBsh3mCZnbxol7KhVwC2O0wZIbfX1V0
-         csubDAcOrdawvH6Igw93W2rIzaGdLcjnJJhUPRcJs1qOfB5r66RiDbGYWGWO2fJdr1Bz
-         D59zCMqFZB/oOOPhMrkwa1/tQ/WIK6ANEZefNGz4+c8VeHeTbD9D2AzuEjVii/3X37Od
-         Msxy4OjSO/zvWptB9aFSfmEvi3Vx3AM6BCbLSvPVoz9hRjykCIQeMQOcm9NQw6W8z902
-         QO/tnXQ+1UANvbXEcp32jxmgucsOP3xC+ZAkXsqqqYv9qz49h3ovCsxmldABJgoPkmKw
-         n/7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773744588; x=1774349388;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+cfs0t0LmSJY4mOioX92eiqEvpcsRdD7gJt43vu6FJI=;
-        b=BXIINzDe5q8TnR57c9WIJ1jGYE2SdSuoZ89k1wbSQ/742z1CMV/QDKxYpnI+0hhGOi
-         j76dbax6Nqdtj8yjaePTVTxD8JK1jGIVx1iq5FOXSFAFykAqoPpInh4ass95aX0hYTve
-         hnGlhkotgnOCyatwP5tozfrBKRSkt/2DDo1q0lT0l9kXWzXawKnMvo5Uw+ZusyYcbyDy
-         bmpx80jCYyfkOtBZr2StjwHiZxy2kWhg5dZaXzDiDRdYm5lOzohhWIjpvYu18rnRe2NV
-         ZsZWuZ0LKprAPPziFdsIMtlN6lU6DLqABmzzRmQXNLQ5kmWxovO2hPE7MIJAcZS5ZdQk
-         Js5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXYQJfJU64L/aAEU20ORh+3nvO6G2NvivNCjonRtJPN2tRP5CHr2qGEFTmnKdy8bNe3aqGabbTE/+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8gl8VzbX3H2PQPQs83mPzv4X0GNkMCeyBwuk5YH06UUShoCU8
-	6MIJL4Fftd4KknYkPeBu6QqYi2APPI9+iAGZj/rCuYzVREcoyG2LAkHH
-X-Gm-Gg: ATEYQzzOHmoPNAR3j6K3yyd4eVtdyTTEyLwOEUVgLxzwewJqfBA3zsQ6kQJUz1TA7WF
-	czU/gWXw9IkdGaH9e5JYJtorc7tKPD5egLaKuuyOH2nTacdVp/MVP9u6T9g9k95hwXWRT8lmckA
-	iR0pizNnJJg6B1ad3fsybG6uMa8FuJIgra4UbcsL/RNkpVxlqY0WRPnjyIG3ULy7cu54FyKCyko
-	otWwE3zSdFzGvpRuQBQbyK/sWNbGWp1lp+ZX0ep4hucTIehiY4NT1LzYKQfiaL7GeF59jVE1QJw
-	5eIoEGOF5OF2nOSm7F+R3pxExf1k4WU0F44hzFjnrMRmQQ7gsAu/fBxRAo9wsHJSKCmVZ4Ldgjg
-	YF9fiRMjDY5GGxN0+oQ4QplrMjJL3//5gD4M1btZCahN8YmKDsA+CJPe5HXq5nRyIXwEb5kpRWc
-	Z03IddhqtGeg1m/+wy8hTrfA==
-X-Received: by 2002:a17:90a:d408:b0:35b:a9f3:62ee with SMTP id 98e67ed59e1d1-35ba9f36aa5mr3331138a91.27.1773744587612;
-        Tue, 17 Mar 2026 03:49:47 -0700 (PDT)
-Received: from bsp.. ([2401:4900:54f0:3ab6:58b:9924:8921:710a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35badb90b8esm2529439a91.11.2026.03.17.03.49.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2026 03:49:46 -0700 (PDT)
-From: Rahul Navale <rahulnavale04@gmail.com>
-To: Folker Schwesinger <dev@folker-schwesinger.de>
-Cc: Rahul Navale <rahul.navale@ifm.com>,
-	dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	vkoul@kernel.org,
-	Frank.Li@kernel.org,
-	michal.simek@amd.com,
-	suraj.gupta2@amd.com,
-	thomas.gessler@brueckmann-gmbh.de,
-	radhey.shyam.pandey@amd.com,
-	tomi.valkeinen@ideasonboard.com,
-	rahulnavale04@gmail.com,
-	marex@nabladev.com,
-	marex@denx.de
-Subject: Re: [RFC PATCH] dmaengine: xilinx_dma: Fix per-channel direction reporting via device_caps
-Date: Tue, 17 Mar 2026 16:19:32 +0530
-Message-ID: <20260317104933.4846-1-rahulnavale04@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <DGHGTCJRRZCW.9TGXQW44V6RR@folker-schwesinger.de>
-References: <DGHGTCJRRZCW.9TGXQW44V6RR@folker-schwesinger.de>
+	s=arc-20240116; t=1773744845; c=relaxed/simple;
+	bh=DuQCBEOmmBF6B5LP0Nv10h8KXlh7YJZD1iVQVy7vzTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JBBPbW3H2E1GUCm6DA0haYsv2FZlFBLR/AnpL7nF2WWe4u1IlnIgKl62QUtLcAmqHhrmTFLqf1cCqyOfyma+u6RYAXa2nov7PBdsR6pAah7I+aytbvCKuLbsjgWrqreYOq/2TSUFCKkg3OfKKZhoujsjLHuPdiaefGDHlKAbFeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QIRi4GRD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F021CC4CEF7;
+	Tue, 17 Mar 2026 10:54:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773744844;
+	bh=DuQCBEOmmBF6B5LP0Nv10h8KXlh7YJZD1iVQVy7vzTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QIRi4GRDpfc3Zk8Pp+i8sH5HzuCSgJ4kZPb2MRhXU/VZDHkr785/sFCaWEdDVJQrF
+	 WgdLcztVjm8/Cie/tj0N6WqRbJtz9L1jvztzVzGLlzYMDBhB65oj5K7GAPKBBtQgjm
+	 07nX7g+ahq2/6/jal+mxGd2fqS9Uq8K49CDzgS6nlQlDQY4oF0oaxc453KIB/cmVqZ
+	 lz86r+7kctbckyO9wXT5LduslAKPWCuqHlZxkAcpGAHw+iOvUdVNVZXcvtdYUGC7Ll
+	 dgdzjDRmDO9eBOu/BsLkCWKq3BRcU2JP+GgET6mF6cAbWYkN2lLzUgr622GB8OiURK
+	 B0U8Rf2lMk+vg==
+Date: Tue, 17 Mar 2026 16:24:00 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Sumit Kumar <sumit.kumar@oss.qualcomm.com>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Veerabhadrarao Badiganti <veerabhadrarao.badiganti@oss.qualcomm.com>,
+	Subramanian Ananthanarayanan <subramanian.ananthanarayanan@oss.qualcomm.com>,
+	Akhil Vinod <akhil.vinod@oss.qualcomm.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	linux-pci@vger.kernel.org, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/3] dmaengine: Add multi-buffer support in single DMA
+ transfer
+Message-ID: <abkyyBxSnwZWAt4-@vaman>
+References: <20260313-dma_multi_sg-v1-0-8fabb0d1a759@oss.qualcomm.com>
+ <20260313-dma_multi_sg-v1-1-8fabb0d1a759@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260313-dma_multi_sg-v1-1-8fabb0d1a759@oss.qualcomm.com>
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[ifm.com,vger.kernel.org,lists.infradead.org,kernel.org,amd.com,brueckmann-gmbh.de,ideasonboard.com,gmail.com,nabladev.com,denx.de];
-	TAGGED_FROM(0.00)[bounces-9465-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rahulnavale04@gmail.com,dmaengine@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-9466-lists,dmaengine=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[dmaengine];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,ifm.com:email]
-X-Rspamd-Queue-Id: D8B832A8466
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4BCF22A84D7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Rahul Navale <rahul.navale@ifm.com>
+On 13-03-26, 12:19, Sumit Kumar wrote:
+> Add dmaengine_prep_batch_sg API for batching multiple independent buffers
+> in a single DMA transaction. Each scatter-gather entry specifies both
+> source and destination addresses. This allows multiple non-contiguous
 
-Hi Folker,
+Looks like you want to bring back dmaengine_prep_dma_sg() see commit c678fa66341c
 
->Just to double check, and to make sure the regression you're seeing is
->not a combination of any additional, yet unknown side-effects, could you
->perform one more test?
->In dmaengine_pcm_pointer() (the function we just patched), could you
->replace the call to snd_dmaengine_pcm_pointer() with
->snd_dmaengine_pcm_pointer_no_residue() while keeping 7e01511443c3 active
->and test if this fixes your issue or not?
+> memory regions to be transferred in a single DMA transaction instead of
+> separate operations, significantly reducing submission overhead and
+> interrupt overhead.
+> 
+> Extends struct scatterlist with optional dma_dst_address field
+> and implements support in dw-edma driver.
 
-I have performed the test (replace the call in dmaengine_pcm_pointer()
-function of provided patch) while keeping 7e01511443c3 active.
-I see issue is fixed audio is working with this.
+If this is memcpy why are you talking about dma_dst_address which is a
+slave field?
 
-Hi Marek,
-
->I came to the same conclusion, that the residue handling is broken in
->the xilinx DMA driver for cyclic transfers, and the fix is below, with
->two extra fixes in top:
-
-I have tested the provided patches the audio is not fixed with this.
-
+-- 
+~Vinod
 

@@ -1,135 +1,185 @@
-Return-Path: <dmaengine+bounces-9476-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9477-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EFmRHt47uWkowQEAu9opvQ
-	(envelope-from <dmaengine+bounces-9476-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 12:32:46 +0100
+	id eJM0Cz1IuWmK+QEAu9opvQ
+	(envelope-from <dmaengine+bounces-9477-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 13:25:33 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ABEA2A8D96
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 12:32:46 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52A022A9CE5
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 13:25:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CBF3930E537F
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 11:28:33 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 245AF3009811
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Mar 2026 12:21:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 746353ACA54;
-	Tue, 17 Mar 2026 11:28:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C32C83C140C;
+	Tue, 17 Mar 2026 12:21:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rItg2e/A"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="26tTFzcf"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012061.outbound.protection.outlook.com [52.101.48.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426C53AB275;
-	Tue, 17 Mar 2026 11:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773746912; cv=none; b=toa6rXo2KPdPR4CaZwriJxqzqkhV8QNH3S2pcHOd9ZiteahpZ7/nZPzAW5zw+v/Q/+oIuhN2qc3ghV+BQAQk+4vX1zLhZB+fOiJxi0RcyJ3l2oddPRWIvbeJkMHJlir91Sz/wVRH2RxcLkRuKRQMDteCteh1sDWx6gRJliEf4Kk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773746912; c=relaxed/simple;
-	bh=7MS7Odatrc28GGahSuXodA1j4BTKHK8U6ebok7EBrOk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NyH5VoSJ2q4zkVuT7nlUobsxFqwwX5iikMROA0Q7zF6V/zXF7IH126jl0sDEUzgaDD7T5oIo9OJekyisnsGa43px6/ZTZiyZfKDF4dOrD4San3we6ZxozGxiB2nYJ6VcEOj+6qM+hNrgRM6L+GKm+vxiydBwr8bdfhKyMtwpang=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rItg2e/A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C054C2BCB0;
-	Tue, 17 Mar 2026 11:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773746911;
-	bh=7MS7Odatrc28GGahSuXodA1j4BTKHK8U6ebok7EBrOk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=rItg2e/A04b4BF/9+cTtBd09SDdhWHkS0liklWLHDbem8dG1pEppzQxNAUUfE00iv
-	 zBgkmuGMYep+Cw4deHFSo0I8XM3uPh+THS4aRmrRVJwGIYjBTMWRlQZXNwn9VEPH/O
-	 JdKLffEtgWrePG9lF8QGE3db1/TSwD0zaOfZgh0+Kk32p9uKJTvVBJvRtuATaTSHNV
-	 k6oTmoBLTm3YJiqHVH/9rQjCIQQNqglOFElKfX+KXdpihr3uvf6SBBHMBwftnuL+p6
-	 /1Q6uL24MUCkksGOZwGJejV/zevX09JHrw1WGWmyR5VCQWyzHlT3BlgIRwOHvr5P+K
-	 Fak4HUVfNsx+A==
-From: Vinod Koul <vkoul@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
- dmaengine@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
- Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
- loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
- Keguang Zhang <keguang.zhang@gmail.com>, linux-mips@vger.kernel.org
-In-Reply-To: <cover.1772853681.git.zhoubinbin@loongson.cn>
-References: <cover.1772853681.git.zhoubinbin@loongson.cn>
-Subject: Re: [PATCH v4 0/6] dmaengine: Add Loongson Multi-Channel DMA
- controller support
-Message-Id: <177374690827.337210.13271036907193844178.b4-ty@kernel.org>
-Date: Tue, 17 Mar 2026 16:58:28 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4683AE1A0;
+	Tue, 17 Mar 2026 12:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773750103; cv=fail; b=oW6xxNAc7Wb8hRVjwO7j/6jTN3db1GrE2ULmu9InTkAWX7h9z7FCXINabxHrKDJlKSVSEgXJ97jHoeEthLCCHQrCJRSwPW9bXWQ0mPnQjdJCQhzn9Tak/bzM4oPlr+FX/S2N6YipI96jitrvE70ZY+H79XFc7+NjllpFp6U2qTQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773750103; c=relaxed/simple;
+	bh=AuCUE/15uADoSCaJGN/wU3X7Hk9wMJtRjHRJQMgZFbA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hBIh36XVEXyksaQxlxBUO9Q75b1HNr7vouDzxh1w4UKUaftRTlL3x2A6VyVQnMX5084DvrqmLbKqySBY/kfIzr8apjW+01BwhPgJnoT1bP731r0oAq1JMRzl7o+pbhuu3d5A1IQHBKJf5hjDq7b5M8pV5pRYE6l+VU23jUJK54c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=26tTFzcf; arc=fail smtp.client-ip=52.101.48.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kbRr3Gvr01QrQuRZCL9x7JXYhFL7Bbfn2GMEtjS8RjOffnoQRvhlDb54utdUDRJSO/AbCUvGkd6PQY/MkiXbsNmXZ1wQUsMjTx0UTEPbCNZ+CTnSZf6g7psrKcGj38F5HbSkyefOqxg07yYWUsMwu7hSiTP3JiZLd26KLoFmEcAxOnoL5Le2OzqcEFi8Cek5L/jqLoxpIJ903nOQ7/npvu3s29XJCaVKDIXdXFv2iO82SXzo4hKUL3t6JL3huYjurcJNDR8RmwMs+cyas91v8iuKNyWZeOthOkg0GgBxJldsvWFBqL0bb8mpUbdEBhidAd6RUGcPFaB3ws+KVK2ifQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DlTazOwjVb+ojB+pLrAYtyPxcvaEgPH+S/kJyPYKgkA=;
+ b=xjtd/sQNgURNdTlpG2Ow5Fztx78Ypc/DPX5cTFQxoc+1uOKHXN1QGoeKqUu7q+o/AO2UClskp4SGhiNusKJ8VWKM4AmI9L+x0oYFLSgEFbidUz3YxbovedG0SiOUhpJF/SxQKh95Yo7LElFsdRBZ8iSNIWVhh0zaaDpX7E/Y7iBA83bE71CMlFhN210QILoCMnWEVBHO10AFF867jc3TzJq40f98gquT+uy1xlelpsRcsjOlluYLS/dzhQezBHKSmXE4o+JX/a9mZBOXnPU7Zdp6H71HhPfwicC6cEo/JI140tJeZlSn7KqWvcpW9/yP1ErxD1ZIBzsMjP3cylQbPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DlTazOwjVb+ojB+pLrAYtyPxcvaEgPH+S/kJyPYKgkA=;
+ b=26tTFzcf6dlkKEcVrgZcnP7pXLi4Ud9/KYcUS44BOHTMctwuT9u92vbbTpyn5BgMPwCIgQFaaMbhzmH5vKcOrdVV9UW1WTYW9gL9psLU7MxwPwyT9VDiHRgV5QaWqIBheXjnOy7QdnzaIU13euyAaEvrGN7+E25/nWJn3q+VhNs=
+Received: from BL1PR13CA0115.namprd13.prod.outlook.com (2603:10b6:208:2b9::30)
+ by SA0PR12MB4416.namprd12.prod.outlook.com (2603:10b6:806:99::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.19; Tue, 17 Mar
+ 2026 12:21:39 +0000
+Received: from MN1PEPF0000F0E0.namprd04.prod.outlook.com
+ (2603:10b6:208:2b9:cafe::86) by BL1PR13CA0115.outlook.office365.com
+ (2603:10b6:208:2b9::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9723.19 via Frontend Transport; Tue,
+ 17 Mar 2026 12:21:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ MN1PEPF0000F0E0.mail.protection.outlook.com (10.167.242.38) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9700.17 via Frontend Transport; Tue, 17 Mar 2026 12:21:39 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 17 Mar
+ 2026 07:21:38 -0500
+Received: from xhdapps-pcie2.xilinx.com (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Tue, 17 Mar 2026 07:21:36 -0500
+From: Devendra K Verma <devendra.verma@amd.com>
+To: <bhelgaas@google.com>, <mani@kernel.org>, <vkoul@kernel.org>
+CC: <dmaengine@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
+	<Devendra.Verma@amd.com>
+Subject: [PATCH v14 0/2]  Add AMD MDB Endpoint and non-LL mode Support
+Date: Tue, 17 Mar 2026 17:51:33 +0530
+Message-ID: <20260317122135.130474-1-devendra.verma@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E0:EE_|SA0PR12MB4416:EE_
+X-MS-Office365-Filtering-Correlation-Id: 46eb66aa-86a5-412a-a962-08de841fbd9b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700016|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	B82n0SYDaSlmxVQiwK4gPAhOfTHC7mId+ydu5KfI4t0ZsqO37JgwWh+nyvMmv1PksJDhMmb7WQXiDBdEBZM6Z24We5qLZUxw3n40a75TmgmRH7xpBsJAoQKUQKMjsq2GTAT1HQT9NdVyqKOnEShG4A479r1VrOnLoBHu2xl/lyFpXUjx0+w9jPhAO8ZYKggj4dmO/hadZz7SJ+aheizUcArUwI2AQNPwxsqDRZUxOOS+E0CDHNMoqV1scTLzZgnS8isugtFJTkZoc7nQMD41+SrvzZEhRbcSqRPUl0h9ghwj4O8fdvEIoriK0LreDURbQo+cjTdg5fuxZ97VJLfhLnnmhsLJ1dPU0xStlPTN+m8D+vHJhy7OcLQ7edSAuXuDxEYxU5YLYKaD4l/FHIw+t6Yy6FEHCaRqDwdRIYULcUmzYBSmZgF9CyW5iEi5AEHdIUASeVxPXGi4K2I5UCqK/HWvmpjWQAOPcDQBRnItiwEeyv8bHr/2Nn1xCtjJM1kW8SJ7xmdZ2OwtkHFSM4egVadwBe2Js3YnNnOQvJKZHMBF0RCF4xvEyvZvW/JB4mesOSwY1KcKIDpiBLg2nrsY/mlvxtGgD0FrirZ3VlfleJDlPzp1hXO5nw39Wz/Bqu6GZLhc/lcJkeJjT5yNR0E2YTnzBZoYrRj+uD2mAeyjDzRWHVEuYovhem2C7b2rRPilYpIsfuoYUc4ClmS7FmmvmSGqtDw2Ens0sbB0CyLP/5TD8imObvry9CqLMLo1JlDPnTasKCy2C47/HtwUwhhExQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700016)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	/8TynYKyG09uUcD6WgynYH4FNkGWG4QNzsmFsaq63FYA6lz+okvxa7rWUc97jZg7pkp3fCXseXwncIfXC9rkzuibRjqpuQcQiw1azdCl5ZZwa2YgiapWxlMJbazAzSM/sKSG9eX+PQTEC0z+j1+weYTIKso6TKeV8sWPBJ19MRjtBPFXkS5w0gTnxZY88rxNUEVozvQbBz9OSnnnNvY2RJXZZJGoe+kgcvtiAfrm9rHNF2BGnWGCdyCopFwqN41rJ7GP+YJFrZmldwWTIy61FExBFmipp5C/UVBIZQ51LBdimoXygR3SDhP3Vay3BmYmoW6B94y7rZOvH0SxPaLWfd3WUIovcUwVdLMs8R5Rm8+m+tFxVn/y8Jzv+qRKYgdYIg36hKH0TKc6wzkmjLgjObsRn8YBra5/ISwRiQCMQBLmIEKFY/dincq/DYYwTkAO
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2026 12:21:39.2707
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46eb66aa-86a5-412a-a962-08de841fbd9b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000F0E0.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4416
+X-Spamd-Result: default: False [1.34 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9476-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org,vger.kernel.org,loongson.cn];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,xen0n.name,lists.linux.dev,vger.kernel.org,gmail.com];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[amd.com:+];
+	TAGGED_FROM(0.00)[bounces-9477-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:dkim,amd.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
+	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1ABEA2A8D96
+	FROM_NEQ_ENVFROM(0.00)[devendra.verma@amd.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCVD_COUNT_SEVEN(0.00)[8]
+X-Rspamd-Queue-Id: 52A022A9CE5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+This series of patch support the following:
 
-On Sat, 07 Mar 2026 11:25:09 +0800, Binbin Zhou wrote:
-> This patchset introduces the Loongson multi-channel DMA controller,
-> which is present in the Loongson-2K0300 and Loongson-2K3000 processors.
-> 
-> It is a multi-channel controller that enables data transfers from memory
-> to memory, device to memory, and memory to device, as well as channel
-> prioritization configurable through the channel configuration registers.
-> 
-> [...]
+ - AMD MDB Endpoint Support, as part of this patch following are
+   added:
+   o AMD supported device ID and vendor ID (Xilinx)
+   o AMD MDB specific driver data
+   o AMD specific VSEC capabilities to retrieve the base of
+     phys address of MDB side DDR
+   o Logic to assign the offsets to LL and data blocks if
+     more number of channels are enabled than configured
+     in the given pci_data struct.
 
-Applied, thanks!
+ - Addition of non-LL mode
+   o The IP supported non-LL mode functions
+   o Flexibility to choose non-LL mode via dma_slave_config
+     param peripheral_config, by the client for all the vendors
+     using HDMA IP.
+   o Allow IP utilization if LL mode is not available
 
-[1/6] dmaengine: loongson: New directory for Loongson DMA controllers drivers
-      commit: ffee2dc04e7e06534aaa4fd51ef89645b809b6b8
-[2/6] dmaengine: loongson: loongson2-apb: Convert to dmaenginem_async_device_register()
-      commit: 7d348227f4961bbf21255281438ee3aebe12830f
-[3/6] dmaengine: loongson: loongson2-apb: Convert to devm_clk_get_enabled()
-      commit: bdf1621a6a67b6327e2a26a1d47bffcde3be3b26
-[4/6] dmaengine: loongson: loongson2-apb: Simplify locking with guard() and scoped_guard()
-      commit: 9de4303fc04977d15b257726a6519caca687c43a
-[5/6] dt-bindings: dmaengine: Add Loongson Multi-Channel DMA controller
-      commit: 7a65e81e8e2e58b0db9f2dedda410ee2b6042859
-[6/6] dmaengine: loongson: New driver for the Loongson Multi-Channel DMA controller
-      commit: 1c0028e725f156ebabe68b0025f9c8e7a6170ffd
+Devendra K Verma (2):
+  dmaengine: dw-edma: Add AMD MDB Endpoint Support
+  dmaengine: dw-edma: Add non-LL mode
 
-Best regards,
+ drivers/dma/dw-edma/dw-edma-core.c    |  47 +++++-
+ drivers/dma/dw-edma/dw-edma-core.h    |   1 +
+ drivers/dma/dw-edma/dw-edma-pcie.c    | 220 +++++++++++++++++++++++---
+ drivers/dma/dw-edma/dw-hdma-v0-core.c |  64 +++++++-
+ drivers/dma/dw-edma/dw-hdma-v0-regs.h |   1 +
+ include/linux/dma/edma.h              |   1 +
+ 6 files changed, 312 insertions(+), 22 deletions(-)
+
 -- 
-~Vinod
-
+2.43.0
 
 

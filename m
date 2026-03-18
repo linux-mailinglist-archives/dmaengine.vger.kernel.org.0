@@ -1,89 +1,91 @@
-Return-Path: <dmaengine+bounces-9513-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9514-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0MMVGpDaummfcgIAu9opvQ
-	(envelope-from <dmaengine+bounces-9513-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Mar 2026 18:02:08 +0100
+	id pOW+Ivcvu2m0gQIAu9opvQ
+	(envelope-from <dmaengine+bounces-9514-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 00:06:31 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B5332BFD49
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Mar 2026 18:02:08 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D759F2C3B8A
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 00:06:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1429334BBC88
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Mar 2026 16:51:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 65BB6303660D
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Mar 2026 23:06:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D6EF330B2E;
-	Wed, 18 Mar 2026 16:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 135D92F60A7;
+	Wed, 18 Mar 2026 23:06:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBJ/cV6b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0gYWQl6"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-yx1-f50.google.com (mail-yx1-f50.google.com [74.125.224.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2CE2BDC2F
-	for <dmaengine@vger.kernel.org>; Wed, 18 Mar 2026 16:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B0321FF4D
+	for <dmaengine@vger.kernel.org>; Wed, 18 Mar 2026 23:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773852489; cv=none; b=AWoGOaIjU0/6eKj8fb4YYvbxnurJgjRAhANt5TQM1rc58E1fGfgBj7oYF7EZwI/cRDjw+JsAVEJNfXSq6VGgPiD7HYRBDDZQ+2Ut7lIK/b1IlWtPS0m0z0vG9dFw+MUjty+ET91q0ox5D2NBzl1rYkAqJzb+vUsMcqgEYgNgXdo=
+	t=1773875188; cv=none; b=gUJmPnuMUylpBI/fFwpNG+0lJ6ROLLOIOjdU8wape5SlOqWlJhFl+t8/+aDQ7VuMT5xXHEx9z2/ODDHmrpx4Z8MblyXiNrLSdMEBIkT8iiGWULUjvdWbEFB0/QmThxfaRIDrQftAicocVJDdAe2ffpK3QTmkc9gpih8FWXTXPFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773852489; c=relaxed/simple;
-	bh=/O1PKW0L6llEilKfOZWfVaU+Et5UNzTSKi6mhZOaZOU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N0DfMOT7JGkdl3z8OcDeOjobaPbXozMYffcWR60Z712oejiML5BAydSOGLHuLFh2HjRV7uR5P3q5G6kwaBd0g1VLOZk6ozNrHlOTbGbpACoo1KW3FaxTCnsgXx7pOj6293cLkmudGwwLN8NsKQpeYTNi8Gm3STZUwpsKeINvnNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XBJ/cV6b; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1773875188; c=relaxed/simple;
+	bh=WkDwWR97uPMYr198IbrL+66YAHoGZpqK3oLNIHB2518=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PLJ6QzpHBdwB0hjC7BCMFwzVvdMwmwC5vB3T9JyUXmbNACYNFwJ/Ee2uiyST0C5mtmuCVUAc3Q9H8sXMtV5vay0CgO/twX5ZmTUZv5vfRP8CWTFQTI5trmIKCleSSIrpqF9k9mvqQRSA9eJKiOsoA7aodXY/F4ElKWxso7rkCfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q0gYWQl6; arc=none smtp.client-ip=74.125.224.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-48628ce9ab5so608325e9.2
-        for <dmaengine@vger.kernel.org>; Wed, 18 Mar 2026 09:48:07 -0700 (PDT)
+Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-64e8c7f5082so41811d50.0
+        for <dmaengine@vger.kernel.org>; Wed, 18 Mar 2026 16:06:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773852486; x=1774457286; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773875186; x=1774479986; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2vSQKqx5ovXKn98lQU5Bj5tW5n+VoVpdWli+lGVZHY8=;
-        b=XBJ/cV6baJ1AF3W0Ijyhrqrj2SjejcI4RU9BelMGXL+v891/Fjz3FVZqiyGclNq6oT
-         1dRmlEcUscpL71Gn7hcIjWUi2mjVdxq2HCL2BCSejcpXtCUdiiCDhatEVgBPH9vEVvYb
-         spKf87ksLUQElSlQ0WA3KmRi8SGMjpxXx1BAoCfuc4MPjKoz3IYajXZVn+nUu14fyzmf
-         h04tXdYW+Mgr0cYpMW9yQp4oSZjTH83G7fZr3yLxnWM+b36EaVjgkA053lpghbbW7V+g
-         kWYI5umZ3xEvdgnea35MBoKh/B0KTCiuftmX4n32PaG/EV+PBJVWhKgqScILLZRWEMg4
-         2q1w==
+        bh=pka3MFbB++QP8Jn1PcZH7W5IZI1eMirz9wRTwsjleEg=;
+        b=Q0gYWQl60KkVSDw4+euR7P5czFfdjUXUFOuouGZJbarO9HKIcKDT/eDzqd5p53nbBS
+         vFxrpgmKmzAgdZuKcLZHE2mbI06bDj2OeTaSLM+ztucODzO0x3h5G21PRVth6kiOUoqf
+         4trB0vcZ0VkNKEYTKNaLyTUjHsRHna4QiWolB69agYdNexcmY6JEJyg0vmBCDZ9TxX5F
+         l5uAW1P2wrcoPE2tWv2iEQbOcMcQDvtH9yu22u+oD2ZJ8SoQ2kJ3PZuHVD8SG0GAYBKu
+         1ij3LuZ9wC3C2C39am0Ri9OJuwKS3JzMsvaRamin/9A62Oat3B0gHH22udCvx7aV5zOk
+         DvJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773852486; x=1774457286;
+        d=1e100.net; s=20251104; t=1773875186; x=1774479986;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2vSQKqx5ovXKn98lQU5Bj5tW5n+VoVpdWli+lGVZHY8=;
-        b=TTTpzBmTnL0ALd85zpSa7eSsDwUDIE+8zV73G2x2LXX13mKTlmK9ELycKQblCFrgZB
-         RAKdek7NvFc9cEbpuX/ukiZ5XVtbndxyKTRsXraucdKu4UyBX1+JpeLVo6Sze+M8qt+n
-         /wEC65Pd/ODizdeZegRn1iSarGN9tMoLKxgHQQyz56PuNefTiVlxuW4Lva3wFfCDZ3hn
-         8myue5FPDnLs4KJCJpYMdrqzFLpWMyP8rQ/poyXyzcHTEql40IXM0rJPIUJDife26WgU
-         4iJCL9SxA5uLYe74roSDZREsEpV8sJS2EAlwklhsVWYg3WA0cTgX5Atinjvi1iPHrlMr
-         pg4g==
-X-Gm-Message-State: AOJu0YyyLzz1D5AhMRf3rkKji0RIuoUUqZuqphT4Dfs7Vk9DU2J1IL4X
-	vBo7Ah5BVqIjRPOrNo8LUdJGb+pCziJwM6NeuIwbapWWZC3ysiy8O9yVFTaPOnKz
-X-Gm-Gg: ATEYQzweY2dWyat3/sqzJ8Stw+ulzf7Lc+mx2XbJoDDqXWzz3JvvcOocXHxxUNXwOF0
-	9DFeHc8wzhjZZ5IPJbxvx2xsf8UuoHJpzuRBQvLdy/ZJo5pj4PSv4rahYWbdY6NjG2tFz9chaJJ
-	HmKca6AaWtQLkTRaHjtIiAM8ecLsbqBMZRBFEDCyAPds7o3S+HxfUUkDMIH4AyhPUOVmR68xHje
-	69AcY6dWYqFIOTJsWZJ2fsLUf4L6+wYzZpcW3aJzTV7cy57JHGysIZS4pRyGXSdSFnpu9MRAH7I
-	qbuyLMe7Et5c1B9+CtBdKrRIL0DygXqQIYrOegS/3CtRlCtKc0Xmag8hM++DE1FBWCaxHroMUT4
-	48bnBpcoTKRAhrsNUztClJQo81nz5cV8x9hx57Lb0Vhq/xCSi3YOpqfW8SO6yNINlbITqVBhguy
-	YFOXze/BZCYt67wr2ePa8VWLPNJHXmQ5/qTfKD9EajHS96+eMF+wDLwDIScPTvUpptk1V/ZTZ+n
-	ucfMHS+UrKrG83EW3PrwGk=
-X-Received: by 2002:a05:600c:4c95:b0:485:30d4:6b9e with SMTP id 5b1f17b1804b1-486f446d013mr46192455e9.21.1773852485819;
-        Wed, 18 Mar 2026 09:48:05 -0700 (PDT)
-Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486f8c292e2sm2812185e9.2.2026.03.18.09.48.04
+        bh=pka3MFbB++QP8Jn1PcZH7W5IZI1eMirz9wRTwsjleEg=;
+        b=gx9gvOpa/EPH1CCORn2KPrUVc7/ROnadOwBXO68p14Y5tuyLraZzSSOTh4jO4AM6wA
+         djU9PcSq64yj7qqBan4CphaJLJqpjbt2njVpJy8vvjJJrNmm720PuXFRElQn8mwlNhO6
+         Ukq0YkMs1Tf1CEYZKqIjFyJz2cH2bJ0gP/vL9UMIUbKXreHfVouP4KYsv/l5mjV6kQq1
+         90NmRRUwY/0FPMofzwx1eW6bu96xPOOOIucnC2dIcLjDGGMooCnP3U4bqRD2Gb13HLEy
+         sEQolMlVjXgQkvuKsOCGixADs47w87BR1BdThH5rFCmahYabe7Ok22KV1qm2Hs6zzNGO
+         qYMg==
+X-Forwarded-Encrypted: i=1; AJvYcCXKthPhHtncrgiBlTar+mxDZPxfH6rmlNe3f0bmOo/Ew6OcvJMSOrGUYf4eRZkAihedry3HIdweUUY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSphm4PQvz70pnUydsjxIY74gLP7Kpwc1FAhzIAgMIBhhv6jLx
+	Jb2S1kwVZps7eJWsK9ye0erR7QvXUWZmN5SWq1rIOXkJDXvITTBhg9+1
+X-Gm-Gg: ATEYQzwiXBCWH7EbiFoJuvYMzKV62VBf1yfsU9IWyCrz1mxIZ8PDTzR4u8I7aE/QwSE
+	fKX5ZKO1WHaDvB2Ix7BYeXiMCE324SBGDws1scD3acQfUo6svuLNemK+Bj4ZU7/tEXu8fesRN+f
+	dE/G6xdqDvDTUMSlH5y6nmH8Z0CK9q/+BHGA2S88zw0k4pbhNcUw6JK4UdmColMH8rhyiq0KYSY
+	3m91hhlnXlVBBe/ZapA5a4i7wLem9Db9L/+Daya3w8WwsoMzBMTDmMaNTlt9FXvngCvLR85DTTx
+	clnGnaeCs7eFNICMjygcJSIDrm95k07kBZpFRl98M5t4V0uA0qsUqzzKbCFYbLGNwHDgCwMDTpH
+	05az38qnzVhT3jT3uMGgT76cMaeJHyXQ4p3NiZBTm+XOGv6+Ag7jofskJYCgtzrNxggFLshbYWW
+	PxCAgYbxZGnzx3XUdMARx9/V1/gN9ckZwImtanoWCm/LwyMr8m9a0kvkvD680IPAD2QsHowCEWR
+	TYFE9TewxAsVVrkwvrFtKpm
+X-Received: by 2002:a53:b74f:0:b0:64c:a0eb:c4b5 with SMTP id 956f58d0204a3-64e9157c04dmr4140506d50.52.1773875185723;
+        Wed, 18 Mar 2026 16:06:25 -0700 (PDT)
+Received: from tux ([2601:7c0:c37e:2360::f769])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64e91bba0c9sm2481644d50.13.2026.03.18.16.06.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2026 09:48:05 -0700 (PDT)
-From: David Carlier <devnexen@gmail.com>
+        Wed, 18 Mar 2026 16:06:25 -0700 (PDT)
+From: Ethan Tidmore <ethantidmore06@gmail.com>
 To: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Yingkun Meng <mengyingkun@loongson.cn>
-Cc: dmaengine@vger.kernel.org,
-	David Carlier <devnexen@gmail.com>
-Subject: [PATCH] dmaengine: loongson: loongson2-apb: fix broken bus width validation in ls2x_dmac_detect_burst()
-Date: Wed, 18 Mar 2026 16:48:03 +0000
-Message-ID: <20260318164803.14351-1-devnexen@gmail.com>
+	Vinod Koul <vkoul@kernel.org>
+Cc: Frank Li <Frank.Li@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ethan Tidmore <ethantidmore06@gmail.com>
+Subject: [PATCH] dmaengine: loongson: Fix signedness bug
+Date: Wed, 18 Mar 2026 18:06:23 -0500
+Message-ID: <20260318230623.1084926-1-ethantidmore06@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -93,74 +95,74 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-9513-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com];
+	TAGGED_FROM(0.00)[bounces-9514-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ethantidmore06@gmail.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnexen@gmail.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	NEURAL_HAM(-0.00)[-0.924];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[dmaengine];
-	NEURAL_HAM(-0.00)[-0.962];
-	RCPT_COUNT_FIVE(0.00)[6];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 0B5332BFD49
+X-Rspamd-Queue-Id: D759F2C3B8A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The bus width validation check in ls2x_dmac_detect_burst() compares raw
-enum dma_slave_buswidth values (e.g. 4, 8) directly against
-LDMA_SLAVE_BUSWIDTHS, which is a BIT()-encoded bitmask
-(BIT(4) | BIT(8) = 0x110). Since 4 & 0x110 == 0 and 8 & 0x110 == 0,
-the condition is always false for valid bus widths, making the
-validation dead code.
+The function platform_get_irq() returns negative error codes and
+lchan->irq is an unsigned integer, so the check (lchan->irq < 0) is
+always impossible.
 
-Additionally, the logic was inverted: it rejected configurations where
-both widths matched valid values, rather than rejecting when neither
-width is supported.
+Make the return value of platform_get_irq() be assigned to ret, check
+for error, and then assign lchan->irq to ret.
 
-Fix by wrapping the enum values with BIT() before masking (matching the
-pattern used in sun6i-dma.c) and inverting the logic to reject when
-neither width is supported by the hardware.
+Detected by Smatch:
+drivers/dma/loongson/loongson2-apb-cmc-dma.c:677 loongson2_cmc_dma_probe() warn:
+unsigned 'lchan->irq' is never less than zero.
 
-Fixes: 71e7d3cb6e55 ("dmaengine: ls2x-apb: New driver for the Loongson LS2X APB DMA controller")
-Signed-off-by: David Carlier <devnexen@gmail.com>
+Fixes: 1c0028e725f15 ("dmaengine: loongson: New driver for the Loongson Multi-Channel DMA controller")
+Signed-off-by: Ethan Tidmore <ethantidmore06@gmail.com>
 ---
- drivers/dma/loongson/loongson2-apb-dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/loongson/loongson2-apb-cmc-dma.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/loongson/loongson2-apb-dma.c b/drivers/dma/loongson/loongson2-apb-dma.c
-index aceb069e71fc..102c01f993ef 100644
---- a/drivers/dma/loongson/loongson2-apb-dma.c
-+++ b/drivers/dma/loongson/loongson2-apb-dma.c
-@@ -220,8 +220,8 @@ static size_t ls2x_dmac_detect_burst(struct ls2x_dma_chan *lchan)
- 	u32 maxburst, buswidth;
+diff --git a/drivers/dma/loongson/loongson2-apb-cmc-dma.c b/drivers/dma/loongson/loongson2-apb-cmc-dma.c
+index 1c9a542edc85..2a702de8063c 100644
+--- a/drivers/dma/loongson/loongson2-apb-cmc-dma.c
++++ b/drivers/dma/loongson/loongson2-apb-cmc-dma.c
+@@ -673,9 +673,11 @@ static int loongson2_cmc_dma_probe(struct platform_device *pdev)
+ 	for (i = 0; i < nr_chans; i++) {
+ 		lchan = &lddev->chan[i];
  
- 	/* Reject definitely invalid configurations */
--	if ((lchan->sconfig.src_addr_width & LDMA_SLAVE_BUSWIDTHS) &&
--	    (lchan->sconfig.dst_addr_width & LDMA_SLAVE_BUSWIDTHS))
-+	if (!(BIT(lchan->sconfig.src_addr_width) & LDMA_SLAVE_BUSWIDTHS) &&
-+	    !(BIT(lchan->sconfig.dst_addr_width) & LDMA_SLAVE_BUSWIDTHS))
- 		return 0;
+-		lchan->irq = platform_get_irq(pdev, i);
+-		if (lchan->irq < 0)
+-			return lchan->irq;
++		ret = platform_get_irq(pdev, i);
++		if (ret < 0)
++			return ret;
++
++		lchan->irq = ret;
  
- 	if (lchan->sconfig.direction == DMA_MEM_TO_DEV) {
+ 		ret = devm_request_irq(dev, lchan->irq, loongson2_cmc_dma_chan_irq, IRQF_SHARED,
+ 				       dev_name(chan2dev(lchan)), lchan);
 -- 
 2.53.0
 

@@ -1,42 +1,42 @@
-Return-Path: <dmaengine+bounces-9532-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9533-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6F5MF8sfvGnQswIAu9opvQ
-	(envelope-from <dmaengine+bounces-9532-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:09:47 +0100
+	id oKFkDgoivGnQswIAu9opvQ
+	(envelope-from <dmaengine+bounces-9533-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:19:22 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C731B2CE700
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:09:46 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDD192CEA1C
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:19:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7B1123155537
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 15:57:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 812E930B8D81
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 15:58:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F4103EBF03;
-	Thu, 19 Mar 2026 15:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D55D93EC2D0;
+	Thu, 19 Mar 2026 15:56:30 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B62C3EBF05;
-	Thu, 19 Mar 2026 15:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C3F13E9595;
+	Thu, 19 Mar 2026 15:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773935781; cv=none; b=DIZw1cb4ytuK5Odkh9mukeBzcmdZcLFcoPuIGDkfqYOwpr80aVuCg2wsoffsKtZREzq8Ew5/6DSGfoRCU+8AeVorlfY3Zd2lo74FMIi6UID5mi348UZP8J/dDzlHj8EEX+G8FrmuFVFo6nsBRQP9x4eI0kJyZi3tGEojuTaMwgI=
+	t=1773935790; cv=none; b=RnYLk86SvUezRSn8SeJiXR4AvEg8+j2PwdKU/XMAI+ZYHlNkw7Jh2xkv0fukvS4WIcLUMUKvA4M2bLwEObwMOhyFOOmsS3Qzz7YSJiSs/TRyDut6g0yQd8wM5aVkC7bdUeruGiWjtErEs53lBxiv3O0PwumiQ/0hJoXNY+CfUbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773935781; c=relaxed/simple;
-	bh=YaT1vm3ZGZQJADPdtO3h5jlr2l0NVkxzr+E0zGp10+4=;
+	s=arc-20240116; t=1773935790; c=relaxed/simple;
+	bh=pxmwXqdfheRNmyRz29WVb8GdRzN1F9luVbETBgPCG8U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E4Ayao29RqUo6/culptaG85wrkxmEelww2q6aPXKMMHvAsSXp7cO3oRScNtQ197b7cARAxfbkvLq6u/C3vFZKZ+WF7Ad31jAOsEe+F1StAGVSgoJ0j7IBR1Rz3j0JeVhvmzg9zkyY7FvCMfehLm7WME66qIW5iDcMCK27lssiPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+	 MIME-Version; b=nIfe3x/Olnumq9crmcf3aXjkxFqJcIIBJjijzLqMIRVUeBe3HAaONq4NtcApjeyiXA3eM9zCyrBAXR2HliN/kjLdjE+pRZQnLp6ZbQHpcuF5BmC+N4eFWVpVosmzwrVIYGqTQkLaVPGc99jlmnc7NA9Dvbg1w6q6CTEUNnTrTiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: 9f3zlsATTEme95ClzlDzQw==
-X-CSE-MsgGUID: OoIBrNMxQAK+fz3fhjmBDA==
+X-CSE-ConnectionGUID: zYrras1FTlOYwkS2lZaAYw==
+X-CSE-MsgGUID: 6utN6feGTsezMK4VWju+sA==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 20 Mar 2026 00:56:18 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 20 Mar 2026 00:56:27 +0900
 Received: from ubuntu.adwin.renesas.com (unknown [10.226.93.35])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id F26DF401B307;
-	Fri, 20 Mar 2026 00:56:09 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id E665F401B641;
+	Fri, 20 Mar 2026 00:56:18 +0900 (JST)
 From: John Madieu <john.madieu.xa@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
@@ -66,9 +66,9 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	dmaengine@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH 10/22] ASoC: rsnd: Add DMA support infrastructure for RZ/G3E
-Date: Thu, 19 Mar 2026 16:53:22 +0100
-Message-ID: <20260319155334.51278-11-john.madieu.xa@bp.renesas.com>
+Subject: [PATCH 11/22] ASoC: rsnd: ssui: Add RZ/G3E SSIU BUSIF support
+Date: Thu, 19 Mar 2026 16:53:23 +0100
+Message-ID: <20260319155334.51278-12-john.madieu.xa@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260319155334.51278-1-john.madieu.xa@bp.renesas.com>
 References: <20260319155334.51278-1-john.madieu.xa@bp.renesas.com>
@@ -84,7 +84,7 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[renesas.com : SPF not aligned (relaxed), No valid DKIM,none];
@@ -94,9 +94,9 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	FREEMAIL_CC(0.00)[baylibre.com,kernel.org,gmail.com,perex.cz,suse.com,pengutronix.de,tuxon.dev,bp.renesas.com,renesas.com,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9532-lists,dmaengine=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	NEURAL_SPAM(0.00)[0.657];
+	TAGGED_FROM(0.00)[bounces-9533-lists,dmaengine=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	NEURAL_SPAM(0.00)[0.654];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[john.madieu.xa@bp.renesas.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -105,308 +105,215 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	TAGGED_RCPT(0.00)[dmaengine,renesas,dt];
 	R_DKIM_NA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,bp.renesas.com:mid]
-X-Rspamd-Queue-Id: C731B2CE700
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bp.renesas.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,renesas.com:email]
+X-Rspamd-Queue-Id: CDD192CEA1C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-RZ/G3E has different DMA register base addresses and offset calculations
-compared to R-Car platforms, and requires additional audmac-pp clock and
-reset lines for Audio DMAC operation.
+Add support for the SSIU found on the Renesas RZ/G3E SoC, which
+provides a different BUSIF layout compared to earlier generations:
 
-Add RZ/G3E-specific DMA address macros and audmac-pp clock/reset support
-using optional APIs to remain transparent to other platforms.
+ - SSI0-SSI4: 4 BUSIF instances each (BUSIF0-3)
+ - SSI5-SSI8: 1 BUSIF instance each (BUSIF0 only)
+ - SSI9: 4 BUSIF instances (BUSIF0-3)
+ - Total: 28 BUSIFs
+
+RZ/G3E also differs from Gen2/Gen3 implementations in that only two
+pairs of BUSIF error-status registers are available instead of four,
+and the SSI always operates in BUSIF mode with no PIO fallback.
+
+Rather than scattering SoC-specific checks across functional code,
+introduce two capability flags in the match data:
+
+ - RSND_SSI_ALWAYS_BUSIF: the SSI has no PIO mode and always uses
+   BUSIF. Used in rsnd_ssi_use_busif() and rsnd_ssiu_init() to skip
+   SSI_MODE0 configuration.
+ - RSND_SSIU_BUSIF_STATUS_COUNT_2: only two BUSIF error-status
+   register pairs are present. Used in rsnd_ssiu_busif_err_irq_ctrl()
+   and rsnd_ssiu_busif_err_status_clear() to limit register iteration.
+
+Future SoCs sharing these constraints can set the flags without
+requiring code changes.
 
 Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 ---
- sound/soc/renesas/rcar/core.c |   2 +-
- sound/soc/renesas/rcar/dma.c  | 171 +++++++++++++++++++++++++++-------
- sound/soc/renesas/rcar/rsnd.h |  12 +++
- 3 files changed, 152 insertions(+), 33 deletions(-)
+ sound/soc/renesas/rcar/core.c |  5 +++-
+ sound/soc/renesas/rcar/rsnd.h |  3 +++
+ sound/soc/renesas/rcar/ssiu.c | 47 +++++++++++++++++++++--------------
+ 3 files changed, 36 insertions(+), 19 deletions(-)
 
 diff --git a/sound/soc/renesas/rcar/core.c b/sound/soc/renesas/rcar/core.c
-index 86b2e9d06f9b..2f9c32c647a6 100644
+index 2f9c32c647a6..6a25580b9c6a 100644
 --- a/sound/soc/renesas/rcar/core.c
 +++ b/sound/soc/renesas/rcar/core.c
-@@ -615,7 +615,7 @@ int rsnd_dai_connect(struct rsnd_mod *mod,
- 	return 0;
- }
+@@ -107,7 +107,9 @@ static const struct of_device_id rsnd_of_match[] = {
+ 	{ .compatible = "renesas,rcar_sound-gen4", .data = (void *)RSND_GEN4 },
+ 	/* Special Handling */
+ 	{ .compatible = "renesas,rcar_sound-r8a77990", .data = (void *)(RSND_GEN3 | RSND_SOC_E) },
+-	{ .compatible = "renesas,rcar_sound-r9a09g047", .data = (void *)RSND_RZG3E },
++	{ .compatible = "renesas,rcar_sound-r9a09g047", .data = (void *)(RSND_RZG3E |
++									 RSND_SSI_ALWAYS_BUSIF |
++									 RSND_SSIU_BUSIF_STATUS_COUNT_2) },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, rsnd_of_match);
+@@ -1960,6 +1962,7 @@ static int rsnd_probe(struct platform_device *pdev)
  
--static void rsnd_dai_disconnect(struct rsnd_mod *mod,
-+void rsnd_dai_disconnect(struct rsnd_mod *mod,
- 				struct rsnd_dai_stream *io,
- 				enum rsnd_mod_type type)
- {
-diff --git a/sound/soc/renesas/rcar/dma.c b/sound/soc/renesas/rcar/dma.c
-index 68c859897e68..d3123ae3b402 100644
---- a/sound/soc/renesas/rcar/dma.c
-+++ b/sound/soc/renesas/rcar/dma.c
-@@ -496,24 +496,71 @@ static struct rsnd_mod_ops rsnd_dmapp_ops = {
-  *	SSIU: 0xec541000 / 0xec100000 / 0xec100000 / 0xec400000 / 0xec400000
-  *	SCU : 0xec500000 / 0xec000000 / 0xec004000 / 0xec300000 / 0xec304000
-  *	CMD : 0xec500000 /            / 0xec008000                0xec308000
-+ *
-+ * 	ex) G3E case
-+ *	      mod        / DMAC in    / DMAC out   / DMAC PP in / DMAC pp out
-+ *	SSI : 0x13C31000 / 0x13C40000 / 0x13C40000
-+ *	SSIU: 0x13C31000 / 0x13C40000 / 0x13C40000 / 0xEC400000 / 0xEC400000
-+ *	SCU : 0x13C00000 / 0x13C10000 / 0x13C14000 / 0xEC300000 / 0xEC304000
-+ *	CMD : 0x13C00000 /            / 0x13C18000                0xEC308000
-  */
--#define RDMA_SSI_I_N(addr, i)	(addr ##_reg - 0x00300000 + (0x40 * i) + 0x8)
--#define RDMA_SSI_O_N(addr, i)	(addr ##_reg - 0x00300000 + (0x40 * i) + 0xc)
- 
--#define RDMA_SSIU_I_N(addr, i, j) (addr ##_reg - 0x00441000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400) - (0x4000 * ((i) / 9) * ((j) / 4)))
--#define RDMA_SSIU_O_N(addr, i, j) RDMA_SSIU_I_N(addr, i, j)
-+/* RZ/G3E DMA address macros */
-+#define RDMA_SSI_I_N_G3E(addr, i)	(addr ##_reg + 0x0000F000 + (0x1000 * i))
-+#define RDMA_SSI_O_N_G3E(addr, i)	(addr ##_reg + 0x0000F000 + (0x1000 * i))
-+
-+#define RDMA_SSIU_I_N_G3E(addr, i, j) (addr ##_reg + 0x0000F000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400) - (0x4000 * ((i) / 9) * ((j) / 4)))
-+#define RDMA_SSIU_O_N_G3E(addr, i, j) RDMA_SSIU_I_N_G3E(addr, i, j)
-+
-+#define RDMA_SSIU_I_P_G3E(addr, i, j) (addr ##_reg + 0xD87CF000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400) - (0x4000 * ((i) / 9) * ((j) / 4)))
-+#define RDMA_SSIU_O_P_G3E(addr, i, j) RDMA_SSIU_I_P_G3E(addr, i, j)
-+
-+#define RDMA_SRC_I_N_G3E(addr, i)	(addr ##_reg + 0x00010000 + (0x400 * i))
-+#define RDMA_SRC_O_N_G3E(addr, i)	(addr ##_reg + 0x00014000 + (0x400 * i))
-+
-+#define RDMA_SRC_I_P_G3E(addr, i)	(addr ##_reg + 0xD8700000 + (0x400 * i))
-+#define RDMA_SRC_O_P_G3E(addr, i)	(addr ##_reg + 0xD8704000 + (0x400 * i))
-+
-+#define RDMA_CMD_O_N_G3E(addr, i)	(addr ##_reg + 0x00018000 + (0x400 * i))
-+#define RDMA_CMD_O_P_G3E(addr, i)	(addr ##_reg + 0xD8708000 + (0x400 * i))
-+
-+/* R-Car DMA address macros */
-+#define RDMA_SSI_I_N_RCAR(addr, i)	(addr ##_reg - 0x00300000 + (0x40 * i) + 0x8)
-+#define RDMA_SSI_O_N_RCAR(addr, i)	(addr ##_reg - 0x00300000 + (0x40 * i) + 0xc)
- 
--#define RDMA_SSIU_I_P(addr, i, j) (addr ##_reg - 0x00141000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400) - (0x4000 * ((i) / 9) * ((j) / 4)))
--#define RDMA_SSIU_O_P(addr, i, j) RDMA_SSIU_I_P(addr, i, j)
-+#define RDMA_SSIU_I_N_RCAR(addr, i, j) (addr ##_reg - 0x00441000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400) - (0x4000 * ((i) / 9) * ((j) / 4)))
-+#define RDMA_SSIU_O_N_RCAR(addr, i, j) RDMA_SSIU_I_N_RCAR(addr, i, j)
- 
--#define RDMA_SRC_I_N(addr, i)	(addr ##_reg - 0x00500000 + (0x400 * i))
--#define RDMA_SRC_O_N(addr, i)	(addr ##_reg - 0x004fc000 + (0x400 * i))
-+#define RDMA_SSIU_I_P_RCAR(addr, i, j) (addr ##_reg - 0x00141000 + (0x1000 * (i)) + (((j) / 4) * 0xA000) + (((j) % 4) * 0x400) - (0x4000 * ((i) / 9) * ((j) / 4)))
-+#define RDMA_SSIU_O_P_RCAR(addr, i, j) RDMA_SSIU_I_N_RCAR(addr, i, j)
- 
--#define RDMA_SRC_I_P(addr, i)	(addr ##_reg - 0x00200000 + (0x400 * i))
--#define RDMA_SRC_O_P(addr, i)	(addr ##_reg - 0x001fc000 + (0x400 * i))
-+#define RDMA_SRC_I_N_RCAR(addr, i)	(addr ##_reg - 0x00500000 + (0x400 * i))
-+#define RDMA_SRC_O_N_RCAR(addr, i)	(addr ##_reg - 0x004fc000 + (0x400 * i))
- 
--#define RDMA_CMD_O_N(addr, i)	(addr ##_reg - 0x004f8000 + (0x400 * i))
--#define RDMA_CMD_O_P(addr, i)	(addr ##_reg - 0x001f8000 + (0x400 * i))
-+#define RDMA_SRC_I_P_RCAR(addr, i)	(addr ##_reg - 0x00200000 + (0x400 * i))
-+#define RDMA_SRC_O_P_RCAR(addr, i)	(addr ##_reg - 0x001fc000 + (0x400 * i))
-+
-+#define RDMA_CMD_O_N_RCAR(addr, i)	(addr ##_reg - 0x004f8000 + (0x400 * i))
-+#define RDMA_CMD_O_P_RCAR(addr, i)	(addr ##_reg - 0x001f8000 + (0x400 * i))
-+
-+/* Platform-agnostic address macros */
-+#define RDMA_SSI_I_N(p, addr, i)	rsnd_is_rzg3e(p) ? RDMA_SSI_I_N_G3E(addr, i) : RDMA_SSI_I_N_RCAR(addr, i)
-+#define RDMA_SSI_O_N(p, addr, i)	rsnd_is_rzg3e(p) ? RDMA_SSI_O_N_G3E(addr, i) : RDMA_SSI_O_N_RCAR(addr, i)
-+
-+#define RDMA_SSIU_I_N(p, addr, i, j) rsnd_is_rzg3e(p) ? RDMA_SSIU_I_N_G3E(addr, i, j) : RDMA_SSIU_I_N_RCAR(addr, i, j)
-+#define RDMA_SSIU_O_N(p, addr, i, j) rsnd_is_rzg3e(p) ? RDMA_SSIU_O_N_G3E(addr, i, j) : RDMA_SSIU_O_N_RCAR(addr, i, j)
-+
-+#define RDMA_SSIU_I_P(p, addr, i, j) rsnd_is_rzg3e(p) ? RDMA_SSIU_I_P_G3E(addr, i, j) : RDMA_SSIU_I_P_RCAR(addr, i, j)
-+#define RDMA_SSIU_O_P(p, addr, i, j) rsnd_is_rzg3e(p) ? RDMA_SSIU_O_P_G3E(addr, i, j) : RDMA_SSIU_O_P_RCAR(addr, i, j)
-+
-+#define RDMA_SRC_I_N(p, addr, i)	rsnd_is_rzg3e(p) ? RDMA_SRC_I_N_G3E(addr, i) : RDMA_SRC_I_N_RCAR(addr, i)
-+#define RDMA_SRC_O_N(p, addr, i)	rsnd_is_rzg3e(p) ? RDMA_SRC_O_N_G3E(addr, i) : RDMA_SRC_O_N_RCAR(addr, i)
-+
-+#define RDMA_SRC_I_P(p, addr, i)	rsnd_is_rzg3e(p) ? RDMA_SRC_I_P_G3E(addr, i) : RDMA_SRC_I_P_RCAR(addr, i)
-+#define RDMA_SRC_O_P(p, addr, i)	rsnd_is_rzg3e(p) ? RDMA_SRC_O_P_G3E(addr, i) : RDMA_SRC_O_P_RCAR(addr, i)
-+
-+#define RDMA_CMD_O_N(p, addr, i)	rsnd_is_rzg3e(p) ? RDMA_CMD_O_N_G3E(addr, i) : RDMA_CMD_O_N_RCAR(addr, i)
-+#define RDMA_CMD_O_P(p, addr, i)	rsnd_is_rzg3e(p) ? RDMA_CMD_O_P_G3E(addr, i) : RDMA_CMD_O_P_RCAR(addr, i)
- 
- static dma_addr_t
- rsnd_gen2_dma_addr(struct rsnd_dai_stream *io,
-@@ -522,8 +569,8 @@ rsnd_gen2_dma_addr(struct rsnd_dai_stream *io,
- {
- 	struct rsnd_priv *priv = rsnd_io_to_priv(io);
- 	struct device *dev = rsnd_priv_to_dev(priv);
--	phys_addr_t ssi_reg = rsnd_gen_get_phy_addr(priv, RSND_BASE_SSI);
--	phys_addr_t src_reg = rsnd_gen_get_phy_addr(priv, RSND_BASE_SCU);
-+	phys_addr_t ssi_reg = rsnd_gen_get_phy_addr(priv, rsnd_is_rzg3e(priv) ? RSND_RZG3E_SSI : RSND_BASE_SSI);
-+	phys_addr_t src_reg = rsnd_gen_get_phy_addr(priv, rsnd_is_rzg3e(priv) ? RSND_RZG3E_SCU : RSND_BASE_SCU);
- 	int is_ssi = !!(rsnd_io_to_mod_ssi(io) == mod) ||
- 		     !!(rsnd_io_to_mod_ssiu(io) == mod);
- 	int use_src = !!rsnd_io_to_mod_src(io);
-@@ -539,32 +586,32 @@ rsnd_gen2_dma_addr(struct rsnd_dai_stream *io,
- 		/* SRC */
- 		/* Capture */
- 		{{{ 0,				0 },
--		  { RDMA_SRC_O_N(src, id),	RDMA_SRC_I_P(src, id) },
--		  { RDMA_CMD_O_N(src, id),	RDMA_SRC_I_P(src, id) } },
-+		  { RDMA_SRC_O_N(priv, src, id),	RDMA_SRC_I_P(priv, src, id) },
-+		  { RDMA_CMD_O_N(priv, src, id),	RDMA_SRC_I_P(priv, src, id) } },
- 		 /* Playback */
- 		 {{ 0,				0, },
--		  { RDMA_SRC_O_P(src, id),	RDMA_SRC_I_N(src, id) },
--		  { RDMA_CMD_O_P(src, id),	RDMA_SRC_I_N(src, id) } }
-+		  { RDMA_SRC_O_P(priv, src, id),	RDMA_SRC_I_N(priv, src, id) },
-+		  { RDMA_CMD_O_P(priv, src, id),	RDMA_SRC_I_N(priv, src, id) } }
- 		},
- 		/* SSI */
- 		/* Capture */
--		{{{ RDMA_SSI_O_N(ssi, id),		0 },
--		  { RDMA_SSIU_O_P(ssi, id, busif),	0 },
--		  { RDMA_SSIU_O_P(ssi, id, busif),	0 } },
-+		{{{ RDMA_SSI_O_N(priv, ssi, id),		0 },
-+		  { RDMA_SSIU_O_P(priv, ssi, id, busif),	0 },
-+		  { RDMA_SSIU_O_P(priv, ssi, id, busif),	0 } },
- 		 /* Playback */
--		 {{ 0,			RDMA_SSI_I_N(ssi, id) },
--		  { 0,			RDMA_SSIU_I_P(ssi, id, busif) },
--		  { 0,			RDMA_SSIU_I_P(ssi, id, busif) } }
-+		 {{ 0,			RDMA_SSI_I_N(priv, ssi, id) },
-+		  { 0,			RDMA_SSIU_I_P(priv, ssi, id, busif) },
-+		  { 0,			RDMA_SSIU_I_P(priv, ssi, id, busif) } }
- 		},
- 		/* SSIU */
- 		/* Capture */
--		{{{ RDMA_SSIU_O_N(ssi, id, busif),	0 },
--		  { RDMA_SSIU_O_P(ssi, id, busif),	0 },
--		  { RDMA_SSIU_O_P(ssi, id, busif),	0 } },
-+		{{{ RDMA_SSIU_O_N(priv, ssi, id, busif),	0 },
-+		  { RDMA_SSIU_O_P(priv, ssi, id, busif),	0 },
-+		  { RDMA_SSIU_O_P(priv, ssi, id, busif),	0 } },
- 		 /* Playback */
--		 {{ 0,			RDMA_SSIU_I_N(ssi, id, busif) },
--		  { 0,			RDMA_SSIU_I_P(ssi, id, busif) },
--		  { 0,			RDMA_SSIU_I_P(ssi, id, busif) } } },
-+		 {{ 0,			RDMA_SSIU_I_N(priv, ssi, id, busif) },
-+		  { 0,			RDMA_SSIU_I_P(priv, ssi, id, busif) },
-+		  { 0,			RDMA_SSIU_I_P(priv, ssi, id, busif) } } },
- 	};
+ 	priv->pdev	= pdev;
+ 	priv->flags	= (unsigned long)of_device_get_match_data(dev);
++	priv->ssiu_busif_count = rsnd_flags_has(priv, RSND_SSIU_BUSIF_STATUS_COUNT_2) ? 2 : 4;
+ 	spin_lock_init(&priv->lock);
  
  	/*
-@@ -803,8 +850,12 @@ static int rsnd_dma_alloc(struct rsnd_dai_stream *io, struct rsnd_mod *mod,
- 
- 	*dma_mod = rsnd_mod_get(dma);
- 
--	ret = rsnd_mod_init(priv, *dma_mod, ops, NULL, NULL,
--			    type, dma_id);
-+	/*
-+	 * Pass NULL for clock/reset - audmac_pp is managed globally in
-+	 * rsnd_dma_probe() and core.c suspend/resume, not per-DMA-module.
-+	 * See detailed explanation in rsnd_dma_probe().
-+	 */
-+	ret = rsnd_mod_init(priv, *dma_mod, ops, NULL, NULL, type, dma_id);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -838,6 +889,12 @@ int rsnd_dma_attach(struct rsnd_dai_stream *io, struct rsnd_mod *mod,
- 	return rsnd_dai_connect(*dma_mod, io, (*dma_mod)->type);
- }
- 
-+void rsnd_dma_detach(struct rsnd_dai_stream *io, struct rsnd_mod *mod,
-+		     struct rsnd_mod **dma_mod)
-+{
-+	rsnd_dai_disconnect(*dma_mod, io, (*dma_mod)->type);
-+}
-+
- int rsnd_dma_probe(struct rsnd_priv *priv)
- {
- 	struct platform_device *pdev = rsnd_priv_to_pdev(priv);
-@@ -860,6 +917,56 @@ int rsnd_dma_probe(struct rsnd_priv *priv)
- 		return 0; /* it will be PIO mode */
- 	}
- 
-+	/*
-+	 * audmac_pp clock/reset management strategy:
-+	 *
-+	 * Unlike other modules (SSI, SRC, etc.) which have their own dedicated
-+	 * clocks, all DMA modules share the single audmac_pp clock/reset.
-+	 * Managing it per-stream or per-DMA-module causes
-+	 * reference count imbalances:
-+	 *
-+	 *   - rsnd_mod_init() does clk_prepare_enable() then clk_disable(),
-+	 *     leaving prepare_count=1 per module
-+	 *   - With N DMA modules sharing the same clock handle, prepare_count=N
-+	 *   - suspend does single clk_disable_unprepare() (-1)
-+	 *   - resume does single clk_prepare_enable() (+1)
-+	 *   - Result: prepare_count leaks on each suspend/resume cycle
-+	 *
-+	 * Per-stream management (iterating DMA modules in suspend/resume) is
-+	 * not worth the complexity:
-+	 *
-+	 *   - No power benefit: audmac_pp is needed whenever ANY stream is
-+	 *     active, and every stream uses DMA, so it's essentially always on
-+	 *   - Architecture mismatch: DMA modules live in io->dma, not in a
-+	 *     priv array -- no clean way to iterate like SSI/SRC/DVC
-+	 *   - Shared handle problem: all DMA modules point to the same clock,
-+	 *     so iterating would call clk_unprepare() N times on one clock
-+	 *   - Would require manual refcounting ("enable on first stream,
-+	 *     disable on last") -- reimplementing what clk framework does
-+	 *
-+	 * The correct approach is to treat audmac_pp as always-on infrastructure
-+	 * (same pattern as clk_adg), managed globally:
-+	 *   - Probe: acquire + enable (via devm_clk_get_optional_enabled)
-+	 *   - Suspend/Resume: toggle in core.c rsnd_suspend/rsnd_resume
-+	 *   - Remove: devm cleanup
-+	 *   - DMA modules: pass NULL clock/reset to rsnd_mod_init()
-+	 *
-+	 * Use devm variants that handle deassert/enable automatically.
-+	 * Order: reset deasserted first, then clock enabled.
-+	 */
-+	priv->rstc_audmac_pp =
-+		devm_reset_control_get_optional_exclusive_deasserted(dev, "audmac_pp");
-+	if (IS_ERR(priv->rstc_audmac_pp)) {
-+		return dev_err_probe(dev, PTR_ERR(priv->rstc_audmac_pp),
-+				     "failed to get audmac_pp reset\n");
-+	}
-+
-+	priv->clk_audmac_pp = devm_clk_get_optional_enabled(dev, "audmac_pp");
-+	if (IS_ERR(priv->clk_audmac_pp)) {
-+		return dev_err_probe(dev, PTR_ERR(priv->clk_audmac_pp),
-+				     "failed to get audmac_pp clock\n");
-+	}
-+
- 	/* for Gen4 doesn't have DMA-pp */
- 	if (rsnd_is_gen4(priv))
- 		goto audmapp_end;
 diff --git a/sound/soc/renesas/rcar/rsnd.h b/sound/soc/renesas/rcar/rsnd.h
-index 173fe475b7f8..8f3637904884 100644
+index 8f3637904884..da377bca45a9 100644
 --- a/sound/soc/renesas/rcar/rsnd.h
 +++ b/sound/soc/renesas/rcar/rsnd.h
-@@ -271,6 +271,8 @@ u32 rsnd_get_busif_shift(struct rsnd_dai_stream *io, struct rsnd_mod *mod);
-  */
- int rsnd_dma_attach(struct rsnd_dai_stream *io,
- 		    struct rsnd_mod *mod, struct rsnd_mod **dma_mod);
-+void rsnd_dma_detach(struct rsnd_dai_stream *io,
-+		     struct rsnd_mod *mod, struct rsnd_mod **dma_mod);
- int rsnd_dma_probe(struct rsnd_priv *priv);
- struct dma_chan *rsnd_dma_request_channel(struct device_node *of_node, char *name,
- 					  struct rsnd_mod *mod, char *x);
-@@ -590,6 +592,9 @@ int rsnd_rdai_width_ctrl(struct rsnd_dai *rdai, int width);
- int rsnd_dai_connect(struct rsnd_mod *mod,
- 		     struct rsnd_dai_stream *io,
- 		     enum rsnd_mod_type type);
-+void rsnd_dai_disconnect(struct rsnd_mod *mod,
-+			 struct rsnd_dai_stream *io,
-+			 enum rsnd_mod_type type);
+@@ -641,6 +641,7 @@ struct rsnd_priv {
+ 	struct reset_control *rstc_audmac_pp;
  
- /*
-  *	R-Car Gen1/Gen2
-@@ -628,6 +633,13 @@ void rsnd_adg_clk_dbg_info(struct rsnd_priv *priv, struct seq_file *m);
- struct rsnd_priv {
- 
- 	struct platform_device *pdev;
-+
-+	/*
-+	 * below value will be filled on rsnd_dma_probe()
-+	 */
-+	struct clk *clk_audmac_pp;
-+	struct reset_control *rstc_audmac_pp;
-+
  	spinlock_t lock;
++	unsigned int ssiu_busif_count;
  	unsigned long flags;
  #define RSND_GEN_MASK	(0xF << 0)
+ #define RSND_GEN1	(1 << 0)
+@@ -650,6 +651,8 @@ struct rsnd_priv {
+ #define RSND_RZG3E	(5 << 0)
+ #define RSND_SOC_MASK	(0xFF << 4)
+ #define RSND_SOC_E	(1 << 4) /* E1/E2/E3 */
++#define RSND_SSI_ALWAYS_BUSIF	BIT(12) /* SSI has no PIO mode, always uses BUSIF */
++#define RSND_SSIU_BUSIF_STATUS_COUNT_2	BIT(13) /* Only 2 BUSIF error-status register pairs */
+ 
+ 	/*
+ 	 * below value will be filled on rsnd_gen_probe()
+diff --git a/sound/soc/renesas/rcar/ssiu.c b/sound/soc/renesas/rcar/ssiu.c
+index 0cfa84fe5ea8..f377d9414633 100644
+--- a/sound/soc/renesas/rcar/ssiu.c
++++ b/sound/soc/renesas/rcar/ssiu.c
+@@ -29,31 +29,32 @@ struct rsnd_ssiu {
+ 	     i++)
+ 
+ /*
+- *	SSI	Gen2		Gen3		Gen4
+- *	0	BUSIF0-3	BUSIF0-7	BUSIF0-7
+- *	1	BUSIF0-3	BUSIF0-7
+- *	2	BUSIF0-3	BUSIF0-7
+- *	3	BUSIF0		BUSIF0-7
+- *	4	BUSIF0		BUSIF0-7
+- *	5	BUSIF0		BUSIF0
+- *	6	BUSIF0		BUSIF0
+- *	7	BUSIF0		BUSIF0
+- *	8	BUSIF0		BUSIF0
+- *	9	BUSIF0-3	BUSIF0-7
+- *	total	22		52		8
++ *	SSI	Gen2		Gen3		Gen4		RZ/G3E
++ *	0	BUSIF0-3	BUSIF0-7	BUSIF0-7	BUSIF0-3
++ *	1	BUSIF0-3	BUSIF0-7			BUSIF0-3
++ *	2	BUSIF0-3	BUSIF0-7			BUSIF0-3
++ *	3	BUSIF0		BUSIF0-7			BUSIF0-3
++ *	4	BUSIF0		BUSIF0-7			BUSIF0-3
++ *	5	BUSIF0		BUSIF0				BUSIF0
++ *	6	BUSIF0		BUSIF0				BUSIF0
++ *	7	BUSIF0		BUSIF0				BUSIF0
++ *	8	BUSIF0		BUSIF0				BUSIF0
++ *	9	BUSIF0-3	BUSIF0-7			BUSIF0-3
++ *	total	22		52		8		28
+  */
+ static const int gen2_id[] = { 0, 4,  8, 12, 13, 14, 15, 16, 17, 18 };
+ static const int gen3_id[] = { 0, 8, 16, 24, 32, 40, 41, 42, 43, 44 };
+ static const int gen4_id[] = { 0 };
++static const int rzg3e_id[] = { 0, 4, 8, 12, 16, 20, 21, 22, 23, 24 };
+ 
+ /* enable busif buffer over/under run interrupt. */
+ #define rsnd_ssiu_busif_err_irq_enable(mod)  rsnd_ssiu_busif_err_irq_ctrl(mod, 1)
+ #define rsnd_ssiu_busif_err_irq_disable(mod) rsnd_ssiu_busif_err_irq_ctrl(mod, 0)
+ static void rsnd_ssiu_busif_err_irq_ctrl(struct rsnd_mod *mod, int enable)
+ {
++	struct rsnd_priv *priv = rsnd_mod_to_priv(mod);
+ 	int id = rsnd_mod_id(mod);
+ 	int shift, offset;
+-	int i;
+ 
+ 	switch (id) {
+ 	case 0:
+@@ -72,7 +73,7 @@ static void rsnd_ssiu_busif_err_irq_ctrl(struct rsnd_mod *mod, int enable)
+ 		return;
+ 	}
+ 
+-	for (i = 0; i < 4; i++) {
++	for (unsigned int i = 0; i < priv->ssiu_busif_count; i++) {
+ 		enum rsnd_reg reg = SSI_SYS_INT_ENABLE((i * 2) + offset);
+ 		u32 val = 0xf << (shift * 4);
+ 		u32 sys_int_enable = rsnd_mod_read(mod, reg);
+@@ -87,10 +88,10 @@ static void rsnd_ssiu_busif_err_irq_ctrl(struct rsnd_mod *mod, int enable)
+ 
+ bool rsnd_ssiu_busif_err_status_clear(struct rsnd_mod *mod)
+ {
++	struct rsnd_priv *priv = rsnd_mod_to_priv(mod);
+ 	bool error = false;
+ 	int id = rsnd_mod_id(mod);
+ 	int shift, offset;
+-	int i;
+ 
+ 	switch (id) {
+ 	case 0:
+@@ -109,7 +110,7 @@ bool rsnd_ssiu_busif_err_status_clear(struct rsnd_mod *mod)
+ 		goto out;
+ 	}
+ 
+-	for (i = 0; i < 4; i++) {
++	for (unsigned int i = 0; i < priv->ssiu_busif_count; i++) {
+ 		u32 reg = SSI_SYS_STATUS(i * 2) + offset;
+ 		u32 status = rsnd_mod_read(mod, reg);
+ 		u32 val = 0xf << (shift * 4);
+@@ -160,7 +161,8 @@ static int rsnd_ssiu_init(struct rsnd_mod *mod,
+ 	/*
+ 	 * SSI_MODE0
+ 	 */
+-	rsnd_mod_bset(mod, SSI_MODE0, (1 << id), !use_busif << id);
++	if (!rsnd_is_rzg3e(priv))
++		rsnd_mod_bset(mod, SSI_MODE0, (1 << id), !use_busif << id);
+ 
+ 	/*
+ 	 * SSI_MODE1 / SSI_MODE2
+@@ -510,6 +512,7 @@ int rsnd_ssiu_probe(struct rsnd_priv *priv)
+ {
+ 	struct device *dev = rsnd_priv_to_dev(priv);
+ 	struct device_node *node __free(device_node) = rsnd_ssiu_of_node(priv);
++	struct reset_control *rstc;
+ 	struct rsnd_ssiu *ssiu;
+ 	struct rsnd_mod_ops *ops;
+ 	const int *list = NULL;
+@@ -558,12 +561,20 @@ int rsnd_ssiu_probe(struct rsnd_priv *priv)
+ 		} else if (rsnd_is_gen4(priv)) {
+ 			list	= gen4_id;
+ 			nr	= ARRAY_SIZE(gen4_id);
++		} else if (rsnd_is_rzg3e(priv)) {
++			list	= rzg3e_id;
++			nr	= ARRAY_SIZE(rzg3e_id);
+ 		} else {
+ 			dev_err(dev, "unknown SSIU\n");
+ 			return -ENODEV;
+ 		}
+ 	}
+ 
++	/* Acquire shared reset once for all SSIU modules */
++	rstc = devm_reset_control_get_optional_shared(dev, "ssi-all");
++	if (IS_ERR(rstc))
++		rstc = NULL;
++
+ 	for_each_rsnd_ssiu(ssiu, priv, i) {
+ 		int ret;
+ 
+@@ -586,7 +597,7 @@ int rsnd_ssiu_probe(struct rsnd_priv *priv)
+ 		}
+ 
+ 		ret = rsnd_mod_init(priv, rsnd_mod_get(ssiu),
+-				    ops, NULL, NULL, RSND_MOD_SSIU, i);
++				    ops, NULL, rstc, RSND_MOD_SSIU, i);
+ 		if (ret)
+ 			return ret;
+ 	}
 -- 
 2.25.1
 

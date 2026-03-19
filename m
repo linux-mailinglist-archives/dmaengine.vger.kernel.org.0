@@ -1,42 +1,42 @@
-Return-Path: <dmaengine+bounces-9529-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9530-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AMeeMNIdvGnzsgIAu9opvQ
-	(envelope-from <dmaengine+bounces-9529-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:01:22 +0100
+	id APsaDdghvGnQswIAu9opvQ
+	(envelope-from <dmaengine+bounces-9530-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:18:32 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEFF92CE31C
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:01:22 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C8D02CE9BA
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:18:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 92AB53070119
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 15:57:08 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id AEEFA30CDFF0
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 15:57:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E80713EAC61;
-	Thu, 19 Mar 2026 15:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 783983E92A8;
+	Thu, 19 Mar 2026 15:56:03 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B331F3E9F98;
-	Thu, 19 Mar 2026 15:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 075B93E3C42;
+	Thu, 19 Mar 2026 15:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773935753; cv=none; b=ECcOCjCIca2VnWyLzKdfogH8+G2ilWLVsFDPdP/iIg0fZYy6IEkS2glJfrtg0cc2hETAaQZHw+jN5RRXzFniHy6yIEf95f2AvW+OjKBucSmqBwASxJ8L8L5qwxOKfpNIDCL3ZgQriEJC7doObmY/ef6ErtsYvwLcVdiV6WRDOYk=
+	t=1773935763; cv=none; b=YvY7C/rACdpn6CBDPvxT+mDeT9v5PNXVbVtYRJsOvQRwQ6s9qx9sdNIWgsJqkg3LZbSuzKAusryGc+S6SidDWCmfE/TcdATWbvcT1Sgon2DEMHXOdjOaXUsvv8V55pORSW3Z7RfrDIfusyw7my/9eoX8t0g8khvqGgBcxuY9iiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773935753; c=relaxed/simple;
-	bh=WMGWqBcFvtN0MqdxLGHwwwFXLWkz09suF6r3VyqdT6o=;
+	s=arc-20240116; t=1773935763; c=relaxed/simple;
+	bh=xBi/6GdjjHb2f+q/zcIqO+EtIKlDvHhNI4h79qztEs8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C8hSZ7UrA4gqt+WvruirVvy2gVK2ujLzDsp6MLa1NPI1u/Y05s5oHVzehFKMzKvlEsQMFm9+gyg4XXdUTNvjgnBK39dY72EXbMhYCtQu6G9AlAk22L4noD97wbwIJe2xYnbOATOIhtr4OvJBiMD4LbapHNxRW9akl0E5A9gPI1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+	 MIME-Version; b=pipdAqaZVDj8d6c1Sh875UuCT3i0F3KdXmLtD4FAGgm7CBtW/JZWgzqEbzQFgO/k1BWvgu/V9tlZKsaRU0XQsYLdqYQXJcxAUGsZZ3u7Tkx/c5yiwT9Vb+M/rD04C1FOjozjxYMIwCK3W1lB3M9Tp/Kul1zFDcd5ROuKuX0vWVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: USGzfxtPTtOp4X4fVEVwtg==
-X-CSE-MsgGUID: M1oSURy5ThW4E1gGpRs7pA==
+X-CSE-ConnectionGUID: bPvZtcP1RB2LatR+u0I+NA==
+X-CSE-MsgGUID: Os/YalWtRFWBrRxYQsVh9w==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 20 Mar 2026 00:55:50 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 20 Mar 2026 00:56:00 +0900
 Received: from ubuntu.adwin.renesas.com (unknown [10.226.93.35])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5AD4C401B2FD;
-	Fri, 20 Mar 2026 00:55:41 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 85E05401B2FD;
+	Fri, 20 Mar 2026 00:55:51 +0900 (JST)
 From: John Madieu <john.madieu.xa@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
@@ -66,9 +66,9 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	dmaengine@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH 07/22] ASoC: dt-bindings: renesas,rsnd: Add RZ/G3E support
-Date: Thu, 19 Mar 2026 16:53:19 +0100
-Message-ID: <20260319155334.51278-8-john.madieu.xa@bp.renesas.com>
+Subject: [PATCH 08/22] ASoC: rsnd: Add reset controller support to rsnd_mod
+Date: Thu, 19 Mar 2026 16:53:20 +0100
+Message-ID: <20260319155334.51278-9-john.madieu.xa@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260319155334.51278-1-john.madieu.xa@bp.renesas.com>
 References: <20260319155334.51278-1-john.madieu.xa@bp.renesas.com>
@@ -84,312 +84,246 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[renesas.com : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[renesas.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9529-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[28];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[28];
 	FREEMAIL_CC(0.00)[baylibre.com,kernel.org,gmail.com,perex.cz,suse.com,pengutronix.de,tuxon.dev,bp.renesas.com,renesas.com,vger.kernel.org];
-	NEURAL_SPAM(0.00)[0.696];
-	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9530-lists,dmaengine=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	NEURAL_SPAM(0.00)[0.623];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[john.madieu.xa@bp.renesas.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[dmaengine,renesas,dt];
 	R_DKIM_NA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: AEFF92CE31C
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bp.renesas.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,renesas.com:email]
+X-Rspamd-Queue-Id: 2C8D02CE9BA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add support for the RZ/G3E (R9A09G047) SoC audio subsystem.
-
-RZ/G3E has a different audio architecture from R-Car Gen2/Gen3/Gen4,
-with additional clocks and resets:
-- Per-SSI ADG clocks (adg.ssi.0-9)
-- SCU related clocks (scu, scu_x2, scu_supply)
-- SSIF supply clock
-- AUDMAC peri-peri clock
-- ADG clock
-- Additional resets for SCU, ADG, and AUDMAC peri-peri
-
-RZ/G3E has 5 DMA controllers that can all be used by audio peripherals.
-To allow the DMA core to distribute channels across all available
-controllers, increase the maximum number of DMA entries in DVC, SRC,
-and SSIU sub-nodes so that multiple providers can be listed with
-repeated channel names.
+The RZ/G3E SoC requires per-module reset control for the audio subsystem.
+Add reset controller support to struct rsnd_mod and update rsnd_mod_init()
+to accept and handle a reset_control parameter.
 
 Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 ---
- .../bindings/sound/renesas,rsnd.yaml          | 169 +++++++++++++++---
- 1 file changed, 148 insertions(+), 21 deletions(-)
+ sound/soc/renesas/rcar/adg.c  |  2 +-
+ sound/soc/renesas/rcar/cmd.c  |  2 +-
+ sound/soc/renesas/rcar/core.c | 14 +++++++++++++-
+ sound/soc/renesas/rcar/ctu.c  |  2 +-
+ sound/soc/renesas/rcar/dma.c  |  4 ++--
+ sound/soc/renesas/rcar/dvc.c  |  2 +-
+ sound/soc/renesas/rcar/mix.c  |  2 +-
+ sound/soc/renesas/rcar/rsnd.h |  3 +++
+ sound/soc/renesas/rcar/src.c  |  2 +-
+ sound/soc/renesas/rcar/ssi.c  |  2 +-
+ sound/soc/renesas/rcar/ssiu.c |  2 +-
+ 11 files changed, 26 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml b/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
-index e8a2acb92646..bc8885c4fa24 100644
---- a/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
-+++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
-@@ -58,6 +58,7 @@ properties:
-           - renesas,rcar_sound-gen2
-           - renesas,rcar_sound-gen3
-           - renesas,rcar_sound-gen4
-+          - renesas,rcar_sound-r9a09g047     # RZ/G3E
+diff --git a/sound/soc/renesas/rcar/adg.c b/sound/soc/renesas/rcar/adg.c
+index 8641b73d1f77..0105c60a144e 100644
+--- a/sound/soc/renesas/rcar/adg.c
++++ b/sound/soc/renesas/rcar/adg.c
+@@ -780,7 +780,7 @@ int rsnd_adg_probe(struct rsnd_priv *priv)
+ 		return -ENOMEM;
  
-   reg:
-     minItems: 1
-@@ -97,20 +98,22 @@ properties:
+ 	ret = rsnd_mod_init(priv, &adg->mod, &adg_ops,
+-		      NULL, 0, 0);
++		      NULL, NULL, 0, 0);
+ 	if (ret)
+ 		return ret;
  
-   resets:
-     minItems: 1
--    maxItems: 11
-+    maxItems: 14
+diff --git a/sound/soc/renesas/rcar/cmd.c b/sound/soc/renesas/rcar/cmd.c
+index 8d9a1e345a22..13beef389797 100644
+--- a/sound/soc/renesas/rcar/cmd.c
++++ b/sound/soc/renesas/rcar/cmd.c
+@@ -171,7 +171,7 @@ int rsnd_cmd_probe(struct rsnd_priv *priv)
  
-   reset-names:
-     minItems: 1
--    maxItems: 11
-+    maxItems: 14
+ 	for_each_rsnd_cmd(cmd, priv, i) {
+ 		int ret = rsnd_mod_init(priv, rsnd_mod_get(cmd),
+-					&rsnd_cmd_ops, NULL,
++					&rsnd_cmd_ops, NULL, NULL,
+ 					RSND_MOD_CMD, i);
+ 		if (ret)
+ 			return ret;
+diff --git a/sound/soc/renesas/rcar/core.c b/sound/soc/renesas/rcar/core.c
+index 69fb19964a71..6de576736507 100644
+--- a/sound/soc/renesas/rcar/core.c
++++ b/sound/soc/renesas/rcar/core.c
+@@ -90,6 +90,7 @@
+  *
+  */
  
-   clocks:
-     description: References to SSI/SRC/MIX/CTU/DVC/AUDIO_CLK clocks.
-     minItems: 1
--    maxItems: 31
-+    maxItems: 47
++#include <linux/delay.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/of_graph.h>
+ #include "rsnd.h"
+@@ -196,18 +197,29 @@ int rsnd_mod_init(struct rsnd_priv *priv,
+ 		  struct rsnd_mod *mod,
+ 		  struct rsnd_mod_ops *ops,
+ 		  struct clk *clk,
++		  struct reset_control *rstc,
+ 		  enum rsnd_mod_type type,
+ 		  int id)
+ {
+-	int ret = clk_prepare(clk);
++	int ret;
  
-   clock-names:
-     description: List of necessary clock names.
-     # details are defined below
-+    minItems: 1
-+    maxItems: 47
++	ret = clk_prepare_enable(clk);
+ 	if (ret)
+ 		return ret;
  
-   # ports is below
-   port:
-@@ -136,9 +139,17 @@ properties:
++	ret = reset_control_deassert(rstc);
++	if (ret) {
++		clk_disable_unprepare(clk);
++		return ret;
++	}
++
++	clk_disable(clk);
++
+ 	mod->id		= id;
+ 	mod->ops	= ops;
+ 	mod->type	= type;
+ 	mod->clk	= clk;
++	mod->rstc	= rstc;
+ 	mod->priv	= priv;
  
-         properties:
-           dmas:
--            maxItems: 1
-+            description:
-+              Must contain unique DMA specifiers, one per available
-+              DMAC. On RZ/G3E, up to 5 for transmission.
-+            minItems: 1
-+            maxItems: 5
-           dma-names:
--            const: tx
-+            minItems: 1
-+            maxItems: 5
-+            items:
-+              enum:
-+                - tx
-         required:
-           - dmas
-           - dma-names
-@@ -174,13 +185,19 @@ properties:
-           interrupts:
-             maxItems: 1
-           dmas:
--            maxItems: 2
-+            description:
-+              Must contain unique DMA specifiers, one per available
-+              DMAC, for each transfer direction. On RZ/G3E, up to 5
-+              for transmission and up to 5 for reception.
-+            minItems: 2
-+            maxItems: 10
-           dma-names:
--            allOf:
--              - items:
--                  enum:
--                    - tx
--                    - rx
-+            minItems: 2
-+            maxItems: 10
-+            items:
-+              enum:
-+                - tx
-+                - rx
-     additionalProperties: false
+ 	return 0;
+diff --git a/sound/soc/renesas/rcar/ctu.c b/sound/soc/renesas/rcar/ctu.c
+index bd4c61f9fb3c..81bba6a1af6e 100644
+--- a/sound/soc/renesas/rcar/ctu.c
++++ b/sound/soc/renesas/rcar/ctu.c
+@@ -360,7 +360,7 @@ int rsnd_ctu_probe(struct rsnd_priv *priv)
+ 		}
  
-   rcar_sound,ssiu:
-@@ -193,13 +210,19 @@ properties:
+ 		ret = rsnd_mod_init(priv, rsnd_mod_get(ctu), &rsnd_ctu_ops,
+-				    clk, RSND_MOD_CTU, i);
++				    clk, NULL, RSND_MOD_CTU, i);
+ 		if (ret)
+ 			goto rsnd_ctu_probe_done;
  
-         properties:
-           dmas:
--            maxItems: 2
-+            description:
-+              Must contain unique DMA specifiers, one per available
-+              DMAC, for each transfer direction. On RZ/G3E, up to 5
-+              for transmission and up to 5 for reception.
-+            minItems: 2
-+            maxItems: 10
-           dma-names:
--            allOf:
--              - items:
--                  enum:
--                    - tx
--                    - rx
-+            minItems: 2
-+            maxItems: 10
-+            items:
-+              enum:
-+                - tx
-+                - rx
-         required:
-           - dmas
-           - dma-names
-@@ -299,7 +322,7 @@ allOf:
-               - sru
-               - ssi
-               - adg
--  # for Gen2/Gen3
-+  # for Gen2/Gen3/RZ/G3E
-   - if:
-       properties:
-         compatible:
-@@ -307,6 +330,7 @@ allOf:
-             enum:
-               - renesas,rcar_sound-gen2
-               - renesas,rcar_sound-gen3
-+              - renesas,rcar_sound-r9a09g047
-     then:
-       properties:
-         reg:
-@@ -338,7 +362,7 @@ allOf:
-               - sdmc
+diff --git a/sound/soc/renesas/rcar/dma.c b/sound/soc/renesas/rcar/dma.c
+index 2035ce06fe4c..68c859897e68 100644
+--- a/sound/soc/renesas/rcar/dma.c
++++ b/sound/soc/renesas/rcar/dma.c
+@@ -803,7 +803,7 @@ static int rsnd_dma_alloc(struct rsnd_dai_stream *io, struct rsnd_mod *mod,
  
-   # --------------------
--  # clock-names
-+  # clock-names / reset-names
-   # --------------------
-   - if:
-       properties:
-@@ -354,10 +378,18 @@ allOf:
-               - ssi.0
-               - ssiu.0
-               - clkin
--    else:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - renesas,rcar_sound-gen2
-+              - renesas,rcar_sound-gen3
-+    then:
-       properties:
-+        clocks:
-+          maxItems: 31
-         clock-names:
--          minItems: 1
-           maxItems: 31
-           items:
-             oneOf:
-@@ -368,6 +400,101 @@ allOf:
-               - pattern: '^ctu\.[0-1]$'
-               - pattern: '^dvc\.[0-1]$'
-               - pattern: '^clk_(a|b|c|i)$'
-+        resets:
-+          maxItems: 11
-+        reset-names:
-+          maxItems: 11
-+          items:
-+            oneOf:
-+              - const: ssi-all
-+              - pattern: '^ssi\.[0-9]$'
-+        rcar_sound,dvc:
-+          patternProperties:
-+            "^dvc-[0-1]$":
-+              properties:
-+                dmas:
-+                  maxItems: 1
-+                dma-names:
-+                  maxItems: 1
-+        rcar_sound,src:
-+          patternProperties:
-+            "^src-[0-9]$":
-+              properties:
-+                dmas:
-+                  maxItems: 2
-+                dma-names:
-+                  maxItems: 2
-+        rcar_sound,ssiu:
-+          patternProperties:
-+            "^ssiu-[0-9]+$":
-+              properties:
-+                dmas:
-+                  maxItems: 2
-+                dma-names:
-+                  maxItems: 2
-+  # for RZ/G3E
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: renesas,rcar_sound-r9a09g047
-+    then:
-+      properties:
-+        clocks:
-+          maxItems: 47
-+        clock-names:
-+          maxItems: 47
-+          items:
-+            oneOf:
-+              - const: ssi-all
-+              - pattern: '^ssi\.[0-9]$'
-+              - pattern: '^src\.[0-9]$'
-+              - pattern: '^mix\.[0-1]$'
-+              - pattern: '^ctu\.[0-1]$'
-+              - pattern: '^dvc\.[0-1]$'
-+              - pattern: '^clk_(a|b|c|i)$'
-+              - const: ssif_supply
-+              - const: scu
-+              - const: scu_x2
-+              - const: scu_supply
-+              - pattern: '^adg\.ssi\.[0-9]$'
-+              - const: audmac_pp
-+              - const: adg
-+        resets:
-+          maxItems: 14
-+        reset-names:
-+          maxItems: 14
-+          items:
-+            oneOf:
-+              - const: ssi-all
-+              - pattern: '^ssi\.[0-9]$'
-+              - const: scu
-+              - const: adg
-+              - const: audmac_pp
-+        rcar_sound,dvc:
-+          patternProperties:
-+            "^dvc-[0-1]$":
-+              properties:
-+                dmas:
-+                  maxItems: 5
-+                dma-names:
-+                  maxItems: 5
-+        rcar_sound,src:
-+          patternProperties:
-+            "^src-[0-9]$":
-+              properties:
-+                dmas:
-+                  maxItems: 10
-+                dma-names:
-+                  maxItems: 10
-+        rcar_sound,ssiu:
-+          patternProperties:
-+            "^ssiu-[0-9]+$":
-+              properties:
-+                dmas:
-+                  maxItems: 10
-+                dma-names:
-+                  maxItems: 10
+ 	*dma_mod = rsnd_mod_get(dma);
  
- unevaluatedProperties: false
+-	ret = rsnd_mod_init(priv, *dma_mod, ops, NULL,
++	ret = rsnd_mod_init(priv, *dma_mod, ops, NULL, NULL,
+ 			    type, dma_id);
+ 	if (ret < 0)
+ 		return ret;
+@@ -879,5 +879,5 @@ int rsnd_dma_probe(struct rsnd_priv *priv)
+ 	priv->dma = dmac;
  
+ 	/* dummy mem mod for debug */
+-	return rsnd_mod_init(NULL, &mem, &mem_ops, NULL, 0, 0);
++	return rsnd_mod_init(NULL, &mem, &mem_ops, NULL, NULL, 0, 0);
+ }
+diff --git a/sound/soc/renesas/rcar/dvc.c b/sound/soc/renesas/rcar/dvc.c
+index 988cbddbc611..bf7146ceb5f6 100644
+--- a/sound/soc/renesas/rcar/dvc.c
++++ b/sound/soc/renesas/rcar/dvc.c
+@@ -364,7 +364,7 @@ int rsnd_dvc_probe(struct rsnd_priv *priv)
+ 		}
+ 
+ 		ret = rsnd_mod_init(priv, rsnd_mod_get(dvc), &rsnd_dvc_ops,
+-				    clk, RSND_MOD_DVC, i);
++				    clk, NULL, RSND_MOD_DVC, i);
+ 		if (ret)
+ 			goto rsnd_dvc_probe_done;
+ 
+diff --git a/sound/soc/renesas/rcar/mix.c b/sound/soc/renesas/rcar/mix.c
+index aea74e703305..566e9b2a488c 100644
+--- a/sound/soc/renesas/rcar/mix.c
++++ b/sound/soc/renesas/rcar/mix.c
+@@ -328,7 +328,7 @@ int rsnd_mix_probe(struct rsnd_priv *priv)
+ 		}
+ 
+ 		ret = rsnd_mod_init(priv, rsnd_mod_get(mix), &rsnd_mix_ops,
+-				    clk, RSND_MOD_MIX, i);
++				    clk, NULL, RSND_MOD_MIX, i);
+ 		if (ret)
+ 			goto rsnd_mix_probe_done;
+ 
+diff --git a/sound/soc/renesas/rcar/rsnd.h b/sound/soc/renesas/rcar/rsnd.h
+index 04c70690f7a2..cd7e7df62298 100644
+--- a/sound/soc/renesas/rcar/rsnd.h
++++ b/sound/soc/renesas/rcar/rsnd.h
+@@ -15,6 +15,7 @@
+ #include <linux/list.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/reset.h>
+ #include <linux/sh_dma.h>
+ #include <linux/workqueue.h>
+ #include <sound/soc.h>
+@@ -353,6 +354,7 @@ struct rsnd_mod {
+ 	struct rsnd_mod_ops *ops;
+ 	struct rsnd_priv *priv;
+ 	struct clk *clk;
++	struct reset_control *rstc;
+ 	u32 status;
+ };
+ /*
+@@ -420,6 +422,7 @@ int rsnd_mod_init(struct rsnd_priv *priv,
+ 		  struct rsnd_mod *mod,
+ 		  struct rsnd_mod_ops *ops,
+ 		  struct clk *clk,
++		  struct reset_control *rstc,
+ 		  enum rsnd_mod_type type,
+ 		  int id);
+ void rsnd_mod_quit(struct rsnd_mod *mod);
+diff --git a/sound/soc/renesas/rcar/src.c b/sound/soc/renesas/rcar/src.c
+index 6a3dbc84f474..8b58cc20e7a8 100644
+--- a/sound/soc/renesas/rcar/src.c
++++ b/sound/soc/renesas/rcar/src.c
+@@ -766,7 +766,7 @@ int rsnd_src_probe(struct rsnd_priv *priv)
+ 		}
+ 
+ 		ret = rsnd_mod_init(priv, rsnd_mod_get(src),
+-				    &rsnd_src_ops, clk, RSND_MOD_SRC, i);
++				    &rsnd_src_ops, clk, NULL, RSND_MOD_SRC, i);
+ 		if (ret)
+ 			goto rsnd_src_probe_done;
+ 
+diff --git a/sound/soc/renesas/rcar/ssi.c b/sound/soc/renesas/rcar/ssi.c
+index 0420041e282c..c06cebb36170 100644
+--- a/sound/soc/renesas/rcar/ssi.c
++++ b/sound/soc/renesas/rcar/ssi.c
+@@ -1225,7 +1225,7 @@ int rsnd_ssi_probe(struct rsnd_priv *priv)
+ 			ops = &rsnd_ssi_dma_ops;
+ 
+ 		ret = rsnd_mod_init(priv, rsnd_mod_get(ssi), ops, clk,
+-				    RSND_MOD_SSI, i);
++				    NULL, RSND_MOD_SSI, i);
+ 		if (ret)
+ 			goto rsnd_ssi_probe_done;
+ 
+diff --git a/sound/soc/renesas/rcar/ssiu.c b/sound/soc/renesas/rcar/ssiu.c
+index 244fb833292a..0cfa84fe5ea8 100644
+--- a/sound/soc/renesas/rcar/ssiu.c
++++ b/sound/soc/renesas/rcar/ssiu.c
+@@ -586,7 +586,7 @@ int rsnd_ssiu_probe(struct rsnd_priv *priv)
+ 		}
+ 
+ 		ret = rsnd_mod_init(priv, rsnd_mod_get(ssiu),
+-				    ops, NULL, RSND_MOD_SSIU, i);
++				    ops, NULL, NULL, RSND_MOD_SSIU, i);
+ 		if (ret)
+ 			return ret;
+ 	}
 -- 
 2.25.1
 

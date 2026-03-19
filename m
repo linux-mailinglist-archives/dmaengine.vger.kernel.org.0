@@ -1,42 +1,42 @@
-Return-Path: <dmaengine+bounces-9528-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9529-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AArYNqsdvGnzsgIAu9opvQ
-	(envelope-from <dmaengine+bounces-9528-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:00:43 +0100
+	id AMeeMNIdvGnzsgIAu9opvQ
+	(envelope-from <dmaengine+bounces-9529-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:01:22 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AFEE2CE2FD
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:00:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AEFF92CE31C
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:01:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9AB27304B8ED
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 15:56:50 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 92AB53070119
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 15:57:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8344E3E9F73;
-	Thu, 19 Mar 2026 15:55:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E80713EAC61;
+	Thu, 19 Mar 2026 15:55:53 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7322D3E9F69;
-	Thu, 19 Mar 2026 15:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B331F3E9F98;
+	Thu, 19 Mar 2026 15:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773935744; cv=none; b=dtysFWSYQREJue/kgduF0qLo3/FqOPdFISddFxQSuYXkF+1XkHUNy6XOsPVVZmtqe3Euq2RXhdU6QkOnTu7uvq/g5UyvG70vmURH7ooMqULyzM268CMuxbUMVcFyE1rKkxJyh6xDoCkgynFT+7GntK248yxHNycMIH8/B+VMMWI=
+	t=1773935753; cv=none; b=ECcOCjCIca2VnWyLzKdfogH8+G2ilWLVsFDPdP/iIg0fZYy6IEkS2glJfrtg0cc2hETAaQZHw+jN5RRXzFniHy6yIEf95f2AvW+OjKBucSmqBwASxJ8L8L5qwxOKfpNIDCL3ZgQriEJC7doObmY/ef6ErtsYvwLcVdiV6WRDOYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773935744; c=relaxed/simple;
-	bh=8Zc6OScGYb+5AvQgNfZdnReDdkm0l7MnThx/FKQQlXE=;
+	s=arc-20240116; t=1773935753; c=relaxed/simple;
+	bh=WMGWqBcFvtN0MqdxLGHwwwFXLWkz09suF6r3VyqdT6o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kCi/ZFkw8wxr6Dq6tugnFnoH5XLXAyo7IAScv2EaCw8JH07KZ8LdYYL31kjWYVYA3gpeal2Qrr5/LdTxRHh2bilRrnUeFxRVgRZblNfa2ugZ5Egjdm9q1nj4mZCmua6njJ61Fo8ZTC8GV7IV/oEy3U0Y+I98nd26bj6Tl0z3YiI=
+	 MIME-Version; b=C8hSZ7UrA4gqt+WvruirVvy2gVK2ujLzDsp6MLa1NPI1u/Y05s5oHVzehFKMzKvlEsQMFm9+gyg4XXdUTNvjgnBK39dY72EXbMhYCtQu6G9AlAk22L4noD97wbwIJe2xYnbOATOIhtr4OvJBiMD4LbapHNxRW9akl0E5A9gPI1k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: iKDvIp6eQS6mGUie7p6U6A==
-X-CSE-MsgGUID: gjoqKmIDTFSnk/wIw57Zwg==
+X-CSE-ConnectionGUID: USGzfxtPTtOp4X4fVEVwtg==
+X-CSE-MsgGUID: M1oSURy5ThW4E1gGpRs7pA==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 20 Mar 2026 00:55:41 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 20 Mar 2026 00:55:50 +0900
 Received: from ubuntu.adwin.renesas.com (unknown [10.226.93.35])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 90E41401B2E9;
-	Fri, 20 Mar 2026 00:55:32 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5AD4C401B2FD;
+	Fri, 20 Mar 2026 00:55:41 +0900 (JST)
 From: John Madieu <john.madieu.xa@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
@@ -66,9 +66,9 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	dmaengine@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH 06/22] dma: sh: rz-dmac: Add DMA ACK signal routing support
-Date: Thu, 19 Mar 2026 16:53:18 +0100
-Message-ID: <20260319155334.51278-7-john.madieu.xa@bp.renesas.com>
+Subject: [PATCH 07/22] ASoC: dt-bindings: renesas,rsnd: Add RZ/G3E support
+Date: Thu, 19 Mar 2026 16:53:19 +0100
+Message-ID: <20260319155334.51278-8-john.madieu.xa@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260319155334.51278-1-john.madieu.xa@bp.renesas.com>
 References: <20260319155334.51278-1-john.madieu.xa@bp.renesas.com>
@@ -89,13 +89,13 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	DMARC_POLICY_SOFTFAIL(0.10)[renesas.com : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9528-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9529-lists,dmaengine=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[28];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[baylibre.com,kernel.org,gmail.com,perex.cz,suse.com,pengutronix.de,tuxon.dev,bp.renesas.com,renesas.com,vger.kernel.org];
-	NEURAL_SPAM(0.00)[0.611];
+	NEURAL_SPAM(0.00)[0.696];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[john.madieu.xa@bp.renesas.com,dmaengine@vger.kernel.org];
@@ -105,150 +105,290 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	R_DKIM_NA(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 5AFEE2CE2FD
+X-Rspamd-Queue-Id: AEFF92CE31C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Some peripherals, mainly from the audio subsystem, on RZ/V2H and RZ/G3E
-SoCs require explicit ACK signal routing through the ICU.
+Add support for the RZ/G3E (R9A09G047) SoC audio subsystem.
 
-Extend the driver to support an optional second DMA specifier cell that
-contains the ACK signal number. When present, program the ICU accordingly
-during channel configuration. This maintains backward compatibility with
-single-cell DMA specifiers.
+RZ/G3E has a different audio architecture from R-Car Gen2/Gen3/Gen4,
+with additional clocks and resets:
+- Per-SSI ADG clocks (adg.ssi.0-9)
+- SCU related clocks (scu, scu_x2, scu_supply)
+- SSIF supply clock
+- AUDMAC peri-peri clock
+- ADG clock
+- Additional resets for SCU, ADG, and AUDMAC peri-peri
+
+RZ/G3E has 5 DMA controllers that can all be used by audio peripherals.
+To allow the DMA core to distribute channels across all available
+controllers, increase the maximum number of DMA entries in DVC, SRC,
+and SSIU sub-nodes so that multiple providers can be listed with
+repeated channel names.
 
 Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 ---
- drivers/dma/sh/rz-dmac.c | 40 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+ .../bindings/sound/renesas,rsnd.yaml          | 169 +++++++++++++++---
+ 1 file changed, 148 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index 240c318b5753..d4a8cc95b871 100644
---- a/drivers/dma/sh/rz-dmac.c
-+++ b/drivers/dma/sh/rz-dmac.c
-@@ -97,6 +97,7 @@ struct rz_dmac_chan {
- 	u32 chcfg;
- 	u32 chctrl;
- 	int mid_rid;
-+	int dmac_ack;
+diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml b/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
+index e8a2acb92646..bc8885c4fa24 100644
+--- a/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
++++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
+@@ -58,6 +58,7 @@ properties:
+           - renesas,rcar_sound-gen2
+           - renesas,rcar_sound-gen3
+           - renesas,rcar_sound-gen4
++          - renesas,rcar_sound-r9a09g047     # RZ/G3E
  
- 	struct {
- 		u32 nxla;
-@@ -124,6 +125,9 @@ struct rz_dmac_icu {
- struct rz_dmac_info {
- 	void (*icu_register_dma_req)(struct platform_device *icu_dev,
- 				     u8 dmac_index, u8 dmac_channel, u16 req_no);
-+	void (*icu_register_dma_ack)(struct platform_device *icu_dev, u8 dmac_index,
-+				     u8 dmac_channel, u16 ack_no);
-+	u16 default_dma_ack_no;
- 	u16 default_dma_req_no;
- };
+   reg:
+     minItems: 1
+@@ -97,20 +98,22 @@ properties:
  
-@@ -362,6 +366,25 @@ static void rz_dmac_set_dma_req_no(struct rz_dmac *dmac, unsigned int index,
- 		rz_dmac_set_dmars_register(dmac, index, req_no);
- }
+   resets:
+     minItems: 1
+-    maxItems: 11
++    maxItems: 14
  
-+static void rz_dmac_set_dma_ack_no(struct rz_dmac *dmac, unsigned int index,
-+				   u16 ack_no)
-+{
-+	if (!dmac->info->icu_register_dma_ack)
-+		return;
-+
-+	dmac->info->icu_register_dma_ack(dmac->icu.pdev, dmac->icu.dmac_index,
-+					 index, ack_no);
-+}
-+
-+static void rz_dmac_reset_dma_ack_no(struct rz_dmac *dmac, int ack_no)
-+{
-+	if (ack_no < 0 || !dmac->info->icu_register_dma_ack)
-+		return;
-+
-+	dmac->info->icu_register_dma_ack(dmac->icu.pdev, dmac->icu.dmac_index,
-+					 dmac->info->default_dma_ack_no, ack_no);
-+}
-+
- static void rz_dmac_prepare_desc_for_memcpy(struct rz_dmac_chan *channel)
- {
- 	struct dma_chan *chan = &channel->vc.chan;
-@@ -431,6 +454,7 @@ static void rz_dmac_prepare_descs_for_slave_sg(struct rz_dmac_chan *channel)
- 	channel->lmdesc.tail = lmdesc;
+   reset-names:
+     minItems: 1
+-    maxItems: 11
++    maxItems: 14
  
- 	rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
-+	rz_dmac_set_dma_ack_no(dmac, channel->index, channel->dmac_ack);
- }
+   clocks:
+     description: References to SSI/SRC/MIX/CTU/DVC/AUDIO_CLK clocks.
+     minItems: 1
+-    maxItems: 31
++    maxItems: 47
  
- static void rz_dmac_prepare_descs_for_cyclic(struct rz_dmac_chan *channel)
-@@ -485,6 +509,7 @@ static void rz_dmac_prepare_descs_for_cyclic(struct rz_dmac_chan *channel)
- 	channel->lmdesc.tail = lmdesc;
+   clock-names:
+     description: List of necessary clock names.
+     # details are defined below
++    minItems: 1
++    maxItems: 47
  
- 	rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
-+	rz_dmac_set_dma_ack_no(dmac, channel->index, channel->dmac_ack);
- }
+   # ports is below
+   port:
+@@ -136,9 +139,17 @@ properties:
  
- static int rz_dmac_xfer_desc(struct rz_dmac_chan *chan)
-@@ -567,6 +592,9 @@ static void rz_dmac_free_chan_resources(struct dma_chan *chan)
- 		channel->mid_rid = -EINVAL;
- 	}
+         properties:
+           dmas:
+-            maxItems: 1
++            description:
++              Must contain unique DMA specifiers, one per available
++              DMAC. On RZ/G3E, up to 5 for transmission.
++            minItems: 1
++            maxItems: 5
+           dma-names:
+-            const: tx
++            minItems: 1
++            maxItems: 5
++            items:
++              enum:
++                - tx
+         required:
+           - dmas
+           - dma-names
+@@ -174,13 +185,19 @@ properties:
+           interrupts:
+             maxItems: 1
+           dmas:
+-            maxItems: 2
++            description:
++              Must contain unique DMA specifiers, one per available
++              DMAC, for each transfer direction. On RZ/G3E, up to 5
++              for transmission and up to 5 for reception.
++            minItems: 2
++            maxItems: 10
+           dma-names:
+-            allOf:
+-              - items:
+-                  enum:
+-                    - tx
+-                    - rx
++            minItems: 2
++            maxItems: 10
++            items:
++              enum:
++                - tx
++                - rx
+     additionalProperties: false
  
-+	rz_dmac_reset_dma_ack_no(dmac, channel->dmac_ack);
-+	channel->dmac_ack = -EINVAL;
-+
- 	spin_unlock_irqrestore(&channel->vc.lock, flags);
+   rcar_sound,ssiu:
+@@ -193,13 +210,19 @@ properties:
  
- 	list_for_each_entry_safe(desc, _desc, &channel->ld_free, node) {
-@@ -814,6 +842,7 @@ static void rz_dmac_device_synchronize(struct dma_chan *chan)
- 		dev_warn(dmac->dev, "DMA Timeout");
+         properties:
+           dmas:
+-            maxItems: 2
++            description:
++              Must contain unique DMA specifiers, one per available
++              DMAC, for each transfer direction. On RZ/G3E, up to 5
++              for transmission and up to 5 for reception.
++            minItems: 2
++            maxItems: 10
+           dma-names:
+-            allOf:
+-              - items:
+-                  enum:
+-                    - tx
+-                    - rx
++            minItems: 2
++            maxItems: 10
++            items:
++              enum:
++                - tx
++                - rx
+         required:
+           - dmas
+           - dma-names
+@@ -299,7 +322,7 @@ allOf:
+               - sru
+               - ssi
+               - adg
+-  # for Gen2/Gen3
++  # for Gen2/Gen3/RZ/G3E
+   - if:
+       properties:
+         compatible:
+@@ -307,6 +330,7 @@ allOf:
+             enum:
+               - renesas,rcar_sound-gen2
+               - renesas,rcar_sound-gen3
++              - renesas,rcar_sound-r9a09g047
+     then:
+       properties:
+         reg:
+@@ -338,7 +362,7 @@ allOf:
+               - sdmc
  
- 	rz_dmac_set_dma_req_no(dmac, channel->index, dmac->info->default_dma_req_no);
-+	rz_dmac_reset_dma_ack_no(dmac, channel->dmac_ack);
- }
+   # --------------------
+-  # clock-names
++  # clock-names / reset-names
+   # --------------------
+   - if:
+       properties:
+@@ -354,10 +378,18 @@ allOf:
+               - ssi.0
+               - ssiu.0
+               - clkin
+-    else:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - renesas,rcar_sound-gen2
++              - renesas,rcar_sound-gen3
++    then:
+       properties:
++        clocks:
++          maxItems: 31
+         clock-names:
+-          minItems: 1
+           maxItems: 31
+           items:
+             oneOf:
+@@ -368,6 +400,101 @@ allOf:
+               - pattern: '^ctu\.[0-1]$'
+               - pattern: '^dvc\.[0-1]$'
+               - pattern: '^clk_(a|b|c|i)$'
++        resets:
++          maxItems: 11
++        reset-names:
++          maxItems: 11
++          items:
++            oneOf:
++              - const: ssi-all
++              - pattern: '^ssi\.[0-9]$'
++        rcar_sound,dvc:
++          patternProperties:
++            "^dvc-[0-1]$":
++              properties:
++                dmas:
++                  maxItems: 1
++                dma-names:
++                  maxItems: 1
++        rcar_sound,src:
++          patternProperties:
++            "^src-[0-9]$":
++              properties:
++                dmas:
++                  maxItems: 2
++                dma-names:
++                  maxItems: 2
++        rcar_sound,ssiu:
++          patternProperties:
++            "^ssiu-[0-9]+$":
++              properties:
++                dmas:
++                  maxItems: 2
++                dma-names:
++                  maxItems: 2
++  # for RZ/G3E
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: renesas,rcar_sound-r9a09g047
++    then:
++      properties:
++        clocks:
++          maxItems: 47
++        clock-names:
++          maxItems: 47
++          items:
++            oneOf:
++              - const: ssi-all
++              - pattern: '^ssi\.[0-9]$'
++              - pattern: '^src\.[0-9]$'
++              - pattern: '^mix\.[0-1]$'
++              - pattern: '^ctu\.[0-1]$'
++              - pattern: '^dvc\.[0-1]$'
++              - pattern: '^clk_(a|b|c|i)$'
++              - const: ssif_supply
++              - const: scu
++              - const: scu_x2
++              - const: scu_supply
++              - pattern: '^adg\.ssi\.[0-9]$'
++              - const: audmac_pp
++              - const: adg
++        resets:
++          maxItems: 14
++        reset-names:
++          maxItems: 14
++          items:
++            oneOf:
++              - const: ssi-all
++              - pattern: '^ssi\.[0-9]$'
++              - const: scu
++              - const: adg
++              - const: audmac_pp
++        rcar_sound,dvc:
++          patternProperties:
++            "^dvc-[0-1]$":
++              properties:
++                dmas:
++                  maxItems: 5
++                dma-names:
++                  maxItems: 5
++        rcar_sound,src:
++          patternProperties:
++            "^src-[0-9]$":
++              properties:
++                dmas:
++                  maxItems: 10
++                dma-names:
++                  maxItems: 10
++        rcar_sound,ssiu:
++          patternProperties:
++            "^ssiu-[0-9]+$":
++              properties:
++                dmas:
++                  maxItems: 10
++                dma-names:
++                  maxItems: 10
  
- static struct rz_lmdesc *
-@@ -1164,6 +1193,10 @@ static bool rz_dmac_chan_filter(struct dma_chan *chan, void *arg)
- 	channel->chcfg = CHCFG_FILL_TM(ch_cfg) | CHCFG_FILL_AM(ch_cfg) |
- 			 CHCFG_FILL_LVL(ch_cfg) | CHCFG_FILL_HIEN(ch_cfg);
- 
-+	/* ACK signal number from optional second cell */
-+	if (dma_spec->args_count == 2 && dmac->info->icu_register_dma_ack)
-+		channel->dmac_ack = FIELD_GET(GENMASK(6, 0), dma_spec->args[1]);
-+
- 	return !test_and_set_bit(channel->mid_rid, dmac->modules);
- }
- 
-@@ -1172,7 +1205,8 @@ static struct dma_chan *rz_dmac_of_xlate(struct of_phandle_args *dma_spec,
- {
- 	dma_cap_mask_t mask;
- 
--	if (dma_spec->args_count != 1)
-+	/* Accept 1 cell (basic) or 2 cells (with ACK signal) */
-+	if (dma_spec->args_count < 1 || dma_spec->args_count > 2)
- 		return NULL;
- 
- 	/* Only slave DMA channels can be allocated via DT */
-@@ -1200,6 +1234,7 @@ static int rz_dmac_chan_probe(struct rz_dmac *dmac,
- 
- 	channel->index = index;
- 	channel->mid_rid = -EINVAL;
-+	channel->dmac_ack = -EINVAL;
- 
- 	/* Request the channel interrupt. */
- 	scnprintf(pdev_irqname, sizeof(pdev_irqname), "ch%u", index);
-@@ -1568,6 +1603,7 @@ static int rz_dmac_resume(struct device *dev)
- 		guard(spinlock_irqsave)(&channel->vc.lock);
- 
- 		rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
-+		rz_dmac_set_dma_ack_no(dmac, channel->index, channel->dmac_ack);
- 
- 		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC))) {
- 			rz_dmac_ch_writel(&dmac->channels[i], CHCTRL_DEFAULT, CHCTRL, 1);
-@@ -1599,6 +1635,8 @@ static const struct dev_pm_ops rz_dmac_pm_ops = {
- 
- static const struct rz_dmac_info rz_dmac_v2h_info = {
- 	.icu_register_dma_req = rzv2h_icu_register_dma_req,
-+	.icu_register_dma_ack = rzv2h_icu_register_dma_ack,
-+	.default_dma_ack_no = RZV2H_ICU_DMAC_ACK_NO_DEFAULT,
- 	.default_dma_req_no = RZV2H_ICU_DMAC_REQ_NO_DEFAULT,
- };
+ unevaluatedProperties: false
  
 -- 
 2.25.1

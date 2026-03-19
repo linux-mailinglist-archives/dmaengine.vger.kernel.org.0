@@ -1,42 +1,42 @@
-Return-Path: <dmaengine+bounces-9527-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9528-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WMMjNGkfvGnQswIAu9opvQ
-	(envelope-from <dmaengine+bounces-9527-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:08:09 +0100
+	id AArYNqsdvGnzsgIAu9opvQ
+	(envelope-from <dmaengine+bounces-9528-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:00:43 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AE702CE647
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:08:09 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AFEE2CE2FD
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 17:00:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 63CA330D73BE
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 15:56:33 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9AB27304B8ED
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2026 15:56:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADFEB3E92B3;
-	Thu, 19 Mar 2026 15:55:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8344E3E9F73;
+	Thu, 19 Mar 2026 15:55:44 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBA0B3E3165;
-	Thu, 19 Mar 2026 15:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7322D3E9F69;
+	Thu, 19 Mar 2026 15:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773935734; cv=none; b=oz87tAfLu7RxgDsCoMz3Yuz+fwueeq2bYNboS90ILhOPeEIOzyisMZ+57xRiGkBDiZGusY/iypv22PYlC/ml6/Mxsfwnwhy/OMqylIe37GSpwaIVFqNbyLiyc2PKpcFUVQ1uHZHJdAwrh2fAQGD0u4wqqHazyFlNYZTpdJ85MTM=
+	t=1773935744; cv=none; b=dtysFWSYQREJue/kgduF0qLo3/FqOPdFISddFxQSuYXkF+1XkHUNy6XOsPVVZmtqe3Euq2RXhdU6QkOnTu7uvq/g5UyvG70vmURH7ooMqULyzM268CMuxbUMVcFyE1rKkxJyh6xDoCkgynFT+7GntK248yxHNycMIH8/B+VMMWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773935734; c=relaxed/simple;
-	bh=D1SxVx/NovE4mVqL7CRPWG12P1m0PWzlzknGr5qNHPY=;
+	s=arc-20240116; t=1773935744; c=relaxed/simple;
+	bh=8Zc6OScGYb+5AvQgNfZdnReDdkm0l7MnThx/FKQQlXE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GwS3pAiqNn74kkTTEFWF96/r+4ope7Yj+yNfYtCSA4VEpXDZ+VCNpZBlkDSyK9AbBFTi9mEJhDk9P2Fyk7ioFb2yePu7XDczXwFNat2q2rNLY4k63okQRn/hz+zXpjI5Y2wJm+QZVTKxo1XcDEddATEq6LNmtr291C8RdYc858E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+	 MIME-Version; b=kCi/ZFkw8wxr6Dq6tugnFnoH5XLXAyo7IAScv2EaCw8JH07KZ8LdYYL31kjWYVYA3gpeal2Qrr5/LdTxRHh2bilRrnUeFxRVgRZblNfa2ugZ5Egjdm9q1nj4mZCmua6njJ61Fo8ZTC8GV7IV/oEy3U0Y+I98nd26bj6Tl0z3YiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: qTtFXDT6SN6Efg7qGNScTQ==
-X-CSE-MsgGUID: gS+yZpz/TEmdxvkqMknL3g==
+X-CSE-ConnectionGUID: iKDvIp6eQS6mGUie7p6U6A==
+X-CSE-MsgGUID: gjoqKmIDTFSnk/wIw57Zwg==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 20 Mar 2026 00:55:31 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 20 Mar 2026 00:55:41 +0900
 Received: from ubuntu.adwin.renesas.com (unknown [10.226.93.35])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8CB44401B2FD;
-	Fri, 20 Mar 2026 00:55:23 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 90E41401B2E9;
+	Fri, 20 Mar 2026 00:55:32 +0900 (JST)
 From: John Madieu <john.madieu.xa@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
@@ -66,9 +66,9 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	dmaengine@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH 05/22] irqchip/renesas-rzv2h: Add DMA ACK signal routing support
-Date: Thu, 19 Mar 2026 16:53:17 +0100
-Message-ID: <20260319155334.51278-6-john.madieu.xa@bp.renesas.com>
+Subject: [PATCH 06/22] dma: sh: rz-dmac: Add DMA ACK signal routing support
+Date: Thu, 19 Mar 2026 16:53:18 +0100
+Message-ID: <20260319155334.51278-7-john.madieu.xa@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260319155334.51278-1-john.madieu.xa@bp.renesas.com>
 References: <20260319155334.51278-1-john.madieu.xa@bp.renesas.com>
@@ -84,18 +84,18 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	DMARC_POLICY_SOFTFAIL(0.10)[renesas.com : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9527-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9528-lists,dmaengine=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[28];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[baylibre.com,kernel.org,gmail.com,perex.cz,suse.com,pengutronix.de,tuxon.dev,bp.renesas.com,renesas.com,vger.kernel.org];
-	NEURAL_SPAM(0.00)[0.655];
+	NEURAL_SPAM(0.00)[0.611];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[john.madieu.xa@bp.renesas.com,dmaengine@vger.kernel.org];
@@ -103,101 +103,153 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[dmaengine,renesas,dt];
 	R_DKIM_NA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 8AE702CE647
+X-Rspamd-Queue-Id: 5AFEE2CE2FD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Some peripherals (mainly from audio module) found on RZ/G3E SoCs
-require explicit ACK signal routing through the ICU via the ICU_DMACKSELk
-registers.
+Some peripherals, mainly from the audio subsystem, on RZ/V2H and RZ/G3E
+SoCs require explicit ACK signal routing through the ICU.
 
-Add rzv2h_icu_register_dma_ack() to configure this routing.
+Extend the driver to support an optional second DMA specifier cell that
+contains the ACK signal number. When present, program the ICU accordingly
+during channel configuration. This maintains backward compatibility with
+single-cell DMA specifiers.
 
 Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 ---
- drivers/irqchip/irq-renesas-rzv2h.c       | 36 +++++++++++++++++++++++
- include/linux/irqchip/irq-renesas-rzv2h.h |  5 ++++
- 2 files changed, 41 insertions(+)
+ drivers/dma/sh/rz-dmac.c | 40 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-renesas-rzv2h.c b/drivers/irqchip/irq-renesas-rzv2h.c
-index ce790590f7ca..4d10b19f7e09 100644
---- a/drivers/irqchip/irq-renesas-rzv2h.c
-+++ b/drivers/irqchip/irq-renesas-rzv2h.c
-@@ -151,6 +151,12 @@ struct rzv2h_hw_info {
- #define ICU_DMAC_PREP_DMAREQ(sel, up)		(FIELD_PREP(ICU_DMAC_DkRQ_SEL_MASK, (sel)) \
- 						 << ICU_DMAC_DMAREQ_SHIFT(up))
+diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+index 240c318b5753..d4a8cc95b871 100644
+--- a/drivers/dma/sh/rz-dmac.c
++++ b/drivers/dma/sh/rz-dmac.c
+@@ -97,6 +97,7 @@ struct rz_dmac_chan {
+ 	u32 chcfg;
+ 	u32 chctrl;
+ 	int mid_rid;
++	int dmac_ack;
  
-+/* DMAC ACK routing - 4 x 7-bit fields per 32-bit register, 8-bit spacing */
-+#define ICU_DMAC_DACK_SEL_MASK			GENMASK(6, 0)
-+#define ICU_DMAC_DACK_SHIFT(n)			((n) * 8)
-+#define ICU_DMAC_DACK_FIELD_MASK(n)		(ICU_DMAC_DACK_SEL_MASK << ICU_DMAC_DACK_SHIFT(n))
-+#define ICU_DMAC_PREP_DACK(val, n)		(((val) & ICU_DMAC_DACK_SEL_MASK) << ICU_DMAC_DACK_SHIFT(n))
-+
- /**
-  * struct rzv2h_icu_priv - Interrupt Control Unit controller private data structure.
-  * @base:	Controller's base address
-@@ -188,6 +194,36 @@ void rzv2h_icu_register_dma_req(struct platform_device *icu_dev, u8 dmac_index,
+ 	struct {
+ 		u32 nxla;
+@@ -124,6 +125,9 @@ struct rz_dmac_icu {
+ struct rz_dmac_info {
+ 	void (*icu_register_dma_req)(struct platform_device *icu_dev,
+ 				     u8 dmac_index, u8 dmac_channel, u16 req_no);
++	void (*icu_register_dma_ack)(struct platform_device *icu_dev, u8 dmac_index,
++				     u8 dmac_channel, u16 ack_no);
++	u16 default_dma_ack_no;
+ 	u16 default_dma_req_no;
+ };
+ 
+@@ -362,6 +366,25 @@ static void rz_dmac_set_dma_req_no(struct rz_dmac *dmac, unsigned int index,
+ 		rz_dmac_set_dmars_register(dmac, index, req_no);
  }
- EXPORT_SYMBOL_GPL(rzv2h_icu_register_dma_req);
  
-+/**
-+ * rzv2h_icu_register_dma_ack - Configure DMA ACK signal routing
-+ * @icu_dev: ICU platform device
-+ * @dmac_index: DMAC instance index (0-4)
-+ * @dmac_channel: DMAC channel number (0-15), or RZV2H_ICU_DMAC_ACK_NO_DEFAULT to clear
-+ * @ack_no: Peripheral ACK number (0-88), used as index into ICU_DMACKSELk
-+ *
-+ * Routes the DMAC channel's ACK signal to the peripheral specified by ack_no,
-+ * or clears the entry when dmac_channel is RZV2H_ICU_DMAC_ACK_NO_DEFAULT.
-+ */
-+void rzv2h_icu_register_dma_ack(struct platform_device *icu_dev, u8 dmac_index,
-+				u8 dmac_channel, u16 ack_no)
++static void rz_dmac_set_dma_ack_no(struct rz_dmac *dmac, unsigned int index,
++				   u16 ack_no)
 +{
-+	struct rzv2h_icu_priv *priv = platform_get_drvdata(icu_dev);
-+	u8 reg_idx = ack_no / 4;
-+	u8 field_idx = ack_no & 0x3;
-+	u8 dmac_ack_src = (dmac_channel == RZV2H_ICU_DMAC_ACK_NO_DEFAULT) ?
-+			  RZV2H_ICU_DMAC_ACK_NO_DEFAULT :
-+			  (dmac_index * 16 + dmac_channel);
-+	u32 val;
++	if (!dmac->info->icu_register_dma_ack)
++		return;
 +
-+	guard(raw_spinlock_irqsave)(&priv->lock);
-+
-+	val = readl(priv->base + ICU_DMACKSELk(reg_idx));
-+	val &= ~ICU_DMAC_DACK_FIELD_MASK(field_idx);
-+	val |= ICU_DMAC_PREP_DACK(dmac_ack_src, field_idx);
-+	writel(val, priv->base + ICU_DMACKSELk(reg_idx));
++	dmac->info->icu_register_dma_ack(dmac->icu.pdev, dmac->icu.dmac_index,
++					 index, ack_no);
 +}
-+EXPORT_SYMBOL_GPL(rzv2h_icu_register_dma_ack);
 +
- static inline struct rzv2h_icu_priv *irq_data_to_priv(struct irq_data *data)
++static void rz_dmac_reset_dma_ack_no(struct rz_dmac *dmac, int ack_no)
++{
++	if (ack_no < 0 || !dmac->info->icu_register_dma_ack)
++		return;
++
++	dmac->info->icu_register_dma_ack(dmac->icu.pdev, dmac->icu.dmac_index,
++					 dmac->info->default_dma_ack_no, ack_no);
++}
++
+ static void rz_dmac_prepare_desc_for_memcpy(struct rz_dmac_chan *channel)
  {
- 	return data->domain->host_data;
-diff --git a/include/linux/irqchip/irq-renesas-rzv2h.h b/include/linux/irqchip/irq-renesas-rzv2h.h
-index 618a60d2eac0..4ffa898eaaf2 100644
---- a/include/linux/irqchip/irq-renesas-rzv2h.h
-+++ b/include/linux/irqchip/irq-renesas-rzv2h.h
-@@ -11,13 +11,18 @@
- #include <linux/platform_device.h>
+ 	struct dma_chan *chan = &channel->vc.chan;
+@@ -431,6 +454,7 @@ static void rz_dmac_prepare_descs_for_slave_sg(struct rz_dmac_chan *channel)
+ 	channel->lmdesc.tail = lmdesc;
  
- #define RZV2H_ICU_DMAC_REQ_NO_DEFAULT		0x3ff
-+#define RZV2H_ICU_DMAC_ACK_NO_DEFAULT		0x7f
+ 	rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
++	rz_dmac_set_dma_ack_no(dmac, channel->index, channel->dmac_ack);
+ }
  
- #ifdef CONFIG_RENESAS_RZV2H_ICU
- void rzv2h_icu_register_dma_req(struct platform_device *icu_dev, u8 dmac_index, u8 dmac_channel,
- 				u16 req_no);
-+void rzv2h_icu_register_dma_ack(struct platform_device *icu_dev, u8 dmac_index,
-+				u8 dmac_channel, u16 ack_no);
- #else
- static inline void rzv2h_icu_register_dma_req(struct platform_device *icu_dev, u8 dmac_index,
- 					      u8 dmac_channel, u16 req_no) { }
-+static inline void rzv2h_icu_register_dma_ack(struct platform_device *icu_dev, u8 dmac_index,
-+					      u8 dmac_channel, u16 ack_no) { }
- #endif
+ static void rz_dmac_prepare_descs_for_cyclic(struct rz_dmac_chan *channel)
+@@ -485,6 +509,7 @@ static void rz_dmac_prepare_descs_for_cyclic(struct rz_dmac_chan *channel)
+ 	channel->lmdesc.tail = lmdesc;
  
- #endif /* __LINUX_IRQ_RENESAS_RZV2H */
+ 	rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
++	rz_dmac_set_dma_ack_no(dmac, channel->index, channel->dmac_ack);
+ }
+ 
+ static int rz_dmac_xfer_desc(struct rz_dmac_chan *chan)
+@@ -567,6 +592,9 @@ static void rz_dmac_free_chan_resources(struct dma_chan *chan)
+ 		channel->mid_rid = -EINVAL;
+ 	}
+ 
++	rz_dmac_reset_dma_ack_no(dmac, channel->dmac_ack);
++	channel->dmac_ack = -EINVAL;
++
+ 	spin_unlock_irqrestore(&channel->vc.lock, flags);
+ 
+ 	list_for_each_entry_safe(desc, _desc, &channel->ld_free, node) {
+@@ -814,6 +842,7 @@ static void rz_dmac_device_synchronize(struct dma_chan *chan)
+ 		dev_warn(dmac->dev, "DMA Timeout");
+ 
+ 	rz_dmac_set_dma_req_no(dmac, channel->index, dmac->info->default_dma_req_no);
++	rz_dmac_reset_dma_ack_no(dmac, channel->dmac_ack);
+ }
+ 
+ static struct rz_lmdesc *
+@@ -1164,6 +1193,10 @@ static bool rz_dmac_chan_filter(struct dma_chan *chan, void *arg)
+ 	channel->chcfg = CHCFG_FILL_TM(ch_cfg) | CHCFG_FILL_AM(ch_cfg) |
+ 			 CHCFG_FILL_LVL(ch_cfg) | CHCFG_FILL_HIEN(ch_cfg);
+ 
++	/* ACK signal number from optional second cell */
++	if (dma_spec->args_count == 2 && dmac->info->icu_register_dma_ack)
++		channel->dmac_ack = FIELD_GET(GENMASK(6, 0), dma_spec->args[1]);
++
+ 	return !test_and_set_bit(channel->mid_rid, dmac->modules);
+ }
+ 
+@@ -1172,7 +1205,8 @@ static struct dma_chan *rz_dmac_of_xlate(struct of_phandle_args *dma_spec,
+ {
+ 	dma_cap_mask_t mask;
+ 
+-	if (dma_spec->args_count != 1)
++	/* Accept 1 cell (basic) or 2 cells (with ACK signal) */
++	if (dma_spec->args_count < 1 || dma_spec->args_count > 2)
+ 		return NULL;
+ 
+ 	/* Only slave DMA channels can be allocated via DT */
+@@ -1200,6 +1234,7 @@ static int rz_dmac_chan_probe(struct rz_dmac *dmac,
+ 
+ 	channel->index = index;
+ 	channel->mid_rid = -EINVAL;
++	channel->dmac_ack = -EINVAL;
+ 
+ 	/* Request the channel interrupt. */
+ 	scnprintf(pdev_irqname, sizeof(pdev_irqname), "ch%u", index);
+@@ -1568,6 +1603,7 @@ static int rz_dmac_resume(struct device *dev)
+ 		guard(spinlock_irqsave)(&channel->vc.lock);
+ 
+ 		rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
++		rz_dmac_set_dma_ack_no(dmac, channel->index, channel->dmac_ack);
+ 
+ 		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC))) {
+ 			rz_dmac_ch_writel(&dmac->channels[i], CHCTRL_DEFAULT, CHCTRL, 1);
+@@ -1599,6 +1635,8 @@ static const struct dev_pm_ops rz_dmac_pm_ops = {
+ 
+ static const struct rz_dmac_info rz_dmac_v2h_info = {
+ 	.icu_register_dma_req = rzv2h_icu_register_dma_req,
++	.icu_register_dma_ack = rzv2h_icu_register_dma_ack,
++	.default_dma_ack_no = RZV2H_ICU_DMAC_ACK_NO_DEFAULT,
+ 	.default_dma_req_no = RZV2H_ICU_DMAC_REQ_NO_DEFAULT,
+ };
+ 
 -- 
 2.25.1
 

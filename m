@@ -1,209 +1,210 @@
-Return-Path: <dmaengine+bounces-9556-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9557-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uK/SEOAavWnG6QIAu9opvQ
-	(envelope-from <dmaengine+bounces-9556-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 11:01:04 +0100
+	id yIS1JZccvWnG6QIAu9opvQ
+	(envelope-from <dmaengine+bounces-9557-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 11:08:23 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B20E2D868A
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 11:01:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B2C72D87D2
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 11:08:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9420F30238DC
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 09:59:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DCB0030D55F6
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 10:04:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0969238B140;
-	Fri, 20 Mar 2026 09:59:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C78A3612D6;
+	Fri, 20 Mar 2026 10:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILGveJT8"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022126.outbound.protection.outlook.com [52.101.126.126])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE8138B12D;
-	Fri, 20 Mar 2026 09:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.126
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774000745; cv=fail; b=acIcWK+QjJ6/PmQHodLVal6LHowxxquRKYu4/R9VdrlJx1Vn1E2wvq5TyPKgif7m4NVpdAM++yYZUb8q4SfYFWcSYJwLz2kerw/VBizSvNi1CJPYP20oocS5KYlk+pxGmh15YeePGlW/EAv165l5TD8RmtsOyiPQfc5ym8pv5y4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774000745; c=relaxed/simple;
-	bh=uUbOo5KtAg+8DK9Ca1uoORAPs91QSjzCMGjKJaAqp1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qiqYba6XLCfVHtMM3VLlcHZg/DrFJBYxIIuB2B64xMbtm+3gwcmBIVZuKGQY9tnnbwQA5vscuIbB3DKFxSCOrkFn/7N7c1LpEENE3kEYVthhtKaleSCIPwy4dQoh736wxLMBXlV259k0OGTCHSmGqwUcAVXafy2eLs/fzqoEXGI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k7lFuMFykPjRf5jUe1GvkDrpaDziCRDqfbs0ajm5pdvmxhdBq97rZupFe2/nrYwquuOfEpfTGCNPNbjv+/mZgwgK688ZYgXYY29CtZNZk2cXZhkJGHQVrar7xyGq4GoDPkXjBENL9CENNQ3a53ZQq0YIOxrgAYViCdGLz3vHvK/6iWtKsyGEE/jbHgJ7eWNIdpd/7gx9IC6b/EGq2qvH+UzFGyLZ//wzKUp2TWzHsOAtf3VgQTgw4Wp+Kc/EjoyKL6ne8/686ej3d4pc3BddFqyIKX4C+JeaMQvhFG4J7rG7GwpGWkA5YZ0O0810+Ig0HlQMLC5TVu8B8Oub6Jhrtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8GZbaPzqXlxKLuDM+TfBjyOaeC/Soh7/jpxS1F9Ls3o=;
- b=kytiDITFhR1K6bxoz0Dfz3ZpbzUph4CzqF4h8ZElANNOvZ02IWb6lMInGQDMIU1AZ6xjfRLhMHYhYlfFeGqqHAQx5+8ogplY/A+1UNFRXfiBb1wGB1MtHzow7++yVY9bRFPsR5xJ0yNyHYNQ4zDRk+1FHHYYiOt/tmuL+dCaAH2O15/xvX4W8h+cROBCA7TqAPmhXsZxvKzrLEzuS9IX/2pBTlrS6X+iNMWUU+Uy7lklUJAi7fqKG786L8pnTKdOByM4kJC+uB7wPEFjvt2uBvKFOQAtHLihztZkNt5LIffSoHQMpPnMsnEz9u8Yk94AoO+FwKgez5XiN2BCLrvpWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from PS2PR01CA0005.apcprd01.prod.exchangelabs.com
- (2603:1096:300:2d::17) by TY0PR06MB5609.apcprd06.prod.outlook.com
- (2603:1096:400:31e::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.23; Fri, 20 Mar
- 2026 09:59:00 +0000
-Received: from TY2PEPF0000AB84.apcprd03.prod.outlook.com
- (2603:1096:300:2d:cafe::53) by PS2PR01CA0005.outlook.office365.com
- (2603:1096:300:2d::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9723.23 via Frontend Transport; Fri,
- 20 Mar 2026 09:59:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- TY2PEPF0000AB84.mail.protection.outlook.com (10.167.253.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9723.19 via Frontend Transport; Fri, 20 Mar 2026 09:58:59 +0000
-Received: from nchen-desktop (unknown [172.16.64.25])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id DC4FC4126F92;
-	Fri, 20 Mar 2026 17:58:58 +0800 (CST)
-Date: Fri, 20 Mar 2026 17:58:57 +0800
-From: Peter Chen <peter.chen@cixtech.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Jun Guo <jun.guo@cixtech.com>, fugang.duan@cixtech.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
-	ychuang3@nuvoton.com, schung@nuvoton.com, robin.murphy@arm.com,
-	Frank.Li@kernel.org, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	cix-kernel-upstream@cixtech.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: dma: arm-dma350: document generic
- and combined IRQ topologies
-Message-ID: <ab0aYUK1NlUV3riG@nchen-desktop>
-References: <20260319101723.246539-1-jun.guo@cixtech.com>
- <20260319101723.246539-2-jun.guo@cixtech.com>
- <20260320-vengeful-violet-cockle-382580@quoll>
- <ab0VoTut0u4f7EVr@nchen-desktop>
- <41254f6c-3ce3-4566-acf4-f0bf764565f3@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683E2344030;
+	Fri, 20 Mar 2026 10:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774001059; cv=none; b=YaeAuiPDpbH6lrxQmen5J0FJiG5myyh22PuDBdhNn2ggmLCFTpGVpvnTehI47ePnOLVngVEaTCnPsrIHUAbfDoP0XdwfVET0KpiLQLhobEdEBc1ubsF0kzd1gHUJEDmq4dMyQxTYHiZIrZcGriODUH64sW0OjxpyV0BEfK2lwUU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774001059; c=relaxed/simple;
+	bh=mFpe5zFRoAQTYtBLK/7M9bW6IXP92QW/CWqGqj4pWlc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GRo2tjx0B0VWzjPxhMQ4xDP0e5MjdCmsY5XzMm+oHNKmeZjM/Oo15CJNJhsreXujSA/EGu+3VoKEx6iJg2ibqvO0muArVGVwltoqWg3eZysT2yIWSWiArq0KUb6GqMpuh4/pj8ebeXRKMB5t3AktVjrvzBLogKxJAKGfOoyYzNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILGveJT8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB39CC4CEF7;
+	Fri, 20 Mar 2026 10:04:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774001059;
+	bh=mFpe5zFRoAQTYtBLK/7M9bW6IXP92QW/CWqGqj4pWlc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ILGveJT817GXS/Lofx5sSQC8YV44+Da+iGqrrNxHRqwDdwDMss3zsF8Xm32dSKsBH
+	 q+FeUdhykMiIoitRGonghziyYGdEIMeH/svUG0HKb/bewRtpDnyZ42wX3pYNIOV9UR
+	 3AIpW3OiSRRJvKMJrS5dQksGTIDbRfFCLxsSpxgrIr81aH8YE2frug1uujI+JdnSaT
+	 PcCFzJeA1/Gukfsbc9BvI0fHj+8ss9fJfbo5hMMBg4pChCUvSPJm3XsfF8pE6qZ0DC
+	 o07JFVNuQxhEQjWD7nzEmZgS9W1jrQRew6XlAqNaSDY/Rv5MxzAq6N1YB9GQmQEFAH
+	 qm2eP9SwDXC0A==
+Message-ID: <45bb547e-8a9a-41ef-a5d3-417dc4f35746@kernel.org>
+Date: Fri, 20 Mar 2026 11:04:13 +0100
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <41254f6c-3ce3-4566-acf4-f0bf764565f3@kernel.org>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB84:EE_|TY0PR06MB5609:EE_
-X-MS-Office365-Filtering-Correlation-Id: 521018a9-86ed-4f16-35c3-08de86674f0a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|376014|7416014|22082099003|18002099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	0J2RDivcqm7xKMmYd3XScnLfMkAOs4emr3OoHAYHQ6Z+F8QMOX+PljmruP8okbqQWtfMXzLjEBzmYpVIlmnNOwAD4vcKWbjVsEW5ydVjLdJO4Qku/9RryCyYuBbDiLPl5kHADunmrAQ8/JjFcOSA88YbsJ1O9wqaLq8nWDJo2cshUVD8XfKymexh+10GrPXx5OndYbZ5vvKSxGoufITYy1XoxpWpOOj1eQbafZeMsHJuYTTJQZQaWgRiwjKN+jywIcuQTgMANZkmbVyxmoqFp3xCXqnxnElBTQnieV4pWtdwWTDZDRO9S1yJnsD5AbdoTdA8POC7UUf9Vb4239RZytUCQ/SzEOMGGSpjLush8N7+/7GBIlcSXE5weaebAS/gbnxxAJqaLz34ZQhVhowknI1HUnJbK30i0wJWYjMFP2JIKsEt0WJZRKGgTNHZWoNO3DQ4nIkwhyCXm9o+jJqZ9+d3MbgUQ59316UFlcu7qk5uA7VLOH2QAHJbwIrHEvUp0nST5xe/X3jb1GPT1LdkhIE+JA/PlprdZSxpIPJpFYQ3PT7nwojBSxtj9wMFXw2MiUFO9lEF46B8rxF3LU38YRBaIIbzQiGIoOEKteYqLQpkeg6GN2WfSiR6j19w1v4PsS+10RgDVFdSX23/ep923A29CqMeq1lZi093LTGpwwnBR1mDHU32uF8rNe7rqrPoNTS4+u79vDwTZK/JVG4/+GD7Nj4vBmXHDImLSRhR/I2Stx3yPEFTKM7uLFhSnGvU414oCyVi0nrQ01HFM0BqVg==
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(376014)(7416014)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	h8pPphuYHh5klIs0ADkMWTKFH9oKeC0+iHnTDeUux470SOmZul1RSAlisIlS1EKZKj6T/dJAF8Q3N0x2imtoPAg1KZfHBke3MWb3NO3R0QmJXg8ebPM59Xh3ZWdeRjHQrN2ZqGjYCZqOLlIGIkl7c5RLGl7Iw7UgNlzLwX5MEIeE+FAFCJC9nnFlLz+iAOQjMu62Tv0dRnEpiXRbOGVR9rM8pW3imCnqr9KrIGv4+KFThOo8avl0yUJ1IF6T5daNpyTCCSV1RLh7fQlm4XoAUzPex5WX8q+84F9aPyFrQkDkMbVWv0k2HZILnHJ3Rjuu8sXX3fm1iZZgUwVOm9tVmqM3BNqWEgKoBBMBQzak2ym21f/T3dObCepDrtYf+qaoEbcf0zjbejE1bWhhWgSZpL9XwGtLs5D8dOELZE4Fsk6UDY8IOVGZ2AYb1NUIbVf6
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2026 09:58:59.6943
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 521018a9-86ed-4f16-35c3-08de86674f0a
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	TY2PEPF0000AB84.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB5609
-X-Spamd-Result: default: False [2.54 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] dt-bindings: dma: arm-dma350: document generic and
+ combined IRQ topologies
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: Jun Guo <jun.guo@cixtech.com>, fugang.duan@cixtech.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
+ ychuang3@nuvoton.com, schung@nuvoton.com, robin.murphy@arm.com,
+ Frank.Li@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20260319101723.246539-1-jun.guo@cixtech.com>
+ <20260319101723.246539-2-jun.guo@cixtech.com>
+ <20260320-vengeful-violet-cockle-382580@quoll>
+ <ab0VoTut0u4f7EVr@nchen-desktop>
+ <41254f6c-3ce3-4566-acf4-f0bf764565f3@kernel.org>
+ <ab0aYUK1NlUV3riG@nchen-desktop>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <ab0aYUK1NlUV3riG@nchen-desktop>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9556-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7];
-	DMARC_NA(0.00)[cixtech.com];
+	TAGGED_FROM(0.00)[bounces-9557-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[16];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[peter.chen@cixtech.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	NEURAL_SPAM(0.00)[0.190];
-	R_DKIM_NA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.993];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,checkpatch.pl:url]
-X-Rspamd-Queue-Id: 9B20E2D868A
+X-Rspamd-Queue-Id: 1B2C72D87D2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 26-03-20 10:43:10, Krzysztof Kozlowski wrote:
-> EXTERNAL EMAIL
+On 20/03/2026 10:58, Peter Chen wrote:
+> On 26-03-20 10:43:10, Krzysztof Kozlowski wrote:
+>> EXTERNAL EMAIL
+>>
+>> On 20/03/2026 10:38, Peter Chen wrote:
+>>> On 26-03-20 10:12:53, Krzysztof Kozlowski wrote:
+>>>> EXTERNAL EMAIL
+>>>>
+>>>> On Thu, Mar 19, 2026 at 06:17:21PM +0800, Jun Guo wrote:
+>>>>> Update the DMA-350 DT binding to match the current driver behavior.
+>>>>>
+>>>>> Allow both:
+>>>>> - "arm,dma-350" as the generic compatible, and
+>>>>> - "cix,sky1-dma-350", "arm,dma-350" for SoC-specific fallback usage.
+>>>>>
+>>>>> Also document interrupt topology variants supported by hardware
+>>>>> integration:
+>>>>> - one combined interrupt for all channels, or
+>>>>> - one interrupt per channel (up to 8 channels).
+>>>>>
+>>>>> This patch is Assisted-by: Cursor: GPT-5.3 Codex.
+>>>>
+>>>> Wrong tag, please read carefully the guideline before using LLM tools.
+>>>>
+>>>
+>>> Hi Krzysztof,
+>>>
+>>> It is the trade off for coding-assistants.rst suggestion and
+>>> passing checkpatch.pl. Currently, checkpatch.pl reports the
+>>> error for tag without email address. So we choose to add tag
+>>> description at patch context.
+>>
+>> You still have to use correct tag.
 > 
-> On 20/03/2026 10:38, Peter Chen wrote:
-> > On 26-03-20 10:12:53, Krzysztof Kozlowski wrote:
-> >> EXTERNAL EMAIL
-> >>
-> >> On Thu, Mar 19, 2026 at 06:17:21PM +0800, Jun Guo wrote:
-> >>> Update the DMA-350 DT binding to match the current driver behavior.
-> >>>
-> >>> Allow both:
-> >>> - "arm,dma-350" as the generic compatible, and
-> >>> - "cix,sky1-dma-350", "arm,dma-350" for SoC-specific fallback usage.
-> >>>
-> >>> Also document interrupt topology variants supported by hardware
-> >>> integration:
-> >>> - one combined interrupt for all channels, or
-> >>> - one interrupt per channel (up to 8 channels).
-> >>>
-> >>> This patch is Assisted-by: Cursor: GPT-5.3 Codex.
-> >>
-> >> Wrong tag, please read carefully the guideline before using LLM tools.
-> >>
-> >
-> > Hi Krzysztof,
-> >
-> > It is the trade off for coding-assistants.rst suggestion and
-> > passing checkpatch.pl. Currently, checkpatch.pl reports the
-> > error for tag without email address. So we choose to add tag
-> > description at patch context.
+> You mean even checkpatch.pl reports below error, we still add it
+> "Assisted-by: Cursor: GPT-5.3 Codex" as tag?
+
+Yes, after fixing the contents (that's not entirely correct format I
+think). Hopefully someone will fix checkpatch one day...
+
 > 
-> You still have to use correct tag.
-
-You mean even checkpatch.pl reports below error, we still add it
-"Assisted-by: Cursor: GPT-5.3 Codex" as tag?
-
-WARNING: Non-standard signature: Assisted-by:
-#14:
-Assisted-by: Cursor: GPT-5.3 Codex
-
-ERROR: Unrecognized email address: 'Cursor: GPT-5.3 Codex'
-#14:
-Assisted-by: Cursor: GPT-5.3 Codex
-
-> You ignored rest of the email
-> message, so I assume you agree that you should not send LLM microslop?
+> WARNING: Non-standard signature: Assisted-by:
+> #14:
+> Assisted-by: Cursor: GPT-5.3 Codex
 > 
+> ERROR: Unrecognized email address: 'Cursor: GPT-5.3 Codex'
+> #14:
+> Assisted-by: Cursor: GPT-5.3 Codex
+> 
+>> You ignored rest of the email
+>> message, so I assume you agree that you should not send LLM microslop?
+>>
+> 
+> I am not the patch author, Jun will reply it.
 
-I am not the patch author, Jun will reply it.
-I come in to discuss this patch duo to I suggested Jun adding LLM tag
-at patch context.
+Ah, sorry, I did not notice that.
 
--- 
 
 Best regards,
-Peter
+Krzysztof
 

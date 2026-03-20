@@ -1,243 +1,212 @@
-Return-Path: <dmaengine+bounces-9559-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9560-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MAzSFGoivWmr6wIAu9opvQ
-	(envelope-from <dmaengine+bounces-9559-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 11:33:14 +0100
+	id sFf9Cd8vvWmI7QIAu9opvQ
+	(envelope-from <dmaengine+bounces-9560-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 12:30:39 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAD7A2D8B9F
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 11:33:13 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24A9A2D996B
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 12:30:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8F1D030A6E0B
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 10:28:44 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 059DB30074D4
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Mar 2026 11:28:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4DA1375AB5;
-	Fri, 20 Mar 2026 10:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DFB23806CA;
+	Fri, 20 Mar 2026 11:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="IehB20ga"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023114.outbound.protection.outlook.com [40.107.44.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F59314D1A;
-	Fri, 20 Mar 2026 10:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774002523; cv=fail; b=MP0bJHrt4NOKxdjDB8koSuNin6rtjFKdDkanyyW09hHykrD72Iff0Ov5J8VfsdCJeCEcvfnjUk2yNUziLGGgdDad5wnuwTSCWU+2bI0rlHQTjU+XlTxtrQKISJVHC7toEJs1zAlyC+EwKeAHzsC8sM4KsHf+omWVDF9JNd52keU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774002523; c=relaxed/simple;
-	bh=+IoiRkmfcNSqTWGpX/L1q/PVQ6oP11i24FvsPgLbGBI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y9aBZTKKklMPhFa6jar0U941Cw/aEoHgON9WeOD7xari9zbMi+GpWOpl9RyhPio7Sm5dSmmhAS7L2/SdO82swbi7MG4VwZROiQGjaYlE+GBlvBOMlaBlftrewZbEqPdjilUxO7dzL0cGBlZpJJ2S/AgWwJM0jK6Nu5KeooPdkKs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TM0A8LpiCf99z9wijj/+OvjPRbLzpXKriqKlNUDDOKssDbNI/vKOA3kpGe/MV1w68f5xkkOP9vX2Z70+LeZrfIYBgHh3Dkb0HStox29999I43Z0gLTxNOrTY8x+nrf2GgKNrK3QZUJLorfeJjyDW6kEIyMGDCEBverpa3fXmL5tzwMjTnKSDgkzJRxeuzIK0xbox8nvc08I0nXTdm51Pqpifq0zvYpLD7vrmg7/jqf9HyzIaYDSfXMDMt1AnbDfwD4jZEA7UriUrjwNySlNLSKPAif2IjgWMHQSvszjd3Zc6U+s/fV+qcgXvYoHaOj0gKQmQj1Jwl558/dHNxYhRGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Jdq6kd2e/QetCN5+0KvkNKA9+Xu9sw78ttZMSbDkXn0=;
- b=FSLbhg9z3AwZL2/l0piHGMl0EBtXjnq3DA2/18VCY7yzuaqTxuTxULRi8rowAu27QAwJPoFjBBvh/jeZ3NvVuAK3U+2X6TV/mBM0uMnD6smPVeZ93UbdGQbKY4p14mf4OtuwdfOHzT8xeZq+y2ywn2MHCY2oqkunw0NvXZuvL2SQw9BCcB39leVib8Xo+AIhSfuFNeE7J7H3JGEfaGsbctUMWARLdow0wsfN0XKxfooGBjt6JM1mGUIUi2ZbUrkATI9NjxMd0C1SXhE7rDqqYXEvmeeB885hY8v6nAsjC7DXw3dZfuamD/4a4brjXrY9pVmfV9r1Iz6RYxlkkSUQDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SI2PR02CA0017.apcprd02.prod.outlook.com (2603:1096:4:194::17)
- by TY2PPF5221563AF.apcprd06.prod.outlook.com (2603:1096:408::78e) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.19; Fri, 20 Mar
- 2026 10:28:36 +0000
-Received: from SG2PEPF000B66CB.apcprd03.prod.outlook.com
- (2603:1096:4:194:cafe::e6) by SI2PR02CA0017.outlook.office365.com
- (2603:1096:4:194::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9700.27 via Frontend Transport; Fri,
- 20 Mar 2026 10:28:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG2PEPF000B66CB.mail.protection.outlook.com (10.167.240.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9723.19 via Frontend Transport; Fri, 20 Mar 2026 10:28:35 +0000
-Received: from [172.20.96.43] (unknown [172.20.96.43])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 747374126F82;
-	Fri, 20 Mar 2026 18:28:34 +0800 (CST)
-Message-ID: <40fc5cb7-a5f2-4b86-8dba-1b39e1ea0da4@cixtech.com>
-Date: Fri, 20 Mar 2026 18:28:34 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2058387352
+	for <dmaengine@vger.kernel.org>; Fri, 20 Mar 2026 11:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774006126; cv=none; b=bNgFWIlku90Rru97FnQSVX2rQ2fwGZag0r7aFcqCu4yGDtKlu7RZajTQ9BFUPKE1pMVl66lmLf0vLHVsyyD6XRJoNMHcsZELuQ+ohzbuXJCDu6jTo7M9ClfvlTwdBODrJ+nnI0U5DL6s6VBT4LWN6KC7IWs/iUcMjz+3bMU4v1M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774006126; c=relaxed/simple;
+	bh=vSI4IwqxGu0eFjumdTZBx6cxeXmalzUJA2e4nqdV7cY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GMYsNBrrWtHtZHicqKw+eGsE18kArEuiKUZdVsyknYO5zYWiFnM3CBcR9RoXa0FmFD6JpM6Ahq69vfgfcmL5cL+LDGops/2hjLi6Hj1EIMagR5TDkozHqkXapJgfs1ii3x5D2eDmOIlm3LArj6wVuHzLDr+9qYOhwnaBvtxHWDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=IehB20ga; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-486fda2a389so3767965e9.1
+        for <dmaengine@vger.kernel.org>; Fri, 20 Mar 2026 04:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1774006122; x=1774610922; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xJs+yjFGc4wxJBOuT7ndvWzC4803vs8mZQN493sbHhM=;
+        b=IehB20gaJ9sQr8Ezs9Ubb0LuV6QKdNvKllTIWULzRTJRM0cgqA3IDErWp8/6aJMkzY
+         yjy/nVfOotxAAw2JUSbr3TZlWB+nwQF+JvwltkthM4qeAoylrKjNGbf/zdZ7eZhhckK/
+         WXQY1uBoEnGDDpXCGzHsfAkTQL7LHJ/uMaHHlzreJhHyANi3MFTiCdDd+PheCesQvZi7
+         hMBYfGiyDD24mUAxJmVmwbTAoJTg4F67afO1heI+XCcqOo0THKADZ1Aad1vRuirL1GLA
+         ed2PA1cIgTuLRpNrtokLG8tEb57bgv5oTbJvik+p3qxWkWGu1p7kq1kFUR27/XCO1Tsd
+         IVDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774006122; x=1774610922;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xJs+yjFGc4wxJBOuT7ndvWzC4803vs8mZQN493sbHhM=;
+        b=fWrtdyHeVLjymEd2dlrFsBqsTqqA3rGC+9btpSJ6p6XbFFq5y6vICuu8zUWH8xp5qu
+         YPdfKg6he3xRHcOV2ufjoa24/iKlLk96JczJPbF9yW/KIcE1soeyP5jjpwe3XSKZhiMS
+         tEqdF5gowA6s0mFQdvFdOLxmwAU8HnFy9Gq/8tCFAmu9PiwCTaxFQT5wqXse4X020aY+
+         7ye8OYv2Ee/qhYiZzuoz3ES1WgfFdyRcBhcDHjz0lVhhlIcLkqitDVsFyLrlb8vB1Vd6
+         AsAHqfbxlO5fH1/2BvOpV0zTzw/iCShoUphol4iAcPsQ+VM9jVJS31/MCTY+4nIDPhuB
+         ayXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWcRJp4lwmZZ9TKXA6MQQUYVuu4p++O7wH5jtjDkIxJ2Yr86LhXPiJZ2q+CF5wd2mjFQ/Rw/wOV+QI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVK7T0+dH7rOc7hXy9ZsWQTGAojis8VpLjtxQmtjwCilQprlGd
+	nTpEcHlkDrqbZ5LVzB1vpZwMRgj+6x43ppTTtMK/Y2z4bN04Eu6EZJ9y0wl0SahDUpI=
+X-Gm-Gg: ATEYQzyeVfQXd5X0pnl8fqVwmDydoSnBzCPtF8lmRHi3KdX5qiYYkjrlS36CnRljkQr
+	YkAij+Gl/9DTkKiusuIjxVuuDNhIEHw4SpRcSUz/reFbDdQL8GOKdbY93cSP7XSM9Ay7uVpE0gW
+	MQZbLT8GfI7VttQvSB7ZNlOIrZ3C8icyhv1ANQWn7I0FLupowMeiiGS1fA8MX+o7jxB4L0/9tzO
+	5a8CU/ZWE9Fk9N2rUTWJ4n62WI+KAM1dKanI9VqelJAar7r3Mb382iEVSG/lW3j3Nd/BXxZWaz8
+	wqCHxrR67g3QkEizmqVVXV3tAOJF/TyiGgHjeuoxglNyYiVfH8QA0NXdFC3kxC8KjXw7YpiUD9o
+	dexXGnHdGEkGc2FgACsn649JpZJmebyxgMiRWoELY1zmhEKA2B8HSArQik5pAC4oHt5mfbhjZ6A
+	gDt5IeEytlxREFujhdus1wigDACHFEtWeQ50tT5hOzDlS3uMsdH6Gf
+X-Received: by 2002:a05:600c:3b8c:b0:486:d76c:fa51 with SMTP id 5b1f17b1804b1-486ff03ffa5mr34883115e9.27.1774006121958;
+        Fri, 20 Mar 2026 04:28:41 -0700 (PDT)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.216])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486fe836784sm49869935e9.13.2026.03.20.04.28.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2026 04:28:41 -0700 (PDT)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: vkoul@kernel.org,
+	Frank.Li@kernel.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	biju.das.jz@bp.renesas.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	p.zabel@pengutronix.de,
+	geert+renesas@glider.be,
+	fabrizio.castro.jz@renesas.com,
+	john.madieu.xa@bp.renesas.com,
+	kuninori.morimoto.gx@renesas.com,
+	tommaso.merciai.xr@bp.renesas.com
+Cc: claudiu.beznea@tuxon.dev,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v2 0/7] Renesas: dmaengine and ASoC fixes
+Date: Fri, 20 Mar 2026 13:28:31 +0200
+Message-ID: <20260320112838.2200198-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: dma: arm-dma350: document generic and
- combined IRQ topologies
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: peter.chen@cixtech.com, fugang.duan@cixtech.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
- ychuang3@nuvoton.com, schung@nuvoton.com, robin.murphy@arm.com,
- Frank.Li@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- linux-arm-kernel@lists.infradead.org
-References: <20260319101723.246539-1-jun.guo@cixtech.com>
- <20260319101723.246539-2-jun.guo@cixtech.com>
- <20260320-vengeful-violet-cockle-382580@quoll>
-Content-Language: en-US
-From: Jun Guo <jun.guo@cixtech.com>
-In-Reply-To: <20260320-vengeful-violet-cockle-382580@quoll>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CB:EE_|TY2PPF5221563AF:EE_
-X-MS-Office365-Filtering-Correlation-Id: c10e4ae6-3009-4e9f-f4c5-08de866b71aa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700016|18002099003|56012099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	r8sFFwBC6ObsQSPen90pyXg8xIQGpKGIkl7aquw4le+dsEl7JPKMcJW4UcKHfWarzwb2EqyADmskws9IVrRqD4JM9se6NV2Ibn9+xsrYMF9eMKBozaqWaZ/p8l//31ExE/ASyymSWfx9DQAB5vTgv8/qHKOQ5hw63GEECAZIVYnLHQapbHh5u5DjRHqquAXL/OkmumDvaD8XZ6bwA2Pf4gZQ9R+fI4vI/J/iqvq+FRf48qGLjj19WbDLhrd0u1h2/0LtE3yG982Q5uikP139+n+2/tmreRmKza1BBDvz4FeZQfbRskIDAUoqbsXfTJKmwXDXtS+9IeIey0LHXHcYG+xab1YAwPjSYa/fzfqUFBsYAqphSjtpYlFCs/FGoiSCLlcb8Z+xnTqs1m418oNrg1rzCUkbIivLltEDyskqEnniYnAQKYM+6RYmgr5F9A90GvVSHa3cRSpPdYhRLlPj870F1YJepmzya1fVtcRbBSUosLiMzOZxog4ScN8yK5hsKUulkAyTHFxPd3koWozIAN13ONkD0w6QFue/aLmSDJsV+XAjL8N1YxWqgqAFbZ5YRHkPcxCdqzqJELcVNdyfLe66LO1sgxdrOxohVGlAwyUA1ARL0ggmalpdIg909hzjWUs8PHvOUAxsl1qWqR7jF9Ho6bjkYDD5nAS8zgNvVwHinEU5fNFEOArRN6/fSGGRCJFO4mrC9YS3UeIKfw3WGgMeT35kvW/gpuLVKanXR21DFJHfQ5ZPWsJRu2HFpt+HmXd0GqDEnuRaNbkk48a0mg==
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700016)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	E6l3c1EjVdaJIuCi15i5a6s7o1qEdRuzJQClsUjlDLIdOFesxZIWCZoHwxKmFhOCb0YgcjerF1aX9schm6gMuIzjXq+eHcoYxEGWeCAfio+gvf0dwHQeU+bITRN1nNbo+bgOH++yg3DudUI9rnpayl7ii2EzpGaekiUk+7VvKhD7MqIOrff8BoVBcrltf3aHHa1H7/MVnCQ5csVxy1TZDJOOlB3pfiQNEmg5En9WZVS+1K8zSYJk30Atjvrq6gun0F3oLvjI/UL/6oEWZOZw6QKvKk5Fo5FjucdRN59+tpW1+ITbhcbtuGTuxpUDC16KkoosgncX7Q+rx4NfjiY+4V5CgyT8D7V1pr0JRNN/rHlw4/xsINyWMWg5KLdZ4KxHT0I553okHfIiCRUULOWq+wHFzUk+17R8CRPus0HDoguda3PU0pchDaFTOtqTJTrp
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2026 10:28:35.8137
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c10e4ae6-3009-4e9f-f4c5-08de866b71aa
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG2PEPF000B66CB.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PPF5221563AF
-X-Spamd-Result: default: False [2.04 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[tuxon.dev:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9559-lists,dmaengine=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[cixtech.com];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	DMARC_NA(0.00)[tuxon.dev];
+	TAGGED_FROM(0.00)[bounces-9560-lists,dmaengine=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,perex.cz,suse.com,bp.renesas.com,pengutronix.de,glider.be,renesas.com];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jun.guo@cixtech.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.407];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,cixtech.com:email,cixtech.com:mid]
-X-Rspamd-Queue-Id: CAD7A2D8B9F
+	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@tuxon.dev,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[tuxon.dev:+];
+	NEURAL_HAM(-0.00)[-0.960];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 24A9A2D996B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
+Hi,
 
-On 3/20/2026 5:12 PM, Krzysztof Kozlowski wrote:
-> EXTERNAL EMAIL
-> 
-> On Thu, Mar 19, 2026 at 06:17:21PM +0800, Jun Guo wrote:
->> Update the DMA-350 DT binding to match the current driver behavior.
->>
->> Allow both:
->> - "arm,dma-350" as the generic compatible, and
->> - "cix,sky1-dma-350", "arm,dma-350" for SoC-specific fallback usage.
->>
->> Also document interrupt topology variants supported by hardware
->> integration:
->> - one combined interrupt for all channels, or
->> - one interrupt per channel (up to 8 channels).
->>
->> This patch is Assisted-by: Cursor: GPT-5.3 Codex.
-> 
-> Wrong tag, please read carefully the guideline before using LLM tools.
-Okay. I will temporarily disregard the check patch warnings in the next 
-version and correct the format of the AI-generated tag.
+This series addresses issues identified in the DMA engine and RZ SSI
+drivers.
 
-> 
->>
->> Signed-off-by: Jun Guo <jun.guo@cixtech.com>
->> Link: https://lore.kernel.org/r/20251216123026.3519923-2-jun.guo@cixtech.com
-> 
-> What does this express? Changelog link? Then keep it in the changelog
-> --- part.
-Okay, I'll address this in the next version of the patch.
+As described in the patch "dmaengine: sh: rz-dmac: Set the Link End (LE)
+bit on the last descriptor", stress testing on the Renesas RZ/G2L SoC
+showed that starting all available DMA channels could cause the system
+to stall after several hours of operation. This issue was resolved by
+setting the Link End bit on the last descriptor of a DMA transfer.
 
-> 
-> 
->> ---
->>   .../devicetree/bindings/dma/arm,dma-350.yaml  | 31 +++++++++++++------
->>   1 file changed, 21 insertions(+), 10 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/dma/arm,dma-350.yaml b/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
->> index 429f682f15d8..3639ce0d5054 100644
->> --- a/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
->> +++ b/Documentation/devicetree/bindings/dma/arm,dma-350.yaml
->> @@ -14,7 +14,11 @@ allOf:
->>
->>   properties:
->>     compatible:
->> -    const: arm,dma-350
->> +    oneOf:
->> +      - const: arm,dma-350
->> +      - items:
->> +          - const: cix,sky1-dma-350
->> +          - const: arm,dma-350
->>
->>     reg:
->>       items:
->> @@ -22,15 +26,22 @@ properties:
->>
->>     interrupts:
->>       minItems: 1
->> -    items:
->> -      - description: Channel 0 interrupt
->> -      - description: Channel 1 interrupt
->> -      - description: Channel 2 interrupt
->> -      - description: Channel 3 interrupt
->> -      - description: Channel 4 interrupt
->> -      - description: Channel 5 interrupt
->> -      - description: Channel 6 interrupt
->> -      - description: Channel 7 interrupt
->> +    maxItems: 8
->> +    description: |
->> +      The DMA controller may be configured with separate interrupts for each channel,
->> +      or with a single combined interrupt for all channels, depending on the SoC integration.
-> 
-> And more important - you must review the LLM microslop output before
-> posting and adjust it to Linux kernel coding style. Don't send
-> unredacted tool output.
-> 
-Actually, this part of the description was not AI-generated. However, 
-I’d like to confirm the issue you mentioned: are you saying that this 
-description is written too verbosely?
-Then, do you think there are still issues with the revised version?
-   interrupts:
-     minItems: 1
-     maxItems: 8
-     description:
-       Either one interrupt per channel (8 interrupts), or one
-       combined interrupt for all channels.
+However, after applying that fix, the SSI audio driver began to suffer
+from frequent overruns and underruns. This was caused by the way the SSI
+driver emulated cyclic DMA transfers: at the start of playback/capture
+it initially enqueued 4 DMA descriptors as single SG transfers, and upon
+completion of each descriptor, a new one was enqueued. Since there was
+no indication to the DMA hardware where the descriptor list ended
+(though the LE bit), the DMA engine continued transferring until the
+audio stream was stopped. From time to time, audio signal spikes were
+observed in the recorded file with this approach.
 
-> Best regards,
-> Krzysztof
-> 
+To address these issue, cyclic DMA support was added to the DMA engine
+driver, and the SSI audio driver was reworked to use this support via
+the generic PCM dmaengine APIs.
+
+Due to the behavior described above, no Fixes tags were added to the
+patches in this series, and all patches should be merged through the
+same tree.
+
+In case this series will be merged this release cycle, best would
+be to go though the DMA tree as the DMA changes are based on the series
+at [1] which was merged on March 17th. Otherwise, any of the ASoC or DMA
+tree should be good.
+
+Thank you,
+Claudiu
+
+Changes in v2:
+- fixed typos in patch descriptions and patch titles
+- updated "ASoC: renesas: rz-ssi: Use generic PCM dmaengine APIs"
+  to fix the PIO mode
+- in patch "dmaengine: sh: rz-dmac: Add suspend to RAM support"
+  clear the RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED status bit for
+  channel w/o RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL
+- per-patch updates can be found in individual patches changelog 
+- rebased on top of next-20260319
+- updated the cover letter
+
+[1] https://lore.kernel.org/all/20260316133252.240348-1-claudiu.beznea.uj@bp.renesas.com/
+
+Claudiu Beznea (7):
+  dmaengine: sh: rz-dmac: Add enable status bit
+  dmaengine: sh: rz-dmac: Add pause status bit
+  dmaengine: sh: rz-dmac: Drop the update of channel->chctrl with
+    CHCTRL_SETEN
+  dmaengine: sh: rz-dmac: Add cyclic DMA support
+  dmaengine: sh: rz-dmac: Add suspend to RAM support
+  ASoC: renesas: rz-ssi: Use generic PCM dmaengine APIs
+  dmaengine: sh: rz-dmac: Set the Link End (LE) bit on the last
+    descriptor
+
+ drivers/dma/sh/rz-dmac.c   | 403 ++++++++++++++++++++++++++++++++++---
+ sound/soc/renesas/Kconfig  |   1 +
+ sound/soc/renesas/rz-ssi.c | 348 +++++++++-----------------------
+ 3 files changed, 470 insertions(+), 282 deletions(-)
+
+-- 
+2.43.0
 
 

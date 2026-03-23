@@ -1,181 +1,407 @@
-Return-Path: <dmaengine+bounces-9586-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9587-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eNbwEBcKwWmtPwQAu9opvQ
-	(envelope-from <dmaengine+bounces-9586-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Mar 2026 10:38:31 +0100
+	id UB8mGp0KwWmVQAQAu9opvQ
+	(envelope-from <dmaengine+bounces-9587-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Mar 2026 10:40:45 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADD0B2EF31B
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Mar 2026 10:38:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB34E2EF387
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Mar 2026 10:40:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 135473031B16
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Mar 2026 09:33:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 61DA8303CA66
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Mar 2026 09:35:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A9A838552C;
-	Mon, 23 Mar 2026 09:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 343A138552C;
+	Mon, 23 Mar 2026 09:35:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UUrYX+cZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsTpQ8sr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A118737BE66
-	for <dmaengine@vger.kernel.org>; Mon, 23 Mar 2026 09:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8B41FE44A;
+	Mon, 23 Mar 2026 09:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774258408; cv=none; b=V5GvHLM8I6uza0oKM5VVXI+4aYLcVsILu6i2mdY+tGB4zbNyCcNirGJ4yAyATtMhzfj7IyjWIeY+FV95REZfUO4CN2GGmh3izIY+8zAkk25dSw7Pe5c7dUwgGzdr3sX7OUWq65mBxhoRB0fUAyegxsPZ352R63L6EvCMZUoBlAw=
+	t=1774258501; cv=none; b=cTP/QuxMSXF8HhGziyLj3Q+q4WjRXVCd1P35oI7EFQhAp1DENspqM5cyK6HONS/SCHanMHed3TO9+S0wcR7TFetmfNan03fVWw0Izmfr0aykRXICiRL75aF1qwrcn/3AF/0m4EgJjXqlqI54hpoJK8G1Mf9fo97mP5GNVi8qrTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774258408; c=relaxed/simple;
-	bh=KRxBm1ceWdh4JSdKGz9/QEaRpfyX/bIND2I+6uxavEo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=swVXLc8d7+OURKDHu8RxpIo5bmJDQ5V1fsvQ+JncygxrDkTfDN3IkVZb4F+FucfAJIWdWmBBr5c8TNf4YSc4sLKDau+ogbvELREnH0Q5MdP/S1mqyK7ls3fQp9u0Fz3YIzIPxKRaZdWr46IXl08ON7UTMGwneOLbt0irobJpnh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UUrYX+cZ; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-487012ce896so12673945e9.0
-        for <dmaengine@vger.kernel.org>; Mon, 23 Mar 2026 02:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1774258405; x=1774863205; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KRxBm1ceWdh4JSdKGz9/QEaRpfyX/bIND2I+6uxavEo=;
-        b=UUrYX+cZ/ThZ7itPqX1uBUO82xlx0UAvMlDX9oJo8apuGXxescmMwhFiYsf1G9JL3B
-         RWJzHgx9FL4tNAk25hDyRS4MbQD6tlemTSQv98SJlnuKjd+S423Cgw9U84Wwt4xOKYXg
-         DnebftcuaFa2IAnj/oUhCAE+4QZxJeHIL4w+fIf68l9GFop8HUDaUxFmEiPpCOXyAPri
-         R3lV9rm8rktSGKkMXTk1Dq6pEwFekYzj7gFfnA3bPLI1opCJ5Coy+6QjszLNAvrHHijn
-         ac3CY7k888Tu++pGC/bt8xMCtlEXWhMjPzUZoHU2y3ACPwIytmUgep1ihg8dY2Npt1kj
-         AFjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774258405; x=1774863205;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KRxBm1ceWdh4JSdKGz9/QEaRpfyX/bIND2I+6uxavEo=;
-        b=LZIyQcthm+fyw6v2F3SJj9jysFvEr60THQ+VXrzn1/3xaxxGQwu99zYYUWJYuMdv6E
-         kJ8nnzovpOp+duYiiltzoYmMktjTKTSB0MpDrhd3CCMWn1SOtNEGoEZ6TdcvbaG7rJXB
-         XyzQ8hgHYxlefahHPG3hxmOTsihbNT2+o5jP4hSGctJoZaA1vdajhmzd2ZLPVvk4/5Uk
-         SxrOMhK6CjZgaiT5IBE3kU3/hbtkubDKR+CdSEzuPVaUDEAfiM55F35hnC8mp5MQsr9D
-         KCJSmVUhm9WFIKyA0fa3n8cbxzIvUKpdUPkG7Tm8kb9NOaM+Hxi6qcY/jMDizDBGI9wQ
-         F3TQ==
-X-Gm-Message-State: AOJu0YwqiDCHZX6PurvnwMmo1ZO/hBQsWpvK4JNuVIT0q6fhPZ7d/cPl
-	/ou8QrnEfbC6me4sUp5prfVB4AvGZRof6vvzl5DJzjPrRd6I2eS9sn3u
-X-Gm-Gg: ATEYQzx8tOmrr9FslIXi2EnIBhrrV81BPQ0QrrSvth/Ksu/2Aa4TGa2vX5WU64ekrXV
-	VseOnx8jB3TG8t/xOG/fUnxTkehW1oW6YojI4b9Cu7zs0bVA8bPM9spVT+4QochRTXRvx/z5DWu
-	59aTnuLzcfLSnNj7KU5dYm6QNL05EoaDXWu6PyR0WB5i8Vjtv+npqjLXNe0KuROHJ6DQzzZEVsX
-	MSekqJLOLkwEBl95lHp8H75FZAzofgTP82cf2trWPgDcoXkZirS/JCHDOWlo9659ia7O5waEyHm
-	YYsbPNN5ZvMvIadww2mY25FDvLmkGSL0Xv1kXPAjJDNfA1bdkIIBv4exol6A1SV/e7tKZjlRRHr
-	qeD/lwh8giPhYMxwtZKpj+JqyOhuAPlG6jXkPYzNSAyFUsEgulX0ffQNE/ACHM0JoM2KyJLZON9
-	/owLhSQwORLgFiRsDqAh0m58u83zqu3z0=
-X-Received: by 2002:a05:600c:4fc9:b0:483:6a8d:b2f9 with SMTP id 5b1f17b1804b1-486fede7393mr160520115e9.5.1774258404714;
-        Mon, 23 Mar 2026 02:33:24 -0700 (PDT)
-Received: from [192.168.1.187] ([148.63.225.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48700524864sm98310685e9.5.2026.03.23.02.33.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2026 02:33:24 -0700 (PDT)
-Message-ID: <8b6cd66550d7c3cbee0fe1f488d87f00beef12a9.camel@gmail.com>
-Subject: Re: [PATCH v2 0/5] dmaengine: dma-axi-dmac: Add cyclic transfer
- support and graceful termination
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>,  Lars-Peter Clausen	 <lars@metafoo.de>, Frank Li
- <Frank.Li@nxp.com>
-Date: Mon, 23 Mar 2026 09:34:10 +0000
-In-Reply-To: <abkoXXbaxaiqbBuX@vaman>
-References: <20260303-axi-dac-cyclic-support-v2-0-0db27b4be95a@analog.com>
-	 <177304239096.87946.15531982345548560058.b4-ty@kernel.org>
-	 <c4e7e6f071ce0e7dfdd624b3b31077e2b0f4e454.camel@gmail.com>
-	 <abkoXXbaxaiqbBuX@vaman>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 
+	s=arc-20240116; t=1774258501; c=relaxed/simple;
+	bh=9DVS4XWePq3fWP8PnNkZL1RiZ3dghTt1ujGUsfLlRmM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qnQEftZYvpTuSidk8SNH6yeze1EUuRsFTpxG6U6hYLjC/sdFuSLvL9C9TeLE/VCfQtec68S6r05baxZnvoy33DdXWF9JspSLgIVOAPQNTigwtn8/DFyZMxvDPWHYgotgCKF8f9qzfuVSKLfeHI4uWx4sewcB+Nd6jAryYfxIjhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsTpQ8sr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E831BC2BC9E;
+	Mon, 23 Mar 2026 09:34:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774258500;
+	bh=9DVS4XWePq3fWP8PnNkZL1RiZ3dghTt1ujGUsfLlRmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tsTpQ8sr9ZfFe23UYvY9gWpEp4pi3UFpdtCDyFUJ0o7LE32Uk5F4vgOPifpRJNFFY
+	 CK9ZxWImSDjq96G80Dpgjk0eEAT1UzCkSckZ+wUTTo1rwZgtfteXTCxy2eS0I0ivmj
+	 8ygvJ5lQwTk+7ZcemwDn0bDWOPeuokFyWfiIT12I7oWKoDelMfxFKX9wgcyrc3iTzg
+	 irjQBVP6hPhFVtkKv3WUp7FzrarlPkf8AngjZPRtaZEgRqxzwurhCueLJQZ5Xd3GHu
+	 BC0AgZQl897EaidI07vuDFoBbIPRr3E5WYLkF4Xsb9fvCiPPNXazkpFoZtGXnjIMCR
+	 P3Le4Kr6zRJRg==
+Date: Mon, 23 Mar 2026 15:04:50 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Thara Gopinath <thara.gopinath@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Udit Tiwari <quic_utiwari@quicinc.com>, 
+	Md Sadre Alam <mdalam@qti.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>, Michal Simek <michal.simek@amd.com>, 
+	Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, brgl@kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v13 05/12] dmaengine: qcom: bam_dma: add support for BAM
+ locking
+Message-ID: <hohx2judes5c6na4svpah254hqbaf4kbeyu7prwkprfv5dy7hj@26nxwlvb76yp>
+References: <20260317-qcom-qce-cmd-descr-v13-0-0968eb4f8c40@oss.qualcomm.com>
+ <20260317-qcom-qce-cmd-descr-v13-5-0968eb4f8c40@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260317-qcom-qce-cmd-descr-v13-5-0968eb4f8c40@oss.qualcomm.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9586-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9587-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nonamenuno@gmail.com,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,lwn.net,gmail.com,gondor.apana.org.au,davemloft.net,quicinc.com,qti.qualcomm.com,linaro.org,amd.com,vger.kernel.org,lists.infradead.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mani@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[dmaengine];
-	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: ADD0B2EF31B
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email]
+X-Rspamd-Queue-Id: BB34E2EF387
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 2026-03-17 at 15:39 +0530, Vinod Koul wrote:
-> On 09-03-26, 13:30, Nuno S=C3=A1 wrote:
-> > On Mon, 2026-03-09 at 08:46 +0100, Vinod Koul wrote:
-> > Thanks for applying the patches. Since I have you here and if you have =
-5 min I would like to
-> > ask you for some clarifications. It seems there's a bit of a confusion =
-regarding src_addr_widths
-> > and dst_addr_widths. For instance the docs say the following:
-> >=20
-> > " bit mask of src addr widths the channel supports.
-> > Width is specified in bytes, e.g. for a channel supporting
-> > a width of 4 the mask should have BIT(4) set."
-> >=20
-> > And I suspect that BIT(4) is leading into some confusion. Like, if I ha=
-ve a width of 4, then my
-> > mask should look like 0x04 and not 0x20, right? Like the code in [1] lo=
-oks suspicious to me...
-> > And
-> > it seems that pattern is followed in a lot of other places. If I look a=
-t [2], then it looks more
-> > with what I would expect.
-> >=20
-> > Like, if the correct way is 1), then it means that 64bytes is not reall=
-y possible right now
-> > given
-> > that BIT(64) is UB and that looks a bit limitating and odd to me. That =
-and given that the
-> > AXI_DMAC
-> > might also suffer from a, possible bug, made me want to clarify this.
->=20
-> If you look at the field it documents "@src_addr_width: this is the width=
- in bytes of the source
-> (RX)
-> =C2=A0* register where DMA data shall be read. If the source is memory th=
-is
-> =C2=A0* may be ignored depending on architecture. Legal values: 1, 2, 3, =
-4,
-> =C2=A0* 8, 16, 32, 64, 128."
+On Tue, Mar 17, 2026 at 03:02:12PM +0100, Bartosz Golaszewski wrote:
+> Add support for BAM pipe locking. To that end: when starting DMA on an RX
+> channel - prepend the existing queue of issued descriptors with an
+> additional "dummy" command descriptor with the LOCK bit set. Once the
+> transaction is done (no more issued descriptors), issue one more dummy
+> descriptor with the UNLOCK bit.
+> 
+> We *must* wait until the transaction is signalled as done because we
+> must not perform any writes into config registers while the engine is
+> busy.
+> 
+> The dummy writes must be issued into a scratchpad register of the client
+> so provide a mechanism to communicate the right address via descriptor
+> metadata.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-Yeah, I figured. It seems some drivers are using the enum directly as the m=
-ask instead for BIT(x).
+I've left some comments in v12, but looks like you've missed them. Anyhow,
+this version looks good to me as the design looks simple and doesn't warrant
+much change from the client driver other than passing the scratchpad register as
+metadata. I just have some minor comments in this version. 
 
->=20
-> We cant have bitmask as 64bit wont work! So I guess lets fix it
+> ---
+>  drivers/dma/qcom/bam_dma.c       | 160 ++++++++++++++++++++++++++++++++++++++-
+>  include/linux/dma/qcom_bam_dma.h |   4 +
+>  2 files changed, 160 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+> index 83491e7c2f17d8c9d12a1a055baea7e3a0a75a53..895286452c8b5e701c1df482095e5fe4a49f4246 100644
+> --- a/drivers/dma/qcom/bam_dma.c
+> +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -28,11 +28,13 @@
+>  #include <linux/clk.h>
+>  #include <linux/device.h>
+>  #include <linux/dma-mapping.h>
+> +#include <linux/dma/qcom_bam_dma.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+> +#include <linux/lockdep.h>
+>  #include <linux/module.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_dma.h>
+> @@ -60,6 +62,8 @@ struct bam_desc_hw {
+>  #define DESC_FLAG_EOB BIT(13)
+>  #define DESC_FLAG_NWD BIT(12)
+>  #define DESC_FLAG_CMD BIT(11)
+> +#define DESC_FLAG_LOCK BIT(10)
+> +#define DESC_FLAG_UNLOCK BIT(9)
+>  
+>  struct bam_async_desc {
+>  	struct virt_dma_desc vd;
+> @@ -391,6 +395,14 @@ struct bam_chan {
+>  	struct list_head desc_list;
+>  
+>  	struct list_head node;
+> +
+> +	/* BAM locking infrastructure */
+> +	bool locked;
+> +	phys_addr_t scratchpad_addr;
+> +	struct scatterlist lock_sg;
+> +	struct scatterlist unlock_sg;
+> +	struct bam_cmd_element lock_ce;
+> +	struct bam_cmd_element unlock_ce;
+>  };
+>  
+>  static inline struct bam_chan *to_bam_chan(struct dma_chan *common)
+> @@ -652,6 +664,27 @@ static int bam_slave_config(struct dma_chan *chan,
+>  	return 0;
+>  }
+>  
+> +static int bam_metadata_attach(struct dma_async_tx_descriptor *desc, void *data, size_t len)
+> +{
+> +	struct bam_chan *bchan = to_bam_chan(desc->chan);
+> +	const struct bam_device_data *bdata = bchan->bdev->dev_data;
+> +	struct bam_desc_metadata *metadata = data;
+> +
+> +	if (!data)
+> +		return -EINVAL;
+> +
+> +	if (!bdata->pipe_lock_supported)
+> +		return -EOPNOTSUPP;
 
-I do have a working patch locally. I'll send it later this week.
+As mentioned in v12, you should return 0 to avoid erroring out the clients if
+pipe lock is not supported.
 
-- Nuno S=C3=A1
+> +
+> +	bchan->scratchpad_addr = metadata->scratchpad_addr;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dma_descriptor_metadata_ops bam_metadata_ops = {
+> +	.attach = bam_metadata_attach,
+> +};
+> +
+>  /**
+>   * bam_prep_slave_sg - Prep slave sg transaction
+>   *
+> @@ -668,6 +701,7 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
+>  	void *context)
+>  {
+>  	struct bam_chan *bchan = to_bam_chan(chan);
+> +	struct dma_async_tx_descriptor *tx_desc;
+>  	struct bam_device *bdev = bchan->bdev;
+>  	struct bam_async_desc *async_desc;
+>  	struct scatterlist *sg;
+> @@ -723,7 +757,12 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
+>  		} while (remainder > 0);
+>  	}
+>  
+> -	return vchan_tx_prep(&bchan->vc, &async_desc->vd, flags);
+> +	tx_desc = vchan_tx_prep(&bchan->vc, &async_desc->vd, flags);
+> +	if (!tx_desc)
+> +		return NULL;
+> +
+> +	tx_desc->metadata_ops = &bam_metadata_ops;
+> +	return tx_desc;
+>  }
+>  
+>  /**
+> @@ -1012,13 +1051,115 @@ static void bam_apply_new_config(struct bam_chan *bchan,
+>  	bchan->reconfigure = 0;
+>  }
+>  
+> +static struct bam_async_desc *
+> +bam_make_lock_desc(struct bam_chan *bchan, struct scatterlist *sg,
+> +		   struct bam_cmd_element *ce, unsigned long flag)
+> +{
+> +	struct dma_chan *chan = &bchan->vc.chan;
+> +	struct bam_async_desc *async_desc;
+> +	struct bam_desc_hw *desc;
+> +	struct virt_dma_desc *vd;
+> +	struct virt_dma_chan *vc;
+> +	unsigned int mapped;
+> +	dma_cookie_t cookie;
+> +	int ret;
+> +
+> +	sg_init_table(sg, 1);
+> +
+> +	async_desc = kzalloc_flex(*async_desc, desc, 1, GFP_NOWAIT);
+> +	if (!async_desc) {
+> +		dev_err(bchan->bdev->dev, "failed to allocate the BAM lock descriptor\n");
+> +		return NULL;
+> +	}
+> +
+> +	async_desc->num_desc = 1;
+> +	async_desc->curr_desc = async_desc->desc;
+> +	async_desc->dir = DMA_MEM_TO_DEV;
+> +
+> +	desc = async_desc->desc;
+> +
+> +	bam_prep_ce_le32(ce, bchan->scratchpad_addr, BAM_WRITE_COMMAND, 0);
+> +	sg_set_buf(sg, ce, sizeof(*ce));
+> +
+> +	mapped = dma_map_sg_attrs(chan->slave, sg, 1, DMA_TO_DEVICE, DMA_PREP_CMD);
+> +	if (!mapped) {
+> +		kfree(async_desc);
+> +		return NULL;
+> +	}
+> +
+> +	desc->flags |= cpu_to_le16(DESC_FLAG_CMD | flag);
+> +	desc->addr = sg_dma_address(sg);
+> +	desc->size = sizeof(struct bam_cmd_element);
+> +
+> +	vc = &bchan->vc;
+> +	vd = &async_desc->vd;
+> +
+> +	dma_async_tx_descriptor_init(&vd->tx, &vc->chan);
+> +	vd->tx.flags = DMA_PREP_CMD;
+> +	vd->tx.desc_free = vchan_tx_desc_free;
+> +	vd->tx_result.result = DMA_TRANS_NOERROR;
+> +	vd->tx_result.residue = 0;
+> +
+> +	cookie = dma_cookie_assign(&vd->tx);
+> +	ret = dma_submit_error(cookie);
+> +	if (ret)
+> +		return NULL;
 
+You are leaking async_desc here.
+
+> +
+> +	return async_desc;
+> +}
+> +
+> +static int bam_do_setup_pipe_lock(struct bam_chan *bchan, bool lock)
+> +{
+> +	struct bam_device *bdev = bchan->bdev;
+> +	const struct bam_device_data *bdata = bdev->dev_data;
+> +	struct bam_async_desc *lock_desc;
+> +	struct bam_cmd_element *ce;
+> +	struct scatterlist *sgl;
+> +	unsigned long flag;
+> +
+> +	lockdep_assert_held(&bchan->vc.lock);
+> +
+> +	if (!bdata->pipe_lock_supported || !bchan->scratchpad_addr ||
+> +	    bchan->slave.direction != DMA_MEM_TO_DEV)
+> +		return 0;
+> +
+> +	if (lock) {
+> +		sgl = &bchan->lock_sg;
+> +		ce = &bchan->lock_ce;
+> +		flag = DESC_FLAG_LOCK;
+> +	} else {
+> +		sgl = &bchan->unlock_sg;
+> +		ce = &bchan->unlock_ce;
+> +		flag = DESC_FLAG_UNLOCK;
+> +	}
+> +
+> +	lock_desc = bam_make_lock_desc(bchan, sgl, ce, flag);
+> +	if (!lock_desc)
+> +		return -ENOMEM;
+> +
+> +	if (lock)
+> +		list_add(&lock_desc->vd.node, &bchan->vc.desc_issued);
+> +	else
+> +		list_add_tail(&lock_desc->vd.node, &bchan->vc.desc_issued);
+> +
+> +	bchan->locked = lock;
+
+What is this flag for?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void bam_setup_pipe_lock(struct bam_chan *bchan)
+> +{
+> +	if (bam_do_setup_pipe_lock(bchan, true) || bam_do_setup_pipe_lock(bchan, false))
+> +		dev_err(bchan->vc.chan.slave, "Failed to setup BAM pipe lock descriptors");
+> +}
+> +
+>  /**
+>   * bam_start_dma - start next transaction
+>   * @bchan: bam dma channel
+>   */
+>  static void bam_start_dma(struct bam_chan *bchan)
+>  {
+> -	struct virt_dma_desc *vd = vchan_next_desc(&bchan->vc);
+> +	struct virt_dma_desc *vd;
+>  	struct bam_device *bdev = bchan->bdev;
+>  	struct bam_async_desc *async_desc = NULL;
+>  	struct bam_desc_hw *desc;
+> @@ -1030,6 +1171,9 @@ static void bam_start_dma(struct bam_chan *bchan)
+>  
+>  	lockdep_assert_held(&bchan->vc.lock);
+>  
+> +	bam_setup_pipe_lock(bchan);
+> +
+> +	vd = vchan_next_desc(&bchan->vc);
+>  	if (!vd)
+>  		return;
+>  
+> @@ -1157,8 +1301,15 @@ static void bam_issue_pending(struct dma_chan *chan)
+>   */
+>  static void bam_dma_free_desc(struct virt_dma_desc *vd)
+>  {
+> -	struct bam_async_desc *async_desc = container_of(vd,
+> -			struct bam_async_desc, vd);
+> +	struct bam_async_desc *async_desc = container_of(vd, struct bam_async_desc, vd);
+> +	struct bam_desc_hw *desc = async_desc->desc;
+> +	struct dma_chan *chan = vd->tx.chan;
+> +	struct bam_chan *bchan = to_bam_chan(chan);
+> +
+> +	if (le16_to_cpu(desc->flags) & DESC_FLAG_LOCK)
+> +		dma_unmap_sg(chan->slave, &bchan->lock_sg, 1, DMA_TO_DEVICE);
+> +	else if (le16_to_cpu(desc->flags) & DESC_FLAG_UNLOCK)
+> +		dma_unmap_sg(chan->slave, &bchan->unlock_sg, 1, DMA_TO_DEVICE);
+>  
+>  	kfree(async_desc);
+>  }
+> @@ -1350,6 +1501,7 @@ static int bam_dma_probe(struct platform_device *pdev)
+>  	bdev->common.device_terminate_all = bam_dma_terminate_all;
+>  	bdev->common.device_issue_pending = bam_issue_pending;
+>  	bdev->common.device_tx_status = bam_tx_status;
+> +	bdev->common.desc_metadata_modes = DESC_METADATA_CLIENT;
+>  	bdev->common.dev = bdev->dev;
+>  
+>  	ret = dma_async_device_register(&bdev->common);
+> diff --git a/include/linux/dma/qcom_bam_dma.h b/include/linux/dma/qcom_bam_dma.h
+> index 68fc0e643b1b97fe4520d5878daa322b81f4f559..f85e0c72407b5e1a733750ac87bbaba6af6e8c78 100644
+> --- a/include/linux/dma/qcom_bam_dma.h
+> +++ b/include/linux/dma/qcom_bam_dma.h
+> @@ -34,6 +34,10 @@ enum bam_command_type {
+>  	BAM_READ_COMMAND,
+>  };
+>  
+> +struct bam_desc_metadata {
+> +	phys_addr_t scratchpad_addr;
+
+I think it'd be worth adding a comment for this.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 

@@ -1,265 +1,210 @@
-Return-Path: <dmaengine+bounces-9618-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9619-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GAwxKE1swmmncwQAu9opvQ
-	(envelope-from <dmaengine+bounces-9618-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Mar 2026 11:49:49 +0100
+	id kGn5B85+wmnqdAQAu9opvQ
+	(envelope-from <dmaengine+bounces-9619-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Mar 2026 13:08:46 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43175306B8E
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Mar 2026 11:49:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79C55307E97
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Mar 2026 13:08:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9BB823046E9B
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Mar 2026 10:47:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 22F9F313584B
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Mar 2026 12:01:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D59D3E274B;
-	Tue, 24 Mar 2026 10:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BNIxsw6V"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE1C23D7D8A;
+	Tue, 24 Mar 2026 12:01:24 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010028.outbound.protection.outlook.com [52.101.56.28])
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023089.outbound.protection.outlook.com [40.107.44.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3615934DB6B;
-	Tue, 24 Mar 2026 10:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DDD3EF666;
+	Tue, 24 Mar 2026 12:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.89
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774349275; cv=fail; b=n+HiooMMy6UMlrl+/qlbW2q+FwQGCNTK9Q3/T4nMxEfnfsaM3N+cCEPJYX/zZXUm7fs0wAE19bomxfq8kH5e1Dge2QumX4rBSlPcCwI0TrA2MQMzULLEhurhGyY4omsTb6PxlRxjq3fSyRSrcZ9aL1f75qgSbzZjZGXvlMDspyQ=
+	t=1774353684; cv=fail; b=et+EDW3Pe7pO5f1KGomiiY8tVAC2A2YQhTOzfcXbQb64zvGHqUrz0fpFL51bnSyyZxXnAxLOfvEaffFqt3CPteb54m/9e2/VitGCh4bZs9gsaSwyOG+abTEv1qRbdu87YNVIbbNn+VTi9pOGE/CjhMABXVy6AV80PZXP+CymS8U=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774349275; c=relaxed/simple;
-	bh=KMjsMX5fVfRMtFuPPKoAIKYYTB3tLfoPINeIGSO5wxM=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=URLWE2pYClvzGWSlwZGwUbBaRjr8IM+BSoRRgBYrDWJ/dhsxHz7f6llY923zkNRXghPAbbVnCYawVi047AIgrt5UZ0wQGoULbhUJnzrclG187EuiiJTwDrEQ2moZ1w0IiD2j2flmi6FWxLxqd1Pr1eujqG8uW+Se58sEQBWRkKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BNIxsw6V; arc=fail smtp.client-ip=52.101.56.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1774353684; c=relaxed/simple;
+	bh=yuNYyaIeERMI+JV0p7k0TqB7txQk6knrCCvEjawCxXg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=HbYIrUdmwvT4sKFfjkr9DecJjBAV0JiKLzz6R/vtXyeK91JaErrp8yVUqBmR4c9ajkmIu2bXiLNrD39EYns3g84KodmIF1rbzkPDul4tvoA7kv5s6Qeq+U4ut9ccd/GKKTN2FLXFdf7EzYx2Mm/LErhTjmNZwm4WzoU0pbp51U4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w7MzUWAW2SeAwev1V0hG8B3IK7npn/7ARCTS++QIB35GlKTRaHGMpbapwjX08tPkbD0tj6yS3fs1oC7wL/0iKNmm4iTt6wyC3SxXe5MxH2G37pBYDSbGpMiA/ych9fFKqeHV15QXJ8qejif9fSBW8yPRSkaunI624flJqMLhB/ifH7GE97K5Iw2qlB97ff1ZtDrEiuGb/T7HNlvXnS/Lu2navDYzNEhdDYodqHwTfftVDsHWUaz+km8X0BTj6iPShlGufCuaFs9CcHah+yu5YEZPeGG8pfjRKcmYDUFvnl2CTMbCRBOp39uPZd6ApPDd8SdppesuSUYELV1o54a4zg==
+ b=LaLu+Or/ljzl6Rzbs5QMDgViKhPdPKGX0NdBaHWiSkld+33Dt3v9mtAFwmN8RZnph+n6zV/jidfeJ2ywF3gFC6YZ3aQ1f7Ry5r/OpTRpQUXoCIOKMOzmxxPPOHUB4goMpwlVzndIZSTdrN8TmRj6G9SQDyJxacnip3Ga2QupMDWaIbzgWeFqYKkYXZZzg3rGXRugOm2y/ckUXNxEa159F/x31BKdoOc8a7w0JWDMDX+ylagov7p1RToYedYEzvDAE9D6390jeukmGOZ9SsbuwiOnAwhF5Faugy5jkMadbjJyL6yzBrczSkU/qE8GA1CXhYe4Mg+FsNckxy8n5+UhDg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FGV5BtqQo5fZS9ZUeriCQ+dO7SmJpVg7PXNr7h4sf9k=;
- b=c7mxtsGjVg3Q4kwRgG3o+1fLReklRh3DrpMFuyIVGMBK+oG+bjNUMyMebVFwKoUg2D4QsC9DyAlTd+TgwKwk7iEI/5WdcEZLNuXwtiSUs67H+I5NUGgh5RReTI4T3CsoiQ7/Or6RMJlTgD0bWL8BofzGj0qVX6ixTwvqUnw7NrtssR8Pya8nEe1MEST078H1WGk8yORq8jggqlZ8UoLfA2W+BXJPZ8Okf7zmRIW9x7FUn1hzOXOaD/vc8A/KkDSnfNliTmm27rMlfjAyFwDunXJDrNg5FdUtAHUy9Fei2/6ZrNzxgrbUclJwuItpoJVHwPdH17TlORjmcftoe6CX8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FGV5BtqQo5fZS9ZUeriCQ+dO7SmJpVg7PXNr7h4sf9k=;
- b=BNIxsw6VQl0pNU+3UhO0WAMLDEHWG2rWiwehW974VpuHYUuVHyS+JKAVy5w5CpSw/+neussEggQrj+bizw4wC+D5IWuftJ9pa0z4tGhFKrY4npbTy8zF6trZoM6w+hYQsnTbLd1xFqG/xnx8/FWwXVeU1HGhaVhWqEG5oHp3yU5jlgevNZkXizVU45tiIUeEprkEcAtkdT9UmwRy3lRUGxY9EIg1IE8VWHOajPalQxEe5HPB43fd/OEv9RnChcwHyuaujYRnvcpVthnXrALN9//fWhgxiOTmTXspcCHGR5MszeuAKFVqkhL8QPImiwg2VqBKwongR4QNvzml9Q2IBA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS2PR12MB9750.namprd12.prod.outlook.com (2603:10b6:8:2b0::12)
- by SA0PR12MB7462.namprd12.prod.outlook.com (2603:10b6:806:24b::5) with
+ bh=/48YHi9PH/jbHwNAxGtxWG5UWSPXla39qFvH8wMTRxU=;
+ b=EIFMJs6p7J+a6TiTJoWMtf9bI7VUb/uonkGWAmahzg34HqPP79faVNpdoEwU5swn74BG2kC0y/oIDiS8TLZII65N6tGv1ovwsALFQLGWi+LOA1s8ftx3GqSdS9AAUDSs6lgp16kuq2EHeCNWfAOcccJL7SxmWfwZ7moDa3W4gzb0MG/abUUWtHsyItkzeFxPKNlALXDp5lTp/kfH4PSuwPXWJ89ZWkkxpKU43J/SykTZepX8F5XHyuEfHy8m2/WLlf9m96X9WJB/IwvD9ECNN+Z/C7ANH2ZYQb8AuoFIzU0sJDPDqwQNsxPVxmluo5r4p+JmOhkrMME49TOYg0v64w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from TY4P286CA0119.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:37c::16)
+ by TYZPR06MB6860.apcprd06.prod.outlook.com (2603:1096:405:1d::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.15; Tue, 24 Mar
- 2026 10:47:50 +0000
-Received: from DS2PR12MB9750.namprd12.prod.outlook.com
- ([fe80::56a8:d6bf:e24c:b391]) by DS2PR12MB9750.namprd12.prod.outlook.com
- ([fe80::56a8:d6bf:e24c:b391%6]) with mapi id 15.20.9745.019; Tue, 24 Mar 2026
- 10:47:50 +0000
-Message-ID: <55dc0957-fdc5-4821-891d-76df677ca94f@nvidia.com>
-Date: Tue, 24 Mar 2026 10:47:45 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/9] dt-bindings: dma: nvidia,tegra186-gpc-dma: Make
- reset optional
-To: Akhil R <akhilrajeev@nvidia.com>, Vinod Koul <vkoul@kernel.org>,
- Frank Li <Frank.Li@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Thierry Reding <thierry.reding@kernel.org>,
- Laxman Dewangan <ldewangan@nvidia.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260316171823.61800-1-akhilrajeev@nvidia.com>
- <20260316171823.61800-3-akhilrajeev@nvidia.com>
-From: Jon Hunter <jonathanh@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <20260316171823.61800-3-akhilrajeev@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0289.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a5::13) To DS2PR12MB9750.namprd12.prod.outlook.com
- (2603:10b6:8:2b0::12)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.31; Tue, 24 Mar
+ 2026 12:01:15 +0000
+Received: from TY2PEPF0000AB88.apcprd03.prod.outlook.com
+ (2603:1096:405:37c:cafe::6d) by TY4P286CA0119.outlook.office365.com
+ (2603:1096:405:37c::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9723.31 via Frontend Transport; Tue,
+ 24 Mar 2026 12:01:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ TY2PEPF0000AB88.mail.protection.outlook.com (10.167.253.11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9723.19 via Frontend Transport; Tue, 24 Mar 2026 12:01:15 +0000
+Received: from guoo-System-Product-Name.. (unknown [172.20.64.188])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id AD9644126F95;
+	Tue, 24 Mar 2026 20:01:13 +0800 (CST)
+From: Jun Guo <jun.guo@cixtech.com>
+To: peter.chen@cixtech.com,
+	fugang.duan@cixtech.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	vkoul@kernel.org,
+	ychuang3@nuvoton.com,
+	schung@nuvoton.com,
+	robin.murphy@arm.com,
+	Frank.Li@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	cix-kernel-upstream@cixtech.com,
+	linux-arm-kernel@lists.infradead.org,
+	Jun Guo <jun.guo@cixtech.com>
+Subject: [PATCH v5 0/3] dmaengine: arm-dma350: support combined IRQ mode with runtime IRQ topology detection
+Date: Tue, 24 Mar 2026 20:01:10 +0800
+Message-Id: <20260324120113.3681830-1-jun.guo@cixtech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PR12MB9750:EE_|SA0PR12MB7462:EE_
-X-MS-Office365-Filtering-Correlation-Id: be76ffcd-f730-4d79-b11c-08de8992cb8d
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB88:EE_|TYZPR06MB6860:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 6480a878-66a6-4501-1d34-08de899d0d1e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020|22082099003|18002099003|56012099003;
+	BCL:0;ARA:13230040|82310400026|36860700016|1800799024|376014|7416014|921020|18002099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	wBKTfOcOg5ldCLVhQX4jlPUVRNuA6RswGgQTOztEdJdlrYtFRqjCGQkA+tTg2J6xQ5vmAMVnZGRIoiyhdh7dtXsdO8nK6sNSbyiG7vgH/3wH3pw0ADJsWMQ4L0VBOgJzYQppf1SVzjK9rk/NbKNisigbb11xKuHbUVIAW9mmyVDRWwqIPCGe/GiCqIu43UVPrNoq9BqXuhJCfcbHbQsB1DtW5tQefukakoaOmctdLY0FEey8EwttbWWS1KRb+N3Shf63g1O+v72iqyQ11+M9VNwv/DgVPKthbdL/SX1P8RObYSyfEAtQO8BGoNrWazvwQbejmYKLBxo51aU8v8T2uCS6KROExQsxv+InmcdNm3h3wH1EtXzXTVU58YqaH3lEZrpzRlV+NVHcHV1CNn4taNBLHTswlRoUsSCuoQ/fRcuSly41TfnY8nz9TEay6Z1kokHt9VoCXXohH58eBYD14fdPP5bVpCFNBJx7dRncg5VknNjwg62LbgdW1RUFfP+DXC1sFWXTQfndG5U0mWHzV7v89CiHPlFXn3wgT3vA1AZ/kiqX+DBv0gvwud6JGf2RcLdWdeUHbWoTtriiT1xPBGaX0zwf836S+BYlYjy62gMiTIyTobIT9OSmmoQUnmTEEDL0adigsYx5eHXhv/FiklB9WxaRsvYxCA/8dL0Dm+wAoMGkqp/qc7vGzYgdM+nBIznwn3Xnl7XcnVkFi153e+87O9saFuowS7jBjfV/a9u3mU68D3KTDj49EF4SDGWnM37rsKI6diPSaLRxhjVbDA==
+	zNSACxjgafAiD0Qh6epW4DoYESRrYgsooJM6xuD672mPx60pvF0O33UkTPTVz+RSMzMu/OFXOGWF9FiMNu/N56LbJloYahUP7iINlTcd0MbZQ+e/A3VX8XdhOBPi/b6Sg1/tI+3kZkGrl3hQrBV0jZavUxHH3jOSkAtDpcTC6/tiidRvXAFlF+BRVXt0lywEuGRGtDqpCLFkJ0pF7CAlHBbYHI/n1ikEJpTS+5kCGRzzlTVgh11qKNKucxH7ZN+4mk3siP0njdGbm+NFDB23E/NNc4N7WMClmzGdM7dRg7Z2wDMsepGlQFLEQwz8dNGfXNRkkrabYctSFxN7v/7IJn7zd8K6wiiMYV61HOQeI18rpWbVfApySuaKhwVmaBcCm3EDTxsyefGI7KuYwPHJOLtSmUSw4glqH/q1HjI0yGvmBCVi6cof88iggLG+VI/0Cxam0ptGcDEW/R4xXQVYmYj1Enakmgx5jdMbiIEdKswD39OdRHUr21boduxMURqvg6hiP/GVOBkpehllF1f0aemD5gHX5OWFOZramEwxhGKqVV19lVQ2jhehGIfV9SnJ+chxK4QKIRHglejOm341UVUO2J6ZtSqrEx0EQzv3oQeC21WzTreZNE/Mq3eg7mYTJkn7h4c3wLI0cJR3VyUoVaEQToUzvjfMVsdyNP7d9p21rKOmGEfdXfgqMLaHAkrlF4kFLrvrGuqjZG46dVNbgKaOYseUPC+Ue9Y2peBxrrxF53Gy1k2pISk7kHy86/lzb7VxfePZoeK1OC68pQrlNpuoSERBXr0ujc/h8C15wXGDFnQnZIFOj4tWa9cbGc3R
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS2PR12MB9750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(1800799024)(376014)(7416014)(921020)(18002099003)(56012099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZEhXWXRleGpDTVZpazF5Y283OGF0UGN5TWo5NW5nT2lJQ0YyVTkwYVA4TjhV?=
- =?utf-8?B?dVJGUFRzYTBpT1FpV0ZjbUJCeHlpY092QjNRUWJXeUk5a0JyT3hmQW1ubVpu?=
- =?utf-8?B?M0NRTytkSWF0RkIyZWppNjBPRlQrQURjUndHT3hBUithM0htSFA0N2lLUmJK?=
- =?utf-8?B?alpya2h0MjRzNnZjdExyUURDRDhXMVZtZ3c1U3l3eDNHaWVmcXNxSnBJd1BV?=
- =?utf-8?B?MXZScGI1WVNqQlVsSWl5UXhJN0ZrNkE2cGtaejNPaGl0OUc5Tkk0emdXekZr?=
- =?utf-8?B?KzVwSU5IYVFkb2E4WFpvc2tnRjNob2luVThiN1pHaUk5VVRIbEpFSVFGdzlX?=
- =?utf-8?B?YzliS21EZXBkTitUSDJWWEFQSEo1Sk5vQWN3eGFnNVY0WUV1SnlQSHhpbDF0?=
- =?utf-8?B?czFjd3JubzcvRjZTYjdobHg4ZXhsUTZ3cnZXR1dhNzhneTZ6d1ZQQzBmRnNK?=
- =?utf-8?B?WnpMQmtDd1g5RkhHT2J1TjgrNnlYSWluWThtUzBNa0NzWURybU5FTHNFVEVl?=
- =?utf-8?B?UDg4RDZGSlQ0TzRtRFhCQlZnRTZ2QW5FemVuRWlQSnM2czdEOUd1R3JGQ0hx?=
- =?utf-8?B?d2tkN29sZjZnenNmZFB2YXlHbDhYQkNQSTdheWhYS0VCTTFGaVdkMVppT1k1?=
- =?utf-8?B?T1V2NlpyUEZTcVREOThkditDcm1OU2xTbXQ5a1hjSE1DaE1vVnB2cDhoYmJm?=
- =?utf-8?B?dWFMeXN5MW5zODFKbngvYlkxeFJRTjduaitYcUIyaG5hTkRjMjh6amxmVENp?=
- =?utf-8?B?RExIbUt3M2p6ZS9DTm1LWlNnMmZaWVdvd0F3MlpGZmtZYXNUWnlsTy81anhV?=
- =?utf-8?B?aWpteENmUG5BZG9pMm1xc1g1RGhkZVp1d1dKcm5yb2tPQllDSzRiZjV1di9S?=
- =?utf-8?B?bmxMaUNGWUhHU29QY0NXRjlSM3hEQ2x3ekhIVHBJaDJKeHBvYWFPOURDNzZt?=
- =?utf-8?B?eEZzUlR2ckVmc1BiYm0ycE1yK2hOdXVwUzkrK3l2VnhvUFBqT1VIcWhxRFR4?=
- =?utf-8?B?VGpuQVBoS0RGeHozODE3aFBnb1BNUzRLd0VCZzIxRVIyTjhxdDlUZno5NFll?=
- =?utf-8?B?aVFzNVVFa1pLTDhGSzBvRWZuZnFQcmErNk1icjliQ293eHJ1ZjF3RWs5S0xr?=
- =?utf-8?B?ZWZVSXQrVlJ4R3lKVG1tZnNORTd6VSt1elFpVjRYL0p3R2dUbjNWM0NRdUhm?=
- =?utf-8?B?ZmVod1FndXV6cXBvNWthTHEvY0dxenRaOUhQdjdYaWZiL3V3RXIyNmJMWTdP?=
- =?utf-8?B?MVcvVDFaTmxFSTRSWW5lWUZmTzBOQmhvYzFXcERzSmRxNWxwc3RZbXNkYTQy?=
- =?utf-8?B?cU5oWGFFVEUvQVhpQTVwOFpHaDNwMXY3SVNQYlFBbmFZUVJqeW42OWw5eE1z?=
- =?utf-8?B?d2h5MnRMZ3BrdUIvMG1OYTZHOW9tREZwUWVHVDlQR1pWMk9qekZJNDdMd2tY?=
- =?utf-8?B?V3hDNGk1cTVRZkVSUWhMMWdyNGhhTWQ1cGhjdWFzREdFWCtMZmVQZVd5cFJB?=
- =?utf-8?B?enp6aktnMVh4UU9uTzd2SzFvT0dQb0FCT3hNRGl3ZDYydlhKOSs1dHRscHZp?=
- =?utf-8?B?TVZOaVNZRFpnMTJmUnFobnd3N0FsY3AvUzExQzJKN2dneDZva2RLcm00aGxs?=
- =?utf-8?B?QXdPWUpraTVsWXRGMlhxUFhycnVPNTdOYW1kVFdSb1JRcEFRVkVOTWUvRlh6?=
- =?utf-8?B?K204RnNkdEt3TXhsdmRzWnBXYy9KNlpMU0VSakRTRjNocDJZcElnc3JLSFNs?=
- =?utf-8?B?eDlSVEsyaGJ4V2UrV1lxaFVqKzBiR2ZCRk1tYkIzb1pNUEowSXJKak5BWEpZ?=
- =?utf-8?B?V2dxRDMrSUVrYjFZUTR3UEh3NEE2dVg0MVJxamQvUG0zUm9uam1DNWljUE15?=
- =?utf-8?B?QUVJM01jc0IvaUZ6UVRqWlJTalovVTd4UUdvUFVtTmZEd3ZXd282TFFhNzdU?=
- =?utf-8?B?QmpFU3JjaVhiSEdXaXNIUlZJQlNyMUp4aW81VS93dThjZnlVaTFjQkhKMjdk?=
- =?utf-8?B?Y0xmaldlQmxMWTV4S1d2RjhsVUNXcFViejdUWjF3djhvcWtUVE9tU2FNdGhE?=
- =?utf-8?B?eTRCaXFSUE8rRVhQUGZCWEFYVUI1SkpVT21vRXEyQ1o1Yy8zNWFjOUlJZWVl?=
- =?utf-8?B?WEovanVoZ3VFeHdhVXdNT1daMG1zMFNmLzdQbUxZcERTZjVjOG4xdkF2NGpG?=
- =?utf-8?B?TzhpeEo4eWw2Q3VKd0o0VjZDZUZpQjZnOVltT0srNVZ2K1pSL1NFSUFOYW1h?=
- =?utf-8?B?KzZDcHZaMnZTMzRzWTBoNXAyOFZlZWpGTkZpRXBzcS80NFNhTHBYTXFaanpG?=
- =?utf-8?B?a3BQQ3RDb1IvbHhBb3kyRllobmVtMGJxbjdTRktJTERzMW1oMGRqZz09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: be76ffcd-f730-4d79-b11c-08de8992cb8d
-X-MS-Exchange-CrossTenant-AuthSource: DS2PR12MB9750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2026 10:47:50.7339
+	+8ucrI4K44X6V5WUeCBoxrkB/AXRR2eJ9oj64aDVJHQ/YTrY76tCrnAyP+/AbBWQovuAtYnoz5W7obGM1x5I3YRx3saobzA/D6gpsB7UBp8JPSygdOj/Wx4uwkHeEID6matsW358THBFpdVUs3aGa8vSD9vW7WLranmpeuzQGxauy6Ax5Z0cbV06E1FG6/XYUiiTZiZ7bbugqN6z6KfsXWG9ez+4nlbXi4rsqKy8BzRLV7laotVNHyC2q5TTjZY50t7UyMhB+pjVD/PwmG6xECYSa8FPTMMU0kf7XR0IPfTapJIO39q6yP2ocN0GWVX04q3oSiOzF74tL0gCvwviQljnjO1mhOttMsuB+yupe//IWkjcvs8jhlodJ8G3ZXxjjtLejNI2LHrDY/DsbZTAfv6T6cE0W0BAmoWL4vLUN0RODvF5NhkAsAhEfj+vYAyU
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2026 12:01:15.3570
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Y6SuXebERZoUy6A39dYi2n3OWN9sezyPLtGZ48hvV6wYEr6Gz3gHZOOW+is5GQS+X0UFlUvJ1sAhtTJAp0U8RQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7462
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6480a878-66a6-4501-1d34-08de899d0d1e
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	TY2PEPF0000AB88.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB6860
+X-Spamd-Result: default: False [3.54 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9618-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	DMARC_NA(0.00)[cixtech.com];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9619-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jonathanh@nvidia.com,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[jun.guo@cixtech.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,nvidia.com:mid,Nvidia.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 43175306B8E
+	R_DKIM_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 79C55307E97
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+DMA-350 can be integrated with either one interrupt per channel or a
+single combined interrupt for all channels. This series adds support
+for the combined IRQ topology while keeping compatibility with the
+per-channel topology.
 
+Patch 1 updates the DT binding to describe both interrupt topologies
+(1 combined IRQ or 8 per-channel IRQs).
 
-On 16/03/2026 17:18, Akhil R wrote:
-> On Tegra264, GPCDMA reset control is not exposed to Linux and is handled
-> by the boot firmware.
-> 
-> Although the reset was not exposed in Tegra234 as well, the firmware
-> supported a dummy reset which just returns success on reset without doing
-> an actual reset. This is also not supported in Tegra264. Therefore mark
-> 'reset' and 'reset-names' properties as required only for devices prior
-> to Tegra264.
-> 
-> This also necessitates that the Tegra264 compatible be standalone and
-> cannot have the fallback compatible of Tegra186. Since there is no
-> functional impact, we keep reset as required for Tegra234 to avoid
-> breaking the ABI.
-> 
+Patch 2 updates the driver to detect IRQ topology at runtime via
+platform_irq_count(), handle both modes in one code path, and enable
+DMANSECCTRL.INTREN_ANYCHINTR only in combined IRQ mode.
 
-This is a fix for Tegra264 and so having a fixes tag here seems appropriate.
+Patch 3 adds the Sky1 DMA DT node using the combined IRQ topology.
 
-> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-> ---
->   .../bindings/dma/nvidia,tegra186-gpc-dma.yaml | 25 +++++++++++++------
->   1 file changed, 18 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml b/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
-> index b5d8fd0b281d..b849d4cc2901 100644
-> --- a/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
-> @@ -16,16 +16,14 @@ maintainers:
->     - Rajesh Gumasta <rgumasta@nvidia.com>
->     - Akhil R <akhilrajeev@nvidia.com>
->   
-> -allOf:
-> -  - $ref: dma-controller.yaml#
-> -
->   properties:
->     compatible:
->       oneOf:
-> -      - const: nvidia,tegra186-gpcdma
-> +      - enum:
-> +          - nvidia,tegra264-gpcdma
-> +          - nvidia,tegra186-gpcdma
->         - items:
->             - enum:
-> -              - nvidia,tegra264-gpcdma
->                 - nvidia,tegra234-gpcdma
->                 - nvidia,tegra194-gpcdma
->             - const: nvidia,tegra186-gpcdma
-> @@ -69,12 +67,25 @@ required:
->     - compatible
->     - reg
->     - interrupts
-> -  - resets
-> -  - reset-names
->     - "#dma-cells"
->     - iommus
->     - dma-channel-mask
->   
-> +allOf:
-> +  - $ref: dma-controller.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra186-gpcdma
-> +              - nvidia,tegra194-gpcdma
-> +              - nvidia,tegra234-gpcdma
-> +    then:
-> +      required:
-> +        - resets
-> +        - reset-names
-> +
->   additionalProperties: false
->   
->   examples:
+Tested on CIX SKY1 with dmatest:
+  % echo 2000 > /sys/module/dmatest/parameters/timeout
+  % echo 1 > /sys/module/dmatest/parameters/iterations
+  % echo "" > /sys/module/dmatest/parameters/channel
+  % echo 1 > /sys/module/dmatest/parameters/run
+
+Changes in v5:
+- Fix the formatting issue in the AI tag.
+- Remove the unnecessary "cix,sky1-dma-350".
+
+Changes in v4:
+- Reword binding text to align with kernel style.
+- Revise the AI attribution to the standard format.
+- Remove redundant links from the commit log.
+
+Changes in v3:
+- Rework binding compatible description to match generic-first model.
+- Keep interrupts schema support for both 1-IRQ and 8-IRQ topologies.
+- Drop SoC match-data dependency for IRQ mode selection.
+- Detect IRQ topology via platform_irq_count() in probe path.
+- Refactor IRQ handling into a shared channel handler.
+- Enable DMANSECCTRL.INTREN_ANYCHINTR only in combined IRQ mode.
+
+Changes in v2:
+- Update to kernel standards, enhance patch description, and refactor
+ driver to use match data for hardware differentiation instead of
+ compatible strings.
+
+Jun Guo (3):
+  dt-bindings: dma: arm-dma350: document combined and per-channel IRQ
+    topologies
+  dma: arm-dma350: support combined IRQ mode with runtime IRQ topology
+    detection
+  arm64: dts: cix: add DT nodes for DMA
+
+ .../devicetree/bindings/dma/arm,dma-350.yaml  |  25 ++-
+ arch/arm64/boot/dts/cix/sky1.dtsi             |   7 +
+ drivers/dma/arm-dma350.c                      | 164 +++++++++++++++---
+ 3 files changed, 161 insertions(+), 35 deletions(-)
 
 -- 
-nvpublic
+2.34.1
 
 

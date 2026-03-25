@@ -1,89 +1,89 @@
-Return-Path: <dmaengine+bounces-9647-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9648-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YLemBbHYw2lwuQQAu9opvQ
-	(envelope-from <dmaengine+bounces-9647-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 13:44:33 +0100
+	id qB05KdnYw2lwuQQAu9opvQ
+	(envelope-from <dmaengine+bounces-9648-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 13:45:13 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5A5032516F
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 13:44:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 48C9D32519D
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 13:45:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6D4ED309A797
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 12:37:43 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A4836309FC38
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 12:37:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93D6F3D5237;
-	Wed, 25 Mar 2026 12:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 324B33D5236;
+	Wed, 25 Mar 2026 12:37:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gObccjiu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Fp7WMDUJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010054.outbound.protection.outlook.com [52.101.46.54])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013045.outbound.protection.outlook.com [40.93.196.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195603D4132;
-	Wed, 25 Mar 2026 12:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B633D3D4132;
+	Wed, 25 Mar 2026 12:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774442233; cv=fail; b=CpEhmD2JdUINuFr1m9gm0g8gM5LLptNPzWDVLrLqXQm5Z3VijZF8Vxb4oKrryri4EiSshgU2YfiIf8lNXwXvna6mcrRVq1g4qHjeguFhxOdkugIDHzZBO1W7+OsyaZHRzo9JQz4nnvAyLkAmyBqAmHw2gDUyospf4ike5+YtWmo=
+	t=1774442247; cv=fail; b=RaMbuhuikaEUKD1P/HOhCoIWsNVZ2d0bq+Koc9Ec3WxURcmVi7g36hdkuTuKqRPagSiClqJWWe8sN9quNJ30Ouc+w+PtmeSYN5ZujnPYXjDnLrKukGVyBGbi27kl0G5MXpuYzcGn4l72EKNdZpdlAmfroPBaR3BBqz3FUruxboU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774442233; c=relaxed/simple;
-	bh=/PSCNRiqROKUR+dU+cJ9fSgqQ23LbkP8bIDrqmfr/Ao=;
+	s=arc-20240116; t=1774442247; c=relaxed/simple;
+	bh=17TBLeYd6IZYd00gyp72MiKkZcV8LEzGH3cZNWAByqw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M8+xvmY5iCtoUksfruK31AhNPvh4+oVPPW24z5nAn/SbTOCi/ey1zhPHx+/PtAmF6C0Z8Qx3drfzcGC5tphsbRaTBwMm8mvihURfCNKu54zGc9C2NoYfd8omHavZGbsGTSXm9BIKgWSgQ4n9RupRdywReeuz6Bm33hlR9QZIppM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gObccjiu; arc=fail smtp.client-ip=52.101.46.54
+	 MIME-Version:Content-Type; b=SMNY4lgFuXKjx9IhGQK8qrx2p3o7aPkTLm1x5kLCLmrqVbimMklugjK5UJCS7kcExw1mXd/m/10OnaEdxLxsebm7fa23nU5ugropCTWMtA3iY+ejrHTYX9w/juSYGUGd3GbOiT/BnuL7naYUFsdPIXkXKAgC4+EynJqsHHEr/+Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Fp7WMDUJ; arc=fail smtp.client-ip=40.93.196.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dW8Y8sSbFaUpJNDccmvZwVX0/NLzTRAYrjDRFuM30KTKIzs0/Q+7RzgZfY212HNOO3dvoRGNGFlCQenzNnvR+KChIr4uF6BmE3jF9Y3i8mXoTkYA5PL3lhMtg2LjxNSWo3w2pYAf7AkXOXrJc3bCTLnvBPhSzDywEMDuNm8jOIH0mhoxa3sAlMGpQSns2Bm7Q0D5sOENb6klPcq3eK+LgFl648BsJykgz6Kq8kb3jgNSig8j7ywxJQrWwQBz2vp7/IAyn5ZPoPiGXSJ9WClg44PVJK3eogvXPAa2MLWmrgFvMQyyeh8bsjoA4Z07sWTL1oT5GpVTmBoxozZcKzgCWQ==
+ b=Zq9kO5hqWBV2U5GmrWhclVEtV6HU7BSiezn1GcRJ0A0JEdBORQvr66U0YN4gjLbgW2u/cUgFxz7EbqA9McnWBcTDgEOpx3foCU/u1ryeRpIOgdJxtVMyTScUe7HWkIt1QiW6gTZ0+KQihSLMayTykBT3B9nDV8joq5Hwa9rwQdL/QXsBjDlQwQbTb0dw0qXFYdz5V+neG5idGAqezZH7sJNge1bSjoHSl1dadHJcqvlXiNy9ISYSEq6tyMyuZzdoA1BPw1dLWJckEE9Jo/gUOKPaSctzSq1lKTr2rKLuOSqRkbzS0dOCX8mom1k8ZJlTsycNFpgN8oAvpUkpKQw/Sg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CgKZ7m4P6eAx2iXaOwJ4lkCoEHQIYnxfzLoU2fRC6ow=;
- b=tD6G9+Yyl97YyobizO3uixKimu5yThy8phx6t49yywrHTmdxlAYMgMxUvX8yFS/MbuJO9M2Qig1WYieFtU8MMigl6JHx6OWiUwKlW6MKOuwRjZY4SzVZbeoWJ1Vy9+ZiKyi9vZCcFa6ZHQ/dc1ASZSfaVkVAQgRca7gf6Jjx8/CFy51CMqRu2F/ylvXW9sRLsTj5VDjHOZhtb/8yucimEJYHb5oNkyu3cf2mNGhvTrLrM9lIwUTanbG56rF9A2RBAh8Z82MZaCtAvikt98jcKy/9gAZb2qWSgoTuw8V03BPpEONEGheo5hIri9ozNzVp177pAQE3hDQ/sOA9AFGT7A==
+ bh=2bRiNRtgnqkJ67Mg8EIBLs82K4MpTNnw8rA5LlF5OMQ=;
+ b=drQDILtpHc7HondGBkr3TZMyH7srV6KjQMNQDZ2U0h0H2EdMZjoK50++3Bgc02hhkvEFmbppr3jm7ICqU2Wa2VJOIE+p+qQPLGNVQJV7YvyWHBh2BHnNNxfHFwb3m/0ZV9wdaKN3S4Qh9aUeEUgobxxft/Ptyp9NH+VER+Grwqb4sdGtWp1AaC3qkfur7+xAB+tlpX/8SePRz3lxb3xkSzMjQZBIegPbvVeu3QUFOqfAD7p9JPppc+i4nqfv5uuGlCCGAc4ej1uNNJzZYA+NNTSn+E/oQZJdIqhcFso7nWAh94NjyvveMq8PKi0p9YMaZXNHUykgOjuq8eqFF28y8g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.195) smtp.rcpttodomain=lists.infradead.org smtp.mailfrom=ti.com;
+ 198.47.21.195) smtp.rcpttodomain=lists.infradead.org smtp.mailfrom=ti.com;
  dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CgKZ7m4P6eAx2iXaOwJ4lkCoEHQIYnxfzLoU2fRC6ow=;
- b=gObccjiux7e/IQFVZBamVb5brnL+4y7X1+KVKYooN8za8edKActZgVQA+i7EpH5gXkMqTz3he1WDIXzTwDb6R+W1HTI8NEHJSV+a9tZGDzvLNGbayqQaqQZjHTPGhc9kpFak5g2E2KK939xHcDNlydInlJyoJGfoLkDiEb/HhaU=
-Received: from MN2PR22CA0028.namprd22.prod.outlook.com (2603:10b6:208:238::33)
- by BLAPR10MB4868.namprd10.prod.outlook.com (2603:10b6:208:333::7) with
+ bh=2bRiNRtgnqkJ67Mg8EIBLs82K4MpTNnw8rA5LlF5OMQ=;
+ b=Fp7WMDUJW+9MVtFI54fpBpP8Q6A0N1eA3gDUeeEHFH42qCOl1o3lia0YeE6wf1GS8Kr5kp+2Dd4r5/2EHIZUG+2K3KbC5YV/3qPJUm3j8ic5/PoGriLRG0Lq88ymKFV/nb3Cob8wpPsQWa8+vJ121CfRH5ZF3vNJWbr9xtwJtMc=
+Received: from PH8P223CA0030.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:2db::26)
+ by SA2PR10MB4475.namprd10.prod.outlook.com (2603:10b6:806:118::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Wed, 25 Mar
- 2026 12:37:09 +0000
-Received: from BL6PEPF0001AB73.namprd02.prod.outlook.com
- (2603:10b6:208:238:cafe::9a) by MN2PR22CA0028.outlook.office365.com
- (2603:10b6:208:238::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9723.31 via Frontend Transport; Wed,
- 25 Mar 2026 12:36:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.195)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.20; Wed, 25 Mar
+ 2026 12:37:23 +0000
+Received: from SA2PEPF000015CA.namprd03.prod.outlook.com
+ (2603:10b6:510:2db:cafe::89) by PH8P223CA0030.outlook.office365.com
+ (2603:10b6:510:2db::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9723.32 via Frontend Transport; Wed,
+ 25 Mar 2026 12:37:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.195)
  smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
  action=none header.from=ti.com;
 Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.195 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.195; helo=lewvzet201.ext.ti.com; pr=C
-Received: from lewvzet201.ext.ti.com (198.47.23.195) by
- BL6PEPF0001AB73.mail.protection.outlook.com (10.167.242.166) with Microsoft
+ 198.47.21.195 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.21.195; helo=flwvzet201.ext.ti.com; pr=C
+Received: from flwvzet201.ext.ti.com (198.47.21.195) by
+ SA2PEPF000015CA.mail.protection.outlook.com (10.167.241.200) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9745.21 via Frontend Transport; Wed, 25 Mar 2026 12:37:09 +0000
-Received: from DLEE210.ent.ti.com (157.170.170.112) by lewvzet201.ext.ti.com
- (10.4.14.104) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.9745.21 via Frontend Transport; Wed, 25 Mar 2026 12:37:21 +0000
+Received: from DFLE208.ent.ti.com (10.64.6.66) by flwvzet201.ext.ti.com
+ (10.248.192.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 25 Mar
- 2026 07:37:08 -0500
-Received: from DLEE215.ent.ti.com (157.170.170.118) by DLEE210.ent.ti.com
- (157.170.170.112) with Microsoft SMTP Server (version=TLS1_2,
+ 2026 07:37:14 -0500
+Received: from DFLE207.ent.ti.com (10.64.6.65) by DFLE208.ent.ti.com
+ (10.64.6.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 25 Mar
- 2026 07:37:08 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE215.ent.ti.com
- (157.170.170.118) with Microsoft SMTP Server (version=TLS1_2,
+ 2026 07:37:13 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE207.ent.ti.com
+ (10.64.6.65) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Wed, 25 Mar 2026 07:37:08 -0500
+ Transport; Wed, 25 Mar 2026 07:37:13 -0500
 Received: from toolbox.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.73.74])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 62PCakEY270453;
-	Wed, 25 Mar 2026 07:37:03 -0500
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 62PCakEZ270453;
+	Wed, 25 Mar 2026 07:37:08 -0500
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>, <Frank.Li@kernel.org>,
 	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
@@ -92,9 +92,9 @@ To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>, <Frank.Li@kernel.org>,
 CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<danishanwar@ti.com>, <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [RFC PATCH 3/6] dmaengine: ti: k3-udma-glue: Add helpers for batch operations on TX/RX DMA
-Date: Wed, 25 Mar 2026 18:08:39 +0530
-Message-ID: <20260325123850.638748-4-s-vadapalli@ti.com>
+Subject: [RFC PATCH 4/6] net: ethernet: ti: am65-cpsw-nuss: Do not set buf_type for SKB fragments
+Date: Wed, 25 Mar 2026 18:08:40 +0530
+Message-ID: <20260325123850.638748-5-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.51.1
 In-Reply-To: <20260325123850.638748-1-s-vadapalli@ti.com>
 References: <20260325123850.638748-1-s-vadapalli@ti.com>
@@ -109,30 +109,30 @@ Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB73:EE_|BLAPR10MB4868:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6ef2f5b-8217-4cd3-7da6-08de8a6b3b51
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015CA:EE_|SA2PR10MB4475:EE_
+X-MS-Office365-Filtering-Correlation-Id: cb9c62b2-9204-4ead-6ec4-08de8a6b429e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700016|82310400026|1800799024|56012099003|22082099003|18002099003|921020;
+	BCL:0;ARA:13230040|82310400026|36860700016|376014|7416014|1800799024|921020|22082099003|18002099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	hNMA/YMX8+b+8oY7hEFzCX4ka+Mo/N9QHLWOf2pK6lpkhFW7BU2kfkhvryCDOCH9ULPkdcY2FDp+6VTvSeLkEirsnJjAsgOGgSZ/FLoLROr7gpKibtlcwarRpCCSpDm0oE714fqiLFj7Tg6kvY2ZSAXtjD2c20aeVuBt3NXJxYOKfAPvdVglcDrkiZxn0HO3KokjV3+PgCNtXC2olWiXSZ2H24WlQuaEUy2uLJYT1Y8/ydpx7Rl8PcFhjAtn4jMlJIwp25xw6pXKVHOafTOm8vK5ZSY39Dxb8t8OCi6T4UdXoPwY24WxNJulhdm3ykw633nZEA69LnEUkmJN0KElueCZYo2a80nMoDvExQsQBd7Qde570gxNG3mCML5oZJS+34qcICgcREAHPkPuC7CCrthiBXCUQr+I2UNeXgWIzz33QA7OM3P0qZdTyf51Ml5L6QIUn6YEHhPRnU6SaMCyp9+NjSkVRHrfe6amriSX74pahHKao0kItlQNg+BXmsK8m3LyFliA4YBIVMoFQXit07vJH0rOY8yo5HbSGTKQYlHEzcEofpYl20xjcuS7q8sA832zIfwGwVS8NGliuyW6rB7f+VfDR0lQjscZEdH43huzzmQ5qLUcHMQmweITspkmLjnc+ebdPRuhS4fa8vi2dWiF8CKU61anqurYXPzR91GfgKJwDjzTCkn7SskAKBXLnBPZKSrFDnVho49EtPM/b46U7uzcckN3pV5s3F0gO614+kPARcOLuGu5+iXPe2AlBe4ndKnUdDsT6acA1nld4w0SsOQBm082Kf8+3MGN9bNoJpshH7K7OiHKwVT9lI28
+	zjyukiHjf72O5BY0I1mFKqDRG7ucqt3HxvYS0JHvCOveMD36rlyjM+H/02JgtsHQjVPA17Sauw/abzTJDD01xQHzsVZth4Z2b2Cnmzxx+UmftR6z9Mvu/UEjKByOUfhRDWqf5qB1XehBWpaX7Rdwo4+u2+1efihy/KcKNkj68tR3ZluCz/NRfkC4abWheyuRARmtrMDZFEm0Mqfd3COH5P+N0THiLlDpmrQYgwGNav9fnLWPHWcREV1lMKwQUL+flbgvJfKY+6K933lGPo8iG1aHVXfl/V7JmvZhD1Al3t5wr8z1nWt2QNyknPxA7FHWROrtQ0Y5djJBsubebWsn4DdMyYF8dXerQcyR/5+8gGbU418UOoAiw/wUJrSHKvcPSaO4epFCSty/sYCIOJWgcRba9umY6B+Z+gh+UFv0VHyBh31tRdkthor8ZVkejs0nUceq6pQyMXf551wL8HcVywapdcKHm/W5UJwV3tPZ9N7pMIRKKaDwe/N8iJCzk0Umo+/Ci3FulRS2jKWpZoV0xUeQMjW4ehcJB6syDNfgQOip0+uMRkVp691SWOIaOyHsrjfPdJ2B++mlC+LDR5zst+xscwGQ5RiyQBqblanHGWU98y2ebVIusfAZRdPmlr5SsPPXBRNxCUHHHJoEhtXvTbc/rSyu2oyHZfLv7N3EJJTFmtGCYsYSwePpexdNfs7C8StLrbQNj/CuRpCO1ACNQXaWIFx4F8zMtO4NI/FK0tWwUpYzvf8CcJQtdE7bavf/PgZVllWW/GzGjgM3dzdM4DVmwZ2wD6i7UycKuF7CPnT6pjAEg6y9nuQXlx/3gqu6
 X-Forefront-Antispam-Report:
-	CIP:198.47.23.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet201.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700016)(82310400026)(1800799024)(56012099003)(22082099003)(18002099003)(921020);DIR:OUT;SFP:1101;
+	CIP:198.47.21.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet201.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(376014)(7416014)(1800799024)(921020)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	B+LKMKLP73xLUfw/LiInwyIC6PA0piF7f0mXJ20xJJrUtRNTIizln67vq6U/BXutlXKiUvrPzmbdMFDIl10MvDqqHMeFsm+xS7XkdnhADgGfYHGpbFpYEWbTEopEeluCUtjGCxW1Nud23b0Zj5ws9a8/nQouhBUWQPb/0n9oKDHSOze1TX6ruKWGWp9g7/0zeVCrLybN0KLabPd/NznCnJJNZ2oct9NaWs03QQ4QiDnD9Toq2LisQP7BUcEOE4+WGjb4rqaZEQ6nwglmMqCOBnNS2hjuT21y+hKlTvTqYoGe3LD+yE0Rcu+1oatUgpwco6c9i7xcuwE3LpnR+jYY5ObajYdJUhcj382hpbpKES8bKQS3h8UUz+g90du4F2vmAsKVX2ff9YceCpcPZT9BIDJGPL8zsKRmNCa3a9sIyAB3SsQK0XqQGh8LN6tU9vjR
+	hgq0etyJ6qn9Sp++C+F9TIsel5Ks+73BBvijN3OtHA1duWNuna8oKZr7Xc1TMQDNMnvXkpwuz0PhHvbMgKohb0kb37xs0imvqhGAce/DlcuUG4UfiVySaMDKRbPoSXJeCtTYyLtgQ+YsrXv+oP9hASMEUrPWu5gq7Ix02RfjCmh7T4qT7NtR8VevNy2BjgzLzVMRsckpf0mZ+b7kZ4GuDGqqGWrCH8rYV+xmhPWL0vVsMOXVvOpTiWthXKSKulapxnlT4AwuuM+3h0HX9iuyaG51vOG9mTYPrQYrV9idWXnSymcS8XP4HKmuD08a+C3UJhigs/MVCgCjY58VqJijNGyYzJq3JL9dU09dn1fEdf7Svl9h7u84pO3NNqUVX4yHqrqJbKomA7755HNE6fdMEaWwxrqXGvVjwAiSMYzwZ7yjCrNgazwlOvELvMDpKn0z
 X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2026 12:37:09.3362
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2026 12:37:21.6273
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6ef2f5b-8217-4cd3-7da6-08de8a6b3b51
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb9c62b2-9204-4ead-6ec4-08de8a6b429e
 X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.195];Helo=[lewvzet201.ext.ti.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.195];Helo=[flwvzet201.ext.ti.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB73.namprd02.prod.outlook.com
+	SA2PEPF000015CA.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB4868
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4475
 X-Spamd-Result: default: False [2.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
@@ -148,7 +148,7 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	FREEMAIL_TO(0.00)[gmail.com,kernel.org,lunn.ch,davemloft.net,google.com,redhat.com,ti.com];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9647-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9648-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[20];
 	PRECEDENCE_BULK(0.00)[];
@@ -161,144 +161,48 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine,netdev];
 	RCVD_COUNT_SEVEN(0.00)[10]
-X-Rspamd-Queue-Id: C5A5032516F
+X-Rspamd-Queue-Id: 48C9D32519D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-To allow pushing and popping a batch of DMA Descriptors on the Transmit
-and Receive DMA Channels (Flows), introduce four helpers:
-1. k3_udma_glue_push_tx_chn_batch
-2. k3_udma_glue_pop_tx_chn_batch
-3. k3_udma_glue_push_rx_chn_batch
-4. k3_udma_glue_pop_rx_chn_batch
+There are two kinds of descriptors:
+1. Host Packet Descriptor
+2. Host Buffer Descriptor
+
+Unfragmented SKBs are always associated with a single Host Packet
+Descriptor. Fragmented SKBs on the other hand have the Start-of-Packet
+SKB associated with a single Host Packet Descriptor and the remaining
+fragments are associated with a Host Buffer Descriptor. A single Host
+Packet Descriptor is linked to a chain of Host Buffer Descriptors for
+fragmented SKBs with as many Host Buffer Descriptors as the number of
+SKB fragments.
+
+Since packet completion handling only uses the buffer type of the Host
+Packet Descriptor, setting the buffer type of the linked Host Buffer
+Descriptors is an unnecessary operation which wastes CPU cycles per SKB
+fragment.
+
+Hence, do not set buffer type for SKB fragments.
 
 Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
- drivers/dma/ti/k3-udma-glue.c    | 55 ++++++++++++++++++++++++++++++++
- include/linux/dma/k3-udma-glue.h | 12 +++++++
- 2 files changed, 67 insertions(+)
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index f87d244cc2d6..15835c521977 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -485,6 +485,25 @@ int k3_udma_glue_push_tx_chn(struct k3_udma_glue_tx_channel *tx_chn,
- }
- EXPORT_SYMBOL_GPL(k3_udma_glue_push_tx_chn);
+diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+index d9400599e80a..6df6cb52d952 100644
+--- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
++++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+@@ -1678,9 +1678,6 @@ static netdev_tx_t am65_cpsw_nuss_ndo_slave_xmit(struct sk_buff *skb,
+ 			goto busy_free_descs;
+ 		}
  
-+int k3_udma_glue_push_tx_chn_batch(struct k3_udma_glue_tx_channel *tx_chn,
-+				   struct cppi5_host_desc_t **desc_tx,
-+				   dma_addr_t *desc_dma, u32 batch_size)
-+{
-+	u32 ringtxcq_id;
-+	int i;
-+
-+	if (!atomic_add_unless(&tx_chn->free_pkts, -1 * batch_size, 0))
-+		return -ENOMEM;
-+
-+	ringtxcq_id = k3_ringacc_get_ring_id(tx_chn->ringtxcq);
-+
-+	for (i = 0; i < batch_size; i++)
-+		cppi5_desc_set_retpolicy(&desc_tx[i]->hdr, 0, ringtxcq_id);
-+
-+	return k3_ringacc_ring_push_batch(tx_chn->ringtx, desc_dma, batch_size);
-+}
-+EXPORT_SYMBOL_GPL(k3_udma_glue_push_tx_chn_batch);
-+
- int k3_udma_glue_pop_tx_chn(struct k3_udma_glue_tx_channel *tx_chn,
- 			    dma_addr_t *desc_dma)
- {
-@@ -498,6 +517,21 @@ int k3_udma_glue_pop_tx_chn(struct k3_udma_glue_tx_channel *tx_chn,
- }
- EXPORT_SYMBOL_GPL(k3_udma_glue_pop_tx_chn);
- 
-+int k3_udma_glue_pop_tx_chn_batch(struct k3_udma_glue_tx_channel *tx_chn,
-+				  dma_addr_t *desc_dma, u32 *batch_size,
-+				  u32 max_batch)
-+{
-+	int ret;
-+
-+	ret = k3_ringacc_ring_pop_batch(tx_chn->ringtxcq, desc_dma, batch_size,
-+					max_batch);
-+	if (!ret)
-+		atomic_add(*batch_size, &tx_chn->free_pkts);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(k3_udma_glue_pop_tx_chn_batch);
-+
- int k3_udma_glue_enable_tx_chn(struct k3_udma_glue_tx_channel *tx_chn)
- {
- 	int ret;
-@@ -1512,6 +1546,16 @@ int k3_udma_glue_push_rx_chn(struct k3_udma_glue_rx_channel *rx_chn,
- }
- EXPORT_SYMBOL_GPL(k3_udma_glue_push_rx_chn);
- 
-+int k3_udma_glue_push_rx_chn_batch(struct k3_udma_glue_rx_channel *rx_chn,
-+				   u32 flow_num, dma_addr_t desc_dma,
-+				   u32 batch_size)
-+{
-+	struct k3_udma_glue_rx_flow *flow = &rx_chn->flows[flow_num];
-+
-+	return k3_ringacc_ring_push_batch(flow->ringrxfdq, &desc_dma, batch_size);
-+}
-+EXPORT_SYMBOL_GPL(k3_udma_glue_push_rx_chn_batch);
-+
- int k3_udma_glue_pop_rx_chn(struct k3_udma_glue_rx_channel *rx_chn,
- 			    u32 flow_num, dma_addr_t *desc_dma)
- {
-@@ -1521,6 +1565,17 @@ int k3_udma_glue_pop_rx_chn(struct k3_udma_glue_rx_channel *rx_chn,
- }
- EXPORT_SYMBOL_GPL(k3_udma_glue_pop_rx_chn);
- 
-+int k3_udma_glue_pop_rx_chn_batch(struct k3_udma_glue_rx_channel *rx_chn,
-+				  u32 flow_num, dma_addr_t *desc_dma,
-+				  u32 *batch_size, u32 max_batch)
-+{
-+	struct k3_udma_glue_rx_flow *flow = &rx_chn->flows[flow_num];
-+
-+	return k3_ringacc_ring_pop_batch(flow->ringrx, desc_dma, batch_size,
-+					 max_batch);
-+}
-+EXPORT_SYMBOL_GPL(k3_udma_glue_pop_rx_chn_batch);
-+
- int k3_udma_glue_rx_get_irq(struct k3_udma_glue_rx_channel *rx_chn,
- 			    u32 flow_num)
- {
-diff --git a/include/linux/dma/k3-udma-glue.h b/include/linux/dma/k3-udma-glue.h
-index 5d43881e6fb7..9fe3f51c230c 100644
---- a/include/linux/dma/k3-udma-glue.h
-+++ b/include/linux/dma/k3-udma-glue.h
-@@ -35,8 +35,14 @@ void k3_udma_glue_release_tx_chn(struct k3_udma_glue_tx_channel *tx_chn);
- int k3_udma_glue_push_tx_chn(struct k3_udma_glue_tx_channel *tx_chn,
- 			     struct cppi5_host_desc_t *desc_tx,
- 			     dma_addr_t desc_dma);
-+int k3_udma_glue_push_tx_chn_batch(struct k3_udma_glue_tx_channel *tx_chn,
-+				   struct cppi5_host_desc_t **desc_tx,
-+				   dma_addr_t *desc_dma, u32 batch_size);
- int k3_udma_glue_pop_tx_chn(struct k3_udma_glue_tx_channel *tx_chn,
- 			    dma_addr_t *desc_dma);
-+int k3_udma_glue_pop_tx_chn_batch(struct k3_udma_glue_tx_channel *tx_chn,
-+				  dma_addr_t *desc_dma, u32 *batch_size,
-+				  u32 max_batch);
- int k3_udma_glue_enable_tx_chn(struct k3_udma_glue_tx_channel *tx_chn);
- void k3_udma_glue_disable_tx_chn(struct k3_udma_glue_tx_channel *tx_chn);
- void k3_udma_glue_tdown_tx_chn(struct k3_udma_glue_tx_channel *tx_chn,
-@@ -127,8 +133,14 @@ void k3_udma_glue_tdown_rx_chn(struct k3_udma_glue_rx_channel *rx_chn,
- int k3_udma_glue_push_rx_chn(struct k3_udma_glue_rx_channel *rx_chn,
- 		u32 flow_num, struct cppi5_host_desc_t *desc_tx,
- 		dma_addr_t desc_dma);
-+int k3_udma_glue_push_rx_chn_batch(struct k3_udma_glue_rx_channel *rx_chn,
-+				   u32 flow_num, dma_addr_t desc_dma,
-+				   u32 batch_size);
- int k3_udma_glue_pop_rx_chn(struct k3_udma_glue_rx_channel *rx_chn,
- 		u32 flow_num, dma_addr_t *desc_dma);
-+int k3_udma_glue_pop_rx_chn_batch(struct k3_udma_glue_rx_channel *rx_chn,
-+				  u32 flow_num, dma_addr_t *desc_dma,
-+				  u32 *batch_size, u32 max_batch);
- int k3_udma_glue_rx_flow_init(struct k3_udma_glue_rx_channel *rx_chn,
- 		u32 flow_idx, struct k3_udma_glue_rx_flow_cfg *flow_cfg);
- u32 k3_udma_glue_rx_flow_get_fdq_id(struct k3_udma_glue_rx_channel *rx_chn,
+-		am65_cpsw_nuss_set_buf_type(tx_chn, next_desc,
+-					    AM65_CPSW_TX_BUF_TYPE_SKB);
+-
+ 		buf_dma = skb_frag_dma_map(tx_chn->dma_dev, frag, 0, frag_size,
+ 					   DMA_TO_DEVICE);
+ 		if (unlikely(dma_mapping_error(tx_chn->dma_dev, buf_dma))) {
 -- 
 2.51.1
 

@@ -1,204 +1,211 @@
-Return-Path: <dmaengine+bounces-9640-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9641-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +EluE1+Xw2nNrwQAu9opvQ
-	(envelope-from <dmaengine+bounces-9640-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 09:05:51 +0100
+	id cOWtFZbIw2lKuAQAu9opvQ
+	(envelope-from <dmaengine+bounces-9641-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 12:35:50 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAE7B3211DE
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 09:05:50 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B48E8323FB3
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 12:35:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4D41030C70FB
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 08:03:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EBC4C315EEB3
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2026 11:22:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4176283FEF;
-	Wed, 25 Mar 2026 08:03:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5DE13CCFB2;
+	Wed, 25 Mar 2026 11:22:08 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023097.outbound.protection.outlook.com [40.107.44.97])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6075382398
-	for <dmaengine@vger.kernel.org>; Wed, 25 Mar 2026 08:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774425795; cv=none; b=GFkw0OtM3aRByRc8UkstWb8ON8cYGh37uQr4VfJqos6WQHNMxjpla6GmhVWznUTz1EwkkKhPFAJvFKNLq3yt+RmjM/toEJFmDbbRs5g0+q/rmB4Bww/fviZX/HfayNK5Y2N0O3egd/x5vQX4y4bCe4ARbIw3QnCDT8n4rtH5044=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774425795; c=relaxed/simple;
-	bh=ZYG/k7kjLeCs+G5BXN/DGjRFcRRtBzlVxNoa6nU4SS8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z2g4kUKlnOOphgr6hexBsORUtoyTGLMcfS6yJjZlGLK8Hy7Gu3FCj99fkDiYfSq8UB1vGZ/h1vGf9foFjh7NjzZOVMb22h3qdkOp+GYjPBxTfgtOj95WwcGVusIyU6lzkN4NayuPsIpEQKfZmU8ooUKBVgJ6yn5L/SyTYAdW44k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-56cde28a9b6so1864955e0c.3
-        for <dmaengine@vger.kernel.org>; Wed, 25 Mar 2026 01:03:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774425792; x=1775030592;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zEgogPO73kZUH+F/LPjEzcWkUO0MFC82X3nlBvBxxvY=;
-        b=Xb+72kUEkfh7udQTdo/0ZMS8TUDkO+zirrSGB9dSKmgZiMvNau712G7XemIJh5TI5p
-         8Qekr/nR0pF9dzNyof0wgWhfqlU6Hgn8oypGAEm7Mj/4LRV+JHHKGCcSSsd3KKHLNp4o
-         mDxnCf8x1QVM8Xq+mnjLalvPn+SEx5xpvXoR/dejTRg/2sJsqaO0NUfQmTR+2TQ4q199
-         jrOMnpKyPaj3UFt8Usc3QtJp24biA8gRpYGo4d7xV5C/+FbO65f+PCKQ1pvLx5AKCeXL
-         nAvRa2oWIAcxNtvsPfcAc6T7VgJwANJOS6ZoEfpv6uKJS90EFn0L/9NSwsX8wV9Vy0f6
-         dTpw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfztQhLatCYIdh1a8d6tmQmLbp/hRIcMpbpR90hl90qVHK1cSo1xOwcr5akJha+/0z8WOUSMiC8jM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVbmvAWi/XBamJVo684O4jpd6X+yIeCsmwupDVzfcn+5mZOdQm
-	/Nh3/K/w9cbKnqKEefwY8pwtfKP7JGsozPoPVVmtrCjFOTNxXGCCeRIMujW3qYGRBCs=
-X-Gm-Gg: ATEYQzykexdXF84HtVuCjnnsaMCZTT32GmIassMIhm5Aj9EFwcK5e7JUxTi45itJk2k
-	f/lG4LwS3a6QhA2ACWZXMp/YJgPSGFi0yg/DcrNruaj5Z2lGDCikrj+p1N3S4tH3aqRijrjQeD1
-	7w+jN1RFS5veS7tvpJLDraBjWxMdmQ9LymETccE3+rPWJ5aLbWoZKrLb6UNnqhsH1VLiyYKmnVh
-	KZYs3jp3JTVECsMaTgk8WdMJfzhLipWHZFzEE/kupSO8KlBLcLJB55rdOy9J0pYfkqgXYRvB7YU
-	eao3T2/E+RR6UMib+piKTkiYa+rVriKvkQ7Q5YsigCx7ech2Y7LVbbyPvOievjKzvznjmmjH9r0
-	xgnAYrurX8+9Vv/gYCHQ+8o2TZYlUadaDcI1lAsCAn8l4oakA28xEiqfxTOlsWxOqEO32ldr363
-	N1Tjds/QhQ1SH5QkiKr70Wvp7v8Jq/8RTnHNq3b7s75oEaWpUW4Q3FE2O5izm18dCb
-X-Received: by 2002:a05:6122:678d:b0:56b:95a5:da18 with SMTP id 71dfb90a1353d-56d22069f0amr668162e0c.10.1774425791565;
-        Wed, 25 Mar 2026 01:03:11 -0700 (PDT)
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56cddcf1554sm19582985e0c.17.2026.03.25.01.03.10
-        for <dmaengine@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2026 01:03:10 -0700 (PDT)
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-56cc6fe8815so2708765e0c.1
-        for <dmaengine@vger.kernel.org>; Wed, 25 Mar 2026 01:03:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUEAuWv4vcHZXur4b7W1S4uQYm5wydFPYaTwzc2b9dlLvgpcKfygjgn5Bz4TY+LkL/P3OCs00ytB5E=@vger.kernel.org
-X-Received: by 2002:a05:6122:311e:b0:56a:e0e2:69b3 with SMTP id
- 71dfb90a1353d-56d21cf9aa1mr1214240e0c.0.1774425790419; Wed, 25 Mar 2026
- 01:03:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E7E3BE15D;
+	Wed, 25 Mar 2026 11:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.97
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774437728; cv=fail; b=jHrP03AIDtyJrVTcICx69NOEg6PYFa7IfahjF+q04XgNwsvo34eees34nAZa9dnoaNdGyM3vsMF7AyM7iF3D6TdLXXQmC2KnwNC98SRRTPX+hHw50xXEWEukAhypT4L30ZHnTONSAbRNiZ5StQ6pFySj6+sTmEJOVcWQvvQ3mfc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774437728; c=relaxed/simple;
+	bh=+KTPSI2prCXu+vIs9DUJ3tiOz63pLiKV+DZgAYiSETI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=aPu/E2EanyLY9YA+N9Svs8ylrptbbTlAXfkQLtN7mOYM11fnhpP4p1CDkf1iZp6JDcwxW6684VyGube/TdQUjMAnzQznC2HJntVlx35cfMkx7FGLrlipXn9XJykDY7sbCmwqtGvAj0MolA7SE7YMzu3Vexe73Y1+BiaivLVCBBs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Chu4fe7RZVKOZXZgzY9SKS3AsA0oYNnLXOjGaOSsuT8ScvdvL/dAPM0uW5Z9ofqFl8k/1ZEHzlbNqvuT0suKOQXYHM31Roengi2XdHng/4WGcwnHLX4qqykJ9xrQH1bv7KjZw2d8mvKwmowx/zFUzg2LOCNc8M9VYiL0gLCZQmHWyN4ZejtLf0qU8w0Cx58huBFvfWEq8VbFvVj1+ZQKJhuYwTV/UXj7b+01AmA1SMn3sRHOvG7/HqmgpgnDL2Yjmm2ieXYF16QudYtpqqBtaVoKsAHQSW5cURMnP8OvKS2m4LqEZK0+HQB2o4fdafkFJEAA/hiocIVnyDl4SuivNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aUng7xsJsVuKxmG4d/Phsrr5AfYhOLGcGOlm0+NVjYA=;
+ b=ikEu8GlddIRewui2lTJ3NI7KNWZ3BalX3lPL1/IbqE4QjTcW9tg0cR50TA4DK83mCBd5gpVP0nqX0EZjAjEO+GSw2gVFC+mmLweidNrzavQu7U9m44Q3MifmOlFzRpts3/zgjEbbyYu3Xi8b8L5UaFX/zkDQM5D2CphCo18tGxfceP/BoQMlDVJ6KTsbUv+SK+HvQkS50lM3JPS/JaSn3Q6qd1P+BnHRyqEcKcldBEnEDsQTka4vp9dG48EPX5ajKF11RtE93Ue/Bi0RlAzTnFCzZQ1cgr2RroMl6tZ/f0ddfUkbwYLu9YryqdNggN6XgV4tn4bnB9IynUxrDNrqrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SI2PR01CA0027.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::7) by KL1PR06MB6686.apcprd06.prod.outlook.com
+ (2603:1096:820:fe::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Wed, 25 Mar
+ 2026 11:22:02 +0000
+Received: from SG2PEPF000B66CE.apcprd03.prod.outlook.com
+ (2603:1096:4:192:cafe::a0) by SI2PR01CA0027.outlook.office365.com
+ (2603:1096:4:192::7) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9723.31 via Frontend Transport; Wed,
+ 25 Mar 2026 11:22:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG2PEPF000B66CE.mail.protection.outlook.com (10.167.240.21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9745.21 via Frontend Transport; Wed, 25 Mar 2026 11:22:01 +0000
+Received: from guoo-System-Product-Name.. (unknown [172.20.64.188])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id D51684126F9A;
+	Wed, 25 Mar 2026 19:21:59 +0800 (CST)
+From: Jun Guo <jun.guo@cixtech.com>
+To: peter.chen@cixtech.com,
+	fugang.duan@cixtech.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	vkoul@kernel.org,
+	ychuang3@nuvoton.com,
+	schung@nuvoton.com,
+	robin.murphy@arm.com,
+	Frank.Li@kernel.org
+Cc: dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	cix-kernel-upstream@cixtech.com,
+	linux-arm-kernel@lists.infradead.org,
+	Jun Guo <jun.guo@cixtech.com>
+Subject: [PATCH v6 0/2] dma: arm-dma350: handle shared channel IRQ wiring on sky1
+Date: Wed, 25 Mar 2026 19:21:57 +0800
+Message-Id: <20260325112159.663881-1-jun.guo@cixtech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260320112838.2200198-1-claudiu.beznea.uj@bp.renesas.com> <20260320112838.2200198-7-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20260320112838.2200198-7-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 25 Mar 2026 09:02:58 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUw+Dg4wEv9+F71aWgY9SLxPO6DyXO+30Gi_sNFpxechQ@mail.gmail.com>
-X-Gm-Features: AQROBzBTFk3wDshBCZKCcekMpDggyNDKzrPFZ_w0YB_UnpLQ_sKycSkS0HnN5zA
-Message-ID: <CAMuHMdUw+Dg4wEv9+F71aWgY9SLxPO6DyXO+30Gi_sNFpxechQ@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] ASoC: renesas: rz-ssi: Use generic PCM dmaengine APIs
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, lgirdwood@gmail.com, 
-	broonie@kernel.org, perex@perex.cz, tiwai@suse.com, 
-	biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
-	p.zabel@pengutronix.de, fabrizio.castro.jz@renesas.com, 
-	john.madieu.xa@bp.renesas.com, kuninori.morimoto.gx@renesas.com, 
-	tommaso.merciai.xr@bp.renesas.com, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spamd-Result: default: False [-1.46 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CE:EE_|KL1PR06MB6686:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: dda8f7b8-04d0-46ee-8fdf-08de8a60bc79
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700016|376014|7416014|921020|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	GowSDUskEPt3QHP358CqH7v4xyYJ5NDxPDRmhXjDapjJi3MGSoveSgnxLQhocTNsfBbB+1zvufnqW9c2Wa46idLWroXNc4YTlo6n41fBsMD5uMTUyobQmmLCbYIp0pdTvgHoOgiBhXTK25+fQqMf8JFLLdyadmiMs8JauPGl6pkvmoXtWvKMKToq/KTm+ruPXhYhcx/3cVL44afP3A3G5PaXY2OjVdeVsFmtudCXGKc3Dsx09rAKY8c46J6fqehZ+wI0RxqlKfgsikjFONpIZJROFeod+x9pO2Wb2MZxyuvPuaqliW9w2bGpPHlpgmhk8mjQT+7KIpb3PUX8MaDZVy8lzxUpYunlswXW0KTPHc2F9il1BEiLX6ZOOim0hQjiooRTEFeHWZqdhqklVrFlg6lbUJBj5ToZank+vbbCiogO1eOFtvq2ozkpvldaGCnMGuyqckR/um9F9S/fdTlEz3hfEAEU/fCBTiCgy0xZRM3zRc5/wacFS4ihvpJRzU5q2Kd7vuyL4cLgQz1tRv6TQTTc8Pd2gZg7/0aS99wPwiiWHuwHmab4DJlfu+6otDA+lwqVouY7ruR9sGpxguQy5aP6IZlVEFvzJnmPpi5sS+IB6iEW6ZbHxCCPYkelLz+WYL7A31aBloITGUoagWGXUDUYnd86PmFO8hmmPOMHWXnmLBJpZBuX773ZFHVwAshwE4l21EBkoJupJkmj+f3TPof88aGauRceQCKGJcLCgz6qnXQJNg3BAAXpT/rjXURBtiWyr4kdV5Tfq9sJghNEG0bkM/USIRk/1bGc7TvlGWKW3OKYx6sFlrB18qfvGqjH
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700016)(376014)(7416014)(921020)(18002099003)(56012099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	cJ90qwUP/Ybfwi6qeWO8jSzJ3YSBnFjh7qSaaCOWA88He9GkdQNuScFaKh8ywgZxtW1iBZYZGCO6D8G3L/XsgWjl7Y3ucgCYFuFmsEVb4d7kZNiYOXaAAOlN9xIq0ngieVuNHhQHsdHhCZQ35dl41O1sG+cCA3Ty/7fNxzP5mO1SrVQ26pODQHCjmO7Ef3EcxofmeC1VsX1Qdm7PVd4dHTDuq+Qe4KLRBJFJDo/BUw/5UcZzTx2mp5YcLK+0dW76neXtz0+VzPEw9ESfZbW4Ayd+XGOrpSKI/XIc6rOMmcU9FQYqzK5S7K3+z4QpcQ+Cqroo8cly0/ZFGAp+QGjKgzW0R50NVq6Kleax3gIlA3P8fkj/dJSyKD7gyCGj3+skXFR/VziLgh4f/UmZN3K4Q8bh3KfCHHRXFa1IHhoksOhALAF9NNaH4AYHCYZvU4R+
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2026 11:22:01.1818
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dda8f7b8-04d0-46ee-8fdf-08de8a60bc79
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG2PEPF000B66CE.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6686
+X-Spamd-Result: default: False [3.54 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,perex.cz,suse.com,bp.renesas.com,pengutronix.de,renesas.com,vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	TAGGED_FROM(0.00)[bounces-9640-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[linux-m68k.org];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9641-lists,dmaengine=lfdr.de];
+	DMARC_NA(0.00)[cixtech.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine];
-	R_DKIM_NA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,renesas.com:email]
-X-Rspamd-Queue-Id: BAE7B3211DE
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jun.guo@cixtech.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[cixtech.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: B48E8323FB3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Claudiu,
+This series updates DMA-350 support for the SKY1 integration where all DMA
+channel interrupt outputs are wired to the same GIC SPI.
 
-On Fri, 20 Mar 2026 at 12:28, Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> On Renesas RZ/G2L and RZ/G3S SoCs (where this was tested), captured audio
-> files occasionally contained random spikes when viewed with a tool such
-> as Audacity. These spikes were also audible as popping noises.
->
-> Using cyclic DMA resolves this issue. The driver was reworked to use the
-> existing support provided by the generic PCM dmaengine APIs. In addition
-> to eliminating the random spikes, the following issues were addressed:
-> - blank periods at the beginning of recorded files, which occurred
->   intermittently, are no longer present
-> - no overruns or underruns were observed when continuously recording
->   short audio files (e.g. 5 seconds long) in a loop
-> - concurrency issues in the SSI driver when enqueuing DMA requests were
->   eliminated; previously, DMA requests could be prepared and submitted
->   both from the DMA completion callback and the interrupt handler, which
->   led to crashes after several hours of testing
-> - the SSI driver logic is simplified
-> - the number of generated interrupts is reduced by approximately 250%
->
-> In the SSI platform driver probe function, the following changes were
-> made:
-> - the driver-specific DMA configuration was removed in favor of the
->   generic PCM dmaengine APIs. As a result, explicit cleanup goto labels
->   are no longer required and the driver remove callback was dropped,
->   since resource management is now handled via devres helpers
-> - special handling was added for IP variants operating in half-duplex
->   mode, where the DMA channel name in the device tree is "rt"; this DMA
->   channel name is taken into account and passed to the generic PCM
->   dmaengine configuration data
->
-> All code previously responsible for preparing and completing DMA
-> transfers was removed, as this functionality is now handled entirely by
-> the generic PCM dmaengine APIs.
->
-> Since DMA channels must be paused and resumed during recovery paths
-> (overruns and underruns), the DMA channel references are stored in
-> rz_ssi_hw_params().
->
-> The logic in rz_ssi_is_dma_enabled() was updated to reflect that the
-> driver no longer manages DMA transfers directly.
->
-> Finally, rz_ssi_stream_is_play() was removed, as it had only a single
-> remaining user after this rework, and its logic was inlined at the call
-> site.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Patch 1 enables DMANSECCTRL.INTREN_ANYCHINTR in the driver so per-channel
+interrupt status is propagated even when channels share one parent IRQ
+line.
 
-Thanks for your patch!
+Patch 2 adds the SKY1 DMA-350 DT node and describes the channel interrupt
+sources using 8 channel entries, while all entries map to the same SPI.
 
-> --- a/sound/soc/renesas/Kconfig
-> +++ b/sound/soc/renesas/Kconfig
-> @@ -56,6 +56,7 @@ config SND_SOC_MSIOF
->  config SND_SOC_RZ
->         tristate "RZ/G2L series SSIF-2 support"
->         depends on ARCH_RZG2L || COMPILE_TEST
-> +       select CONFIG_SND_SOC_GENERIC_DMAENGINE_PCM
+Tested on CIX SKY1 with dmatest:
+  % echo 2000 > /sys/module/dmatest/parameters/timeout
+  % echo 1 > /sys/module/dmatest/parameters/iterations
+  % echo "" > /sys/module/dmatest/parameters/channel
+  % echo 1 > /sys/module/dmatest/parameters/run
 
-Please drop the "CONFIG_"-prefix.
+Changes in v6:
+- Drop the dt-binding update and keep the existing 8-channel interrupt
+ schema.
+- Simplify driver change to a minimal fix:
+ enable DMANSECCTRL.INTREN_ANYCHINTR.
+- Update SKY1 DT node to describe 8 channel interrupt entries mapped
+ to one SPI.
 
->         help
->           This option enables RZ/G2L SSIF-2 sound support.
->
+Changes in v5:
+- Fix the formatting issue in the AI tag.
+- Remove the unnecessary "cix,sky1-dma-350".
 
-Gr{oetje,eeting}s,
+Changes in v4:
+- Reword binding text to align with kernel style.
+- Revise the AI attribution to the standard format.
+- Remove redundant links from the commit log.
 
-                        Geert
+Changes in v3:
+- Rework binding compatible description to match generic-first model.
+- Keep interrupts schema support for both 1-IRQ and 8-IRQ topologies.
+- Drop SoC match-data dependency for IRQ mode selection.
+- Detect IRQ topology via platform_irq_count() in probe path.
+- Refactor IRQ handling into a shared channel handler.
+- Enable DMANSECCTRL.INTREN_ANYCHINTR only in combined IRQ mode.
+
+Changes in v2:
+- Update to kernel standards, enhance patch description, and refactor
+ driver to use match data for hardware differentiation instead of
+ compatible strings.
+
+Jun Guo (2):
+  dma: arm-dma350: enable ANYCH interrupt for shared IRQ wiring
+  arm64: dts: cix: add sky1 DMA-350 node with channel IRQ entries
+
+ arch/arm64/boot/dts/cix/sky1.dtsi | 14 ++++++++++++++
+ drivers/dma/arm-dma350.c          |  9 +++++++++
+ 2 files changed, 23 insertions(+)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.34.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 

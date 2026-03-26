@@ -1,46 +1,46 @@
-Return-Path: <dmaengine+bounces-9664-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9665-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cHMfG4gUxWnr6QQAu9opvQ
-	(envelope-from <dmaengine+bounces-9664-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 12:12:08 +0100
+	id 0OAaBwUWxWnr6QQAu9opvQ
+	(envelope-from <dmaengine+bounces-9665-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 12:18:29 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FBCA334284
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 12:12:08 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 889793344B4
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 12:18:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9333D305ABA0
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 11:10:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9E1EA3113A7C
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 11:11:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF21F3C0601;
-	Thu, 26 Mar 2026 11:10:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D76083BFE5A;
+	Thu, 26 Mar 2026 11:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Qs8BaBR+"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fVqMW1Is"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010041.outbound.protection.outlook.com [52.101.46.41])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012035.outbound.protection.outlook.com [40.107.200.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B098F3A7839;
-	Thu, 26 Mar 2026 11:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9213538C2A9;
+	Thu, 26 Mar 2026 11:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.35
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774523440; cv=fail; b=OI5XshlSeCbsQV+ZOGUNkjwhkdw/m8vj0PmcsFdqeEVvdIDdnOgE7pdNKNKdZiVwhszgaT4xTF3IkQ5UX0pkKznR1kwLmDuCXPHw82AOCifrySBRgg5WP93D5fCABF0tNP1D+sV/me+C6evtMV+Y1Zw4BIb6tfptQF3tZrFL85M=
+	t=1774523458; cv=fail; b=JMsxewWCYzRMoJggGvIM2NCEOf1bF4Qx0Tfvidc3g0uj5kFfhzt4BhIQ7PYtofbkRt7OTRQ7FLT8W6sS9s60UoeoIINemvko7Gu6DqH8os3Bj+KYenXDa4Fn4XKoTZaOhONBCirO7focKLmpS5SaaVzDl5xjUXEItf7126MF/T8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774523440; c=relaxed/simple;
-	bh=I9Jf6991WxDcrrVxLgNrTEuMMpB2mQJt80ACs+rMu2s=;
+	s=arc-20240116; t=1774523458; c=relaxed/simple;
+	bh=6j28uLu1xKmrY8yhSmyvyK4Jmout6qnXPmI+SWxxXZw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tWxupi1n2t7JFjo2x835ab5Lml85CDkAHtMVXFXUHoUSdxo5m4RB2sg8XbQrTdo8S302ri+SlRaeJbf3hZsDcmy3+2HVjRZ78ow7OdGMohhTvXVA3yLMhvehlGuXjLQBnCgsHh4xSIR9SW4ABaxCMC7vLTzG8yiKbx9RsTc38XI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Qs8BaBR+; arc=fail smtp.client-ip=52.101.46.41
+	 MIME-Version:Content-Type; b=ay80jBohFEWjZWgU2fFlYUeLb9q+uo1YToM7nCGVd7yeZiT4aYtZ0vz3NTC9pk80GANxJLlksKxbOyBzDHLv1BGMvGRFD8fNfBKJ7rH9WhPZA241yB/GHhbbZIe7INirO+OIPbrbxxFhmg/2w/ovPkkp/OrDca66uuL5ocPcny0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fVqMW1Is; arc=fail smtp.client-ip=40.107.200.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Vx5Aor+BxjPyDXaIU/nicK0VQDeXbEq55lq6cOA6qSid4D8Om/7mvyM0lEmbtrWYbFrCYzZn+l0TdFBKkqtLN+qQfFK6YoOEmRl1b2AseLRq+idt8kGOWltHooDd88uI89slVWsdlLUolMUv3TnNDXJPhF2S0hzZdg6f5Am7+T9vYjpWpMnBOBuORYjtxMjBvZ7eatU+uMCSoDMP0V7FlziOrdY397yLUhOGslL2KOSE7hn3mwwshLciFf/LVo5zAHHUgY/g6/nYHWqWNfeu4RqR4EPE/uVxUdHPFB5IhR/CVPAa68PZiBv4jxz6l+LYyGNE9fO9uefo7skVqpGCBg==
+ b=IR0utsTQ2tcZs+iL34u66C8cmjjlU8xp6nPF935YvDPQL9KWaxpzJ7+0ReNX/soGWe7imjG8iCQl+dZZgpWzwUuQTXkFR9yceOCn/Aa5t+jbq5qjqeovvCfL42KpmHDvyvCgIsjyCWLppD48WPoJ7zeicQ29vmJRdFMkF1jgsgF0yClgg+YnWPQ1JnnN44ZUFG4exdUkinXTANXxRD7C+ceasYtbtehG/lgkboDpyOzya1olLRxPfghgcVYSMBkZR54iNsuxShOk0badLulbc7Gcvtfa0UfjYMGB9g4nEHrLFjdZ3yWOCJ6blU9hPjhyLzRUsoWCx19akqw4JoMkOw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mG3HNC59MBDQbzEnowzIv1XlbuWYfwd6rnH3TJgW0Qc=;
- b=UNl1sLFIhuaq6UfSedFDlKdRiV3PxZKnm4Yrg0OMnU2b1nM5HTERxO8EcMFeQuV3QylaMphwE2vHCFuKOxJLsiSvp/nKqc3xkp3mBlCdm6qN+hkJCcZROvIFUiGPMdROcLFt9b6qGfdpBfpN51yWqVKNkZkIgaSxWZj236WWCTWDrysIoLwHwofTJ5LLqL9oMUZrE05enVb39xIfLYRvg6khY9XG+hkZ/I/HKjpRySeTn8MF1Gy+8GaU60r+AloXZBZIDn8GAyXfxgTiMX7EPaVKot3tvLkYl1S0+NXa6USDP1aNOnop7EK0E68b10pEsnX7alkbWlQLZ3culNLQtw==
+ bh=F4/6eiXNtz/Xnhq3+6P8/inzJUExGAOUHTx0roSa2NY=;
+ b=OQK7D74nTm3c2F89vzM97w2bpTkWuXxKnSxrqmeQWGtRZTa8NKiy43ur7NAZGdkmqmqEng2lNAIgwBRQLNWUVP9Re1pbMSOkcQyREtqqOw1JVflXtd5uZmN4y2ATRZ8dPerVwDRon2Oi4T3IdsruvXv+z3pybtJjph1OztfsQEByYJijcIqdyTPuSp+RMjoHKnN6sX1iRsXyzECx9OMX37W7IhtNEqRcqxE76/1Z8+fYyU34e4KVp72/w8xQK0Y53OG9KQ95LSi01KxaPtSuPL2ER7fvUZoGM90NmsaEEqJnNNdrodNkizqGpKBlMKbfwr9mcmbCo0xKCqaTMLn8kg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.118.233) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -48,18 +48,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mG3HNC59MBDQbzEnowzIv1XlbuWYfwd6rnH3TJgW0Qc=;
- b=Qs8BaBR+NwOxM0uMLDSbhfnNbcRjNwe3fk7No5EfG9H8um0WadOcZ7SpcRZXq+mD74P/Wx1Xq4dZpEQW6oahBJ54l+HQjhC2R3qEHMGXgy6Yj3kOO5xO/eP+UBgJ20ftRrIPmU1ibtzrKYYFpG5XsNWxrFjhKoMb4b+l36WbkEIjM31jz+QNI8zuHOlIEDSCZjhJSCAQ9GRDFr3hcsxA8gp2VxZbl5B3y2OKFHGe5FKl1GFQ47MmGlwC1Yy/VXZLFuui0izDf/Dsn2kVWilrUypK3fsPWZAud4/lPMfFvXaHCj7qObTuf+JGU8m6ilgjmtzbq7Wdlct+4Jsn6dxh1A==
-Received: from CH0P220CA0011.NAMP220.PROD.OUTLOOK.COM (2603:10b6:610:ef::13)
- by CY3PR12MB9556.namprd12.prod.outlook.com (2603:10b6:930:10a::17) with
+ bh=F4/6eiXNtz/Xnhq3+6P8/inzJUExGAOUHTx0roSa2NY=;
+ b=fVqMW1IslCGnFerZ6Iho9IT3DjqQyJvkrEjezkLbeosON+8o3ttsYblD10YQ/O6m3Xdx5D2RL1Yw3gLJfiDCinnuK4i4PmQFHSPZfMWGoikrVN7pnOaUHkBIjq1aURhSPETTxLFMIvj6nw4fdsgLpVJt74N7F2Hk2QzkGjDLNCDgeSmA7i67L2O+8GCbLluI1sH+hSZNWFnD6y5OmvnJK36DfCYPjlZOWvXXWd3t8b8sR8q8Qe945+M7j4T0O8MagSPHqxnU+rWn+OO9ORtz4Spfp+gNyYy4ydzXr6/NhxjDXMyPT+6rnTCMfq5mQECDzx9GqB3kPzMyMFk0f+EhFQ==
+Received: from PH5P220CA0011.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:34a::11)
+ by CY3PR12MB9553.namprd12.prod.outlook.com (2603:10b6:930:109::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Thu, 26 Mar
- 2026 11:10:34 +0000
-Received: from CH3PEPF0000000C.namprd04.prod.outlook.com
- (2603:10b6:610:ef:cafe::b4) by CH0P220CA0011.outlook.office365.com
- (2603:10b6:610:ef::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9723.32 via Frontend Transport; Thu,
- 26 Mar 2026 11:10:30 +0000
+ 2026 11:10:53 +0000
+Received: from SN1PEPF000397B1.namprd05.prod.outlook.com
+ (2603:10b6:510:34a:cafe::21) by PH5P220CA0011.outlook.office365.com
+ (2603:10b6:510:34a::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9745.22 via Frontend Transport; Thu,
+ 26 Mar 2026 11:10:53 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -67,20 +67,20 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.118.233 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.118.233) by
- CH3PEPF0000000C.mail.protection.outlook.com (10.167.244.39) with Microsoft
+ SN1PEPF000397B1.mail.protection.outlook.com (10.167.248.55) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9745.21 via Frontend Transport; Thu, 26 Mar 2026 11:10:34 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ 15.20.9745.21 via Frontend Transport; Thu, 26 Mar 2026 11:10:52 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
  (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 26 Mar
- 2026 04:10:25 -0700
+ 2026 04:10:42 -0700
 Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Thu, 26 Mar 2026 04:10:25 -0700
+ 15.2.2562.20; Thu, 26 Mar 2026 04:10:41 -0700
 Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.9) by mail.nvidia.com
  (10.126.190.180) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
- Transport; Thu, 26 Mar 2026 04:10:20 -0700
+ Transport; Thu, 26 Mar 2026 04:10:37 -0700
 From: Akhil R <akhilrajeev@nvidia.com>
 To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, Rob Herring
 	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -90,9 +90,9 @@ To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, Rob Herring
 	<devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
 CC: Akhil R <akhilrajeev@nvidia.com>
-Subject: [PATCH v4 02/10] arm64: tegra: Remove fallback compatible for GPCDMA
-Date: Thu, 26 Mar 2026 16:39:39 +0530
-Message-ID: <20260326110948.68908-3-akhilrajeev@nvidia.com>
+Subject: [PATCH v4 03/10] dt-bindings: dma: nvidia,tegra186-gpc-dma: Add iommu-map property
+Date: Thu, 26 Mar 2026 16:39:40 +0530
+Message-ID: <20260326110948.68908-4-akhilrajeev@nvidia.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260326110948.68908-1-akhilrajeev@nvidia.com>
 References: <20260326110948.68908-1-akhilrajeev@nvidia.com>
@@ -108,41 +108,41 @@ Content-Type: text/plain
 X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF0000000C:EE_|CY3PR12MB9556:EE_
-X-MS-Office365-Filtering-Correlation-Id: 003367e8-b757-48b6-f2e4-08de8b284d88
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B1:EE_|CY3PR12MB9553:EE_
+X-MS-Office365-Filtering-Correlation-Id: aee0b708-3fe6-4dfa-fa82-08de8b285833
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|36860700016|1800799024|56012099003|18002099003|22082099003|921020;
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|7416014|36860700016|921020|56012099003|18002099003|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	8Vt5m5LZb5XuDeQUwqDmMe8yvjjnHhX+2Q41GH36vBiTdWK/gCjVVjJ9UJYjM1LbxylWzE9LcHgnznd8+D/4VkAD9NSZ5IX+9OpgpFPv/Y9pZzj8nNl/FFVY+ya+UMKhNE4mWtlkMHzrBfRXRD6jEWyoWflQv98hL2GFl7PrY359CNTW/fERy2S5kMcsaNi/eAWdV9FYypfydWPt3KNBP6IHURfAQaoZWLi1yFlVAoLvGrmCErmONvjpSya9DIPPEnqsGky386ejbdG64Z3J3RsbwuY3XbvZJNWCQI8mGEV8+nXj8jbHIuPFpqGMBBrZrE/ijlWVL+xaaVKO0KasNCFIHmwX3ibCoeF4YCG/dkw0GOz7dkvPpvppwPDJChCp0ohTIdQ6znk9B2C07HL27e7z0pkTxd95NH3G9KFe47SqcitRmBy6CAq/qHIYsafvs6fbqOLCI2wAln+2Ftcdnd0SL8whmsp4/VjHGYC9YNhwEM8UsR0KNT57QLV3pD9OGB64hEApMjVDzuPPgoyOJjNzDxSNCz8NTS+KcfTkYtOrukdM44nTBldzHKkMvQ7DNUXx+J7mWYFI7v5r+ttjF2Bn8GmcYLxzfaz0PS0Tnz63sPf9PLVbW++iEGCahnBWkJP61ZWSZAF6wwRCejsWGVsiwkfkDNRgRtwWEiI3jAc7LfU+BLy4uiPd3jdbzmyQE1nCRAni6Pn92h3lBAmzW/RnnNC8o1c05rozmtXhoHk9T4VQpvMxhMKu2dKUqUBi+bn8lLM4gatD6cn6G3MuaLRqThe+7uUFqpIdvHwNQmz3YV+gcgBhA7DbdrXUmyws
+	P8g9594WkJBnCLDvXBffAcY/OnBLabIMZUCk0CJ4yh6LM0As320P3T8Oa1ccpwLja6HVlVhIRpxgILFeE5m2BVWvlwONguY72YHi2pbNU/ZEZ2sbrl++2o2uQ23D0z5+Yvmnly70YT7hm/qzLFFw8xgx6dSe2ideMSEuAhhT5PzsmXexFA50wBOCugc5FpbhDdcSDc29Tfdl7GjHElb44vjbd5VZ8tb9Lsf6SxxA6mHY/hUw3NclZuPH8dIvOXv/y0eNwUTaQOsPEjtfkxc0KvA0rkw0lwh9cfggkXSTF1CifkJJ+Ink3VAXmAH35TJKd3NXQvcazGtD+OpfGcukFRSRBqeMH9X0qA8F4Fddj8Q6DFHcXL2ZWrPdQj7f6h71qAD88lOFJd71fX7ihvj4ovhp9xrvzPaqFBj/VaQvU8zVNt/BeDnaEFzl3c9RwsMGuqC0Q8ynJbcU+xVshC/6RkhRvMCkJdZ+smkzqvEHfJr52GKeJ/qboOJzUqMBedyBWuPi2g8ub6Zn3QUGWx3K27SqvtEdm7mi6qkuPEkud8YjucGgHStD6WcZOrCtpW4qCB3gdSnev2JoM8bXxI24PSvv4IugBBIoHvrR7JzBhZ8lZ8vegzti0/3ir+dJ2xBNvBjgW4ANt/Bt/IBJFP81/nqOxHl1laLxeZIr1kPQGJRxENqxkkWVY7tQwiQt6LDTJijAs337Xap3G1LUOOw3TV7rOcp1OSdYG3ANXr7k7XaqfW9QZdpw16ALxuj6ZgRXMH2e3H+UhSniLK+mP/wEYGVc/1yNdjhphCUPdI1qz4wYchZT4RD/ENvs95smB6pl
 X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(36860700016)(1800799024)(56012099003)(18002099003)(22082099003)(921020);DIR:OUT;SFP:1101;
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(7416014)(36860700016)(921020)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	VpSUjHj0irWv1I213ombkaoYi5QjXDFJ8+E3vM87DvJFgDpCF/khcQrbHGDlHTIP93hodw7EnEoTpKH6EYh4Ox647XfK6NppjmEZxGIkMM0zdOznmt99GWogYivf6cNXsa+p4gjlC2RRlpWtoDVTirgA3Da1HGk5AzI8ThbRqKFommGY8DCGGhcYWZUTg+ad38e+e6jKBYD+9A0+4LjGvGZ1B+C+TDEH8jg+LjjGpNSfnYRuu98d/lhjeGpn/fD6jL38SEiUgNO5qUhrw4NTkwltk3tTXCmI3tkKKyjINeTZ45t8U7KLVc7oXLYBb75wcBVe59ORVwVkW78/ailgNWw4TzpUUC0ilwbST3e0FG07Z5wzlbnyT8l7G93ezAXYtOT2uaSZNvmDC+b8QZJH0C2XimaxoW1f2ynNsdSAplPjmiiQdVUYh2mfqtw8f95I
+	2Ou7slZcE9hqpoEbFzAhGeL8332nc5c0vx++XQEFLXeMRWosTt8hEWSjpj0LM/iTv6D+JS5hj6LoM++owGCWNYjrMFDPy338CSIe4ySFLdwMMMOquTRskClrqSMsu4uMvuqcz4kzrCvoCv3mjqF7EEbsVPBarfomMe+wwCDPKM8XusQNorgKLnQg+2CU5QsOhLQ9PR/GmPEygTtJjGlLH5KtQExTXft4JHsmJ0XO6edn0UpvX5I1LKF6CcTmn/g5CFZv6sDYrtZdNdy/iSCWRMxvnTPP2jAlukZBiXEclnPE2rwHIDsXmGd/oUMwMekFB4MebBeEK4RLYPomj41ViwWmDweWLK4a3fOKcHyKEQvOcW7Y2ft4oLXKGqJidklDwJAIuXuV7rBAT1/27LfYRyuxlUB5yRQzP9fME50zqbPX4FjGmyL9epT87bxDyoPI
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2026 11:10:34.7632
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2026 11:10:52.6882
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 003367e8-b757-48b6-f2e4-08de8b284d88
+X-MS-Exchange-CrossTenant-Network-Message-Id: aee0b708-3fe6-4dfa-fa82-08de8b285833
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF0000000C.namprd04.prod.outlook.com
+	SN1PEPF000397B1.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9556
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9553
 X-Spamd-Result: default: False [1.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9664-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9665-lists,dmaengine=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -154,38 +154,57 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[akhilrajeev@nvidia.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[Nvidia.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,99b0000:email,0.128.44.128:email];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim,nvidia.com:email,nvidia.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[9]
-X-Rspamd-Queue-Id: 0FBCA334284
+X-Rspamd-Queue-Id: 889793344B4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Remove the fallback compatible string "nvidia,tegra186-gpcdma" for GPCDMA
-in Tegra264. Tegra186 compatible cannot work on Tegra264 because of the
-register offset changes and absence of the reset property.
+Add iommu-map property to specify separate stream IDs for each DMA
+channel. This enables each channel to be in its own IOMMU domain,
+keeping memory isolated from other devices sharing the same DMA
+controller.
 
-Fixes: 65ef237e4810 ("arm64: tegra: Add Tegra264 support")
+Define the constraints such that if the channel and stream IDs are
+contiguous, a single entry can map all the channels, but if the
+channels or stream IDs are non-contiguous support multiple entries.
+
 Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra264.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra264.dtsi b/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-index 24cc2c51a272..af077420d7d9 100644
---- a/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-@@ -3208,7 +3208,7 @@ agic_page5: interrupt-controller@99b0000 {
- 		};
+diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml b/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
+index 9f9f1a30e139..b849d4cc2901 100644
+--- a/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
++++ b/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
+@@ -14,6 +14,7 @@ description: |
+ maintainers:
+   - Jon Hunter <jonathanh@nvidia.com>
+   - Rajesh Gumasta <rgumasta@nvidia.com>
++  - Akhil R <akhilrajeev@nvidia.com>
  
- 		gpcdma: dma-controller@8400000 {
--			compatible = "nvidia,tegra264-gpcdma", "nvidia,tegra186-gpcdma";
-+			compatible = "nvidia,tegra264-gpcdma";
- 			reg = <0x0 0x08400000 0x0 0x210000>;
- 			interrupts = <GIC_SPI 584 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 585 IRQ_TYPE_LEVEL_HIGH>,
+ properties:
+   compatible:
+@@ -49,6 +50,14 @@ properties:
+   iommus:
+     maxItems: 1
+ 
++  iommu-map:
++    description:
++      Maps DMA channel numbers to IOMMU stream IDs. A single entry can map all
++      channels when stream IDs are contiguous. In systems where the channels or
++      stream IDs are not contiguous, multiple entries may be needed.
++    minItems: 1
++    maxItems: 32
++
+   dma-coherent: true
+ 
+   dma-channel-mask:
 -- 
 2.50.1
 

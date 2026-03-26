@@ -1,144 +1,150 @@
-Return-Path: <dmaengine+bounces-9673-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9675-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id m19nCuI1xWk38QQAu9opvQ
-	(envelope-from <dmaengine+bounces-9673-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 14:34:26 +0100
+	id gBAjM7U3xWn/8AQAu9opvQ
+	(envelope-from <dmaengine+bounces-9675-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 14:42:13 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF16E336092
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 14:34:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A8ED3362B5
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 14:42:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2BEB930E05C8
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 13:24:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 464213084AED
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 13:37:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7119630E0F5;
-	Thu, 26 Mar 2026 13:22:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E332F12C6;
+	Thu, 26 Mar 2026 13:37:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iTJWV+BH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tt8DZY1h"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1B22D3A6A;
-	Thu, 26 Mar 2026 13:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E8A271A7C;
+	Thu, 26 Mar 2026 13:37:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774531328; cv=none; b=nABxUsRh5nPIBo+aQHNiqYIeHNqulA9rurRb0MoksNml5RD5Tb5QzcN/mlwH63OFNTIASCQoEBbnrfQ/fzdKXXOqtRM1mJrirzXE3AYlx8tmcbjuna4xtyPb0aWgzotx5/kbsQMwREkppTSRZmfwtAFnmp+Tk4V7cJGyb4JqgC4=
+	t=1774532251; cv=none; b=o56M9YsZuSxyyo4UIgZHqMvLBsU7MgPuu7aNHlzG49nv6BH5hLJkMgOe1hf1D7tVWzf7swiRp/iWLaHrpWZgI4FKDu/9oLQcxeGAhLjfV47WmUJ7m+dduvgYFp1ktutyG3BqMVhlcgfpqu1lhHesZHOMaOipxT6fU8WTAbxKAKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774531328; c=relaxed/simple;
-	bh=FqviOofHcupaR0PJdYP1xhrpYp3IqlmmCCw7Mja4j6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iQdRhHaIeEGRSPrtEaZrhI+Bi49zFnB8hnVvcP2N18FBc/0Wyq66wonNCdoa4ZxIrMNnZQ/cERsPMe+uNshCceRgEoI/Gk+ihiSIBDz9siegtUT/XOmVn4WShuww/qvf1NRPvhDjwZyRMbSWAJ3RhKRsAib2qIkipltdz2iZH9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iTJWV+BH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2527C116C6;
-	Thu, 26 Mar 2026 13:22:07 +0000 (UTC)
+	s=arc-20240116; t=1774532251; c=relaxed/simple;
+	bh=UsmwhaGP+e5WwipGleUgGHqJL8dBThe2HRGuRQN3g7A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UiNwF7vTX3tp8qWGRKx4YIzsmGABLTN5/cRrxbI5X9myIRVmGdUFJqRXmdd/2Fb8/4smboZDqRyKWnpECWApR3BY/NscI3qK6BQghGcc63P0HWPjjE+ZeFNIvwKs4AKOh6N7DRS7GBfXjn7X2orCyH0bdiHWZ70UOzlRK1j6mRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tt8DZY1h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 06D1CC2BCB0;
+	Thu, 26 Mar 2026 13:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774531327;
-	bh=FqviOofHcupaR0PJdYP1xhrpYp3IqlmmCCw7Mja4j6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iTJWV+BH76Iv2CnFB2JvggheKH4Xz8DIDxtX+r1t+NaDmOQEp8pdCWVyzjrkjQgDz
-	 gqmWL962pMBGyzd9aOon6+zH9Qu/wGfg006ldueWdYhJdQvm2LgTci2ErkRfqIiwOD
-	 nCCvXQLOCVskFFFE7LveT3cq1VZeKStCFYemyyh3GC6qVyEN3PREYKVQCCcRTvwrk8
-	 hhr5xu+IBKo9SIuAGvjGogR4wlQX9eoPbthxENq8K1DTVS+sC0lyE8KWBkxHqYdaLX
-	 LvvMNvi/4fG012KPdbgkMgzJw5vH8OmYFCR0ADtF/G+3sNTV+57hArlB+Yb/hTEFVA
-	 pLBXjWyQ100lA==
-Date: Thu, 26 Mar 2026 08:22:05 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Srinivas Neeli <srinivas.neeli@amd.com>
-Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Michal Simek <michal.simek@amd.com>, Frank Li <Frank.Li@kernel.org>,
-	devicetree@vger.kernel.org, git@amd.com,
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Suraj Gupta <suraj.gupta2@amd.com>,
-	Abin Joseph <abin.joseph@amd.com>,
-	Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>,
-	Folker Schwesinger <dev@folker-schwesinger.de>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-	Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH V2 4/5] dt-bindings: dma: xlnx,axi-dma: Add
- "xlnx,include-stscntrl-strm" property
-Message-ID: <177453132469.2249522.18301971752512802709.robh@kernel.org>
-References: <20260313062533.421249-1-srinivas.neeli@amd.com>
- <20260313062533.421249-5-srinivas.neeli@amd.com>
+	s=k20201202; t=1774532251;
+	bh=UsmwhaGP+e5WwipGleUgGHqJL8dBThe2HRGuRQN3g7A=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=tt8DZY1hPUw6KnatwIifYovFaZXDPotP8a2q2Rik5SZShX2IbtmCVs3rfTq+erlhr
+	 Cc5536y1Cdojhf5bNTVyBpLSq9W/MSNANTt5FwcqIyR4eLYVdJcFOncSCq6ouqIjP8
+	 fHpeLhpPRjWlCBseonxg3ulfIxoTxpp4IxZwzJBMb45pClOJ1VUUOXELqUoMOLBsKE
+	 eJjgKF+MtAvWTx4+vZFZK9G+4/BPbiGoVPE5ezc36U+evq+iRcccjT0M50zjuQmFiR
+	 XRUBd3ozH3C9P+A1OTvXzdhZod4c5kU55y8aWsEkFoogEXwmJ3e71YkCHUTH6b6jSv
+	 UDV/JBwV9/RJQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFDF10A62D6;
+	Thu, 26 Mar 2026 13:37:30 +0000 (UTC)
+From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
+Subject: [PATCH 0/2] dmaengine: dma-axi-dmac: Some memory related fixes
+Date: Thu, 26 Mar 2026 13:37:34 +0000
+Message-Id: <20260326-dma-dmac-handle-vunmap-v1-0-be3e46ffaf69@analog.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260313062533.421249-5-srinivas.neeli@amd.com>
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWMQQqDMBBFryKz7kBM1IpXKS5iZmynaJRERRDv3
+ lgXf/H4vHdA5CAcockOCLxJlMknyB8ZuI/1b0ahxKCVrpTRJdJorzlMLw2M2+pHO2NdWFVR/6T
+ cGEjyHLiX/R9+tTfHtfuyW64anOcP5evccXoAAAA=
+X-Change-ID: 20260325-dma-dmac-handle-vunmap-84a06df7d133
+To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>, 
+ Frank Li <Frank.Li@kernel.org>, Eliza Balas <eliza.balas@analog.com>
+X-Mailer: b4 0.15.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1774532297; l=1511;
+ i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
+ bh=UsmwhaGP+e5WwipGleUgGHqJL8dBThe2HRGuRQN3g7A=;
+ b=nkgfcGteA/fbgayHV/UsxRPyYRHyEnS84P0LXM3iOYJyz450JJ50y/a1koPPn0jI9C+yeplRj
+ ZLQMLUIgIX6CavXkS6RHXcPPaWYlYkLKQKiXSTd67g5Yn48ahq/rd8S
+X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
+ pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
+X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
+ auth_id=100
+X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
+Reply-To: nuno.sa@analog.com
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-9675-lists,dmaengine=lfdr.de,nuno.sa.analog.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9673-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,dmaengine@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EF16E336092
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	HAS_REPLYTO(0.00)[nuno.sa@analog.com];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[dmaengine];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,analog.com:email,analog.com:replyto,analog.com:mid]
+X-Rspamd-Queue-Id: 0A8ED3362B5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+This series aims to fix some issues with axi-dmac driver related to
+memory:
 
-On Fri, 13 Mar 2026 11:55:32 +0530, Srinivas Neeli wrote:
-> Add an optional boolean DT property "xlnx,include-stscntrl-strm" to
-> indicate that the AXI DMA IP is configured with the AXI4-Stream status
-> and control interface. This enables the use of APP fields in DMA
-> descriptors for metadata reporting.
-> 
-> This property is distinct from "xlnx,axistream-connected" and serves a
-> different purpose:
-> 
-> - "xlnx,include-stscntrl-strm": Indicates whether APP fields are present
->   in DMA descriptors. When enabled, the driver can access status/control
->   metadata through these descriptor fields.
-> 
-> - "xlnx,axistream-connected": Indicates whether a streaming IP (client)
->   is connected to the DMA IP.
-> 
-> These two configurations are independent of each other. For example, in
-> TSN (Time-Sensitive Networking) designs, a streaming client may be
-> connected to the DMA IP, but the status/control stream interface is not
-> enabled. In such cases, "xlnx,axistream-connected" would be present while
-> "xlnx,include-stscntrl-strm" would be absent.
-> 
-> Adding this property allows the driver to correctly determine descriptor
-> layout and access APP fields only when the hardware supports them.
-> 
-> Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@amd.com>
-> ---
->  .../devicetree/bindings/dma/xilinx/xlnx,axi-dma.yaml          | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
+1. When testing the IP on a microblaze based platform, we get vmalloced
+   memory when allocation DMAC descriptors which will lead to BUG() when
+   releasing them. More on the commit message.
+2. The second is related with a well known issues with devm allocations
+   of reference counted objects on a provider-consumer relationship.
+   Seems to be a knows issue in dmaengine but fix it in the AXI-DMAC
+   driver by properly implementing .the device_release() callback.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Didn't add any fixes tag because for 1), it was not an issue when the
+drivers was first implemented (just triggered very recently) and for 2),
+because it seems like a well known issue. Anyways, for 2) seems more
+reasonable to have a fixes tag (IMO) if you want me to add one.
+
+Also note that my signoff on Eliza patch is merely because I'm sending
+the patch on her behalf. I had not part in the solution (just improved
+comments and commit message a bit).
+
+Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+---
+Eliza Balas (1):
+      dmaengine: dma-axi-dmac: Defer freeing DMA descriptors
+
+Nuno Sá (1):
+      dmaengine: dma-axi-dmac: fix use-after-free on unbind
+
+ drivers/dma/dma-axi-dmac.c | 95 +++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 78 insertions(+), 17 deletions(-)
+---
+base-commit: b7560798466a07d9c3fb011698e92c335ab28baf
+change-id: 20260325-dma-dmac-handle-vunmap-84a06df7d133
+--
+
+Thanks!
+- Nuno Sá
+
 
 

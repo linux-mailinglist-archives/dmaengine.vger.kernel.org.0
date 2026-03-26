@@ -1,241 +1,230 @@
-Return-Path: <dmaengine+bounces-9677-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9678-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4JN0F1JPxWkU8wQAu9opvQ
-	(envelope-from <dmaengine+bounces-9677-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 16:22:58 +0100
+	id SBGAF3RXxWkk9gQAu9opvQ
+	(envelope-from <dmaengine+bounces-9678-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 16:57:40 +0100
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A769D337821
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 16:22:57 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68F90337F9B
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 16:57:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C257A30D662A
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 15:14:03 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7DC8530DB995
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2026 15:30:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CAF92ED866;
-	Thu, 26 Mar 2026 15:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l99oVyku"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF80041161C;
+	Thu, 26 Mar 2026 15:27:55 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FC93FFAD4
-	for <dmaengine@vger.kernel.org>; Thu, 26 Mar 2026 15:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855EF3FFABB
+	for <dmaengine@vger.kernel.org>; Thu, 26 Mar 2026 15:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774538043; cv=none; b=m0tCIiqO8/IUDmq+zDivMH4IeVI8oIEz3oTTsFhXBryHPLbZabq5w+Uw5FVtnJgLeBm1FTGcUPI6kpflX2aHHrJ0bBXhR04NVuJgFGgFyJOb/MEHQhTJvJOoYTNUc9rxvlIrozAg3SX6qLbo6KmEV3R6o3C5PE5wH44I2KJwhE0=
+	t=1774538875; cv=none; b=JZMIBZn51O9sNP/xf31jk0bN9GC24mG5TsNZCfKWCWp0DSySDuHhJX9hqsA7a1yleZxw7Oz3+6Dk1dP0m9hmkxSIUMHZUoPDjC6NH77J882HuhAgiTOWL2qJ2jMbb7b2tWC0HUGSSZ7vCxdwGskgRFWZhfIsT0zS492v7IjYw0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774538043; c=relaxed/simple;
-	bh=FWf1dB2Qon/UR2aHHejUdu+2XcfIQ/PGLiP3BnMrCfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TbNieg8kcmCv43yPOstOJRVFQrS8yVUTXc0fi1wbLEYObRyzDzXAqv818qpW6CS454BcXteVdQKDQQSxIhAj4+0cPDBOOVQtDW/En5DDCAUz/CyZQv5nkQjg9R3R1H8h5HViT6rtYHf1/+/QYca1l5DzMa4+iYZAJLcNjkcKgv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l99oVyku; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1774538875; c=relaxed/simple;
+	bh=peWwslY60X5deNxQgqJv7OYyoSx6v0JNvTUpeeVZ1q4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=czkwNwQOVXQEmrTn8FLokIXbPy7MADGzS6saqiUe7hnsxuH9zYYytU1WqaP2bEyYLRi+elbc1iDJe87CrtkjNIPL00AqWpJAar02hH1YoyO+VoxKpD5Mo6vHe41/DzX9BhpH4uqXzdzn6ZoMJjYwenngnWMBzOfP0VZ7LgaIjR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-486fd3a577eso10023435e9.1
-        for <dmaengine@vger.kernel.org>; Thu, 26 Mar 2026 08:14:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774538040; x=1775142840; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=D0sYiHqQQkLdMu3GiNtAqjtuktge8TgQEH5jdZWb9i0=;
-        b=l99oVykusxGbrlmrUJMDEc4Dmnr8V1cV12rAO9HrZhUPZnYnUOZxacr93UnPCWJ/Nn
-         BPwaY2teM7cxO9gem+jV5nMTkHox4zlvNgAHNdzE8INmgcuUL0WWJN0/u0f1pFDbRiHq
-         +GzS/M4hj0kKn7bRSdE8J7OQu4of2F3wGoPtgcutXFSG50ti7YnICZiKuq5Do6qYbyoO
-         FfkYwPQ3Lx3Yazbhd51tGHQvGWMQnCTa+8WWEDSpqS/Q0v9tKN5DfI8RhfdI1n0MTLWz
-         8qfB0pIYgqnVUuLf77fzFu59ob4i92u5CDk3/gXAw/2eBifTSo7GYsZiyPZ5cAB/4FN9
-         q6Hw==
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-94aaa5d3bfcso630375241.3
+        for <dmaengine@vger.kernel.org>; Thu, 26 Mar 2026 08:27:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774538040; x=1775142840;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D0sYiHqQQkLdMu3GiNtAqjtuktge8TgQEH5jdZWb9i0=;
-        b=RA/e+QePHStq09mGv7M6noSFiWaEip0JTyIOZEWuB626XDBxqO7G1MytmvNtexuh3r
-         R8SFGzXfq26bW+TjLJb3eYF5ZHasTcaHRCrTotYhVDAiEv8BHJ8vxoVY0ZNkv3hmEM1W
-         Ob5m7UaHTgIhB4zpp50aO0AR0rX7KkkbH2GK4Hxj5CsF2R/c4qDeuZ8eOtoDo31HlGqF
-         /YfHTU+aMVl7Ups1WwsSlSM+R7rPW6AHZORzGCOaelT5e8Z28YiolMLt+MXUtvvHg2VV
-         bEvWcybwPJxiEqFQ+R0vvenS+5nXYUUTMSzMH2HGukKk6D78uhJuAaWIAqeNFmOPdXNL
-         WX7w==
-X-Gm-Message-State: AOJu0YxuVT/iy4T81NN7y1+kJUbpJE/HaOCi0C82K4Udv2jvH9UvzxDm
-	qPY8Z4zzf+a9zfSaRWDExfHbErU5HLntQuixZ3hZbydmkZbJD0ncUXZX
-X-Gm-Gg: ATEYQzwPyxnTgmg80Ubkm0w4Zf7bLVyoIQG225dNdugV1AW3cnaxo53JoTozC57MejV
-	N50Q7V616s1G5X+3Xt8X05Da1+xQZAkKLBIFuqjzVvBYl+63IIEjykMdc6JXNHfHzyLbjx+9qWP
-	gGbNOR/x53qDSb2+ElmsCAlbYxzsQRg1KLZ5RXJPp6CD/ZKgRENTCZnNoYjPQlLIlHzDsy9AAR3
-	eVO0TBvFdTx8i0D3uoNRfs0jGbH4eQIopEYkULJQ6ccxoAi7vqRA04VMpcPSpOlEsAQ7l4l2gy4
-	rTJmcCt58odMxeVac6MjgMliIn/gw+1sJuVVzzWD9Ybf+o9hxsozU4EFsw41cwBr+90mCjgadvZ
-	KwGzK5uja/tQEPtMFWMNTz+UHboKOZAT7cbLbjfzPIRn7HJkOG6Ml1XidDTjYlPsqOwHLsN8ozP
-	BYw8J7cttn7EK0tg==
-X-Received: by 2002:a05:600c:8b6d:b0:485:3e20:4013 with SMTP id 5b1f17b1804b1-4871604b905mr125124305e9.28.1774538039577;
-        Thu, 26 Mar 2026 08:13:59 -0700 (PDT)
-Received: from nsa ([45.94.208.206])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4872090fb74sm21045505e9.7.2026.03.26.08.13.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2026 08:13:59 -0700 (PDT)
-Date: Thu, 26 Mar 2026 15:14:44 +0000
-From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-To: Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
-	Eliza Balas <eliza.balas@analog.com>
-Subject: Re: [PATCH 1/2] dmaengine: dma-axi-dmac: Defer freeing DMA
- descriptors
-Message-ID: <acVM8YwN3yoFYry2@nsa>
-References: <20260326-dma-dmac-handle-vunmap-v1-0-be3e46ffaf69@analog.com>
- <20260326-dma-dmac-handle-vunmap-v1-1-be3e46ffaf69@analog.com>
+        d=1e100.net; s=20251104; t=1774538873; x=1775143673;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ICY5En3i4NzNQi5qrag5c9s0SZbURVLCotK2DvpExx4=;
+        b=iGL4yMB8y4ZPo9Sy0CJJt6cuTpjEAOwMTzijIOw36Iqpk6jNR8FJmcQpLfppJ+C9fg
+         fDHUU15V0UbaefOv3xOLUhF7tCrzr7LTjV5v67jBdljqNUxcgOg3/8W9yXwI9oUEchwR
+         UCiMsikJURqHqBKvQP8SatDARTLfJ0zDIfCnZzWwrLOiBh5WjX9iJnQp5lYfQBF7iKHc
+         64xqeaz9aTcCH7QOx3NUGQMeEOzG7foPWNttKeMLGcAEkvihM8MAXDr1w6YjoMmtCWXf
+         seCIjXVvs8zzO3xDVIFr0jP5rMcVPTVKve7ppEd0VhOdruPFpHhMpg1Nx0RWeAVpd7s6
+         PDpg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxwdhRpS4a4Xbt0YoBJKow6cED8o/a7y/kOn0HlkXtR10mnFBKVq0Ywq1wp6N+yj8YGP3GHzUcKHA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziUjnhA3QQHOd/mQwmJb/cU51FSGNQO3Wf9o89EgFlluQ693el
+	nNPS1f5uHfUr2yrpwmxuTwpuu7Klwg+q7F5Woe++v7wbwGhzzhLNunKHSPnB4Few2NE=
+X-Gm-Gg: ATEYQzyptPR8LtVHShyX7R6YWi7glSPJ4mNkjqWYwPeFX0Psytgm35q5i77WHpT9qOr
+	ZlEGc8nGYXRIAi8Qm4yapWzUyEEk4lURUUNmDhZWcs5+lQXe3raGnKqPQ/33/q39XqrwvbncYzm
+	eoshwZTVOdQdySt3QosGtFXrdFPhk8748lvby+gzN+rwwfyQP6dU4GcqF9nh8JjeVBZX/Z7qLQi
+	d2nBj/LykMvsYZovAKBgxo5HJeJvK/tzXG0wPK6iHmKFD+rtYgUCaJrq+sNKnyOLUhuDSdtDiXA
+	ZtXGwtwW7G/d8kuxQCLsQVpo6831dUF2Nr5DNgHNFWWB+ZxXlA4uXtl4vKFnMc/YPLDeRmrXDWj
+	o1m7z2b/ERHsm6O16QNiWEHf3NtQbaEsbMNmIey1wy5qT1g3nNw9McaA5hF3XbF72I4s0TyyRz6
+	paSYDIZiJ7s4mvdsubXteD9FGU7u74w8XglY71RxKToP2dKHAQS4XrbYkBBEhl
+X-Received: by 2002:a05:6102:dca:b0:5f5:4f68:9f7e with SMTP id ada2fe7eead31-6037900d2a0mr4006917137.8.1774538873355;
+        Thu, 26 Mar 2026 08:27:53 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-951be5afc43sm3916129241.13.2026.03.26.08.27.51
+        for <dmaengine@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Mar 2026 08:27:51 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-94de68feaf4so686855241.0
+        for <dmaengine@vger.kernel.org>; Thu, 26 Mar 2026 08:27:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUeAT1V41Lg84767G8AUVPptWI/s4qDmDpBC7fVTIt4MaYro68pjBodr7dsbH1kN7PaRcjo2VWlNqQ=@vger.kernel.org
+X-Received: by 2002:a05:6102:5801:b0:5f5:2539:9b11 with SMTP id
+ ada2fe7eead31-603870ce0f5mr4152226137.14.1774538871002; Thu, 26 Mar 2026
+ 08:27:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260326-dma-dmac-handle-vunmap-v1-1-be3e46ffaf69@analog.com>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+References: <20260319155334.51278-1-john.madieu.xa@bp.renesas.com> <20260319155334.51278-5-john.madieu.xa@bp.renesas.com>
+In-Reply-To: <20260319155334.51278-5-john.madieu.xa@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 26 Mar 2026 16:27:40 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVbP5Bbr9KuxoEb48zUvubT3CN7sC9oVat2NcNWaBwOtQ@mail.gmail.com>
+X-Gm-Features: AQROBzCXM6uPDs6UcVr58TTtg0-_14CRbEgbIPerOfaOzDyxBM9HF9kuEp2hlRY
+Message-ID: <CAMuHMdVbP5Bbr9KuxoEb48zUvubT3CN7sC9oVat2NcNWaBwOtQ@mail.gmail.com>
+Subject: Re: [PATCH 04/22] dt-bindings: dma: renesas,rz-dmac: Document
+ optional DMA ACK cell
+To: John Madieu <john.madieu.xa@bp.renesas.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Vinod Koul <vkoul@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	John Madieu <john.madieu@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [0.04 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9677-lists,dmaengine=lfdr.de];
+	FREEMAIL_CC(0.00)[renesas.com,kernel.org,baylibre.com,gmail.com,perex.cz,suse.com,pengutronix.de,tuxon.dev,bp.renesas.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-9678-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[linux-m68k.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nonamenuno@gmail.com,dmaengine@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	MIME_TRACE(0.00)[0:+];
 	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	R_DKIM_NA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,analog.com:email]
-X-Rspamd-Queue-Id: A769D337821
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid,renesas.com:email,linux-m68k.org:email]
+X-Rspamd-Queue-Id: 68F90337F9B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 26, 2026 at 01:37:35PM +0000, Nuno Sá wrote:
-> From: Eliza Balas <eliza.balas@analog.com>
-> 
-> This IP core can be used in architectures (like Microblaze) where DMA
-> descriptors are allocated with vmalloc(). Hence, given that freeing the
-> descriptors happen in softirq context, vunmpap() will BUG().
-> 
-> To solve the above, we setup a work item during allocation of the
-> descriptors and schedule in softirq context. Hence, the actual freeing
-> happens in threaded context.
-> 
-> Signed-off-by: Eliza Balas <eliza.balas@analog.com>
-> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> ---
->  drivers/dma/dma-axi-dmac.c | 48 +++++++++++++++++++++++++++++++++-------------
->  1 file changed, 35 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-> index 45c2c8e4bc45..df2668064ea2 100644
-> --- a/drivers/dma/dma-axi-dmac.c
-> +++ b/drivers/dma/dma-axi-dmac.c
-> @@ -133,6 +133,8 @@ struct axi_dmac_desc {
->  	struct virt_dma_desc vdesc;
->  	struct axi_dmac_chan *chan;
->  
-> +	struct work_struct sched_work;
+Hi John,
 
-Ahh, just realized that workqueue.h needs to be included. Will wait for
-some feedback before v2.
+On Thu, 19 Mar 2026 at 16:55, John Madieu <john.madieu.xa@bp.renesas.com> wrote:
+> Some peripherals on RZ/V2H, RZ/V2N, and RZ/G3E SoCs require explicit
+> ACK signal routing through the ICU. Document the optional second cell
+> in the DMA specifier for specifying the ACK signal number.
+>
+> The first cell remains unchanged and specifies the encoded MID/RID and
+> channel configuration. The optional second cell specifies the DMA ACK
+> signal number for peripherals requiring level-based handshaking.
+>
+> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 
-- Nuno Sá
+Thanks for your patch!
+
+Just a quick head-up, as I haven't read the actual secion in the
+documentation yet.
+
+> --- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> +++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> @@ -63,17 +63,27 @@ properties:
+>        - const: register
+>
+>    '#dma-cells':
+> -    const: 1
+> -    description:
+> +    description: |
+>        The cell specifies the encoded MID/RID or the REQ No values of
+>        the DMAC port connected to the DMA client and the slave channel
+>        configuration parameters.
+> +      Use 1 cell for basic DMA configuration.
+> +      Use 2 cells when DMA ACK signal routing through ICU is required
+> +      (RZ/V2H, RZ/V2N, RZ/G3E audio peripherals such as SSIU, SPDIF, SRC, DVC).
+> +
+> +      First cell:
+>        bits[0:9] - Specifies the MID/RID or the REQ No value
+>        bit[10] - Specifies DMA request high enable (HIEN)
+>        bit[11] - Specifies DMA request detection type (LVL)
+>        bits[12:14] - Specifies DMAACK output mode (AM)
+>        bit[15] - Specifies Transfer Mode (TM)
+>
+> +      Second cell (optional, when #dma-cells = <2>):
+> +      bits[6:0] - DMA acknowledge signal number (from ICU ACK table),
+> +                  where 0 is a valid signal number.
+> +                  Required for peripherals using level-based DMA
+> +                  handshaking (SSIU, SPDIF, RSPI, SCU, ADC, PDM).
+
+How do you expect this to work? #dma-cells applies to all DMA consumers
+of this provider, and these SoCs already have DMA users relying on
+#dma-cells being one.
+In addition, you cannot have optional cells: if #dma-cells is two,
+then all consumers must supply two cells (of course we could switch
+all of them to two cells at once).  However, as zero is a valid signal
+number, we cannot use that as a dummy when no DMA acknowledge signal
+number is needed (we could use e.g. 0xffffffff instead).
+
+Is there any other way to provide this information?
+E.g. could we have a table in the driver that contains this info for
+the (presumably few) MID/RID values that need it?
 
 > +
->  	bool cyclic;
->  	bool cyclic_eot;
->  	bool have_partial_xfer;
-> @@ -650,6 +652,26 @@ static void axi_dmac_issue_pending(struct dma_chan *c)
->  	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->  }
->  
-> +static void axi_dmac_free_desc(struct axi_dmac_desc *desc)
-> +{
-> +	struct axi_dmac *dmac = chan_to_axi_dmac(desc->chan);
-> +	struct device *dev = dmac->dma_dev.dev;
-> +	struct axi_dmac_hw_desc *hw = desc->sg[0].hw;
-> +	dma_addr_t hw_phys = desc->sg[0].hw_phys;
+>    dma-channels:
+>      const: 16
+>
+> @@ -212,6 +222,20 @@ allOf:
+>          - renesas,icu
+>          - resets
+>
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: renesas,r9a09g057-dmac
+> +    then:
+> +      properties:
+> +        '#dma-cells':
+> +          enum: [1, 2]
+> +    else:
+> +      properties:
+> +        '#dma-cells':
+> +          const: 1
 > +
-> +	dma_free_coherent(dev, PAGE_ALIGN(desc->num_sgs * sizeof(*hw)),
-> +			  hw, hw_phys);
-> +	kfree(desc);
-> +}
-> +
-> +static void axi_dmac_free_desc_schedule_work(struct work_struct *work)
-> +{
-> +	struct axi_dmac_desc *desc = container_of(work, struct axi_dmac_desc,
-> +						  sched_work);
-> +
-> +	axi_dmac_free_desc(desc);
-> +}
-> +
->  static struct axi_dmac_desc *
->  axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
->  {
-> @@ -687,21 +709,18 @@ axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
->  	/* The last hardware descriptor will trigger an interrupt */
->  	desc->sg[num_sgs - 1].hw->flags = AXI_DMAC_HW_FLAG_LAST | AXI_DMAC_HW_FLAG_IRQ;
->  
-> +	/*
-> +	 * We need to setup a work item because this IP can be used on archs
-> +	 * that rely on vmalloced memory for descriptors. And given that freeing
-> +	 * the descriptors happens in softirq context, vunmpap() will BUG().
-> +	 * Hence, setup the worker so that we can queue it and free the
-> +	 * descriptor in threaded context.
-> +	 */
-> +	INIT_WORK(&desc->sched_work, axi_dmac_free_desc_schedule_work);
-> +
->  	return desc;
->  }
->  
-> -static void axi_dmac_free_desc(struct axi_dmac_desc *desc)
-> -{
-> -	struct axi_dmac *dmac = chan_to_axi_dmac(desc->chan);
-> -	struct device *dev = dmac->dma_dev.dev;
-> -	struct axi_dmac_hw_desc *hw = desc->sg[0].hw;
-> -	dma_addr_t hw_phys = desc->sg[0].hw_phys;
-> -
-> -	dma_free_coherent(dev, PAGE_ALIGN(desc->num_sgs * sizeof(*hw)),
-> -			  hw, hw_phys);
-> -	kfree(desc);
-> -}
-> -
->  static struct axi_dmac_sg *axi_dmac_fill_linear_sg(struct axi_dmac_chan *chan,
->  	enum dma_transfer_direction direction, dma_addr_t addr,
->  	unsigned int num_periods, unsigned int period_len,
-> @@ -942,7 +961,10 @@ static void axi_dmac_free_chan_resources(struct dma_chan *c)
->  
->  static void axi_dmac_desc_free(struct virt_dma_desc *vdesc)
->  {
-> -	axi_dmac_free_desc(to_axi_dmac_desc(vdesc));
-> +	struct axi_dmac_desc *desc = to_axi_dmac_desc(vdesc);
-> +
-> +	/* See the comment in axi_dmac_alloc_desc() for the why! */
-> +	schedule_work(&desc->sched_work);
->  }
->  
->  static bool axi_dmac_regmap_rdwr(struct device *dev, unsigned int reg)
-> 
-> -- 
-> 2.53.0
-> 
+>    - if:
+>        properties:
+>          compatible:
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 

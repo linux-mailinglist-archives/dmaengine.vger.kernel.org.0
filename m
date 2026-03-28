@@ -1,81 +1,81 @@
-Return-Path: <dmaengine+bounces-9703-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9704-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MJNICFekx2k6aAUAu9opvQ
-	(envelope-from <dmaengine+bounces-9703-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 28 Mar 2026 10:50:15 +0100
+	id +DZRB+qmx2mraAUAu9opvQ
+	(envelope-from <dmaengine+bounces-9704-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 28 Mar 2026 11:01:14 +0100
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8409334DF7F
-	for <lists+dmaengine@lfdr.de>; Sat, 28 Mar 2026 10:50:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B899B34E014
+	for <lists+dmaengine@lfdr.de>; Sat, 28 Mar 2026 11:01:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 549ED3019056
-	for <lists+dmaengine@lfdr.de>; Sat, 28 Mar 2026 09:48:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B8C4E303B4EB
+	for <lists+dmaengine@lfdr.de>; Sat, 28 Mar 2026 09:58:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 160193783BE;
-	Sat, 28 Mar 2026 09:48:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3559F3793C3;
+	Sat, 28 Mar 2026 09:58:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXMZ+ZMl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlhYebPa"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-dy1-f195.google.com (mail-dy1-f195.google.com [74.125.82.195])
+Received: from mail-dy1-f194.google.com (mail-dy1-f194.google.com [74.125.82.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C912EB860
-	for <dmaengine@vger.kernel.org>; Sat, 28 Mar 2026 09:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A8C13DBA0
+	for <dmaengine@vger.kernel.org>; Sat, 28 Mar 2026 09:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774691311; cv=none; b=MiDWJUWpdjmy2HAXjPEUOInpaCu61nUgyWrhxBZ6VgWmWDNQFjm02mX4+y84dfklqWvO05A08slNJ5N3d3If19RvcH9kgw7/jD9UWP7Gn70Z0zTwSw5arxxzAfAbhMVqPW6PF+Vdf2us/H+g6UFR/Ip3osK02/4dX8isl6Tx38Q=
+	t=1774691926; cv=none; b=HH1Q/P6n3TKbpkGRdHKAbWasAqgB6dV5v5R3lOGQP/F66i7w/v0K+3pUMzrfWS0yi6pRNeRFJnR3XpcqwzzwTFTtOvM15qoLKr4zEbkoPSkUxrDZSAGc7frI4x6IvlybHSuq0Dp+R/ih05bz4FAyu7vnPJMvlwJM4JWckGetPWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774691311; c=relaxed/simple;
-	bh=H0NsGRh1ZLqqimD4Zi9vPUYMg9ZH77e8pUdX2q1gGgY=;
+	s=arc-20240116; t=1774691926; c=relaxed/simple;
+	bh=b3JlCC4tL2Tz58FKwg2YL+SyAtOwXrfA/gsgi5WMt/A=;
 	h=From:Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:To:
-	 References:In-Reply-To; b=pOGVy23RY0REe7+5GNY45SZyImLEAXfZgNojk8KCtiCQlsu9CWcSSG2v/RCOd1kqepYQGpsx+2bWtMOZSdTtIysz1CNLj8ulw5+0z9Up5ABMetBhQ5Nsjld+UiaF/MXW/c5EAlYstADqonlSzRS3wRFpgVOvEDYPBmVsmgrNv5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eXMZ+ZMl; arc=none smtp.client-ip=74.125.82.195
+	 References:In-Reply-To; b=iNm2Y1/ViKqTfShLy+KU2t629QmHo4MkfLhOPmZeEQVozvEdCciPVnpFqkpqpzixesgWfFkwuHYWAFQajZ7nmXUmsyQ6lEv1b+Iat04xxyp1DHA+AerkBmilF4OGGhDAmyqYmqwwEXfZ8UvxoWVMcM6SJu9mk1sEHEuYoEeZ3zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hlhYebPa; arc=none smtp.client-ip=74.125.82.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dy1-f195.google.com with SMTP id 5a478bee46e88-2bdcf5970cdso1855561eec.0
-        for <dmaengine@vger.kernel.org>; Sat, 28 Mar 2026 02:48:28 -0700 (PDT)
+Received: by mail-dy1-f194.google.com with SMTP id 5a478bee46e88-2c0c955a481so3808158eec.1
+        for <dmaengine@vger.kernel.org>; Sat, 28 Mar 2026 02:58:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774691308; x=1775296108; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774691923; x=1775296723; darn=vger.kernel.org;
         h=in-reply-to:references:to:subject:cc:message-id:date
          :content-transfer-encoding:mime-version:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tRlWsjp96tD6U6Z/Cd/j4p1pGmRJaWjFo7e47fa1C/A=;
-        b=eXMZ+ZMl7sw5pk8rITM/ZHRIW9fG4x2xSaxYstxM0qXmmO/yTNlFRkkgItaLMBeox0
-         H+1Bd/yh69vGmLbimCFPCigBbHa8r2/vQyAdo0VfRDRixMP/yGI0zLBt0BurAe171Fwg
-         C+wTfN00pdxz5HxD6Tla7u5Cd55JzGTOz9k0bLJ7bZiH+TjA5vM9TnWr91zAYbWlDvis
-         32U9bvjqzKhNKEgClnHAXdCR0+7rG60BNBvNu/Z1B/UnAplEHsyPU8f3g/vB5Wz5qSpr
-         eaf/OCuNWHyFdQxxE4iFmrz/D5ope+bY4ix0qlAGWIhIIPRDRz0xOaPjgVaXjw2zT0y4
-         +o6A==
+        bh=VPZRgmhGXKGLV4+N3md+ZOqvfZ5oB0BV4k3AKJQbhLw=;
+        b=hlhYebPa5oD866bhGrd/E9DOI4xLPqqIBTNB58MI6CdiLe3RE62TMwDKXlT5JD9JHz
+         616BnPap7CdTVnFhBgz1vNAQGISSEC6UKbM+tOLvrRlFVcbzBcrI4cKky7sUu2qgJ4sX
+         esb+fG8/zEpOtMtAeSfw2QmIMue8UJ7bZmIBGfob3rD6Xv3MJ21axcBoS2W5kSerVQsE
+         tfEGaebsgJnsUaKRNCmsXAcsz2vRhOYZP4/0+OcB/+t+DV0zUUDuXDPuQFc5W/jLyaIU
+         yVE+fCtnWhzPC8ODrhs8bDg97Pn1/4nAx38AKFL8cWIQjWzg4YCemqayURr4y+W/0avQ
+         5OpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774691308; x=1775296108;
+        d=1e100.net; s=20251104; t=1774691923; x=1775296723;
         h=in-reply-to:references:to:subject:cc:message-id:date
          :content-transfer-encoding:mime-version:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tRlWsjp96tD6U6Z/Cd/j4p1pGmRJaWjFo7e47fa1C/A=;
-        b=MwJZ2BP0Bhf/UxD1bLgUrWUEgB0L4FzE4Lqu/zNyeXa0n70XrqKgstCc3Dc6azzLxS
-         X2KcsrXVgwYAvs89qpTHSogwJINkNJjU7bZ3BzkaCdzg2dxKjwgbeZwSf5KKqxTcJYpW
-         /Kf4nas+ab2Z994O+Uvcc+JNL7ZyN52aYkRsX+kjqNeto+FcjDHT4FPsXeTjHPI4pLOh
-         5u6OdAS52w9YWg9hm+SueNTG9PLUKeMr457JNLt/uHREoHIQRfQRWGsOmFI4qA1Yas43
-         sRTWzt7f6ifvn9TdCZm2P6adGVbf6OHbGlohu7zTMGVv/EnwjTKnsgMXPyR5umYkjyOR
-         PShQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIQk1TC3Z7rtG/E+OUKVStXvKRHozRPmuGlh4bITFasT2oH1MCDpJlAml+janbASkkoVk0KaPWJqk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7uSKTkVL2/vl04lVrHsAR4RtAOm6IDPjTac5fpUCNRaBNdSYX
-	ikC0SdNhPZAI98M3VO5gfgzZIl5Zv8dvUobmopZbyekstw8UKepsSqgQydTkZFLIha8=
-X-Gm-Gg: ATEYQzyOlLJq0uJbFv5kwC2ovm/chGptp27dttO1EZOR92EZcTiRE3nh7wxvlRtNVB2
-	5Y/tRontgcsr2+JEdZvgrTpq9pBAW7FOwusJkCo4fUjNaK13RVWw/U8v23zt7zqFrNYsSaNx2L1
-	DOqOU5p0gm7PTLBMVFebcDBnvwAbFYMTNlRQP7on6+jaujfhA03w0KMy7JIyUO5xY5Gn8w8w/mL
-	bfexUduN5XrGWpDoGLOX/qygYc8gKKIOOf+oqUw+u9nDf20sXOvE1UbDxocOniI+mWXaA+wsFQX
-	GKmx5cKfuBiJr5oqns1tj9DAclRb2kkrYImamjRE83JoL2ahMHxbp2dWNxWoFrEGXV7glUkXdZH
-	uNK4R/yBB4/MVyBoMjRNtIttO56pl7QN1Q5DR1zxyAKCGxntaus3jtlP2RajxIxWqRGAejESwFs
-	Dp6fT5SIqJ+bxgc6UQICviEmlenJU=
-X-Received: by 2002:a05:7300:fb8b:b0:2be:9c19:b34b with SMTP id 5a478bee46e88-2c186dd2a0amr2428508eec.4.1774691307454;
-        Sat, 28 Mar 2026 02:48:27 -0700 (PDT)
+        bh=VPZRgmhGXKGLV4+N3md+ZOqvfZ5oB0BV4k3AKJQbhLw=;
+        b=HVQGhYp8XpuM58mReOumRyYy+BRgu7IfdhR/mwKSbln6jdoju19cBQBfE+w/rzJVKj
+         bBsFoBzh2zitm0p2ktFXR/AIg5nETE/iCqIzK3CIpe3KnvwqgnMAdjUht5GtaGCrrucs
+         BVrxCJo+YdJU/2IIeQTyu7XeVhu/2NmsWuwyL5b0ZhtMhrf3AOjcWftBs0kI8ey7AwtX
+         M9ARU+mhH+dDzTq0cD6Vkt0UXfVag1YnwkJBIo4HJ2JXuujuwZu15aXDVKOo7eiIHcBV
+         kInlQB+FqJuvU41SwDg6OMJe3LmxkZ0odGx9WAX18kF551VWMA9fgYjoU2qihKOETlc9
+         M88Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW0D3VWFw90UtQtMcnQXMqV1EP8DTdvWfyFl+wQspdBkBTKcARY8IpNEd0F+C5h6IxiBvLgBdaUV9U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/qk7uAcqme3UOSgeMMJyGkPE4Xo0BEKVDPiPs4ZuPEjBH48V5
+	qa5ihPUJsVmxIbAJg/xL7qC95FPfP/V++gFVIgdhcUlQzNMWnN5ve9mu3xXz6C3nTLI=
+X-Gm-Gg: ATEYQzxXAYWz9UY4Pho5Vtdro/hdQxoAW4cjFabCovqpFQ0pD3vq9mqTUxQR7g9cuGz
+	ras4M33Cs4Jvi1BBEgympXY1NEIhX7fSVzJka58fB4NkdK2pvlRVmfDwNDGd6jijzp4rN8/adK7
+	oVcOk9EXf+vIcv5o50GOSc1+qqr2YNdAGsdQORjg9IOKDE56vxwI3UzIJ+foVMcKQOVGevhbNLz
+	omHMX9wB4HNVkc4BNQYdtgsNYF8sHvhQMrKM5W/Fwc61oLzgpL43shV4Fa23268Xx+RVoA7extH
+	xR3MAkgOApTaErWBrupv1+tzbuGxuR4R+xLCj6dnir200a4S57JoPnKxTZIJU9drI3yhf3rX9ew
+	vtbE4vd0oxApZv0F3zNz8QjbS2QbCxK6Can2GDzbmpAD6ShJTh9IeagWAPrP0lzengXkNcWOa6o
+	5k4mn5xeH1e+uJyhaDz4WvJDih56Q=
+X-Received: by 2002:a05:7022:b98:b0:127:33e0:ea33 with SMTP id a92af1059eb24-12ab28e4da2mr3105409c88.22.1774691922629;
+        Sat, 28 Mar 2026 02:58:42 -0700 (PDT)
 Received: from localhost ([104.28.227.186])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c3c3bda147sm1742844eec.5.2026.03.28.02.48.26
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c3c79722e0sm1866524eec.31.2026.03.28.02.58.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2026 02:48:26 -0700 (PDT)
+        Sat, 28 Mar 2026 02:58:42 -0700 (PDT)
 From: Troy Mitchell <troymitchell988@gmail.com>
 X-Google-Original-From: "Troy Mitchell" <troy.mitchell@linux.spacemit.com>
 Precedence: bulk
@@ -86,8 +86,8 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Sat, 28 Mar 2026 17:48:24 +0800
-Message-Id: <DHEBKA3QHPUT.2A9BJLPBXGQWG@linux.spacemit.com>
+Date: Sat, 28 Mar 2026 17:58:39 +0800
+Message-Id: <DHEBS4TLJV5W.3AO0UY2JXWAFE@linux.spacemit.com>
 Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
  <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Paul Walmsley"
  <pjw@kernel.org>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou"
@@ -97,16 +97,17 @@ Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
  Turquette" <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>,
  <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
  <spacemit@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <dmaengine@vger.kernel.org>, <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v2 1/7] dt-bindings: dmaengine: Add SpacemiT K1 DMA
+ <dmaengine@vger.kernel.org>, <linux-clk@vger.kernel.org>, "liyeshan"
+ <yeshan.li@spacemit.com>
+Subject: Re: [PATCH v2 3/7] dt-bindings: dmaengine: Add SpacemiT K3 DMA
  request definitions
 To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Troy Mitchell"
  <troy.mitchell@linux.spacemit.com>
 X-Mailer: aerc 0.21.0-0-g5549850facc2
 References: <20260326-k3-pdma-v2-0-ca94ca7bb595@linux.spacemit.com>
- <20260326-k3-pdma-v2-1-ca94ca7bb595@linux.spacemit.com>
- <20260327-silkworm-of-algebraic-aurora-e9bd1c@quoll>
-In-Reply-To: <20260327-silkworm-of-algebraic-aurora-e9bd1c@quoll>
+ <20260326-k3-pdma-v2-3-ca94ca7bb595@linux.spacemit.com>
+ <20260327-granite-giraffe-of-infinity-ff49a3@quoll>
+In-Reply-To: <20260327-granite-giraffe-of-infinity-ff49a3@quoll>
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -117,12 +118,13 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9703-lists,dmaengine=lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9704-lists,dmaengine=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[22];
 	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -133,28 +135,53 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 8409334DF7F
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,spacemit.com:email,riscstar.com:email]
+X-Rspamd-Queue-Id: B899B34E014
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri Mar 27, 2026 at 3:28 PM CST, Krzysztof Kozlowski wrote:
-> On Thu, Mar 26, 2026 at 04:17:16PM +0800, Troy Mitchell wrote:
->> From: Guodong Xu <guodong@riscstar.com>
+On Fri Mar 27, 2026 at 3:30 PM CST, Krzysztof Kozlowski wrote:
+> On Thu, Mar 26, 2026 at 04:17:18PM +0800, Troy Mitchell wrote:
+>> From: liyeshan <yeshan.li@spacemit.com>
 >>=20
->> Add the DMA request numbers for non-secure peripherals of the K1 SoC
->> from SpacemiT.
+>> Add device tree binding header for SpacemiT k3 DMA request numbers. This
+>
+> Why?
+The DMA request mappings are hardware-hardwired and differ between the K1 a=
+nd K3 SoCs.
+Therefore, separate header files are required to define these unique consta=
+nts for each
+platform to ensure correct DMA channel allocation in the device tree.
+>
+>> defines the DMA request mapping for non-secure peripherals including UAR=
+T,
+>> I2C, SSP/SPI, CAN, and QSPI.
 >>=20
+>> Signed-off-by: liyeshan <yeshan.li@spacemit.com>
+>
+> Name looks close to login name?
+I will contact her and confirm.
+>
 >> Signed-off-by: Guodong Xu <guodong@riscstar.com>
 >> Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 >> ---
->>  include/dt-bindings/dma/k1-pdma.h | 56 ++++++++++++++++++++++++++++++++=
+>>  include/dt-bindings/dma/k3-pdma.h | 83 ++++++++++++++++++++++++++++++++=
 +++++++
 >
-> Also, this is not a separate commit.
-Could you please clarify? This patch already contains only a single file
-(include/dt-bindings/dma/k3-pdma.h).
+> I am already confused what is happening in this patchset - so which
+> device are you adding? K1 or K3?
+Aside from this K1-related patch, the rest of the series focuses on adding =
+support for
+the K3 SoC. I included the K1 header because I noticed it was missing in th=
+e upstream
+tree while working on the K3 support.
+
+It seems my attempt to 'clean up' K1 while adding K3 has caused unnecessary=
+ confusion.
+Would you prefer me to remove the K1 patch from this series and submit it a=
+s a separate
+patch?
 
                                     - Troy
 

@@ -1,90 +1,79 @@
-Return-Path: <dmaengine+bounces-9736-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9737-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yIInGk+jymmx+gUAu9opvQ
-	(envelope-from <dmaengine+bounces-9736-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Mar 2026 18:22:39 +0200
+	id yP23Cfmkymmx+gUAu9opvQ
+	(envelope-from <dmaengine+bounces-9737-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Mar 2026 18:29:45 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B73CB35EB33
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Mar 2026 18:22:38 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id B601E35ECB8
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Mar 2026 18:29:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1FB2F3080D46
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Mar 2026 16:07:54 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 54CF130022E2
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Mar 2026 16:28:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF93B378D6E;
-	Mon, 30 Mar 2026 16:04:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5665626B74A;
+	Mon, 30 Mar 2026 16:28:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ObnxSOjc"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="F4aPsl82"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011065.outbound.protection.outlook.com [52.101.65.65])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013061.outbound.protection.outlook.com [40.107.159.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D7D376BD3;
-	Mon, 30 Mar 2026 16:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF27F282F22
+	for <dmaengine@vger.kernel.org>; Mon, 30 Mar 2026 16:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774886664; cv=fail; b=mOPoJq38jRVWH1Oa0U4H7X1+nuJKQ8mRMlXVzE/xmFKgt/teQ7YFbUTC0H2gxsfhAClyvHIqPRBjvF64iTCTHCyL1NIY0Qo3OUEg8lOEjT7vxzZDbQp5gQMADkB5oGPimaZgGgseRG3NzzZzqsCZiL2LWj3lgBDY1FvePPVW/48=
+	t=1774888121; cv=fail; b=ukLmr9ECuGQd4lzOuqfU7YKhwOTpcrc6or/A35/71LpPNXSNq2oL1gWhVF3J74goFi6vutg7k113Hsu+aDxRUX5sPUmYpOV1BeWZr9uiJXB+XM0lPNYewS+dKMoP6rtsVy2p0kBI4ZKKGmbTppJHwsnYrpcvnN8JZwFIt5V/ZFo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774886664; c=relaxed/simple;
-	bh=wT0KNeyZLujXevskOzkgWlxQ42hiK9OIyn//Nl+7tXU=;
+	s=arc-20240116; t=1774888121; c=relaxed/simple;
+	bh=IBS+saOiAj/VAB2t2bJBHqb3a8bZ4OBRGP6c8XqT1A4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=JMIUk/FH6KdV6wUlDGoYhvdPpSeUTzjwfCdv267wRAv/xTa/UBhSdxfQrUcyw2MsQNL+/QrbzJRSzQorltKZVExYLufv9HcooHQUT+fXHnPHRupm0gcJXmEgMoOjIm2br4e8lbXfBv3EgovUFKkTmNRaZnyN4lyYAqU1HctqAoA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ObnxSOjc; arc=fail smtp.client-ip=52.101.65.65
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MB2q9Dp1j4FoYiZMi+XSE4JmnTNrpZa8wWKL1fC8KN5gNamGK4ErbbXglrKhe6DJYX0eWbzODCrTBVGGxVdxI8WUxDdaa5Cbbqjkz3MAwhYvc8TmdrW2CoVvq/ho/hWGr6iaho8ZdFine9757DAtG2ssxvVFblWRC60/3O7Dxz8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=F4aPsl82; arc=fail smtp.client-ip=40.107.159.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F9IIZJ2l98XnCcO0j1l7fa/EQWrqHotXH9AysUfRlLVvrCXD1/YsuvViWZUmmUCVk3np6nslPKAc4/BikUHv+zh+sm1QLQQaXE0CZyIF2jiaHvAWSH3M0j4mgZo+qLCkxfq+3rks9owazqkm94IkEQSBmCnYUFhcVOW6Xpg9DcTwfN0tywYKVcs+ZLpSGHjRVVmuyw2w7OkF9hu4ksyHOyv5aZWPE3w8L8iWQ4A3HvKp51h5p1M8O3BoM6eKIyrykgn3TEReXzcLxpKHOijjKRDrSDnaOk6Udngl0DV+aNUFI4ndo2kHbdoJ4VNnDDCp6hNFgB58J+/rgQQ01ch1ng==
+ b=Eb/5QRMgoF9qxprPEfUd/gn7Rk9mrWW/Z5FsflETTjUA/VjfoHs6imOXUi1OZMU2yhFZHolE0wi6fsypexGZ5ybdOcv8h2x2txNOdxhVj4miHdfb5QXNRTL0YHIcS2aTdFk6gUa+zFhyRquLlqtT28miD+7+s0ongxOyPV1iUaE+/6oAo1iM4N6wUoiAqotFVVOMbfy5tD/8NwNtqobtfZnsNMdWiKGI9v4it00NG5LKWwGj71Mp8tyyPWWaT4z4aUni6ydmpIzGygxXjbYUZD2eM8ipGBct2ljE8K0ziCVmd/vNLER34EBtETfsXIpgLAAOR3pNucnwtZbA7pdC0g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cK6CHQ0JYSO7WKzfUcaM8seLmBH8P37jyo8prhZDYfM=;
- b=v8n7G2EXTZyRfDe99cAGZFsHYXA78kUnwLqXykfIi+pQkmFLBrbDhIxsxeOjTtZ+UcB/lpJN5xTzZDnz9Ythno6FdPUxBWyEWyE2tDNg1nU4KSJlye9uvo9BSxV3CT0Net3edJwUidUFuGcTdq9mM8HoBYhMcBlN8vwNEyVeLSbb3v3ubWIS61jULSRv/ME2rScoEl1nvn62edhGIz1gxOuz+aoxPXfptDg2mZbFcbATr48bIeT190lm4t4EoPHG/qesIoP6B997Mdpd4UlQYUaXwXgBh3uSVp6cgZyOF28HEkfvfGkEnGO53bfY5TDERqsqYKgGaJTeqjplb7uu9w==
+ bh=QJ1jm7K8l+rwvqfl4dXBnzRAdPsocs2hmBMUz9Ri4hc=;
+ b=p454bMKVBIri09sF9f0jMhWQibtJaFoRFjyeISHsKRHiNRQn6NbDZ6AIZYL1RPVor/xvz/P0MV4PuhRvJGg9WAFIYwM3hZkIMq+f6MqSzhWBt7zMYg9BG/WoBsKp5NeTKK2CaTGFV+LVCYKdQykxFjRfZbqnWQua9BMKpWjzscOfnkAdu+Whl7eEgpm6ziOG6brj4MA9WlsgJwB16PiuCOPryAJVif2K99zBWSLPUaKn8RRQe9acFMrPmmhp1dsERTKB2BqpbwPAKZtYaVaqFQW71RpjqJF+de52DubwHifWNhueFN04nZqfgVDDfxAPFigYCDMlP6gHPyQESCZa7w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cK6CHQ0JYSO7WKzfUcaM8seLmBH8P37jyo8prhZDYfM=;
- b=ObnxSOjcPPcTF/2o3p0SFflTONibhOg98I110qgfqh9RHydlZWM18OyFh46JjJh4CUa7nYu7ua2hZ2BASUK2elTZhlxj1H2MCERWa1e/5mberTpIIp8WDYrFvIo5LL/PYGE4x4WPSCvm6/5AGqB/Djp23DCOZF80xlSBX5F0qX6+gHgY/qF41uojO+e6lJ6eMDu1uUUixlJ3sTAa6tySuwlzai5XVJt/91NmfNCtIHqnueu0tVRtc6zlOdMTOYhWCK7a/1B5V6P5XcsWQeWqfyibq7istJA8dV5+3EX3mg7JQQIUc0gSM6R8kvH8wJRyBeMVLPHCr3BJKsrtOJr32g==
+ bh=QJ1jm7K8l+rwvqfl4dXBnzRAdPsocs2hmBMUz9Ri4hc=;
+ b=F4aPsl82TIdm0bc/55oZcNbB5O5gAc2XfuUTrvBrKGI9sXpZfk19tlCnXDrke48VACoS9Kst4o+S1M9ciOs/fYKtx6wfEqFTM2WFBOCKHEG+YvNa+4ixJiOgp4U+npiJBMqqJKiYaOns5sssxaGUCIrcBBShG3beyBvG8CLhwLI4KzNERSlbR8nv/s862N8TDc7yrYRv5T0GguiiXby8bXSDX0JM9zGyn53OdagQHuoJa0ivz8W8k09JL26Sc3Ygg6jNKH647pZBsvMu+nc8MKCPvEtqsjvkVJzba4IDCI6mg93JaAQuIHuYzX89rUSr71nhwV2dk2sMzbZk0rdmLw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by AS8PR04MB8261.eurprd04.prod.outlook.com (2603:10a6:20b:3b1::15) with
+ by PA2PR04MB10216.eurprd04.prod.outlook.com (2603:10a6:102:406::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.28; Mon, 30 Mar
- 2026 16:04:19 +0000
+ 2026 16:28:36 +0000
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9745.027; Mon, 30 Mar 2026
- 16:04:19 +0000
-Date: Mon, 30 Mar 2026 12:04:12 -0400
+ 16:28:36 +0000
+Date: Mon, 30 Mar 2026 12:28:28 -0400
 From: Frank Li <Frank.li@nxp.com>
-To: Srinivas Neeli <srinivas.neeli@amd.com>
-Cc: Vinod Koul <vkoul@kernel.org>, git@amd.com,
-	Frank Li <Frank.Li@kernel.org>, Michal Simek <michal.simek@amd.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Suraj Gupta <suraj.gupta2@amd.com>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>,
-	Folker Schwesinger <dev@folker-schwesinger.de>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Kees Cook <kees@kernel.org>, Abin Joseph <abin.joseph@amd.com>,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 5/5] dmaengine: xilinx_dma: Add support for reporting
- transfer size to AXI DMA / MCDMA client when app fields are unavailable
-Message-ID: <acqe_AF3YHPLNzoV@lizhi-Precision-Tower-5810>
-References: <20260313062533.421249-1-srinivas.neeli@amd.com>
- <20260313062533.421249-6-srinivas.neeli@amd.com>
+To: David Carlier <devnexen@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	Yingkun Meng <mengyingkun@loongson.cn>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: loongson: loongson2-apb: fix broken bus width
+ validation in ls2x_dmac_detect_burst()
+Message-ID: <acqkrL7CYbr0WmHf@lizhi-Precision-Tower-5810>
+References: <20260318164803.14351-1-devnexen@gmail.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260313062533.421249-6-srinivas.neeli@amd.com>
-X-ClientProxiedBy: SA0PR11CA0039.namprd11.prod.outlook.com
- (2603:10b6:806:d0::14) To PA4PR04MB9366.eurprd04.prod.outlook.com
+In-Reply-To: <20260318164803.14351-1-devnexen@gmail.com>
+X-ClientProxiedBy: BYAPR07CA0065.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::42) To PA4PR04MB9366.eurprd04.prod.outlook.com
  (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -93,230 +82,136 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|AS8PR04MB8261:EE_
-X-MS-Office365-Filtering-Correlation-Id: f189232a-85c1-46ab-fed3-08de8e760049
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PA2PR04MB10216:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6df39958-f79e-4c13-4229-08de8e79644f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|19092799006|56012099003|18002099003|22082099003|38350700014;
+	BCL:0;ARA:13230040|1800799024|376014|52116014|19092799006|366016|22082099003|18002099003|56012099003|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	oFlmOb014+NHhjpWrBdyLQ1bXAwmWg1mavcF79v2JL3s3SZFfO501HQXSoOppJA9NOhDPKVSN5nc6f5PMWDeSr3K9Y/Lqv6vxGemmLGrj2ONJ30zys7chCUShjbKAdLmxpZgTQB3jQKEjTK/hK34vj1LSyVw/pnXMJPGLG2MDX9L5xJ0l2YbPeD/BhaSZxVA33YiJ6TZki0/jGhuWyrIRxp7b2sDvD3Oz8LWIJZWV1jMLvdMX8TOhRGGbWmOqwehk4xZVodfdz0jnueCDuoa2i33AtMhdolYMx5oee+aSeZVCJOzX+nzrwnjWfgFW45hwuPr4s1u8U4PPocdt75M26iR3ofeRX2M9sfIxHrPdTC67fxD+qlMm4p3v5O1GeJUQCODmVRv4X0+WUpiBqJw/U40B7WEq6zmdMohcBrZj4LXVIh9CUeaNigC6TTKcX6IeUwRJxcWwBnqrv4o3TABeH9ZBCrfo31tTtxCXyUb0cgo537r2CE9i+2o/efhts5beyurRD5jARI6OJWyV0rM9dfZ6k4MyNVIk1k6nkL8cavy7toJ6EcTADKOFUYNm0xFObH4E+lGtfXjCxQ2Da1Tmad2XzCrjInyordEs2aSrp/bPvnzZoqR/88AxzAehzA5y1sM8lYu9QXndud3x+HRAqNaXU4ytqUiEC6nGe3TlUzPafcZpE4sOU3cbV34gVhfX1hU1aMhGvS0h9rVeP8XdLwd7zEyCxzdvmASQ8Td3l2jiMasYWYVmfoAkfPWmTwH53309vIuMsbak91VXTdSk7Sf1BHbpdwNWPaMvuuXM3A=
+	+GtHfa5bfu9AngYVXUwm09BmEp6pKOxFIOheDd0sZGzE0VuL3kIAT0/Bv0JgqmbasvdAOlOo3JxQ2D79MPfNeKwosBI6+KpMIp3FUeDJb5+Pof58+s6oqBKcvK8CUI61ieK2uIrDRFxrMYt552/cjxLTMnTcOiqAkMGPgT+SCYvpfq510lI3gmCrlEV5fZNSHQEXtonu/RkXAyEULhwRjfn3n7TgR+7nKVqJtFNbMuxHhuxNCMN7k/m+gG4IWBrKNgvM7bTEg32h23My+uvaO5hji69nWDDNTTOsLMxFfGpPFYyxhwX949F6Kg7whW033hrclXUCF8NB1R245KuJ4OxD+9V/j4i0ZGGT0UDLMCVpqL7srgvctLPyVT8OAwNMt40UN2th78LhqdMzlrP85GsKqYcia7iezNnb5r0dJw4SNaojZnK5I6IcGDZ5Jo26u4VMKQkTyZhHXGFHPF8XnpBfi8uHbqqPBNmuD1CEmlJPsksiZLIOB5Y54QAtNuyXASoehR9hu64H0YzCMZflj31rfh5t+c3Ppny3mkTSeDsJ1kRwGvtlFB39pkyuZu7QVBu99421VGVAeCHgBjoGO8Q9+DHlNInG11VRpFooNh6Roer27IgyCE5QevLv/QZ65tkJSsf5yixKl6lQZ4jecaumr7TsjpL/elhtfmevngug77tEoAmnbJr/v/zJ1TCqdHk6Nbq/BczDg20ruoA6D2ceNWrHY3o6Ej/TSIJPPFsjfAZx5rcOnNXGwaaKHIaN93s8oIvFFHS/8x8l9vr/mdDEurMDDx6mS/IizoaqhlE=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(19092799006)(56012099003)(18002099003)(22082099003)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(19092799006)(366016)(22082099003)(18002099003)(56012099003)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?6RMRlxV0vnmrLDssuECMbpm+r0GySv1DS5IJhjebT1gKFOov5Za2+TXv4fBS?=
- =?us-ascii?Q?lSYLFfycHABx+RXqeMwQFY6OH4Zg8Q04A0a8k971+km2z0R4ncb8+/0ak1EP?=
- =?us-ascii?Q?ZKZfQXkZqqSCc3+LvWNeYEiiWknhFaj0znzPqS8RZOzmtFPoTDHGbOCmvEdZ?=
- =?us-ascii?Q?86dmsbIjC7gAektTLfgPNNqF9eD+fKDgUTbkACW/2+NrVCaudDlB4WbdkHkd?=
- =?us-ascii?Q?paOHQ0T0673p6uWW1SXJIj3wJgUKx1Va0mcOSCf4DnEhhPG76MZqIer8iv7w?=
- =?us-ascii?Q?HnM2/04nvmH4BQxeQbDTYTvk4nMsUQk7W2HRnUD8H28uHkPTFrJ+5lcUS8lf?=
- =?us-ascii?Q?YcWa1FR+XFHPoE58W/FC4rqpyYX3iCBZ1kv/XTXWBsNR2vUDgCc3DtQTuNkX?=
- =?us-ascii?Q?1PcwwUmlaSgIE/zvejS4CasR6VcHgxtkKYw1Se36z+ztS/wfhNRzFpr8vix8?=
- =?us-ascii?Q?3qHUxJpANDePk7sZ9sHu3B9xyKXWyZP6erzfMCsxhPndg3QFSXR87wFB3yNF?=
- =?us-ascii?Q?j1gOGR2iAM7D4W6x4A+6Af0Fhbj+pKO+bqK+i7mQ+CuSy7aQ9Heky+Tlw9Wp?=
- =?us-ascii?Q?oIkWQGcfJ/PMUbubAL6uplcOtHCvHVyImR67J5CKNAdjoKPzK3JH5j2beOSt?=
- =?us-ascii?Q?Vvb3Cm4Lle1cnpN8QXucu1DmeZkdvq2AhfkbI7RhR/paxWenhcgZiCMndwdk?=
- =?us-ascii?Q?c/XGNSJ9W/fAjYuyspELfpZXdUkqadZRcFjw7RmxYHBnjLpRUyaMcCESppql?=
- =?us-ascii?Q?rf4XAoAgBJtzsDuCGLJImctPiMk2EdDYc0+A4S0HOvOHRwlJqa6Ox6vQznIm?=
- =?us-ascii?Q?bTZ6iFmZpLtiGoOXVwyEH5R4H0dygaXa3Bgl1MnQbL8TfnlTbvqcF4Grg7GT?=
- =?us-ascii?Q?I/s2fzvO6zCttIvX21AIGFiBCrvNj40ij+6lXcnKbaIa9TA+inKWdNKGg/hI?=
- =?us-ascii?Q?qgkOLyQFegk+cIp3NNaZybGnSIMGQcPgml5+owCc+6ngLu4mJGX3RtoNDlGj?=
- =?us-ascii?Q?JM+i+XzaN5rzfMF6JpYlmxYHk2/TT0u+oXGW8iK2UAycRfd785xNnR0mgUxO?=
- =?us-ascii?Q?cammEz7ZPjo/rbwYU/IAwVbPk+NY0bO3hGU7INgxgwNBM3niIniZ0YtX+NGO?=
- =?us-ascii?Q?9jRwBAimHjUhkTOKnHv8S/5MddSDTcAi/IVJ7pugaSgT0Lyz1X72h4ZeETNA?=
- =?us-ascii?Q?GSSXkK6kSQrxIqEKqn40gCoY7h13lvj0vsl/W4FKzVD5xDVhCLzfvK39KLGQ?=
- =?us-ascii?Q?HAPHG4yfRQKtXU0zjyId8vG+FZsVjsyLWl7R54HizdjQL+cmIGzFOYptdzXJ?=
- =?us-ascii?Q?RCjkhDVF62LUICwy1v+a5VhTvY3NoprJXLB0qbagEjqU06/82DFCJC+8c3PV?=
- =?us-ascii?Q?RHxnCCs8oH58aC+Kr0RR+vK9VD3JLaZcd0RwsrP/MDrhgHfRqBQMoanj0SvX?=
- =?us-ascii?Q?BsTyrXNZ4VIRrQTiXOane4FQnrNj4hGuFQfaPfBsLETm9WEYUpjOFApYevlY?=
- =?us-ascii?Q?SbQkLBh42iHEDK/sUoh9xuQN6/jEtukZzDeTZAPmimcyRpsit2C1IPBEk0QC?=
- =?us-ascii?Q?Wo47EuRnzze7t10OjxJpfnCt2cAJOrnrOHDYzGdcMjRAtItUnkK3lBlmMAbK?=
- =?us-ascii?Q?T5BLcvlSJp2uzbu6ZueIhsaCD4iQnUcntJvjUvtsJzjazERsxJBMbqmNFcHs?=
- =?us-ascii?Q?8tPVF91tyRY2L50Z4eexcx77ZirenWaKgC8w5PdTVeIJKrCo?=
+	=?us-ascii?Q?BLTB3FIfSOZ9+JqZzLOgL6kkHOLrTE4c2CeGOh0Tw/cXOy72rMKAGc7yWcAQ?=
+ =?us-ascii?Q?sDyusY/U+uIVfVEy+w15AT47yl+t04CfCLwq3UDXRELy/esn3gLGd6kwWkIZ?=
+ =?us-ascii?Q?G0hyp4UZUnUTSjD5wCEzJ+aPJnyP9vlbjh1PfIt+bafg5mpqIbV7wKIV1g/0?=
+ =?us-ascii?Q?GyKVTGuzZTIZkP5xKIQMQHmjS7whvQ+CpmXUf5cE0xEwX+8V4wi8ERQlyb+v?=
+ =?us-ascii?Q?YBXzlN155ypnKregMaFK6MamghX4H7+JYvn4i97uBvjYTdCHtmeRsMNrKy+p?=
+ =?us-ascii?Q?1bQohgXFM7406aNsqOYVTlcJOW2nF+pyIhLmb5K9Q+JfvK0+ja1S7/IVZ3hL?=
+ =?us-ascii?Q?7swMGYyCFY5avbcOqeBIfVBoUgpc+1yT0BB4hPcweNmbhEEabsSY3YlVU/qe?=
+ =?us-ascii?Q?6AkufJ5IGQPcf1ksslT6G+P4gDes54z4Yr6czEG8GD1LN0u5hOy4hqXYWUeU?=
+ =?us-ascii?Q?kLWyialwPwJe0hQrUY251PIou/c+trUROl2kAiHAUSLTp9ncZd6VfhyrBOti?=
+ =?us-ascii?Q?luBcCSMgOaOQwSHp8bmtBC9aRUOPa5ZcjSRjfQAIC9qrsG2wMec3U6bWOKpk?=
+ =?us-ascii?Q?WRxpvCxfLCG1mQJK5B/QBHsXHibp04x/3JlnvIpSeudH6kLh4KcQl0AerscG?=
+ =?us-ascii?Q?hO0KpnHRnphk0DuLctcR9qoHcrL3ZAFFbwIGjodt06+t6jFOh/FajKSxE8mk?=
+ =?us-ascii?Q?CJ5gx0ECbJGRi3RJ6uxV0zvvqxWyFieAdE5bUvSnkaYbwh5JZknymueUiQGV?=
+ =?us-ascii?Q?26t65eKJPSVMdrclYiykKRXHjCotvAvo7L8SYZmvD1arui6rwRViopAAUlDA?=
+ =?us-ascii?Q?G47FiojaIv6VICNlx+V2hGRAh8O+vJhe63P88N/gPVUpYyxOvOOTSbt2HjwQ?=
+ =?us-ascii?Q?Rre4pcZ12VOOBXC36cZjriQXiXrdJB3/+PSQFDSpUbQ4nfRDzzk462OUXj1B?=
+ =?us-ascii?Q?7KEGowtUZZxZ7zp2qp+308YWdOPtmIUc44nmfO6bT5/kTK4DletHjrqpl8g6?=
+ =?us-ascii?Q?tSK2ychgTsG/0mmBdMu5jtD3YK3RniIxbvbidJnxnVV7kv8MioE0VIHU1tf4?=
+ =?us-ascii?Q?wdVQWsyQXGXXX6DDB6OgamibDm7vR8kDY0olzma/nLfxTc4YsLjVxtFC8ytR?=
+ =?us-ascii?Q?QcH8lAfEjvGRoCpfqVOS9orTGKJL76d77FqjHpiGvULk6RV8+M705u06y+To?=
+ =?us-ascii?Q?TFU6GjWN8xrJdBqCO2HzI8UQx2aCV6BU8Ru8BLLVV7BSBRcyj3JYYaW/5D0a?=
+ =?us-ascii?Q?tve9QsGLo/igjU9nP7i09NW/5hIYaLw2dpU2HPflJaBS2s/Pr3wzm/af3YNJ?=
+ =?us-ascii?Q?KKBUYiIYbPmoLM+1e79cwc6eLy+rTVxwHT3jsY7qwSC+8fqQKjELDITAkFKM?=
+ =?us-ascii?Q?OyJ82imIzo/gzlO4w24swNSBeYocQX8CT4f0Y4TIB35FhEQwcEv1snMQTQK1?=
+ =?us-ascii?Q?GbtxjqIG+0iTTZO4iE74WedOX/vcAyOImsfCNMqxqwoWfTtCgShNrkqK2hI6?=
+ =?us-ascii?Q?Htt8hzYCSv7vxdeqSEmUO4KTZvoKrM+oQW5fIUvsM5/sNyLJWe6oifmaDZEi?=
+ =?us-ascii?Q?8e35wTC/PwNiT7hK0566zT8zgupaIgfnsmZgnGNy/dQgeygIQuMFkWSTqYbZ?=
+ =?us-ascii?Q?1uO8is/ecPHS3t3z49dkq/ulestsaaaFAKaLFxmmEdM+cGLEbDbfVcdn4HPO?=
+ =?us-ascii?Q?BqXgDKC0dzlWVIxD/7IQa55INrvEDtFsDmX1/9SOalI+I3DsJQ2e6pMTW7gh?=
+ =?us-ascii?Q?8ArkoqgCQQ=3D=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f189232a-85c1-46ab-fed3-08de8e760049
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6df39958-f79e-4c13-4229-08de8e79644f
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2026 16:04:19.6856
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2026 16:28:35.9830
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xhemQrNMxg4+6BwAIrGETU6C39tSZSbM36yS9hkvLVOZtUy7VpfUI8GmdzX+/ESYJ844l1g5iMmBObI3Vs2JKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8261
-X-Spamd-Result: default: False [1.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-MS-Exchange-CrossTenant-UserPrincipalName: /TZsDTlgtt5psvQrdv3q86aUV9JVRsUsxpYLacAo/bK+dCZ42Q1Wms44T8bJmJ9dWj0VvaGdj4nn4+E88xwAVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10216
+X-Spamd-Result: default: False [0.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9736-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[19];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9737-lists,dmaengine=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[nxp.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amd.com:email,nxp.com:dkim]
-X-Rspamd-Queue-Id: B73CB35EB33
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: B601E35ECB8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 13, 2026 at 11:55:33AM +0530, Srinivas Neeli wrote:
-> From: Suraj Gupta <suraj.gupta2@amd.com>
+On Wed, Mar 18, 2026 at 04:48:03PM +0000, David Carlier wrote:
+> The bus width validation check in ls2x_dmac_detect_burst() compares raw
+> enum dma_slave_buswidth values (e.g. 4, 8) directly against
+> LDMA_SLAVE_BUSWIDTHS, which is a BIT()-encoded bitmask
+> (BIT(4) | BIT(8) = 0x110). Since 4 & 0x110 == 0 and 8 & 0x110 == 0,
+> the condition is always false for valid bus widths, making the
+> validation dead code.
 >
-> The AXI4-stream status and control interface is optional in the AXI DMA /
-> MCDMA IP design; when it is not present, app fields are not available in
-> DMA descriptor. In such cases, the transferred byte count can be
-> communicated to the client using the status field (bits 0-25) of
-> AXI DMA / MCDMA descriptor.
+> Additionally, the logic was inverted: it rejected configurations where
+> both widths matched valid values, rather than rejecting when neither
+> width is supported.
 >
-> Add a xferred_bytes field to struct xilinx_dma_tx_descriptor to record the
-> number of bytes transferred for each transaction. The value is calculated
-> using the existing xilinx_dma_get_residue() function, which traverses all
-> hardware descriptors associated with the async transaction descriptor,
-> avoiding redundant traversal.
+> Fix by wrapping the enum values with BIT() before masking (matching the
+> pattern used in sun6i-dma.c) and inverting the logic to reject when
+> neither width is supported by the hardware.
+>
+> Fixes: 71e7d3cb6e55 ("dmaengine: ls2x-apb: New driver for the Loongson LS2X APB DMA controller")
+> Signed-off-by: David Carlier <devnexen@gmail.com>
+> ---
+>  drivers/dma/loongson/loongson2-apb-dma.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/dma/loongson/loongson2-apb-dma.c b/drivers/dma/loongson/loongson2-apb-dma.c
+> index aceb069e71fc..102c01f993ef 100644
+> --- a/drivers/dma/loongson/loongson2-apb-dma.c
+> +++ b/drivers/dma/loongson/loongson2-apb-dma.c
+> @@ -220,8 +220,8 @@ static size_t ls2x_dmac_detect_burst(struct ls2x_dma_chan *lchan)
+>  	u32 maxburst, buswidth;
+>
+>  	/* Reject definitely invalid configurations */
+> -	if ((lchan->sconfig.src_addr_width & LDMA_SLAVE_BUSWIDTHS) &&
+> -	    (lchan->sconfig.dst_addr_width & LDMA_SLAVE_BUSWIDTHS))
+> +	if (!(BIT(lchan->sconfig.src_addr_width) & LDMA_SLAVE_BUSWIDTHS) &&
+> +	    !(BIT(lchan->sconfig.dst_addr_width) & LDMA_SLAVE_BUSWIDTHS))
 
-Can you split this change to new patch?
+src_addr_width is enum dma_slave_buswidth, which allow
+DMA_SLAVE_BUSWIDTH_128_BYTES = 128,
+
+BIT(128) will overflow.
 
 Frank
+
+>  		return 0;
 >
-> The driver uses the xlnx,include-stscntrl-strm device tree property to
-> determine if the status/control stream interface is present and selects the
-> appropriate metadata source accordingly.
->
-> Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
-> ---
->  drivers/dma/xilinx/xilinx_dma.c | 28 ++++++++++++++++++++++++----
->  1 file changed, 24 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-> index 52203d44e7a4..f5ef03a1297c 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -380,6 +380,8 @@ struct xilinx_cdma_tx_segment {
->   * @cyclic: Check for cyclic transfers.
->   * @err: Whether the descriptor has an error.
->   * @residue: Residue of the completed descriptor
-> + * @xferred_bytes: Number of bytes transferred by this transaction
-> + *                 descriptor.
->   */
->  struct xilinx_dma_tx_descriptor {
->  	struct xilinx_dma_chan *chan;
-> @@ -389,6 +391,7 @@ struct xilinx_dma_tx_descriptor {
->  	bool cyclic;
->  	bool err;
->  	u32 residue;
-> +	u32 xferred_bytes;
->  };
->
->  /**
-> @@ -515,6 +518,7 @@ struct xilinx_dma_config {
->   * @mm2s_chan_id: DMA mm2s channel identifier
->   * @max_buffer_len: Max buffer length
->   * @has_axistream_connected: AXI DMA connected to AXI Stream IP
-> + * @has_stsctrl_stream: AXI4-stream status and control interface is enabled
->   */
->  struct xilinx_dma_device {
->  	void __iomem *regs;
-> @@ -534,6 +538,7 @@ struct xilinx_dma_device {
->  	u32 mm2s_chan_id;
->  	u32 max_buffer_len;
->  	bool has_axistream_connected;
-> +	bool has_stsctrl_stream;
->  };
->
->  /* Macros */
-> @@ -672,8 +677,12 @@ static void *xilinx_dma_get_metadata_ptr(struct dma_async_tx_descriptor *tx,
->  				       struct xilinx_axidma_tx_segment, node);
->  		metadata_ptr = seg->hw.app;
->  	}
-> -	*max_len = *payload_len = sizeof(u32) * XILINX_DMA_NUM_APP_WORDS;
-> -	return metadata_ptr;
-> +	if (desc->chan->xdev->has_stsctrl_stream) {
-> +		*max_len = *payload_len = sizeof(u32) * XILINX_DMA_NUM_APP_WORDS;
-> +		return metadata_ptr;
-> +	}
-> +	*max_len = *payload_len = sizeof(desc->xferred_bytes);
-> +	return (void *)&desc->xferred_bytes;
->  }
->
->  static struct dma_descriptor_metadata_ops xilinx_dma_metadata_ops = {
-> @@ -864,6 +873,7 @@ xilinx_dma_alloc_tx_descriptor(struct xilinx_dma_chan *chan)
->  		return NULL;
->
->  	desc->chan = chan;
-> +	desc->xferred_bytes = 0;
->  	INIT_LIST_HEAD(&desc->segments);
->
->  	return desc;
-> @@ -1014,6 +1024,7 @@ static u32 xilinx_dma_get_residue(struct xilinx_dma_chan *chan,
->  	struct xilinx_aximcdma_desc_hw *aximcdma_hw;
->  	struct list_head *entry;
->  	u32 residue = 0;
-> +	u32 xferred = 0;
->
->  	list_for_each(entry, &desc->segments) {
->  		if (chan->xdev->dma_config->dmatype == XDMA_TYPE_CDMA) {
-> @@ -1031,25 +1042,32 @@ static u32 xilinx_dma_get_residue(struct xilinx_dma_chan *chan,
->  			axidma_hw = &axidma_seg->hw;
->  			residue += (axidma_hw->control - axidma_hw->status) &
->  				   chan->xdev->max_buffer_len;
-> +			xferred += axidma_hw->status & chan->xdev->max_buffer_len;
->  		} else {
->  			aximcdma_seg =
->  				list_entry(entry,
->  					   struct xilinx_aximcdma_tx_segment,
->  					   node);
->  			aximcdma_hw = &aximcdma_seg->hw;
-> -			if (chan->direction == DMA_DEV_TO_MEM)
-> +			if (chan->direction == DMA_DEV_TO_MEM) {
->  				residue +=
->  					(aximcdma_hw->control -
->  					 aximcdma_hw->s2mm_status) &
->  					chan->xdev->max_buffer_len;
-> -			else
-> +				xferred += aximcdma_hw->s2mm_status &
-> +					chan->xdev->max_buffer_len;
-> +			} else {
->  				residue +=
->  					(aximcdma_hw->control -
->  					 aximcdma_hw->mm2s_status) &
->  					chan->xdev->max_buffer_len;
-> +				xferred += aximcdma_hw->mm2s_status &
-> +					chan->xdev->max_buffer_len;
-> +			}
->  		}
->  	}
->
-> +	desc->xferred_bytes = xferred;
->  	return residue;
->  }
->
-> @@ -3284,6 +3302,8 @@ static int xilinx_dma_probe(struct platform_device *pdev)
->  	    xdev->dma_config->dmatype == XDMA_TYPE_AXIMCDMA) {
->  		xdev->has_axistream_connected =
->  			of_property_read_bool(node, "xlnx,axistream-connected");
-> +		xdev->has_stsctrl_stream =
-> +			of_property_read_bool(node, "xlnx,include-stscntrl-strm");
->  	}
->
->  	if (xdev->dma_config->dmatype == XDMA_TYPE_VDMA) {
+>  	if (lchan->sconfig.direction == DMA_MEM_TO_DEV) {
 > --
-> 2.43.0
+> 2.53.0
 >
 

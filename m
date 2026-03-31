@@ -1,115 +1,111 @@
-Return-Path: <dmaengine+bounces-9772-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9773-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iO+vN1O0y2kpKAYAu9opvQ
-	(envelope-from <dmaengine+bounces-9772-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 13:47:31 +0200
+	id mGzjOoW0y2kpKAYAu9opvQ
+	(envelope-from <dmaengine+bounces-9773-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 13:48:21 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DAB53690AF
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 13:47:31 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAC823690FB
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 13:48:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0062730620C4
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 11:35:10 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 09A4230069B2
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 11:48:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C83CE3DC4C7;
-	Tue, 31 Mar 2026 11:35:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3919E3E0C51;
+	Tue, 31 Mar 2026 11:48:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Dfkm+mQd"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZWxJoc9v"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383463BF680;
-	Tue, 31 Mar 2026 11:35:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B564C3DE43F;
+	Tue, 31 Mar 2026 11:48:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774956908; cv=none; b=S4mff3fQrMIL5PFd/ShX/TmKMG97rjA5tTjSSVx6I0jE5EWtS1q7YvcLDQGTtSyEolmzpp3tSd4uAMbHpPf1FrpIN+quldl+JnqaE+m4Defagnaz0Z2e/ULTMdvcY/pomxAm8qdbiQyMndv9xZ8uaxk4mT5s3KnSCrktwR8EdwE=
+	t=1774957694; cv=none; b=Gm5osuvJ6ssQVoQfmkQ7D/2a8yobsvgMIbWoZfO8Sw66nX9NEesd758Ct5gOxQ8+1w7hOfQx3Q8xPdQB1THRJ8iPzAJDwVQ+tSRaxWmLkgiGAeS3A1A/ZwVe4RQB6sLo5aaILTQF29CyLdv5YosJYSs2aCOZs3fA6RfyPw986s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774956908; c=relaxed/simple;
-	bh=iw2nbRNvTNhMEZpHJGdylsAbAADzQDP14RngEClAXXA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=NsGm0e9E42hXzE12QlaJvZ4+P04JRk7aP1RhmmduuohDUrHkPPqutxU68TQqpVS7ieKCNP7BFe7Ax6Sb56xfDTj5OwXnPYDvY7d0KdQci9kTOAzs+4Wk+/VgX4d4hCOduYlNrb0xUr+6gOag7wz9kO2RCrYSOTEgbVB1OnBSiIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Dfkm+mQd; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1774957694; c=relaxed/simple;
+	bh=w5pRZF6uea6M5k397IVeLguUISvyf8Mr0N1vsHjPESo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=n0VZDUSEiUr4rBIuWJfW4zRhTPSLq2sK9ck6vJ4Du6ybk+5uwM/J4+qjhWF/YC3ATpSqTFw9XJNrs2wdyJLFEgbD7IoEGxuknSa4I/Xg9s9m64fUZNiqOLVSV9d5GoMFrFuEwVq8+LEUtorLmG0gE7JqVdaiNDbs99ui6U5Pr9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZWxJoc9v; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62V61prD2407599;
-	Tue, 31 Mar 2026 11:34:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	OknH5510GMPxRr3A1I6WUbD2Orc3lEMFsn9yBnFsmDY=; b=Dfkm+mQdNpXDDa8W
-	tIIihVmVhJmVP6itykSzuqXq2NjURbQG+oHzWNWorQe8TmLp9jGd2OSmpbrxDML/
-	JRTahlOdxaxJxHdMKXWUCqLIVoBMQhny3GNAVHb6eu+2tRQIYQd6LuTYq0H2yiHr
-	PC+7mEpmri7CqtIOKihJBYFrHJAkqfBx2cSMRv+tzVPsF/yIiZETi4FKy/ES4e0n
-	G5+oUmdmYv0fOyP+8QDxmyQJLwtDX2/x7VZGr1wGCzH+vPtEq6zTCL5slaBbo/Y6
-	Ca6VWibGIh/QSM4RHUymUC7rYZ01w9hZuhcqCeaFKKc4NnWf1CpBhrg5QsqXMOpZ
-	hyWxKg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d80hetut3-1
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62VB7TOI2408168;
+	Tue, 31 Mar 2026 11:48:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=AUux2zk7AwAFrU61+jgegr
+	GdcC0k+BhMvpTHHgQXjm0=; b=ZWxJoc9vpo9SLL1/zvs3n2G7VAeaBxOxCl+vq9
+	OZJEqx5gUTYHjJmjUd6xYQm3tnhDrpuNPiopNU8wszCOdf/E27JNUfj7CJNi7Egc
+	Xfpsm/0Y4yWrVB884X92STdU0gsXUwBlUs592k2c00awbltvvWi0DUsmmvNDxdh+
+	6a3NG7QILl8WCEHrleCtIyMVRxqGewA6r4E4oGBNB7MsfH61BaVUtUggHnSmFSnE
+	gq0CScTLW71DHsmgdMN7fQkQxAS+uW2c8k7U9Ya/REdQVpfWar47idgbWncjjX8g
+	ZU9OL+uAMRnZcb2WfnVdaY3GjbELJOhgDqDPetWMBVmIFCJg==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d80hetw7n-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 31 Mar 2026 11:34:58 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.18.1.7/8.18.1.7) with ESMTPS id 62VBYvc1009312
+	Tue, 31 Mar 2026 11:48:06 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.7/8.18.1.7) with ESMTP id 62VBm3um010666;
+	Tue, 31 Mar 2026 11:48:03 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 4d6qk1vegv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 31 Mar 2026 11:34:57 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Tue, 31 Mar
- 2026 04:34:51 -0700
-Message-ID: <614b908c-aa0a-4f05-8761-7b722160cf33@quicinc.com>
-Date: Tue, 31 Mar 2026 17:04:48 +0530
+	Tue, 31 Mar 2026 11:48:03 +0000 (GMT)
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.1.12) with ESMTP id 62VBm3Ak010635;
+	Tue, 31 Mar 2026 11:48:03 GMT
+Received: from hu-maiyas-hyd.qualcomm.com (hu-msavaliy-hyd.qualcomm.com [10.213.110.207])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 62VBm2x3010569
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 31 Mar 2026 11:48:02 +0000 (GMT)
+Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 429934)
+	id AF9D12579A; Tue, 31 Mar 2026 17:18:01 +0530 (+0530)
+From: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
+To: viken.dadhaniya@oss.qualcomm.com, andi.shyti@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
+        Frank.Li@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+        dmitry.baryshkov@oss.qualcomm.com, linmq006@gmail.com,
+        quic_jseerapu@quicinc.com, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org
+Cc: krzysztof.kozlowski@oss.qualcomm.com, bartosz.golaszewski@oss.qualcomm.com,
+        bjorn.andersson@oss.qualcomm.com, konrad.dybcio@oss.qualcomm.com,
+        Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
+Subject: [PATCH v6 0/4] Enable multi-owner I2C support for QCOM GENI controllers
+Date: Tue, 31 Mar 2026 17:17:38 +0530
+Message-Id: <20260331114742.2896317-1-mukesh.savaliya@oss.qualcomm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] i2c: i2c-qcom-geni: Enable i2c controller sharing
- between two subsystems
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <konrad.dybcio@linaro.org>,
-        <andersson@kernel.org>, <andi.shyti@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <conor+dt@kernel.org>, <agross@kernel.org>,
-        <devicetree@vger.kernel.org>, <vkoul@kernel.org>, <linux@treblig.org>,
-        <dan.carpenter@linaro.org>, <Frank.Li@nxp.com>,
-        <konradybcio@kernel.org>, <bryan.odonoghue@linaro.org>,
-        <krzk+dt@kernel.org>, <robh@kernel.org>
-CC: <quic_vdadhani@quicinc.com>
-References: <20241129144357.2008465-1-quic_msavaliy@quicinc.com>
- <20241129144357.2008465-5-quic_msavaliy@quicinc.com>
- <ce9f1ab1-56a0-4c0a-aa5b-f044111288ec@oss.qualcomm.com>
- <57815272-bc07-4c5e-8ae6-8bf8eaaca78f@quicinc.com>
- <cc8655ed-0021-4490-8873-519c9b5b939c@oss.qualcomm.com>
- <5e83f946-e157-4ec0-8ebf-14dbbdb93e34@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <5e83f946-e157-4ec0-8ebf-14dbbdb93e34@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
-X-Authority-Analysis: v=2.4 cv=Gb0aXAXL c=1 sm=1 tr=0 ts=69cbb162 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22
- a=COk6AnOGAAAA:8 a=e2zjlk6G_uH4ECtknV4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: Er03ZWea6JqFKSbJsCHwFkxnsaQEo3Q5
-X-Proofpoint-ORIG-GUID: Er03ZWea6JqFKSbJsCHwFkxnsaQEo3Q5
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzMxMDExMiBTYWx0ZWRfX3aN/sccOfDEq
- z5TKA8EN5ZjtCxkK1bB8FZ36Z3zMos26qaVzGC+QJyIlo76M/9BrM1hxwDhvQ1hRS+FzJXSPqmj
- eh9wCx49nw6rBRZt584Z+gSBNTkL1s90bayicCSyaWGkZseC/mSC4r7wVMCuccoAC7l8CslmlR8
- TktpIjdKRGmPwi06yM4jO4LEpXWaAw6js9lAbEMQqxNr/O/ODb3jbTeVGbJL8lZoXCvHOwydI2y
- zM3taHL0qYS64N6Ba6HC9Q9VW69XiYBr3w+PN/zvV2kUxSTUO0Oau7rj/Z0g1a5Gh0R9yIB9prg
- +vTPEq3ByUlH+JGimewEpsoggZESy6jOum4qVCBbgt73XN2ekNDLU/F0VK4t3bV9k1zLT7chtn/
- uxLP0VwRRTNsz2BY5MX1xT+Pqzq8lYeFi55T+5OhPlg4GQykcd8781Uux5118VuuP7QVuB3xERq
- eNbn19cEUCj1u96Pp9A==
+X-QCInternal: smtphost
+X-Authority-Analysis: v=2.4 cv=Gb0aXAXL c=1 sm=1 tr=0 ts=69cbb477 cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=1yO_DMxMffipIJpN-DIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: OG9m2SHIQnLrLpG_pivlIyuOQVBu77dj
+X-Proofpoint-ORIG-GUID: OG9m2SHIQnLrLpG_pivlIyuOQVBu77dj
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzMxMDExNCBTYWx0ZWRfX3G6ilNfM1n61
+ Wk72lRlHOBvciVgqaYD24/528aEVtRnCorrI3WIgyXYBZvQHtd5kaR1K+Rz67XwkyI3njdchs1h
+ M5oPU9oK6BJTSUXYpH/9cByoMBOCKtn/7BqhVa+yB4ZECx3tQfnKF4vXkNkOFLYcKSkYyHotPYr
+ j4okLq4VaKl+Naf4SAWI1dSzPLFTdz/kDL82HoYYt+dJSzM9LvrGCrFIsRtBaSdy4QQutQNquwI
+ GIqZeDlbyroi21iljhc2sdXi4pIDi9InwgvLkeqBmlsgO5NV8MHcqQn50Ue73NdfY9Ql1HQ30tM
+ Q2bHMjbPQ663D7+4hRPknD1OUdUlcKmvd+3r2yu4ldhz1wBpgJVDAE6gG9NVbm1jfN2kwo0pWLL
+ aiUdchXbWbaPRubA0iWY8g5J/QOz6fkyKrQNUgy3LP57t96kH8XENl1/hyYejiS9bAsmLZb+ITR
+ JElAQUnZbBTa/P8UUbg==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-31_02,2026-03-31_01,2025-10-01_01
@@ -117,152 +113,130 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  lowpriorityscore=0 impostorscore=0 adultscore=0 spamscore=0 bulkscore=0
  malwarescore=0 clxscore=1011 suspectscore=0 priorityscore=1501 phishscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603310112
-X-Spamd-Result: default: False [-0.66 / 15.00];
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603310114
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[quicinc.com,none];
-	R_DKIM_ALLOW(-0.20)[quicinc.com:s=qcppdkim1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9772-lists,dmaengine=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[quicinc.com:dkim,quicinc.com:email,quicinc.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9773-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	FREEMAIL_TO(0.00)[oss.qualcomm.com,kernel.org,gmail.com,quicinc.com,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[quicinc.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[quic_msavaliy@quicinc.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:mid,qualcomm.com:dkim,qualcomm.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mukesh.savaliya@oss.qualcomm.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+];
 	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 7DAB53690AF
+	NEURAL_HAM(-0.00)[-0.932];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[10]
+X-Rspamd-Queue-Id: EAC823690FB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Konrad, Thanks for the review and sorry for long delay replying on 
-this change. I was completely away from this work.
-Let me upload V6 to share latest changes and cover letter details to 
-help review ahead.
+The QUP-based GENI I2C controller driver currently assumes exclusive
+ownership of the controller by a single system processor. This prevents
+safe use of a single I2C controller by multiple system processors
+(e.g. APPS and a DSP) running the same or different operating systems.
 
-On 12/16/2024 6:17 PM, Mukesh Kumar Savaliya wrote:
-> 
-> 
-> On 12/16/2024 5:40 PM, Konrad Dybcio wrote:
->> On 15.12.2024 9:59 AM, Mukesh Kumar Savaliya wrote:
->>> Hi Konrad,
->>>
->>> On 12/13/2024 6:35 PM, Konrad Dybcio wrote:
->>>> On 29.11.2024 3:43 PM, Mukesh Kumar Savaliya wrote:
->>>>> Add support to share I2C controller in multiprocessor system in a 
->>>>> mutually
->>>>> exclusive way. Use "qcom,shared-se" flag in a particular i2c 
->>>>> instance node
->>>>> if the usecase requires i2c controller to be shared.
->>>>>
->>>>> Sharing of I2C SE(Serial engine) is possible only for GSI mode as 
->>>>> client
->>>>> from each processor can queue transfers over its own GPII Channel. For
->>>>> non GSI mode, we should force disable this feature even if set by user
->>>>> from DT by mistake.
->>>>>
->>>>> I2C driver just need to mark first_msg and last_msg flag to help 
->>>>> indicate
->>>>> GPI driver to take lock and unlock TRE there by protecting from 
->>>>> concurrent
->>>>> access from other EE or Subsystem.
->>>>>
->>>>> gpi_create_i2c_tre() function at gpi.c will take care of adding 
->>>>> Lock and
->>>>> Unlock TRE for the respective transfer operations.
->>>>>
->>>>> Since the GPIOs are also shared between two SS, do not unconfigure 
->>>>> them
->>>>> during runtime suspend. This will allow other SS to continue to 
->>>>> transfer
->>>>> the data without any disturbance over the IO lines.
->>>>>
->>>>> For example, Assume an I2C EEPROM device connected with an I2C 
->>>>> controller.
->>>>> Each client from ADSP and APPS processor can perform i2c transactions
->>>>> without any disturbance from each other.
->>>>>
->>>>> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
->>>>> ---
->>>>>    drivers/i2c/busses/i2c-qcom-geni.c | 22 +++++++++++++++++++---
->>>>>    1 file changed, 19 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/ 
->>>>> busses/i2c-qcom-geni.c
->>>>> index 7a22e1f46e60..ccf9933e2dad 100644
->>>>> --- a/drivers/i2c/busses/i2c-qcom-geni.c
->>>>> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
->>>>> @@ -1,5 +1,6 @@
->>>>>    // SPDX-License-Identifier: GPL-2.0
->>>>>    // Copyright (c) 2017-2018, The Linux Foundation. All rights 
->>>>> reserved.
->>>>> +// Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights 
->>>>> reserved.
->>>>>      #include <linux/acpi.h>
->>>>>    #include <linux/clk.h>
->>>>> @@ -617,6 +618,7 @@ static int geni_i2c_gpi_xfer(struct 
->>>>> geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
->>>>>        peripheral.clk_div = itr->clk_div;
->>>>>        peripheral.set_config = 1;
->>>>>        peripheral.multi_msg = false;
->>>>> +    peripheral.shared_se = gi2c->se.shared_geni_se;
->>>>>          for (i = 0; i < num; i++) {
->>>>>            gi2c->cur = &msgs[i];
->>>>> @@ -627,6 +629,8 @@ static int geni_i2c_gpi_xfer(struct 
->>>>> geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
->>>>>            if (i < num - 1)
->>>>>                peripheral.stretch = 1;
->>>>>    +        peripheral.first_msg = (i == 0);
->>>>> +        peripheral.last_msg = (i == num - 1);
->>>>>            peripheral.addr = msgs[i].addr;
->>>>>              ret =  geni_i2c_gpi(gi2c, &msgs[i], &config,
->>>>> @@ -815,6 +819,11 @@ static int geni_i2c_probe(struct 
->>>>> platform_device *pdev)
->>>>>            gi2c->clk_freq_out = KHZ(100);
->>>>>        }
->>>>>    +    if (of_property_read_bool(pdev->dev.of_node, "qcom,shared- 
->>>>> se")) {
->>>>> +        gi2c->se.shared_geni_se = true;
->>>>> +        dev_dbg(&pdev->dev, "I2C is shared between subsystems\n");
->>>>> +    }
->>>>> +
->>>>>        if (has_acpi_companion(dev))
->>>>>            ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(dev));
->>>>>    @@ -887,8 +896,10 @@ static int geni_i2c_probe(struct 
->>>>> platform_device *pdev)
->>>>>        else
->>>>>            fifo_disable = readl_relaxed(gi2c->se.base + 
->>>>> GENI_IF_DISABLE_RO) & FIFO_IF_DISABLE;
->>>>>    -    if (fifo_disable) {
->>>>> -        /* FIFO is disabled, so we can only use GPI DMA */
->>>>> +    if (fifo_disable || gi2c->se.shared_geni_se) {
->>>>> +        /* FIFO is disabled, so we can only use GPI DMA.
->>>>> +         * SE can be shared in GSI mode between subsystems, each 
->>>>> SS owns a GPII.
->>>>> +         **/
->>>>
->>>> I don't think this change makes things clearer, I would drop it
->>> Shall i revert back to previous change ? What's your suggestion ?
->>
->> Yes, drop changing this comment.
-> Sure, Thanks for confirming !
-Done this change with new flag name addressing the previous comments 
-from dt-binding file.
->>
->> Konrad
-> 
+One practical example is an EEPROM connected to an I2C controller that
+needs to be accessed independently by firmware running on a DSP and by
+Linux running on the application processor, without causing bus-level
+interference during transfers.
+
+This series adds support for operating a QUP GENI I2C Serial Engine in a
+multi-owner configuration. Each system processor uses its own dedicated
+GPI instance (GPII) as the data path between the Serial Engine and the
+GSI DMA engine. As a result, controller sharing is supported only when
+the I2C controller operates in GPI mode; FIFO/CPU DMA modes are not
+supported for this configuration.
+
+To serialize access at the hardware level, the GPI DMA engine is used to
+emit lock and unlock Transfer Ring Elements (TREs) around I2C transfers.
+The lock is acquired before the first transfer and released after the
+last transfer, ensuring uninterrupted access to the controller while a
+processor owns it.
+
+In addition, when a controller is shared, the GENI common layer avoids
+placing the associated GPIOs into the pinctrl "sleep" state during
+runtime suspend. This prevents disruption of transfers that may still
+be in progress on another system processor using the same controller
+pins.
+
+The multi-owner behavior is enabled via a DeviceTree property,
+`qcom,qup-multi-owner`, on the I2C controller node. This property must be
+used only when the hardware configuration requires controller sharing
+and when GPI mode is enabled.
+
+Patch overview:
+  1. Document the `qcom,qup-multi-owner` DeviceTree property for GENI I2C.
+  2. Extend the QCOM GPI DMA driver to support lock and unlock TREs with a
+     simplified single-field API.
+  3. Update the GENI common layer to keep pinctrl active for shared
+     controllers during runtime suspend.
+  4. Enable multi-owner operation in the GENI I2C driver using the new
+     DeviceTree property and GPI lock/unlock support.
+
+Signed-off-by: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
+---
+Link to V5 : https://lore.kernel.org/lkml/20241129144357.2008465-2-mukesh.savaliya@oss.qualcomm.com/
+
+Changes in V6:
+ - Addressed review feedback from Krzysztof Kozlowski and other reviewers, primarily
+   around clarifying the feature semantics and improving the DeviceTree flag naming.
+ - Renamed the DeviceTree property from qcom,shared-se to qcom,qup-multi-owner to
+   better describe the multi-owner controller use case.
+ - Updated the cover letter to clearly describe the multi-owner I2C design, the
+   GPI-only limitation, and the role of the new qcom,qup-multi-owner flag.
+ - Updated the DeviceTree binding documentation to reflect the new qcom,qup-multi-owner
+   property and refined its description for clarity and correctness.
+ - [Patch 2/4] Simplify the GPI I2C interface by replacing multiple shared SE related
+   state flags with a single internal lock/unlock control managed entirely in the GPI
+   driver - Suggested by Vinod Koul.
+ - [Patch 3/4] Updated the GENI common layer to avoid selecting the pinctrl “sleep”
+   state for multi-owner controllers, preventing disruption of transfers initiated by
+   another system processor during runtime suspend.
+ - [Patch 4/4] Updated the GENI I2C driver to: 
+    - Detect the qcom,qup-multi-owner DeviceTree property.
+	- Mark the underlying serial engine as shared.
+	- Request GPI lock and unlock TRE sequencing around I2C transfers using the
+	  simplified single field API.
+ - Clarified commit messages across all patches to avoid ambiguous terminology
+   (such as “subsystem”), expand abbreviations, and better explain functional
+   requirements rather than optimizations.
+ - Updated copyright headers across all files wherever applicable.
+ - Renamed variable shared_geni_se to multi_owner to match the DT property naming.
+ - Changed dev_err(print_log) during probe() to dev_err_probe().
+---
+
+Mukesh Kumar Savaliya (4):
+  dt-bindings: i2c: qcom,i2c-geni: Document multi-owner controller
+    support
+  dmaengine: qcom: gpi: Add lock/unlock TREs for multi-owner I2C
+    transfers
+  soc: qcom: geni-se: Keep pinctrl active for multi-owner controllers
+  i2c: qcom-geni: Support multi-owner controllers in GPI mode
+
+ .../bindings/i2c/qcom,i2c-geni-qcom.yaml      |  7 +++
+ drivers/dma/qcom/gpi.c                        | 44 ++++++++++++++++++-
+ drivers/i2c/busses/i2c-qcom-geni.c            | 27 +++++++++++-
+ drivers/soc/qcom/qcom-geni-se.c               | 15 +++++--
+ include/linux/dma/qcom-gpi-dma.h              | 18 ++++++++
+ include/linux/soc/qcom/geni-se.h              |  2 +
+ 6 files changed, 107 insertions(+), 6 deletions(-)
+
+-- 
+2.25.1
 
 

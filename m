@@ -1,93 +1,94 @@
-Return-Path: <dmaengine+bounces-9757-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9758-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4DSdOQWMy2kuIwYAu9opvQ
-	(envelope-from <dmaengine+bounces-9757-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 10:55:33 +0200
+	id 4A87ORGMy2kuIwYAu9opvQ
+	(envelope-from <dmaengine+bounces-9758-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 10:55:45 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA645366853
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 10:55:32 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4332C36686A
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 10:55:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id F1988303D29D
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 08:45:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 94C71300C902
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 08:53:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C19073E0C6B;
-	Tue, 31 Mar 2026 08:45:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1A393EAC75;
+	Tue, 31 Mar 2026 08:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uh4Yggzj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bptLvaVs"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0483DEAE9
-	for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2026 08:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4043E5ED1
+	for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2026 08:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774946752; cv=none; b=oCxIIhzxbBIrScvBtMTgJpreMe54BVN/GM+edQegMt+GdGEJ1ZY0mSIk+Fx49b92GgIVLMTq8AKxVjdO9VOGW6EDdURKWMGaXNwqfomADmNMCkIT87rUzT6FsHGzlmGSgd6zhy2KTrm9RV6zzLMaaZ+yKubCXFLelumKYB7vwMI=
+	t=1774947182; cv=none; b=osG3m9VYEswAGRw/b3URHYRvxXlea5qxcgAPwGSJczNFM+4spTqPe4heD5beV+/zUV4Mq1VQCkWDH5w0kuT613KPf8owW/mRznvPklrvDbY9h57nHz0XKAnfpFWd8y/t4weVGdFlBJ9Gx7p6u4gy4aJ4goLNrfjo/A35zq2snks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774946752; c=relaxed/simple;
-	bh=O0yM7XuRJP5G60ySmr2EGl5SOM6KAgYuY7taUORfZhY=;
+	s=arc-20240116; t=1774947182; c=relaxed/simple;
+	bh=bvpIgjVtWto+oCm8koGMwWa89oZXZ1C/QAMVAFUla7M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPpHSDkIfDDzzythRhTfl9rbCTrZvJ3iyy6aTuJaX2NxF5ezbJ1yXvMZVyCUT1WyCSyO/coSlvRT1yK4150YeqhVvlVgSg98fOSuSP2EQtWw5uHDZBMZnv7Q0N9xzt/lCCgyChE7gmoZx35zSGdU+ghU7J3EkF/Ni06BQMMCWuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uh4Yggzj; arc=none smtp.client-ip=209.85.128.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=i4gAHiktGIxjavTrmx2LSBeGj2mhIUx9tGX6t73bSWT/2b6RuiTL2e092r47lI4sLNXMOwQt3gV6QSRK4DIO7n5caIpOeKbQ3rojkIHnK9W9wf82US8jf/SxkwZ5pPwUq57Jqkm0bu4H/3NkNeUDVIPyrDyU9WD7ojHf5rocpmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bptLvaVs; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-486507134e4so62348545e9.0
-        for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2026 01:45:50 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-43b8982c2f4so2677862f8f.2
+        for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2026 01:53:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774946749; x=1775551549; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774947180; x=1775551980; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=HtDaHUAWiDkq+2zyDNr4VypANemvXrePJQ+g8Y/BMcE=;
-        b=Uh4YggzjWSSK425r26BEb4C8+7+hyir0MzFrNMJtglUZlZLT4DCbyATOP1zsommSsa
-         XIGy3/DJ65bufVqn9dkxZVYgFYTk/HxUeJHVH+CQpIe8jvEHM8r60yBH9BJpD5I3BgAI
-         0k0QDNrM//OERPWai3zSPN4bRlo0BLK8De/lNUGdegRtec2Tw9h7VgiolcCLbGNSl5Hs
-         epch5CWZQBFwNgW/pkkcZNuXxYfaSADPWynUIzzEizNUmtK4ZWVispD+T3nB48ies1nX
-         FVrX42r6THl5nPTcWypDs6UQmgx5BDnR9vGwo0mix1RkvO/uhBwXF+9odeQSud+vt4OV
-         naSQ==
+        bh=J9rs97qkXzEMvETg8cotvloOAYk66/huh+GVzhQWn0U=;
+        b=bptLvaVsut6O49Z5pQK3uJtnt4XFC+/v43Ihuk2SSBELMs3kAhoFJ9Ehkyg53bMTxY
+         O0WWPUnmsoSuzUV0eZpDngRVs08+j5JbE0Rm8jz8+ojbgX4zmDpQbsbrvOCgwEjgR3p9
+         56nmtfpDQGA3IJVX6ACSH5vO9A5wYgkSVgSXwDQ9yEnqkoV7CWiQpNlRGY05j3a1xR97
+         j6OHdZOTrupjGbLKVbp4FmY3PgseVPPg99+oL3OODo/CwrnOqyvKYanj++X34CTuUrpX
+         GGCKhjj8U+tLplWmRsHlUXW5aI48mKWaynufPk+YpT8Dk3UUnfTNe5Vl6IzF8wlKENTm
+         78fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774946749; x=1775551549;
+        d=1e100.net; s=20251104; t=1774947180; x=1775551980;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HtDaHUAWiDkq+2zyDNr4VypANemvXrePJQ+g8Y/BMcE=;
-        b=nuXdIojn3fauy5XyY2+uLPg2ZlkAcN3n44ni8O8fzn/VBNv/1O9ccsThcESaEVj7ET
-         11AAzGqWbciuU3mV4ED6egLj1pqJJG/0Nv8I6D2E7uslu++sOGwyEEapijZwjXQef6dw
-         Bk9+eTMl3tyEJ5JUqxAHU1hT32QecZ5bwwoKtvQpRXEGNT5WcbTC/7bTPZ0IBNXCqfYM
-         6iT0DP0teufa253n7MtqLnS+gnzJreoFHciAXrlXStTMTVXSpUooaRyXRX++OnN36H2X
-         l8Vz8xg1Uzk0xB1DCXlT61PMxx6TpnySjr9DK9UCCOXqsPglQKdeJG6BlIdSiUWV1b/1
-         /EUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkd8vJcOKKbov6g9+r8gKjlebns9yzejmDNLzI2kRdmjFAaMyS0CCz+W0SWhXLWNO1Jqeh8HJu6BM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd+J4i5K7EGKOHlK+7zV1OvkT+R4DBIAKRykwqYE37aj80zrR9
-	49f4ZjN3kn5XLAmhnULt51rbAD60+ITQahRQ2mJDavO5swOfj8qSqeLN
-X-Gm-Gg: ATEYQzwwBaSDVD7WytNd2xnJzu9MPn8opy3Udx8/jZDmx1fjwLvMfMzJgQAVPmqH+x/
-	026a/5u26Nr5qFWl8RspscHBmpufYtfRbf46zAhMdmX1zaYf9nOvnr5DZD143YS49zv3LZukBVp
-	vixh6wADwTg6C6EEuZNgR+1dGxjklTJoC5EuASudJGnv1aMFBvpmLv21rQ7YtZIl7rKogWrmWZk
-	mOE3EcmJabdPJwW7b6kytNqt2xS75WyKag092bhkmDVF/SUtbuaHCxcN3TFb6Bvy40vnSBjK3o2
-	XAQ0zHFBM0PJcepyZTFd5uvVOIrFoThCPUs9n4XFNawF9ZukViSjDSAMBeqO1LekYTHHXBBiT3I
-	3+8pA+JB/Wk7u/qMY/vU/mGA8C2XE4wxzX79E+vrIykX8d4iKT1i+eL/vLAXDcZUeU0maV9FEVE
-	okcc0uzRQEjhWR
-X-Received: by 2002:a05:600c:4744:b0:485:4278:2558 with SMTP id 5b1f17b1804b1-48727d5a313mr264087635e9.6.1774946749239;
-        Tue, 31 Mar 2026 01:45:49 -0700 (PDT)
+        bh=J9rs97qkXzEMvETg8cotvloOAYk66/huh+GVzhQWn0U=;
+        b=i859PfNz5vnAnXKqRG05gJOtfxvP66+T6htyeVcisXdW+Or2Rv+Z5PDwzOMT3he3SW
+         LiUwKf7Cyoy3G57RLn42H48W5Hx38GElrfepFFrV6n6p3iFnWuRhEfTjh6HY0uQq1uYB
+         Txc/QMoZmMAmC7TrBFRfeEFh9AJYMRGR1OIUr4zz/xw0NYLjJ01P2PX6RcNQerXfikq+
+         j/T5jQVTKJQI3z6dx3ARe0kQ4w/l7OjGqjQMrPn60Iet5icVf8gUt/BVROIlald3f1Qp
+         KXSRhzbR3LUPyB+4OVkYzA1C2d0XNHkoU5ly+ewfYFzfcRO12H/srXT3wKtqMZg0RLDN
+         bIYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8EqIAMo3EacxnPCOjYMkIFqSp01r//JAZBXnE/mSVmctSCIX7un+H1A3zIPPS02QY9GESIFSh1QI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbEY6q7134SiMn01SHUnPKdYrEOpk3W66aLcYCEj3NdLYkOjMq
+	/haYY4JXSOTuagdjBde5adef+kSsL3JZX38bWTTmcF7nBWsDNsFsl/o1
+X-Gm-Gg: ATEYQzzl+f2L2zvCDJ05pel4RWNjHMia3FwrNu35uiQyiPvWpCAwrjbxvTpBR4LAjA0
+	3dJWhx2g2QIkVsP4riCVptQXbmVEo+NrP/H1kj5DXVijokcmbhBubtMgWO7nICIexKy8YWb3WUg
+	QedLR3TuW6zLcZfDQbERce+vgSSCg04Q6zdOSojNWHKeNI64GRWIjn+BV3yy8skb/3tGPAUHs3c
+	YsNrbYiCq++pu6lw4a5aZ+NzOLDqq3oAEgoj3CaOzuCS48XUwiQuOHF1ETkBsg9OO/kqMa1IBqe
+	fuEk2cpjtKAo/JTDTxlOdBNhonR+shkh7MuNh2obTN/IXFDainzHuFoTIL3vheRuPVLLhk/WRTM
+	ir+lD2aF0BLWstlq+b8T7QTjGUack46/CLhQjh9XO+aqMQcPyHpTjWwUmdEyDZkx1+gEWbumaeL
+	pC6kLmjoZDtr0K
+X-Received: by 2002:a05:6000:1445:b0:43b:8806:be32 with SMTP id ffacd0b85a97d-43b9e9d59dcmr27940529f8f.7.1774947179370;
+        Tue, 31 Mar 2026 01:52:59 -0700 (PDT)
 Received: from nsa ([185.128.9.53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887e80140esm18687875e9.4.2026.03.31.01.45.48
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43cf21e2628sm28428947f8f.6.2026.03.31.01.52.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 01:45:48 -0700 (PDT)
-Date: Tue, 31 Mar 2026 09:46:35 +0100
+        Tue, 31 Mar 2026 01:52:58 -0700 (PDT)
+Date: Tue, 31 Mar 2026 09:53:45 +0100
 From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
 To: Frank Li <Frank.li@nxp.com>
 Cc: Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, dmaengine@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>
-Subject: Re: [PATCH v2 3/4] dmaengine: dma-axi-dmac: fix use-after-free on
- unbind
-Message-ID: <acuI7MOEMmAgGwve@nsa>
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+	Eliza Balas <eliza.balas@analog.com>
+Subject: Re: [PATCH v2 4/4] dmaengine: dma-axi-dmac: Defer freeing DMA
+ descriptors
+Message-ID: <acuJ-Girr0ozQHh2@nsa>
 References: <20260327-dma-dmac-handle-vunmap-v2-0-021f95f0e87b@analog.com>
- <20260327-dma-dmac-handle-vunmap-v2-3-021f95f0e87b@analog.com>
- <acqVIrUwtIM5AaG3@lizhi-Precision-Tower-5810>
+ <20260327-dma-dmac-handle-vunmap-v2-4-021f95f0e87b@analog.com>
+ <acqVsvQo87NvlqU7@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -97,17 +98,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <acqVIrUwtIM5AaG3@lizhi-Precision-Tower-5810>
+In-Reply-To: <acqVsvQo87NvlqU7@lizhi-Precision-Tower-5810>
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9757-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9758-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -115,7 +116,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -123,216 +124,149 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EA645366853
+	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4332C36686A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Mar 30, 2026 at 11:22:10AM -0400, Frank Li wrote:
-> On Fri, Mar 27, 2026 at 04:58:40PM +0000, Nuno Sá wrote:
-> > The DMA device lifetime can extend beyond the platform driver unbind if
-> > DMA channels are still referenced by client drivers. This leads to
-> > use-after-free when the devm-managed memory is freed on unbind but the
-> > DMA device callbacks still access it.
+On Mon, Mar 30, 2026 at 11:24:34AM -0400, Frank Li wrote:
+> On Fri, Mar 27, 2026 at 04:58:41PM +0000, Nuno Sá wrote:
+> > From: Eliza Balas <eliza.balas@analog.com>
 > >
-> > Fix this by:
-> >  - Allocating axi_dmac with kzalloc_obj() instead of devm_kzalloc() so
-> > its lifetime is not tied to the platform device.
-> >  - Implementing the device_release callback that so that we can free
-> > the object when reference count gets to 0 (no users).
-> >  - Adding an 'unbound' flag protected by the vchan lock that is set
-> > during driver removal, preventing MMIO accesses after the device has been
-> > unbound.
-> >
-> > While at it, explicitly include spinlock.h given it was missing.
-> >
-> > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> > ---
+> > This IP core can be used in architectures (like Microblaze) where DMA
+> > descriptors are allocated with vmalloc().
 > 
-> Not sure if it similar with
-> https://lore.kernel.org/dmaengine/20250903-v6-16-topic-sdma-v1-9-ac7bab629e8b@pengutronix.de/
-> 
-> It looks like miss device link between comsumer and provider.
+> strage, why use vmalloc()?
 
-Well, it surely it's related. I mean, if we ensure the consumers are
-gone through devlinks and nothing is left behind, then this patch is basically unneeded.
- 
-But, FWIW, my 2cents would also go into questioning if AUTOREMOVE is
-really want we want in every situation? Might be to harsh to assume that
-a DMA channel consumer is useless even if DMA is gone. Anyways, is there
-a v2 already? I would be interested in following this one...
+It's just one of the paths in dma_alloc_coherent(). It should be
+architecture dependant.
 
 - Nuno Sá
 
 > 
 > Frank
 > 
-> >  drivers/dma/dma-axi-dmac.c | 70 +++++++++++++++++++++++++++++++++++++++-------
-> >  1 file changed, 60 insertions(+), 10 deletions(-)
+> >  Hence, given that freeing the
+> > descriptors happen in softirq context, vunmpap() will BUG().
+> >
+> > To solve the above, we setup a work item during allocation of the
+> > descriptors and schedule in softirq context. Hence, the actual freeing
+> > happens in threaded context.
+> >
+> > Also note that to account for the possible race where the struct axi_dmac
+> > object is gone between scheduling the work and actually running it, we
+> > now save and get a reference of struct device when allocating the
+> > descriptor (given that's all we need in axi_dmac_free_desc()) and
+> > release it in axi_dmac_free_desc().
+> >
+> > Signed-off-by: Eliza Balas <eliza.balas@analog.com>
+> > Co-developed-by: Nuno Sá <nuno.sa@analog.com>
+> > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> > ---
+> >  drivers/dma/dma-axi-dmac.c | 50 ++++++++++++++++++++++++++++++++++------------
+> >  1 file changed, 37 insertions(+), 13 deletions(-)
 > >
 > > diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-> > index 127c3cf80a0e..70d3ad7e7d37 100644
+> > index 70d3ad7e7d37..46f1ead0c7d7 100644
 > > --- a/drivers/dma/dma-axi-dmac.c
 > > +++ b/drivers/dma/dma-axi-dmac.c
-> > @@ -24,6 +24,7 @@
-> >  #include <linux/platform_device.h>
+> > @@ -25,6 +25,7 @@
 > >  #include <linux/regmap.h>
 > >  #include <linux/slab.h>
-> > +#include <linux/spinlock.h>
+> >  #include <linux/spinlock.h>
+> > +#include <linux/workqueue.h>
 > >
 > >  #include <dt-bindings/dma/axi-dmac.h>
 > >
-> > @@ -174,6 +175,8 @@ struct axi_dmac {
-> >
-> >  	struct dma_device dma_dev;
-> >  	struct axi_dmac_chan chan;
+> > @@ -133,6 +134,9 @@ struct axi_dmac_sg {
+> >  struct axi_dmac_desc {
+> >  	struct virt_dma_desc vdesc;
+> >  	struct axi_dmac_chan *chan;
+> > +	struct device *dev;
 > > +
-> > +	bool unbound;
-> >  };
+> > +	struct work_struct sched_work;
 > >
-> >  static struct axi_dmac *chan_to_axi_dmac(struct axi_dmac_chan *chan)
-> > @@ -182,6 +185,11 @@ static struct axi_dmac *chan_to_axi_dmac(struct axi_dmac_chan *chan)
-> >  		dma_dev);
-> >  }
-> >
-> > +static struct axi_dmac *dev_to_axi_dmac(struct dma_device *dev)
-> > +{
-> > +	return container_of(dev, struct axi_dmac, dma_dev);
-> > +}
-> > +
-> >  static struct axi_dmac_chan *to_axi_dmac_chan(struct dma_chan *c)
-> >  {
-> >  	return container_of(c, struct axi_dmac_chan, vchan.chan);
-> > @@ -614,7 +622,12 @@ static int axi_dmac_terminate_all(struct dma_chan *c)
-> >  	LIST_HEAD(head);
-> >
-> >  	spin_lock_irqsave(&chan->vchan.lock, flags);
-> > -	axi_dmac_write(dmac, AXI_DMAC_REG_CTRL, 0);
-> > +	/*
-> > +	 * Only allow the MMIO access if the device is live. Otherwise still
-> > +	 * go for freeing the descriptors.
-> > +	 */
-> > +	if (!dmac->unbound)
-> > +		axi_dmac_write(dmac, AXI_DMAC_REG_CTRL, 0);
-> >  	chan->next_desc = NULL;
-> >  	vchan_get_all_descriptors(&chan->vchan, &head);
-> >  	list_splice_tail_init(&chan->active_descs, &head);
-> > @@ -642,9 +655,12 @@ static void axi_dmac_issue_pending(struct dma_chan *c)
-> >  	if (chan->hw_sg)
-> >  		ctrl |= AXI_DMAC_CTRL_ENABLE_SG;
-> >
-> > -	axi_dmac_write(dmac, AXI_DMAC_REG_CTRL, ctrl);
-> > -
-> >  	spin_lock_irqsave(&chan->vchan.lock, flags);
-> > +	if (dmac->unbound) {
-> > +		spin_unlock_irqrestore(&chan->vchan.lock, flags);
-> > +		return;
-> > +	}
-> > +	axi_dmac_write(dmac, AXI_DMAC_REG_CTRL, ctrl);
-> >  	if (vchan_issue_pending(&chan->vchan))
-> >  		axi_dmac_start_transfer(chan);
+> >  	bool cyclic;
+> >  	bool cyclic_eot;
+> > @@ -666,6 +670,25 @@ static void axi_dmac_issue_pending(struct dma_chan *c)
 > >  	spin_unlock_irqrestore(&chan->vchan.lock, flags);
-> > @@ -1184,6 +1200,14 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
-> >  	return 0;
 > >  }
 > >
-> > +static void axi_dmac_release(struct dma_device *dma_dev)
+> > +static void axi_dmac_free_desc(struct axi_dmac_desc *desc)
 > > +{
-> > +	struct axi_dmac *dmac = dev_to_axi_dmac(dma_dev);
+> > +	struct axi_dmac_hw_desc *hw = desc->sg[0].hw;
+> > +	dma_addr_t hw_phys = desc->sg[0].hw_phys;
 > > +
-> > +	put_device(dma_dev->dev);
-> > +	kfree(dmac);
+> > +	dma_free_coherent(desc->dev, PAGE_ALIGN(desc->num_sgs * sizeof(*hw)),
+> > +			  hw, hw_phys);
+> > +	put_device(desc->dev);
+> > +	kfree(desc);
 > > +}
 > > +
-> >  static void axi_dmac_tasklet_kill(void *task)
-> >  {
-> >  	tasklet_kill(task);
-> > @@ -1194,16 +1218,27 @@ static void axi_dmac_free_dma_controller(void *of_node)
-> >  	of_dma_controller_free(of_node);
-> >  }
-> >
-> > +static void axi_dmac_disable(void *__dmac)
+> > +static void axi_dmac_free_desc_schedule_work(struct work_struct *work)
 > > +{
-> > +	struct axi_dmac *dmac = __dmac;
-> > +	unsigned long flags;
+> > +	struct axi_dmac_desc *desc = container_of(work, struct axi_dmac_desc,
+> > +						  sched_work);
 > > +
-> > +	spin_lock_irqsave(&dmac->chan.vchan.lock, flags);
-> > +	dmac->unbound = true;
-> > +	spin_unlock_irqrestore(&dmac->chan.vchan.lock, flags);
-> > +	axi_dmac_write(dmac, AXI_DMAC_REG_CTRL, 0);
+> > +	axi_dmac_free_desc(desc);
 > > +}
 > > +
-> >  static int axi_dmac_probe(struct platform_device *pdev)
+> >  static struct axi_dmac_desc *
+> >  axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
 > >  {
-> >  	struct dma_device *dma_dev;
-> > -	struct axi_dmac *dmac;
-> > +	struct axi_dmac *__dmac;
-> >  	struct regmap *regmap;
-> >  	unsigned int version;
-> >  	u32 irq_mask = 0;
-> >  	int ret;
+> > @@ -681,6 +704,7 @@ axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
+> >  		return NULL;
+> >  	desc->num_sgs = num_sgs;
+> >  	desc->chan = chan;
+> > +	desc->dev = get_device(dmac->dma_dev.dev);
 > >
-> > -	dmac = devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
-> > +	struct axi_dmac *dmac __free(kfree) = kzalloc_obj(struct axi_dmac);
-> >  	if (!dmac)
-> >  		return -ENOMEM;
-> >
-> > @@ -1251,6 +1286,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
-> >  	dma_dev->dev = &pdev->dev;
-> >  	dma_dev->src_addr_widths = BIT(dmac->chan.src_width);
-> >  	dma_dev->dst_addr_widths = BIT(dmac->chan.dest_width);
-> > +	dma_dev->device_release = axi_dmac_release;
-> >  	dma_dev->directions = BIT(dmac->chan.direction);
-> >  	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-> >  	dma_dev->max_sg_burst = 31; /* 31 SGs maximum in one burst */
-> > @@ -1285,12 +1321,21 @@ static int axi_dmac_probe(struct platform_device *pdev)
-> >  	if (ret)
-> >  		return ret;
+> >  	hws = dma_alloc_coherent(dev, PAGE_ALIGN(num_sgs * sizeof(*hws)),
+> >  				&hw_phys, GFP_ATOMIC);
+> > @@ -703,21 +727,18 @@ axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
+> >  	/* The last hardware descriptor will trigger an interrupt */
+> >  	desc->sg[num_sgs - 1].hw->flags = AXI_DMAC_HW_FLAG_LAST | AXI_DMAC_HW_FLAG_IRQ;
 > >
 > > +	/*
-> > +	 * From this point on, our dmac object has it's lifetime bounded with
-> > +	 * dma_dev. Will be freed when dma_dev refcount goes to 0. That means,
-> > +	 * no more automatic kfree(). Also note that dmac is now NULL so we
-> > +	 * need __dmac.
+> > +	 * We need to setup a work item because this IP can be used on archs
+> > +	 * that rely on vmalloced memory for descriptors. And given that freeing
+> > +	 * the descriptors happens in softirq context, vunmpap() will BUG().
+> > +	 * Hence, setup the worker so that we can queue it and free the
+> > +	 * descriptor in threaded context.
 > > +	 */
-> > +	__dmac = no_free_ptr(dmac);
-> > +	get_device(&pdev->dev);
+> > +	INIT_WORK(&desc->sched_work, axi_dmac_free_desc_schedule_work);
 > > +
-> >  	/*
-> >  	 * Put the action in here so it get's done before unregistering the DMA
-> >  	 * device.
-> >  	 */
-> >  	ret = devm_add_action_or_reset(&pdev->dev, axi_dmac_tasklet_kill,
-> > -				       &dmac->chan.vchan.task);
-> > +				       &__dmac->chan.vchan.task);
-> >  	if (ret)
-> >  		return ret;
-> >
-> > @@ -1304,13 +1349,18 @@ static int axi_dmac_probe(struct platform_device *pdev)
-> >  	if (ret)
-> >  		return ret;
-> >
-> > -	ret = devm_request_irq(&pdev->dev, dmac->irq, axi_dmac_interrupt_handler,
-> > -			       IRQF_SHARED, dev_name(&pdev->dev), dmac);
-> > +	/* So that we can mark the device as unbound and disable it */
-> > +	ret = devm_add_action_or_reset(&pdev->dev, axi_dmac_disable, __dmac);
-> >  	if (ret)
-> >  		return ret;
-> >
-> > -	regmap = devm_regmap_init_mmio(&pdev->dev, dmac->base,
-> > -		 &axi_dmac_regmap_config);
-> > +	ret = devm_request_irq(&pdev->dev, __dmac->irq, axi_dmac_interrupt_handler,
-> > +			       IRQF_SHARED, dev_name(&pdev->dev), __dmac);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	regmap = devm_regmap_init_mmio(&pdev->dev, __dmac->base,
-> > +				       &axi_dmac_regmap_config);
-> >
-> >  	return PTR_ERR_OR_ZERO(regmap);
+> >  	return desc;
 > >  }
+> >
+> > -static void axi_dmac_free_desc(struct axi_dmac_desc *desc)
+> > -{
+> > -	struct axi_dmac *dmac = chan_to_axi_dmac(desc->chan);
+> > -	struct device *dev = dmac->dma_dev.dev;
+> > -	struct axi_dmac_hw_desc *hw = desc->sg[0].hw;
+> > -	dma_addr_t hw_phys = desc->sg[0].hw_phys;
+> > -
+> > -	dma_free_coherent(dev, PAGE_ALIGN(desc->num_sgs * sizeof(*hw)),
+> > -			  hw, hw_phys);
+> > -	kfree(desc);
+> > -}
+> > -
+> >  static struct axi_dmac_sg *axi_dmac_fill_linear_sg(struct axi_dmac_chan *chan,
+> >  	enum dma_transfer_direction direction, dma_addr_t addr,
+> >  	unsigned int num_periods, unsigned int period_len,
+> > @@ -958,7 +979,10 @@ static void axi_dmac_free_chan_resources(struct dma_chan *c)
+> >
+> >  static void axi_dmac_desc_free(struct virt_dma_desc *vdesc)
+> >  {
+> > -	axi_dmac_free_desc(to_axi_dmac_desc(vdesc));
+> > +	struct axi_dmac_desc *desc = to_axi_dmac_desc(vdesc);
+> > +
+> > +	/* See the comment in axi_dmac_alloc_desc() for the why! */
+> > +	schedule_work(&desc->sched_work);
+> >  }
+> >
+> >  static bool axi_dmac_regmap_rdwr(struct device *dev, unsigned int reg)
 > >
 > > --
 > > 2.53.0

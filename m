@@ -1,289 +1,246 @@
-Return-Path: <dmaengine+bounces-9784-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9785-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WAHlIJzny2myMQYAu9opvQ
-	(envelope-from <dmaengine+bounces-9784-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 17:26:20 +0200
+	id qD2NKCPuy2m5MgYAu9opvQ
+	(envelope-from <dmaengine+bounces-9785-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 17:54:11 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E89B836BA39
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 17:26:19 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0155636C2AB
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 17:54:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 22466306B9E7
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 15:20:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4D9BB30D440E
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 15:36:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 382ED1DF748;
-	Tue, 31 Mar 2026 15:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4394421886;
+	Tue, 31 Mar 2026 15:34:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M/Tc7X5p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rXbLle0o"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC893D8114
-	for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2026 15:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176F040FDAF
+	for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2026 15:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774970424; cv=none; b=W4aPpcJCpRUkdCNSg1U/EswyB0Vq3jEWIcd9emm65glsKUqYS2YnIAXopg6VOJUaDpn0veAhlZZLxDEWFql+SleY82yWoow2yJmBfSk/LF7UUN9Z+TmW1Id/K18kmZSoD7CqDVm8B9lEqfE0+ETKeDdSVhw1L5ikpTJc+Hmj39Q=
+	t=1774971273; cv=none; b=lWcDPje8jsJ9IfdiFpe9+y/98QeZNZ9v1OOZSkh9reHWhzJAeTbF0rTmvBeQFm0sQ92laLRIFGuzuG0cF3IvzZWHzeHCCV+QSH/x/44r+4Ml59WrD+2o5tYsHJrisLVFmwjuateCQtiMwgsgoSyDUkjPWcIVHbBmBgIh3bKsUO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774970424; c=relaxed/simple;
-	bh=l0LlDkyfvY8y3McluW/DvtUp/NGA9DqtzzZt/NcX++Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kr62XW+jIrDrcRzSa/NiHboAKkrnMAYCC8VM6QlLrGqNnJHxO5f/Nxqkyle1VLDPxrj4NSunOlGquoecL0N7/grEb7kml9nPbeXLSTalFlptj0lmeYejNZj2ySTrvnvE8vXzAb4e4c/KP7tpFi0KXj+MnpdRw7XSM8C/C7FHVqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M/Tc7X5p; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4887f49ec5aso10675865e9.1
-        for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2026 08:20:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774970421; x=1775575221; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Pe9dJRCGIOyBk6tQN/a+uxmJvmi9jHnWQcAWjuN5jZY=;
-        b=M/Tc7X5p634rjXveDYdjx0CiIlu8/pz8SbSEtO+eahN0eCNi2XqojTOucjGVM7NjHI
-         KdJeW/OblaeAePgSbvYIZIR6GnrJHLgZyguVlIC/OxrJrJqL9HT03+cDTikdE17Px2du
-         SPbmsanBuFgRisfFUZ37BsIEFMtn9ee0LGe7w+f7MqxZsNJTE4PLlhXofUW8k4fyr+gY
-         Ci+0UAu/SDSHVnqr29fbvZT8ONvdFZetWHnZkcENcWplE4/9HWueVjmb7UuzxvlmQP7P
-         /4shLyGYpV4/rW1Ju5T32xAYVK+702zpno+F6NIt+OO/6sjj6ujV0xskDaiZ0XcUjBQI
-         vIYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774970421; x=1775575221;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pe9dJRCGIOyBk6tQN/a+uxmJvmi9jHnWQcAWjuN5jZY=;
-        b=r5wAwCrWJ+jTnu1vq5CMXIKqXa5ObdDEA8oExBQxq0oEdklj3TerIyHcGinopNOjKv
-         noSmNpV7uHILanWKC9PhgP9PVy5qUJFyQg9JwFc8uqUXIzdJrO0FFCRptzVlaO/kIG2k
-         T5Si3bPX2o3mHVeDENpE5DAmW5k4ufQmqklsqGuVOY/l1E6zHVz6/use338RQLwaf5gs
-         xNytYUW6W3BFdh/H1Dz/H7aYtkglgpAn1FkqmlAu1JQOQhvUQcVbsQRJbGQ0EZviGpi9
-         CEzAsaEDKTwcQoW6hn/xsvMsykYSExPBOs7XIx6Df0aj5NSNgkEQC8gQP3Rw8aWm/FTv
-         suBg==
-X-Forwarded-Encrypted: i=1; AJvYcCVTrVWtPPExc1a53kJ4qEpEOCqTj5cBjS7TkR9kF7BH5CY5I/QcRtYljrwndgLkXjJddzAs1Dt99Is=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4ke8MUq0YtKGcxmvH3I0MmuMo1eI+w8coVSKQ55Z6I3PAdGbi
-	Zik+uvJvwvdd4d0Ix1KcCx9ACM+4LOQ+gyiU1kg5mvi9ci6S4NW4Q1ip
-X-Gm-Gg: ATEYQzzkAdPxvdy0AfZsKW2udgmOzr/sLkiRKDkVMC2Gf6vU6SE9rs9ePVnNTltZxjr
-	unPSBJfGcrcHW8cA1Xmsk6ANfCpKMxvrIH6aTW4rKVpYG+BJQbXC1pbYKiisw8kyk49FjGp6tnv
-	WN2HpX4CTncZx7l8LkzcQCWrFgzM09LSNXlZ/GHDTgu7b8nqACyuhKYJ6/FQfzf1urGFw/tIHae
-	xEeriWBWmqJhJpTsDnrmXwFckZw1IsnCmjOQ4YDSuufaQh5WfwuA+CTO+qdCnTpoz/g60tx94eh
-	irb2J+cBNJpC0WD9jj+niA5pb+hd10Nqnq7jrUXVPoq0hL2WzE/qUAxPPteJk1ZtauUH/ne5jfF
-	aZ27HN0jO5foF1e2/6ShM9pFkJ5KKLlH4GUi2hMpcAK6PKPlLPFPviICjT5uDGFehnFo1F1YBJz
-	i80xe2oK95sE4ysWx7y7ngRWM=
-X-Received: by 2002:a05:600c:83c4:b0:485:46fd:7887 with SMTP id 5b1f17b1804b1-48727d8816amr287097545e9.13.1774970420588;
-        Tue, 31 Mar 2026 08:20:20 -0700 (PDT)
-Received: from nsa ([185.128.9.53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887c9250afsm18816885e9.36.2026.03.31.08.20.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 08:20:20 -0700 (PDT)
-Date: Tue, 31 Mar 2026 16:21:06 +0100
-From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
-	Eliza Balas <eliza.balas@analog.com>
-Subject: Re: [PATCH v2 4/4] dmaengine: dma-axi-dmac: Defer freeing DMA
- descriptors
-Message-ID: <acvmNkDwLsdJCvWa@nsa>
-References: <20260327-dma-dmac-handle-vunmap-v2-0-021f95f0e87b@analog.com>
- <20260327-dma-dmac-handle-vunmap-v2-4-021f95f0e87b@analog.com>
- <acqVsvQo87NvlqU7@lizhi-Precision-Tower-5810>
- <acuJ-Girr0ozQHh2@nsa>
- <acvXKYJkXID9qiqM@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1774971273; c=relaxed/simple;
+	bh=mDgEr/ixLijAZanOerr9IGXX884q8KiAbK6fspfxvIo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=utsbdsjfK5OY2EaWcNxLSLWZxKV2uECXJPhw+jR2DjBxSa6Yi80eCSAvJwLG98/qH0qkvCtDbpeHCOZoiXo1xn1/Jcx1slQUhhdhTnN3DJY4ULCVAHHWLlaS18WQhWbuT+SAOqU1//B/rZORMm+EgiSn8y4NwTHUIdNNOURDL0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=rXbLle0o; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+Received: from eig-obgw-5002b.ext.cloudfilter.net ([10.0.29.226])
+	by cmsmtp with ESMTPS
+	id 7aFLw07Denwj27b6pwQ1JO; Tue, 31 Mar 2026 15:34:27 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 7b6lwAMNyQLXz7b6lwJDl3; Tue, 31 Mar 2026 15:34:24 +0000
+X-Authority-Analysis: v=2.4 cv=DodW+H/+ c=1 sm=1 tr=0 ts=69cbe983
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=k5Y5iPg+dmTXVWgYE/XtfQ==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=_Wotqz80AAAA:8 a=pGLkceISAAAA:8 a=auZ1cPAoFAK5FwhZLi8A:9 a=QEXdDO2ut3YA:10
+ a=buJP51TR1BpY-zbLSsyS:22 a=2aFnImwKRvkU0tJ3nQRT:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=y4PSqneLUEeDkfVln3s0jyhbu/p+YZWIvMlwoMvls4c=; b=rXbLle0oz15n47ZuK/Ep5LfG1u
+	dcboqrirz2TozQ3a+ojvSI9eh6MqLSjy7+4Dv7lsJ8grfQN7dTya4KV0ILn5RR3LntJxTD7UnGnep
+	1rAK/+57tP3dzCy5aSP7c67m3lWKb4B5F1bnOuT2oa+IVw5YVBspbb1BU+kumQo9F/LlIyNjuiimx
+	j5PYOZP0EtaH6ZcXipf9KnjssRO9+oQR+fdHQqGo/xwTgFX1YZTO+zmR5zUBBelnmvG42wphe/MYI
+	C2bY4coCqRTAR/hdEY2sjFRAf3eUtgtPMQHBxU6sd5JuYcMmknmAZUwu9MY+4dtq8hBqNKCcysg+Y
+	GyftIu2w==;
+Received: from [177.238.16.13] (port=53228 helo=[192.168.0.104])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.99.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1w7b6k-00000002IL2-1iz2;
+	Tue, 31 Mar 2026 10:34:23 -0500
+Message-ID: <5977a259-a7ae-43be-ad09-d09115268854@embeddedor.com>
+Date: Tue, 31 Mar 2026 09:33:13 -0600
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <acvXKYJkXID9qiqM@lizhi-Precision-Tower-5810>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: st_fdma: simplify allocation
+To: Rosen Penev <rosenp@gmail.com>, dmaengine@vger.kernel.org
+Cc: Patrice Chotard <patrice.chotard@foss.st.com>,
+ Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "moderated list:ARM/STI ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ open "list:KERNEL" HARDENING "(not" covered by other
+ "areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+References: <20260330211555.13974-1-rosenp@gmail.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20260330211555.13974-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.16.13
+X-Source-L: No
+X-Exim-ID: 1w7b6k-00000002IL2-1iz2
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.104]) [177.238.16.13]:53228
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 39
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHrYQDNnPuhpL37Sc9JU8XOK8f7jJNnPcE2K4c67wwQyJrdyNpD5GOWJddvS58B1aDb/L3rCofnHex0vFavcd/lLs6kJqlnWbVoXIF8M4H8BTgK0OfN2
+ GXaT7cyJp7/YmPNFbrh0MLFef6M/B8cvUSCSKn7X0ENhGhA9Hg1zD/Crkf6J+TJ/NA7PvJhJ2vgcSjyLRHgB1GUeMWbP9gHOQJU=
+X-Spamd-Result: default: False [-0.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_REJECT(1.00)[embeddedor.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9784-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-9785-lists,dmaengine=lfdr.de];
+	DMARC_NA(0.00)[embeddedor.com];
+	HAS_X_SOURCE(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
+	DKIM_TRACE(0.00)[embeddedor.com:-];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	NEURAL_SPAM(0.00)[0.123];
+	RCVD_COUNT_FIVE(0.00)[6];
+	FROM_NEQ_ENVFROM(0.00)[gustavo@embeddedor.com,dmaengine@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nonamenuno@gmail.com,dmaengine@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	HAS_X_ANTIABUSE(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E89B836BA39
+	DBL_BLOCKED_OPENRESOLVER(0.00)[embeddedor.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 0155636C2AB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 31, 2026 at 10:16:09AM -0400, Frank Li wrote:
-> On Tue, Mar 31, 2026 at 09:53:45AM +0100, Nuno Sá wrote:
-> > On Mon, Mar 30, 2026 at 11:24:34AM -0400, Frank Li wrote:
-> > > On Fri, Mar 27, 2026 at 04:58:41PM +0000, Nuno Sá wrote:
-> > > > From: Eliza Balas <eliza.balas@analog.com>
-> > > >
-> > > > This IP core can be used in architectures (like Microblaze) where DMA
-> > > > descriptors are allocated with vmalloc().
-> > >
-> > > strage, why use vmalloc()?
-> >
-> > It's just one of the paths in dma_alloc_coherent(). It should be
-> > architecture dependant.
-> 
-> Which architectures, this may common problem, dma_alloc/free_coherent() is
-> quite common at other dma-engine driver.
 
-I'll double check this but I believe this was triggered on microblaze
-where we also use this IP. Will come back with confirmation!
 
-- Nuno Sá
+On 3/30/26 15:15, Rosen Penev wrote:
+> Use a flexible array member to combine kzalloc and kcalloc to a single
+> allocation.
 > 
-> Frank
+> Add __counted_by for extra runtime analysis. 
+
+Assign counting variable
+> after allocation as required by __counted_by.
+
+This is misinformation and should be phrased differently[1]
+
+-Gustavo
+
+[1] https://lore.kernel.org/linux-hardening/37378f49-437f-438b-ad6c-d60480feb306@embeddedor.com/
+
 > 
-> >
-> > - Nuno Sá
-> >
-> > >
-> > > Frank
-> > >
-> > > >  Hence, given that freeing the
-> > > > descriptors happen in softirq context, vunmpap() will BUG().
-> > > >
-> > > > To solve the above, we setup a work item during allocation of the
-> > > > descriptors and schedule in softirq context. Hence, the actual freeing
-> > > > happens in threaded context.
-> > > >
-> > > > Also note that to account for the possible race where the struct axi_dmac
-> > > > object is gone between scheduling the work and actually running it, we
-> > > > now save and get a reference of struct device when allocating the
-> > > > descriptor (given that's all we need in axi_dmac_free_desc()) and
-> > > > release it in axi_dmac_free_desc().
-> > > >
-> > > > Signed-off-by: Eliza Balas <eliza.balas@analog.com>
-> > > > Co-developed-by: Nuno Sá <nuno.sa@analog.com>
-> > > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> > > > ---
-> > > >  drivers/dma/dma-axi-dmac.c | 50 ++++++++++++++++++++++++++++++++++------------
-> > > >  1 file changed, 37 insertions(+), 13 deletions(-)
-> > > >
-> > > > diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-> > > > index 70d3ad7e7d37..46f1ead0c7d7 100644
-> > > > --- a/drivers/dma/dma-axi-dmac.c
-> > > > +++ b/drivers/dma/dma-axi-dmac.c
-> > > > @@ -25,6 +25,7 @@
-> > > >  #include <linux/regmap.h>
-> > > >  #include <linux/slab.h>
-> > > >  #include <linux/spinlock.h>
-> > > > +#include <linux/workqueue.h>
-> > > >
-> > > >  #include <dt-bindings/dma/axi-dmac.h>
-> > > >
-> > > > @@ -133,6 +134,9 @@ struct axi_dmac_sg {
-> > > >  struct axi_dmac_desc {
-> > > >  	struct virt_dma_desc vdesc;
-> > > >  	struct axi_dmac_chan *chan;
-> > > > +	struct device *dev;
-> > > > +
-> > > > +	struct work_struct sched_work;
-> > > >
-> > > >  	bool cyclic;
-> > > >  	bool cyclic_eot;
-> > > > @@ -666,6 +670,25 @@ static void axi_dmac_issue_pending(struct dma_chan *c)
-> > > >  	spin_unlock_irqrestore(&chan->vchan.lock, flags);
-> > > >  }
-> > > >
-> > > > +static void axi_dmac_free_desc(struct axi_dmac_desc *desc)
-> > > > +{
-> > > > +	struct axi_dmac_hw_desc *hw = desc->sg[0].hw;
-> > > > +	dma_addr_t hw_phys = desc->sg[0].hw_phys;
-> > > > +
-> > > > +	dma_free_coherent(desc->dev, PAGE_ALIGN(desc->num_sgs * sizeof(*hw)),
-> > > > +			  hw, hw_phys);
-> > > > +	put_device(desc->dev);
-> > > > +	kfree(desc);
-> > > > +}
-> > > > +
-> > > > +static void axi_dmac_free_desc_schedule_work(struct work_struct *work)
-> > > > +{
-> > > > +	struct axi_dmac_desc *desc = container_of(work, struct axi_dmac_desc,
-> > > > +						  sched_work);
-> > > > +
-> > > > +	axi_dmac_free_desc(desc);
-> > > > +}
-> > > > +
-> > > >  static struct axi_dmac_desc *
-> > > >  axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
-> > > >  {
-> > > > @@ -681,6 +704,7 @@ axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
-> > > >  		return NULL;
-> > > >  	desc->num_sgs = num_sgs;
-> > > >  	desc->chan = chan;
-> > > > +	desc->dev = get_device(dmac->dma_dev.dev);
-> > > >
-> > > >  	hws = dma_alloc_coherent(dev, PAGE_ALIGN(num_sgs * sizeof(*hws)),
-> > > >  				&hw_phys, GFP_ATOMIC);
-> > > > @@ -703,21 +727,18 @@ axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
-> > > >  	/* The last hardware descriptor will trigger an interrupt */
-> > > >  	desc->sg[num_sgs - 1].hw->flags = AXI_DMAC_HW_FLAG_LAST | AXI_DMAC_HW_FLAG_IRQ;
-> > > >
-> > > > +	/*
-> > > > +	 * We need to setup a work item because this IP can be used on archs
-> > > > +	 * that rely on vmalloced memory for descriptors. And given that freeing
-> > > > +	 * the descriptors happens in softirq context, vunmpap() will BUG().
-> > > > +	 * Hence, setup the worker so that we can queue it and free the
-> > > > +	 * descriptor in threaded context.
-> > > > +	 */
-> > > > +	INIT_WORK(&desc->sched_work, axi_dmac_free_desc_schedule_work);
-> > > > +
-> > > >  	return desc;
-> > > >  }
-> > > >
-> > > > -static void axi_dmac_free_desc(struct axi_dmac_desc *desc)
-> > > > -{
-> > > > -	struct axi_dmac *dmac = chan_to_axi_dmac(desc->chan);
-> > > > -	struct device *dev = dmac->dma_dev.dev;
-> > > > -	struct axi_dmac_hw_desc *hw = desc->sg[0].hw;
-> > > > -	dma_addr_t hw_phys = desc->sg[0].hw_phys;
-> > > > -
-> > > > -	dma_free_coherent(dev, PAGE_ALIGN(desc->num_sgs * sizeof(*hw)),
-> > > > -			  hw, hw_phys);
-> > > > -	kfree(desc);
-> > > > -}
-> > > > -
-> > > >  static struct axi_dmac_sg *axi_dmac_fill_linear_sg(struct axi_dmac_chan *chan,
-> > > >  	enum dma_transfer_direction direction, dma_addr_t addr,
-> > > >  	unsigned int num_periods, unsigned int period_len,
-> > > > @@ -958,7 +979,10 @@ static void axi_dmac_free_chan_resources(struct dma_chan *c)
-> > > >
-> > > >  static void axi_dmac_desc_free(struct virt_dma_desc *vdesc)
-> > > >  {
-> > > > -	axi_dmac_free_desc(to_axi_dmac_desc(vdesc));
-> > > > +	struct axi_dmac_desc *desc = to_axi_dmac_desc(vdesc);
-> > > > +
-> > > > +	/* See the comment in axi_dmac_alloc_desc() for the why! */
-> > > > +	schedule_work(&desc->sched_work);
-> > > >  }
-> > > >
-> > > >  static bool axi_dmac_regmap_rdwr(struct device *dev, unsigned int reg)
-> > > >
-> > > > --
-> > > > 2.53.0
-> > > >
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>   drivers/dma/st_fdma.c | 27 ++++++++-------------------
+>   drivers/dma/st_fdma.h |  4 ++--
+>   2 files changed, 10 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/dma/st_fdma.c b/drivers/dma/st_fdma.c
+> index d9547017f3bd..3ec0d6731b8d 100644
+> --- a/drivers/dma/st_fdma.c
+> +++ b/drivers/dma/st_fdma.c
+> @@ -710,16 +710,6 @@ static const struct of_device_id st_fdma_match[] = {
+>   };
+>   MODULE_DEVICE_TABLE(of, st_fdma_match);
+>   
+> -static int st_fdma_parse_dt(struct platform_device *pdev,
+> -			const struct st_fdma_driverdata *drvdata,
+> -			struct st_fdma_dev *fdev)
+> -{
+> -	snprintf(fdev->fw_name, FW_NAME_SIZE, "fdma_%s_%d.elf",
+> -		drvdata->name, drvdata->id);
+> -
+> -	return of_property_read_u32(pdev->dev.of_node, "dma-channels",
+> -				    &fdev->nr_channels);
+> -}
+>   #define FDMA_DMA_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
+>   				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
+>   				 BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
+> @@ -742,27 +732,26 @@ static int st_fdma_probe(struct platform_device *pdev)
+>   	struct st_fdma_dev *fdev;
+>   	struct device_node *np = pdev->dev.of_node;
+>   	const struct st_fdma_driverdata *drvdata;
+> +	u32 nr_channels;
+>   	int ret, i;
+>   
+>   	drvdata = device_get_match_data(&pdev->dev);
+>   
+> -	fdev = devm_kzalloc(&pdev->dev, sizeof(*fdev), GFP_KERNEL);
+> -	if (!fdev)
+> -		return -ENOMEM;
+> -
+> -	ret = st_fdma_parse_dt(pdev, drvdata, fdev);
+> +	ret = of_property_read_u32(pdev->dev.of_node, "dma-channels", &nr_channels);
+>   	if (ret) {
+>   		dev_err(&pdev->dev, "unable to find platform data\n");
+> -		goto err;
+> +		return ret;
+>   	}
+>   
+> -	fdev->chans = devm_kcalloc(&pdev->dev, fdev->nr_channels,
+> -				   sizeof(struct st_fdma_chan), GFP_KERNEL);
+> -	if (!fdev->chans)
+> +	fdev = devm_kzalloc(&pdev->dev, struct_size(fdev, chans, nr_channels), GFP_KERNEL);
+> +	if (!fdev)
+>   		return -ENOMEM;
+>   
+> +	fdev->nr_channels = nr_channels;
+>   	fdev->dev = &pdev->dev;
+>   	fdev->drvdata = drvdata;
+> +	snprintf(fdev->fw_name, FW_NAME_SIZE, "fdma_%s_%d.elf", drvdata->name, drvdata->id);
+> +
+>   	platform_set_drvdata(pdev, fdev);
+>   
+>   	fdev->irq = platform_get_irq(pdev, 0);
+> diff --git a/drivers/dma/st_fdma.h b/drivers/dma/st_fdma.h
+> index f1e746f7bc7d..27ded555879f 100644
+> --- a/drivers/dma/st_fdma.h
+> +++ b/drivers/dma/st_fdma.h
+> @@ -136,13 +136,13 @@ struct st_fdma_dev {
+>   
+>   	int irq;
+>   
+> -	struct st_fdma_chan *chans;
+> -
+>   	spinlock_t dreq_lock;
+>   	unsigned long dreq_mask;
+>   
+>   	u32 nr_channels;
+>   	char fw_name[FW_NAME_SIZE];
+> +
+> +	struct st_fdma_chan chans[] __counted_by(nr_channels);
+>   };
+>   
+>   /* Peripheral Registers*/
+
 

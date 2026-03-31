@@ -1,86 +1,85 @@
-Return-Path: <dmaengine+bounces-9778-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9779-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oNJ1MGzXy2mILwYAu9opvQ
-	(envelope-from <dmaengine+bounces-9778-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 16:17:16 +0200
+	id yKW+LYHYy2mILwYAu9opvQ
+	(envelope-from <dmaengine+bounces-9779-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 16:21:53 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EE5336ACC9
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 16:17:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5922536ADAC
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 16:21:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8578A308E494
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 14:12:30 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A7DAE3015481
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 14:16:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90D803F9F59;
-	Tue, 31 Mar 2026 14:12:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 887C73DC4AA;
+	Tue, 31 Mar 2026 14:16:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="d7ulp888"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="MFdAKO4m"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013065.outbound.protection.outlook.com [52.101.83.65])
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013035.outbound.protection.outlook.com [52.101.83.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEA73E9282;
-	Tue, 31 Mar 2026 14:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72283F9F44;
+	Tue, 31 Mar 2026 14:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.35
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774966349; cv=fail; b=WE4GO+17tOHT3gzUFuSO3wPIbzmXg6DnFpq0jXYvY5/DUm+sfzQqTrdZJLRRSAFBdRxxbuoYHeURBFIu7ygLSKV/oSHaIy5XHGGu1hCjLyKDHDdaasxJbQF3V9pgSqGxy/hlT6s/lnYTNUmgRWsgprcjL4RovTpnTmXAGy/gLEM=
+	t=1774966582; cv=fail; b=i36v2V2mioS72JEJtptf2vVxC3D80vPnODRoqSIWLOsNWAzTzC9z+8WwrNSUSN87J4PQgnnKGL7eSo2gm4gWXmLq0Ow51j+A5zDxntUG72/s4ZDGAXCTWr9Y23usvnqtdnx9ofwFXcwhG9ISHYCatRVVulp9vhmpfntmIoSXkig=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774966349; c=relaxed/simple;
-	bh=MFj/mIrtBL/97rkNrh7bk+3T4F9iIs2s3tGyNWn6lcc=;
+	s=arc-20240116; t=1774966582; c=relaxed/simple;
+	bh=d+CHYhwcHLqtMFDCZGB0xwflNjYOqhq9rKCcsBm9sgY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=HD5LjraVWJq92/F1HLErCiR/iOSkvo9Ish8euDhUjw4X3nhFNFnCB32UtVBjfolW/OuNBjxDR4QfGEn9/tgi6JJ0CeCU9U+/oiMWGSUcpsfuqr7f0/U1jiY/oWuqj8f4U8R8F1dhRuTsPCyAcGOY7wbunzOg//WJXHIDx3jidMY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=d7ulp888; arc=fail smtp.client-ip=52.101.83.65
+	 Content-Disposition:In-Reply-To:MIME-Version; b=nBHOw//mlWlXcKszC063sS+jrn7QtX3CPCPdFuOX291nadSuUGhXgk+66X1QjAUuM8kjnVfwWSiO8l1gmlK03+I+GNeIIfyDrepAmC0JF7MDk53ai1jcaWMYRjVxtrOpn0PehKNJxSu8J/4dhAfAJhx6lqH0SN85HpjQMFNq6qg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=MFdAKO4m reason="signature verification failed"; arc=fail smtp.client-ip=52.101.83.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yf1fWP24Ot2xVgPvwzKOLDeNevyghKnws2tPYTTA2EIEP3qjy9VslK2cxQtTTpoJdqlHkjmdz2UQGfvV8tCVAi05uVDWS5UYjyHwWcgxl8sZo1wr99o//7m3+E17azuSWOzj1mQkcEzpnPTRQG9dUiiSNusRHRjhFNYX1V6gQUDSQ/6Azzjk3pq+FbKI3jQ6WHG/GaXWYu1UR23dr82g3cT8vU2UPyvEDdx3RyYl94tOyJiVwg95nZ2tE67Gf9EhlGycA92L+vN4rc5bB6+laM9ELTXOjavHEJn2ax57/NQwOIBQn9HTxUEn8JlHXX0x8ZKdg2EkweR3fTtela6sEw==
+ b=SlT6YmuSI695MFDiOAeXhc3haiwCPph/Jz+ulp+phhjBU6wXk3Lk8U87lFS1Gzuel8yFl9x1uKqr6+OgkWF1ugYEYuITJvnVGnaQd9qU9iSw6IEPeZ3eSX0ap0GhWjemY9KaSEoB/YGXhHB01+m92pYpAG8T6CiQydzHJKIhZaGnT9CnQP2WmneJmBC64xb6wVW/Gbefkdkxqqb+1GYvNlEeOX9R6xriU8a6tEEdWZfP6KLBILxltzP96QSSQdS7mk4u+OToqrugnBSIVbS+Mteg9PSxbr7UmAysezjjFI7yIb0zcxH0sbdsg+zZC3Us9e2ukmBNjbCMToipJW9Zfw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nvZKgM9z9wMsoW8LduVDcW/H1ETBs8FFAzq3d5MNZ3c=;
- b=I+HDJ/fRudfLO15lU3HEQKvt3yut+tKKCJKobnnKCPdVGJQq0s9BflRfvxgBe67803woaHjOXEvWrnS+gpP67/G2KmNH5Wj+c4VtcHL9i+Jnht9I4GCj88q7qD/RgT5y8xAQ7R5AjrSzbdHXb35ZvzsEcZGr/IDNt9jP8atH6+rmF99ra7fgQ/8LlcigOq0Afvf0tsResc2TYSHjFjCnxQmMevn/RnNT688sMMDiQ7ylTWU0cb4pyLcsdhtv2iPksmy4o/WkJ3qBHN4aW/Fs/HNy9hH/0autIuxWyncXMQoCxiekjCFnwq1FvbHX6vMoOOGicbJ9FeG8CopU3DJBCA==
+ bh=etzzKsccG3tPEA4Cqfg8Ba8vp76l6ThWJ1xY/kiXHsE=;
+ b=P2Om+mXCGxZieqZZ52C3LOeNN76mHxqvEQuGQoXDZF/L0K9xx3oHtWad0Bqa1kQPXOxl50imm0LqE6UBIAuBz3n0iDzB41OHUk75vKBgoPl/tlG+Eph5lMZ8IjnNhw+6NZG7SsgdEh05n95AgjQy0SrdsPmHX41UXwZgmsBIj/m2MxALyfyF0Tp5R8/2A/Q4FKBiXHpr4+pC9SB5s4IaEQNNbaT3YPn6p59vFGo83T+JXoqI8G3NvWUTjF0A7LEH32m9LI5N72vGLF2qjTUJxX8o/2Uh7/p3BfST5yPtvpeENjDU2/vCx5P2+F0ZjS+PnaRxSk9SL2Sp0h0+8wAhMQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nvZKgM9z9wMsoW8LduVDcW/H1ETBs8FFAzq3d5MNZ3c=;
- b=d7ulp888F9XmB3LbgQRwD+RA+VusCwb64yLRCjyxIMRJxJc9E5gZrqvbd5WjGQiwVPvjUOpzSbwG844ysYcuXH63x/25sIPXojIuY2fKVCvqG9QD6V2UaKEleato4eGR+w6e3QAXXZrxGFPzuklJWHiYD1wkaavKWnKudrj8ErSwe4R0DMSV3+l3RJQfGsRPucJProWeB7vUfgd6jN2Gp+Nk3NcoHAV3wWJiXDa0zdr+FoxPiMaWAgpAS8xa+7+khLnMNra0GGHxh8sVqlQsxEUr7VXtSdD0kn9WKb2A1X3Q7YK6uinUmLXnFdPcdLgXbFfPjW1sghDLgvtDD1qEkQ==
+ bh=etzzKsccG3tPEA4Cqfg8Ba8vp76l6ThWJ1xY/kiXHsE=;
+ b=MFdAKO4mFEXgSG1w2i1d+6eR2DOBwoX4vsTLR9DLSMz9wksKF72l3tllGbSbv86+bX33fwnSzjKUwv6sSEp0gM83GNS6cuI4NJxBaJrOux6J6WpK4AgcSNoNGni+P13219MG3h6aIIix/tngRpirXXHzRZr16zrySqcUg7GEp+1Jm1MuSJov1h4e14nRkaLK2lWRJu/Gd3xS+9e0TWFig2QwhbQ0rgBDnrqLi3GI1HN5tRG7MN7zEvFFYfEvZSnELg3kp7KT4QoGb+xxwgRUt2td2EbuF3yiV24BLVXJU8HaETRdM1Wv4VLCovTQUEr5Wj/j3hGArCHEdgfj8Oy9TQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by BESPR04MB12563.eurprd04.prod.outlook.com (2603:10a6:b10:ff::22) with
+ by AS8PR04MB7495.eurprd04.prod.outlook.com (2603:10a6:20b:295::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.28; Tue, 31 Mar
- 2026 14:12:24 +0000
+ 2026 14:16:16 +0000
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9745.027; Tue, 31 Mar 2026
- 14:12:24 +0000
-Date: Tue, 31 Mar 2026 10:12:17 -0400
+ 14:16:16 +0000
+Date: Tue, 31 Mar 2026 10:16:09 -0400
 From: Frank Li <Frank.li@nxp.com>
-To: Akhil R <akhilrajeev@nvidia.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 08/10] dmaengine: tegra: Use iommu-map for stream ID
-Message-ID: <acvWQa-bJB5EYjLH@lizhi-Precision-Tower-5810>
-References: <20260331102303.33181-1-akhilrajeev@nvidia.com>
- <20260331102303.33181-9-akhilrajeev@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
+To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+Cc: Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	Eliza Balas <eliza.balas@analog.com>
+Subject: Re: [PATCH v2 4/4] dmaengine: dma-axi-dmac: Defer freeing DMA
+ descriptors
+Message-ID: <acvXKYJkXID9qiqM@lizhi-Precision-Tower-5810>
+References: <20260327-dma-dmac-handle-vunmap-v2-0-021f95f0e87b@analog.com>
+ <20260327-dma-dmac-handle-vunmap-v2-4-021f95f0e87b@analog.com>
+ <acqVsvQo87NvlqU7@lizhi-Precision-Tower-5810>
+ <acuJ-Girr0ozQHh2@nsa>
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260331102303.33181-9-akhilrajeev@nvidia.com>
-X-ClientProxiedBy: SN6PR16CA0045.namprd16.prod.outlook.com
- (2603:10b6:805:ca::22) To PA4PR04MB9366.eurprd04.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <acuJ-Girr0ozQHh2@nsa>
+X-ClientProxiedBy: PH8PR20CA0014.namprd20.prod.outlook.com
+ (2603:10b6:510:23c::24) To PA4PR04MB9366.eurprd04.prod.outlook.com
  (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -89,218 +88,236 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|BESPR04MB12563:EE_
-X-MS-Office365-Filtering-Correlation-Id: daf1f144-06ba-4de9-8b53-08de8f2f8838
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|AS8PR04MB7495:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9222114d-cd7d-4fb7-5b02-08de8f301289
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|19092799006|366016|52116014|376014|7416014|1800799024|38350700014|18002099003|22082099003|56012099003;
+	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|19092799006|38350700014|18002099003|22082099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	khproBywJN4MHNdTWbICQXGJWAYSXusnUD3hDxHs1lQdx4PJTXpSCdnzOBbLUUQeSsqSkgOKxsb49T8+wDpUs33wZNv6NLmzdGB/BvIkO68Sw38u9Lo1dB/sC/84Jd92d796dmWTGaXznkx3keJ0EBWpbvcO9aDVFcitDock5GMHYFw+SpOABWxnNlaa+pgz6VdLN0Jhge8+d+W9g3tLGng62qQN/i7+M86Z2KPStmvIQHbdPyMkvCtGKBpZcxr/DJ0vdMZA4vyxYjGYSTwF2NGNAC6IRf37bqkYbMlkbVpMB7DcA/Jt5IDWPa6yeozvaXuhlATkgXKBkAhOMTUJutN246uOBC8/HvAOBi1flxDekOGGFfaymZIRBx+NyHHjqiDLmOpi0AOg6hfe+jCfZc91BMLKCWlVNZww0hJXhHA99nRHUFbP9st9EAE4iJ9RXsjqO8GdsVABlRE6JxsFdNfYMt67AQSl0rINMvYSBKDOwo/Fq57yeeQ+S4D52JkQEvDeXUEgBPjNdEYeEur//IIpzrlyptugT8/BOdJi+whR2uO36hcacm9Vtwyddf52pYIeUV0jE4mPqZHLgTrmbq8y9L1myDUMYtSicgA2U7jfOtxISdhxXFQNapXTgo0jFoDyUtQYxVDGZBRtD69MegAYiN6ipdaVe5obUW9QYbcl96mHxy+5EXJbU5BDOdR3jWSipTYb3hB5jAjDoiLGORl4qkvdVFlyZYjPHsu6VNv6LgMsloBx9fPBE5MiNK9TXrhgy73Qm8wa6rb726b10YoWFFORV1V8UjuKe00xNYs=
+	jcGAv+7ph7wVO63DHgzR6NhB1uwJomNuxc/73lehSEvp782j/EgDf71NQezMPaPr2EjGXAjLB6HXCZoLY7U7olnmAhLji3suIn57Nr7YsasngxuCHztRKwRmnVx0mOB6fET2dtdp4fa0nneUGqkAw3GpOuJvN0giGez0G7LBIout/9lSARX7GKidUPXupBRJ2y0i9Nvv3YrMb95zd6caDlAb8IAe15+YtNt0c9Bf1D+JT8WGGIB+CyAf9I+Ky4pCeGLdEtIyQckmtp23lxZW4C7i8ysTCMi6Oribc3EnYxjl4Nc/ia+R6UFGu8+VfiM/HbsuMSPGFZCmFx9/T9nLkK8gAAXHp4tTft4lOX0B3GMQvd5uPby2mmf8VVe12IGF74iTShjB+8W9/nKroX581d6OspOzARKotx+LJAlgxS/TySQv6m9OpC7Rt9yExxkl3Q30d1BfCsm9QzUZuhz6U5pbrLIUnJ2wAoSit/jI/fPf58TfcKorIOVG1eKVRcIfjiJOt1UGitktuY55FcEaLJ3oCTNkj4LUWsOy1w6GY05n4kzQGsZEMYtAW6LaaZFKul+uASWnPdHbayCI944fkFGlVlxzAYBPUuL13XdwluC73p+WeTTLCy83khxESrc6WaVqRZQA1/lPbv41YFyT0DvLLcIcPDfV+Z2b2F2uJguH79JKtASDFvhvKFpKZkC9lm/PAsXGoDqQDwKPutfr/Vsc+jb5PO5F2F63jDjZs7tb9A5Q+D7x/tvRISLfbKiY+APDJOFwlLOsu1xGxjiCPLEsGbRgxglc2+m9MPDtmMs=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(52116014)(376014)(7416014)(1800799024)(38350700014)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(19092799006)(38350700014)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bSIsSX0VJB0FkFysB2/IrrHO6WWvR03X7zUkznzk0IHEHsvkae/IMOX6RtXb?=
- =?us-ascii?Q?sl0eEMQJj/2B6exXiBiQ9xkmyf3foTV1HZdQ0PpkIgsBRdUUB3+ejs+bDXuz?=
- =?us-ascii?Q?k40ntvgTSdOerTo8XS0VpQYrGglBCkmNDmqpnVaoxroQYxI0aHwNGzUCtLsT?=
- =?us-ascii?Q?eOgzHPWfjV18tnTsP3H5zhLyrZ5zkYvUpDwYinARhQ4SOdHhAedgsDGSQnvv?=
- =?us-ascii?Q?3o84ow4OKsWt98ECG1zpugAermW9zgJhmEUMhNEkpGQNwoE9Qehz3/tmhkey?=
- =?us-ascii?Q?r9Djev0GHvGRm0ulD599dbvJ0AOrOeWGomRGAjLAIY8ytpl2lTptZ7lyTK3X?=
- =?us-ascii?Q?AgQttuEvm0b5mqvCxKOfuUvP1ImqvT1Bpf/I3ByqL+HfhAOWP3GRCO28ZZpf?=
- =?us-ascii?Q?1D+1EVQ4eu2qcswg+r1T466IU0dSAvLe3XJyKERafn10QOUmGdqjhskp4fpW?=
- =?us-ascii?Q?3Wy8GqbIdAK9WyPiQuqvPgHmzeTllKGE0Wlzd2C5Cc/seCdL9tRStrelrSde?=
- =?us-ascii?Q?sE5C/uAj7BdzmK1P119g2QpC6aaRs2H1I0hPTJdNeIrLlgL6pyCj3oUTSpCO?=
- =?us-ascii?Q?e/9ufHneLQ3qZdcnatl+lDOiewijcSvWC3xGV1JV5hcKFwEt4WZbLXnNOvOO?=
- =?us-ascii?Q?ya+uylk2aaNvc1BFuftrkgmcqqT5c6tL1JcltndO/uGW0CeHjOmMEKY+ApYd?=
- =?us-ascii?Q?gNyWkqdg7HcNIPb6qI5TpQhoRfhzjQPA8c4sk9LiVkN/4vJ9BTS0JRBhgyin?=
- =?us-ascii?Q?ioVxWnSWnTHY+BlWnfnf0KGyjT3GemZWWtCMddC3S5j//POHClpGYkvdUMZJ?=
- =?us-ascii?Q?3msjJwXAxT5eiMF7aqTMmljObEaCWDgfXwFdENdcnRH7kGdEBDxMfFXQCwoV?=
- =?us-ascii?Q?XHestlkWxow+k8It72R+jjhf9xxJo0EohyildMt8fn7902H9+D/8JOguDRwo?=
- =?us-ascii?Q?BcUvUfQzWBk/IiZhy85qrZVFpiDQAzTiT8ls5/OYdYAlRCEMeFfwhggkudve?=
- =?us-ascii?Q?P2mwB/THsiI5+djMVV/v3BiUBVAYgzwZV1yua6MRnCFAsoKF4lsQtO5WTssz?=
- =?us-ascii?Q?xUhDnBGukEpl7WJFNKdDD0ZwZopUE/K9ZThBJghWR97kSYOuUk/wmXeuMbGS?=
- =?us-ascii?Q?C3mTOAEWtyfyZ9UiC6ZRQ9ld3ts5u3tYE9X4ZFh+o6LHg3W1Q48m5fW0Cx2+?=
- =?us-ascii?Q?Z68ldOuZfPB359/ir6qlCLhS/OnQiKYVlAUT9U+iUDt+HXfPJPDcffblRvnO?=
- =?us-ascii?Q?h/R7QLzeozRexfgvn9lVVnP+YdFc14QHA2zCJVOoPuxgldmL8rJdc7pK0FzL?=
- =?us-ascii?Q?A1C/GmRyLjIwPkSXo+y0o4mpnOKQQQCiVff/H4seCuCN8uj20rZIzCaRAs0i?=
- =?us-ascii?Q?4wkOYTwH38a8ufyTlLyZi+O87mFSHRu98fqvr1IXDJNR2/wLWMH9B1M6hOry?=
- =?us-ascii?Q?wmdKMsNCXhtNU71l6HQa9t10w5NMc6xi3hbNSiK+yAnOMZCIkKOv2ODe/UTM?=
- =?us-ascii?Q?WvYrTRD5Jqi5W25qQJH2fHR51N2XGZyOBW2ABpwF+bVs0Cnk0/ZaMdH/gMJV?=
- =?us-ascii?Q?EV6y8mEXQe0R8FZGMunEBPQYQCE20MLMGs6LLBTzz689gefdd/CnUUUGt34M?=
- =?us-ascii?Q?HjIGHGA6uaVnXHl4KlUdnOi1NaMS2WDg5IOzoQc55/e4ChyfrsuOyfdczUhN?=
- =?us-ascii?Q?jRkQ5azSV7w251urFfgGD24BwUdM2FOg34lbtfmWYACxmneJ?=
+	=?iso-8859-1?Q?PheDZuR7kaTLvGCUy9z3IqayGwjQVa3avxX0qjYq023PpGEvFd1kMgW9dD?=
+ =?iso-8859-1?Q?QYm5d4+bm6GXVj7lMvSbL1ogfU3PVB8OUlG8ztcGIBpMMAPWx3TY+wrQpE?=
+ =?iso-8859-1?Q?1CjpbYxtSklSD3wMTurSvJpoNwlKkfTaRr6F70AGZlhceCdJQaYqZDKzXI?=
+ =?iso-8859-1?Q?cBm4NdOoCUmbFhqam1GsbU51Nw38dsOob8joVUhhjIzK5oQXAAg+9psuer?=
+ =?iso-8859-1?Q?MGLzKl7WoR8Ygwh2LHGoHmGJG9J9fgkKYln9jnJjg+0eeJyL94ArF5LLUy?=
+ =?iso-8859-1?Q?xYk5xpSg4ySCTHK2DiqOThi+c21xmHtS3ZPjZ3Y9bMhv+mC9kYhfUr2hUY?=
+ =?iso-8859-1?Q?t6FhX206GAbd+D69gXVxY1E7eIPhAFrdvmrvSByxZDGUVL8ESUNa1mDXW7?=
+ =?iso-8859-1?Q?/mWJIaDarP2yNSIPmhM9ZdKg16ehA0gizVkven19OSyStdjx+HYjv1FkRc?=
+ =?iso-8859-1?Q?G4lzsj+OjImvPC2+vi9DIh49tq0B+loTunkjeqQ0GPPuz4ZUrFH73kHhzG?=
+ =?iso-8859-1?Q?q6GDf6W8cV1wP0DUTX7Y4sywqpyylEQBO7wq6YKmALHZcWkltuEEuqMqKm?=
+ =?iso-8859-1?Q?YLHf3bsNL07NtXdbyzPEv9Vh7cdDhNcPsrb3200AVrlLL395tOk91APOWs?=
+ =?iso-8859-1?Q?2fBNmv6DW7pPmmWI8QkoQlU1+rlHjANbJWp+wB6Z8kSW1GwWoE52yl8ekc?=
+ =?iso-8859-1?Q?OfdKQ/ug5V1LIcCs9rY9kMDxTyDml+IYtagDSiPZXDzUpFVVCDIcFx+Eka?=
+ =?iso-8859-1?Q?fvrlrs6MSF7/2NgJy5bU6bHkZ9Zm3ea2dGfCheSkCjuWrgDCXBvbRXgh7w?=
+ =?iso-8859-1?Q?owIoD+JeJThuY/1ZlMrFuw3hWfbhmMPjjgXhcnJozeRIMoJCy1lf7C9GDG?=
+ =?iso-8859-1?Q?jxMQV6QFtt5elhcy8QmzhJERJeHLpO3OxKQAm+/u4MV43UHUyJCsU1egaN?=
+ =?iso-8859-1?Q?XU55GEbtLmIBOfXUCgyaYkXFAP5qTzm8d9YuTNRVHOJF3R6QJsVJ4CP3YR?=
+ =?iso-8859-1?Q?egj9Qg3EFbnp3Yv5DzxEOpQcC/njFpHCUN1cgEGxnQFHh0PqpjiiU1B0bw?=
+ =?iso-8859-1?Q?8gYG3a2EPazAgB+qYM3CS319FcnW8pAAXfWZP9Y0+wT+49hGIVzAF1mVlb?=
+ =?iso-8859-1?Q?ciKETf5udHETUGSBXLPqzKlRxD0hS1x5ulRUgTZoD/mYC2fSUbqIJBM2QC?=
+ =?iso-8859-1?Q?yfMcjexDs7wXwgMvLDCy1LfFxIvgDLv560qaDPqn9qu5o/5ofs3L9fRq8D?=
+ =?iso-8859-1?Q?hXOBSo5bL6oJG9RpkNGUdX8nwd2493VXWeQkTSl6fG6n0LkcSCyRFhuqsm?=
+ =?iso-8859-1?Q?9xUrdt9ZZvn1Bubmcs1QYgos8Ok/5WKPVv4rZ2EF73Z7s1CbhWUFfuBqKc?=
+ =?iso-8859-1?Q?9abmIK7bVWL8gSATdez1P3JKuYfCdJXtQPMAoGQO4xO1K7PPvWVIzcLtVc?=
+ =?iso-8859-1?Q?Am9QnpDhKCVubgpEB+6GBDmRbbTj+2F+UDq5VT9Td5L39iju2yZwMZtzts?=
+ =?iso-8859-1?Q?tgWy5bHGO2mvIwo91mMntGYFZbuEOuDNOakiEhet/80hLUg5ykn7K9NEQ4?=
+ =?iso-8859-1?Q?jfbjK9nHRGwcVCk5TX698M/03PhY/MskZTh/uPgnq1eYyPT/0+1AnLSx1H?=
+ =?iso-8859-1?Q?ltkRekQAruQjSG+/gqBj7xAM7tPKavQdJLkx+P4522Xwe4AfK4LwJs6IIN?=
+ =?iso-8859-1?Q?Cumj/qKTGf3NdqBB3BaYb3BF3ULhmdy4ITDamOQTORmlqwbygGmqWX1gcJ?=
+ =?iso-8859-1?Q?FOv4hKB5LBwRXBvNV4w+Br/pMHacyBDCoXT2mC75l6WDI32V6X1mnzIZnm?=
+ =?iso-8859-1?Q?u2Xanl7PUw=3D=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: daf1f144-06ba-4de9-8b53-08de8f2f8838
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9222114d-cd7d-4fb7-5b02-08de8f301289
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2026 14:12:24.7736
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2026 14:16:16.6679
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cG5yJWEMKIQ/xYD7PzEA9YRXbpKPEfjU6n20WHQSzZv1kbiMMQblV+RPz+izH+iAF9UNkIqlrJAcFc3lt+uo5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BESPR04MB12563
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2KvIuckF9TRNcN/OUxWXl0vjuuLhJwQUektuUd8Xnlqz8wHYm+ultWH1VaYmRJk7K5Ebt6GFZGk35Vb1FL0DpQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7495
+X-Spamd-Result: default: False [2.14 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
+	R_DKIM_REJECT(1.00)[nxp.com:s=selector1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9778-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[14];
+	TAGGED_FROM(0.00)[bounces-9779-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,nvidia.com,pengutronix.de,vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[nxp.com:-];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[nxp.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.622];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,nxp.com:dkim,nxp.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5EE5336ACC9
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,analog.com:email]
+X-Rspamd-Queue-Id: 5922536ADAC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 31, 2026 at 03:53:01PM +0530, Akhil R wrote:
-> Use 'iommu-map', when provided, to get the stream ID to be programmed
-> for each channel. Iterate over the channels registered and configure
-> each channel device separately using of_dma_configure_id() to allow
-> it to use a separate IOMMU domain for the transfer. However, do this
-> in a second loop since the first loop populates the DMA device channels
-> list and async_device_register() registers the channels. Both are
-> prerequisites for using the channel device in the next loop.
+On Tue, Mar 31, 2026 at 09:53:45AM +0100, Nuno Sá wrote:
+> On Mon, Mar 30, 2026 at 11:24:34AM -0400, Frank Li wrote:
+> > On Fri, Mar 27, 2026 at 04:58:41PM +0000, Nuno Sá wrote:
+> > > From: Eliza Balas <eliza.balas@analog.com>
+> > >
+> > > This IP core can be used in architectures (like Microblaze) where DMA
+> > > descriptors are allocated with vmalloc().
+> >
+> > strage, why use vmalloc()?
 >
-> Channels will continue to use the same global stream ID if the
-> 'iommu-map' property is not present in the device tree.
+> It's just one of the paths in dma_alloc_coherent(). It should be
+> architecture dependant.
+
+Which architectures, this may common problem, dma_alloc/free_coherent() is
+quite common at other dma-engine driver.
+
+Frank
+
 >
-> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-> ---
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
->  drivers/dma/tegra186-gpc-dma.c | 53 ++++++++++++++++++++++++++++------
->  1 file changed, 44 insertions(+), 9 deletions(-)
+> - Nuno Sá
 >
-> diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
-> index 9bea2ffb3b9e..cd480d047204 100644
-> --- a/drivers/dma/tegra186-gpc-dma.c
-> +++ b/drivers/dma/tegra186-gpc-dma.c
-> @@ -15,6 +15,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_dma.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/reset.h>
->  #include <linux/slab.h>
-> @@ -1380,9 +1381,13 @@ static int tegra_dma_program_sid(struct tegra_dma_channel *tdc, int stream_id)
->  static int tegra_dma_probe(struct platform_device *pdev)
->  {
->  	const struct tegra_dma_chip_data *cdata = NULL;
-> +	struct tegra_dma_channel *tdc;
-> +	struct tegra_dma *tdma;
-> +	struct dma_chan *chan;
-> +	struct device *chdev;
-> +	bool use_iommu_map = false;
->  	unsigned int i;
->  	u32 stream_id;
-> -	struct tegra_dma *tdma;
->  	int ret;
->
->  	cdata = of_device_get_match_data(&pdev->dev);
-> @@ -1410,9 +1415,10 @@ static int tegra_dma_probe(struct platform_device *pdev)
->
->  	tdma->dma_dev.dev = &pdev->dev;
->
-> -	if (!tegra_dev_iommu_get_stream_id(&pdev->dev, &stream_id)) {
-> -		dev_err(&pdev->dev, "Missing iommu stream-id\n");
-> -		return -EINVAL;
-> +	use_iommu_map = of_property_present(pdev->dev.of_node, "iommu-map");
-> +	if (!use_iommu_map) {
-> +		if (!tegra_dev_iommu_get_stream_id(&pdev->dev, &stream_id))
-> +			return dev_err_probe(&pdev->dev, -EINVAL, "Missing iommu stream-id\n");
->  	}
->
->  	ret = device_property_read_u32(&pdev->dev, "dma-channel-mask",
-> @@ -1424,9 +1430,10 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  		tdma->chan_mask = TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK;
->  	}
->
-> +	/* Initialize vchan for each channel and populate the channels list */
->  	INIT_LIST_HEAD(&tdma->dma_dev.channels);
->  	for (i = 0; i < cdata->nr_channels; i++) {
-> -		struct tegra_dma_channel *tdc = &tdma->channels[i];
-> +		tdc = &tdma->channels[i];
->
->  		/* Check for channel mask */
->  		if (!(tdma->chan_mask & BIT(i)))
-> @@ -1446,10 +1453,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
->
->  		vchan_init(&tdc->vc, &tdma->dma_dev);
->  		tdc->vc.desc_free = tegra_dma_desc_free;
-> -
-> -		/* program stream-id for this channel */
-> -		tegra_dma_program_sid(tdc, stream_id);
-> -		tdc->stream_id = stream_id;
->  	}
->
->  	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(cdata->addr_bits));
-> @@ -1483,6 +1486,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  	tdma->dma_dev.device_synchronize = tegra_dma_chan_synchronize;
->  	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
->
-> +	/* Register the DMA device and the channels */
->  	ret = dmaenginem_async_device_register(&tdma->dma_dev);
->  	if (ret < 0) {
->  		dev_err_probe(&pdev->dev, ret,
-> @@ -1490,6 +1494,37 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->
-> +	/*
-> +	 * Configure stream ID for each channel from the channels registered
-> +	 * above. This is done in a separate iteration to ensure that only
-> +	 * the channels available and registered for the DMA device are used.
-> +	 */
-> +	list_for_each_entry(chan, &tdma->dma_dev.channels, device_node) {
-> +		chdev = &chan->dev->device;
-> +		tdc = to_tegra_dma_chan(chan);
-> +
-> +		if (use_iommu_map) {
-> +			chdev->bus = pdev->dev.bus;
-> +			dma_coerce_mask_and_coherent(chdev, DMA_BIT_MASK(cdata->addr_bits));
-> +
-> +			ret = of_dma_configure_id(chdev, pdev->dev.of_node,
-> +						  true, &tdc->id);
-> +			if (ret)
-> +				return dev_err_probe(chdev, ret,
-> +					   "Failed to configure IOMMU for channel %d\n", tdc->id);
-> +
-> +			if (!tegra_dev_iommu_get_stream_id(chdev, &stream_id))
-> +				return dev_err_probe(chdev, -EINVAL,
-> +					   "Failed to get stream ID for channel %d\n", tdc->id);
-> +
-> +			chan->dev->chan_dma_dev = true;
-> +		}
-> +
-> +		/* program stream-id for this channel */
-> +		tegra_dma_program_sid(tdc, stream_id);
-> +		tdc->stream_id = stream_id;
-> +	}
-> +
->  	ret = devm_of_dma_controller_register(&pdev->dev, pdev->dev.of_node,
->  					      tegra_dma_of_xlate, tdma);
->  	if (ret < 0) {
-> --
-> 2.50.1
->
+> >
+> > Frank
+> >
+> > >  Hence, given that freeing the
+> > > descriptors happen in softirq context, vunmpap() will BUG().
+> > >
+> > > To solve the above, we setup a work item during allocation of the
+> > > descriptors and schedule in softirq context. Hence, the actual freeing
+> > > happens in threaded context.
+> > >
+> > > Also note that to account for the possible race where the struct axi_dmac
+> > > object is gone between scheduling the work and actually running it, we
+> > > now save and get a reference of struct device when allocating the
+> > > descriptor (given that's all we need in axi_dmac_free_desc()) and
+> > > release it in axi_dmac_free_desc().
+> > >
+> > > Signed-off-by: Eliza Balas <eliza.balas@analog.com>
+> > > Co-developed-by: Nuno Sá <nuno.sa@analog.com>
+> > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> > > ---
+> > >  drivers/dma/dma-axi-dmac.c | 50 ++++++++++++++++++++++++++++++++++------------
+> > >  1 file changed, 37 insertions(+), 13 deletions(-)
+> > >
+> > > diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+> > > index 70d3ad7e7d37..46f1ead0c7d7 100644
+> > > --- a/drivers/dma/dma-axi-dmac.c
+> > > +++ b/drivers/dma/dma-axi-dmac.c
+> > > @@ -25,6 +25,7 @@
+> > >  #include <linux/regmap.h>
+> > >  #include <linux/slab.h>
+> > >  #include <linux/spinlock.h>
+> > > +#include <linux/workqueue.h>
+> > >
+> > >  #include <dt-bindings/dma/axi-dmac.h>
+> > >
+> > > @@ -133,6 +134,9 @@ struct axi_dmac_sg {
+> > >  struct axi_dmac_desc {
+> > >  	struct virt_dma_desc vdesc;
+> > >  	struct axi_dmac_chan *chan;
+> > > +	struct device *dev;
+> > > +
+> > > +	struct work_struct sched_work;
+> > >
+> > >  	bool cyclic;
+> > >  	bool cyclic_eot;
+> > > @@ -666,6 +670,25 @@ static void axi_dmac_issue_pending(struct dma_chan *c)
+> > >  	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+> > >  }
+> > >
+> > > +static void axi_dmac_free_desc(struct axi_dmac_desc *desc)
+> > > +{
+> > > +	struct axi_dmac_hw_desc *hw = desc->sg[0].hw;
+> > > +	dma_addr_t hw_phys = desc->sg[0].hw_phys;
+> > > +
+> > > +	dma_free_coherent(desc->dev, PAGE_ALIGN(desc->num_sgs * sizeof(*hw)),
+> > > +			  hw, hw_phys);
+> > > +	put_device(desc->dev);
+> > > +	kfree(desc);
+> > > +}
+> > > +
+> > > +static void axi_dmac_free_desc_schedule_work(struct work_struct *work)
+> > > +{
+> > > +	struct axi_dmac_desc *desc = container_of(work, struct axi_dmac_desc,
+> > > +						  sched_work);
+> > > +
+> > > +	axi_dmac_free_desc(desc);
+> > > +}
+> > > +
+> > >  static struct axi_dmac_desc *
+> > >  axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
+> > >  {
+> > > @@ -681,6 +704,7 @@ axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
+> > >  		return NULL;
+> > >  	desc->num_sgs = num_sgs;
+> > >  	desc->chan = chan;
+> > > +	desc->dev = get_device(dmac->dma_dev.dev);
+> > >
+> > >  	hws = dma_alloc_coherent(dev, PAGE_ALIGN(num_sgs * sizeof(*hws)),
+> > >  				&hw_phys, GFP_ATOMIC);
+> > > @@ -703,21 +727,18 @@ axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
+> > >  	/* The last hardware descriptor will trigger an interrupt */
+> > >  	desc->sg[num_sgs - 1].hw->flags = AXI_DMAC_HW_FLAG_LAST | AXI_DMAC_HW_FLAG_IRQ;
+> > >
+> > > +	/*
+> > > +	 * We need to setup a work item because this IP can be used on archs
+> > > +	 * that rely on vmalloced memory for descriptors. And given that freeing
+> > > +	 * the descriptors happens in softirq context, vunmpap() will BUG().
+> > > +	 * Hence, setup the worker so that we can queue it and free the
+> > > +	 * descriptor in threaded context.
+> > > +	 */
+> > > +	INIT_WORK(&desc->sched_work, axi_dmac_free_desc_schedule_work);
+> > > +
+> > >  	return desc;
+> > >  }
+> > >
+> > > -static void axi_dmac_free_desc(struct axi_dmac_desc *desc)
+> > > -{
+> > > -	struct axi_dmac *dmac = chan_to_axi_dmac(desc->chan);
+> > > -	struct device *dev = dmac->dma_dev.dev;
+> > > -	struct axi_dmac_hw_desc *hw = desc->sg[0].hw;
+> > > -	dma_addr_t hw_phys = desc->sg[0].hw_phys;
+> > > -
+> > > -	dma_free_coherent(dev, PAGE_ALIGN(desc->num_sgs * sizeof(*hw)),
+> > > -			  hw, hw_phys);
+> > > -	kfree(desc);
+> > > -}
+> > > -
+> > >  static struct axi_dmac_sg *axi_dmac_fill_linear_sg(struct axi_dmac_chan *chan,
+> > >  	enum dma_transfer_direction direction, dma_addr_t addr,
+> > >  	unsigned int num_periods, unsigned int period_len,
+> > > @@ -958,7 +979,10 @@ static void axi_dmac_free_chan_resources(struct dma_chan *c)
+> > >
+> > >  static void axi_dmac_desc_free(struct virt_dma_desc *vdesc)
+> > >  {
+> > > -	axi_dmac_free_desc(to_axi_dmac_desc(vdesc));
+> > > +	struct axi_dmac_desc *desc = to_axi_dmac_desc(vdesc);
+> > > +
+> > > +	/* See the comment in axi_dmac_alloc_desc() for the why! */
+> > > +	schedule_work(&desc->sched_work);
+> > >  }
+> > >
+> > >  static bool axi_dmac_regmap_rdwr(struct device *dev, unsigned int reg)
+> > >
+> > > --
+> > > 2.53.0
+> > >
 

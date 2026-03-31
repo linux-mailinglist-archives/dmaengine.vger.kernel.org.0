@@ -1,246 +1,221 @@
-Return-Path: <dmaengine+bounces-9785-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9786-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qD2NKCPuy2m5MgYAu9opvQ
-	(envelope-from <dmaengine+bounces-9785-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 17:54:11 +0200
+	id SNAyN+P9y2mcNAYAu9opvQ
+	(envelope-from <dmaengine+bounces-9786-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 19:01:23 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0155636C2AB
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 17:54:10 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1BB436DA98
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 19:01:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4D9BB30D440E
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 15:36:39 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 41B77311161A
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 16:52:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4394421886;
-	Tue, 31 Mar 2026 15:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A6B2426EDE;
+	Tue, 31 Mar 2026 16:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rXbLle0o"
+	dkim=pass (2048-bit key) header.d=bereza.email header.i=@bereza.email header.b="0bhZXFkZ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from fsn-vps-1.bereza.email (fsn-vps-1.bereza.email [162.55.44.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176F040FDAF
-	for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2026 15:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C574E413225;
+	Tue, 31 Mar 2026 16:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.55.44.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774971273; cv=none; b=lWcDPje8jsJ9IfdiFpe9+y/98QeZNZ9v1OOZSkh9reHWhzJAeTbF0rTmvBeQFm0sQ92laLRIFGuzuG0cF3IvzZWHzeHCCV+QSH/x/44r+4Ml59WrD+2o5tYsHJrisLVFmwjuateCQtiMwgsgoSyDUkjPWcIVHbBmBgIh3bKsUO0=
+	t=1774975912; cv=none; b=GqaqDwQnk/y6fZ9PQ1qd0SKs5pfCiib2J29usfXB6igc/wGItPyaA4qDjByVV27m02Y8c75bwOGulEdk0nbC4Rm8U6zCNYnXFcZREsESwbOlbjBvHw2BhL12DphrFf40zsKpwGRbuVwc6nI+vJjMEE9RMebC6Cx4JbNd0Gb2xWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774971273; c=relaxed/simple;
-	bh=mDgEr/ixLijAZanOerr9IGXX884q8KiAbK6fspfxvIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=utsbdsjfK5OY2EaWcNxLSLWZxKV2uECXJPhw+jR2DjBxSa6Yi80eCSAvJwLG98/qH0qkvCtDbpeHCOZoiXo1xn1/Jcx1slQUhhdhTnN3DJY4ULCVAHHWLlaS18WQhWbuT+SAOqU1//B/rZORMm+EgiSn8y4NwTHUIdNNOURDL0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=rXbLle0o; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Received: from eig-obgw-5002b.ext.cloudfilter.net ([10.0.29.226])
-	by cmsmtp with ESMTPS
-	id 7aFLw07Denwj27b6pwQ1JO; Tue, 31 Mar 2026 15:34:27 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 7b6lwAMNyQLXz7b6lwJDl3; Tue, 31 Mar 2026 15:34:24 +0000
-X-Authority-Analysis: v=2.4 cv=DodW+H/+ c=1 sm=1 tr=0 ts=69cbe983
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=k5Y5iPg+dmTXVWgYE/XtfQ==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=_Wotqz80AAAA:8 a=pGLkceISAAAA:8 a=auZ1cPAoFAK5FwhZLi8A:9 a=QEXdDO2ut3YA:10
- a=buJP51TR1BpY-zbLSsyS:22 a=2aFnImwKRvkU0tJ3nQRT:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=y4PSqneLUEeDkfVln3s0jyhbu/p+YZWIvMlwoMvls4c=; b=rXbLle0oz15n47ZuK/Ep5LfG1u
-	dcboqrirz2TozQ3a+ojvSI9eh6MqLSjy7+4Dv7lsJ8grfQN7dTya4KV0ILn5RR3LntJxTD7UnGnep
-	1rAK/+57tP3dzCy5aSP7c67m3lWKb4B5F1bnOuT2oa+IVw5YVBspbb1BU+kumQo9F/LlIyNjuiimx
-	j5PYOZP0EtaH6ZcXipf9KnjssRO9+oQR+fdHQqGo/xwTgFX1YZTO+zmR5zUBBelnmvG42wphe/MYI
-	C2bY4coCqRTAR/hdEY2sjFRAf3eUtgtPMQHBxU6sd5JuYcMmknmAZUwu9MY+4dtq8hBqNKCcysg+Y
-	GyftIu2w==;
-Received: from [177.238.16.13] (port=53228 helo=[192.168.0.104])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.99.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1w7b6k-00000002IL2-1iz2;
-	Tue, 31 Mar 2026 10:34:23 -0500
-Message-ID: <5977a259-a7ae-43be-ad09-d09115268854@embeddedor.com>
-Date: Tue, 31 Mar 2026 09:33:13 -0600
+	s=arc-20240116; t=1774975912; c=relaxed/simple;
+	bh=9PyHENddhGjJqQ3dIJrsaurapatYX0PZNL/WyIPsycU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qsNmxOhffLj9LEdoKuw3nrZV+FXUjJEAs5tdGzCmchut7Wcj2y6phWH49VDPtM6/7jmLE0NRos5YibrgXRd4D4JF1PgZUmzcAADtwzR9vgf1gy1CQaxBXU+AxbrAcFZDh/7hQErC0dXyatrGMNYLmFb1D2/GULiW+9/sOaapowY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bereza.email; spf=pass smtp.mailfrom=bereza.email; dkim=pass (2048-bit key) header.d=bereza.email header.i=@bereza.email header.b=0bhZXFkZ; arc=none smtp.client-ip=162.55.44.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bereza.email
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bereza.email
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bereza.email; s=mail;
+	t=1774975460; bh=9PyHENddhGjJqQ3dIJrsaurapatYX0PZNL/WyIPsycU=;
+	h=From:Date:Subject:To:Cc:From;
+	b=0bhZXFkZ8tmu2R82WFklCpkQlIQx74k1AOnQWpeuPqlbOcibVoPZkRpHuO8a+GkZe
+	 WzUEKi0EF0WeLB6NlvJ5PG4cxnGMO827wAxQpJ0SiraVIBFwnGU0v6LwYFQFUPaEuV
+	 9XdsAfsiJP0GFVq5rWPU2xz3PHBwRymk7kr5IhrD9SekexTznbdI8fMOR8GsZnknjv
+	 Ak3LoSaagaeYqXNCScR1v8p/DsfWFcq1ztuM4gAoU4Oh/i5XXis2Jzmf1EURQFQAQs
+	 2YeTvmF+2ZtOz9qYGaUwms9V4EPFJigHvSfd84EmLFnOym0X1Qva1RDdqYW5OjnwfY
+	 b02aave3JMFZw==
+Received: from [127.0.1.1] (pd95bbad8.dip0.t-ipconnect.de [217.91.186.216])
+	by fsn-vps-1.bereza.email (Postfix) with ESMTPSA id 5FC5F60F1B;
+	Tue, 31 Mar 2026 18:44:20 +0200 (CEST)
+From: Alex Bereza <alex@bereza.email>
+Date: Tue, 31 Mar 2026 18:44:00 +0200
+Subject: [PATCH] dmaengine: xilinx_dma: Fix CPU stall in
+ xilinx_dma_poll_timeout
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: st_fdma: simplify allocation
-To: Rosen Penev <rosenp@gmail.com>, dmaengine@vger.kernel.org
-Cc: Patrice Chotard <patrice.chotard@foss.st.com>,
- Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "moderated list:ARM/STI ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>,
- open "list:KERNEL" HARDENING "(not" covered by other
- "areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-References: <20260330211555.13974-1-rosenp@gmail.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20260330211555.13974-1-rosenp@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.16.13
-X-Source-L: No
-X-Exim-ID: 1w7b6k-00000002IL2-1iz2
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.104]) [177.238.16.13]:53228
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 39
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHrYQDNnPuhpL37Sc9JU8XOK8f7jJNnPcE2K4c67wwQyJrdyNpD5GOWJddvS58B1aDb/L3rCofnHex0vFavcd/lLs6kJqlnWbVoXIF8M4H8BTgK0OfN2
- GXaT7cyJp7/YmPNFbrh0MLFef6M/B8cvUSCSKn7X0ENhGhA9Hg1zD/Crkf6J+TJ/NA7PvJhJ2vgcSjyLRHgB1GUeMWbP9gHOQJU=
-X-Spamd-Result: default: False [-0.46 / 15.00];
+Message-Id: <20260331-fix-atomic-poll-timeout-regression-v1-1-5b7bd96eaca0@bereza.email>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yWNwQqDMBAFf0X23IXUiIX+Sukhxhe7RY1sYimI/
+ 95Yj3OYmY0SVJDoXm2k+EiSOBe4XiryLzcPYOkLU23q1lhrOMiXXY6TeF7iOHKWCXHNrBgU6dC
+ 5CQ1s54IN/Y1KaFEU6z95PE9Oa/eGz0eZ9v0H2q6Fh4YAAAA=
+X-Change-ID: 20260330-fix-atomic-poll-timeout-regression-4f4e3baf3fd7
+To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+ Michal Simek <michal.simek@amd.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+ Tony Lindgren <tony@atomide.com>
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Alex Bereza <alex@bereza.email>
+X-Mailer: b4 0.15.1
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_REJECT(1.00)[embeddedor.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[bereza.email,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[bereza.email:s=mail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9785-lists,dmaengine=lfdr.de];
-	DMARC_NA(0.00)[embeddedor.com];
-	HAS_X_SOURCE(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
-	DKIM_TRACE(0.00)[embeddedor.com:-];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	NEURAL_SPAM(0.00)[0.123];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FROM_NEQ_ENVFROM(0.00)[gustavo@embeddedor.com,dmaengine@vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
-	HAS_X_ANTIABUSE(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	TAGGED_FROM(0.00)[bounces-9786-lists,dmaengine=lfdr.de];
+	DKIM_TRACE(0.00)[bereza.email:+];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[alex@bereza.email,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[embeddedor.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 0155636C2AB
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: A1BB436DA98
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Currently when calling xilinx_dma_poll_timeout with delay_us=0 and a
+condition that is never fulfilled, the CPU busy-waits for prolonged time
+and the timeout triggers only with a massive delay causing a CPU stall.
 
+This happens due to a huge underestimation of wall clock time in
+poll_timeout_us_atomic. Commit 7349a69cf312 ("iopoll: Do not use
+timekeeping in read_poll_timeout_atomic()") changed the behavior to no
+longer use ktime_get at the expense of underestimation of wall clock
+time which appears to be very large for delay_us=0. Instead of timing
+out after approximately XILINX_DMA_LOOP_COUNT microseconds, the timeout
+takes XILINX_DMA_LOOP_COUNT * 1000 * (time that the overhead of the for
+loop in poll_timeout_us_atomic takes) which is in the range of several
+minutes for XILINX_DMA_LOOP_COUNT=1000000. Fix this by using a non-zero
+value for delay_us. Use delay_us=10 to keep the delay in the hot path of
+starting DMA transfers minimal but still avoid CPU stalls in case of
+unexpected hardware failures.
 
-On 3/30/26 15:15, Rosen Penev wrote:
-> Use a flexible array member to combine kzalloc and kcalloc to a single
-> allocation.
-> 
-> Add __counted_by for extra runtime analysis. 
+One-off measurement with delay_us=0 causes the cpu to busy wait around 7
+minutes in the timeout case. After applying this patch with delay_us=10
+the measured timeout was 1053428 microseconds which is roughly
+equivalent to the expected 1000000 microseconds specified in
+XILINX_DMA_POLL_TIMEOUT_US.
 
-Assign counting variable
-> after allocation as required by __counted_by.
+Rename XILINX_DMA_LOOP_COUNT to XILINX_DMA_POLL_TIMEOUT_US because the
+former is incorrect. It is a timeout value for polling various register
+bits in microseconds. It is not a loop count. Add a constant
+XILINX_DMA_POLL_DELAY_US for delay_us value.
 
-This is misinformation and should be phrased differently[1]
+Fixes: 7349a69cf312 ("iopoll: Do not use timekeeping in read_poll_timeout_atomic()")
+Signed-off-by: Alex Bereza <alex@bereza.email>
+---
+Hi, in addition to this patch I also have a question: what is the point
+of atomically polling for the HALTED or IDLE bit in the stop_transfer
+functions? Does device_terminate_all really need to be callable from
+atomic context? If not, one could switch to polling non-atomically and
+avoid burning CPU cycles.
 
--Gustavo
+As this is my first patch, please feel free to point me in the right
+direction if I am missing anything.
+---
+ drivers/dma/xilinx/xilinx_dma.c | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-[1] https://lore.kernel.org/linux-hardening/37378f49-437f-438b-ad6c-d60480feb306@embeddedor.com/
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 02a05f215614..8556c357b665 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -165,8 +165,10 @@
+ #define XILINX_DMA_FLUSH_MM2S		2
+ #define XILINX_DMA_FLUSH_BOTH		1
+ 
+-/* Delay loop counter to prevent hardware failure */
+-#define XILINX_DMA_LOOP_COUNT		1000000
++/* Timeout for polling various registers */
++#define XILINX_DMA_POLL_TIMEOUT_US		1000000
++/* Delay between polls (avoid a delay of 0 to prevent CPU stalls) */
++#define XILINX_DMA_POLL_DELAY_US		10
+ 
+ /* AXI DMA Specific Registers/Offsets */
+ #define XILINX_DMA_REG_SRCDSTADDR	0x18
+@@ -1332,8 +1334,9 @@ static int xilinx_dma_stop_transfer(struct xilinx_dma_chan *chan)
+ 
+ 	/* Wait for the hardware to halt */
+ 	return xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR, val,
+-				       val & XILINX_DMA_DMASR_HALTED, 0,
+-				       XILINX_DMA_LOOP_COUNT);
++				       val & XILINX_DMA_DMASR_HALTED,
++				       XILINX_DMA_POLL_DELAY_US,
++				       XILINX_DMA_POLL_TIMEOUT_US);
+ }
+ 
+ /**
+@@ -1347,8 +1350,9 @@ static int xilinx_cdma_stop_transfer(struct xilinx_dma_chan *chan)
+ 	u32 val;
+ 
+ 	return xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR, val,
+-				       val & XILINX_DMA_DMASR_IDLE, 0,
+-				       XILINX_DMA_LOOP_COUNT);
++				       val & XILINX_DMA_DMASR_IDLE,
++				       XILINX_DMA_POLL_DELAY_US,
++				       XILINX_DMA_POLL_TIMEOUT_US);
+ }
+ 
+ /**
+@@ -1364,8 +1368,9 @@ static void xilinx_dma_start(struct xilinx_dma_chan *chan)
+ 
+ 	/* Wait for the hardware to start */
+ 	err = xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR, val,
+-				      !(val & XILINX_DMA_DMASR_HALTED), 0,
+-				      XILINX_DMA_LOOP_COUNT);
++				      !(val & XILINX_DMA_DMASR_HALTED),
++				      XILINX_DMA_POLL_DELAY_US,
++				      XILINX_DMA_POLL_TIMEOUT_US);
+ 
+ 	if (err) {
+ 		dev_err(chan->dev, "Cannot start channel %p: %x\n",
+@@ -1780,8 +1785,9 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
+ 
+ 	/* Wait for the hardware to finish reset */
+ 	err = xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMACR, tmp,
+-				      !(tmp & XILINX_DMA_DMACR_RESET), 0,
+-				      XILINX_DMA_LOOP_COUNT);
++				      !(tmp & XILINX_DMA_DMACR_RESET),
++				      XILINX_DMA_POLL_DELAY_US,
++				      XILINX_DMA_POLL_TIMEOUT_US);
+ 
+ 	if (err) {
+ 		dev_err(chan->dev, "reset timeout, cr %x, sr %x\n",
 
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->   drivers/dma/st_fdma.c | 27 ++++++++-------------------
->   drivers/dma/st_fdma.h |  4 ++--
->   2 files changed, 10 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/dma/st_fdma.c b/drivers/dma/st_fdma.c
-> index d9547017f3bd..3ec0d6731b8d 100644
-> --- a/drivers/dma/st_fdma.c
-> +++ b/drivers/dma/st_fdma.c
-> @@ -710,16 +710,6 @@ static const struct of_device_id st_fdma_match[] = {
->   };
->   MODULE_DEVICE_TABLE(of, st_fdma_match);
->   
-> -static int st_fdma_parse_dt(struct platform_device *pdev,
-> -			const struct st_fdma_driverdata *drvdata,
-> -			struct st_fdma_dev *fdev)
-> -{
-> -	snprintf(fdev->fw_name, FW_NAME_SIZE, "fdma_%s_%d.elf",
-> -		drvdata->name, drvdata->id);
-> -
-> -	return of_property_read_u32(pdev->dev.of_node, "dma-channels",
-> -				    &fdev->nr_channels);
-> -}
->   #define FDMA_DMA_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
->   				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
->   				 BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
-> @@ -742,27 +732,26 @@ static int st_fdma_probe(struct platform_device *pdev)
->   	struct st_fdma_dev *fdev;
->   	struct device_node *np = pdev->dev.of_node;
->   	const struct st_fdma_driverdata *drvdata;
-> +	u32 nr_channels;
->   	int ret, i;
->   
->   	drvdata = device_get_match_data(&pdev->dev);
->   
-> -	fdev = devm_kzalloc(&pdev->dev, sizeof(*fdev), GFP_KERNEL);
-> -	if (!fdev)
-> -		return -ENOMEM;
-> -
-> -	ret = st_fdma_parse_dt(pdev, drvdata, fdev);
-> +	ret = of_property_read_u32(pdev->dev.of_node, "dma-channels", &nr_channels);
->   	if (ret) {
->   		dev_err(&pdev->dev, "unable to find platform data\n");
-> -		goto err;
-> +		return ret;
->   	}
->   
-> -	fdev->chans = devm_kcalloc(&pdev->dev, fdev->nr_channels,
-> -				   sizeof(struct st_fdma_chan), GFP_KERNEL);
-> -	if (!fdev->chans)
-> +	fdev = devm_kzalloc(&pdev->dev, struct_size(fdev, chans, nr_channels), GFP_KERNEL);
-> +	if (!fdev)
->   		return -ENOMEM;
->   
-> +	fdev->nr_channels = nr_channels;
->   	fdev->dev = &pdev->dev;
->   	fdev->drvdata = drvdata;
-> +	snprintf(fdev->fw_name, FW_NAME_SIZE, "fdma_%s_%d.elf", drvdata->name, drvdata->id);
-> +
->   	platform_set_drvdata(pdev, fdev);
->   
->   	fdev->irq = platform_get_irq(pdev, 0);
-> diff --git a/drivers/dma/st_fdma.h b/drivers/dma/st_fdma.h
-> index f1e746f7bc7d..27ded555879f 100644
-> --- a/drivers/dma/st_fdma.h
-> +++ b/drivers/dma/st_fdma.h
-> @@ -136,13 +136,13 @@ struct st_fdma_dev {
->   
->   	int irq;
->   
-> -	struct st_fdma_chan *chans;
-> -
->   	spinlock_t dreq_lock;
->   	unsigned long dreq_mask;
->   
->   	u32 nr_channels;
->   	char fw_name[FW_NAME_SIZE];
-> +
-> +	struct st_fdma_chan chans[] __counted_by(nr_channels);
->   };
->   
->   /* Peripheral Registers*/
+---
+base-commit: b7560798466a07d9c3fb011698e92c335ab28baf
+change-id: 20260330-fix-atomic-poll-timeout-regression-4f4e3baf3fd7
+
+Best regards,
+--  
+Alex Bereza <alex@bereza.email>
 
 

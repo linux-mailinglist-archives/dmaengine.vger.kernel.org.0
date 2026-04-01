@@ -1,216 +1,199 @@
-Return-Path: <dmaengine+bounces-9788-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9789-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MI2JJ7c/zGm+RgYAu9opvQ
-	(envelope-from <dmaengine+bounces-9788-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 23:42:15 +0200
+	id aMOYLFaRzGk7UAYAu9opvQ
+	(envelope-from <dmaengine+bounces-9789-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 01 Apr 2026 05:30:30 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A31637218D
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 23:42:15 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCA96374651
+	for <lists+dmaengine@lfdr.de>; Wed, 01 Apr 2026 05:30:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 856D230FEA5B
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2026 21:32:21 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id EE86D300AD7B
+	for <lists+dmaengine@lfdr.de>; Wed,  1 Apr 2026 03:30:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DC914657F4;
-	Tue, 31 Mar 2026 21:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D499D37D10D;
+	Wed,  1 Apr 2026 03:30:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BhlLMpCA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0bMMrXp"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25534657F6
-	for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2026 21:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774992671; cv=pass; b=d4X0qnAqZWp/Yz59QAm7dGIzQl0+GDWkILNLdwvkRrD0ecbO/fRIga2g+axRrw+veD3XQe3C+BOWl+WDdPzsgLkAHdrEXNvnc+aJBDjtLb/5PDECiay8YntcDVeSznLrtQMKjwmAYpqAc4W9+XPUapzhIKeeffXyaUrtsXYfjo4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774992671; c=relaxed/simple;
-	bh=2A2JmefpCGzhygpv75dI+lo6EAqlpCUDR/JlkgSbrRs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gzf0/b1eEoP9MW7eCK3og8pbKp/i4ZefuGNH7UphpQFX5BTFSnmLq607IlmaQnkLqBaGtnN0IrXOFDKDW4/ztiZx0dVeYvqdr6RtQ2glDJjYR/XIy6s+9Fv8g9YHTJUwpS3akldOnaz/qcKfYKRSgZMi2AMzCmnrkdypcbhy0SY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BhlLMpCA; arc=pass smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6033286D57
+	for <dmaengine@vger.kernel.org>; Wed,  1 Apr 2026 03:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775014225; cv=none; b=pujqSi9Ci5oRpjbcJNmXab81ZLouPlgZF6hQBr69sHIZW32KfInhZvi6ujAYzJF4OH8jc0kyOqJV3TqG3kjQ7s4qrdsh+NlsvbySjScBfzvTIs/Pj5D9UZBxg7/PWNrZ9gTrIPteIOTRBA3X2Q8Okt1lI1cmtvHE2IItDy0LlG4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775014225; c=relaxed/simple;
+	bh=hxXLF5lyQ0tyXHzP24s/EoG6WZkR9hY6mbKxFS7/gIc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OCVBA5Mi3gpb6K3XpCnWueyzTdWPLcRRROPVYRsW31fmqHYV+us9i3NsxsvPRKXhjVx/uupy1RDZrN7tb9SlLOuaEljOootW0P+czYZUACNGJTUWjpRg8BFtApSZVJFgYbjCZ6N0o5Qo8MON5yK/sgII3hqJD+P0H9CvPGOblus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g0bMMrXp; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-66bf15430ecso4740606a12.3
-        for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2026 14:31:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774992668; cv=none;
-        d=google.com; s=arc-20240605;
-        b=NW6qYWLpVSCvFanO2RvOFpx4Z2fKqE3lvhQSrhHaXz+MM5FscORiJ9hAEuOZddgC6d
-         6YZXrGoQ/fam8hgfqvGiKDe9d/BqUySf0ybv8FqrZ7Ox7unIvZxe3RBiwb0w1rsuZVQo
-         NOQXxOdITgxQZ6I4Q6ud7zhL+T7rbACDhUiwoUfS4Jk15zX+5OeCJoq3qV3ZOLJde9ar
-         HljwDseWull0/cGa+M2P3MtVe9CC3OuFCBnilBeE1aacdBxRkrUyTonD//PmsYYSS0bu
-         4X8Gium2tz3UuSQ5ZZYnmxwsQ8+DF7kx9DvomB8j6Z4GQ5ajgyK4GZ2kdiCBrcYE+UwY
-         hO5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=0gAZxdKTrtG0UNe7fhqbtNVst5TpR+8MqiteFQr6YFg=;
-        fh=5yCQyCFvCUNVjME2BCR/k+AtUoXmnI7wokdRO8ukVdE=;
-        b=aNRoCNRlSpmLvemgvQZBpTunyshIB75k+25joBKuqpGadOyCs06EAzlTmljqufzGzZ
-         ezzi8AVQses4PbR6wFwtHDx4uQhfRapCqw2aP2INxGbwOO4xTYGUffpw/xBTkjtyDpwq
-         ncDi6W33L4Lh4maoWwVG5EpI2hiAMkTesU5nnOWeeo5NurUaeCW4Bu8kGd86ww5WbnTf
-         9BPCCCja1RX/9JgMK9429HxmGNeKe92EIh8E25FNa+6lGiCzbKhgf48cYgvB/FGIg5r2
-         wjv3kJz9brP3bE0uhfAy2LW2nwySXH/g/55syAuZscsyDBaYfK0HoyEVLcIOtGIsEe8Y
-         kRmA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-356337f058aso3768478a91.2
+        for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2026 20:30:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774992668; x=1775597468; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0gAZxdKTrtG0UNe7fhqbtNVst5TpR+8MqiteFQr6YFg=;
-        b=BhlLMpCAhFyvu5S5DhCtDeVfYc8uN/TrrB+L2WWjdry4LGFFuw5vPn4uJuVuFSpYEE
-         C0Ulc8DVEGp29GpwarEof2pfnS6t7A0p0Vcz23IHyOb1snGU+Bbqn24gvhBiL9lUvEmc
-         Ty+TSfhBMbWOQaCh22rQwhXRMAWllw5VIhFQCyLnJKMnYOv2dPrN9IvQeotReEc0MOt5
-         jUiJTCxAuBeilSyELeJFL8lXD9NNNZ8YBdycFnNQEbf/iO92F+s2uqkgGC43uiJVOVoo
-         KrMf51fVZHOl2iuza9z/bZOEJGz1jhHvhc6Dp0ltFQXLAnuVeVyVtVPeY/coO1uB8h2V
-         TkVg==
+        d=gmail.com; s=20251104; t=1775014224; x=1775619024; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9P47rW39jbyc8421UN3l72weYmCGnxeZ7bLfcFbS7SM=;
+        b=g0bMMrXpwoB/CO/dEnOQ5Rzfz0twtVzdElG2ZCt7mgooDFH4k/cov2vHZyTC9McCEf
+         YZu6EV8mmXa+3uwkKvLO7L3ofKvCHU+Rcf3My5aWxczqhLAiC5ljp865XnTuLsbh7Gpi
+         DdDG03ZyDvVEGnYErKzbAS7HO7rWCDjWE+TKrIVkQKtqTGODFy5qTkazQH0WAmBbaoB+
+         EFR1z6zptTObM1SD+CxImS20GNDUANpNUxYchy/uZuDWPyvDMikXMm45T0fckSghwsAE
+         Xdip0Q/Za6mh1184u8MEmgdsztcnVLRhpvajS2k6kaJxjqsxacW3r5m8FPNy6iG+vXu9
+         O93g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774992668; x=1775597468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0gAZxdKTrtG0UNe7fhqbtNVst5TpR+8MqiteFQr6YFg=;
-        b=IQ1HmWkcWQCziGHiqacNstQ2EqzCYdcPX1axEOp1HC0gZXA8T3T8tXBIBI6Ott3DB7
-         i0pW2DhDlqAIgaSGgfBo0mtauVeGGAOZ6zRY9/yzW2GL/PuZCOqxMskZjIgiyI+9Q/VD
-         mRr0Ilbt/tnveKkKjIaomFZt+uZes1LP2aJW+VFZ2vYE9gcGEmZPqPW2I48uChoyZ2jD
-         VQ7xcHpgmHx9Ix4ByiDpx/FV/LH3RuwNXQWH7WgzRTsHb0lU6eMxsmMNBMmreJj135vv
-         OKC8DwJoWLcEB0T5AQ4QvKoR7i4Mz8Hc7EbzUG5keG5n6VV7oEQvFYxMVXtx2JdNEMw/
-         5Vwg==
-X-Gm-Message-State: AOJu0YyjD6BdazH/KvJ6Arvxc/NYZ8BAWaNXO3iJY+80xVbKk0VjF5vs
-	Ns1Nc3lptVOf35arZ8uImV0t/MWdU5YA18N4YDzu2qXTEZEIwhywXI/Qm8bqUgTp59TEtPyMxl2
-	olYaSI3gReTBmkV9DFczElglEHbB4TOM=
-X-Gm-Gg: ATEYQzy3woGePGLYLzUDIOaTBzcwADa6Dmb6eAif8SNyTCWPePqe6SKT/YYTEfRO5Xs
-	mujdy3Mxyxkrve1DL5ih0Ev10tfnr9ITE118q5p/Ru/NtxUtnv2sc1zPuB2xETprN1zwgV6Gr0x
-	oDKglibb35Ep59GxTCJQsbPcRm0hQO932KCAZkw3OQwrxAajc0YP5ZBS87P01Dc9NaUGIRhiG01
-	Ep9vxezjq0afGO5lqTG/efvmBGvCWL7Z8xOapOX3xkjX3zwVVxNTKMehiY5emyw4s+k+oUirGmz
-	Cq45/9i1svF/VacermG68uqJfVHrKl1mMI2l2DAB5wBQetbc55oiOgOisI8Qp+DDDu+N8ICfqo/
-	c1XcRVw==
-X-Received: by 2002:a05:6402:a0d5:b0:66b:aa56:ee5c with SMTP id
- 4fb4d7f45d1cf-66db3f96414mr555333a12.28.1774992668047; Tue, 31 Mar 2026
- 14:31:08 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775014224; x=1775619024;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9P47rW39jbyc8421UN3l72weYmCGnxeZ7bLfcFbS7SM=;
+        b=dBo/nK75itYzENIstMXQr9wi6g0bHuTMuambGum3xinsMf9HwcLxSKQ/pzpQrd8Dod
+         ThDYyt0j2agXXjNHhuFtudvkBDTuJjr0Xzw4GuGDA4zozLU7mUhACZ/CD/YjBvp3NA/U
+         0zTWOJOzOLvanPLB0ZTOoFEgnWolvci+WFkJxyk7GQ0d5egDimGiR711kaxXEcUtWT4j
+         ZtGrRREoGlW3H1di3n1+otA+zx31oqCXI8KkWhamw/TSsNM2qJEcJtdiHdttw17KGAve
+         ZubHw2huz0D0lLTxEGr2qFvXwUnl5eO7o6lDjzM/xfYI1EcGiaaq96pNLqmrHnhVG0Kr
+         1BFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUAaQ0ds91qSAJIvjpzsAnF1hxKpnRHcDX0nS9NmMqW76VA+1lZQTgpQZAgEH1meGmigbXe8GbrRnQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3FjLEn7bAeRiekrhPMQ/usRipU1hkzDPzj/mtD90sUYY0bcZm
+	vwToMCcUOC2oygIja9ZVHgsuSrShcCwVenm4HYpGXerXVvKuIFsoAp+s
+X-Gm-Gg: ATEYQzzhgkld6JHibqNjqwmA478uakyBukySZcApRSj4TcwavMgMPyUN2CiMJbdtESa
+	amJbbPnr6ZfUE+CX2XcpZ5RQ0J8RugLPR4nvYZQ2vxx3Y1xRZTG/BxEVm6MSo38gPwjHATzFvFQ
+	UzyMTYRYIMrvomgX5j9u4I6Ivys7WCqvnnADnocs9apqI21yPxcTB/OQA9IyXvoH/41O5RQzDXc
+	PDytsEghCs6o5r2eJ10CVyY73gT6Zx5aBrJyXChHHnD1FVQ698WFUK1K1hkD6NU881/0lv7Olwf
+	wdrgNQW3uevfuSZwLlnEQREXVyu2+JNZfFG/WFSdMYBelHRCDMNcX7YKpL0Sg6+ZgsLl/CO85IS
+	uX90CjJSCyFnMxKdKlnyKE2ph9Ci1PPQBm+z/R730EYkUM4oCNul/4v6DoYotWlwVGdySoLEhlb
+	J7r7Taf8ozxboIIFd540ekCQ==
+X-Received: by 2002:a17:90b:528c:b0:35d:a0b7:9608 with SMTP id 98e67ed59e1d1-35dc6e7b1d8mr1756731a91.7.1775014223910;
+        Tue, 31 Mar 2026 20:30:23 -0700 (PDT)
+Received: from lgs.. ([2408:8417:e10:5f85:653:6a84:ffc9:685c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35dbe41b11fsm3075358a91.0.2026.03.31.20.30.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2026 20:30:23 -0700 (PDT)
+From: Guangshuo Li <lgs201920130244@gmail.com>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Guangshuo Li <lgs201920130244@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] dmaengine: idxd: fix double free in idxd_setup_wqs() error path
+Date: Wed,  1 Apr 2026 11:30:13 +0800
+Message-ID: <20260401033013.1434986-1-lgs201920130244@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260328191646.312298-1-rosenp@gmail.com> <CAHp75VfXO1acijFMySQTCtYEE9dRyUMk7xJ7ff7m0hgy42g7=A@mail.gmail.com>
- <CAKxU2N_SXeEgwZ5e1eARpK5jAorx-ycnPdf=Ut2jUvSM2xYZFw@mail.gmail.com> <CAHp75Vdvn9n_qgBsXTBw8mRxdJcrmCi01JfAGz7oTkKQ1uXBmw@mail.gmail.com>
-In-Reply-To: <CAHp75Vdvn9n_qgBsXTBw8mRxdJcrmCi01JfAGz7oTkKQ1uXBmw@mail.gmail.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Tue, 31 Mar 2026 14:30:56 -0700
-X-Gm-Features: AQROBzDOlWtP4rTa212l85ZHquL-AO6utx3CmRcZmj7oHcqq8AvGqVreKjXveeQ
-Message-ID: <CAKxU2N-QT6KAKzAYDUp_d9ug=1VxHMvegEQDbxS4GumH+8QBWg@mail.gmail.com>
-Subject: Re: [PATCHv2] dmaengine: hsu: use kzalloc_flex()
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: dmaengine@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"open list:INTEL MID (Mobile Internet Device) PLATFORM" <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9788-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-9789-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lgs201920130244@gmail.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 3A31637218D
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: BCA96374651
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Mar 30, 2026 at 9:29=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Mar 30, 2026 at 11:41=E2=80=AFPM Rosen Penev <rosenp@gmail.com> w=
-rote:
-> > On Mon, Mar 30, 2026 at 1:46=E2=80=AFAM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Sat, Mar 28, 2026 at 9:17=E2=80=AFPM Rosen Penev <rosenp@gmail.com=
-> wrote:
->
-> ...
->
-> > > > -       hsu =3D devm_kzalloc(chip->dev, sizeof(*hsu), GFP_KERNEL);
-> > > > +       /* Calculate nr_channels from the IO space length */
-> > > > +       nr_channels =3D (chip->length - chip->offset) / HSU_DMA_CHA=
-N_LENGTH;
-> > > > +       hsu =3D devm_kzalloc(chip->dev, struct_size(hsu, chan, nr_c=
-hannels), GFP_KERNEL);
-> > > >         if (!hsu)
-> > > >                 return -ENOMEM;
-> > > >
-> > > > -       chip->hsu =3D hsu;
-> > > > -
-> > > > -       /* Calculate nr_channels from the IO space length */
-> > > > -       hsu->nr_channels =3D (chip->length - chip->offset) / HSU_DM=
-A_CHAN_LENGTH;
-> > > > +       hsu->nr_channels =3D nr_channels;
-> > > >
-> > > > -       hsu->chan =3D devm_kcalloc(chip->dev, hsu->nr_channels,
-> > > > -                                sizeof(*hsu->chan), GFP_KERNEL);
-> > > > -       if (!hsu->chan)
-> > > > -               return -ENOMEM;
-> > > > +       chip->hsu =3D hsu;
-> > >
-> > > Don't know these _flex() APIs enough, but can we leave the chip->hsu =
-=3D
-> > > hsu; in the same place as it's now?
-> > __counted_by requires the first assignment after allocation to be the
-> > counting variable. The _flex macros do this automatically for GCC15
-> > and above.
->
-> Why? The hsu member has nothing to do with VLA, where is this
-> requirement coming from? My understanding is that the check should
-> imply the minimum sizeof of the data structure and the compiler should
-> know that way before doing any allocations.
-Not sure I follow. This patch changes hsu's chan member to a FAM.
-Where is VLA coming from?
+When an error happens after device_initialize(), idxd_setup_wqs()
+calls put_device(conf_dev).
 
-The current code is devm_kzalloc(x, struct_size()). When it gets
-introduced, I'm sure there will be a treewide conversion to
-devm_kzalloc_flex, which would automatically set the counting variable
-for >=3DGCC15.
+The device release callback idxd_conf_wq_release() frees wq,
+wq->wqcfg, and wq->opcap_bmap, but the current error paths then free
+them again directly, causing a double free.
 
-It's best practice to assign right after since kzalloc_flex does it anyways=
-.
->
-> My understanding seems in align with what Gustavo blogged:
-> https://people.kernel.org/gustavoars/how-to-use-the-new-counted_by-attrib=
-ute-in-c-and-linux
->
-> The same is written in the GCC patch description
-> https://gcc.gnu.org/pipermail/gcc-patches/2024-May/653123.html
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Keep the cleanup in idxd_conf_wq_release() after put_device() and
+avoid freeing those objects again in idxd_setup_wqs().
+
+Fixes: 39aaa337449e7 ("dmaengine: idxd: Fix double free in idxd_setup_wqs()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
+---
+ drivers/dma/idxd/init.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 2acc34b3daff..b782eb3c191d 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -212,7 +212,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+ 		rc = dev_set_name(conf_dev, "wq%d.%d", idxd->id, wq->id);
+ 		if (rc < 0) {
+ 			put_device(conf_dev);
+-			kfree(wq);
++
+ 			goto err_unwind;
+ 		}
+ 
+@@ -226,7 +226,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+ 		wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
+ 		if (!wq->wqcfg) {
+ 			put_device(conf_dev);
+-			kfree(wq);
++
+ 			rc = -ENOMEM;
+ 			goto err_unwind;
+ 		}
+@@ -234,9 +234,9 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+ 		if (idxd->hw.wq_cap.op_config) {
+ 			wq->opcap_bmap = bitmap_zalloc(IDXD_MAX_OPCAP_BITS, GFP_KERNEL);
+ 			if (!wq->opcap_bmap) {
+-				kfree(wq->wqcfg);
++
+ 				put_device(conf_dev);
+-				kfree(wq);
++
+ 				rc = -ENOMEM;
+ 				goto err_unwind;
+ 			}
+@@ -252,12 +252,10 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+ err_unwind:
+ 	while (--i >= 0) {
+ 		wq = idxd->wqs[i];
+-		if (idxd->hw.wq_cap.op_config)
+-			bitmap_free(wq->opcap_bmap);
+-		kfree(wq->wqcfg);
++
+ 		conf_dev = wq_confdev(wq);
+ 		put_device(conf_dev);
+-		kfree(wq);
++
+ 	}
+ 	bitmap_free(idxd->wq_enable_map);
+ 
+-- 
+2.43.0
+
 

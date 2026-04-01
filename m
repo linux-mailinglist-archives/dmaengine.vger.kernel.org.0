@@ -1,55 +1,51 @@
-Return-Path: <dmaengine+bounces-9794-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9795-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EOzULtXAzGkWWgYAu9opvQ
-	(envelope-from <dmaengine+bounces-9794-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 01 Apr 2026 08:53:09 +0200
+	id qGfZL6TXzGnnWwYAu9opvQ
+	(envelope-from <dmaengine+bounces-9795-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 01 Apr 2026 10:30:28 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66F893756F4
-	for <lists+dmaengine@lfdr.de>; Wed, 01 Apr 2026 08:53:09 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72C29376CF5
+	for <lists+dmaengine@lfdr.de>; Wed, 01 Apr 2026 10:30:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E9A3F304E827
-	for <lists+dmaengine@lfdr.de>; Wed,  1 Apr 2026 06:46:16 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id AB0E23066716
+	for <lists+dmaengine@lfdr.de>; Wed,  1 Apr 2026 08:27:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35C2C33B6F8;
-	Wed,  1 Apr 2026 06:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CFBD39A065;
+	Wed,  1 Apr 2026 08:27:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="jQqDFXPL"
+	dkim=pass (2048-bit key) header.d=bereza.email header.i=@bereza.email header.b="fuMZdP5U"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+Received: from fsn-vps-1.bereza.email (fsn-vps-1.bereza.email [162.55.44.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6232BD0B;
-	Wed,  1 Apr 2026 06:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC6039A073;
+	Wed,  1 Apr 2026 08:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.55.44.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775025975; cv=none; b=k2/zY+fvxr4nwgP285hP5c6CcXoum3V5YiNYA8G+kZ0Tj/1p188okMiZZGHf+P+usFjn9uy3QSSL6KwT3tYGUqm+tq9OBfbXcN0RaDbrleJNFag0xMmp5BKAcc1GzM1ny5/Scq/J0IZjyeuuNZ7yGrKh9EMrCIwAYZ22607NIj8=
+	t=1775032065; cv=none; b=QW3ZUxXEPM9MVFAdonqTxC8Ee1eUzaPI4zpb5WDUCevrVHW0FS8REaVEOf0DY9V3lBfwj7KC5Aj2OgkwG9b26LS1Z41Oxzf4g4vo6/W5rGlKLnRfR6HMnCkBYwqLTk11N9jVi93zZYqK0jKzvqzzUQQb86wd0t8FsKM9OqptU2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775025975; c=relaxed/simple;
-	bh=tsXCo8kHJxaw2PHmUna9SP8WpCxHXFWUfDWgjeE1aCk=;
+	s=arc-20240116; t=1775032065; c=relaxed/simple;
+	bh=+K3p909lQJp4qb4sPAC49UNQHhnygwyrcg82WmuyFaE=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=aAUHVSEZmK1y+yupvKnRb7+0lgKXCgLvxKqx0Ha+WuZhqI1k3sGdulQzxzao4zzVqDg2s4UXD4bhKw7efMi1SndXHSR93pH1OwnoFqangCzKxY4Ee+fzwRdIUy5SMmYc3kbgQj1rDdXesczDbPGoZRwpXFLtI3w3LRxQYZwE+pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=jQqDFXPL; arc=none smtp.client-ip=54.207.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1775025903;
-	bh=jdSh7Gkw/dQvbevK9ISn2ljXK48jqiWBgsjGy36WQ/c=;
-	h=Mime-Version:Date:Message-Id:Subject:From:To;
-	b=jQqDFXPLrpAGxQZQu+WsloIN51XWDD+ZO4a4UMAweMsPlqhjtwmLznjOrZMMJh6C6
-	 n3QQYFDoS4iLU8O1ZReUCsNmwyyttIb5lanTRgAerRGgouoU0GEk+Ch+/EvRH8SF4o
-	 xsN/dhgdHQFZzbPzlfdKvsfbPZvfmZFw+ciqOVHI=
-X-QQ-mid: esmtpsz18t1775025901t2af1da78
-X-QQ-Originating-IP: rNVcEvc/xIMzFngA6uKPDU8Cfui6+G/HVk6UwmFySyo=
-Received: from = ( [120.237.158.181])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 01 Apr 2026 14:44:58 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 1209826560755650584
-EX-QQ-RecipientCnt: 21
+	 References:In-Reply-To; b=BQOkqcFaHZ7sToAMwXJbK4Nx0uOI3TEV5sueg73JrJdQPoWywwg1ZiTpNH4TrWbjOi5g5k9t6zeIhbDhrdDfn5mrp948oveTyjj1oKvCm1Zb0RUs99/7dZBhh5JXIgKLGhsOYEwW+96/Lm+HTgVa2ALEDDp/ojEh5UlHzALaKIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bereza.email; spf=pass smtp.mailfrom=bereza.email; dkim=pass (2048-bit key) header.d=bereza.email header.i=@bereza.email header.b=fuMZdP5U; arc=none smtp.client-ip=162.55.44.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bereza.email
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bereza.email
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bereza.email; s=mail;
+	t=1775032061; bh=+K3p909lQJp4qb4sPAC49UNQHhnygwyrcg82WmuyFaE=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=fuMZdP5UJWf0uN9V7Zqnhhj1E6gHRVyZrdxyNqIRcQlAWGwNBsjHhl8M7/Ls6j0qU
+	 FrRsymOnPJ2T4VTApd8UfdMbnlFk+RPL7eoOU23IRTL3mNJsfgXYz7BBk8zc/5som0
+	 mvbDIW6qH9ZTpYmZ9XfvmeDbGFYPTDKoKKKNUCXMcOkZCD9wo6y534ts5JQGShiJdR
+	 whg4Lwj68Dd/I6ZUwUyenb1X21LU9bFHKj2T9J0uGKqbVYFQNbefa6DwkCg+6LMbJg
+	 M3qTsnCgFdkhZ+qTqi4VuueGTfQ8heauNbL3vdlbmrbs/GVu/vqlNaSGTvSeh9Um16
+	 B9hZdF6HML5Mw==
+Received: from localhost (pd95bbad8.dip0.t-ipconnect.de [217.91.186.216])
+	by fsn-vps-1.bereza.email (Postfix) with ESMTPSA id 316CB5DF94;
+	Wed,  1 Apr 2026 10:27:41 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -58,98 +54,113 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 01 Apr 2026 14:44:58 +0800
-Message-Id: <DHHM60NUGNZP.1JLBPAHKZRQFR@linux.spacemit.com>
-Cc: "Vinod Koul" <vkoul@kernel.org>, "Frank Li" <Frank.Li@kernel.org>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Yixun Lan" <dlan@kernel.org>,
- "Guodong Xu" <guodong@riscstar.com>, "Michael Turquette"
- <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Paul
- Walmsley" <pjw@kernel.org>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
- Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>,
- <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-riscv@lists.infradead.org>, <spacemit@lists.linux.dev>,
- <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v3 1/5] dt-bindings: dmaengine: Add SpacemiT K3 DMA
- compatible string
-From: "Troy Mitchell" <troy.mitchell@linux.spacemit.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Troy Mitchell"
- <troy.mitchell@linux.spacemit.com>
+Date: Wed, 01 Apr 2026 10:27:40 +0200
+Message-Id: <DHHOCNHDN27K.RIE745OFAACD@bereza.email>
+Cc: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dmaengine: xilinx_dma: Fix CPU stall in
+ xilinx_dma_poll_timeout
+From: "Alex Bereza" <alex@bereza.email>
+To: "Gupta, Suraj" <suraj.gupta2@amd.com>, "Alex Bereza"
+ <alex@bereza.email>, "Vinod Koul" <vkoul@kernel.org>, "Frank Li"
+ <Frank.Li@kernel.org>, "Michal Simek" <michal.simek@amd.com>, "Geert
+ Uytterhoeven" <geert+renesas@glider.be>, "Ulf Hansson"
+ <ulf.hansson@linaro.org>, "Arnd Bergmann" <arnd@arndb.de>, "Tony Lindgren"
+ <tony@atomide.com>
 X-Mailer: aerc 0.21.0-0-g5549850facc2
-References: <20260331-k3-pdma-v3-0-a4e60dd8b4b3@linux.spacemit.com>
- <20260331-k3-pdma-v3-1-a4e60dd8b4b3@linux.spacemit.com>
- <20260401-divergent-magenta-dalmatian-3c6c3e@quoll>
-In-Reply-To: <20260401-divergent-magenta-dalmatian-3c6c3e@quoll>
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: N9m5DZSiVOZbSjfBIAHCOaI9580cNFua75cW6peU9XPs/5ClY9v4OmN4
-	owqev2zFdNAATCFOi6twzi/iF/GqezRCQWgbLUQw+lPDiXo4wqzgKbKYl8MRq9by7EqOYQw
-	e03FFqbdHOS72KDNHdlv4XNwpvBqYL+0uLu35zqzgrNgDG27HjZBEVEBo+Gg9bWGlpXSL8t
-	UbPXZTbNI04bQ0KxJAJq5a3IdodTDo/yPPjX+moWowygem1dw2rlKHuhSx1km3UdUVTXuCD
-	jVRjhtenQg7hbzqNI1IiUkiZ2PHXjQgRh0DdXX1/8aT6xlHTkbVu7bbUEQ37jVUB36TPQfJ
-	F5uSN+zNWhpsAHbLdY+7tchj/+M5r8/HPHZtcxpox+UIwRau6U1QiJlk+shqC8EOB7K/I9V
-	P3a6HlYeQR/iUkKDn/Xl7dHtvh00wW+FlSpAVegBOwF37rpAX2J3jtSIIZH+oduWaP417hl
-	VraVOmHQnu00Smo4/5fr9XyVpsID8WBHjnqsKqEOpqYU+JIaY1AIAJbN/da7BlBimMYKQcz
-	ncG5Rd3XBoHkxoKECWLBqRdYRldT9WnUXeIBEuOglG88MG/8rP0NOFEB5K77LQylvsdP8Dr
-	6EcdWQTgs7E4bz1CKoCE+TBdI3u9OpnUyVlNYBIs82/qwgvJsYHohy22JJnB+vkWqgnai50
-	OYg0pZ6nM3sDeL93DoNHTLEMAucqxX5KVpHlZonGFw0/YulAw3pXpXYU3L3h/dLdVxbAb8h
-	y9uYn8QWvM7OEPEyGjHRN/YwjWUVUle4tiXfSQ9Y0mg6ynGj5gc4X90yh3ejufllkhN1qPd
-	XwsR3tcsRoRUQx6F343MPF/+7SyGUI5CNhDGGgW0fwY2OCjaonTquc+Q6ak3dVNeuVMDEkm
-	IzojDah2TDJf3Tdryf5ryhJ2X6CsAw5JnXkRgWFRFB1QYuBTlKMnbkEtQacaHAwLzk5BMCc
-	awYWLgI7fBE7+X3mkB9vJCxvMVifTX439yVHnMHlvZ916oFaSn/QPilJSLHZxW+QvXDuMLb
-	UuJNILu1yea/cQorlRbcFt/yLfBZDHlQU3tjWN0Zs3dIJsZb1S/nXMrO+Jl6PkD0jf8Wfxl
-	d2wpM3aEKSYDAh6BbNKrQ0=
-X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
-X-QQ-RECHKSPAM: 0
-X-Spamd-Result: default: False [0.34 / 15.00];
+References: <20260331-fix-atomic-poll-timeout-regression-v1-1-5b7bd96eaca0@bereza.email> <vA8GpbivDeKzKN1k0B6m1cvW-rZwJjKzvhksYdUJPo4fsfhLQoXtWoK59V1YX_U2U3jcVR2PAmzrleamvq8Dmw==@protonmail.internalid> <833bb42a-65b8-4c93-8109-d2959f8b807f@amd.com>
+In-Reply-To: <833bb42a-65b8-4c93-8109-d2959f8b807f@amd.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[bereza.email,quarantine];
 	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[linux.spacemit.com:s=mxsw2412];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[bereza.email:s=mail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-9795-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9794-lists,dmaengine=lfdr.de];
-	DMARC_NA(0.00)[spacemit.com];
-	RCPT_COUNT_TWELVE(0.00)[21];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[troy.mitchell@linux.spacemit.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.spacemit.com:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[alex@bereza.email,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[bereza.email:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,riscstar.com:email,linux.spacemit.com:dkim,linux.spacemit.com:mid]
-X-Rspamd-Queue-Id: 66F893756F4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 72C29376CF5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed Apr 1, 2026 at 2:42 PM CST, Krzysztof Kozlowski wrote:
-> On Tue, Mar 31, 2026 at 04:27:04PM +0800, Troy Mitchell wrote:
->> From: Guodong Xu <guodong@riscstar.com>
->> - Memory addressing capabilities: Unlike the K1 SoC, which had memory ad=
-dressing
->>   limitations (e.g., restricted to the 0-4GB space) and required a dedic=
-ated
->>   dma-bus with dma-ranges to restrict memory allocations, the K3 DMA mas=
-ters
->>   possess full memory addressing capabilities.
->
-> Programming interface is still compatible, regardless of memory
-> addressing limitations, so that is rather incorrect reason.
-I'll remove this item. Thanks.
+On Wed Apr 1, 2026 at 7:23 AM CEST, Suraj Gupta wrote:
 
-                            - Troy
+>> Rename XILINX_DMA_LOOP_COUNT to XILINX_DMA_POLL_TIMEOUT_US because the
+>> former is incorrect. It is a timeout value for polling various register
+>> bits in microseconds. It is not a loop count. Add a constant
+>> XILINX_DMA_POLL_DELAY_US for delay_us value.
 >
-> Best regards,
-> Krzysztof
+> Please split this change in a new patch.
 
+Ok, will send a v2.
+
+>> Fixes: 7349a69cf312 ("iopoll: Do not use timekeeping in read_poll_timeou=
+t_atomic()")
+>
+> This patch doesn't fixes anything in iopoll, please use correct fixes tag=
+.
+
+Ok, but I'm not sure what would be the correct fixes tag then? I though I n=
+eed to reference
+7349a69cf312 in fixes tag because this is the actual change that surfaced t=
+he CPU stall issue that I
+want to fix in this driver. I'm fixing the call sites of xilinx_dma_poll_ti=
+meout but they were added
+in different commits. Should I add all of them? That would be the following=
+ then:
+
+Fixes: 9495f2648287 ("dmaengine: xilinx_vdma: Use readl_poll_timeout instea=
+d of do while loop's")
+Fixes: 676f9c26c330 ("dmaengine: xilinx: fix device_terminate_all() callbac=
+k for AXI CDMA")
+
+Three call sites with delay_us=3D0 were first introduced by 9495f2648287, t=
+hen 676f9c26c330 added the
+fourth call site when introducing xilinx_cdma_stop_transfer (probably copy =
+paste from
+xilinx_dma_stop_transfer). Would adding these two fixes tags be correct?
+
+>> Hi, in addition to this patch I also have a question: what is the point
+>> of atomically polling for the HALTED or IDLE bit in the stop_transfer
+>> functions? Does device_terminate_all really need to be callable from
+>> atomic context? If not, one could switch to polling non-atomically and
+>> avoid burning CPU cycles.
+>>
+>
+> dmaengine_terminate_async(), which directly calls device_terminate_all
+> can be called from atomic context.
+
+Right, thanks! Just for my understanding: I still think there is potential =
+for improvement, because
+from my understanding it would be beneficial to do the waiting for the bits=
+ in the status register
+and the freeing of descriptors in xilinx_dma_synchronize. Do I understand c=
+orrectly that this is
+currently not possible due to how the DMA engine API is structured? To make=
+ this possible I think
+the deprecated dmaengine_terminate_all would have to be removed and all use=
+rs of this API would have
+to be adapted accordingly, correct? So this would be a patch of much larger=
+ scope than xilinx_dma
+driver alone.
 

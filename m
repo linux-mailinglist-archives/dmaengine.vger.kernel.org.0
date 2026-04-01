@@ -1,200 +1,229 @@
-Return-Path: <dmaengine+bounces-9810-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9811-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gIt4FwkUzWmMZwYAu9opvQ
-	(envelope-from <dmaengine+bounces-9810-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 01 Apr 2026 14:48:09 +0200
+	id sJ+vFF4gzWnOaAYAu9opvQ
+	(envelope-from <dmaengine+bounces-9811-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 01 Apr 2026 15:40:46 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE94D37AB59
-	for <lists+dmaengine@lfdr.de>; Wed, 01 Apr 2026 14:48:08 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0B0537B618
+	for <lists+dmaengine@lfdr.de>; Wed, 01 Apr 2026 15:40:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DD4603097020
-	for <lists+dmaengine@lfdr.de>; Wed,  1 Apr 2026 12:40:43 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 338E9303430A
+	for <lists+dmaengine@lfdr.de>; Wed,  1 Apr 2026 13:32:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20AA140757F;
-	Wed,  1 Apr 2026 12:40:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B600A2C0296;
+	Wed,  1 Apr 2026 13:32:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hMirwWpC";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="cu0TziGF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drl+lWPr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71DA406273
-	for <dmaengine@vger.kernel.org>; Wed,  1 Apr 2026 12:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775047240; cv=none; b=Apf3wuTsH7PPUqU32wJRiKvBD7W4czzRjC1TVsCn/WW3nikgEK+/xaer9T+9I9z3ZStDRCK/vXZTVpsWicA8zRH8hAds/cNrrIoug3KsBNUuGyfRNwrbRMD6hhBjJJ8kpo7vlxrKxCCoVZIxPx2/9rPFXE0/xw6nor8QBuCB2gA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775047240; c=relaxed/simple;
-	bh=V5Q62nK0Vbbku4OtnNMe64D85IWZhZmt3X/PMujd7b8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qjrNMK/afYwYzuMOjaroJZQ+zLmmvO+UZizO6hPnn+nGhB3y0qYhldnvYqMAP3XbFygryyDe8pS4C5bQmsOnSNQmrbln/NYWc5WNVcL6CfVWYMb7OaiCBtH5fp04419hY+IPEqvSMWOV3wFGum2ux3NLslRQLcao2H91z4Gg3h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hMirwWpC; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=cu0TziGF; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6319Ttei1579389
-	for <dmaengine@vger.kernel.org>; Wed, 1 Apr 2026 12:40:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=jt5F0jmqoE4+JGiWZ53i58ADF2Fia+zsItp
-	8jaoXLWM=; b=hMirwWpCfXpZ8fgkE/tHCqq1EmTzdzMNyMgb427m+/i+9g+67kB
-	jzFG04BU8ccZ/GFaZBg+n6ksqH2YPqQDUcbOs0t/CEo3nCJlk3PsLwzCOQIkcwtm
-	2G94EQL1ij4N2XXioZcdlsQ5rtv5kdsFLR9dyVdHYDTwC5bKrQJaXgEv231VwbAX
-	ugavsjq73bh0FQbZGzH/57/H9KJSmh1VkA643+Tk/5k5WEaRWWWPwQgmXlBUhrqg
-	L3YZh7J+LnUdwe2pgRWpIjm3HI3+LBX0Egk5U+Q2ywHFd2FzgWOwn/0A5WfeAH3L
-	wOCcO0LoRGVS3tTUncJKzcGaFVgxiLDb6NA==
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d8mr2ukdu-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Wed, 01 Apr 2026 12:40:37 +0000 (GMT)
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-35678f99c6eso4997721a91.1
-        for <dmaengine@vger.kernel.org>; Wed, 01 Apr 2026 05:40:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5006C29D294
+	for <dmaengine@vger.kernel.org>; Wed,  1 Apr 2026 13:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775050374; cv=pass; b=V2xQqghNFcmIPfZnvp7CQuC7WASFML3DaYDsEncNFlP4W9GVxrbE9/+NJJJrqr43PzKHkq5Cbv8EfbbyR5Ey6XYjr2W+FRecaih45o/iUpYD2/VCWBLf7RKrjcXweM0gUQgRO7M72fNIANvI9JiPwj1Uk8Rrj9j9pSloJLeP1oI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775050374; c=relaxed/simple;
+	bh=ykZlBQP3ui0pr+RmE/BDkLgSNESXpnvh5+IEQp6F9Qo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d4jGEeMf0864PMmDWp3nEiu0bZJXfuaDyCLunog6jqYF3DGy6JdlZjxSAL3IklUaXdL/wlONT+2kddHgIzU16oJEAHYuwVOwekadcHj14OwXjzsXt5GhyeBRck28pyMmHVFPdrKfn5rvnPixKQSiTp7EzcaCldAGJvtwab4jTco=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=drl+lWPr; arc=pass smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b9c1da7ac63so121387266b.0
+        for <dmaengine@vger.kernel.org>; Wed, 01 Apr 2026 06:32:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775050372; cv=none;
+        d=google.com; s=arc-20240605;
+        b=UqkZUuw3lZ+sGD/5X2d9a+l1ihxnoIhSAVT4i6Uc9h9GdFnMkXW/Gd12u0UlRmZJF5
+         19903H5wpr4dKzM5Wg/1rGH60sOTzUsqiCFGshcScbT3uuEeigYKt+skbQQkEvvSvFRt
+         GtWE/1JMn1voFxjwadgfEdwCAs/Fd9BQGuBhtMcMyNp+0/AQt+1aqeV/Tn1CzX59Vfmc
+         jY0pcaVWEhN4Bd0LnVgBIr/lsAdkCjIkOl+NxeLC6dWQmEeTYsu91hPVmJCbUgkKIJAU
+         3iY69z++atnyxGG2yQCS8C8K6uxLcLKaTefoJfAYbKKGYSLvkCTHWi1+H1Jw5sfkcM04
+         D02w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=XdQtbwlhskFWFC4jOk1CfaWVr+c6qUIfl9XMYThbgKA=;
+        fh=22r3XkhgFXYlo01h1jYb+ZSltnvR0YVp6gSI4ip4x/I=;
+        b=OWs2R12lgxQr4wY5czXOHchVgMYw/8HCVOUfXzluZLM8gqARk0DLV76kUppMW2LElL
+         cqOAg82T1oRshkk+dGZSAhe3QZTmtUL7dJeRaoaMuox9YeSoldS8P26lDG2RR+Jqxy0t
+         DHftYSEp7nAZT9flGcZ/Z+DpmnFOAqRe7OsPhUZTZicZxsF2VX3vUt1MF+Hbm8el1ZD7
+         5SWM94ziJHWUMKWaauo+Prt4r2APEI1WGlZmEajsQSCr41m7Q5h4lK82+gHavbcKGmoH
+         QWLMlmM1Pf19ZvUl43OJ59Frg3seqYvvnvISRIPEClfTQFAy0KSY/VzVjGr5fTuhbCfa
+         qq0g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1775047237; x=1775652037; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jt5F0jmqoE4+JGiWZ53i58ADF2Fia+zsItp8jaoXLWM=;
-        b=cu0TziGF8CmsAQ3VAZM4MSsRqHwWpkZRQ519NiYQPB5OEK2Y9wvUfh+reqwZW4+WfS
-         BmsF124moxRAmz8Lx+F2yT4Y4ofwZUzLnj2P7pMFXPNSlRkf5zFxtr6qR4PVuV8KRgVd
-         ztEWXBHED0+JBLYFiQhdN8mgsrJcIol1ZBg5kW4t7n3XSv4E8qtCTnGhvzfztwX8OZ6q
-         KBA7OKOvdjlnoTQuS2+4AX+PdLTNXDJCRuJzPkWjgeKoj1y3Dh3KehWB6bREgJM42tQ9
-         GNovK49y+3SxARnFzCGoftiXQfgZqGARfj1Ztw6lEEgyg769pfj/a1Tc00G1a0ZeNQrf
-         C9Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775047237; x=1775652037;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1775050372; x=1775655172; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jt5F0jmqoE4+JGiWZ53i58ADF2Fia+zsItp8jaoXLWM=;
-        b=r+KAaa9u7Hqe4IFsGRJEjWS+rYg/SWVgGksrngQ2kmcE3RDQ/OBK1cKjCfMvKO6ejy
-         qr9uJ8OTTLGxkoqV7P1vePZZbqs4xvmsMlOD8mXTWX0XyYkdeMC7Z8en+KK/dLPYwHth
-         NGBbGLjyhT4KWRgYl4xOrbC0ZwNBCuwSVX9W9fn+NmmMiM5GM11YdXPlmKbqzmQ06i6t
-         3Ilh+aTPnwaZO0os3cp5Xe/xo8iZbbQF725tx1BjqugCbL72HA3DNyy7j9CBjmOgtRt1
-         a2b2ZHALEy+h0xLqfzxsrYS1F9tE8Tu560o7km1PTqJDkY3F7fL/cmpFwGTLzzezCXvQ
-         JVYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcCRO73Rr7/BiZ1bJaiBp0ENDR4+B8z41q0pZwtdsvZKjIVRcZCKQZ7iOSUCsEJkjNXDwTT14ilsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1z4iuEx6YamtIDJJITIukWaHmGq1evkNyf17IjbHRgpY+NDVv
-	lYz/DL8RLZM+NrI32hyB0Tzoh3LURtnp0rDBURJgqdxnUO5OXU1iMmG9m/WrmmYncsfaMtKDfBE
-	DK3eu4im4JYH9prXkStJR7Zo7ptEyURe4bYtCdFWOWV96yliwIsMa+A7p7S92AqI=
-X-Gm-Gg: ATEYQzzVrGTaxDilT4uyzUanO/SHTlcZ+Rz6AAjBgmOqsSu6Nse0ZWfD6FY/QKthwFF
-	Q10Cqny2KKjp5We8fqqCrWyw0a1rIpHG5Jbirec8pr6MkVXubxrPcnbbkKWC47oYBI7ZaE+LE/7
-	qLSKw0yluhGlN1IiKfnrvN5lAOvV1c32pfSLsAyf6SBo9wlPi2vJTCn0wpJ0pMAuBvdOL6CdK3E
-	XZdRKvNQNswJUwGaok36qa9o4cdrKISPjaQQPPK02J2fTMslYXOkc6dEuO3Zet5o8x0QUkyNHHq
-	LAdf/55isRkE65qjor7C48FIfUXrxgXnw4cIWXAl2wLXNtXsYR4CrbSxMKnAc9Mgm7+zPpwcFIk
-	GDYbQW5zr9PPLe7horw0SftYc89OLnR+6ysgjQgYUuftqdzUG
-X-Received: by 2002:a17:90b:5868:b0:35b:96bb:47b9 with SMTP id 98e67ed59e1d1-35dc6f7aaf0mr3154331a91.19.1775047236606;
-        Wed, 01 Apr 2026 05:40:36 -0700 (PDT)
-X-Received: by 2002:a17:90b:5868:b0:35b:96bb:47b9 with SMTP id 98e67ed59e1d1-35dc6f7aaf0mr3154293a91.19.1775047236029;
-        Wed, 01 Apr 2026 05:40:36 -0700 (PDT)
-Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35dbb74aa3bsm3558171a91.1.2026.04.01.05.40.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2026 05:40:35 -0700 (PDT)
-From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: Frank Li <Frank.Li@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xueyao An <xueyao.an@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Subject: [PATCH] dt-bindings: dma: qcom,gpi: Document GPI DMA engine for Hawi SoC
-Date: Wed,  1 Apr 2026 18:10:28 +0530
-Message-ID: <20260401124028.589931-1-mukesh.ojha@oss.qualcomm.com>
-X-Mailer: git-send-email 2.53.0
+        bh=XdQtbwlhskFWFC4jOk1CfaWVr+c6qUIfl9XMYThbgKA=;
+        b=drl+lWPrtGiBxHOM5pgDFJD5CmHy4v+/dJJYWTH3SiBxikgnLRDfkCshRpArShhvih
+         0hoNNwidgE8RbdojmOd3fvO3/gHoNCpX0ptr+DKqBEdJKb4qsvIpxb3sfNSQS9ez41y2
+         QEwM7RjkQGHgqER68SGmVRFzlfdSBj3SwuyYGrROcTkUsiBqD8cBZUJfVjvSQL/LWjZd
+         8V4D0GyYu+dpm8YUA4tJBu967oq0XHtkV2FIxxFPZ3zRaybk2OMr9nvl+Ud5y6KQ5Cr6
+         7PNIgYhd27tK4o+zuqn3EWSwaB/RpbKraO5xiNtKg6K6+qRWTZu1DfX8GRIwnggCQrmY
+         YHfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775050372; x=1775655172;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XdQtbwlhskFWFC4jOk1CfaWVr+c6qUIfl9XMYThbgKA=;
+        b=FO9qxTVjufxetVS6HqjVDwQ5/0MlbDf1v4SdhTJSCiAvlYVmZ08cDvgK04+uNFC1IE
+         jc+IMERf8SHrUBEWtU2gqr1UHCFys+tjECLuCPBJ/S0J9EczjYLMPh1QtIG04tB4YbiH
+         OMJLeKmY3kn1G40qnzNovUTZdkfFABypFkwfq2w6RcBR8tDBYyq234LI/rE1vSV8I2Oy
+         sGwOYF84LFVdD88RBH80+uZbvYyWXy2XisuFmMYuSNz0yVfvr1KTfljzLNxNo0IkxgK+
+         zHfNsDwuChopOAVUh3uo5rmc3ljzqHAO2OlGUScQEvZJFezg/3phLC+hXUAxQvUlKC/b
+         69xg==
+X-Gm-Message-State: AOJu0YyEpt0HK9CsSQlDZRbaBzPHpgvMSDje+MGJ/WGRUGcLGOE+OLxh
+	eUn4wcLh0wTHicibTKvj3UyPDhNNe7lGTn5nUL6QVR+TdtgEyrfFF98m/fdBHBLVqx9dOKyQkQU
+	ZsZstEwHqPuCclvdR8BInBG+APk7VUaE=
+X-Gm-Gg: ATEYQzxM8IhmiXCosZcvEEdw80koBj8IwSIwWj8soagspEiawZDhLzrQlbdTpvZKt2L
+	VFOmmHnL3yx0AfUGgH8h6w+f7F4fPtpfd9N/G0qsk8c8jrC6loYaqwTD1Vj6GLbqtOoEE0yLAyr
+	E1lQ6pzzl6zZZ/fCWJ+6QWJUuYSYbJbn44E5Rh7ztzxWj5Efx2OzSdWmRKUjSyw6hdZguHA8oEc
+	1khfCY2SmuyWlUVoRx6BmLAJNKnAFzDoPfOXVnPHhPM7WRaUxZCF1T1Hb/LlKgW4pia443X7myL
+	4cS9EkMwkjvTAoCe/Clq3pQB5cuaV9GpR3T3gqW9Oa4xN2fCbSUMVO4+i1gOwmo6xmoH2L4U/H9
+	Xdj8fg+4=
+X-Received: by 2002:a17:906:891:b0:b98:2c19:6c49 with SMTP id
+ a640c23a62f3a-b9c139028e4mr197175066b.18.1775050371154; Wed, 01 Apr 2026
+ 06:32:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=B+O0EetM c=1 sm=1 tr=0 ts=69cd1245 cx=c_pps
- a=0uOsjrqzRL749jD1oC5vDA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22 a=EUspDBNiAAAA:8
- a=Kwsw5yc_4_qMWDLpIgMA:9 a=mQ_c8vxmzFEMiUWkPHU9:22
-X-Proofpoint-ORIG-GUID: UVeYKLAiD-s06FKC7gKcGWJ_-J3h0Opv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAxMDExNSBTYWx0ZWRfX86nODTH4zSNQ
- 9u7b2iA4WoDL/mqFTTS4AB4yjcTzfmQuT0ESU54+83FPZO91HDzk1hq7kD/YPhkpcIM0Fvhl7Oj
- WkWd7xhkpglA9bVoIPZ+10cHPHZujL9fXE3mEW7JSDMpLB1hlLse3RppmxgPOVDSQUns4pOEeB3
- UDRSQixYt56vozRDzlbFgBqRSq9bkw/x+XUKOK7U5pBAPB1rdknX1bvYstg/6aFpWWAnBx07BIR
- CdVuMWPtWYg1Eo8YOoc7xsa0zaBU9mbhy5SiZRZEK/j1GWRZRFSWUjPlbfvCRE1RG4Gft8POdmr
- IINBlbo6Er9DXeEdK7GdavesvJYbfu0CB+4M9jk1JJpKSSD9xvsOQM6AZLrxBRzvhRyEDts2IP9
- HXEXUAbnfhq1DLCrYlOJ8bsoETvNf2EQWtEeKNo6FgD3iMoP3CCDQTnQGDk9xJKOyGqaXxk06B/
- /igGxx4uVlzqyOyRafQ==
-X-Proofpoint-GUID: UVeYKLAiD-s06FKC7gKcGWJ_-J3h0Opv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-01_04,2026-04-01_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 adultscore=0 malwarescore=0
- lowpriorityscore=0 spamscore=0 clxscore=1011 suspectscore=0 phishscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2604010115
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+References: <20260328191646.312298-1-rosenp@gmail.com> <CAHp75VfXO1acijFMySQTCtYEE9dRyUMk7xJ7ff7m0hgy42g7=A@mail.gmail.com>
+ <CAKxU2N_SXeEgwZ5e1eARpK5jAorx-ycnPdf=Ut2jUvSM2xYZFw@mail.gmail.com>
+ <CAHp75Vdvn9n_qgBsXTBw8mRxdJcrmCi01JfAGz7oTkKQ1uXBmw@mail.gmail.com> <CAKxU2N-QT6KAKzAYDUp_d9ug=1VxHMvegEQDbxS4GumH+8QBWg@mail.gmail.com>
+In-Reply-To: <CAKxU2N-QT6KAKzAYDUp_d9ug=1VxHMvegEQDbxS4GumH+8QBWg@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 1 Apr 2026 16:32:13 +0300
+X-Gm-Features: AQROBzDcdLuWeJRe3D71X4YVGCYTKmrY5ZFcR0AhiBibbvw6usBcWjOKiaIKYno
+Message-ID: <CAHp75Vf_Q4OqYgEOBhoFxpKpAkw5_+GJxQCTbA6LnbR0xhOnMA@mail.gmail.com>
+Subject: Re: [PATCHv2] dmaengine: hsu: use kzalloc_flex()
+To: Rosen Penev <rosenp@gmail.com>
+Cc: dmaengine@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"open list:INTEL MID (Mobile Internet Device) PLATFORM" <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9810-lists,dmaengine=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qualcomm.com:dkim,qualcomm.com:email,oss.qualcomm.com:dkim,oss.qualcomm.com:mid];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FROM_NEQ_ENVFROM(0.00)[mukesh.ojha@oss.qualcomm.com,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	TAGGED_FROM(0.00)[bounces-9811-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andyshevchenko@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: BE94D37AB59
+	FREEMAIL_FROM(0.00)[gmail.com]
+X-Rspamd-Queue-Id: C0B0537B618
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Xueyao An <xueyao.an@oss.qualcomm.com>
+On Wed, Apr 1, 2026 at 12:31=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wrot=
+e:
+> On Mon, Mar 30, 2026 at 9:29=E2=80=AFPM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Mon, Mar 30, 2026 at 11:41=E2=80=AFPM Rosen Penev <rosenp@gmail.com>=
+ wrote:
+> > > On Mon, Mar 30, 2026 at 1:46=E2=80=AFAM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Sat, Mar 28, 2026 at 9:17=E2=80=AFPM Rosen Penev <rosenp@gmail.c=
+om> wrote:
 
-The Hawi GPI DMA engine follows the same programming model and
-register interface as previous generation of Qualcomm SoCs like
-kaanapali, glymur, and is fully compatible with earlier GPI DMA
-implementations.
+...
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Xueyao An <xueyao.an@oss.qualcomm.com>
-Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
----
- Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
- 1 file changed, 1 insertion(+)
+> > > > > -       hsu =3D devm_kzalloc(chip->dev, sizeof(*hsu), GFP_KERNEL)=
+;
+> > > > > +       /* Calculate nr_channels from the IO space length */
+> > > > > +       nr_channels =3D (chip->length - chip->offset) / HSU_DMA_C=
+HAN_LENGTH;
+> > > > > +       hsu =3D devm_kzalloc(chip->dev, struct_size(hsu, chan, nr=
+_channels), GFP_KERNEL);
+> > > > >         if (!hsu)
+> > > > >                 return -ENOMEM;
+> > > > >
+> > > > > -       chip->hsu =3D hsu;
+> > > > > -
+> > > > > -       /* Calculate nr_channels from the IO space length */
+> > > > > -       hsu->nr_channels =3D (chip->length - chip->offset) / HSU_=
+DMA_CHAN_LENGTH;
+> > > > > +       hsu->nr_channels =3D nr_channels;
+> > > > >
+> > > > > -       hsu->chan =3D devm_kcalloc(chip->dev, hsu->nr_channels,
+> > > > > -                                sizeof(*hsu->chan), GFP_KERNEL);
+> > > > > -       if (!hsu->chan)
+> > > > > -               return -ENOMEM;
+> > > > > +       chip->hsu =3D hsu;
+> > > >
+> > > > Don't know these _flex() APIs enough, but can we leave the chip->hs=
+u =3D
+> > > > hsu; in the same place as it's now?
+> > > __counted_by requires the first assignment after allocation to be the
+> > > counting variable. The _flex macros do this automatically for GCC15
+> > > and above.
+> >
+> > Why? The hsu member has nothing to do with VLA, where is this
+> > requirement coming from? My understanding is that the check should
+> > imply the minimum sizeof of the data structure and the compiler should
+> > know that way before doing any allocations.
+> Not sure I follow. This patch changes hsu's chan member to a FAM.
+> Where is VLA coming from?
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-index fde1df035ad1..caa2ef90d8f2 100644
---- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-+++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-@@ -25,6 +25,7 @@ properties:
-       - items:
-           - enum:
-               - qcom,glymur-gpi-dma
-+              - qcom,hawi-gpi-dma
-               - qcom,kaanapali-gpi-dma
-               - qcom,milos-gpi-dma
-               - qcom,qcm2290-gpi-dma
--- 
-2.53.0
+VLA: variable-length array
+FAM: flexible array member
+The second one is VLA member + size member.
 
+What your patch is doing is changing a pointer to VLA member.
+
+> The current code is devm_kzalloc(x, struct_size()). When it gets
+> introduced, I'm sure there will be a treewide conversion to
+> devm_kzalloc_flex, which would automatically set the counting variable
+> for >=3DGCC15.
+>
+> It's best practice to assign right after since kzalloc_flex does it anywa=
+ys.
+
+Still, I'm not convinced we should blindly follow this rule. The
+length needs to be known before accessing the VLA, but it's okay to
+access other members. Leaving hsu member assignment where it's now is
+fine, no need to move it around.
+
+> > My understanding seems in align with what Gustavo blogged:
+> > https://people.kernel.org/gustavoars/how-to-use-the-new-counted_by-attr=
+ibute-in-c-and-linux
+> >
+> > The same is written in the GCC patch description
+> > https://gcc.gnu.org/pipermail/gcc-patches/2024-May/653123.html
+
+--=20
+With Best Regards,
+Andy Shevchenko
 

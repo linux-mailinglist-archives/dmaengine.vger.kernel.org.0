@@ -1,42 +1,42 @@
-Return-Path: <dmaengine+bounces-9830-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9831-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eBXQM8gyzmkpmAYAu9opvQ
-	(envelope-from <dmaengine+bounces-9830-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:11:36 +0200
+	id aGzDCKo0zmk8mAYAu9opvQ
+	(envelope-from <dmaengine+bounces-9831-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:19:38 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BB753868D9
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:11:36 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87EF1386BD9
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:19:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C02BB306F2DD
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2026 09:08:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 82135305B364
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2026 09:08:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 771DF36DA00;
-	Thu,  2 Apr 2026 09:07:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0605E36308A;
+	Thu,  2 Apr 2026 09:07:54 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BF0A362139;
-	Thu,  2 Apr 2026 09:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E91936493C;
+	Thu,  2 Apr 2026 09:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775120865; cv=none; b=ZXWSDUl0Ql7yG6oyiXKMnaNNamz8Lokfr12gpeau9p/k+Ro1iq4v8zNBEsFVbFb7NsYtt+ZsyQ0tX4Rw6XvsivekHQkmQnT6Jds6318bGzXxUdF3PeVmOAQ0V7pmrY1pWNs4zfnRScmNRhpi2J5DZRi85kNYnOEBNmF1CLJcgSw=
+	t=1775120873; cv=none; b=ih4BvocPxBrirzd+3jIEvh7WZob6gl2480oXE7l/P/Owe6iYgL4DbhdQAXhnK9A5MklVkLL5wnxbXjhbI1FNH9MnxirznJrII4QBPGvdDU6keEZCVgfTySEn0CLqGvV0JwlBppOKFzYyymIihDvan3x/kDlNzNLVK2dDX7wnRxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775120865; c=relaxed/simple;
-	bh=M0CU3Uc0tfBSlS7ZxZSKYahJQFVM8+/qyc0NSNfXOBg=;
+	s=arc-20240116; t=1775120873; c=relaxed/simple;
+	bh=r0szSXzre0lQvz8ZreFkXVHs0155RoES95xCRgWIMSA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bCEHw5YZzVHt8KnFkP+FbAy+fngpqPuty9o0hz4uoWLkrXn46dugV/FHq2Jn5Korh08HY76YtUVT01069mLMH9g/1pePCIgsBxSzAGRbjt0upEyYAMDJgVVMUyL+PrVulASbF57BXqSrA7rU7MGy40/1OUADpJWOBMauaQpbhb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+	 MIME-Version; b=S7FPg/F7ciQOIXL2rlQcYKBVUa7BbuHQSBSXBVeoGUPqKEejFPSn8qtNel84mwhyj5Cc3w+FdqLqwE74cfysEMi8QQEVz+4k3b2t3KMNgy5AuHJsMJju0hC15X7tkYwzlyPDLZR3X5dGUm2kcKSr5bgx9Yc4tzpcR8RIfxNvxPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: So1UC1bGRyWi4euwVPLevA==
-X-CSE-MsgGUID: cpHxI3LuRTeMzMa+86AnvA==
+X-CSE-ConnectionGUID: dFG6N9hrR8ejFWSPOdQpAg==
+X-CSE-MsgGUID: +dn9WaTrSkqm1BCQqfKcBA==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 02 Apr 2026 18:07:41 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 02 Apr 2026 18:07:50 +0900
 Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.136])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id A8E7F413EA85;
-	Thu,  2 Apr 2026 18:07:33 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 839E2413E676;
+	Thu,  2 Apr 2026 18:07:42 +0900 (JST)
 From: John Madieu <john.madieu.xa@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
@@ -66,9 +66,9 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	dmaengine@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH v2 04/24] dma: sh: rz-dmac: Add DMA ACK signal routing support
-Date: Thu,  2 Apr 2026 11:05:03 +0200
-Message-ID: <20260402090524.9137-5-john.madieu.xa@bp.renesas.com>
+Subject: [PATCH v2 05/24] ASoC: dt-bindings: renesas,rsnd: Split into generic and SoC-specific parts
+Date: Thu,  2 Apr 2026 11:05:04 +0200
+Message-ID: <20260402090524.9137-6-john.madieu.xa@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260402090524.9137-1-john.madieu.xa@bp.renesas.com>
 References: <20260402090524.9137-1-john.madieu.xa@bp.renesas.com>
@@ -84,7 +84,7 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[renesas.com : SPF not aligned (relaxed), No valid DKIM,none];
@@ -94,208 +94,629 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[baylibre.com,kernel.org,gmail.com,perex.cz,suse.com,pengutronix.de,tuxon.dev,bp.renesas.com,renesas.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9830-lists,dmaengine=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-9831-lists,dmaengine=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[john.madieu.xa@bp.renesas.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.978];
+	NEURAL_HAM(-0.00)[-0.873];
 	TAGGED_RCPT(0.00)[dmaengine,renesas,dt];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 1BB753868D9
+X-Rspamd-Queue-Id: 87EF1386BD9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Some peripherals on RZ/G3E SoCs (SSIU, SPDIF, SCU/SRC, DVC, PFC) require
-explicit ACK signal routing through the ICU for level-based DMA handshaking.
+The current renesas,rsnd.yaml binding file handles all supported SoCs
+in a single schema, resulting in deeply nested if/else/then constructs
+that become increasingly difficult to maintain. Each new SoC addition
+amplifies this complexity, making reviews harder and diffs noisier than
+they need to be.
 
-Rather than extending the DT binding with an optional second #dma-cells
-(which would require all DMA consumers to supply two cells even when ACK
-routing is not needed), derive the ACK signal number directly from the
-MID/RID request number using the linear mapping defined in RZ/G3E hardware
-manual Table 4.6-28:
+Refactor the binding by extracting the common properties shared across
+all SoCs into a dedicated renesas,rsnd-common.yaml schema, and keeping
+only SoC-specific constraints (required nodes, port counts, clock names,
+etc.) in per-SoC or per-family files that $ref the common part.
 
-  PFC external DMA pins (DREQ0..DREQ4):
-    req_no 0x000-0x004 -> ACK No. 84-88
+This prepares the ground for upcoming SoCs such as the RZ/G3E, which
+introduces a different set of audio resources compared to existing
+R-Car Gen variants. With the split in place, adding RZ/G3E support
+becomes a self-contained change that neither bloats a monolithic schema
+nor buries new constraints inside ever-deeper conditional blocks.
 
-  SSIU BUSIFs (ssip00..ssip93):
-    req_no 0x161-0x198 -> ACK No. 28-83
-
-  SPDIF (CH0..CH2) + SCU SRC (sr0..sr9) + DVC (cmd0..cmd1):
-    req_no 0x199-0x1b4 -> ACK No. 0-27
-
-ACK routing is programmed when a channel is prepared for transfer and
-cleared when the channel is released or the transfer times out, following
-the same pattern as MID/RID request routing.
+No functional change in validation behaviour for existing device trees.
 
 Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 ---
 
 Changes:
 
-v2:
- - Drop DMA ACK second cell from DT specifier
- - Derive ACK signal number in-driver from MID/RID using arithmetic formulas
-   per ICU Table 4.6-28 (3 linear peripheral groups)
+v2: New patch
 
- drivers/dma/sh/rz-dmac.c | 72 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ .../bindings/sound/renesas,rsnd-common.yaml   | 196 +++++++++++
+ .../bindings/sound/renesas,rsnd.yaml          | 319 +++++-------------
+ 2 files changed, 274 insertions(+), 241 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/renesas,rsnd-common.yaml
 
-diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index 95a89c9d2925..bde3da96b37e 100644
---- a/drivers/dma/sh/rz-dmac.c
-+++ b/drivers/dma/sh/rz-dmac.c
-@@ -97,6 +97,7 @@ struct rz_dmac_chan {
- 	u32 chcfg;
- 	u32 chctrl;
- 	int mid_rid;
-+	int dmac_ack;
- 
- 	struct {
- 		u32 nxla;
-@@ -124,6 +125,9 @@ struct rz_dmac_icu {
- struct rz_dmac_info {
- 	void (*icu_register_dma_req)(struct platform_device *icu_dev,
- 				     u8 dmac_index, u8 dmac_channel, u16 req_no);
-+	void (*icu_register_dma_ack)(struct platform_device *icu_dev,
-+				     u8 dmac_index, u8 dmac_channel, u16 ack_no);
-+	u16 default_dma_ack_no;
- 	u16 default_dma_req_no;
- };
- 
-@@ -362,6 +366,60 @@ static void rz_dmac_set_dma_req_no(struct rz_dmac *dmac, unsigned int index,
- 		rz_dmac_set_dmars_register(dmac, index, req_no);
- }
- 
-+/*
-+ * Map MID/RID request number (bits[0:9] of DMA specifier) to the ICU
-+ * DMA ACK signal number, per RZ/G3E hardware manual Table 4.6-28.
-+ *
-+ * Three peripheral groups cover all ACK-capable peripherals:
-+ *
-+ *   PFC external DMA pins (DREQ0..DREQ4):
-+ *     req_no 0x000-0x004 -> ACK No. 84-88  (ack = req_no + 84)
-+ *
-+ *   SSIU BUSIFs (ssip00..ssip93):
-+ *     req_no 0x161-0x198 -> ACK No. 28-83  (ack = req_no - 0x145)
-+ *
-+ *   SPDIF (CH0..CH2) + SCU SRC (sr0..sr9) + DVC (cmd0..cmd1):
-+ *     req_no 0x199-0x1b4 -> ACK No. 0-27   (ack = req_no - 0x199)
-+ */
-+static int rz_dmac_get_ack_no(const struct rz_dmac_info *info, u16 req_no)
-+{
-+	if (!info->icu_register_dma_ack)
-+		return -EINVAL;
+diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd-common.yaml b/Documentation/devicetree/bindings/sound/renesas,rsnd-common.yaml
+new file mode 100644
+index 000000000000..ec6bf644d1a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/renesas,rsnd-common.yaml
+@@ -0,0 +1,196 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/renesas,rsnd-common.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	switch (req_no) {
-+	case 0x000 ... 0x004:
-+		/* PFC external DMA pins: ACK No. 84-88 */
-+		return req_no + 84;
-+	case 0x161 ... 0x198:
-+		/* SSIU BUSIFs: ACK No. 28-83 */
-+		return req_no - 0x145;
-+	case 0x199 ... 0x1b4:
-+		/* SPDIF + SCU SRC + DVC: ACK No. 0-27 */
-+		return req_no - 0x199;
-+	default:
-+		return -EINVAL;
-+	}
-+}
++title: Renesas R-Car/RZ Sound Common Properties
 +
-+static void rz_dmac_set_dma_ack_no(struct rz_dmac *dmac, unsigned int index,
-+				   int ack_no)
-+{
-+	if (ack_no < 0 || !dmac->info->icu_register_dma_ack)
-+		return;
++maintainers:
++  - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 +
-+	dmac->info->icu_register_dma_ack(dmac->icu.pdev, dmac->icu.dmac_index,
-+					 index, ack_no);
-+}
++description:
++  Common property and subnode definitions shared by Renesas R-Car and RZ
++  sound controller bindings.
 +
-+static void rz_dmac_reset_dma_ack_no(struct rz_dmac *dmac, int ack_no)
-+{
-+	if (ack_no < 0 || !dmac->info->icu_register_dma_ack)
-+		return;
++select: false
 +
-+	dmac->info->icu_register_dma_ack(dmac->icu.pdev, dmac->icu.dmac_index,
-+					 dmac->info->default_dma_ack_no, ack_no);
-+}
++properties:
++  compatible: true
 +
- static void rz_dmac_prepare_desc_for_memcpy(struct rz_dmac_chan *channel)
- {
- 	struct dma_chan *chan = &channel->vc.chan;
-@@ -431,6 +489,7 @@ static void rz_dmac_prepare_descs_for_slave_sg(struct rz_dmac_chan *channel)
- 	channel->lmdesc.tail = lmdesc;
- 
- 	rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
-+	rz_dmac_set_dma_ack_no(dmac, channel->index, channel->dmac_ack);
- }
- 
- static void rz_dmac_prepare_descs_for_cyclic(struct rz_dmac_chan *channel)
-@@ -485,6 +544,7 @@ static void rz_dmac_prepare_descs_for_cyclic(struct rz_dmac_chan *channel)
- 	channel->lmdesc.tail = lmdesc;
- 
- 	rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
-+	rz_dmac_set_dma_ack_no(dmac, channel->index, channel->dmac_ack);
- }
- 
- static int rz_dmac_xfer_desc(struct rz_dmac_chan *chan)
-@@ -567,6 +627,9 @@ static void rz_dmac_free_chan_resources(struct dma_chan *chan)
- 		channel->mid_rid = -EINVAL;
- 	}
- 
-+	rz_dmac_reset_dma_ack_no(dmac, channel->dmac_ack);
-+	channel->dmac_ack = -EINVAL;
++  reg: true
 +
- 	spin_unlock_irqrestore(&channel->vc.lock, flags);
- 
- 	list_for_each_entry_safe(desc, _desc, &channel->ld_free, node) {
-@@ -814,6 +877,7 @@ static void rz_dmac_device_synchronize(struct dma_chan *chan)
- 		dev_warn(dmac->dev, "DMA Timeout");
- 
- 	rz_dmac_set_dma_req_no(dmac, channel->index, dmac->info->default_dma_req_no);
-+	rz_dmac_reset_dma_ack_no(dmac, channel->dmac_ack);
- }
- 
- static struct rz_lmdesc *
-@@ -1164,6 +1228,8 @@ static bool rz_dmac_chan_filter(struct dma_chan *chan, void *arg)
- 	channel->chcfg = CHCFG_FILL_TM(ch_cfg) | CHCFG_FILL_AM(ch_cfg) |
- 			 CHCFG_FILL_LVL(ch_cfg) | CHCFG_FILL_HIEN(ch_cfg);
- 
-+	channel->dmac_ack = rz_dmac_get_ack_no(dmac->info, channel->mid_rid);
++  reg-names: true
 +
- 	return !test_and_set_bit(channel->mid_rid, dmac->modules);
- }
- 
-@@ -1200,6 +1266,7 @@ static int rz_dmac_chan_probe(struct rz_dmac *dmac,
- 
- 	channel->index = index;
- 	channel->mid_rid = -EINVAL;
-+	channel->dmac_ack = -EINVAL;
- 
- 	/* Request the channel interrupt. */
- 	scnprintf(pdev_irqname, sizeof(pdev_irqname), "ch%u", index);
-@@ -1569,6 +1636,9 @@ static int rz_dmac_resume(struct device *dev)
- 
- 		guard(spinlock_irqsave)(&channel->vc.lock);
- 
-+		rz_dmac_set_dma_req_no(dmac, channel->index, channel->mid_rid);
-+		rz_dmac_set_dma_ack_no(dmac, channel->index, channel->dmac_ack);
++  "#sound-dai-cells":
++    description:
++      Must be 0 for a single-DAI system and 1 for a multi-DAI system.
++    enum: [0, 1]
 +
- 		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC))) {
- 			rz_dmac_ch_writel(&dmac->channels[i], CHCTRL_DEFAULT, CHCTRL, 1);
- 			continue;
-@@ -1601,6 +1671,8 @@ static const struct dev_pm_ops rz_dmac_pm_ops = {
++  "#clock-cells":
++    description:
++      Must be 0 when the system has audio_clkout and 1 when it has
++      audio_clkout0/1/2/3.
++    enum: [0, 1]
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  clock-frequency:
++    description: Audio clock output frequency for audio_clkout0/1/2/3.
++
++  clkout-lr-asynchronous:
++    description: audio_clkoutn is asynchronous with lr-clock.
++    $ref: /schemas/types.yaml#/definitions/flag
++
++  power-domains: true
++
++  resets: true
++
++  reset-names: true
++
++  clocks: true
++
++  clock-names: true
++
++  port:
++    $ref: audio-graph-port.yaml#/definitions/port-base
++    unevaluatedProperties: false
++    patternProperties:
++      "^endpoint(@[0-9a-f]+)?$":
++        $ref: audio-graph-port.yaml#/definitions/endpoint-base
++        properties:
++          playback:
++            $ref: /schemas/types.yaml#/definitions/phandle-array
++          capture:
++            $ref: /schemas/types.yaml#/definitions/phandle-array
++        unevaluatedProperties: false
++
++  rcar_sound,dvc:
++    description: DVC subnode.
++    type: object
++    patternProperties:
++      "^dvc-[0-1]$":
++        type: object
++        additionalProperties: false
++        properties:
++          dmas: true
++          dma-names: true
++        required:
++          - dmas
++          - dma-names
++    additionalProperties: false
++
++  rcar_sound,mix:
++    description: MIX subnode.
++    type: object
++    patternProperties:
++      "^mix-[0-1]$":
++        type: object
++        additionalProperties: false
++    additionalProperties: false
++
++  rcar_sound,ctu:
++    description: CTU subnode.
++    type: object
++    patternProperties:
++      "^ctu-[0-7]$":
++        type: object
++        additionalProperties: false
++    additionalProperties: false
++
++  rcar_sound,src:
++    description: SRC subnode.
++    type: object
++    patternProperties:
++      "^src-[0-9]$":
++        type: object
++        additionalProperties: false
++        properties:
++          interrupts:
++            maxItems: 1
++          dmas: true
++          dma-names: true
++    additionalProperties: false
++
++  rcar_sound,ssiu:
++    description: SSIU subnode.
++    type: object
++    patternProperties:
++      "^ssiu-[0-9]+$":
++        type: object
++        additionalProperties: false
++        properties:
++          dmas: true
++          dma-names: true
++        required:
++          - dmas
++          - dma-names
++    additionalProperties: false
++
++  rcar_sound,ssi:
++    description: SSI subnode.
++    type: object
++    patternProperties:
++      "^ssi-[0-9]$":
++        type: object
++        additionalProperties: false
++        properties:
++          interrupts:
++            maxItems: 1
++          dmas: true
++          dma-names: true
++          shared-pin:
++            description: Shared clock pin.
++            $ref: /schemas/types.yaml#/definitions/flag
++          pio-transfer:
++            description: PIO transfer mode.
++            $ref: /schemas/types.yaml#/definitions/flag
++          no-busif:
++            description: BUSIF is not used for the mem-to-SSI via DMA case.
++            $ref: /schemas/types.yaml#/definitions/flag
++        required:
++          - interrupts
++    additionalProperties: false
++
++patternProperties:
++  'rcar_sound,dai(@[0-9a-f]+)?$':
++    description: DAI subnode.
++    type: object
++    patternProperties:
++      "^dai([0-9]+)?$":
++        type: object
++        additionalProperties: false
++        properties:
++          playback:
++            $ref: /schemas/types.yaml#/definitions/phandle-array
++          capture:
++            $ref: /schemas/types.yaml#/definitions/phandle-array
++        anyOf:
++          - required:
++              - playback
++          - required:
++              - capture
++    additionalProperties: false
++
++  'ports(@[0-9a-f]+)?$':
++    $ref: audio-graph-port.yaml#/definitions/port-base
++    unevaluatedProperties: false
++    patternProperties:
++      '^port(@[0-9a-f]+)?$':
++        $ref: "#/properties/port"
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++
++allOf:
++  - $ref: dai-common.yaml#
++
++additionalProperties: true
+diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml b/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
+index e8a2acb92646..0d989922a5b4 100644
+--- a/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
++++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
+@@ -9,8 +9,11 @@ title: Renesas R-Car Sound Driver
+ maintainers:
+   - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
  
- static const struct rz_dmac_info rz_dmac_v2h_info = {
- 	.icu_register_dma_req = rzv2h_icu_register_dma_req,
-+	.icu_register_dma_ack = rzv2h_icu_register_dma_ack,
-+	.default_dma_ack_no = RZV2H_ICU_DMAC_ACK_NO_DEFAULT,
- 	.default_dma_req_no = RZV2H_ICU_DMAC_REQ_NO_DEFAULT,
- };
+-properties:
++description:
++  Binding for Renesas R-Car Gen1/Gen2/Gen3/Gen4 and RZ/G1/G2 sound
++  controllers using the standard RSND layout.
+ 
++properties:
+   compatible:
+     oneOf:
+       # for Gen1 SoC
+@@ -67,34 +70,6 @@ properties:
+     minItems: 1
+     maxItems: 5
+ 
+-  "#sound-dai-cells":
+-    description: |
+-      it must be 0 if your system is using single DAI
+-      it must be 1 if your system is using multi  DAIs
+-      This is used on simple-audio-card
+-    enum: [0, 1]
+-
+-  "#clock-cells":
+-    description: |
+-      it must be 0 if your system has audio_clkout
+-      it must be 1 if your system has audio_clkout0/1/2/3
+-    enum: [0, 1]
+-
+-  "#address-cells":
+-    const: 1
+-
+-  "#size-cells":
+-    const: 0
+-
+-  clock-frequency:
+-    description: for audio_clkout0/1/2/3
+-
+-  clkout-lr-asynchronous:
+-    description: audio_clkoutn is asynchronizes with lr-clock.
+-    $ref: /schemas/types.yaml#/definitions/flag
+-
+-  power-domains: true
+-
+   resets:
+     minItems: 1
+     maxItems: 11
+@@ -109,181 +84,45 @@ properties:
+     maxItems: 31
+ 
+   clock-names:
+-    description: List of necessary clock names.
+-    # details are defined below
+-
+-  # ports is below
+-  port:
+-    $ref: audio-graph-port.yaml#/definitions/port-base
+-    unevaluatedProperties: false
+-    patternProperties:
+-      "^endpoint(@[0-9a-f]+)?":
+-        $ref: audio-graph-port.yaml#/definitions/endpoint-base
+-        properties:
+-          playback:
+-            $ref: /schemas/types.yaml#/definitions/phandle-array
+-          capture:
+-            $ref: /schemas/types.yaml#/definitions/phandle-array
+-        unevaluatedProperties: false
+-
+-  rcar_sound,dvc:
+-    description: DVC subnode.
+-    type: object
+-    patternProperties:
+-      "^dvc-[0-1]$":
+-        type: object
+-        additionalProperties: false
+-
+-        properties:
+-          dmas:
+-            maxItems: 1
+-          dma-names:
+-            const: tx
+-        required:
+-          - dmas
+-          - dma-names
+-    additionalProperties: false
+-
+-  rcar_sound,mix:
+-    description: MIX subnode.
+-    type: object
+-    patternProperties:
+-      "^mix-[0-1]$":
+-        type: object
+-        additionalProperties: false
+-    additionalProperties: false
+-
+-  rcar_sound,ctu:
+-    description: CTU subnode.
+-    type: object
+-    patternProperties:
+-      "^ctu-[0-7]$":
+-        type: object
+-        additionalProperties: false
+-    additionalProperties: false
+-
+-  rcar_sound,src:
+-    description: SRC subnode.
+-    type: object
+-    patternProperties:
+-      "^src-[0-9]$":
+-        type: object
+-        additionalProperties: false
+-
+-        properties:
+-          interrupts:
+-            maxItems: 1
+-          dmas:
+-            maxItems: 2
+-          dma-names:
+-            allOf:
+-              - items:
+-                  enum:
+-                    - tx
+-                    - rx
+-    additionalProperties: false
+-
+-  rcar_sound,ssiu:
+-    description: SSIU subnode.
+-    type: object
+-    patternProperties:
+-      "^ssiu-[0-9]+$":
+-        type: object
+-        additionalProperties: false
+-
+-        properties:
+-          dmas:
+-            maxItems: 2
+-          dma-names:
+-            allOf:
+-              - items:
+-                  enum:
+-                    - tx
+-                    - rx
+-        required:
+-          - dmas
+-          - dma-names
+-    additionalProperties: false
+-
+-  rcar_sound,ssi:
+-    description: SSI subnode.
+-    type: object
+-    patternProperties:
+-      "^ssi-[0-9]$":
+-        type: object
+-        additionalProperties: false
+-
+-        properties:
+-          interrupts:
+-            maxItems: 1
+-          dmas:
+-            minItems: 2
+-            maxItems: 4
+-          dma-names:
+-            allOf:
+-              - items:
+-                  enum:
+-                    - tx
+-                    - rx
+-                    - txu # if no ssiu node
+-                    - rxu # if no ssiu node
+-
+-          shared-pin:
+-            description: shared clock pin
+-            $ref: /schemas/types.yaml#/definitions/flag
+-          pio-transfer:
+-            description: PIO transfer mode
+-            $ref: /schemas/types.yaml#/definitions/flag
+-          no-busif:
+-            description: BUSIF is not used when [mem -> SSI] via DMA case
+-            $ref: /schemas/types.yaml#/definitions/flag
+-        required:
+-          - interrupts
+-    additionalProperties: false
++    description: List of clock names.
++    minItems: 1
++    maxItems: 31
++
++  "#sound-dai-cells": true
++
++  "#clock-cells": true
++
++  "#address-cells": true
++
++  "#size-cells": true
++
++  clock-frequency: true
++
++  clkout-lr-asynchronous: true
++
++  power-domains: true
++
++  port: true
++
++  rcar_sound,dvc: true
++
++  rcar_sound,mix: true
++
++  rcar_sound,ctu: true
++
++  rcar_sound,src: true
++
++  rcar_sound,ssiu: true
++
++  rcar_sound,ssi: true
+ 
+ patternProperties:
+-  # For DAI base
+-  'rcar_sound,dai(@[0-9a-f]+)?$':
+-    description: DAI subnode.
+-    type: object
+-    patternProperties:
+-      "^dai([0-9]+)?$":
+-        type: object
+-        additionalProperties: false
+-
+-        properties:
+-          playback:
+-            $ref: /schemas/types.yaml#/definitions/phandle-array
+-          capture:
+-            $ref: /schemas/types.yaml#/definitions/phandle-array
+-        anyOf:
+-          - required:
+-              - playback
+-          - required:
+-              - capture
+-    additionalProperties: false
+-
+-  'ports(@[0-9a-f]+)?$':
+-    $ref: audio-graph-port.yaml#/definitions/port-base
+-    unevaluatedProperties: false
+-    patternProperties:
+-      '^port(@[0-9a-f]+)?$':
+-        $ref: "#/properties/port"
+-
+-required:
+-  - compatible
+-  - reg
+-  - reg-names
+-  - clocks
+-  - clock-names
++  'rcar_sound,dai(@[0-9a-f]+)?$': true
++  'ports(@[0-9a-f]+)?$': true
+ 
+ allOf:
+-  - $ref: dai-common.yaml#
++  - $ref: renesas,rsnd-common.yaml#
+ 
+-  # --------------------
+-  # reg/reg-names
+-  # --------------------
+-  # for Gen1
+   - if:
+       properties:
+         compatible:
+@@ -295,11 +134,10 @@ allOf:
+           maxItems: 3
+         reg-names:
+           items:
+-            enum:
+-              - sru
+-              - ssi
+-              - adg
+-  # for Gen2/Gen3
++            - const: sru
++            - const: ssi
++            - const: adg
++
+   - if:
+       properties:
+         compatible:
+@@ -310,16 +148,34 @@ allOf:
+     then:
+       properties:
+         reg:
+-          minItems: 5
++          maxItems: 5
+         reg-names:
+           items:
+-            enum:
+-              - scu
+-              - adg
+-              - ssiu
+-              - ssi
+-              - audmapp
+-  # for Gen4
++            - const: scu
++            - const: adg
++            - const: ssiu
++            - const: ssi
++            - const: audmapp
++        resets:
++          maxItems: 11
++        reset-names:
++          items:
++            oneOf:
++              - const: ssi-all
++              - pattern: '^ssi\.[0-9]$'
++        clocks:
++          maxItems: 31
++        clock-names:
++          items:
++            oneOf:
++              - const: ssi-all
++              - pattern: '^ssi\.[0-9]$'
++              - pattern: '^src\.[0-9]$'
++              - pattern: '^mix\.[0-1]$'
++              - pattern: '^ctu\.[0-1]$'
++              - pattern: '^dvc\.[0-1]$'
++              - pattern: '^clk_(a|b|c|i)$'
++
+   - if:
+       properties:
+         compatible:
+@@ -336,38 +192,19 @@ allOf:
+               - ssiu
+               - ssi
+               - sdmc
+-
+-  # --------------------
+-  # clock-names
+-  # --------------------
+-  - if:
+-      properties:
+-        compatible:
+-          contains:
+-            const: renesas,rcar_sound-gen4
+-    then:
+-      properties:
+-        clock-names:
+-          maxItems: 3
++        resets:
++          maxItems: 2
++        reset-names:
+           items:
+-            enum:
+-              - ssi.0
+-              - ssiu.0
+-              - clkin
+-    else:
+-      properties:
++            - const: ssiu.0
++            - const: ssi.0
++        clocks:
++          maxItems: 3
+         clock-names:
+-          minItems: 1
+-          maxItems: 31
+           items:
+-            oneOf:
+-              - const: ssi-all
+-              - pattern: '^ssi\.[0-9]$'
+-              - pattern: '^src\.[0-9]$'
+-              - pattern: '^mix\.[0-1]$'
+-              - pattern: '^ctu\.[0-1]$'
+-              - pattern: '^dvc\.[0-1]$'
+-              - pattern: '^clk_(a|b|c|i)$'
++            - const: ssiu.0
++            - const: ssi.0
++            - const: clkin
+ 
+ unevaluatedProperties: false
  
 -- 
 2.25.1

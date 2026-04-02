@@ -1,170 +1,119 @@
-Return-Path: <dmaengine+bounces-9824-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9825-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iPseOpkgzmnElAYAu9opvQ
-	(envelope-from <dmaengine+bounces-9824-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 09:54:01 +0200
+	id aJfLAvYszmnIlQYAu9opvQ
+	(envelope-from <dmaengine+bounces-9825-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 10:46:46 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52948385782
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 09:54:01 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84FA53863FF
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 10:46:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 86AB93068F07
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2026 07:47:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 779A43058DE5
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2026 08:40:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 384C2389DE3;
-	Thu,  2 Apr 2026 07:47:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33BD238AC78;
+	Thu,  2 Apr 2026 08:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bereza.email header.i=@bereza.email header.b="YO+fG+cH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxcGY1KB"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from fsn-vps-1.bereza.email (fsn-vps-1.bereza.email [162.55.44.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329DD359A7C;
-	Thu,  2 Apr 2026 07:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.55.44.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF6978F59;
+	Thu,  2 Apr 2026 08:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775116037; cv=none; b=TmQBO/XNgc3nU+vL80YUmf5S574XZ5QTXIllE95kQFVBZTrp1vwiZNb2Tbn0dg0cAJMCSflDcGj8xNkgOHK7EZba7UCrQ1E6ryTw/CZcTGEltLfZ3lho41jCDZk/PppA+I2W914PBcx8UOsAB4kOeX2wTzaLOgQ6iZKDoD2E/C4=
+	t=1775119226; cv=none; b=LpIAczz+0DawxAHrBPAInd0ttUwlQvyiCxFMGsBA6yTTjpERxMQnB41+KCcd/cur5JG+ei5ikuCNQeh5R2I0sPAVF0p1J8oQvOU7Myyt0OFh5aQzeHke4Tcy7A7ruVFzfU4x1JrSFqfvtigVs5Sra4VLdhbcJxy1oXLJmE/fQeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775116037; c=relaxed/simple;
-	bh=CF7O3i7wHSzlyimOTIc/kLCwdu7hGG6ESx7aNHgmZKQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Em51eTMuBL3KDRtdBQICArXrnuA33xmeftPV/ujkkhqAezxuvdbhYXfQKjc3gp331bs4AWcR0ZycTmoznwj+9mYjkB58vRA933XyhuoFgzgRr7VBtYDSPPOjBEIbywjRcSV5yX9KTvtYv4kQSZPlloF1sUdKxftLO+JHtgCftZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bereza.email; spf=pass smtp.mailfrom=bereza.email; dkim=pass (2048-bit key) header.d=bereza.email header.i=@bereza.email header.b=YO+fG+cH; arc=none smtp.client-ip=162.55.44.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bereza.email
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bereza.email
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bereza.email; s=mail;
-	t=1775116026; bh=CF7O3i7wHSzlyimOTIc/kLCwdu7hGG6ESx7aNHgmZKQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=YO+fG+cHociVuiNRfv2Aquhhm8HO/hcJjZnR2tL8+48Asp/a9n01WNjJA5zLEk+D0
-	 Yqj9zL0MqleqT6hVkSIT5gejgqXG5KbHlxQVHE9flxDRkq4LpSm9xnzTQoo6Cuao5R
-	 LUdPgW4StDCpyo1EoJXT8D6CqMEDoupZyg6EbPqH0hSiwoBZ5lAV4L9N8N6lm1mnZ7
-	 9oiJFRx4TD5z+/9IqR5UiVT1VNtGUrrh761E9AJi+qxINcVEt5taHBXLuPyY4OyxOz
-	 j2N4NUnHyAcGyUrm4R+plaZv9NilFcihhDKfp6ZaeVipsG7OBW2XZnYSx1k1cmNW0W
-	 s+9LzQNJKYwpQ==
-Received: from [127.0.1.1] (pd95bbad8.dip0.t-ipconnect.de [217.91.186.216])
-	by fsn-vps-1.bereza.email (Postfix) with ESMTPSA id 67B966025A;
-	Thu,  2 Apr 2026 09:47:06 +0200 (CEST)
-From: Alex Bereza <alex@bereza.email>
-Date: Thu, 02 Apr 2026 09:46:23 +0200
-Subject: [PATCH v4 2/2] dmaengine: xilinx_dma: Rename XILINX_DMA_LOOP_COUNT
+	s=arc-20240116; t=1775119226; c=relaxed/simple;
+	bh=cKu/jCB9ioOWzqhlmJ618JPe0TN1anLKMrkWDWFbf/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ETBoKxMC/svucmfOd0hvP79rEbAQ8W86G0v5cpBg3H71z1FqJPnqaHwt5ovDy2ZrgLPhy3APdIdMs+IPZaLW9phPZN4i2JRsgnEbuaj3iOlkM7lgfCXirzg2Y7eihPttIxZbma0lzyVJAAzCzpNx5bi+viMYGeHEQoHdAU9OkNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxcGY1KB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 277D6C116C6;
+	Thu,  2 Apr 2026 08:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775119225;
+	bh=cKu/jCB9ioOWzqhlmJ618JPe0TN1anLKMrkWDWFbf/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NxcGY1KBS6HNodyt8aAkyRLe3Gj/9VwON4RP9Y5AzwpXOx2HOzcNT43bkNQkG2fyi
+	 mXSgDdKxiVnHbxp79ieY6Q9a9CYosTfkvhDWFpzo/bzPmkl8Xl6vojHQRg2ID2GuQD
+	 r/hFnYQNIOkCAwnDW/tahfL3O080nsUzmY3r7ua+cI2Crk+8nZPJ4Ee8XWzxKvsWjV
+	 suvuJjcTNuOup3cQUQcWtvt7Snph6mBO5QgC5Vizki8iQd+FtovUvg8SbuWUa0A5Y0
+	 I5Dehj7pYua2V7ejyGimhiLHz/HObAo65NvvJWjLIpUhjCGfnDnz3+FXfVm5QW8h9r
+	 ADZVEioTANpww==
+Date: Thu, 2 Apr 2026 10:40:23 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Frank Li <Frank.Li@kernel.org>, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Xueyao An <xueyao.an@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH] dt-bindings: dma: qcom,gpi: Document GPI DMA engine for
+ Hawi SoC
+Message-ID: <20260402-attractive-bug-of-experiment-c932e1@quoll>
+References: <20260401124028.589931-1-mukesh.ojha@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260402-fix-atomic-poll-timeout-regression-v4-2-f30d6a6c13cb@bereza.email>
-References: <20260402-fix-atomic-poll-timeout-regression-v4-0-f30d6a6c13cb@bereza.email>
-In-Reply-To: <20260402-fix-atomic-poll-timeout-regression-v4-0-f30d6a6c13cb@bereza.email>
-To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
- Michal Simek <michal.simek@amd.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
- Tony Lindgren <tony@atomide.com>, 
- Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Alex Bereza <alex@bereza.email>, 
- Suraj Gupta <suraj.gupta2@amd.com>
-X-Mailer: b4 0.15.1
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260401124028.589931-1-mukesh.ojha@oss.qualcomm.com>
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[bereza.email,quarantine];
-	R_DKIM_ALLOW(-0.20)[bereza.email:s=mail];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9824-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
+	TAGGED_FROM(0.00)[bounces-9825-lists,dmaengine=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alex@bereza.email,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[bereza.email:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amd.com:email]
-X-Rspamd-Queue-Id: 52948385782
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 84FA53863FF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Rename XILINX_DMA_LOOP_COUNT to XILINX_DMA_POLL_TIMEOUT_US because it is
-a timeout value, not a loop count for polling register in microseconds.
+On Wed, Apr 01, 2026 at 06:10:28PM +0530, Mukesh Ojha wrote:
+> From: Xueyao An <xueyao.an@oss.qualcomm.com>
+> 
+> The Hawi GPI DMA engine follows the same programming model and
+> register interface as previous generation of Qualcomm SoCs like
+> kaanapali, glymur, and is fully compatible with earlier GPI DMA
+> implementations.
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Xueyao An <xueyao.an@oss.qualcomm.com>
+> Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+> ---
+>  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-No functional changes.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
-Reviewed-by: Suraj Gupta <suraj.gupta2@amd.com>
-Signed-off-by: Alex Bereza <alex@bereza.email>
----
- drivers/dma/xilinx/xilinx_dma.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 345a738bab2c..253c27fd1a0e 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -165,8 +165,8 @@
- #define XILINX_DMA_FLUSH_MM2S		2
- #define XILINX_DMA_FLUSH_BOTH		1
- 
--/* Delay loop counter to prevent hardware failure */
--#define XILINX_DMA_LOOP_COUNT		1000000
-+/* Timeout for polling various registers */
-+#define XILINX_DMA_POLL_TIMEOUT_US	1000000
- /* Delay between polls (avoid a delay of 0 to prevent CPU stalls) */
- #define XILINX_DMA_POLL_DELAY_US	10
- 
-@@ -1336,7 +1336,7 @@ static int xilinx_dma_stop_transfer(struct xilinx_dma_chan *chan)
- 	return xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR, val,
- 				       val & XILINX_DMA_DMASR_HALTED,
- 				       XILINX_DMA_POLL_DELAY_US,
--				       XILINX_DMA_LOOP_COUNT);
-+				       XILINX_DMA_POLL_TIMEOUT_US);
- }
- 
- /**
-@@ -1352,7 +1352,7 @@ static int xilinx_cdma_stop_transfer(struct xilinx_dma_chan *chan)
- 	return xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR, val,
- 				       val & XILINX_DMA_DMASR_IDLE,
- 				       XILINX_DMA_POLL_DELAY_US,
--				       XILINX_DMA_LOOP_COUNT);
-+				       XILINX_DMA_POLL_TIMEOUT_US);
- }
- 
- /**
-@@ -1370,7 +1370,7 @@ static void xilinx_dma_start(struct xilinx_dma_chan *chan)
- 	err = xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR, val,
- 				      !(val & XILINX_DMA_DMASR_HALTED),
- 				      XILINX_DMA_POLL_DELAY_US,
--				      XILINX_DMA_LOOP_COUNT);
-+				      XILINX_DMA_POLL_TIMEOUT_US);
- 
- 	if (err) {
- 		dev_err(chan->dev, "Cannot start channel %p: %x\n",
-@@ -1787,7 +1787,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
- 	err = xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMACR, tmp,
- 				      !(tmp & XILINX_DMA_DMACR_RESET),
- 				      XILINX_DMA_POLL_DELAY_US,
--				      XILINX_DMA_LOOP_COUNT);
-+				      XILINX_DMA_POLL_TIMEOUT_US);
- 
- 	if (err) {
- 		dev_err(chan->dev, "reset timeout, cr %x, sr %x\n",
-
--- 
-2.53.0
+Best regards,
+Krzysztof
 
 

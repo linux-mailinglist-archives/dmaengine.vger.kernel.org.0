@@ -1,41 +1,42 @@
-Return-Path: <dmaengine+bounces-9826-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9827-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wBnZOFAyzmnIlQYAu9opvQ
-	(envelope-from <dmaengine+bounces-9826-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:09:36 +0200
+	id 0HTeE1Yzzmk8mAYAu9opvQ
+	(envelope-from <dmaengine+bounces-9827-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:13:58 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8159386823
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:09:35 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BFA73869B6
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:13:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4B298303CBD0
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2026 09:07:18 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 08BFC302C338
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2026 09:07:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8968533D4FD;
-	Thu,  2 Apr 2026 09:07:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99F3336493C;
+	Thu,  2 Apr 2026 09:07:16 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86EF2328B4B;
-	Thu,  2 Apr 2026 09:07:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCA7C35CB6A;
+	Thu,  2 Apr 2026 09:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775120834; cv=none; b=JatzpdLaEsFkAexbud2/flbcJcQ6HBbANaIXQlN+/fPrnEMTqRGL+VQtb86PGzNnROvts2octQTKGtzKecKjFWZEZwCJtBtcQzLinXw8pK2XD+REhIymrPUNbpmRy+yxhXYT0ZngnPzk93QsqfjAhcQQPciyq+o47786hNVMK/A=
+	t=1775120836; cv=none; b=InVZ07Hg5Uv7G5uvhepWzTyPKxnNS2l29H51BIpRE4Syy0LGSRKn85dQUaJGetgXxJE8hsmp0YmC1qD/yGntUANnQI0DWMkYjSYgEeCvVRmlxyfCJfyqWbNU6zeMATGi2mFlbRr6fnhVp6oHhiNWn9dv24mPLlQXpyk1l8IZxO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775120834; c=relaxed/simple;
-	bh=xixV5RkwLk5z95u+nLxN4EdJOHoKOzWPM6DEQMzVwnk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D8KUN9LW/VA9WEvwP4YM7ZLrZAUnfkXeHs+Zklp2xHSqgePD8jTssuX1epI3DgTV/m7RdMgOonDbSroh6OHYIY3fC+F90Qd3HpG+QLWPJdCPdyqLP9pzPFX7/kHfHU0fLDt9nrxs+r1FQCOOS6XsB7hmgt04sBk7++zPEBCSQJ0=
+	s=arc-20240116; t=1775120836; c=relaxed/simple;
+	bh=X37XDUHdWRw5TvK1a2T1hccGb5D60ivpW8gq3u11GPE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oOzugD2/QKjutydj4eKOGANLHs75A2nuC4hC7HA36h0GR5B8SmJX3ACmgudJpX4mAhDzGWHh0+R3qkO2itZzILO1y9cbAjvC8J87173Ers+qk8Fo1zk1OgCahdNGq/RP0G2XQ5xaTQ29PmuL1tOhbusE/y6ZKmcVHbZTl1I1Ruk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: YBocXJXfTZiExZAeyV3GAQ==
-X-CSE-MsgGUID: 5xLgOFjnRvyeGWl4dtf8Lw==
+X-CSE-ConnectionGUID: mXO/D9kgS6Kkl54iLs19cQ==
+X-CSE-MsgGUID: QSjdhNOOTS6CIk4s6BuhyQ==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 02 Apr 2026 18:07:04 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 02 Apr 2026 18:07:14 +0900
 Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.136])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3159E413E676;
-	Thu,  2 Apr 2026 18:06:55 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 99AFA413EA85;
+	Thu,  2 Apr 2026 18:07:05 +0900 (JST)
 From: John Madieu <john.madieu.xa@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
@@ -65,10 +66,12 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	dmaengine@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH v2 00/24] ASoC: rsnd: Add audio support for the Renesas RZ/G3E SoC
-Date: Thu,  2 Apr 2026 11:04:59 +0200
-Message-ID: <20260402090524.9137-1-john.madieu.xa@bp.renesas.com>
+Subject: [PATCH v2 01/24] dt-bindings: clock: renesas: Add audio clock inputs for RZ/V2H family
+Date: Thu,  2 Apr 2026 11:05:00 +0200
+Message-ID: <20260402090524.9137-2-john.madieu.xa@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260402090524.9137-1-john.madieu.xa@bp.renesas.com>
+References: <20260402090524.9137-1-john.madieu.xa@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -81,7 +84,7 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[renesas.com : SPF not aligned (relaxed), No valid DKIM,none];
@@ -91,139 +94,68 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[baylibre.com,kernel.org,gmail.com,perex.cz,suse.com,pengutronix.de,tuxon.dev,bp.renesas.com,renesas.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9826-lists,dmaengine=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TAGGED_FROM(0.00)[bounces-9827-lists,dmaengine=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[john.madieu.xa@bp.renesas.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.559];
+	NEURAL_HAM(-0.00)[-0.979];
 	TAGGED_RCPT(0.00)[dmaengine,renesas,dt];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: E8159386823
+X-Rspamd-Queue-Id: 0BFA73869B6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This series adds audio support for the Renesas RZ/G3E SoC and enables
-it on the SMARC EVK board with the Dialog DA7212 codec.
+RZ/V2H, RZ/V2N, and RZ/G3E support external audio clock inputs
+(AUDIO_CLKA, AUDIO_CLKB, AUDIO_CLKC) that can be used by the Audio Clock
+Generator (ADG) to derive internal audio clocks. These clocks are optional
+and their frequencies are set by the board.
 
-The RZ/G3E audio subsystem is based on R-Car Sound IP but has several
-differences requiring dedicated handling:
-  - SSI operates exclusively in BUSIF mode (no PIO)
-  - 2 BUSIF channels per SSI instead of 4/8 on R-Car
-  - Different register offsets for SCU, ADG, SSIU, and SSI
-  - Per-SSI ADG and SSIF supply clocks
-  - DMA ACK signal routing through ICU
+Update the bindings to allow these optional clocks for all RZ/V2H family
+SoCs.
 
-This series includes:
-  - Clock driver support for audio clocks and resets
-  - DT bindings update for DMA ACK signal field
-  - IRQ chip extension for DMA ACK signal routing
-  - RZ-DMAC driver updates for ACK signal support
-  - R-Car Sound driver updates for RZ/G3E support
-  - System suspend/resume support
-  - Device tree nodes for RZ/G3E SMARC EVK
-
-Note: patch 04/22 depends on [1]. As this patch will propably be routed
-through the DMA tree independently, the rest of the series can be reviewed
-and the remaining patches applied without this dependency being resolved
-first.
-
-Audio configuration on SMARC EVK:
-  - Codec: Dialog DA7212 on I2C1
-  - Playback: SSI3 -> SRC1 -> DVC1
-  - Capture: SSI4 -> SRC0 -> DVC0
-  - MCLK: 12.288MHz from Versa3 clock generator
-  - Format: I2S, RZ/G3E Sound as clock master
-  - SSI4 shares clock pins with SSI3 (shared-pin)
-
-Tested on RZ/G3E SMARC EVK with:
-  - Playback to headphone output
-  - Capture from line-in (AUX) input and/or Mic
-  - Full duplex operation
-  - System suspend/resume
-
-Merge strategy:
- - Patch 01-02/24: Clock tree
- - Patch 03-04/24: both in DMA tree, as there is hard inter-dependency between
-   these patches 
- - Patch 05-18/24: ASoC tree
- - Patch 19-24/24: SoC dts tree
-
-[1] https://lore.kernel.org/all/20260320112838.2200198-1-claudiu.beznea.uj@bp.renesas.com/
+Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+---
 
 Changes:
 
-v2:
+v2: Remove maxItems as it not needed with items lists.
 
- - Fix Rob's comment on  maxItems not needed with items lists.
- - Drop DMA ACK second cell from DT specifier
- - Derive ACK signal number in-driver from MID/RID using arithmetic formulas
-   per ICU Table 4.6-28 (3 linear peripheral groups)
- - Split of rsnd.yaml into common and R-Car-specific schemas
- - Introduce RZ/G3E sound binding as a standalone schema
- - Addressed Kuninori'comments, details are in individual patches
+ .../devicetree/bindings/clock/renesas,rzv2h-cpg.yaml      | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-
-John Madieu (24):
-  dt-bindings: clock: renesas: Add audio clock inputs for RZ/V2H family
-  clk: renesas: r9a09g047: Add audio clock and reset support
-  irqchip/renesas-rzv2h: Add DMA ACK signal routing support
-  dma: sh: rz-dmac: Add DMA ACK signal routing support
-  ASoC: dt-bindings: renesas,rsnd: Split into generic and SoC-specific
-    parts
-  ASoC: dt-bindings: Add RZ/G3E (R9A09G047) sound binding
-  ASoC: rsnd: Add reset controller support to rsnd_mod
-  ASoC: rsnd: Add RZ/G3E SoC probing and register map
-  ASoC: rsnd: Add audmacpp clock and reset support for RZ/G3E
-  ASoC: rsnd: Add RZ/G3E DMA address calculation support
-  ASoC: rsnd: ssui: Add RZ/G3E SSIU BUSIF support
-  ASoC: rsnd: Add SSI reset support for RZ/G3E platforms
-  ASoC: rsnd: Add ADG reset support for RZ/G3E
-  ASoC: rsnd: adg: Add per-SSI ADG and SSIF supply clock management
-  ASoC: rsnd: src: Add SRC reset and clock support for RZ/G3E
-  ASoC: rsnd: Add rsnd_adg_mod_get() for PM support
-  ASoC: rsnd: Export rsnd_ssiu_mod_get() for PM support
-  ASoC: rsnd: Add system suspend/resume support
-  arm64: dts: renesas: rzv2h: Add audio clock inputs
-  arm64: dts: renesas: r9a09g047: Add R-Car Sound support
-  arm64: dts: renesas: rzg3e-smarc-som: Add Versa3 clock generator
-  arm64: dts: renesas: rzg3e-smarc-som: Add I2C1 support
-  arm64: dts: renesas: rzg3e-smarc-som: add audio pinmux definitions
-  arm64: dts: renesas: r9a09g047e57-smarc: add DA7212 audio codec
-    support
-
- .../bindings/clock/renesas,rzv2h-cpg.yaml     |   8 +
- .../sound/renesas,r9a09g047-sound.yaml        | 371 ++++++++++++
- .../bindings/sound/renesas,rsnd-common.yaml   | 196 +++++++
- .../bindings/sound/renesas,rsnd.yaml          | 319 +++--------
- arch/arm64/boot/dts/renesas/r9a09g047.dtsi    | 529 +++++++++++++++++-
- .../boot/dts/renesas/r9a09g047e57-smarc.dts   | 114 ++++
- arch/arm64/boot/dts/renesas/r9a09g056.dtsi    |  27 +-
- arch/arm64/boot/dts/renesas/r9a09g057.dtsi    |  27 +-
- .../boot/dts/renesas/rzg3e-smarc-som.dtsi     |  44 ++
- drivers/clk/renesas/r9a09g047-cpg.c           | 129 ++++-
- drivers/dma/sh/rz-dmac.c                      |  72 +++
- drivers/irqchip/irq-renesas-rzv2h.c           |  40 ++
- include/linux/irqchip/irq-renesas-rzv2h.h     |   5 +
- sound/soc/renesas/rcar/adg.c                  | 133 ++++-
- sound/soc/renesas/rcar/cmd.c                  |   2 +-
- sound/soc/renesas/rcar/core.c                 |  60 +-
- sound/soc/renesas/rcar/ctu.c                  |  22 +-
- sound/soc/renesas/rcar/dma.c                  | 167 +++++-
- sound/soc/renesas/rcar/dvc.c                  |  22 +-
- sound/soc/renesas/rcar/gen.c                  | 180 ++++++
- sound/soc/renesas/rcar/mix.c                  |  22 +-
- sound/soc/renesas/rcar/rsnd.h                 |  53 +-
- sound/soc/renesas/rcar/src.c                  |  71 ++-
- sound/soc/renesas/rcar/ssi.c                  |  51 +-
- sound/soc/renesas/rcar/ssiu.c                 |  69 ++-
- 25 files changed, 2427 insertions(+), 306 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/renesas,r9a09g047-sound.yaml
- create mode 100644 Documentation/devicetree/bindings/sound/renesas,rsnd-common.yaml
-
+diff --git a/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml b/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
+index f261445bf341..d9cf62f5224e 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
++++ b/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
+@@ -26,16 +26,24 @@ properties:
+     maxItems: 1
+ 
+   clocks:
++    minItems: 3
+     items:
+       - description: AUDIO_EXTAL clock input
+       - description: RTXIN clock input
+       - description: QEXTAL clock input
++      - description: AUDIO_CLKA clock input
++      - description: AUDIO_CLKB clock input
++      - description: AUDIO_CLKC clock input
+ 
+   clock-names:
++    minItems: 3
+     items:
+       - const: audio_extal
+       - const: rtxin
+       - const: qextal
++      - const: audio_clka
++      - const: audio_clkb
++      - const: audio_clkc
+ 
+   '#clock-cells':
+     description: |
 -- 
 2.25.1
 

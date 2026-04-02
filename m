@@ -1,42 +1,42 @@
-Return-Path: <dmaengine+bounces-9840-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9841-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kOm5HGkzzmk8mAYAu9opvQ
-	(envelope-from <dmaengine+bounces-9840-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:14:17 +0200
+	id GN1wMHg0zmk8mAYAu9opvQ
+	(envelope-from <dmaengine+bounces-9841-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:18:48 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19E6A3869E2
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:14:17 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7626386B90
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Apr 2026 11:18:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B1FB930B6E77
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2026 09:10:02 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9F5EA305FE74
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2026 09:10:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86BF4366065;
-	Thu,  2 Apr 2026 09:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1B7E36A03A;
+	Thu,  2 Apr 2026 09:09:22 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5472A33E34E;
-	Thu,  2 Apr 2026 09:09:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C153C368962;
+	Thu,  2 Apr 2026 09:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775120953; cv=none; b=rpHItbElQBlH/CZSIiFbvWv9H0cKkqOiU/KuoTDTUT1ca2+AYwXhkY/RlS/Bd7nRcJVf51bvX8Gky2B8bsOL4JxqQuxe0AKzAd0F1vNAQbGQq1+0h1bFQnrUnxvOt17i9ojLorutR1akgWtLZzFC9ijrA64vdAblhXhHwgH3PEo=
+	t=1775120962; cv=none; b=W42wgxUqcgVnc4UIxozFV2ml3My1a1Aolmzd/6Biau5Zlti244MJiof905MBjt0QtXHISiB1772XzCQR/aUnQ5oNyIYS/fiyTZEto/qQG16LaemU5zcJjIeUMBbJ5/5LJEEr4gEVRy3Xj29dcKJ2UbimsuAOFd3uHW2EYiJ5h5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775120953; c=relaxed/simple;
-	bh=SlzWocXygQw9GwXTMMYdsuWw/mHQSpTen9UeSNgEXjs=;
+	s=arc-20240116; t=1775120962; c=relaxed/simple;
+	bh=RgxtrmYDG3leJ7S6EE6mmn/Q2bMMV/4Xqvgxbz8M7Iw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EtEL/MWoBlHd6Arl5vn03k1Tl93WKoprQWRXFK5fDR6vMjshqtpXv8p7pWUVK/nL13fKf/tkvoUReN31Lix8tjkL8m9ASCP1viuU5ABn/Ts4C6+vSLwu5y98gfv7rMJYUWmIrE9CAD7YaddnjZF2hQx9lNRsqkkT722RLuWy8VA=
+	 MIME-Version; b=HVeqO3ncr6tCNC2qUCn5htMaI/fxH4j3J+xzrTDaO0ExCZca1TvSRoKMT3EWNhxb0O9WniGqBtSDIxOcnXvTPHt5fPUjdyj+GW7xXu3eit1v2/35UHYtbpKwYcvD46+Qbqfm5NGs2OG8W/zIaB/BZzen2UUdXUTSzlnA59tpuMM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: G2qT5eepQWmtDLerwyd/ZA==
-X-CSE-MsgGUID: XlEPblvzRPGujjEN/z6C2w==
+X-CSE-ConnectionGUID: 284a3b3RROmhPRQ3nndh4w==
+X-CSE-MsgGUID: mVxyfJeMSEGm7zz+v0fzXg==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 02 Apr 2026 18:09:10 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 02 Apr 2026 18:09:20 +0900
 Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.136])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id D2FD0413EABB;
-	Thu,  2 Apr 2026 18:09:01 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5378D413EB4D;
+	Thu,  2 Apr 2026 18:09:10 +0900 (JST)
 From: John Madieu <john.madieu.xa@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
@@ -66,9 +66,9 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	dmaengine@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH v2 14/24] ASoC: rsnd: adg: Add per-SSI ADG and SSIF supply clock management
-Date: Thu,  2 Apr 2026 11:05:13 +0200
-Message-ID: <20260402090524.9137-15-john.madieu.xa@bp.renesas.com>
+Subject: [PATCH v2 15/24] ASoC: rsnd: src: Add SRC reset and clock support for RZ/G3E
+Date: Thu,  2 Apr 2026 11:05:14 +0200
+Message-ID: <20260402090524.9137-16-john.madieu.xa@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260402090524.9137-1-john.madieu.xa@bp.renesas.com>
 References: <20260402090524.9137-1-john.madieu.xa@bp.renesas.com>
@@ -84,7 +84,7 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[renesas.com : SPF not aligned (relaxed), No valid DKIM,none];
@@ -94,38 +94,32 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[baylibre.com,kernel.org,gmail.com,perex.cz,suse.com,pengutronix.de,tuxon.dev,bp.renesas.com,renesas.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9840-lists,dmaengine=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-9841-lists,dmaengine=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[john.madieu.xa@bp.renesas.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.976];
+	NEURAL_HAM(-0.00)[-0.978];
 	TAGGED_RCPT(0.00)[dmaengine,renesas,dt];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 19E6A3869E2
+X-Rspamd-Queue-Id: C7626386B90
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-RZ/G3E's ADG module requires explicit clock management for SSI audio
-interfaces that differs from R-Car Gen2/Gen3/Gen4:
+The RZ/G3E SoC requires explicit SCU (Sampling Rate Converter Unit)
+reset and clock management unlike previous R-Car generations:
 
- - Per-SSI ADG clocks (adg.ssi.N) for each SSI module
- - A shared SSIF supply clock for the SSI subsystem
+- scu_clk: SCU module clock
+- scu_clkx2: SCU double-rate clock
+- scu_supply_clk: SCU supply clock
 
-These clocks are acquired using optional APIs, making them transparent
-to platforms that do not require them.
-
-Additionally, since rsnd_adg_ssi_clk_try_start() is called from the
-trigger path (atomic context), clk_prepare_enable() cannot be used
-directly as clk_prepare() may sleep. Split clock handling into:
-
- - hw_params: clk_prepare() - sleepable context
- - trigger (start): clk_enable() - atomic safe
- - trigger (stop): clk_disable() - atomic safe
- - hw_free: clk_unprepare() - sleepable context
+Without these clocks enabled, the SRC module cannot operate on RZ/G3E.
+Add support for the shared SCU reset controller used by the SRC modules
+on the Renesas RZ/G3E SoC. All SRC instances are gated by the same "scu"
+reset line.
 
 Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 ---
@@ -134,230 +128,127 @@ Changes:
 
 v2: No changes
 
- sound/soc/renesas/rcar/adg.c  | 99 ++++++++++++++++++++++++++++++++++-
- sound/soc/renesas/rcar/rsnd.h |  2 +
- sound/soc/renesas/rcar/ssi.c  | 18 +++++++
- 3 files changed, 118 insertions(+), 1 deletion(-)
+ sound/soc/renesas/rcar/rsnd.h |  7 ++++++
+ sound/soc/renesas/rcar/src.c  | 45 +++++++++++++++++++++++++++++++++--
+ 2 files changed, 50 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/renesas/rcar/adg.c b/sound/soc/renesas/rcar/adg.c
-index cbb5c4432a2d..131a60689f6d 100644
---- a/sound/soc/renesas/rcar/adg.c
-+++ b/sound/soc/renesas/rcar/adg.c
-@@ -19,6 +19,9 @@
- #define CLKOUT3	3
- #define CLKOUTMAX 4
- 
-+/* Maximum SSI count for per-SSI clocks */
-+#define ADG_SSI_MAX	10
-+
- #define BRGCKR_31	(1 << 31)
- #define BRRx_MASK(x) (0x3FF & x)
- 
-@@ -34,6 +37,9 @@ struct rsnd_adg {
- 	struct clk *adg;
- 	struct clk *clkin[CLKINMAX];
- 	struct clk *clkout[CLKOUTMAX];
-+	/* RZ/G3E: per-SSI ADG clocks (adg.ssi.0 through adg.ssi.9) */
-+	struct clk *clk_adg_ssi[ADG_SSI_MAX];
-+	struct clk *clk_ssif_supply;
- 	struct clk *null_clk;
- 	struct clk_onecell_data onecell;
- 	struct rsnd_mod mod;
-@@ -341,10 +347,58 @@ int rsnd_adg_clk_query(struct rsnd_priv *priv, unsigned int rate)
- 	return -EIO;
- }
- 
-+/*
-+ * RZ/G3E: Prepare SSI clocks - call from hw_params (can sleep)
-+ */
-+int rsnd_adg_ssi_clk_prepare(struct rsnd_mod *ssi_mod)
-+{
-+	struct rsnd_priv *priv = rsnd_mod_to_priv(ssi_mod);
-+	struct rsnd_adg *adg = rsnd_priv_to_adg(priv);
-+	struct device *dev = rsnd_priv_to_dev(priv);
-+	int id = rsnd_mod_id(ssi_mod);
-+	int ret;
-+
-+	ret = clk_prepare(adg->clk_adg_ssi[id]);
-+	if (ret) {
-+		dev_err(dev, "Cannot prepare adg.ssi.%d ADG clock\n", id);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare(adg->clk_ssif_supply);
-+	if (ret) {
-+		dev_err(dev, "Cannot prepare SSIF supply clock\n");
-+		clk_unprepare(adg->clk_adg_ssi[id]);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * RZ/G3E: Unprepare SSI clocks - call from hw_free (can sleep)
-+ */
-+void rsnd_adg_ssi_clk_unprepare(struct rsnd_mod *ssi_mod)
-+{
-+	struct rsnd_priv *priv = rsnd_mod_to_priv(ssi_mod);
-+	struct rsnd_adg *adg = rsnd_priv_to_adg(priv);
-+	int id = rsnd_mod_id(ssi_mod);
-+
-+	clk_unprepare(adg->clk_adg_ssi[id]);
-+	clk_unprepare(adg->clk_ssif_supply);
-+}
-+
- int rsnd_adg_ssi_clk_stop(struct rsnd_mod *ssi_mod)
- {
-+	struct rsnd_priv *priv = rsnd_mod_to_priv(ssi_mod);
-+	struct rsnd_adg *adg = rsnd_priv_to_adg(priv);
-+	int id = rsnd_mod_id(ssi_mod);
-+
- 	rsnd_adg_set_ssi_clk(ssi_mod, 0);
- 
-+	/* RZ/G3E: only disable here, unprepare is done in hw_free */
-+	clk_disable(adg->clk_adg_ssi[id]);
-+	clk_disable(adg->clk_ssif_supply);
-+
- 	return 0;
- }
- 
-@@ -354,7 +408,8 @@ int rsnd_adg_ssi_clk_try_start(struct rsnd_mod *ssi_mod, unsigned int rate)
- 	struct rsnd_adg *adg = rsnd_priv_to_adg(priv);
- 	struct device *dev = rsnd_priv_to_dev(priv);
- 	struct rsnd_mod *adg_mod = rsnd_mod_get(adg);
--	int data;
-+	int id = rsnd_mod_id(ssi_mod);
-+	int ret, data;
- 	u32 ckr = 0;
- 
- 	data = rsnd_adg_clk_query(priv, rate);
-@@ -376,6 +431,18 @@ int rsnd_adg_ssi_clk_try_start(struct rsnd_mod *ssi_mod, unsigned int rate)
- 		(ckr) ?	adg->brg_rate[ADG_HZ_48] :
- 			adg->brg_rate[ADG_HZ_441]);
- 
-+	/*
-+	 * RZ/G3E: enable per-SSI and supply clocks
-+	 * Prepare was done in hw_params
-+	 */
-+	ret = clk_enable(adg->clk_adg_ssi[id]);
-+	if (ret)
-+		dev_warn(dev, "Cannot enable adg.ssi.%d ADG clock\n", id);
-+
-+	ret = clk_enable(adg->clk_ssif_supply);
-+	if (ret)
-+		dev_warn(dev, "Cannot enable SSIF supply clock\n");
-+
- 	return 0;
- }
- 
-@@ -769,6 +836,31 @@ void rsnd_adg_clk_dbg_info(struct rsnd_priv *priv, struct seq_file *m)
- #define rsnd_adg_clk_dbg_info(priv, m)
- #endif
- 
-+static int rsnd_adg_get_ssi_clks(struct rsnd_priv *priv)
-+{
-+	struct rsnd_adg *adg = rsnd_priv_to_adg(priv);
-+	struct device *dev = rsnd_priv_to_dev(priv);
-+	char name[16];
-+	int i;
-+
-+	/* SSIF supply clock */
-+	adg->clk_ssif_supply = devm_clk_get_optional(dev, "ssif_supply");
-+	if (IS_ERR(adg->clk_ssif_supply))
-+		return dev_err_probe(dev, PTR_ERR(adg->clk_ssif_supply),
-+				     "failed to get ssif_supply clock\n");
-+
-+	/* Per-SSI ADG clocks */
-+	for (i = 0; i < ADG_SSI_MAX; i++) {
-+		snprintf(name, sizeof(name), "adg.ssi.%d", i);
-+		adg->clk_adg_ssi[i] = devm_clk_get_optional(dev, name);
-+		if (IS_ERR(adg->clk_adg_ssi[i]))
-+			return dev_err_probe(dev, PTR_ERR(adg->clk_adg_ssi[i]),
-+					     "failed to get %s clock\n", name);
-+	}
-+
-+	return 0;
-+}
-+
- int rsnd_adg_probe(struct rsnd_priv *priv)
- {
- 	struct reset_control *rstc;
-@@ -800,6 +892,11 @@ int rsnd_adg_probe(struct rsnd_priv *priv)
- 	if (ret)
- 		return ret;
- 
-+	/* RZ/G3E-specific: per-SSI ADG and SSIF supply clocks */
-+	ret = rsnd_adg_get_ssi_clks(priv);
-+	if (ret)
-+		return ret;
-+
- 	ret = rsnd_adg_clk_enable(priv);
- 	if (ret)
- 		return ret;
 diff --git a/sound/soc/renesas/rcar/rsnd.h b/sound/soc/renesas/rcar/rsnd.h
-index 5c5be0f64cb1..2c5738926093 100644
+index 2c5738926093..8700b39b535e 100644
 --- a/sound/soc/renesas/rcar/rsnd.h
 +++ b/sound/soc/renesas/rcar/rsnd.h
-@@ -602,6 +602,8 @@ void __iomem *rsnd_gen_get_base_addr(struct rsnd_priv *priv, int reg_id);
-  *	R-Car ADG
-  */
- int rsnd_adg_clk_query(struct rsnd_priv *priv, unsigned int rate);
-+int rsnd_adg_ssi_clk_prepare(struct rsnd_mod *ssi_mod);
-+void rsnd_adg_ssi_clk_unprepare(struct rsnd_mod *ssi_mod);
- int rsnd_adg_ssi_clk_stop(struct rsnd_mod *ssi_mod);
- int rsnd_adg_ssi_clk_try_start(struct rsnd_mod *ssi_mod, unsigned int rate);
- int rsnd_adg_probe(struct rsnd_priv *priv);
-diff --git a/sound/soc/renesas/rcar/ssi.c b/sound/soc/renesas/rcar/ssi.c
-index c65435551283..c61750922aff 100644
---- a/sound/soc/renesas/rcar/ssi.c
-+++ b/sound/soc/renesas/rcar/ssi.c
-@@ -537,6 +537,7 @@ static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
+@@ -632,6 +632,13 @@ struct rsnd_priv {
+ 	struct clk *audmapp_clk;
+ 	struct reset_control *audmapp_rstc;
+ 
++	/*
++	 * Below values will be filled in rsnd_src_probe()
++	 */
++	struct clk *clk_scu;
++	struct clk *clk_scu_x2;
++	struct clk *clk_scu_supply;
++
+ 	spinlock_t lock;
+ 	unsigned int ssiu_busif_count;
+ 	unsigned long flags;
+diff --git a/sound/soc/renesas/rcar/src.c b/sound/soc/renesas/rcar/src.c
+index 8b58cc20e7a8..e1f609589406 100644
+--- a/sound/soc/renesas/rcar/src.c
++++ b/sound/soc/renesas/rcar/src.c
+@@ -516,6 +516,7 @@ static int rsnd_src_init(struct rsnd_mod *mod,
+ 			 struct rsnd_priv *priv)
  {
- 	struct rsnd_dai *rdai = rsnd_io_to_rdai(io);
- 	unsigned int fmt_width = snd_pcm_format_width(params_format(params));
-+	int ret;
+ 	struct rsnd_src *src = rsnd_mod_to_src(mod);
++	struct device *dev = rsnd_priv_to_dev(priv);
+ 	int ret;
  
- 	if (fmt_width > rdai->chan_width) {
- 		struct rsnd_priv *priv = rsnd_io_to_priv(io);
-@@ -546,6 +547,21 @@ static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
- 		return -EINVAL;
- 	}
+ 	/* reset sync convert_rate */
+@@ -526,6 +527,12 @@ static int rsnd_src_init(struct rsnd_mod *mod,
+ 	if (ret < 0)
+ 		return ret;
  
-+	/* RZ/G3E: prepare clocks here (can sleep) */
-+	ret = rsnd_adg_ssi_clk_prepare(mod);
-+	if (ret < 0)
++	ret = clk_prepare_enable(priv->clk_scu_supply);
++	if (ret) {
++		dev_err(dev, "Cannot enable scu_supply_clk\n");
 +		return ret;
++	}
 +
-+	return 0;
-+}
-+
-+static int rsnd_ssi_hw_free(struct rsnd_mod *mod,
-+			    struct rsnd_dai_stream *io,
-+			    struct snd_pcm_substream *substream)
-+{
-+	/* RZ/G3E: unprepare clocks here (can sleep) */
-+	rsnd_adg_ssi_clk_unprepare(mod);
+ 	rsnd_src_activation(mod);
+ 
+ 	rsnd_src_init_convert_rate(io, mod);
+@@ -549,6 +556,8 @@ static int rsnd_src_quit(struct rsnd_mod *mod,
+ 	src->sync.val		=
+ 	src->current_sync_rate	= 0;
+ 
++	clk_disable_unprepare(priv->clk_scu_supply);
 +
  	return 0;
  }
  
-@@ -956,6 +972,7 @@ static struct rsnd_mod_ops rsnd_ssi_pio_ops = {
- 	.pointer	= rsnd_ssi_pio_pointer,
- 	.pcm_new	= rsnd_ssi_pcm_new,
- 	.hw_params	= rsnd_ssi_hw_params,
-+	.hw_free	= rsnd_ssi_hw_free,
- 	.get_status	= rsnd_ssi_get_status,
- };
+@@ -711,8 +720,9 @@ struct rsnd_mod *rsnd_src_mod_get(struct rsnd_priv *priv, int id)
  
-@@ -1070,6 +1087,7 @@ static struct rsnd_mod_ops rsnd_ssi_dma_ops = {
- 	.pcm_new	= rsnd_ssi_pcm_new,
- 	.fallback	= rsnd_ssi_fallback,
- 	.hw_params	= rsnd_ssi_hw_params,
-+	.hw_free	= rsnd_ssi_hw_free,
- 	.get_status	= rsnd_ssi_get_status,
- 	DEBUG_INFO
- };
+ int rsnd_src_probe(struct rsnd_priv *priv)
+ {
+-	struct device_node *node;
+ 	struct device *dev = rsnd_priv_to_dev(priv);
++	struct reset_control *rstc;
++	struct device_node *node;
+ 	struct rsnd_src *src;
+ 	struct clk *clk;
+ 	char name[RSND_SRC_NAME_SIZE];
+@@ -737,6 +747,27 @@ int rsnd_src_probe(struct rsnd_priv *priv)
+ 	priv->src_nr	= nr;
+ 	priv->src	= src;
+ 
++	priv->clk_scu = devm_clk_get_optional_enabled(dev, "scu");
++	if (IS_ERR(priv->clk_scu)) {
++		ret = dev_err_probe(dev, PTR_ERR(priv->clk_scu),
++				    "failed to get scu clock\n");
++		goto rsnd_src_probe_done;
++	}
++
++	priv->clk_scu_x2 = devm_clk_get_optional_enabled(dev, "scu_x2");
++	if (IS_ERR(priv->clk_scu_x2)) {
++		ret = dev_err_probe(dev, PTR_ERR(priv->clk_scu_x2),
++				    "failed to get scu_x2 clock\n");
++		goto rsnd_src_probe_done;
++	}
++
++	priv->clk_scu_supply = devm_clk_get_optional(dev, "scu_supply");
++	if (IS_ERR(priv->clk_scu_supply)) {
++		ret = dev_err_probe(dev, PTR_ERR(priv->clk_scu_supply),
++				    "failed to get scu_supply clock\n");
++		goto rsnd_src_probe_done;
++	}
++
+ 	i = 0;
+ 	for_each_child_of_node_scoped(node, np) {
+ 		if (!of_device_is_available(np))
+@@ -759,6 +790,16 @@ int rsnd_src_probe(struct rsnd_priv *priv)
+ 			goto rsnd_src_probe_done;
+ 		}
+ 
++		/*
++		 * RZ/G3E uses a shared SCU reset controller for all SRC modules.
++		 * R-Car platforms typically don't have SRC reset controls.
++		 */
++		rstc = devm_reset_control_get_optional_shared(dev, "scu");
++		if (IS_ERR(rstc)) {
++			ret = PTR_ERR(rstc);
++			goto rsnd_src_probe_done;
++		}
++
+ 		clk = devm_clk_get(dev, name);
+ 		if (IS_ERR(clk)) {
+ 			ret = PTR_ERR(clk);
+@@ -766,7 +807,7 @@ int rsnd_src_probe(struct rsnd_priv *priv)
+ 		}
+ 
+ 		ret = rsnd_mod_init(priv, rsnd_mod_get(src),
+-				    &rsnd_src_ops, clk, NULL, RSND_MOD_SRC, i);
++				    &rsnd_src_ops, clk, rstc, RSND_MOD_SRC, i);
+ 		if (ret)
+ 			goto rsnd_src_probe_done;
+ 
 -- 
 2.25.1
 

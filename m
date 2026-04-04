@@ -1,210 +1,344 @@
-Return-Path: <dmaengine+bounces-9877-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9878-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KA8HMAx8z2kKwwYAu9opvQ
-	(envelope-from <dmaengine+bounces-9877-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 03 Apr 2026 10:36:28 +0200
+	id CL5VNUJW0GmR6gYAu9opvQ
+	(envelope-from <dmaengine+bounces-9878-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 04 Apr 2026 02:07:30 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EBF0392255
-	for <lists+dmaengine@lfdr.de>; Fri, 03 Apr 2026 10:36:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7745D39935B
+	for <lists+dmaengine@lfdr.de>; Sat, 04 Apr 2026 02:07:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0FE8C3021980
-	for <lists+dmaengine@lfdr.de>; Fri,  3 Apr 2026 08:34:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 97335302DE17
+	for <lists+dmaengine@lfdr.de>; Sat,  4 Apr 2026 00:07:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 487F837B416;
-	Fri,  3 Apr 2026 08:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EB74165F1A;
+	Sat,  4 Apr 2026 00:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="fd0KOtGG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PwkM0ca5"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012071.outbound.protection.outlook.com [52.101.66.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E218319D07E;
-	Fri,  3 Apr 2026 08:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775205286; cv=fail; b=OIOG1WG3Ty++Cqyi6I+hbp8Px/ZzphH2AkdnCdMTmElcXeCL4hFXmiJlFcF5L0Znckt0I5B63Lk1uuMxSqrvfypUvOUoCsxD9TIFj30Qocu6y3TzRroj2HEJFCMLYX3/y68JUtn/QfDWZNg+1aAiNkqIQjR4ah4SFbh9xK1WKeA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775205286; c=relaxed/simple;
-	bh=BnABhRC84HeKNBcvKTFMj926Xf4g56ZcY3WQ/qHfhXI=;
-	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=tJk/vY6Dvlxh987V1BtU+Rjvn/EBIcfQfxEVJGqf1sB/FlQX/pKS+KP4HDz9myNw3tRogIwK+q0TQhdbv4xJ2jHW/rKFsbNvc9uMlrhAJxCd4sKolYfs7cYxWzMtP3sLygimSCDY5A+29lDrhjqeadehulxEmK/S4hiee7cjVls=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=fd0KOtGG; arc=fail smtp.client-ip=52.101.66.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qnk+A6n9DE15YwJSAZ5cvo25c3xqFC277ofzDLyoyY8qiKby6D4XuKMQNc/cF7BFJLMKzfDFespeW+69jZWlQrmBh+sEzfHQCOCtdYH87GKxf7+Vkdv4xH76urZ/E2xH8eMdtnAQWZ7aFx8nGHi8DhyF/gDkB9xJ4jPpArXHszTymmHlmlCPZyODMHPde9giwxpDXMHKL+HP7UWTV9vgvRw0137UM2P7sqFQiWZQwxr+70T/Qvxc53eiYbww/E4XV9HdzNmnRaAV0Y1NUyf/EOOD5B+NwqvxN9uQ31aVEgLrkg45ZrGI/T0olD8siGYyIowk7fMyOfOp694lfZjbCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2EDhQ3rrhU918zgSlkj5HKTpmjN5n1mYpVd3OA9YGh0=;
- b=puZMLUiDYXSozXbFJZASyp0LFounFjRV5sfzIcs0aL/pFFXK/Cpvy5LK+a6s+9Pa0Wqxu/I0bCxkJVISTHzGJhlpJLHo2udQtvaxPo6M3Plevk5rv/Ek/aqHEOHQMJxbpRXtH+cE8s5JhtIehSemGuP4U2zbzi8QN99kPZ2dpuh/j2sk+SIlFvma+QCVtd+w4/Q7r1WnUtAVOqw7c2I3QwmDdXMnIdLlxZNKwmH8RvUrYIg3n2SXYVKBXhiN/r+y7fVuQxolw5G8qZLOo/ODe2CFMkDEdWId28AfAIDG0Zgd9jHoEOV2MuViATWZ4OIn59sOkPF89GwJmLUOhxihDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2EDhQ3rrhU918zgSlkj5HKTpmjN5n1mYpVd3OA9YGh0=;
- b=fd0KOtGGYwEvloqKGiMyb8nVqR7rW6t22Yztub70NxTaTH0Ogxq/oitjYTHaVNe+ma6TWasfVQ79yUvuwV/0AG8T7t9NUW/qzH9teF9m+BcaZP5VTfJjU35ip+/C0yJDX370L5N83/a+pjOd/1d3XYo3c2rLsODCf3P19KlYhmtp0ML+QM/FTBR3gof97Fr+FzhHl3dU+R9zZQ+6kGCBLM+kqs6rhoO0ofgZY5r1sT2CS2bXPWzg6J9z8veDGIzrn2nqacUUwdQ/KSip2snyEnPYjTyYL54iSgctHMRHKeo8lGW3/yKEqPiSpoJezl/kNKuXLe/Y7YzaH0ru6SXMeA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM0PR04MB7044.eurprd04.prod.outlook.com (2603:10a6:208:191::20)
- by GVXPR04MB10383.eurprd04.prod.outlook.com (2603:10a6:150:1df::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Fri, 3 Apr
- 2026 08:34:41 +0000
-Received: from AM0PR04MB7044.eurprd04.prod.outlook.com
- ([fe80::bab2:d15c:fcf8:ef2b]) by AM0PR04MB7044.eurprd04.prod.outlook.com
- ([fe80::bab2:d15c:fcf8:ef2b%4]) with mapi id 15.20.9769.016; Fri, 3 Apr 2026
- 08:34:41 +0000
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: vkoul@kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4BF1DA23
+	for <dmaengine@vger.kernel.org>; Sat,  4 Apr 2026 00:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775261244; cv=none; b=OmQQlkdTmPWFBnoY8I3fNZdkrlh4RXKyr6S+mlhpJdgcY4hrH9j1pPeTX3nXHHYfcI9KM7xZkU03wdMeNt3JGjs/XfRFBwMD1JUP7eniIjosAUr8kcrAf2039jvTgG2xj33UyLclPfXfkR6DNKlEFTydiyUnVShZtSoSYqxrjiQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775261244; c=relaxed/simple;
+	bh=4U6qcOnXRz1y4XkIRO6Hkkenfy7He0XdH8Hlg7ak3cg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G56scVQ5IhbV73i6Cf79YVM0AW90En+cAha6VsMt2E29ofeWT1Y55mvYhcoJrVndUgT1UjKyZHHN0ZPkAi+zHGTeLrHSGw8Q1fzWdUTUl6dc7/9EnKP1wJiXeA3/x/BN2gfSmZVDB2gEKdvx8L7H0BemW9tbvMOh2q3nSe8jSac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PwkM0ca5; arc=none smtp.client-ip=74.125.82.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-2cc4c693d59so2340894eec.1
+        for <dmaengine@vger.kernel.org>; Fri, 03 Apr 2026 17:07:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1775261240; x=1775866040; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KGKsMy9vhlN9yvdnOvYy+R4lmavPYuTzTATeThGwgQc=;
+        b=PwkM0ca5QROQeAiqfW1iW3X5spqYFYnS/2L8X2vcFUpdpBz6vLqXtTdxRmqYTeF6q/
+         NDi5p9sCrUEvbIK5uHiC57+gLzcOEIBYv7aCk5GMpae+1/ZnhWFUDq8sr72nlwgdVNST
+         nHX5BJ12zprQxgF4o/WMCad7kw+xm3w03KRW8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775261240; x=1775866040;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KGKsMy9vhlN9yvdnOvYy+R4lmavPYuTzTATeThGwgQc=;
+        b=DG302cZtJr3oxSyBpSHneFiDB+P4lxgLGIDxX8r+g5mEYSaFsyUAWRSVEfhpt+tNmT
+         JR6JA9tx80qf3W8m64vGopGRX5Nj/PCwQZTQuLRl/aVTEIWjuLcvmL/n/1wVozC1QghJ
+         tlJyubzJJ2utnGsZ3fZJ6ycmDID8LBFVFiVdqPheI9r4bb1//ntaiXKqFmPWdyM5gZcL
+         EGQBvHyKqMK3EoiTNHwLBSEfO1V/OA+BU8rt0G2Pz+EnEy6Xc5x48iI528JbxuCOc6dv
+         OWMEb9CacpRGvdXS2+yd4Nk2ajSuTUpU96F46DDYwLlrkTO4iynDIUvsDuE/SKjCNlI1
+         g2Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCULOqe1BuX1fZhSVjujknxIUcsDzF6Qw7Tt6rp6zMpLjgmhee3p83ykLA31V67luHwMpIpdX7Sydf8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywgn1uku3Ozh9/PTgL4TajBJesnC+RRa/cbD3G/37j1rYlMAO2A
+	z9lWPXjoeLBjk5tgGvKT71lxz56ZIz4OawKzWE/In8+idnf48vkScn/pMh8ztmQhDQ==
+X-Gm-Gg: AeBDietS5t3qB8E80DeiHX8NF3faifkXJ8wooV8Nzf+pVuNUPkQuuN2d5mbFnSdhKQD
+	EQnUTOObrBg3kiHoCI8tZKvHUdAahI+vI3dXnXFdZsoPdtLLUac30y7AARDlPnMNoc4fi1mGIES
+	EIzEcBmuyjBvgyxjMye7VPV17EqdaalXib0ry3OJjUs0HeQRzPLG5w3NrbBImj6hL+30ZN+mcOx
+	7PrWZrOOZLZ8S1mvV4XDtj3XMPaJXAAn5Pl/n8+wVLxURfj0joEQqytXC2ppwLLRnZJDSaWkvfO
+	1wNPMgv6FHPizlGQuIXyi594XP6WTB8t8A40UHqA5PL5crcYTwKwFm1BXksRDKLVnkJCDt1EH9M
+	IQU7mizCD4W5RR5V9oobf+1i1DyWPbVD0EBJxASk2YpRJBsBt4ekhRAh4bdwO3G28BwKi4FvXtt
+	gng70e3kRF8LPamyBW4g2f2QvYtATpUzJT2IDwv3mRQKRqMq7mrnaGG2Ll+UDDE5exX7+6OrQ7+
+	6ks8gtEblM=
+X-Received: by 2002:a05:7300:5722:b0:2c7:ea98:da0 with SMTP id 5a478bee46e88-2cbfbc8aeb9mr2680118eec.19.1775261240285;
+        Fri, 03 Apr 2026 17:07:20 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2a00:79e0:2e7c:8:a8b6:55b2:3eb6:2c0e])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ca79e1d93bsm6520716eec.12.2026.04.03.17.07.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2026 17:07:19 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>
+Cc: Saravana Kannan <saravanak@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Eric Dumazet <edumazet@google.com>,
+	Johan Hovold <johan@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Alexey Kardashevskiy <aik@ozlabs.ru>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Frank.Li@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	alex@ghiti.fr,
+	alexander.stein@ew.tq-group.com,
+	andre.przywara@arm.com,
+	andrew@codeconstruct.com.au,
+	andrew@lunn.ch,
+	andriy.shevchenko@linux.intel.com,
+	aou@eecs.berkeley.edu,
+	ardb@kernel.org,
+	bhelgaas@google.com,
+	brgl@kernel.org,
+	broonie@kernel.org,
+	catalin.marinas@arm.com,
+	chleroy@kernel.org,
+	davem@davemloft.net,
+	david@kernel.org,
+	devicetree@vger.kernel.org,
 	dmaengine@vger.kernel.org,
-	imx@lists.linux.dev,
+	driver-core@lists.linux.dev,
+	gbatra@linux.ibm.com,
+	gregory.clement@bootlin.com,
+	hkallweit1@gmail.com,
+	iommu@lists.linux.dev,
+	jirislaby@kernel.org,
+	joel@jms.id.au,
+	joro@8bytes.org,
+	kees@kernel.org,
+	kevin.brodsky@arm.com,
+	kuba@kernel.org,
+	lenb@kernel.org,
+	lgirdwood@gmail.com,
+	linux-acpi@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: imx-sdma: Refine spba bus searching in probe
-Date: Fri,  3 Apr 2026 16:33:13 +0800
-Message-Id: <20260403083313.1172292-1-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA5PR01CA0121.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:1a7::10) To AM0PR04MB7044.eurprd04.prod.outlook.com
- (2603:10a6:208:191::20)
+	linux-aspeed@lists.ozlabs.org,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-usb@vger.kernel.org,
+	linux@armlinux.org.uk,
+	linuxppc-dev@lists.ozlabs.org,
+	m.szyprowski@samsung.com,
+	maddy@linux.ibm.com,
+	mani@kernel.org,
+	maz@kernel.org,
+	miko.lenczewski@arm.com,
+	mpe@ellerman.id.au,
+	netdev@vger.kernel.org,
+	npiggin@gmail.com,
+	osalvador@suse.de,
+	oupton@kernel.org,
+	pabeni@redhat.com,
+	palmer@dabbelt.com,
+	peter.ujfalusi@gmail.com,
+	peterz@infradead.org,
+	pjw@kernel.org,
+	robh@kernel.org,
+	sebastian.hesselbarth@gmail.com,
+	tglx@kernel.org,
+	tsbogend@alpha.franken.de,
+	vgupta@kernel.org,
+	vkoul@kernel.org,
+	will@kernel.org,
+	willy@infradead.org,
+	yangyicong@hisilicon.com,
+	yeoreum.yun@arm.com
+Subject: [PATCH v4 0/9] driver core: Fix some race conditions
+Date: Fri,  3 Apr 2026 17:04:54 -0700
+Message-ID: <20260404000644.522677-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR04MB7044:EE_|GVXPR04MB10383:EE_
-X-MS-Office365-Filtering-Correlation-Id: 52aa927a-fb85-4d60-1450-08de915bd9e8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|366016|52116014|19092799006|38350700014|18002099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	5t0gV56SZ8r4Wo/zMCobCBUfGfP+GHrf0sJKuUv90fJ+7fHM9GEhM7qwD2LtK3x3X0BNrZ/yJqaRVDICitebfi9v5RWY6MRMrXvtR26iPvjOjGIaXSebL8RE/48UZsUA9BPKxeHfcta75QbwrDHJbQ66Fe7UQJlLfCWdH64ERuE9QTNjAQ5/8vw+6S+cdEF2HviFEZupRjjoJ98WJQ1Mk5wr3eh7eguTGfBoXkgo/grtcW7Q7p6zk+oTQgpkzBBfVbetm/svUPlTXn/bKTIQ4RknyWolfKXHSAvJaMR5TXCFCnn/x4mZVMWnEc6eFJN7o2ozG6xJIE2lYOK5k8LaNcmivCZt41He8R1fY2e6PopREh+IRCsehOWrifsGDoSL81vYVxMmKXBKGRHsVBPn20/ms/RSy/p/8/K99wDWX4MOwncjdS80LvxNK7JVeZfxmD8lB7NjKPjkZ3S8jMt6/g5HLF+RAsCyfRnk2/Mup2abFOT/wEvxGo3NicGldLcN++54ab15NAeO6QmrDqQlk5tL8v1BsCc7ffzjuBHry81cAZyXdfYhJhxJPfj2C61UN10NGCaUe4e2e15+TdcqEb28o4BWCGNP/Ggtxdx6w5qCFGY4Kw8DDEntIxiQnpupBlmRPRGaCr37DCWkt7ClfqNzwCZzDh4X7mX74K0fDi6yxKrxme7hHh5JIiLnZLu0igveA1dOVLrommKPTgq7QU0jinLZSmiT4CIOWgPxz8YeU6NNWHjU2hFpCiAfFGXhL9WOFRGTIqHUzVHIjmDexN+OIMK3qwaDZeugkMMQEk4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB7044.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(52116014)(19092799006)(38350700014)(18002099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?f8Owl3DNs+fKvhP3l4qWZOYDlgZovLUcMyf1i4/zb7vFAtmYTGqmSUj6jZEk?=
- =?us-ascii?Q?zmUkcLp20pVBT5Rp37mZuVVNoaCmhgbKzQ0SL7Bb8Auw/nHZrgQf0zq1iIrY?=
- =?us-ascii?Q?na9mQZb3g8OBJGPW8wsJiaIfFAHph+NSpkjNUzciNt1s+8oJpVk1yqop0R4C?=
- =?us-ascii?Q?bsXEYBvDDnzfb2yt/f8oUipRNHy6cO+GFZcDvAz39/Z37JeX/YpP+5uRJfMp?=
- =?us-ascii?Q?5xqJQU0+TCm+YOvc6Z/fZCMLX5+l5AMIYolzW2UeS05pK3lmzas7gxhP/Cyf?=
- =?us-ascii?Q?3cI4HBIN2zjx9ksZLOAhbNyk+DKPW8DWUSzHUj9Hl4Uqg6ZW8ThZJaaKIN70?=
- =?us-ascii?Q?e4hFe2z5VAR3tk1CdiA/YX5QxPL3U2qP6QyD5rwf6ZOEn+RkuqKtVbgTaJMn?=
- =?us-ascii?Q?YhU8u8q/PeOhQhx1+3IVCR3QU+WUAWIHkkIjieuHp8HJCKdk8sAXzrL5xjn8?=
- =?us-ascii?Q?l4RXiVB4rbRwHUfOICo6GuZjorltUBIY4De6Bqv3AId7YTJHkwtYHDaESJ0T?=
- =?us-ascii?Q?eLMhasn1ndfOjOfYfeOoLb8TTvnEHRWEQAOkwHHHBOj8ZZQvIAbZIfC+maMw?=
- =?us-ascii?Q?P7u3WhHi+zS5rEHC2hDwTK/w/sQOdUsvOaiDgZ7ahurQhms/oF0YTkCEDzUX?=
- =?us-ascii?Q?bMU1Zq/oBFuB7f0aTiXU/O88FgLQdjZILiY7W4h6z/W+sHqLOWcoDANa6V0p?=
- =?us-ascii?Q?tr448rn4otut11M1EaeggL83QdeMjj0UQEVTcv67+fy6N2EJ7u9HpfNuX6Li?=
- =?us-ascii?Q?DejwLe6cJPjrsaqRSzQZVb+cIAslJcb4Ms7/+zIL+hL1qJzK5aZ0eAwDO0yg?=
- =?us-ascii?Q?m/PnBGzIdy8M9iaL56oXy1W8J3dpnkOzVVYzRG5jUX9mpjKsLxPiKy7JqBu1?=
- =?us-ascii?Q?yK/6YJGROQP7eSGy+dKNoKTGtWwDIOlS6ylGHSlMiY74xKgsqlRFgzT2p8Ip?=
- =?us-ascii?Q?53CZLJ0VD4ho0t5UmqpueB6tZwYzSlLK8LkCQvR6nbtj4hygvJkfUq/+PzgM?=
- =?us-ascii?Q?h9D0D0+Gye/TkdcVuKGLYRMi1SXv84mSW97QAk+KB2GvkvgRQNEkVJsVZFDn?=
- =?us-ascii?Q?wNzV3Lp4klgp3CeEVhxmIP38PkMUyCS+KQppBFhmkL7MuQrdSmpdm5Go8KFg?=
- =?us-ascii?Q?xVeKK3iS0OLQ+HP1SeTp2iR8WfOR4G1si2xqsmmsGTGCzlQyNX+i8Ejx7j6E?=
- =?us-ascii?Q?MgvrEF/IKd7B2pOgsGoU4tJ5QRxwJnNdfJnYeZzuuOzZOdrvIc3Uur3cbCep?=
- =?us-ascii?Q?6glolkq4FH/hmW7dqe1+pdCS5GX5fA+bgGjL5bAhQVLRGNxR1RfyHQZiXyvY?=
- =?us-ascii?Q?None5MzBr/SSx78vEO54Ng8c5saUcu+r9q/pOKmX7a77ycbwwBjWUC83I6UW?=
- =?us-ascii?Q?RTpcRTGQ9q0goOZqNY1s18aCHoGCWq/o0T3wZPPpdDxGOxLeKInnIMYpSzH/?=
- =?us-ascii?Q?GyNzeJuBPXV5LFnDlQqK9XM95T2lzHTmexFDTaq/1uimcsO2aVVvZw/dRCYq?=
- =?us-ascii?Q?0iCWKqFzxNsM/UvYpH9EYtOBtReWIqfrijFsQV37BeBDZYC2IEN5twxS9eny?=
- =?us-ascii?Q?hZehgWY22mhJwuVbnN/ThVoAMrSJYBat12QezCcID9RdvoQlmnQB9MNAd962?=
- =?us-ascii?Q?9W15HRr7hpVOcD+Et9z8bA2vLEu/aq82xOEpmEwFscEp2CYpaSHqHwtWi7+u?=
- =?us-ascii?Q?S42/1PHJAN0SYzKv9rdRHrCAmfjsj7R7inAumf1JFiQLfsfHJZMXgcrmbYLR?=
- =?us-ascii?Q?lXVCgLqkaA=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52aa927a-fb85-4d60-1450-08de915bd9e8
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB7044.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2026 08:34:41.8071
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zerV8QkbAaf4iDMIUyeljX4JsROIhyXF7ku+10NQV2XoiCVp4sHQSj4o5eKsZKCkrWKvipf6cY4vbxSToPh72w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10383
-X-Spamd-Result: default: False [1.34 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[chromium.org,none];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+	R_DKIM_ALLOW(-0.20)[chromium.org:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9877-lists,dmaengine=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[nxp.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,lst.de,google.com,intel.com,ozlabs.ru,arm.com,chromium.org,linux-foundation.org,ziepe.ca,ghiti.fr,ew.tq-group.com,codeconstruct.com.au,lunn.ch,linux.intel.com,eecs.berkeley.edu,davemloft.net,vger.kernel.org,lists.linux.dev,linux.ibm.com,bootlin.com,gmail.com,jms.id.au,8bytes.org,lists.infradead.org,lists.ozlabs.org,kvack.org,armlinux.org.uk,samsung.com,ellerman.id.au,suse.de,redhat.com,dabbelt.com,infradead.org,alpha.franken.de,hisilicon.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9878-lists,dmaengine=lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[dianders@chromium.org,dmaengine@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shengjiu.wang@nxp.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[chromium.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_NONE(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_GT_50(0.00)[85];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[dmaengine];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 3EBF0392255
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[chromium.org:dkim,chromium.org:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 7745D39935B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-There are multi spba-busses for i.MX8M* platforms, if only search for
-the first spba-bus in DT, the found spba-bus may not the real bus of
-audio devices, which cause issue for sdma p2p case, as the sdma p2p
-script presently does not deal with the transactions involving two devices
-connected to the AIPS bus.
+The main goal of this series is to fix the observed bug talked about
+in the first patch ("driver core: Don't let a device probe until it's
+ready"). That patch fixes a problem that has been observed in the real
+world and could land even if the rest of the patches are found
+unacceptable or need to be spun.
 
-Search the SDMA parent node first, which should be the AIPS bus, then
-search the child node whose compatible string is spba-bus under that AIPS
-bus for the above multi spba-busses case.
+That said, during patch review Danilo correctly pointed out that many
+of the bitfield accesses in "struct device" are unsafe. I added a
+bunch of patches in the series to address each one.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- drivers/dma/imx-sdma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Danilo said he's most worried about "can_match", so I put that one
+first. After that, I tried to transition bitfields to flags in reverse
+order to when the bitfield was added.
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 3d527883776b..be2fb87b7a89 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -2364,13 +2364,16 @@ static int sdma_probe(struct platform_device *pdev)
- 			return dev_err_probe(&pdev->dev, ret,
- 					     "failed to register controller\n");
- 
--		spba_bus = of_find_compatible_node(NULL, NULL, "fsl,spba-bus");
-+		struct device_node *sdma_parent_np = of_get_parent(np);
-+
-+		spba_bus = of_get_compatible_child(sdma_parent_np, "fsl,spba-bus");
- 		ret = of_address_to_resource(spba_bus, 0, &spba_res);
- 		if (!ret) {
- 			sdma->spba_start_addr = spba_res.start;
- 			sdma->spba_end_addr = spba_res.end;
- 		}
- 		of_node_put(spba_bus);
-+		of_node_put(sdma_parent_np);
- 	}
- 
- 	/*
+Even if transitioning from bitfields to flags isn't truly needed for
+correctness, it seems silly (and wasteful of space in struct device)
+to have some in bitfields and some as flags. Thus I didn't spend time
+for each bitfield showing that it's truly needed for correctness.
+
+Transition was done semi manually. Presumably someone skilled at
+coccinelle could do a better job, but I just used sed in a heavy-
+handed manner and then reviewed/fixed the results, undoing anything my
+script got wrong. My terrible/ugly script was:
+
+var=can_match
+caps="${var^^}"
+for f in $(git grep -l "[>\.]${var}[^1-9_a-zA-Z\[]"); do
+  echo $f
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} = true/set_bit(DEV_FLAG_${caps}, \&\\1->flags)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} = true/dev_set_${caps}(\&\\1)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} = false/clear_bit(DEV_FLAG_${caps}, \&\\1->flags)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} = false/dev_clear_${caps}(\&\\1)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} = \([^;]*\)/assign_bit(DEV_FLAG_${caps}, \&\\1->flags, \\2)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} = \([^;]*\)/dev_assign_${caps}(\&\\1, \\2)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var}\([^1-9_a-zA-Z\[]\)/test_bit(DEV_FLAG_${caps}, \&\\1->flags)\\2/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var}\([^1-9_a-zA-Z\[]\)/dev_${caps}(\&\\1)\\2/" "$f"
+done
+
+From v3 to v4, I transitioned to accessor functions with another ugly
+sed script. I had git format the old patches, then transformed them
+with:
+
+for f in *.patch; do
+  echo $f
+  sed -i~ -e "s/test_and_set_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev_test_and_set_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/test_and_set_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_test_and_set_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/test_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/test_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/set_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev_set_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/set_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_set_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/clear_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev_clear_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/clear_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_clear_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/assign_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags, \(.*\))/dev_assign_\\L\\1(\\2, \\3)/" "$f"
+  sed -i~ -e "s/assign_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags, \(.*\))/dev_assign_\\L\\1(\\2, \\3)/" "$f"
+done
+
+...and then did a few manual touchups for spacing.
+
+NOTE: one potentially "controversial" choice I made in some patches
+was to always reserve a flag ID even if a flag is only used under
+certain CONFIG_ settings. This is a change from how things were
+before. Keeping the numbering consistent and allowing easy
+compile-testing of both CONFIG settings seemed worth it, especially
+since it won't take up any extra space until we've added a lot more
+flags.
+
+I only marked the first patch as a "Fix" since it is the only one
+fixing observed problems. Other patches could be considered fixes too
+if folks want.
+
+I tested the first patch in the series backported to kernel 6.6 on the
+Pixel phone that was experiencing the race. I added extra printouts to
+make sure that the problem was hitting / addressed. The rest of the
+patches are tested with allmodconfig with arm32, arm64, ppc, and
+x86. I boot tested on an arm64 Chromebook running mainline.
+
+Changes in v4:
+- Use accessor functions for flags
+
+Changes in v3:
+- Use a new "flags" bitfield
+- Add missing \n in probe error message
+
+Changes in v2:
+- Instead of adjusting the ordering, use "ready_to_probe" flag
+
+Douglas Anderson (9):
+  driver core: Don't let a device probe until it's ready
+  driver core: Replace dev->can_match with dev_can_match()
+  driver core: Replace dev->dma_iommu with dev_dma_iommu()
+  driver core: Replace dev->dma_skip_sync with dev_dma_skip_sync()
+  driver core: Replace dev->dma_ops_bypass with dev_dma_ops_bypass()
+  driver core: Replace dev->state_synced with dev_state_synced()
+  driver core: Replace dev->dma_coherent with dev_dma_coherent()
+  driver core: Replace dev->of_node_reused with dev_of_node_reused()
+  driver core: Replace dev->offline + ->offline_disabled with accessors
+
+ arch/arc/mm/dma.c                             |   4 +-
+ arch/arm/mach-highbank/highbank.c             |   2 +-
+ arch/arm/mach-mvebu/coherency.c               |   2 +-
+ arch/arm/mm/dma-mapping-nommu.c               |   4 +-
+ arch/arm/mm/dma-mapping.c                     |  28 ++--
+ arch/arm64/kernel/cpufeature.c                |   2 +-
+ arch/arm64/mm/dma-mapping.c                   |   2 +-
+ arch/mips/mm/dma-noncoherent.c                |   2 +-
+ arch/powerpc/kernel/dma-iommu.c               |   8 +-
+ .../platforms/pseries/hotplug-memory.c        |   4 +-
+ arch/riscv/mm/dma-noncoherent.c               |   2 +-
+ drivers/acpi/scan.c                           |   2 +-
+ drivers/base/core.c                           |  53 +++++---
+ drivers/base/cpu.c                            |   4 +-
+ drivers/base/dd.c                             |  28 ++--
+ drivers/base/memory.c                         |   2 +-
+ drivers/base/pinctrl.c                        |   2 +-
+ drivers/base/platform.c                       |   2 +-
+ drivers/dma/ti/k3-udma-glue.c                 |   6 +-
+ drivers/dma/ti/k3-udma.c                      |   6 +-
+ drivers/iommu/dma-iommu.c                     |   9 +-
+ drivers/iommu/iommu.c                         |   5 +-
+ drivers/net/pcs/pcs-xpcs-plat.c               |   2 +-
+ drivers/of/device.c                           |   6 +-
+ drivers/pci/of.c                              |   2 +-
+ drivers/pci/pwrctrl/core.c                    |   2 +-
+ drivers/regulator/bq257xx-regulator.c         |   2 +-
+ drivers/regulator/rk808-regulator.c           |   2 +-
+ drivers/tty/serial/serial_base_bus.c          |   2 +-
+ drivers/usb/gadget/udc/aspeed-vhub/dev.c      |   2 +-
+ include/linux/device.h                        | 120 ++++++++++++------
+ include/linux/dma-map-ops.h                   |   6 +-
+ include/linux/dma-mapping.h                   |   2 +-
+ include/linux/iommu-dma.h                     |   3 +-
+ kernel/cpu.c                                  |   4 +-
+ kernel/dma/mapping.c                          |  12 +-
+ mm/hmm.c                                      |   2 +-
+ 37 files changed, 206 insertions(+), 142 deletions(-)
+
 -- 
-2.34.1
+2.53.0.1213.gd9a14994de-goog
 
 

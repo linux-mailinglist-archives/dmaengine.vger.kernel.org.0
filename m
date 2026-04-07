@@ -1,563 +1,243 @@
-Return-Path: <dmaengine+bounces-9893-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9894-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CGQfJHhB1GmRsQcAu9opvQ
-	(envelope-from <dmaengine+bounces-9893-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 07 Apr 2026 01:27:52 +0200
+	id sB0HAwxo1GnptgcAu9opvQ
+	(envelope-from <dmaengine+bounces-9894-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 07 Apr 2026 04:12:28 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C8573A827F
-	for <lists+dmaengine@lfdr.de>; Tue, 07 Apr 2026 01:27:52 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F7A13A8EA3
+	for <lists+dmaengine@lfdr.de>; Tue, 07 Apr 2026 04:12:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 58622303DA1C
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Apr 2026 23:26:12 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C66BB300610D
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Apr 2026 02:12:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89EFF3A3801;
-	Mon,  6 Apr 2026 23:25:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6F7D2874E6;
+	Tue,  7 Apr 2026 02:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ePzKf5w8"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="C0LRdsoV"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013006.outbound.protection.outlook.com [40.107.159.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DF839FCB3
-	for <dmaengine@vger.kernel.org>; Mon,  6 Apr 2026 23:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775517947; cv=none; b=VUQ/FlilusSzXP61sRDlgG/BDhmlpxOAuGvD8DJkgfTCOt45Rd6ndGU6pK4/N5mT3kliugscqY0OuBCssTVUQcdYlgKPNrRSu2Obg9SNFWoxa0UoQol7K+7qnbhXCFm/t/BXVxiEPXRYK1srGbCDwUcq7sSqEzs/uBa57Xq23WU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775517947; c=relaxed/simple;
-	bh=WAk3CbC0UCD7Z2dahJaOEqxHzONEBbmkQeRy9YA3MaM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b8OHaWm/UXZecjwd9TeSOTNayYgsXuFTLBBr4yGL5Emnqv3dy9LX8fCqxl+HykhuLipuLCokM2f+kbHtHEHucTddBD3pCdhK8ALYYmfw0zdCqPYY6J7VNhkx+XCgRawHHhQb7SQBQ7Z3y1uwlxevvkoNCIV0EhaDZrR/trazlvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ePzKf5w8; arc=none smtp.client-ip=74.125.82.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-12c080efc1eso1279916c88.0
-        for <dmaengine@vger.kernel.org>; Mon, 06 Apr 2026 16:25:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1775517943; x=1776122743; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qFmDYcnnDgWKdH7Fx1pvQvOvhn076UMYFbFndXl8P/A=;
-        b=ePzKf5w81yqM7EVF1K5T2ATgEnpdFaj9qeJGNty7kbDCwRJTfCMtdjZ4F2VsZM8z47
-         8EhfA9BPXlKdzSSzwAG0s8ITVfxlHW3lnOEMEbrRS4qBriB3PQobNPk0ShzsbDcegvP4
-         BTmCEWs3VyiDihKo0142o06idYEjtjG6sD61U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775517943; x=1776122743;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qFmDYcnnDgWKdH7Fx1pvQvOvhn076UMYFbFndXl8P/A=;
-        b=jcBMxMFmaoRxeMmWStIrhNSt75r1lHPM0t3NGOvD9M1S2AR9FNppYYr/UvinGLVzjC
-         aU1SCmNj05scP9Ix0a5dAPjo7ZN7ScGEzEpCxtfO61fTw2NnqOCUm6d8zZ08XSIWd4T1
-         MT0UuhKonVkTiU1aBpMV0eGKL467IP3Hf/eF2pG1xkxul/G+QgBON1FHDlKQQgJDrw+E
-         Mabx6rJUXeygL5B29souMhdFrEraPfLij3l7oU5/ZujxOi2i1GyASNDaJWtx4Jsx2ghg
-         TIc1Y+nA4SRQg3EH4O29Oq11/vnCRJXMY9cAwWyifrJ5xd+fvPYIIQM1x1rKG9AgrXNo
-         IGwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVncpS2nZ3BwSc28YaFF8qNMZhiFrEnKGlcbJkA5NcouIt9QBhTVrIK07L1txAMmiavIS8lEchY738=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpXojhwsjUT98F4VHxMekEszTGKPjUqnGA/IV34tYoRo52T5s2
-	YjBw0tQh5J0uxDosHmdtOluj3EGNEF3N5ds5O1loGxN0+skbKUpn8HxpXYiYGs7ZSOnBjWpKXc4
-	DOFfAz+vm
-X-Gm-Gg: AeBDievc4gQt5u2rtNAJXebWeKIP0DgvP69hFOj6lsK46ruSrwQm4BZpo6UtqI07M8H
-	sDzEqHOeH7sTFSwrpiNyhE0H3rEpiZbrsGr4LbG/5ZBi/2dWYYvMNoCzGcVomVaGkrtVwL8Lojk
-	rTOXmYD6aVbzzIDpoiP3nyxRhwivrDEks0vaZJzHR2ZYK4D1TQDOyhYqNN1ethjyVQTjqQao6bS
-	f4rq6CLpUE6X4YQv5eTfqAj22QTJSHIQ6L84BVOwyZBXBFvZlG6j8Hc3MEcsOzWhji+jPy8FGSJ
-	XYG7XzW3/ccahotkvo4p5uQR5or+f/ozwE4HCHgYVkf9V9Rw2KTIEEg/sXt0oXlpaSR6RBUYWJX
-	9LiKjmjib07S1/W/GXBopcFe5qdM4vKuXemc9Um7XzdCMTEe6c3KGHgBQ7gtL+CBldVkfUxiGYn
-	cKx1jJhV4w6Gqsxm9VXIc13VUlC6uI89YDqumT+7n8qzHcVnzhb6vAo45FhBl6m6ulO9hOFhYxI
-	hAgU/bijPJjezqKxeG9
-X-Received: by 2002:a05:693c:300c:b0:2be:acac:af7f with SMTP id 5a478bee46e88-2cad6ab1abfmr6524179eec.7.1775517943447;
-        Mon, 06 Apr 2026 16:25:43 -0700 (PDT)
-Received: from dianders.sjc.corp.google.com ([2a00:79e0:2e7c:8:c071:3b78:5a5:824a])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ca760b0518sm14730975eec.0.2026.04.06.16.25.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2026 16:25:41 -0700 (PDT)
-From: Douglas Anderson <dianders@chromium.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>
-Cc: Alexey Kardashevskiy <aik@ozlabs.ru>,
-	Johan Hovold <johan@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	maz@kernel.org,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank.Li@kernel.org,
-	alex@ghiti.fr,
-	andre.przywara@arm.com,
-	andrew@lunn.ch,
-	aou@eecs.berkeley.edu,
-	catalin.marinas@arm.com,
-	dmaengine@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	gregory.clement@bootlin.com,
-	iommu@lists.linux.dev,
-	jgg@ziepe.ca,
-	kees@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-snps-arc@lists.infradead.org,
-	linux@armlinux.org.uk,
-	m.szyprowski@samsung.com,
-	palmer@dabbelt.com,
-	peter.ujfalusi@gmail.com,
-	pjw@kernel.org,
-	sebastian.hesselbarth@gmail.com,
-	tsbogend@alpha.franken.de,
-	vgupta@kernel.org,
-	will@kernel.org,
-	willy@infradead.org
-Subject: [PATCH v5 7/9] driver core: Replace dev->dma_coherent with dev_dma_coherent()
-Date: Mon,  6 Apr 2026 16:23:00 -0700
-Message-ID: <20260406162231.v5.7.If839f6dde98979fce177f70c6c74689a1904ee76@changeid>
-X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
-In-Reply-To: <20260406232444.3117516-1-dianders@chromium.org>
-References: <20260406232444.3117516-1-dianders@chromium.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363AA282F32;
+	Tue,  7 Apr 2026 02:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.6
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775527944; cv=fail; b=LKq5iQ05gjedAfE7jKCi0vT7HGEa3vmMDgCmCVK8cX2qoAtd5DBoq7j8PVvcitzDWHBY9shjIjjfHwO802A4m/VZU7rn3XnaaNrjAhkFLekvOZV2LQxIZuXtw5C7T6Za1d5RAQTwYpXG01aMjoDLxLAaqbgNKJ+Gn71TVd8uPNU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775527944; c=relaxed/simple;
+	bh=bxqeuGs9QUFxlUyU+QEYMftfNV+2mqlw9tFP8svSbcA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=AlGRQXWcUM/9Fs3dR2cuGJ/reXJKYxTjhWy/EjDvs8iASj9ZS/+/UuFdnVted5axS1V0WEo+cPYWuUNDxwyJC6baxB+Ld8PYSleL41mC4OuV3pYs8d4BBbJQL5pZtMIMrCbJzHY7pPdZT+yCeAYoB+6lkp/QaZdcFHOCWToKWa8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=C0LRdsoV; arc=fail smtp.client-ip=40.107.159.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ljhid3rCUDrOTA9JiYd3lGjCtQw77GQUCi6HNuTFKONefYu8VucJTBrgkchUhoBiuA/S5+nlWzrRgIS5xytdfvmaptVD1RBiEyGcddPFlk05OUkozWQaOtHYuvGNsIfcMe5GmCVEvRKVyQ+oF71XedJckiQCm5udlXvUWofBm8JUFDF69VRZRoDdilUsdkar+oyniMtnWalvKbemDyruJDmCb1O38AVwzQYxxzES3RELH0RqzBPNWNwKdrqieOZPKzMm6EZGCS2jlZj2D0OEbYl4P4r0noz2m0bG6F8ixnKMglRi03aeOfEb8oqfcGXqNvYvIy+PK0TSYDZersAPyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GQpt+5fJcLIfuLbo/s3Sk9BF0yjddoMYGODlT4uvOXA=;
+ b=h10w/qY0Q0atu9VeoybRnKqoAHEWm7VI0p1QGAKGCODICXN6c/Gds2K3tU8o2ttg4btQDYOTyqwqkAfkIFgMKpvari8ZkTmSxw3x7/q5t4XvabyA8+LOe9lQoUD4/fgUsuJmk1HSqWYvjBdEIY4WAqx58BnISJNT1t4Y+Rb0+zqunMRDnun1gcTGdZ3CaoVMU/9RQjK19464qS246QNAVot5psfJDV0vJybzH4/VAZU2Xy7GNdeseZiiBVRc6UfTMzJ3pLRVY3K1H9emjLNsPLX6H65AkuBXLyffZX+WYwy8cbQP7l62a8sEa+rII4oA6bpufRuxS4gk5gRbIUETdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GQpt+5fJcLIfuLbo/s3Sk9BF0yjddoMYGODlT4uvOXA=;
+ b=C0LRdsoVj4S0r8finkHMw4NHUhIkDsRkWhglE0MZXSfK8unfZR76PFZUh4EzZfFQZc/11GE2I5wZaIrim/iY/2t6MfXY3KTZKlS8rNT6ZbEIPSJbAvMHxgzQ3go8Fai6YD2+OtOcKIdXP7f1kiG4/2dceL6nboPueHSAl1uoEASWjoyVFCccg/Cgayl8L9p5NAxBEc06Jdq//SX3jzf2aPyRBxYsNxviIbGlYajkK05OrvcUWKBjV2xh4WxRWm/1UT2nAJf+AdszymhfnqA7RhtSCPQ+HgHx71laOdUEnPEe8oyhz/kAuE1nAO4921OIfspKrGYerk1SO26BVmfyeQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by PA1PR04MB11505.eurprd04.prod.outlook.com (2603:10a6:102:4e3::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Tue, 7 Apr
+ 2026 02:12:19 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9769.018; Tue, 7 Apr 2026
+ 02:12:19 +0000
+Date: Mon, 6 Apr 2026 22:12:13 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: dmaengine@vger.kernel.org,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCHv2] dmaengine: dw-axi-dmac: simplify allocation
+Message-ID: <adRn_ewqVVOTLg_1@lizhi-Precision-Tower-5810>
+References: <20260406194424.13365-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260406194424.13365-1-rosenp@gmail.com>
+X-ClientProxiedBy: SA0PR11CA0023.namprd11.prod.outlook.com
+ (2603:10b6:806:d3::28) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PA1PR04MB11505:EE_
+X-MS-Office365-Filtering-Correlation-Id: 687ebddc-0586-4612-7b5d-08de944b18b2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|19092799006|52116014|366016|376014|38350700014|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	IFpkTOB6r2IfOCyfDdSvakQCUmb0OlCs7fHN9dKnDuotfDg+Scu5J0JQTmL/FWLL8AcaGqdByuzeL+6blveo7E37/NbeJKPY30MC8ob0s0FBG4M6NHIS0EUEvXk8Hex3ACYUWd5mm/GeAgdDKVC+QzA/oVcYwXWCqDIlfV2eEVAWNzJ3nu1vsDfMsNKTAcW3qUc+nKnoSmdu35Wm0WZs7hUGnDVVzsollqLCqneM/B9zFyRSkLT28ymEFhoRlGZH29qDCtuM3CVYK6CHJuaCj2BPTRxW4xUZhgUhlZGEZAJjd9nNU6g0UYLBSkO43wpF2DXLZwq7pD5dfzo4HeijzvR7wD7sjgctmS2iMzSO2TiSwA2ags1rSjSe1meB3ko4kvOFFUZJs+s8b5aet0QxhKUd93u3NsB2w4GnGhyheZS/v1xf+nq74e6/VKoIjAThLnfNRq8t5KWwwkTc8dExgYrLSiKgC6EeLBvt3ppSJSgIUXpKsdQLLRs17lSk9ZWXt8ZbXU3V/NkVJQn021xTcpOxgojTpw+twmzLNBT8zFpU//jRmoCQKmVBeeHAciebKtdDJN3xrUTege97F2NTr2HJgqEEeDUBEKHyKkaW3CPInbXirgSBzwzRyGX8w0FQv/SEDFKnnYWAH+ciLhU8dw9ZLwGxaOUSDXr1+atMXmb5WE7k7qc3frdoIOLCnylMPF0AyjYPbEvW70Hr/gpK/0eTofIs3x/+3Pl/0mXFLIEsysNlt89BltFajwp2VeKqppiJCiZF35M6zEi9l5b7eQizLyoHFDItlewL0phQ+to=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(52116014)(366016)(376014)(38350700014)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tVhKdKjdRoGcFC8P87KSqpf2vdwNuBVKWYCXkbc4cyOqZMZgy34vFbYbFEX2?=
+ =?us-ascii?Q?wixPGHonHGmZ+FAACbBWScgWi15so//5Km0T+iwcIvQ3eexcNT0a/ksKLoC6?=
+ =?us-ascii?Q?ACohLs7hEUmS4XWPm+dt+q8mPkTZ8JLUPh9UvaXgHY42otNJSzkK2M3dcxGn?=
+ =?us-ascii?Q?9Jm5W9R+3cB1cOxhH0fsjHNirShZ95nMLEz5DXj/h84SUK7CF8aH5Tlcw18F?=
+ =?us-ascii?Q?KPjAzPv4UChe4apv/5hOQutWqCquccUZWTJJp97TY/Sgi9f7ES7UwadXqX/1?=
+ =?us-ascii?Q?IsSLMiPR7i6tFSJpiOmFSSMZ/MyEWIuVYz6XykesvUe1+VvgBzeV2B3QuLJA?=
+ =?us-ascii?Q?pfZfWgsvnGoUForVNNkO0m1oLNU7PyDD9XCtysHHWEIyY4f+pH/tC/5gd5qR?=
+ =?us-ascii?Q?muSW7ViI41Lme2LK+ZCJX91lIZwuEyC8y5MCt2oTT7nBrr9q7JOEtrlg7nB+?=
+ =?us-ascii?Q?fQkLcWatero8wGDOYF4xHTJ/B6TK2Bo8J8FxPEtxCXPf/G/wszHoiAJitSPx?=
+ =?us-ascii?Q?L4H+6TBcykH93HqXLC1qMkXXIB+GjG/cZYX0S9hr7qOpI+zelYjEcNGEvXBd?=
+ =?us-ascii?Q?I5xFJO80pfO1m+eilLmxjYh/KaXGCkwfL3gGm5Vgy3DqFWRbCv8qdxgwvbAJ?=
+ =?us-ascii?Q?Zo+MuaBMpNYSAG0J1a+NdO6Mc5TOrkgbIEd4OR9g9c5NBZWzLfUHcy5Fwc2l?=
+ =?us-ascii?Q?kw7OHS7iVVg0V5/c0pUr7wfU2MKlcc5DLAcQorw2dXwi6NPa0sW/yWqxOC5C?=
+ =?us-ascii?Q?6fbIO2b2QJpioIpZZsieuTsruDdGHJhOuBArmAznZVlOFquSn8n6zYZwbfw4?=
+ =?us-ascii?Q?3AoVyucH9/9yHv0ZFXQoDlithmzLYIL8YLKUjQjon3ojXiyljngn+qnWoZaU?=
+ =?us-ascii?Q?vKde8q3BukAIa9duw6kgHJ1qwpn/L4nMe7zCOMMmh00TZxH/nsMoD4J2mD/e?=
+ =?us-ascii?Q?HboUj9pg+5V2y+s6e9bAD64KxpDaYXxw+wmEvowSg5fqxWuKiAaPmsX526C7?=
+ =?us-ascii?Q?UodhvirtCrMMIFTz9TfqsBkSv5Fi5ZOV9QBB3M1hY+VmjSayuVIlmAs8l7cd?=
+ =?us-ascii?Q?ZbiRGTHpo3eDYrw5LWQTnIgTAiXnHiTZjWv9BQvNLbsAdrHksIB2HscOJSS1?=
+ =?us-ascii?Q?JCNTAUEGvV8/4C63jzMCEW3MwW7Om6c3v1og3AfqrjQ7wK/nFl1G/lzg+sTo?=
+ =?us-ascii?Q?jGDwcXj6ieo8rdt02r4GXSHspwMDDDUk8WwuLmynLBTrhwT7kgtyiRsxqua+?=
+ =?us-ascii?Q?/KfgZrsWDQ7oeuCFXbP7cG/YVbtM3eZY++/XrbAWxD7Ma1l6crc/lzqJltqd?=
+ =?us-ascii?Q?bQI4T82fCv8Uo2eMdvcdrYq6M+4dPEahuoWjNga4+8KzgGeq1/RkHgSADy19?=
+ =?us-ascii?Q?18UdJdf/IpJjzjCtzRGx7ysHxMoXJL239kJHvP1hyMUH/kbuvyDz1N6Tpr41?=
+ =?us-ascii?Q?lge739f1m1AjQyldaS83nRRSiwkUt1UxLKypDD3cxLFdn1pk2yrokxI0wPkE?=
+ =?us-ascii?Q?ltq249RUvI1Uft5Fe7sBD1sl+yQur5/4uvXr0pbRROE1cWjdEZsIe7hDDUyU?=
+ =?us-ascii?Q?KHtIRmQcnFvhXRBjuEw5zgj4aa8mqD3HvP6P/sEsJbKHUNMrwsXNvloTRvnv?=
+ =?us-ascii?Q?tjZmn1VzttJOUgc3K2RYJofGHskZCrBZKBHPFgagvOilsT6/UfNncGhHzh0i?=
+ =?us-ascii?Q?m/YwhnBGcry2Ir8TfEBfYM78fdN35cU+ZBGKQIKLMzsZUmWs?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 687ebddc-0586-4612-7b5d-08de944b18b2
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2026 02:12:19.2430
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: j6nBpD0syS60JfNQWHqCBqxrf9wIWKo1kLZNSQIf5Vg7rrabRGl7aSCB7rfZpEbTwcVeiYUY8Cn5Z8dPSSc3kA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11505
 X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[chromium.org,none];
-	R_DKIM_ALLOW(-0.20)[chromium.org:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[42];
-	FREEMAIL_CC(0.00)[ozlabs.ru,kernel.org,google.com,lst.de,arm.com,intel.com,chromium.org,ghiti.fr,lunn.ch,eecs.berkeley.edu,vger.kernel.org,lists.linux.dev,bootlin.com,ziepe.ca,lists.infradead.org,armlinux.org.uk,samsung.com,dabbelt.com,gmail.com,alpha.franken.de,infradead.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9893-lists,dmaengine=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9894-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[nxp.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dianders@chromium.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[chromium.org:+];
-	NEURAL_HAM(-0.00)[-0.997];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 4C8573A827F
+	RCPT_COUNT_SEVEN(0.00)[9];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 9F7A13A8EA3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-In C, bitfields are not necessarily safe to modify from multiple
-threads without locking. Switch "dma_coherent" over to the "flags"
-field so modifications are safe.
+On Mon, Apr 06, 2026 at 12:44:24PM -0700, Rosen Penev wrote:
 
-Cc: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
-Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-Not fixing any known bugs; problem is theoretical and found by code
-inspection. Change is done somewhat manually and only lightly tested
-(mostly compile-time tested).
+Subject need update to
 
-NOTE: even though previously we only took up a bit if
-CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE, CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU,
-or CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL, in this change I reserve the
-bit unconditionally.  While we could get the "dynamic" behavior by
-changing the flags definition to be an unnumbered "enum", Greg has
-requested that the numbers be stable.
+"Use kzalloc_flex() to simplify allocation"
 
-(no changes since v4)
+Frank
 
-Changes in v4:
-- Use accessor functions for flags
-
-Changes in v3:
-- New
-
- arch/arc/mm/dma.c                 |  4 ++--
- arch/arm/mach-highbank/highbank.c |  2 +-
- arch/arm/mach-mvebu/coherency.c   |  2 +-
- arch/arm/mm/dma-mapping-nommu.c   |  4 ++--
- arch/arm/mm/dma-mapping.c         | 28 ++++++++++++++--------------
- arch/arm64/mm/dma-mapping.c       |  2 +-
- arch/mips/mm/dma-noncoherent.c    |  2 +-
- arch/riscv/mm/dma-noncoherent.c   |  2 +-
- drivers/base/core.c               |  2 +-
- drivers/dma/ti/k3-udma-glue.c     |  6 +++---
- drivers/dma/ti/k3-udma.c          |  6 +++---
- include/linux/device.h            | 11 ++++-------
- include/linux/dma-map-ops.h       |  2 +-
- 13 files changed, 35 insertions(+), 38 deletions(-)
-
-diff --git a/arch/arc/mm/dma.c b/arch/arc/mm/dma.c
-index 6b85e94f3275..9b9adb02b4c5 100644
---- a/arch/arc/mm/dma.c
-+++ b/arch/arc/mm/dma.c
-@@ -98,8 +98,8 @@ void arch_setup_dma_ops(struct device *dev, bool coherent)
- 	 * DMA buffers.
- 	 */
- 	if (is_isa_arcv2() && ioc_enable && coherent)
--		dev->dma_coherent = true;
-+		dev_set_dma_coherent(dev);
- 
- 	dev_info(dev, "use %scoherent DMA ops\n",
--		 dev->dma_coherent ? "" : "non");
-+		 dev_dma_coherent(dev) ? "" : "non");
- }
-diff --git a/arch/arm/mach-highbank/highbank.c b/arch/arm/mach-highbank/highbank.c
-index 47335c7dadf8..8b7d0929dac4 100644
---- a/arch/arm/mach-highbank/highbank.c
-+++ b/arch/arm/mach-highbank/highbank.c
-@@ -98,7 +98,7 @@ static int highbank_platform_notifier(struct notifier_block *nb,
- 	if (of_property_read_bool(dev->of_node, "dma-coherent")) {
- 		val = readl(sregs_base + reg);
- 		writel(val | 0xff01, sregs_base + reg);
--		dev->dma_coherent = true;
-+		dev_set_dma_coherent(dev);
- 	}
- 
- 	return NOTIFY_OK;
-diff --git a/arch/arm/mach-mvebu/coherency.c b/arch/arm/mach-mvebu/coherency.c
-index fa2c1e1aeb96..7234d487ff39 100644
---- a/arch/arm/mach-mvebu/coherency.c
-+++ b/arch/arm/mach-mvebu/coherency.c
-@@ -95,7 +95,7 @@ static int mvebu_hwcc_notifier(struct notifier_block *nb,
- 
- 	if (event != BUS_NOTIFY_ADD_DEVICE)
- 		return NOTIFY_DONE;
--	dev->dma_coherent = true;
-+	dev_set_dma_coherent(dev);
- 
- 	return NOTIFY_OK;
- }
-diff --git a/arch/arm/mm/dma-mapping-nommu.c b/arch/arm/mm/dma-mapping-nommu.c
-index fecac107fd0d..c6a70686507b 100644
---- a/arch/arm/mm/dma-mapping-nommu.c
-+++ b/arch/arm/mm/dma-mapping-nommu.c
-@@ -42,11 +42,11 @@ void arch_setup_dma_ops(struct device *dev, bool coherent)
- 		 * enough to check if MPU is in use or not since in absence of
- 		 * MPU system memory map is used.
- 		 */
--		dev->dma_coherent = cacheid ? coherent : true;
-+		dev_assign_dma_coherent(dev, cacheid ? coherent : true);
- 	} else {
- 		/*
- 		 * Assume coherent DMA in case MMU/MPU has not been set up.
- 		 */
--		dev->dma_coherent = (get_cr() & CR_M) ? coherent : true;
-+		dev_assign_dma_coherent(dev, (get_cr() & CR_M) ? coherent : true);
- 	}
- }
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index f304037d1c34..f9bc53b60f99 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -1076,7 +1076,7 @@ static void *arm_iommu_alloc_attrs(struct device *dev, size_t size,
- 	pgprot_t prot = __get_dma_pgprot(attrs, PAGE_KERNEL);
- 	struct page **pages;
- 	void *addr = NULL;
--	int coherent_flag = dev->dma_coherent ? COHERENT : NORMAL;
-+	int coherent_flag = dev_dma_coherent(dev) ? COHERENT : NORMAL;
- 
- 	*handle = DMA_MAPPING_ERROR;
- 	size = PAGE_ALIGN(size);
-@@ -1124,7 +1124,7 @@ static int arm_iommu_mmap_attrs(struct device *dev, struct vm_area_struct *vma,
- 	if (vma->vm_pgoff >= nr_pages)
- 		return -ENXIO;
- 
--	if (!dev->dma_coherent)
-+	if (!dev_dma_coherent(dev))
- 		vma->vm_page_prot = __get_dma_pgprot(attrs, vma->vm_page_prot);
- 
- 	err = vm_map_pages(vma, pages, nr_pages);
-@@ -1141,7 +1141,7 @@ static int arm_iommu_mmap_attrs(struct device *dev, struct vm_area_struct *vma,
- static void arm_iommu_free_attrs(struct device *dev, size_t size, void *cpu_addr,
- 	dma_addr_t handle, unsigned long attrs)
- {
--	int coherent_flag = dev->dma_coherent ? COHERENT : NORMAL;
-+	int coherent_flag = dev_dma_coherent(dev) ? COHERENT : NORMAL;
- 	struct page **pages;
- 	size = PAGE_ALIGN(size);
- 
-@@ -1202,7 +1202,7 @@ static int __map_sg_chunk(struct device *dev, struct scatterlist *sg,
- 		phys_addr_t phys = page_to_phys(sg_page(s));
- 		unsigned int len = PAGE_ALIGN(s->offset + s->length);
- 
--		if (!dev->dma_coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-+		if (!dev_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
- 			arch_sync_dma_for_device(sg_phys(s), s->length, dir);
- 
- 		prot = __dma_info_to_prot(dir, attrs);
-@@ -1304,7 +1304,7 @@ static void arm_iommu_unmap_sg(struct device *dev,
- 		if (sg_dma_len(s))
- 			__iommu_remove_mapping(dev, sg_dma_address(s),
- 					       sg_dma_len(s));
--		if (!dev->dma_coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-+		if (!dev_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
- 			arch_sync_dma_for_cpu(sg_phys(s), s->length, dir);
- 	}
- }
-@@ -1323,7 +1323,7 @@ static void arm_iommu_sync_sg_for_cpu(struct device *dev,
- 	struct scatterlist *s;
- 	int i;
- 
--	if (dev->dma_coherent)
-+	if (dev_dma_coherent(dev))
- 		return;
- 
- 	for_each_sg(sg, s, nents, i)
-@@ -1345,7 +1345,7 @@ static void arm_iommu_sync_sg_for_device(struct device *dev,
- 	struct scatterlist *s;
- 	int i;
- 
--	if (dev->dma_coherent)
-+	if (dev_dma_coherent(dev))
- 		return;
- 
- 	for_each_sg(sg, s, nents, i)
-@@ -1371,7 +1371,7 @@ static dma_addr_t arm_iommu_map_phys(struct device *dev, phys_addr_t phys,
- 	dma_addr_t dma_addr;
- 	int ret, prot;
- 
--	if (!dev->dma_coherent &&
-+	if (!dev_dma_coherent(dev) &&
- 	    !(attrs & (DMA_ATTR_SKIP_CPU_SYNC | DMA_ATTR_MMIO)))
- 		arch_sync_dma_for_device(phys, size, dir);
- 
-@@ -1412,7 +1412,7 @@ static void arm_iommu_unmap_phys(struct device *dev, dma_addr_t handle,
- 	if (!iova)
- 		return;
- 
--	if (!dev->dma_coherent &&
-+	if (!dev_dma_coherent(dev) &&
- 	    !(attrs & (DMA_ATTR_SKIP_CPU_SYNC | DMA_ATTR_MMIO))) {
- 		phys_addr_t phys = iommu_iova_to_phys(mapping->domain, iova);
- 
-@@ -1431,7 +1431,7 @@ static void arm_iommu_sync_single_for_cpu(struct device *dev,
- 	unsigned int offset = handle & ~PAGE_MASK;
- 	phys_addr_t phys;
- 
--	if (dev->dma_coherent || !iova)
-+	if (dev_dma_coherent(dev) || !iova)
- 		return;
- 
- 	phys = iommu_iova_to_phys(mapping->domain, iova);
-@@ -1446,7 +1446,7 @@ static void arm_iommu_sync_single_for_device(struct device *dev,
- 	unsigned int offset = handle & ~PAGE_MASK;
- 	phys_addr_t phys;
- 
--	if (dev->dma_coherent || !iova)
-+	if (dev_dma_coherent(dev) || !iova)
- 		return;
- 
- 	phys = iommu_iova_to_phys(mapping->domain, iova);
-@@ -1701,13 +1701,13 @@ static void arm_teardown_iommu_dma_ops(struct device *dev) { }
- void arch_setup_dma_ops(struct device *dev, bool coherent)
- {
- 	/*
--	 * Due to legacy code that sets the ->dma_coherent flag from a bus
--	 * notifier we can't just assign coherent to the ->dma_coherent flag
-+	 * Due to legacy code that sets the dma_coherent flag from a bus
-+	 * notifier we can't just assign coherent to the dma_coherent flag
- 	 * here, but instead have to make sure we only set but never clear it
- 	 * for now.
- 	 */
- 	if (coherent)
--		dev->dma_coherent = true;
-+		dev_set_dma_coherent(dev);
- 
- 	/*
- 	 * Don't override the dma_ops if they have already been set. Ideally
-diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-index b2b5792b2caa..dc1fce939451 100644
---- a/arch/arm64/mm/dma-mapping.c
-+++ b/arch/arm64/mm/dma-mapping.c
-@@ -48,7 +48,7 @@ void arch_setup_dma_ops(struct device *dev, bool coherent)
- 		   dev_driver_string(dev), dev_name(dev),
- 		   ARCH_DMA_MINALIGN, cls);
- 
--	dev->dma_coherent = coherent;
-+	dev_assign_dma_coherent(dev, coherent);
- 
- 	xen_setup_dma_ops(dev);
- }
-diff --git a/arch/mips/mm/dma-noncoherent.c b/arch/mips/mm/dma-noncoherent.c
-index ab4f2a75a7d0..30ef3e247eb7 100644
---- a/arch/mips/mm/dma-noncoherent.c
-+++ b/arch/mips/mm/dma-noncoherent.c
-@@ -139,6 +139,6 @@ void arch_sync_dma_for_cpu(phys_addr_t paddr, size_t size,
- #ifdef CONFIG_ARCH_HAS_SETUP_DMA_OPS
- void arch_setup_dma_ops(struct device *dev, bool coherent)
- {
--	dev->dma_coherent = coherent;
-+	dev_assign_dma_coherent(dev, coherent);
- }
- #endif
-diff --git a/arch/riscv/mm/dma-noncoherent.c b/arch/riscv/mm/dma-noncoherent.c
-index cb89d7e0ba88..a1ec2d71d1c9 100644
---- a/arch/riscv/mm/dma-noncoherent.c
-+++ b/arch/riscv/mm/dma-noncoherent.c
-@@ -140,7 +140,7 @@ void arch_setup_dma_ops(struct device *dev, bool coherent)
- 		   "%s %s: device non-coherent but no non-coherent operations supported",
- 		   dev_driver_string(dev), dev_name(dev));
- 
--	dev->dma_coherent = coherent;
-+	dev_assign_dma_coherent(dev, coherent);
- }
- 
- void riscv_noncoherent_supported(void)
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index e94749092345..8a83d7c93361 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -3173,7 +3173,7 @@ void device_initialize(struct device *dev)
- #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
--	dev->dma_coherent = dma_default_coherent;
-+	dev_assign_dma_coherent(dev, dma_default_coherent);
- #endif
- 	swiotlb_dev_init(dev);
- }
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index f87d244cc2d6..686dc140293e 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -312,7 +312,7 @@ k3_udma_glue_request_tx_chn_common(struct device *dev,
- 
- 	if (xudma_is_pktdma(tx_chn->common.udmax)) {
- 		/* prepare the channel device as coherent */
--		tx_chn->common.chan_dev.dma_coherent = true;
-+		dev_set_dma_coherent(&tx_chn->common.chan_dev);
- 		dma_coerce_mask_and_coherent(&tx_chn->common.chan_dev,
- 					     DMA_BIT_MASK(48));
- 	}
-@@ -1003,7 +1003,7 @@ k3_udma_glue_request_rx_chn_priv(struct device *dev, const char *name,
- 
- 	if (xudma_is_pktdma(rx_chn->common.udmax)) {
- 		/* prepare the channel device as coherent */
--		rx_chn->common.chan_dev.dma_coherent = true;
-+		dev_set_dma_coherent(&rx_chn->common.chan_dev);
- 		dma_coerce_mask_and_coherent(&rx_chn->common.chan_dev,
- 					     DMA_BIT_MASK(48));
- 	}
-@@ -1104,7 +1104,7 @@ k3_udma_glue_request_remote_rx_chn_common(struct k3_udma_glue_rx_channel *rx_chn
- 
- 	if (xudma_is_pktdma(rx_chn->common.udmax)) {
- 		/* prepare the channel device as coherent */
--		rx_chn->common.chan_dev.dma_coherent = true;
-+		dev_set_dma_coherent(&rx_chn->common.chan_dev);
- 		dma_coerce_mask_and_coherent(&rx_chn->common.chan_dev,
- 					     DMA_BIT_MASK(48));
- 		rx_chn->single_fdq = false;
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index c964ebfcf3b6..1cf158eb7bdb 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -428,18 +428,18 @@ static void k3_configure_chan_coherency(struct dma_chan *chan, u32 asel)
- 		/* No special handling for the channel */
- 		chan->dev->chan_dma_dev = false;
- 
--		chan_dev->dma_coherent = false;
-+		dev_clear_dma_coherent(chan_dev);
- 		chan_dev->dma_parms = NULL;
- 	} else if (asel == 14 || asel == 15) {
- 		chan->dev->chan_dma_dev = true;
- 
--		chan_dev->dma_coherent = true;
-+		dev_set_dma_coherent(chan_dev);
- 		dma_coerce_mask_and_coherent(chan_dev, DMA_BIT_MASK(48));
- 		chan_dev->dma_parms = chan_dev->parent->dma_parms;
- 	} else {
- 		dev_warn(chan->device->dev, "Invalid ASEL value: %u\n", asel);
- 
--		chan_dev->dma_coherent = false;
-+		dev_clear_dma_coherent(chan_dev);
- 		chan_dev->dma_parms = NULL;
- 	}
- }
-diff --git a/include/linux/device.h b/include/linux/device.h
-index b7a8b902efb3..5b0fb6ad4c72 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -481,6 +481,8 @@ struct device_physical_location {
-  * @DEV_FLAG_STATE_SYNCED: The hardware state of this device has been synced to
-  *		match the software state of this device by calling the
-  *		driver/bus sync_state() callback.
-+ * @DEV_FLAG_DMA_COHERENT: This particular device is dma coherent, even if the
-+ *		architecture supports non-coherent devices.
-  */
- enum struct_device_flags {
- 	DEV_FLAG_READY_TO_PROBE = 0,
-@@ -489,6 +491,7 @@ enum struct_device_flags {
- 	DEV_FLAG_DMA_SKIP_SYNC = 3,
- 	DEV_FLAG_DMA_OPS_BYPASS = 4,
- 	DEV_FLAG_STATE_SYNCED = 5,
-+	DEV_FLAG_DMA_COHERENT = 6,
- 
- 	DEV_FLAG_COUNT
- };
-@@ -572,8 +575,6 @@ enum struct_device_flags {
-  * @offline:	Set after successful invocation of bus type's .offline().
-  * @of_node_reused: Set if the device-tree node is shared with an ancestor
-  *              device.
-- * @dma_coherent: this particular device is dma coherent, even if the
-- *		architecture supports non-coherent devices.
-  * @flags:	DEV_FLAG_XXX flags. Use atomic bitfield operations to modify.
-  *
-  * At the lowest level, every device in a Linux system is represented by an
-@@ -681,11 +682,6 @@ struct device {
- 	bool			offline_disabled:1;
- 	bool			offline:1;
- 	bool			of_node_reused:1;
--#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
--    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
--    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
--	bool			dma_coherent:1;
--#endif
- 
- 	DECLARE_BITMAP(flags, DEV_FLAG_COUNT);
- };
-@@ -718,6 +714,7 @@ __create_dev_flag_accessors(dma_iommu, DEV_FLAG_DMA_IOMMU);
- __create_dev_flag_accessors(dma_skip_sync, DEV_FLAG_DMA_SKIP_SYNC);
- __create_dev_flag_accessors(dma_ops_bypass, DEV_FLAG_DMA_OPS_BYPASS);
- __create_dev_flag_accessors(state_synced, DEV_FLAG_STATE_SYNCED);
-+__create_dev_flag_accessors(dma_coherent, DEV_FLAG_DMA_COHERENT);
- 
- #undef __create_dev_flag_accessors
- 
-diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
-index edd7de60a957..44dd9035b4fe 100644
---- a/include/linux/dma-map-ops.h
-+++ b/include/linux/dma-map-ops.h
-@@ -230,7 +230,7 @@ int dma_direct_set_offset(struct device *dev, phys_addr_t cpu_start,
- extern bool dma_default_coherent;
- static inline bool dev_is_dma_coherent(struct device *dev)
- {
--	return dev->dma_coherent;
-+	return dev_dma_coherent(dev);
- }
- #else
- #define dma_default_coherent true
--- 
-2.53.0.1213.gd9a14994de-goog
-
+> Use a flexible array member with kzalloc_flex() to combine allocations.
+>
+> Add __counted_by for extra runtime analysis.
+>
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  v2: use () for kzalloc_flex in description.
+>  drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 8 +-------
+>  drivers/dma/dw-axi-dmac/dw-axi-dmac.h          | 4 ++--
+>  2 files changed, 3 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> index 4d53f077e9d2..d3ca202dc478 100644
+> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> @@ -294,15 +294,10 @@ static struct axi_dma_desc *axi_desc_alloc(u32 num)
+>  {
+>  	struct axi_dma_desc *desc;
+>
+> -	desc = kzalloc_obj(*desc, GFP_NOWAIT);
+> +	desc = kzalloc_flex(*desc, hw_desc, num, GFP_NOWAIT);
+>  	if (!desc)
+>  		return NULL;
+>
+> -	desc->hw_desc = kzalloc_objs(*desc->hw_desc, num, GFP_NOWAIT);
+> -	if (!desc->hw_desc) {
+> -		kfree(desc);
+> -		return NULL;
+> -	}
+>  	desc->nr_hw_descs = num;
+>
+>  	return desc;
+> @@ -339,7 +334,6 @@ static void axi_desc_put(struct axi_dma_desc *desc)
+>  		dma_pool_free(chan->desc_pool, hw_desc->lli, hw_desc->llp);
+>  	}
+>
+> -	kfree(desc->hw_desc);
+>  	kfree(desc);
+>  	atomic_sub(descs_put, &chan->descs_allocated);
+>  	dev_vdbg(chan2dev(chan), "%s: %d descs put, %d still allocated\n",
+> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+> index 67cc199e24d1..a04a4e03eb3d 100644
+> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+> @@ -98,14 +98,14 @@ struct axi_dma_hw_desc {
+>  };
+>
+>  struct axi_dma_desc {
+> -	struct axi_dma_hw_desc	*hw_desc;
+> -
+>  	struct virt_dma_desc		vd;
+>  	struct axi_dma_chan		*chan;
+>  	u32				completed_blocks;
+>  	u32				length;
+>  	u32				period_len;
+>  	u32				nr_hw_descs;
+> +
+> +	struct axi_dma_hw_desc		hw_desc[] __counted_by(nr_hw_descs);
+>  };
+>
+>  struct axi_dma_chan_config {
+> --
+> 2.53.0
+>
 

@@ -1,91 +1,86 @@
-Return-Path: <dmaengine+bounces-9898-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9899-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KExZMm1/1GlLugcAu9opvQ
-	(envelope-from <dmaengine+bounces-9898-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 07 Apr 2026 05:52:13 +0200
+	id aL2aF9t/1GlLugcAu9opvQ
+	(envelope-from <dmaengine+bounces-9899-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 07 Apr 2026 05:54:03 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35E923A982D
-	for <lists+dmaengine@lfdr.de>; Tue, 07 Apr 2026 05:52:12 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06CEB3A9862
+	for <lists+dmaengine@lfdr.de>; Tue, 07 Apr 2026 05:54:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9F16030191A8
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Apr 2026 03:51:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 241AA307308E
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Apr 2026 03:52:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9986374E57;
-	Tue,  7 Apr 2026 03:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B52737475B;
+	Tue,  7 Apr 2026 03:52:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qsFa1Rns"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ohFNyTwp"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8DD37474B
-	for <dmaengine@vger.kernel.org>; Tue,  7 Apr 2026 03:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E4937475C
+	for <dmaengine@vger.kernel.org>; Tue,  7 Apr 2026 03:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775533914; cv=none; b=qIBLw1uZB7xFYj4gnHpQXx3+acQQOdAA50W5ovUJzL9aR+kcIvxvMOSreD2BwjkeR2+eTg2tdE1oeafh+4mnWkA9bIChmnWHbKfdOfbaCgO7ghk9Os+ZETgO9+ZYyznpQOaelxSHYpzzIoIJzXTFjmgh20zPxlJsWiIPzeJY4jc=
+	t=1775533953; cv=none; b=VDme6JHwh/JCN8TSxoWxvcCuo4CuIl08jra5PlzMDPV+U9z9cN9J1wiTM7VflPau/PdfuO+9FMy1TPpjQ3erwkOf293Pq2dxiIf3d8gO1GJRR7FBD0LzZ8aEbAIItvEXbSUvmcRXHDDSNPEdRqXlm9bkQWn8EDSIUaAtDCfsckY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775533914; c=relaxed/simple;
-	bh=ZGc+Lx7Q3ImjQIU2MsaptvUr2OjdQPH11+1aygZf1BQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eTkEMuHEJ2bhaiiSqvkNVZuUG82EzbPSensFKJ8j9+02yAIyCNrahvIt8OHXxcJzqmYI1j1eujswXJVD2ApUMjLTaEFzQ1YRNGJvk5cM4MY+wHrrGe8vzZ05V1Nz32zWJmami7ulXfR1AiLClRRN7mrJchQ/++xuNQHDdFsWxb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qsFa1Rns; arc=none smtp.client-ip=209.85.160.174
+	s=arc-20240116; t=1775533953; c=relaxed/simple;
+	bh=hWTqrbgs6Ynu8w+0/oInRnFbfmZqm7O0l+BAT/oCoac=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o5q9qFxPIAOhWGVMP8cw6aKem/HxO8E/fipzcSOJeeg2kVmp2g2pWamVZ5yxiR25DRP3iOP80IRdaYAwbcTY6mXXpExIjJpjLXoHB7TKzb+zB/D7HP0NxMSFh0blqjm6grHdtZV7eQeCsCnrXktm5RwKL0pphT8jHu20KxNxthc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ohFNyTwp; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-50d6b9bca48so58729051cf.2
-        for <dmaengine@vger.kernel.org>; Mon, 06 Apr 2026 20:51:53 -0700 (PDT)
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-8d65f4073bfso362240785a.3
+        for <dmaengine@vger.kernel.org>; Mon, 06 Apr 2026 20:52:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775533912; x=1776138712; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775533948; x=1776138748; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=e/TQHykLdF85VtC6CTJ2wonciXUmXtr/iGFz2p1d+iM=;
-        b=qsFa1RnsmqIpoiWveTXijEroCfY6YDbyuRPmq/j8gurUFF5XxOJxSbR1N7RGlYfIaO
-         DpGxIT4WTWgDfVRGHTJPimjw3DMyu8s7rXdK3jfGA2bvl2mMv0NlnsR1fYiO/A8rrKbm
-         ghYcVrv2sYteen6K4Cin73OGtBcuL3JI90fjf3Oyvs0UbWkgYky8a0lyzwVJ4cgZ/7PU
-         WiS2vOaxD2k06Bsbh/eMdx3EJoKEHRMMG80lq0jFodWnuysiAZkew3lXj/ryMDgjDwwH
-         153d67gnK29wOno2xZueGHfUKdQ7KKL6H6BlqASEtybnG4B7dys38XZr88tGWa3eieN5
-         K2aw==
+        bh=MqMWReHNfBZQ1cD4RbW3GJ+O9AwhazTgpk4nLCPXKWQ=;
+        b=ohFNyTwpi5Tvc7uwHySSIle/sRaBmd22CfFhvUNx/xpplRQC5ZdGvejTK2n9Iy5STL
+         JCwbiTnJ1ECJQhLbWPTO9mvvz1tbpQzbN1fP+mjBrl0Kd+ztwVrrxnXd6IJC00MMSVw1
+         r/AHG0E4Ynzmjl8U3nUMuUtAn3pkRo6n89SgWaHQJPO+T4LxxvnatJYxGTiw3NOYD5br
+         mxbfbzY+EfwpJpr1tEHKPNKo5hytS4YX6OqxJiLN4hhJZPZwurxeDIge23xbqEi5t2S7
+         s/zI+gK42i49tKb1ikm9Of+Ga5dYS6z7gnGJj47KF+a722BAVi3tkRyv41mXIgEYQRdg
+         Z+rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775533912; x=1776138712;
+        d=1e100.net; s=20251104; t=1775533948; x=1776138748;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e/TQHykLdF85VtC6CTJ2wonciXUmXtr/iGFz2p1d+iM=;
-        b=pc8YQEEkXaxklkjNmFULvIAF2fOoL7BBNVh3xTKd7wZt7SQ2izl96ZBa1Fr3i+I2Oi
-         O1wZ+faoBV171ciRQcAqLAwsdiWcJtYg9MHRyd9dJMdnkjfkZ43kLxv5wrrApERuFXtU
-         smXYk/+7rGQyjS0pcTHCKllJZ/C/Hxhb7tVUvw8WKbkUjAKYyoE5YVAbD2RYXeJPLJ7G
-         EKWJyRKF+rnZr6zkWrDUhO6OXWQwfFkdvMjQT5f+sy9N5GhdCa1EsWbQQ2MS2AhkegGl
-         IIGBNOJ2rSNo2+SetXM0msp258uULufPL44Ux5oyIzJ9IIs/+1NzDHwISfjyt9hTX5sX
-         cLnQ==
-X-Gm-Message-State: AOJu0Yxho68Q1y1sdhqLqd0lfh9PZ7axPEvp6c/kuwGSWnBbGAiaFJ40
-	1L8OGEx06hiEtWWBOyKyj0g9bYxudM34pf+5FWsCF7aS0wyLpGetv0MuiWCnUw==
-X-Gm-Gg: AeBDiesXqqqd17J8aDI66HQ/Lw0En1fkNDc1EYx/dDhmEcL3AVLlV/LZXzFC8paO1dg
-	3M4tfZkCHfAfEUbDn6mBbttaX+dRlGHdY5dzEpum+XFWXS/ECTH/1CveVv6EshMqAOQ6AVJwlOj
-	os0wX4QpRfFiuzv9o8YbQgCVfFrHcmCFfSNiXQ/R1lnsmoBnacntsIqNG+9bU6UlymwPsDd8H/H
-	A7O8gWCaF4ZiY+nJXdbaua+a1kJYEQNb+NxhBBYJgiVCnRIlXSrcDQBzh2Cl6qGZn3NpzLmfGIG
-	KztZ2bCBUXB+ogbGU1WKvLXNCyD7f/9yWmFOsKmsJLt3fRBejZtC7UiTywPQrEa8kq8kXmf7AfX
-	xzO3uCjx8nEiEe/eyVbG37ME8OtRSUbwe8p81dtt5cbmkSf65Cd7hhSlocehJ78HgepkgFDk/uF
-	nkfWHs6B80YcInQ7s39xD4JyXRDZbDZRU8XcvmDQT/yigL3G8Mb2EBEAk=
-X-Received: by 2002:a05:622a:1247:b0:50d:8389:c3f3 with SMTP id d75a77b69052e-50d8389c6c4mr146678471cf.54.1775533912203;
-        Mon, 06 Apr 2026 20:51:52 -0700 (PDT)
+        bh=MqMWReHNfBZQ1cD4RbW3GJ+O9AwhazTgpk4nLCPXKWQ=;
+        b=YYQExYQRVHOqTZbKFs9dqdwgf8IaXapEkbA40OGsOYq36AACvjoPtTu7tQ7bg4xmTM
+         aGz2SUd/boyCxRnvN2Qu4Dm2P3IFbcuMHPE9eU22/vSEUqwAxLyresMVsr1kPXbZqo/p
+         2Vuf4C4lkk7uO5UD2+fah83GhCcSXihXcXNqkVs3g5omUIs1rnhkQ1UOx7xXBf6BmrSd
+         TAVVlARjrn/OyDRIiu46T8ucKm+oDbUrd8x1qxdDBrM1nzY606SYwyGu82H3+tAqnK30
+         fAnVTCIdDQA+pOfN0SGHGr3Z6OXZgC02aXpkB5OQjpnapwZCPkgj1mHvStZInYvSf6Uk
+         pw0g==
+X-Gm-Message-State: AOJu0YwwUoHNJ+S3OVB2CjOz9cosxSk02LYiVXhy8onOgOSkqk4c/1+z
+	BAbq2XhYzYees24jbrgHyTZrBzt9iqrFuCvDOF/tBcWmcVUMeRzgM7REqK1gJw==
+X-Gm-Gg: AeBDies2SIZRduCfVQfQ6S2gciuKawxtppS/iVXqLwjb3H4xWgqAmw3xxYrHDdu0mQf
+	Uidv/0wTEsKkvLu4uoPP5YMI/jqTMZ4neY59Gh3q8CoM2NiNq6h3onKpqfTphQGz8KRb0FHwJjV
+	on3pqDdahJV3xvjSIy9pmCsMxCxQjLXwKxX/P+j4nOPYMry+8Ce5Lpf5XcP8YrmeCoSq9LWavgR
+	k735HuBr9YxZyBjCSYwXni40vsduroSMVer2PPHMyKzQixgbWmGDlEtzYmPsZmEwW4cVdGkx1Mw
+	SPwd/zPsaID6XxQ7lvFSOFjMfsMPsi4n/3DuvgnbWaCdt2QW+vGk4xzKY3xr8dxHNBZzPqsu6SI
+	PyreNdG/CaCeeYzFlH1sFY8w2rt5I5/l6essc4nu3OgPnaFC2/FqIBRdtQwC+OHTBzolw6x4mZw
+	7b3NyY83EegP6nHXwJwgERvG0qqXRhW4SEgXn9QufUrNBj2GVD94TrzkD5S+QMUYKiMg==
+X-Received: by 2002:a05:620a:4104:b0:8cf:d3a9:60ea with SMTP id af79cd13be357-8d419961f7bmr2287785185a.26.1775533948373;
+        Mon, 06 Apr 2026 20:52:28 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d::8bd])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50d82afc7d5sm77280341cf.30.2026.04.06.20.51.49
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8d5e69afdb6sm687935285a.40.2026.04.06.20.52.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2026 20:51:50 -0700 (PDT)
+        Mon, 06 Apr 2026 20:52:27 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
 To: dmaengine@vger.kernel.org
 Cc: Vinod Koul <vkoul@kernel.org>,
 	Frank Li <Frank.Li@kernel.org>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/LPC18XX ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] dmaengine: lpc18xx-dmamux: simplify allocation
-Date: Mon,  6 Apr 2026 20:51:32 -0700
-Message-ID: <20260407035132.99037-1-rosenp@gmail.com>
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] dmaengine: pl08x: use kzalloc_flex()
+Date: Mon,  6 Apr 2026 20:52:10 -0700
+Message-ID: <20260407035210.99085-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -97,122 +92,106 @@ Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9898-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_FROM(0.00)[bounces-9899-lists,dmaengine=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FREEMAIL_FROM(0.00)[gmail.com];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[dmaengine];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 35E923A982D
+X-Rspamd-Queue-Id: 06CEB3A9862
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Use a flexible array member to combine allocations. Requires
-preparation, aka reshuffling before the actual allocation to get the
-proper size.
-
-Add __counted_by for extra runtime analysis.
+kzalloc_obj and kzalloc_objs can be combined by changing the array type
+to a flexible array member to simplify allocation.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/dma/lpc18xx-dmamux.c | 42 +++++++++++++++++-------------------
- 1 file changed, 20 insertions(+), 22 deletions(-)
+ drivers/dma/amba-pl08x.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/dma/lpc18xx-dmamux.c b/drivers/dma/lpc18xx-dmamux.c
-index d3ff521951b8..5dfefbc496da 100644
---- a/drivers/dma/lpc18xx-dmamux.c
-+++ b/drivers/dma/lpc18xx-dmamux.c
-@@ -32,11 +32,11 @@ struct lpc18xx_dmamux {
- 
- struct lpc18xx_dmamux_data {
- 	struct dma_router dmarouter;
--	struct lpc18xx_dmamux *muxes;
- 	u32 dma_master_requests;
- 	u32 dma_mux_requests;
- 	struct regmap *reg;
- 	spinlock_t lock;
-+	struct lpc18xx_dmamux muxes[] __counted_by(dma_master_requests);
+diff --git a/drivers/dma/amba-pl08x.c b/drivers/dma/amba-pl08x.c
+index 5e88fd44812d..255b33064945 100644
+--- a/drivers/dma/amba-pl08x.c
++++ b/drivers/dma/amba-pl08x.c
+@@ -268,12 +268,12 @@ struct pl08x_dma_chan {
+  * @adev: the corresponding AMBA (PrimeCell) bus entry
+  * @vd: vendor data for this PL08x variant
+  * @pd: platform data passed in from the platform/machine
+- * @phy_chans: array of data for the physical channels
+  * @pool: a pool for the LLI descriptors
+  * @lli_buses: bitmask to or in to LLI pointer selecting AHB port for LLI
+  * fetches
+  * @mem_buses: set to indicate memory transfers on AHB2.
+  * @lli_words: how many words are used in each LLI item for this variant
++ * @phy_chans: array of data for the physical channels
+  */
+ struct pl08x_driver_data {
+ 	struct dma_device slave;
+@@ -283,11 +283,11 @@ struct pl08x_driver_data {
+ 	struct amba_device *adev;
+ 	const struct vendor_data *vd;
+ 	struct pl08x_platform_data *pd;
+-	struct pl08x_phy_chan *phy_chans;
+ 	struct dma_pool *pool;
+ 	u8 lli_buses;
+ 	u8 mem_buses;
+ 	u8 lli_words;
++	struct pl08x_phy_chan phy_chans[];
  };
  
- static void lpc18xx_dmamux_free(struct device *dev, void *route_data)
-@@ -122,12 +122,30 @@ static int lpc18xx_dmamux_probe(struct platform_device *pdev)
- {
- 	struct device_node *dma_np, *np = pdev->dev.of_node;
- 	struct lpc18xx_dmamux_data *dmamux;
-+	u32 dma_master_requests;
- 	int ret;
+ /*
+@@ -2709,7 +2709,7 @@ static int pl08x_probe(struct amba_device *adev, const struct amba_id *id)
+ 		goto out_no_pl08x;
  
--	dmamux = devm_kzalloc(&pdev->dev, sizeof(*dmamux), GFP_KERNEL);
-+	dma_np = of_parse_phandle(np, "dma-masters", 0);
-+	if (!dma_np) {
-+		dev_err(&pdev->dev, "can't get dma master\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = of_property_read_u32(dma_np, "dma-requests",
-+				   &dma_master_requests);
-+	of_node_put(dma_np);
-+	if (ret) {
-+		dev_err(&pdev->dev, "missing master dma-requests property\n");
-+		return ret;
-+	}
-+
-+	dmamux = devm_kzalloc(&pdev->dev, struct_size(dmamux, muxes, dma_master_requests),
-+			GFP_KERNEL);
- 	if (!dmamux)
- 		return -ENOMEM;
- 
-+	dmamux->dma_master_requests = dma_master_requests;
-+
- 	dmamux->reg = syscon_regmap_lookup_by_compatible("nxp,lpc1850-creg");
- 	if (IS_ERR(dmamux->reg)) {
- 		dev_err(&pdev->dev, "syscon lookup failed\n");
-@@ -141,26 +159,6 @@ static int lpc18xx_dmamux_probe(struct platform_device *pdev)
- 		return ret;
+ 	/* Create the driver state holder */
+-	pl08x = kzalloc_obj(*pl08x);
++	pl08x = kzalloc_flex(*pl08x, phy_chans, vd->channels);
+ 	if (!pl08x) {
+ 		ret = -ENOMEM;
+ 		goto out_no_pl08x;
+@@ -2854,13 +2854,6 @@ static int pl08x_probe(struct amba_device *adev, const struct amba_id *id)
+ 		goto out_no_irq;
  	}
  
--	dma_np = of_parse_phandle(np, "dma-masters", 0);
--	if (!dma_np) {
--		dev_err(&pdev->dev, "can't get dma master\n");
--		return -ENODEV;
+-	/* Initialize physical channels */
+-	pl08x->phy_chans = kzalloc_objs(*pl08x->phy_chans, vd->channels);
+-	if (!pl08x->phy_chans) {
+-		ret = -ENOMEM;
+-		goto out_no_phychans;
 -	}
 -
--	ret = of_property_read_u32(dma_np, "dma-requests",
--				   &dmamux->dma_master_requests);
--	of_node_put(dma_np);
--	if (ret) {
--		dev_err(&pdev->dev, "missing master dma-requests property\n");
--		return ret;
--	}
--
--	dmamux->muxes = devm_kcalloc(&pdev->dev, dmamux->dma_master_requests,
--				     sizeof(struct lpc18xx_dmamux),
--				     GFP_KERNEL);
--	if (!dmamux->muxes)
--		return -ENOMEM;
--
- 	spin_lock_init(&dmamux->lock);
- 	platform_set_drvdata(pdev, dmamux);
- 	dmamux->dmarouter.dev = &pdev->dev;
+ 	for (i = 0; i < vd->channels; i++) {
+ 		struct pl08x_phy_chan *ch = &pl08x->phy_chans[i];
+ 
+@@ -2962,8 +2955,6 @@ static int pl08x_probe(struct amba_device *adev, const struct amba_id *id)
+ out_no_slave:
+ 	pl08x_free_virtual_channels(&pl08x->memcpy);
+ out_no_memcpy:
+-	kfree(pl08x->phy_chans);
+-out_no_phychans:
+ 	free_irq(adev->irq[0], pl08x);
+ out_no_irq:
+ 	dma_pool_destroy(pl08x->pool);
 -- 
 2.53.0
 

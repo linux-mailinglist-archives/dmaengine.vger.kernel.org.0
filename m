@@ -1,55 +1,56 @@
-Return-Path: <dmaengine+bounces-9957-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9959-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uKdtKJr22GkYkQgAu9opvQ
-	(envelope-from <dmaengine+bounces-9957-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Apr 2026 15:09:46 +0200
+	id mOFeBKD22GkYkQgAu9opvQ
+	(envelope-from <dmaengine+bounces-9959-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Apr 2026 15:09:52 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CD923D7EC6
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Apr 2026 15:09:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D3983D7EEC
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Apr 2026 15:09:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DF1053026F27
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Apr 2026 13:07:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7CE06302D529
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Apr 2026 13:07:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07B7B331A5B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1341A33F5B4;
 	Fri, 10 Apr 2026 13:07:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ThL/1M3a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clrbc0Kv"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3007313E1D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F6031619C;
 	Fri, 10 Apr 2026 13:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775826469; cv=none; b=n4zrRF41jhtZbEhthK5aNsi9UHmu6EZCKF+mOubCs49Qv3P+f3iLDsXow63hWcaTYtG4WdnOg8KF6YLL5uZJI39IjQRk+7Bv15BDpNM5wpRgrvn/Xh3bPIxsCnhlRDMSMwfpzKp4a/RhO1if4H8608Z5xq1yEQtdPnXTxPRKbRw=
+	t=1775826470; cv=none; b=PV5e74kOY6YyZEfne1Nk3TQaBp29KaB5wBd+76Z+wMcuyHMmdAn6OuX0JMxNGDiAEyF5ed+In11U2vyR1h9cX28CqvxkGj+6UIpSMzi/X0aSyTElTitPRWiyOptat8kxahgB5+5TgLUS47z//wA+CmKiSH+enCU6Pt7CFJuNk1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775826469; c=relaxed/simple;
-	bh=HKLbyRBVfPTHlCYt6B5t9msTPNnxCYsSjPdFZbFLnuw=;
+	s=arc-20240116; t=1775826470; c=relaxed/simple;
+	bh=TDlOip3ZfY9DrU7R+d4ucyTjMh2oYmgSkztpezMIt/s=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eAJGJUM+4inkAkZFmcvpZhlAyTS+lx1NMnr8yWGiZlTtvLUoRHIm3eLuAduinWVpJGLMwb090LQjP9KaV48oXDI7HJJjcKcVtQKpIY24mUlEZvuSo0v7vGzoUoseso35rBOdJKo/VkfAmc44VUlHCVk2i9lJMgK8tHgSFCmcVJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ThL/1M3a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A6B6BC2BC9E;
+	 In-Reply-To:To:Cc; b=Gctq4tjSs1f7187Ybb9PzQwcGa9wXXE+7593V0xssyDQakDselnr9OqouIDNnwFCXDlOvTNaAARxDtF+n/SiolL5d4n2ZOI1WmePBO5QwKx+ONyyQt8MfDZqXFVp6Jew8r2JMPUHe30AlSJ2WLOw1vTfJHLNf6zVxsAOxDyEfDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clrbc0Kv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B4C69C2BCB0;
 	Fri, 10 Apr 2026 13:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1775826469;
-	bh=HKLbyRBVfPTHlCYt6B5t9msTPNnxCYsSjPdFZbFLnuw=;
+	bh=TDlOip3ZfY9DrU7R+d4ucyTjMh2oYmgSkztpezMIt/s=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ThL/1M3avfN/caZ2EIVBa9HXiCrGgT28bhLYEM2GPGatVekUgzTZSHrU94ulzFqVw
-	 Hm9PyfMh4G28Mj2bknSQxMfHDT89bxcS4NGCI7hoBBP1MmjR+yr5Ef40s6SFGiuPLN
-	 XsAiqzsaDlfAfrJudlUuHbyOL7t6qSEGq8OXOvp/5CfNJFf9okKC2qNkHRrTuGKqg3
-	 /3iw8LfshG3Z0rFZaHzCk8bjM1wC88SHrqoFqB290VE14Bnu69Hldw/PWT+oZ6Pl9P
-	 aigbfG4oTRGr27uB7JPuGukjvkC0OlHL0MulkD0ByzDyCg0fNh+etelsr3A/idZWFC
-	 zyDUWHbTJSUzQ==
+	b=clrbc0KveuIXMHv6wOliywRCW0s9/840vehw8FfSDET6VYD2R8hNhYZ5NE5Y/eOn8
+	 smsUvUcQbScUsTIGjbkQ5vxmprf3P2ESpZHt/5wAFZMynIQle/L/70DfdkD1Y21a6t
+	 3BSCxQ0trRx7dw+vWh2MeXW1B4fR4j1KPGZF6X534nIcRbfzb0ya7O7sh1wF6xY7IL
+	 T3+c/QoaRhcnrByA0UiEhBGdTYvE4aaVT0qKF+x0J9kE3oFYXmfWaJgHVWadRwbYFa
+	 awcrpYnvpKgCGPg8cgDDtvTDGpzBRAdVHpEBU5Xcftw4o/hiMtjyHtoByMpXO/jvbD
+	 wee+XA9HcBidg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C12BF4485D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE536F4485B;
 	Fri, 10 Apr 2026 13:07:49 +0000 (UTC)
 From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Fri, 10 Apr 2026 08:07:13 -0500
-Subject: [PATCH 03/23] dmaengine: sdxi: Add PCI initialization
+Date: Fri, 10 Apr 2026 08:07:14 -0500
+Subject: [PATCH 04/23] dmaengine: sdxi: Feature discovery and initial
+ configuration
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -58,7 +59,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260410-sdxi-base-v1-3-1d184cb5c60a@amd.com>
+Message-Id: <20260410-sdxi-base-v1-4-1d184cb5c60a@amd.com>
 References: <20260410-sdxi-base-v1-0-1d184cb5c60a@amd.com>
 In-Reply-To: <20260410-sdxi-base-v1-0-1d184cb5c60a@amd.com>
 To: Vinod Koul <vkoul@kernel.org>
@@ -71,11 +72,11 @@ Cc: Wei Huang <wei.huang2@amd.com>,
  linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
  Nathan Lynch <nathan.lynch@amd.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1775826467; l=7230;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1775826467; l=9474;
  i=nathan.lynch@amd.com; s=20260410; h=from:subject:message-id;
- bh=3A0BXgIoSercG94OmOdIOrhmik2mZE2IAheGEIhO5Q0=;
- b=2bpWgEy4FtNh9XEmlaLsO4DAUK2nN/Cleb6ZaHIf364SRLwwh+r8I9KiBsaYNRewTH7sMda8a
- ZfFgYojVy55B0AqjxUrkcMD5AgVehdjWknUvWBOpk3qzmtOAnsWHm7Q
+ bh=b7xu936IWaAWui2gDis8KlNNC8TGpATPQfcAYDAr6kM=;
+ b=y69NHSxZh8DFXKYmeqC9Zq2QsmbA5eS5d6E5M/G8yii7wjB+0qj+1Z4ui552Kxyv9f01qwFqO
+ ndycO+cNlbgC8bDMFQzRcOr2GONhO6O2ZxFr5wCAQ0uVJ0jMyUN5cQM
 X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
  pk=PK4ozhq+/z9/2Jl5rgDmvHa9raVomv79qM8p1RAFpEw=
 X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20260410 with
@@ -90,7 +91,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9957-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
+	TAGGED_FROM(0.00)[bounces-9959-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -108,267 +109,325 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	HAS_REPLYTO(0.00)[nathan.lynch@amd.com]
-X-Rspamd-Queue-Id: 3CD923D7EC6
+X-Rspamd-Queue-Id: 8D3983D7EEC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Nathan Lynch <nathan.lynch@amd.com>
 
-Add enough code to bind a SDXI device via the class code and map its
-control registers and doorbell region. All device resources are
-managed with devres at this point, so there is no explicit teardown
-path.
+After bus-specific initialization, force the SDXI function to stopped
+state. This is the expected state from reset, but kexec or driver bugs
+can leave a function in other states from which the initialization
+code must be able to recover.
 
-While the SDXI specification includes a PCIe binding, the standard is
-intended to be independent of the underlying I/O interconnect. So the
-driver confines PCI-specific code to pci.c, and the rest (such as
-device.c, introduced here) is bus-agnostic. Hence there is some
-indirection: during probe, the bus code registers any matched device
-with the generic SDXI core, supplying the device and a sdxi_bus_ops
-vector. After the core associates a new sdxi_dev with the device,
-bus-specific initialization proceeds via the sdxi_bus_ops->init()
-callback.
+Discover via the capability registers the doorbell region stride, the
+maximum supported context ID, the operation groups implemented, and
+limits on buffer and control structure sizes. The driver has the
+option of writing more conservative limits to the ctl2 register, but
+it uses those supplied by the implementation for now.
+
+Introduce device register definitions and associated masks via mmio.h.
+
+Add convenience wrappers which are first used here:
+- sdxi_dbg()
+- sdxi_info()
+- sdxi_err()
+- sdxi_read64()
+- sdxi_write64()
+
+Report the version of the standard to which the device conforms, e.g.
+
+  sdxi 0000:00:03.0: SDXI 1.0 device found
 
 Co-developed-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 ---
- drivers/dma/Kconfig       |  2 ++
- drivers/dma/Makefile      |  1 +
- drivers/dma/sdxi/Kconfig  |  8 +++++
- drivers/dma/sdxi/Makefile |  6 ++++
- drivers/dma/sdxi/device.c | 26 ++++++++++++++
- drivers/dma/sdxi/pci.c    | 87 +++++++++++++++++++++++++++++++++++++++++++++++
- drivers/dma/sdxi/sdxi.h   | 45 ++++++++++++++++++++++++
- 7 files changed, 175 insertions(+)
+ drivers/dma/sdxi/device.c | 149 +++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/dma/sdxi/mmio.h   |  51 ++++++++++++++++
+ drivers/dma/sdxi/sdxi.h   |  23 +++++++
+ 3 files changed, 222 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index e98e3e8c5036..5a19df2da7f2 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -783,6 +783,8 @@ source "drivers/dma/fsl-dpaa2-qdma/Kconfig"
- 
- source "drivers/dma/lgm/Kconfig"
- 
-+source "drivers/dma/sdxi/Kconfig"
-+
- source "drivers/dma/stm32/Kconfig"
- 
- # clients
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index df566c4958b6..3055ed87bc52 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -86,6 +86,7 @@ obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
- obj-$(CONFIG_ST_FDMA) += st_fdma.o
- obj-$(CONFIG_FSL_DPAA2_QDMA) += fsl-dpaa2-qdma/
- obj-$(CONFIG_INTEL_LDMA) += lgm/
-+obj-$(CONFIG_SDXI) += sdxi/
- 
- obj-y += amd/
- obj-y += mediatek/
-diff --git a/drivers/dma/sdxi/Kconfig b/drivers/dma/sdxi/Kconfig
-new file mode 100644
-index 000000000000..a568284cd583
---- /dev/null
-+++ b/drivers/dma/sdxi/Kconfig
-@@ -0,0 +1,8 @@
-+config SDXI
-+	tristate "SDXI support"
-+	select DMA_ENGINE
-+	help
-+	  Enable support for Smart Data Accelerator Interface (SDXI)
-+	  Platform Data Mover devices. SDXI is a vendor-neutral
-+	  standard for a memory-to-memory data mover and acceleration
-+	  interface.
-diff --git a/drivers/dma/sdxi/Makefile b/drivers/dma/sdxi/Makefile
-new file mode 100644
-index 000000000000..f84b87d53e27
---- /dev/null
-+++ b/drivers/dma/sdxi/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_SDXI) += sdxi.o
-+
-+sdxi-objs += device.o
-+
-+sdxi-$(CONFIG_PCI_MSI) += pci.o
 diff --git a/drivers/dma/sdxi/device.c b/drivers/dma/sdxi/device.c
-new file mode 100644
-index 000000000000..b718ce04afa0
---- /dev/null
+index b718ce04afa0..1083fdddd72f 100644
+--- a/drivers/dma/sdxi/device.c
 +++ b/drivers/dma/sdxi/device.c
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * SDXI hardware device driver
-+ *
-+ * Copyright Advanced Micro Devices, Inc.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+
-+#include "sdxi.h"
-+
-+int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops)
-+{
-+	struct sdxi_dev *sdxi;
-+
-+	sdxi = devm_kzalloc(dev, sizeof(*sdxi), GFP_KERNEL);
-+	if (!sdxi)
-+		return -ENOMEM;
-+
-+	sdxi->dev = dev;
-+	sdxi->bus_ops = ops;
-+	dev_set_drvdata(dev, sdxi);
-+
-+	return sdxi->bus_ops->init(sdxi);
-+}
-diff --git a/drivers/dma/sdxi/pci.c b/drivers/dma/sdxi/pci.c
-new file mode 100644
-index 000000000000..f3f8485e50e3
---- /dev/null
-+++ b/drivers/dma/sdxi/pci.c
-@@ -0,0 +1,87 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * SDXI PCI device code
-+ *
-+ * Copyright Advanced Micro Devices, Inc.
-+ */
-+
-+#include <linux/dev_printk.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/iomap.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+
-+#include "sdxi.h"
-+
-+enum sdxi_mmio_bars {
-+	SDXI_PCI_BAR_CTL_REGS = 0,
-+	SDXI_PCI_BAR_DOORBELL = 2,
+@@ -5,14 +5,157 @@
+  * Copyright Advanced Micro Devices, Inc.
+  */
+ 
++#include <linux/bitfield.h>
++#include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/slab.h>
+ 
++#include "mmio.h"
+ #include "sdxi.h"
+ 
++enum sdxi_fn_gsv {
++	SDXI_GSV_STOP,
++	SDXI_GSV_INIT,
++	SDXI_GSV_ACTIVE,
++	SDXI_GSV_STOPG_SF,
++	SDXI_GSV_STOPG_HD,
++	SDXI_GSV_ERROR,
 +};
 +
-+static struct pci_dev *sdxi_to_pci_dev(const struct sdxi_dev *sdxi)
++static const char *const gsv_strings[] = {
++	[SDXI_GSV_STOP]     = "stopped",
++	[SDXI_GSV_INIT]     = "initializing",
++	[SDXI_GSV_ACTIVE]   = "active",
++	[SDXI_GSV_STOPG_SF] = "soft stopping",
++	[SDXI_GSV_STOPG_HD] = "hard stopping",
++	[SDXI_GSV_ERROR]    = "error",
++};
++
++static const char *gsv_str(enum sdxi_fn_gsv gsv)
 +{
-+	return to_pci_dev(sdxi_to_dev(sdxi));
++	if ((size_t)gsv < ARRAY_SIZE(gsv_strings))
++		return gsv_strings[(size_t)gsv];
++
++	WARN_ONCE(1, "unexpected gsv %u\n", gsv);
++
++	return "unknown";
 +}
 +
-+static int sdxi_pci_init(struct sdxi_dev *sdxi)
++enum sdxi_fn_gsr {
++	SDXI_GSRV_RESET,
++	SDXI_GSRV_STOP_SF,
++	SDXI_GSRV_STOP_HD,
++	SDXI_GSRV_ACTIVE,
++};
++
++static enum sdxi_fn_gsv sdxi_dev_gsv(const struct sdxi_dev *sdxi)
 +{
-+	struct pci_dev *pdev = sdxi_to_pci_dev(sdxi);
-+	struct device *dev = &pdev->dev;
-+	int ret;
++	return (enum sdxi_fn_gsv)FIELD_GET(SDXI_MMIO_STS0_FN_GSV,
++					   sdxi_read64(sdxi, SDXI_MMIO_STS0));
++}
 +
-+	ret = pcim_enable_device(pdev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to enable device\n");
++static void sdxi_write_fn_gsr(struct sdxi_dev *sdxi, enum sdxi_fn_gsr cmd)
++{
++	u64 ctl0 = sdxi_read64(sdxi, SDXI_MMIO_CTL0);
 +
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to set DMA masks\n");
++	FIELD_MODIFY(SDXI_MMIO_CTL0_FN_GSR, &ctl0, cmd);
++	sdxi_write64(sdxi, SDXI_MMIO_CTL0, ctl0);
++}
 +
-+	sdxi->ctrl_regs = pcim_iomap_region(pdev, SDXI_PCI_BAR_CTL_REGS,
-+					    KBUILD_MODNAME);
-+	if (IS_ERR(sdxi->ctrl_regs)) {
-+		return dev_err_probe(dev, PTR_ERR(sdxi->ctrl_regs),
-+				     "failed to map control registers\n");
-+	}
++/* Get the device to the GSV_STOP state. */
++static int sdxi_dev_stop(struct sdxi_dev *sdxi)
++{
++	unsigned long deadline = jiffies + msecs_to_jiffies(1000);
++	bool reset_issued = false;
 +
-+	sdxi->dbs = pcim_iomap_region(pdev, SDXI_PCI_BAR_DOORBELL,
-+				      KBUILD_MODNAME);
-+	if (IS_ERR(sdxi->dbs)) {
-+		return dev_err_probe(dev, PTR_ERR(sdxi->dbs),
-+				     "failed to map doorbell region\n");
-+	}
++	do {
++		enum sdxi_fn_gsv status = sdxi_dev_gsv(sdxi);
 +
-+	pci_set_master(pdev);
++		sdxi_dbg(sdxi, "%s: function state: %s\n", __func__, gsv_str(status));
++
++		switch (status) {
++		case SDXI_GSV_ACTIVE:
++			sdxi_write_fn_gsr(sdxi, SDXI_GSRV_STOP_SF);
++			break;
++		case SDXI_GSV_ERROR:
++			if (!reset_issued) {
++				sdxi_info(sdxi,
++					  "function in error state, issuing reset\n");
++				sdxi_write_fn_gsr(sdxi, SDXI_GSRV_RESET);
++				reset_issued = true;
++			} else {
++				fsleep(1000);
++			}
++			break;
++		case SDXI_GSV_STOP:
++			return 0;
++		case SDXI_GSV_INIT:
++		case SDXI_GSV_STOPG_SF:
++		case SDXI_GSV_STOPG_HD:
++			/* transitional states, wait */
++			sdxi_dbg(sdxi, "waiting for stop (gsv = %u)\n",
++				 status);
++			fsleep(1000);
++			break;
++		default:
++			sdxi_err(sdxi, "unknown gsv %u, giving up\n", status);
++			return -EIO;
++		}
++	} while (time_before(jiffies, deadline));
++
++	sdxi_err(sdxi, "stop attempt timed out, current status %u\n",
++		sdxi_dev_gsv(sdxi));
++	return -ETIMEDOUT;
++}
++
++/*
++ * See SDXI 1.0 4.1.8 Activation of the SDXI Function by Software.
++ */
++static int sdxi_fn_activate(struct sdxi_dev *sdxi)
++{
++	u64 version, cap0, cap1, ctl2;
++	int err;
++
++	/*
++	 * Clear any existing configuration from MMIO_CTL0 and ensure
++	 * the function is in GSV_STOP state.
++	 */
++	sdxi_write64(sdxi, SDXI_MMIO_CTL0, 0);
++	err = sdxi_dev_stop(sdxi);
++	if (err)
++		return err;
++
++	version = sdxi_read64(sdxi, SDXI_MMIO_VERSION);
++	sdxi_info(sdxi, "SDXI %llu.%llu device found\n",
++		  FIELD_GET(SDXI_MMIO_VERSION_MAJOR, version),
++		  FIELD_GET(SDXI_MMIO_VERSION_MINOR, version));
++
++	/* Read capabilities and features. */
++	cap0 = sdxi_read64(sdxi, SDXI_MMIO_CAP0);
++	sdxi->db_stride = SZ_4K;
++	sdxi->db_stride *= 1U << FIELD_GET(SDXI_MMIO_CAP0_DB_STRIDE, cap0);
++
++	cap1 = sdxi_read64(sdxi, SDXI_MMIO_CAP1);
++	sdxi->op_grp_cap = FIELD_GET(SDXI_MMIO_CAP1_OPB_000_CAP, cap1);
++	sdxi->max_cxtid = FIELD_GET(SDXI_MMIO_CAP1_MAX_CXT, cap1);
++
++	/* Apply our configuration. */
++	ctl2 = FIELD_PREP(SDXI_MMIO_CTL2_MAX_CXT, sdxi->max_cxtid);
++	ctl2 |= FIELD_PREP(SDXI_MMIO_CTL2_MAX_BUFFER,
++			   FIELD_GET(SDXI_MMIO_CAP1_MAX_BUFFER, cap1));
++	ctl2 |= FIELD_PREP(SDXI_MMIO_CTL2_MAX_AKEY_SZ,
++			   FIELD_GET(SDXI_MMIO_CAP1_MAX_AKEY_SZ, cap1));
++	ctl2 |= FIELD_PREP(SDXI_MMIO_CTL2_OPB_000_AVL,
++			   FIELD_GET(SDXI_MMIO_CAP1_OPB_000_CAP, cap1));
++	sdxi_write64(sdxi, SDXI_MMIO_CTL2, ctl2);
++
 +	return 0;
 +}
 +
-+static const struct sdxi_bus_ops sdxi_pci_ops = {
-+	.init = sdxi_pci_init,
-+};
+ int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops)
+ {
+ 	struct sdxi_dev *sdxi;
++	int err;
+ 
+ 	sdxi = devm_kzalloc(dev, sizeof(*sdxi), GFP_KERNEL);
+ 	if (!sdxi)
+@@ -22,5 +165,9 @@ int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops)
+ 	sdxi->bus_ops = ops;
+ 	dev_set_drvdata(dev, sdxi);
+ 
+-	return sdxi->bus_ops->init(sdxi);
++	err = sdxi->bus_ops->init(sdxi);
++	if (err)
++		return err;
 +
-+static int sdxi_pci_probe(struct pci_dev *pdev,
-+			  const struct pci_device_id *id)
-+{
-+	return sdxi_register(&pdev->dev, &sdxi_pci_ops);
-+}
-+
-+static const struct pci_device_id sdxi_id_table[] = {
-+	{ PCI_DEVICE_CLASS(PCI_CLASS_ACCELERATOR_SDXI, 0xffffff) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(pci, sdxi_id_table);
-+
-+static struct pci_driver sdxi_driver = {
-+	.name = "sdxi",
-+	.id_table = sdxi_id_table,
-+	.probe = sdxi_pci_probe,
-+	.sriov_configure = pci_sriov_configure_simple,
-+};
-+
-+MODULE_AUTHOR("Wei Huang");
-+MODULE_AUTHOR("Nathan Lynch");
-+MODULE_DESCRIPTION(SDXI_DRV_DESC);
-+MODULE_LICENSE("GPL");
-+module_pci_driver(sdxi_driver);
-diff --git a/drivers/dma/sdxi/sdxi.h b/drivers/dma/sdxi/sdxi.h
++	return sdxi_fn_activate(sdxi);
+ }
+diff --git a/drivers/dma/sdxi/mmio.h b/drivers/dma/sdxi/mmio.h
 new file mode 100644
-index 000000000000..9430f3b8d0b3
+index 000000000000..c9a11c3f2f76
 --- /dev/null
-+++ b/drivers/dma/sdxi/sdxi.h
-@@ -0,0 +1,45 @@
++++ b/drivers/dma/sdxi/mmio.h
+@@ -0,0 +1,51 @@
 +/* SPDX-License-Identifier: GPL-2.0-only */
++
 +/*
-+ * SDXI device driver header
++ * SDXI MMIO register offsets and layouts.
 + *
 + * Copyright Advanced Micro Devices, Inc.
 + */
 +
-+#ifndef DMA_SDXI_H
-+#define DMA_SDXI_H
++#ifndef DMA_SDXI_MMIO_H
++#define DMA_SDXI_MMIO_H
 +
-+#include <linux/compiler_types.h>
-+#include <linux/types.h>
++#include <linux/bits.h>
 +
-+#define SDXI_DRV_DESC		"SDXI driver"
-+
-+struct sdxi_dev;
-+
-+/**
-+ * struct sdxi_bus_ops - Bus-specific methods for SDXI devices.
-+ */
-+struct sdxi_bus_ops {
-+	/**
-+	 * @init: Map control registers and doorbell region, allocate
-+	 *        IRQ ranges. Invoked before bus-agnostic SDXI
-+	 *        function initialization.
-+	 */
-+	int (*init)(struct sdxi_dev *sdxi);
++enum sdxi_reg {
++	/* SDXI 1.0 9.1 General Control and Status Registers */
++	SDXI_MMIO_CTL0       = 0x00000,
++	SDXI_MMIO_CTL2       = 0x00010,
++	SDXI_MMIO_STS0       = 0x00100,
++	SDXI_MMIO_CAP0       = 0x00200,
++	SDXI_MMIO_CAP1       = 0x00208,
++	SDXI_MMIO_VERSION    = 0x00210,
 +};
 +
-+struct sdxi_dev {
-+	struct device *dev;
-+	void __iomem *ctrl_regs;	/* virt addr of ctrl registers */
-+	void __iomem *dbs;		/* virt addr of doorbells */
++/* SDXI 1.0 Table 9-2: MMIO_CTL0 */
++#define SDXI_MMIO_CTL0_FN_GSR         GENMASK_ULL(1, 0)
 +
-+	const struct sdxi_bus_ops *bus_ops;
-+};
++/* SDXI 1.0 Table 9-4: MMIO_CTL2 */
++#define SDXI_MMIO_CTL2_MAX_BUFFER  GENMASK_ULL(3, 0)
++#define SDXI_MMIO_CTL2_MAX_AKEY_SZ GENMASK_ULL(15, 12)
++#define SDXI_MMIO_CTL2_MAX_CXT     GENMASK_ULL(31, 16)
++#define SDXI_MMIO_CTL2_OPB_000_AVL GENMASK_ULL(63, 32)
 +
-+static inline struct device *sdxi_to_dev(const struct sdxi_dev *sdxi)
++/* SDXI 1.0 Table 9-5: MMIO_STS0 */
++#define SDXI_MMIO_STS0_FN_GSV GENMASK_ULL(2, 0)
++
++/* SDXI 1.0 Table 9-6: MMIO_CAP0 */
++#define SDXI_MMIO_CAP0_SFUNC          GENMASK_ULL(15, 0)
++#define SDXI_MMIO_CAP0_DB_STRIDE      GENMASK_ULL(22, 20)
++#define SDXI_MMIO_CAP0_MAX_DS_RING_SZ GENMASK_ULL(28, 24)
++
++/* SDXI 1.0 Table 9-7: MMIO_CAP1 */
++#define SDXI_MMIO_CAP1_MAX_BUFFER    GENMASK_ULL(3, 0)
++#define SDXI_MMIO_CAP1_MAX_AKEY_SZ   GENMASK_ULL(15, 12)
++#define SDXI_MMIO_CAP1_MAX_CXT       GENMASK_ULL(31, 16)
++#define SDXI_MMIO_CAP1_OPB_000_CAP   GENMASK_ULL(63, 32)
++
++/* SDXI 1.0 Table 9-8: MMIO_VERSION */
++#define SDXI_MMIO_VERSION_MINOR GENMASK_ULL(7, 0)
++#define SDXI_MMIO_VERSION_MAJOR GENMASK_ULL(23, 16)
++
++#endif  /* DMA_SDXI_MMIO_H */
+diff --git a/drivers/dma/sdxi/sdxi.h b/drivers/dma/sdxi/sdxi.h
+index 9430f3b8d0b3..427118e60aa6 100644
+--- a/drivers/dma/sdxi/sdxi.h
++++ b/drivers/dma/sdxi/sdxi.h
+@@ -9,8 +9,12 @@
+ #define DMA_SDXI_H
+ 
+ #include <linux/compiler_types.h>
++#include <linux/dev_printk.h>
++#include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/types.h>
+ 
++#include "mmio.h"
++
+ #define SDXI_DRV_DESC		"SDXI driver"
+ 
+ struct sdxi_dev;
+@@ -32,6 +36,11 @@ struct sdxi_dev {
+ 	void __iomem *ctrl_regs;	/* virt addr of ctrl registers */
+ 	void __iomem *dbs;		/* virt addr of doorbells */
+ 
++	/* hardware capabilities (from cap0 & cap1) */
++	u32 db_stride;			/* doorbell stride in bytes */
++	u16 max_cxtid;			/* Maximum context ID allowed. */
++	u32 op_grp_cap;			/* supported operation group cap */
++
+ 	const struct sdxi_bus_ops *bus_ops;
+ };
+ 
+@@ -40,6 +49,20 @@ static inline struct device *sdxi_to_dev(const struct sdxi_dev *sdxi)
+ 	return sdxi->dev;
+ }
+ 
++#define sdxi_dbg(s, fmt, ...) dev_dbg(sdxi_to_dev(s), fmt, ## __VA_ARGS__)
++#define sdxi_info(s, fmt, ...) dev_info(sdxi_to_dev(s), fmt, ## __VA_ARGS__)
++#define sdxi_err(s, fmt, ...) dev_err(sdxi_to_dev(s), fmt, ## __VA_ARGS__)
++
+ int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops);
+ 
++static inline u64 sdxi_read64(const struct sdxi_dev *sdxi, enum sdxi_reg reg)
 +{
-+	return sdxi->dev;
++	return ioread64(sdxi->ctrl_regs + reg);
 +}
 +
-+int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops);
++static inline void sdxi_write64(struct sdxi_dev *sdxi, enum sdxi_reg reg, u64 val)
++{
++	iowrite64(val, sdxi->ctrl_regs + reg);
++}
 +
-+#endif /* DMA_SDXI_H */
+ #endif /* DMA_SDXI_H */
 
 -- 
 2.53.0

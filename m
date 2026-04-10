@@ -1,56 +1,55 @@
-Return-Path: <dmaengine+bounces-9966-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9967-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QGMWMtX22GkYkQgAu9opvQ
-	(envelope-from <dmaengine+bounces-9966-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Apr 2026 15:10:45 +0200
+	id 2DgkLzj22GkYkQgAu9opvQ
+	(envelope-from <dmaengine+bounces-9967-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Apr 2026 15:08:08 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34B293D7F7A
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Apr 2026 15:10:45 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DBD23D7E38
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Apr 2026 15:08:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 83C3330570DC
+	by tor.lore.kernel.org (Postfix) with ESMTP id CC323303101E
 	for <lists+dmaengine@lfdr.de>; Fri, 10 Apr 2026 13:07:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 965933A8730;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A06EB3AD516;
 	Fri, 10 Apr 2026 13:07:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mj+dDl5T"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G93lmfVh"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D69C3A6F0A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793BE3A75A2;
 	Fri, 10 Apr 2026 13:07:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775826470; cv=none; b=YaguefK5CB7AbYwm5Fw/48UEnqfAZlwYlUoxMg628ZYR6lo4/Ov3ZsfV64rusbAMLgGrg2Cjo7TDSyBdbpxANzr9e+0+Nv5QtEVC64orNlKnux7f75jEGIxtqIkVKn0/YKZyUtphPQEBabQs2uvlHKkC/W3CjEG4jisJ/ojC/5U=
+	t=1775826470; cv=none; b=Cw8xLos690ShG9WhzNhjrvLYRp5jG5Am+1A0l3MknP6JJXpHOOz9vkGt/PuEezAW+mx/2M1TnHjpYOdLlmNKgoBqKg8lrQNQJ4IqdbkxhDfudAkyG38jqDjvbo+iXoQJzI+ov8Hp0MDrb/U9Xr6NpurJQafP5T29H8a4nPYwrf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1775826470; c=relaxed/simple;
-	bh=CwnH20nbnZeEx71kjJfqgW1Kkik5vXHnbnNTIzkpXZ8=;
+	bh=y2lhqBRmwblDddnugdEB3vFz8AAI/IYZVx7AafENaug=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dxFV59W2X3oVvV6D9601zBoK123HArRnaEhT4UUGVsfOjlvyaN6Lv5JUjZNWEhGvud5w7Voy8yC+1OwHVeQ+Pc2g9sM05pUP+CRZWxjnkM2HcoY/btLbHG/QGLLDRI4J4qCyOHiHrvmN8izDgKyYD3c0b1i5rkim/RMkY7vx2Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mj+dDl5T; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3BFF7C2BCAF;
+	 In-Reply-To:To:Cc; b=ogVgdBDkc9i9Oj4D762w+TgVmDUw4hNl0wx0HCbLD3ri1W6yrNd1rlEJweuDcLiaaU4rjU84KkSZSgVf1DOdZhHG9LWKmLuv/BZKpBGxuCfLJninseZ+MdJ+HKheM2s5WbrxCwteYNJ1mx3sZ5AjJelMpfAfmYWKbpQqABz7IhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G93lmfVh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4939AC4AF14;
 	Fri, 10 Apr 2026 13:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1775826470;
-	bh=CwnH20nbnZeEx71kjJfqgW1Kkik5vXHnbnNTIzkpXZ8=;
+	bh=y2lhqBRmwblDddnugdEB3vFz8AAI/IYZVx7AafENaug=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Mj+dDl5TBDivPfUpl6elvcmNetF4UKH2FqDtF+qABbocSH5Gyx+bfFftG2amuNfn6
-	 zEqJQNJVYD1zAS0575K5p55jIzEC3Fgvgnoa1+fov5KtqNe1h5Z3ufuOt/3ozOkcNT
-	 FG/o6vHy9ne7iRGwzRETWYQVtNvH3eyRIObAAVZEjDfliP3h/CHfy0UDzC4+19BOOG
-	 2+kzI4JWeTJ3Qif4wwlNfD2OHZsnjiMgnExZgmtA9PHa60EOYvvUFQDgCu92YSiLFj
-	 adE7sCQdAzzpd36ocEAL7UODFhAMkvKkwokRjTiEz50vzoohpY0qX88i5f6XrZCcko
-	 PV42hzeseWD1A==
+	b=G93lmfVhB0seWhqvYhiGfy0DjzUEorIwvRKuIsn+4tORdrTuR6ICeh6vIjYhnRqL/
+	 OGXSzES3gHgJQW2LC3G90BLAJ+HSqk/SELzLbBa6NN4Q/oTl3UX90Nohx3cAoaLm01
+	 JDLoQmtMQxHAuB7r7LF2jeOilO5uML6WhSJe7Y4J3Ml/XkmmgrilqHejmXKU/qEt5Y
+	 NtkRuEsgMYZqQm+fQG8XklxE1O/KwBRJPQ4W8N8dI5ssAPlItnE8ivHtToqULxUMSz
+	 lyGzm6egXFfiLQRL1RIauwUItRFyUVSpeXa0X8SeFPbv5dXj2N9K0fJSwwDCvKQxPZ
+	 YehHS7EbzO86w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F83CF44858;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AA0F4485D;
 	Fri, 10 Apr 2026 13:07:50 +0000 (UTC)
 From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Fri, 10 Apr 2026 08:07:21 -0500
-Subject: [PATCH 11/23] dmaengine: sdxi: Add client context alloc and
- release APIs
+Date: Fri, 10 Apr 2026 08:07:22 -0500
+Subject: [PATCH 12/23] dmaengine: sdxi: Add descriptor ring management
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -59,7 +58,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260410-sdxi-base-v1-11-1d184cb5c60a@amd.com>
+Message-Id: <20260410-sdxi-base-v1-12-1d184cb5c60a@amd.com>
 References: <20260410-sdxi-base-v1-0-1d184cb5c60a@amd.com>
 In-Reply-To: <20260410-sdxi-base-v1-0-1d184cb5c60a@amd.com>
 To: Vinod Koul <vkoul@kernel.org>
@@ -72,11 +71,11 @@ Cc: Wei Huang <wei.huang2@amd.com>,
  linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
  Nathan Lynch <nathan.lynch@amd.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1775826467; l=7502;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1775826467; l=9249;
  i=nathan.lynch@amd.com; s=20260410; h=from:subject:message-id;
- bh=L09ifU2t1M66vemGzv844gf5trJUsLLPkMvoKJ9/BWU=;
- b=1wnV9tnj4bjG+TusTQcZRbOfOcwafacenADlcgVb9vf+dMBelEbNHJutiK8mBDq5FrgtayL7e
- ee9XuJBASLiANTLPt64q12nZrouPjHd6BC0fpsloQuUxvtXK3JyRrYk
+ bh=U1lYJRGamQ63I3Aze0bJO+juzHNCos3OOr49CuQP8zc=;
+ b=1i7IxsLJT2SQfymOvkdyPQsByIsZEiizdFlb6yIXlQpWI0DCSInly6vv8tYZZJv2XvCZhb+9d
+ Y/KIYK66kClCA1f1EWpABpNrQ5ilJlP7VpTOybLpFUtEkC5T9dKyQt9
 X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
  pk=PK4ozhq+/z9/2Jl5rgDmvHa9raVomv79qM8p1RAFpEw=
 X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20260410 with
@@ -86,12 +85,12 @@ Reply-To: nathan.lynch@amd.com
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9966-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
+	TAGGED_FROM(0.00)[bounces-9967-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -107,267 +106,311 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[dmaengine];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	HAS_REPLYTO(0.00)[nathan.lynch@amd.com]
-X-Rspamd-Queue-Id: 34B293D7F7A
+X-Rspamd-Queue-Id: 6DBD23D7E38
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Nathan Lynch <nathan.lynch@amd.com>
 
-Expose sdxi_cxt_new() and sdxi_cxt_exit(), which are the rest of the
-driver's entry points to creating and releasing SDXI contexts.
+Introduce a library for managing SDXI descriptor ring state. It
+encapsulates determining the next free space in the ring to deposit
+descriptors and performing the update of the write index correctly, as
+well as iterating over slices (reservations) of the ring without
+dealing directly with ring offsets/indexes.
 
-Track client contexts in a device-wide allocating xarray, mapping
-context ID to the context object. The admin context always has ID 0,
-so begin allocations at 1. Define a local class for ID allocation to
-facilitate automatic release of an ID if an error is encountered when
-"publishing" a context to the L1 table.
+The central abstraction is sdxi_ring_state, which maintains the write
+index and a wait queue. An internal spin lock serializes checks for
+space in the ring and updates to the write index.
 
-Introduce new code to invalidate a context's entry in the L1 table on
-deallocation.
+Reservations (sdxi_ring_resv) are intended to be short-lived on-stack
+objects representing slices of the ring for callers to populate with
+descriptors. Both blocking and non-blocking reservation APIs are
+provided.
 
-Support for starting and stopping contexts will be added in changes to
-follow.
+Descriptor access within a reservation is provided via
+sdxi_ring_resv_next() and sdxi_ring_resv_foreach().
 
-The only expected user of sdxi_cxt_new() and sdxi_cxt_exit() at this
-point is the DMA engine provider code where a client context per
-channel will be created.
+Completion handlers must call sdxi_ring_wake_up() when descriptors
+have been consumed so that blocked reservations can proceed.
 
 Co-developed-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 ---
- drivers/dma/sdxi/context.c | 111 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/dma/sdxi/context.h |  13 ++++++
- drivers/dma/sdxi/device.c  |   8 ++++
- drivers/dma/sdxi/sdxi.h    |   2 +
- 4 files changed, 134 insertions(+)
+ drivers/dma/sdxi/Makefile |   3 +-
+ drivers/dma/sdxi/ring.c   | 158 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/dma/sdxi/ring.h   |  84 ++++++++++++++++++++++++
+ 3 files changed, 244 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/sdxi/context.c b/drivers/dma/sdxi/context.c
-index 934c487b4774..7cae140c0a20 100644
---- a/drivers/dma/sdxi/context.c
-+++ b/drivers/dma/sdxi/context.c
-@@ -155,6 +155,16 @@ static int configure_cxt_ctl(struct sdxi_cxt_ctl *ctl, const struct sdxi_cxt_ctl
- 	return 0;
- }
+diff --git a/drivers/dma/sdxi/Makefile b/drivers/dma/sdxi/Makefile
+index 2178f274831c..23536a1defc3 100644
+--- a/drivers/dma/sdxi/Makefile
++++ b/drivers/dma/sdxi/Makefile
+@@ -3,6 +3,7 @@ obj-$(CONFIG_SDXI) += sdxi.o
  
-+static void invalidate_cxtl_ctl(struct sdxi_cxt_ctl *ctl)
-+{
-+	u64 ds_ring_ptr = le64_to_cpu(ctl->ds_ring_ptr);
-+
-+	FIELD_MODIFY(SDXI_CXT_CTL_VL, &ds_ring_ptr, 0);
-+	WRITE_ONCE(ctl->ds_ring_ptr, cpu_to_le64(ds_ring_ptr));
-+	dma_wmb();
-+	*ctl = (typeof(*ctl)) { 0 };
-+}
-+
- /*
-  * Logical representation of CXT_L1_ENT subfields.
-  */
-@@ -209,6 +219,16 @@ static int configure_L1_entry(struct sdxi_cxt_L1_ent *ent,
- 	return 0;
- }
+ sdxi-objs += \
+ 	context.o     \
+-	device.o
++	device.o      \
++	ring.o
  
-+static void invalidate_L1_entry(struct sdxi_cxt_L1_ent *ent)
-+{
-+	u64 cxt_ctl_ptr = le64_to_cpu(ent->cxt_ctl_ptr);
+ sdxi-$(CONFIG_PCI_MSI) += pci.o
+diff --git a/drivers/dma/sdxi/ring.c b/drivers/dma/sdxi/ring.c
+new file mode 100644
+index 000000000000..d51b9e708a4f
+--- /dev/null
++++ b/drivers/dma/sdxi/ring.c
+@@ -0,0 +1,158 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * SDXI descriptor ring state management. Handles advancing the write
++ * index correctly and supplies "reservations" i.e. slices of the ring
++ * to be filled with descriptors.
++ *
++ * Copyright Advanced Micro Devices, Inc.
++ */
++#include <kunit/visibility.h>
++#include <linux/io-64-nonatomic-lo-hi.h>
++#include <linux/lockdep.h>
++#include <linux/range.h>
++#include <linux/sched.h>
++#include <linux/spinlock.h>
++#include <linux/types.h>
++#include <linux/wait.h>
++#include <asm/barrier.h>
++#include <asm/byteorder.h>
++#include <asm/div64.h>
++#include <asm/rwonce.h>
 +
-+	FIELD_MODIFY(SDXI_CXT_L1_ENT_VL, &cxt_ctl_ptr, 0);
-+	WRITE_ONCE(ent->cxt_ctl_ptr, cpu_to_le64(cxt_ctl_ptr));
-+	dma_wmb();
-+	*ent = (typeof(*ent)) { 0 };
-+}
-+
- /*
-  * Make the context control structure hierarchy valid from the POV of
-  * the SDXI implementation. This may eventually involve allocation of
-@@ -259,6 +279,17 @@ static int sdxi_publish_cxt(const struct sdxi_cxt *cxt)
- 	/* todo: need to send DSC_CXT_UPD to admin */
- }
- 
-+/* Invalidate a context. */
-+static void sdxi_rescind_cxt(struct sdxi_cxt *cxt)
-+{
-+	u8 l1_idx = ID_TO_L1_INDEX(cxt->id);
-+	struct sdxi_cxt_L1_ent *ent = &cxt->sdxi->L1_table->entry[l1_idx];
-+
-+	invalidate_L1_entry(ent);
-+	invalidate_cxtl_ctl(cxt->cxt_ctl);
-+	/* todo: need to send DSC_CXT_UPD to admin */
-+}
-+
- void sdxi_cxt_push_doorbell(struct sdxi_cxt *cxt, u64 index)
- {
- 	/* Ensure preceding write index increment is visible. */
-@@ -266,6 +297,61 @@ void sdxi_cxt_push_doorbell(struct sdxi_cxt *cxt, u64 index)
- 	iowrite64(index, cxt->db);
- }
- 
-+/* Enable automatic cleanup of an allocated context ID */
-+struct __class_sdxi_cxt_id {
-+	struct sdxi_dev *sdxi;
-+	s32 id;
-+};
-+
-+#define sdxi_cxt_id_null ((struct __class_sdxi_cxt_id){ NULL, -1 })
-+#define take_sdxi_cxt_id(x) __get_and_null(x, sdxi_cxt_id_null)
-+
-+DEFINE_CLASS(sdxi_alloc_cxt_id, struct __class_sdxi_cxt_id,
-+	if (_T.id >= 0)
-+		xa_erase(&_T.sdxi->client_cxts, _T.id),
-+	((struct __class_sdxi_cxt_id){
-+		.sdxi = sdxi,
-+		.id = ({
-+			struct xa_limit limit = XA_LIMIT(1, sdxi->max_cxtid);
-+			u32 id;
-+			int err = xa_alloc(&sdxi->client_cxts, &id, cxt,
-+					   limit, GFP_KERNEL);
-+			err ? err : id;
-+		}),
-+	}),
-+	struct sdxi_dev *sdxi, struct sdxi_cxt *cxt)
++#include "ring.h"
++#include "hw.h"
 +
 +/*
-+ * Allocate the context ID; link the context back to the device;
-+ * perform some final initialization of the context based on the ID
-+ * allocated; update the context tables.
++ * Initialize ring management state. Caller is responsible for
++ * allocating, mapping, and initializing the actual control structures
++ * shared with hardware: the indexes and ring array.
 + */
-+static int register_cxt(struct sdxi_dev *sdxi, struct sdxi_cxt *cxt)
++void sdxi_ring_state_init(struct sdxi_ring_state *rs, const __le64 *read_index,
++			  __le64 *write_index, u32 entries,
++			  struct sdxi_desc descs[static SZ_1K])
 +{
-+	int err;
++	WARN_ON_ONCE(!read_index);
++	WARN_ON_ONCE(!write_index);
++	/*
++	 * See SDXI 1.0 Table 3-1 Memory Structure Summary. Minimum
++	 * descriptor ring size in bytes is 64KB; thus 1024 64-byte
++	 * entries.
++	 */
++	WARN_ON_ONCE(entries < SZ_1K);
 +
-+	CLASS(sdxi_alloc_cxt_id, slot)(sdxi, cxt);
-+	if (slot.id < 0)
-+		return slot.id;
++	*rs = (typeof(*rs)) {
++		.write_index = le64_to_cpu(*write_index),
++		.write_index_ptr = write_index,
++		.read_index_ptr = read_index,
++		.entries = entries,
++		.entry = descs,
++	};
++	spin_lock_init(&rs->lock);
++	init_waitqueue_head(&rs->wqh);
++}
++EXPORT_SYMBOL_IF_KUNIT(sdxi_ring_state_init);
 +
-+	cxt->sdxi = sdxi;
-+	cxt->id = slot.id;
-+	cxt->db = sdxi->dbs + slot.id * sdxi->db_stride;
++static u64 sdxi_ring_state_load_ridx(struct sdxi_ring_state *rs)
++{
++	lockdep_assert_held(&rs->lock);
++	return le64_to_cpu(READ_ONCE(*rs->read_index_ptr));
++}
 +
-+	err = sdxi_publish_cxt(cxt);
-+	if (err)
-+		return err;
++static void sdxi_ring_state_store_widx(struct sdxi_ring_state *rs, u64 new_widx)
++{
++	lockdep_assert_held(&rs->lock);
++	*rs->write_index_ptr = cpu_to_le64(rs->write_index = new_widx);
++}
 +
-+	take_sdxi_cxt_id(slot);
++/* Non-blocking ring reservation. Callers must handle ring full (-EBUSY). */
++int sdxi_ring_try_reserve(struct sdxi_ring_state *rs, size_t nr,
++			  struct sdxi_ring_resv *resv)
++{
++	u64 new_widx;
++
++	/*
++	 * Caller bug, warn and reject.
++	 */
++	if (WARN_ONCE(nr < 1 || nr > rs->entries,
++		      "Reservation of size %zu requested from ring of size %u\n",
++		      nr, rs->entries))
++		return -EINVAL;
++
++	scoped_guard(spinlock_irqsave, &rs->lock) {
++		u64 ridx = sdxi_ring_state_load_ridx(rs);
++
++		/*
++		 * Bug: the read index should never exceed the write index.
++		 * TODO: sdxi_err() or similar; need a reference to
++		 * the device.
++		 */
++		if (ridx > rs->write_index)
++			return -EIO;
++
++		new_widx = rs->write_index + nr;
++
++		/*
++		 * Not enough space available right now.
++		 * TODO: sdxi_dbg() or tracepoint here.
++		 */
++		if (new_widx - ridx > rs->entries)
++			return -EBUSY;
++
++		sdxi_ring_state_store_widx(rs, new_widx);
++	}
++
++	*resv = (typeof(*resv)) {
++		.rs = rs,
++		.range = {
++			.start = new_widx - nr,
++			.end = new_widx - 1,
++		},
++		.iter = new_widx - nr,
++	};
++
 +	return 0;
 +}
++EXPORT_SYMBOL_IF_KUNIT(sdxi_ring_try_reserve);
 +
-+static void unregister_cxt(struct sdxi_cxt *cxt)
++/* Blocking ring reservation. Retries until success or non-transient error. */
++int sdxi_ring_reserve(struct sdxi_ring_state *rs, size_t nr,
++		      struct sdxi_ring_resv *resv)
 +{
-+	sdxi_rescind_cxt(cxt);
-+	xa_erase(&cxt->sdxi->client_cxts, cxt->id);
++	int ret;
++
++	wait_event(rs->wqh,
++		   (ret = sdxi_ring_try_reserve(rs, nr, resv)) != -EBUSY);
++
++	return ret;
 +}
 +
- static void free_admin_cxt(void *ptr)
- {
- 	struct sdxi_dev *sdxi = ptr;
-@@ -296,3 +382,28 @@ int sdxi_admin_cxt_init(struct sdxi_dev *sdxi)
- 
- 	return devm_add_action_or_reset(sdxi_to_dev(sdxi), free_admin_cxt, sdxi);
- }
++/* Completion code should call this whenever descriptors have been consumed. */
++void sdxi_ring_wake_up(struct sdxi_ring_state *rs)
++{
++	wake_up_all(&rs->wqh);
++}
++
++static struct sdxi_desc *
++sdxi_desc_ring_entry(const struct sdxi_ring_state *rs, u64 index)
++{
++	return &rs->entry[do_div(index, rs->entries)];
++}
++
++struct sdxi_desc *sdxi_ring_resv_next(struct sdxi_ring_resv *resv)
++{
++	if (resv->range.start <= resv->iter && resv->iter <= resv->range.end)
++		return sdxi_desc_ring_entry(resv->rs, resv->iter++);
++	/*
++	 * Caller has iterated to the end of the reservation.
++	 */
++	if (resv->iter == resv->range.end + 1)
++		return NULL;
++	/*
++	 * Should happen only if caller messed with internal
++	 * reservation state.
++	 */
++	WARN_ONCE(1, "reservation[%llu,%llu] with iter %llu",
++		  resv->range.start, resv->range.end, resv->iter);
++	return NULL;
++}
++EXPORT_SYMBOL_IF_KUNIT(sdxi_ring_resv_next);
+diff --git a/drivers/dma/sdxi/ring.h b/drivers/dma/sdxi/ring.h
+new file mode 100644
+index 000000000000..d5682687c05c
+--- /dev/null
++++ b/drivers/dma/sdxi/ring.h
+@@ -0,0 +1,84 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright Advanced Micro Devices, Inc. */
++#ifndef DMA_SDXI_RING_H
++#define DMA_SDXI_RING_H
++
++#include <linux/io-64-nonatomic-lo-hi.h>
++#include <linux/range.h>
++#include <linux/spinlock.h>
++#include <linux/types.h>
++#include <linux/wait.h>
++#include <asm/barrier.h>
++#include <asm/byteorder.h>
++#include <asm/div64.h>
++#include <asm/rwonce.h>
++
++#include "hw.h"
 +
 +/*
-+ * Allocate a context for in-kernel use. Starting the context is the
-+ * caller's responsibility.
++ * struct sdxi_ring_state - Descriptor ring management.
++ *
++ * @lock: Guards *read_index_ptr (RO), *write_index_ptr (RW),
++ *   write_index (RW). *read_index is incremented by hw.
++ * @write_index: Cached write index value, minimizes dereferences in
++ *   critical sections.
++ * @write_index_ptr: Location of the architected write index shared with
++ *   the SDXI implementation.
++ * @read_index_ptr: Location of the architected read index shared with
++ *   the SDXI implementation.
++ * @entries: Number of entries in the ring.
++ * @entry: The descriptor ring itself, shared with the SDXI implementation.
++ * @wqh: Pending reservations.
 + */
-+struct sdxi_cxt *sdxi_cxt_new(struct sdxi_dev *sdxi)
++struct sdxi_ring_state {
++	spinlock_t lock;
++	u64 write_index; /* Cache current value of write index. */
++	__le64 *write_index_ptr;
++	const __le64 *read_index_ptr;
++	u32 entries;
++	struct sdxi_desc *entry;
++	wait_queue_head_t wqh;
++};
++
++/*
++ * Ring reservation and iteration state.
++ */
++struct sdxi_ring_resv {
++	const struct sdxi_ring_state *rs;
++	struct range range;
++	u64 iter;
++};
++
++void sdxi_ring_state_init(struct sdxi_ring_state *ring, const __le64 *read_index,
++			  __le64 *write_index, u32 entries,
++			  struct sdxi_desc descs[static SZ_1K]);
++void sdxi_ring_wake_up(struct sdxi_ring_state *rs);
++int sdxi_ring_reserve(struct sdxi_ring_state *ring, size_t nr,
++		      struct sdxi_ring_resv *resv);
++int sdxi_ring_try_reserve(struct sdxi_ring_state *ring, size_t nr,
++			  struct sdxi_ring_resv *resv);
++struct sdxi_desc *sdxi_ring_resv_next(struct sdxi_ring_resv *resv);
++
++/* Reset reservation's internal iterator. */
++static inline void sdxi_ring_resv_reset(struct sdxi_ring_resv *resv)
 +{
-+	struct sdxi_cxt *cxt __free(sdxi_cxt) = sdxi_alloc_cxt(sdxi);
-+	if (!cxt)
-+		return NULL;
-+
-+	if (register_cxt(sdxi, cxt))
-+		return NULL;
-+
-+	return_ptr(cxt);
++	resv->iter = resv->range.start;
 +}
 +
-+void sdxi_cxt_exit(struct sdxi_cxt *cxt)
++/*
++ * Return the value that should be written to the doorbell after
++ * serializing descriptors for this reservation, i.e. the value of the
++ * write index after obtaining the reservation.
++ */
++static inline u64 sdxi_ring_resv_dbval(const struct sdxi_ring_resv *resv)
 +{
-+	if (WARN_ON(sdxi_cxt_is_admin(cxt)))
-+		return;
-+
-+	unregister_cxt(cxt);
-+	sdxi_free_cxt(cxt);
-+}
-diff --git a/drivers/dma/sdxi/context.h b/drivers/dma/sdxi/context.h
-index c34acd730acb..5cd78e883c8d 100644
---- a/drivers/dma/sdxi/context.h
-+++ b/drivers/dma/sdxi/context.h
-@@ -58,6 +58,19 @@ struct sdxi_cxt {
- 
- int sdxi_admin_cxt_init(struct sdxi_dev *sdxi);
- 
-+struct sdxi_cxt *sdxi_cxt_new(struct sdxi_dev *sdxi);
-+void sdxi_cxt_exit(struct sdxi_cxt *cxt);
-+
-+static inline struct sdxi_cxt *to_admin_cxt(const struct sdxi_cxt *cxt)
-+{
-+	return cxt->sdxi->admin_cxt;
++	return resv->range.end + 1;
 +}
 +
-+static inline bool sdxi_cxt_is_admin(const struct sdxi_cxt *cxt)
-+{
-+	return cxt == to_admin_cxt(cxt);
-+}
++#define sdxi_ring_resv_foreach(resv_, desc_)			\
++	for (sdxi_ring_resv_reset(resv_),			\
++	     desc_ = sdxi_ring_resv_next(resv_);		\
++	     desc_;						\
++	     desc_ = sdxi_ring_resv_next(resv_))
 +
- void sdxi_cxt_push_doorbell(struct sdxi_cxt *cxt, u64 index);
- 
- #endif /* DMA_SDXI_CONTEXT_H */
-diff --git a/drivers/dma/sdxi/device.c b/drivers/dma/sdxi/device.c
-index 15f61d1ce490..aaff6b15325a 100644
---- a/drivers/dma/sdxi/device.c
-+++ b/drivers/dma/sdxi/device.c
-@@ -12,6 +12,7 @@
- #include <linux/dmapool.h>
- #include <linux/log2.h>
- #include <linux/slab.h>
-+#include <linux/xarray.h>
- 
- #include "context.h"
- #include "hw.h"
-@@ -302,6 +303,7 @@ int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops)
- 
- 	sdxi->dev = dev;
- 	sdxi->bus_ops = ops;
-+	xa_init_flags(&sdxi->client_cxts, XA_FLAGS_ALLOC1);
- 	dev_set_drvdata(dev, sdxi);
- 
- 	err = sdxi->bus_ops->init(sdxi);
-@@ -314,6 +316,12 @@ int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops)
- void sdxi_unregister(struct device *dev)
- {
- 	struct sdxi_dev *sdxi = dev_get_drvdata(dev);
-+	struct sdxi_cxt *cxt;
-+	unsigned long index;
-+
-+	xa_for_each(&sdxi->client_cxts, index, cxt)
-+		sdxi_cxt_exit(cxt);
-+	xa_destroy(&sdxi->client_cxts);
- 
- 	sdxi_dev_stop(sdxi);
- }
-diff --git a/drivers/dma/sdxi/sdxi.h b/drivers/dma/sdxi/sdxi.h
-index 426101875334..da33719735ab 100644
---- a/drivers/dma/sdxi/sdxi.h
-+++ b/drivers/dma/sdxi/sdxi.h
-@@ -12,6 +12,7 @@
- #include <linux/dev_printk.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <linux/types.h>
-+#include <linux/xarray.h>
- 
- #include "mmio.h"
- 
-@@ -61,6 +62,7 @@ struct sdxi_dev {
- 	struct dma_pool *cst_blk_pool;
- 
- 	struct sdxi_cxt *admin_cxt;
-+	struct xarray client_cxts; /* context id -> (struct sdxi_cxt *) */
- 
- 	const struct sdxi_bus_ops *bus_ops;
- };
++#endif /* DMA_SDXI_RING_H */
 
 -- 
 2.53.0

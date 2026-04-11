@@ -1,256 +1,284 @@
-Return-Path: <dmaengine+bounces-9998-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10000-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KqscGBA/2ml4zQgAu9opvQ
-	(envelope-from <dmaengine+bounces-9998-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 14:31:12 +0200
+	id yDzxHSFA2mmFzQgAu9opvQ
+	(envelope-from <dmaengine+bounces-10000-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 14:35:45 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7E3F3DFEB0
-	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 14:31:11 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10C2B3DFEFF
+	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 14:35:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C700F300D775
-	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 12:30:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 18DAE300F96F
+	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 12:34:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47DE617B425;
-	Sat, 11 Apr 2026 12:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3B351A0BF3;
+	Sat, 11 Apr 2026 12:34:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="v49K1APe"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="rOhNADDy"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010062.outbound.protection.outlook.com [52.101.228.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D34B78F2E;
-	Sat, 11 Apr 2026 12:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775910648; cv=fail; b=U5EbjA9RATWhx+jRb+JKkpd86CnXlTcB5ERmC37Ihbn3LzeRNUAOT/etMpj5MBREfKvnhWngHhANBktlSefLcepckD4Dso2mSuo3c2cq60A/XsPAyQVijIw7qGoHhx+IjsKuiRuMtRmCHU55hB9opUqbNRJ1SLgrjktkSznnuKM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775910648; c=relaxed/simple;
-	bh=Wp4uRTNX/bdI7XvW4No5bbs6fiVMIhF877Hceud42xs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RhKpWFJpUm9ta3FfUhudcvuDzD6a5yJH6RLfHytxsJubdgpSt2TWtusw7KYsfEhHJGn05e18lJXdS6jfUQ/oWdDM28u5eOStBAkntHdkVkCuGvSByFiuKjthhu94ZLjZJ0wCT6F044OEO+7aLEnlNKBOyY9ETPfk9vr9REofncE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=v49K1APe; arc=fail smtp.client-ip=52.101.228.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BsSgMGcKr1r2KDo7l8i0wNUBd3ZSvz7QqQweY0W5zZdUtzaP140j+9CVrXTjkmfsxZYmSad813Vwfp/MXTfUckxXWPCLAPTIDG1lZUu6jZO0x6DIK21dZMcxe+oOrRJWxuTEE16v2VXzltrfVOsFYfzAcTH5O1AavyHjgsLNsf06DLzeAOSE7Sw2bosGAR+BkDY+0ewLNXWE1Z+J35AQHMpxNKtGRfnejaoMIj8bIDqubNfo67o/7tXYpPlgQ4OGlm2AwsRUu7yhjDhbCeaM3URwChJWPAy5DBMCI6E6VSXuCQaWl6qmS98dCjOglbiEZQFqOXDptHqhf+L7qWJqww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JKYoJFUJeUDhL0uhbUmBUpd7a931t0A1uUs03SkOfOI=;
- b=D6JR69vhImQZvz1LHwLw/IPyVc5IU0x4mAN3WNvtiXIQBv3LsocA9JBy1yau3yDFymhD2F3E1VMzPdN2WCNmAhsYeXLgg4Q06LlXxof0F/gKnI+n5asd5ZOPm+xclc17FsdOwqGv44udtZY0W1QHLygjASiUkgmeMmlbKgcCjI/weOom7nf0xF+F277WRJivTSDTkkPiMWD0WP6JPFa+OUSlcHsJ8HhIiKDZNLusQP9wUayq+Ov+WsvFmQ5EhH9w+S87T2rFzoNZaG7a5myVqFheaxSdujpuF3SUQimxd94MABgONTW/tlCaPDTXE0n5NJYDexjRYruUlvVSLW4ORg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JKYoJFUJeUDhL0uhbUmBUpd7a931t0A1uUs03SkOfOI=;
- b=v49K1APedPgVBSj15wezGUB4ahxyKASRYa916sz4Sv2QpMADcUA7FXRVnZtKtSs0h9opfpxYYsxmgpePOtR5ZR5SuwMoVlSabMX7bEjvmoOCjUWCkQhHRaqJT8E16uQkCVyGwNUoorH0CRuG+yjyDqh48QIjQ70R+vLavvuDtx4=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by OS7PR01MB17824.jpnprd01.prod.outlook.com (2603:1096:604:441::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.16; Sat, 11 Apr
- 2026 12:30:43 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::87d1:4928:d55:97de]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::87d1:4928:d55:97de%4]) with mapi id 15.20.9769.044; Sat, 11 Apr 2026
- 12:30:43 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Claudiu.Beznea <claudiu.beznea@tuxon.dev>, "vkoul@kernel.org"
-	<vkoul@kernel.org>, "Frank.Li@kernel.org" <Frank.Li@kernel.org>,
-	"lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org"
-	<broonie@kernel.org>, "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com"
-	<tiwai@suse.com>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "geert+renesas@glider.be"
-	<geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Long Luu <long.luu.ur@renesas.com>
-CC: Claudiu.Beznea <claudiu.beznea@tuxon.dev>, "dmaengine@vger.kernel.org"
-	<dmaengine@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-sound@vger.kernel.org"
-	<linux-sound@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>, Claudiu Beznea
-	<claudiu.beznea.uj@bp.renesas.com>
-Subject: RE: [PATCH v4 05/17] dmaengine: sh: rz-dmac: Do not disable the
- channel on error
-Thread-Topic: [PATCH v4 05/17] dmaengine: sh: rz-dmac: Do not disable the
- channel on error
-Thread-Index: AQHcyahmZN3GNCbaGUaclgQ9L2JEArXZydig
-Date: Sat, 11 Apr 2026 12:30:43 +0000
-Message-ID:
- <TY3PR01MB11346923D8D18E79A9F7AC10086262@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20260411114303.2814115-1-claudiu.beznea.uj@bp.renesas.com>
- <20260411114303.2814115-6-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20260411114303.2814115-6-claudiu.beznea.uj@bp.renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OS7PR01MB17824:EE_
-x-ms-office365-filtering-correlation-id: 56b4d250-4b1a-4e58-dfe9-08de97c62647
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|22082099003|18002099003|56012099003|38070700021|921020;
-x-microsoft-antispam-message-info:
- JSOselteiaT/YflnZW/k02A1Eq4wEtqfsihC3U7IHFzsm0GWVz2D57Wch9yYOkc4gVwPogQqdVqn2LULSDnfBs2eliWN+S7sdrxeYwrI96CK269ZxgbmgsYi+IMT7D4nQi0XGqTfMDayyXGdnCZTaFxFbvbtr8lQBYyfGYEYYnQxYCuRIYzfi5cQ+TQNdjUhZXPMP22Lw8USd/9nEa1KPQKhvQgQ9SvkFCMXH9+CDbGdAa/ppTGi8Q/DpKXDXq1eL2X3NuurMMEdHELOVH3dGxqQZ+zlABsmFnc/YAjOL6vwTA8NsGM+T+DL+wHReHLLK/50f/syhTSVO7iaZp7YFDu/mkj93UJmKDTXWmAN9+wjv6AqGv62r0LCXc5AMQxwPit06XY5r2ejpupoeUSuN//ZPwfGAuJQeREpbXYvdjukoRaAvTCpCwAYpSQ8w8h+u7j2fBoGpFDhp4JmGY45IGAHHGHFMQ43tquY6YLi0xEK9CoQn48n56q6rjydLGaGkyaUz95uk0tqqvmkyAr7HbaGhwEwkcFFa9KZTfDg1QLPuV7i5FKANOKX9jVnyFcMn+5FBIXKMGjRouz+HHH5OdN0D/2OsdHMkV0KgYnPf43O3mBO2JbTR5OcPwVqBJjWIFiUaIK6g1wNqXiG5Zw2eZhGS22j+oZls5oUitjJofo5Y92tdyGsGGZpSX+AcPhPg8yQs5eKdbQtOjydsKaix56H/n8utlEsL+Fapybm9QjCRrKEKwaiFsvhWbXtTGuWqIk5G+QENPrmyNOe5F5JwmncPGZFy1Ukl1LtmxIyybUJbx4w6EvOAU0KaOKSXHwn
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(22082099003)(18002099003)(56012099003)(38070700021)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?GK6ktzNm420q2BUh42+WHGJtxhOC2LtYC21oN8eOe2Fa0kdYLCdn7NT2F5MI?=
- =?us-ascii?Q?gQpdv8gFjZAvlWMF8+PBrKHJx7kU0UcvkM2c/m33j6616Gig17xp8zOG+rEA?=
- =?us-ascii?Q?YOENizc0HQkhPKTeH8uu53KyxfITlDUoCaqLteS1gc5mCwEi3qwd1avkawGY?=
- =?us-ascii?Q?qHLSqD6CLtxZptM1SSoAYJt0X1WZQDTPBNQcMUHGaAA9BLkSknouir1dtqXr?=
- =?us-ascii?Q?X9yIQj10g5jOF7l+gtxFUB++aamPwr/DBpnQRHJRhYQFX2AK+K/1Ehr8Xr0U?=
- =?us-ascii?Q?J2783Sek4gNfu+JDfnLGiBcdqCxb4uTGDM3HHGqUm1+ZQcbm0FGwCR8/nf0/?=
- =?us-ascii?Q?l4MUH4vHfbjZR1wdGfbaE8+vBOSFDkO3jA8uGCWJEfiIvWRxgbsH9KQOPY7I?=
- =?us-ascii?Q?c6pptd7ATGxJS18RE1SQLxYgaOlrx5pbAxwKERD6K6ha71Xc/PaKzrR0Fm3Z?=
- =?us-ascii?Q?kHMpwnQlpdANZqtVDdZg7t3LZZBQGM3BvA2nz1EudsYmBhIHK5IyumPwKbXI?=
- =?us-ascii?Q?8lgWhL397cRFYG4f7n4VsDTgfs3XG+O/QlnEKBOOV7+gFMWIlOwlGSvsevMM?=
- =?us-ascii?Q?mYyQAjNlL2VaavS+1/0pMW2IZ1gU4HfSP9/tjukZjftgPVfqBwGllPHDta4k?=
- =?us-ascii?Q?FaaXHneKuaOv9t7xwAhbwuKvfoSq7rWPvK3Wb719T1V8PD/wvMPwfLgBiaqY?=
- =?us-ascii?Q?hzEE2ymYFmpKbslhESnyjMS48BesrhHopQ1pJ1fk/+om7b2tzhOHD8/JUaBb?=
- =?us-ascii?Q?cEH3nRIQcfX6XyGgjJU0s1IAsFqc2H3ozxdIJxwfBXmD1dIPWlqh0j/uyTla?=
- =?us-ascii?Q?r09MG9jSOO6VbKg5novc+bw3e4g9Vf/GCl0Fdkz1xbEdJ6Js5IHx+LK97cQS?=
- =?us-ascii?Q?ig7/WLi3WWo2YbduhXTgkj+En1Gsnay5nm/8ZySdF4R19NCOO3RlQBBU4yu8?=
- =?us-ascii?Q?rGzcoY/txHBAMaPyXOrmbv2e3wzpHWkVk8b/o1Vc+wtNN3hQ0eRu5JiXQXEm?=
- =?us-ascii?Q?Xm3M4ZYy37gEL3ezFF62W+1+W1nK1O2dqWB9CTcsoTjOfyQcDIi8p949YxDn?=
- =?us-ascii?Q?NcZ+jT3i+sQ8AONkFLhX+fTkCNrNVrwVHzLPrERgfxXeKcQD58vcYxDhsxxx?=
- =?us-ascii?Q?hbr1rQkKPXEI5gQ8/4S3C+1/UAeJY+n0rG7a6vJtvhjzrMUfgXEGSUPjdwNG?=
- =?us-ascii?Q?vREw0FbLw3w5MRal+GZeyTS7WkDoaB6iXfiOte3twnoshscXRgxURbCk4tze?=
- =?us-ascii?Q?WYopGvk1pLuAEMMWU6EZI4ABm7rycFNRQhJnU79MyCD1hFgKk9j+Xw6iJx1I?=
- =?us-ascii?Q?PfIlga4M6TmNC1kF91jpGVNGduupKZgbRU1X3TTBAxxY4Fl2Xfb2ljjE55p3?=
- =?us-ascii?Q?x5hXhp7LJCkuHKF8Vr7pJZ24U2nPXzyO0DKdBK/nzflMHmt1zDhhXiDSAdhn?=
- =?us-ascii?Q?07XgogGJ5ud0eI4xvlQSOY1gYK5pp6djC9lf5XtRrLR29yBG5qPmEu7XR8tv?=
- =?us-ascii?Q?xxRPVa7Mr0aEQqWcET0Fo33cvD9YvIwRMWG+Rdu9Vl05coNVYODIVl1oEBKk?=
- =?us-ascii?Q?O+k0bdaQCuw9cBcXAIhSCiXiIDS1iEzbhDF3tRy1C62pr2cwpLBTaC9mKHAl?=
- =?us-ascii?Q?5hXFCoIu5kBB7d3RBBdtp88Ix7akczcqyvazAYHVOC1Odha+c+ZwfTDI+C7V?=
- =?us-ascii?Q?Ja6XQD4zJ9DZyM9Xx5NldJgyH2LQ+AdTh1+cPoDYXvK3c3Hb3gbTZKyMvq9C?=
- =?us-ascii?Q?/FxTnn2h4A=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C3E2CCC5
+	for <dmaengine@vger.kernel.org>; Sat, 11 Apr 2026 12:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775910860; cv=none; b=sXpvFVm4/+lo0GKuLTeaRXZavUiHIUj7ICLrIRf4NnFnEq0y+ZnMF0/De9yNmG5vY0bL6vA2N+twdre4pCMJDH0SSAMej4qzXQAlqaebcuuT+AZHuASdJaCG365BUA+awsZS5rwToT7myS2iiICWMXsZg+/mtSZyEvF82yVbqsk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775910860; c=relaxed/simple;
+	bh=X2t+yaYaZsutfPKPYxoJOyLmkjJDQRmkMhOU64B+e08=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L1Y/aWsIgqkGW2ZbOKdoe5nLzPnMrczUNljjyoTE6Ncp067zztf+38dHyO02wJ+miDyuXr0UCxg6zR9W/dhSJymSJKOWa+mPtmI3cxZFijq8BeIjjvnlqncUxK6i9q8TZ47PDkJJ/HrSu9wde3csFLADdgocyThKF5jOtyGWAwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=rOhNADDy; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-43ba1f3fa7eso2990401f8f.2
+        for <dmaengine@vger.kernel.org>; Sat, 11 Apr 2026 05:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1775910857; x=1776515657; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TOxwujemq0kL/KQS4PJuYHJAL6Vzf+e3T0xcOOritGk=;
+        b=rOhNADDytYjBJ0HRjp4nibc9ez03YXhjeGHbXTlXTjyjRtJNLbvlk3GFbK4i8b5ts7
+         A1GlMblsSiWBVqIeO+Un65Xi6Jbb2NKQyGus/4Ou9ojVosrh6wJ4F7s77Ivd100Zpgw2
+         zxDt6/RSl1WWduVoAPBFd+Qi6rufr+FC5WrRyKUCpl//mIX3fcKya2aj+/10l7yEmTgC
+         2Pbhl8BT4z04vS3tQIrssLu58FawoX4hSrhQZBpNM1GWEkBoJGPRSY4yoeMSqDimDDpg
+         6rwk2uCn8K0PiSEd/EsMhO7RYRt/LlHAmEdBmoA261VAbOScc5UPXrKpNpIuIQkFZNgH
+         Vecw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775910857; x=1776515657;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TOxwujemq0kL/KQS4PJuYHJAL6Vzf+e3T0xcOOritGk=;
+        b=g7ZFYtvOUqU0ipy6ve/ZbzBdyecpgPb4b8jWYsoaOVnTbMgUi7/DXble1+pHdmSjkm
+         U0a/ohSGxOJagaMWMLTlx0NGB1HGRzX9PAeMNqXh5opkentsMRGbpipjo4bA1wgbDFfd
+         tSmqOhqJ79bXPg+KVABVm8frnI2H/suumDl/xxvz+vTdS8J7E7zL/2juFcTf3SD+OBdB
+         kAImzv524nVJMV69EclwDvzQVcqPtlLD8ZidJKkSCh8FQ6XaNHh6D8ONO/a+qF1pTikI
+         Gw/LpLuJFtR7qbuBt6/Ovpi4xWkQ1gYv2kcU6Nln0JrLMMwwVosAemzLLNss5y46I0ox
+         LdQw==
+X-Gm-Message-State: AOJu0YxOvXrF7igPGah7L4UGdRLfsu6mAgEf3pxPPnPDLZzSioimqoEc
+	ivm7hXx30WGuDoRzkabp5V2PK0+pLh7oWElrWzMVGgY4yGS7UGQujRMK713lm0prqz0=
+X-Gm-Gg: AeBDieu8RYBuiwb4uvheekREdRL3Gon3B3vWMTdNiOgV2dOVwGa0qrEylCIDxIAcQRt
+	KQivFgRl9jgQjZtlrBHGzoKul02AIhBbiaci/KdvixzPCegODRvlKlbCgYQik284NtJXjhWNfCp
+	u1edAoM2KP+HDX/3VhuuKLtSdfrZcU/TrXXnCIRgQPlelMPQjshImkzHqhKOm7jcAOf0jAEBAaN
+	ArZk68fWEfP1PIsrBZM+qz+Qmt+4J/6LCb9nBt2zROhZWlWpp1+OfXwlq7xvEAoTDzzmMikqyV1
+	0SvKEwc1WmoEvVTIML6GqjRbNYqiOe9qEQHiuUp9x/k7mQ/MmTg/F1lxFiP1I+Y0kJjFt2SIV3+
+	UZcEd8XoQIGrzJU1IFPSu3g67hwk4fjMmiYWu4A56jlRgCmmCgbJ5U1DNY1r50XdMUgNETZwpB8
+	O74zv704+YdKOhuyJhbPyODUXhKMPvTG8=
+X-Received: by 2002:a05:6000:40c8:b0:439:be67:a038 with SMTP id ffacd0b85a97d-43d642d47f7mr9826259f8f.41.1775910856868;
+        Sat, 11 Apr 2026 05:34:16 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.248])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d63e5ccdasm16450654f8f.34.2026.04.11.05.34.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Apr 2026 05:34:16 -0700 (PDT)
+Message-ID: <1932cc15-0ced-4e0a-8034-98ee78f370a2@tuxon.dev>
+Date: Sat, 11 Apr 2026 15:34:14 +0300
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56b4d250-4b1a-4e58-dfe9-08de97c62647
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2026 12:30:43.4448
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pEHgoFBEMyuYg08J9owWVEttvQyfAg5y1ZcP5mfI5vl4SNeBNTfdqlhZh1Yxbiyv3MLfsQb8Ka9PjO6DcGkxcqEt9PDQpZlHyK4HX01XjmA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB17824
-X-Spamd-Result: default: False [1.34 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/17] dmaengine: sh: rz-dmac: Move interrupt request
+ after everything is set up
+To: Biju Das <biju.das.jz@bp.renesas.com>, "vkoul@kernel.org"
+ <vkoul@kernel.org>, "Frank.Li@kernel.org" <Frank.Li@kernel.org>,
+ "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+ "broonie@kernel.org" <broonie@kernel.org>, "perex@perex.cz"
+ <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
+ Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "geert+renesas@glider.be" <geert+renesas@glider.be>,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ Long Luu <long.luu.ur@renesas.com>
+Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+ "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20260411114303.2814115-1-claudiu.beznea.uj@bp.renesas.com>
+ <20260411114303.2814115-2-claudiu.beznea.uj@bp.renesas.com>
+ <TY3PR01MB11346F56B1A311E46053EDB3486262@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Content-Language: en-US
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <TY3PR01MB11346F56B1A311E46053EDB3486262@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
-	R_DKIM_ALLOW(-0.20)[bp.renesas.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[tuxon.dev:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9998-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10000-lists,dmaengine=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[18];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[bp.renesas.com,kernel.org,gmail.com,perex.cz,suse.com,pengutronix.de,glider.be,renesas.com];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[tuxon.dev,kernel.org,gmail.com,perex.cz,suse.com,bp.renesas.com,pengutronix.de,glider.be,renesas.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[tuxon.dev];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DKIM_TRACE(0.00)[tuxon.dev:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[biju.das.jz@bp.renesas.com,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@tuxon.dev,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[bp.renesas.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,TY3PR01MB11346.jpnprd01.prod.outlook.com:mid,tuxon.dev:email,renesas.com:email]
-X-Rspamd-Queue-Id: E7E3F3DFEB0
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:url,renesas.com:email,vivo.com:email,tuxon.dev:dkim,tuxon.dev:email,tuxon.dev:mid,linutronix.de:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 10C2B3DFEFF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
 
-> -----Original Message-----
-> From: Claudiu <claudiu.beznea@tuxon.dev>
-> Sent: 11 April 2026 12:43
--soc@vger.kernel.org; Claudiu Beznea
-> <claudiu.beznea.uj@bp.renesas.com>
-> Subject: [PATCH v4 05/17] dmaengine: sh: rz-dmac: Do not disable the chan=
-nel on error
->=20
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->=20
-> Disabling the channel on error is pointless, as if other transfers are qu=
-eued, the IRQ thread will be
-> woken up and will execute them anyway by calling rz_dmac_xfer_desc().
->=20
-> rz_dmac_xfer_desc() re-enables the transfer. Before doing so, it sets CHC=
-TRL.SWRST, which clears
-> CHSTAT.DER and CHSTAT.END anyway.
->=20
-> Skip disabling the DMA channel and just log the error instead.
->=20
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->=20
-> Changes in v4:
-> - none
->=20
-> Changes in v3:
-> - none, this patch is new
->=20
->  drivers/dma/sh/rz-dmac.c | 4 ----
->  1 file changed, 4 deletions(-)
->=20
-> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c index 40=
-ddf534c094..943c005f52bd
-> 100644
-> --- a/drivers/dma/sh/rz-dmac.c
-> +++ b/drivers/dma/sh/rz-dmac.c
-> @@ -871,10 +871,6 @@ static void rz_dmac_irq_handle_channel(struct rz_dma=
-c_chan *channel)
->  	if (chstat & CHSTAT_ER) {
->  		dev_err(dmac->dev, "DMAC err CHSTAT_%d =3D %08X\n",
->  			channel->index, chstat);
-> -
-> -		scoped_guard(spinlock_irqsave, &channel
-->vc.lock)
-> -			rz_dmac_disable_hw(channel);
+On 4/11/26 15:17, Biju Das wrote:
+> 
+>> -----Original Message-----
+>> From: Claudiu<claudiu.beznea@tuxon.dev>
+>> Sent: 11 April 2026 12:43
+>> Subject: [PATCH v4 01/17] dmaengine: sh: rz-dmac: Move interrupt request after everything is set up
+>>
+>> From: Claudiu Beznea<claudiu.beznea.uj@bp.renesas.com>
+>>
+>> Once the interrupt is requested, the interrupt handler may run immediately.
+>> Since the IRQ handler can access channel->ch_base, which is initialized only after requesting the IRQ,
+>> this may lead to invalid memory access.
+>> Likewise, the IRQ thread may access uninitialized data (the ld_free, ld_queue, and ld_active lists),
+>> which may also lead to issues.
+>>
+>> Request the interrupts only after everything is set up. To keep the error path simpler, use
+>> dmam_alloc_coherent() instead of dma_alloc_coherent().
+>>
+>> Fixes: 5000d37042a6 ("dmaengine: sh: Add DMAC driver for RZ/G2L SoC")
+>> Cc:stable@vger.kernel.org
+>> Signed-off-by: Claudiu Beznea<claudiu.beznea.uj@bp.renesas.com>
+>> ---
+>>
+>> Changes in v4:
+>> - none, this patch is new
+>>
+>>   drivers/dma/sh/rz-dmac.c | 88 +++++++++++++++-------------------------
+>>   1 file changed, 33 insertions(+), 55 deletions(-)
+>>
+>> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c index 625ff29024de..9f206a33dcc6
+>> 100644
+>> --- a/drivers/dma/sh/rz-dmac.c
+>> +++ b/drivers/dma/sh/rz-dmac.c
+>> @@ -981,25 +981,6 @@ static int rz_dmac_chan_probe(struct rz_dmac *dmac,
+>>   	channel->index = index;
+>>   	channel->mid_rid = -EINVAL;
+>>
+>> -	/* Request the channel interrupt. */
+>> -	scnprintf(pdev_irqname, sizeof(pdev_irqname), "ch%u", index);
+>> -	irq = platform_get_irq_byname(pdev, pdev_irqname);
+>> -	if (irq < 0)
+>> -		return irq;
+>> -
+>> -	irqname = devm_kasprintf(dmac->dev, GFP_KERNEL, "%s:%u",
+>> -				 dev_name(dmac->dev), index);
+>> -	if (!irqname)
+>> -		return -ENOMEM;
+>> -
+>> -	ret = devm_request_threaded_irq(dmac->dev, irq, rz_dmac_irq_handler,
+>> -					rz_dmac_irq_handler_thread, 0,
+>> -					irqname, channel);
+>> -	if (ret) {
+>> -		dev_err(dmac->dev, "failed to request IRQ %u (%d)\n", irq, ret);
+>> -		return ret;
+>> -	}
+>> -
+>>   	/* Set io base address for each channel */
+>>   	if (index < 8) {
+>>   		channel->ch_base = dmac->base + CHANNEL_0_7_OFFSET + @@ -1012,9 +993,9 @@ static int
+>> rz_dmac_chan_probe(struct rz_dmac *dmac,
+>>   	}
+>>
+>>   	/* Allocate descriptors */
+>> -	lmdesc = dma_alloc_coherent(&pdev->dev,
+>> -				    sizeof(struct rz_lmdesc) * DMAC_NR_LMDESC,
+>> -				    &channel->lmdesc.base_dma, GFP_KERNEL);
+>> +	lmdesc = dmam_alloc_coherent(&pdev->dev,
+>> +				     sizeof(struct rz_lmdesc) * DMAC_NR_LMDESC,
+>> +				     &channel->lmdesc.base_dma, GFP_KERNEL);
+>>   	if (!lmdesc) {
+>>   		dev_err(&pdev->dev, "Can't allocate memory (lmdesc)\n");
+>>   		return -ENOMEM;
+>> @@ -1030,7 +1011,24 @@ static int rz_dmac_chan_probe(struct rz_dmac *dmac,
+>>   	INIT_LIST_HEAD(&channel->ld_free);
+>>   	INIT_LIST_HEAD(&channel->ld_active);
+>>
+>> -	return 0;
+>> +	/* Request the channel interrupt. */
+>> +	scnprintf(pdev_irqname, sizeof(pdev_irqname), "ch%u", index);
+>> +	irq = platform_get_irq_byname(pdev, pdev_irqname);
+>> +	if (irq < 0)
+>> +		return irq;
+>> +
+>> +	irqname = devm_kasprintf(dmac->dev, GFP_KERNEL, "%s:%u",
+>> +				 dev_name(dmac->dev), index);
+>> +	if (!irqname)
+>> +		return -ENOMEM;
+>> +
+>> +	ret = devm_request_threaded_irq(dmac->dev, irq, rz_dmac_irq_handler,
+>> +					rz_dmac_irq_handler_thread, 0,
+>> +					irqname, channel);
+>> +	if (ret)
+>> +		dev_err(dmac->dev, "failed to request IRQ %u (%d)\n", irq, ret);
+> As per [1], it is redundant.
+> 
+> [1]
+> https://elixir.bootlin.com/linux/v7.0-rc7/source/kernel/irq/devres.c#L108
 
-On previous patch, rz_dmac_disable_hw() for initializing each register
+This is a fix patch, it just moves code around, intended to be backported to 
+older kernels (e.g. v6.1, v6.12). However devm_request_result() is introduced in:
 
-+	/* Initialize register for each channel */
-+	rz_dmac_disable_hw(channel);
+commit 55b48e23f5c4
+Author: Pan Chuang <panchuang@vivo.com>
+Date:   Tue Aug 5 17:29:22 2025 +0800
 
+     genirq/devres: Add error handling in devm_request_*_irq()
 
-As per hardware manual,
+     devm_request_threaded_irq() and devm_request_any_context_irq() currently
+     don't print any error message when interrupt registration fails.
 
-Once an error occurs, the data of the whole transfer cannot be guaranteed.
-Be sure to start the transaction again from the
-beginning by following the procedure below.
-1. Set 1 in the SWRST bit of the CHCTRL_n/nS register.
-2. Set each register again.
+     This forces each driver to implement redundant error logging - over 2,000
+     lines of error messages exist across drivers. Additionally, when
+     upper-layer functions propagate these errors without logging, critical
+     debugging information is lost.
 
-Is this patch doing the procedure mentioned in hardware manual?
+     Add devm_request_result() helper to unify error reporting via dev_err_probe(),
 
-Cheers,
-Biju
+     Use it in devm_request_threaded_irq() and devm_request_any_context_irq()
+     printing device name, IRQ number, handler functions, and error code on failure
+     automatically.
+
+     Co-developed-by: Yangtao Li <frank.li@vivo.com>
+     Signed-off-by: Yangtao Li <frank.li@vivo.com>
+     Signed-off-by: Pan Chuang <panchuang@vivo.com>
+     Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+     Link: https://lore.kernel.org/all/20250805092922.135500-2-panchuang@vivo.com
+
+And it is not present in v6.1, v6.12 kernels.
+
+To have a clean backport (at least to the above mentioned kernel versions), 
+would be better to have the alignment to devm_request_result() done in a later 
+cleanup patch.
+
+Thank you,
+Claudiu
 

@@ -1,79 +1,81 @@
-Return-Path: <dmaengine+bounces-9979-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-9980-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id Z7RbD94z2mlqzAgAu9opvQ
-	(envelope-from <dmaengine+bounces-9979-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 13:43:26 +0200
+	id 8NOcIeYz2mlqzAgAu9opvQ
+	(envelope-from <dmaengine+bounces-9980-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 13:43:34 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D555B3DF883
-	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 13:43:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F0A23DF892
+	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 13:43:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 585A6303A3FC
-	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 11:43:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8F8C930538AA
+	for <lists+dmaengine@lfdr.de>; Sat, 11 Apr 2026 11:43:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 246CE3446A3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C290334250E;
 	Sat, 11 Apr 2026 11:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="JWWGFkez"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="AlTA3i+/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13ACE1E633C
-	for <dmaengine@vger.kernel.org>; Sat, 11 Apr 2026 11:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D3933DED1
+	for <dmaengine@vger.kernel.org>; Sat, 11 Apr 2026 11:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775907793; cv=none; b=YgmSQ+rh1reT+VTUiXPwC3spHlRTopC1iHk+YWuroVHYe+d/2u+KNI7gOv7HiHaPC0zyUcJXxHyhYGITGeYND/cJS5wJm7RqOzEDMhPD+RsNVCpxxJts/iiwjcUhwwlxfFVw4rxtdjO85/WKqOPZjBnjS856yiwcIEwX394ZxOU=
+	t=1775907793; cv=none; b=BLSs/tUVxEsQ4HDowSVs4b6+8IKoi+DKSZiu3mo7BI7yxBW5t/TUK2j2SleEYB1tIoCHsvForxzmWuEsWEVOxo+3QPq3vHb+IgDHN+XEE6N/6EllsDTOIolgu8obsan2LrjlX1kC9mZFSco11sFOP7X8hcFBlWpLj/NiqywWBUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1775907793; c=relaxed/simple;
-	bh=cKFhAtkhgAfTA+QAOjsxsnhy2l5B7v8pbAd2rbghqwI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LyJ6GZ6+zvkxh9N5k9f1slRV+biM76Yfrf/giq78MP4fj8R1ZkJ4ZUX1u/yIEC5Nxi3ApYBF5gSOdRhcq+8ZDAwFdLk8HCAQcMrMdOhNcrlUkxfPAZtED5Pz5EZXVU/oGEGBi0QkJk8e2nmo50oOOjczKUaGCjXdE9BhMtESZx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=JWWGFkez; arc=none smtp.client-ip=209.85.221.49
+	bh=SIisgWIq7iz0fEX6zbuC2vzUQFNOenfE175SXgsqSCI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gjLNW4jcI8iLZgTsYI4THoB3/cfE4chMWr8m6v8k/cz8rdebePd8yREnaayayTTzrVHjrf9KQfgvLET/ffhaMt5QooUBlSHT1JN9M03ITUkIY9CDFRD23BbAyv+9Mc2989jaB7isnxngEtqOCFvSaIcm6iDS19btnBCotWBnIcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=AlTA3i+/; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-43cf8fe9c2aso1894801f8f.2
-        for <dmaengine@vger.kernel.org>; Sat, 11 Apr 2026 04:43:09 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-48374014a77so40484705e9.3
+        for <dmaengine@vger.kernel.org>; Sat, 11 Apr 2026 04:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1775907788; x=1776512588; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=q1eTBRD7MumKinxlgMqLdQk94b4xlHoIm/BiwJmzTkc=;
-        b=JWWGFkezFo1yDEDecIrZLJjGK42Vf6H9fJniOzTftW34XHdA/KSdoKkGZvuElKv+MK
-         Z19IEKV0IhAz2eXIQgf6cGCKVsS0oOiXeiP6g0N4f0cFTvzm9Hkjv4ZPhV+fRLwJJRKR
-         zB4ZQKF0KB3npU+CZIH4inalpg6wwo2QjR9N1ooDJQAGhbOnqBIt/VTKPQhxfuszUrK5
-         rhnXJrhiXOfxtQ6bo1DJ+BRJPid72SP49oiZJYa2T+bHKmkx7sVULLPjCYrIOD7W1/GO
-         /oG1IhGQ6c2yX5bW3YUCJ6XvhVFkUkMjO9yuWxAo/ic37ZB/++rRM0J7kTwlejMxpJxn
-         hPAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775907788; x=1776512588;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=tuxon.dev; s=google; t=1775907790; x=1776512590; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=q1eTBRD7MumKinxlgMqLdQk94b4xlHoIm/BiwJmzTkc=;
-        b=Bk/ltnabDpInu83/f7O3p6L0q5xTbW1bAGBa+GNujBTE5UxGf1Z6FPZJSWjBQF8WU5
-         GDZppmzPtCO3f8Z1X/+t6X3rlPslFfHLMB8K76MM/egF+ss/Wew+ZuT/f/l4U9dvI6ea
-         rebw5+nyTo1D1Mp4S2qXh7DIu9ZeucdJ4a67S4p79fYu8dpU9xbj+2j/HOR5JWg1qnGu
-         npSDc6TKGVVEg5Qc2QB5IXp8e/LUrjtp2VHEh7SlKXl6fg918YsDyGHWpxD5tJlUk3h9
-         IuZ0Y4yYGQKA5wSV/3ACoYph6Dk/nAkbj9QH6kiIcI/7Gp41MSiRRF31UXstKGG4dtHw
-         C0KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUv0XJRI3NMUq34WjvX3d3PXOfOYLID7Jf7aq54+9HMBIOY/yjpvP43mk1L6pmozuXwYt1qkSpIlco=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFfb4sKcx/RMYTq09PXYwCXajxBDa4IF0gsw2Ga/hvMnRTBA8v
-	Q7qw/yGT7eDKyvOagIwPt+Y8FuCQjSYDAlPnUBnyrhobkYUOhWE9UJ3Wrk3ZnaW76q4=
-X-Gm-Gg: AeBDieuQgSxUXFtgopZk5EL6UnpqQ0CResWM9tluzpQI4VhEmuemca9Erkf/ailpLaC
-	aDGDgvYvnJnuIR06WqL6V4CFlIjKg5oxTQV5si3fMXXmdnxmHozVnnlWYNwPMlrQCn9ImEVf3hm
-	ojWOusseeY2+FdA8gfSrOKS7JeI7lhZoyumT2tyby/Um1xqDnKUmAkoIzzCF1aMpRFTO4GlbzpM
-	ZU3/kFyZGYeUg9S/Q6pkxcZt0H1zmPvE0KWw/ovMnRJBKH/ngPRxSaGeG2yaWByQfsZonZH7oAu
-	K2ko4MlDk4UTN088109yJTsazpXCyUzA7RwQWMwYAonLHmGL3GKufKJgtPbjuVPh2zM0Ly6keg9
-	zLqEtBivNVpfT9KJ8Ss4g4aCdu/xSV2bBeev7pVh3TzRqWB5r3+sLS7mmpUD6/etZ8/7JYLfygn
-	2gmiHNHZSzzgduClibsejRJrC+1KVWYqgNZjtd1gK5NvNzIfxnrMbN
-X-Received: by 2002:a05:6000:3107:b0:43b:3e34:7fe with SMTP id ffacd0b85a97d-43d64289402mr9860136f8f.21.1775907788294;
-        Sat, 11 Apr 2026 04:43:08 -0700 (PDT)
+        bh=2xnheHvaNltUuBI9CjLhmlXKJ1g2zxubkvsSzZotxIQ=;
+        b=AlTA3i+/aEmGGqWaBB/kIenOvnULZwPvTCVjI0P+kS15UAYBEzTk4h4GhouQd55ocE
+         LAgQ03YVZ0Iqqhif14f/F1dM7IT4GAVEXJwcCBkQ2KMgYea9wVaDgLvRctwtcF9q+oAe
+         vGFL1k305VFnGQbB8cRSO1PW7ybMsQOW33tZHAFTztQhz3VbLLH81jq66YqJCmI85Aif
+         R2d+kISc8scZXfIvU0nPu2W1f7rIspQ1V7bYtijgohYBgA/nfr4NjLu8bcYSNDM4hbVC
+         OcKCweXLKSE9Z3HCLqSlBDjiO5dlJgLkwV4Wb8xCidGG5N6YSVY74+B2rD8HxxgTl4Ct
+         U3nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775907790; x=1776512590;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=2xnheHvaNltUuBI9CjLhmlXKJ1g2zxubkvsSzZotxIQ=;
+        b=dMgIc8GP+p1SZLfs+kjwvTCCBwKeiNg2Q9cfJgwMFXURsXPDnzm6IP2WVRyuhtVSaa
+         qYKbHxz1mx9zCwC0uzeJDpCLI6Ex8Rm9Bty+f1WIGi5FUnKIJI4X23PnRz+1EoSfWeSt
+         FAGDyuUsFKh3TgwlBPS98EppifieueOU5xsMbLj5ROnlGOz172PeXbkSDNNKeZdIKFJ9
+         6Rw7sXbbZq5kyvmah5UayzFV70lDmCqBZgkIMEWuQdOMALznpQsXs8lZjuXOjTxcnR6W
+         QNMcJUszo1Dme1Y1lOgY7PnmrRgCBky0AIijdbI/aby0HvOwKIH5OBIWZ91syEaOfcCZ
+         IvcA==
+X-Forwarded-Encrypted: i=1; AJvYcCUx3Q+PM8wWk03zDpRqlDPNoNG5aR9JUBE2XbF4KqSceoZnOqybqtnxWtDuMnljoQi5sMsBNY58Dog=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyjS+BT9HOtja+FZ0AqotONH2Qgz1J7YtSO4WAo8Lo2dmadG1n
+	6+RGQifZ3KuKkKdVT+6Cf3pp9eTOZE2BbOLFZ8v7mJXZvkpuvQt5ANcMSvfPt/Uq150=
+X-Gm-Gg: AeBDietsfmnXLdHaJFjrJjm7DDQHtY6PCw29ScWQaEIJY1Ku9sT93rRN+c5PciDeF+b
+	dy588b4i8HlIrgfRoJ5tbKk2FTavexsTPw4k9X9L+JH1Wsyf6cp2o6hS4OAZlpTSomVLq4x2K5Z
+	hOP0mot0GoeW2Mm69K2bHpX00xy1PCHAXYgUaQLN9YdF6faRwkjZCUBp8Veh8qdprUbktXpqClm
+	7VZpsqfbrVly+oacac8RZLprPps8eGNeM0u8Xbj6vkQTmujMEP43f4ajSU2D8W9BIzC1NhJ0WgX
+	7tKfb1CwkKLwbxJoohRF0ZtDKfXIVjU/KOwtEJVmMsKCCCIQebF6av4NtQEuMneezGrIqtP98OD
+	tYsFFrJReFfdM4pNT9mWctRXJCa8dkt9C9WpADyl7n2vTGdpAJFmWR5ZZtuV/SDblHkfZd6NXiy
+	Y86ZB7d6Ub0P3vcHmHHGWs021K75nw00wVN7wr9GJ1uMr1g2dpnDpA9GjBaEIP/vQ=
+X-Received: by 2002:a05:600c:c171:b0:488:a894:b27a with SMTP id 5b1f17b1804b1-488d67f0105mr91856815e9.8.1775907789889;
+        Sat, 11 Apr 2026 04:43:09 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.248])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d63e5c981sm15776447f8f.33.2026.04.11.04.43.06
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d63e5c981sm15776447f8f.33.2026.04.11.04.43.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2026 04:43:07 -0700 (PDT)
+        Sat, 11 Apr 2026 04:43:09 -0700 (PDT)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: vkoul@kernel.org,
@@ -93,11 +95,14 @@ Cc: claudiu.beznea@tuxon.dev,
 	linux-kernel@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v4 00/17] Renesas: dmaengine and ASoC fixes
-Date: Sat, 11 Apr 2026 14:42:46 +0300
-Message-ID: <20260411114303.2814115-1-claudiu.beznea.uj@bp.renesas.com>
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v4 01/17] dmaengine: sh: rz-dmac: Move interrupt request after everything is set up
+Date: Sat, 11 Apr 2026 14:42:47 +0300
+Message-ID: <20260411114303.2814115-2-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260411114303.2814115-1-claudiu.beznea.uj@bp.renesas.com>
+References: <20260411114303.2814115-1-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -115,8 +120,8 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9979-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	TAGGED_FROM(0.00)[bounces-9980-lists,dmaengine=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	MIME_TRACE(0.00)[0:+];
 	DMARC_NA(0.00)[tuxon.dev];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -132,107 +137,184 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	TAGGED_RCPT(0.00)[dmaengine,renesas];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,bp.renesas.com:mid,sashiko.dev:url]
-X-Rspamd-Queue-Id: D555B3DF883
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,bp.renesas.com:mid,renesas.com:email]
+X-Rspamd-Queue-Id: 1F0A23DF892
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Hi,
+Once the interrupt is requested, the interrupt handler may run immediately.
+Since the IRQ handler can access channel->ch_base, which is initialized
+only after requesting the IRQ, this may lead to invalid memory access.
+Likewise, the IRQ thread may access uninitialized data (the ld_free,
+ld_queue, and ld_active lists), which may also lead to issues.
 
-This series addresses issues identified in the DMA engine and RZ SSI
-drivers.
+Request the interrupts only after everything is set up. To keep the error
+path simpler, use dmam_alloc_coherent() instead of dma_alloc_coherent().
 
-As described in the patch "dmaengine: sh: rz-dmac: Set the Link End (LE)
-bit on the last descriptor", stress testing on the Renesas RZ/G2L SoC
-showed that starting all available DMA channels could cause the system
-to stall after several hours of operation. This issue was resolved by
-setting the Link End bit on the last descriptor of a DMA transfer.
-
-However, after applying that fix, the SSI audio driver began to suffer
-from frequent overruns and underruns. This was caused by the way the SSI
-driver emulated cyclic DMA transfers: at the start of playback/capture
-it initially enqueued 4 DMA descriptors as single SG transfers, and upon
-completion of each descriptor, a new one was enqueued. Since there was
-no indication to the DMA hardware where the descriptor list ended
-(though the LE bit), the DMA engine continued transferring until the
-audio stream was stopped. From time to time, audio signal spikes were
-observed in the recorded file with this approach.
-
-To address these issue, cyclic DMA support was added to the DMA engine
-driver, and the SSI audio driver was reworked to use this support via
-the generic PCM dmaengine APIs.
-
-Due to the behavior described above, no Fixes tags were added to the
-patches in this series, and all patches should be merged through the
-same tree.
-
-In case this series will be merged this release cycle, best would
-be to go though the DMA tree as the DMA changes are based on the series
-at [1] which was merged on March 17th. Otherwise, any of the ASoC or DMA
-tree should be good.
-
-Thank you,
-Claudiu
+Fixes: 5000d37042a6 ("dmaengine: sh: Add DMAC driver for RZ/G2L SoC")
+Cc: stable@vger.kernel.org
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+---
 
 Changes in v4:
-- collected tags
-- addressed review comments got from sashiko.dev. For this:
-- added patches:
--- dmaengine: sh: rz-dmac: Move interrupt request after everything is set up
--- dmaengine: sh: rz-dmac: Fix incorrect NULL check on list_first_entry()
+- none, this patch is new
 
-Changes in v3:
-- addressed review comments got from sashiko.dev. For this:
-- added patches 1-9
-- added patch "ASoC: renesas: rz-ssi: Add pause support"
-- dropped patches:
--- dmaengine: sh: rz-dmac: Add enable status bit
--- dmaengine: sh: rz-dmac: Add pause status bit
+ drivers/dma/sh/rz-dmac.c | 88 +++++++++++++++-------------------------
+ 1 file changed, 33 insertions(+), 55 deletions(-)
 
-Changes in v2:
-- fixed typos in patch descriptions and patch titles
-- updated "ASoC: renesas: rz-ssi: Use generic PCM dmaengine APIs"
-  to fix the PIO mode
-- in patch "dmaengine: sh: rz-dmac: Add suspend to RAM support"
-  clear the RZ_DMAC_CHAN_STATUS_SYS_SUSPENDED status bit for
-  channel w/o RZ_DMAC_CHAN_STATUS_PAUSED_INTERNAL
-- per-patch updates can be found in individual patches changelog 
-- rebased on top of next-20260319
-- updated the cover letter
-
-[1] https://lore.kernel.org/all/20260316133252.240348-1-claudiu.beznea.uj@bp.renesas.com/
-
-
-Claudiu Beznea (17):
-  dmaengine: sh: rz-dmac: Move interrupt request after everything is set
-    up
-  dmaengine: sh: rz-dmac: Fix incorrect NULL check on list_first_entry()
-  dmaengine: sh: rz-dmac: Use list_first_entry_or_null()
-  dmaengine: sh: rz-dmac: Use rz_dmac_disable_hw()
-  dmaengine: sh: rz-dmac: Do not disable the channel on error
-  dmaengine: sh: rz-dmac: Add helper to compute the lmdesc address
-  dmaengine: sh: rz-dmac: Save the start LM descriptor
-  dmaengine: sh: rz-dmac: Add helper to check if the channel is enabled
-  dmaengine: sh: rz-dmac: Add helper to check if the channel is paused
-  dmaengine: sh: rz-dmac: Use virt-dma APIs for channel descriptor
-    processing
-  dmaengine: sh: rz-dmac: Refactor pause/resume code
-  dmaengine: sh: rz-dmac: Drop the update of channel->chctrl with
-    CHCTRL_SETEN
-  dmaengine: sh: rz-dmac: Add cyclic DMA support
-  dmaengine: sh: rz-dmac: Add suspend to RAM support
-  ASoC: renesas: rz-ssi: Add pause support
-  ASoC: renesas: rz-ssi: Use generic PCM dmaengine APIs
-  dmaengine: sh: rz-dmac: Set the Link End (LE) bit on the last
-    descriptor
-
- drivers/dma/sh/rz-dmac.c   | 762 +++++++++++++++++++++++++------------
- sound/soc/renesas/Kconfig  |   1 +
- sound/soc/renesas/rz-ssi.c | 388 +++++++------------
- 3 files changed, 652 insertions(+), 499 deletions(-)
-
+diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+index 625ff29024de..9f206a33dcc6 100644
+--- a/drivers/dma/sh/rz-dmac.c
++++ b/drivers/dma/sh/rz-dmac.c
+@@ -981,25 +981,6 @@ static int rz_dmac_chan_probe(struct rz_dmac *dmac,
+ 	channel->index = index;
+ 	channel->mid_rid = -EINVAL;
+ 
+-	/* Request the channel interrupt. */
+-	scnprintf(pdev_irqname, sizeof(pdev_irqname), "ch%u", index);
+-	irq = platform_get_irq_byname(pdev, pdev_irqname);
+-	if (irq < 0)
+-		return irq;
+-
+-	irqname = devm_kasprintf(dmac->dev, GFP_KERNEL, "%s:%u",
+-				 dev_name(dmac->dev), index);
+-	if (!irqname)
+-		return -ENOMEM;
+-
+-	ret = devm_request_threaded_irq(dmac->dev, irq, rz_dmac_irq_handler,
+-					rz_dmac_irq_handler_thread, 0,
+-					irqname, channel);
+-	if (ret) {
+-		dev_err(dmac->dev, "failed to request IRQ %u (%d)\n", irq, ret);
+-		return ret;
+-	}
+-
+ 	/* Set io base address for each channel */
+ 	if (index < 8) {
+ 		channel->ch_base = dmac->base + CHANNEL_0_7_OFFSET +
+@@ -1012,9 +993,9 @@ static int rz_dmac_chan_probe(struct rz_dmac *dmac,
+ 	}
+ 
+ 	/* Allocate descriptors */
+-	lmdesc = dma_alloc_coherent(&pdev->dev,
+-				    sizeof(struct rz_lmdesc) * DMAC_NR_LMDESC,
+-				    &channel->lmdesc.base_dma, GFP_KERNEL);
++	lmdesc = dmam_alloc_coherent(&pdev->dev,
++				     sizeof(struct rz_lmdesc) * DMAC_NR_LMDESC,
++				     &channel->lmdesc.base_dma, GFP_KERNEL);
+ 	if (!lmdesc) {
+ 		dev_err(&pdev->dev, "Can't allocate memory (lmdesc)\n");
+ 		return -ENOMEM;
+@@ -1030,7 +1011,24 @@ static int rz_dmac_chan_probe(struct rz_dmac *dmac,
+ 	INIT_LIST_HEAD(&channel->ld_free);
+ 	INIT_LIST_HEAD(&channel->ld_active);
+ 
+-	return 0;
++	/* Request the channel interrupt. */
++	scnprintf(pdev_irqname, sizeof(pdev_irqname), "ch%u", index);
++	irq = platform_get_irq_byname(pdev, pdev_irqname);
++	if (irq < 0)
++		return irq;
++
++	irqname = devm_kasprintf(dmac->dev, GFP_KERNEL, "%s:%u",
++				 dev_name(dmac->dev), index);
++	if (!irqname)
++		return -ENOMEM;
++
++	ret = devm_request_threaded_irq(dmac->dev, irq, rz_dmac_irq_handler,
++					rz_dmac_irq_handler_thread, 0,
++					irqname, channel);
++	if (ret)
++		dev_err(dmac->dev, "failed to request IRQ %u (%d)\n", irq, ret);
++
++	return ret;
+ }
+ 
+ static void rz_dmac_put_device(void *_dev)
+@@ -1099,7 +1097,6 @@ static int rz_dmac_probe(struct platform_device *pdev)
+ 	const char *irqname = "error";
+ 	struct dma_device *engine;
+ 	struct rz_dmac *dmac;
+-	int channel_num;
+ 	int ret;
+ 	int irq;
+ 	u8 i;
+@@ -1132,18 +1129,6 @@ static int rz_dmac_probe(struct platform_device *pdev)
+ 			return PTR_ERR(dmac->ext_base);
+ 	}
+ 
+-	/* Register interrupt handler for error */
+-	irq = platform_get_irq_byname_optional(pdev, irqname);
+-	if (irq > 0) {
+-		ret = devm_request_irq(&pdev->dev, irq, rz_dmac_irq_handler, 0,
+-				       irqname, NULL);
+-		if (ret) {
+-			dev_err(&pdev->dev, "failed to request IRQ %u (%d)\n",
+-				irq, ret);
+-			return ret;
+-		}
+-	}
+-
+ 	/* Initialize the channels. */
+ 	INIT_LIST_HEAD(&dmac->engine.channels);
+ 
+@@ -1169,6 +1154,18 @@ static int rz_dmac_probe(struct platform_device *pdev)
+ 			goto err;
+ 	}
+ 
++	/* Register interrupt handler for error */
++	irq = platform_get_irq_byname_optional(pdev, irqname);
++	if (irq > 0) {
++		ret = devm_request_irq(&pdev->dev, irq, rz_dmac_irq_handler, 0,
++				       irqname, NULL);
++		if (ret) {
++			dev_err(&pdev->dev, "failed to request IRQ %u (%d)\n",
++				irq, ret);
++			goto err;
++		}
++	}
++
+ 	/* Register the DMAC as a DMA provider for DT. */
+ 	ret = of_dma_controller_register(pdev->dev.of_node, rz_dmac_of_xlate,
+ 					 NULL);
+@@ -1210,16 +1207,6 @@ static int rz_dmac_probe(struct platform_device *pdev)
+ dma_register_err:
+ 	of_dma_controller_free(pdev->dev.of_node);
+ err:
+-	channel_num = i ? i - 1 : 0;
+-	for (i = 0; i < channel_num; i++) {
+-		struct rz_dmac_chan *channel = &dmac->channels[i];
+-
+-		dma_free_coherent(&pdev->dev,
+-				  sizeof(struct rz_lmdesc) * DMAC_NR_LMDESC,
+-				  channel->lmdesc.base,
+-				  channel->lmdesc.base_dma);
+-	}
+-
+ 	reset_control_assert(dmac->rstc);
+ err_pm_runtime_put:
+ 	pm_runtime_put(&pdev->dev);
+@@ -1232,18 +1219,9 @@ static int rz_dmac_probe(struct platform_device *pdev)
+ static void rz_dmac_remove(struct platform_device *pdev)
+ {
+ 	struct rz_dmac *dmac = platform_get_drvdata(pdev);
+-	unsigned int i;
+ 
+ 	dma_async_device_unregister(&dmac->engine);
+ 	of_dma_controller_free(pdev->dev.of_node);
+-	for (i = 0; i < dmac->n_channels; i++) {
+-		struct rz_dmac_chan *channel = &dmac->channels[i];
+-
+-		dma_free_coherent(&pdev->dev,
+-				  sizeof(struct rz_lmdesc) * DMAC_NR_LMDESC,
+-				  channel->lmdesc.base,
+-				  channel->lmdesc.base_dma);
+-	}
+ 	reset_control_assert(dmac->rstc);
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
 -- 
 2.43.0
 

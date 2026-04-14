@@ -1,204 +1,252 @@
-Return-Path: <dmaengine+bounces-10013-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10014-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CMmOJ/o+3mlJpwkAu9opvQ
-	(envelope-from <dmaengine+bounces-10013-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 15:19:54 +0200
+	id cNrtHNOn3mlTHAAAu9opvQ
+	(envelope-from <dmaengine+bounces-10014-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 22:47:15 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03EF93FA679
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 15:19:53 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14C753FE72E
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 22:47:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E375D30BA486
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 13:14:10 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 28404300F12D
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 20:47:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD6173E63A2;
-	Tue, 14 Apr 2026 13:14:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC1F1351C29;
+	Tue, 14 Apr 2026 20:47:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="h01gwWYl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/uXR2x8"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1403E6DD0
-	for <dmaengine@vger.kernel.org>; Tue, 14 Apr 2026 13:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776172450; cv=none; b=YzOu3/Av3GxbZ3Lsq7MWlXIChZAltNK2wWjvldV2zp8LP8LSEfRZOqh+uZ8vDFTwL9KKHq5a0vEn5UMjTdTs0Ec40ObKSf/HtXby5XhJsP1U0+11Rr5m0jhsAIAtEWbJo7H3/k5DQ+AG7EHkbBbJt7ZnxNHMhUY/x91i2UUAKT0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776172450; c=relaxed/simple;
-	bh=BWUknX/SqSphXopJt6grMbuXbMrrAM3MWr8dLaEs8A4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Yq/ERMiUYp3vTuf9wzlkCdq5gKzkhdU5c1AnFXA5n55DX3crfIpzMtnbNWG1ywf6aTuyeQYxj4LaqJkdEELqnZcQFlzViebbXjgT+Svrj0VpHgT88OCmcUns7fY4rSux13EN6p8tc1Gv09iou5+ADrv14CltYksFINb4qHuysBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=h01gwWYl; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1776172442; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=9qKeKoNGprk9U/gm/iAv4BsDkuhlxsA7yusvrVUUOVM=;
-	b=h01gwWYlbtfM7vXQSuRLNJFKlyGjCKoBsCXfRi3ALRpxP4QFO+N2IoqYTIW87MD6mogSd/nHmLk4LTzJkWGwR8+bXtXWnkZfDnOk1p8sZfzOh2giWTPJbBYkvK7U3iheUFKhnCeu7MipCIm54VTcKFCUYnY+nDfVuWwPr1B9ZP8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0X11UdtP_1776172441;
-Received: from 30.178.84.2(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X11UdtP_1776172441 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 14 Apr 2026 21:14:02 +0800
-Message-ID: <661fdde4-cd7a-4def-9a80-d2369a0e78b9@linux.alibaba.com>
-Date: Tue, 14 Apr 2026 21:14:01 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7125C371D1F
+	for <dmaengine@vger.kernel.org>; Tue, 14 Apr 2026 20:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776199631; cv=pass; b=H5yvMserXZQ7EMfAu3wp9OR5lkFwdvcA+CUzlP5HzBUuc0y+tvBCv8aEVEesG6tGhEUACUYKvHJMJac286EPLWOJYTtFqlfYdF08oZGmAgA/uRgzMzFY/ndM/ePJmK1zK89clyyjDcc1XGM5MmEYB3MRFY96uDt4ChzeO9v6m1I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776199631; c=relaxed/simple;
+	bh=w74mUAf5VahjnEJnuSGpY2y5M9gKcwnQOiPx4hHYhvA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DKYDfQ2c6Zikqwtdg7KWvxGbpPLbrp+MrbmaXu8XQya4O/LdpB+beF0qOgwX97i6bK5SqYSM5huVS40BKr7+S7dWd+IPGwLKpwObgy9tEOU860c4p78Ts22ku37SF23Hesi/DeP7qEx7i3LKMdAMiZj0LCNJl8MnO3Ujuw8Tty8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T/uXR2x8; arc=pass smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-671ae79e617so2935509a12.3
+        for <dmaengine@vger.kernel.org>; Tue, 14 Apr 2026 13:47:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776199629; cv=none;
+        d=google.com; s=arc-20240605;
+        b=GGyv6t4RmJTQh/lHYix0pYqrepneTo4f3YXSt5dYqu7znjsWlBII4BEE23k8y1MNTK
+         GeUVXZ//HAq05ZkYpk99tTRLQBp8VmZO0UuO/2Qu0z21ohyM6Myk3cIXTGgYyXi5pPxS
+         SNoTBsc8aAW11L0LbHGjmJVgF1aiY5neQhG+JMCEHdChOZh+H4zwOJCyZUJvhJC58mAJ
+         1qYgJ+zjOleeVD7ecRCMHEexnQ6tP1A0w2o5XdvfX9sjpS+xn59bgt/6bb9TI3oxgD7w
+         RA+ZROF2G1RmE7YjCb79UAMPeRO/EM8s2f1xdx3bYmEY0HxSeORaiDNEhFFaBURs0GH5
+         uXCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ULQscP/jHQhzC6bIBAm/mnPePwL8/2Be+C8MegQPnW0=;
+        fh=x+FQWSdGliD2GXZCRWAICkTVTX6I+XolA51YjeCbxcY=;
+        b=KtwPBg5gNZQ4BdQ0q+A4keV1+1o5cSAndN5OsE3GpkODak+O7iNLo4Tm4m6QEaB0PT
+         YF9c1mzQdWjPXmk+7zo4FDWKN8vWcRH0CUEJxrIsGNDNAxmPdwLDkX9brIQzcxwfpd1t
+         udIuVU6i0DaJaqq9yILRd0U5wKd6TWYGggMVDBvLjp+PYCZG8Di1Q8cWnaeNiBVbzqBg
+         deBaTA9gy4Ykscbk1fVNbPCM8ySavVxysnI5b5snideawk/GT0DlvUwOs+lgJrF1YHFw
+         5fakE3Ngn+GyxZU0ToiDUkXoqYHQ6IbHcLNVhy6lJn6qpF4wy0NH9FZI0NIqdrvGJ7ti
+         rUcQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776199629; x=1776804429; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ULQscP/jHQhzC6bIBAm/mnPePwL8/2Be+C8MegQPnW0=;
+        b=T/uXR2x8sOCQj5JnasSVimdT6XFAD2+dgKJXcruygbd3Wg94RRCAbg2ga4qLnsB6yu
+         lqI3cB0t0TmY9180yQ5ibTlO/l0Wg/XCkbMzWiblqfRwcSm9x8RXUArCBhqijGNCysa0
+         ajulAScKpCiGw+rw+3oNHzWXjuDnDyynYymeec0GZjP953MiDfZ1TCvuHU27azqAVdbZ
+         Xw7p5IN08uO32maJke1OORpyPJeM/e55zARQW9/omz/AWJVRcKYlYaksGNTt8lYLhfMz
+         SmQvrS9bns8CjreKiok+ZKe4K4Hz/eMdUvB2drayDR24909WAAeWzg58Q1yApBcu9VvO
+         4G9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776199629; x=1776804429;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ULQscP/jHQhzC6bIBAm/mnPePwL8/2Be+C8MegQPnW0=;
+        b=EqbD5GWZjEULfRy41W1Epgi5vYyeaPiUSYrgiRj59dFj97tdotx3sTzZbql4cmTIiK
+         /MHKk2gonN2/pqEqrX5b79xSyJSBDkyLauC9wWhfYsPjrMxd4GRBclB41FObkpxCLSLo
+         851VJ+Nz5w8Z3n6UX1sl1pHAkpIz4dyetb/PUBMt6+GUE0tmr9ZexInBmSsQ5h2C7Ohu
+         Yccuy5TWRtgp4fjMwFtLCRmdM7gJHvAYBGunsK8Ogok3++u4WCM08osl+taJm9n9uWle
+         5juA+Cp6QY6qCnk9rFXH9OcnKO9Go2Kle3h92EpF+iXfy2H5N46SWs21aDnlaO5gjfAP
+         I5Iw==
+X-Forwarded-Encrypted: i=1; AFNElJ+Ofn+0mOarMryjH3cWtv9bjcmuNBg+MW21PIBlrxl8z5cnJZ1eIAPW3jOZi2EOo6IDocfqkLpzZX8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy59Wi6JNiicCUS/IoJFnl1sAAS6vGFrY0GvtiZIygC/eSYf6Fd
+	vtNnB1MPC6EV/8SO/XUPkL4aonTQRjEeYlMxG5c5NZy94Ex4xWTj9NIYxTqMKpEHaJSI9F7E2jf
+	6xglDc2nozPXpcoIe5WeUP377U5bHSZY=
+X-Gm-Gg: AeBDieu9xDms0nePksZccO8k9GItG68je4tOhDY5uzhi5n4Larpuf9wFvgUbFtOVGDh
+	dydCN8bIWbySzUAwq+ry1F7IJLRk0j29ZWsSsOyV2nqkVymkydyHYeD6H462m0p3Nq5fbKMRt32
+	wQx+dtYoC6s8j+34bbxn4cBjtJSzhVZC4pH1qZ7HQeWxfEf1pbmJTvooJM8aLjQagf1JGKkHyxu
+	xrbsDv9YgesRQPDBFvx5EdEzxh8P69rz+pFI41/ldJSgT3ExUIhW3E3QaTKAO4/PYcP3sx4RruQ
+	Ap2pK/gM+4XzV0UovJwRB6XGkruWno10Hf1b9n9ja8wr1itf30FtCX/Ry/m9nXcZqcGuuJjrkWz
+	gl36cqV9JCMGNRvrd
+X-Received: by 2002:a17:906:fd84:b0:b9e:3bd:6ed3 with SMTP id
+ a640c23a62f3a-b9e03bd788amr413611066b.47.1776199628403; Tue, 14 Apr 2026
+ 13:47:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: idxd: Fix use-after-free of idxd_wq
-From: Guixin Liu <kanie@linux.alibaba.com>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
- Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
- Frank Li <Frank.Li@kernel.org>
-Cc: dmaengine@vger.kernel.org, Xunlei Pang <xlpang@linux.alibaba.com>,
- oliver.yang@linux.alibaba.com
-References: <20260414124535.19353-1-kanie@linux.alibaba.com>
-In-Reply-To: <20260414124535.19353-1-kanie@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-9.16 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+References: <20260328191646.312298-1-rosenp@gmail.com> <CAHp75VfXO1acijFMySQTCtYEE9dRyUMk7xJ7ff7m0hgy42g7=A@mail.gmail.com>
+ <CAKxU2N_SXeEgwZ5e1eARpK5jAorx-ycnPdf=Ut2jUvSM2xYZFw@mail.gmail.com>
+ <CAHp75Vdvn9n_qgBsXTBw8mRxdJcrmCi01JfAGz7oTkKQ1uXBmw@mail.gmail.com>
+ <CAKxU2N-QT6KAKzAYDUp_d9ug=1VxHMvegEQDbxS4GumH+8QBWg@mail.gmail.com>
+ <CAHp75Vf_Q4OqYgEOBhoFxpKpAkw5_+GJxQCTbA6LnbR0xhOnMA@mail.gmail.com> <ad415SF1zIrCof8W@ashevche-desk.local>
+In-Reply-To: <ad415SF1zIrCof8W@ashevche-desk.local>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Tue, 14 Apr 2026 13:46:57 -0700
+X-Gm-Features: AQROBzCICMG8Zo6fYMVai50qbGVhi3q2wK0diZ3X13vuWCIcE4K4JnPpYpjQdUM
+Message-ID: <CAKxU2N-xb8CKuwxAXMhix9BH31UBSBLwAkxXiewyUQ=t0BsOTQ@mail.gmail.com>
+Subject: Re: [PATCHv2] dmaengine: hsu: use kzalloc_flex()
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, dmaengine@vger.kernel.org, 
+	Andy Shevchenko <andy@kernel.org>, Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	"open list:INTEL MID (Mobile Internet Device) PLATFORM" <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10013-lists,dmaengine=lfdr.de];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10014-lists,dmaengine=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kanie@linux.alibaba.com,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:dkim,linux.alibaba.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,alibaba.com:email]
-X-Rspamd-Queue-Id: 03EF93FA679
+	RCPT_COUNT_SEVEN(0.00)[10];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,intel.com:email,mail.gmail.com:mid,gnu.org:url]
+X-Rspamd-Queue-Id: 14C753FE72E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Well, I found that after this change, there is
-another warning call trace:
-
-sysfs group 'power' not found for kobject 'wq6.0'
-WARNING: CPU: 74 PID: 15364 at fs/sysfs/group.c:282 
-sysfs_remove_group+0xfb/0x150
-[  185.957323] Call Trace:
-[  185.957325]  <TASK>
-[  185.957327]  device_del+0x1f4/0x990
-[  185.957335]  ? __pfx_device_del+0x10/0x10
-[  185.957338]  ? device_del+0x69a/0x990
-[  185.957341]  ? rwsem_wake.isra.0+0xcb/0x120
-[  185.957348]  device_unregister+0x13/0xa0
-[  185.957351]  idxd_unregister_devices+0xb3/0x320 [idxd]
-[  185.957373]  idxd_remove+0x4f/0x1b0 [idxd]
-[  185.957383]  pci_device_remove+0xa7/0x1d0
-[  185.957390]  device_release_driver_internal+0x391/0x560
-[  185.957395]  ? pci_pme_active+0x1e/0x450
-[  185.957399]  pci_stop_bus_device+0x10a/0x150
-[  185.957405]  pci_stop_and_remove_bus_device_locked+0x16/0x30
-...
-
-Please ignore this patch...
-
-Best Regards,
-Guixin Liu
-
-在 2026/4/14 20:45, Guixin Liu 写道:
-> We found an idxd_wq use-after-free issue with kasan:
-> Use location:
-> BUG: KASAN: slab-use-after-free in idxd_device_drv_remove+0x1f8/0x240 [idxd]
-> Call Trace:
->    <TASK>
->    dump_stack_lvl+0x32/0x50
->    print_address_description.constprop.0+0x2c/0x390
->    ? idxd_device_drv_remove+0x1f8/0x240 [idxd]
->    print_report+0xba/0x280
->    ? kasan_addr_to_slab+0x9/0xa0
->    ? idxd_device_drv_remove+0x1f8/0x240 [idxd]
->    kasan_report+0xab/0xe0
->    ? idxd_device_drv_remove+0x1f8/0x240 [idxd]
->    idxd_device_drv_remove+0x1f8/0x240 [idxd]
->    device_release_driver_internal+0x391/0x560
->    bus_remove_device+0x1f5/0x3f0
->    device_del+0x392/0x990
->    ? __pfx_device_del+0x10/0x10
->    ? kobject_cleanup+0x117/0x360
->    ? idxd_unregister_devices+0x229/0x320 [idxd]
->    device_unregister+0x13/0xa0
->    idxd_remove+0x4f/0x1b0 [idxd]
->    pci_device_remove+0xa7/0x1d0
->    device_release_driver_internal+0x391/0x560
->    ? pci_pme_active+0x1e/0x450
->    pci_stop_bus_device+0x10a/0x150
->    pci_stop_and_remove_bus_device_locked+0x16/0x30
->    remove_store+0xcf/0xe0
+On Tue, Apr 14, 2026 at 5:41=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
 >
-> Freed by task 15535:
->    kasan_save_stack+0x1c/0x40
->    kasan_set_track+0x21/0x30
->    kasan_save_free_info+0x27/0x40
->    ____kasan_slab_free+0x171/0x240
->    slab_free_freelist_hook+0xde/0x190
->    __kmem_cache_free+0x19e/0x310
->    device_release+0x98/0x210
->    kobject_cleanup+0x102/0x360
->    idxd_unregister_devices+0xb3/0x320 [idxd]
->    dxd_remove+0x3f/0x1b0 [idxd]
->    pci_device_remove+0xa7/0x1d0
->    device_release_driver_internal+0x391/0x560
->    pci_stop_bus_device+0x10a/0x150
->    pci_stop_and_remove_bus_device_locked+0x16/0x30
->    remove_store+0xcf/0xe0
+> On Wed, Apr 01, 2026 at 04:32:13PM +0300, Andy Shevchenko wrote:
+> > On Wed, Apr 1, 2026 at 12:31=E2=80=AFAM Rosen Penev <rosenp@gmail.com> =
+wrote:
+> > > On Mon, Mar 30, 2026 at 9:29=E2=80=AFPM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Mon, Mar 30, 2026 at 11:41=E2=80=AFPM Rosen Penev <rosenp@gmail.=
+com> wrote:
+> > > > > On Mon, Mar 30, 2026 at 1:46=E2=80=AFAM Andy Shevchenko
+> > > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > > On Sat, Mar 28, 2026 at 9:17=E2=80=AFPM Rosen Penev <rosenp@gma=
+il.com> wrote:
 >
-> In the idxd_remove() flow, when execution reaches
-> idxd_unregister_devices(), all idxd_wq instances have already been
-> freed. Subsequently, when device_unregister(idxd_confdev(idxd)) is
-> executed, it calls into idxd_device_drv_remove() which accesses the
-> already-freed idxd_wq. This fix resolves the issue by swapping the order
-> of these two operations.
+> ...
 >
-> Fixes: 98da0106aac0d ("dmanegine: idxd: fix resource free ordering on driver removal")
-> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-> ---
->   drivers/dma/idxd/init.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > > -       hsu =3D devm_kzalloc(chip->dev, sizeof(*hsu), GFP_KER=
+NEL);
+> > > > > > > +       /* Calculate nr_channels from the IO space length */
+> > > > > > > +       nr_channels =3D (chip->length - chip->offset) / HSU_D=
+MA_CHAN_LENGTH;
+> > > > > > > +       hsu =3D devm_kzalloc(chip->dev, struct_size(hsu, chan=
+, nr_channels), GFP_KERNEL);
+> > > > > > >         if (!hsu)
+> > > > > > >                 return -ENOMEM;
+> > > > > > >
+> > > > > > > -       chip->hsu =3D hsu;
+> > > > > > > -
+> > > > > > > -       /* Calculate nr_channels from the IO space length */
+> > > > > > > -       hsu->nr_channels =3D (chip->length - chip->offset) / =
+HSU_DMA_CHAN_LENGTH;
+> > > > > > > +       hsu->nr_channels =3D nr_channels;
+> > > > > > >
+> > > > > > > -       hsu->chan =3D devm_kcalloc(chip->dev, hsu->nr_channel=
+s,
+> > > > > > > -                                sizeof(*hsu->chan), GFP_KERN=
+EL);
+> > > > > > > -       if (!hsu->chan)
+> > > > > > > -               return -ENOMEM;
+> > > > > > > +       chip->hsu =3D hsu;
+> > > > > >
+> > > > > > Don't know these _flex() APIs enough, but can we leave the chip=
+->hsu =3D
+> > > > > > hsu; in the same place as it's now?
+> > > > > __counted_by requires the first assignment after allocation to be=
+ the
+> > > > > counting variable. The _flex macros do this automatically for GCC=
+15
+> > > > > and above.
+> > > >
+> > > > Why? The hsu member has nothing to do with VLA, where is this
+> > > > requirement coming from? My understanding is that the check should
+> > > > imply the minimum sizeof of the data structure and the compiler sho=
+uld
+> > > > know that way before doing any allocations.
+> > > Not sure I follow. This patch changes hsu's chan member to a FAM.
+> > > Where is VLA coming from?
+> >
+> > VLA: variable-length array
+> > FAM: flexible array member
+> > The second one is VLA member + size member.
+> >
+> > What your patch is doing is changing a pointer to VLA member.
+> >
+> > > The current code is devm_kzalloc(x, struct_size()). When it gets
+> > > introduced, I'm sure there will be a treewide conversion to
+> > > devm_kzalloc_flex, which would automatically set the counting variabl=
+e
+> > > for >=3DGCC15.
+> > >
+> > > It's best practice to assign right after since kzalloc_flex does it a=
+nyways.
+> >
+> > Still, I'm not convinced we should blindly follow this rule. The
+> > length needs to be known before accessing the VLA, but it's okay to
+> > access other members. Leaving hsu member assignment where it's now is
+> > fine, no need to move it around.
+> >
+> > > > My understanding seems in align with what Gustavo blogged:
+> > > > https://people.kernel.org/gustavoars/how-to-use-the-new-counted_by-=
+attribute-in-c-and-linux
+> > > >
+> > > > The same is written in the GCC patch description
+> > > > https://gcc.gnu.org/pipermail/gcc-patches/2024-May/653123.html
 >
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index f1cfc7790d95..4f001ef6b1ef 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -1293,7 +1293,6 @@ static void idxd_remove(struct pci_dev *pdev)
->   {
->   	struct idxd_device *idxd = pci_get_drvdata(pdev);
->   
-> -	idxd_unregister_devices(idxd);
->   	/*
->   	 * When ->release() is called for the idxd->conf_dev, it frees all the memory related
->   	 * to the idxd context. The driver still needs those bits in order to do the rest of
-> @@ -1303,6 +1302,7 @@ static void idxd_remove(struct pci_dev *pdev)
->   	 */
->   	get_device(idxd_confdev(idxd));
->   	device_unregister(idxd_confdev(idxd));
-> +	idxd_unregister_devices(idxd);
->   	idxd_shutdown(pdev);
->   	idxd_device_remove_debugfs(idxd);
->   	perfmon_pmu_remove(idxd);
-
+> If you agree with my reasoning, please send a v4, I will give you a tag.
+>
+> Otherwise I really would like to understand the justification why the
+> assignment going first is the best practice and how it may help the devel=
+oper.
+Merge window is closed right now AFAIK.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 

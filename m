@@ -1,231 +1,200 @@
-Return-Path: <dmaengine+bounces-10010-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10011-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gGvFEoP73WkRmAkAu9opvQ
-	(envelope-from <dmaengine+bounces-10010-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 10:32:03 +0200
+	id ePIxNvE13mkRpQkAu9opvQ
+	(envelope-from <dmaengine+bounces-10011-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 14:41:21 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 894583F7590
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 10:32:02 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id C50A23FA11A
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 14:41:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 121A1301DC0F
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 08:28:22 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B296A300FEFC
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2026 12:41:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDDE93A1A5C;
-	Tue, 14 Apr 2026 08:28:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6E3F3E6388;
+	Tue, 14 Apr 2026 12:41:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="refL2xOD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BQ9Vvq38"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7E03A3822
-	for <dmaengine@vger.kernel.org>; Tue, 14 Apr 2026 08:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D30C3E5ECE;
+	Tue, 14 Apr 2026 12:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776155299; cv=none; b=saTgewIMg+dv6oOmjgdiWiMwnhPpXehXjJEP8Fx2XCPo68HNg3B9hsnBg+k55L/PDC+GNNbu2F6S/9CGUvOi5wHYrRKrGMT0SOh2GHzUlzo7cWgzbRGRsCNaHwFOt+GrRGgTsu4sSiY+AcugXD2UlaT+ALux44Uj17Fp1uginHs=
+	t=1776170475; cv=none; b=OZWWgtAkLvkVPbMQN5qz6jp/na24AcTVDHpJkAKYi74VP1LRkFBpkrDC4v8OaGb/gXIPJ0lSFQ+opLcPu2HVHW/ceBjVAqI6Iq5my0ZcILKY3s302XuUcjbvIXw2cg753cBkoLBjsAhYNLdOndauKv21mpIiw2IpXaU/2B6C18Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776155299; c=relaxed/simple;
-	bh=A0A0SRk1zjT+GpcK54V4mSJXuPt0aQvZfkQIiF5d4Xc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CzkKSnocVeXJTEB9Y2iadC4+nhxguDHfLXl9RIBDuZIfyq4y1BE0jh8+yWwWXnYGNGY9tBmLjfvqSWa3CkKr+z7aSYH0w1KYYimDuwfK8SL1e1lcvwZY4QZbAsFRRKfIuiMWrIKVl5HSJTOnwiq/eBSjI6IvsGUTdFi/3VGV9ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=refL2xOD; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-488c2690057so51511135e9.0
-        for <dmaengine@vger.kernel.org>; Tue, 14 Apr 2026 01:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1776155297; x=1776760097; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uelHwNikEBg5tHyCN4f5ieipMicy2BHQBsPBzqFR0dE=;
-        b=refL2xODmskYXu30XW1dHd0e1WwGAUfj2qGO13omkKc9jVT/bTa8n7VbqgXlm9HFwI
-         WNXAVy+URJH8V0O01i0wr+hPAOqZjevCLdXhkoWKQ+u3hTCRsLiap6bXSw69/Q/qAaUH
-         y06x5/YwO8d1webNJa7vZLOlaSPIatZ93WyqCxUefiSmqrJf990VNGf+6eqfFzpTqHyP
-         I5i4GgeDZfGd/YGvt3lruBn5mb+jUuODAB0ZRZ4tOXvTY73QjuvyzbJKHc18A8PHYrYJ
-         kqq5KUjNNxQhQYhJp+59KpFeC2TcDO4uWorkW8gVvwCidT+7LlTU+QXfQ/HnfR0ed1OC
-         HYdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776155297; x=1776760097;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uelHwNikEBg5tHyCN4f5ieipMicy2BHQBsPBzqFR0dE=;
-        b=kbJDMcE9DU3Ks0mgZNMv7nohQbTvpy0PF1gLogE8EJ/zya4Xnl9nOgfRyRNG2DRUkH
-         qy7SRLGKberg7xZdUnWWOHP/+afz/vSoznF5fZpGMzcWCH/kiS2GnMCRWp8Rs+yHpaDH
-         MbBc5uY9EOTzwE1RY6RJTY6TXDWVtr/hfgGeAOmTofkYKiNKvU6io39TPb6xfRxE7UPk
-         kgI9ltCBnlWxBdkYiBan7bOR3rpqXJ1c4iLBDyd65GtVO7RB/JYo71z6QUClYWMVCnEW
-         3SEadIiuNtfVfhCA/7D5S6Cu81DNsKVY5JXPbuC93DHMJ3cwRJVjZDfop/p84zYoR4nS
-         VFTw==
-X-Gm-Message-State: AOJu0Yy4otT3QCWqdy34mL+vK/ExL+NshQIOCC2ktwAQGXZ5As0bmFE1
-	FzS6CAUuWB/LjmhmepQxGCWYGYPqxJwjWEE1aY4lML9gQw5a9q3CiJDbpkccO6QbMAQ=
-X-Gm-Gg: AeBDievG3ZbvHDd+OWT3z2Y9R3gY70RfVP1tb3hrI+58SiPKnvn2EL/t9DB5DlKg6kE
-	d4onWRs84Gyry1pk5rWnvlLVSU/usI6+OuNbiQAmWU82nvO+kiQPK3SlT4BNn/0zq4U9uNG/KiS
-	iEMfMGRBfmmFfBCuandaE0DJNdecTF8LyTO1QeRvvkJsGRyq15hAb571bme7jHzryc+CtsLup89
-	Z+iRp3O4GAeA5D740oi6OnO/N0bqnfgjp5Gh/wZ5LjPvcu/PnIV/WVHjJvBSO5weuIyYyBndZJA
-	xNEEb9ZMDGXwTbB2E3IZbA4NiK3FtLTTmwL4THYY0DScfmj45kQCsb/Uesdb/y5HD4ql1R+/G2q
-	OrOHOLf0AIZuGiOr74zFthyRdJm/wFzrvAbJV2F4xFkPGQhprylpJaB3d8XMI2NEiEj1iQX+Y2g
-	f4xeMPsx2u+3dnY5tqcbBc7FQQN0YzAfg=
-X-Received: by 2002:a05:600c:528c:b0:488:a2ac:a337 with SMTP id 5b1f17b1804b1-488d68c2bffmr213398185e9.21.1776155296847;
-        Tue, 14 Apr 2026 01:28:16 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.123])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488ec77508csm54500935e9.0.2026.04.14.01.28.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2026 01:28:16 -0700 (PDT)
-Message-ID: <a2362c89-e9ea-4c11-80ac-b65786da1e32@tuxon.dev>
-Date: Tue, 14 Apr 2026 11:28:13 +0300
+	s=arc-20240116; t=1776170475; c=relaxed/simple;
+	bh=G8U+4WpNt4in0UMMQOdtgMiZYV2gUKxHt4bziHo0gnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V31UxOjtQzYow6Z0Up4ajw0KoMS921uV0GxCL3lgMMqBAf2TpJN+MUi+uIzeWn8abV+tpo6L6BKprZ1UmKOqyJ3cpp9xSElKts2SgQhZRkG+XMeXJbG/IU9Os2a8K/BS48cddjQDrDsOo5TUkp/S8wxLatPDybz8LbtYn4LSLCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BQ9Vvq38; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776170474; x=1807706474;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=G8U+4WpNt4in0UMMQOdtgMiZYV2gUKxHt4bziHo0gnw=;
+  b=BQ9Vvq38Yb+j00XpFbLYr7k96Uuw2fV9mMTGtbGEmMLpFyhqOYOsQB7a
+   vQkOo+EHIqmHao0oc6q43DVNgIqFRi8JOcIoEtxoz2zbyPz2BgunmcqLl
+   kfxCcxIehFH/1jPDmMVRaDMXjy3VbAyZEL4PzxPGHPfNkKlekvr4V2zTR
+   w6Yuk1sgMzVAARTDMIhAxqgS466Vp8r/vu4/DkEjZqdvUBoZ4Fb7I6K/4
+   eNtXaAKBIoFcF4xrgCDxLWea8LSD6kRW/TxnSIRzXKXa4VkDZTtahGseY
+   RAI4I6FPr6Jm/rNFs1zeVulikUIPzWbAkzP+PbJn1rKSJ107tcDV9oM/8
+   A==;
+X-CSE-ConnectionGUID: NU5QM2OgR8am53KoFHwcZw==
+X-CSE-MsgGUID: cLaMj8XNTPKCfYF66yUgRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11759"; a="77002554"
+X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
+   d="scan'208";a="77002554"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2026 05:41:13 -0700
+X-CSE-ConnectionGUID: Akqxntp1TEC0Sj8nmTzS0g==
+X-CSE-MsgGUID: MhslQKxFTZebrRUR0gjwBw==
+X-ExtLoop1: 1
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.106])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2026 05:41:11 -0700
+Date: Tue, 14 Apr 2026 15:41:09 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rosen Penev <rosenp@gmail.com>, dmaengine@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"open list:INTEL MID (Mobile Internet Device) PLATFORM" <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCHv2] dmaengine: hsu: use kzalloc_flex()
+Message-ID: <ad415SF1zIrCof8W@ashevche-desk.local>
+References: <20260328191646.312298-1-rosenp@gmail.com>
+ <CAHp75VfXO1acijFMySQTCtYEE9dRyUMk7xJ7ff7m0hgy42g7=A@mail.gmail.com>
+ <CAKxU2N_SXeEgwZ5e1eARpK5jAorx-ycnPdf=Ut2jUvSM2xYZFw@mail.gmail.com>
+ <CAHp75Vdvn9n_qgBsXTBw8mRxdJcrmCi01JfAGz7oTkKQ1uXBmw@mail.gmail.com>
+ <CAKxU2N-QT6KAKzAYDUp_d9ug=1VxHMvegEQDbxS4GumH+8QBWg@mail.gmail.com>
+ <CAHp75Vf_Q4OqYgEOBhoFxpKpAkw5_+GJxQCTbA6LnbR0xhOnMA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/17] dmaengine: sh: rz-dmac: Do not disable the
- channel on error
-To: Biju Das <biju.das.jz@bp.renesas.com>, "vkoul@kernel.org"
- <vkoul@kernel.org>, "Frank.Li@kernel.org" <Frank.Li@kernel.org>,
- "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
- "broonie@kernel.org" <broonie@kernel.org>, "perex@perex.cz"
- <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>,
- Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "geert+renesas@glider.be" <geert+renesas@glider.be>,
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- Long Luu <long.luu.ur@renesas.com>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20260411114303.2814115-1-claudiu.beznea.uj@bp.renesas.com>
- <20260411114303.2814115-6-claudiu.beznea.uj@bp.renesas.com>
- <TY3PR01MB11346923D8D18E79A9F7AC10086262@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Content-Language: en-US
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <TY3PR01MB11346923D8D18E79A9F7AC10086262@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vf_Q4OqYgEOBhoFxpKpAkw5_+GJxQCTbA6LnbR0xhOnMA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[tuxon.dev:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10010-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[bp.renesas.com,kernel.org,gmail.com,perex.cz,suse.com,pengutronix.de,glider.be,renesas.com];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[tuxon.dev];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	DKIM_TRACE(0.00)[tuxon.dev:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@tuxon.dev,dmaengine@vger.kernel.org];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org];
+	TAGGED_FROM(0.00)[bounces-10011-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FREEMAIL_TO(0.00)[gmail.com];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,tuxon.dev:dkim,tuxon.dev:email,tuxon.dev:mid,renesas.com:email]
-X-Rspamd-Queue-Id: 894583F7590
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,gnu.org:url,intel.com:dkim,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C50A23FA11A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Wed, Apr 01, 2026 at 04:32:13PM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 1, 2026 at 12:31 AM Rosen Penev <rosenp@gmail.com> wrote:
+> > On Mon, Mar 30, 2026 at 9:29 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Mon, Mar 30, 2026 at 11:41 PM Rosen Penev <rosenp@gmail.com> wrote:
+> > > > On Mon, Mar 30, 2026 at 1:46 AM Andy Shevchenko
+> > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > On Sat, Mar 28, 2026 at 9:17 PM Rosen Penev <rosenp@gmail.com> wrote:
 
+...
 
-On 4/11/26 15:30, Biju Das wrote:
+> > > > > > -       hsu = devm_kzalloc(chip->dev, sizeof(*hsu), GFP_KERNEL);
+> > > > > > +       /* Calculate nr_channels from the IO space length */
+> > > > > > +       nr_channels = (chip->length - chip->offset) / HSU_DMA_CHAN_LENGTH;
+> > > > > > +       hsu = devm_kzalloc(chip->dev, struct_size(hsu, chan, nr_channels), GFP_KERNEL);
+> > > > > >         if (!hsu)
+> > > > > >                 return -ENOMEM;
+> > > > > >
+> > > > > > -       chip->hsu = hsu;
+> > > > > > -
+> > > > > > -       /* Calculate nr_channels from the IO space length */
+> > > > > > -       hsu->nr_channels = (chip->length - chip->offset) / HSU_DMA_CHAN_LENGTH;
+> > > > > > +       hsu->nr_channels = nr_channels;
+> > > > > >
+> > > > > > -       hsu->chan = devm_kcalloc(chip->dev, hsu->nr_channels,
+> > > > > > -                                sizeof(*hsu->chan), GFP_KERNEL);
+> > > > > > -       if (!hsu->chan)
+> > > > > > -               return -ENOMEM;
+> > > > > > +       chip->hsu = hsu;
+> > > > >
+> > > > > Don't know these _flex() APIs enough, but can we leave the chip->hsu =
+> > > > > hsu; in the same place as it's now?
+> > > > __counted_by requires the first assignment after allocation to be the
+> > > > counting variable. The _flex macros do this automatically for GCC15
+> > > > and above.
+> > >
+> > > Why? The hsu member has nothing to do with VLA, where is this
+> > > requirement coming from? My understanding is that the check should
+> > > imply the minimum sizeof of the data structure and the compiler should
+> > > know that way before doing any allocations.
+> > Not sure I follow. This patch changes hsu's chan member to a FAM.
+> > Where is VLA coming from?
 > 
+> VLA: variable-length array
+> FAM: flexible array member
+> The second one is VLA member + size member.
 > 
->> -----Original Message-----
->> From: Claudiu <claudiu.beznea@tuxon.dev>
->> Sent: 11 April 2026 12:43
-> -soc@vger.kernel.org; Claudiu Beznea
->> <claudiu.beznea.uj@bp.renesas.com>
->> Subject: [PATCH v4 05/17] dmaengine: sh: rz-dmac: Do not disable the channel on error
->>
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> Disabling the channel on error is pointless, as if other transfers are queued, the IRQ thread will be
->> woken up and will execute them anyway by calling rz_dmac_xfer_desc().
->>
->> rz_dmac_xfer_desc() re-enables the transfer. Before doing so, it sets CHCTRL.SWRST, which clears
->> CHSTAT.DER and CHSTAT.END anyway.
->>
->> Skip disabling the DMA channel and just log the error instead.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->> ---
->>
->> Changes in v4:
->> - none
->>
->> Changes in v3:
->> - none, this patch is new
->>
->>   drivers/dma/sh/rz-dmac.c | 4 ----
->>   1 file changed, 4 deletions(-)
->>
->> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c index 40ddf534c094..943c005f52bd
->> 100644
->> --- a/drivers/dma/sh/rz-dmac.c
->> +++ b/drivers/dma/sh/rz-dmac.c
->> @@ -871,10 +871,6 @@ static void rz_dmac_irq_handle_channel(struct rz_dmac_chan *channel)
->>   	if (chstat & CHSTAT_ER) {
->>   		dev_err(dmac->dev, "DMAC err CHSTAT_%d = %08X\n",
->>   			channel->index, chstat);
->> -
->> -		scoped_guard(spinlock_irqsave, &channel
-> ->vc.lock)
->> -			rz_dmac_disable_hw(channel);
+> What your patch is doing is changing a pointer to VLA member.
 > 
-> On previous patch, rz_dmac_disable_hw() for initializing each register
+> > The current code is devm_kzalloc(x, struct_size()). When it gets
+> > introduced, I'm sure there will be a treewide conversion to
+> > devm_kzalloc_flex, which would automatically set the counting variable
+> > for >=GCC15.
+> >
+> > It's best practice to assign right after since kzalloc_flex does it anyways.
 > 
-> +	/* Initialize register for each channel */
-> +	rz_dmac_disable_hw(channel);
-
-This initializes a single register by clearing various bits.
-
+> Still, I'm not convinced we should blindly follow this rule. The
+> length needs to be known before accessing the VLA, but it's okay to
+> access other members. Leaving hsu member assignment where it's now is
+> fine, no need to move it around.
 > 
-> 
-> As per hardware manual,
-> 
-> Once an error occurs, the data of the whole transfer cannot be guaranteed.
-> Be sure to start the transaction again from the
-> beginning by following the procedure below.
-> 1. Set 1 in the SWRST bit of the CHCTRL_n/nS register.
-> 2. Set each register again.
+> > > My understanding seems in align with what Gustavo blogged:
+> > > https://people.kernel.org/gustavoars/how-to-use-the-new-counted_by-attribute-in-c-and-linux
+> > >
+> > > The same is written in the GCC patch description
+> > > https://gcc.gnu.org/pipermail/gcc-patches/2024-May/653123.html
 
-I wasn't aware of this sequence. Thank for pointing it. However, calling 
-rz_dmac_disable_hw() as it previously was may be wrong from my point of view. 
-According to the sequence you pointed, I think the code here should have only 
-set the SWRST, if any, and let the rz_dmac_xfer_desc() "set each register 
-again". According to "Figure 14.26 Setting Example 4", of RZ/G3S HW manual, rev 
-1.20, the registers that need to be set when starting DMAC ch in Link mode are:
+If you agree with my reasoning, please send a v4, I will give you a tag.
 
-- DCTRL = 0x1
-- NXLA = 0x1000
-- CHCFG = 0x80000000
-- CHCTRL = 0x8 // swreset
-- CHCTRL = 0x5 // enable
+Otherwise I really would like to understand the justification why the
+assignment going first is the best practice and how it may help the developer.
 
-So, I think these are the registers that need to be re-configured again (handled 
-though the rz_dmac_xfer_desc()).
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Anyway, I'll drop this patch from the next version, as it is not the subject of 
-cyclic DMA.
 
-Thank you,
-Claudiu
 

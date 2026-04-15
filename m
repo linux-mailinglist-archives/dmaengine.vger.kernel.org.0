@@ -1,266 +1,135 @@
-Return-Path: <dmaengine+bounces-10016-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10017-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +Ah8D9MF32lLNwAAu9opvQ
-	(envelope-from <dmaengine+bounces-10016-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 05:28:19 +0200
+	id rS3XLicZ32ktOwAAu9opvQ
+	(envelope-from <dmaengine+bounces-10017-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 06:50:47 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 999583FFFB9
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 05:28:18 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24295400406
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 06:50:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7D6C03018D71
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 03:28:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6658B303E127
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 04:49:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8E27314B9A;
-	Wed, 15 Apr 2026 03:28:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8442E2D5926;
+	Wed, 15 Apr 2026 04:49:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="scHr2tsG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G4JWSjNS"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CB4313532
-	for <dmaengine@vger.kernel.org>; Wed, 15 Apr 2026 03:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F92918AFE;
+	Wed, 15 Apr 2026 04:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776223695; cv=none; b=ApXMzoF0V9rrv2c1SR7HcWL2x/Xuo+NFLWL/DSi66yf7BrzqNWzwvRTvUOdV2vTcCHzkaeKMAD0JhyWZ6lsdZ/I9tTufL5DBMIsaaOKOc7ZgZDX+VYAvW7joV4Czz7wtJ5RP9+8FLbK6KV1L9cYjdIXtWXbc2Uw97Hv2XeaGFAQ=
+	t=1776228571; cv=none; b=BqPJtLFmpYLhvEkGuB9z5sk8xjg9q3vfOSODbRPgc7xN21dTjdYABbqQmw9SrEOn4ETqbkIgukKcerwwLW2oMTLIbDbOJl46frvDSiUKY5qvXy3nSfuTlI5rjzDjX6JZ2MgYAVzKmqyUOGLVtwAuqTMXw9V3alPGt6RwU4/ni8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776223695; c=relaxed/simple;
-	bh=tCSW40mdJktOK1h1VfrP3QQE4ZWe+0q0/kLHOByHApk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GTAPXA1qu2nMCeSh6A0tWoTcXprFVdQy/+NgEBHOgajkaZgOYS1VI2lkPNF3/QuYcBSIQcyTqW3UzpkGUH8aOjNwoDmMyRBv7sgEdWR8Yd0KDJ3Adx+U/BZJEA9CbXMejy/CkyEIi3mJkAlvR3k+Vof4QApSOJ5DvqktlaboR8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=scHr2tsG; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8d67a483d3eso672259985a.1
-        for <dmaengine@vger.kernel.org>; Tue, 14 Apr 2026 20:28:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776223693; x=1776828493; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rLKjOgt0prGno2etyoUy7FVuq/6O60livyoOWpMDLDg=;
-        b=scHr2tsGPNkK0eklazc83dke/VS8irTYyGPxqKBfopPNepWMbvV1fpaf3p580DjFEm
-         5rMXdhaysAAsPgts9ydlq4uyDJUJ6RNIvTR1Yv+3qwYvjjWljVoDv8TdO2OiMYJYRAnU
-         +Xldqv0bawAhi07m21K5vtdwMWJDgc3SeVvEJE9xGRDVogJWypYSRx5oUPMQJYH1wo8H
-         y207mW+yyiBzEuDmVUfCvK9QBokXDZfelieqPWMISNAKCZSvkbMWcSn7A/+htwsvLLvB
-         yCJFq7eaSjAMqANQnS6VLVCydPbPPDvkwx7aXPT/riVTe/CHd2XUrp7o99SKX1+KT+r9
-         DVZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776223693; x=1776828493;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rLKjOgt0prGno2etyoUy7FVuq/6O60livyoOWpMDLDg=;
-        b=JPDkNuTK+eWJ4bT5+cNgpIpoRjLBdX5xEEAq/zMeYhKZwwCLJoHylbBsk6FfTU64Ax
-         +RelkmFw/U81RspnqkFI3iA/yGCEejqorHQFgOvMsAjYz6mJiUSKw9quoNV8Msqd/s1M
-         4ZxV1KB4mondXWA06lBAXqVFdapuh1uPI3QSdw/lV0kosfGDQChOOnLX4m9GmphqbgvE
-         Sjnk6LPw3aCDFKttk8QhEwqP3FdDO7xKtna8+sZTxd8p6yosMtBu+AQcTjZP505WIOiF
-         V6RV+U/J1VqjqF2odcAp2L0nW5dk5Z9uC8kEYcuKV7V8JC2dygnLZ9XxApLZNo9oYLJV
-         uq1w==
-X-Gm-Message-State: AOJu0YwcRKLOWKVqgQ2DTMBoqDsi8uMAoIMXGvZiKAFLn3zOFumeOev3
-	ka24TEqbmRHPLiM+r2xdeUNlopGgxV+0yXkMB6ypzZj6KZ7YfZmC+MsHKCEUAA==
-X-Gm-Gg: AeBDiesuKDZTjpp1lAXjrCYQtZ8y1QG1PhDPky4qZks7zGkpoO+p4ZMgAWhrH7nJHVG
-	uXbFlFQuFTFPQELjjKkYB64i8PYMmR+Z8NJ0HSXK6K1Z7usOFtmgv92gli2xl6qRzZR5UP1Wm4u
-	jjhOABbBIXGtF+SbsRwLKcI/+EeAppegs7B8FLAIagcUT7ngcLazKPqsto6zLHxIy55ZsYfqADL
-	LxYc1ALvyemlsujDhBzbr3oIdMvWqbGugtZesmSyAYesFMm1d64BE27mMPZclhKbI4bxBzS0AxA
-	FrXYf2jbD9z3UaXRzMKbxkLD1GIY4gzL8GHOR7CBZ2VqZ6eIAf4+u5azwEeM5hKlFAv8C0OVYl0
-	Qjpt2vz/pqx8Q5kNsw5Bmv0qepjvdKD1+csCFkiBDwWu/5fJhuyIU0y1FZ4xLKprpl82fwm2OCV
-	nPc/tV84pm/u7wt74lc7+9fA65Z5/wCf4iV5uU7NODfs2vcJN1i+LWQuI=
-X-Received: by 2002:ac8:5f88:0:b0:50d:6838:964c with SMTP id d75a77b69052e-50dd5af0776mr330945371cf.18.1776223693139;
-        Tue, 14 Apr 2026 20:28:13 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d::8bf])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ae6c974c2esm2578556d6.17.2026.04.14.20.28.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2026 20:28:12 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
+	s=arc-20240116; t=1776228571; c=relaxed/simple;
+	bh=P9zel4N4vJ/m7EaNlzsfUxdcYvuyDvrGFljiQLe6NfM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u9eTAK5+Fiqgpm1eapm35yztEy+OOaKd6yFykodANTWxCpyk2v+kPnve5dWAGvPfRLaHX55NRGdbG8q9dXLrrOBWyi4Z2l9Ab+tK0WduZQFGHH5wKewHixlqDvljUTB3z4byiviGeUaEPc1QyAXNVxktocltM0SPcY/j5VPGqnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G4JWSjNS; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776228570; x=1807764570;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=P9zel4N4vJ/m7EaNlzsfUxdcYvuyDvrGFljiQLe6NfM=;
+  b=G4JWSjNSE7CaZlNKEh0KucBIAQbZsRmzEwGV4eUMkl8kX9QPtrTDglJk
+   axaPUAfE47EkiznpaEreP6JP8LjytGJ570q0l3XN9zlZBIUnaQFbj+OUM
+   DWXo1UNUGIU3GcPvr3bLF9KAoobuiv+OWyBz9Q1IlmLQZZscWtDnyxmIs
+   Xft6MMydnOpgERRxFvifx3SO0PaqfnpvYRVcVq6z2/+gBMzYl77sRF5qs
+   O2S/42sVORxs2I+nUah2W9Ji0oItmUFuMo9cNYYMSsn10k+45qqkoebZl
+   m0KYEV9fEMFu7RBbocy8blv9jzzHCZeUcEXuwJb3hK0dJnc2J0TsE1vi+
+   A==;
+X-CSE-ConnectionGUID: t6tmHgJTS0OfGNpyM+QJsA==
+X-CSE-MsgGUID: MgV7DNVqRKygU1PN8XV7UQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11759"; a="77220472"
+X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
+   d="scan'208";a="77220472"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2026 21:49:29 -0700
+X-CSE-ConnectionGUID: hwmshjR5RR+cptQjVspaiw==
+X-CSE-MsgGUID: ZxL9D9PjRPy5uaDr9vjVCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
+   d="scan'208";a="225994423"
+Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.34])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2026 21:49:26 -0700
+Date: Wed, 15 Apr 2026 07:49:23 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: dmaengine@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
 	Kees Cook <kees@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list:INTEL MID (Mobile Internet Device) PLATFORM),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv4] dmaengine: hsu: use kzalloc_flex()
-Date: Tue, 14 Apr 2026 20:27:53 -0700
-Message-ID: <20260415032753.6006-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	"open list:INTEL MID (Mobile Internet Device) PLATFORM" <linux-kernel@vger.kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCHv4] dmaengine: hsu: use kzalloc_flex()
+Message-ID: <ad8Y02LPDO8e8URl@ashevche-desk.local>
+References: <20260415032753.6006-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260415032753.6006-1-rosenp@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10016-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10017-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	TAGGED_RCPT(0.00)[dmaengine];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 999583FFFB9
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,ashevche-desk.local:mid]
+X-Rspamd-Queue-Id: 24295400406
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Simplifies allocations by using a flexible array member in this struct.
+On Tue, Apr 14, 2026 at 08:27:53PM -0700, Rosen Penev wrote:
+> Simplifies allocations by using a flexible array member in this struct.
+> 
+> Remove hsu_dma_alloc_desc(). It now offers no readability advantages in
+> this single usage.
+> 
+> Add __counted_by to get extra runtime analysis.
+> 
+> Apply the exact same treatment to struct hsu_dma and devm_kzalloc().
 
-Remove hsu_dma_alloc_desc(). It now offers no readability advantages in
-this single usage.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-Add __counted_by to get extra runtime analysis.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Apply the exact same treatment to struct hsu_dma and devm_kzalloc().
-
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- v4: move back counting variable assignment, as requested.
- v3: update description.
- v2: address review comments.
- drivers/dma/hsu/hsu.c | 43 +++++++++++--------------------------------
- drivers/dma/hsu/hsu.h |  4 ++--
- 2 files changed, 13 insertions(+), 34 deletions(-)
-
-diff --git a/drivers/dma/hsu/hsu.c b/drivers/dma/hsu/hsu.c
-index f62d60d7bc6b..b1dd4fd1109b 100644
---- a/drivers/dma/hsu/hsu.c
-+++ b/drivers/dma/hsu/hsu.c
-@@ -241,28 +241,10 @@ int hsu_dma_do_irq(struct hsu_dma_chip *chip, unsigned short nr, u32 status)
- }
- EXPORT_SYMBOL_GPL(hsu_dma_do_irq);
-
--static struct hsu_dma_desc *hsu_dma_alloc_desc(unsigned int nents)
--{
--	struct hsu_dma_desc *desc;
--
--	desc = kzalloc_obj(*desc, GFP_NOWAIT);
--	if (!desc)
--		return NULL;
--
--	desc->sg = kzalloc_objs(*desc->sg, nents, GFP_NOWAIT);
--	if (!desc->sg) {
--		kfree(desc);
--		return NULL;
--	}
--
--	return desc;
--}
--
- static void hsu_dma_desc_free(struct virt_dma_desc *vdesc)
- {
- 	struct hsu_dma_desc *desc = to_hsu_dma_desc(vdesc);
-
--	kfree(desc->sg);
- 	kfree(desc);
- }
-
-@@ -276,10 +258,15 @@ static struct dma_async_tx_descriptor *hsu_dma_prep_slave_sg(
- 	struct scatterlist *sg;
- 	unsigned int i;
-
--	desc = hsu_dma_alloc_desc(sg_len);
-+	desc = kzalloc_flex(*desc, sg, sg_len, GFP_NOWAIT);
- 	if (!desc)
- 		return NULL;
-
-+	desc->nents = sg_len;
-+	desc->direction = direction;
-+	/* desc->active = 0 by kzalloc */
-+	desc->status = DMA_IN_PROGRESS;
-+
- 	for_each_sg(sgl, sg, sg_len, i) {
- 		desc->sg[i].addr = sg_dma_address(sg);
- 		desc->sg[i].len = sg_dma_len(sg);
-@@ -287,11 +274,6 @@ static struct dma_async_tx_descriptor *hsu_dma_prep_slave_sg(
- 		desc->length += sg_dma_len(sg);
- 	}
-
--	desc->nents = sg_len;
--	desc->direction = direction;
--	/* desc->active = 0 by kzalloc */
--	desc->status = DMA_IN_PROGRESS;
--
- 	return vchan_tx_prep(&hsuc->vchan, &desc->vdesc, flags);
- }
-
-@@ -428,22 +410,19 @@ int hsu_dma_probe(struct hsu_dma_chip *chip)
- {
- 	struct hsu_dma *hsu;
- 	void __iomem *addr = chip->regs + chip->offset;
-+	unsigned short nr_channels;
- 	unsigned short i;
- 	int ret;
-
--	hsu = devm_kzalloc(chip->dev, sizeof(*hsu), GFP_KERNEL);
-+	/* Calculate nr_channels from the IO space length */
-+	nr_channels = (chip->length - chip->offset) / HSU_DMA_CHAN_LENGTH;
-+	hsu = devm_kzalloc(chip->dev, struct_size(hsu, chan, nr_channels), GFP_KERNEL);
- 	if (!hsu)
- 		return -ENOMEM;
-
- 	chip->hsu = hsu;
-
--	/* Calculate nr_channels from the IO space length */
--	hsu->nr_channels = (chip->length - chip->offset) / HSU_DMA_CHAN_LENGTH;
--
--	hsu->chan = devm_kcalloc(chip->dev, hsu->nr_channels,
--				 sizeof(*hsu->chan), GFP_KERNEL);
--	if (!hsu->chan)
--		return -ENOMEM;
-+	hsu->nr_channels = nr_channels;
-
- 	INIT_LIST_HEAD(&hsu->dma.channels);
- 	for (i = 0; i < hsu->nr_channels; i++) {
-diff --git a/drivers/dma/hsu/hsu.h b/drivers/dma/hsu/hsu.h
-index 3bca577b98a1..f6ca1014bccf 100644
---- a/drivers/dma/hsu/hsu.h
-+++ b/drivers/dma/hsu/hsu.h
-@@ -71,11 +71,11 @@ struct hsu_dma_sg {
- struct hsu_dma_desc {
- 	struct virt_dma_desc vdesc;
- 	enum dma_transfer_direction direction;
--	struct hsu_dma_sg *sg;
- 	unsigned int nents;
- 	size_t length;
- 	unsigned int active;
- 	enum dma_status status;
-+	struct hsu_dma_sg sg[] __counted_by(nents);
- };
-
- static inline struct hsu_dma_desc *to_hsu_dma_desc(struct virt_dma_desc *vdesc)
-@@ -115,8 +115,8 @@ struct hsu_dma {
- 	struct dma_device		dma;
-
- 	/* channels */
--	struct hsu_dma_chan		*chan;
- 	unsigned short			nr_channels;
-+	struct hsu_dma_chan		chan[] __counted_by(nr_channels);
- };
-
- static inline struct hsu_dma *to_hsu_dma(struct dma_device *ddev)
---
-2.53.0
 
 

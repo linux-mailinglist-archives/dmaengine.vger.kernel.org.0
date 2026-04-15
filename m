@@ -1,293 +1,347 @@
-Return-Path: <dmaengine+bounces-10021-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10022-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8PafIyr732ntbAAAu9opvQ
-	(envelope-from <dmaengine+bounces-10021-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 22:55:06 +0200
+	id kADeBMf732ntbAAAu9opvQ
+	(envelope-from <dmaengine+bounces-10022-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 22:57:43 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33705407C46
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 22:55:02 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CA66407C7E
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 22:57:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F2927301D31C
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 20:55:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4A905307BD73
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 20:57:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6535B386C24;
-	Wed, 15 Apr 2026 20:54:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FDB938C2A8;
+	Wed, 15 Apr 2026 20:57:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYvP6ToX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qvrvxP8f"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC00829ACC5
-	for <dmaengine@vger.kernel.org>; Wed, 15 Apr 2026 20:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FB810785;
+	Wed, 15 Apr 2026 20:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776286498; cv=none; b=SsEDs4Wavb72CKuks8HIKV2EDiJXp1WctvdRaEjhykUuF+z4l9YFRf7VIGCjWcwfD+fBDc1w3J3VSfb4LDAwavUCnfmCgGBg6hRFU4dNsCeKKXR4L/oNj8B4VqkQh/hpw5E0Sb7/6v+wkJpgj9F0BHfa7DgE+x8RJv6GUfjmcFs=
+	t=1776286656; cv=none; b=apgzXLKnTz6NrMGalQ449Xu8FGs1DfEdPE26apA0/QKpv2kly3HNUMIhU+2T4MmRuNPqwV2FRGe1edVioJfoeWNW+h5JaZPTI9zh9Ij9zo92lo6ErrnPyN9txg5oGu+IDBxq7F1i8eur+Cx5rTcyDTyNs5IFWb+CalUGg5sd6Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776286498; c=relaxed/simple;
-	bh=CIig0oQq5yHGW+pYesGTtuB+dPuvghH25hD6RPj7nUY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U/ZcdFt16U71bOVtVill/vp4VE8PlQDo9Fk8WZwS24OdRhiq7sGEBIjRBzhrYO2pF+4M7bSL4p16MfzP1z/5sm5rQKOOQfs7QbmrmrL8MZX1T/eX42xdrS3C9/2hlG/9wTRwHoFDaEObsNTRTKFQVv0NHTzHWf7Jwgnl0j9GV9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rYvP6ToX; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-50d6b9bca48so94958571cf.2
-        for <dmaengine@vger.kernel.org>; Wed, 15 Apr 2026 13:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776286496; x=1776891296; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5wI9Om12pRgMIyRltB1FE+/OLTEU+POmfWziZVV+KeU=;
-        b=rYvP6ToXuc9Ym/knEVfkwS/dZ5c9HuVkuq3uIDElWdeVOrPTbGaT2MyWgk4ojqGYL4
-         AlqyqND2SHga5Gqeev9hAKZ9CO/0ANb4EKyYCus/QPl2G3elveF3uGHUYhsWIgkFBtWB
-         kJbg+6G+j2jfkglq8R2W4lw1JSdHXYdKvk+a5ou3/qcwwZ1pfV0hjd3MkcyqVlF5c0Fl
-         xjQSnV8lieAKrMcx1KEwHCw5Y8D1zebRrIyjkVs5KnO1Ys3D6v2Wn+t6BkFbwzT51cbn
-         c7Evd+88RN0SMF8s8JJzBAxuZpgEwHOOb62MjGA/lJZ3x+xfRUageFVNQ5eHkgnWNf84
-         BKVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776286496; x=1776891296;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5wI9Om12pRgMIyRltB1FE+/OLTEU+POmfWziZVV+KeU=;
-        b=L3PZikOdhyZnJQRx8+71AzzGFlL/W6lAz1N358XCrgTPJfgbLAmABfEsTfNnATl2YP
-         jxSiuKuIehsey6HJWwUz1Bad7aT7YPHXJ0H3y6UR7/NjoX7E8FPihN6JC5eAnU28WLZS
-         6b6lA9uNUAmZHscsrecsnqLcACxSHU7Nu5z0eYH336siNfq7Ue5QDkaog4bmoqdMuFMy
-         /bOX8z1N953G9g5VrEqdJWzHPbMRiQpSH/R8LAy0aN4qvBh+okv/LQ5aeVN8SH5fkXNd
-         vUoYx4g/WOC+O8Vgy2MiqiAQX/d0PZ7NZtoKGNFmVRQ01seUPbrAP2TBbnxCDsiIG4M+
-         EgNQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/DK0FYIIe31ztyzlwlLeDfzC1LKju/+YElZfBgKvyRD1z5LntVBrL1dQhwgan8AHMqn/HSmFblOpg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7YkgCYLQTbBOZtb+o29BXMKCugaLuLMLcSABUAJCloqM5e9MK
-	3imURxnEFBh+QowyXb4an/CwUfWkronpvVk5JWmH8YGb48GB1urVxpve
-X-Gm-Gg: AeBDietH62Xy2ZX7e75TCs/SS91Y8nVpkBcO7zpgGqTO0ut5nl4Hnm9edf4QfQUuTrZ
-	Wa6KU5FssIoaWrVsUm3UQIV0qxoVJlDvyoEKGjklnkguqzvpWKojJz9liPQpaQY7JfHat+IKEDa
-	9EH08e/gGMTuv/dpn+J1Mv2mQCnITkWtpI+isiOV3EWfAxvZe9ESH7nYtpW7fS+6Di6GlQSeK+M
-	eCLY7reHOQpEbnXQLCsu5aYqeTBR4QOVWuTb0OkKQcyAetl5QGDiHcircn5LRbXzWN/k3LRWCP7
-	qGTD6Hc4m3sufs4HLGRSpDiMnphm7vKlL02+U+wBVcw60P20+vbM2I5Wh3F0AH3cMBp9Xwnkzrr
-	MhEYdAaKex4Z1FEbSZLuNfJd9HWohXgjWT8v1l9XD0ho1+qGB8lkCXvhR5Q4qe8g+0Q5ks5fAp3
-	KQu/EaZhxv6sSfjKxXEO5Zmtaka5ZEYcvgFyN7FgUHxlt89gOdHcJHhhc=
-X-Received: by 2002:a05:622a:4009:b0:50d:66b6:1564 with SMTP id d75a77b69052e-50dd5bc5171mr357041541cf.14.1776286495729;
-        Wed, 15 Apr 2026 13:54:55 -0700 (PDT)
-Received: from localhost.localdomain ([104.39.116.151])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50e1ad9663bsm26078281cf.4.2026.04.15.13.54.54
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 15 Apr 2026 13:54:55 -0700 (PDT)
-From: Yuho Choi <dbgh9129@gmail.com>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Frank Li <Frank.Li@kernel.org>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yuho Choi <dbgh9129@gmail.com>
-Subject: [PATCH v1] dmaengine: idxd: fix double free of wq, engine, and group structs
-Date: Wed, 15 Apr 2026 16:54:52 -0400
-Message-ID: <20260415205452.67155-1-dbgh9129@gmail.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1776286656; c=relaxed/simple;
+	bh=aqhppy8I9dR8UMYq5nQG0mjZqAyJaHAT6wJPHqTBjp4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VWYfR4IOHrQloeyxjlZQSG7CQhNBODEnZq2/3r7cu1nzBgaMipngklN3t+nq/mdaKe53MxR31HCXjwcgTw2fvyjnW09NORORgY/df4agtbohfMigSj4M0VEYhUyaoB1TWVrmHwjquxr9bsI1zGnlmnayCVuMHlWERDAcJE/BtCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qvrvxP8f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D819DC19424;
+	Wed, 15 Apr 2026 20:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776286656;
+	bh=aqhppy8I9dR8UMYq5nQG0mjZqAyJaHAT6wJPHqTBjp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qvrvxP8f3feyB84C54LUvSSbpisJTYNVytbYbS977fkWQ1Yn8/kU3888fH18CC2gc
+	 CxsjSPfxa+Y0/rYs7Z0J0iD2iLR4iBAJfetB4POM2eLmN9IZhw8nwjXgFD3yB+0dFp
+	 e/ejxw++syxZqhq4qQlhTuYue6ydk3c7yXcgopbPEFGFn+XZxGh9Xq8qAHDC0J1ChT
+	 r64fQH4f529LG0zJkRJRBTsIS1bETKyTkSP/z/ftFUmYX1rFbT8YNJiRvLEqaumPoJ
+	 CPbFIkzw+59fQaS6pTNsGG6xWCC6kiP13U+TAs7Xx9FU5gGJKOBwe7nds/T8y/Gfa9
+	 9bM5ZsiCSnv7Q==
+Date: Wed, 15 Apr 2026 15:57:33 -0500
+From: Rob Herring <robh@kernel.org>
+To: John Madieu <john.madieu.xa@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Thomas Gleixner <tglx@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	John Madieu <john.madieu@gmail.com>,
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH v2 06/24] ASoC: dt-bindings: Add RZ/G3E (R9A09G047) sound
+ binding
+Message-ID: <20260415205733.GA354660-robh@kernel.org>
+References: <20260402090524.9137-1-john.madieu.xa@bp.renesas.com>
+ <20260402090524.9137-7-john.madieu.xa@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260402090524.9137-7-john.madieu.xa@bp.renesas.com>
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[intel.com,kernel.org,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-10021-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[glider.be,renesas.com,kernel.org,baylibre.com,gmail.com,perex.cz,suse.com,pengutronix.de,tuxon.dev,bp.renesas.com,vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10022-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dbgh9129@gmail.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	NEURAL_HAM(-0.00)[-0.998];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_RCPT(0.00)[dmaengine];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[dmaengine,renesas,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 33705407C46
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 8CA66407C7E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The release callbacks for wq, engine, and group devices
-(idxd_conf_wq_release, idxd_conf_engine_release,
-idxd_conf_group_release) each call kfree() on the enclosing struct.
-The setup error paths and cleanup functions also call kfree()
-explicitly after put_device(), producing a double free whenever
-put_device() drops the reference count to zero and fires the release.
+On Thu, Apr 02, 2026 at 11:05:05AM +0200, John Madieu wrote:
+> The RZ/G3E shares the same audio IP as the R-Car variants but differs
+> in several aspects: it supports up to 5 DMA controllers per audio
+> channel, requires additional clocks (47 total including per-SSI ADG
+> clocks, SCU domain clocks and SSIF supply) and additional reset lines
+> (14 total including SCU, ADG and Audio DMAC peri-peri resets).
+> 
+> Add a dedicated devicetree binding for the RZ/G3E sound controller.
+> The binding references the common renesas,rsnd-common.yaml schema for
+> shared property and subnode definitions.
+> 
+> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+> ---
+> 
+> Changes:
+> 
+> v2: New patch
+> 
+>  .../sound/renesas,r9a09g047-sound.yaml        | 371 ++++++++++++++++++
+>  1 file changed, 371 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/renesas,r9a09g047-sound.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/renesas,r9a09g047-sound.yaml b/Documentation/devicetree/bindings/sound/renesas,r9a09g047-sound.yaml
+> new file mode 100644
+> index 000000000000..1dfe9bab3382
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/renesas,r9a09g047-sound.yaml
+> @@ -0,0 +1,371 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/renesas,r9a09g047-sound.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas RZ/G3E Sound Controller
+> +
+> +maintainers:
+> +  - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> +  - John Madieu <john.madieu.xa@bp.renesas.com>
+> +
+> +description:
+> +  The RZ/G3E (R9A09G047) integrates an R-Car compatible sound controller
+> +  with extended DMA channel support (up to 5 DMACs per direction), additional
+> +  clock domains, and additional reset lines compared to the R-Car Gen2/Gen3
+> +  variants.
+> +
+> +allOf:
+> +  - $ref: renesas,rsnd-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: renesas,r9a09g047-sound
+> +
+> +  reg:
+> +    maxItems: 5
+> +
+> +  reg-names:
+> +    items:
+> +      - const: scu
+> +      - const: adg
+> +      - const: ssiu
+> +      - const: ssi
+> +      - const: audmapp
+> +
+> +  clocks:
+> +    maxItems: 47
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ssi-all
+> +      - const: ssi.9
+> +      - const: ssi.8
+> +      - const: ssi.7
+> +      - const: ssi.6
+> +      - const: ssi.5
+> +      - const: ssi.4
+> +      - const: ssi.3
+> +      - const: ssi.2
+> +      - const: ssi.1
+> +      - const: ssi.0
+> +      - const: src.9
+> +      - const: src.8
+> +      - const: src.7
+> +      - const: src.6
+> +      - const: src.5
+> +      - const: src.4
+> +      - const: src.3
+> +      - const: src.2
+> +      - const: src.1
+> +      - const: src.0
+> +      - const: mix.1
+> +      - const: mix.0
+> +      - const: ctu.1
+> +      - const: ctu.0
+> +      - const: dvc.0
+> +      - const: dvc.1
+> +      - const: clk_a
+> +      - const: clk_b
+> +      - const: clk_c
+> +      - const: clk_i
+> +      - const: ssif_supply
+> +      - const: scu
+> +      - const: scu_x2
+> +      - const: scu_supply
+> +      - const: adg.ssi.9
+> +      - const: adg.ssi.8
+> +      - const: adg.ssi.7
+> +      - const: adg.ssi.6
+> +      - const: adg.ssi.5
+> +      - const: adg.ssi.4
+> +      - const: adg.ssi.3
+> +      - const: adg.ssi.2
+> +      - const: adg.ssi.1
+> +      - const: adg.ssi.0
+> +      - const: audmapp
+> +      - const: adg
+> +
+> +  resets:
+> +    maxItems: 14
+> +
+> +  reset-names:
+> +    items:
+> +      - const: ssi-all
+> +      - const: ssi.9
+> +      - const: ssi.8
+> +      - const: ssi.7
+> +      - const: ssi.6
+> +      - const: ssi.5
+> +      - const: ssi.4
+> +      - const: ssi.3
+> +      - const: ssi.2
+> +      - const: ssi.1
+> +      - const: ssi.0
+> +      - const: scu
+> +      - const: adg
+> +      - const: audmapp
+> +
+> +  rcar_sound,dvc:
+> +    description: DVC subnode.
+> +    type: object
 
-In the setup functions, device_initialize() is called before
-device_add(), so the reference count is exactly 1 at the error sites.
-put_device() unconditionally fires the release, which frees the struct;
-the subsequent explicit kfree() then operates on freed memory.
+Move 'additionalProperties' here.
 
-For idxd_setup_wqs(), the wq release callback also owns opcap_bmap
-and wqcfg. The error unwind additionally freed those fields explicitly
-before calling put_device(), causing further double frees on both.
+blank line after.
 
-Remove the redundant explicit kfree() calls from all setup error paths
-and cleanup functions for wq, engine, and group structs, delegating
-sole ownership of those allocations to the release callbacks.
+> +    patternProperties:
+> +      "^dvc-[0-1]$":
+> +        type: object
+> +        additionalProperties: false
 
-Fixes: 7c5dd23e57c1 ("dmaengine: idxd: fix wq conf_dev 'struct device' lifetime")
-Fixes: 75b911309060 ("dmaengine: idxd: fix engine conf_dev lifetime")
-Fixes: defe49f96012 ("dmaengine: idxd: fix group conf_dev lifetime")
-Signed-off-by: Yuho Choi <dbgh9129@gmail.com>
----
- drivers/dma/idxd/init.c | 36 +++++-------------------------------
- 1 file changed, 5 insertions(+), 31 deletions(-)
+blank line
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index f1cfc7790d950..4b827a3297564 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -159,18 +159,12 @@ static void idxd_cleanup_interrupts(struct idxd_device *idxd)
- 
- static void idxd_clean_wqs(struct idxd_device *idxd)
- {
--	struct idxd_wq *wq;
- 	struct device *conf_dev;
- 	int i;
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		wq = idxd->wqs[i];
--		if (idxd->hw.wq_cap.op_config)
--			bitmap_free(wq->opcap_bmap);
--		kfree(wq->wqcfg);
--		conf_dev = wq_confdev(wq);
-+		conf_dev = wq_confdev(idxd->wqs[i]);
- 		put_device(conf_dev);
--		kfree(wq);
- 	}
- 	bitmap_free(idxd->wq_enable_map);
- 	kfree(idxd->wqs);
-@@ -212,7 +206,6 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 		rc = dev_set_name(conf_dev, "wq%d.%d", idxd->id, wq->id);
- 		if (rc < 0) {
- 			put_device(conf_dev);
--			kfree(wq);
- 			goto err_unwind;
- 		}
- 
-@@ -227,7 +220,6 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 		wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
- 		if (!wq->wqcfg) {
- 			put_device(conf_dev);
--			kfree(wq);
- 			rc = -ENOMEM;
- 			goto err_unwind;
- 		}
-@@ -235,9 +227,7 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 		if (idxd->hw.wq_cap.op_config) {
- 			wq->opcap_bmap = bitmap_zalloc(IDXD_MAX_OPCAP_BITS, GFP_KERNEL);
- 			if (!wq->opcap_bmap) {
--				kfree(wq->wqcfg);
- 				put_device(conf_dev);
--				kfree(wq);
- 				rc = -ENOMEM;
- 				goto err_unwind;
- 			}
-@@ -252,13 +242,8 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 
- err_unwind:
- 	while (--i >= 0) {
--		wq = idxd->wqs[i];
--		if (idxd->hw.wq_cap.op_config)
--			bitmap_free(wq->opcap_bmap);
--		kfree(wq->wqcfg);
--		conf_dev = wq_confdev(wq);
-+		conf_dev = wq_confdev(idxd->wqs[i]);
- 		put_device(conf_dev);
--		kfree(wq);
- 	}
- 	bitmap_free(idxd->wq_enable_map);
- 
-@@ -270,15 +255,12 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 
- static void idxd_clean_engines(struct idxd_device *idxd)
- {
--	struct idxd_engine *engine;
- 	struct device *conf_dev;
- 	int i;
- 
- 	for (i = 0; i < idxd->max_engines; i++) {
--		engine = idxd->engines[i];
--		conf_dev = engine_confdev(engine);
-+		conf_dev = engine_confdev(idxd->engines[i]);
- 		put_device(conf_dev);
--		kfree(engine);
- 	}
- 	kfree(idxd->engines);
- }
-@@ -313,7 +295,6 @@ static int idxd_setup_engines(struct idxd_device *idxd)
- 		rc = dev_set_name(conf_dev, "engine%d.%d", idxd->id, engine->id);
- 		if (rc < 0) {
- 			put_device(conf_dev);
--			kfree(engine);
- 			goto err;
- 		}
- 
-@@ -324,10 +305,8 @@ static int idxd_setup_engines(struct idxd_device *idxd)
- 
-  err:
- 	while (--i >= 0) {
--		engine = idxd->engines[i];
--		conf_dev = engine_confdev(engine);
-+		conf_dev = engine_confdev(idxd->engines[i]);
- 		put_device(conf_dev);
--		kfree(engine);
- 	}
- 	kfree(idxd->engines);
- 
-@@ -336,13 +315,10 @@ static int idxd_setup_engines(struct idxd_device *idxd)
- 
- static void idxd_clean_groups(struct idxd_device *idxd)
- {
--	struct idxd_group *group;
- 	int i;
- 
- 	for (i = 0; i < idxd->max_groups; i++) {
--		group = idxd->groups[i];
--		put_device(group_confdev(group));
--		kfree(group);
-+		put_device(group_confdev(idxd->groups[i]));
- 	}
- 	kfree(idxd->groups);
- }
-@@ -377,7 +353,6 @@ static int idxd_setup_groups(struct idxd_device *idxd)
- 		rc = dev_set_name(conf_dev, "group%d.%d", idxd->id, group->id);
- 		if (rc < 0) {
- 			put_device(conf_dev);
--			kfree(group);
- 			goto err;
- 		}
- 
-@@ -402,7 +377,6 @@ static int idxd_setup_groups(struct idxd_device *idxd)
- 	while (--i >= 0) {
- 		group = idxd->groups[i];
- 		put_device(group_confdev(group));
--		kfree(group);
- 	}
- 	kfree(idxd->groups);
- 
--- 
-2.50.1 (Apple Git-155)
+> +        properties:
+> +          dmas:
+> +            maxItems: 5
 
+blank line
+
+> +          dma-names:
+> +            maxItems: 5
+> +            allOf:
+
+Don't need 'allOf'
+
+> +              - items:
+> +                  enum:
+> +                    - tx
+
+blank line
+
+> +        required:
+> +          - dmas
+> +          - dma-names
+> +    additionalProperties: false
+> +
+> +  rcar_sound,src:
+> +    description: SRC subnode.
+> +    type: object
+> +    patternProperties:
+> +      "^src-[0-9]$":
+> +        type: object
+> +        additionalProperties: false
+> +        properties:
+> +          interrupts:
+> +            maxItems: 1
+> +          dmas:
+> +            maxItems: 10
+> +          dma-names:
+> +            maxItems: 10
+> +            allOf:
+> +              - items:
+> +                  enum:
+> +                    - tx
+> +                    - rx
+> +    additionalProperties: false
+> +
+> +  rcar_sound,ssiu:
+> +    description: SSIU subnode.
+> +    type: object
+> +    patternProperties:
+> +      "^ssiu-[0-9]+$":
+> +        type: object
+> +        additionalProperties: false
+> +        properties:
+> +          dmas:
+> +            maxItems: 10
+> +          dma-names:
+> +            maxItems: 10
+> +            allOf:
+> +              - items:
+> +                  enum:
+> +                    - tx
+> +                    - rx
+> +        required:
+> +          - dmas
+> +          - dma-names
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+
+Most of these are already required by the common schema. No need to 
+duplicate.
+
+> +
+> +unevaluatedProperties: false
 

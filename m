@@ -1,347 +1,166 @@
-Return-Path: <dmaengine+bounces-10022-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10023-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kADeBMf732ntbAAAu9opvQ
-	(envelope-from <dmaengine+bounces-10022-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 22:57:43 +0200
+	id gNxUOh5h4WnbsgAAu9opvQ
+	(envelope-from <dmaengine+bounces-10023-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2026 00:22:22 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CA66407C7E
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 22:57:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DDE441537C
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2026 00:22:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4A905307BD73
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2026 20:57:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BC11C3015E29
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Apr 2026 22:20:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FDB938C2A8;
-	Wed, 15 Apr 2026 20:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DDB9374E6F;
+	Thu, 16 Apr 2026 22:20:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qvrvxP8f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+UTotIs"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FB810785;
-	Wed, 15 Apr 2026 20:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC952D1931
+	for <dmaengine@vger.kernel.org>; Thu, 16 Apr 2026 22:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776286656; cv=none; b=apgzXLKnTz6NrMGalQ449Xu8FGs1DfEdPE26apA0/QKpv2kly3HNUMIhU+2T4MmRuNPqwV2FRGe1edVioJfoeWNW+h5JaZPTI9zh9Ij9zo92lo6ErrnPyN9txg5oGu+IDBxq7F1i8eur+Cx5rTcyDTyNs5IFWb+CalUGg5sd6Ak=
+	t=1776378003; cv=none; b=idq3bdibRPVwLeNIMEfhGPjSbEQfaGY0i6yDFp61SNjFtc8/Cqlxx469gHR5oYdLd/vtSEnUZJVuMdn/X5krFOpGTTBcyxcYauBaffGeXoaHT/BH46LXyYBbrCV3aBfcEcJFeqYrF6Sln+8c4ollQ4piKapqPUTlYtbqFWOjGRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776286656; c=relaxed/simple;
-	bh=aqhppy8I9dR8UMYq5nQG0mjZqAyJaHAT6wJPHqTBjp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VWYfR4IOHrQloeyxjlZQSG7CQhNBODEnZq2/3r7cu1nzBgaMipngklN3t+nq/mdaKe53MxR31HCXjwcgTw2fvyjnW09NORORgY/df4agtbohfMigSj4M0VEYhUyaoB1TWVrmHwjquxr9bsI1zGnlmnayCVuMHlWERDAcJE/BtCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qvrvxP8f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D819DC19424;
-	Wed, 15 Apr 2026 20:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776286656;
-	bh=aqhppy8I9dR8UMYq5nQG0mjZqAyJaHAT6wJPHqTBjp4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qvrvxP8f3feyB84C54LUvSSbpisJTYNVytbYbS977fkWQ1Yn8/kU3888fH18CC2gc
-	 CxsjSPfxa+Y0/rYs7Z0J0iD2iLR4iBAJfetB4POM2eLmN9IZhw8nwjXgFD3yB+0dFp
-	 e/ejxw++syxZqhq4qQlhTuYue6ydk3c7yXcgopbPEFGFn+XZxGh9Xq8qAHDC0J1ChT
-	 r64fQH4f529LG0zJkRJRBTsIS1bETKyTkSP/z/ftFUmYX1rFbT8YNJiRvLEqaumPoJ
-	 CPbFIkzw+59fQaS6pTNsGG6xWCC6kiP13U+TAs7Xx9FU5gGJKOBwe7nds/T8y/Gfa9
-	 9bM5ZsiCSnv7Q==
-Date: Wed, 15 Apr 2026 15:57:33 -0500
-From: Rob Herring <robh@kernel.org>
-To: John Madieu <john.madieu.xa@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Thomas Gleixner <tglx@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	John Madieu <john.madieu@gmail.com>,
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH v2 06/24] ASoC: dt-bindings: Add RZ/G3E (R9A09G047) sound
- binding
-Message-ID: <20260415205733.GA354660-robh@kernel.org>
-References: <20260402090524.9137-1-john.madieu.xa@bp.renesas.com>
- <20260402090524.9137-7-john.madieu.xa@bp.renesas.com>
+	s=arc-20240116; t=1776378003; c=relaxed/simple;
+	bh=g04gVYoYQ5qLQ0HXn+BkXJNgKoX3hhS4uYX1Ju698og=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Cf3Uic6IoAgj6+cwvdvwWqbbU6kdDwTJi3qyF+mcZeyoD2AnjN05so72lO+UfSJPvwA5IP2yyXSW3FK2A5fKFSZtk0dux+FhpH2/8SCmmXRKxIsyakufH7qdtNTJm6q49V03l0y5iTrmT5JRV5wGMQzgyp3QtxlHYhYKFkXIsZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+UTotIs; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-8a032383008so220696d6.1
+        for <dmaengine@vger.kernel.org>; Thu, 16 Apr 2026 15:20:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776378001; x=1776982801; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VqLnb5CKsaCaiuJFzjJfnkJy5snz88dDy+uDsxyQCTM=;
+        b=g+UTotIsjWXzYJ90lz7eEu+fvwTnH64XP0k5FE3QSiZOcp2O9SjhwalY4ngwOqbaqL
+         05fG2NcHQ/MvIMgU7rtnovvz2uCj1TE0LyqkNmNDm9oavC34kF+NLVwwQKaZm06gUt/o
+         Yn7ry1bZnw7y1+ZF+uxMsykfqGDj8NcRCm0pGVrcPj8cmp9YKiskBgTb8nvT2tXWKtX9
+         xp86iformhEAO0ljfutfjzKcE5/umDUhqWQbTdLy/3SJ6VXpkrch4JsTqf2fCK1UZR9R
+         YacjKdo8ugTPl54upxL/N+G3yS54rTR8Mn7RkwMZs3zROyvskVCIQLklAdglvPn8f36D
+         kjPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776378001; x=1776982801;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VqLnb5CKsaCaiuJFzjJfnkJy5snz88dDy+uDsxyQCTM=;
+        b=j0ftPm8Mgn1Bdmp8WH+EZoJ64y2t3p421ZatgElzxJX7g8eOZK4W8/F1iU0isfXyPI
+         5DswRX9CpKMeRBkiAKJQbZbWMtnffAoepG8OMZTf+4ufUemkBesIsaCrJpq3H8GwVHBS
+         InxoMiGGmnp23v0BnIZMQLkdqjyT5FmdUmvXh7oq++UhescV78lWuS6JgrNe9F9TM3jT
+         tJ4xNEZboUBYzOOYZIqqzSVxEqnZqThuNnpIkKntkCBK+STXhF6wfccaVH/s5zKZXAZe
+         oMh4gjGRfIahlljjRSxiI4594B1lXlThAjzAemBvoq0F/zt9BKnZmfRP+GAxLqiRuhEj
+         EJ+w==
+X-Forwarded-Encrypted: i=1; AFNElJ8c4RS/w2whs4iIx6pwbQr2ROt2YS6Pr0suwSzp/BXK8i+ECQfPvFY7iU82VD9OQKi1BxDwKvW2qy4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh9G/h1i3bMeRYYe8a7+kIVwbhQanmoXTAAlpH5gxa8y1ElNr/
+	Sohowy+E9BKdJCNHTIDKk+Rm4zf7POXDT2mXmdvgndUEP9MnRjOdxpFj
+X-Gm-Gg: AeBDieuiCh7p8w9m34ZSDowc1CXbUehFMBBSWE5saypiu8s0yLhdNBJm6BgFT/9c78U
+	2Yp0nE3EUsqOCxuWMG9HQxjC8hDInhQPqVN2wyw9QxuWSsA8Xj80q8CscWumBiW89DMw+fPonn+
+	B/oa64l10dmkxImz5QNFXd5d3oreUvMQ3HJzBwRdmTM0z3wAc0HvaPOYdMom4/tZO9ft667pzeo
+	txIkdU7XUpuvxl37rdTgFimEzDi652OOnLcbIcWa/33e0zp9Dxz8MuTupdw4zhoBMWKP7ZZIyHo
+	EpuoD/3Tl205fYilm5JL065ZQFBEnTHVDRyV4khIv1K8FweqDUa1j5rBdUciXS/vnNEBb1xzdj7
+	rYznflPFVOKSdyR0VMvtAXLB5vO2DoyNV+UWvHxT2ezANrXmxe6dw7CxT48MuWqRB9CZSutniWo
+	SRB4pHO+hXLC0uGHmPckFh1HiFTJwz+V19dolrBBvVKKP/qJ6zgdX3WrdfERKP
+X-Received: by 2002:a05:6214:2587:b0:8ac:ab13:8f0a with SMTP id 6a1803df08f44-8b02804d2afmr7367476d6.11.1776378000666;
+        Thu, 16 Apr 2026 15:20:00 -0700 (PDT)
+Received: from localhost.localdomain ([104.39.116.151])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ae6cb9ee20sm46224366d6.26.2026.04.16.15.19.59
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 16 Apr 2026 15:19:59 -0700 (PDT)
+From: Yuho Choi <dbgh9129@gmail.com>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	Vinod Koul <vkoul@kernel.org>
+Cc: Dave Jiang <dave.jiang@intel.com>,
+	Frank Li <Frank.Li@kernel.org>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yuho Choi <dbgh9129@gmail.com>
+Subject: [PATCH v1] dmaengine: idxd: fix deadlock and double free in idxd_cdev_open()
+Date: Thu, 16 Apr 2026 18:19:57 -0400
+Message-ID: <20260416221957.51250-1-dbgh9129@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260402090524.9137-7-john.madieu.xa@bp.renesas.com>
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[glider.be,renesas.com,kernel.org,baylibre.com,gmail.com,perex.cz,suse.com,pengutronix.de,tuxon.dev,bp.renesas.com,vger.kernel.org];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[intel.com,kernel.org,vger.kernel.org,gmail.com];
+	TAGGED_FROM(0.00)[bounces-10023-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10022-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[dmaengine,renesas,dt];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dbgh9129@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 8CA66407C7E
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4DDE441537C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Apr 02, 2026 at 11:05:05AM +0200, John Madieu wrote:
-> The RZ/G3E shares the same audio IP as the R-Car variants but differs
-> in several aspects: it supports up to 5 DMA controllers per audio
-> channel, requires additional clocks (47 total including per-SSI ADG
-> clocks, SCU domain clocks and SSIF supply) and additional reset lines
-> (14 total including SCU, ADG and Audio DMAC peri-peri resets).
-> 
-> Add a dedicated devicetree binding for the RZ/G3E sound controller.
-> The binding references the common renesas,rsnd-common.yaml schema for
-> shared property and subnode definitions.
-> 
-> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
-> ---
-> 
-> Changes:
-> 
-> v2: New patch
-> 
->  .../sound/renesas,r9a09g047-sound.yaml        | 371 ++++++++++++++++++
->  1 file changed, 371 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/renesas,r9a09g047-sound.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/renesas,r9a09g047-sound.yaml b/Documentation/devicetree/bindings/sound/renesas,r9a09g047-sound.yaml
-> new file mode 100644
-> index 000000000000..1dfe9bab3382
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/renesas,r9a09g047-sound.yaml
-> @@ -0,0 +1,371 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/renesas,r9a09g047-sound.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas RZ/G3E Sound Controller
-> +
-> +maintainers:
-> +  - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> +  - John Madieu <john.madieu.xa@bp.renesas.com>
-> +
-> +description:
-> +  The RZ/G3E (R9A09G047) integrates an R-Car compatible sound controller
-> +  with extended DMA channel support (up to 5 DMACs per direction), additional
-> +  clock domains, and additional reset lines compared to the R-Car Gen2/Gen3
-> +  variants.
-> +
-> +allOf:
-> +  - $ref: renesas,rsnd-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: renesas,r9a09g047-sound
-> +
-> +  reg:
-> +    maxItems: 5
-> +
-> +  reg-names:
-> +    items:
-> +      - const: scu
-> +      - const: adg
-> +      - const: ssiu
-> +      - const: ssi
-> +      - const: audmapp
-> +
-> +  clocks:
-> +    maxItems: 47
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ssi-all
-> +      - const: ssi.9
-> +      - const: ssi.8
-> +      - const: ssi.7
-> +      - const: ssi.6
-> +      - const: ssi.5
-> +      - const: ssi.4
-> +      - const: ssi.3
-> +      - const: ssi.2
-> +      - const: ssi.1
-> +      - const: ssi.0
-> +      - const: src.9
-> +      - const: src.8
-> +      - const: src.7
-> +      - const: src.6
-> +      - const: src.5
-> +      - const: src.4
-> +      - const: src.3
-> +      - const: src.2
-> +      - const: src.1
-> +      - const: src.0
-> +      - const: mix.1
-> +      - const: mix.0
-> +      - const: ctu.1
-> +      - const: ctu.0
-> +      - const: dvc.0
-> +      - const: dvc.1
-> +      - const: clk_a
-> +      - const: clk_b
-> +      - const: clk_c
-> +      - const: clk_i
-> +      - const: ssif_supply
-> +      - const: scu
-> +      - const: scu_x2
-> +      - const: scu_supply
-> +      - const: adg.ssi.9
-> +      - const: adg.ssi.8
-> +      - const: adg.ssi.7
-> +      - const: adg.ssi.6
-> +      - const: adg.ssi.5
-> +      - const: adg.ssi.4
-> +      - const: adg.ssi.3
-> +      - const: adg.ssi.2
-> +      - const: adg.ssi.1
-> +      - const: adg.ssi.0
-> +      - const: audmapp
-> +      - const: adg
-> +
-> +  resets:
-> +    maxItems: 14
-> +
-> +  reset-names:
-> +    items:
-> +      - const: ssi-all
-> +      - const: ssi.9
-> +      - const: ssi.8
-> +      - const: ssi.7
-> +      - const: ssi.6
-> +      - const: ssi.5
-> +      - const: ssi.4
-> +      - const: ssi.3
-> +      - const: ssi.2
-> +      - const: ssi.1
-> +      - const: ssi.0
-> +      - const: scu
-> +      - const: adg
-> +      - const: audmapp
-> +
-> +  rcar_sound,dvc:
-> +    description: DVC subnode.
-> +    type: object
+The failed_dev_add and failed_dev_name error paths in idxd_cdev_open()
+call put_device(fdev) while still holding wq->wq_lock. This triggers
+idxd_file_dev_release() synchronously, which calls
+mutex_lock(&wq->wq_lock) — deadlocking on the same mutex.
 
-Move 'additionalProperties' here.
+Additionally, the original code fell through from failed_dev_add and
+failed_dev_name to the failed: label, which called kfree(ctx) a second
+time after idxd_file_dev_release() had already freed it. The subsequent
+idxd_xa_pasid_remove(ctx) then uses the freed pointer.
 
-blank line after.
+Fix both issues by releasing wq_lock before put_device(fdev) and
+returning immediately, so the release callback acquires the lock without
+contention and no further cleanup is attempted on the freed context.
 
-> +    patternProperties:
-> +      "^dvc-[0-1]$":
-> +        type: object
-> +        additionalProperties: false
+Fixes: e6fd6d7e5f0fe ("dmaengine: idxd: add a device to represent the file opened")
+Signed-off-by: Yuho Choi <dbgh9129@gmail.com>
+---
+ drivers/dma/idxd/cdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-blank line
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index 0366c7cf35020..19a449333782b 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -307,7 +307,9 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+ 
+ failed_dev_add:
+ failed_dev_name:
++	mutex_unlock(&wq->wq_lock);
+ 	put_device(fdev);
++	return rc;
+ failed_ida:
+ failed_set_pasid:
+ 	if (device_user_pasid_enabled(idxd))
+-- 
+2.50.1 (Apple Git-155)
 
-> +        properties:
-> +          dmas:
-> +            maxItems: 5
-
-blank line
-
-> +          dma-names:
-> +            maxItems: 5
-> +            allOf:
-
-Don't need 'allOf'
-
-> +              - items:
-> +                  enum:
-> +                    - tx
-
-blank line
-
-> +        required:
-> +          - dmas
-> +          - dma-names
-> +    additionalProperties: false
-> +
-> +  rcar_sound,src:
-> +    description: SRC subnode.
-> +    type: object
-> +    patternProperties:
-> +      "^src-[0-9]$":
-> +        type: object
-> +        additionalProperties: false
-> +        properties:
-> +          interrupts:
-> +            maxItems: 1
-> +          dmas:
-> +            maxItems: 10
-> +          dma-names:
-> +            maxItems: 10
-> +            allOf:
-> +              - items:
-> +                  enum:
-> +                    - tx
-> +                    - rx
-> +    additionalProperties: false
-> +
-> +  rcar_sound,ssiu:
-> +    description: SSIU subnode.
-> +    type: object
-> +    patternProperties:
-> +      "^ssiu-[0-9]+$":
-> +        type: object
-> +        additionalProperties: false
-> +        properties:
-> +          dmas:
-> +            maxItems: 10
-> +          dma-names:
-> +            maxItems: 10
-> +            allOf:
-> +              - items:
-> +                  enum:
-> +                    - tx
-> +                    - rx
-> +        required:
-> +          - dmas
-> +          - dma-names
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-
-Most of these are already required by the common schema. No need to 
-duplicate.
-
-> +
-> +unevaluatedProperties: false
 

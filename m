@@ -1,166 +1,148 @@
-Return-Path: <dmaengine+bounces-10023-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10024-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gNxUOh5h4WnbsgAAu9opvQ
-	(envelope-from <dmaengine+bounces-10023-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2026 00:22:22 +0200
+	id 6NUqCBIS4mkg1AAAu9opvQ
+	(envelope-from <dmaengine+bounces-10024-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2026 12:57:22 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DDE441537C
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2026 00:22:21 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4961F41A7AD
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2026 12:57:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BC11C3015E29
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Apr 2026 22:20:03 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 83E0B300ADB3
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2026 10:56:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DDB9374E6F;
-	Thu, 16 Apr 2026 22:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E23383C69;
+	Fri, 17 Apr 2026 10:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+UTotIs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eSqczjzY"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC952D1931
-	for <dmaengine@vger.kernel.org>; Thu, 16 Apr 2026 22:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400213B38A2;
+	Fri, 17 Apr 2026 10:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776378003; cv=none; b=idq3bdibRPVwLeNIMEfhGPjSbEQfaGY0i6yDFp61SNjFtc8/Cqlxx469gHR5oYdLd/vtSEnUZJVuMdn/X5krFOpGTTBcyxcYauBaffGeXoaHT/BH46LXyYBbrCV3aBfcEcJFeqYrF6Sln+8c4ollQ4piKapqPUTlYtbqFWOjGRI=
+	t=1776423395; cv=none; b=CTQ0cL5Hskjgxwtb5ragJJFSmm+EZkkskuAMvQ5t7C5SpAHJH9gFDal5iqCU3iR7Q6AfTB8MeFrPT3rYqx6zQxrFt0nwLUOTteg25ISzjMU6BuU3pkhdgIXgxo36orZ6iBINurbJfSwu1h0yzq67brElYJUatcDHQ83G/dAWb34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776378003; c=relaxed/simple;
-	bh=g04gVYoYQ5qLQ0HXn+BkXJNgKoX3hhS4uYX1Ju698og=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Cf3Uic6IoAgj6+cwvdvwWqbbU6kdDwTJi3qyF+mcZeyoD2AnjN05so72lO+UfSJPvwA5IP2yyXSW3FK2A5fKFSZtk0dux+FhpH2/8SCmmXRKxIsyakufH7qdtNTJm6q49V03l0y5iTrmT5JRV5wGMQzgyp3QtxlHYhYKFkXIsZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+UTotIs; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-8a032383008so220696d6.1
-        for <dmaengine@vger.kernel.org>; Thu, 16 Apr 2026 15:20:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776378001; x=1776982801; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VqLnb5CKsaCaiuJFzjJfnkJy5snz88dDy+uDsxyQCTM=;
-        b=g+UTotIsjWXzYJ90lz7eEu+fvwTnH64XP0k5FE3QSiZOcp2O9SjhwalY4ngwOqbaqL
-         05fG2NcHQ/MvIMgU7rtnovvz2uCj1TE0LyqkNmNDm9oavC34kF+NLVwwQKaZm06gUt/o
-         Yn7ry1bZnw7y1+ZF+uxMsykfqGDj8NcRCm0pGVrcPj8cmp9YKiskBgTb8nvT2tXWKtX9
-         xp86iformhEAO0ljfutfjzKcE5/umDUhqWQbTdLy/3SJ6VXpkrch4JsTqf2fCK1UZR9R
-         YacjKdo8ugTPl54upxL/N+G3yS54rTR8Mn7RkwMZs3zROyvskVCIQLklAdglvPn8f36D
-         kjPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776378001; x=1776982801;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VqLnb5CKsaCaiuJFzjJfnkJy5snz88dDy+uDsxyQCTM=;
-        b=j0ftPm8Mgn1Bdmp8WH+EZoJ64y2t3p421ZatgElzxJX7g8eOZK4W8/F1iU0isfXyPI
-         5DswRX9CpKMeRBkiAKJQbZbWMtnffAoepG8OMZTf+4ufUemkBesIsaCrJpq3H8GwVHBS
-         InxoMiGGmnp23v0BnIZMQLkdqjyT5FmdUmvXh7oq++UhescV78lWuS6JgrNe9F9TM3jT
-         tJ4xNEZboUBYzOOYZIqqzSVxEqnZqThuNnpIkKntkCBK+STXhF6wfccaVH/s5zKZXAZe
-         oMh4gjGRfIahlljjRSxiI4594B1lXlThAjzAemBvoq0F/zt9BKnZmfRP+GAxLqiRuhEj
-         EJ+w==
-X-Forwarded-Encrypted: i=1; AFNElJ8c4RS/w2whs4iIx6pwbQr2ROt2YS6Pr0suwSzp/BXK8i+ECQfPvFY7iU82VD9OQKi1BxDwKvW2qy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywh9G/h1i3bMeRYYe8a7+kIVwbhQanmoXTAAlpH5gxa8y1ElNr/
-	Sohowy+E9BKdJCNHTIDKk+Rm4zf7POXDT2mXmdvgndUEP9MnRjOdxpFj
-X-Gm-Gg: AeBDieuiCh7p8w9m34ZSDowc1CXbUehFMBBSWE5saypiu8s0yLhdNBJm6BgFT/9c78U
-	2Yp0nE3EUsqOCxuWMG9HQxjC8hDInhQPqVN2wyw9QxuWSsA8Xj80q8CscWumBiW89DMw+fPonn+
-	B/oa64l10dmkxImz5QNFXd5d3oreUvMQ3HJzBwRdmTM0z3wAc0HvaPOYdMom4/tZO9ft667pzeo
-	txIkdU7XUpuvxl37rdTgFimEzDi652OOnLcbIcWa/33e0zp9Dxz8MuTupdw4zhoBMWKP7ZZIyHo
-	EpuoD/3Tl205fYilm5JL065ZQFBEnTHVDRyV4khIv1K8FweqDUa1j5rBdUciXS/vnNEBb1xzdj7
-	rYznflPFVOKSdyR0VMvtAXLB5vO2DoyNV+UWvHxT2ezANrXmxe6dw7CxT48MuWqRB9CZSutniWo
-	SRB4pHO+hXLC0uGHmPckFh1HiFTJwz+V19dolrBBvVKKP/qJ6zgdX3WrdfERKP
-X-Received: by 2002:a05:6214:2587:b0:8ac:ab13:8f0a with SMTP id 6a1803df08f44-8b02804d2afmr7367476d6.11.1776378000666;
-        Thu, 16 Apr 2026 15:20:00 -0700 (PDT)
-Received: from localhost.localdomain ([104.39.116.151])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ae6cb9ee20sm46224366d6.26.2026.04.16.15.19.59
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 16 Apr 2026 15:19:59 -0700 (PDT)
-From: Yuho Choi <dbgh9129@gmail.com>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Frank Li <Frank.Li@kernel.org>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yuho Choi <dbgh9129@gmail.com>
-Subject: [PATCH v1] dmaengine: idxd: fix deadlock and double free in idxd_cdev_open()
-Date: Thu, 16 Apr 2026 18:19:57 -0400
-Message-ID: <20260416221957.51250-1-dbgh9129@gmail.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1776423395; c=relaxed/simple;
+	bh=bDDxe6yCiiX0HBvBrYA3XwWhcLpDG14hB3Lfi/7cuzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MgxKbG4rkIEdvJOjVZ52OZisWp/YUN2lSNKHzLMKbYcvi7nHNb0SiKfXECwhNQ08MGU1x+rgtpKGPRVQtSmD0dbEKqScIynDnlx0wRMlE+rIYe4YYFtrc6ty0PZGz6B/03JkhVUS3qxTUc2DHPZpxh4K7CvrTj9xtC9mgqErQuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eSqczjzY; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776423394; x=1807959394;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bDDxe6yCiiX0HBvBrYA3XwWhcLpDG14hB3Lfi/7cuzY=;
+  b=eSqczjzYqUFDfVsr/W93+PefGyl5dn9/yhgJdwac4y3GXM83r1NW3VRv
+   S723yLE641/IZZCw/fw2OtNxMikbI5s1s+2y5GhgTw1KV/LHm9O2Rs4gO
+   CsQYh01Vr/1mvgKGX/Do2oHIrW1oVkdMboFS3sRxpXqB8tTqxEgf7VVnG
+   HAd4+k0JwibULjCjls9RPS+6cQWiLFELnVSyM8Opr4uztKmJQYFOY35Ke
+   ip7TPM/jqYeyK5ffuwFzAvpFsngn2dl8iPmfuC+SrW2ZjG9cQhx4fZx64
+   +qFhtf4kK1ijNub7vv4TMDK4K7KnxNwwnPGkS/CRl2er/3/8kDL43C1ah
+   A==;
+X-CSE-ConnectionGUID: B3ckPEknSzK04UUIvwJg0g==
+X-CSE-MsgGUID: JITddxxOQcu3b/7KFxDOKA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11761"; a="77345757"
+X-IronPort-AV: E=Sophos;i="6.23,184,1770624000"; 
+   d="scan'208";a="77345757"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2026 03:56:34 -0700
+X-CSE-ConnectionGUID: 8jrViil9RjmICwdPWfiZYg==
+X-CSE-MsgGUID: 4TaKAjvgR4Scv1JD5xJTzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,184,1770624000"; 
+   d="scan'208";a="235995089"
+Received: from lkp-server01.sh.intel.com (HELO 7e48d0ff8e22) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 17 Apr 2026 03:56:33 -0700
+Received: from kbuild by 7e48d0ff8e22 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wDgs9-000000000HR-3TGn;
+	Fri, 17 Apr 2026 10:56:29 +0000
+Date: Fri, 17 Apr 2026 18:55:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Rosen Penev <rosenp@gmail.com>, dmaengine@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dma: add COMPILE_TEST to AMBA_PL08X
+Message-ID: <202604171853.KZzzfda6-lkp@intel.com>
+References: <20260407035104.98985-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260407035104.98985-1-rosenp@gmail.com>
 X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[intel.com,kernel.org,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-10023-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10024-lists,dmaengine=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dbgh9129@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 4DDE441537C
+	RCPT_COUNT_FIVE(0.00)[6];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[git-scm.com:url,intel.com:email,intel.com:dkim,intel.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,01.org:url]
+X-Rspamd-Queue-Id: 4961F41A7AD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The failed_dev_add and failed_dev_name error paths in idxd_cdev_open()
-call put_device(fdev) while still holding wq->wq_lock. This triggers
-idxd_file_dev_release() synchronously, which calls
-mutex_lock(&wq->wq_lock) — deadlocking on the same mutex.
+Hi Rosen,
 
-Additionally, the original code fell through from failed_dev_add and
-failed_dev_name to the failed: label, which called kfree(ctx) a second
-time after idxd_file_dev_release() had already freed it. The subsequent
-idxd_xa_pasid_remove(ctx) then uses the freed pointer.
+kernel test robot noticed the following build errors:
 
-Fix both issues by releasing wq_lock before put_device(fdev) and
-returning immediately, so the release callback acquires the lock without
-contention and no further cleanup is attempted on the freed context.
+[auto build test ERROR on vkoul-dmaengine/next]
+[also build test ERROR on linus/master v7.0 next-20260416]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Fixes: e6fd6d7e5f0fe ("dmaengine: idxd: add a device to represent the file opened")
-Signed-off-by: Yuho Choi <dbgh9129@gmail.com>
----
- drivers/dma/idxd/cdev.c | 2 ++
- 1 file changed, 2 insertions(+)
+url:    https://github.com/intel-lab-lkp/linux/commits/Rosen-Penev/dma-add-COMPILE_TEST-to-AMBA_PL08X/20260414-134925
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+patch link:    https://lore.kernel.org/r/20260407035104.98985-1-rosenp%40gmail.com
+patch subject: [PATCH] dma: add COMPILE_TEST to AMBA_PL08X
+config: m68k-randconfig-r062-20260417 (https://download.01.org/0day-ci/archive/20260417/202604171853.KZzzfda6-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260417/202604171853.KZzzfda6-lkp@intel.com/reproduce)
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index 0366c7cf35020..19a449333782b 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -307,7 +307,9 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 
- failed_dev_add:
- failed_dev_name:
-+	mutex_unlock(&wq->wq_lock);
- 	put_device(fdev);
-+	return rc;
- failed_ida:
- failed_set_pasid:
- 	if (device_user_pasid_enabled(idxd))
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202604171853.KZzzfda6-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   m68k-linux-ld: drivers/dma/amba-pl08x.o: in function `pl08x_probe':
+>> amba-pl08x.c:(.text+0x183c): undefined reference to `amba_request_regions'
+>> m68k-linux-ld: amba-pl08x.c:(.text+0x18ae): undefined reference to `amba_release_regions'
+
 -- 
-2.50.1 (Apple Git-155)
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 

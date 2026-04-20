@@ -1,246 +1,224 @@
-Return-Path: <dmaengine+bounces-10068-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10069-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KA0hCUCH5mlHxwEAu9opvQ
-	(envelope-from <dmaengine+bounces-10068-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 22:06:24 +0200
+	id QCcONdWl5mlQzQEAu9opvQ
+	(envelope-from <dmaengine+bounces-10069-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Apr 2026 00:16:53 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80B9343386D
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 22:06:23 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D4044348A8
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Apr 2026 00:16:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F3E4D3011BF2
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 20:06:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id DE6503020EAD
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 22:16:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A218383C9C;
-	Mon, 20 Apr 2026 20:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE593CD8CB;
+	Mon, 20 Apr 2026 22:16:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maduyh/c"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="joaPu9ns"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012057.outbound.protection.outlook.com [52.101.53.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00B8150997
-	for <dmaengine@vger.kernel.org>; Mon, 20 Apr 2026 20:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98D13CFF6D;
+	Mon, 20 Apr 2026 22:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776715581; cv=pass; b=LBGt/kRGiEzY0Z+qlwoPAqXhlN4+YEq8V4kw5LOUbViQqXrBmECE2s1HW1qxfUt8HmU4k549Ghjm3O8VWcoyA5M10UTrUK9S4v+5iMwV4Z/8ZXqCYUBmRJiUgFRw6WbuB9UMcB7uSw+t6oboOYm7OCAs4osRmGY5l5MHKbxzMPQ=
+	t=1776723394; cv=fail; b=dt2h+iy/CVZ/woK7MwO4rlRjjkzNjrvb8toFUOkeIjWaMHAI57ScymSe/p7YTlJA3sJdnXwiEUWQF0nT3VH3mNX1Nh6GPabT78n7SGxjO4Rmw1TXwvjtVKp3Ygl5iIDY6e25Z3+iW1P1jCo7sqUP5GdIz5Vuk+6DKU7Nr6klRlg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776715581; c=relaxed/simple;
-	bh=RgnpwnXZMk/u5r3ZCAUsrG1fzGOXHv5FLbJH7g7/ZzI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sdhDN0EYtaN1Y1HSC8GRVAIGb4f7LD0sLCMIzLaplXBLiEHxrXQ6Mc/5tUJNw9Sa4PoNpk2NQmyH9D5LeNVPXKTqG8OfhWysK0l1tGTzSRgu/UWBzKYskV/Ir84YzbnMYkTgrpubKdvzowlpcRr67LSqLdrMfIFcX8LkCVDo0Ic=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=maduyh/c; arc=pass smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6746d0b2b4aso3127932a12.3
-        for <dmaengine@vger.kernel.org>; Mon, 20 Apr 2026 13:06:19 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776715578; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Y/MC1EhJGGFqCOa7075o3FwRPnTqSFB8CiIqT0F24p7Uv4p2D94kUIM01GVLJY+N7q
-         WfU50BvezHdzxyzZNGU2iy1OnE7diJrppvmU2XK5qWQEsCWNccQOOkjkQVSknoIQU5Uj
-         qJp/v8pmnzU8MFwHbkXoP1YEuyiRjtONwphnFhVrIEH2odl8jxqxXIgWza+c3Bh0dGE+
-         f3eX+LsBKkKu8xyA7sf9+XDtFboe/tRNZbJiiwBrSrXW+PftiugQoHI6zJaGbjGNCrAA
-         5frYWqal0YICmMd9IaVtO8Z3gz3y2oBbeitygh0/JrljN+fc19/oqSr69y1aeEtgBweb
-         CQ4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=mMBafyl9U9T3/5JLuCORI9yHKRbb9sNWR+NfxA1SVHY=;
-        fh=xEH8+oxPt16gQuQuOeLqPTEXQDeJllf4Lhb90rHVeqg=;
-        b=AuIeomWWQkf/BOILst+cTiHMAKwzpb2TuZo8eIlXWMvuxDlM4CBttyXLQaPv7iNgC5
-         nar0nOjAZizRdJB5VV2+szrK9JobUrQao/9NiGehlPLyEXdVwidvzMe0CStbdvedjEId
-         6QArnUns/onFixrQsPcgsnZw7wDhAz9JmqMZT0uVOsxRcgC+rgxqtoD1FEqnMpjQGE3v
-         opUbGi9QhzPRBIxFjvFH3p+/P19XaAKgMX3rfEXE+g9GMc7UOVLBHMLsvr9xopt+Amxu
-         mDVQxeavHXbmv6o1pMPxxUX0d5pE0aQH7PtcJ6S5YEL9CqQQtXL1pwwsytOvGDfaa9Ux
-         zwLw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776715578; x=1777320378; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mMBafyl9U9T3/5JLuCORI9yHKRbb9sNWR+NfxA1SVHY=;
-        b=maduyh/ce3/5bEpWk8Zn9EHDQq4Kvy65ntfiOEdfqCW4FLHrmvpV3J9ueSkaGT7a+M
-         ADWPKMsZGKX7lrmPJctbia3JmHG+1w2FxwEn696Yg9Cwdn18PQn1ZYtnm5H6ZsmL7+C7
-         Ohn2vTVqjJfsLiMP89prcAezOLRI+bCL0U14Qh6j0Sv4NEl8lQANojRhtnVnX1ZWpNpS
-         kr+upRjsIkCtDlpgfvBOEHTrQ1jnft8Ky3FLR28ycXtJuu48StTKvF5NdE/WI3/knJ4e
-         AjSMtFLnbc2E1zd0yCtKevMKcUq41DfY86EwkIRnTYXb22O746+g9KFfKJVZmA18AQY9
-         DQ8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776715578; x=1777320378;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mMBafyl9U9T3/5JLuCORI9yHKRbb9sNWR+NfxA1SVHY=;
-        b=PZKYKM35q4mlKeGbtA+iTGfuqNJcGx1uPYKkrWRt4zbE88hOYkBmNx5reFCKqMSAGK
-         FmjGJgy402vc0G0/qGMOjzpE08nmH/cHUqVXRbvJqlaoFbKZrnQtLBWNILIUOBn1dDlU
-         zXF7v9ce2MB//dopNdiL2vcD/RKTq1HfAOqMKJKIQjesjIYqr1Rcq7x8y42OFbMusM7n
-         KAFkGKe8H0Jqvn4wkW9CDiR0/nmm+tGQoujbZ33Um7k2cUu3JTDx+wiByRkLdrik2t2V
-         UVTv3aIrMBAlCOc8xnDzl571KQEboKd5/lnOx+uRz0lTExiJ/hT/8WAT3tE9jAGLEKTY
-         6Anw==
-X-Forwarded-Encrypted: i=1; AFNElJ+YCjliS+EIvrDxYIETe9JMflfNBHBt+3CnTI5rMRYS/mNYe8WZBgFTQhn6/JXIJD0M2ma5Bf1XmII=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSjjJxcCa6LUwl8QBkxmlWnYw/6oEiqhE+JeJvGytBqkUNWRdz
-	fshIq451K6DdoO48N1i2u636mfPGVyvpih1NUuOhKkLQH89NID3uiyhMcnC/1yveQjUQAfVKX1O
-	7HdDSr1nXZRm7wrqzPJgxdkOHB359dj0=
-X-Gm-Gg: AeBDiesip7mv4DWpSAv3Tn7oGAQAOGuCmx9jAXI7BcL+GzM7iz+blVS3mYOND5MG7em
-	ndtw3cJLlhOmkhp9CVbq2xKjrucimU+95nOSQCXck+Cs4vKaGdsiZp98UkHkYt3e5JUMH+EAPwE
-	TG+Nk6SW7bEzyN7PrO/nRaNUyBsvAZIHdCeGxwBuCnt+KbAC/FA2fB8NgE7PWfKpmQali44Hl+q
-	GqwEQPkM1rwciGbtPYd+tMBaXeKQI31Rfv1LhiF6LYJ4kM53j+ZOZVKwWIELrMk3cUizsELlghN
-	3UrDJAH7gs1NWuBZGA==
-X-Received: by 2002:a05:6402:4408:b0:66c:1736:ded with SMTP id
- 4fb4d7f45d1cf-672bfd9c29cmr7233478a12.11.1776715578087; Mon, 20 Apr 2026
- 13:06:18 -0700 (PDT)
+	s=arc-20240116; t=1776723394; c=relaxed/simple;
+	bh=N4iDFdt3Y2zHqFxBnCXa8by04IlQ5YnoH8Jda9yFVnY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=P1dtMM/ReIBNK4flZn6jnBOVv6r17NeII68B0i6k5fkpv+HS8IUvFYK36Fzi6lCQF5Kptax5C5INhORvI4PpnjNUOwu/BFJm2vXPqJrdaiDoBYUrguJ4m9BIiptv2ceg79/PlI0WDlid9d1JP26vfZjqy7JGFiuzCA0vMOCwGto=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=joaPu9ns; arc=fail smtp.client-ip=52.101.53.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=njifqtz4CiehJV3CGp32MaYzcGKwr3W5KfDXNpZ61Om2AHijD4rc3USZWAF2Zl9Eqdk8GEuM8vq5pXiY/QXtVZtsRMtChCAhv46nqg7QJslmdHqz3vWuTRBCTIeCQ6f1kblJKe8DrKWVwKVVBS/14/CftdDlcINjyLSQ9TiEEX0JnOuB7mZoVTyqPUxM5Bz1qx2tiJq6ZRK+SBv0pigQKcGMkhJsWt2jVh2QDbFRsL6rixM1n755y4qmJmK0S2CiZMv45xkOdx9tXgvub8xMTb7XdmLyPr1pdQYlYci9yyNuqdXD4IV5sRbdSxb4DHRcqDXIz927+iz6NYJG3gC49g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+h1zy2u9UTQhSI5735iZSEWK90s3aeOdOfkof1xDuKo=;
+ b=xCjDbLle0vqAuCq0pGQ+WOcz0+q7Lq07jIzDpd7Q9pa3JAbIveWzq9g4C1/Yh7B3QQXNDcqlhrnTJeSLluOpHCN6t36fUiMvNR61tPVyjQsYt0kR99fv7Isld2/nBN1lGtktCpyPePVsitNNuTnDTRz2zeXfphTsJivGosGNoj+8pBFGg/h5fq1RsaPCuhw62oeVzQcFIC5F+hPdbAWCV0ICtyRnh5GQrT1kLqZFvorS6xpFfCU70FiGIpjkEA2hV8omG8xFIp+kkxoOlqH74sQi2+KOSOjN1RiurvKlN2jDgfEeDzG4z0FM7XbsmpMY++MBA6xsyBuNiXep9MeLgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+h1zy2u9UTQhSI5735iZSEWK90s3aeOdOfkof1xDuKo=;
+ b=joaPu9nsfK9Vv1ypyHApAUrfpQsk6Q4+xdiFwrEeO1Z/L+HEO53jCJEmybxyj3qABGPkp1EcscrO7AzlMWfuo/LL/NAhM3JLXZsKtgBG5uTdkGNeVpim6ZQJcOEvkDZ6bVzhDJuqqp8UZRPzIjYAG2kHU5xSm9xQA/ru1M8tuYM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW4PR12MB7357.namprd12.prod.outlook.com (2603:10b6:303:219::16)
+ by IA1PR12MB8285.namprd12.prod.outlook.com (2603:10b6:208:3f6::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.15; Mon, 20 Apr
+ 2026 22:16:29 +0000
+Received: from MW4PR12MB7357.namprd12.prod.outlook.com
+ ([fe80::a230:c3c8:a903:2b57]) by MW4PR12MB7357.namprd12.prod.outlook.com
+ ([fe80::a230:c3c8:a903:2b57%4]) with mapi id 15.20.9846.014; Mon, 20 Apr 2026
+ 22:16:29 +0000
+Message-ID: <67b36b5c-718c-4a9d-94a1-0db790655319@amd.com>
+Date: Mon, 20 Apr 2026 17:16:25 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/23] dmaengine: sdxi: Allocate DMA pools
+To: Frank Li <Frank.li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Wei Huang <wei.huang2@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Stephen Bates <Stephen.Bates@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ John.Kariuki@amd.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+References: <20260410-sdxi-base-v1-0-1d184cb5c60a@amd.com>
+ <20260410-sdxi-base-v1-6-1d184cb5c60a@amd.com>
+ <aeXPvc-9pRSNFKAR@lizhi-Precision-Tower-5810>
+Content-Language: en-US
+From: "Lynch, Nathan" <nathan.lynch@amd.com>
+In-Reply-To: <aeXPvc-9pRSNFKAR@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0PR08CA0019.namprd08.prod.outlook.com
+ (2603:10b6:610:33::24) To MW4PR12MB7357.namprd12.prod.outlook.com
+ (2603:10b6:303:219::16)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260416221957.51250-1-dbgh9129@gmail.com> <aeXBVKLvHANxqGGZ@lizhi-Precision-Tower-5810>
-In-Reply-To: <aeXBVKLvHANxqGGZ@lizhi-Precision-Tower-5810>
-From: =?UTF-8?B?7LWc7Jyg7Zi4?= <dbgh9129@gmail.com>
-Date: Mon, 20 Apr 2026 16:06:04 -0400
-X-Gm-Features: AQROBzCrdQXOD6z0OwIjTQiqtCrpKi1ZrveHybwpqhktO9bpOpk7ocxvVQCQPXc
-Message-ID: <CACrCO_WCtKfWUDXGYcsqT4zWTxBdpRpXyW34QmOs3-y1vhVTJQ@mail.gmail.com>
-Subject: Re: [PATCH v1] dmaengine: idxd: fix deadlock and double free in idxd_cdev_open()
-To: Frank Li <Frank.li@nxp.com>
-Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vinod Koul <vkoul@kernel.org>, 
-	Dave Jiang <dave.jiang@intel.com>, Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR12MB7357:EE_|IA1PR12MB8285:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7865d251-27a8-41ba-331b-08de9f2a7875
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|366016|1800799024|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	QNVGgix3TVgZWOfzFDJT2PLoZ5lZAvrudfPdqXREY/disghETDPcplTElLR3vy5y62h1vMMYJ0uDXNrh1pu40WSoJbfQi2RIFuOPGUg71rx7YecKMTOI6PR7Ve3V2DWqm1XeRA1W7dJOJd5YlStS4s31wZEoUAzG2+cGTgw1nwwYxotKX3Eqn2QqjlbtWROAQpvZMChLkHuZlAAbSPF1y5SaUWESfgcvAJA0JniO8W/RSER7seynqejkn7mcAtkrCwtTLSu9v/6uqJDtiAa9CqR+Dct5753vpcYkt+84eWTWyWX2Jihdae6KOBIT+yJNL/IVy2tzdgvq4j/G9tX5nlALv2nbP3pF7ff9qGdRggkDJQGzOCi6wnbCeW0VRLnc4N/U40cPZCI1g0INgu5KUodv9TK/2tbo2/0totlNWfKGEtn2osIqVA0e+HH07KYxWxxmOfDdcVrMKNH+XY6mswpUJMHpQHz3SYEjLAhDRyx61TmtlIbRL0KIJLBxb/4Htdbs6OCaWNmw7b96EVS18N8bafonAK6SNHDkIhivR+Wp2x9kiQu5MbR8LJgp7W+T4E8Ff2bGtJD7bNVynJN/jjnoeJFJjr9LrO88tSpIoIOduNzuJqJh0ykFjw0ND287YH4NLkgKtvvdhQZ6AEvjuD3zZXdxucA7kr77XXrxkI9rhdkCNhkXvplQS5rYW/Qqa01t7fhBf+AVSJc57e7Je6Upg/+Bv0NlsMcAbr31e5o=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7357.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dEx1Y0UranFka0V3anNJZGRTbGNXODlQUWYrUzNWNWpTMVJKUWpSSjVzK2Vt?=
+ =?utf-8?B?UHlkbVF2Wi9DcVJ1VGE3MDQzZ2JkV3NsMkZUdFEyeThRSzh5T1I3OU10T21D?=
+ =?utf-8?B?dkJVb2xUOW1GejBSbEtRZnNtNXd0Tk91eFpsbW9KYlhiWnRpSG9SYU5UbTdQ?=
+ =?utf-8?B?UXlmZzlrRzFubWVBNHNTdFBmRngwdStpRGptbWcyRHNYQ2pkcW1oa2hNTmE0?=
+ =?utf-8?B?anlxdVk2WGtWSWczZmRHMmt6MkdRQTh1bXA1empyZ2VOM3kwS2cyOUh0S3kz?=
+ =?utf-8?B?aGordTZobTEydzVGc1FVMlh3N2xQTzJia3hXd3lieVlpSjhlTTlmQmVGWUd4?=
+ =?utf-8?B?UGFPWDVQNWhxSC9EdTlxeUhuZlU4NFRoN3Nad2lYU280TWpRZ2J3VFcrWGc4?=
+ =?utf-8?B?SGwyc1ZyRmRpNnVUQis4a1cyYllnQVlzL0tmUlBscmVNb2RiUDRuR2xOL2Jr?=
+ =?utf-8?B?WjhMU3RlUUNRZ2NvS0VJSHVvK1EvNEhxTFdkb1IwK3oyMzgvUU85TEZLeU5E?=
+ =?utf-8?B?RmxCQmZLa2JxaVY3eHhwNkF2N25xQnU5NUpxazcyZEFKc2JhQURMZVcwRjV0?=
+ =?utf-8?B?ZjVzKzBUVklOdnJSNUlFeWRSWEhtdm5lV2wrTWhOblo5VVdrQTN0aUx1VFNt?=
+ =?utf-8?B?ZTVJUW5YNzdVV3h2MnNFNVYwSGtuTTZjVjNNcnNkSWV0NTFjTXF6bCtPbWRm?=
+ =?utf-8?B?bWF5Y0F0Q0pNeHI0a01zVW1RVkVJTUdnK1JJUklpdndGcGxDTHpNY29ZM0pG?=
+ =?utf-8?B?VDQybzlhYlB0UmZJSmd0U281bmNUZGdEOTZqWGQrWElvSmpyRloxN0o1SUZy?=
+ =?utf-8?B?RCtaQXlXYUJ2eVJjTjBnZE5vZmZtRjEzSGZRcWlCeGwyRnlJNjUwUUQveTVR?=
+ =?utf-8?B?NVJieEd6VXpIaVkvcDBHSzRLNUNhdGNMMGF5Qzh1WjgrUVBDRGgyclZZTUR6?=
+ =?utf-8?B?TDVjZEVTWXhCNzlxMm1OcXZxZDRpY2NsT1QvMkNTTTdUWUxHMDVKUW5YUElB?=
+ =?utf-8?B?UlNIb3RzVnlKZ0lMRzVvT0s4RDN2Q09oTWdKbGZBekR1RERNYVpoYUNKV1pD?=
+ =?utf-8?B?MXlEK2ZtMExGNitOcEFnUzlML3hXSkREdzU3RXRGMGVlVHhlNU1ZZmgxbk9u?=
+ =?utf-8?B?TVd2QjROZHlIeE5QMUdoQmprejl5eHVqczFKY2k1bDBMbnFDZGFYdjNnZEFt?=
+ =?utf-8?B?b2Izb1hsbisvVkY2ZnRGQ2pvK1gzck5ZWXBqVG5MdVVKU3B3ZEQ5QXlDS1Uv?=
+ =?utf-8?B?WTBVaGg4Z2xNUENjNjRtOGt2NXpRRHVQYW5YamVLdW96YTZLTmRWZzQ2eWtl?=
+ =?utf-8?B?MXdNMC8yY2M1OWF4YStMT2RkNVZLUWxLZHFodG1TTitQSHZVUTVSSmdIbkht?=
+ =?utf-8?B?RitHcVBINE5yWm1hUTZJOVJYM0N3bCtQb3FFMU5HdEFnODJzWTB6NllCS0gx?=
+ =?utf-8?B?MmtWZjJxdVBHYnBjeDhsYjlubzNpbUZqSEMrNlBjMFR3anRIZXpIR20razJK?=
+ =?utf-8?B?TW1PcU1EbytVby94bDBEa2F0WnlDNTdxYzl6UWRJcmhHcVFWNHU3aWR1M01m?=
+ =?utf-8?B?NzFYcC9IcmFiczRUNEQ3VHViQzE5VGxmZG03VndBcURKZGZBR0VrcEFBL3Jn?=
+ =?utf-8?B?elhUYXhqa2g4VE0zL0VlTTZuUTJZZnNRV1Z0aWptcXExUUdOeXpnWk5mc0E1?=
+ =?utf-8?B?UG1TQTdjN3NaTDBaM3dCU2k4L1AxZHNoSXFhaGsxelI0ajJFZStuaVR3RkN1?=
+ =?utf-8?B?Zy9jUHFjMERXZkN1VDFrZXVxSS9Bd1FZc1RXUmJNMWszQXhrRzhSa1lsMjZW?=
+ =?utf-8?B?em40Z2h1REgvTWhjRFZFL1gvUGFzenU2cVJBYlJ2VTVuTllKUnlPRTRpZFBm?=
+ =?utf-8?B?R3R6dWpsMGIvTlJwNkVFNHRWREZ2aHdUL04zbW5BM0Raak8zTDNrNDhsOU9t?=
+ =?utf-8?B?MDRaODZBWWVaYkYyRTdpemgwRHlLTFFXeW5Mb1dRZHdMaElzWFhYT0VaREZh?=
+ =?utf-8?B?S0lWUnhZUWlRK2VHMXU3YzNuVXF5MFhRTGpYeHk4VklxbnJiLzhNc3hXS0F6?=
+ =?utf-8?B?RFk1cUczYllwbnBVQS9tMW9hQTRIYkpLeHV2RkFDSGhZSzlCbnZ5MHdIUDBp?=
+ =?utf-8?B?cy8vMWZsTGFFWVZNeVZ3b2owV214OE9wa0ZpVHhzWjkyU2thTXVyajkxZUJF?=
+ =?utf-8?B?WGcxZXA4WkFMcGNMOG10cm8vNndYb0lvblJjQ1loem5KVjBORERtdzNYeUFL?=
+ =?utf-8?B?eGxsQmxaQ2dBcmZsbUVtbmpHMUlXNHpzc1IvczRBSmFxdnI0Ui95NWgwT2dx?=
+ =?utf-8?Q?pe6mThzCEPCjm13bcv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7865d251-27a8-41ba-331b-08de9f2a7875
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7357.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2026 22:16:29.3022
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tv+d1PQnGsv+VmM+eYt+6Q/KT73b+5kF1c7PLD/E3OghmlQ0CUSLYPBQh8GD7PeWso0EoC4jMHR7qbbfaVz05g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8285
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10068-lists,dmaengine=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TAGGED_FROM(0.00)[bounces-10069-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dbgh9129@gmail.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[nathan.lynch@amd.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[amd.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 80B9343386D
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:dkim,amd.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3D4044348A8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Dear Frank,
+On 4/20/2026 2:03 AM, Frank Li wrote:
+> On Fri, Apr 10, 2026 at 08:07:16AM -0500, Nathan Lynch wrote:
+>>
+>> +static int sdxi_create_dma_pool(struct sdxi_dev *sdxi, struct dma_pool **pool,
+>> +                             const char *name, size_t size)
+>> +{
+>> +     *pool = dmam_pool_create(name, sdxi_to_dev(sdxi), size, size, 0);
+>> +     return *pool ? 0 : -ENOMEM;
+>> +}
+> 
+> This helper funciton is not help much!
 
-Thanks. I can rework this in v2 to use auto cleanup for fdev instead
-of explicitly calling
-put_device() on the error path.
+Hmm OK. I can drop it and make sdxi_device_init() look something like this
+instead?
 
-I plan to keep the change narrow and limit it to the fdev lifetime.
-The idea is to return directly
-from the failed_dev_add/failed_dev_name path after unlocking
-wq->wq_lock, so that the
-auto cleanup runs only after the mutex has been released and it won't
-fall through into
-the later ctx cleanup path.
-
-```
-static int idxd_cdev_open(...)
+static int sdxi_device_init(struct sdxi_dev *sdxi)
 {
-    struct device *dev, *fdev __free(put_device) =3D NULL;
-    ...
-    fdev =3D user_ctx_dev(ctx);
-    ...
-    rc =3D dev_set_name(fdev, "file%d", ctx->id);
-    if (rc < 0) {
-        dev_warn(dev, "set name failure\n");
-        goto failed_dev_name;
-    }
+	struct device *dev = sdxi_to_dev(sdxi);
+	size_t sz;
 
-    rc =3D device_add(fdev);
-    if (rc < 0) {
-        dev_warn(dev, "file device add failure\n");
-        goto failed_dev_add;
-    }
+	sz = sizeof(__le64);
+	sdxi->write_index_pool = dmam_pool_create("Write_Index", dev, sz, sz, 0);
+	if (!sdxi->write_index_pool)
+		return -ENOMEM;
 
-    idxd_wq_get(wq);
-    fdev =3D NULL;
-    mutex_unlock(&wq->wq_lock);
-    return 0;
+	sz = sizeof(struct sdxi_cxt_sts);
+	sdxi->cxt_sts_pool = dmam_pool_create("CXT_STS", dev, sz, sz, 0);
+	if (!sdxi->cxt_sts_pool)
+		return -ENOMEM;
 
-failed_dev_add:
-failed_dev_name:
-    mutex_unlock(&wq->wq_lock);
-    return rc;
-...
-```
+	sz = sizeof(struct sdxi_cxt_ctl);
+	sdxi->cxt_ctl_pool = dmam_pool_create("CXT_CTL", dev, sz, sz, 0);
+	if (!sdxi->cxt_ctl_pool)
+		return -ENOMEM;
 
-If you have a specific auto-cleanup pattern in mind, please let me
-know and I can follow
-that in v2.
+	sz = sizeof(struct sdxi_cst_blk);
+	sdxi->cst_blk_pool = dmam_pool_create("CST_BLK", dev, sz, sz, 0);
+	if (!sdxi->cst_blk_pool)
+		return -ENOMEM;
 
-Best regards,
-Yuho Choi
-
-On Mon, 20 Apr 2026 at 02:02, Frank Li <Frank.li@nxp.com> wrote:
->
-> On Thu, Apr 16, 2026 at 06:19:57PM -0400, Yuho Choi wrote:
-> > The failed_dev_add and failed_dev_name error paths in idxd_cdev_open()
-> > call put_device(fdev) while still holding wq->wq_lock. This triggers
-> > idxd_file_dev_release() synchronously, which calls
-> > mutex_lock(&wq->wq_lock) =E2=80=94 deadlocking on the same mutex.
-> >
-> > Additionally, the original code fell through from failed_dev_add and
-> > failed_dev_name to the failed: label, which called kfree(ctx) a second
-> > time after idxd_file_dev_release() had already freed it. The subsequent
-> > idxd_xa_pasid_remove(ctx) then uses the freed pointer.
-> >
-> > Fix both issues by releasing wq_lock before put_device(fdev) and
-> > returning immediately, so the release callback acquires the lock withou=
-t
-> > contention and no further cleanup is attempted on the freed context.
-> >
-> > Fixes: e6fd6d7e5f0fe ("dmaengine: idxd: add a device to represent the f=
-ile opened")
-> > Signed-off-by: Yuho Choi <dbgh9129@gmail.com>
-> > ---
-> >  drivers/dma/idxd/cdev.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-> > index 0366c7cf35020..19a449333782b 100644
-> > --- a/drivers/dma/idxd/cdev.c
-> > +++ b/drivers/dma/idxd/cdev.c
-> > @@ -307,7 +307,9 @@ static int idxd_cdev_open(struct inode *inode, stru=
-ct file *filp)
-> >
-> >  failed_dev_add:
-> >  failed_dev_name:
-> > +     mutex_unlock(&wq->wq_lock);
->
-> Can you use auto cleanup to fix this problem?
->
-> Frank
->
-> >       put_device(fdev);
-> > +     return rc;
-> >  failed_ida:
-> >  failed_set_pasid:
-> >       if (device_user_pasid_enabled(idxd))
-> > --
-> > 2.50.1 (Apple Git-155)
-> >
 

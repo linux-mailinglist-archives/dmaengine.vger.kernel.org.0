@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-10043-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10044-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oK1JJ7jl5WlkpAEAu9opvQ
-	(envelope-from <dmaengine+bounces-10043-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 10:37:12 +0200
+	id OKNeG03l5WlkpAEAu9opvQ
+	(envelope-from <dmaengine+bounces-10044-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 10:35:25 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EC534283B3
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 10:37:12 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3F0442835C
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 10:35:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C164F3011BEF
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 08:32:57 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id F02643004D92
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 08:35:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AB14388364;
-	Mon, 20 Apr 2026 08:32:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9833388E7C;
+	Mon, 20 Apr 2026 08:35:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="RYGQqSQ4"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="SxBWG8bR"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013069.outbound.protection.outlook.com [52.101.72.69])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010025.outbound.protection.outlook.com [52.101.84.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770D6377558;
-	Mon, 20 Apr 2026 08:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7E1388364;
+	Mon, 20 Apr 2026 08:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.25
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776673977; cv=fail; b=rQxmZ10YtKkExzkgr2rZC7wFNDdYzjgVC/Cb/3x2PE0cCQ+XZKPE9fQYYyqbK6A0fMQA1Bc3tOQquIP7Q1eyZfYmp/mhrSCuZBWNbUTIfdB0VVrJWf4sW+chAtnHUUKFmejt32zPsvAQgt9ZLplc+73xjgzUQFE/jObxk4b168U=
+	t=1776674107; cv=fail; b=dgUGAdyIvPzobpOLQac2UoYQUfkmoAJdYJBuudeh7C5BcEXLOKM0m9X72RxJ5gN5P5PAlwUoRInyiKvKBg12lOvg1o8yKBs70uFlvlUZ0NXF5xsEzBkDo5g+d2wcJQE9Yy1xC7tyFPb5eCwwMEGCNhYj5E4oS3bVsKMqpk3FBfg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776673977; c=relaxed/simple;
-	bh=HeYH2rx44hfK7YLOj76UWaZYPDRS50ZAoF9JxZI5MoM=;
+	s=arc-20240116; t=1776674107; c=relaxed/simple;
+	bh=9Lr6ABOXkS5lFdPEAJp/VSW9kgMuAlaD6If/wiNotZ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kVkqT3RttdTbaM/VhWh4P8lzRSlaJuDngb+Hd/4x7aeuXHum16XNnvh7uPcVvg8pH6so4zd7v84C2W9O+jZIL0U/wRRKiU35/oLXqz2dlbL7dm9ArGH3Vg3cg91bRmISZ0lsih2CF6KTfF87RNSi5d8ilvLRbkRiGo81h8ELpWo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=RYGQqSQ4; arc=fail smtp.client-ip=52.101.72.69
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ryJQBDEoaQlIUJl5ZaR5awZVy9BzVWstFPVp0AqAAq6LwXtvKUL+sVJVWT2jSNsO4Afi0G+h4o2HRkgzGqA98j9YsL0YuYYMuQYPH/MT8JuNs1XtHMxm1evHq0DUpl8CbR14ri07Q1/sbfgWHZUaqYlP2M9Mnzy/SZ6BIvIsKhE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=SxBWG8bR; arc=fail smtp.client-ip=52.101.84.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ytz8vVvKVKxiruaAIOnoc/O/dHGFXcMRur6N9T7b4YlIUmh4jUKeIIv8ZQhi+82vsAVVbCjvRIkqW/ZSiNfLqQdE8eJGs6jUSQkVr5cQhMTDk57Qx7MgYSAynTscPJmFsiP/b8lZIp00Cec39P5p8RCS9lqVdkfNNyDW+RJkYrzrPKkYDtp90uLX1U+Wp0KlgkwQTrj9q1lhFKR5cPeof9KUZ7O4SmSwglWDKvUP41LECCAT0xkkA71vTt90HXj8fC8+xKG6TLQxwIElzHqz//1gFxL/sXhFtw0Kq4ZSPCAXBq+tJLA0775QQit/65Z92HLKyrkg7JxqqgNw9+8xcQ==
+ b=kdy8SQlYShsqap/AAPRxd2J58DaUTg/Ta4DrbXJd9RXaWBerkFep0VEGvw7CiFhyeT0XP9JLvkB092sHk+NJ6iMqLKcsnKpdf5fj8ytDesAkmo6G7rVdC8ixnkdnH0ioJnr8pB/5Yhfvn+re8XiqoC+2a/tEGuY8+iAItU/b2WVWnFOo73OVb6HgG63VKUKH4DvCP5VgXQde/lBWjiTbwzZnQXCZZSaU5y294SNR6rUyw+4wsBmMRedd0ahTmq59UlLzzMe33Wd0tgTxLkxCeXPawtr4C8CP+aeVhwU6TIQP1ZzDQcgmKrb13nUsyg7bDQRK2kOgLxT07RvU3P7WnQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qkizAcAeX4xFiBs4dP+IGyQgOP/vkg7Pu7kzwyrcvQg=;
- b=A0gv+KyxkGHS+SxLzf2IKIaVpw6yT0kfUFkyyR7dlcpMY5I6iEpowzU8U2lsJUOyWzXC8Rznd/VT14ejXES+ZL8K8Q06Glk/TFnLZYRSSMXaymXRcuxGnHAW6cYMCuOc13LHwROpzS4Mx0/BL0fGXjLd2rUjGRUD+U5xJ0c1QgGNe4YaMQhfA86I7q9WJsqGsuNATWIfgc8ig+e0vu0/lNMasey5xyN8QF2lFL76YTcwOcd7eZCEMxaDJfiIUruQvGl9VsvrstTJCbl1Zt9fbEL4iUSAMyDQKm7HdlE46OfQHZENwbzNBAl/IusBPvmn35H+WI00X23NuK2F+zAR0g==
+ bh=k5RwWtS6pr5ZjWL5ACfmp9tjRaESb09w3I7jG3DEMeU=;
+ b=rNzkvYfYkjqI52ZSjnDpiuPpvq5MJgy0TdfkSt/8q+jIUL/wgE5tLJLLq6XdJwj8IfLaYN/QV5oxQ5lyB2Nu1baF1HfO2GnjD80FkPEGeJpR5Fwx/TqcH6ysF3MK/h5tokxcm8jFMzWHznF6i9p0GVQVAQqcf1iFXvi7iiRjjLzA57fLGm/AVO30llo2LxwAjTr94I+q/hzdjtSCfoopJHaNCM9686H/PgDdCun0S3nmTgBkJjynntv37yw38yAKQeZtfLJU+UDcIPqUtkZVMkG35Ii0D158lh2dvQv2AZKq7kllCIiDnkjhFrQnWfg5g5qp2o9Zt8DRUU/cCOkrNw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qkizAcAeX4xFiBs4dP+IGyQgOP/vkg7Pu7kzwyrcvQg=;
- b=RYGQqSQ4ujpUsbu/ccttIBy8TDERU797DpI1jwXEJC/M45Nd/5R0+TdJVdeGQss/zmXL5EQjE2UOGvC/xAqLLkzEx2sp+9ovduxAjukXVNYLlpo3Ngewqkak79Pf6inhVUIftW03jnvw2Qp2xxZP3l9PzhUUpvtT1jlzzL38ebA6SmMXVRMMdZdq1NbYKe8AbH6u8H9zUXWdJPrd/g44Ikh7/nZRxRCDbdmEFUaEreuSo1wZvNmyZotCEscXr9Mh5syPjCshQYDln1s7y4ZjaKDLzXDstS5m6N+jaybbdN7xSErsDDFy//5eN6ouykjcHFXcuEMOzvc8Bq89PcpRKg==
+ bh=k5RwWtS6pr5ZjWL5ACfmp9tjRaESb09w3I7jG3DEMeU=;
+ b=SxBWG8bRF9AfU7zQZxQ6mVnyTT9VAHw0HDyK0p77U8jWUW4OOIHBrXHhjAKVeWSWOqLHNNyzOLoapuSjXtYL2pQyX7Z9XtF8bHvBG6tGFr0kL+amnEvZ2VWnGOfBwot2Zt/C99MFHn0I0EjwDGWkjRuU5PKUL6zorf0QJ8WEXo+RK+frm4tx7uz5XokVi8vNzSqGYjfwosSC7KdSHElFeZKv2GPtN+mUjdmLrZZJ7PNEfvlGP+GkggQU/th+ckgkiiXfku2FJCnVV/H7Hm6Kkn2LmI9TczL7FCTulNuXMvLUIfT2Hj6DuJW664TQrcV3eplkiOL4zcvrQkDP27YZtQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by GVXPR04MB12106.eurprd04.prod.outlook.com (2603:10a6:150:317::23) with
+ by PA1PR04MB11360.eurprd04.prod.outlook.com (2603:10a6:102:4f2::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.25; Mon, 20 Apr
- 2026 08:32:52 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.32; Mon, 20 Apr
+ 2026 08:35:03 +0000
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9818.032; Mon, 20 Apr 2026
- 08:32:52 +0000
-Date: Mon, 20 Apr 2026 04:32:46 -0400
+ 08:35:03 +0000
+Date: Mon, 20 Apr 2026 04:34:57 -0400
 From: Frank Li <Frank.li@nxp.com>
 To: Nathan Lynch <nathan.lynch@amd.com>
 Cc: Vinod Koul <vkoul@kernel.org>, Wei Huang <wei.huang2@amd.com>,
@@ -70,15 +70,16 @@ Cc: Vinod Koul <vkoul@kernel.org>, Wei Huang <wei.huang2@amd.com>,
 	PradeepVineshReddy.Kodamati@amd.com, John.Kariuki@amd.com,
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
 	dmaengine@vger.kernel.org
-Subject: Re: [PATCH 12/23] dmaengine: sdxi: Add descriptor ring management
-Message-ID: <aeXkrudhvhTRtS9d@lizhi-Precision-Tower-5810>
+Subject: Re: [PATCH 14/23] dmaengine: sdxi: Attach descriptor ring state to
+ contexts
+Message-ID: <aeXlMTenR8WGpBL2@lizhi-Precision-Tower-5810>
 References: <20260410-sdxi-base-v1-0-1d184cb5c60a@amd.com>
- <20260410-sdxi-base-v1-12-1d184cb5c60a@amd.com>
+ <20260410-sdxi-base-v1-14-1d184cb5c60a@amd.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260410-sdxi-base-v1-12-1d184cb5c60a@amd.com>
-X-ClientProxiedBy: SA9PR13CA0179.namprd13.prod.outlook.com
- (2603:10b6:806:28::34) To PA4PR04MB9366.eurprd04.prod.outlook.com
+In-Reply-To: <20260410-sdxi-base-v1-14-1d184cb5c60a@amd.com>
+X-ClientProxiedBy: SA9PR10CA0017.namprd10.prod.outlook.com
+ (2603:10b6:806:a7::22) To PA4PR04MB9366.eurprd04.prod.outlook.com
  (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -87,69 +88,70 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|GVXPR04MB12106:EE_
-X-MS-Office365-Filtering-Correlation-Id: 235cc6bf-2ebb-461f-993a-08de9eb76985
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PA1PR04MB11360:EE_
+X-MS-Office365-Filtering-Correlation-Id: ca8d0810-f2f7-40e7-f327-08de9eb7b79b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|19092799006|366016|7416014|376014|52116014|38350700014|22082099003|56012099003|18002099003;
+	BCL:0;ARA:13230040|19092799006|366016|1800799024|7416014|52116014|376014|38350700014|18002099003|22082099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	7KQcjFHdBrSdVDxSGxpjzuUgtTiV3h3csWaKH9jwEeUjune9QGbfVJK9JOIvdhcdaNlcUUR62CIQXDW/LZUT4HhL+nD8zMiH3LZtolWKludvDdJJWKytIdhM3weSiKub5SNZYutisbQeIKzsrCrwsw6swQMQdODkn1J/jqEAqDZWbHbZRItFF5HpmohoQ/goBx+0e1J3i5aNIk0ZYKBvsH/poCrMBcJ3mfN9VhFHnG/p6Fmoep06M++ETcGsDY075aPkyvkRntjv7VUyAV/057BGHfrTXHCuTe5kwKYfMcjLFWCs+YMRfvxmXcEqvdAk+IGWNQK6S6hiMow2ROSOzDSszGtJeXePsMdk6vp9ZQ2gQUooZ1XC1ttypKpGkPY0WBV9hW+1AGeMuhXnJFDIpyqQ8FVe0vt062iwkuRfQta94TMcw/i1REW+n3c/dyrYOoqjaAtjJ5Sfr5lHK4rlBM9nb230xWZJqn+bKMw+FTgDVu7FU509gb+sU5RgPwocFKjtMudmuGgEcMxYyj8NhXjIAhmRKOS2OVHrHhALSmuF4d5sWIwJDDJ85q9/dRUppveRk0/bfANBdRGWeJ/DtXZeureITv73ndI9Gp/cRagCQlpA82kMR+hZo72f0nRTLhe7w9GIuWSgq3JG1fAxmVhxO8O/E/GCZ0ELFCuMQvLjYKHJCL+x1RkYHlmyrnVUYXcrdUlVVMthdyHkMzu8J4G1LizoqFxTuP/R3JI5A7thorii/Jl/dj2JQ6yuT0jtaWxk9QOv8bfSxGg1pPsed9WYJuf2xAuCjL5zIEh0PqU=
+	Yf4ek4vQQ4tNJz/XNWyZkZhD6+m5h44GOwOnYYXF4n3SNy5jBKWsxBkl2lRudRrIlt+2JPhhDJw3G4CCCFXGlvLBdOFqwDACkXjUNIWGvgfY7wGbQwOL1wEo8/olC1Nz/qW77sdFXu9hiKQD3yLAVzoQl5tE5DxhxHXy8t1V9F/72UY9CS/iZLq+2cpPvLA7YKfx5r0zrKImAc03zZHLXINufGWw85loYTURoff/EwoldIpZRb9yEGVM78e9ZAm8sJGU9jxtW9witR47NWx8gW/9WCeN10phcwuZ2vRUQ7CcNoERs2/QuhV2l/rPfWlFPfHZj+rpTxGTCf7Kp9PN1TZUVjBjcxeXMXhrxV31j8jZA0k/5GKYdV8g9g+Iod1HMOUy8JZzeF2rwquZWYU9PIWJY1e9AYtg9ynoNp6/YQEbFtD9/x6eZEB2rSY7jC2l0/gpWMGNxKYTlCuWOsQM1YRO0t63SFnywrhjkP6a18qe2EVc2V80JYbzbP6rJ/Fjy0NK+roFN+xCgn/0SfGCebVv3/qYYliQQkGnZ206HCkcXzv4SETigJ6InsMJDB4ZZi5IZKEPdFtKtVjDH3LI71ANEsWVtoe4qJ4ds0Up/tgawKJ+2zo34x5MGMiggILWBUH5+7aLGiLeGs9+DjlzGVRxHc13eIg2TD6kTCeh7Iy7F380Kw2UUrfuPLt8Y+h7S0eFt8xmGsDEv+eyrAXE1+FpXgEd5OiH1Pm/SbTBrHMk9dBP3Zv+TxE036ootdON7lnHlRE7CGK1YH9RGeH3mgiuLvB6KeOzzxpPUqh/fKM=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(366016)(7416014)(376014)(52116014)(38350700014)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(1800799024)(7416014)(52116014)(376014)(38350700014)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?R1rwYkg4ZFVr5Xe5xmBy3pxMSxkW6GAfjconbB9oafCxAHAvKdfGIOlxATkz?=
- =?us-ascii?Q?qwnlRB/KhuCL8qx/7lWMw+ke7aSoLELN3UijtHSQsIXYgts2Fh5E2oVzEEIp?=
- =?us-ascii?Q?1x3FoZzzbWXVwgENzICfV32eOZAZonvBQOhoUDi/R4UoeQSOH8EJa2UNYUT7?=
- =?us-ascii?Q?92SYiCwABXaGNakanDEKmRceMg7cs/0uqDFPTyD9XXJsAZQU/qoWL8saiqD8?=
- =?us-ascii?Q?9IW5NewaiSVVHPCB+2lmjDyAjSyvtXyNnvkYqInr9UjI9B7sLq3r4IFUWydM?=
- =?us-ascii?Q?KyWhqllh4I7t5xGVtcaUX98hYpZxoPGTZs9H6hC6gZx12EDVIyIGwYYccS5E?=
- =?us-ascii?Q?5L1PVJQVB8khuHqfaF2UOzXXnlG2HjE8GIB/gToZ+zxPK4g/Edtwco5MVNJD?=
- =?us-ascii?Q?0cJmJd4ta7NSMCM+Nfh6fksRPFMX5v0NnVjjMucPfYM7m76eRaGCvi67yr2J?=
- =?us-ascii?Q?tsDqapWjuLO76J3H4KqyceRJyUjcFXUwB4KX7NsZN82iQUDbPRN099BHSvl8?=
- =?us-ascii?Q?CMNsvc+n6eQEolIW7LV9j9d/oJ9nKHKMn4TfZrzunsihKxkCaaEPx6LJFxOy?=
- =?us-ascii?Q?kZ22xls1PydLmeMNolDIYlzTMSOUKtUCKKhdz8r0LYIsb+bOWmvHJyuZEQ3a?=
- =?us-ascii?Q?FOuDqD0ICtqko0m7Bh5dTTbLOgx1sfLZu0o8X3f1hxWSdA9VsBtdkuI1ZD5N?=
- =?us-ascii?Q?CfM90NxEkrkC00FoiQZCiVsqXmIH3kVnnMM/e1TlkRxFaKQkPoVTnoB7WDmV?=
- =?us-ascii?Q?gpYRsvbI4j+rZsmOU0m8ISHkUh9z3xT3QmROeVbuhI7ah7cinKZqeqPptkXh?=
- =?us-ascii?Q?SsDyl+lLrZ/Q2fnuEXIKcAbG6pUVslM9hO5ac4+V+9vxCf49TzQmyM6qdTQc?=
- =?us-ascii?Q?by74O2AKL7OJ4wL6U6cJb0hWVHRyWC6MW5wdQtezZtcFBxt5RFPJKDqM8Hr2?=
- =?us-ascii?Q?vcS33vuft3hna1vZq34yTDqUcruWV4/Z+enHv3KvvbbcTSQUR1Kzj1DYZPoo?=
- =?us-ascii?Q?VywumOL1z5GOxF80sIppYQixKREB06fAR0fdPMoW1En9XpFfd82/Tbg+EQHK?=
- =?us-ascii?Q?KlWPXPUXrR8hpCFx1BAHlJidDSx+qx1IkjBLmvpfAYMwbw0G9XQqqULMbUBO?=
- =?us-ascii?Q?mp2F2ODM/HBqTquQpYomBfutzf5UlbzViKB7O2kId9JWnAzo4q9OSmuGGJ2r?=
- =?us-ascii?Q?voj2FBmjCYEc/YJNNfdBG67Jjk9UDj8i4v+jxYw7saU3QlaXOlY97WrTJoJe?=
- =?us-ascii?Q?23UCw/bsgsJaDvwnTk9HNJv5akEwIvrJYo4S6vBdZqNG2B7CHpC9sB31Unyz?=
- =?us-ascii?Q?uRfpxvekAie3/dCC+aRTuIHgXuJrFLbwZfaQU76doDhoVad1PPtKLLaRzsMw?=
- =?us-ascii?Q?V3RIciSow1m+kNCZ15OQlF1jjchSw/n/ynWMdXxuLkWPjYcHviXgOckX8DqA?=
- =?us-ascii?Q?eGti0SxPmCXjDpgt3QZUlLorzbJ/98HsMGUn8/84s3qaopUqiOjtgCa1+BqT?=
- =?us-ascii?Q?JVrucuaB58VT6ShsoFKiRr2v5JwQknOLKRwd0+YjZURPawHJQtWDy+xoqrE3?=
- =?us-ascii?Q?9PXkVZoGbtIxZPojJqMmfg0MpfKP09w3fZPW//eacslMpyVmgMNz0yY5ktvm?=
- =?us-ascii?Q?nwFbNxeLnJPlByOrnX18RxGFLGz5Aq8ryfhBqXc2sE/eFfxSfNsa9qnOaei+?=
- =?us-ascii?Q?o4hxIqmpWBvjCUJbHYMUlv++N+9/dhQbgaMYEgbR5a2AMBzR?=
+	=?us-ascii?Q?0+Vd/Y24+CVyFHAYKc+kb77kdkEQrRnrSR3Um9je3dq2IfXwCSMLVzHQdtl+?=
+ =?us-ascii?Q?pRuj2DA5Wl1kaBpamOjBpzOYJMtEeBkZTF350O09kmi3L7Zondr8uKpsLt7U?=
+ =?us-ascii?Q?DKFhlWRBlAv1lbfmbLNLoXv+GU5RwoYIteGR1wuOoJTT9J4FJQf9raAwiZPS?=
+ =?us-ascii?Q?/qYQ4l2mV8A2HLqWOnkG2RwAR2JwO8O/ucksI4iHQ4GGYl7ZfN2+qqCUTi5z?=
+ =?us-ascii?Q?ManIOaH+71H/4HDkclhHNkt1XMPspqkvLcB56uHIRO1bPFBPRvOdMYfQwfLn?=
+ =?us-ascii?Q?wd5Y+3GuvTtSaiABkQN8/76cfBVtmKFyKVztB0//4i/WneC89AyLEye0zKDU?=
+ =?us-ascii?Q?wuE0X1sqAxCWcWO2JyCbDIWGwvl0A61KgB95oNZIIiqJktnziYQcYa6FzJQM?=
+ =?us-ascii?Q?KyZvtcHnS67j1l0mtIfs69nTb8BpWDnGVaU58OoqyoHSMV6t51Qhk1oIEGcj?=
+ =?us-ascii?Q?NtvZFOTggR0VTrIXZc26fXwwxzW5hTY1ncu5CuTVYShuei1401rYe1RRqm8L?=
+ =?us-ascii?Q?2q0sXbph5RBolCJG4ZhYbQqdPOeIhwuS5nlnPd0fDdev1p0uu1sWjmbaCmpb?=
+ =?us-ascii?Q?fG0XwrPJgTJ47LMHADmHhiQDs48M9uhCTqnYvqeqSpjoK9DvvUDUVY1cEuDd?=
+ =?us-ascii?Q?GU1ZhDpgCu0Tj4oMXWrSfYusCkStFRsFhZ5k7PQMTyv06KHTHSNyjKHOqNx5?=
+ =?us-ascii?Q?qvCnsg9/FwyjBgJFAuFSpvPVuDY3uNrfj/8FHCStSuBuq5osGswYY0CRORzW?=
+ =?us-ascii?Q?pcTyILNE5F6XETYfyHeQAXbWiCURuZO5xFtT6WAqdZ2p/YT1cW3yRZdrafym?=
+ =?us-ascii?Q?oBJUEJtqyD1NmMHALjgE2V7e4+Qi8W9gxg1ZNHSwGY4WaxGOti6rCedua4s4?=
+ =?us-ascii?Q?jl0eWg5tWNEzax9uTNEL6lEAaSFFAxSMSXCu1jiUAIYCh8mr2tjXZzln3wkI?=
+ =?us-ascii?Q?5Yi6E9Cd2Iq15gKq5XEifJtKob6MnxntnRB3NeGR5JTIPcTXnLdvKAfllpuJ?=
+ =?us-ascii?Q?qeNpqvIPddk80GNk9BYrZf5hm53nkfT0GYk1KWO2rrfqOe780xPVsWClCeRy?=
+ =?us-ascii?Q?2osN+ASSHKQeKREtqkDtP9BFp5GsXoIkZp+iUX+5KYCQoWbv2iEWuk0pcMIq?=
+ =?us-ascii?Q?Lt5Nisw6cRPpOhNcYHjIAbHiHqZ0721ACTBzp+O7nVmuBPIl/c0Ze7bg8CWj?=
+ =?us-ascii?Q?FJ0fj45mXf/I0jsZ/25kRr0+RyRAK4ci63YexhyqpKW264BZnixoRcuFlSId?=
+ =?us-ascii?Q?GmFPyjTJ7diUvJSEan/jEQ4cTYrTtoUDz+6/QLyMObCLUIkqBDYxNxaBfz1v?=
+ =?us-ascii?Q?apAer83zEQZAqJLqZTEyyTjPGNn71EVIeHCs1Wi0ZISCpHlmRd9deaXlS4hg?=
+ =?us-ascii?Q?dkf+9xK+jyMnaGizErlOdtcdONFXqT9Ff3ZV5pX1kgaZytn45Iey0XEPLmQm?=
+ =?us-ascii?Q?e0FrTaY1vmHwxEbc/EpgmZg1qr/6ANEfJHCM7AoYFvQkogEXJA8Kd0cCPeS+?=
+ =?us-ascii?Q?KYk1T2wVWTBb+VVJZnN4g4tA961pLlm9/w06fgohKzFBC9+Ekbr3jNfUEaMK?=
+ =?us-ascii?Q?rGpv/STmholFBRYwyDCIGxRl4XaPK50go3k5xnOiZusqfAPoUXwN1JDTeTIF?=
+ =?us-ascii?Q?WOqmV60xuRIQKpa9GHO/+TAOJkw3Ge401teOxLfUsaTU2Z28zKWK9UbtmOqa?=
+ =?us-ascii?Q?7lWxkvEL4mLim4vuUhrjdgxb9m7XCssizJ/V9E3VlD9AMm/voOWeMNMuR13C?=
+ =?us-ascii?Q?8X7/OuPPAA=3D=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 235cc6bf-2ebb-461f-993a-08de9eb76985
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca8d0810-f2f7-40e7-f327-08de9eb7b79b
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2026 08:32:52.1890
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2026 08:35:03.5343
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /V3HIcqya95f8/cFIgFQKuu+rWvp26/aybdx9cC0g5dwGUEWiID/MOzxmzt2184Twc6DfBAw2pIxQcxSkiC5GQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB12106
+X-MS-Exchange-CrossTenant-UserPrincipalName: P3D/qDhtbgylHZj3FdsaIElEJq3jlhELKE8YbNyXVG5Ie3JO0rFZ4+/kmhQycE4l3vlbsFhP6rfCQQ/XZvMu0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11360
 X-Spamd-Result: default: False [0.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10043-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10044-lists,dmaengine=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[12];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -161,134 +163,100 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[nxp.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amd.com:email]
-X-Rspamd-Queue-Id: 1EC534283B3
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:dkim,nxp.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,amd.com:email]
+X-Rspamd-Queue-Id: D3F0442835C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Apr 10, 2026 at 08:07:22AM -0500, Nathan Lynch wrote:
-> Introduce a library for managing SDXI descriptor ring state. It
-> encapsulates determining the next free space in the ring to deposit
-> descriptors and performing the update of the write index correctly, as
-> well as iterating over slices (reservations) of the ring without
-> dealing directly with ring offsets/indexes.
->
-> The central abstraction is sdxi_ring_state, which maintains the write
-> index and a wait queue. An internal spin lock serializes checks for
-> space in the ring and updates to the write index.
->
-> Reservations (sdxi_ring_resv) are intended to be short-lived on-stack
-> objects representing slices of the ring for callers to populate with
-> descriptors. Both blocking and non-blocking reservation APIs are
-> provided.
->
-> Descriptor access within a reservation is provided via
-> sdxi_ring_resv_next() and sdxi_ring_resv_foreach().
->
-> Completion handlers must call sdxi_ring_wake_up() when descriptors
-> have been consumed so that blocked reservations can proceed.
+On Fri, Apr 10, 2026 at 08:07:24AM -0500, Nathan Lynch wrote:
+> Attach an instance of struct sdxi_ring_state to each context upon
+> allocation. Each ring state has the same lifetime has its context and
+> is freed upon context release.
 >
 > Co-developed-by: Wei Huang <wei.huang2@amd.com>
 > Signed-off-by: Wei Huang <wei.huang2@amd.com>
 > Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 > ---
->  drivers/dma/sdxi/Makefile |   3 +-
->  drivers/dma/sdxi/ring.c   | 158 ++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/dma/sdxi/ring.h   |  84 ++++++++++++++++++++++++
->  3 files changed, 244 insertions(+), 1 deletion(-)
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+
+>  drivers/dma/sdxi/context.c | 13 +++++++++++++
+>  drivers/dma/sdxi/context.h |  2 ++
+>  2 files changed, 15 insertions(+)
 >
-> diff --git a/drivers/dma/sdxi/Makefile b/drivers/dma/sdxi/Makefile
-> index 2178f274831c..23536a1defc3 100644
-> --- a/drivers/dma/sdxi/Makefile
-> +++ b/drivers/dma/sdxi/Makefile
-> @@ -3,6 +3,7 @@ obj-$(CONFIG_SDXI) += sdxi.o
+> diff --git a/drivers/dma/sdxi/context.c b/drivers/dma/sdxi/context.c
+> index 7cae140c0a20..792b5032203b 100644
+> --- a/drivers/dma/sdxi/context.c
+> +++ b/drivers/dma/sdxi/context.c
+> @@ -24,6 +24,7 @@
 >
->  sdxi-objs += \
->  	context.o     \
-> -	device.o
-> +	device.o      \
-> +	ring.o
->
->  sdxi-$(CONFIG_PCI_MSI) += pci.o
-> diff --git a/drivers/dma/sdxi/ring.c b/drivers/dma/sdxi/ring.c
-> new file mode 100644
-> index 000000000000..d51b9e708a4f
-> --- /dev/null
-> +++ b/drivers/dma/sdxi/ring.c
-> @@ -0,0 +1,158 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * SDXI descriptor ring state management. Handles advancing the write
-> + * index correctly and supplies "reservations" i.e. slices of the ring
-> + * to be filled with descriptors.
-> + *
-> + * Copyright Advanced Micro Devices, Inc.
-> + */
-> +#include <kunit/visibility.h>
-> +#include <linux/io-64-nonatomic-lo-hi.h>
-> +#include <linux/lockdep.h>
-> +#include <linux/range.h>
-> +#include <linux/sched.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/types.h>
-> +#include <linux/wait.h>
-> +#include <asm/barrier.h>
-> +#include <asm/byteorder.h>
-> +#include <asm/div64.h>
-> +#include <asm/rwonce.h>
-> +
+>  #include "context.h"
+>  #include "hw.h"
 > +#include "ring.h"
-> +#include "hw.h"
+>  #include "sdxi.h"
+>
+>  #define DEFAULT_DESC_RING_ENTRIES 1024
+> @@ -60,6 +61,7 @@ static void sdxi_free_cxt(struct sdxi_cxt *cxt)
+>  		dma_free_coherent(sdxi_to_dev(sdxi), sq->ring_size,
+>  				  sq->desc_ring, sq->ring_dma);
+>  	kfree(cxt->sq);
+> +	kfree(cxt->ring_state);
+>  	kfree(cxt);
+>  }
+>
+> @@ -77,6 +79,10 @@ static struct sdxi_cxt *sdxi_alloc_cxt(struct sdxi_dev *sdxi)
+>
+>  	cxt->sdxi = sdxi;
+>
+> +	cxt->ring_state = kzalloc_obj(*cxt->ring_state, GFP_KERNEL);
+> +	if (!cxt->ring_state)
+> +		return NULL;
 > +
-> +/*
-> + * Initialize ring management state. Caller is responsible for
-> + * allocating, mapping, and initializing the actual control structures
-> + * shared with hardware: the indexes and ring array.
-> + */
-> +void sdxi_ring_state_init(struct sdxi_ring_state *rs, const __le64 *read_index,
-> +			  __le64 *write_index, u32 entries,
-> +			  struct sdxi_desc descs[static SZ_1K])
-> +{
-> +	WARN_ON_ONCE(!read_index);
-> +	WARN_ON_ONCE(!write_index);
-> +	/*
-> +	 * See SDXI 1.0 Table 3-1 Memory Structure Summary. Minimum
-> +	 * descriptor ring size in bytes is 64KB; thus 1024 64-byte
-> +	 * entries.
-> +	 */
-> +	WARN_ON_ONCE(entries < SZ_1K);
+>  	cxt->sq = kzalloc_obj(*cxt->sq, GFP_KERNEL);
+>  	if (!cxt->sq)
+>  		return NULL;
+> @@ -373,6 +379,8 @@ int sdxi_admin_cxt_init(struct sdxi_dev *sdxi)
+>  	sq->cxt_sts->state = FIELD_PREP(SDXI_CXT_STS_STATE, CXTV_RUN);
+>  	cxt->id = SDXI_ADMIN_CXT_ID;
+>  	cxt->db = sdxi->dbs + cxt->id * sdxi->db_stride;
+> +	sdxi_ring_state_init(cxt->ring_state, &sq->cxt_sts->read_index,
+> +			     sq->write_index, sq->ring_entries, sq->desc_ring);
+>
+>  	err = sdxi_publish_cxt(cxt);
+>  	if (err)
+> @@ -389,10 +397,15 @@ int sdxi_admin_cxt_init(struct sdxi_dev *sdxi)
+>   */
+>  struct sdxi_cxt *sdxi_cxt_new(struct sdxi_dev *sdxi)
+>  {
+> +	struct sdxi_sq *sq;
 > +
-> +	*rs = (typeof(*rs)) {
-> +		.write_index = le64_to_cpu(*write_index),
-> +		.write_index_ptr = write_index,
-> +		.read_index_ptr = read_index,
-> +		.entries = entries,
-> +		.entry = descs,
-> +	};
-> +	spin_lock_init(&rs->lock);
-> +	init_waitqueue_head(&rs->wqh);
-> +}
-> +EXPORT_SYMBOL_IF_KUNIT(sdxi_ring_state_init);
+>  	struct sdxi_cxt *cxt __free(sdxi_cxt) = sdxi_alloc_cxt(sdxi);
+>  	if (!cxt)
+>  		return NULL;
+>
+> +	sq = cxt->sq;
+> +	sdxi_ring_state_init(cxt->ring_state, &sq->cxt_sts->read_index,
+> +			     sq->write_index, sq->ring_entries, sq->desc_ring);
+>  	if (register_cxt(sdxi, cxt))
+>  		return NULL;
+>
+> diff --git a/drivers/dma/sdxi/context.h b/drivers/dma/sdxi/context.h
+> index 5cd78e883c8d..9779b9aa4f86 100644
+> --- a/drivers/dma/sdxi/context.h
+> +++ b/drivers/dma/sdxi/context.h
+> @@ -54,6 +54,8 @@ struct sdxi_cxt {
+>  	dma_addr_t akey_table_dma;
+>
+>  	struct sdxi_sq *sq;
 > +
-> +static u64 sdxi_ring_state_load_ridx(struct sdxi_ring_state *rs)
-> +{
-> +	lockdep_assert_held(&rs->lock);
-> +	return le64_to_cpu(READ_ONCE(*rs->read_index_ptr));
-> +}
-> +
-> +static void sdxi_ring_state_store_widx(struct sdxi_ring_state *rs, u64 new_widx)
-> +{
-> +	lockdep_assert_held(&rs->lock);
-> +	*rs->write_index_ptr = cpu_to_le64(rs->write_index = new_widx);
-
-Does it need WRITE_ONCE() ? you load_ridx() use READ_ONCE. I just not sure
-
-suppose doorbell will drain write buffer, most likely it is okay without
-WRITE_ONCE()
-
-Frank
+> +	struct sdxi_ring_state *ring_state;
+>  };
+>
+>  int sdxi_admin_cxt_init(struct sdxi_dev *sdxi);
+>
+> --
+> 2.53.0
 >
 

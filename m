@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-10044-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10045-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OKNeG03l5WlkpAEAu9opvQ
-	(envelope-from <dmaengine+bounces-10044-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 10:35:25 +0200
+	id GDwSF4rn5WlkpAEAu9opvQ
+	(envelope-from <dmaengine+bounces-10045-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 10:44:58 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3F0442835C
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 10:35:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C65C4285CB
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 10:44:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id F02643004D92
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 08:35:09 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B16693019D9D
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Apr 2026 08:39:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9833388E7C;
-	Mon, 20 Apr 2026 08:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AED293845CF;
+	Mon, 20 Apr 2026 08:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="SxBWG8bR"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="YRseQIgd"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010025.outbound.protection.outlook.com [52.101.84.25])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011040.outbound.protection.outlook.com [52.101.70.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7E1388364;
-	Mon, 20 Apr 2026 08:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C69382388;
+	Mon, 20 Apr 2026 08:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776674107; cv=fail; b=dgUGAdyIvPzobpOLQac2UoYQUfkmoAJdYJBuudeh7C5BcEXLOKM0m9X72RxJ5gN5P5PAlwUoRInyiKvKBg12lOvg1o8yKBs70uFlvlUZ0NXF5xsEzBkDo5g+d2wcJQE9Yy1xC7tyFPb5eCwwMEGCNhYj5E4oS3bVsKMqpk3FBfg=
+	t=1776674369; cv=fail; b=hjGC0DELKXzJgcZ+n0Hvnuum5s8DYQ6HArxVnZ+mg8WzrhIIrQfadHWezqu8aomZyEW7Pysc4NC8d8BK2j3IKDcfBD+Fz/J3VBsDQ1VtGiZne7GZKRlHc2F4xVzAzPUFwcAE5j0SwnQd233lETAJl2ndX4Bhi7s0jd3DMEYXw5c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776674107; c=relaxed/simple;
-	bh=9Lr6ABOXkS5lFdPEAJp/VSW9kgMuAlaD6If/wiNotZ8=;
+	s=arc-20240116; t=1776674369; c=relaxed/simple;
+	bh=8BBXnpagWkcXWvFtTRokR9+gNamZ1IIW5sj8US3I1C0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ryJQBDEoaQlIUJl5ZaR5awZVy9BzVWstFPVp0AqAAq6LwXtvKUL+sVJVWT2jSNsO4Afi0G+h4o2HRkgzGqA98j9YsL0YuYYMuQYPH/MT8JuNs1XtHMxm1evHq0DUpl8CbR14ri07Q1/sbfgWHZUaqYlP2M9Mnzy/SZ6BIvIsKhE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=SxBWG8bR; arc=fail smtp.client-ip=52.101.84.25
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kp3sn12nP1Y5hf2iC0kFqdqU6pM4dYrsvXNawJeMDB+3LYkq2ZGUUbtVbximgFrnzIfUsPUJ1HU9LMnAlzrYs/9jt6a01iLdQZKb/btA7EIYuD5zd5aK2ZMspuCwjDENcuRnZDL7AQMR6VpX4iQ2kKGp1YJqrGFrPIIqrG66BSI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=YRseQIgd; arc=fail smtp.client-ip=52.101.70.40
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kdy8SQlYShsqap/AAPRxd2J58DaUTg/Ta4DrbXJd9RXaWBerkFep0VEGvw7CiFhyeT0XP9JLvkB092sHk+NJ6iMqLKcsnKpdf5fj8ytDesAkmo6G7rVdC8ixnkdnH0ioJnr8pB/5Yhfvn+re8XiqoC+2a/tEGuY8+iAItU/b2WVWnFOo73OVb6HgG63VKUKH4DvCP5VgXQde/lBWjiTbwzZnQXCZZSaU5y294SNR6rUyw+4wsBmMRedd0ahTmq59UlLzzMe33Wd0tgTxLkxCeXPawtr4C8CP+aeVhwU6TIQP1ZzDQcgmKrb13nUsyg7bDQRK2kOgLxT07RvU3P7WnQ==
+ b=AHLRUCt6v4emKaIqrTXg9E4ExydGzqu+KASTJHt2cRoT6o5X1ZAQhfrrk7OPaEIiy14VqH6pDzhcypURbTC/dcHlJXHPMOfvPNQaIfgOGIRntgI5hDF0r/10bbBZtkMVSIDn+5xLagUzg0nzLSoAeTblWlMEI+TTsf+N4JW3WRS4qjdXL/lVsO+6ttQ26DVbYU41PbBbvsKc4ZUg9+fTYDSmqlDj2B1hB1M+ZVoSRbmMUDzNQStGFeB85XbThjH0YNqMD0TspOwviopujDOUgMBlbaWm577FeId0qmy7wb9NDwyJR/5x4Z8tln1gMEwRy4mCmhXJ8rMn81Zebd1a8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k5RwWtS6pr5ZjWL5ACfmp9tjRaESb09w3I7jG3DEMeU=;
- b=rNzkvYfYkjqI52ZSjnDpiuPpvq5MJgy0TdfkSt/8q+jIUL/wgE5tLJLLq6XdJwj8IfLaYN/QV5oxQ5lyB2Nu1baF1HfO2GnjD80FkPEGeJpR5Fwx/TqcH6ysF3MK/h5tokxcm8jFMzWHznF6i9p0GVQVAQqcf1iFXvi7iiRjjLzA57fLGm/AVO30llo2LxwAjTr94I+q/hzdjtSCfoopJHaNCM9686H/PgDdCun0S3nmTgBkJjynntv37yw38yAKQeZtfLJU+UDcIPqUtkZVMkG35Ii0D158lh2dvQv2AZKq7kllCIiDnkjhFrQnWfg5g5qp2o9Zt8DRUU/cCOkrNw==
+ bh=Q049j1MNBd2kSLsxAV9WdDj+RVu4G3Bs+6YkSpwsfxI=;
+ b=CiQnERvKCETcXb5tHTao4SNmVqX0nfYT+bvwXV7EIy7ZU7oI9aze/WUwok3L9H7Mzqd8+jrfHDMegWV75+aO33IqPJAPFLl1lHzi3MWoeF6I3wvhDpYqVimkTXO4ZFYEJk8qoFgmJ7SWus8C5cWZN1Lv+FHLA336ingYnTl97fQQsitftGjikCsgWYZYaa/4f/7LLU6pDiHhcTv9wrlp1PPGxdPktIE7UrUl+tIdU5gWZ69/lkg1tovCAIUoXxwZCx0IB50yfw6eif6AIisPONyeGHv0/aF6L4YNuKXIWvN5DFRnIw9H4LA7tqFSqm5S6FHzo+9QLYsxxrxAyNla+Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k5RwWtS6pr5ZjWL5ACfmp9tjRaESb09w3I7jG3DEMeU=;
- b=SxBWG8bRF9AfU7zQZxQ6mVnyTT9VAHw0HDyK0p77U8jWUW4OOIHBrXHhjAKVeWSWOqLHNNyzOLoapuSjXtYL2pQyX7Z9XtF8bHvBG6tGFr0kL+amnEvZ2VWnGOfBwot2Zt/C99MFHn0I0EjwDGWkjRuU5PKUL6zorf0QJ8WEXo+RK+frm4tx7uz5XokVi8vNzSqGYjfwosSC7KdSHElFeZKv2GPtN+mUjdmLrZZJ7PNEfvlGP+GkggQU/th+ckgkiiXfku2FJCnVV/H7Hm6Kkn2LmI9TczL7FCTulNuXMvLUIfT2Hj6DuJW664TQrcV3eplkiOL4zcvrQkDP27YZtQ==
+ bh=Q049j1MNBd2kSLsxAV9WdDj+RVu4G3Bs+6YkSpwsfxI=;
+ b=YRseQIgd34vNYT9exJPxiFPts0gwaQRqlZov7nJpyRzz1YwSlyi9yJwjcTKWSbxQb8nhdFSq/mmk0gTw9mEWiaYeu/CETv6Wa3WKcg2V64bH5jJgtp59K6+goATMv5kNAK54Wqf18QKiG0E8B7hf6i/ewczvow0N9fScwgq82dV36uMZeMJImx3yopv0ddhue1Kg41IfBvMBZZIEbb9/FfCEA/68INJ71N0UOi1dyK6Xhe4S/j4jkSagU+uEPeoxKUP5FOYNreCMK+7ALuKbtgIS2s4ibWFuj4YpRuCn5bqer+iaLDmO866ySATLKDb/KHCZ14+T4Y/B6RSMdkwASQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
  by PA1PR04MB11360.eurprd04.prod.outlook.com (2603:10a6:102:4f2::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.32; Mon, 20 Apr
- 2026 08:35:03 +0000
+ 2026 08:39:25 +0000
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9818.032; Mon, 20 Apr 2026
- 08:35:03 +0000
-Date: Mon, 20 Apr 2026 04:34:57 -0400
+ 08:39:25 +0000
+Date: Mon, 20 Apr 2026 04:39:17 -0400
 From: Frank Li <Frank.li@nxp.com>
 To: Nathan Lynch <nathan.lynch@amd.com>
 Cc: Vinod Koul <vkoul@kernel.org>, Wei Huang <wei.huang2@amd.com>,
@@ -70,16 +70,16 @@ Cc: Vinod Koul <vkoul@kernel.org>, Wei Huang <wei.huang2@amd.com>,
 	PradeepVineshReddy.Kodamati@amd.com, John.Kariuki@amd.com,
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
 	dmaengine@vger.kernel.org
-Subject: Re: [PATCH 14/23] dmaengine: sdxi: Attach descriptor ring state to
- contexts
-Message-ID: <aeXlMTenR8WGpBL2@lizhi-Precision-Tower-5810>
+Subject: Re: [PATCH 15/23] dmaengine: sdxi: Per-context access key (AKey)
+ table entry allocator
+Message-ID: <aeXmNfn2unYevYzQ@lizhi-Precision-Tower-5810>
 References: <20260410-sdxi-base-v1-0-1d184cb5c60a@amd.com>
- <20260410-sdxi-base-v1-14-1d184cb5c60a@amd.com>
+ <20260410-sdxi-base-v1-15-1d184cb5c60a@amd.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260410-sdxi-base-v1-14-1d184cb5c60a@amd.com>
-X-ClientProxiedBy: SA9PR10CA0017.namprd10.prod.outlook.com
- (2603:10b6:806:a7::22) To PA4PR04MB9366.eurprd04.prod.outlook.com
+In-Reply-To: <20260410-sdxi-base-v1-15-1d184cb5c60a@amd.com>
+X-ClientProxiedBy: PH7P223CA0014.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:510:338::24) To PA4PR04MB9366.eurprd04.prod.outlook.com
  (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -89,57 +89,57 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PA1PR04MB11360:EE_
-X-MS-Office365-Filtering-Correlation-Id: ca8d0810-f2f7-40e7-f327-08de9eb7b79b
+X-MS-Office365-Filtering-Correlation-Id: 2150f296-4bb2-4703-19e2-08de9eb853b4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|19092799006|366016|1800799024|7416014|52116014|376014|38350700014|18002099003|22082099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	Yf4ek4vQQ4tNJz/XNWyZkZhD6+m5h44GOwOnYYXF4n3SNy5jBKWsxBkl2lRudRrIlt+2JPhhDJw3G4CCCFXGlvLBdOFqwDACkXjUNIWGvgfY7wGbQwOL1wEo8/olC1Nz/qW77sdFXu9hiKQD3yLAVzoQl5tE5DxhxHXy8t1V9F/72UY9CS/iZLq+2cpPvLA7YKfx5r0zrKImAc03zZHLXINufGWw85loYTURoff/EwoldIpZRb9yEGVM78e9ZAm8sJGU9jxtW9witR47NWx8gW/9WCeN10phcwuZ2vRUQ7CcNoERs2/QuhV2l/rPfWlFPfHZj+rpTxGTCf7Kp9PN1TZUVjBjcxeXMXhrxV31j8jZA0k/5GKYdV8g9g+Iod1HMOUy8JZzeF2rwquZWYU9PIWJY1e9AYtg9ynoNp6/YQEbFtD9/x6eZEB2rSY7jC2l0/gpWMGNxKYTlCuWOsQM1YRO0t63SFnywrhjkP6a18qe2EVc2V80JYbzbP6rJ/Fjy0NK+roFN+xCgn/0SfGCebVv3/qYYliQQkGnZ206HCkcXzv4SETigJ6InsMJDB4ZZi5IZKEPdFtKtVjDH3LI71ANEsWVtoe4qJ4ds0Up/tgawKJ+2zo34x5MGMiggILWBUH5+7aLGiLeGs9+DjlzGVRxHc13eIg2TD6kTCeh7Iy7F380Kw2UUrfuPLt8Y+h7S0eFt8xmGsDEv+eyrAXE1+FpXgEd5OiH1Pm/SbTBrHMk9dBP3Zv+TxE036ootdON7lnHlRE7CGK1YH9RGeH3mgiuLvB6KeOzzxpPUqh/fKM=
+	bC9l9SFGDFZNx3guYyRmoXsscjl7sgk+GeETW2JQeZdkffl+TUAUgim2XDEa1VTiAiPLqpkRNWBmQ9vLJFL+Tpc6+4vjOzv0ErSSR5QnsAo+9bTWdex4tv8jTodifRhWoq/Vnu3vWSn4hkue8jtQUfKlIbdkbVb0Z/iCDeh3afh4SDj6GgUD0Rz2o+POBY6L30DdiBENpOu2y7yRE+cXnE11ZM5+UtfhfHVc2d9g4m5gUxdfnqErM7JjI/0Jr1PCDjRWRiYuAaI3SUOuQMoqHeANFMCSFQ0gGZUWlRSzeU1sjXNkGpTlcNYMUQlk4l4GL2BP7DOHAB/43WomyOQxyC+JEepH8Gi730b+CeSMeNpGzs4OcPUw6kPo/PEBlo0HuAn4+3zBgXUhxdxxKZNgOfyUyUfrPLvEIypVZrzdIAisOFYU2O0DWXiYuxIIzkdJh7+5LSWRpw24GAyP9OE+uE1JwNmCEpZMVSR+IJMx2Gq5eXnG2gy501W9QZR0OXmOf0d3i9PMdVukJFQ4i6yj3vkb+5AyNyotpEso1sL1B+MIAraMj+VbCYIQprB7SmWg6xtNamoRvCRXdk4kmJi57XCMhg0vBCmfVd3aMGs2z0JP3Lk+qpMfa+R5te1w6dLnE/5z5JRiYTA017Fdh/v9KuQB/hhN5pztIMsK+bWvwpb/BBQ7sRX28P/TmwRujBhRq+PLcOLXQ1D2bZ2skqfSUSLzeKMe4UlRd5jC7N711tC+UHwYudhgMIsCvdF2XUuzGS7dtMXvp0D7xmwFb90BrFGSpHtKWcGirr2/dLbVnYQ=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(1800799024)(7416014)(52116014)(376014)(38350700014)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0+Vd/Y24+CVyFHAYKc+kb77kdkEQrRnrSR3Um9je3dq2IfXwCSMLVzHQdtl+?=
- =?us-ascii?Q?pRuj2DA5Wl1kaBpamOjBpzOYJMtEeBkZTF350O09kmi3L7Zondr8uKpsLt7U?=
- =?us-ascii?Q?DKFhlWRBlAv1lbfmbLNLoXv+GU5RwoYIteGR1wuOoJTT9J4FJQf9raAwiZPS?=
- =?us-ascii?Q?/qYQ4l2mV8A2HLqWOnkG2RwAR2JwO8O/ucksI4iHQ4GGYl7ZfN2+qqCUTi5z?=
- =?us-ascii?Q?ManIOaH+71H/4HDkclhHNkt1XMPspqkvLcB56uHIRO1bPFBPRvOdMYfQwfLn?=
- =?us-ascii?Q?wd5Y+3GuvTtSaiABkQN8/76cfBVtmKFyKVztB0//4i/WneC89AyLEye0zKDU?=
- =?us-ascii?Q?wuE0X1sqAxCWcWO2JyCbDIWGwvl0A61KgB95oNZIIiqJktnziYQcYa6FzJQM?=
- =?us-ascii?Q?KyZvtcHnS67j1l0mtIfs69nTb8BpWDnGVaU58OoqyoHSMV6t51Qhk1oIEGcj?=
- =?us-ascii?Q?NtvZFOTggR0VTrIXZc26fXwwxzW5hTY1ncu5CuTVYShuei1401rYe1RRqm8L?=
- =?us-ascii?Q?2q0sXbph5RBolCJG4ZhYbQqdPOeIhwuS5nlnPd0fDdev1p0uu1sWjmbaCmpb?=
- =?us-ascii?Q?fG0XwrPJgTJ47LMHADmHhiQDs48M9uhCTqnYvqeqSpjoK9DvvUDUVY1cEuDd?=
- =?us-ascii?Q?GU1ZhDpgCu0Tj4oMXWrSfYusCkStFRsFhZ5k7PQMTyv06KHTHSNyjKHOqNx5?=
- =?us-ascii?Q?qvCnsg9/FwyjBgJFAuFSpvPVuDY3uNrfj/8FHCStSuBuq5osGswYY0CRORzW?=
- =?us-ascii?Q?pcTyILNE5F6XETYfyHeQAXbWiCURuZO5xFtT6WAqdZ2p/YT1cW3yRZdrafym?=
- =?us-ascii?Q?oBJUEJtqyD1NmMHALjgE2V7e4+Qi8W9gxg1ZNHSwGY4WaxGOti6rCedua4s4?=
- =?us-ascii?Q?jl0eWg5tWNEzax9uTNEL6lEAaSFFAxSMSXCu1jiUAIYCh8mr2tjXZzln3wkI?=
- =?us-ascii?Q?5Yi6E9Cd2Iq15gKq5XEifJtKob6MnxntnRB3NeGR5JTIPcTXnLdvKAfllpuJ?=
- =?us-ascii?Q?qeNpqvIPddk80GNk9BYrZf5hm53nkfT0GYk1KWO2rrfqOe780xPVsWClCeRy?=
- =?us-ascii?Q?2osN+ASSHKQeKREtqkDtP9BFp5GsXoIkZp+iUX+5KYCQoWbv2iEWuk0pcMIq?=
- =?us-ascii?Q?Lt5Nisw6cRPpOhNcYHjIAbHiHqZ0721ACTBzp+O7nVmuBPIl/c0Ze7bg8CWj?=
- =?us-ascii?Q?FJ0fj45mXf/I0jsZ/25kRr0+RyRAK4ci63YexhyqpKW264BZnixoRcuFlSId?=
- =?us-ascii?Q?GmFPyjTJ7diUvJSEan/jEQ4cTYrTtoUDz+6/QLyMObCLUIkqBDYxNxaBfz1v?=
- =?us-ascii?Q?apAer83zEQZAqJLqZTEyyTjPGNn71EVIeHCs1Wi0ZISCpHlmRd9deaXlS4hg?=
- =?us-ascii?Q?dkf+9xK+jyMnaGizErlOdtcdONFXqT9Ff3ZV5pX1kgaZytn45Iey0XEPLmQm?=
- =?us-ascii?Q?e0FrTaY1vmHwxEbc/EpgmZg1qr/6ANEfJHCM7AoYFvQkogEXJA8Kd0cCPeS+?=
- =?us-ascii?Q?KYk1T2wVWTBb+VVJZnN4g4tA961pLlm9/w06fgohKzFBC9+Ekbr3jNfUEaMK?=
- =?us-ascii?Q?rGpv/STmholFBRYwyDCIGxRl4XaPK50go3k5xnOiZusqfAPoUXwN1JDTeTIF?=
- =?us-ascii?Q?WOqmV60xuRIQKpa9GHO/+TAOJkw3Ge401teOxLfUsaTU2Z28zKWK9UbtmOqa?=
- =?us-ascii?Q?7lWxkvEL4mLim4vuUhrjdgxb9m7XCssizJ/V9E3VlD9AMm/voOWeMNMuR13C?=
- =?us-ascii?Q?8X7/OuPPAA=3D=3D?=
+	=?us-ascii?Q?KKpBEUGit0TYLblNKETXj+tgtWYrBTqlFPXS69L1i65uK41CqC+ze6gmPtGK?=
+ =?us-ascii?Q?o4U2McX2jd0hlmzxaTR4GwwMfNopI6AEVbBOamsQUr/4W89BQLVsG7KoBZ9V?=
+ =?us-ascii?Q?pEfuMhuaJaI3xppMx0HwBUqyt+lDSLot8oTsLXpBidVzMm7qrhAclG5NDa4a?=
+ =?us-ascii?Q?CKkZvUdJYF64UrQgViKQWN+Dh65N5K3OxhsgqcGNwtam527ACy43oRDPC5XK?=
+ =?us-ascii?Q?2kgGCYtN5MRVxDnniVRuhSAyVF3QpZCfb45KwZ2DW8cRiGt5YIRIxFO9snxo?=
+ =?us-ascii?Q?nB8pXXmRO7GLLrV8xXQV9M0oIN10ndeK2Le5nbAQy+z4EnCN5oaszZudgKzG?=
+ =?us-ascii?Q?FZCjuTXP0vJCuBh8n/pIMaTVxw8owvc+hCMkxh2HtuQFYkaRTKUZn3XrN84y?=
+ =?us-ascii?Q?Acc3XSeBC9dPAoQT2EK1ox254qdnSvpbyCSCubghIr2Gf+li+5hUudVotVzD?=
+ =?us-ascii?Q?RIn0hbNAhzeSvXzq/+M5y1s662On5WlcVi3LngIgUWQlxgN5RMW9aXwCDigh?=
+ =?us-ascii?Q?wFVX/LRKgbhlaIsJNSCs4Gi7r9JaQdiGhHjP9bO4CtkEClVXooCWnJToKuO7?=
+ =?us-ascii?Q?/oL/NGT35lyCH5UnvOFatMYa+d/D/bT/lhaUTzg6grm3MCKpeeMXekox4Vkf?=
+ =?us-ascii?Q?fCD76EX8/IbkmqoaG9TQnKGkmiJRaBQC914iujXWudhXKVbenK3TEjpc/5b0?=
+ =?us-ascii?Q?isSF2cwAv2/L5YKwWiTWKuCGBflmWsZDrlByJscUbtfpSroKRRHijbIx6LQR?=
+ =?us-ascii?Q?q6NnliqB5NSVsrxKZ+miNBMNTNOsLS00JPKewr/brGesnF5/IxrDu4zEXCR6?=
+ =?us-ascii?Q?R4sCavgGEWNQjehnY+4mFQ7iXbJ6ic7Vuc5nhBYySP6UvTGSGfOBDRNVFobS?=
+ =?us-ascii?Q?d9Cnkp/k8lOiWK+IqFUtSnQDbGOHjE8Q2UFLvmCsKq5XFl9sn4KFlM91LAFs?=
+ =?us-ascii?Q?kIFFO3azDlCPa56hdSdTsCOVhI2swfrdhwzFokvN7BcQvIzXKH5cYSNVfNBv?=
+ =?us-ascii?Q?ARvch11x0arjLKD6UFpGkIR9Dj0EHQ1X99gsk4QnDUBSHyGx60xoDvuovDlw?=
+ =?us-ascii?Q?u7DH28xAFF00Fz0hdevnBQPhmQjxrmlz/Z4LXYGd1CWGhTW+I2Ec9pv6qUBV?=
+ =?us-ascii?Q?IQhyB1kIBw9+PsrpdhXzk1KGrzg/1+WU++a6YCCWqgyXc1rDMkf2f7IrrnHs?=
+ =?us-ascii?Q?G4BbPw6/mZjkqKkanJsWWlLm5TxwsXbPNpkS03W/VxSks1mmjCwtxGdXTJxX?=
+ =?us-ascii?Q?liy6KlNUpnPlCE9TNe0K5d2r073sB2oq/quqPZgvZtUxtIQHpJUa4SKNlJoL?=
+ =?us-ascii?Q?+7qehpmh1uO9tTHNo+syV9+GrSwM4rN50oFV1Fhd1FTAA0bafjNE/n9IvBQ6?=
+ =?us-ascii?Q?gaGB+kwz0tH8ofgtd/uuzbPxlNOGJne+Ad6Vy79PrijGa5hHctlrML2jsz0x?=
+ =?us-ascii?Q?RFd/muczBHerrbXgxYUod3SEkA95QwFNubF3C2JqKmX23qRJhXQukTo5hkMS?=
+ =?us-ascii?Q?KrZPPQ6Lt7vNsXNng0jn5jlt1n+xIPsY7VJqf4TK38QoPFqrQjaCMDlpwJCL?=
+ =?us-ascii?Q?rx/muayxglxyKIndDMCKZlvFtSKF6722s9vSic4JfGBarM5Sesqv4HfINFeY?=
+ =?us-ascii?Q?ONLcM8m+Ry5l3sCs+OOjlA5AKbsDo28rLOjo1JBVaUbo531L+CJuDFRcQwlA?=
+ =?us-ascii?Q?uvuJGKF0zgohEUjpR9g72GtAENXlRFT6zv8Bxg4fN1pPG3G54BVXzQjK9kkZ?=
+ =?us-ascii?Q?FtBeD15XSg=3D=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca8d0810-f2f7-40e7-f327-08de9eb7b79b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2150f296-4bb2-4703-19e2-08de9eb853b4
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2026 08:35:03.5343
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2026 08:39:25.2822
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P3D/qDhtbgylHZj3FdsaIElEJq3jlhELKE8YbNyXVG5Ie3JO0rFZ4+/kmhQycE4l3vlbsFhP6rfCQQ/XZvMu0g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: l11t/GwrqMlW+PeSZGHq3vCMQoIU2ooRI9MA9k5JyHMnTka/NDJogrZIrJR1yEunCMfAToEwoAVkHc9lH8eeIg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11360
 X-Spamd-Result: default: False [0.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
@@ -151,7 +151,7 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10044-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10045-lists,dmaengine=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[12];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -167,94 +167,125 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	TAGGED_RCPT(0.00)[dmaengine];
 	MISSING_XM_UA(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:dkim,nxp.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,amd.com:email]
-X-Rspamd-Queue-Id: D3F0442835C
+X-Rspamd-Queue-Id: 5C65C4285CB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Apr 10, 2026 at 08:07:24AM -0500, Nathan Lynch wrote:
-> Attach an instance of struct sdxi_ring_state to each context upon
-> allocation. Each ring state has the same lifetime has its context and
-> is freed upon context release.
+On Fri, Apr 10, 2026 at 08:07:25AM -0500, Nathan Lynch wrote:
+> Each SDXI context has a table of access keys (AKeys). SDXI descriptors
+> submitted to a context may refer to an AKey associated with that
+> context by its index in the table. AKeys describe properties of the
+> access that the descriptor is to perform, such as PASID or a target
+> SDXI function, or an interrupt to trigger.
+>
+> Use a per-context IDA to keep track of used entries in the table.
+> Provide sdxi_alloc_akey(), which claims an AKey table entry for the
+> caller to program directly; sdxi_akey_index(), which returns the
+> entry's index for programming into descriptors the caller intends to
+> submit; and sdxi_free_akey(), which clears the entry and makes it
+> available again.
+>
+> The DMA engine provider is currently the only user and allocates a
+> single entry that encodes the access properties for copy operations
+> and a completion interrupt. More complex use patterns are possible
+> when user space gains access to SDXI contexts (not in this series).
 >
 > Co-developed-by: Wei Huang <wei.huang2@amd.com>
 > Signed-off-by: Wei Huang <wei.huang2@amd.com>
 > Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 > ---
+
 Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
->  drivers/dma/sdxi/context.c | 13 +++++++++++++
->  drivers/dma/sdxi/context.h |  2 ++
->  2 files changed, 15 insertions(+)
+>  drivers/dma/sdxi/context.c |  5 +++++
+>  drivers/dma/sdxi/context.h | 24 ++++++++++++++++++++++++
+>  2 files changed, 29 insertions(+)
 >
 > diff --git a/drivers/dma/sdxi/context.c b/drivers/dma/sdxi/context.c
-> index 7cae140c0a20..792b5032203b 100644
+> index 792b5032203b..04e0d3e6a337 100644
 > --- a/drivers/dma/sdxi/context.c
 > +++ b/drivers/dma/sdxi/context.c
-> @@ -24,6 +24,7 @@
->
->  #include "context.h"
->  #include "hw.h"
-> +#include "ring.h"
->  #include "sdxi.h"
->
->  #define DEFAULT_DESC_RING_ENTRIES 1024
-> @@ -60,6 +61,7 @@ static void sdxi_free_cxt(struct sdxi_cxt *cxt)
+> @@ -15,6 +15,7 @@
+>  #include <linux/dma-mapping.h>
+>  #include <linux/dmapool.h>
+>  #include <linux/errno.h>
+> +#include <linux/idr.h>
+>  #include <linux/iommu.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+>  #include <linux/slab.h>
+> @@ -61,6 +62,7 @@ static void sdxi_free_cxt(struct sdxi_cxt *cxt)
 >  		dma_free_coherent(sdxi_to_dev(sdxi), sq->ring_size,
 >  				  sq->desc_ring, sq->ring_dma);
 >  	kfree(cxt->sq);
-> +	kfree(cxt->ring_state);
+> +	ida_destroy(&cxt->akey_ida);
+>  	kfree(cxt->ring_state);
 >  	kfree(cxt);
 >  }
->
-> @@ -77,6 +79,10 @@ static struct sdxi_cxt *sdxi_alloc_cxt(struct sdxi_dev *sdxi)
->
->  	cxt->sdxi = sdxi;
->
-> +	cxt->ring_state = kzalloc_obj(*cxt->ring_state, GFP_KERNEL);
-> +	if (!cxt->ring_state)
-> +		return NULL;
-> +
->  	cxt->sq = kzalloc_obj(*cxt->sq, GFP_KERNEL);
->  	if (!cxt->sq)
->  		return NULL;
-> @@ -373,6 +379,8 @@ int sdxi_admin_cxt_init(struct sdxi_dev *sdxi)
->  	sq->cxt_sts->state = FIELD_PREP(SDXI_CXT_STS_STATE, CXTV_RUN);
->  	cxt->id = SDXI_ADMIN_CXT_ID;
+> @@ -381,6 +383,7 @@ int sdxi_admin_cxt_init(struct sdxi_dev *sdxi)
 >  	cxt->db = sdxi->dbs + cxt->id * sdxi->db_stride;
-> +	sdxi_ring_state_init(cxt->ring_state, &sq->cxt_sts->read_index,
-> +			     sq->write_index, sq->ring_entries, sq->desc_ring);
+>  	sdxi_ring_state_init(cxt->ring_state, &sq->cxt_sts->read_index,
+>  			     sq->write_index, sq->ring_entries, sq->desc_ring);
+> +	ida_init(&cxt->akey_ida);
 >
 >  	err = sdxi_publish_cxt(cxt);
 >  	if (err)
-> @@ -389,10 +397,15 @@ int sdxi_admin_cxt_init(struct sdxi_dev *sdxi)
->   */
->  struct sdxi_cxt *sdxi_cxt_new(struct sdxi_dev *sdxi)
->  {
-> +	struct sdxi_sq *sq;
+> @@ -406,6 +409,8 @@ struct sdxi_cxt *sdxi_cxt_new(struct sdxi_dev *sdxi)
+>  	sq = cxt->sq;
+>  	sdxi_ring_state_init(cxt->ring_state, &sq->cxt_sts->read_index,
+>  			     sq->write_index, sq->ring_entries, sq->desc_ring);
+> +	ida_init(&cxt->akey_ida);
 > +
->  	struct sdxi_cxt *cxt __free(sdxi_cxt) = sdxi_alloc_cxt(sdxi);
->  	if (!cxt)
->  		return NULL;
->
-> +	sq = cxt->sq;
-> +	sdxi_ring_state_init(cxt->ring_state, &sq->cxt_sts->read_index,
-> +			     sq->write_index, sq->ring_entries, sq->desc_ring);
 >  	if (register_cxt(sdxi, cxt))
 >  		return NULL;
 >
 > diff --git a/drivers/dma/sdxi/context.h b/drivers/dma/sdxi/context.h
-> index 5cd78e883c8d..9779b9aa4f86 100644
+> index 9779b9aa4f86..5310e51a668c 100644
 > --- a/drivers/dma/sdxi/context.h
 > +++ b/drivers/dma/sdxi/context.h
-> @@ -54,6 +54,8 @@ struct sdxi_cxt {
+> @@ -6,7 +6,10 @@
+>  #ifndef DMA_SDXI_CONTEXT_H
+>  #define DMA_SDXI_CONTEXT_H
+>
+> +#include <linux/array_size.h>
+>  #include <linux/dma-mapping.h>
+> +#include <linux/idr.h>
+> +#include <linux/string.h>
+>  #include <linux/types.h>
+>
+>  #include "hw.h"
+> @@ -50,6 +53,7 @@ struct sdxi_cxt {
+>  	struct sdxi_cxt_ctl *cxt_ctl;
+>  	dma_addr_t cxt_ctl_dma;
+>
+> +	struct ida akey_ida;
+>  	struct sdxi_akey_table *akey_table;
 >  	dma_addr_t akey_table_dma;
 >
->  	struct sdxi_sq *sq;
-> +
-> +	struct sdxi_ring_state *ring_state;
->  };
+> @@ -75,4 +79,24 @@ static inline bool sdxi_cxt_is_admin(const struct sdxi_cxt *cxt)
 >
->  int sdxi_admin_cxt_init(struct sdxi_dev *sdxi);
+>  void sdxi_cxt_push_doorbell(struct sdxi_cxt *cxt, u64 index);
+>
+> +static inline struct sdxi_akey_ent *sdxi_alloc_akey(struct sdxi_cxt *cxt)
+> +{
+> +	unsigned int max = ARRAY_SIZE(cxt->akey_table->entry) - 1;
+> +	int idx = ida_alloc_max(&cxt->akey_ida, max, GFP_KERNEL);
+> +
+> +	return idx < 0 ? NULL : &cxt->akey_table->entry[idx];
+> +}
+> +
+> +static inline unsigned int sdxi_akey_index(const struct sdxi_cxt *cxt,
+> +					   const struct sdxi_akey_ent *akey)
+> +{
+> +	return akey - &cxt->akey_table->entry[0];
+> +}
+> +
+> +static inline void sdxi_free_akey(struct sdxi_cxt *cxt, struct sdxi_akey_ent *akey)
+> +{
+> +	memset(akey, 0, sizeof(*akey));
+> +	ida_free(&cxt->akey_ida, sdxi_akey_index(cxt, akey));
+> +}
+> +
+>  #endif /* DMA_SDXI_CONTEXT_H */
 >
 > --
 > 2.53.0

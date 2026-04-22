@@ -1,225 +1,199 @@
-Return-Path: <dmaengine+bounces-10082-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10083-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SG+NLt+k6GngOAIAu9opvQ
-	(envelope-from <dmaengine+bounces-10082-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2026 12:37:19 +0200
+	id 4I9/OOg+6WmEWQIAu9opvQ
+	(envelope-from <dmaengine+bounces-10083-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2026 23:34:32 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2084A444CB0
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2026 12:37:19 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0C7E44AF85
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2026 23:34:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8BAF3300EA94
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2026 10:34:01 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B6F07300B469
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2026 21:34:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F6D63B27E2;
-	Wed, 22 Apr 2026 10:34:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BCB4367F25;
+	Wed, 22 Apr 2026 21:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CnJoIEIJ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023126.outbound.protection.outlook.com [40.107.44.126])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518DC374759;
-	Wed, 22 Apr 2026 10:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.126
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776854039; cv=fail; b=hAE+HxEMDEMgfwFaqmxamClHABs0zB5q0Lg/8deqtos27F2d+wQy9KNgcCrwXIYakNG2SfCG3xNf6CMJFWUYrN1Kf9hMUsU1fUc4DO0nk6Fohjo/4p6hIs8n43WkeIigQFM/6geHN75ETtobIfoYzwfavYBzL2uiG769EHeXqA4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776854039; c=relaxed/simple;
-	bh=lfxvUXvwFVuWcPptvpRzQbreyT2j+9RpNYVOKyJGIbo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VPe3nwy6PCGvp0SBf3mTi9wXKtt79B4EKX/TNmzkJ1e9RfePJS8TdiWFmMuhx6NgK0mZ6Tfs2OeF6YHvEHk9xoFvJyp8pQtw1yeRSiGMEVAqPkFRAz/155UP7cj6cl48Jmyl9gWxW0PgTTOI4iEszdbl8X8PQhF5NvcHpYFs4j0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xw31M+jmdrYJbE2OZ8RN/IlsS40F7fnPO1zLOigProjcJRN8bhAxnFRqs0puUTUhQtsoRKQ2r0Iw8YMOInOaPy280132Mf9OF6UKuf3r3OB4I8pNBQyt8zs4GibBlYrfoS5Kgxg1IjpKLgRE+LDIA8rzPZV6NG2vmhhenWgrb5bSLvSaJ/aX5h+3URMWREqXpnMZBtAXOOasoEahebGRK9vALZKo2wHMJr2dWqdqmTpnO/EMZ9TSJ4rQc6KUIG9SVsJV9Vw+z9o6L6r8rAfpHJjrkAzGOfNQkkaDD6em77eGS2u6cg7sHip2gqgrYAy0yesZjESayTPHKnPG9OtbCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WablyoBFy+gxbiiAwuqgA+V3P4WM6fUiNbf1+c/IFcM=;
- b=lRIhx84J0q1w20qol6wyVHqyoDgb0g0WONw6BpnVpFYWSBtC3icbcD6/jBjturHYDHJZCVtCHQRxKuLnTYBytPqJoUbkT1cRuxSipOQTorE47scgqoabPOTMpI6NlsXCdFBxkO8I56NTlH85tI3FpxtHPVhWl4jxgNTgVxh2pNlczGWks1pkZVHei0WCQPlx/OOtLa87F1C3O6U997wFxk0BSTMFO3awEs+v5vp5+ZPAxZHYYgZxkJ52yJH9Gfi4LBWURx6b+LTGbZxFqqlf9lO7IYNV9GN7kejWvI9N7UzPa7WqRp3EBp3GTg/U5C2AMBSKL5W7kn0uBeYl/DNAzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SG2P153CA0007.APCP153.PROD.OUTLOOK.COM (2603:1096::17) by
- PUZPR06MB5982.apcprd06.prod.outlook.com (2603:1096:301:112::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.16; Wed, 22 Apr
- 2026 10:33:53 +0000
-Received: from OSA0EPF000000CC.apcprd02.prod.outlook.com
- (2603:1096::cafe:0:0:d) by SG2P153CA0007.outlook.office365.com
- (2603:1096::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9870.8 via Frontend Transport; Wed,
- 22 Apr 2026 10:33:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- OSA0EPF000000CC.mail.protection.outlook.com (10.167.240.58) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9846.18 via Frontend Transport; Wed, 22 Apr 2026 10:33:51 +0000
-Received: from [172.20.96.43] (unknown [172.20.96.43])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 37C854126F9A;
-	Wed, 22 Apr 2026 18:33:50 +0800 (CST)
-Message-ID: <1c1025c1-ead7-49fe-b18e-0454119d85f8@cixtech.com>
-Date: Wed, 22 Apr 2026 18:33:49 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04F537755D
+	for <dmaengine@vger.kernel.org>; Wed, 22 Apr 2026 21:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776893665; cv=none; b=QgoG9cSxJMuGO7UNEDbtOa90JZlQy9OG6pbLSXxzoAyj1Z2NE5iq8hfNF9zqEc9ufs7h/SJuBgLeq+8sPJIbOtuSyI34QQvVYN14U/46GBoMNTvjzIHEYf2qUp446KYqax+kdSpIJONlcXo1vHpBquCBtCKMeShFZZVPu6S/2eI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776893665; c=relaxed/simple;
+	bh=j4ep7JtWvE+eBsS70irzVasiY7GmSSDWHVOd1jxQZlM=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=VnFrPWcctvyG98yXlBm5ctq7kkDfHXJ026SuaMf8dQoGEh19JZ4e9yIWgIb7JvV3cBJbRQmpnZR5VGElP0Ve0PWfinkRZzcD8Jw0V7BXASlp+AjtFeCnoEGhE3t2VhV6s4qIvYmqTpSUyy0DFg6Y0OsJ9cYoHRaF6xV5fwOttdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CnJoIEIJ; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776893664; x=1808429664;
+  h=mime-version:content-transfer-encoding:subject:from:to:
+   cc:in-reply-to:references:date:message-id;
+  bh=j4ep7JtWvE+eBsS70irzVasiY7GmSSDWHVOd1jxQZlM=;
+  b=CnJoIEIJBYZajqfGZxHxfsDHX0zmzDNtRBH/DGwqMqToe/+u/Q5cabjA
+   sWtkPIH6AsFULIjQlVu58CwMD7Df42mvc8icwHpgH/uYq4YU7wq6EK+tl
+   wBvAhGzbHS7Ac9SSChxA8lRhPQ3qzlW5ETn8jFG439zYVWxsrVn2PRYT8
+   yLFhwwwwMQpV5AnPGf4CIStOXey1FKmjLeRQTIEp4bXkHlPda+8oyN4YG
+   xzgTVv4yJt/JJe4kpqN6MqPz2lTBcpyWFL6/iTGjWnl7f+4pi7L8JRnNy
+   NMRhqaC4CsbpjNkyaRUdGd5pUWHcYd9TIocrWV0Z20jZZ2RvR9lxm5nsp
+   Q==;
+X-CSE-ConnectionGUID: CQilvuIJSfmogZz79ZS7Lg==
+X-CSE-MsgGUID: Vo7vsBA5TuCWPGTip84Q4Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="77022754"
+X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
+   d="scan'208";a="77022754"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 14:34:22 -0700
+X-CSE-ConnectionGUID: R2cf4Fx7Qh2jdr1bAq9HvQ==
+X-CSE-MsgGUID: IbP59mzmTtqfYY2O9GqHlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
+   d="scan'208";a="237524927"
+Received: from vcostago-desk1.jf.intel.com (HELO [10.88.27.144]) ([10.88.27.144])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 14:34:23 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] dma: arm-dma350: enable ANYCH interrupt for shared
- IRQ wiring
-To: Frank Li <Frank.li@nxp.com>
-Cc: peter.chen@cixtech.com, fugang.duan@cixtech.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
- ychuang3@nuvoton.com, schung@nuvoton.com, robin.murphy@arm.com,
- Frank.Li@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- linux-arm-kernel@lists.infradead.org
-References: <20260325112159.663881-1-jun.guo@cixtech.com>
- <20260325112159.663881-2-jun.guo@cixtech.com>
- <932db8ad-a9d8-47ff-bf3c-62a54c42bb76@cixtech.com>
- <aeia3uoz4g8tlBaV@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: Jun Guo <jun.guo@cixtech.com>
-In-Reply-To: <aeia3uoz4g8tlBaV@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OSA0EPF000000CC:EE_|PUZPR06MB5982:EE_
-X-MS-Office365-Filtering-Correlation-Id: f59b8d3d-2c49-4fbe-8e73-08dea05aa5b3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700016|22082099003|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	qunEvMqNFrMDS/2CWi6RsBVyYLQFdQU8jm2B5bggqaoLFh1af2XWWyAc9iYkHs2mDkdNEYWqUruXyi3ZXNByOlIJ2lXPAk+G1IkEfoZPjk5VRPFIhyurcPRfFW7ESpz+YXCfELK7lY+Fo6zq4auFzigO+vsto+KsC7BwrK70fX80Q7GZoW4XpLNifyJiRVZBXoGcW1F26ZalXOXu51EnPMr7sQOr60m1uK2yttpVGWCdlUWq2IGaeFd0YpVwATMrQfbvaRChRGQ+UYpyf1ZKq4BvCnzFnxwKvnrQ0qvbGNaoY0PvC8PnxiFE75cAet2Qdh0DEh9UgHWNdolEqGGeHi2xXqbkEfplApbUAYwCkXQesPb6DLTm7EtNtkfngxBPHmqn/ksR5D4pG1nHdF0DRv09JHOGTYhoI27ifYi9mtyOz/Qh73a5fzFh61Sxe/OPdxaMWtA+t7Sk7UBia+8qO/TzfYWWcngnvjq9e+566ggliIOk7dclnY3bPKjfUiYB7M99+MAmXvXPtaP6eTS4HHnHR8TyHNhLr+KDilB4ehLdIhp/5xcdt1sq/mYZznB6F9YCBOgZt0mpTks3/LTvqrjBSynDzg99DLNrh+11mcMw3kPzaXAKVwLWRtRQ8kET+h7j2wLGwDyHVJ6ss/26L8MP5tjhSiUJldEWXW/pxS6YRztUtVnDdNF51Y/g8s0UPdK0VYLE/34eewZ7jeuQSAVnhcp8g8j3uwDHA/W/dKfqKtiIQL9Zte3qZKONAVpwwtcWtKT0Sgf/rbkMzzRH/Q==
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700016)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	E6QyIMqtbUeamiLWTTm0mMXVVtExWz7ifIeCVTbFkVs8RmiD5TldJPvmosYyPe9ACXMeVEu6++gjgBjQM/hRyJAMqWoyK0SeaY7fpNx9H4dbz5GLqxPLkqXmu4xncXGU8eJSXwYKF0H/Y7wQBf3Wb+Xxh5MAaybRvE4yiwKK4lU/wIEECtlN50u/SFuhy6AaAn/e+Dau7Jk3A09UrxixQNGy3ZK+Sk73PV1+IH5xBJzrSs8tA6Hgz+kJRjQtwnH9SAqsM1YLbcJ5T0ec3MsAKmIEKPVEpiXVQgw+vJ/m48CwXMYk3vKBG/Qs6/BmxfurLvGvrMz1r6WKlgVZim2dwuhipJqm6pqP6q+PwDqXHZIpYlUblTwM3cxmY4Qg8PMva6eJ7weScr8L+Dem7RHAzGMpE94NvUNz1+6Mn3Jo1ytbSpsBtr8NIo6vxxFuPqgD
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2026 10:33:51.8241
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f59b8d3d-2c49-4fbe-8e73-08dea05aa5b3
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	OSA0EPF000000CC.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5982
-X-Spamd-Result: default: False [2.04 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] dmaengine: idxd: Fix use-after-free of idxd_wq
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: Guixin Liu <kanie@linux.alibaba.com>
+Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>, 
+ Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, 
+ Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org, 
+ Xunlei Pang <xlpang@linux.alibaba.com>, oliver.yang@linux.alibaba.com
+In-Reply-To: <20260415095030.42183-1-kanie@linux.alibaba.com>
+References: <20260415095030.42183-1-kanie@linux.alibaba.com>
+Date: Wed, 22 Apr 2026 14:34:02 -0700
+Message-Id: <177689364254.530433.11713441936347707463.b4-review@b4>
+X-Mailer: b4 0.16-dev-3bfbc
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1776893662; l=3426;
+ i=vinicius.gomes@intel.com; s=20230921; h=from:subject:message-id;
+ bh=j4ep7JtWvE+eBsS70irzVasiY7GmSSDWHVOd1jxQZlM=;
+ b=SUhh6wMRkQX1FURJ7Ut2vlWhoZ2EdO4FecOe6/eA51XJTioDfeqrlOHJK4pTpi3woJjUlIw+Z
+ qSaTZ95fg1sArmW3Zc/vptr9eiRwwTJKpTnCIKV7JDPpa9yhbAjl843
+X-Developer-Key: i=vinicius.gomes@intel.com; a=ed25519;
+ pk=aJkrtgqgT6TZ8iIHSG8/rTPsmlYnjMrUjCsMYvCzntk=
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	TAGGED_FROM(0.00)[bounces-10082-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[cixtech.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jun.guo@cixtech.com,dmaengine@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-10083-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	REDIRECTOR_URL(0.00)[aka.ms];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,aka.ms:url]
-X-Rspamd-Queue-Id: 2084A444CB0
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vinicius.gomes@intel.com,dmaengine@vger.kernel.org];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+]
+X-Rspamd-Queue-Id: E0C7E44AF85
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Wed, 15 Apr 2026 17:50:30 +0800, Guixin Liu <kanie@linux.alibaba.com> wrote:
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index fb80803d5b57..c3cfd96074c9 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -1293,13 +1293,30 @@ static void idxd_remove(struct pci_dev *pdev)
+> [ ... skip 14 lines ... ]
+> +	 *
+> +	 * Use device_release_driver() to only unbind the driver (triggering
+> +	 * idxd_device_drv_remove()) without touching sysfs. Then safely
+> +	 * unregister children before the parent.
+> +	 */
+> +	device_release_driver(idxd_confdev(idxd));
 
+Below are sashiko comments verbatim, some notes:
 
-On 4/22/2026 5:54 PM, Frank Li wrote:
-> [Some people who received this message don't often get email from frank.li@nxp.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> EXTERNAL EMAIL
-> 
-> On Tue, Apr 21, 2026 at 03:24:11PM +0800, Jun Guo wrote:
->> Hi Robin,
->>
->> Just pinging. I’d like to ask if you have any comments on the latest patch?
->>
->> On 3/25/2026 7:21 PM, Jun Guo wrote:
->>> Enable DMANSECCTRL.INTREN_ANYCHINTR during probe so channel
->>> interrupts are propagated when integrators wire DMA-350 channels
->>> onto a shared IRQ line.
-> 
-> Your tag is wrong
-> 
-> dmaegine: arm-dma350: enable ANYCH ...	
-Okay, I'll fix this in the next version.
+ - I do believe the race condition that it points out is real (but
+   very narrow), but not sure that we don't have a similar one in
+   current code (i.e. it wasn't introduced by your patch);
+ - The possible wq leak was definitely not introduced by this patch;
+ - The question about what happens with the file references after a
+   device is removed is a separate issue;
 
-> 
->>>
->>> Signed-off-by: Jun Guo <jun.guo@cixtech.com>
->>> ---
->>>    drivers/dma/arm-dma350.c | 9 +++++++++
->>>    1 file changed, 9 insertions(+)
->>>
->>> diff --git a/drivers/dma/arm-dma350.c b/drivers/dma/arm-dma350.c
->>> index 84220fa83029..09403aca8bb0 100644
->>> --- a/drivers/dma/arm-dma350.c
->>> +++ b/drivers/dma/arm-dma350.c
->>> @@ -13,6 +13,11 @@
->>>    #include "dmaengine.h"
->>>    #include "virt-dma.h"
-> 
-> extra empty line between header file and macro
-The space actually exists in the code, but it is hidden in the review 
-records.
+The patch looks good, not opposed to it at all, the only one I am a
+bit concerned, about this patch, to be sure, is the race condition,
+and the two "paths" to reach it. (the others we can fix separately)
 
-> 
-> 
->>> +#define DMANSECCTRL                0x200
->>> +
->>> +#define NSEC_CTRL          0x0c
-> 
-> why need two layer regiser define, your use DMANSECCTRL + NSEC_CTRL，
-> 
-> why not use one macro for 0x20c
-> 
-DMANSECCTRL is the base address for a set of control registers. 
-Currently, only the NSEC_CTRL register within that set is being used. 
-All other registers in the same group share this same base address, and 
-a similar arrangement applies to DMAINFO.
-> 
->>> +#define INTREN_ANYCHINTR_EN        BIT(0)
->>> +
->>>    #define DMAINFO                   0x0f00
->>>    #define DMA_BUILDCFG0             0xb0
->>> @@ -582,6 +587,10 @@ static int d350_probe(struct platform_device *pdev)
->>>      dmac->dma.device_issue_pending = d350_issue_pending;
->>>      INIT_LIST_HEAD(&dmac->dma.channels);
->>> +   reg = readl_relaxed(base + DMANSECCTRL + NSEC_CTRL);
->>> +   writel_relaxed(reg | INTREN_ANYCHINTR_EN,
->>> +                  base + DMANSECCTRL + NSEC_CTRL);
->>> +
->>>      /* Would be nice to have per-channel caps for this... */
->>>      memset = true;
->>>      for (int i = 0; i < nchan; i++) {
->>
+sashiko.dev <sashiko@sashiko.dev>:
+
+Does this introduce a race condition with sysfs?
+
+Since the driver's sysfs nodes remain active after device_release_driver()
+is called, a user with sysfs privileges could write to the bind attribute
+to re-probe the driver before the device unregistration completes.
+
+If idxd_device_drv_probe()->idxd_wqs_setup() runs concurrently with
+idxd_unregister_devices(), does it cause a use-after-free when it
+iterates over the idxd->wqs[] objects being freed, since
+suppress_bind_attrs is not set?
+
+Also, does this code leak the workqueue?
+
+The workqueue idxd->wq is dynamically allocated using create_workqueue()
+during device initialization, but destroy_workqueue(idxd->wq) does not
+appear to be called in idxd_remove() or the sysfs device release callback.
+
+>  	idxd_unregister_devices(idxd);
+
+sashiko.dev <sashiko@sashiko.dev>:
+
+If idxd_unregister_devices() drops the last reference to the child wq
+objects and frees them, can idxd_shutdown() trigger a use-after-free
+when called shortly after?
+
+For example, if a hardware error interrupt fired during teardown,
+idxd_shutdown()->flush_workqueue() could execute an error handler that
+iterates over the freed idxd->wqs[] memory.
+
+Additionally, if the hardware is wedged,
+idxd_shutdown()->idxd_device_disable()->idxd_device_clear_state()
+iterates over idxd->wqs[] and attempts to acquire mutex_lock(&wq->wq_lock)
+on the freed memory.
+
+Is there also a missing reference count for the cdev open path?
+
+Since idxd_unregister_devices() frees the wq structure, if user space
+holds an open file descriptor, cdev_device_del() won't revoke it.
+Can file operations like mmap or poll subsequently access the freed
+ctx->wq pointer? Should idxd_cdev_open() take a kobject reference on
+the parent wq device?
+
+via: https://sashiko.dev/#/message/20260415095030.42183-1-kanie@linux.alibaba.com
+via: https://sashiko.dev/#/message/20260415095030.42183-1-kanie@linux.alibaba.com
+
+via: https://sashiko.dev/#/message/20260415095030.42183-1-kanie@linux.alibaba.com
+via: https://sashiko.dev/#/message/20260415095030.42183-1-kanie@linux.alibaba.com
+
+-- 
+Vinicius
 
 

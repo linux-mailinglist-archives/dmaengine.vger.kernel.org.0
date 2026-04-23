@@ -1,71 +1,71 @@
-Return-Path: <dmaengine+bounces-10093-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10094-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2HPvDxM06mkCwwIAu9opvQ
-	(envelope-from <dmaengine+bounces-10093-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Apr 2026 17:00:35 +0200
+	id AE7sFU006mkCwwIAu9opvQ
+	(envelope-from <dmaengine+bounces-10094-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Apr 2026 17:01:33 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 798B045403F
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Apr 2026 17:00:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EC6F454062
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Apr 2026 17:01:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C24F2305FA12
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Apr 2026 14:57:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B051230C4156
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Apr 2026 14:57:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C85AA3624AF;
-	Thu, 23 Apr 2026 14:57:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D48735A388;
+	Thu, 23 Apr 2026 14:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kY/JaW/8"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N6461PjQ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4CF359A62;
-	Thu, 23 Apr 2026 14:57:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F093126B2;
+	Thu, 23 Apr 2026 14:57:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776956255; cv=none; b=fVtmyY8kZlPSZkeCOg818SA7xu+mrTxBMxyQUkfPEEwHzeQBaYluNEeYTe8wh6Le/gCEm1vYGYEDUYdDTnj7m/QvuAOUQWpgOx1Rm0etdjX5RxcFAThoOLsf7FJpiRqU2yWzVb97ua5Erc6vMvjjfQM8vnOrJNeZnkMIdeOiJI0=
+	t=1776956265; cv=none; b=SYZ4bD7ceBKk9Wrz51Qa6mtN2WRbuRLy/KbP0OFAZ1CcP4XVeudljwMoJvBif2UQQAZ5NU2IvJ4fFe1i2oLmKYpLaVwHpGnmuiD8GCtsHqrTFC3RRJou7m9VT6BWeRcvX2Q4nWIpFB1EXpikcTmKq4VrBg2Nts5ZuVJrKUqJjvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776956255; c=relaxed/simple;
-	bh=e7t6ShQ2cI3Mz6AmaHsbAxeWQh28RjNT6mgVG3MLxxw=;
+	s=arc-20240116; t=1776956265; c=relaxed/simple;
+	bh=5wWO8YpZZeKWSICm5+VAGrGxxREHvjDClIgimaLRvN4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hWzXB+Cz9ZKUgVlbltrEqJIZsUK/i5SkPEc0uHu7qEqL8Wg1ayWLKjxLG8THqrlx0nh6MLjMdnvlvs2PowYaoExcc4g6fwgp+mxLmo3+hWJtxN7TuYqpqPB85KLa8AsXmaf77l8G0nmChF22y8zM1WVdW8sziyzG0WNBPtMafgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kY/JaW/8; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=qiwzlh+xhywg0A/NaAY+kg66Vlyh4I5aOXS4HBhKsi+cofSzQEgNEGsw5xdGrnOk1bZqbMzJ1pWRsB1FN0HheCL4JCo0mZgu4lXzYUlQV/CJzLGBAq3wo/rrAWbgMWncO+0oIQ02JIoAnokkASj7xcEQJLbRHdFxCbDZWxxrpEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N6461PjQ; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63N8uEtN3044055;
-	Thu, 23 Apr 2026 14:57:30 GMT
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63NBwigG009885;
+	Thu, 23 Apr 2026 14:57:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=MVr+iQ0IOVH
-	oD8QLuy6TdPdop5YCIZQZqq7rbtOLfq4=; b=kY/JaW/81tBDC3bTJ+dVIQt0hSs
-	1h3N0RZEV68z56FENw+xhRDypU6TI2fCcY0IJlcQ1XSi5i2mkIgmdRQzhoYqUBAz
-	wEF/v6ZUDN+MI1+Dy4DU4tvqX4WccIwe6lcN49Yk5Vme3N+BuLvQI4HEoRnBnBzE
-	0MMI5vNKMIu4odslVmtFK7yh4ZNqm2nBNOpj94XO4FQZ9boPa7LN5C5TuqnL3XOq
-	7lwCHx6ltYompWl3AD9bMvU5TH1HyCaEos1xk6I0kKQgP4d4ehQKZh+Pt7E3DCas
-	fo40XpEPAYZU5MitramtUfru3Omi/WGRK6aaViyQlLYOxRgM1uRY/8Qlb5w==
+	:mime-version:references:subject:to; s=qcppdkim1; bh=dKWP3BzwCZ7
+	DH9txszXX63ggQ7TbNv0YUXlfrhzzdJs=; b=N6461PjQ6aSKrwud81Z4tlKnObp
+	u06Kp7qaogu4vi8Utp80pgq8j+fNaWBeYPmhyqTr+WtNf/t1UkGkH86E8dqYUGHU
+	w/DO4LgEvCmd0GFsU5wYMbP383SxOHgijMKVRnT3/aizhju8G3VfM9Pvb3W6rjjj
+	z5N1MsqmWVYvaj4ffAON/jhDgfJ1C2LKeqTkQk1aToLqhOrTQwteOk1cAibc3t8K
+	m9nUzSyJ6xB7jye46PmO1RqUtZ3g5IEzVdvn0+qFI8wZ7ulouMiWQ6J9P63yOgzS
+	AIVPUDFMUwTm6j+QmfcNQ0DRawsNiLot9AwhhF/3TubQgKwPsvdFiygjq1w==
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dq1jh4eqj-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dqk178p60-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Apr 2026 14:57:29 +0000 (GMT)
+	Thu, 23 Apr 2026 14:57:39 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.7/8.18.1.7) with ESMTP id 63NEvQO5011425;
-	Thu, 23 Apr 2026 14:57:26 GMT
+	by APBLRPPMTA02.qualcomm.com (8.18.1.7/8.18.1.7) with ESMTP id 63NEvUA9011463;
+	Thu, 23 Apr 2026 14:57:30 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 4dm31k24b4-1
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 4dm31k24bj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Apr 2026 14:57:26 +0000 (GMT)
+	Thu, 23 Apr 2026 14:57:30 +0000 (GMT)
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.1.12) with ESMTP id 63NEvQnW011419;
-	Thu, 23 Apr 2026 14:57:26 GMT
+	by pps.reinject (8.18.1.12/8.18.1.12) with ESMTP id 63NEvU7i011455;
+	Thu, 23 Apr 2026 14:57:30 GMT
 Received: from hu-devc-hyd-u24-a.qualcomm.com (hu-msavaliy-hyd.qualcomm.com [10.147.246.140])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 63NEvPrS011417
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 63NEvTsT011451
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Apr 2026 14:57:26 +0000 (GMT)
+	Thu, 23 Apr 2026 14:57:30 +0000 (GMT)
 Received: by hu-devc-hyd-u24-a.qualcomm.com (Postfix, from userid 429934)
-	id E3BF521C47; Thu, 23 Apr 2026 20:27:24 +0530 (+0530)
+	id AF69E21C47; Thu, 23 Apr 2026 20:27:28 +0530 (+0530)
 From: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
 To: viken.dadhaniya@oss.qualcomm.com, andi.shyti@kernel.org, robh@kernel.org,
         krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
@@ -78,9 +78,9 @@ To: viken.dadhaniya@oss.qualcomm.com, andi.shyti@kernel.org, robh@kernel.org,
 Cc: krzysztof.kozlowski@oss.qualcomm.com, bartosz.golaszewski@oss.qualcomm.com,
         bjorn.andersson@oss.qualcomm.com, konrad.dybcio@oss.qualcomm.com,
         Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
-Subject: [PATCH v7 3/4] soc: qcom: geni-se: Keep pinctrl active for multi-owner controllers
-Date: Thu, 23 Apr 2026 20:25:50 +0530
-Message-ID: <20260423145705.545552-4-mukesh.savaliya@oss.qualcomm.com>
+Subject: [PATCH v7 4/4] i2c: qcom-geni: Support multi-owner controllers in GPI mode
+Date: Thu, 23 Apr 2026 20:25:51 +0530
+Message-ID: <20260423145705.545552-5-mukesh.savaliya@oss.qualcomm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260423145705.545552-1-mukesh.savaliya@oss.qualcomm.com>
 References: <20260423145705.545552-1-mukesh.savaliya@oss.qualcomm.com>
@@ -93,126 +93,138 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QCInternal: smtphost
 X-QCInternal: smtphost
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIzMDE0OSBTYWx0ZWRfX3wQntq8X80DI
- jdfK1b/mplihxHrqiHMq6M66n4l5ku3HLfiKXQCaiWNqCFmUKtkNuKR6oLOkZf7qUsNiBptMIrp
- UCxeDBsCZyab63xMxAlWJgzPU/EcwHtNUHdrCWyXIbQ6sdWuFfraAK/4aHwuPT2vLEskizDZEnq
- MprEdmwWjRW85/KT86bEyH7N9MI4Pb4f6AjDf0CXTtZw1c1xmU3XldMOs7ltQ8iXXvGBbkq7uHf
- GAY6oPRAt5Ztq4hJOVDyD+CMVAyh6422fIMI4fjoRofKJnlxTcu0WemV0RS0bPCQIK/DWw2UtUZ
- Vd6H64PHc8rxd027gknKFxbDRPXl/TD11M/hyOQqlTUKv5NEOqe2b5pmeyYNvC+QGav8dpF1QyG
- Ys98PQUgJYswh3wjCPoM8PHHrWiL27/Ls8k+1Oxf3abVaChe4aSelZSWPioZMOHUiEq1wV9yAtp
- ABLjXQ+MWblGP3YUmPQ==
-X-Authority-Analysis: v=2.4 cv=OeyoyBTY c=1 sm=1 tr=0 ts=69ea335a cx=c_pps
+X-Proofpoint-GUID: xpahXvXzHtvYjIgZ8PxySvxbpBjJ0HGd
+X-Authority-Analysis: v=2.4 cv=R98z39RX c=1 sm=1 tr=0 ts=69ea3363 cx=c_pps
  a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
  a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=rJkE3RaqiGZ5pbrm-msn:22 a=EUspDBNiAAAA:8 a=AU6ItHRBSQEJJjuWNb0A:9
-X-Proofpoint-GUID: yn-QgtGEoKNj2wWp8mn69598A6mtBZow
-X-Proofpoint-ORIG-GUID: yn-QgtGEoKNj2wWp8mn69598A6mtBZow
+ a=yx91gb_oNiZeI1HMLzn7:22 a=EUspDBNiAAAA:8 a=r5MnBgDnrAiVjouRZIUA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIzMDE0OSBTYWx0ZWRfX8iwpSd9tFd8F
+ zxbZ7rJP4V3sMaVsWZDnblxkLhxkNQYFzz0+iZHodA9vh/MGzbCmDlGGWYfaLB9Vmz5JU+Ucve8
+ NuLGwJ8Lh3xmFccnI2qrSo6RezdSHYEohLl2fTDzP+dw4D7LfvWPc3EgvkUvlQL0JlojqvjCG/E
+ RxIAoQnlibBF9KUDfHK1Wf8GRg9dCwIGC4Vs2kkxsZqMy+P3FmWg2YgF2l80aMRz0E6PFw/08Hs
+ 9wa1IMiTP4AYrtHpSoglQGB/JlbGsE0piuEa14vcufowljWjaSXhJjaD3WpmvLcwWbwQCFwOhrO
+ Yat/pW2ZAc4rto6RavaE9RsaUGKA5RuY939KeZhdn1d0guoPya5cftHf5rR8oYZbmdGPteDnQ/E
+ +x9RxkNt2XY+iuXRW3UbmyBnoZusEPvxjFXZtAat3GSuWuVu/EqzsB3NtsILmyuD8l+fm8tOtnM
+ ZH9jFElxrQVkVE3fzng==
+X-Proofpoint-ORIG-GUID: xpahXvXzHtvYjIgZ8PxySvxbpBjJ0HGd
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-23_03,2026-04-21_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 adultscore=0 suspectscore=0 phishscore=0
- clxscore=1015 spamscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
- definitions=main-2604230149
+ bulkscore=0 spamscore=0 clxscore=1015 priorityscore=1501 phishscore=0
+ malwarescore=0 impostorscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604230149
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
 	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
 	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10093-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[oss.qualcomm.com,kernel.org,gmail.com,quicinc.com,vger.kernel.org];
-	RCVD_COUNT_SEVEN(0.00)[10];
+	TAGGED_FROM(0.00)[bounces-10094-lists,dmaengine=lfdr.de];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MAILSPIKE_FAIL(0.00)[2600:3c04:e001:36c::12fc:5321:query timed out];
+	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[mukesh.savaliya@oss.qualcomm.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[qualcomm.com:+];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	MAILSPIKE_FAIL(0.00)[2600:3c04:e001:36c::12fc:5321:query timed out];
 	NEURAL_HAM(-0.00)[-1.000];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qualcomm.com:dkim,qualcomm.com:email];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oss.qualcomm.com:mid,qualcomm.com:dkim,qualcomm.com:email]
-X-Rspamd-Queue-Id: 798B045403F
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	RCVD_COUNT_SEVEN(0.00)[10]
+X-Rspamd-Queue-Id: 4EC6F454062
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On platforms where a GENI Serial Engine is shared with another system
-processor, selecting the "sleep" pinctrl state can disrupt ongoing
-transfers initiated by the other processor.
+Some platforms use a QUP-based I2C controller in a configuration where the
+controller is shared with another system processor. In this setup the
+operating system must not assume exclusive ownership of the controller or
+its associated pins.
 
-Teach geni_se_resources_off() to skip selecting the pinctrl sleep state
-when the Serial Engine is marked as shared, while still allowing the
-rest of the resource shutdown sequence to proceed.
+Add support for enabling multi-owner operation when DeviceTree specifies
+qcom,qup-multi-owner. When enabled, mark the underlying serial engine as
+shared so the common GENI resource handling avoids selecting the "sleep"
+pinctrl state, which could disrupt transfers initiated by the other
+processor.
 
-This is required for multi-owner configurations (described via DeviceTree
-with qcom,qup-multi-owner on the protocol controller node).
+For GPI mode transfers, request lock/unlock TRE sequencing from the GPI
+driver by setting a single lock_action selector per message, emitting lock
+before the first message and unlock after the last message (handling the
+single-message case as well). This serializes access to the shared
+controller without requiring message-position flags to be passed into the
+DMA engine layer.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Signed-off-by: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
 ---
- drivers/soc/qcom/qcom-geni-se.c  | 15 +++++++++++----
- include/linux/soc/qcom/geni-se.h |  2 ++
- 2 files changed, 13 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-qcom-geni.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-index cd1779b6a91a..1a60832ace16 100644
---- a/drivers/soc/qcom/qcom-geni-se.c
-+++ b/drivers/soc/qcom/qcom-geni-se.c
-@@ -597,10 +597,17 @@ int geni_se_resources_off(struct geni_se *se)
+diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+index ae609bdd2ec4..a396ddc7d8f4 100644
+--- a/drivers/i2c/busses/i2c-qcom-geni.c
++++ b/drivers/i2c/busses/i2c-qcom-geni.c
+@@ -815,6 +815,14 @@ static int geni_i2c_gpi_xfer(struct geni_i2c_dev *gi2c, struct i2c_msg msgs[], i
+ 		if (i < num - 1)
+ 			peripheral.stretch = 1;
  
- 	if (has_acpi_companion(se->dev))
- 		return 0;
--
--	ret = pinctrl_pm_select_sleep_state(se->dev);
--	if (ret)
--		return ret;
-+	/*
-+	 * Select the "sleep" pinctrl state only when the serial engine is
-+	 * exclusively owned by this system processor. For shared controller
-+	 * configurations, another system processor may still be using the pins,
-+	 * and switching them to "sleep" can disrupt ongoing transfers.
-+	 */
-+	if (!se->multi_owner) {
-+		ret = pinctrl_pm_select_sleep_state(se->dev);
-+		if (ret)
-+			return ret;
++		peripheral.lock_action = GPI_LOCK_NONE;
++		if (gi2c->se.multi_owner) {
++			if (i == 0)
++				peripheral.lock_action = GPI_LOCK_ACQUIRE;
++			else if (i == num - 1)
++				peripheral.lock_action = GPI_LOCK_RELEASE;
++		}
++
+ 		peripheral.addr = msgs[i].addr;
+ 		if (i > 0 && (!(msgs[i].flags & I2C_M_RD)))
+ 			peripheral.multi_msg = false;
+@@ -1014,6 +1022,11 @@ static int geni_i2c_probe(struct platform_device *pdev)
+ 		gi2c->clk_freq_out = I2C_MAX_STANDARD_MODE_FREQ;
+ 	}
+ 
++	if (of_property_read_bool(pdev->dev.of_node, "qcom,qup-multi-owner")) {
++		gi2c->se.multi_owner = true;
++		dev_dbg(&pdev->dev, "I2C controller is shared with another system processor\n");
 +	}
++
+ 	if (has_acpi_companion(dev))
+ 		ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(dev));
  
- 	geni_se_clks_off(se);
- 	return 0;
-diff --git a/include/linux/soc/qcom/geni-se.h b/include/linux/soc/qcom/geni-se.h
-index 0a984e2579fe..46217cac73c3 100644
---- a/include/linux/soc/qcom/geni-se.h
-+++ b/include/linux/soc/qcom/geni-se.h
-@@ -63,6 +63,7 @@ struct geni_icc_path {
-  * @num_clk_levels:	Number of valid clock levels in clk_perf_tbl
-  * @clk_perf_tbl:	Table of clock frequency input to serial engine clock
-  * @icc_paths:		Array of ICC paths for SE
-+ * @multi_owner:	True if SE is shared between multiple owners.
-  */
- struct geni_se {
- 	void __iomem *base;
-@@ -72,6 +73,7 @@ struct geni_se {
- 	unsigned int num_clk_levels;
- 	unsigned long *clk_perf_tbl;
- 	struct geni_icc_path icc_paths[3];
-+	bool multi_owner;
- };
+@@ -1089,7 +1102,9 @@ static int geni_i2c_probe(struct platform_device *pdev)
+ 	}
  
- /* Common SE registers */
+ 	if (fifo_disable) {
+-		/* FIFO is disabled, so we can only use GPI DMA */
++		/* FIFO is disabled, so we can only use GPI DMA.
++		 * SE can be shared in GSI mode between subsystems, each SS owns a GPII.
++		 */
+ 		gi2c->gpi_mode = true;
+ 		ret = setup_gpi_dma(gi2c);
+ 		if (ret)
+@@ -1098,6 +1113,11 @@ static int geni_i2c_probe(struct platform_device *pdev)
+ 		dev_dbg(dev, "Using GPI DMA mode for I2C\n");
+ 	} else {
+ 		gi2c->gpi_mode = false;
++
++		if (gi2c->se.multi_owner)
++			return dev_err_probe(dev, -EINVAL,
++					     "I2C sharing not supported in non GSI mode\n");
++
+ 		tx_depth = geni_se_get_tx_fifo_depth(&gi2c->se);
+ 
+ 		/* I2C Master Hub Serial Elements doesn't have the HW_PARAM_0 register */
 -- 
 2.43.0
 

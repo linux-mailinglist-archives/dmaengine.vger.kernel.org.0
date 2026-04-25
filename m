@@ -1,269 +1,139 @@
-Return-Path: <dmaengine+bounces-10117-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10120-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KP11HtGq62nfQAAAu9opvQ
-	(envelope-from <dmaengine+bounces-10117-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Apr 2026 19:39:29 +0200
+	id Lf54AjWW7GnUaAAAu9opvQ
+	(envelope-from <dmaengine+bounces-10120-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 25 Apr 2026 12:23:49 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D52714620AD
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Apr 2026 19:39:28 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0032A465E18
+	for <lists+dmaengine@lfdr.de>; Sat, 25 Apr 2026 12:23:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7C980300B9DB
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Apr 2026 17:39:25 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 45E83300404C
+	for <lists+dmaengine@lfdr.de>; Sat, 25 Apr 2026 10:23:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EEEC3E5588;
-	Fri, 24 Apr 2026 17:39:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1185B39446B;
+	Sat, 25 Apr 2026 10:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KS7Mpja0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCCPoSXl"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5373AD510;
-	Fri, 24 Apr 2026 17:39:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BB22F2607;
+	Sat, 25 Apr 2026 10:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777052364; cv=none; b=PV54k3yXCa83pVaUI5E9hNFA88K8aw6jH6dmeKMc/Y6TF9avOnphGewQNFClTdw8KUkVsyqZzw4YzpujdKSGf+LgoCxAK/LnCAjNIJFQ5eBtRWSKY3yy0hpwWrxLPLjKKAEtUa0yKKqPCbKs/zcijMyJrtukHo49omGrB+B55rE=
+	t=1777112624; cv=none; b=qy/t9PQnvMr1P1gvtG1K0029QiZiwrglo0xPWYZjM/B5RnKM0ZBK8Q1qtGAGWFmIVhMckXcgA1LJAdU/3RsbEyU4aCAXcLVHQaZ2juAjM0WvTcSi3C3i/AYCiKlxtm30Ng82XAcyh8Pnh/vv9+Pfvnwa1FboxjxdjcWq9o6lZ4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777052364; c=relaxed/simple;
-	bh=5n0eTKt2Cl626iyJU0lxSbAm30fR29gcRRZy0D1Bo6Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gI/ZyjO5IBZFdOVgRAA0ND5uMuVRkS1z6hoAGFGps6W/gtTUxiCuQnmdE2c4YURaSjZgZiRufMgOpmBitwlRuuXjsFZlbdYKHchs5g1dLK2//jKZgjuT/WmPbmO1QVFNVKaHWah/ODcwqTsZzyHt+Rlrb7b4J75tLemm4n+JoDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KS7Mpja0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 27EA7C4AF0C;
-	Fri, 24 Apr 2026 17:39:24 +0000 (UTC)
+	s=arc-20240116; t=1777112624; c=relaxed/simple;
+	bh=zwCFJtmeAUbii235fTcLlj5zP/eaa8Auc9w7sbkO2dQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h+GX7tOeau0dIW2Q7yfN0KNdUHA6KEuezLiGvXYz3DwegWTJhOKwpR2oI+k7VSNnTe/hBbas4k/k4UiORAK8fHjNKoMf7U1gCDG1PGAI+pay0LL/lSVmO3+1Y61wuJ2FSOxVJ9H3MYmUyTGvCPHR/3McFarcgR1CJvUxgJKTcbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCCPoSXl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFB9EC2BCB0;
+	Sat, 25 Apr 2026 10:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777052364;
-	bh=5n0eTKt2Cl626iyJU0lxSbAm30fR29gcRRZy0D1Bo6Y=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=KS7Mpja0XMIk3zBoxWxFgCX28C4an6iS0f6KkS0UYooRXbb5XHP+QBXtlIBbKikdW
-	 d7so4QcW9VE5k7uZ7vVmbcznA6ndzoacJvgVB4yGc1ec2KcD4zkl7WJEyjuFSGWNpQ
-	 0cmP836xqWajKDPRX8Sw5I6JPys8oNH4TdY6qsvdOXthGFNK5LwMasf4xo1PmCe/lh
-	 rBvKw9/kktW0FaVAnv3ToXV8F4jhe8WQ4RRGHYie/+v1wJHVB0BsyQB8BuPjq6lC/O
-	 U15E6DKjQr/Fcjq0CCvq9j32R0go4Wr2X0GK3R0+PV97nLpGv8eM8gUh8JR1S+il5C
-	 WhQCuMsegpyjA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206D4FED3F6;
-	Fri, 24 Apr 2026 17:39:24 +0000 (UTC)
-From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Fri, 24 Apr 2026 18:40:17 +0100
-Subject: [PATCH v4 4/4] dmaengine: dma-axi-dmac: use DMA pool to manange
- DMA descriptor
+	s=k20201202; t=1777112623;
+	bh=zwCFJtmeAUbii235fTcLlj5zP/eaa8Auc9w7sbkO2dQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GCCPoSXlP3bKNK40bIBroSzsXszNSouGd+DinWM8KD7ByNimt3mbRkDTEesRHxwfm
+	 ta/U4EHh1oQL4/D4wQx4VRjvhiqmF8TR1/cR1KZpMk/JQxTKI33Iaghi4Fps9MJiNV
+	 HLa8+XVJJtJwdXBHj+4NQVv7AfQXFQYxjbMK/Zrx9cmX43KdaLC5gsq7nn90LRWLfB
+	 20lMZGraR0J1A98/jEbfheJ/PXD4JAAWhI1i9v5EkjMUWz+OLuHz4sZ0yRwO7ZNl6N
+	 sEVkhv+01U0Q2Bxmizv5Iyc8z7+00kpoxAP+D4ZFox9q86/xt3PwTq3yfc/VQVdUA1
+	 fu7Bk7K+UpXyw==
+Date: Sat, 25 Apr 2026 12:23:41 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Harshal Dev <harshal.dev@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: dma: qcom: bam-dma: Add support for
+ kaanapali BAM v2.0.0
+Message-ID: <20260425-handsome-papaya-porcupine-d42df7@quoll>
+References: <20260424-knp_qce-v1-0-813e18f8f355@oss.qualcomm.com>
+ <20260424-knp_qce-v1-1-813e18f8f355@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260424-dma-dmac-handle-vunmap-v4-4-90f43412fdc0@analog.com>
-References: <20260424-dma-dmac-handle-vunmap-v4-0-90f43412fdc0@analog.com>
-In-Reply-To: <20260424-dma-dmac-handle-vunmap-v4-0-90f43412fdc0@analog.com>
-To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>, 
- Frank Li <Frank.Li@kernel.org>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777052415; l=5323;
- i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=HqWNkCDI0VfeVEb5KKgxsi/P7bet+YEciX6Acpcld7Q=;
- b=zl7ajjc9sDfmd7eFj4L/AZLliMugd/RhFG9WpDr23VCMGb60Mi96x70gRoUaX5rapp93fPBEi
- A7DeYvKWXMEDxZGKSGhHVLKaKPD472buAM/tUPoTJ3pJ9f7cqph8lYP
-X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
- pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
-X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
- auth_id=100
-X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-Reply-To: nuno.sa@analog.com
-X-Rspamd-Queue-Id: D52714620AD
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260424-knp_qce-v1-1-813e18f8f355@oss.qualcomm.com>
+X-Rspamd-Queue-Id: 0032A465E18
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10117-lists,dmaengine=lfdr.de,nuno.sa.analog.com];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10120-lists,dmaengine=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[dmaengine];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	HAS_REPLYTO(0.00)[nuno.sa@analog.com]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
-From: Nuno Sá <nuno.sa@analog.com>
+On Fri, Apr 24, 2026 at 05:04:15PM +0530, Kuldeep Singh wrote:
+> Kaanapali support newer BAM v2.0.0 version.
+> Document the compatible string and update example along with it.
 
-For architectures like Microblaze or arm64 (where this IP is used),
-DMA_DIRECT_REMAP is set which means that dma_alloc_coherent() might
-remap (and hence vmalloc()) some memory. This became visible in a design
-where dma_direct_use_pool() is not possible.
+And why v2.0.0 is not compatible with v1.7.0? Or what is not compatible?
 
-With the above, when calling dma_free_coherent(), vunmap() would be
-called from softirq context and thus leading to a BUG().
+> 
+> Signed-off-by: Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
+> ---
+>  .../devicetree/bindings/dma/qcom,bam-dma.yaml       | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> index 6493a6968bb4..0923fb189ada 100644
+> --- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> @@ -23,6 +23,8 @@ properties:
+>            - qcom,bam-v1.4.0
+>            # MSM8916, SDM630
+>            - qcom,bam-v1.7.0
+> +          # Kaanapali
+> +          - qcom,bam-v2.0.0
+>        - items:
+>            - enum:
+>                # SDM845, SM6115, SM8150, SM8250 and QCM2290
+> @@ -118,4 +120,23 @@ examples:
+>          #dma-cells = <1>;
+>          qcom,ee = <0>;
+>      };
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
 
-To fix it, use a dma pool that is allocated in
-.device_alloc_chan_resources() and allocate blocks from it. The key
-point is that now dma_pool_free() is used in axi_dmac_free_desc() to
-free the blocks and that just frees the blocks from the pool in the
-sense they can be used again. In other words, no actual call to
-dma_free_coherent() happens. That only happens when destroying the pool
-in axi_dmac_free_chan_resources() which does not happen in any interrupt
-context.
+Drop the example, no need for difference in compatible.
 
-Fixes: 3f8fd25936ee ("dmaengine: axi-dmac: Allocate hardware descriptors")
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
----
- drivers/dma/dma-axi-dmac.c | 66 ++++++++++++++++++++++++++++------------------
- 1 file changed, 40 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 41898d594be7..d47ff27e1408 100644
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -13,6 +13,7 @@
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
-+#include <linux/dmapool.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -147,6 +148,7 @@ struct axi_dmac_chan {
- 	struct virt_dma_chan vchan;
- 
- 	struct axi_dmac_desc *next_desc;
-+	void *pool;
- 	struct list_head active_descs;
- 	enum dma_transfer_direction direction;
- 
-@@ -648,11 +650,17 @@ static void axi_dmac_issue_pending(struct dma_chan *c)
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- }
- 
-+static void axi_dmac_free_desc(struct axi_dmac_desc *desc)
-+{
-+	for (unsigned int i = 0; i < desc->num_sgs; i++)
-+		dma_pool_free(desc->chan->pool, desc->sg[i].hw, desc->sg[i].hw_phys);
-+
-+	kfree(desc);
-+}
-+
- static struct axi_dmac_desc *
- axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
- {
--	struct axi_dmac *dmac = chan_to_axi_dmac(chan);
--	struct device *dev = dmac->dma_dev.dev;
- 	struct axi_dmac_hw_desc *hws;
- 	struct axi_dmac_desc *desc;
- 	dma_addr_t hw_phys;
-@@ -664,22 +672,22 @@ axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
- 	desc->num_sgs = num_sgs;
- 	desc->chan = chan;
- 
--	hws = dma_alloc_coherent(dev, PAGE_ALIGN(num_sgs * sizeof(*hws)),
--				&hw_phys, GFP_ATOMIC);
--	if (!hws) {
--		kfree(desc);
--		return NULL;
--	}
--
- 	for (i = 0; i < num_sgs; i++) {
--		desc->sg[i].hw = &hws[i];
--		desc->sg[i].hw_phys = hw_phys + i * sizeof(*hws);
-+		hws = dma_pool_zalloc(chan->pool, GFP_NOWAIT, &hw_phys);
-+		if (!hws) {
-+			desc->num_sgs = i;
-+			axi_dmac_free_desc(desc);
-+			return NULL;
-+		}
- 
--		hws[i].id = AXI_DMAC_SG_UNUSED;
--		hws[i].flags = 0;
-+		desc->sg[i].hw = hws;
-+		desc->sg[i].hw_phys = hw_phys;
-+
-+		hws->id = AXI_DMAC_SG_UNUSED;
- 
- 		/* Link hardware descriptors */
--		hws[i].next_sg_addr = hw_phys + (i + 1) * sizeof(*hws);
-+		if (i)
-+			desc->sg[i - 1].hw->next_sg_addr = hw_phys;
- 	}
- 
- 	/* The last hardware descriptor will trigger an interrupt */
-@@ -688,18 +696,6 @@ axi_dmac_alloc_desc(struct axi_dmac_chan *chan, unsigned int num_sgs)
- 	return desc;
- }
- 
--static void axi_dmac_free_desc(struct axi_dmac_desc *desc)
--{
--	struct axi_dmac *dmac = chan_to_axi_dmac(desc->chan);
--	struct device *dev = dmac->dma_dev.dev;
--	struct axi_dmac_hw_desc *hw = desc->sg[0].hw;
--	dma_addr_t hw_phys = desc->sg[0].hw_phys;
--
--	dma_free_coherent(dev, PAGE_ALIGN(desc->num_sgs * sizeof(*hw)),
--			  hw, hw_phys);
--	kfree(desc);
--}
--
- static struct axi_dmac_sg *axi_dmac_fill_linear_sg(struct axi_dmac_chan *chan,
- 	enum dma_transfer_direction direction, dma_addr_t addr,
- 	unsigned int num_periods, unsigned int period_len,
-@@ -933,9 +929,26 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_interleaved(
- 	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
- }
- 
-+static int axi_dmac_alloc_chan_resources(struct dma_chan *c)
-+{
-+	struct axi_dmac_chan *chan = to_axi_dmac_chan(c);
-+	struct device *dev = c->device->dev;
-+
-+	chan->pool = dma_pool_create(dev_name(dev), dev,
-+				     sizeof(struct axi_dmac_hw_desc),
-+				     __alignof__(struct axi_dmac_hw_desc), 0);
-+	if (!chan->pool)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
- static void axi_dmac_free_chan_resources(struct dma_chan *c)
- {
-+	struct axi_dmac_chan *chan = to_axi_dmac_chan(c);
-+
- 	vchan_free_chan_resources(to_virt_chan(c));
-+	dma_pool_destroy(chan->pool);
- }
- 
- static void axi_dmac_desc_free(struct virt_dma_desc *vdesc)
-@@ -1238,6 +1251,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
- 	dma_cap_set(DMA_CYCLIC, dma_dev->cap_mask);
- 	dma_cap_set(DMA_INTERLEAVE, dma_dev->cap_mask);
-+	dma_dev->device_alloc_chan_resources = axi_dmac_alloc_chan_resources;
- 	dma_dev->device_free_chan_resources = axi_dmac_free_chan_resources;
- 	dma_dev->device_tx_status = dma_cookie_status;
- 	dma_dev->device_issue_pending = axi_dmac_issue_pending;
-
--- 
-2.54.0
-
+Best regards,
+Krzysztof
 
 

@@ -1,215 +1,183 @@
-Return-Path: <dmaengine+bounces-10181-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10183-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yCl/NA168GnyTwEAu9opvQ
-	(envelope-from <dmaengine+bounces-10181-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 11:12:45 +0200
+	id oC5VLFyA8GlSUAEAu9opvQ
+	(envelope-from <dmaengine+bounces-10183-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 11:39:40 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D10AC48105C
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 11:12:44 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4993A481A66
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 11:39:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7E8AE3055E74
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 08:56:07 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 91A263128F19
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 09:33:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AC303D8913;
-	Tue, 28 Apr 2026 08:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XdhI5C1l"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64FB8383C7C;
+	Tue, 28 Apr 2026 09:33:42 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010010.outbound.protection.outlook.com [52.101.56.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B849A3D6673;
-	Tue, 28 Apr 2026 08:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777366445; cv=fail; b=Z80z0dUKnw+BJNgA6bXI+967vLviD+vUkRsEHkY9V7UJKUATfc7bor8jTDn2nfuJYXb8kN8vk7d2Bnj0H1UGHKVeu9lxoKwvdhN1XhiRTtMKnhlG+3WHZrI0inuNSWR3PYW54ktooifofBvcNCDodEyo7kwQNInQ/GjJea/pBzk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777366445; c=relaxed/simple;
-	bh=U/DiUCGE0MTdXw22vutZnCVkof+cbVq6CdYlxmCcSLU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PR0YDeg6TDQu+NClhwdGjpJccbzBRB9tSxk5twQ7npqJ2eIn2BC5kOr414Aotu4NPHX6Fd09ll7SPbs0+EOa5P6P6OOMRYxg+6aMgxCJxZkAMlAR7DR2amXXbSERb+hvScWMJt7wVlVEKk/TrOOod1XreWrhsQ7O2fhraPuPsxY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XdhI5C1l; arc=fail smtp.client-ip=52.101.56.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MdpFcg76LhOFjZNV4t4/ahWUhMpXhzdiX1pzsD0+Ya/QEArfEW57fkKbdv0ks8tIivxUasYs7OsY5Hs/9k6u45dnBvb4rX4NQjrX6dFsUclOR/vqh7sQBMusnUuk6kaTNMzhAEJ7BZL67zpuJd4eiGKvIMqEcceGNPWQE/YM/mXm4lTwRX9bauAH/1DSy6EDuzp6kkUEU+3+7ERfwdm0NStAAqLQai7+S7GdaulmQ1w8wIOfoluonD5m1WyQ6dsPgIBpbGQDWPNE4lyZxYjLpYKPyDeVqrO24yT9H9HLGAleIWpvj1yytmpbHIlLC5rt/fqsZZPvQ+y1zUxyRHrkIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sMNmze9D/smZWTbqcmnj/N8fgqgsTRWcKHnTetGUt/Y=;
- b=asfjswpWcaEtIKb7s91GK+gc/LI50SEEGwG8sfzns72IU/VnIFPrQWH3abE67kuioEody5/6IK3GGK8Job+U6ak/n5WPnIaw2dNR6H1rI0JwsMT3ftIh/GrfCvp6/wrOtqMKORfRLln1h9i+SJ2QFt3ASZHoQor7IO65BqfvyRVpeXcNtARu3KWJzvIXXRS/YiTggJTu8dva5uBZ/gIO2K7wW3ZLSE9Ou7tRE60gnnPYQaFBG3pS1bne+OSIIXVOOucMgi+TsGDnSxX3ZQvozYXUznHnul6r+DtVDEB9yn8K/P8T6c/Svgqc7x0brgYJQBkVXcI9pQi/yWImnPgt2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.21.194) smtp.rcpttodomain=nxp.com smtp.mailfrom=ti.com; dmarc=pass
- (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sMNmze9D/smZWTbqcmnj/N8fgqgsTRWcKHnTetGUt/Y=;
- b=XdhI5C1lP97c0IMiuw3t8N73gX8LLcVuS6NLDdAYsXAT7Cs4hHRA2LQJvbWGV9yhqrp0o84IQQ6icVKoFUB75V1EOKwG4sb3hX5d3+xHnV0qlE9wgxN1ZSN34EdyVREd3EJgTIShOhBaEvjM83TlUuCjzLLc6fhqFqp2Hb3pQ9U=
-Received: from MW4PR03CA0209.namprd03.prod.outlook.com (2603:10b6:303:b8::34)
- by SJ0PR10MB4560.namprd10.prod.outlook.com (2603:10b6:a03:2d3::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.25; Tue, 28 Apr
- 2026 08:54:01 +0000
-Received: from SJ5PEPF000001F2.namprd05.prod.outlook.com
- (2603:10b6:303:b8:cafe::a0) by MW4PR03CA0209.outlook.office365.com
- (2603:10b6:303:b8::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.26 via Frontend Transport; Tue,
- 28 Apr 2026 08:54:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.194)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.21.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.21.194; helo=flwvzet200.ext.ti.com; pr=C
-Received: from flwvzet200.ext.ti.com (198.47.21.194) by
- SJ5PEPF000001F2.mail.protection.outlook.com (10.167.242.70) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9846.18 via Frontend Transport; Tue, 28 Apr 2026 08:53:59 +0000
-Received: from DFLE210.ent.ti.com (10.64.6.68) by flwvzet200.ext.ti.com
- (10.248.192.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 28 Apr
- 2026 03:53:39 -0500
-Received: from DFLE200.ent.ti.com (10.64.6.58) by DFLE210.ent.ti.com
- (10.64.6.68) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 28 Apr
- 2026 03:53:39 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE200.ent.ti.com
- (10.64.6.58) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Tue, 28 Apr 2026 03:53:39 -0500
-Received: from uda0498651.dhcp.ti.com (uda0498651.dhcp.ti.com [172.24.233.239])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 63S8q6Mb623293;
-	Tue, 28 Apr 2026 03:53:34 -0500
-From: Sai Sree Kartheek Adivi <s-adivi@ti.com>
-To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nm@ti.com>,
-	<ssantosh@kernel.org>, <dmaengine@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
-	<Frank.li@nxp.com>, <s-adivi@ti.com>
-CC: <r-sharma3@ti.com>, <gehariprasath@ti.com>
-Subject: [PATCH v6 19/19] dmaengine: ti: k3-udma: Validate resource ID and fix logging in reservation
-Date: Tue, 28 Apr 2026 14:21:48 +0530
-Message-ID: <20260428085202.1724548-20-s-adivi@ti.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260428085202.1724548-1-s-adivi@ti.com>
-References: <20260428085202.1724548-1-s-adivi@ti.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABA73A6EED
+	for <dmaengine@vger.kernel.org>; Tue, 28 Apr 2026 09:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777368822; cv=none; b=htOjgnTfjwx9i0hR1+Uq70qfInzL4ntN8cJInCuU+O7qAs/DBIjCIoDwYea4x+4G6hDJ/1M8IqgkkOfRSpHawSTSCeuJ3kzTX63eZA9oStu9/vq/u8AmdPegim7A6FtFg3v4CHu0zqgVgUzmyBE7Ev15WVrgd2LeqguFqjVatIg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777368822; c=relaxed/simple;
+	bh=WZ0dv++aH+AeLwkvbNXxLqu7wJ3mA6GpS63WG1N27Uc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dMCGdNCPHVDnF+IbPoYT0kgg0B+GB8XSEi62yHqw7s+FZFnRdCoAJo4RAMsDLgU1SmsZVClrGzbj6aoj3y9T6wdq/Qsmnu1MT3sXXtQzNHEhei6yYWHou87Y9/r/4J9wbtXw8g21Cwxg9/bs9fTaW5/9XkdLbn+vW7sGHS0t7I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-67389cf78b0so19509169a12.2
+        for <dmaengine@vger.kernel.org>; Tue, 28 Apr 2026 02:33:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777368819; x=1777973619;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Al22kA6RCf7FSEzj29cZLSkjdM9EgXxihmBX7/SeSVI=;
+        b=gOuEbCYbM+Eu4Bih5SSYJE9376B0khQIUQOPQP+n6cL5GUM5dckTdgUjuLHAPjoZUy
+         l28joor/uYMCCbNy9fq7o0poJd8SvleHInBdQZXSoV3gsXVQ2YlSbNq0QvsQr1TgGwvi
+         esHMT+k6QSL8KgC1j/tEbryQBo1tkNaeRgji7uzt4hMTD5giol2/ooadfjQhm+Ga9Zdv
+         FPwSiFOzp4FfieJrqCOw1ToVA42GSTzdkdwC2ipARt50VymUNoX4a7i/p8OYFYvDc1l7
+         FZSDrpg8Qxy+VIF6jCOeM5qykz/pBLVld097DbD2kNiLAzp/bBItLkBH6k8lrtQgYUD5
+         KUhg==
+X-Forwarded-Encrypted: i=1; AFNElJ/euH5U+IApSADhn/MOgfOWKV6HoIuu+IrJoDM652CI7wTCtPyGT6podMvLcH5MbIr251GYLTUZZ/Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEMefVO7XycNTTIGc0UmdttLVwuLyYBKLkJJ56oWy9tlQ0gNot
+	9ztL19D0/PlCzGEDj2zao+HsZH8rpkxusLg69yGJE5TFlxfEhj6TCG8uBQRom0wlSGw=
+X-Gm-Gg: AeBDiet7BqKK9hxx+NuT1ncrQbE6lIeuOvUpNTjWayfqs9FjKWcYBLUe/C2DeXtaJ2a
+	gELlGxVCbHIVV0jP5LzmF7QUqqGTtHNWkFqlJ8Kx3fHBjdfFPn3UqM7b5exWgtjUxhECu0io6Xd
+	+dfuo7cYe/jngs74kzR+craC/zBzoUPo5XdDWNUAKK7NKe4+hgJI8cljWq7G/K83OPr1Q65XmHO
+	XpoI36/FvlqXq7CWe7AK6gJBxjUxBLYbXP6sHVXErQeEev/iiV+nRzEzrie++cKU+dm0tNuH4Pv
+	fefBuUtQFgymCaLyGSxEtlS1jb9a2eQ+sk61egPpoa8YvAC5BkxMYwdhmjxW1qqkzRV4Q9p3Ys/
+	ZnNz96ox3xCdcodDP22ZbPCP02qZSWe47GR8ANivjxixrH0XeiHd0xsxX8OeuKJhFai6+7WPGg9
+	RzPTRfqfeEUUEljdltMjghWkNhZvsLjq8F5KYyUSH83Ls81J/toiHmQGx+DGOacAjgYwJw2Jk=
+X-Received: by 2002:a05:6402:26cc:b0:674:bbc4:be21 with SMTP id 4fb4d7f45d1cf-679bb0625e3mr1138328a12.10.1777368819215;
+        Tue, 28 Apr 2026 02:33:39 -0700 (PDT)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-679b67cd14bsm538208a12.3.2026.04.28.02.33.38
+        for <dmaengine@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2026 02:33:39 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-678a526f374so7382244a12.0
+        for <dmaengine@vger.kernel.org>; Tue, 28 Apr 2026 02:33:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/RBFvCppdyVj7jKG6E6UFZat//53Zqcq43JTzOigyh2QTTaQgAG8YRAn4/0jtPHtCJayuMiFwSlIU=@vger.kernel.org
+X-Received: by 2002:a05:6402:5056:b0:676:d8a1:7a04 with SMTP id
+ 4fb4d7f45d1cf-679bb09a4admr915149a12.23.1777368324094; Tue, 28 Apr 2026
+ 02:25:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F2:EE_|SJ0PR10MB4560:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2105cdf1-2af9-4006-f1e6-08dea503b046
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700016|7416014|1800799024|376014|22082099003|921020|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	MTAzQ8n3aao/b9YSiEV7ODHS1Zb0SluDPWakMYtent7TEJlitl4GgEgmXic2MjWr9sKFUPkYaffYaSGHgOoSE1mAdDVIKqIWXOGV+d6d25vdaCGbtyYVSikjj1q7rqzRinVLQk+Hs/Do3URvAcbDXVelGzBiWP127wtS6v+Nz6ACKOzlLVPRPveXOjmT1X6/23z20foVQ2ZKpOtn/ofcJoSRq0CRU3I8ThUcVdL3RiUEu4/alANGlNDEnob4CNTx6+bMkNKtVwLI/c2w8UW/l8LlZ5Cg/cWU/A0KGuFun6I5MtFTSJWt4QHv6QE6uViYHMvnDfavF+KLGk7IPtWBXHkjrUs6yHWW7MQ/f+kvSuy/b/EwBctiXNH2+GzS3gGxwkhLWgtJJ3Digjczzeyq8Z98hV434x+YI15pK1BWN4ZG567T0B0yDA001afQVua6p8vBIDtO/dySFIidSCWVphwLR7HklFwLdLfa2pGdS8WVCIA3Yw7kOEJOs2FErs8RnF+qGxxK50VE5Jo0E4s3u1c6/mQD7s9NRWrPrhdsqqYsLfK9eXihc8snlWIcbGhCmCVIaqRzb0FZSfnUeMT35xQRMCR36i6lZAjfoHdaP0SR389tpmCJM9pUbub7xCEMZuYTekUIOKCSjyPIPA3McZbraBIMh+Bnnnckokk2yLo/JJCUTwcufBpn3/X4AeaOlk0ocCzoh7iHhQEOKzn79A5zLcu2i3rZVcY0FJX5WlUUfAjCJZdLlr1vs5r99sn4woQEIPuXEd0X8OH9dvUw7sLXRKWS2lPFpHJTWaZmiJ7HLomH3DNBw7x9OBqw93Dw
-X-Forefront-Antispam-Report:
-	CIP:198.47.21.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet200.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(7416014)(1800799024)(376014)(22082099003)(921020)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	oDj3qW0PLq/yTQfWanSXsw+lqzxl8lq14TIVCaeScUhuRk/9bRCgYYyfPqANt9jPq719oWlk0UvKdwyC9+Axx+OCG1cs18pEdGPNyHvtHTTNLQk8K0tZPQ6c1XEsDDyRy63eIoDub2e0L9dKKDQFqBNtU14pcWyXyaj6wvU75WK/WlyfP3dhZMBahJ5/VZsY4ChWcOTXDRqlj3VxmFmdC7u0Idg+/52gNoWVGnM20RpTSB94Z0isLLBflU1p+zp7iTtWSCa6CiOXOHNr3iIDiDd7ydOGGa1NiYeectIHNSqVTWteMaC3jZ40LSYx/a6H+83s5lHoh8ZO5CZTt58fzlJ15XaV+cpCAVbns0j0m3k7hpeBqNHUnBU9/zCrvrhLfosooLYXrbf9SFRPnekYdzHdCT1PtK7hFG2DbpI9iq7tiuYav3Yjw0rZlriVlk08
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2026 08:53:59.2778
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2105cdf1-2af9-4006-f1e6-08dea503b046
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.194];Helo=[flwvzet200.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001F2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4560
-X-Rspamd-Queue-Id: D10AC48105C
+References: <cover.1777306795.git.chleroy@kernel.org> <c73b90236f2810edd47c84edd2a8d8e8e0c816da.1777306795.git.chleroy@kernel.org>
+In-Reply-To: <c73b90236f2810edd47c84edd2a8d8e8e0c816da.1777306795.git.chleroy@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 28 Apr 2026 11:25:11 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUvTBWoDN_wUo2n8-gkoheJ+-rbwew53OvoAwo8G5n1qg@mail.gmail.com>
+X-Gm-Features: AVHnY4JEWBVPw4tSjHgbQTia8gZd2WGJ1sv6qLdKJbtvs4hms1blpvc35yb0VWw
+Message-ID: <CAMuHMdUvTBWoDN_wUo2n8-gkoheJ+-rbwew53OvoAwo8G5n1qg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 4/9] uaccess: Introduce copy_{to/from}_user_partial()
+To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Yury Norov <ynorov@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, David Laight <david.laight.linux@gmail.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, linux-alpha@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
+	dmaengine@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-fsi@lists.ozlabs.org, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+	linux-wpan@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, 
+	ocfs2-devel@lists.linux.dev, bpf@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-mm@kvack.org, linux-x25@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-sound@vger.kernel.org, sound-open-firmware@alsa-project.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-sh@vger.kernel.org, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Rspamd-Queue-Id: 4993A481A66
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.84 / 15.00];
+X-Spamd-Result: default: False [0.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ti.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[ti.com:s=selector1];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org,ti.com,vger.kernel.org,lists.infradead.org,nxp.com];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[nvidia.com,linux-foundation.org,gmail.com,linutronix.de,vger.kernel.org,lists.infradead.org,lists.ozlabs.org,lists.freedesktop.org,lists.linux.dev,lists.xenproject.org,googlegroups.com,kvack.org,alsa-project.org,lists.linux-m68k.org];
+	TAGGED_FROM(0.00)[bounces-10183-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10181-lists,dmaengine=lfdr.de];
+	DMARC_NA(0.00)[linux-m68k.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[s-adivi@ti.com,dmaengine@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[49];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ti.com:+];
-	TO_DN_NONE(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,ti.com:email,ti.com:dkim,ti.com:mid];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	RCVD_COUNT_SEVEN(0.00)[10]
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	NEURAL_HAM(-0.00)[-0.990];
+	TAGGED_RCPT(0.00)[dmaengine];
+	R_DKIM_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-m68k.org:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid]
 
-The `__udma_reserve_##res` macro currently lacks a bounds check for
-the provided `id`. If a caller passes an ID exceeding the resource
-count (`ud->res##_cnt`), `test_bit()` performs an out-of-bounds
-memory access on the bitmap.
+Hi Christophe,
 
-Additionally, the macro returns `-ENOENT` when a resource is already
-in use, which is semantically incorrect. The logging logic is also
-broken, printing the literal "res##<id>" instead of the resource
-name.
+Thanks for your patch!
 
-Update the macro to:
-1. Validate `id` against `ud->res##_cnt` and return `-EINVAL` if out
-   of bounds.
-2. Return `-EBUSY` instead of `-ENOENT` when a resource is already
-   reserved, correctly reflecting the resource state.
-3. Use the stringification operator `#res` to correctly print the
-   resource name (e.g., "tchan") in error messages.
+On Mon, 27 Apr 2026 at 19:18, Christophe Leroy (CS GROUP)
+<chleroy@kernel.org> wrote:
+> Today there are approximately 3000 calls for copy_to_user() and
+> 3000 calls to copy_from_user().
+>
+> The majority of callers of copy_{to/from}_user() don't care about the
+> return value, they only check whether it is 0 or not, and when it is
+> not 0 they handle it as a -EACCES.
 
-Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
----
- drivers/dma/ti/k3-udma-common.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+I think the "a" can be dropped.
 
-diff --git a/drivers/dma/ti/k3-udma-common.c b/drivers/dma/ti/k3-udma-common.c
-index 304dad59bf183..92b14b0b620a8 100644
---- a/drivers/dma/ti/k3-udma-common.c
-+++ b/drivers/dma/ti/k3-udma-common.c
-@@ -2010,9 +2010,14 @@ struct udma_##res *__udma_reserve_##res(struct udma_dev *ud,	\
- 					       int id)			\
- {									\
- 	if (id >= 0) {							\
-+		if (id >= ud->res##_cnt) {				\
-+			dev_err(ud->dev,				\
-+				#res " id %d is out of bounds.\n", id);	\
-+			return ERR_PTR(-EINVAL);			\
-+		}							\
- 		if (test_bit(id, ud->res##_map)) {			\
--			dev_err(ud->dev, "res##%d is in use\n", id);	\
--			return ERR_PTR(-ENOENT);			\
-+			dev_err(ud->dev, #res "%d is in use\n", id);	\
-+			return ERR_PTR(-EBUSY);			\
- 		}							\
- 	} else {							\
- 		int start;						\
+> In order to allow better optimisation of copy_{to/from}_user() when
+> the size of the copy is known at build time, create new fonctions
+
+functions
+
+> named copy_{to/from}_user_partial() to be used by the few callers
+> that are interested in partial copies and need to now how many
+
+know
+
+> bytes remain at the end of the copy.
+>
+> For the time being it is just the same as copy_{to/from}_user().
+>
+> Signed-off-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.53.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 

@@ -1,89 +1,89 @@
-Return-Path: <dmaengine+bounces-10172-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10174-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OHAoGyB38GlgTwEAu9opvQ
-	(envelope-from <dmaengine+bounces-10172-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 11:00:16 +0200
+	id 4E8NMUF38GlgTwEAu9opvQ
+	(envelope-from <dmaengine+bounces-10174-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 11:00:49 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10C5B480C78
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 11:00:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 885D1480C91
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 11:00:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 8C5F63070FB1
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 08:54:24 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 4F206307A607
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Apr 2026 08:54:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED683DDDB6;
-	Tue, 28 Apr 2026 08:53:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 474053E025A;
+	Tue, 28 Apr 2026 08:53:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HUdjS0f8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v9tsyCg6"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010016.outbound.protection.outlook.com [52.101.193.16])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011060.outbound.protection.outlook.com [52.101.52.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EF43DE43D;
-	Tue, 28 Apr 2026 08:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78683DEFFA;
+	Tue, 28 Apr 2026 08:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777366391; cv=fail; b=kfrWoHySPVx4zVN1DFZdQq7a0s/3CKW+USEx5xk6Rthmh2QX3+1L/4r+VdeRyYnAHkV2WjEHPBP8fGEkTFRGRNnSYBhw+QAIP23N7qsLWEpZv+jg7CfozifLRES9vtfRZa44EFv8Siy7H+OgQPzzebH8/Za7qbdehA393PBXOkY=
+	t=1777366397; cv=fail; b=hz4y3nKPm8ICaV4aAo5+VoNR+n8NZ4V1hU8aGcWe465N9/yA/DQCIaVz3KZbRjhx0TBr6d2l5fuhZHVnSSNcWvLnNMHhqtognq2s49Ntlu1BQ4X3tgDEb+SQsBBBiKB5cXY2dsS9ShVQBPi+bublvNWKNhRrjD0pyqzfGlD0lQM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777366391; c=relaxed/simple;
-	bh=oMeHBLGpz51Rhtg379nub1xMrCA+xvSH4qg2mEKAefU=;
+	s=arc-20240116; t=1777366397; c=relaxed/simple;
+	bh=umwpW701IjAY92td34goO9XpgZGiffLNNoCb3kEnN5Q=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PfB0LQMlwZGAfyLilGpGWMwkETbKVQqouwfvYrwCaul6trhljCzNOZ/BaYZPyeLF0IuXNv6Cx/SoGDTnOMPQqFbJrHskIIy6uR3ftWkQ/5bvCmM2aciTR5KcKjHK5X7sHDaFDT4QzrEI/v4FEMrNhmDzFa114MdwUvtVxZbvg8w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HUdjS0f8; arc=fail smtp.client-ip=52.101.193.16
+	 MIME-Version:Content-Type; b=u/WKyGx5ZZ2o2YJRxEcNEK8htr61/Env4+a1SaONnN5aczLj4MFwf5J1ghw19s6f9YJmsZMl7VqiWUGJIGjZECZN8zRp0/uVFGHsOzmG4MM8kRao5KEK3Smoehu+lrMWynw/tmXiiY8YiUIEreeTtAR1NM4UHA/deGMr+WD0smk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=v9tsyCg6; arc=fail smtp.client-ip=52.101.52.60
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=R1RT3Rxu0KtmPIoWNZ7cAI8bmobksQ1U+vCpLNR8oJviVkZQqac9alfgWmTc53/VYCngcBoIwosF924qnFV5z/weski/fPrsPIG9XLOhZvsUlvZxkHwafmwZIqkJOBJXb7oSSY38+QdLR+m+Snrmosaw3pFuIDjxqf03LKw47eniyHYKjcjidx8LIZQbD+CQ/UP3IvklSKPkhVTDVySpXZzBtyuvRwJ6joH8xDA5avR5Meg3w+U6AsgWMG0p2AxtEAdgWY9ZtDYUzFc57GOlwcn2pKxepa7jHKNfv+ULRoUbx9xRMrCAdTY9E1IVAcQzvMa4Gg3PLdmJ+fX11e23uQ==
+ b=LVU9J/d+IwuYTk6tWB1uBdf0LD/J78g6+6hMU8oht1ac1HCpDw/aTLCWG4sMKep/eq6zSl2uYRkjk7RYEy4DGohWvupQ3XHRNNY7yGXhJaOihJS3VejH0QpKhDaEflX7DSzOBkv6bhnBarAyMLq1YP9/ARrvdYgsUqA2N2ngi7lzDezT514XDz34F2aGxFhLYZ6r98fOmRG7W/AByYZdGFihE0nTKlu8YArpzTH2PzqRs67gksjqi8lIXvRbtCt8TTQs+0wimZ9AE4Ty6VaUWKHK0H3TeO+soCcVHY4Itm2fP2iNmsN2KfKlkXY7IYDlrRR0sEyCVOQlF8ukL+H2xg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iqvXaFzGrZBKlE/4PM+fCZuKIt8Wq421rQ5BKzFgkzY=;
- b=p3HwVJ7F1SUVwJU3BwE+K/3CkMR222Pj/8AV7x7IrRdgno08k3xQFu4scj0KkFOrncA83QfPDZZ/fwdZtjuR79Vyz0K2oDYXQcVxEOo+FnXPQczPfUYfeznybxHgPZ+JBplapr7B8RkyZVClT5rCC7XGvaqXOgaydudfk9zl0rSiLEuB2/ZYbtSyo/bcHCx+YTo7jB156TBr6VaIRzY26XupL0h5u+RdLufCwT9g70Iwmt3Fi4yGY3hLW+MFpfll6bGjne/taWADzzlz6w11E7II0ht7DbUQKZa4yS543KmhYoGPx65EGVcDmVwlxpXfcH6Q9mLOfupM7fp2jezfWw==
+ bh=wTytVa4bNZiYGWAnVQ1DtFr3lqJwt/SysrwGOHCAreg=;
+ b=NmUhZvDriR6c+puQ+7qf/26ZuK59hkgcyCGtS5+VXO/ZpZy7eEX3qVxNWMDIbLCq06iPnLDHyNC2GzRWmBgoWmsE4Uvx2OyzcYKH8wJJ++0VIiEhAe+UIfYKB575nmeUh1bn/NEM57JDzBXD8at+kVjprCbyz1yHxi6riRKRkTdqIsb+FtUX2PM0gUw9llbuzdkD5mA5DRxy055SPEKpg1YV9JlBJwVHGb4RFeM3cOaeBAMN4Wlq491j4bwIyfJKBZgAXFHY9/0hpzHKFrMFLigqqT3nwaoeuImZdV+lSRHirdw65lYli/94PwU8orz2DhBAOOx15cfaUEHlJYU1EA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.194) smtp.rcpttodomain=nxp.com smtp.mailfrom=ti.com; dmarc=pass
+ 198.47.23.195) smtp.rcpttodomain=nxp.com smtp.mailfrom=ti.com; dmarc=pass
  (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
  (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iqvXaFzGrZBKlE/4PM+fCZuKIt8Wq421rQ5BKzFgkzY=;
- b=HUdjS0f8OxnvsPMq6OdXN+Rrdc+MpX6F+ApR6Rrv0RO/D18H8r4PbOlHy7oM+bpD0Z3gxbnDS9eC3AjBALGbpb+UhZQP9TE5slIdYlD10/Ut/BvqaucJW/OmhgoTXMtuKKXr0oJM3Vfd4mtQLp9d4F/ZONxt3UvjXJ5GqMERWpE=
-Received: from BN1PR14CA0003.namprd14.prod.outlook.com (2603:10b6:408:e3::8)
- by IA0PR10MB7326.namprd10.prod.outlook.com (2603:10b6:208:40d::18) with
+ bh=wTytVa4bNZiYGWAnVQ1DtFr3lqJwt/SysrwGOHCAreg=;
+ b=v9tsyCg6Hnqru6VNkStx1rXQVuSQoXEq0ws0G6kiJBZ8cNF7hMcZccn9lsBLInn4rK8EvWSIabuaUiHUBUzFUqRor707ZD3EyMOWiw1s+8GRg9iEGbQwdkzy/gtXsYQcIg/9RZYbNZAw/cO+26Zr9biBO5hZC0ZjlXKyqXjmLBw=
+Received: from MN2PR08CA0014.namprd08.prod.outlook.com (2603:10b6:208:239::19)
+ by IA3PR10MB8590.namprd10.prod.outlook.com (2603:10b6:208:57b::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.27; Tue, 28 Apr
- 2026 08:53:08 +0000
-Received: from BN2PEPF00004FC0.namprd04.prod.outlook.com
- (2603:10b6:408:e3:cafe::64) by BN1PR14CA0003.outlook.office365.com
- (2603:10b6:408:e3::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.27 via Frontend Transport; Tue,
- 28 Apr 2026 08:53:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.194)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.26; Tue, 28 Apr
+ 2026 08:53:13 +0000
+Received: from BL02EPF00021F6C.namprd02.prod.outlook.com
+ (2603:10b6:208:239:cafe::bb) by MN2PR08CA0014.outlook.office365.com
+ (2603:10b6:208:239::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.26 via Frontend Transport; Tue,
+ 28 Apr 2026 08:53:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.195)
  smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
  action=none header.from=ti.com;
 Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.194; helo=lewvzet200.ext.ti.com; pr=C
-Received: from lewvzet200.ext.ti.com (198.47.23.194) by
- BN2PEPF00004FC0.mail.protection.outlook.com (10.167.243.186) with Microsoft
+ 198.47.23.195 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.23.195; helo=lewvzet201.ext.ti.com; pr=C
+Received: from lewvzet201.ext.ti.com (198.47.23.195) by
+ BL02EPF00021F6C.mail.protection.outlook.com (10.167.249.8) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9846.18 via Frontend Transport; Tue, 28 Apr 2026 08:53:07 +0000
-Received: from DLEE210.ent.ti.com (157.170.170.112) by lewvzet200.ext.ti.com
- (10.4.14.103) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.9846.18 via Frontend Transport; Tue, 28 Apr 2026 08:53:13 +0000
+Received: from DLEE203.ent.ti.com (157.170.170.78) by lewvzet201.ext.ti.com
+ (10.4.14.104) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 28 Apr
- 2026 03:53:07 -0500
-Received: from DLEE210.ent.ti.com (157.170.170.112) by DLEE210.ent.ti.com
- (157.170.170.112) with Microsoft SMTP Server (version=TLS1_2,
+ 2026 03:53:12 -0500
+Received: from DLEE214.ent.ti.com (157.170.170.117) by DLEE203.ent.ti.com
+ (157.170.170.78) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 28 Apr
- 2026 03:53:07 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE210.ent.ti.com
- (157.170.170.112) with Microsoft SMTP Server (version=TLS1_2,
+ 2026 03:53:11 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE214.ent.ti.com
+ (157.170.170.117) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Tue, 28 Apr 2026 03:53:07 -0500
+ Transport; Tue, 28 Apr 2026 03:53:11 -0500
 Received: from uda0498651.dhcp.ti.com (uda0498651.dhcp.ti.com [172.24.233.239])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 63S8q6MU623293;
-	Tue, 28 Apr 2026 03:53:03 -0500
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 63S8q6MV623293;
+	Tue, 28 Apr 2026 03:53:07 -0500
 From: Sai Sree Kartheek Adivi <s-adivi@ti.com>
 To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>, <robh@kernel.org>,
 	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nm@ti.com>,
@@ -92,9 +92,9 @@ To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>, <robh@kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
 	<Frank.li@nxp.com>, <s-adivi@ti.com>
 CC: <r-sharma3@ti.com>, <gehariprasath@ti.com>
-Subject: [PATCH v6 12/19] drivers: soc: ti: k3-ringacc: handle absence of tisci
-Date: Tue, 28 Apr 2026 14:21:41 +0530
-Message-ID: <20260428085202.1724548-13-s-adivi@ti.com>
+Subject: [PATCH v6 13/19] dt-bindings: dma: ti: Add K3 BCDMA V2
+Date: Tue, 28 Apr 2026 14:21:42 +0530
+Message-ID: <20260428085202.1724548-14-s-adivi@ti.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260428085202.1724548-1-s-adivi@ti.com>
 References: <20260428085202.1724548-1-s-adivi@ti.com>
@@ -109,31 +109,31 @@ Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FC0:EE_|IA0PR10MB7326:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ca9c775-c3a5-4155-4f5b-08dea50391ab
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F6C:EE_|IA3PR10MB8590:EE_
+X-MS-Office365-Filtering-Correlation-Id: c1d6b2ab-6df3-405f-d25e-08dea50394c6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|82310400026|1800799024|7416014|376014|921020|56012099003|18002099003|22082099003;
+	BCL:0;ARA:13230040|36860700016|1800799024|82310400026|376014|7416014|56012099003|18002099003|22082099003|921020;
 X-Microsoft-Antispam-Message-Info:
-	s4xscCHPt0hS1CwG1OMEc7PcBpSY0jL1JR4SwQzTwRmNi/bbtyzK9jCTmyg+RuRMG4tOOqlMsJ6CnNPDU6tfH1tGAz33Vaxk5TN9ZkBjgyyWnck6Dia+r/Nh/4BOw21qfK6oiWDoIq9kqtb8aIpCHrjcXbribXgnHtI1tz8lvKt3ZXsD93cy2PWFlKag/7R+PRZIHacjxTBb5lvNvVnvmKYYKRZCEbyZ12ojUkzDHVwi9qGnCARFbqrAl21kgbnIVn1KPJlCOF3O6LL71fjQZB4u20GNHErnc9j0lu39lythmCLkitBry6w1nevn5tq4fcH07CLgE+vE9g+2WkuKK0EycoXTHTfczrmIBaXByFaXrDMDGm0pygttvJ3GOuS5SAzkwPetNchlV4k/LQPqQ/gqWStLAMP1/DnlMMqqa2YG/BMKwg73WPL3Gp283mPNTHujVa7ylBoJSYfUFGA6uJ1ItrL5uhyucXMI4ucXut7sBlnfccC99YwEGKOMK4wpeqDTXnTI36iCr9nQZ2DfLCX8aXNRpyygnQR0GpcedqdRdP6lpwQLGiplot8AZnQRflur90hCz6gDwvK/SFEw2fs61G1IuyNq2fJq3uS09KQyMALwSFIFOmLmAdJIvHaFJpXuODSeHIlmKOt0cTVM2NcVlYM9KhyRtA6HtQykJVVPmj0h//B7dnTM/lwGBN7iglUhxeO8I6Ea791KaCP4UAS2KfvSZcyL++Jrsf7GvRCmMnzxokqft+YwTZWFU22ixERT00i3IRFmhtnAN1D7bcPWRYkKL3+oLz9J5Gnd5cbayMfpvfacZVACe4+zoQGJ
+	k2Vufs1Z22aP0zmmlb9R12OmgPsHy7NgXeygkB/A2cnnwXyhesFipJy2jCkDkHroAfr3e74Fx05hM9NWEIYOS6CN0KqQZDu9qoY3XutZJNBKIufZ4XQpMAWfovA0AtUXdZrQiL5MVuMj+APhXWG1GrFlFJfLoRbwLNJG4Slod1EIy7kjszdSoI9ZZc2Vkzi1Ct3wM6dH3+LyNH0CD12enkh/1xbluZYKPZcpzlXFpZkk9LHLF0DNPJuWOnSYJtP2lCcJgsMvSaQg8c7nyPtT+vKKsC6ge4roA5gP6SERRudlWk0X0F9K0NytlFAUMh7WmmjhLESnDg2zt5IUzOvSIlab7XXKF6q6Mz8I3Y1B3/uoGwv8Nqqha7QqnkLXuBHG797/S/fJ/pZdtnj9SaXT7zlyM1PRmcw5KyHThKkEUuU1iXej+f6NdlTGPixNMKqM7fhG98hydA7pO8VN1s/JGmj31qUhoxjb/xgG6vZ7xGlm1rGkCEl6BgZMue8gPm7LspUptWVx0Hu9DdhKLX0L68gIWg+v1NzG+SiGjrnUP4TqU9WY30m0DM8/vGqhOPmgFi7yAnztHBz8Wzgnnz1e9InDoB5z8wQ7GYvr0zT2HKyMQrnEjBnV29uTiiJCCty6VfBSZA8J6fS1rXAhtjYMjwIhS7+OCKL2mv6KNWWhPKbXNKek0XzShUbKXoylgkxwgVG3h6b02dRJY+8bxs/abJDbYqBFCmOrAO3zX74Kzh0daJiVhNLnxq7y28R1aBRoD4GkNp/yNV34fSOWm2jcdg==
 X-Forefront-Antispam-Report:
-	CIP:198.47.23.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet200.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(1800799024)(7416014)(376014)(921020)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:198.47.23.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet201.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(1800799024)(82310400026)(376014)(7416014)(56012099003)(18002099003)(22082099003)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	GUiMTZ3fjW6qnVYjCw1t/2RWSXK9rLwgprjz8cAKwXAhc0o/81xD57AT/VxT+RXOvXCYM/4nC8gUtzGaGbFX4L260posCKX4+TwR2UrAvpKwupsOT6wfp2J23FwDIJBC1cH40HjkCAkm1WKr7wmUWTiCtZdAFN9KGPBsh5VCzQxlmmv2GbwA25ZQyroatiYSqlvS9xgEp1d/d/2NcW//lcvE9/E++1GHup1Wkrz1/q0FLKbmd+hx0YeuXwxWJIVArEy51fnzO1Vi9iDCNeAEmb7F8/zxo8nY07CiQEQHHTphd3p40Q7KTUEGnMix7+nWEwT/1FQhIYa1fWhtgsC+GcbF8b7/WLG1tTm8oG8EfmYucFjC5vzzZAvDg85IV3rCZ8MsCswNlAucVkrbXEvHlVr4KtZQFUHLWRjkSMwC69UgO1OPItNiZQ+0tyL6+moY
+	MH2JnPEoQ+EVpdv51MFx7pSf9qm5yssqVqiB/l3+o4370gzIVOsVj1o5iqdLXgKfMUkNUZzURoGcLw8m/BAD8sqtcN4NJnKTgP8eX/Tdmcb7Mge8XpmgIcd+1OzvvUWHQOPjCVk2PekTbPykIU6rsAeHhtgIqZPVgygxQll0Wuqpk8I9gdT6QJiNxH7UEOnU7BDmuszRafQdzOTenw1YsME3AoAEvW6j2PeQfoP+qg7fhh9f6TCTW598MnDdNjmEEZwVOOh6XiCXuxhMrVfSc9/vqg80KHl8pvdmoEBOdQV6pI0r0uNkpedOAN+FvsYjV6tWbS8JGSVos9FtBY3aUSAzVyseEyZjg0/eERSBpxC8eG9lkEsI8PS20y46R02wG39wMpWGu4jNCuPuc7p//NWq5Mu9a0U517Oy4t/BQuulCMJ4xo1RxYbYpWSfZTjC
 X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2026 08:53:07.9484
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2026 08:53:13.1550
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ca9c775-c3a5-4155-4f5b-08dea50391ab
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1d6b2ab-6df3-405f-d25e-08dea50394c6
 X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.194];Helo=[lewvzet200.ext.ti.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.195];Helo=[lewvzet201.ext.ti.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF00004FC0.namprd04.prod.outlook.com
+	BL02EPF00021F6C.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7326
-X-Rspamd-Queue-Id: 10C5B480C78
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR10MB8590
+X-Rspamd-Queue-Id: 885D1480C91
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [2.84 / 15.00];
@@ -142,16 +142,17 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ti.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[ti.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[gmail.com,kernel.org,ti.com,vger.kernel.org,lists.infradead.org,nxp.com];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10172-lists,dmaengine=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RSPAMD_URIBL_FAIL(0.00)[devicetree.org:query timed out];
+	TAGGED_FROM(0.00)[bounces-10174-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	PRECEDENCE_BULK(0.00)[];
@@ -160,331 +161,149 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	DKIM_TRACE(0.00)[ti.com:+];
 	TO_DN_NONE(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,ti.com:email,ti.com:dkim,ti.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,ti.com:email,ti.com:dkim,ti.com:mid,devicetree.org:url,485c4000:email];
 	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
 	RCVD_COUNT_SEVEN(0.00)[10]
 
-Handle absence of tisci with direct register writes. This will support
-platforms that do not have tisci firmware like AM62L.
+New binding document for
+Texas Instruments K3 Block Copy DMA (BCDMA) V2.
+
+BCDMA V2 is introduced as part of AM62L.
 
 Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
 ---
- drivers/soc/ti/k3-ringacc.c       | 188 ++++++++++++++++++++++++++----
- include/linux/soc/ti/k3-ringacc.h |  17 +++
- 2 files changed, 181 insertions(+), 24 deletions(-)
+ .../bindings/dma/ti/ti,am62l-dmss-bcdma.yaml  | 121 ++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/ti/ti,am62l-dmss-bcdma.yaml
 
-diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
-index 7602b8a909b05..fd7c960a3fa2a 100644
---- a/drivers/soc/ti/k3-ringacc.c
-+++ b/drivers/soc/ti/k3-ringacc.c
-@@ -45,6 +45,53 @@ struct k3_ring_rt_regs {
- 	u32	hwindx;
- };
- 
-+#define K3_RINGACC_RT_CFG_REGS_OFS	0x40
-+#define K3_DMARING_CFG_ADDR_HI_MASK	GENMASK(3, 0)
-+#define K3_DMARING_CFG_ASEL_SHIFT	16
-+#define K3_DMARING_CFG_SIZE_MASK	GENMASK(15, 0)
+diff --git a/Documentation/devicetree/bindings/dma/ti/ti,am62l-dmss-bcdma.yaml b/Documentation/devicetree/bindings/dma/ti/ti,am62l-dmss-bcdma.yaml
+new file mode 100644
+index 0000000000000..28dcfce5633ce
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/ti/ti,am62l-dmss-bcdma.yaml
+@@ -0,0 +1,121 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2024-25 Texas Instruments Incorporated
++# Author: Sai Sree Kartheek Adivi <s-adivi@ti.com>
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/ti/ti,am62l-dmss-bcdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+/**
-+ * struct k3_ring_cfg_regs - The RA Configuration Registers region
-+ *
-+ * @ba_lo: Ring Base Address Low Register
-+ * @ba_hi: Ring Base Address High Register
-+ * @size: Ring Size Register
-+ */
-+struct k3_ring_cfg_regs {
-+	u32	ba_lo;
-+	u32	ba_hi;
-+	u32	size;
-+};
++title: Texas Instruments K3 DMSS BCDMA V2
 +
-+#define K3_RINGACC_RT_INT_REGS_OFS		0x140
-+#define K3_RINGACC_RT_INT_ENABLE_SET_COMPLETE	BIT(0)
-+#define K3_RINGACC_RT_INT_ENABLE_SET_TR			BIT(2)
++maintainers:
++  - Sai Sree Kartheek Adivi <s-adivi@ti.com>
 +
-+/**
-+ * struct k3_ring_intr_regs {
-+ *
-+ * @enable_set: Ring Interrupt Enable Register
-+ * @resv_1: Reserved
-+ * @clr: Ring Interrupt Clear Register
-+ * @resv_2: Reserved
-+ * @status_set: Ring Interrupt Status Set Register
-+ * @resv_3: Reserved
-+ * @status: Ring Interrupt Status Register
-+ * @resv_4: Reserved
-+ * @status_masked: Ring Interrupt Status Masked Register
-+ */
-+struct k3_ring_intr_regs {
-+	u32	enable_set;
-+	u32	resv_1;
-+	u32	clr;
-+	u32	resv_2;
-+	u32	status_set;
-+	u32	resv_3;
-+	u32	status;
-+	u32	resv_4;
-+	u32	status_masked;
-+};
++description:
++  The BCDMA V2 is intended to perform similar functions as the TR
++  mode channels of K3 UDMA-P.
++  BCDMA V2 includes block copy channels and Split channels.
 +
- #define K3_RINGACC_RT_REGS_STEP			0x1000
- #define K3_DMARING_RT_REGS_STEP			0x2000
- #define K3_DMARING_RT_REGS_REVERSE_OFS		0x1000
-@@ -138,6 +185,8 @@ struct k3_ring_state {
-  * struct k3_ring - RA Ring descriptor
-  *
-  * @rt: Ring control/status registers
-+ * @cfg: Ring config registers
-+ * @intr: Ring interrupt registers
-  * @fifos: Ring queues registers
-  * @proxy: Ring Proxy Datapath registers
-  * @ring_mem_dma: Ring buffer dma address
-@@ -157,6 +206,8 @@ struct k3_ring_state {
-  */
- struct k3_ring {
- 	struct k3_ring_rt_regs __iomem *rt;
-+	struct k3_ring_cfg_regs __iomem *cfg;
-+	struct k3_ring_intr_regs __iomem *intr;
- 	struct k3_ring_fifo_regs __iomem *fifos;
- 	struct k3_ringacc_proxy_target_regs  __iomem *proxy;
- 	dma_addr_t	ring_mem_dma;
-@@ -466,15 +517,31 @@ static void k3_ringacc_ring_reset_sci(struct k3_ring *ring)
- 	struct k3_ringacc *ringacc = ring->parent;
- 	int ret;
- 
--	ring_cfg.nav_id = ringacc->tisci_dev_id;
--	ring_cfg.index = ring->ring_id;
--	ring_cfg.valid_params = TI_SCI_MSG_VALUE_RM_RING_COUNT_VALID;
--	ring_cfg.count = ring->size;
-+	if (!ringacc->tisci) {
-+		u32 reg;
- 
--	ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
--	if (ret)
--		dev_err(ringacc->dev, "TISCI reset ring fail (%d) ring_idx %d\n",
--			ret, ring->ring_id);
-+		if (!ring->cfg)
-+			return;
++  Block copy channels mainly used for memory to memory transfers, but with
++  optional triggers a block copy channel can service peripherals by accessing
++  directly to memory mapped registers or area.
 +
-+		reg = readl(&ring->cfg->size);
-+		reg &= ~K3_DMARING_CFG_SIZE_MASK;
-+		writel(reg, &ring->cfg->size);
++  Split channels can be used to service PSI-L based peripherals.
++  The peripherals can be PSI-L native or legacy, non PSI-L native peripherals
++  with PDMAs. PDMA is tasked to act as a bridge between the PSI-L fabric and the
++  legacy peripheral.
 +
-+		/* Ensure the register clear operation completes before writing new value */
-+		wmb();
-+		reg |= ring->size;
-+		writel(reg, &ring->cfg->size);
-+	} else {
-+		ring_cfg.nav_id = ringacc->tisci_dev_id;
-+		ring_cfg.index = ring->ring_id;
-+		ring_cfg.valid_params = TI_SCI_MSG_VALUE_RM_RING_COUNT_VALID;
-+		ring_cfg.count = ring->size;
++allOf:
++  - $ref: /schemas/dma/dma-controller.yaml#
 +
-+		ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
-+		if (ret)
-+			dev_err(ringacc->dev, "TISCI reset ring fail (%d) ring_idx %d\n",
-+				ret, ring->ring_id);
-+	}
- }
- 
- void k3_ringacc_ring_reset(struct k3_ring *ring)
-@@ -500,10 +567,25 @@ static void k3_ringacc_ring_reconfig_qmode_sci(struct k3_ring *ring,
- 	ring_cfg.valid_params = TI_SCI_MSG_VALUE_RM_RING_MODE_VALID;
- 	ring_cfg.mode = mode;
- 
--	ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
--	if (ret)
--		dev_err(ringacc->dev, "TISCI reconf qmode fail (%d) ring_idx %d\n",
--			ret, ring->ring_id);
-+	if (!ringacc->tisci) {
-+		u32 reg;
++properties:
++  compatible:
++    const: ti,am62l-dmss-bcdma
 +
-+		writel(ring_cfg.addr_lo, &ring->cfg->ba_lo);
-+		writel((ring_cfg.addr_hi & K3_DMARING_CFG_ADDR_HI_MASK) +
-+				(ring_cfg.asel << K3_DMARING_CFG_ASEL_SHIFT),
-+				&ring->cfg->ba_hi);
++  reg:
++    items:
++      - description: BCDMA Control & Status Registers region
++      - description: Block Copy Channel Realtime Registers region
++      - description: Channel Realtime Registers region
++      - description: Ring Realtime Registers region
 +
-+		reg = readl(&ring->cfg->size);
-+		reg &= ~K3_DMARING_CFG_SIZE_MASK;
-+		reg |= ring_cfg.count & K3_DMARING_CFG_SIZE_MASK;
++  reg-names:
++    items:
++      - const: gcfg
++      - const: bchanrt
++      - const: chanrt
++      - const: ringrt
 +
-+		writel(reg, &ring->cfg->size);
-+	} else {
-+		ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
-+		if (ret)
-+			dev_err(ringacc->dev, "TISCI reconf qmode fail (%d) ring_idx %d\n",
-+				ret, ring->ring_id);
-+	}
- }
- 
- void k3_ringacc_ring_reset_dma(struct k3_ring *ring, u32 occ)
-@@ -575,10 +657,25 @@ static void k3_ringacc_ring_free_sci(struct k3_ring *ring)
- 	ring_cfg.index = ring->ring_id;
- 	ring_cfg.valid_params = TI_SCI_MSG_VALUE_RM_ALL_NO_ORDER;
- 
--	ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
--	if (ret)
--		dev_err(ringacc->dev, "TISCI ring free fail (%d) ring_idx %d\n",
--			ret, ring->ring_id);
-+	if (!ringacc->tisci) {
-+		u32 reg;
++  "#address-cells":
++    const: 0
 +
-+		writel(ring_cfg.addr_lo, &ring->cfg->ba_lo);
-+		writel((ring_cfg.addr_hi & K3_DMARING_CFG_ADDR_HI_MASK) +
-+				(ring_cfg.asel << K3_DMARING_CFG_ASEL_SHIFT),
-+				&ring->cfg->ba_hi);
++  "#dma-cells":
++    const: 4
++    description: |
++      cell 1: Trigger type for the channel
++        0 - disable / no trigger
++        1 - internal channel event
++        2 - external signal
++        3 - timer manager event
 +
-+		reg = readl(&ring->cfg->size);
-+		reg &= ~K3_DMARING_CFG_SIZE_MASK;
-+		reg |= ring_cfg.count & K3_DMARING_CFG_SIZE_MASK;
++      cell 2: parameter for the trigger:
++        if cell 1 is 0 (disable / no trigger):
++          Unused, ignored
++        if cell 1 is 1 (internal channel event):
++          channel number whose TR event should trigger the current channel.
++        if cell 1 is 2 or 3 (external signal or timer manager event):
++          index of global interfaces that come into the DMA.
 +
-+		writel(reg, &ring->cfg->size);
-+	} else {
-+		ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
-+		if (ret)
-+			dev_err(ringacc->dev, "TISCI ring free fail (%d) ring_idx %d\n",
-+				ret, ring->ring_id);
-+	}
- }
- 
- int k3_ringacc_ring_free(struct k3_ring *ring)
-@@ -669,15 +766,30 @@ int k3_ringacc_get_ring_irq_num(struct k3_ring *ring)
- }
- EXPORT_SYMBOL_GPL(k3_ringacc_get_ring_irq_num);
- 
-+u32 k3_ringacc_ring_get_irq_status(struct k3_ring *ring)
-+{
-+	struct k3_ringacc *ringacc = ring->parent;
-+	struct k3_ring *ring2 = &ringacc->rings[ring->ring_id];
++          Please refer to the device documentation for global interface indexes.
 +
-+	return readl(&ring2->intr->status);
-+}
-+EXPORT_SYMBOL_GPL(k3_ringacc_ring_get_irq_status);
++      cell 3: Channel number for the peripheral
 +
-+void k3_ringacc_ring_clear_irq(struct k3_ring *ring)
-+{
-+	struct k3_ringacc *ringacc = ring->parent;
-+	struct k3_ring *ring2 = &ringacc->rings[ring->ring_id];
++        Please refer to the device documentation for the channel map.
 +
-+	writel(0xFF, &ring2->intr->status);
-+}
-+EXPORT_SYMBOL_GPL(k3_ringacc_ring_clear_irq);
++      cell 4: ASEL value for the channel
 +
- static int k3_ringacc_ring_cfg_sci(struct k3_ring *ring)
- {
- 	struct ti_sci_msg_rm_ring_cfg ring_cfg = { 0 };
- 	struct k3_ringacc *ringacc = ring->parent;
- 	int ret;
- 
--	if (!ringacc->tisci)
--		return -EINVAL;
--
- 	ring_cfg.nav_id = ringacc->tisci_dev_id;
- 	ring_cfg.index = ring->ring_id;
- 	ring_cfg.valid_params = TI_SCI_MSG_VALUE_RM_ALL_NO_ORDER;
-@@ -688,6 +800,24 @@ static int k3_ringacc_ring_cfg_sci(struct k3_ring *ring)
- 	ring_cfg.size = ring->elm_size;
- 	ring_cfg.asel = ring->asel;
- 
-+	if (!ringacc->tisci) {
-+		u32 reg;
++  interrupts:
++    minItems: 1
++    maxItems: 144
++    description:
++      Interrupts for DMA channels.
 +
-+		writel(ring_cfg.addr_lo, &ring->cfg->ba_lo);
-+		writel((ring_cfg.addr_hi & K3_DMARING_CFG_ADDR_HI_MASK) +
-+				(ring_cfg.asel << K3_DMARING_CFG_ASEL_SHIFT),
-+				&ring->cfg->ba_hi);
++  interrupt-names:
++    minItems: 1
++    maxItems: 144
++    items:
++      pattern: "^chan[0-9]+$"
++    description:
++      The name of the interrupt corresponding to the DMA channel.
 +
-+		reg = readl(&ring->cfg->size);
-+		reg &= ~K3_DMARING_CFG_SIZE_MASK;
-+		reg |= ring_cfg.count & K3_DMARING_CFG_SIZE_MASK;
++required:
++  - compatible
++  - reg
++  - reg-names
++  - "#address-cells"
++  - "#dma-cells"
++  - interrupts
++  - interrupt-names
 +
-+		writel(reg, &ring->cfg->size);
-+		writel(K3_RINGACC_RT_INT_ENABLE_SET_COMPLETE | K3_RINGACC_RT_INT_ENABLE_SET_TR,
-+		       &ring->intr->enable_set);
-+		return 0;
-+	}
++unevaluatedProperties: false
 +
- 	ret = ringacc->tisci_ring_ops->set_cfg(ringacc->tisci, &ring_cfg);
- 	if (ret)
- 		dev_err(ringacc->dev, "TISCI config ring fail (%d) ring_idx %d\n",
-@@ -1346,8 +1476,11 @@ static int k3_ringacc_probe_dt(struct k3_ringacc *ringacc)
- 		return PTR_ERR(ringacc->rm_gp_range);
- 	}
- 
--	return ti_sci_inta_msi_domain_alloc_irqs(ringacc->dev,
--						 ringacc->rm_gp_range);
-+	if (IS_ENABLED(CONFIG_TI_K3_UDMA))
-+		return ti_sci_inta_msi_domain_alloc_irqs(ringacc->dev,
-+			ringacc->rm_gp_range);
-+	else
-+		return 0;
- }
- 
- static const struct k3_ringacc_soc_data k3_ringacc_soc_data_sr1 = {
-@@ -1480,9 +1613,12 @@ struct k3_ringacc *k3_ringacc_dmarings_init(struct platform_device *pdev,
- 
- 	mutex_init(&ringacc->req_lock);
- 
--	base_rt = devm_platform_ioremap_resource_byname(pdev, "ringrt");
--	if (IS_ERR(base_rt))
--		return ERR_CAST(base_rt);
-+	base_rt = data->base_rt;
-+	if (!base_rt) {
-+		base_rt = devm_platform_ioremap_resource_byname(pdev, "ringrt");
-+		if (IS_ERR(base_rt))
-+			return ERR_CAST(base_rt);
-+	}
- 
- 	ringacc->rings = devm_kzalloc(dev,
- 				      sizeof(*ringacc->rings) *
-@@ -1498,6 +1634,10 @@ struct k3_ringacc *k3_ringacc_dmarings_init(struct platform_device *pdev,
- 		struct k3_ring *ring = &ringacc->rings[i];
- 
- 		ring->rt = base_rt + K3_DMARING_RT_REGS_STEP * i;
-+		ring->cfg = base_rt + K3_RINGACC_RT_CFG_REGS_OFS +
-+			    K3_DMARING_RT_REGS_STEP * i;
-+		ring->intr = base_rt + K3_RINGACC_RT_INT_REGS_OFS +
-+			     K3_DMARING_RT_REGS_STEP * i;
- 		ring->parent = ringacc;
- 		ring->ring_id = i;
- 		ring->proxy_id = K3_RINGACC_PROXY_NOT_USED;
-diff --git a/include/linux/soc/ti/k3-ringacc.h b/include/linux/soc/ti/k3-ringacc.h
-index 39b022b925986..9f2d141c988bd 100644
---- a/include/linux/soc/ti/k3-ringacc.h
-+++ b/include/linux/soc/ti/k3-ringacc.h
-@@ -158,6 +158,22 @@ u32 k3_ringacc_get_ring_id(struct k3_ring *ring);
-  */
- int k3_ringacc_get_ring_irq_num(struct k3_ring *ring);
- 
-+/**
-+ * k3_ringacc_ring_get_irq_status - Get the irq status for the ring
-+ * @ring: pointer on ring
-+ *
-+ * Returns the interrupt status
-+ */
-+u32 k3_ringacc_ring_get_irq_status(struct k3_ring *ring);
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
 +
-+/**
-+ * k3_ringacc_ring_clear_irq - Clear all interrupts
-+ * @ring: pointer on ring
-+ *
-+ * Clears all the interrupts on the ring
-+ */
-+void k3_ringacc_ring_clear_irq(struct k3_ring *ring);
++    dma-controller@485c4000 {
++        compatible = "ti,am62l-dmss-bcdma";
++        reg = <0x485c4000 0x4000>,
++              <0x48880000 0x10000>,
++              <0x48800000 0x80000>,
++              <0x47000000 0x200000>;
++        reg-names = "gcfg", "bchanrt", "chanrt", "ringrt";
 +
- /**
-  * k3_ringacc_ring_cfg - ring configure
-  * @ring: pointer on ring
-@@ -262,6 +278,7 @@ struct k3_ringacc_init_data {
- 	const struct ti_sci_handle *tisci;
- 	u32 tisci_dev_id;
- 	u32 num_rings;
-+	void __iomem *base_rt;
- };
- 
- struct k3_ringacc *k3_ringacc_dmarings_init(struct platform_device *pdev,
++        #address-cells = <0>;
++        #dma-cells = <4>;
++
++        interrupts = <GIC_SPI 385 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 386 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "chan49", "chan50";
++    };
 -- 
 2.53.0
 

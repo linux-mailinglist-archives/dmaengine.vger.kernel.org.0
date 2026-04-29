@@ -1,141 +1,182 @@
-Return-Path: <dmaengine+bounces-10191-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10192-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QGXVIPnq8WmalQEAu9opvQ
-	(envelope-from <dmaengine+bounces-10191-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Apr 2026 13:26:49 +0200
+	id oKiJGWIG8mnNmgEAu9opvQ
+	(envelope-from <dmaengine+bounces-10192-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Apr 2026 15:23:46 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 063274937D8
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Apr 2026 13:26:45 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE4B8494BCA
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Apr 2026 15:23:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C375630297BD
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Apr 2026 11:26:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0C45230B4A72
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Apr 2026 13:17:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06CFD3CF054;
-	Wed, 29 Apr 2026 11:26:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECF583FCB1F;
+	Wed, 29 Apr 2026 13:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ejvHWE1z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMj4FQhW"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA70302750;
-	Wed, 29 Apr 2026 11:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353B93F23A3
+	for <dmaengine@vger.kernel.org>; Wed, 29 Apr 2026 13:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777462002; cv=none; b=T4w88c8pfdui+uKTZ/A75N54vv5+ygt6XtOs+c3C834wo0jn3RKHbz8ymm034YMsyjybqeQRh4/Pkv4+hdKrXyhNd6+FeEmf1vc8g4TePtP2zeSpc7qPPwVv/agvMsclMeZvSkFsu2dIiPIE3NOV7HwPXDkT9IpDdJth3Fb3HrQ=
+	t=1777468653; cv=none; b=kdq0YLSiH+omU5mY+VQ8M+8pJo5hHCqKhkSlaHzx6I77QZYNBMCdLdlZzNM2aabKbBooHsztmne6L5abZR2pJsSp/G7BVo8RIP/5/MtckBTL9Pn5ZyE4L2F32FkjX7l11uTmiBmp6vZ87R2Hotq7Nfin75VxabhhdlCK2enxorw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777462002; c=relaxed/simple;
-	bh=HgV0q/+gZ9n2giWTxhUD6P3yQ6wEmY66ZwCWQHhgQ2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kKGPImIqofHhHWkrh4obt4PWgAsqITzuUZVnGNDkfXyNLSZcsDoFgpxWWpSmbc5g0edrzTytstBlWuiMROxKCSnCuFDN5vsyWoqKkpkiSdJCcn9sghnNkWFaAx9gXkuVuHeVxtZuU4tcBqXoQ9JIGTcKIDXLTkfHvbQdDMgSy0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ejvHWE1z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 158D1C19425;
-	Wed, 29 Apr 2026 11:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777462002;
-	bh=HgV0q/+gZ9n2giWTxhUD6P3yQ6wEmY66ZwCWQHhgQ2g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ejvHWE1zJ0tb1KwQu/gVCMj0KcNhlMqCOjLI4kQmWC01EPIO4HFDTFQg5PpNyMx2F
-	 7OMWgwbyfp16yd5ZKGLwfDDMuBlWK8CK9qcSIqUHZRxyhnWE4iAN+OK+xmr5WBtr4T
-	 BgqmCB7r/rsFvwFu/mT2z67QkDE/mDzOf7GDi68KHsQjYM3r7svy7TXqJDW5kWsfNa
-	 xYHmkznhflijvwvOUJkH6AcM42ZHWo8kZp7k26fwbFC82N/jHC8/F/rL8GlM8z6Ksh
-	 UMOZ5KVH94exo80oAIrmoHKOK/k/qke5mU8V2uOXUW3Mlxuf7JynBO/Edq8wMcfI5M
-	 twwrBSWDcoLLw==
-Date: Wed, 29 Apr 2026 12:26:30 +0100
-From: Will Deacon <will@kernel.org>
-To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-Cc: Yury Norov <ynorov@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	David Laight <david.laight.linux@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	dmaengine@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-fsi@lists.ozlabs.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org,
-	ocfs2-devel@lists.linux.dev, bpf@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-mm@kvack.org,
-	linux-x25@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-sound@vger.kernel.org, sound-open-firmware@alsa-project.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-arch@vger.kernel.org,
-	catalin.marinas@arm.com
-Subject: Re: [RFC PATCH v1 8/9] arm64: Add unsafe_copy_from_user()
-Message-ID: <afHq5vyNUJzxVwDV@willie-the-truck>
-References: <cover.1777306795.git.chleroy@kernel.org>
- <5b09e58a84c9edcfe5724db5cd57e45d96a96bfa.1777306795.git.chleroy@kernel.org>
+	s=arc-20240116; t=1777468653; c=relaxed/simple;
+	bh=8zDzl40BaE6A2qSxEiS15J6sZUI2R9MUGecR7Jcykuk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jHfwq5vrGJxxqHh0OzuXdek2GX9Vb5Kybo0ZVnCcbNJ9WKwdimKPQ0GRbFHxopP72jcMu+mEDnmS1+xjHCezmbVuaNRzdhGAg1kgUV1xZ+Vj7KfHpwbuJZ4Nlf7QS4qCd2b8SzM64LFpIpqTb0VLPrOm2L1WUn1Ait1aFQpoi8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aMj4FQhW; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5a62a049c1fso10102062e87.3
+        for <dmaengine@vger.kernel.org>; Wed, 29 Apr 2026 06:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777468649; x=1778073449; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0uZhjPbSdYNEfdJ2xmxocjlnV7uXSsw+wopBLD2OHSc=;
+        b=aMj4FQhWraoFdFq4e0CMYeXqdpmXbViqbEiBpAKpCxegKWMeHYOiLwNLfUfFbhcagj
+         t4BDpUhu2oPxuVMjl+EfAJE467W0T0okYOgxtjkKX5JQlH6NhM9BKbqdQOn3MHCeI1Pt
+         +4O4Rm9BnIg4zGJaBv/Pl5cHJr/Ja/ASL+F8+6YIbn12IE6juj2o31lBa0tLll9wtZgI
+         krLksiU35BTpKt3u5rw7QDyK0+Zx2w6e9WL+WuJ/yqIhgzPYZxAI7ABtIyzidookZrgn
+         q/hcebSbFfAT2tNeXfLNUYqFfSxZ8utPuWVHkVH30/qq5tXS9gEflSXv6Du3/ZQzJ3yG
+         yk5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777468649; x=1778073449;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0uZhjPbSdYNEfdJ2xmxocjlnV7uXSsw+wopBLD2OHSc=;
+        b=cOKMvfYWDkPs9BOLFOv22NC292Bs9/CCgIitbWZbCrf8xtbhVDY68BWwUKrAO61awl
+         DecaOGi65nCV5147I/noZnGapLfOKtD1KGDTo85B6qBq648X6wAXnrk+4kkvdVEq3EeO
+         BKaWq1sEPHUFca1xAfDbYlqON48r+fzqubtYtwVipkiyF8iymGESOhUtrHElt18GqDWT
+         3D9CIdkxh52lFoZr7GO5O3/ixUmKunnbNU4T5joz4be7v0N1hqY+HhZsPV3458um50Iw
+         SfABySnIrqXq8i/Jn9kYBETyYStTYRLOJshi2jV2mF2q+fuBdLmRjHzTjgCKzwYzO5O9
+         zWiQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/siTf/7akNt1MIoUyWW2LKgsEzEHW8QRkhAtFse+kqrpouD+C48l/Nn70bt3PPRBrvAOsGmAmQgDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoF43E75N7gRMBwWtO5Wgmr9cJOdWHONjyrYF9lg/3RtThixdB
+	deMfwAUd/BnzSCKDIoFlXCPXSuOrdiRFg467OODW+9Xz5SnDkNb8YUNU
+X-Gm-Gg: AeBDievmD1s1hCG2xNCtMgEOG3k5I6iwuRtMdc4bIEPTC9YpSEXkxr77z+4VVaJLecY
+	vZeWXUqtakaGruNIpOIuFK2zV1WacwDECrd63jagaQLDOI9BfbZ6VBFMwTKxVFkFnlXJMSyWV3/
+	HNhth80HgjSX8/tWDukN1Y5zk+wI3tRJG9ClgRV4T7BfLJa2UEwYe+v27BrlT5lt2SlWXdECGfm
+	e+NWWYKNAIxrt4S7mnN4FKnHCLnSJkwT3xJ2195u1N1JIS87tOKK0o999PGrWXPaGI5My2gY7VW
+	vPhrkdeQt1hgfzaJES0eisB1qsDAMGb1rofRHW9ykCvjJnSEqsV1+AmT4ONFiR9V7LeJ9/lLv9W
+	Qsjm/39SKGXI17kwFawUry8WPmCVKO8YfjPbRRayoUxoiRizW5WA+SFnbs4X4QNNc+XxUWXyjL+
+	y8UZNMIDCLAGrEcz7hh52drHcZHLRZWdCPzhxVtUXCt3NTORf9qQ==
+X-Received: by 2002:a05:6512:3ca1:b0:5a2:a36f:3ef4 with SMTP id 2adb3069b0e04-5a749d1fa92mr1719854e87.31.1777468649159;
+        Wed, 29 Apr 2026 06:17:29 -0700 (PDT)
+Received: from localhost.localdomain ([62.76.73.208])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a74a6f318bsm558820e87.23.2026.04.29.06.17.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2026 06:17:28 -0700 (PDT)
+From: Ilya Polyvyanyy <il.polyvyanyy@gmail.com>
+To: Eugeniy.Paltsev@synopsys.com,
+	vkoul@kernel.org
+Cc: Frank.Li@kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ilya Polyvyanyy <il.polyvyanyy@gmail.com>
+Subject: [PATCH] dmaengine: dw-axi-dmac: fix vchan teardown races and LLI dump bounds
+Date: Wed, 29 Apr 2026 16:17:15 +0300
+Message-ID: <20260429131718.2557247-1-il.polyvyanyy@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b09e58a84c9edcfe5724db5cd57e45d96a96bfa.1777306795.git.chleroy@kernel.org>
-X-Rspamd-Queue-Id: 063274937D8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: DE4B8494BCA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10191-lists,dmaengine=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-10192-lists,dmaengine=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[nvidia.com,linux-foundation.org,gmail.com,linutronix.de,vger.kernel.org,lists.infradead.org,lists.ozlabs.org,lists.freedesktop.org,lists.linux.dev,lists.xenproject.org,googlegroups.com,kvack.org,alsa-project.org,lists.linux-m68k.org,arm.com];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[50];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[will@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ilpolyvyanyy@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[dmaengine];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[]
 
-[+Catalin]
+The channel teardown paths free descriptors/pools without synchronizing
+virt-dma callbacks first. If the vchan tasklet is still running, descriptor
+cleanup may race with callback processing and trigger use-after-free.
 
-On Mon, Apr 27, 2026 at 07:13:49PM +0200, Christophe Leroy (CS GROUP) wrote:
-> At the time being, x86 and arm64 are missing unsafe_copy_from_user().
-> 
-> Add it.
-> 
-> Signed-off-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
-> ---
->  arch/arm64/include/asm/uaccess.h | 29 ++++++++++++++++++++++++-----
->  1 file changed, 24 insertions(+), 5 deletions(-)
+Call vchan_synchronize() in free_chan_resources() and terminate_all() to
+drain pending tasklet activity before/after descriptor list cleanup.
 
-Why?
+Also fix axi_chan_list_dump_lli() to iterate over desc_head->nr_hw_descs
+instead of the channel-wide descs_allocated counter. The old bound could
+exceed the current descriptor array and cause out-of-bounds access in the
+error-dump path.
 
-And please cc the arm64 maintainers on arm64 patches next time. You've
-managed to cc most of the world apart from us.
+Signed-off-by: Ilya Polyvyanyy <il.polyvyanyy@gmail.com>
+---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Will
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index 4d53f077e..4c317ee82 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -553,6 +553,7 @@ static void dma_chan_free_chan_resources(struct dma_chan *dchan)
+ 
+ 	axi_chan_disable(chan);
+ 	axi_chan_irq_disable(chan, DWAXIDMAC_IRQ_ALL);
++	vchan_synchronize(&chan->vc);
+ 
+ 	vchan_free_chan_resources(&chan->vc);
+ 
+@@ -1049,9 +1050,13 @@ static void axi_chan_dump_lli(struct axi_dma_chan *chan,
+ static void axi_chan_list_dump_lli(struct axi_dma_chan *chan,
+ 				   struct axi_dma_desc *desc_head)
+ {
+-	int count = atomic_read(&chan->descs_allocated);
++	int count;
+ 	int i;
+ 
++	if (!desc_head || !desc_head->hw_desc)
++		return;
++
++	count = desc_head->nr_hw_descs;
+ 	for (i = 0; i < count; i++)
+ 		axi_chan_dump_lli(chan, &desc_head->hw_desc[i]);
+ }
+@@ -1206,6 +1211,7 @@ static int dma_chan_terminate_all(struct dma_chan *dchan)
+ 	spin_unlock_irqrestore(&chan->vc.lock, flags);
+ 
+ 	vchan_dma_desc_free_list(&chan->vc, &head);
++	vchan_synchronize(&chan->vc);
+ 
+ 	dev_vdbg(dchan2dev(dchan), "terminated: %s\n", axi_chan_name(chan));
+ 
+-- 
+2.54.0
+
 

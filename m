@@ -1,73 +1,74 @@
-Return-Path: <dmaengine+bounces-10203-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10204-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oMsOMPeS9WmOMgIAu9opvQ
-	(envelope-from <dmaengine+bounces-10203-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 02 May 2026 08:00:23 +0200
+	id wK5IEcWU9WnUMgIAu9opvQ
+	(envelope-from <dmaengine+bounces-10204-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 02 May 2026 08:08:05 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34A844B113F
-	for <lists+dmaengine@lfdr.de>; Sat, 02 May 2026 08:00:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E70964B1203
+	for <lists+dmaengine@lfdr.de>; Sat, 02 May 2026 08:08:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2035130128D4
-	for <lists+dmaengine@lfdr.de>; Sat,  2 May 2026 06:00:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 802F1303E2DE
+	for <lists+dmaengine@lfdr.de>; Sat,  2 May 2026 06:07:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F6641EEA31;
-	Sat,  2 May 2026 06:00:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01B322ECD32;
+	Sat,  2 May 2026 06:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="oprKaMp+"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="HIS5a7YQ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679512475D0;
-	Sat,  2 May 2026 06:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D53C2ED16D;
+	Sat,  2 May 2026 06:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777701619; cv=none; b=q0ZnoYhmLY2YXysjqhg/6ksPF+6BvcjbfxnuZvfbhIP/MAdPsf9j6ItSfjgtl3v7ttLYjQvUMSXgrObCns8TFCbRKSunmJTCtqAxOGqjICOMH5Kohc+Bb4So39D0FBPBVcBNROqOUyawsNSmzXnbrQeORSdaEq9kSfU9lyPywQ4=
+	t=1777702046; cv=none; b=j36EnbC6fR8j3JTVvkJE0W64p8QxGLzKMFIAq2TV1z963n1DVIcKRNGLGUDGgdR1Vc1dXFlSIxR9Do5QXiC8sqnGl5cNb7hPHs+ce9Vna1DlarukHG/3boqMDXhxM+38TwxBNqDAPFQWpE3AniOnSgk6V+ghbf+aMHZJ8eFlA8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777701619; c=relaxed/simple;
+	s=arc-20240116; t=1777702046; c=relaxed/simple;
 	bh=qiA9TIwApvjkB1pcKhTev8aAAXW+kknNg6MYs9yJqHI=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=WMFfooIVCpGm/brhOMY90n7wleReHanCkqmtnq8l6xAcpbewG6maVUNkHmUukvHR11Gf1rwRpM1/d29k1M77SZu5P2ARwKvR7pJsdL1wVYGzy1+avOu9j5xCOInj0rEj4zSBMEalC33dksa5+k3dKWP5qxHENmhdsLYRZIkJoPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=oprKaMp+; arc=none smtp.client-ip=203.205.221.239
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=N+SV9Nf6tDD28pal6SYmkwaw2EXEwZ2NWEn7lvXo0U8taHsTMbzuKFWrxmjlEHphIL2k/vOHF/gPI4OeMZMBVqByPmCBQovkjbw42dMmBQGoE7Tkl9ygIyol0dFQMZAJUqWU4aBdmI2FNUPVdjVYdNeeXrSqbpLq+tzNdutTW/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=HIS5a7YQ; arc=none smtp.client-ip=162.62.58.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1777701615; bh=fa5pN4GGt097LLhhH34pMrgAbO6h8NqyL1vvMQH7N0M=;
+	t=1777702040; bh=fa5pN4GGt097LLhhH34pMrgAbO6h8NqyL1vvMQH7N0M=;
 	h=From:To:Cc:Subject:Date;
-	b=oprKaMp+XuXxSlUvV4CwhAgxBOvVeSox1sZ6RpmsIfBcTfVIkZFMaXvDZN5SpZQBj
-	 +MRqOk+1KeULTHZY08zSEvzu4zow8zNUT4V9P/7fKpItNKIz3nFUhNz6hDkKM+62no
-	 iJakQzqAygmkCjjBlBhUxcrHD4lLD4/w0FWDTx1I=
+	b=HIS5a7YQMRMbe42UBnAIGpqFgbA6UM/eVZZcrcme01NeSwbBoWKfldv8yeRtoQbPH
+	 YuZH9BTTobxjwValOiXb+NKyUqbc2NMzKXxzPb6avkfeeiXxx5DRPstU8OWobMLA6y
+	 +HdX5bhl+LX19DUcy+sXq8iOIR1BrlBVD3f+kDt0=
 Received: from Lang.smartont.net ([223.88.152.211])
-	by newxmesmtplogicsvrszc56-0.qq.com (NewEsmtp) with SMTP
-	id C9ECE5; Sat, 02 May 2026 14:00:12 +0800
-X-QQ-mid: xmsmtpt1777701612ta0ocwnfu
-Message-ID: <tencent_BB6C24EBCDC646F997612BBBDC93A0B55C08@qq.com>
-X-QQ-XMAILINFO: OVFdYp27KdlJ9m2bkjNIpItVO1phl3fiuTO9gAtD48TAgL+lpcAG7F2TpXjtoe
-	 2EDQEMGdw8b/2boIqS9N6RVTmLlmli2wgtUDw7tTWqUCgMkqWaj/pQMGJjlxnjeIDynXR6vVCUP3
-	 mOJf9G08BDybP06KG0Frfz1R12Z35eMWar9bFU+o4bwZrie5bTao7SuNQtHO3VZRY2aXfJiV1Aqs
-	 xXz+JKiXgI4zDmxohYHGNi1jKjFV3y3pQ2r+cuT3nXM4kPVz5n4yRRa0IupbYfK17B8EuHQE7bzp
-	 o3T778IwuKNkmd7BaDI1LEBHZJp0yr6hhBXSCvATRw5+IVn0t/HbQaY1hsqd520GPCN+Z6+MbP25
-	 1aSDLQ5FxfFgp5hpfNozE9JsHwb9f5YZXIXA2PvQ9u6s7Jw7DlZgS2HC9oPuPwpuD80N1ASIPSu0
-	 Lxe+WkOpmzM51XQ/Y+4TQslf/4G55UQzlbv/67IHfHci0lUlf6YtkhghzDJ3LVigDjELIiNNiJ5z
-	 DbQ9+Vel2vSoruHG8k9QgH2rIme7V7s4unxGzINjCdgQ7jKaVAiaYddh6p3s1EzC7ZgMv0AJ86lq
-	 O7Nba0X74O/GXuPpww2cJxi9wdW/fglDYNIwfokx1SMSeT2ae3jgcabeVsYAuB373AYQlZAL4eWf
-	 xBPjr6N9kXYhABeoU33ItVT3eCyw+M+8hi5lxkeZfoFQu7rI/7Ir6pF0RUgQuy3MOu+sTVOvRGqX
-	 qPcqfdryiqZchVWY35WCCT0xQPHcAvkFAw/XaCmo+KAiibIAFymxBidD9nQhqq2qon3KFzIzaqpS
-	 wtfs3eP5Ak0QgSNXgq3JXiKl7Jy0KePevVbpXxGOlkqijxLjehkrWOZw9DkxwnCWgpnD+I1zDuCn
-	 riUhoM5YoxRISgqkJrMbuyEaJYF75SDvsInQbcryzPMtp8v2CDTD/q7ZbfCuFNflNUKv99Xq0uqc
-	 WIzUU5QaVCpOSH/pLtV0ztTL90Uv6mIl7aZBacAylQ/9h+XA/CtQjAZhO+oEZhN4bzosP8nzwgg+
-	 zmTy1OEtjRoLEIAXIf+KJto+l4uF3jMbv/7ozjFN83ZWgdFdQg
+	by newxmesmtplogicsvrsza63-0.qq.com (NewEsmtp) with SMTP
+	id 1D18E2C2; Sat, 02 May 2026 14:07:17 +0800
+X-QQ-mid: xmsmtpt1777702037tn75go5dp
+Message-ID: <tencent_74E58D3B06F4908B89C4AC39C688F4B26A05@qq.com>
+X-QQ-XMAILINFO: OeJ9zRfntlNPrOjpcIiCj8G5d3sem9tPL/VqhNowV1YY7BZmFO9oTCA2QWhgOY
+	 hXL6LLRRpxoeCXhCXPWgcdszxxa+wAaWEFLKr0YsmahY7ydV9Blkapwrgvv8uWfS1u4+U/il3rVo
+	 AraNI0XM/uv2dwe0u2+4SopwqVKcnRzeh/rRneJLipo20hs30EPeLI3WdZ7pI3fPrO041v3/eB87
+	 Ai9C49A68n5mRPMCbCcCUHmbiPL/pzyRXA0lvImL0S5Sz15Rk8i/fwvZznGgFHgJ34dNtRDXGj4Q
+	 RWyxo2zyl3zBA+ycP4diZSq1lIg4XwkAhmqesbWjxM5xzDaJzbMyS8jznydFynNVYeM69qRs47j6
+	 +66ZPCr8ZQgMRB3HvYTeSmjVqD4XUQl1Ig7HMFloHskFRVwVNdbGbT3OVAiot++zh9lZW9WBzhYt
+	 soDk99aX5SVRIOsjBwFNUE+cQI8fRd4sf63Vb7hG6NEUWEytnsJjFx1Zldx27JQWfNdy2aPRE9Sz
+	 1cZ66QNYAB16TWoX7AeovDmNK83XcMp7rDK3194LHePKZa3yP6/TLbCYg/P1kmp/5IXJBhf6pf29
+	 UDO1HLvjzYrpBa4oTaL6Lj+agP8ZawB1XLSd9ArsbxcJJUeMxrpnXjGjf4qMdQaArHIi1nxgSVIF
+	 zwxmyxFPVW375f8SQx8wjFrwqY9jRG3GSGzOwbYA3JevHLDDMZSAm1OrbRJk3a4gkHW55AFLE3Ya
+	 0bbPTIxZ70JbkqS8D8YMXhuTGG5XDoBlheVaRne6aKqIR8AZaidelQE6i2OeZXTg15b3hdPapOKY
+	 a9c0Cjznjj9q/950TKOI4AP/Mm5IVphCkQjwNcvY1tEhvNAeql7/b1Q338sjpv1wa/dOFOQIvDNH
+	 lcVNXBZMepgnG6lybxWHJRB3AwYmDGKeh6FRkcgDGJv3usQ0A34j0dFadacTQOyfI/ZacizWWFyS
+	 7o+pUIVBJVls0LJwPJjcrUywPy1ga1OnSSiiZR/qa+yWhJNf3PQBLw0XdIypkcrC9e0Axx9tJB2L
+	 /Ve5WvLdy+JFzzQ7L7y2++2xr3vFmiNE4ICniMLxPtbpPGoMeyV6YYPMcPdtzongfAGf6bGxK7oq
+	 CkvetxlhStwUuRto8lV6jkl6VcIA==
 X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
 From: Wang Zihan <jiyu03@qq.com>
 To: vkoul@kernel.org
 Cc: dmaengine@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	Wang Zihan <jiyu03@qq.com>
-Subject: [PATCH 3/4] dmaengine: dmatest: fix preposition error in documentation
-Date: Sat,  2 May 2026 13:59:09 +0800
-X-OQ-MSGID: <20260502055909.116546-1-jiyu03@qq.com>
+Subject: [PATCH v2] dmaengine: dmatest: fix preposition error in documentation
+Date: Sat,  2 May 2026 14:07:02 +0800
+X-OQ-MSGID: <20260502060702.142296-1-jiyu03@qq.com>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -76,20 +77,20 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 34A844B113F
+X-Rspamd-Queue-Id: E70964B1203
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[qq.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[qq.com:s=s201512];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10203-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10204-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -105,8 +106,8 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[dmaengine];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qq.com:email,qq.com:dkim,qq.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qq.com:email,qq.com:dkim,qq.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
 Change "built-in in" to "built into".
 

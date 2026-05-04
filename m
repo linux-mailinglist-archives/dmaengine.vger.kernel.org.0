@@ -1,339 +1,284 @@
-Return-Path: <dmaengine+bounces-10212-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10213-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cLrIKrDD+GlQ0gIAu9opvQ
-	(envelope-from <dmaengine+bounces-10212-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 04 May 2026 18:05:04 +0200
+	id iOzoOMjL+Gma0wIAu9opvQ
+	(envelope-from <dmaengine+bounces-10213-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 04 May 2026 18:39:36 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 591FC4C1216
-	for <lists+dmaengine@lfdr.de>; Mon, 04 May 2026 18:05:03 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46AEF4C184C
+	for <lists+dmaengine@lfdr.de>; Mon, 04 May 2026 18:39:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 3B6F330090B9
-	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2026 16:05:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 43D55303938A
+	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2026 16:38:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B41F23E1CF5;
-	Mon,  4 May 2026 16:05:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DEED3E3146;
+	Mon,  4 May 2026 16:38:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="jRcXom2M"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="XcRYG3kQ"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011058.outbound.protection.outlook.com [52.101.65.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90737883D;
-	Mon,  4 May 2026 16:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777910701; cv=fail; b=JxrrEGfBl76U7fDctpXtlflV+hX26EAidGWn/8aa9+BQPVEniXfdDeLrXkrBe9CLU1k8WQHD8wTHmnpQQrtRVQhV+2wEYg3A0GzxBXEKvhVjRJmo/qGcogbxpYDOn8FDq3+eH/KXO6IurkRg/4SAXOnR8zcfHbZufWmPPNqZi6g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777910701; c=relaxed/simple;
-	bh=jXGjG32ubL+dKImrLJiZelGbKIjCtmqi3LowhFyjhW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=uw5wY+10rJZ6vli0Liwjq1N59Sj6CcRN2yvTbSGulJci9i2i5lPpYm3uLKhoz9+clyQrDSLhcVrk4xdybi8YZhVIQvz1LIeJqAmCIlrbdfoWm7FE2yK8PRgZlDlhGetBMDcSxt0j02GhXiZ4++Sz2yyrw4T6P5wP1jO229MvGHg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=jRcXom2M reason="signature verification failed"; arc=fail smtp.client-ip=52.101.65.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nuzAAk/zWMfz/HgIxJVYgJBEuMvZEB/3Ian5v+82bsICqSzXzoOjn8lLs5wWon/yH48q+qDmTlC0TW7p2antJnS3tpOQtxheSd6SpzcIinRq4Tm0dseGXU/WhjkfsxzA0pF5M5KFgC9i/F/XzcCZOZAveP70PrR9m2D7ebMmGoDnStfcNtcThRN5rrqvIAfus/5GFqu6zIlEo7ZcdamVN2ZJ+RmtZ3wOlyk+dKF2pjFAiC1dGkrilBk4ASdrDGT/BZc9eF2wV/zrpj+9aJl9/gPHxzmlF90DN/QC/pPK8lg5stbpHt+LMRCPh5fEkQY7HSBBJSnRZ1GrjCfdbD1mzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wRmih/Wgq9kpsoO6N2ixAT16jOdU/u4boORR0V+JIM0=;
- b=HS5nGTwwY/Q/ZnNkgWolLRNkedgoDhToHaCoG8Nh+CmNR7JQN6cnulXQ6h1osdTpTthVTl7iTJztlN/C56B8K1SEfJC3BL6YMEHXpqOl1xCmtSg3byvHdUdG4rLrJmCKi1Y0qhlDFUyJXn7jXWMNcNzSzastAmkkcgYQ9zpC3yMnmgzo7DAAbLcXSF3Z6IYduatYDhIv4CNDaeeAHZ/D5GCWNkLQVbHxzIVoWt4M70IIa3AWhGGtVAvjtClUyGpXBqmTr6d2pYdevjLLnY633CIYG8GwJ4Fkg1fXuOX1vxPmFihtigkxLmaTZOmu/T5/st1na2q/0Cmm0/SYlBAnvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wRmih/Wgq9kpsoO6N2ixAT16jOdU/u4boORR0V+JIM0=;
- b=jRcXom2MaLI/QKenXQtyO+VkO0/kf3PBGpfkPSooqRJHwyLJzaGlNk1NRxGma3f7NQHw0OegSQPr00ujofncoYCSflJ7obPiMHZSJpliguVRypIHsxVjkB4Mrt09dwsO50QNjDLPd2vqCbn82Jt0r254w1qDz4iZJTDP6NBk+RVR9UVCDLomGZzAXtDoj0HO/64gfp9mdIVw1ghTGO72vyyA037q5Z4MVOXhD/WtNWu6bAD9jGYu+Bhg3mjOBse58MQWvNP97R+NZ+8sDsjn5xZp664l/tppEFIhS3TKUhT+v0t5nL231GAgV0z8LbvXqhqconfV3NmBE5Wo8hzKxQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by AM7PR04MB7127.eurprd04.prod.outlook.com (2603:10a6:20b:113::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.25; Mon, 4 May
- 2026 16:04:57 +0000
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9870.023; Mon, 4 May 2026
- 16:04:57 +0000
-Date: Mon, 4 May 2026 12:04:49 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: =?iso-8859-1?Q?Beno=EEt?= Monin <benoit.monin@bootlin.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Frank Li <Frank.Li@kernel.org>, imx@lists.linux.dev,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 2/2] dmaengine: fsl-edma: Support dynamic
- scatter/gather chaining
-Message-ID: <afjDoZbRlKnsNxwe@lizhi-Precision-Tower-5810>
-References: <20260430-fsl-edma-dyn-sg-v1-0-4e0ecbe2df66@bootlin.com>
- <20260430-fsl-edma-dyn-sg-v1-2-4e0ecbe2df66@bootlin.com>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260430-fsl-edma-dyn-sg-v1-2-4e0ecbe2df66@bootlin.com>
-X-ClientProxiedBy: BY3PR10CA0008.namprd10.prod.outlook.com
- (2603:10b6:a03:255::13) To PA4PR04MB9366.eurprd04.prod.outlook.com
- (2603:10a6:102:2a9::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BF33A2574
+	for <dmaengine@vger.kernel.org>; Mon,  4 May 2026 16:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777912737; cv=none; b=KuTbZtrFbzCNxGvuloBiZXILZjkP+Y0wFQVK05Wp23ilK9Ja6qnNLg1NtH5jrMCnOck55sQcV3e6Sa/Xbx6qv0Pjayn6q2+znA8Y9sQQWr2yVwI3MVZ21AQH8XKqHzbz5Re7N2cRXlqXICBIG8xtNC3U/U/RHjjyyZsA9xICpZ8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777912737; c=relaxed/simple;
+	bh=ifDcycN4sxmMeP0jkCzmCvk6hKMxSu/AfQu/RMH4qdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LTtfQGpCBuIlsBePfNHmaMXLXLgceAPqG8jFvMWG0FwltPw1ZyBNYVvrVFdy9NlsFW6Ws08B3wN6P2wY69ErDH8BFlLG2ik45wRjqLoHKN1W1vVLf8MBvr++4E69vBM6LIgVIH549w362DiOumJiRKkiOaqkFtHilD0dEadO3d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=XcRYG3kQ; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-488ff90d6c7so41101465e9.2
+        for <dmaengine@vger.kernel.org>; Mon, 04 May 2026 09:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1777912732; x=1778517532; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tzti5IfnmT+c5McxmlLM2AJ8DTzW4zuCbfFoVuxW04s=;
+        b=XcRYG3kQdfhcLWnVKYUmd8UF+KP6b+cxcumrSVyLdoOktS1shXRAGnDaJXdg9kF4d8
+         KGuODi40Q04e/qae5PzIkwQC1rUBnqe+z62B4aHFUvNPOmlpjLS/ogHnJ/7mbZX6U4Aa
+         Qouz1iQ4fmyWHC3ZLQhr1Hc5gtz7IJUToAHLoC0VUqOLNL5kh/swF7fQNoCKn/aNfui8
+         cJ9X7c9ZlkxSZH7mor7LgpH8ugo86Yg3CCEP2jP0hPI17V4hgGV6kUI+USJSD5h+sK1l
+         oOVZyrvBi5pliQWpNW/p9Zs8iMZHMNKXCwqKi3r9scpHZKZblWeo5aMgrkyAF9SKNMsP
+         GgoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777912732; x=1778517532;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tzti5IfnmT+c5McxmlLM2AJ8DTzW4zuCbfFoVuxW04s=;
+        b=MZv8LmyOEK4GSxH3x5yOWJ6Z4ydZd5te6rYY1H2qjazS/anmdlojI5ikANroNmnfmk
+         160urhN3KEqwkuD/NW2NUwsjTplh1UFefObf3vEvJPmwkhiLMJm8V5tt1G+Tk4+XnvNr
+         /NXOLjcsz4RT/Fl3ap6Tue5fZne7Oj0x6yCVnsqTY7aOpPutAM+zzyon+ZTLKrCpw/Np
+         0YS7P1dlbIoSpulxcIwce+jJwErn8qPJ1GiyxGbaB3PI3vUwU3XmDjtOAvSfVGhu77Uv
+         TXzRSXlHVbjz25hT/UCIRBjeEn+3m5jW9St5/Sx4+359djSX/cCbwFdYH+K0gNirH5IW
+         x1YQ==
+X-Forwarded-Encrypted: i=1; AFNElJ82BdvA1+L0z67YYlYfeAa+I/J8UTXwuE2NA6IbvbfORzxcuO50Kx06jSlxBMBbu9UosB54iUStzb4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ+O1jhEIocT8sdEOLrzLpXG/h4LsUbsQcmOJmTJkxnYM40YSd
+	hhHCiT1E8M21U8+D6/FirS2qm5TO3xUZNSqCt68pMp01Lmugf453WfS3OUsfK30Bvzw=
+X-Gm-Gg: AeBDievYoeLCu60gWLN1nZGoFZZjBWHYYzN0yyu2N8WGBT/1Pjwo3TdXZD49gwD2B6t
+	azDdSa9bdWyxH4sqql35zN1lGnztyjvqqZfa7aMPgx7WNOtRd5OaMewmfk/a68oHE2kAV8UCvNy
+	aZ1aiDu2J5cLENav5g2Xmmrmiz5XVifAf0W6Rb1KbGF3c72w1bE1dk0EhJ8225s69VQzqZlCuMy
+	RIyqLizs4RVDcXAJi6ZABK87xFtL78aZDlKbFxkUyH6hQI+10k+uz8e7DKWtViuXreZ6dwtAw9y
+	SEih9SVpZ84e3Fr+nXiL64Z3LpJP/omPnYFF73B8R+XjCtNR8E+CcAaAwyLksy5dSQs3PHH14oF
+	RBCilnZmhhNFFRvRSmb9NP+17d0v9Vli7uEmlMJv62hVLsoqDAIrS8BG3BiZQQAFspNoPWrQ8aS
+	5s8i5gFG3qXO1SCh/ASsqwyXf5g8GALYBmw28ZnAU31zMiI0KV7Nh6mYocuUsUWtdiVlwTOFVka
+	FweJS08Xw5qhRNPrcajt6LJMA==
+X-Received: by 2002:a05:600c:c082:b0:48a:54fd:54ea with SMTP id 5b1f17b1804b1-48a98877b42mr117774355e9.12.1777912732469;
+        Mon, 04 May 2026 09:38:52 -0700 (PDT)
+Received: from localhost (p200300f65f114e08197264a4bf9e813f.dip0.t-ipconnect.de. [2003:f6:5f11:4e08:1972:64a4:bf9e:813f])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-44a8ef50e59sm26411276f8f.10.2026.05.04.09.38.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2026 09:38:51 -0700 (PDT)
+Date: Mon, 4 May 2026 18:38:51 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Markus Schneider-Pargmann <msp@baylibre.com>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
+	Frank Li <Frank.Li@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Viresh Kumar <vireshk@kernel.org>, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: Consistently define pci_device_ids using
+ named initializers
+Message-ID: <afjJ0YjzLgk-r9Nh@monoceros>
+References: <20260504102008.1996139-2-u.kleine-koenig@baylibre.com>
+ <afh0-BSmchvY-W-d@ashevche-desk.local>
+ <afijNvdU6HPbjDCX@monoceros>
+ <afioswWDnEbf53ay@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|AM7PR04MB7127:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19bffadb-09aa-446b-f78c-08dea9f6e317
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|19092799006|1800799024|366016|52116014|376014|18002099003|22082099003|56012099003|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	XMt+oJuLQCzgz/mNH85VwPcNKQ5smdCaviDMPLEym8AUlvDHQBS3qeJriFfUC++NNuQSV8vkol8B+52YK3PbokLNIMgkdziUPdZYb9HscvOnQTo+to3a2K440qJBoQQcTLkYIW3+lTNUsPMx6jCDRQpxexLGc195X4cXJROaA2tiwEbeZD3AItJ/TUivadLebTwbMd3eLuIKKGcMek0DnXiiajxZdyx1Fqyss2iaBxp5pUBBLT4NQNYGm5ydgQRhJ6AOPg0DwjD9Duq/MGXBo4a+HJJXBmrW1qgXiKbuea5CxPPlq8qhxA6uEks2Oha6RecIIVySVSinrMpK8HKaWlSVx+bx5rHLbho7mBgthv11KtglLYqcNJ3+Wyy9jUw/o/4Qs5TVZlE1BEzlTtMsWohQeASA3kvsxMyLFYTwPb88FgtoTm4+K46ugVy1GiAzQRiWPfNOPX9X0XqpDblEVYYhTVKMBg0BBKbDKwyZOGuOAAxNJFNpXtwYFrrIWARLymuJXjPRkanD0/rWLMc1MCw28g0yNiYkb5jZAsa4QvTRx7BmmQEYZRwKDb2NRjzIamQLrv2lrm+/dQ8ozVIorRYejnOxeqcYLKMXmh9uc6qNvpBpfvzH7ofCyvQbZuPQ5vB5Cbtlt1HRj1OpzzGTxHHoMavHlaG6GIrfYVm1n6Z3VY6L8Ubkyd+2v8Oqx587UhXdTsj8xwfzs6LwoQrJOia1E+FTNYT+Zf/cm13VQHc9Yk9yNPeO+5xhrJ79oTa2
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(1800799024)(366016)(52116014)(376014)(18002099003)(22082099003)(56012099003)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?+V3wZiM9BbTOm+cfCdi5kjVHRUEHKfncNjMBuDdW7uN5jdJequpMbyah/f?=
- =?iso-8859-1?Q?deYNytIfeqRu45wWJbwJ65jbk0GoMzp8z7RYMM5DsHWqwxndt3ZulW8T5h?=
- =?iso-8859-1?Q?f5PlW8APGypLr/5d/gehUxbMv4it3jxpFMIy1LdfBRyC2bZcjSmPnHd6R9?=
- =?iso-8859-1?Q?VNBJ7rHRuujnCp6+IeQzB2//rCbLTHd5PbQhotmxi9YuZiGb+INAwGcXWU?=
- =?iso-8859-1?Q?s2RiS9Jakf9qEm/co7THTV27ARRGuSn3EFCffX26hAR3A8F0KDWM5jutIO?=
- =?iso-8859-1?Q?EUPlCRpC9SzF5Rv7iNMdw5HYV61Hv+oGCLMcpTp2nNVYIDLv/8sfyv6/EP?=
- =?iso-8859-1?Q?hmFd/U2ka+w/FUfp5aiWsDl1H9C25ixxCh00sw8Uyf8Hgck5cIyfDqKSwV?=
- =?iso-8859-1?Q?zWU3xTU5kgYpD4qqsfyufDAi/wcWTv2gRymaQ3vcJTHGAzpkOrCf/x5qLy?=
- =?iso-8859-1?Q?g+HAZebh8qqNkOeA2VlcW0hiw4mqjLRH/p95v++Qjc1arOt9PgEmK4HZEP?=
- =?iso-8859-1?Q?b7XOJRSXZhlJa/mlnDKVxqFPiNQwYnJErEawM2kRr+8PxfXWZ6ESfAv7EE?=
- =?iso-8859-1?Q?m3sqY9xOaTEwg49760TGav9Krk07n57qLbu5kCpJwpV+uJ3+vc4zaVI+H4?=
- =?iso-8859-1?Q?bD+/nMNpoODOkJn4uEkb40ik/8iRKrF84H31Y3gh856IHmqvl4J3Uc1h8E?=
- =?iso-8859-1?Q?wi7iiuasTcJ0ZR4+wmuHuE5qpSxryP3393ZmRekXnbMqKEd/Jb3uqLeaVK?=
- =?iso-8859-1?Q?A/M+iA5lzDL2y5TcJr28kqscIlCkMDT6N6jleLwXqWlt2ABmrKbc1m6Ro+?=
- =?iso-8859-1?Q?QmeqKE2omO60jeUtMIlF4RLnB+ffBnskNmCoV6SXCxHwFSr+SyVqUpeoIT?=
- =?iso-8859-1?Q?Q8LKZC/a/h/KjrTThxnAuryaIDpBmmCmwWXQOdK4n2ma3jqJXBApiak5Z7?=
- =?iso-8859-1?Q?FXC8G5xVzNnxrmMOBeEh4Nw/vjdygkGmfNGlzHKPo0wHd7iuc3gebP+feD?=
- =?iso-8859-1?Q?5lySqtHCwfCNmxDkTEhb/hWHjrAsBRXjelu+C4jBsmJpLqqarENqauGSId?=
- =?iso-8859-1?Q?JqdiW7DvYlRZ+bZwSXiT36gnnjpuA4Qa4pOuXuqrMn429VpMMroqYZoDOu?=
- =?iso-8859-1?Q?nDxObZ8+spUz+jLAHC9phymdwXRqj1+OnYqdOAzliJIkhN5dSUKgS7yn+R?=
- =?iso-8859-1?Q?C3jhQY7oDZBsD0x1M2xguXfSRN9nPjtMGglmOvN90jcSouofj0GZ+tp0VZ?=
- =?iso-8859-1?Q?+Rl+JVx7y3VsvjW8DVg0mktg1yjvhpb2fUiHIR9WKu7R7N79UFRjlNSi1A?=
- =?iso-8859-1?Q?BjItcBu0H4dlqfu1gr6bpgmUNDJ1luFnL8yBDWpvCHRISjCfGuVx+ZDfWK?=
- =?iso-8859-1?Q?2zmY5VEET1jfpoA0EeoCfvuR85yOiYadNAjQp3j5nKf88s3UU7U0bJeSgg?=
- =?iso-8859-1?Q?NE7hr8UipzBxNoP7Ie3kyi4jxm6fFx39Z6qrlAGMvlYAYkLIk2SbTv2yjP?=
- =?iso-8859-1?Q?v6Gbqm4CAsocaBqpLUP6j9XPA4+4xYJ6suYIrBOil67EPRWY4s6WMeIxHf?=
- =?iso-8859-1?Q?FjA5uGaURF59z1H2pjcnlNB3p7obLCpRc2SFb22OT63xTh+i8DNT7fZY4d?=
- =?iso-8859-1?Q?Ur4vWkA46ut/3XH9oUHrppRnhuqW+r8GxYw+jaJD13DdeI2T9fn4o1xehW?=
- =?iso-8859-1?Q?D8d1dNxDOf2De1A04B/smccfRGujvldsDL9+d51ULv3xDv3UrLMeJtHI+F?=
- =?iso-8859-1?Q?SigSYotd4vsrPcvuJ1Tmkv2GZMqNPDqEFeecAyyH0L+f3XiewFvS5PaOHH?=
- =?iso-8859-1?Q?y/Ql7kVD5Q=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19bffadb-09aa-446b-f78c-08dea9f6e317
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2026 16:04:57.1471
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8SmWj6jv+caM2UlLCoWwu5VHZiR570KcZl7YOqRq3166swTOmRpTFMdxhyVSjJiqSJNTr7E6w/YIlyeD1tEsxw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7127
-X-Rspamd-Queue-Id: 591FC4C1216
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="h7rxs4abwv7pbrlb"
+Content-Disposition: inline
+In-Reply-To: <afioswWDnEbf53ay@ashevche-desk.local>
+X-Rspamd-Queue-Id: 46AEF4C184C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.14 / 15.00];
-	R_DKIM_REJECT(1.00)[nxp.com:s=selector1];
-	ARC_REJECT(1.00)[cv is fail on i=2];
+X-Spamd-Result: default: False [-3.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[baylibre-com.20251104.gappssmtp.com:s=20251104];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10212-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[nxp.com:-];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10213-lists,dmaengine=lfdr.de];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[baylibre.com];
+	DKIM_TRACE(0.00)[baylibre-com.20251104.gappssmtp.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.961];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,bootlin.com:email]
+	RCPT_COUNT_SEVEN(0.00)[9];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,baylibre-com.20251104.gappssmtp.com:dkim]
 
-On Thu, Apr 30, 2026 at 11:49:33AM +0200, Benoît Monin wrote:
-> Implement dynamic linking of scatter/gather transfers to enable
-> chaining multiple DMA descriptors without stopping the channel.
-> This avoids waiting for the channel to go idle if there is another
-> transaction already issued.
->
-> Add fsl_edma_link_sg() to dynamically link the last TCD of a previously
-> submitted descriptor to the first TCD of a new descriptor by setting
-> the scatter/gather address and the E_SG flag, and keeping the channel
-> active by clearing the DREQ bit.
 
-Thank for your trying this, which I want to do long time ago.
+--h7rxs4abwv7pbrlb
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] dmaengine: Consistently define pci_device_ids using
+ named initializers
+MIME-Version: 1.0
 
-The key problem is
+Hello Andy,
 
-	how to guarratee safe when link to last TCD and DMA is working it?
-	if update last TCD's next pointer before DMA load it, it is good.
-	but, if update last TCD's next pointer after DMA load it. DMA engine
-	may stop.
+On Mon, May 04, 2026 at 05:09:55PM +0300, Andy Shevchenko wrote:
+> On Mon, May 04, 2026 at 03:55:00PM +0200, Uwe Kleine-K=F6nig (The Capable=
+ Hub) wrote:
+> > On Mon, May 04, 2026 at 01:29:12PM +0300, Andy Shevchenko wrote:
+> > > On Mon, May 04, 2026 at 12:20:06PM +0200, Uwe Kleine-K=F6nig (The Cap=
+able Hub) wrote:
+> > > > The .driver_data member of the various struct pci_device_id arrays =
+were
+> > > > initialized by list expressions. This isn't easily readable if you'=
+re
+> > > > not into PCI. Using named initializers is more explicit and thus ea=
+sier
+> > > > to parse. Also skip explicit assignments of 0 (which the compiler t=
+hen
+> > > > takes care of).
+> > > >=20
+> > > > This change doesn't introduce changes to the compiled pci_device_id
+> > > > arrays. Tested on x86 and arm64.
+> > >=20
+> > > HSU driver has different change ("Also" is a strong sign to the split=
+ required).
+> >=20
+> > HSU is in the category "skip explicit assignments of 0", so I think
+> > that's fine. I could be talked into splitting if that's what is wanted.
+>=20
+> Yes, please. I will Rb/Ack it immediately when standalone change.
+>=20
+> ...
+>=20
+> > > >  static const struct pci_device_id pch_dma_id_table[] =3D {
+> > > > -	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_8CH), 8 },
+> > > > -	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_4CH), 4 },
+> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA1_8CH), 8}, /* UART V=
+ideo */
+> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA2_8CH), 8}, /* PCMIF =
+SPI */
+> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA3_4CH), 4}, /* FPGA */
+> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA4_12CH), 12}, /* I2S =
+*/
+> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA1_4CH), 4}, /* UART */
+> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA2_4CH), 4}, /* Video =
+SPI */
+> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA3_4CH), 4}, /* Securi=
+ty */
+> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA4_4CH), 4}, /* FPGA */
+> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA1_8CH), 8}, /* UART */
+> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA2_4CH), 4}, /* SPI */
+> > > > -	{ 0, },
+> > > > +	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_8CH), .driver_da=
+ta =3D 8 },
+> > > > +	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_4CH), .driver_da=
+ta =3D 4 },
+> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA1_8CH), .driver_data =
+=3D 8 },		/* UART Video */
+> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA2_8CH), .driver_data =
+=3D 8 },		/* PCMIF SPI */
+> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA3_4CH), .driver_data =
+=3D 4 },		/* FPGA */
+> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA4_12CH), .driver_data=
+ =3D 12 },	/* I2S */
+> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA1_4CH), .driver_data =
+=3D 4 },		/* UART */
+> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA2_4CH), .driver_data =
+=3D 4 },		/* Video SPI */
+> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA3_4CH), .driver_data =
+=3D 4 },		/* Security */
+> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA4_4CH), .driver_data =
+=3D 4 },		/* FPGA */
+> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA1_8CH), .driver_data =
+=3D 8 },		/* UART */
+> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA2_4CH), .driver_data =
+=3D 4 },		/* SPI */
+> > > > +	{ },
+> > > >  };
+> > >=20
+> > > Use PCI_DEVICE_DATA() instead. Same may apply to DesignWare, but one =
+needs to
+> > > define the device IDs. I think I may help with that.
+> >=20
+> > I'm not a fan of PCI_DEVICE_DATA. While it could indeed be used to
+> > shorten the assignments here, it's less readable in my opinion.
+>=20
+> I'm not fun of these long unreadable lines with tons of repetitions :-)
 
-	how do you test it? and how much preformance improved?
+Seems to be subjective.
 
-Frank
+> > Compare
+> >=20
+> > 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_4CH), .driver_data =
+=3D 4 },
+> >=20
+> > with
+> >=20
+> > 	{ PCI_DEVICE_DATA(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_4CH, 4) },
+>=20
+> First of all, with
+>=20
+> 	{ PCI_DEVICE_DATA(INTEL, EG20T_PCH_DMA_4CH, 4) },
 
->
-> Linking is only done if the last TCD was set to disable the DMA channel,
-> to prevent corrupting cyclic transaction.
->
-> Update fsl_edma_xfer_desc() to avoid re-initializing the hardware when a
-> transfer is already in progress, allowing seamless chaining of descriptors.
->
-> Modify the transfer completion handler to check the DONE flag in the
-> channel CSR before marking the transfer complete. Since this flag is
-> only available on SoC with the split registers layout, we only link
-> transactions for DMA controllers flagged with FSL_EDMA_DRV_SPLIT_REG.
->
-> Add trace event for scatter/gather linking operations.
->
-> Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
-> ---
->  drivers/dma/fsl-edma-common.c | 64 ++++++++++++++++++++++++++++++++++++++++---
->  drivers/dma/fsl-edma-trace.h  |  5 ++++
->  2 files changed, 65 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-> index 26a5ecf493b9..7094c747defa 100644
-> --- a/drivers/dma/fsl-edma-common.c
-> +++ b/drivers/dma/fsl-edma-common.c
-> @@ -58,7 +58,10 @@ void fsl_edma_tx_chan_handler(struct fsl_edma_chan *fsl_chan)
->  		list_del(&fsl_chan->edesc->vdesc.node);
->  		vchan_cookie_complete(&fsl_chan->edesc->vdesc);
->  		fsl_chan->edesc = NULL;
-> -		fsl_chan->status = DMA_COMPLETE;
-> +		if (!(fsl_edma_drvflags(fsl_chan) & FSL_EDMA_DRV_SPLIT_REG) ||
-> +		    (edma_readl_chreg(fsl_chan, ch_csr) & EDMA_V3_CH_CSR_DONE)) {
-> +			fsl_chan->status = DMA_COMPLETE;
-> +		}
->  	} else {
->  		vchan_cyclic_callback(&fsl_chan->edesc->vdesc);
->  	}
-> @@ -673,6 +676,51 @@ struct dma_async_tx_descriptor *fsl_edma_prep_dma_cyclic(
->  	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
->  }
->
-> +static void fsl_edma_link_sg(struct fsl_edma_chan *fsl_chan, struct fsl_edma_desc *fsl_desc)
-> +{
-> +	u32 flags = fsl_edma_drvflags(fsl_chan);
-> +	struct virt_dma_desc *vdesc;
-> +	struct fsl_edma_desc *prev_desc;
-> +	struct fsl_edma_hw_tcd *last_tcd;
-> +	u16 csr;
-> +
-> +	if (!(flags & FSL_EDMA_DRV_SPLIT_REG))
-> +		return;
-> +
-> +	guard(spinlock_irqsave)(&fsl_chan->vchan.lock);
-> +
-> +	vdesc = list_last_entry_or_null(&fsl_chan->vchan.desc_issued,
-> +					struct virt_dma_desc, node);
-> +	if (!vdesc)
-> +		vdesc = list_last_entry_or_null(&fsl_chan->vchan.desc_submitted,
-> +						struct virt_dma_desc, node);
-> +	if (!vdesc)
-> +		return;
-> +
-> +	prev_desc = to_fsl_edma_desc(vdesc);
-> +	last_tcd = prev_desc->tcd[prev_desc->n_tcds - 1].vtcd;
-> +
-> +	csr = fsl_edma_get_tcd_to_cpu(fsl_chan, last_tcd, csr);
-> +	if (!(csr & EDMA_TCD_CSR_D_REQ))
-> +		return;
-> +
-> +	fsl_edma_set_tcd_to_le(fsl_chan, last_tcd, fsl_desc->tcd[0].ptcd, dlast_sga);
-> +
-> +	csr &= ~EDMA_TCD_CSR_D_REQ;
-> +	csr |= EDMA_TCD_CSR_E_SG;
-> +	fsl_edma_set_tcd_to_le(fsl_chan, last_tcd, csr, csr);
-> +
-> +	if (prev_desc == fsl_chan->edesc && prev_desc->n_tcds == 1) {
-> +		if (flags & FSL_EDMA_DRV_CLEAR_DONE_E_SG)
-> +			edma_writel_chreg(fsl_chan, edma_readl_chreg(fsl_chan, ch_csr), ch_csr);
-> +
-> +		edma_cp_tcd_to_reg(fsl_chan, last_tcd, dlast_sga);
-> +		edma_cp_tcd_to_reg(fsl_chan, last_tcd, csr);
-> +	}
-> +
-> +	trace_edma_link_sg(fsl_chan, last_tcd);
-> +}
-> +
->  struct dma_async_tx_descriptor *fsl_edma_prep_peripheral_dma_vec(
->  		struct dma_chan *chan, const struct dma_vec *vecs,
->  		size_t nb, enum dma_transfer_direction direction,
-> @@ -780,6 +828,9 @@ struct dma_async_tx_descriptor *fsl_edma_prep_peripheral_dma_vec(
->  		}
->  	}
->
-> +	if (!fsl_desc->iscyclic)
-> +		fsl_edma_link_sg(fsl_chan, fsl_desc);
-> +
->  	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
->  }
->
-> @@ -883,6 +934,8 @@ struct dma_async_tx_descriptor *fsl_edma_prep_slave_sg(
->  		}
->  	}
->
-> +	fsl_edma_link_sg(fsl_chan, fsl_desc);
-> +
->  	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
->  }
->
-> @@ -925,9 +978,12 @@ void fsl_edma_xfer_desc(struct fsl_edma_chan *fsl_chan)
->  	if (!vdesc)
->  		return;
->  	fsl_chan->edesc = to_fsl_edma_desc(vdesc);
-> -	fsl_edma_set_tcd_regs(fsl_chan, fsl_chan->edesc->tcd[0].vtcd);
-> -	fsl_edma_enable_request(fsl_chan);
-> -	fsl_chan->status = DMA_IN_PROGRESS;
-> +
-> +	if (fsl_chan->status != DMA_IN_PROGRESS) {
-> +		fsl_edma_set_tcd_regs(fsl_chan, fsl_chan->edesc->tcd[0].vtcd);
-> +		fsl_edma_enable_request(fsl_chan);
-> +		fsl_chan->status = DMA_IN_PROGRESS;
-> +	}
->  }
->
->  void fsl_edma_issue_pending(struct dma_chan *chan)
-> diff --git a/drivers/dma/fsl-edma-trace.h b/drivers/dma/fsl-edma-trace.h
-> index d3541301a247..ac319d2dbb90 100644
-> --- a/drivers/dma/fsl-edma-trace.h
-> +++ b/drivers/dma/fsl-edma-trace.h
-> @@ -119,6 +119,11 @@ DEFINE_EVENT(edma_log_tcd, edma_fill_tcd,
->  	TP_ARGS(chan, tcd)
->  );
->
-> +DEFINE_EVENT(edma_log_tcd, edma_link_sg,
-> +	     TP_PROTO(struct fsl_edma_chan *chan, void *tcd),
-> +	     TP_ARGS(chan, tcd)
-> +);
-> +
->  #endif
->
->  /* this part must be outside header guard */
->
-> --
-> 2.54.0
->
+Agreed. That doesn't considerably weaken my reasoning however.
+
+> > . For someone who doesn't know what PCI_DEVICE_DATA does, the latter is
+> > less understandable.
+>=20
+> Same applicable to many other macros. I don't consider this argument viab=
+le.
+
+Also agreed. But other bad macros don't justify using that (admittedly
+subjectively) bad PCI_DEVICE_DATA macro that mixes device identity
+(.vendor, .device, .subvendor and .subdevice) with a driver specific
+struct member.
+
+> > Also PCI_DEVICE_DATA has a cast which is something I want to get rid of.
+>=20
+> Yes, and you will get rid of in one place instead of tons of them.
+
+This would require another (subjectively bad) macro PCI_DEVICE_DATAPTR.
+I think I let someone else tackle that quest.
+
+Best regards
+Uwe
+
+--h7rxs4abwv7pbrlb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmn4y5gACgkQj4D7WH0S
+/k5j4gf7BzClYF7Qm/3avNqi1xld/TXdXt/woPDF/ZNusHkkGtBxNv2j7sUc14Ot
+FUrhi4CbqErQIHIrykpwygL1qxm09eb6AVSh7JCreGwu7bwoJEzY/2RqkCuW6D2U
+lS3ED8xga/xuLEVbqw2QowWU2oEHna6xZMMGp0oHr0/yGE16WxogPT5KUUHeBeaE
+szDnd4aoJHOOeKu9kWI7Yzp5TaOfHnL0hz5SIj9c/Lc7I1iOKGsAF1Tn0MWZJpNZ
+lt/WkfCNHIXwcFY9Hqzi2NuFmdaodD45c0VE5enZ6KNIPw5JSS43EEMZZFHnd+4V
+B+Lntso7Qdp6z95Pzo+aBBLzFZcnsg==
+=TGo4
+-----END PGP SIGNATURE-----
+
+--h7rxs4abwv7pbrlb--
 

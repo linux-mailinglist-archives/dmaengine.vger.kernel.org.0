@@ -1,593 +1,302 @@
-Return-Path: <dmaengine+bounces-10206-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10207-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aMZ8O7wO+GmTpQIAu9opvQ
-	(envelope-from <dmaengine+bounces-10206-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 04 May 2026 05:13:00 +0200
+	id MK5cOGN0+Gk9vgIAu9opvQ
+	(envelope-from <dmaengine+bounces-10207-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 04 May 2026 12:26:43 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59BD44B82B9
-	for <lists+dmaengine@lfdr.de>; Mon, 04 May 2026 05:12:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CD744BBB2F
+	for <lists+dmaengine@lfdr.de>; Mon, 04 May 2026 12:26:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 935DF300B608
-	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2026 03:12:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CC09B302BEBB
+	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2026 10:20:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F38BF16CD33;
-	Mon,  4 May 2026 03:12:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26C5439185A;
+	Mon,  4 May 2026 10:20:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5yUS0/1"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="AxO9ZPcw"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6AE17C203
-	for <dmaengine@vger.kernel.org>; Mon,  4 May 2026 03:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49994391E76
+	for <dmaengine@vger.kernel.org>; Mon,  4 May 2026 10:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777864352; cv=none; b=saCeMcsQxG6beQmYSe3l0fw7oIdnPvYJsemexHse6x6i1eRcc+Zlz5/vhRVQRP32Pxdn5WizPoXLwyFeGFB4p9nUFAahEm5p8T9lG6E6P7ff+NlnbxrM5ZCarF7KOwhFuPACI9KwN2dero0tUj8zsgDg13Bd9NrVHdN4s+3kXxs=
+	t=1777890020; cv=none; b=c8KJBcBG1bYDc+RhlLK1BdVfdqlagWM9fAcbqke5Ze0LGo7QF60oUY4Eim7OTHeKL+nMwGKTXV/b8nDzxiZIWCn2gkzrIENbND2GYqtuEAZPUgAqydcOjmKr0Kgw84R4LYlXCgCmCKYVxdjTyA6v/K8QmCFzTHyHf73BY9ffn2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777864352; c=relaxed/simple;
-	bh=PzBoLGt+HSzA8hrxic0tw2YDmkzFCVSkTbJLdJVcrIs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JTriYMcSTPiEhVOsn8Wb/KS44W0tTRiNKNyYXMNtcRs9zBpplEDPP4MeZF8m0LOied7DPXPsLslpZTbDHOLxmnkn8l6QTjToCy95VyIaQw1CDxAZ7ao4c3PNtIwsOOEbfJUO7uubPdMeRYPxX5Ucdg98/J1dHkgmb80saFJgz6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i5yUS0/1; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-50e594413c2so22637151cf.0
-        for <dmaengine@vger.kernel.org>; Sun, 03 May 2026 20:12:30 -0700 (PDT)
+	s=arc-20240116; t=1777890020; c=relaxed/simple;
+	bh=s/6N5gB8DGjoEg4dSFAL94hJC0H4w9laOHrkxskMoWo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YTLPcGJsaVFMnegJwuR/Yo7NuP+3eeoxwOeUED1lyBGsEb6Z98sA7KJ5saO4/47+Vr7pcjO0FaL5G+4leJIyhzIaOfZimdOTJuHEKaNkyz0qmiEdOLBAs6TMOd1jzVKorRJImH4oCuuvO9dypsYnb01XpmGtAqc2wmbzBH/jcwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=AxO9ZPcw; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-488a14c31eeso28287365e9.0
+        for <dmaengine@vger.kernel.org>; Mon, 04 May 2026 03:20:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777864350; x=1778469150; darn=vger.kernel.org;
+        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1777890016; x=1778494816; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ix64vFLTMg1zfqNmmDku6bMK7XtzXkWd5VZgOslz+04=;
-        b=i5yUS0/1h49THU8NwjqNdiORYWbIHKP1wPBLTadgua3Y5MitB1JeJ5yCnlF/4RyI58
-         czlECQ+ZCSPmjuMUx/q1IFvZTd5eQTF1r0Jjk4dlxCMOkh3/QL9UDWnfUs7cpf9qRX33
-         hsHRlOYkFkgElxDnPi7lqRhWRomsWfuHV45F/ZF29RloZsaWLf0X9cqf8fk3o/DtyJ70
-         GAj+ZntA5I2QZTDHkRVhOWoRFUhmX8k40T14HoM3ZXtsRPoJJ2Eg0uqmZ+J1hlOJUrLl
-         EJMJP9xvSkGqa7JT6Sq2RquxOAeziL3bqbsuxCj2ca8uM7QRKWu0zxLeHjE5Cme2YWtw
-         lu3A==
+        bh=LyhQFJnZEJaCueKPpnDeICsuB1xZ0J96lBFz4FcGpak=;
+        b=AxO9ZPcwBTLcHxDqPcG3peL+IOsqRkgTaNhGppgRrmS/A+EQOvMNduj0bKvLnxPF5S
+         C06ZrDY74rVJ8bdJX7NTUsxfrXXNFfl0jOEeB3QgH1oEY+nLSVkkh9EbSxaM470Mp8S5
+         8TupZIA8GSMaIeIB0NBvGJNIguW+1pIkcOI3ZDw/1gbMmn9tx2EYCF2AX5q1PFmxU2eW
+         VtrwADYQgUCFpfaCo2WhiU/IA7wwhI6/Wf3hovcztWBBRTKIMo6ijR4hOEeWxsuTkCfj
+         an4J4buz691gngoVWVEIL1Zlvz1IVBXcU0K7nkYpmb79MKVjbse27z4nUGkmOLo/ZoZk
+         QIDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777864350; x=1778469150;
+        d=1e100.net; s=20251104; t=1777890016; x=1778494816;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ix64vFLTMg1zfqNmmDku6bMK7XtzXkWd5VZgOslz+04=;
-        b=RJEUPrr3iEDSyb7Ug96NOEJ+Ojyn4XzBBfdZFUjrRlY/f0PU6bos2Uxnkh0YcXPiHG
-         /2ch1nhQsWTGXEhw5jYZsvhyvqu0Ckf9fb97TBjrNa8SJUxtgiQv2xomTa74yHpwmdkR
-         9+zAe0sT8ONMe9paQxSDwpHYxePuSkPqaeiF3ZsaW+D4Ogj0zVrrCZqTF9Amv5k/7NbD
-         cMolY0FHcrfcnIxBuezY/4RAa/ots0BUU3Rsyenw1FR8rOledN/EuSS86RFNnU0u12eI
-         6Gkp7xUO369fs2E4Luewr5P8xlgBS0x8hbc1q0jeagZkuB+iBr45U4rw5cSllV797hml
-         WXhQ==
-X-Gm-Message-State: AOJu0YxmZJu0/JABPN4eDAgCo0594aaUSO+uiPNyCDPLI0OiyRRhv77a
-	1YZKpb2/BiwIfpiyCx/AUXz1j7OXCWf24fIGSTn7xVum2JiQPBAgXo7SG6eiNQ==
-X-Gm-Gg: AeBDieuMJnnScqjIR08tgOOW7rwXQEJtsWk9jP0/gt5H4U8wSbGEJnZDWwJKJrTDt+I
-	149JpY9y8POiUW5d12bMnIAe6/ZJhbDoOBvc9yukRAo3xvLJCvHyCQmjwdM0Gpx4GdkSjE291sO
-	91/pAmArsuhmRrEDFWsBC4W0XcLFW9TVyU+Rd9ykCI2WPBi6/YTS/EAhwHsIhi0oZ/tmm4EGOKw
-	see0mUMwWtl4Ci2j40lwKHqIGydF/LQBVGBeps+NMIIbOpfIPH6RiPKtEUft2QuxESlGZqSF5e7
-	XDpD1OIZ8rA9jjpxERWouSgwPFxJ/KpxsLPDWgDrH7CHO+bZRXQ7ttbauwe/RKPXclhkMnR827V
-	YXt0dTzb3pOVXzNZx5U+NvjwedzwTeaQFYj0uG2OEFaaufwi10SY3ZrDT3IDV9FhUAlD/wzJ3+r
-	XYFes041K9C7tc/LjZGEWHyEZ1XKIr1ZRCMQkXOIu1DiOf2mf13ibvqLkcFxw2QMfNR9nzjm3Zk
-	nkTfMKSLnQzF8+isIcIlFg7kH/Y4VYZJQP1f8tiGhlNJw==
-X-Received: by 2002:a05:622a:15cf:b0:50f:c9a2:1643 with SMTP id d75a77b69052e-5104b484d42mr108220031cf.11.1777864349633;
-        Sun, 03 May 2026 20:12:29 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51040ba8acdsm86540591cf.31.2026.05.03.20.12.26
+        bh=LyhQFJnZEJaCueKPpnDeICsuB1xZ0J96lBFz4FcGpak=;
+        b=KUS+SaUjpOOrEmVETprBJEqbqOqbhodrjMtzNsOLLftlT7huPUcl54FHgZlS0Md9bi
+         U+alfB0pGTXlMm4w9WIivOdk+Qu+o/SBAIgxIHFJsITCMjQlWYCV2CGnKTZ47hFC21wN
+         WmqIsDFnoOPj2TvFKVHXMEgW8eMOv7DEY6MGCIHiGCX/iIV642eqEy8viX61fgp3pQOE
+         I6zwLxRHsSmijUJVy8jXxTbF1EzvRvsyJsxuRGRHCa7OZmuFYU63edGad31RvEPUy3Em
+         w0hjCrXAi+IwK8OHP+Cuf45n3vt45NoCNEAhP+3CUAPGABjEpO4fhPRW9fm0iFGmHCnZ
+         kDHg==
+X-Forwarded-Encrypted: i=1; AFNElJ/m9imQciA/G4MlOcN2b1VhfdK7w9eDTUGdzuTXNSxY5UC0rYU3lrwUKfDZWdQaaUQ5z3pBqV+L8tE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdKCTXYxqjfo78FEzL5WQ/J2helgLcYqu4oIzeB1ffN+u8ZO82
+	oYp0ot7hBhKI4JpHryBR+HfjElCppSnbKof3TYAMU57bRpnualbOBlfOGdjfl4h1eS0R/pE++Qg
+	DzMYM
+X-Gm-Gg: AeBDieuLE3koeiGj2EhLUAehOQEFim/K7zSE0FuElXgo+Sa86SDmMLNnvh3gjQeIXLh
+	pT5Wf3kTb88CdBU2DMNeDH8gaI+lFo055TkWnVD6pC6cIpKjrNrhJQNWedq4z5PzigDjM5OqDLn
+	4SdsQkReQqdwofR0RUCtvLRzmrsClmbTDTJZx8Ifp6djsErDiRT54a6bY3tS886P0zlBzQzinB0
+	zZEhavrBobHOq1qalVRIv+NbxNnUYszWU/78xr2VP1QV9CZvnIqfjfLcY6ZYKXPPTgxqTrqFrgO
+	HHHqsk3ZcUtW+4/UEwrMmu2G9CTW3RhKxiyZcpg8ibHTuj9neKp9Vk9peqpAs36s6Y84jKqnIyp
+	5mPjlE+3SdDeRBEcWYnCBB/APqp/GPbUSYgVZlc4V4u6BvTn6bMDfmADTUCcO80nujrHftFSoGp
+	Dqa7L2LKJ1jz1Y9AozpLfa0Tp4FdmJaKrsTiRyuFt3rC/QZyNOOTdJit8WTJkWp1GrAkacLM912
+	2FXgonnfmyQw/0XWew7AbaTeg==
+X-Received: by 2002:a05:600c:6215:b0:47e:e2eb:bc22 with SMTP id 5b1f17b1804b1-48a988a9c49mr134437975e9.5.1777890015677;
+        Mon, 04 May 2026 03:20:15 -0700 (PDT)
+Received: from localhost (p200300f65f114e08f5a4175dadf07882.dip0.t-ipconnect.de. [2003:f6:5f11:4e08:f5a4:175d:adf0:7882])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-48a81ed6bafsm561197875e9.2.2026.05.04.03.20.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2026 20:12:28 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>,
+        Mon, 04 May 2026 03:20:15 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Markus Schneider-Pargmann <msp@baylibre.com>,
+	Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
 	Frank Li <Frank.Li@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-arm-kernel@lists.infradead.org (moderated list:TEXAS INSTRUMENTS' SYSTEM CONTROL INTERFACE (TI...),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCHv2] firmware: ti_sci: simplify resource allocation
-Date: Sun,  3 May 2026 20:12:09 -0700
-Message-ID: <20260504031209.618949-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: Consistently define pci_device_ids using named initializers
+Date: Mon,  4 May 2026 12:20:06 +0200
+Message-ID: <20260504102008.1996139-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7943; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=s/6N5gB8DGjoEg4dSFAL94hJC0H4w9laOHrkxskMoWo=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBp+HLYOV/ZyjERRcweUg8Jts3cQoG6txIhaCre1 PXO8S/4u0yJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCafhy2AAKCRCPgPtYfRL+ TqAjB/sG9YsoRP2CSPOdFBEX96+ohj/sPR1GMwrTKgvFhAjTZyfr3o/e3UPmIklNTsgx2Ur2/En tt48/dbTkPPuyHBnpRA8R0/LYdGRug8MrLLF0gMMh+DXlC14m+s/ioHmVhZC9eFlDXdVWsfGzC3 AEpVsoG7SwhVptQoNiS30y8hAWJzrOtCAOc/w/EvpWC4+4cBjTscTMfhANO2LAXMwo7wdvkNIpz GZxZirkhsWTrOddE2AVmk3uyo44Cq+hlteRQumYScKUixhZ6Nwkh1iEUOm0iV3zoAw2xFudRwNW yccaNoF4Zm3yZJr4cBatR6/mBPFEAiKUZtuMcBSPePuHvu7U
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 59BD44B82B9
+X-Rspamd-Queue-Id: 3CD744BBB2F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_DKIM_ALLOW(-0.20)[baylibre-com.20251104.gappssmtp.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,ti.com,vger.kernel.org,lists.infradead.org];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10206-lists,dmaengine=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10207-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[baylibre.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[baylibre-com.20251104.gappssmtp.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	NEURAL_HAM(-0.00)[-0.995];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,baylibre-com.20251104.gappssmtp.com:dkim]
 
-Use a flexible array member to combine allocations.
+The .driver_data member of the various struct pci_device_id arrays were
+initialized by list expressions. This isn't easily readable if you're
+not into PCI. Using named initializers is more explicit and thus easier
+to parse. Also skip explicit assignments of 0 (which the compiler then
+takes care of).
 
-Add __counted_by for extra runtime analysis.
+This change doesn't introduce changes to the compiled pci_device_id
+arrays. Tested on x86 and arm64.
 
-Fixup k3-udma as well since ti_sci_resource is used there as well and
-needs fixing up to use kzalloc_flex.
-
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Signed-off-by: Uwe Kleine-König (The Capable Hub) <u.kleine-koenig@baylibre.com>
 ---
- v2: add k3-udma fixes.
- drivers/dma/ti/k3-udma.c               | 180 +++++++++++++------------
- drivers/firmware/ti_sci.c              |   7 +-
- include/linux/soc/ti/ti_sci_protocol.h |   2 +-
- 3 files changed, 98 insertions(+), 91 deletions(-)
+Hello,
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index c964ebfcf3b6..ad6c50d0b844 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -4584,9 +4584,10 @@ static int udma_setup_resources(struct udma_dev *ud)
- {
- 	int ret, i, j;
- 	struct device *dev = ud->dev;
--	struct ti_sci_resource *rm_res, irq_res;
-+	struct ti_sci_resource *rm_res, *irq_res;
- 	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
- 	u32 cap3;
-+	u16 sets;
- 
- 	/* Set up the throughput level start indexes */
- 	cap3 = udma_read(ud->mmrs[MMR_GCFG], 0x2c);
-@@ -4664,64 +4665,67 @@ static int udma_setup_resources(struct udma_dev *ud)
- 	rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
- 	if (IS_ERR(rm_res)) {
- 		bitmap_zero(ud->tchan_map, ud->tchan_cnt);
--		irq_res.sets = 1;
-+		sets = 1;
- 	} else {
- 		bitmap_fill(ud->tchan_map, ud->tchan_cnt);
- 		for (i = 0; i < rm_res->sets; i++)
- 			udma_mark_resource_ranges(ud, ud->tchan_map,
- 						  &rm_res->desc[i], "tchan");
--		irq_res.sets = rm_res->sets;
-+		sets = rm_res->sets;
- 	}
- 
- 	/* rchan and matching default flow ranges */
- 	rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
- 	if (IS_ERR(rm_res)) {
- 		bitmap_zero(ud->rchan_map, ud->rchan_cnt);
--		irq_res.sets++;
-+		sets++;
- 	} else {
- 		bitmap_fill(ud->rchan_map, ud->rchan_cnt);
- 		for (i = 0; i < rm_res->sets; i++)
- 			udma_mark_resource_ranges(ud, ud->rchan_map,
- 						  &rm_res->desc[i], "rchan");
--		irq_res.sets += rm_res->sets;
-+		sets += rm_res->sets;
- 	}
- 
--	irq_res.desc = kzalloc_objs(*irq_res.desc, irq_res.sets);
--	if (!irq_res.desc)
-+	irq_res = kzalloc_flex(*irq_res, desc, sets);
-+	if (!irq_res)
- 		return -ENOMEM;
-+
-+	irq_res->sets = sets;
-+
- 	rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
- 	if (IS_ERR(rm_res)) {
--		irq_res.desc[0].start = 0;
--		irq_res.desc[0].num = ud->tchan_cnt;
-+		irq_res->desc[0].start = 0;
-+		irq_res->desc[0].num = ud->tchan_cnt;
- 		i = 1;
- 	} else {
- 		for (i = 0; i < rm_res->sets; i++) {
--			irq_res.desc[i].start = rm_res->desc[i].start;
--			irq_res.desc[i].num = rm_res->desc[i].num;
--			irq_res.desc[i].start_sec = rm_res->desc[i].start_sec;
--			irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
-+			irq_res->desc[i].start = rm_res->desc[i].start;
-+			irq_res->desc[i].num = rm_res->desc[i].num;
-+			irq_res->desc[i].start_sec = rm_res->desc[i].start_sec;
-+			irq_res->desc[i].num_sec = rm_res->desc[i].num_sec;
- 		}
- 	}
- 	rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
- 	if (IS_ERR(rm_res)) {
--		irq_res.desc[i].start = 0;
--		irq_res.desc[i].num = ud->rchan_cnt;
-+		irq_res->desc[i].start = 0;
-+		irq_res->desc[i].num = ud->rchan_cnt;
- 	} else {
- 		for (j = 0; j < rm_res->sets; j++, i++) {
- 			if (rm_res->desc[j].num) {
--				irq_res.desc[i].start = rm_res->desc[j].start +
-+				irq_res->desc[i].start = rm_res->desc[j].start +
- 						ud->soc_data->oes.udma_rchan;
--				irq_res.desc[i].num = rm_res->desc[j].num;
-+				irq_res->desc[i].num = rm_res->desc[j].num;
- 			}
- 			if (rm_res->desc[j].num_sec) {
--				irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
-+				irq_res->desc[i].start_sec = rm_res->desc[j].start_sec +
- 						ud->soc_data->oes.udma_rchan;
--				irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
-+				irq_res->desc[i].num_sec = rm_res->desc[j].num_sec;
- 			}
- 		}
- 	}
--	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
--	kfree(irq_res.desc);
-+	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, irq_res);
-+	kfree(irq_res);
- 	if (ret) {
- 		dev_err(ud->dev, "Failed to allocate MSI interrupts\n");
- 		return ret;
-@@ -4746,9 +4750,10 @@ static int bcdma_setup_resources(struct udma_dev *ud)
- {
- 	int ret, i, j;
- 	struct device *dev = ud->dev;
--	struct ti_sci_resource *rm_res, irq_res;
-+	struct ti_sci_resource *rm_res, *irq_res;
- 	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
- 	const struct udma_oes_offsets *oes = &ud->soc_data->oes;
-+	u16 sets;
- 	u32 cap;
- 
- 	/* Set up the throughput level start indexes */
-@@ -4828,21 +4833,21 @@ static int bcdma_setup_resources(struct udma_dev *ud)
- 						    (char *)range_names[i]);
- 	}
- 
--	irq_res.sets = 0;
-+	sets = 0;
- 
- 	/* bchan ranges */
- 	if (ud->bchan_cnt) {
- 		rm_res = tisci_rm->rm_ranges[RM_RANGE_BCHAN];
- 		if (IS_ERR(rm_res)) {
- 			bitmap_zero(ud->bchan_map, ud->bchan_cnt);
--			irq_res.sets++;
-+			sets++;
- 		} else {
- 			bitmap_fill(ud->bchan_map, ud->bchan_cnt);
- 			for (i = 0; i < rm_res->sets; i++)
- 				udma_mark_resource_ranges(ud, ud->bchan_map,
- 							  &rm_res->desc[i],
- 							  "bchan");
--			irq_res.sets += rm_res->sets;
-+			sets += rm_res->sets;
- 		}
- 	}
- 
-@@ -4851,14 +4856,14 @@ static int bcdma_setup_resources(struct udma_dev *ud)
- 		rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
- 		if (IS_ERR(rm_res)) {
- 			bitmap_zero(ud->tchan_map, ud->tchan_cnt);
--			irq_res.sets += 2;
-+			sets += 2;
- 		} else {
- 			bitmap_fill(ud->tchan_map, ud->tchan_cnt);
- 			for (i = 0; i < rm_res->sets; i++)
- 				udma_mark_resource_ranges(ud, ud->tchan_map,
- 							  &rm_res->desc[i],
- 							  "tchan");
--			irq_res.sets += rm_res->sets * 2;
-+			sets += rm_res->sets * 2;
- 		}
- 	}
- 
-@@ -4867,36 +4872,39 @@ static int bcdma_setup_resources(struct udma_dev *ud)
- 		rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
- 		if (IS_ERR(rm_res)) {
- 			bitmap_zero(ud->rchan_map, ud->rchan_cnt);
--			irq_res.sets += 2;
-+			sets += 2;
- 		} else {
- 			bitmap_fill(ud->rchan_map, ud->rchan_cnt);
- 			for (i = 0; i < rm_res->sets; i++)
- 				udma_mark_resource_ranges(ud, ud->rchan_map,
- 							  &rm_res->desc[i],
- 							  "rchan");
--			irq_res.sets += rm_res->sets * 2;
-+			sets += rm_res->sets * 2;
- 		}
- 	}
- 
--	irq_res.desc = kzalloc_objs(*irq_res.desc, irq_res.sets);
--	if (!irq_res.desc)
-+	irq_res = kzalloc_flex(*irq_res, desc, sets);
-+	if (!irq_res)
- 		return -ENOMEM;
-+
-+	irq_res->sets = sets;
-+
- 	if (ud->bchan_cnt) {
- 		rm_res = tisci_rm->rm_ranges[RM_RANGE_BCHAN];
- 		if (IS_ERR(rm_res)) {
--			irq_res.desc[0].start = oes->bcdma_bchan_ring;
--			irq_res.desc[0].num = ud->bchan_cnt;
-+			irq_res->desc[0].start = oes->bcdma_bchan_ring;
-+			irq_res->desc[0].num = ud->bchan_cnt;
- 			i = 1;
- 		} else {
- 			for (i = 0; i < rm_res->sets; i++) {
--				irq_res.desc[i].start = rm_res->desc[i].start +
-+				irq_res->desc[i].start = rm_res->desc[i].start +
- 							oes->bcdma_bchan_ring;
--				irq_res.desc[i].num = rm_res->desc[i].num;
-+				irq_res->desc[i].num = rm_res->desc[i].num;
- 
- 				if (rm_res->desc[i].num_sec) {
--					irq_res.desc[i].start_sec = rm_res->desc[i].start_sec +
-+					irq_res->desc[i].start_sec = rm_res->desc[i].start_sec +
- 									oes->bcdma_bchan_ring;
--					irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
-+					irq_res->desc[i].num_sec = rm_res->desc[i].num_sec;
- 				}
- 			}
- 		}
-@@ -4907,28 +4915,28 @@ static int bcdma_setup_resources(struct udma_dev *ud)
- 	if (ud->tchan_cnt) {
- 		rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
- 		if (IS_ERR(rm_res)) {
--			irq_res.desc[i].start = oes->bcdma_tchan_data;
--			irq_res.desc[i].num = ud->tchan_cnt;
--			irq_res.desc[i + 1].start = oes->bcdma_tchan_ring;
--			irq_res.desc[i + 1].num = ud->tchan_cnt;
-+			irq_res->desc[i].start = oes->bcdma_tchan_data;
-+			irq_res->desc[i].num = ud->tchan_cnt;
-+			irq_res->desc[i + 1].start = oes->bcdma_tchan_ring;
-+			irq_res->desc[i + 1].num = ud->tchan_cnt;
- 			i += 2;
- 		} else {
- 			for (j = 0; j < rm_res->sets; j++, i += 2) {
--				irq_res.desc[i].start = rm_res->desc[j].start +
-+				irq_res->desc[i].start = rm_res->desc[j].start +
- 							oes->bcdma_tchan_data;
--				irq_res.desc[i].num = rm_res->desc[j].num;
-+				irq_res->desc[i].num = rm_res->desc[j].num;
- 
--				irq_res.desc[i + 1].start = rm_res->desc[j].start +
-+				irq_res->desc[i + 1].start = rm_res->desc[j].start +
- 							oes->bcdma_tchan_ring;
--				irq_res.desc[i + 1].num = rm_res->desc[j].num;
-+				irq_res->desc[i + 1].num = rm_res->desc[j].num;
- 
- 				if (rm_res->desc[j].num_sec) {
--					irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
-+					irq_res->desc[i].start_sec = rm_res->desc[j].start_sec +
- 									oes->bcdma_tchan_data;
--					irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
--					irq_res.desc[i + 1].start_sec = rm_res->desc[j].start_sec +
-+					irq_res->desc[i].num_sec = rm_res->desc[j].num_sec;
-+					irq_res->desc[i + 1].start_sec = rm_res->desc[j].start_sec +
- 									oes->bcdma_tchan_ring;
--					irq_res.desc[i + 1].num_sec = rm_res->desc[j].num_sec;
-+					irq_res->desc[i + 1].num_sec = rm_res->desc[j].num_sec;
- 				}
- 			}
- 		}
-@@ -4936,35 +4944,35 @@ static int bcdma_setup_resources(struct udma_dev *ud)
- 	if (ud->rchan_cnt) {
- 		rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
- 		if (IS_ERR(rm_res)) {
--			irq_res.desc[i].start = oes->bcdma_rchan_data;
--			irq_res.desc[i].num = ud->rchan_cnt;
--			irq_res.desc[i + 1].start = oes->bcdma_rchan_ring;
--			irq_res.desc[i + 1].num = ud->rchan_cnt;
-+			irq_res->desc[i].start = oes->bcdma_rchan_data;
-+			irq_res->desc[i].num = ud->rchan_cnt;
-+			irq_res->desc[i + 1].start = oes->bcdma_rchan_ring;
-+			irq_res->desc[i + 1].num = ud->rchan_cnt;
- 			i += 2;
- 		} else {
- 			for (j = 0; j < rm_res->sets; j++, i += 2) {
--				irq_res.desc[i].start = rm_res->desc[j].start +
-+				irq_res->desc[i].start = rm_res->desc[j].start +
- 							oes->bcdma_rchan_data;
--				irq_res.desc[i].num = rm_res->desc[j].num;
-+				irq_res->desc[i].num = rm_res->desc[j].num;
- 
--				irq_res.desc[i + 1].start = rm_res->desc[j].start +
-+				irq_res->desc[i + 1].start = rm_res->desc[j].start +
- 							oes->bcdma_rchan_ring;
--				irq_res.desc[i + 1].num = rm_res->desc[j].num;
-+				irq_res->desc[i + 1].num = rm_res->desc[j].num;
- 
- 				if (rm_res->desc[j].num_sec) {
--					irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
-+					irq_res->desc[i].start_sec = rm_res->desc[j].start_sec +
- 									oes->bcdma_rchan_data;
--					irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
--					irq_res.desc[i + 1].start_sec = rm_res->desc[j].start_sec +
-+					irq_res->desc[i].num_sec = rm_res->desc[j].num_sec;
-+					irq_res->desc[i + 1].start_sec = rm_res->desc[j].start_sec +
- 									oes->bcdma_rchan_ring;
--					irq_res.desc[i + 1].num_sec = rm_res->desc[j].num_sec;
-+					irq_res->desc[i + 1].num_sec = rm_res->desc[j].num_sec;
- 				}
- 			}
- 		}
- 	}
- 
--	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
--	kfree(irq_res.desc);
-+	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, irq_res);
-+	kfree(irq_res);
- 	if (ret) {
- 		dev_err(ud->dev, "Failed to allocate MSI interrupts\n");
- 		return ret;
-@@ -4977,10 +4985,11 @@ static int pktdma_setup_resources(struct udma_dev *ud)
- {
- 	int ret, i, j;
- 	struct device *dev = ud->dev;
--	struct ti_sci_resource *rm_res, irq_res;
-+	struct ti_sci_resource *rm_res, *irq_res;
- 	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
- 	const struct udma_oes_offsets *oes = &ud->soc_data->oes;
- 	u32 cap3;
-+	u16 sets;
- 
- 	/* Set up the throughput level start indexes */
- 	cap3 = udma_read(ud->mmrs[MMR_GCFG], 0x2c);
-@@ -5057,13 +5066,13 @@ static int pktdma_setup_resources(struct udma_dev *ud)
- 	if (IS_ERR(rm_res)) {
- 		/* all rflows are assigned exclusively to Linux */
- 		bitmap_zero(ud->rflow_in_use, ud->rflow_cnt);
--		irq_res.sets = 1;
-+		sets = 1;
- 	} else {
- 		bitmap_fill(ud->rflow_in_use, ud->rflow_cnt);
- 		for (i = 0; i < rm_res->sets; i++)
- 			udma_mark_resource_ranges(ud, ud->rflow_in_use,
- 						  &rm_res->desc[i], "rflow");
--		irq_res.sets = rm_res->sets;
-+		sets = rm_res->sets;
- 	}
- 
- 	/* tflow ranges */
-@@ -5071,55 +5080,58 @@ static int pktdma_setup_resources(struct udma_dev *ud)
- 	if (IS_ERR(rm_res)) {
- 		/* all tflows are assigned exclusively to Linux */
- 		bitmap_zero(ud->tflow_map, ud->tflow_cnt);
--		irq_res.sets++;
-+		sets++;
- 	} else {
- 		bitmap_fill(ud->tflow_map, ud->tflow_cnt);
- 		for (i = 0; i < rm_res->sets; i++)
- 			udma_mark_resource_ranges(ud, ud->tflow_map,
- 						  &rm_res->desc[i], "tflow");
--		irq_res.sets += rm_res->sets;
-+		sets += rm_res->sets;
- 	}
- 
--	irq_res.desc = kzalloc_objs(*irq_res.desc, irq_res.sets);
--	if (!irq_res.desc)
-+	irq_res = kzalloc_flex(*irq_res, desc, sets);
-+	if (!irq_res)
- 		return -ENOMEM;
-+
-+	irq_res->sets = sets;
-+
- 	rm_res = tisci_rm->rm_ranges[RM_RANGE_TFLOW];
- 	if (IS_ERR(rm_res)) {
--		irq_res.desc[0].start = oes->pktdma_tchan_flow;
--		irq_res.desc[0].num = ud->tflow_cnt;
-+		irq_res->desc[0].start = oes->pktdma_tchan_flow;
-+		irq_res->desc[0].num = ud->tflow_cnt;
- 		i = 1;
- 	} else {
- 		for (i = 0; i < rm_res->sets; i++) {
--			irq_res.desc[i].start = rm_res->desc[i].start +
-+			irq_res->desc[i].start = rm_res->desc[i].start +
- 						oes->pktdma_tchan_flow;
--			irq_res.desc[i].num = rm_res->desc[i].num;
-+			irq_res->desc[i].num = rm_res->desc[i].num;
- 
- 			if (rm_res->desc[i].num_sec) {
--				irq_res.desc[i].start_sec = rm_res->desc[i].start_sec +
-+				irq_res->desc[i].start_sec = rm_res->desc[i].start_sec +
- 								oes->pktdma_tchan_flow;
--				irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
-+				irq_res->desc[i].num_sec = rm_res->desc[i].num_sec;
- 			}
- 		}
- 	}
- 	rm_res = tisci_rm->rm_ranges[RM_RANGE_RFLOW];
- 	if (IS_ERR(rm_res)) {
--		irq_res.desc[i].start = oes->pktdma_rchan_flow;
--		irq_res.desc[i].num = ud->rflow_cnt;
-+		irq_res->desc[i].start = oes->pktdma_rchan_flow;
-+		irq_res->desc[i].num = ud->rflow_cnt;
- 	} else {
- 		for (j = 0; j < rm_res->sets; j++, i++) {
--			irq_res.desc[i].start = rm_res->desc[j].start +
-+			irq_res->desc[i].start = rm_res->desc[j].start +
- 						oes->pktdma_rchan_flow;
--			irq_res.desc[i].num = rm_res->desc[j].num;
-+			irq_res->desc[i].num = rm_res->desc[j].num;
- 
- 			if (rm_res->desc[j].num_sec) {
--				irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
-+				irq_res->desc[i].start_sec = rm_res->desc[j].start_sec +
- 								oes->pktdma_rchan_flow;
--				irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
-+				irq_res->desc[i].num_sec = rm_res->desc[j].num_sec;
- 			}
- 		}
- 	}
--	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
--	kfree(irq_res.desc);
-+	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, irq_res);
-+	kfree(irq_res);
- 	if (ret) {
- 		dev_err(ud->dev, "Failed to allocate MSI interrupts\n");
- 		return ret;
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index e027a2bd8f26..04d99c1fafa1 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -3574,16 +3574,11 @@ devm_ti_sci_get_resource_sets(const struct ti_sci_handle *handle,
- 	bool valid_set = false;
- 	int i, ret, res_count;
- 
--	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
-+	res = devm_kzalloc(dev, struct_size(res, desc, sets), GFP_KERNEL);
- 	if (!res)
- 		return ERR_PTR(-ENOMEM);
- 
- 	res->sets = sets;
--	res->desc = devm_kcalloc(dev, res->sets, sizeof(*res->desc),
--				 GFP_KERNEL);
--	if (!res->desc)
--		return ERR_PTR(-ENOMEM);
--
- 	for (i = 0; i < res->sets; i++) {
- 		ret = handle->ops.rm_core_ops.get_range(handle, dev_id,
- 							sub_types[i],
-diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-index fd104b666836..7632bb11c862 100644
---- a/include/linux/soc/ti/ti_sci_protocol.h
-+++ b/include/linux/soc/ti/ti_sci_protocol.h
-@@ -599,7 +599,7 @@ struct ti_sci_handle {
- struct ti_sci_resource {
- 	u16 sets;
- 	raw_spinlock_t lock;
--	struct ti_sci_resource_desc *desc;
-+	struct ti_sci_resource_desc desc[] __counted_by(sets);
+The secret plan is to make struct pci_device_id::driver_data an
+anonymous union (similar to
+https://lore.kernel.org/all/cover.1776579304.git.u.kleine-koenig@baylibre.com/)
+and that requires named initializers. But it's also a nice cleanup on
+its own.
+
+The anonymous union will allow changes like the following:
+
+-	{ PCI_VDEVICE(INTEL, 0x0827), .driver_data = (kernel_ulong_t)&dw_dma_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x0827), .driver_data_ptr = &dw_dma_chip_pdata },
+
+(together with the respective change in the code when the value is
+used).  This gets rid of a bunch of casts and thus slightly improving
+type safety.
+
+Best regards
+Uwe
+---
+ drivers/dma/amd/ptdma/ptdma-pci.c  |  4 ++--
+ drivers/dma/dw-edma/dw-edma-pcie.c |  2 +-
+ drivers/dma/dw/pci.c               | 22 +++++++++++-----------
+ drivers/dma/hsu/pci.c              |  4 ++--
+ drivers/dma/pch_dma.c              | 26 +++++++++++++-------------
+ 5 files changed, 29 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/dma/amd/ptdma/ptdma-pci.c b/drivers/dma/amd/ptdma/ptdma-pci.c
+index 22739ff0c3c5..0b226bec950c 100644
+--- a/drivers/dma/amd/ptdma/ptdma-pci.c
++++ b/drivers/dma/amd/ptdma/ptdma-pci.c
+@@ -223,9 +223,9 @@ static const struct pt_dev_vdata dev_vdata[] = {
  };
  
- #if IS_ENABLED(CONFIG_TI_SCI_PROTOCOL)
+ static const struct pci_device_id pt_pci_table[] = {
+-	{ PCI_VDEVICE(AMD, 0x1498), (kernel_ulong_t)&dev_vdata[0] },
++	{ PCI_VDEVICE(AMD, 0x1498), .driver_data = (kernel_ulong_t)&dev_vdata[0] },
+ 	/* Last entry must be zero */
+-	{ 0, }
++	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, pt_pci_table);
+ 
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index 0b30ce138503..6c589d8b46e1 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -546,7 +546,7 @@ static void dw_edma_pcie_remove(struct pci_dev *pdev)
+ static const struct pci_device_id dw_edma_pcie_id_table[] = {
+ 	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, &snps_edda_data) },
+ 	{ PCI_VDEVICE(XILINX, PCI_DEVICE_ID_XILINX_B054),
+-	  (kernel_ulong_t)&xilinx_mdb_data },
++	  .driver_data = (kernel_ulong_t)&xilinx_mdb_data },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, dw_edma_pcie_id_table);
+diff --git a/drivers/dma/dw/pci.c b/drivers/dma/dw/pci.c
+index a3aae3d1c093..99565fab3565 100644
+--- a/drivers/dma/dw/pci.c
++++ b/drivers/dma/dw/pci.c
+@@ -98,29 +98,29 @@ static const struct dev_pm_ops dw_pci_dev_pm_ops = {
+ 
+ static const struct pci_device_id dw_pci_id_table[] = {
+ 	/* Medfield (GPDMA) */
+-	{ PCI_VDEVICE(INTEL, 0x0827), (kernel_ulong_t)&dw_dma_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x0827), .driver_data = (kernel_ulong_t)&dw_dma_chip_pdata },
+ 
+ 	/* BayTrail */
+-	{ PCI_VDEVICE(INTEL, 0x0f06), (kernel_ulong_t)&dw_dma_chip_pdata },
+-	{ PCI_VDEVICE(INTEL, 0x0f40), (kernel_ulong_t)&dw_dma_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x0f06), .driver_data = (kernel_ulong_t)&dw_dma_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x0f40), .driver_data = (kernel_ulong_t)&dw_dma_chip_pdata },
+ 
+ 	/* Merrifield */
+-	{ PCI_VDEVICE(INTEL, 0x11a2), (kernel_ulong_t)&idma32_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x11a2), .driver_data = (kernel_ulong_t)&idma32_chip_pdata },
+ 
+ 	/* Braswell */
+-	{ PCI_VDEVICE(INTEL, 0x2286), (kernel_ulong_t)&dw_dma_chip_pdata },
+-	{ PCI_VDEVICE(INTEL, 0x22c0), (kernel_ulong_t)&dw_dma_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x2286), .driver_data = (kernel_ulong_t)&dw_dma_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x22c0), .driver_data = (kernel_ulong_t)&dw_dma_chip_pdata },
+ 
+ 	/* Elkhart Lake iDMA 32-bit (PSE DMA) */
+-	{ PCI_VDEVICE(INTEL, 0x4bb4), (kernel_ulong_t)&xbar_chip_pdata },
+-	{ PCI_VDEVICE(INTEL, 0x4bb5), (kernel_ulong_t)&xbar_chip_pdata },
+-	{ PCI_VDEVICE(INTEL, 0x4bb6), (kernel_ulong_t)&xbar_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x4bb4), .driver_data = (kernel_ulong_t)&xbar_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x4bb5), .driver_data = (kernel_ulong_t)&xbar_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x4bb6), .driver_data = (kernel_ulong_t)&xbar_chip_pdata },
+ 
+ 	/* Haswell */
+-	{ PCI_VDEVICE(INTEL, 0x9c60), (kernel_ulong_t)&dw_dma_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x9c60), .driver_data = (kernel_ulong_t)&dw_dma_chip_pdata },
+ 
+ 	/* Broadwell */
+-	{ PCI_VDEVICE(INTEL, 0x9ce0), (kernel_ulong_t)&dw_dma_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x9ce0), .driver_data = (kernel_ulong_t)&dw_dma_chip_pdata },
+ 
+ 	{ }
+ };
+diff --git a/drivers/dma/hsu/pci.c b/drivers/dma/hsu/pci.c
+index 0fcc0c0c22fc..b42c9c0887a8 100644
+--- a/drivers/dma/hsu/pci.c
++++ b/drivers/dma/hsu/pci.c
+@@ -116,8 +116,8 @@ static int hsu_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ }
+ 
+ static const struct pci_device_id hsu_pci_id_table[] = {
+-	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MFLD_HSU_DMA), 0 },
+-	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MRFLD_HSU_DMA), 0 },
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MFLD_HSU_DMA) },
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MRFLD_HSU_DMA) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, hsu_pci_id_table);
+diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
+index e9fbfd5a3d51..0ecc10b9288d 100644
+--- a/drivers/dma/pch_dma.c
++++ b/drivers/dma/pch_dma.c
+@@ -956,19 +956,19 @@ static void pch_dma_remove(struct pci_dev *pdev)
+ #define PCI_DEVICE_ID_ML7831_DMA2_4CH	0x8815
+ 
+ static const struct pci_device_id pch_dma_id_table[] = {
+-	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_8CH), 8 },
+-	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_4CH), 4 },
+-	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA1_8CH), 8}, /* UART Video */
+-	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA2_8CH), 8}, /* PCMIF SPI */
+-	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA3_4CH), 4}, /* FPGA */
+-	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA4_12CH), 12}, /* I2S */
+-	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA1_4CH), 4}, /* UART */
+-	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA2_4CH), 4}, /* Video SPI */
+-	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA3_4CH), 4}, /* Security */
+-	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA4_4CH), 4}, /* FPGA */
+-	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA1_8CH), 8}, /* UART */
+-	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA2_4CH), 4}, /* SPI */
+-	{ 0, },
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_8CH), .driver_data = 8 },
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_4CH), .driver_data = 4 },
++	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA1_8CH), .driver_data = 8 },		/* UART Video */
++	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA2_8CH), .driver_data = 8 },		/* PCMIF SPI */
++	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA3_4CH), .driver_data = 4 },		/* FPGA */
++	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA4_12CH), .driver_data = 12 },	/* I2S */
++	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA1_4CH), .driver_data = 4 },		/* UART */
++	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA2_4CH), .driver_data = 4 },		/* Video SPI */
++	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA3_4CH), .driver_data = 4 },		/* Security */
++	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA4_4CH), .driver_data = 4 },		/* FPGA */
++	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA1_8CH), .driver_data = 8 },		/* UART */
++	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA2_4CH), .driver_data = 4 },		/* SPI */
++	{ },
+ };
+ 
+ static SIMPLE_DEV_PM_OPS(pch_dma_pm_ops, pch_dma_suspend, pch_dma_resume);
+
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
 -- 
-2.54.0
+2.47.3
 
 

@@ -1,153 +1,213 @@
-Return-Path: <dmaengine+bounces-10223-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10224-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WFsfAFUe+mkJJgMAu9opvQ
-	(envelope-from <dmaengine+bounces-10223-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 05 May 2026 18:44:05 +0200
+	id QIt8EhNG+mmOLwMAu9opvQ
+	(envelope-from <dmaengine+bounces-10224-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 05 May 2026 21:33:39 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0ECF4D18C2
-	for <lists+dmaengine@lfdr.de>; Tue, 05 May 2026 18:44:04 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 913EC4D3245
+	for <lists+dmaengine@lfdr.de>; Tue, 05 May 2026 21:33:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A773C3029AA8
-	for <lists+dmaengine@lfdr.de>; Tue,  5 May 2026 16:43:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0D1923037DF2
+	for <lists+dmaengine@lfdr.de>; Tue,  5 May 2026 19:33:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18BCE492538;
-	Tue,  5 May 2026 16:43:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 355EE3D7D9B;
+	Tue,  5 May 2026 19:33:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SpmHyewB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O03hXGwu"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF67949250F
-	for <dmaengine@vger.kernel.org>; Tue,  5 May 2026 16:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12527271441;
+	Tue,  5 May 2026 19:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777999384; cv=none; b=lMseE6vlFaYBBpe0/zFFYUgT5L88OoSZ7BAdTVTZpOcl5fMdOS8aNRn8gsSp2VEdd26LLfil07qSudGV0RvaJ0xiHgjaZL469hggi2GEaAAgn0aCQr8oXnyUdOR7AbVk4NeNStkr/8oYvXBHimIWAHBUxzLbqLxcHp1W7Ytfjmc=
+	t=1778009612; cv=none; b=FW67op5qxgJkW4spk08tSrGpVAFcueEZs7/qzFhyFVzGqSMdK2sCyViWPgc3cCqe5eibCM5bHgMFYdxeE37u4WFZ7PIJgshQhrTUAMUYBTyxq3Cgm84vSSTgJx9CZxidkrMPxB/SP1hYpVTIkAy5nhILBhDGE7TbyYPQBOxMIVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777999384; c=relaxed/simple;
-	bh=3U5qlkQbYGi2ITNovAKaqhZe/HcrCUtHOFfL425wVfA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=neNe7zaAs8DOzQpNl9yB1AMAq72eKaMMCGr6z+s21CQnxXrGpvI8IP+FK60NvE72no8o+hJd3Y+yoml39sk35H3WDk+8K6zY+Fqf/VUtUgFTJTCytmuSWCR8Q17EHMKz4yV1d8Dpi1oaI8UTbtMPVno9EsjDfLTPPAKyT5QfPXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SpmHyewB; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-38e7d984096so61814101fa.2
-        for <dmaengine@vger.kernel.org>; Tue, 05 May 2026 09:43:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777999380; x=1778604180; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dfJomzzs+6EwPzI9gpaJRLIrvQo1Be0e97bZAOXGBnE=;
-        b=SpmHyewB0PVdCj4QphZC5byQL5lzgx/rQ9YvXl+MQ83Ngpc5i2r1u3f2lrlXH9e2+O
-         8bzhGyyE5eE80O9H6ZGR+RakQ54M3dmpS+VrlNLsBtmIWi2comzC+Yym/JMJA7UKhVWs
-         frz+UXWVifqDAtgi8W/yYc1iJjjeUe9Tbpcnh/YkSC2+8JSSJywft2h/LSomrulXRuU7
-         G6Db9qTQCD/de6GDuhU8aYGPKCkUuSVWmfap17xzNLec6ZzuMtznTweJGsnjCCHSP/vS
-         2+GiV5vPaqsObT8CsrsyXj8Uu5wMAnr5jnSBX+svHVZE68LJj9lTQpyJQnn13QixvjBt
-         pqIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777999380; x=1778604180;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dfJomzzs+6EwPzI9gpaJRLIrvQo1Be0e97bZAOXGBnE=;
-        b=OIi8R+PQnp+kMPrJMxvtIEqeYqeMBffck/01hWh/0BRO2jvwiu/tZItYGpdHtSNjTi
-         FcHSAzqKQd27kmD+55j1BL25O0RNFOCUu1tGswYK9MD5Bl0ruODR4Gz0JFQXoBvYuM0t
-         lDvQb0MKzBnHxQuq3yksK8T7EcLFduxln8dvC27bqedGMkKOcS5qXFbrZzn/haD1dNox
-         VxN2GQrbzZrJXyWP9NajBnzIpqmNnqGBSHkp4HMQIH+9jBTOgA3/0zrCGUnB59+tclme
-         A7s1ehuxpQ3KWxTY+B+plmKLwXvfnjypP2BUh0V1eny+IKfiYCg50jFfpYbRILsnq7ZK
-         /b6w==
-X-Forwarded-Encrypted: i=1; AFNElJ8LzrD5KwvNyQTbVbCxvUvapNTEMj1Ax2cydSr55ce+es6n/ENbaGqQpmJPqru8YCEzZfSqzcp9OWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqFHSTBoR6IogOPukDdLMxjqIi/VN4hAP+DkUrcSu1NUDJ3toF
-	UIXPQfc+f8dhTpkX27G4/3XxJI/AXhyhJlXsgVsa1EBEME61P5jwrS88
-X-Gm-Gg: AeBDievlBQtg3UheH+ZSzcgg6720wqEhrlJtjIkGD9+ExDAHW4O3ixx+ZiAn7JBDZl2
-	kPaslJCvk8rypLIh+fupczwfPezXvMEfGeo+a/EPl6zUfnKr83yK3a3OQlyoacwlYYhXM7XdGDh
-	XWDKRZHheodPrOafljGoN/8TZnwlUMGcNO/3s5YoNZ6c/P2lewbCwPIzJVWAlNBQpuHKON9glfr
-	iI5YcDZ1U95rL0fQwdez/SxFRwXlMqZwV30V12BJiIsljIMmG6n9R0ARlS8pdHRtcRsuFcq/Fuj
-	6P1v5bEmWv9RI3WUSjAvDZ0hQtjAQSFgJhgxfU5PMBb8ApiQPt9aCAJzudbg3ExiqylSxEikjRQ
-	y9QVLIfihWl7uNN0cM8EzWbVXB1VqsBo1TbTLqOb3osCkl/YwgDBLIDOLSP4kbzgtsdyfBc9FSu
-	ULMMHTa3Kw4JaVOXyjh24IGHvQf/iJLyR7oPIiaddaaXvEWaZEBEZ+NJpbeG+XTwe2eHB3b3lH1
-	T7J
-X-Received: by 2002:a05:6512:799:b0:5a8:65d9:612f with SMTP id 2adb3069b0e04-5a865d961b4mr3428455e87.4.1777999379966;
-        Tue, 05 May 2026 09:42:59 -0700 (PDT)
-Received: from iszonyat (host-185-69-74-59.kaisa-laajakaista.fi. [185.69.74.59])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a85c342548sm4055042e87.71.2026.05.05.09.42.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2026 09:42:59 -0700 (PDT)
-From: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-To: vkoul@kernel.org,
-	vigneshr@ti.com
-Cc: Frank.Li@kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	nm@ti.com
-Subject: [PATCH] MAINTAINERS: dmaengine/ti: Remove myself and add Vignesh as maintainer
-Date: Tue,  5 May 2026 19:46:05 +0300
-Message-ID: <20260505164605.15878-1-peter.ujfalusi@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1778009612; c=relaxed/simple;
+	bh=f7ktUdcZvJc27f8PTHxlczZmATUtC+QYHKgPu9Q4XdI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mMy3KhVYEGzkbNEKNEEaSJru3sNRvR44slWqsRLMA0sOuWrwrBYFQwzztH2FAu0D4AejlhwNS2QZSQqDZSV0UNjQIFgjC6JD5FKdLUU9RaZlcsGkMaS0Yjqu+T3N+1XC7BEtUo7D8fNG3E1AI9/ECyX+c1NNagc/KquT/5FN4To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O03hXGwu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2202DC2BCB4;
+	Tue,  5 May 2026 19:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778009611;
+	bh=f7ktUdcZvJc27f8PTHxlczZmATUtC+QYHKgPu9Q4XdI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=O03hXGwuP6s7cljp4ececAc3RBgZkK0x3Fytpj8e5KnKhBLhsBfGDXms7YFU62yVa
+	 eEicIpkoQBauimSlvLGsLtqBtU3nC0mo7cBNL/uNfv899uHueaHzI5Sbt3u1vzLiko
+	 XzPuaG581n1WHt9MbeT61x4Wj+CD+q2YWL8M8oxlRpRYaZXGgZiStqwTkM+K/HLG2v
+	 i7as8XvW+eVdzHgylEI5SRMt5Gg36RShifHbXWl+2wS7ix5ibZUPtAWWKWSrwr3y8o
+	 pH5I80e3ooAgIu3yNU7OrgwntDpyL8TpXBsTsf+ZNWV6CcUo7TeIvFSsMdNywOeTIe
+	 0WuvppwcxI/Sg==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Rahul Sharma <r-sharma3@ti.com>, peter.ujfalusi@gmail.com,
+ vkoul@kernel.org, Frank.Li@kernel.org, nm@ti.com, kristo@kernel.org,
+ ssantosh@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] irqchip: ti-sci-inta: add runtime PM and system
+ sleep support
+In-Reply-To: <20260429174904.4049243-3-r-sharma3@ti.com>
+References: <20260429174904.4049243-1-r-sharma3@ti.com>
+ <20260429174904.4049243-3-r-sharma3@ti.com>
+Date: Tue, 05 May 2026 21:33:28 +0200
+Message-ID: <87h5oly7lj.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: B0ECF4D18C2
+Content-Type: text/plain
+X-Rspamd-Queue-Id: 913EC4D3245
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [2.84 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_FROM(0.00)[bounces-10223-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10224-lists,dmaengine=lfdr.de];
+	FREEMAIL_TO(0.00)[ti.com,gmail.com,kernel.org];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[peterujfalusi@gmail.com,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[tglx@kernel.org,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-0.999];
-	TO_DN_NONE(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,ti.com:email]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.979];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-As I cannot spend adequate time to fulfill my role as maintainer for the
-TI DMA drivers, it is for the better if I resign and hand over the role
-to Vignesh Raghavendra.
+On Wed, Apr 29 2026 at 23:19, Rahul Sharma wrote:
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please use the proper subsystem prefix as documented:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0dfad67f66c0..f1575f1d2d8b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -26408,7 +26408,7 @@ F:	sound/soc/codecs/tlv320*.*
- F:	sound/soc/codecs/tpa6130a2.*
+  https://www.kernel.org/doc/html/latest/process/maintainer-tip.html
+
+> Register runtime PM callbacks and enable runtime PM via
+> devm_pm_runtime_enable() in probe.
+>
+> runtime_suspend is a no-op; IRQ routing context is preserved by TI SCI
+
+s/IRQ/Interrupt/
+
+A change log is written in prose and not an aggregation of random
+acronyms. This is not twatter.
+
+> firmware across power-gate cycles.
+>
+> runtime_resume restores VINT_ENABLE_SET for each active event bit,
+> skipping IRQs with irqd_irq_masked set to avoid re-enabling
+> intentionally disabled interrupts.
+>
+> System sleep reuses these callbacks via pm_runtime_force_suspend/resume
+> as late/early sleep ops. This ensures MMIO writes in runtime_resume
+> happen after genpd restores the power domain (dpm_resume_noirq),
+> avoiding writes to a powered-off device.
+
+TBH, I fails to decode the above word salad. Please check the above
+linked documentation for hints how to structure change logs.
+
  
- TEXAS INSTRUMENTS DMA DRIVERS
--M:	Peter Ujfalusi <peter.ujfalusi@gmail.com>
-+M:	Vignesh Raghavendra <vigneshr@ti.com>
- L:	dmaengine@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/dma/ti-dma-crossbar.txt
--- 
-2.54.0
+> +static int ti_sci_inta_runtime_suspend(struct device *dev)
+> +{
+> +	return 0;
 
+This clearly lacks a comment why this function is empty, while the
+counterpart is not.
+
+> +}
+> +
+> +static int ti_sci_inta_runtime_resume(struct device *dev)
+> +{
+> +	struct ti_sci_inta_irq_domain *inta = dev_get_drvdata(dev);
+> +	struct ti_sci_inta_vint_desc *vint_desc;
+> +	int bit;
+> +
+> +	mutex_lock(&inta->vint_mutex);
+
+  guard(mutex)(....);
+
+> +	list_for_each_entry(vint_desc, &inta->vint_list, list) {
+> +		for_each_set_bit(bit, vint_desc->event_map, MAX_EVENTS_PER_VINT) {
+> +			unsigned int virq;
+> +			struct irq_data *data;
+
+See 'Variable declarations' in the linked document
+
+> +			virq = irq_find_mapping(vint_desc->domain,
+> +						vint_desc->events[bit].hwirq);
+
+No line break required. You have 100 characters.
+
+> +			if (!virq)
+> +				continue;
+> +			data = irq_get_irq_data(virq);
+> +			if (!data || irqd_irq_masked(data))
+> +				continue;
+
+
+This is a blatant abuse of the interrupt internals.
+
+Why can't you keep track of the current state in
+
+    vint_desc->events[bit].XXXXX
+
+and be done with it?
+
+> +			writeq_relaxed(BIT(bit), inta->base +
+> +				       vint_desc->vint_id * 0x1000 +
+> +				       VINT_ENABLE_SET_OFFSET);
+
+Ditto.
+
+> +		}
+> +	}
+> +	mutex_unlock(&inta->vint_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops ti_sci_inta_pm_ops = {
+> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				     pm_runtime_force_resume)
+> +	SET_RUNTIME_PM_OPS(ti_sci_inta_runtime_suspend,
+> +			   ti_sci_inta_runtime_resume, NULL)
+> +};
+> +
+>  static const struct of_device_id ti_sci_inta_irq_domain_of_match[] = {
+>  	{ .compatible = "ti,sci-inta", },
+>  	{ /* sentinel */ },
+> @@ -736,6 +784,7 @@ static struct platform_driver ti_sci_inta_irq_domain_driver = {
+>  	.driver = {
+>  		.name = "ti-sci-inta",
+>  		.of_match_table = ti_sci_inta_irq_domain_of_match,
+> +		.pm = pm_ptr(&ti_sci_inta_pm_ops),
+
+See 'Struct declarations and initializers' ....
+
+Thanks,
+
+        tglx
 

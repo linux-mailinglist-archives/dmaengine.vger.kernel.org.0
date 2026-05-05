@@ -1,284 +1,155 @@
-Return-Path: <dmaengine+bounces-10213-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10214-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iOzoOMjL+Gma0wIAu9opvQ
-	(envelope-from <dmaengine+bounces-10213-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 04 May 2026 18:39:36 +0200
+	id mFZZIbRK+WnC7gIAu9opvQ
+	(envelope-from <dmaengine+bounces-10214-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 05 May 2026 03:41:08 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46AEF4C184C
-	for <lists+dmaengine@lfdr.de>; Mon, 04 May 2026 18:39:35 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8666A4C5CE5
+	for <lists+dmaengine@lfdr.de>; Tue, 05 May 2026 03:41:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 43D55303938A
-	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2026 16:38:57 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8E45B300AD7E
+	for <lists+dmaengine@lfdr.de>; Tue,  5 May 2026 01:41:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DEED3E3146;
-	Mon,  4 May 2026 16:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE28E35A938;
+	Tue,  5 May 2026 01:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="XcRYG3kQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p6k0X5Ro"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BF33A2574
-	for <dmaengine@vger.kernel.org>; Mon,  4 May 2026 16:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777912737; cv=none; b=KuTbZtrFbzCNxGvuloBiZXILZjkP+Y0wFQVK05Wp23ilK9Ja6qnNLg1NtH5jrMCnOck55sQcV3e6Sa/Xbx6qv0Pjayn6q2+znA8Y9sQQWr2yVwI3MVZ21AQH8XKqHzbz5Re7N2cRXlqXICBIG8xtNC3U/U/RHjjyyZsA9xICpZ8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777912737; c=relaxed/simple;
-	bh=ifDcycN4sxmMeP0jkCzmCvk6hKMxSu/AfQu/RMH4qdY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LTtfQGpCBuIlsBePfNHmaMXLXLgceAPqG8jFvMWG0FwltPw1ZyBNYVvrVFdy9NlsFW6Ws08B3wN6P2wY69ErDH8BFlLG2ik45wRjqLoHKN1W1vVLf8MBvr++4E69vBM6LIgVIH549w362DiOumJiRKkiOaqkFtHilD0dEadO3d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=XcRYG3kQ; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-488ff90d6c7so41101465e9.2
-        for <dmaengine@vger.kernel.org>; Mon, 04 May 2026 09:38:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F65C2C3757
+	for <dmaengine@vger.kernel.org>; Tue,  5 May 2026 01:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777945260; cv=pass; b=j1AVgGiHA7BQaUBmoPHrODRT8oYDzS4KMP2TVQY0K3L4tTEMwn86b49Nh0wvSXGKK9zedmB5klqiHS34WBbldLIxB+B/uOU8CtNqwPjvClhc3Gozy7RUjkJVXk8D0cixGh2w0BFsZKW0mauULgI1at9aVkIx6xF6mLWwS+noagc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777945260; c=relaxed/simple;
+	bh=k7jEuVeEjsC14XNNgNKzD1VE9dKeTyLCGLtXuqee9nY=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=InfHT+9PpfoTavHjrgAMQEFRNWkwjm23eu9359Ly3i/UUKCVqXY8ga3j2IUhVIO/l4vB5SaJcCo52VkdcuBatQp7Ph3luE40w5WGVEm/TUAnjC9aImDyXn6df2tuqnDy6EOPq6H8bv8JC/LXtrrlV7gvxmsyrK+yKp5nF16JTOk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=p6k0X5Ro; arc=pass smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-bb962ce4dcfso714838766b.1
+        for <dmaengine@vger.kernel.org>; Mon, 04 May 2026 18:40:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777945256; cv=none;
+        d=google.com; s=arc-20240605;
+        b=JtwpjxQ75iuJIW1CEaM9SqyS2hzNhWN4Abm9QR4E1NVrCt/juDzuXrk+ZW57rDVQ46
+         a0csJhVapwu7twUaC2q2y5jwK7Cxdh/XUhTkI+oqmclafTRQ0KXecYVO64jNPyazoGcX
+         vqT7uxnGRr0aI3rD7Eu3q3e1zoSYZ4CTtQtYYH6Lkvh2gHlu55TpHH9nlNvlREJAikcY
+         oqjUQek7GZ2sBGZlz97NJ0xL66+o8IGLRqV7AnqofibFQ91pN5o1keqciyryDxRZNXb8
+         26zss5/UMJCtNGqhnjDuF6EXtIc5EQMfXOZ1DIYmODR2CAaBRZIzloiST/VUNvGB+md8
+         AT1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:references:in-reply-to
+         :mime-version:dkim-signature;
+        bh=k7jEuVeEjsC14XNNgNKzD1VE9dKeTyLCGLtXuqee9nY=;
+        fh=HW8WLqds0OaO30Y6EFof5obTe2EXZpd92a1E6lI1vk4=;
+        b=AJNT0COAlypWC1/BGgA5NQy0Zg/vVkBVGDdcOFTlRXcuP92BggG58BZe3miD6OgRO/
+         wDMc1isDVosnOv+xhM/IYv2Tndhb7GHq4JXShjgWmeHWaV4/+wyjPV60evlVeYV4BSKl
+         OdAI+1jyilzTUb+EHOa1dvf6oPqxHYUyFMXYpJDPekwtJeWPfsOSanXGhc8ZHeOdYDqN
+         yQuBmOzY3Aa+0I9zUzk6RCxFHCLT8mdizRpscmpO0VJv11HLsLBPTwrUem99AX/pq5Hp
+         smvv8Nn/9BVliD16TUWbd2nNIoDIOwRWSOU60715jBWlD/hw5PEOCrqX0zID+B+9DIJE
+         KuPg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1777912732; x=1778517532; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tzti5IfnmT+c5McxmlLM2AJ8DTzW4zuCbfFoVuxW04s=;
-        b=XcRYG3kQdfhcLWnVKYUmd8UF+KP6b+cxcumrSVyLdoOktS1shXRAGnDaJXdg9kF4d8
-         KGuODi40Q04e/qae5PzIkwQC1rUBnqe+z62B4aHFUvNPOmlpjLS/ogHnJ/7mbZX6U4Aa
-         Qouz1iQ4fmyWHC3ZLQhr1Hc5gtz7IJUToAHLoC0VUqOLNL5kh/swF7fQNoCKn/aNfui8
-         cJ9X7c9ZlkxSZH7mor7LgpH8ugo86Yg3CCEP2jP0hPI17V4hgGV6kUI+USJSD5h+sK1l
-         oOVZyrvBi5pliQWpNW/p9Zs8iMZHMNKXCwqKi3r9scpHZKZblWeo5aMgrkyAF9SKNMsP
-         GgoQ==
+        d=gmail.com; s=20251104; t=1777945256; x=1778550056; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:references:in-reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=k7jEuVeEjsC14XNNgNKzD1VE9dKeTyLCGLtXuqee9nY=;
+        b=p6k0X5Ro/zd7uDbhBp75LGFQJZ0wKoOZjXLUEvvM5DAA2CT80+dPr5rTJQXJlgtiAc
+         jkBHiUUrPc2dQTT59cd7I3Jr75xzk/tG5UH3lFgVIGxyelocPXCM2RYywFOb86z0y//1
+         BWll29cDtRltWOS3F5AlAjCjcL2qiHXmUDj0JeMoBjk/CoakyitmT/CbkPXrKkrh1Wm1
+         4G+Nmju3UxDmrljFxxg1xt2jC6VWSH4hFPIB34Cc4PYCFsKDjI+CWKI3Txg40/uI7RUr
+         Y34ht/gsBeJgMr9aM89uZIExFOPRkzBLVmMkoAkatAY6bx+TmS5Bq1g29XtEXG+HOgF4
+         xATw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777912732; x=1778517532;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tzti5IfnmT+c5McxmlLM2AJ8DTzW4zuCbfFoVuxW04s=;
-        b=MZv8LmyOEK4GSxH3x5yOWJ6Z4ydZd5te6rYY1H2qjazS/anmdlojI5ikANroNmnfmk
-         160urhN3KEqwkuD/NW2NUwsjTplh1UFefObf3vEvJPmwkhiLMJm8V5tt1G+Tk4+XnvNr
-         /NXOLjcsz4RT/Fl3ap6Tue5fZne7Oj0x6yCVnsqTY7aOpPutAM+zzyon+ZTLKrCpw/Np
-         0YS7P1dlbIoSpulxcIwce+jJwErn8qPJ1GiyxGbaB3PI3vUwU3XmDjtOAvSfVGhu77Uv
-         TXzRSXlHVbjz25hT/UCIRBjeEn+3m5jW9St5/Sx4+359djSX/cCbwFdYH+K0gNirH5IW
-         x1YQ==
-X-Forwarded-Encrypted: i=1; AFNElJ82BdvA1+L0z67YYlYfeAa+I/J8UTXwuE2NA6IbvbfORzxcuO50Kx06jSlxBMBbu9UosB54iUStzb4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJ+O1jhEIocT8sdEOLrzLpXG/h4LsUbsQcmOJmTJkxnYM40YSd
-	hhHCiT1E8M21U8+D6/FirS2qm5TO3xUZNSqCt68pMp01Lmugf453WfS3OUsfK30Bvzw=
-X-Gm-Gg: AeBDievYoeLCu60gWLN1nZGoFZZjBWHYYzN0yyu2N8WGBT/1Pjwo3TdXZD49gwD2B6t
-	azDdSa9bdWyxH4sqql35zN1lGnztyjvqqZfa7aMPgx7WNOtRd5OaMewmfk/a68oHE2kAV8UCvNy
-	aZ1aiDu2J5cLENav5g2Xmmrmiz5XVifAf0W6Rb1KbGF3c72w1bE1dk0EhJ8225s69VQzqZlCuMy
-	RIyqLizs4RVDcXAJi6ZABK87xFtL78aZDlKbFxkUyH6hQI+10k+uz8e7DKWtViuXreZ6dwtAw9y
-	SEih9SVpZ84e3Fr+nXiL64Z3LpJP/omPnYFF73B8R+XjCtNR8E+CcAaAwyLksy5dSQs3PHH14oF
-	RBCilnZmhhNFFRvRSmb9NP+17d0v9Vli7uEmlMJv62hVLsoqDAIrS8BG3BiZQQAFspNoPWrQ8aS
-	5s8i5gFG3qXO1SCh/ASsqwyXf5g8GALYBmw28ZnAU31zMiI0KV7Nh6mYocuUsUWtdiVlwTOFVka
-	FweJS08Xw5qhRNPrcajt6LJMA==
-X-Received: by 2002:a05:600c:c082:b0:48a:54fd:54ea with SMTP id 5b1f17b1804b1-48a98877b42mr117774355e9.12.1777912732469;
-        Mon, 04 May 2026 09:38:52 -0700 (PDT)
-Received: from localhost (p200300f65f114e08197264a4bf9e813f.dip0.t-ipconnect.de. [2003:f6:5f11:4e08:1972:64a4:bf9e:813f])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-44a8ef50e59sm26411276f8f.10.2026.05.04.09.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2026 09:38:51 -0700 (PDT)
-Date: Mon, 4 May 2026 18:38:51 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Vinod Koul <vkoul@kernel.org>, 
-	Markus Schneider-Pargmann <msp@baylibre.com>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
-	Frank Li <Frank.Li@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Viresh Kumar <vireshk@kernel.org>, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: Consistently define pci_device_ids using
- named initializers
-Message-ID: <afjJ0YjzLgk-r9Nh@monoceros>
-References: <20260504102008.1996139-2-u.kleine-koenig@baylibre.com>
- <afh0-BSmchvY-W-d@ashevche-desk.local>
- <afijNvdU6HPbjDCX@monoceros>
- <afioswWDnEbf53ay@ashevche-desk.local>
+        d=1e100.net; s=20251104; t=1777945256; x=1778550056;
+        h=cc:to:subject:message-id:date:from:references:in-reply-to
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k7jEuVeEjsC14XNNgNKzD1VE9dKeTyLCGLtXuqee9nY=;
+        b=syOKuBbcFoXsiVm7Q+A/FMu63GOzMx4Lpe27CUDrW72Gh1FfC/wqpZsEMbI/ycgBry
+         3O8bYpvOs50vkNq1CZfVme3S1ecx6eNSP37jO/3bVgwXowGPQtEKWEHHYfMPnBUz9kYT
+         Kfap86iI7vu1h/mav6urXwebgti2qlzMJsLuuNDNKutVYU3UpWlczwP4LG/O7TgtkhKk
+         P+mPMl6n8luCA2nzGbSD1tw7Em5TRL6rLCpkdjDvrBUYUwsg0xdaeaDriNKU14OHse9N
+         L7LybqlRN43Bsr1Hosm2FEU7d3sGHl0XfDx2HNKLH+avrsN40onNetaeFi5z/nPkTtG4
+         bUpw==
+X-Forwarded-Encrypted: i=1; AFNElJ/EPJMV3SbTIRZDzWOn/n7/lAcKUdyh3zOrYHZViBg1QqZqxY3i6cIKgHQW1Wkv9dsbcMTo8/0IUew=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywpzy53/fjBYEFkh+VcYBbqJI8w28pZO+K2PPZxdZJMbMBQ2YgU
+	3udUlU8Ys9HKZ+wng23hN0o0NaSKwFG0zAvSPLFc2J8yay+9fQlZIeM+lsPTE0VtL/I5+UzM3nL
+	fXAZTzHcz0rFjsb01SLYHgr9jWp5k1nk=
+X-Gm-Gg: AeBDievQk+cUZ2mNGbKmqmfpXvNsguSeRgAhhFDgS9Bke0xoeXqTNDStKYVBAN37Pws
+	eNG2dx89yr51CHD+pyPsodaBfAtjwkjnfxXf+M5ORbRBEW3tEj2Xc9JvNy8vpOrZGyJ26jPlxAx
+	J32VO7++5+ubeuaHLOkytuIZTDAnN8fOC4l0+Y76tVVG5qKiANNR2YnIpdfXcbQb5G3jWgjaLeo
+	IQ90vCQfgZsv29+9L0dixrMM5B6Z2YH08z6ZTsVhvVLP4qKwpHIzSK/02zQcSGsfGhom21QNgu7
+	kK1uPKOfD5dbxODe
+X-Received: by 2002:a17:906:f5a1:b0:bab:e742:aba with SMTP id
+ a640c23a62f3a-bc41000f595mr47512266b.42.1777945256413; Mon, 04 May 2026
+ 18:40:56 -0700 (PDT)
+Received: from unknown named unknown by gmailapi.google.com with HTTPREST;
+ Mon, 4 May 2026 18:40:55 -0700
+Received: from unknown named unknown by gmailapi.google.com with HTTPREST;
+ Mon, 4 May 2026 18:40:55 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="h7rxs4abwv7pbrlb"
-Content-Disposition: inline
-In-Reply-To: <afioswWDnEbf53ay@ashevche-desk.local>
-X-Rspamd-Queue-Id: 46AEF4C184C
+In-Reply-To: <20260415205452.67155-1-dbgh9129@gmail.com>
+References: <20260415205452.67155-1-dbgh9129@gmail.com>
+From: dbgh9129@gmail.com
+Date: Mon, 4 May 2026 18:40:55 -0700
+X-Gm-Features: AVHnY4IBxTPYPpgrFSt3VWGxnuWIhjwUWD0X-N8qG0NsUk6giOcbzNjE8K9vqeI
+Message-ID: <CACrCO_VAhYGjjqRE4TyTq9hdha5ou682ELxmDirptW5Cx7w0aQ@mail.gmail.com>
+Subject: [PATCH v1] dmaengine: idxd: fix double free of wq, engine, and group structs
+To: vinicius.gomes@intel.com, vkoul@kernel.org
+Cc: dave.jiang@intel.com, Frank.Li@kernel.org, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dbgh9129@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+X-Rspamd-Queue-Id: 8666A4C5CE5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-3.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20251104.gappssmtp.com:s=20251104];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FROM_NEQ_ENVFROM(0.00)[dbgh9129@gmail.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FREEMAIL_CC(0.00)[intel.com,kernel.org,vger.kernel.org,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10213-lists,dmaengine=lfdr.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
-	DKIM_TRACE(0.00)[baylibre-com.20251104.gappssmtp.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10214-lists,dmaengine=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NO_DN(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,baylibre-com.20251104.gappssmtp.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid]
 
+Dear Vinicius and Vinod,
 
---h7rxs4abwv7pbrlb
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] dmaengine: Consistently define pci_device_ids using
- named initializers
-MIME-Version: 1.0
+I am sending a gentle ping on this patch. Please let me know if you
+have any feedback or if any changes are required.
 
-Hello Andy,
-
-On Mon, May 04, 2026 at 05:09:55PM +0300, Andy Shevchenko wrote:
-> On Mon, May 04, 2026 at 03:55:00PM +0200, Uwe Kleine-K=F6nig (The Capable=
- Hub) wrote:
-> > On Mon, May 04, 2026 at 01:29:12PM +0300, Andy Shevchenko wrote:
-> > > On Mon, May 04, 2026 at 12:20:06PM +0200, Uwe Kleine-K=F6nig (The Cap=
-able Hub) wrote:
-> > > > The .driver_data member of the various struct pci_device_id arrays =
-were
-> > > > initialized by list expressions. This isn't easily readable if you'=
-re
-> > > > not into PCI. Using named initializers is more explicit and thus ea=
-sier
-> > > > to parse. Also skip explicit assignments of 0 (which the compiler t=
-hen
-> > > > takes care of).
-> > > >=20
-> > > > This change doesn't introduce changes to the compiled pci_device_id
-> > > > arrays. Tested on x86 and arm64.
-> > >=20
-> > > HSU driver has different change ("Also" is a strong sign to the split=
- required).
-> >=20
-> > HSU is in the category "skip explicit assignments of 0", so I think
-> > that's fine. I could be talked into splitting if that's what is wanted.
->=20
-> Yes, please. I will Rb/Ack it immediately when standalone change.
->=20
-> ...
->=20
-> > > >  static const struct pci_device_id pch_dma_id_table[] =3D {
-> > > > -	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_8CH), 8 },
-> > > > -	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_4CH), 4 },
-> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA1_8CH), 8}, /* UART V=
-ideo */
-> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA2_8CH), 8}, /* PCMIF =
-SPI */
-> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA3_4CH), 4}, /* FPGA */
-> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA4_12CH), 12}, /* I2S =
-*/
-> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA1_4CH), 4}, /* UART */
-> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA2_4CH), 4}, /* Video =
-SPI */
-> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA3_4CH), 4}, /* Securi=
-ty */
-> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA4_4CH), 4}, /* FPGA */
-> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA1_8CH), 8}, /* UART */
-> > > > -	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA2_4CH), 4}, /* SPI */
-> > > > -	{ 0, },
-> > > > +	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_8CH), .driver_da=
-ta =3D 8 },
-> > > > +	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_4CH), .driver_da=
-ta =3D 4 },
-> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA1_8CH), .driver_data =
-=3D 8 },		/* UART Video */
-> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA2_8CH), .driver_data =
-=3D 8 },		/* PCMIF SPI */
-> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA3_4CH), .driver_data =
-=3D 4 },		/* FPGA */
-> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7213_DMA4_12CH), .driver_data=
- =3D 12 },	/* I2S */
-> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA1_4CH), .driver_data =
-=3D 4 },		/* UART */
-> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA2_4CH), .driver_data =
-=3D 4 },		/* Video SPI */
-> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA3_4CH), .driver_data =
-=3D 4 },		/* Security */
-> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7223_DMA4_4CH), .driver_data =
-=3D 4 },		/* FPGA */
-> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA1_8CH), .driver_data =
-=3D 8 },		/* UART */
-> > > > +	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA2_4CH), .driver_data =
-=3D 4 },		/* SPI */
-> > > > +	{ },
-> > > >  };
-> > >=20
-> > > Use PCI_DEVICE_DATA() instead. Same may apply to DesignWare, but one =
-needs to
-> > > define the device IDs. I think I may help with that.
-> >=20
-> > I'm not a fan of PCI_DEVICE_DATA. While it could indeed be used to
-> > shorten the assignments here, it's less readable in my opinion.
->=20
-> I'm not fun of these long unreadable lines with tons of repetitions :-)
-
-Seems to be subjective.
-
-> > Compare
-> >=20
-> > 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_4CH), .driver_data =
-=3D 4 },
-> >=20
-> > with
-> >=20
-> > 	{ PCI_DEVICE_DATA(INTEL, PCI_DEVICE_ID_EG20T_PCH_DMA_4CH, 4) },
->=20
-> First of all, with
->=20
-> 	{ PCI_DEVICE_DATA(INTEL, EG20T_PCH_DMA_4CH, 4) },
-
-Agreed. That doesn't considerably weaken my reasoning however.
-
-> > . For someone who doesn't know what PCI_DEVICE_DATA does, the latter is
-> > less understandable.
->=20
-> Same applicable to many other macros. I don't consider this argument viab=
-le.
-
-Also agreed. But other bad macros don't justify using that (admittedly
-subjectively) bad PCI_DEVICE_DATA macro that mixes device identity
-(.vendor, .device, .subvendor and .subdevice) with a driver specific
-struct member.
-
-> > Also PCI_DEVICE_DATA has a cast which is something I want to get rid of.
->=20
-> Yes, and you will get rid of in one place instead of tons of them.
-
-This would require another (subjectively bad) macro PCI_DEVICE_DATAPTR.
-I think I let someone else tackle that quest.
-
-Best regards
-Uwe
-
---h7rxs4abwv7pbrlb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmn4y5gACgkQj4D7WH0S
-/k5j4gf7BzClYF7Qm/3avNqi1xld/TXdXt/woPDF/ZNusHkkGtBxNv2j7sUc14Ot
-FUrhi4CbqErQIHIrykpwygL1qxm09eb6AVSh7JCreGwu7bwoJEzY/2RqkCuW6D2U
-lS3ED8xga/xuLEVbqw2QowWU2oEHna6xZMMGp0oHr0/yGE16WxogPT5KUUHeBeaE
-szDnd4aoJHOOeKu9kWI7Yzp5TaOfHnL0hz5SIj9c/Lc7I1iOKGsAF1Tn0MWZJpNZ
-lt/WkfCNHIXwcFY9Hqzi2NuFmdaodD45c0VE5enZ6KNIPw5JSS43EEMZZFHnd+4V
-B+Lntso7Qdp6z95Pzo+aBBLzFZcnsg==
-=TGo4
------END PGP SIGNATURE-----
-
---h7rxs4abwv7pbrlb--
+Best regards,
+Yuho Choi
 

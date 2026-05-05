@@ -1,189 +1,133 @@
-Return-Path: <dmaengine+bounces-10219-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10220-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CD71MkPz+WmcFQMAu9opvQ
-	(envelope-from <dmaengine+bounces-10219-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 05 May 2026 15:40:19 +0200
+	id eJo2Bwf2+Wk/FgMAu9opvQ
+	(envelope-from <dmaengine+bounces-10220-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 05 May 2026 15:52:07 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C2594CEAC6
-	for <lists+dmaengine@lfdr.de>; Tue, 05 May 2026 15:40:19 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87C5B4CED98
+	for <lists+dmaengine@lfdr.de>; Tue, 05 May 2026 15:52:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 23879301DE30
-	for <lists+dmaengine@lfdr.de>; Tue,  5 May 2026 13:33:58 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2B99130463BD
+	for <lists+dmaengine@lfdr.de>; Tue,  5 May 2026 13:51:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8D6447CC6C;
-	Tue,  5 May 2026 13:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04B6647DFB2;
+	Tue,  5 May 2026 13:51:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FwPYh0op"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dltLJJY9"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010009.outbound.protection.outlook.com [52.101.85.9])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F3847A0D1
-	for <dmaengine@vger.kernel.org>; Tue,  5 May 2026 13:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777988037; cv=fail; b=duRTC2pH7C95pq0Nj32OD+VP6JaqhQHMGNPAq1nKboBX3/+pjevOmM1Svtm7jfzb8IgTp4UlkeVcnAYix0Ud8nBOyvXncGbrRamPOd4xs+AfnqAkI0rIlazLii6dhJkQEGElDnXMQxtJRXYLS59+Ex/JLqahMfqmTLDFkvKRn5s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777988037; c=relaxed/simple;
-	bh=Ife1aIL7sXXgm+M/b8lPyCn4Oah8vMAM9bUE1mCZBRc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xru/embHJD6gzrf1QELZlbb/Yqr3xyR1hwDYKvW5HiW0itQrDmy0xQZhe39vnhvy7Y6cEyZ4uYI4qMrnOX2v1CrefxqfKXYJVymyjYXV/uXLAnQ3Es3sXsH6Z6ld/BiuQMTiB3nLR411guzd/3JX2aOs6qLFU0leN7oVA3/sfJ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FwPYh0op; arc=fail smtp.client-ip=52.101.85.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wCjBLUo5St4FO+kZg0tvRXe9ZRSa+zGT+2d1FRHAiLyJAuC/EFlhgn6dKN/FRMFwSiXc2to41BCuWqe8arg/iOEmFGae1yEXLpwLjC5yvg+3evAcJM3bHDndj/TQUPq0A7P61V+2jdfem6XM/l+RSeRaxPxdrYHCmg9ZJKgXw5z9EYt5Eo4lv1PEhsK09L3qBuT6FzH0gKYaOCRBGY6sksepBdHbsX8CcNbqrwRty3N0hmqUVFgZCzwdHab8TGqVKdvaPFDb+NePpZPRFug9wPG4SYyyAC3t9zuN1rrdG/Z8Auc/mG1BihU54/73pzRyc0fW3M3Okz+k0ApUDy3uZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q3uZ/1hZ0MGK6INjLihizjMJkuLuqHQOxDNuSFafUY4=;
- b=MEbwOZYj+PaPGIOxzIL45c4wK+j/xQAksJP8Uk1tebNZH0JmPOYH70th25W0cTBwxqnDZAPv+bEmanz1yd4elZ+PDoNkJ9i606E/oMCG3lXxCtwqvTv9yjw81wLSxr+HqK4qbbGDk/RzlKUpHjeL6mwLDSst5Dlkea1dSfJEbhLfjdlT8v6Z2RnHPX3FDW03u2OnseOVAgKSgkSjAK6dOmYx0O/t8Tdw2dOMiu02Lg8BMIms1/pG6BLzWXKsOvJUO6T1ERMOcCHJCX+1HwwB+PP1Au8qjngpLnLeaCLSIpbQXKc8SBhQnnzpU2elOfoIo2b/6ITEQGD+mScR10rt8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.21.195) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ti.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q3uZ/1hZ0MGK6INjLihizjMJkuLuqHQOxDNuSFafUY4=;
- b=FwPYh0opH6eBhgtbefzMFhXBFFfljOeVwwsGEb3tyKlvKHulP+7f/5POeSNBlVsxBnQiDYYpUW6qSHApmTyWcuuXLg7lYlmRD65s8ZmYRJOe6/cM/BlP6U4nv7R3nECATyFcCDq1pm288UBnKckv2Ecn7poeT/X1HSLGCIsoCYo=
-Received: from MN0P221CA0012.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:52a::22)
- by CO1PR10MB4674.namprd10.prod.outlook.com (2603:10b6:303:9c::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.25; Tue, 5 May
- 2026 13:33:54 +0000
-Received: from BL6PEPF0001AB74.namprd02.prod.outlook.com
- (2603:10b6:208:52a:cafe::34) by MN0P221CA0012.outlook.office365.com
- (2603:10b6:208:52a::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9870.27 via Frontend Transport; Tue,
- 5 May 2026 13:33:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.195)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.21.195 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.21.195; helo=flwvzet201.ext.ti.com; pr=C
-Received: from flwvzet201.ext.ti.com (198.47.21.195) by
- BL6PEPF0001AB74.mail.protection.outlook.com (10.167.242.167) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9891.9 via Frontend Transport; Tue, 5 May 2026 13:33:51 +0000
-Received: from DFLE207.ent.ti.com (10.64.6.65) by flwvzet201.ext.ti.com
- (10.248.192.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 5 May
- 2026 08:33:17 -0500
-Received: from DFLE206.ent.ti.com (10.64.6.64) by DFLE207.ent.ti.com
- (10.64.6.65) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 5 May
- 2026 08:32:55 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE206.ent.ti.com
- (10.64.6.64) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Tue, 5 May 2026 08:32:55 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 645DWsRF3059280;
-	Tue, 5 May 2026 08:32:54 -0500
-Date: Tue, 5 May 2026 08:32:54 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Rosen Penev <rosenp@gmail.com>
-CC: <dmaengine@vger.kernel.org>
-Subject: Re: [PATCHv2] firmware: ti_sci: simplify resource allocation
-Message-ID: <20260505133254.c7kfeh62ujdl7y2d@cheek>
-References: <20260504031209.618949-1-rosenp@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E84747DD57;
+	Tue,  5 May 2026 13:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777989109; cv=none; b=LMr6h0cfPPR/mnQngw9ya0KR+FsPp7lhbywnj24xZsreS9JbF+StuLsoNbLKFi6YYKqRitXpK/TW+w+FqGn0WDTH7Rr8gKhTFsqU+gzyKUEe5F1d3FRhI8YcbHx+HOu7LV6wyR3Aln9FhnEitXut5JJUwS9aBh7Q3ELe1s1e6ys=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777989109; c=relaxed/simple;
+	bh=xo5umndcEyLGiWOJhHMf9q3v4XEGsmwU7lViijkWpXM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uWS0AC3B+NSazl8G/gjS7b4GS5W4138CvKEdWlIjgkSlsSwWCTZhitGehCKhwdXtUqZy6MnY6kUw54lj+2XG6cgDWV75TKzJ59x0/5XkiqzZrX4Tr7AjHKTg1RJmXDsNjWZcQlUKxkRY/m762XmOeRLrSspg/Eh9JZ0OnyLk9eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dltLJJY9; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 48D7D4E42BC9;
+	Tue,  5 May 2026 13:51:46 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id EA4576053C;
+	Tue,  5 May 2026 13:51:45 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 47E0411AD0190;
+	Tue,  5 May 2026 15:51:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1777989105; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=xo5umndcEyLGiWOJhHMf9q3v4XEGsmwU7lViijkWpXM=;
+	b=dltLJJY95nTFBOjhnhLmFVlYQMKVPbsLzwwbT8GLD4la63Nvrirx7k7dZ/oZHPVo+q4Y4l
+	RRg66/ed60XEZZgEIzIgjjHYAepLfvRJxwSPvkyWe/I+hh1F6bspOJDTx4Q8jho8zXoGO4
+	GQ1bvcQBpxuud1GES7Eq5/fg9CnWW2NdgOVdMGusW4NQmujr0HkJn3mPbiGiMWF9HBpsUg
+	ZrOB10stqv1DjM+1AXWsSzdBjl4vfBRTK16EpxfkwYRZbVa8YPSx2TJ7dKoHqwbYzTy4uO
+	WfjJx1k/m4/Ig4XyQ1th9yghakZdGq7cdWMYbUI/hFckfw8eZ6udrbmpoCCYQA==
+From: =?UTF-8?B?QmVub8OudA==?= Monin <benoit.monin@bootlin.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Frank Li <Frank.Li@kernel.org>, imx@lists.linux.dev,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH RFC 1/2] dmaengine: fsl-edma: Implement
+ device_prep_peripheral_dma_vec
+Date: Tue, 05 May 2026 15:51:43 +0200
+Message-ID: <BXbYyeoYQ824UWckgqlzqQ@bootlin.com>
+In-Reply-To: <afjCEG_Do01eVBBO@lizhi-Precision-Tower-5810>
+References:
+ <20260430-fsl-edma-dyn-sg-v1-0-4e0ecbe2df66@bootlin.com>
+ <20260430-fsl-edma-dyn-sg-v1-1-4e0ecbe2df66@bootlin.com>
+ <afjCEG_Do01eVBBO@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260504031209.618949-1-rosenp@gmail.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB74:EE_|CO1PR10MB4674:EE_
-X-MS-Office365-Filtering-Correlation-Id: c97467f8-83b9-4e2e-a6ee-08deaaaaf218
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700016|376014|22082099003|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	SElSdaNBsnJdQjKPqQFid7DRjNplkzkNQXX2+1Urh5PmT18sV9DTDh6FXfwbKfShSe2nwjVD3JhzGymu/8NDB8tAo4sEFt7FUZL6lFqQyItsEgT2GqaH7geL22NWHaqrv0PsxHLcLO+tlkFzKPl6sK3EBvFfOBIJteZNQF2y0GVx0NLTA1peW9Bw8+tGVv1xRLb9uA1r2XklWjG4XNnB5ov8BCsnAMfydgPL2sanTsT5O47TCFgOZBER6j4KKHr0JoCc9LCoMPIz/TqIMAraBV+qejUgNSvVYr7ia9/GJzqh6bKJC//DkxLprkbX0Scmbz6HsbTbCbK8bsOEI7KAieVde8DpuQTYiUSzKOmqH/rVXhw2YHMlJwxrKRmXsfPeDM4/4cALV97s/7CugWEiLimlxg0zj2NuWecfoVUIC8Z873qkBZHvHJ+13VhSzsPg9QXdto+axFF/gP4PhEjILpG8eJfS0RBB4P70UZckc6qCJJLuaSr12xbQbrhYIjnOVLNcNiIBQzVKhNRWZeXMYlrURsiz9qfvWGfpH6j/u1p+xQSOwEanrZmE+XZvu6HRibCtDJRA78Q+XTu7Hnbf91Qy5NnIzeJkPFL+Oy0ggBdLWG1nCdUq9S4NnBs4Qzd9bt0J++nCa7TcR3E2Oi6luSwxByYn3nkrs3omU844L/0vYL51LZ5ALqJ682F9mBHTnI3PGezoQuQbxWWcHcdj8h/YdBsHM0aIqgrywoePFNY=
-X-Forefront-Antispam-Report:
-	CIP:198.47.21.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet201.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700016)(376014)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	KEHMtdzQebsIrbyCryyK6eMcTvoS6AnlnisMpSp0IPLt3DJ66ETQwqhLPI+2mxJchL7u8b+AQkZUvHO/BTFk+M/kUtjUnEpKHez6R0rHpNx5IUtCy/HNOWfLVMrbbtDGI34P7wS3w7P6eVetAObbXfM/585JHVnoOmhAtM0mKeDqowqiBvu1i8Tu0nBJcqRmVCEmab4s/e8P/qxqMYGwEu+T0V9EAKk+gD26C/b1fP/JcrsQy4HbcMxDpmZRUL8q6Te/NCZxwlQaJqcIrLok5oTsEhBZ73Jr8bS4ZyT7SksbuLhewdPscVFyrw4xgIvlyjt/atsZRFvaRZZBvi/2s0AaT0mQTuIh33iFJJk4T9I9a6ifGTKlSpkrpgtZOh3iWQXaMixgs9h2cC12BYa/G4ogdxOX/O41DdT4ED3B4ZoFoRIsZ08wW1K1/Mc0/0V7
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2026 13:33:51.4841
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c97467f8-83b9-4e2e-a6ee-08deaaaaf218
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.195];Helo=[flwvzet201.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB74.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4674
-X-Rspamd-Queue-Id: 4C2594CEAC6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Last-TLS-Session-Version: TLSv1.3
+X-Rspamd-Queue-Id: 87C5B4CED98
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[ti.com,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[ti.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10219-lists,dmaengine=lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCPT_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[bootlin.com:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ti.com:dkim,ti.com:url];
-	DKIM_TRACE(0.00)[ti.com:+];
+	TAGGED_FROM(0.00)[bounces-10220-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nm@ti.com,dmaengine@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[benoit.monin@bootlin.com,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[10]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-On 20:12-20260503, Rosen Penev wrote:
-> Use a flexible array member to combine allocations.
-> 
-> Add __counted_by for extra runtime analysis.
-> 
-> Fixup k3-udma as well since ti_sci_resource is used there as well and
-> needs fixing up to use kzalloc_flex.
-> 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> ---
->  v2: add k3-udma fixes.
->  drivers/dma/ti/k3-udma.c               | 180 +++++++++++++------------
->  drivers/firmware/ti_sci.c              |   7 +-
->  include/linux/soc/ti/ti_sci_protocol.h |   2 +-
->  3 files changed, 98 insertions(+), 91 deletions(-)
+On Monday, 4 May 2026 at 17:58:08 CEST, Frank Li wrote:
+> On Thu, Apr 30, 2026 at 11:49:32AM +0200, Beno=C3=AEt Monin wrote:
+> > Add implementation of .device_prep_peripheral_dma_vec() callback to set=
+up
+> > a scatter/gather DMA transfer from an array of dma_vec structures. Setup
+> > a cyclic transfer if the DMA_PREP_REPEAT flag is set.
+> >
+> > Signed-off-by: Beno=C3=AEt Monin <benoit.monin@bootlin.com>
+> > ---
+>=20
+> Please remove RFC for this patch.
+>=20
+Ok, will do.
 
-These files are maintained by different maintainers - Could you split
-the patch and send to relevant maintainers?
+Best regards,
+=2D-=20
+Beno=C3=AEt Monin, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
-[...]
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
-https://ti.com/opensource
 

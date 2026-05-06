@@ -1,198 +1,137 @@
-Return-Path: <dmaengine+bounces-10229-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10230-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yGrHAKMi+2lvWwMAu9opvQ
-	(envelope-from <dmaengine+bounces-10229-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 06 May 2026 13:14:43 +0200
+	id aL55GSZL+2nWYwMAu9opvQ
+	(envelope-from <dmaengine+bounces-10230-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 06 May 2026 16:07:34 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B8724D9A2B
-	for <lists+dmaengine@lfdr.de>; Wed, 06 May 2026 13:14:42 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53E894DBB53
+	for <lists+dmaengine@lfdr.de>; Wed, 06 May 2026 16:07:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 05C3430134BE
-	for <lists+dmaengine@lfdr.de>; Wed,  6 May 2026 11:14:41 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id C2C69300B2A6
+	for <lists+dmaengine@lfdr.de>; Wed,  6 May 2026 14:01:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5803F421883;
-	Wed,  6 May 2026 11:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A82F48033F;
+	Wed,  6 May 2026 14:01:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ko0VEGSj"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="E0GFlRfg"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011023.outbound.protection.outlook.com [52.101.52.23])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E02B32ABCD;
-	Wed,  6 May 2026 11:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.23
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778066080; cv=fail; b=Zgvej4EjA0z8qpl5/raEPLyDRAqtrTSaMrEN3f7JdnRIuzomV1ElkaINDPx5qKFcw9CDatneRp4xzOST/pCxk1M2ial15vhsG9VoEkQ5QXy2wPZX1VJ7XFFYBkZs3NuBORa9BwwVgQr8BM0gJPDutQvdAVUYsP5CZRRQSq1ptso=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778066080; c=relaxed/simple;
-	bh=3ZQpXgeTZGpGAcjOelXbNIErVyO911RVYNeAsJCln84=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LWYQ2c7D6Q4mdZkjIzargwZHfpr6cvnAZhEYDmkFK3jXQ7LIB9/VjWsy/Y+xQxob6n72RfnU90dQq4enp4Ghi3OVuAmJrdSL3cU4oq0LqEXkzLBRfgMuApAJhmVgT+w3+sMK5B3AbnRLY3EJnp0BLc+ISudBEfdrO59mxN1RZN4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ko0VEGSj; arc=fail smtp.client-ip=52.101.52.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tUut4T/Ns2HszNipqOob82r7xsu2/yYXeEc2ubS9vPQR2uyZFZ3+IroMuTDTNMLQDHuCdPrgcA98UfXQ+JiDY4wEpzN34XCu9jbbIa7dqrVh2zaKIbfb3U6BOTbjii8fasGfim7l5/nDXqJTt0k5DbCDm+JYiyiaZV1Cq21Ax9RgxkgXUeEXeV82nH3IXryRTFguHqedWk9wAq4pcs7XUlUGRvTQlVhz1+Ew7PNVK17yiZfywMPhAAR2BGHCP+476CngvFVheIqna7AenX3JORpuMwF0rU4msms50koRsY0Hr8WKrX5GXfQsYnYxSMR6a7CgIWW7+rxc/TJ/QFbOkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xy1KlAP8oFmJ2jom6NJfOR0MWykD3bW7hoy3v1cLrwM=;
- b=s7tIwiL/ySk1euhOnieiooyMqHIyiq35IkUbbKBRWbIBFeprgYR5jiQEYJHFvpR1QKBZaUblbfbUjscWmupIeDSFc7Mz6qA2UJPbVJvPLD3fzUnJnwiRIPHkKbF2xXu4ikAPyLxlJ7llArL2dzg0aIQgp49AgdEcy+VelB+zwCXGr8PIB27M8D1rPOrTUPkA6nt9LNI/pbvy318SlTIi9obYf0Qato5v0FRQLk3M4kzFN4Kpg7F14lKo7SA7eEJKO+3YmF9yA3oHJPusOvRJ6dH3p4zTjWT5zXaJl7jC/Yy8qq180OVBVTNaMxJjf+JIagKPIS9XPnQZJrfVBUoogg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.21.195) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ti.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xy1KlAP8oFmJ2jom6NJfOR0MWykD3bW7hoy3v1cLrwM=;
- b=ko0VEGSjMGxkeG4wCZfZOlVqxPMLBXm593+4ktAMm3sqST1VBSY6SFcY1NSjonu+kBOYQqoB19+/j+YweIXSYoiR64K3ZpZC6h5SKQManK8jOyL0EOZfKMHv5JJg6qbgipjKJBRZ7leQcODzZM9nPjB/adgcv6uopikN44NoCZ8=
-Received: from PH7PR13CA0012.namprd13.prod.outlook.com (2603:10b6:510:174::18)
- by CY5PR10MB6192.namprd10.prod.outlook.com (2603:10b6:930:30::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.15; Wed, 6 May
- 2026 11:14:36 +0000
-Received: from CY4PEPF0000E9D3.namprd03.prod.outlook.com
- (2603:10b6:510:174:cafe::f2) by PH7PR13CA0012.outlook.office365.com
- (2603:10b6:510:174::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9891.17 via Frontend Transport; Wed,
- 6 May 2026 11:14:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.195)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.21.195 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.21.195; helo=flwvzet201.ext.ti.com; pr=C
-Received: from flwvzet201.ext.ti.com (198.47.21.195) by
- CY4PEPF0000E9D3.mail.protection.outlook.com (10.167.241.138) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9891.9 via Frontend Transport; Wed, 6 May 2026 11:14:34 +0000
-Received: from DFLE215.ent.ti.com (10.64.6.73) by flwvzet201.ext.ti.com
- (10.248.192.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Wed, 6 May
- 2026 06:14:32 -0500
-Received: from DFLE208.ent.ti.com (10.64.6.66) by DFLE215.ent.ti.com
- (10.64.6.73) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 6 May
- 2026 06:14:32 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE208.ent.ti.com
- (10.64.6.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37 via Frontend
- Transport; Wed, 6 May 2026 06:14:32 -0500
-Received: from [10.249.131.170] ([10.249.131.170])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 646BETqG1240870;
-	Wed, 6 May 2026 06:14:29 -0500
-Message-ID: <0c1d1edb-40bd-4784-a308-7d2308b466af@ti.com>
-Date: Wed, 6 May 2026 16:44:28 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4040547DD5B
+	for <dmaengine@vger.kernel.org>; Wed,  6 May 2026 14:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778076107; cv=none; b=KTc2FV10D9fgpzyA7tBvfD0SXxpTEzg79rXSOzho4AUHfww4l7mk/Wkl9gTy9DNsX5JpOfTADX7t6dySQDUEBx/Wt0LSZkh/H4ReAsY5ubncJX0RpIK9jo9mMaW9md9k4dM6CKM3wS74DQlyqO7wNqhc4uKAkz14mUJeYPS7W04=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778076107; c=relaxed/simple;
+	bh=pw5M7wHyJF7qGE8EOkabTS3y0p6s5JDD1IostcxlSv4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j47fC1VBeIAout3Ohc/zv9ypmu0irK51iw0pPVaU66GT0yFpAUPTilmtKh7eNB8FHx0Git6KGqdD2I4ep3ZntOgfpomloOea0dCufKei0HMurXJvlHYO9f7qkvp2fKxkM7nJz+KqHArq2S6tenRyU/t8tHOAfjMxnaLN2H86rVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=E0GFlRfg; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id EC98CC5DC4B;
+	Wed,  6 May 2026 14:02:29 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id A74CE6053C;
+	Wed,  6 May 2026 14:01:42 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6FB89107F1B59;
+	Wed,  6 May 2026 16:01:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1778076100; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=8VpBetH3FnMFpP2ml6zi3fZvsO0QOprxF497sdCPnpM=;
+	b=E0GFlRfgdvdfui6wsFff2FGJz4F3OVteevBzZRDss8yVpWUh1wped7N0f7uVaAupIDnbr4
+	8Mc88MlkQGntEj0sowal1DfNFSuHRORrCiGp0D6wyHk74AFoNTZ6EC1yuRUgAZSkbQFp8C
+	K1NZSsKqPIU2q2hTksznzNHzCCsCWzHFcYiDrCNjxJbPSDWrM+VDAvpRoOqmwDkP6J2UVE
+	6WLKHN7x1Tg2KfFQ4ReQIDwvC7OSi8HG5/Aj3YOUfyXWJIxkQuB6N7t2BO3Ohe1potTaQd
+	YAbscpQGxaiFP/fje6S6tflDZ84gnB0hdVsfOXjnr5T3lL/vr9d2+Q2xCgZ0rw==
+From: =?UTF-8?B?QmVub8OudA==?= Monin <benoit.monin@bootlin.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Frank Li <Frank.Li@kernel.org>, imx@lists.linux.dev,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH RFC 2/2] dmaengine: fsl-edma: Support dynamic scatter/gather
+ chaining
+Date: Wed, 06 May 2026 16:01:37 +0200
+Message-ID: <43uRGEDfSHihWPAxby2EOg@bootlin.com>
+In-Reply-To: <afoHxJM-s846s6EG@lizhi-Precision-Tower-5810>
+References:
+ <20260430-fsl-edma-dyn-sg-v1-0-4e0ecbe2df66@bootlin.com>
+ <y-kZDXvATLGuBxQOHfCRwA@bootlin.com>
+ <afoHxJM-s846s6EG@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: dmaengine/ti: Remove myself and add Vignesh
- as maintainer
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>
-CC: <Frank.Li@kernel.org>, <dmaengine@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <nm@ti.com>
-References: <20260505164605.15878-1-peter.ujfalusi@gmail.com>
-Content-Language: en-US
-From: Vignesh Raghanvendra <vigneshr@ti.com>
-In-Reply-To: <20260505164605.15878-1-peter.ujfalusi@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D3:EE_|CY5PR10MB6192:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e5233f0-582f-4795-ae4f-08deab60a794
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700016|376014|22082099003|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	OH48RsrIIy5O5a8hrCLhzqpdy46FHnIvqZ/ADJkYJ2SGKunwllFEizJhcy+2Axh5+/XWEhpgc8vG96xif9n5MHltp/VKb62HLeJ4Ttm4+AEv5heA7LnMzGZHRC+3Y1gWihkhnEcVyQS5fYySUL6gzNWHKxsiEmA8VNlbVrka/5hnHGWZmEP/TOoNclZf4OtWctZ8AVpC5hsnH4Qj9cgNT2/vPrfuRy6q2weIZRftX2m2jfhfnK6asrUufPCRqhvO8jFVNjJyAQ9+birhG30QNMkiEi5yqGN/qv28cW5pTPVZ27JLxfw9yVEL2czebXbcwTO0TDiIb2vep5NLCtRozEi3T1sGmSTpkKzxmB4BKIG/EH21yAJErdY+wx9YH5c8FsNIsIj+rFLWH6tjOXVPoV9Dqs4DmD78Uhdve63u1utGEtyVdDvCHjt4Hwjlo3fwVW2O+0XEM8Qt5sFezSEQ9s3f5wbJETdHQp6SQ9Ha3cDhXBwWvQNCUnuBDeQGz5jXKFnD9ol0n8n9g9o458Ws2/BYKSpb2LuIyF/DihPgEZQCH0kcqt8o+18m0tSPEkJk3IXdAcax4PZRrkLXWsj1cOOajDyjesvfALtMcA03KkJPJ0GKv5yXSm6HPg2UhpAFwgo8lHjuT6l5AiTXy3nwFzjQ7jDYoMYBJ9j/ukWCOAFgZxlUD+ny2Wh+PExBkCdjHb/k0dBDp1O2JnH4Q1k2Q7bvuPMAA7ZYAaDqKiIrLXg=
-X-Forefront-Antispam-Report:
-	CIP:198.47.21.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet201.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700016)(376014)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	kc3x800ZxtjwemXieVUQOvduZxBBDwQ96hXGzsoay0Mn+bHedyHX9e+7QG7cTPQPpYEPLFe5NUDgesXy1Ey2PQyQP5AP0ZgC16O3SmFUhJz6cxY7D13Ge14FkjaggkQxsLyv1dMBGft3gXgyP+ofhirr+lsIGpUl1WWsSm8VOydowz7CoQlUZFTygctX5D2IvaX7j97BuYC9o0I+CBxm9kCl0Vx4gzJXBr8BO7FZMG0xHdX4K09AmKCGY7Eenp3tzASOy3uUEQDbiO8uZkzFx7usiknvCITh6kzr54iPkjFjEfb1MJqByq52hdwsL1BpEph3P3sq9gY147mPB4ZGOcUWxXorTwOGDUjlRh7fKABGDGESF0kNP1GDVF8gUkgLqE2Wv3l6iDTAJeIjIy0/UvMYc/t58IF0CdpsxDfWT0ozbWW4LaLsCTx611dtSbEh
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2026 11:14:34.9071
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e5233f0-582f-4795-ae4f-08deab60a794
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.195];Helo=[flwvzet201.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D3.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR10MB6192
-X-Rspamd-Queue-Id: 5B8724D9A2B
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Last-TLS-Session-Version: TLSv1.3
+X-Rspamd-Queue-Id: 53E894DBB53
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[ti.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[ti.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10229-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ti.com:email,ti.com:dkim,ti.com:mid];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[vigneshr@ti.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[bootlin.com:+];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ti.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10230-lists,dmaengine=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[benoit.monin@bootlin.com,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[10]
+	TAGGED_RCPT(0.00)[dmaengine];
+	TO_DN_SOME(0.00)[]
 
-Hi Peter,
+On Tuesday, 5 May 2026 at 17:07:48 CEST, Frank Li wrote:
+> > >         how do you test it? and how much preformance improved?
+> > I did my tests by doing SPI transfers with the LPSPI controllers, doing=
+ DMA
+> > transactions with different number of buffers and different buffer size=
+s.
+> > Without chaining, interruptions on the SPI bus occur between each DMA
+> > transaction. With chaining, the activity on the SPI bus is continuous as
+> > long as DMA transactions are issued before the end of the current
+> > transaction.
+>=20
+> Does SPI support issue new transfers without wait for previous transfer
+> complete, or SPI transfer already support async queue?
+>=20
+This is done with a local version of fsl-lpspi driver adding a simple
+offload support by borrowing the DMA channels allocated to the SPI
+controller. I can then issue multiple DMA transactions with the dma_buf API
+of the IIO subsystem and trigger SG chaining.
 
-On 05/05/26 10:16 pm, Peter Ujfalusi wrote:
-> As I cannot spend adequate time to fulfill my role as maintainer for the
-> TI DMA drivers, it is for the better if I resign and hand over the role
-> to Vignesh Raghavendra.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-> ---
-
-Thanks for all the contributions over the many years!
-
-Acked-by: Vignesh Raghavendra <vigneshr@ti.com>
-
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0dfad67f66c0..f1575f1d2d8b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -26408,7 +26408,7 @@ F:	sound/soc/codecs/tlv320*.*
->  F:	sound/soc/codecs/tpa6130a2.*
->  
->  TEXAS INSTRUMENTS DMA DRIVERS
-> -M:	Peter Ujfalusi <peter.ujfalusi@gmail.com>
-> +M:	Vignesh Raghavendra <vigneshr@ti.com>
->  L:	dmaengine@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/dma/ti-dma-crossbar.txt
+Best regards,
+=2D-=20
+Beno=C3=AEt Monin, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
-Regards
-Vignesh
+
 

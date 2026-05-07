@@ -1,159 +1,169 @@
-Return-Path: <dmaengine+bounces-10263-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10264-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8Ap6DT6O/GlhRQAAu9opvQ
-	(envelope-from <dmaengine+bounces-10263-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 15:06:06 +0200
+	id uG3vDe2U/Gn3RQAAu9opvQ
+	(envelope-from <dmaengine+bounces-10264-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 15:34:37 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA72C4E8E10
-	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 15:06:05 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 936434E950E
+	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 15:34:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 41E64301F4B9
-	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2026 12:59:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5561D3036D51
+	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2026 13:31:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 048D33F23AF;
-	Thu,  7 May 2026 12:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MuVsmwWr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2127C3939C8;
+	Thu,  7 May 2026 13:31:08 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47213F20F4;
-	Thu,  7 May 2026 12:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494F233F5AB
+	for <dmaengine@vger.kernel.org>; Thu,  7 May 2026 13:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778158791; cv=none; b=mw+LgbJS9H7SIY+1HCtVhslLOq9a4KZqLS4YB8h00F+GfN92CL94qWrbfOMwh9z+ylYgojzlrXDI10DrdqHGh57wSvKZbeMuCpj2JapCym8ZZ5v1tMOU8pEyWz4Jom/TFXhH7B0Eg91+rhSth/Nf7N6IYjd5dgAfhgPIvCupsUY=
+	t=1778160668; cv=none; b=Ou+0IjXEKVkw721/eJabrQLPURhFpF/e0YtjhDL1JU6sLSG84OC1YkZLCwrFixC2fGL5eMZxuxiFBYDF8sZ5ewUup0wEa8ExJoSerSHx3LiKayYLH5auFaBMxf8/j7hEsVW+IPPXBT7MZ2y3wrgHVwGnNc++kY6YZGGRtxs9yH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778158791; c=relaxed/simple;
-	bh=SPkdp1hAd3kbxPL1+HqVTfSGgCVdV7lIVFIOyf9qB3M=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=TBO0fKNhLXEjICoN4dLh8sC9S1yEbZEw0XeADe9loj+0oVdyDlP4urCXifi2mnQp2Eyc6/UFMvi+fUx0oSrKEI4REXaWhwoCobL9kd8V0NTQaf66LtfkuzJ1yrXAQTh1Snzrzlx9ww8BZlbwt2G9n7ouOEhYnSGgC62akcIDdc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MuVsmwWr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7648DC4AF09;
-	Thu,  7 May 2026 12:59:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778158791;
-	bh=SPkdp1hAd3kbxPL1+HqVTfSGgCVdV7lIVFIOyf9qB3M=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=MuVsmwWrACEvMVGOT6T62XSIRW5C6lut1XjzJv8VMgV7kv6fBgg/3Cw/GNR+uRfi8
-	 CgMkARZjEIRgfY+YzGltkW3xeGf25ZPsuwxHYzSHwBxSaLWH0TM38r2EQ6FE+gsoga
-	 wcy9AypcEoOVj4gO4khQ/1uhjFAtzsUPgQTO28Vp9ItrAth58+77aKOLcUElthKBum
-	 PpSOq+v5ukaMF0cPIpxGsh+20YSvM2lb3m5u5LFsn1WghiJbuSjJajAUhgnx8G/779
-	 uCTPlo28aAn1TUghVoItw+BILS9jlJC1tMPM9P3Qzf0b85avMKVab+xPRXvL6zEnYc
-	 q8HiuvRK+k2JQ==
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 817D0F40068;
-	Thu,  7 May 2026 08:59:50 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-04.internal (MEProxy); Thu, 07 May 2026 08:59:50 -0400
-X-ME-Sender: <xms:xoz8aVBolen00sW23GmU_yryCHf-zOEL9iXr-Y4eiKIHwOFLzNgZaA>
-    <xme:xoz8aeUdpBXoUJLkQdRh1Vnr7qihBkFSsdFf-iYpGDOMRr8RQWMdGVqRvNdd1JFc3
-    Rnft1FigRvBlWWdrh2YYegLzlKmThP3t1BRk6MuHjULEqQyEFNxiDtF>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddutdejheefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
-    htvghrnhepjeejffetteefteekieejudeguedvgfeffeeitdduieekgeegfeekhfduhfel
-    hfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedtvdeg
-    qddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrdguvg
-    dpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprggu
-    uhhrvghghhgvlhhlohessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepohhlthgvrg
-    hnvhesghhmrghilhdrtghomhdprhgtphhtthhopehgvghrgheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqmheikehksehlihhsthhsrdhlihhnuhigqdhmieekkh
-    drohhrghdprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqtggrnhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehlihhnuhigqdhsphhisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:xoz8aWS6Dbd7vLZ9DfWLWri47kgjf6hFSspF3rk5dLP6blJ7z0-k3A>
-    <xmx:xoz8acPqH-S4hI1w0plNhTt9Z6EQIvDRHoCdx6ANHd_81QGNTqMZ4Q>
-    <xmx:xoz8aUgjTR3zU2EW93PQJQq91aeHmyeyWe_7AUm8II-ZW185vezDVA>
-    <xmx:xoz8aZmctjWvS7E15xE--4swG_Bmnyoag4GGxu_H708S60ibJUzwOw>
-    <xmx:xoz8aQhcJG6RGWfgHmC2ckoc5oLid6ge9IfBiKTBdukoMrH1cTYnvImV>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 600371060066; Thu,  7 May 2026 08:59:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1778160668; c=relaxed/simple;
+	bh=0r6hk/aWmDACR5dNtufyI9Sz3ggteObbzx6/5TofXE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TDJRs4v4I9xiWYI+s4gCxxCLbBHQGUCSdFT1sW2MtcDWmbwLmhix8orY/w2SH6gh52lcT2i/HS3omNFn7GB8wwx1ADB64JoBCEadW1YeYBf0TV7gCB8XE2WZGKgAErHw+RxFtuLQPtIuVN74w2mH0DJ39QGzQ5hUU8yh5TzzgyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1wKyoT-0007GM-N6; Thu, 07 May 2026 15:30:49 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1wKyoS-000viD-1I;
+	Thu, 07 May 2026 15:30:48 +0200
+Received: from pengutronix.de (p4ffb2dc6.dip0.t-ipconnect.de [79.251.45.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 8C2725305FF;
+	Thu, 07 May 2026 13:30:48 +0000 (UTC)
+Date: Thu, 7 May 2026 15:30:48 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Greg Ungerer <gerg@kernel.org>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
+	arnd@kernel.org, Greg Ungerer <gerg@linux-m68k.org>, dmaengine@vger.kernel.org, 
+	linux-can@vger.kernel.org, linux-spi@vger.kernel.org, olteanv@gmail.com, 
+	adureghello@baylibre.com
+Subject: Re: [RFC 4/4] m68k: coldfire: fix non-standard readX()/writeX()
+ functions
+Message-ID: <20260507-masterful-pegasus-of-science-c408e0-mkl@pengutronix.de>
+X-AI: stop_reason: "refusal"
+References: <20260506142644.3234270-2-gerg@kernel.org>
+ <20260506142644.3234270-8-gerg@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Am-_gogYW4uZ
-Date: Thu, 07 May 2026 14:59:30 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Greg Ungerer" <gerg@kernel.org>, linux-m68k@lists.linux-m68k.org
-Cc: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-can@vger.kernel.org, linux-spi@vger.kernel.org,
- "Vladimir Oltean" <olteanv@gmail.com>,
- "Angelo Dureghello" <adureghello@baylibre.com>
-Message-Id: <4a617879-5147-4595-b6ce-ef3391b936d9@app.fastmail.com>
-In-Reply-To: <fdd6fc14-f607-4186-8db4-25de973ac322@kernel.org>
-References: <20260506142644.3234270-2-gerg@kernel.org>
- <20260506142644.3234270-8-gerg@kernel.org>
- <40aefc39-bd98-460d-8aa7-5dd79f562e0d@app.fastmail.com>
- <fdd6fc14-f607-4186-8db4-25de973ac322@kernel.org>
-Subject: Re: [RFC 4/4] m68k: coldfire: fix non-standard readX()/writeX() functions
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: CA72C4E8E10
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wannj6m2lemejz2p"
+Content-Disposition: inline
+In-Reply-To: <20260506142644.3234270-8-gerg@kernel.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Rspamd-Queue-Id: 936434E950E
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-2.56 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TAGGED_FROM(0.00)[bounces-10263-lists,dmaengine=lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,baylibre.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	FREEMAIL_CC(0.00)[lists.linux-m68k.org,vger.kernel.org,kernel.org,linux-m68k.org,gmail.com,baylibre.com];
+	TAGGED_FROM(0.00)[bounces-10264-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[pengutronix.de];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mkl@pengutronix.de,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[pengutronix.de:email,pengutronix.de:mid,pengutronix.de:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Thu, May 7, 2026, at 14:43, Greg Ungerer wrote:
-> On 7/5/26 05:12, Arnd Bergmann wrote:
->> On Wed, May 6, 2026, at 16:26, Greg Ungerer wrote:
->> 
->> I would suggest marking these as explicit BIG_ENDIAN rather than
->> NATIVE_ENDIAN. The effect should be the same since coldfire CPUs
->> cannot run little-endian code, but the way that hardware usually
->> works is that the endianess is fixed at the bus level to one way
->> or the other. NATIVE_ENDIAN to me implies that the registers
->> have configurable endianess that is switched along with the CPU
->> mode.
->
-> Ok, will change. I chose native endian in this case since the regmap config
-> entry used for the m5441x family is also used by the vf610 devce (which looks
-> to be an ARM imx SoC). So it will need a duplicate setup with those endian
-> flags set to BIG_ENDIAN. But that is no problem.
 
-Sounds good. In this case, splitting it up is technically even required,
-because you can run a big-endian ARMv7 kernel on vf610, so the vf610
-entry has to use little-endian registers rather than native.
+--wannj6m2lemejz2p
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC 4/4] m68k: coldfire: fix non-standard readX()/writeX()
+ functions
+MIME-Version: 1.0
 
-I don't think anyone has run big-endian kernels on vf610, though I have
-heard of users testing them successfully on i.MX6.
+On 07.05.2026 00:26:48, Greg Ungerer wrote:
+> diff --git a/drivers/net/can/flexcan/flexcan-core.c b/drivers/net/can/fle=
+xcan/flexcan-core.c
+> index f5d22c61503f..a682f02d2c43 100644
+> --- a/drivers/net/can/flexcan/flexcan-core.c
+> +++ b/drivers/net/can/flexcan/flexcan-core.c
+> @@ -296,6 +296,7 @@ static_assert(sizeof(struct flexcan_regs) =3D=3D  0x4=
+ * 18 + 0xfb8);
+>  static const struct flexcan_devtype_data fsl_mcf5441x_devtype_data =3D {
+>  	.quirks =3D FLEXCAN_QUIRK_BROKEN_PERR_STATE |
 
-      Arnd
+Nitpick:
+Can you move it here, so that the quirks stay sorted?
+
+		FLEXCAN_QUIRK_DEFAULT_BIG_ENDIAN |
+
+>  		FLEXCAN_QUIRK_NR_IRQ_3 | FLEXCAN_QUIRK_NR_MB_16 |
+> +		FLEXCAN_QUIRK_DEFAULT_BIG_ENDIAN |
+>  		FLEXCAN_QUIRK_SUPPORT_RX_MAILBOX |
+>  		FLEXCAN_QUIRK_SUPPORT_RX_FIFO,
+>  };
+
+With that change:
+
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de> # for drivers/net/can/flex=
+can
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--wannj6m2lemejz2p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSl+MghEFFAdY3pYJLMOmT6rpmt0gUCafyUBQAKCRDMOmT6rpmt
+0h1/AQD8fPQ9qBfBV4KsyZ2O2YslluG3RnplOxiorG4vbWXGngD/dQ7s6kWp1KKP
+rLIS55PAZs60zOx+c7AxCJhLScFIvAw=
+=fD+P
+-----END PGP SIGNATURE-----
+
+--wannj6m2lemejz2p--
 

@@ -1,181 +1,146 @@
-Return-Path: <dmaengine+bounces-10260-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10262-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EPvhIaxr/Gn0PgAAu9opvQ
-	(envelope-from <dmaengine+bounces-10260-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 12:38:36 +0200
+	id WPRbEeGI/GleRAAAu9opvQ
+	(envelope-from <dmaengine+bounces-10262-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 14:43:13 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6E7F4E6E36
-	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 12:38:35 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFCBF4E857F
+	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 14:43:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 44B813009E2F
-	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2026 10:37:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1DFBB300EC92
+	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2026 12:43:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E423EC2C4;
-	Thu,  7 May 2026 10:37:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 683443EE1DC;
+	Thu,  7 May 2026 12:43:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="e7qjP51o"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ivYdaGlo"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB3B3EB7FA;
-	Thu,  7 May 2026 10:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CA33E9280;
+	Thu,  7 May 2026 12:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778150254; cv=none; b=Nalxsdc/oemVDtvxl5Zcnod2L84kSUZPZm61G2qy4r/xvAo1C+3WCA+ipapF07aoc8DZux4gzZBePq5yuOFBfGM0IRGgiZJuOsFH1pvBWi++CauJj/CeADUGpsJsGS24G0xDUcOVtojdfF7O56BgeTp3MvpXhwpnJ8pqr6/O/oI=
+	t=1778157787; cv=none; b=WpR4bB7uvAoIOqA7YnmPK2xlh/VA7UywnQHNGkob4JyG3/Oc1RMMv38Twle5gM1U64FDCR+jr2SnBQ0i34cbt+D5DVtAjab8N1ww7haBKvdSeZnbtw6k8lIhtULUKINrfETpKdsIZ4Cdtq8hFJBptAfYrCiSIHvjtvquJG/28I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778150254; c=relaxed/simple;
-	bh=UcgnyaWra/zqeOQob/WjOC8W7jbkn7uDsfsNgx6yk+o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=a2woVOWPHMraeWMPyTNdIQ8VdjWbk5esn7WSOSIKKAqkQZ+eKj7nXjfUaJTUzMhDq3uDkDxzwJhtipdFF7tkNGVaxhCH75nxVeruMaW98ehIhBW+s4UmfaRuJGLokXXc+qz51p1c+z8whgntkN0+a8L28P01bkrhayegqjIMW7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=e7qjP51o; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1778150208;
-	bh=q9cTs1Fc6HOosuoCIVUk0fjsfQdYZlWk0msB6oMaeBI=;
-	h=From:Date:Subject:MIME-Version:Message-Id:To;
-	b=e7qjP51oHFqRhM0QkFGh+yVFuQXuHYS/MZTI7rNgDX7WzyXFfBXvP1FVjaOJGfS0b
-	 8ZuHQGOub1EuFeNeSKPFcM95juzlpm//abi2r9IVvkFwVv552HhBgIG07S1yS6r8cv
-	 /K4pFKcnr2LRqFQizTAQ3INypZ2Wdjlq1xOv26Vs=
-X-QQ-mid: esmtpgz11t1778150206t5ab20be1
-X-QQ-Originating-IP: psN/mL0pLniw6V4U8YI/jaEoUJmf9vKAuNcqWpa3BiI=
-Received: from = ( [120.237.158.181])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 07 May 2026 18:36:43 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 11507075083800382789
-EX-QQ-RecipientCnt: 20
-From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
-Date: Thu, 07 May 2026 18:36:23 +0800
-Subject: [PATCH v5 4/4] riscv: dts: spacemit: Add PDMA controller node for
- K3 SoC
+	s=arc-20240116; t=1778157787; c=relaxed/simple;
+	bh=KcJZ2tQuXM3g8y12mvLrPHW/18cvpRwsmiGbk6LCNUw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KPAkgn822TlgaVoeVSJUj8PyOz6nrWjC6S2EXVaKnLoA7B4w+GN/xOk/1bJ7XbJ/1lMCMlPNTzc2hwtz2S5mEuPLBiUtSVZvMP3HaxTp69l6gbCtKiMydl8afScCpfUA0/J1wj9T5mXnmN4fQ6N2yMYBNyO9ECjgxcHpCX6YbCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ivYdaGlo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8C71C2BCB2;
+	Thu,  7 May 2026 12:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778157786;
+	bh=KcJZ2tQuXM3g8y12mvLrPHW/18cvpRwsmiGbk6LCNUw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ivYdaGloqHxvmfWXSxe1ELUU+RwECDQ3Ot2aFXb4yrVAQge39ukfDNjlED2qvSaZs
+	 oSt9fjlj41wvhoEbVNAed0bzuECz1Oa95CYmBbYRw0rA0lZ8l9e/vqg/NeLtwbC19N
+	 3hYoFNUyTffpG57XqltsjWbSULV11ZgH5g7UwlzF1x7ugsFp30oZACYww61xrFhatG
+	 KoRJQygv77yLSMgafEG2DAH28LcK6ci1wOLt30Yz6lU12saNClOW9EhizsmcbNgdgT
+	 jT4aUZyOu/eFs9CUbXRH7QpgIJoU/ZtJIIgNJ7J0HyBjmQjfOVOs6ABn8AUS1lo8s4
+	 e7SElQxE0X/ug==
+Message-ID: <fdd6fc14-f607-4186-8db4-25de973ac322@kernel.org>
+Date: Thu, 7 May 2026 22:43:01 +1000
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 4/4] m68k: coldfire: fix non-standard readX()/writeX()
+ functions
+To: Arnd Bergmann <arnd@kernel.org>, linux-m68k@lists.linux-m68k.org
+Cc: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-can@vger.kernel.org, linux-spi@vger.kernel.org,
+ Vladimir Oltean <olteanv@gmail.com>,
+ Angelo Dureghello <adureghello@baylibre.com>
+References: <20260506142644.3234270-2-gerg@kernel.org>
+ <20260506142644.3234270-8-gerg@kernel.org>
+ <40aefc39-bd98-460d-8aa7-5dd79f562e0d@app.fastmail.com>
+Content-Language: en-US
+From: Greg Ungerer <gerg@kernel.org>
+In-Reply-To: <40aefc39-bd98-460d-8aa7-5dd79f562e0d@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260507-k3-pdma-v5-4-6b9743038026@linux.spacemit.com>
-References: <20260507-k3-pdma-v5-0-6b9743038026@linux.spacemit.com>
-In-Reply-To: <20260507-k3-pdma-v5-0-6b9743038026@linux.spacemit.com>
-To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@kernel.org>, 
- Guodong Xu <guodong@riscstar.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
- Troy Mitchell <troy.mitchell@linux.spacemit.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778150183; l=1492;
- i=troy.mitchell@linux.spacemit.com; s=20250710; h=from:subject:message-id;
- bh=UcgnyaWra/zqeOQob/WjOC8W7jbkn7uDsfsNgx6yk+o=;
- b=XOc0zZRuiXiBiZoN2eVYgNvG3zHP41yewOpJ76kQpJJtDH8H28Wf+lkzyIPnXBRVNdV2Q9uMT
- epKrIm+hSloDkYlvvqetMTtp6dk8M/N/b+DYHGRXVv0cxMCmuaovu3m
-X-Developer-Key: i=troy.mitchell@linux.spacemit.com; a=ed25519;
- pk=lQa7BzLrq8DfZnChqmwJ5qQk8fP2USmY/4xZ2/MSsXc=
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: MIebQsVGgJ8BS+4hYmiMYCQMGhxTjaYjN9XeuWqmA9lLr8hvfycLy2zG
-	zSYsrg6Yu2lejAIOD0BGXcsBDZ1zKwmNVqw1KodWzUEudn6J2tZhylzFy3JZrnP+8w2haTm
-	Nan/P7xKVSI6OnSWQUthlsinQzYzWKlINUGqFkBFvQYD1Bm/7+OFWJffblUuOdk61ZcJcA0
-	T1JzApaicm/DM0Wf+pol+BxCr8iQOj1aCBuQmDXHJnrS7VNU4vHx9C/Nwr/7QyFOydAxMQB
-	q644KaG37WsqWK39aSzhsEj9BwUQlp77V8kPJebGfAAWY4OW1mwjCeCYOo1f5R1tfRz0IgV
-	cPrtqMCchLMzAHSDrfzKYgpns8/aZAdRlCaA68NiE98s3Pz0ZO7YF0myzJ2tqNCHF0Rg66Z
-	s+cb7vKNkm2Xqe/ZmSHj5IiINyK8QzO4UeW0u/7CLFcK6opUPSlClMFaWtb+X4KrL7zQZaN
-	qtoVXAPGeCHF48ikq/PPT/vWA6VJ/1dXPM+9WSfRaMRWEKuw8gyfWhv1hErhkRcao1UUUcr
-	UcaR7I+ZpTX9fluZ8pKarkDpq4mVwB51Ajj9cWfeyRk6X8N/4PQjN08T1LJXkAHXW3NwGbl
-	9fXwn6a4/94xPWAFQzsgvv9MmuQXGxRgO9AsJPdILltZ+qU3v9yYWyQ7tBa15t+Bu1vzBua
-	bIC7+4YwIWG2kzXLsJSH6j2tY+V4pu8O2Pcay8kL7rXMyGO3U6IqUiudWmjbPcSX03DXlMu
-	JTj//pKuJOVU/uG9TVlMBEsxxEsygjgX+zQ/DD2Uxz1K/seCunmjh0JJ3+GwpcjAJErz5dn
-	vXNN6LuFWvnhsf4420U8SFoVQpbAGdqNR0ihPaZ67cZymGNNYgPy/KEry+GChjCKy+xLQsg
-	HASrImQX7iUH1J0gDS4dR9O9FcCVPLC5dimHC0aQbHuWSj8qh1ogB1OwDl/LKVSPI9zyJ6K
-	GwyzZof/AYs1Jq6y3RhiLMZx2qbS6k5tyYeJPXJ9h10CMEIXbaCwxyCHJzkyc3uts3+XDMo
-	izcvPDZuRzgDUbcMUA215mKoIE5ONFBdWKaatz6F+bQJCacYIX/QAdNq1CmBXSXIfam/lKl
-	ND3Pm7Wu4/FCsoDP9JpaFPxGTIMzW+ZRppe4MMB82VS2Kb1p/hz0okKmAwn7RPkpnt5KhD9
-	kBiF7bSygrlazL3roVKXLSOrKjfp1yCff76d
-X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
-X-QQ-RECHKSPAM: 0
-X-Rspamd-Queue-Id: C6E7F4E6E36
+X-Rspamd-Queue-Id: AFCBF4E857F
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[linux.spacemit.com:s=mxsw2412];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_NA(0.00)[spacemit.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10260-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,baylibre.com];
+	TAGGED_FROM(0.00)[bounces-10262-lists,dmaengine=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[troy.mitchell@linux.spacemit.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[linux.spacemit.com:+];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[gerg@kernel.org,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[spacemit.com:email,d4000000:email,linux.spacemit.com:mid,linux.spacemit.com:dkim,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
-Add the Peripheral DMA (PDMA) controller node for the SpacemiT K3 SoC.
-The PDMA controller provides general-purpose DMA capabilities for various
-peripheral devices across the system to offload CPU data transfers.
+Hi Arnd,
 
-Unlike the previous K1 SoC, where some DMA masters had memory addressing
-limitations (e.g. restricted to the 0-4GB space) requiring a dedicated dma-bus
-with dma-ranges to restrict memory allocations, the K3 DMA masters have
-full memory addressing capabilities. Therefore, the PDMA node is now
-instantiated directly under the main soc bus.
+On 7/5/26 05:12, Arnd Bergmann wrote:
+> On Wed, May 6, 2026, at 16:26, Greg Ungerer wrote:
+> 
+>> drivers/dma/mcf-edma-main.c
+>>    Supports big-endian access by setting the big-endian flag of
+>>    the drivers struct fsl_edma_engine. But locally should be using
+>>    ioread32be() and iowrite32be() instead of ioread32() and iowrite32().
+> 
+> I'm still a bit confused about how this works at the moment,
+> since the drivers/dma/fsl-edma-common.h file already contains
+> checks for the edma->big_endian flag, which is set in
+> mcf_edma_probe(). The version after your patch makes sense
+> to me, but it looks like the existing code cannot work.
 
-Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
----
- arch/riscv/boot/dts/spacemit/k3.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Yes, it certainly doesn't look right to me either.
 
-diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
-index a3a8ceddabec..cd321975fc18 100644
---- a/arch/riscv/boot/dts/spacemit/k3.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k3.dtsi
-@@ -438,6 +438,17 @@ soc: soc {
- 		dma-noncoherent;
- 		ranges;
- 
-+		pdma: dma-controller@d4000000 {
-+			compatible = "spacemit,k3-pdma";
-+			reg = <0x0 0xd4000000 0x0 0x4000>;
-+			clocks = <&syscon_apmu CLK_APMU_DMA>;
-+			resets = <&syscon_apmu RESET_APMU_DMA>;
-+			interrupts = <72 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-channels = <16>;
-+			#dma-cells = <1>;
-+			status = "disabled";
-+		};
-+
- 		syscon_apbc: system-controller@d4015000 {
- 			compatible = "spacemit,k3-syscon-apbc";
- 			reg = <0x0 0xd4015000 0x0 0x1000>;
+Angelo: you look to be the original author of this driver, can you shed any
+light on its working status in mainline currently?
 
--- 
-2.54.0
+
+>> drivers/spi/spi-fsl-dspi.c
+>>    Setting the regmap format_endian flags to use native endian will
+>>    force driver to use appropriate big or little endian access on
+>>    whatever platform it is built for.
+>>
+>> These drivers have only been compile tested.
+> 
+> I would suggest marking these as explicit BIG_ENDIAN rather than
+> NATIVE_ENDIAN. The effect should be the same since coldfire CPUs
+> cannot run little-endian code, but the way that hardware usually
+> works is that the endianess is fixed at the bus level to one way
+> or the other. NATIVE_ENDIAN to me implies that the registers
+> have configurable endianess that is switched along with the CPU
+> mode.
+
+Ok, will change. I chose native endian in this case since the regmap config
+entry used for the m5441x family is also used by the vf610 devce (which looks
+to be an ARM imx SoC). So it will need a duplicate setup with those endian
+flags set to BIG_ENDIAN. But that is no problem.
+
+Thanks
+Greg
 
 

@@ -1,59 +1,58 @@
-Return-Path: <dmaengine+bounces-10258-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10257-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uExzLZ9r/Gn0PgAAu9opvQ
-	(envelope-from <dmaengine+bounces-10258-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 12:38:23 +0200
+	id 1B6zMGhr/GmMPwAAu9opvQ
+	(envelope-from <dmaengine+bounces-10257-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 12:37:28 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 111144E6E04
-	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 12:38:22 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EA364E6DC2
+	for <lists+dmaengine@lfdr.de>; Thu, 07 May 2026 12:37:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5AE5F301F496
-	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2026 10:37:29 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0DDD1300E161
+	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2026 10:37:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A63873EB7FA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 475FF3EAC71;
 	Thu,  7 May 2026 10:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="tpxzY/hs"
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="b/iB98Qx"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2B03845BE;
-	Thu,  7 May 2026 10:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D745431AA8F;
+	Thu,  7 May 2026 10:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778150244; cv=none; b=rVhfxugZzRPeD8I/Lr/4igApEnhTkEvu4fXKriH00mjzXRhi0r7ZPJ5BBKWZhFhaKnooxRU/cZM4ZHuddxr2KL12xrRD74DhefpE1Yt8YW42FDd7Vm4PkXCVjLOU03hge01a5osSTQ0PqBO0PfJg5xO3Q3C4QkRTHZ/LZ5nUzN4=
+	t=1778150244; cv=none; b=XUuyrr8Z171h88rSnMd2J2EUnlfzqdlDRC9g2n5yQy5SYa1EEy0OmHJA0jGG5Zpd2c5U9KHdbPD6h8ccydpYWUZ9kS/+wqt2FGVCuD4DiyeIAHTAYcgEiTqRa2XLXwbivE6ZxSH/A3mcjSa7NrGFpSBdh+YFoKi0We8FkaaNSeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778150244; c=relaxed/simple;
-	bh=YVYOiD0eP6yd+UvcXTn6Thio/bo8CvlHL5PvAFWxilc=;
+	bh=ESr5oLueEavHIEx5CDfpdUrwWxLz87NQ2AGm9fApLJY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K+VE3/wGWKL8S/x5MAUILwc7B2HGyWAPli8S1nRrC8eRz1iqyyb5zdwFIWWMfw7a/iVFwEQOdt9SoOfo0sd4hGhgCj6nX7jFzBL2PkCoi8ZjR+3i5Pd6/vKnalRFbhAXgEZtzOq5GYNlY3HUeN3ricfvh1Hsf9cIMoqD7n7FilI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=tpxzY/hs; arc=none smtp.client-ip=54.204.34.130
+	 In-Reply-To:To:Cc; b=jrCpe5JdvjCybg+Qipl8fxYJxhsA+eMjv2r3kF6hlFqnLZvgI+ZrG7YmRwZMw2utTyhasK1sxCx8b/ODxFaAzaaTAKRHK5Ho0T5VgWs7cKEeso/69lASUZieCP53N3Xfmn8t+vAFS71Bbqnw8yQlYSftdBkkf+Lt5zpbE69X72w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=b/iB98Qx; arc=none smtp.client-ip=54.207.19.206
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1778150198;
-	bh=sHkoX8vNBLMUFbRQgVPu3YGpMESM1FxDTF4U+0Fo1n4=;
+	s=mxsw2412; t=1778150203;
+	bh=Gj+W+N7im+aQQ8FFJbTvQJn0dNoasXq83/GNhZL6xwU=;
 	h=From:Date:Subject:MIME-Version:Message-Id:To;
-	b=tpxzY/hstQ//1xdqH23gVu6cvhH4Vd02UdcR5E8mF5T+Wiw3vSFG2djPMvncm0xWf
-	 JR5dGcd7VSQL2rfU+NVlN8Hj8BSw3XxtP1bwPxI6qw2biFlEYPVsNtB4Wem6bLEKGI
-	 9py2IzlCFNIL43vOiei4A42i/IVhf5RfQ3oEFH04=
-X-QQ-mid: zesmtpgz1t1778150196t9dc38bac
-X-QQ-Originating-IP: HyHuDtH23EJGYtUrGvw3Xt0V1ggtU5dZGJuwPL6eRKE=
+	b=b/iB98Qxr33fDr1N4cROaWUU80Xk0Fi6Y8/cAB1y+t+deRKcfYVeU3AVZxxjCwfxe
+	 o4nKoEjH88H13GQRO8NecrgCfkwSHovt08q02jzJrU/uRxZc3WoY5Y092mIV1zyPzh
+	 th3q2bpDX2tZGaZXqZ48DkTiwxPUvgy7hSe3C71Q=
+X-QQ-mid: esmtpgz10t1778150201tb51ce93c
+X-QQ-Originating-IP: T6++f6lRK+n6ypX3y/ZECT+G0QZ4TApbmsD2W8JptP8=
 Received: from = ( [120.237.158.181])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 07 May 2026 18:36:33 +0800 (CST)
+	id ; Thu, 07 May 2026 18:36:38 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 13784152864614203457
+X-BIZMAIL-ID: 4507917310872199054
 EX-QQ-RecipientCnt: 20
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
-Date: Thu, 07 May 2026 18:36:21 +0800
-Subject: [PATCH v5 2/4] dmaengine: mmp_pdma: support variable extended
- DRCMR base
+Date: Thu, 07 May 2026 18:36:22 +0800
+Subject: [PATCH v5 3/4] dmaengine: mmp_pdma: add Spacemit K3 support
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -62,7 +61,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260507-k3-pdma-v5-2-6b9743038026@linux.spacemit.com>
+Message-Id: <20260507-k3-pdma-v5-3-6b9743038026@linux.spacemit.com>
 References: <20260507-k3-pdma-v5-0-6b9743038026@linux.spacemit.com>
 In-Reply-To: <20260507-k3-pdma-v5-0-6b9743038026@linux.spacemit.com>
 To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
@@ -78,42 +77,42 @@ Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
  Troy Mitchell <troy.mitchell@linux.spacemit.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778150183; l=3360;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778150183; l=1936;
  i=troy.mitchell@linux.spacemit.com; s=20250710; h=from:subject:message-id;
- bh=APvYenLY65RU5Mp1C8YoX68L26txn3bZfRsaRT1Gx7A=;
- b=9n26b2ESPk58g7S8iOWXlY3QbvbgZjTWcp0Blh/Y+1oAhvh5lGVkfOYkPwqnihRNpD31kPN9u
- 2d5H3avJpEjAtMeT29Jy7M+8HxD5ygVtXpSTCyMBxBglSk1uoI94/fR
+ bh=0uBBuEM27xA3rpe8lKTZJ07znj6/zACtY5VL6lS0imo=;
+ b=YarURs6eql25oUea+1GkYffFXSwwGIpptcv2PTQdlBIvFqKFVeO0tCYz+0IBNJg4v9KHxiYAg
+ NPYiVM8FyKlB6CkJHZaclYjs1H/4/Ja9bA+oD+WTPnCGhDqM+pVqGZg
 X-Developer-Key: i=troy.mitchell@linux.spacemit.com; a=ed25519;
  pk=lQa7BzLrq8DfZnChqmwJ5qQk8fP2USmY/4xZ2/MSsXc=
 X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: NepF8YL2AyLP3FutXeEQXT290QUOWynMV6HjWQ+GnMr9snSrlrfgF0Xu
-	6nNMNVdUia+X2VvNawOyB4awRgs7mV2Jo91IeeFdJcZLIhh9jTj5JVfaAQrkcwCR5VT2Kql
-	npAfZaCVqfMkVoR7hfGwPcXmsIDPXEg6KkD8V6mEPsiERpB+P3XfBqaY93iWXbd672GDbaL
-	GcmnqYBX4oYf7ltIUQq9i2891e1G+xWcJ0k4eJABbvzHLI5nq2WcU1mvLo7G0ujTqm39P7G
-	4nGM82XT4X6nBbg2GJqcqNIUmyz1XR0PTkMnNdpiXg2fVoK1M/NKxeUNDYuySGqaC+aqV1c
-	PrcDE44JFyQfWgglHvSPK29b3C1aORGfqQ2HvyCwuz3955KUEs6vbmKRN4eM4jJIEYcfWWi
-	bKIjqtBIg2Ixi67bOxfCsOQoUBLBYHFEy3aNiWB7/ByFEc4ZCv9h6Qk3nnm6RK65QmoFdjY
-	co4lsE4nlDhGMSj+YKqH3mZsvTpZSBfV/zFqsX+bZf2K2SCghwqtag82ESjXt9/kFl17h6f
-	5aP6ftau6omFjJfE+uka+NiaMIBPx3K+j2gO/+T1dlwodgugT41WXbr2LJrqvCliG6m3o83
-	0XyPis8l9Rauzkaqs/oC6ftLUgL4XglLKG0bBDQpLXa/xPV8+NEqi+e9NMI771F2ArqKmNp
-	bD6nfTjdfKILZa8GfVMgy2hngyFkJuYQPyrPnv2H8ikegMZKVoeemXVHLe4M42x08cakrcY
-	KtqbKzJU6yWu+e+V4DHMfXVDnINjGd6MOjfWz03Nm7iCtcQf7UCHEqyzl4bOLRjHD770j4+
-	qx/DeKmuN1fdqvoF3Z0XK26gNUfZWdY1ele5dHyor4I9m7C75rEcmQxbLKY6H/8zP/fnzU/
-	6QodaXKu0q1A+5vliCUCpQMsFcw+rHr1FtuEH5/PX90cNGdf4YtC8Txh0BclkSd5iX6TAs2
-	5flA9p3X3q2TpoOgPr10ycMYzqKVrpmWy5MGebxOe8OSDKM1MBS9TpFsODxeE8WVGWnOEg7
-	tetVCwMakFYNObZQwvUCroxxKhS0M2gPxfMYxM2+l8wrLxhVahRwDjQoYcuUaEHT0Vf2lK1
-	bgNVvRl9Ei3bY9p0caywGON+MhX3/GmI2qb0O/qmkeA/Vdj7Sz46BI8vHfdtm4kogQT7kLb
-	beezRGmkvkXoqAE=
+Feedback-ID: esmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: MW3wiet0EsO3ZtRRGasWQ0A1hgHuEXzsASyoHuEo8mPrQ+1DfqXpo8t5
+	fh3tM4KRdJbXdSxsEdRCRNUhr2jsXPr05QJrCHas4cePkQUWWLYb3POKV+DhAsTXw/WTae4
+	6zWb6hD8+Jkj1O3w7EY48yU5cqyoVv4nPGT1YqO0Hk7uEIBojUrVgZAEBaZgUzP3tKxVo8I
+	Rc4LMBmjIVprC14Dde3LWItqzWw8P1ZyOsGjjUzRTj+Eas5w13J8TfVcuFmBWwcu/xHx/+B
+	gDQhGtE0Bf1fiZ4EBAj1mLvpAuOhfTPtUaCAQE/hNlPHH5V1EBlZacBKzbS7az991S0Dcp/
+	yTBrph4gwFCO++iQQcor3dhqryQ/bQowUm5K8q/nnKVVg9YA4etT7Cyb4zzv0Z83rBZCWlB
+	PL6Yd7yuX7/SnNMzUX+9wepjQU8+UScLKiBfa72509nDjpfTrSF7P7rNe+mwUoL3MzlyMfq
+	eHcHjsRaHODSgH7uu3xJi8LIgdbhWkEnObzOIIbWhRkQUdmO63KhPg4aCxvxRmR1KJkO0oN
+	UH7jhNdCiO8ncizgnJlr3R+k3uJVO2TTUGqd07czQfpi0Y5+fgT00yKt6y4IDTZs+WMdbQY
+	jwBChB3wXdINsUSDYFg6IcVNjuC26HqBIJtF7V3wksX7iNXVPMUCR4KH0NG8QQ7l9GeycIZ
+	zPegJuUmF/Q390xSJkAXAUSqmG3Gf2vQRl1T3NvJH04J+zUEaWMvJuH+r9mewmzPhJ7PT4x
+	+2A64LOML8AvahrXpBoEVVqOX1QtDXqCcWTqqyHKYHMLZZJbSP44qKaZQc3xssYd1cx1ho4
+	MJN3SFZC3Of7nNWrDDfBhzyoI8inxfuLI5O4xwChTX9lISXber0P0H4sQihioAGBuVqUMO2
+	efOVJANAcFJoWEV+ilhiH0cmiiW6aKxG2t2Y+RvNgNgYTVtVa5CdbK7KoSFXwG4HNxPUNer
+	d7hczzfEvx+qZXnprk/JhPWVSQxYF/EhBXjCUqNe+JMgpNvL121feuguyPkIDyEEsSbwSNz
+	0wwarlz5B62JkS9n8Gu7LMs9PAMIu5dfR/4ApSlKyTI603musngchtz6+yniKm1rFYlJx5Q
+	jCPOoEYqvBYmqxIl8jOX/CCZkY1zjlvBCCvOrx212hjh2cjeeunkq4KapCjfHAWD4gv5gRO
+	l3EsX8Ro+2OOiaI=
 X-QQ-XMRINFO: Nq+8W0+stu50tPAe92KXseR0ZZmBTk3gLg==
 X-QQ-RECHKSPAM: 0
-X-Rspamd-Queue-Id: 111144E6E04
+X-Rspamd-Queue-Id: 9EA364E6DC2
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_DKIM_ALLOW(-0.20)[linux.spacemit.com:s=mxsw2412];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -121,7 +120,7 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	RCVD_COUNT_THREE(0.00)[4];
 	DMARC_NA(0.00)[spacemit.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10258-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10257-lists,dmaengine=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
@@ -133,103 +132,65 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,spacemit.com:email,riscstar.com:email,linux.spacemit.com:mid,linux.spacemit.com:dkim]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.spacemit.com:mid,linux.spacemit.com:dkim,spacemit.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
 From: Guodong Xu <guodong@riscstar.com>
 
-DRCMR base address for extended DMA request numbers (which means bigger
-or equal to 64) varies in different PMDA hardware implementation.
-
-One such different PDMA implementation is found in SpacemiT's K3. In
-this patch is for preparation the adding of K3 PDMA support.
+SpacemiT K3 reuses most of the PDMA IP design found on K1, with one difference
+being the extended DRCMR base address. This patch adds "spacemit,k3-pdma"
+compatible string and it defines a new mmp_pdma_ops for k3 pdma.
 
 Signed-off-by: Guodong Xu <guodong@riscstar.com>
 Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 ---
- drivers/dma/mmp_pdma.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ drivers/dma/mmp_pdma.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/drivers/dma/mmp_pdma.c b/drivers/dma/mmp_pdma.c
-index d12e729ee12c..6112369006ee 100644
+index 6112369006ee..386e85cd4882 100644
 --- a/drivers/dma/mmp_pdma.c
 +++ b/drivers/dma/mmp_pdma.c
-@@ -51,7 +51,9 @@
- #define DCSR_CMPST	BIT(10)	/* The Descriptor Compare Status */
+@@ -52,6 +52,7 @@
  #define DCSR_EORINTR	BIT(9)	/* The end of Receive */
  
--#define DRCMR(n)	((((n) < 64) ? 0x0100 : 0x1100) + (((n) & 0x3f) << 2))
-+#define DRCMR_BASE		0x0100
-+#define DRCMR_EXT_BASE_DEFAULT	0x1100
-+#define DRCMR_REQ_LIMIT		64
+ #define DRCMR_BASE		0x0100
++#define DRCMR_EXT_BASE_K3	0x1000
+ #define DRCMR_EXT_BASE_DEFAULT	0x1100
+ #define DRCMR_REQ_LIMIT		64
  #define DRCMR_MAPVLD	BIT(7)	/* Map Valid (read / write) */
- #define DRCMR_CHLNUM	0x1f	/* mask for Channel Number (read / write) */
- 
-@@ -154,6 +156,7 @@ struct mmp_pdma_phy {
-  * @run_bits:   Control bits in DCSR register for channel start/stop
-  * @dma_width:  DMA addressing width in bits (32 or 64). Determines the
-  *              DMA mask capability of the controller hardware.
-+ * @drcmr_ext_base: Base DRCMR address for extended requests
-  */
- struct mmp_pdma_ops {
- 	/* Hardware Register Operations */
-@@ -174,6 +177,7 @@ struct mmp_pdma_ops {
- 	/* Controller Configuration */
- 	u32 run_bits;
- 	u32 dma_width;
-+	u32 drcmr_ext_base;
+@@ -1207,6 +1208,20 @@ static const struct mmp_pdma_ops spacemit_k1_pdma_ops = {
+ 	.drcmr_ext_base = DRCMR_EXT_BASE_DEFAULT,
  };
  
- struct mmp_pdma_device {
-@@ -195,6 +199,13 @@ struct mmp_pdma_device {
- #define to_mmp_pdma_dev(dmadev)					\
- 	container_of(dmadev, struct mmp_pdma_device, device)
- 
-+static u32 mmp_pdma_get_drcmr(struct mmp_pdma_device *pdev, u32 drcmr)
-+{
-+	if (drcmr < DRCMR_REQ_LIMIT)
-+		return DRCMR_BASE + (drcmr << 2);
-+	return pdev->ops->drcmr_ext_base + ((drcmr - DRCMR_REQ_LIMIT) << 2);
-+}
++static const struct mmp_pdma_ops spacemit_k3_pdma_ops = {
++	.write_next_addr = write_next_addr_64,
++	.read_src_addr = read_src_addr_64,
++	.read_dst_addr = read_dst_addr_64,
++	.set_desc_next_addr = set_desc_next_addr_64,
++	.set_desc_src_addr = set_desc_src_addr_64,
++	.set_desc_dst_addr = set_desc_dst_addr_64,
++	.get_desc_src_addr = get_desc_src_addr_64,
++	.get_desc_dst_addr = get_desc_dst_addr_64,
++	.run_bits = (DCSR_RUN | DCSR_LPAEEN | DCSR_EORIRQEN | DCSR_EORSTOPEN),
++	.dma_width = 64,
++	.drcmr_ext_base = DRCMR_EXT_BASE_K3,
++};
 +
- /* For 32-bit PDMA */
- static void write_next_addr_32(struct mmp_pdma_phy *phy, dma_addr_t addr)
- {
-@@ -301,7 +312,7 @@ static void enable_chan(struct mmp_pdma_phy *phy)
- 
- 	pdev = to_mmp_pdma_dev(phy->vchan->chan.device);
- 
--	reg = DRCMR(phy->vchan->drcmr);
-+	reg = mmp_pdma_get_drcmr(pdev, phy->vchan->drcmr);
- 	writel(DRCMR_MAPVLD | phy->idx, phy->base + reg);
- 
- 	dalgn = readl(phy->base + DALGN);
-@@ -437,7 +448,7 @@ static void mmp_pdma_free_phy(struct mmp_pdma_chan *pchan)
- 		return;
- 
- 	/* clear the channel mapping in DRCMR */
--	reg = DRCMR(pchan->drcmr);
-+	reg = mmp_pdma_get_drcmr(pdev, pchan->drcmr);
- 	writel(0, pchan->phy->base + reg);
- 
- 	spin_lock_irqsave(&pdev->phy_lock, flags);
-@@ -1179,6 +1190,7 @@ static const struct mmp_pdma_ops marvell_pdma_v1_ops = {
- 	.get_desc_dst_addr = get_desc_dst_addr_32,
- 	.run_bits = (DCSR_RUN),
- 	.dma_width = 32,
-+	.drcmr_ext_base = DRCMR_EXT_BASE_DEFAULT,
- };
- 
- static const struct mmp_pdma_ops spacemit_k1_pdma_ops = {
-@@ -1192,6 +1204,7 @@ static const struct mmp_pdma_ops spacemit_k1_pdma_ops = {
- 	.get_desc_dst_addr = get_desc_dst_addr_64,
- 	.run_bits = (DCSR_RUN | DCSR_LPAEEN),
- 	.dma_width = 64,
-+	.drcmr_ext_base = DRCMR_EXT_BASE_DEFAULT,
- };
- 
  static const struct of_device_id mmp_pdma_dt_ids[] = {
+ 	{
+ 		.compatible = "marvell,pdma-1.0",
+@@ -1214,6 +1229,9 @@ static const struct of_device_id mmp_pdma_dt_ids[] = {
+ 	}, {
+ 		.compatible = "spacemit,k1-pdma",
+ 		.data = &spacemit_k1_pdma_ops
++	}, {
++		.compatible = "spacemit,k3-pdma",
++		.data = &spacemit_k3_pdma_ops
+ 	}, {
+ 		/* sentinel */
+ 	}
 
 -- 
 2.54.0

@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-10332-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10333-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id RgvcMb9IAmo1qAEAu9opvQ
-	(envelope-from <dmaengine+bounces-10332-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 23:23:11 +0200
+	id XvK+Eo1KAmpaqQEAu9opvQ
+	(envelope-from <dmaengine+bounces-10333-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 23:30:53 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36F21516430
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 23:23:11 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5A925164CF
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 23:30:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2F5643036E97
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:23:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 45DDC3013786
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:30:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A0754D8D8C;
-	Mon, 11 May 2026 21:23:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99AE02C375E;
+	Mon, 11 May 2026 21:30:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="TWlaz1b8"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="a9g5kJuv"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011068.outbound.protection.outlook.com [40.107.130.68])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012063.outbound.protection.outlook.com [52.101.66.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CF632AADC;
-	Mon, 11 May 2026 21:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14902701B6;
+	Mon, 11 May 2026 21:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.63
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778534582; cv=fail; b=mnNd0xzAr1Elw58ut/dH7IUzpbsXmQSKjSuOrQsADwH9m/22ih1zwMXbcjD87xO4f5cL1kZjQz6r1NXpjkMHKesC2/Lx6KSoEMKtY9ENZIdsRONimmDahyVrSRb3SlkrmIUQuAGX8pcIswZVx0E5ja/HL28iD2rrYiRYwQqnjwc=
+	t=1778535050; cv=fail; b=hyCLceIliO3ySBQ9xkDo1C+gZ/jDSrX9r17tq+rWrfX96HPfJiFAr1QfnI0z7dREdM5NgFmd/cN0a7MBPbnARE6dw4blTNV12a/0Zk/1Zn+aDE6u0v/m/JFR9qVadnnVkVDACuhtVEvvlH87PD7EBn14Shl+vLThq7C6TxY+0uQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778534582; c=relaxed/simple;
-	bh=XcOp2i1kMZ9Z8SO//sUmdbqXzIQMSkagmbTff+qaXF8=;
+	s=arc-20240116; t=1778535050; c=relaxed/simple;
+	bh=3TNzo0ou4dC6CSkC24Pu1a6Mc/y3Vu8nUK3XBUJXqQM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=HNsVo/uGaebfRSd0aKdSG3jkdlQdrs0WMDwg4w589GTc9R2QGvpWHRw/q6T2aOEispcwDhr73e1+OfYanf6sDCCUZY3QarWZeY6eg3u1CIV6EpwF7oZ6qS/e4+99Ut+nsRXcd2EL4t190RJMcaavQ/18gHsD6ZT6wKVXUWuzhgU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=TWlaz1b8; arc=fail smtp.client-ip=40.107.130.68
+	 Content-Disposition:In-Reply-To:MIME-Version; b=hPphUk34EOsvEBwjWCWJMYi3fuyC5kWWXee1cxH39ljR0YceMbyPqUY5xW+NBXoVh1tSYASdFX47CoTQvLhYEXbu5GgUUePn9xi5vzqB0upqfgroe+Y8goISx/1wMrHiFiqnFt4gs/8ab+LaacpCMmDLyotZ5h8k3FkJrh336nU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=a9g5kJuv; arc=fail smtp.client-ip=52.101.66.63
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yGL1NpqmnTO7eo3Hc5Pw9SdaKKHQq8f4zi+id5ZyKRX2+R5Fz6rNeQ/ruyLqEmsvr2DadYBPmedNisMsSQLNRyHP1LyqbRbQO1V9BehQvHdJXgXj89p4G1L+0ojN55h6kpuxJqN18yxRO9TgxRj3sU1EMgmRYoxJZymZq+zgpQrEiaRua9+o7nDTz0chzYKQZ5X5mt17AUTFSJJVBZuNpbY1/Tjef0yu3IZr9B1RPsGRRNFh53JhqkEPzOkJjd/ZQYnOc2MQ8lON2tvI3iC58MPe+tkkuKXc7rGA5w2Mdoi6wU42XncBcf5Bm2Oc1CqcYGmDX2xjnLl08/f6NKYa4A==
+ b=EvQ6NgsOCkDPcspqazphyg0ldbhYYkZbvViNHKigOneNgdRGJevSrnWZ/iNgk5IMjZY7XBOXaPJIHWPxCJcLYu5Lq1Q1yLYwkjolU8S/G4PGTVyCJeWqr6S3FMaiu01gGACt7NoSmzVsRvWf6J9h/YOG5AHEaRzzwVRDfFzzF1L3lAmsUgK0oR72WWpkum2YnL8n8U7+GIpVeIRXXBlAvc6fteyNr6ZAAwA0zu7GbM5ksENXU/LO73rzZYq4kgUAzIS0ltJzk0i6P/FEPAkAErJudOeJ/HFqNhAx2EEZwMvwa35MBSYWh229OG0tOcI0vdue73zii2Bb6GAc6TZcIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LSnNfvPeG7v19WghwKI/nHDynI545h4dmlgrVTT5jfY=;
- b=jsAcOlUKRwva2/PXODVc4SX4QdzsPglgm2J5+6u1KPcG0PV3xEHNht9Z0AWlvAxz3kVzbAK+YM6qSLRGBGva0pq/dtNf9YZNIe6NXAQ2XGCZoY9Ov+4QP2rIqapOnRYfuseKuBC/VxVWj0bfmg0p9b+V4MKfJ9nHj5X7yASb8q3lpt1s+DLym5oL69eckmijB5R5UGByhmLejHn3LD1qgELBh8vAtxpmst640yJ4qshr/yrxlomia0ooBNE371XmnbXe9qBcaCx0z0dcA8IZTUnapW68E5zsD4yMGN6gwGh/ZibX/NAOz9e/FJLSpuHuW8n1G/PZuZsR6JECDPFZXw==
+ bh=YRUYFAyVa5gGqf6/He5LMWXiEWerHfnclwCh32wTHgU=;
+ b=n4K5736/wfDqdKRnDVmADn0B5yXdqCaKm3zaOJc1JWGTiAYXKqN0yB/6NZfHiOXTbveUFNAIQ6rr7xVFr4kp4RFHfEPeSXEVNGBqsQpUXRBRT54FPgtYgGJqsieYwsSR8NG9HtGt/aCt0g1RVfTvqzdmA+q4TAcWbJ8LsXUnr9W4SLKxpYFdcnUMnZTbQDilo0RHcZtQOcgUC7UvEFSQc8kmkqENu729szdZ4dYlIdmy4RAaFnBxmsromBKzLQLR+RBizY6ZkVx3PAoZ6sneiO5aTlbCSCg5DemQ1egaYMvEBO7wPEViL0mKUxTSKIeYYyI8KXD2l8PpCSCRAZzboQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LSnNfvPeG7v19WghwKI/nHDynI545h4dmlgrVTT5jfY=;
- b=TWlaz1b8uXMw2bYxSqfHMCP5G885UrwZOq38l8POcImxJ0OIiRaqB1jj7X0vX5OOu38j7FTE5RxcQjiXpzIYiJq/1tU48OqF0JBNkBYo6DWTQb87M9XW6dT1Uyf6oKF69T04Ro2LCBj/QhNqISClDWWsfsQFjdbZhD4hQQgAhQkRMm09gOSlG8XXS3aEi7jg8QUsfML25jsA1eA9Z4CZrgghESUiFEeDfaCfrUeSQPLbKX4seUsNy2y68/X9a9GUVe2kHgoPgFhSUiDN488xGcmWn3QPQRZJuWBzBkTaNiFGuGCGUtOZjz05BD3j/ZlEB3OWUdJK3zINWsE+/ftG2A==
+ bh=YRUYFAyVa5gGqf6/He5LMWXiEWerHfnclwCh32wTHgU=;
+ b=a9g5kJuvM5seuD+PxS/Ay1XNpLHJTu3zofgof7lUgVCiDxfbksX/rqO/1mkJYHjy0dzGV6ZvujmaIeF/bJoMBhRWa0ZVESFcKqylWJxF79Jw4h+I5LOPGFrEWGW4YTAuXrLo9YTwrzfMXRmyo8tSjHOWA04uOTH3KeCmzE6nDjjA0dqri+8pmYPB98K4WfiKpUoCpkxQJOlImzLz0Ahh4ZpmO/9F5j+iF4NpKEiiQoqXl6Trd5neQMiDBfKxgIYcZZXd677yHJ4vaQFv+dKgau+0oryHo1p+dkdGZYnxKhVUqTbp16qtIBuMR1p48FF1/reuCZ3rl0S4aPKdjIUEfw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by AM9PR04MB8383.eurprd04.prod.outlook.com (2603:10a6:20b:3ed::7) with
+ by AM8PR04MB7745.eurprd04.prod.outlook.com (2603:10a6:20b:234::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.23; Mon, 11 May
- 2026 21:22:56 +0000
+ 2026 21:30:45 +0000
 Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
  ([fe80::75e4:8143:ddbc:6588%3]) with mapi id 15.20.9891.021; Mon, 11 May 2026
- 21:22:55 +0000
-Date: Mon, 11 May 2026 17:22:49 -0400
+ 21:30:44 +0000
+Date: Mon, 11 May 2026 17:30:36 -0400
 From: Frank Li <Frank.li@nxp.com>
 To: Nathan Lynch <nathan.lynch@amd.com>
 Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
@@ -73,15 +73,16 @@ Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
 	Wei Huang <wei.huang2@amd.com>, Wei Xu <weixugc@google.com>,
 	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 03/23] dmaengine: sdxi: Add PCI initialization
-Message-ID: <agJIqejHX15_CeKl@lizhi-Precision-Tower-5810>
+Subject: Re: [PATCH v2 04/23] dmaengine: sdxi: Feature discovery and initial
+ configuration
+Message-ID: <agJKfAjCvWOvTLpV@lizhi-Precision-Tower-5810>
 References: <20260511-sdxi-base-v2-0-889cfed17e3f@amd.com>
- <20260511-sdxi-base-v2-3-889cfed17e3f@amd.com>
+ <20260511-sdxi-base-v2-4-889cfed17e3f@amd.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260511-sdxi-base-v2-3-889cfed17e3f@amd.com>
-X-ClientProxiedBy: SA0PR11CA0172.namprd11.prod.outlook.com
- (2603:10b6:806:1bb::27) To PA4PR04MB9366.eurprd04.prod.outlook.com
+In-Reply-To: <20260511-sdxi-base-v2-4-889cfed17e3f@amd.com>
+X-ClientProxiedBy: PH0PR07CA0118.namprd07.prod.outlook.com
+ (2603:10b6:510:4::33) To PA4PR04MB9366.eurprd04.prod.outlook.com
  (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -90,71 +91,71 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|AM9PR04MB8383:EE_
-X-MS-Office365-Filtering-Correlation-Id: 15a9a917-c4c5-43bd-47b8-08deafa377cc
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|AM8PR04MB7745:EE_
+X-MS-Office365-Filtering-Correlation-Id: 15ae0ec2-fbe7-4493-7bfc-08deafa48f17
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|52116014|19092799006|1800799024|366016|56012099003|22082099003|38350700014|18002099003|11063799003;
+	BCL:0;ARA:13230040|376014|7416014|52116014|366016|19092799006|1800799024|38350700014|56012099003|18002099003|22082099003|11063799003;
 X-Microsoft-Antispam-Message-Info:
-	/A8Iv/BHWrHbdg0B7/LU3s4DgaSqueFPTaMkZT9YHmLqjf2b1dqVHmhOO0IJSv6KxrD3aR58epfDxNrBJfmlWPhYyvyu1k7VqMyTWLseIvnV0bSOHsW7EVBkaieGlDsgkXmnBliT9K2+AWMeS5hQdUb5g0+vQejY9V5M0icgKpCvbAB6hBOmpIxYggDzocVlrQ6PiLkQZMGY+wlVvKjHDjpJUj4OH0w4mUSRHyjkUzJeAJFZ2yVRizUTGTxibdeAoDfRh1OsSxXAwLjA/eZtG+Q9O0m2WR1EuQU6nnOLQtvQmchTcAb2P1IKT4M9XjRapDxUV6zll0AoIGvMU6pEy+0Wrh0R5RMkQT9DO/E1PPzNZLq9DIytwdlMvoaAOkRpA6dhTqVeOL+yLjt+6dha0pyPeTKmLbVdpQhiHkvYl62/xV+xUMgKnJv35RFz/Ln5yPTub2/AafWmWb6kM1RmyEqjdG9ZYXwfPdEtyR9I/TdS3Iq+mXPpLZq2Me5qcRBUmowU+sPoDv9X7s8SAWI6xQdwQmJAq++XgzUCGTKSRAmyEqTh1dhxgKFnzCAHdzUKS1KEWmVqz+BWFIs/6Vm7iDe7hs8GWhqIh39EOlqdxV8fse2L9iWAccgwYxhT1OrLbRxjQIrIzXr2wViCnL5aTEn6CZqvXQKtxr11qYFjv7yaa5nEEV8IbrJ7nTvDy0bn0mfQ+96repmHDAG+jDmrQpgCLEAgGZ8euXHWNzb0UR0t5MnGCLOiB1RRrx/Gdd7x
+	984Z/MbCV6ySoNqXfWhi56ic/KLH83J/VEiWUlNcWcp3hENI1w69VGW8JS4SY+vaRpDetg+ozHGaoxbUpdwu0sRd3HhrNwEwRT0g6gBQh1t7Pn9hPBEwXCNqgmno8Vuz75cQthljTmG1hqkFwwAVAW0y2I03UjOYxukBHMkXBhCMN+p1HdM/Ecu9BYm7bS9dn+CV0TFLJTwjLIApCj5ldEMOUFbo6XLs6gEJw7dgvsWOKVtYXgKOyKa7pNu7iElFFV48SNjqzE0LIqYxYpq6kJ0MdCSZBlSDUbjRLD7a84Z8CQqOWkeQJQ8wURtKw5FdqNs/ZCkK24IApdqroZ0JkvsghGAlxBflPHD+8/tn8REFGLLYqbyEC2qEx8hfko824ixo+mVGvF19KyMNfqAhvsMfnGyrVyh1dfDw31Ne5GJtiC4A7O9VyYImx0Ll5nPRkD83dyuoIcA2/H8xroWAektLKg2zU4GcaEe4TG5/iTl0IlcDthjwGTPzc9zr6hATkQf0YT/mhdeSkDBT78g5+ypJCMhrnY1jM8RZRksV5is8mJkw2qs+vjoiEQ+INtgWT2MP3Scd3HV5l3z2L8SEowXskxFCAzu+mms0+9MiZL41mX7SRz5irZGjFsm7nLDVfLsJoR+wBn+9vsuJAvP+98IJvwj73Qmq+bScotoplJHPKyQyI1ddP/XaFwctIgqHYZEx4W+01M8tpWyFHuPwL4uOKMyTsCS0N29IjKrbuIgfaxFkZdUjY0oidzJvBCis
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(19092799006)(1800799024)(366016)(56012099003)(22082099003)(38350700014)(18002099003)(11063799003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(19092799006)(1800799024)(38350700014)(56012099003)(18002099003)(22082099003)(11063799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?GEEeEflQR/Jz/XReSCXHnLekPkhoHMlhkl0X3Wg3Rz8aMg8K/XuF2iDpNAhR?=
- =?us-ascii?Q?CyJsqIaBfdPfycYjXJbtI83bj31Ojhh5j9zp9vNWw4p4Poz7R7h9cnvsC7+h?=
- =?us-ascii?Q?MZlN3RtMuUK23qZqPHe10hZqau+q1eCVFonAswt6y7aGpQrn2r5o0rAJzLlc?=
- =?us-ascii?Q?Cio/WzCZvsrzcVrTnquEPjMzHUFx47939XfXgn6PbfUlmlQceyvwnti4lmO9?=
- =?us-ascii?Q?vJPzt65cQcoXQki1wf9ASDTnXB8UlrjZaewxjwl3yncxwy+qN1wF9FreBWo5?=
- =?us-ascii?Q?6gepLR+AtmqpEJpXdtbhqUZfz1P+7q8arfnwe41BT9dMUigHq8qrK9L9oMRG?=
- =?us-ascii?Q?m/ZAjEiRvlOoDrtzIsvIJAV9eykcEHiktBoMqnqagPKC2C8Zvx14YnKcWUGH?=
- =?us-ascii?Q?TLkSwY7Ga0Ohi6iYEUmLrExZ6h8fKhO7jNsMfrx+9PxEuVx9zCoW1G47UwLm?=
- =?us-ascii?Q?tVupxqgQQul9q6gtAImKlNANoJmMPrjoP5WtyL//UJhDzDiH42/s9SQ5WA6D?=
- =?us-ascii?Q?TKZjC6Hrt6RGNtCqLNkUNroQj1gxE1p0ItE3wyIwLFWVo+ZsTZazJcmQoVtB?=
- =?us-ascii?Q?SRmBHDWo1+H+y+Aw1j84NGT9Qw5rQCYHGlbLQ7SfUVd9pUGD8IqeNYoyqsos?=
- =?us-ascii?Q?8z4hU2KXuYiRFEJcRkV08ntkgjp2XB50bvBryizfpoUdN+XbKGfjHOIS5nWA?=
- =?us-ascii?Q?P9mbUdgquBEgEpOCE589kcO8wLS7QWAHTjF1RqTsnIPIM2FTvYZkdJFdPcqK?=
- =?us-ascii?Q?4zzG+KSA/s/iv6dJiUW1XY+F/H2I4MY2frwGyq61PLe6mznSEjXglxxjuHKK?=
- =?us-ascii?Q?v/P9LUdWVS+N3u1MQEjgN0gGUxm+JyDr6It48JBCHFaikZP++tfvDa1wKS9J?=
- =?us-ascii?Q?EO5vUACa8yHgsJ59vpPYy9YLZGtqxK8JI/mAChcr0tmGpc7Gkxl7y9kgZ7+U?=
- =?us-ascii?Q?cDa4FhbgeUP5KVWkQLcl8H5uqTw3MsvlK9PPuWyO12duvojviTXYufMAGCb+?=
- =?us-ascii?Q?vDJANQc4HyGFwFWHRf9wHDpRH8TFBQarC8Qlbuqk9CSKZv4nHgvaxAKVEsRy?=
- =?us-ascii?Q?U9a3ldZ9Idy63fkatMIKVAZmyctT0ZJ1wgj1NeWikM/2vDKZhghpzzsjehZZ?=
- =?us-ascii?Q?skXwYzRaig6ZtkzIENMOMX01bqQTACdorWTyiQhp2JeTnONeUNkyGRcmwus1?=
- =?us-ascii?Q?fp7XSl0r/a2EifoZfa3kcPcO1xz1pJft5Hv/a2FssxXIeiVqSRfoJmno/ja2?=
- =?us-ascii?Q?cjMAlCrTI8MsQDMdmDcFh9AIm+V1LC6K21B4xqY/3RjcfyY6aqRuA7Jjr7nR?=
- =?us-ascii?Q?fGtjNZ9Qk+H2PQuNwAnoslfYKZPkzOC25o+Rdb2DtuhRweszGfO06cZCLHK1?=
- =?us-ascii?Q?b9LeFhbSjRpwFnagn/lw+yI4XkH22BZmcyPI7CpLsyD8Gl8lxgJiyKkqC5VI?=
- =?us-ascii?Q?IIOQoJ0tu/6978fQQ65v/rkFoKBFL9AnZsuxs439wA8bt2AKbuCWvrPx30Hk?=
- =?us-ascii?Q?ugKymKt/gjPB4zQ2nxq0Sshkx8BVhlagCgg/QSny3hoKzIS2ExkwdDK1hCOK?=
- =?us-ascii?Q?TumzwcHFKyPn+lwWS7Y1akis7h3/9lY7S6Ut5MgdMOeUwfk6fphOubDeDDa8?=
- =?us-ascii?Q?c/7JiPQ1R1jNVtRA/iXWTjLjMNiY6bejsvJABMz6QQ4Y4Bh30p77kcJmCg80?=
- =?us-ascii?Q?QsoRc/htrS9DPuDNXUVh+HjZebJLvFpAx5UP/xirePkJ2Ml6?=
+	=?us-ascii?Q?ZvIHQVCdyUnoiYE/b9lfPib7MS81gtrbNrSMQmVK+pNnipGDpMJljJnMWSzz?=
+ =?us-ascii?Q?4t1ZI+elSWMjzXlU/YI8aouBX5FiscjREhAa8wLYC+LQV21H5+m1slnUBlNR?=
+ =?us-ascii?Q?pJfrtccu4PTa7d8WohWtfs50S9GuLh19jrzDsWuWVT8drah+W7ODtvHr44Bc?=
+ =?us-ascii?Q?KzHVZx5bxfS5Ogxyy5au4dJd3/XW1ttatsfC5NRRghwycvRs5oFU95YAstjK?=
+ =?us-ascii?Q?pOjfltIMgjS4e+cpucpiHmsUhQCqq0yu7ga9wJuLalMT9CNszXyQHe2xdBU5?=
+ =?us-ascii?Q?M5IHy5n6aJyiAtr4Vc0poQh8g6DUrygYWHTqvv/lw31aQfw6Q9u6nW323Seq?=
+ =?us-ascii?Q?3xfSIrrolBwXpanOOvdEAuE4hD9WdoaDtqwhXYNjommzsDW3R8tu0TtvsPFg?=
+ =?us-ascii?Q?ynagX2pLcooVZC6+TeivKapCbSol5yH0YXk2Mm8Lw0+zJuNSRQyIrxJG4+9j?=
+ =?us-ascii?Q?XJCXRKx+NFyLWN0jJe9VTnnGf10ig5hfwR5I0EsZIZDSctLX6v2pEqv+UkiH?=
+ =?us-ascii?Q?rGUZ2Ql3Q1U8Yg5moJ3DXYeHKj1hj+tj9A8BY0GvFrsdiHLJhHcRZsv1goJ1?=
+ =?us-ascii?Q?3lA601lOogaHAqSrELAfIyeOnWS8SHWDa/r+Pu9k379kmiaR8AKbTe/yYB8O?=
+ =?us-ascii?Q?rQfjSPBhCPsuZGludgUBNJ+tHWGAAIonA+01y0K5M4SVYxAIrFr8ekj45jGb?=
+ =?us-ascii?Q?7DjlchgklbJOI8EusKckB/XPow7PwUsVKEiUrkMFy4eGuSUt95ny3pW3BvCp?=
+ =?us-ascii?Q?irnsuyxI62558JJQ5cd/x0WZhIM3cHwUhPYIdl2qOZ1bhvYRFoN1f2yGxjF0?=
+ =?us-ascii?Q?i66sJB+l33G0kV1wT+z+9z3M2yTxojcySjrpkNHclLgSOVuVR/gjRuG8ZxcH?=
+ =?us-ascii?Q?FBch6r0RKt1s8Z3PmLUwlaunc1YeziIYvc1VBFooxg+OgkKw3KbZJaqJy5cG?=
+ =?us-ascii?Q?gwMDM5ndyYPrDM+BUwOTub7Ds8+IvmiZ1QqGexD+V19lNn468yVlkQAOSi9o?=
+ =?us-ascii?Q?1GvskdB+GjqXtyYOprhKTAIy0hY+ZTnjfnasPL7+EM+UsOYj0bmQUbG/1l3c?=
+ =?us-ascii?Q?invVFv30I8UBrk+iOnjWcnmx8m66/Sgp+wxpB/lmGR0EsRpsYVC8qN21k3Sx?=
+ =?us-ascii?Q?ai/dPdY4bdhYYTZGCnXO4bWYRTIIqHq0mNszf8xcGxaDjiahUWqlemlkF7Re?=
+ =?us-ascii?Q?qe5ixoeJBfrbQa573eCvdLooKJL481IvkBdgJqjx6Li4/dmFe4jzlEGti53I?=
+ =?us-ascii?Q?Th4M2jmS2Pgk/4EEtkm1kcs/epwoK6vgdODbAsEV+OaGS9xEYqhSB6jrEAf9?=
+ =?us-ascii?Q?AYozmjQziXMESbfJxqXf1D3Hy1g8GzUAjtgUID3nxpPm4eFKolKNFDJxcsgt?=
+ =?us-ascii?Q?SiNHYXX0Zi26hyC2Ifg8egET83qg0jHoSkwGq30AIQEcJFf/qAaFqWZGxt3v?=
+ =?us-ascii?Q?c5hDWinVvpzUPP2VlE/avLDjkdoFBZTl7joXhRfU1vfMV+/vJkKpi+8n6uHF?=
+ =?us-ascii?Q?V+418ehjMcwdRjd4fa/58BV00q5T1wZclntkAjjP+ZQhDxrUkLR90ByuR8YR?=
+ =?us-ascii?Q?S+tCeuo1iNydkvcmk0YiJxmm2ZzbsgYwgIACCxla+kOEEStCv76Dg+Gzzmg7?=
+ =?us-ascii?Q?JK7nrkD6Gd/Bn7Dw1jxjZvl2hpz8BBk4EZxLz0yaxEcyZvkRFs3ap9Nn26mH?=
+ =?us-ascii?Q?PAmWkFavY830qM94iiJC6HdYB3sdb2cdRTRuK/CiQVyFQYXK?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15a9a917-c4c5-43bd-47b8-08deafa377cc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15ae0ec2-fbe7-4493-7bfc-08deafa48f17
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2026 21:22:55.8802
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2026 21:30:44.6096
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vd4Cnk4M1UqI+w0uzvbOHzGeXCZGmd/uzIZVcO22lW6+kTGtW92e48WyvbfPzNaTFM0IsNGkoJnSCMPg6AKWzw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8383
-X-Rspamd-Queue-Id: 36F21516430
+X-MS-Exchange-CrossTenant-UserPrincipalName: zqZLDUyG1wNA0qyI5t66tS4jMQfpVp1W7HHpHA3ZNNUk6n+ceMdLZ0MbK5Z196Lu2D7gwbYdnQQDs1cgd6G7Rg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7745
+X-Rspamd-Queue-Id: A5A925164CF
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10332-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10333-lists,dmaengine=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[17];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -166,27 +167,33 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[nxp.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,amd.com:email,nxp.com:email,nxp.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:email,nxp.com:dkim,amd.com:email]
 X-Rspamd-Action: no action
 
-On Mon, May 11, 2026 at 02:16:15PM -0500, Nathan Lynch wrote:
-> Add enough code to bind a SDXI device via the class code and map its
-> control registers and doorbell region. All device resources are
-> managed with devres at this point, so there is no explicit teardown
-> path.
+On Mon, May 11, 2026 at 02:16:16PM -0500, Nathan Lynch wrote:
+> Discover via the capability registers the doorbell region stride, the
+> maximum supported context ID, the operation groups implemented, and
+> limits on buffer and control structure sizes. The driver has the
+> option of writing more conservative limits to the ctl2 register, but
+> it uses those supplied by the implementation for now.
 >
-> While the SDXI specification includes a PCIe binding, the standard is
-> intended to be independent of the underlying I/O interconnect. So the
-> driver confines PCI-specific code to pci.c, and the rest (such as
-> device.c, introduced here) is bus-agnostic. Hence there is some
-> indirection: during probe, the bus code registers any matched device
-> with the generic SDXI core, supplying the device and a sdxi_bus_ops
-> vector. After the core associates a new sdxi_dev with the device,
-> bus-specific initialization proceeds via the sdxi_bus_ops->init()
-> callback.
+> Introduce device register definitions and associated masks via mmio.h.
+>
+> Add convenience wrappers which are first used here:
+> - sdxi_read64()
+> - sdxi_write64()
+>
+> Report the version of the standard to which the device conforms, e.g.
+>
+>   sdxi 0000:00:03.0: SDXI 1.0 device found
+>
+> After bus-specific initialization, force the SDXI function to stopped
+> state. This is the expected state from reset, but kexec or driver bugs
+> can leave a function in other states from which the initialization
+> code must be able to recover.
 >
 > Co-developed-by: Wei Huang <wei.huang2@amd.com>
 > Signed-off-by: Wei Huang <wei.huang2@amd.com>
@@ -195,231 +202,306 @@ On Mon, May 11, 2026 at 02:16:15PM -0500, Nathan Lynch wrote:
 
 Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
->  drivers/dma/Kconfig       |  2 ++
->  drivers/dma/Makefile      |  1 +
->  drivers/dma/sdxi/Kconfig  |  8 +++++
->  drivers/dma/sdxi/Makefile |  6 ++++
->  drivers/dma/sdxi/device.c | 26 +++++++++++++++
->  drivers/dma/sdxi/pci.c    | 83 +++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/dma/sdxi/sdxi.h   | 38 ++++++++++++++++++++++
->  7 files changed, 164 insertions(+)
+>  drivers/dma/sdxi/device.c | 172 +++++++++++++++++++++++++++++++++++++++++++++-
+>  drivers/dma/sdxi/mmio.h   |  51 ++++++++++++++
+>  drivers/dma/sdxi/sdxi.h   |  19 +++++
+>  3 files changed, 241 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index ae6a682c9f76..3d89284e7cf8 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -762,6 +762,8 @@ source "drivers/dma/lgm/Kconfig"
->
->  source "drivers/dma/loongson/Kconfig"
->
-> +source "drivers/dma/sdxi/Kconfig"
-> +
->  source "drivers/dma/stm32/Kconfig"
->
->  # clients
-> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> index 14aa086629d5..371927615c4a 100644
-> --- a/drivers/dma/Makefile
-> +++ b/drivers/dma/Makefile
-> @@ -84,6 +84,7 @@ obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
->  obj-$(CONFIG_ST_FDMA) += st_fdma.o
->  obj-$(CONFIG_FSL_DPAA2_QDMA) += fsl-dpaa2-qdma/
->  obj-$(CONFIG_INTEL_LDMA) += lgm/
-> +obj-$(CONFIG_SDXI) += sdxi/
->
->  obj-y += amd/
->  obj-y += loongson/
-> diff --git a/drivers/dma/sdxi/Kconfig b/drivers/dma/sdxi/Kconfig
-> new file mode 100644
-> index 000000000000..a568284cd583
-> --- /dev/null
-> +++ b/drivers/dma/sdxi/Kconfig
-> @@ -0,0 +1,8 @@
-> +config SDXI
-> +	tristate "SDXI support"
-> +	select DMA_ENGINE
-> +	help
-> +	  Enable support for Smart Data Accelerator Interface (SDXI)
-> +	  Platform Data Mover devices. SDXI is a vendor-neutral
-> +	  standard for a memory-to-memory data mover and acceleration
-> +	  interface.
-> diff --git a/drivers/dma/sdxi/Makefile b/drivers/dma/sdxi/Makefile
-> new file mode 100644
-> index 000000000000..f84b87d53e27
-> --- /dev/null
-> +++ b/drivers/dma/sdxi/Makefile
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_SDXI) += sdxi.o
-> +
-> +sdxi-objs += device.o
-> +
-> +sdxi-$(CONFIG_PCI_MSI) += pci.o
 > diff --git a/drivers/dma/sdxi/device.c b/drivers/dma/sdxi/device.c
-> new file mode 100644
-> index 000000000000..b718ce04afa0
-> --- /dev/null
+> index b718ce04afa0..f9a9944ad892 100644
+> --- a/drivers/dma/sdxi/device.c
 > +++ b/drivers/dma/sdxi/device.c
-> @@ -0,0 +1,26 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * SDXI hardware device driver
-> + *
-> + * Copyright Advanced Micro Devices, Inc.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/slab.h>
-> +
-> +#include "sdxi.h"
-> +
-> +int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops)
-> +{
-> +	struct sdxi_dev *sdxi;
-> +
-> +	sdxi = devm_kzalloc(dev, sizeof(*sdxi), GFP_KERNEL);
-> +	if (!sdxi)
-> +		return -ENOMEM;
-> +
-> +	sdxi->dev = dev;
-> +	sdxi->bus_ops = ops;
-> +	dev_set_drvdata(dev, sdxi);
-> +
-> +	return sdxi->bus_ops->init(sdxi);
-> +}
-> diff --git a/drivers/dma/sdxi/pci.c b/drivers/dma/sdxi/pci.c
-> new file mode 100644
-> index 000000000000..9ac94d6f8b96
-> --- /dev/null
-> +++ b/drivers/dma/sdxi/pci.c
-> @@ -0,0 +1,83 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * SDXI PCI device code
-> + *
-> + * Copyright Advanced Micro Devices, Inc.
-> + */
-> +
-> +#include <linux/dev_printk.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/iomap.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +
-> +#include "sdxi.h"
-> +
-> +enum sdxi_mmio_bars {
-> +	SDXI_PCI_BAR_CTL_REGS = 0,
-> +	SDXI_PCI_BAR_DOORBELL = 2,
+> @@ -5,14 +5,180 @@
+>   * Copyright Advanced Micro Devices, Inc.
+>   */
+>
+> +#include <linux/bitfield.h>
+> +#include <linux/delay.h>
+>  #include <linux/device.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/jiffies.h>
+>  #include <linux/slab.h>
+> +#include <linux/time.h>
+>
+> +#include "mmio.h"
+>  #include "sdxi.h"
+>
+> +enum sdxi_fn_gsv {
+> +	SDXI_GSV_STOP     = 0,
+> +	SDXI_GSV_INIT     = 1,
+> +	SDXI_GSV_ACTIVE   = 2,
+> +	SDXI_GSV_STOPG_SF = 3,
+> +	SDXI_GSV_STOPG_HD = 4,
+> +	SDXI_GSV_ERROR    = 5,
 > +};
 > +
-> +static struct pci_dev *sdxi_to_pci_dev(const struct sdxi_dev *sdxi)
+> +static const char *const gsv_strings[] = {
+> +	[SDXI_GSV_STOP]     = "stopped",
+> +	[SDXI_GSV_INIT]     = "initializing",
+> +	[SDXI_GSV_ACTIVE]   = "active",
+> +	[SDXI_GSV_STOPG_SF] = "soft stopping",
+> +	[SDXI_GSV_STOPG_HD] = "hard stopping",
+> +	[SDXI_GSV_ERROR]    = "error",
+> +};
+> +
+> +static const char *gsv_str(enum sdxi_fn_gsv gsv)
 > +{
-> +	return to_pci_dev(sdxi->dev);
+> +	if ((size_t)gsv < ARRAY_SIZE(gsv_strings))
+> +		return gsv_strings[(size_t)gsv];
+> +
+> +	WARN_ONCE(1, "unexpected gsv %u\n", gsv);
+> +
+> +	return "unknown";
 > +}
 > +
-> +static int sdxi_pci_init(struct sdxi_dev *sdxi)
+> +enum sdxi_fn_gsr {
+> +	SDXI_GSRV_RESET   = 0,
+> +	SDXI_GSRV_STOP_SF = 1,
+> +	SDXI_GSRV_STOP_HD = 2,
+> +	SDXI_GSRV_ACTIVE  = 3,
+> +};
+> +
+> +static enum sdxi_fn_gsv sdxi_dev_gsv(const struct sdxi_dev *sdxi)
 > +{
-> +	struct pci_dev *pdev = sdxi_to_pci_dev(sdxi);
-> +	struct device *dev = &pdev->dev;
+> +	u64 sts0 = sdxi_read64(sdxi, SDXI_MMIO_STS0);
+> +	enum sdxi_fn_gsv gsv = FIELD_GET(SDXI_MMIO_STS0_FN_GSV, sts0);
+> +
+> +	switch (gsv) {
+> +	case SDXI_GSV_STOP ... SDXI_GSV_ERROR:
+> +		break;
+> +	default:
+> +		dev_warn_ratelimited(sdxi->dev, "unknown gsv %u\n", gsv);
+> +		break;
+> +	}
+> +
+> +	return gsv;
+> +}
+> +
+> +static const unsigned long gsv_poll_interval_us = USEC_PER_MSEC;
+> +static const unsigned long gsv_transition_timeout_us = USEC_PER_SEC;
+> +
+> +#define sdxi_dev_gsv_poll(sdxi, val, cond)				\
+> +	read_poll_timeout(sdxi_dev_gsv, val, cond, gsv_poll_interval_us, \
+> +			  gsv_transition_timeout_us, false, sdxi)
+> +
+> +static void sdxi_write_fn_gsr(struct sdxi_dev *sdxi, enum sdxi_fn_gsr cmd)
+> +{
+> +	u64 ctl0 = sdxi_read64(sdxi, SDXI_MMIO_CTL0);
+> +
+> +	FIELD_MODIFY(SDXI_MMIO_CTL0_FN_GSR, &ctl0, cmd);
+> +	sdxi_write64(sdxi, SDXI_MMIO_CTL0, ctl0);
+> +}
+> +
+> +/* Get the device to the GSV_STOP state. */
+> +static int sdxi_dev_stop(struct sdxi_dev *sdxi)
+> +{
+> +	enum sdxi_fn_gsv status = sdxi_dev_gsv(sdxi);
 > +	int ret;
 > +
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to enable device\n");
+> +	dev_dbg(sdxi->dev, "attempting stop, current state: %s\n",
+> +		gsv_str(status));
 > +
-> +	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+> +	switch (status) {
+> +	case SDXI_GSV_INIT:
+> +	case SDXI_GSV_ACTIVE:
+> +		sdxi_write_fn_gsr(sdxi, SDXI_GSRV_STOP_SF);
+> +		break;
+> +	case SDXI_GSV_STOPG_SF:
+> +		sdxi_write_fn_gsr(sdxi, SDXI_GSRV_STOP_HD);
+> +		break;
+> +	case SDXI_GSV_STOPG_HD:
+> +	case SDXI_GSV_ERROR:
+> +		/*
+> +		 * If hard-stopping, there's nothing to do but wait.
+> +		 * If in error state, the reset is issued below.
+> +		 */
+> +		break;
+> +	default:
+> +		/* Unrecognized state; try a reset. */
+> +		sdxi_write_fn_gsr(sdxi, SDXI_GSRV_RESET);
+> +		break;
+> +	}
 > +
-> +	sdxi->ctrl_regs = pcim_iomap_region(pdev, SDXI_PCI_BAR_CTL_REGS,
-> +					    KBUILD_MODNAME);
-> +	if (IS_ERR(sdxi->ctrl_regs))
-> +		return dev_err_probe(dev, PTR_ERR(sdxi->ctrl_regs),
-> +				     "failed to map control registers\n");
+> +	/* Wait for transition to either stop or error state. */
+> +	ret = sdxi_dev_gsv_poll(sdxi, status,
+> +				status == SDXI_GSV_STOP ||
+> +				status == SDXI_GSV_ERROR);
 > +
-> +	sdxi->dbs = pcim_iomap_region(pdev, SDXI_PCI_BAR_DOORBELL,
-> +				      KBUILD_MODNAME);
-> +	if (IS_ERR(sdxi->dbs))
-> +		return dev_err_probe(dev, PTR_ERR(sdxi->dbs),
-> +				     "failed to map doorbell region\n");
+> +	if (ret == 0 && status == SDXI_GSV_ERROR) {
+> +		sdxi_write_fn_gsr(sdxi, SDXI_GSRV_RESET);
+> +		ret = sdxi_dev_gsv_poll(sdxi, status, status == SDXI_GSV_STOP);
+> +	}
 > +
-> +	pci_set_master(pdev);
+> +	if (ret) {
+> +		dev_err(sdxi->dev, "stop timed out, current state: %s\n",
+> +			gsv_str(status));
+> +		return ret;
+> +	}
+> +
 > +	return 0;
 > +}
 > +
-> +static const struct sdxi_bus_ops sdxi_pci_ops = {
-> +	.init = sdxi_pci_init,
-> +};
-> +
-> +static int sdxi_pci_probe(struct pci_dev *pdev,
-> +			  const struct pci_device_id *id)
+> +/*
+> + * See SDXI 1.0 4.1.8 Activation of the SDXI Function by Software.
+> + */
+> +static int sdxi_fn_activate(struct sdxi_dev *sdxi)
 > +{
-> +	return sdxi_register(&pdev->dev, &sdxi_pci_ops);
+> +	u64 version, cap0, cap1, ctl2;
+> +	int err;
+> +
+> +	/*
+> +	 * Clear any existing configuration from MMIO_CTL0 and ensure
+> +	 * the function is in GSV_STOP state.
+> +	 */
+> +	sdxi_write64(sdxi, SDXI_MMIO_CTL0, 0);
+> +	err = sdxi_dev_stop(sdxi);
+> +	if (err)
+> +		return err;
+> +
+> +	version = sdxi_read64(sdxi, SDXI_MMIO_VERSION);
+> +	dev_info(sdxi->dev, "SDXI %llu.%llu device found\n",
+> +		  FIELD_GET(SDXI_MMIO_VERSION_MAJOR, version),
+> +		  FIELD_GET(SDXI_MMIO_VERSION_MINOR, version));
+> +
+> +	/* Read capabilities and features. */
+> +	cap0 = sdxi_read64(sdxi, SDXI_MMIO_CAP0);
+> +	sdxi->db_stride = SZ_4K;
+> +	sdxi->db_stride *= 1U << FIELD_GET(SDXI_MMIO_CAP0_DB_STRIDE, cap0);
+> +
+> +	cap1 = sdxi_read64(sdxi, SDXI_MMIO_CAP1);
+> +	sdxi->op_grp_cap = FIELD_GET(SDXI_MMIO_CAP1_OPB_000_CAP, cap1);
+> +	sdxi->max_cxtid = FIELD_GET(SDXI_MMIO_CAP1_MAX_CXT, cap1);
+> +
+> +	/* Apply our configuration. */
+> +	ctl2 = FIELD_PREP(SDXI_MMIO_CTL2_MAX_CXT, sdxi->max_cxtid);
+> +	ctl2 |= FIELD_PREP(SDXI_MMIO_CTL2_MAX_BUFFER,
+> +			   FIELD_GET(SDXI_MMIO_CAP1_MAX_BUFFER, cap1));
+> +	ctl2 |= FIELD_PREP(SDXI_MMIO_CTL2_MAX_AKEY_SZ,
+> +			   FIELD_GET(SDXI_MMIO_CAP1_MAX_AKEY_SZ, cap1));
+> +	ctl2 |= FIELD_PREP(SDXI_MMIO_CTL2_OPB_000_AVL,
+> +			   FIELD_GET(SDXI_MMIO_CAP1_OPB_000_CAP, cap1));
+> +	sdxi_write64(sdxi, SDXI_MMIO_CTL2, ctl2);
+> +
+> +	return 0;
 > +}
 > +
-> +static const struct pci_device_id sdxi_id_table[] = {
-> +	{ PCI_DEVICE_CLASS(PCI_CLASS_ACCELERATOR_SDXI, 0xffffff) },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(pci, sdxi_id_table);
+>  int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops)
+>  {
+>  	struct sdxi_dev *sdxi;
+> +	int err;
+>
+>  	sdxi = devm_kzalloc(dev, sizeof(*sdxi), GFP_KERNEL);
+>  	if (!sdxi)
+> @@ -22,5 +188,9 @@ int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops)
+>  	sdxi->bus_ops = ops;
+>  	dev_set_drvdata(dev, sdxi);
+>
+> -	return sdxi->bus_ops->init(sdxi);
+> +	err = sdxi->bus_ops->init(sdxi);
+> +	if (err)
+> +		return err;
 > +
-> +static struct pci_driver sdxi_driver = {
-> +	.name = "sdxi",
-> +	.id_table = sdxi_id_table,
-> +	.probe = sdxi_pci_probe,
-> +	.sriov_configure = pci_sriov_configure_simple,
-> +};
-> +
-> +MODULE_AUTHOR("Wei Huang");
-> +MODULE_AUTHOR("Nathan Lynch");
-> +MODULE_DESCRIPTION("SDXI PCIe interface driver");
-> +MODULE_LICENSE("GPL");
-> +module_pci_driver(sdxi_driver);
-> diff --git a/drivers/dma/sdxi/sdxi.h b/drivers/dma/sdxi/sdxi.h
+> +	return sdxi_fn_activate(sdxi);
+>  }
+> diff --git a/drivers/dma/sdxi/mmio.h b/drivers/dma/sdxi/mmio.h
 > new file mode 100644
-> index 000000000000..d4c61ca2f875
+> index 000000000000..c9a11c3f2f76
 > --- /dev/null
-> +++ b/drivers/dma/sdxi/sdxi.h
-> @@ -0,0 +1,38 @@
+> +++ b/drivers/dma/sdxi/mmio.h
+> @@ -0,0 +1,51 @@
 > +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
 > +/*
-> + * SDXI device driver header
+> + * SDXI MMIO register offsets and layouts.
 > + *
 > + * Copyright Advanced Micro Devices, Inc.
 > + */
 > +
-> +#ifndef DMA_SDXI_H
-> +#define DMA_SDXI_H
+> +#ifndef DMA_SDXI_MMIO_H
+> +#define DMA_SDXI_MMIO_H
 > +
-> +#include <linux/compiler_types.h>
-> +#include <linux/types.h>
+> +#include <linux/bits.h>
 > +
-> +struct sdxi_dev;
-> +
-> +/**
-> + * struct sdxi_bus_ops - Bus-specific methods for SDXI devices.
-> + */
-> +struct sdxi_bus_ops {
-> +	/**
-> +	 * @init: Map control registers and doorbell region, allocate
-> +	 *        IRQ ranges. Invoked before bus-agnostic SDXI
-> +	 *        function initialization.
-> +	 */
-> +	int (*init)(struct sdxi_dev *sdxi);
+> +enum sdxi_reg {
+> +	/* SDXI 1.0 9.1 General Control and Status Registers */
+> +	SDXI_MMIO_CTL0       = 0x00000,
+> +	SDXI_MMIO_CTL2       = 0x00010,
+> +	SDXI_MMIO_STS0       = 0x00100,
+> +	SDXI_MMIO_CAP0       = 0x00200,
+> +	SDXI_MMIO_CAP1       = 0x00208,
+> +	SDXI_MMIO_VERSION    = 0x00210,
 > +};
 > +
-> +struct sdxi_dev {
-> +	struct device *dev;
-> +	void __iomem *ctrl_regs;	/* virt addr of ctrl registers */
-> +	void __iomem *dbs;		/* virt addr of doorbells */
+> +/* SDXI 1.0 Table 9-2: MMIO_CTL0 */
+> +#define SDXI_MMIO_CTL0_FN_GSR         GENMASK_ULL(1, 0)
 > +
-> +	const struct sdxi_bus_ops *bus_ops;
-> +};
+> +/* SDXI 1.0 Table 9-4: MMIO_CTL2 */
+> +#define SDXI_MMIO_CTL2_MAX_BUFFER  GENMASK_ULL(3, 0)
+> +#define SDXI_MMIO_CTL2_MAX_AKEY_SZ GENMASK_ULL(15, 12)
+> +#define SDXI_MMIO_CTL2_MAX_CXT     GENMASK_ULL(31, 16)
+> +#define SDXI_MMIO_CTL2_OPB_000_AVL GENMASK_ULL(63, 32)
 > +
-> +int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops);
+> +/* SDXI 1.0 Table 9-5: MMIO_STS0 */
+> +#define SDXI_MMIO_STS0_FN_GSV GENMASK_ULL(2, 0)
 > +
-> +#endif /* DMA_SDXI_H */
+> +/* SDXI 1.0 Table 9-6: MMIO_CAP0 */
+> +#define SDXI_MMIO_CAP0_SFUNC          GENMASK_ULL(15, 0)
+> +#define SDXI_MMIO_CAP0_DB_STRIDE      GENMASK_ULL(22, 20)
+> +#define SDXI_MMIO_CAP0_MAX_DS_RING_SZ GENMASK_ULL(28, 24)
+> +
+> +/* SDXI 1.0 Table 9-7: MMIO_CAP1 */
+> +#define SDXI_MMIO_CAP1_MAX_BUFFER    GENMASK_ULL(3, 0)
+> +#define SDXI_MMIO_CAP1_MAX_AKEY_SZ   GENMASK_ULL(15, 12)
+> +#define SDXI_MMIO_CAP1_MAX_CXT       GENMASK_ULL(31, 16)
+> +#define SDXI_MMIO_CAP1_OPB_000_CAP   GENMASK_ULL(63, 32)
+> +
+> +/* SDXI 1.0 Table 9-8: MMIO_VERSION */
+> +#define SDXI_MMIO_VERSION_MINOR GENMASK_ULL(7, 0)
+> +#define SDXI_MMIO_VERSION_MAJOR GENMASK_ULL(23, 16)
+> +
+> +#endif  /* DMA_SDXI_MMIO_H */
+> diff --git a/drivers/dma/sdxi/sdxi.h b/drivers/dma/sdxi/sdxi.h
+> index d4c61ca2f875..84b87066f438 100644
+> --- a/drivers/dma/sdxi/sdxi.h
+> +++ b/drivers/dma/sdxi/sdxi.h
+> @@ -9,8 +9,12 @@
+>  #define DMA_SDXI_H
+>
+>  #include <linux/compiler_types.h>
+> +#include <linux/dev_printk.h>
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+>  #include <linux/types.h>
+>
+> +#include "mmio.h"
+> +
+>  struct sdxi_dev;
+>
+>  /**
+> @@ -30,9 +34,24 @@ struct sdxi_dev {
+>  	void __iomem *ctrl_regs;	/* virt addr of ctrl registers */
+>  	void __iomem *dbs;		/* virt addr of doorbells */
+>
+> +	/* hardware capabilities (from cap0 & cap1) */
+> +	u32 db_stride;			/* doorbell stride in bytes */
+> +	u16 max_cxtid;			/* Maximum context ID allowed. */
+> +	u32 op_grp_cap;			/* supported operation group cap */
+> +
+>  	const struct sdxi_bus_ops *bus_ops;
+>  };
+>
+>  int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops);
+>
+> +static inline u64 sdxi_read64(const struct sdxi_dev *sdxi, enum sdxi_reg reg)
+> +{
+> +	return ioread64(sdxi->ctrl_regs + reg);
+> +}
+> +
+> +static inline void sdxi_write64(struct sdxi_dev *sdxi, enum sdxi_reg reg, u64 val)
+> +{
+> +	iowrite64(val, sdxi->ctrl_regs + reg);
+> +}
+> +
+>  #endif /* DMA_SDXI_H */
 >
 > --
 > 2.54.0

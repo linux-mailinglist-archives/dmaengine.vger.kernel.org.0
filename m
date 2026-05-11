@@ -1,738 +1,257 @@
-Return-Path: <dmaengine+bounces-10324-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10325-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qPI9GNErAmq/ogEAu9opvQ
-	(envelope-from <dmaengine+bounces-10324-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:19:45 +0200
+	id SFacBswtAmq/ogEAu9opvQ
+	(envelope-from <dmaengine+bounces-10325-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:28:12 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB43451504C
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:19:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 713755151E2
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:28:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9EF093039888
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 19:16:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 36FF13080FB7
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 19:20:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1859E4D98F3;
-	Mon, 11 May 2026 19:16:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D05A4C042A;
+	Mon, 11 May 2026 19:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVDja+tP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="BYrjJ8A0"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012062.outbound.protection.outlook.com [52.101.66.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD5E4D90C9;
-	Mon, 11 May 2026 19:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778526998; cv=none; b=b2LtyoTraW9GA6303e4IutgNc+mMs6PY4aNWOOjpgjCKCDAQ6ZPEOTbdyaaLzWzMIA0wU+VwgcRb4DWok/HfbWR3UuQRH1JSSe9iWiUebryqGVR8u7cTym87tKDh/IBjaeniw9ji26j/8AU4KKIiPZIjujR3GkGBcfrGgqGRuT8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778526998; c=relaxed/simple;
-	bh=Z2UHJDKZ6hnvSMw+PuRjmiSQ3SRvvZTl7FyY0ZpGC+0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZlHC4QB6ln8LmjB34i4tL1H4bhiv94spsrrxs5X7BZZCPntXBC1vjXiDmScAx/4ZoyarhMiUswF6KenPvQrEsO+3jwHwmziAZMeF7scShQRQ8zYRirQxsoDr++UcIzzAkNQOKycAA1J9LDce7Vx3O5U9tT+fE5wh6KmaCZ4o3sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVDja+tP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AF559C2BCFC;
-	Mon, 11 May 2026 19:16:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778526998;
-	bh=Z2UHJDKZ6hnvSMw+PuRjmiSQ3SRvvZTl7FyY0ZpGC+0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=WVDja+tPZ4kFYDjOO+5E2NFegfmQElJQkXHcvJzAyCR0N0U6GjA3ihEupt1v4ecJ/
-	 Q7PGxbydqPwT6zz8H2JgCBbABj0kj1hF1K+BhWt//yVU3+F/d12w2MUzWOXcmvX8hV
-	 +NGNR5TyvkdNVlrMd7MwQ3UnCBabQVE59LGiU9ZKqQIVhJBhCwHSiaWj/mZljv67ql
-	 2IHTke0/PjpWMEQuj27QmGWDCVLewR7gCSyNNCFVefQ/+IDlZY2+9nM9AHA6Qltb9S
-	 0B2l24clNJiclobF+vbA1DhOvj3ShY0x+hsHnohigJUwD+6l4sxncHLqJOqQmZN6X/
-	 MDitJ4oDTjIzQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72A2CD484E;
-	Mon, 11 May 2026 19:16:38 +0000 (UTC)
-From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Mon, 11 May 2026 14:16:35 -0500
-Subject: [PATCH v2 23/23] dmaengine: sdxi: Add DMA engine provider
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0CE4C9019;
+	Mon, 11 May 2026 19:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778527227; cv=fail; b=BWXu8fQAboPQDfA+/iBfPUu4JKTQsE1pTJymQw4yzsc6Yaj7ahOHovwnarwU+MHDfa7Zlgx/IUoxFMPW0CNaQENN5cY+US4nqTYI5/QI+Vfjg1ZD1FEz/D6H6Ek89M2DNXC9CCmA3OH6HuYr9hzIkyPdmSuqsgYcpbzNyRfPYf4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778527227; c=relaxed/simple;
+	bh=ehKebAFLRXgsgbbKlMPfl3p2ztZptwuxJf1t9B+dr1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=DjmXE5kaXytHkkDYJV9oyIG2VbPnxY0cxIENsl94HegdRrF06+rG6RP7RZyJ7d3ex5D9m27i76M0yrgS3prLnILamGv4wAuyhFVXheVUTF5gVCEC7n0A/8U/aabZUZpMVyQKeJmWAfo0fsYCNXp6klK3v5BhzSkW/l3b2BIS1tk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=BYrjJ8A0 reason="signature verification failed"; arc=fail smtp.client-ip=52.101.66.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PTVVLJjFu5AEqR0b+PtO+XcxQvBVZFIa/qE4BI7Qhg2bhSzARz5SdOIEMxJUO9B/Jg2dE2XLewnvRoNdlOtcGVe7Rp/DmF3ZVHDne6PnOWYjbpwkWUu7jh6mHjsc/hEhbOBbUeP1bBIxedjdZKH24zJVnOW2wkQBAkQKDgiUselySFg9HCwjmz465m3kHZhC2CMNvwSaKyOYW2oViIXBV3fSdt2ex6gusZWTm8E+/QlpQFP88aDp+ljQkzVroRc/GFJx5JKJps8oIKmNaABQ3borJ6+itsEzsqoaa6HNgeSYRrbpN+eE1id4U+mDvGeh7VUG2ziDGmSnr9q2wAE6SQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vouzTT7UESXK0+OEVbdHfpEguUJx+QeybXrVWcccPMA=;
+ b=tEJxbGYZAEwXNwLypVZxRnclDa56UV8LKOYu9lrqhssOgUz7txTHYAj4IZn39ZYjJIPeTvriOmw8TsLm79i5teUQmoGaoIQv8RKTCUSx+exEg2QuawpITWzVu2fiaYI/jowp6UOIGl6Z5+6wh3T5GCm3rZoF3UxJWNLBsPQVFkbojZeou6c03GeZhiFX2kCPwwKX5xnkvFWpNZZ1y36Ervj41GedAXkh4sJkzvhDulNAK1OxnB+vlRHXevzYmGQyQQfuC780F5Zy38DiYAiFMAXCqg0TFDzIrnsM5SBDOtUeK3OkniL7KL+t1r9Aq6qxFY/1qgwBogX9DPN3ArhqYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vouzTT7UESXK0+OEVbdHfpEguUJx+QeybXrVWcccPMA=;
+ b=BYrjJ8A07BgMKVKmQ43PCNcC4zL1c2pWq7Z9SE3ETIR8e+MQyWc6Onv7SwSa0Qwuvhpbe4Nv244ckkOrJngFBuRz7uZW6HHMNni7Kyj7oI5FKU2ytBHh0iLs0xUYOENqD6KDi0Rg3p1sQx8IUuAgg6FZ9V5toumUM6MOXErGx7T0SBpP+WtJw6AF64f0t2PjOT4uKHjiOKaNrR4CApusowbHDFQDRSrpXSndTcONBhLwgbeJcJGUdbla/u7B7tUrvR/trjl0VslWksyKz1bNxXqBcF9Jtj5dq2Moj9NY4PFBKfWC01wfmvJrBt+31wtyphRzi1q8Ip3hfC2P5fZdpg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by DUZPR04MB9898.eurprd04.prod.outlook.com (2603:10a6:10:4d2::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.23; Mon, 11 May
+ 2026 19:20:22 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%3]) with mapi id 15.20.9891.021; Mon, 11 May 2026
+ 19:20:22 +0000
+Date: Mon, 11 May 2026 15:20:15 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: =?iso-8859-1?Q?Beno=EEt?= Monin <benoit.monin@bootlin.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Frank Li <Frank.Li@kernel.org>, imx@lists.linux.dev,
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] dmaengine: fsl-edma: Support dynamic
+ scatter/gather chaining
+Message-ID: <agIr7wqV3jIFp-dC@lizhi-Precision-Tower-5810>
+References: <20260511-fsl-edma-dyn-sg-v3-0-98a181775dae@bootlin.com>
+ <20260511-fsl-edma-dyn-sg-v3-2-98a181775dae@bootlin.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260511-fsl-edma-dyn-sg-v3-2-98a181775dae@bootlin.com>
+X-ClientProxiedBy: PH7PR17CA0051.namprd17.prod.outlook.com
+ (2603:10b6:510:325::14) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260511-sdxi-base-v2-23-889cfed17e3f@amd.com>
-References: <20260511-sdxi-base-v2-0-889cfed17e3f@amd.com>
-In-Reply-To: <20260511-sdxi-base-v2-0-889cfed17e3f@amd.com>
-To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
- David Rientjes <rientjes@google.com>, John.Kariuki@amd.com, 
- Kinsey Ho <kinseyho@google.com>, 
- Mario Limonciello <mario.limonciello@amd.com>, 
- PradeepVineshReddy.Kodamati@amd.com, Shivank Garg <shivankg@amd.com>, 
- Stephen Bates <Stephen.Bates@amd.com>, Wei Huang <wei.huang2@amd.com>, 
- Wei Xu <weixugc@google.com>, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- Jonathan Cameron <jic23@kernel.org>, Nathan Lynch <nathan.lynch@amd.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778526995; l=18338;
- i=nathan.lynch@amd.com; s=20260410; h=from:subject:message-id;
- bh=yQGyy+ljoBzwKKaO78WvuuAB+JprXL66Tuu4n+LfZxk=;
- b=JHt7tMT97f44zO4GsM1vG0yoloFuG5QPCzObmc+mexQhsiXRXdyLTOCbDGiV6yDaQYiL2WkuP
- DgbIZXh3xyCAhZcTtJGK0djXszxApmHSOkVIumnsC6fKvzCdOdYLjAq
-X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
- pk=PK4ozhq+/z9/2Jl5rgDmvHa9raVomv79qM8p1RAFpEw=
-X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20260410 with
- auth_id=728
-X-Original-From: Nathan Lynch <nathan.lynch@amd.com>
-Reply-To: nathan.lynch@amd.com
-X-Rspamd-Queue-Id: DB43451504C
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|DUZPR04MB9898:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7c08b482-7252-416b-01c5-08deaf9258c4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|19092799006|52116014|376014|38350700014|3023799003|11063799003|56012099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	2dTYObj1JTyY1zp4R6DzUGcYJ/i/rAS7/WFOUgjOTf8ZwnJ8lSR4Uw1SAoxC1Unv0RwIYBU9O2BSBvrejS7SxF0WseLru2iM+vYK58EQyGKmT5Q+bvfz3P7eaPHE9kJPuIG63dcdUby1swwyxErKfPmWAalvAcpbW3GntmIBb2LeZ9t2geHwFtNm6z9YY5D9ZN6IoZSVkip7A/jAtL3Y86wzPnMRb4DICpJR/pNywMLsrTtLFj0TBzzZsdtY1101Qnpl3FfsBl3m6MkhyLNVUcZERYqXmtPBIX6QgJJ3Oh2HRaibgkGS1N7dOxkk6jkeojXDI/kzW3fWaKM1fZsIoFZ+ePfyomTMYFqxM8xCwgonQc2N4I07bouS9FyOlVmxls6zGPHXeeugjE0O02iV8Ykf2xzNgP+3aDGYlNsuQXD3vOki7KskX7OkuP4Y7X906lltQTwwKPZurYTJfu/D03Zjh7Dm20VcNlOtDgt279fM4bqhTkJDOd6GDHO1WGbLkIGD1XcmC2MpCIJ0PuybR+IsRYTH6zWGBFHvDz8v10c/Hyz2B/J9cCV0K5IunBM175EfUcYMvuLbqzcXpXOcfKb18Fo6esjKGSKN7+DwIV3uPufGMrXqbrA2OgSYb5eoN22yXFrf5KNP5c4eSk2MIz4RnPidl9tgJDqVdT87lVZwGJOtn7hQ8iTIpb4ZzESAfGSjFj8BdwrZI5tH+K6gSN+jpk0oybqPzL2FAQhxexVbYWnTShMwuY71WqGO/urn
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(19092799006)(52116014)(376014)(38350700014)(3023799003)(11063799003)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?h1oK0m1sUKLcXKjG6oDZCYLI5rtd0aNcraDXiMRNBte+2OPzw760ZU7Avs?=
+ =?iso-8859-1?Q?1QqxOL+XHCzX4ECzrSoFjdLFzk3DtVTPvPS1Nlh6+QeUN+nPcLCNrNKdPz?=
+ =?iso-8859-1?Q?EYHaKXIQnrIHJm5TEaLK4qTePNgbxAQyseZd67mwBeO95w9Pz3L8V6IJyD?=
+ =?iso-8859-1?Q?yK2wO+YM2IqnQOW7bitr/TX/DNFQ7ZnBLg17dCMCG3lm4LS1mn1q/jkjCO?=
+ =?iso-8859-1?Q?a3jfdCrQfABuDQv7CjtRBJVMtYNTokhWkXueUVJvJainqA6LLKrcpu1AQ5?=
+ =?iso-8859-1?Q?hY+vpE9dfSTasqoRR1nnR42kU8MSSnG8CjwS+EFFdThiqHC/ImFI2kxDiT?=
+ =?iso-8859-1?Q?42bie+fB+c2/Dg6leWC+N1RZvltOrY6bjtCPmlyy5c0d3exm+TMKx92Xs8?=
+ =?iso-8859-1?Q?MltQxA1dst1eBhmiFs9lG0YoxFiFfsfTbS72gtRptAOoWQI4qUCtRfqnIS?=
+ =?iso-8859-1?Q?nFuK1kMwJpuYpm2HZqMI8nJRBcxLXvA95mIcQzGMyF+E4TmXd9T+oZ/Alj?=
+ =?iso-8859-1?Q?0/uS6si6K2FsPjvlAHWLJeNftugcQlaGqaRfb8VWH6BwwUTJvlzEGRHv8i?=
+ =?iso-8859-1?Q?4y+V3ACqwmJQDTC5n5H2/5Q6SKZw7w5MBUEDAF1+1mFwK74vrZhq2ncJL5?=
+ =?iso-8859-1?Q?COjHYrnSv0pANUm+nezygThAPb3Qh8Tq9b3ACDo3pQE0x9EEWZMSNvk6V4?=
+ =?iso-8859-1?Q?fDYXwRcm7ObnLV77J6uPM4Af9fLqPDvfKPCuzWABtTZ3BLVoIVjygKr6em?=
+ =?iso-8859-1?Q?7WbLtCsYBdkHBJYtZeF31u71YGTV+4Azpez7p2i7tSxYskk+Sauvfr+A8p?=
+ =?iso-8859-1?Q?BvUEX0vlVx/GAmFx13/IuqhF+jpD5ZnT3MJXklm+utFzk12Su9fKa2wQ6f?=
+ =?iso-8859-1?Q?nOyUia/t54SOVnJ03i6X5F1QxYNzSnwKb7fMHKMJ/qPtvVE725aoYm1cTV?=
+ =?iso-8859-1?Q?7sE1boUlUdSmE6alRAfrOaalHA0BM6sS+RygdlpSTmrhon8WClt5P8/Vhc?=
+ =?iso-8859-1?Q?UR9LuNEB3N16UOdUPbaevbB1joqzjxsjmGyXh3B3Nd8c36qIx0qeHWPTbY?=
+ =?iso-8859-1?Q?jmP2R5Hd3Jp2FGzrXWLzE0e0YUhw9Aj6wV7/baT5W2+ZV2+zOSaAqMVe3y?=
+ =?iso-8859-1?Q?w7iYw3Lq2yPx/4zH4K8AqxSu58FfrkaLmllYEdiLXmvQiH10wEefY1W2d7?=
+ =?iso-8859-1?Q?Pyy63Q1VxRIDB8YuDdZCI0K8fQHfQ0qg1tL6DfB6uu8MPOiURfX4b2OH2f?=
+ =?iso-8859-1?Q?tlyEub9eGoiLr3FQ9W0QovVmxCdf5lnZCLm2Y5WAll3UO/sEm7FHUMvHum?=
+ =?iso-8859-1?Q?+kwIZE+bHmNZRy2EzNhzyOP3LkQzrRd7pwAymipfCUAOJuzvlM/AGZkgqD?=
+ =?iso-8859-1?Q?wmWzosb26vAC4TOKy65Bg3nWcV1NHyZx5Gf1RosgLX9ix3GriqNGdj5HNU?=
+ =?iso-8859-1?Q?JaGJ5rTpinWRe89ODnTHUVCiM2wqDkNHCRNQLP0VUxPrsPr6iPmzJqTqcZ?=
+ =?iso-8859-1?Q?x1hRomtO9lB0HWjcKUcWSeRpeiusmQni10BhmzT3QQcPi9IRpINKO2J+d+?=
+ =?iso-8859-1?Q?2a2UT1YskkpxtzXFeP37cVcmjnlnUlHnZ3MBTOIyPLn/lnAaPL0k/9YjWl?=
+ =?iso-8859-1?Q?Fa5/qq+qkW7IDq13l38xK0UftIsdq3TC+zqtAPJzt2Egg/nSApBUqYRH+3?=
+ =?iso-8859-1?Q?PPfqbqHq3ud0KKjtp/XZea0qUzdgvLOCUVou4FfXXBNVOGtY+b3huUkPQd?=
+ =?iso-8859-1?Q?2kGiwoDHdByQmhvGAgBoTfxAgrMT5j3MxeZUiy6qoRXV0PN6DDofyuAeP1?=
+ =?iso-8859-1?Q?sRa+YzrB7Q=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c08b482-7252-416b-01c5-08deaf9258c4
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2026 19:20:22.5194
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KvWqqo11AySsYipPCnIj3FSDFQSCMaKvi9NEaSiGbg9hGTT01kHv3VbmykJzaEXIMYU2FvyRdpatV7+xJ6mUTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB9898
+X-Rspamd-Queue-Id: 713755151E2
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+X-Spamd-Result: default: False [2.14 / 15.00];
+	R_DKIM_REJECT(1.00)[nxp.com:s=selector1];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10324-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10325-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[nxp.com:-];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.984];
 	TAGGED_RCPT(0.00)[dmaengine];
-	HAS_REPLYTO(0.00)[nathan.lynch@amd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amd.com:email,amd.com:mid,amd.com:replyto]
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:email]
 X-Rspamd-Action: no action
 
-From: Nathan Lynch <nathan.lynch@amd.com>
+On Mon, May 11, 2026 at 03:57:20PM +0200, Benoît Monin wrote:
+> Implement dynamic linking of scatter/gather transfers to enable
+> chaining multiple DMA descriptors without stopping the channel.
+> This avoids waiting for the channel to go idle if there is another
+> transaction already issued.
+>
+> Add fsl_edma_link_sg() to dynamically link the last TCD of a previously
+> submitted descriptor to the first TCD of a new descriptor by setting
+> the scatter/gather address and the E_SG flag, and keeping the channel
+> active by clearing the DREQ bit.
+>
+> Linking is done when the transaction is submitted by fsl_edma_tx_submit().
+> To do so, the .tx_submit() callback is overridden for non-cyclic
+> transactions prepared by fsl_edma_prep_peripheral_dma_vec() and
+> fsl_edma_prep_slave_sg(). This ensures that transactions are linked
+> in the order they are submitted.
+>
+> Update fsl_edma_xfer_desc() to avoid re-initializing the hardware when a
+> transfer is already in progress, allowing seamless chaining of descriptors.
+>
+> Modify the transfer completion handler to check the DONE flag in the
+> channel CSR before marking the transfer complete. Since this flag is
+> only available on SoC with the split registers layout, we only link
+> transactions for DMA controllers flagged with FSL_EDMA_DRV_SPLIT_REG.
+>
+> Add trace event for scatter/gather linking operations.
+>
+> Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
+> ---
+>  drivers/dma/fsl-edma-common.c | 90 +++++++++++++++++++++++++++++++++++++++----
+>  drivers/dma/fsl-edma-trace.h  |  5 +++
+>  2 files changed, 88 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+> index c10190164926..b83d1b91dca2 100644
+> --- a/drivers/dma/fsl-edma-common.c
+> +++ b/drivers/dma/fsl-edma-common.c
+> @@ -58,7 +58,10 @@ void fsl_edma_tx_chan_handler(struct fsl_edma_chan *fsl_chan)
+>  		list_del(&fsl_chan->edesc->vdesc.node);
+>  		vchan_cookie_complete(&fsl_chan->edesc->vdesc);
+>  		fsl_chan->edesc = NULL;
+> -		fsl_chan->status = DMA_COMPLETE;
+> +		if (!(fsl_edma_drvflags(fsl_chan) & FSL_EDMA_DRV_SPLIT_REG) ||
+> +		    (edma_readl_chreg(fsl_chan, ch_csr) & EDMA_V3_CH_CSR_DONE)) {
+> +			fsl_chan->status = DMA_COMPLETE;
 
-Register a DMA engine provider that implements memcpy. The number of
-channels per SDXI function can be controlled via a module
-parameter (dma_channels). The provider uses the virt-dma library.
+Does fsl_edma_desc_residue() needs to update?
 
-This survives dmatest runs with both polled and interrupt-signaled
-completion modes, with the following debug options and sanitizers
-enabled:
+> +		}
+>  	} else {
+>  		vchan_cyclic_callback(&fsl_chan->edesc->vdesc);
+>  	}
+> @@ -673,6 +676,68 @@ struct dma_async_tx_descriptor *fsl_edma_prep_dma_cyclic(
+>  	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
+>  }
+>
+> +static void fsl_edma_link_sg(struct fsl_edma_chan *fsl_chan, struct fsl_edma_desc *fsl_desc)
+> +{
+> +	u32 flags = fsl_edma_drvflags(fsl_chan);
+> +	struct fsl_edma_hw_tcd *last_tcd;
+> +	struct fsl_edma_desc *prev_desc;
+> +	struct virt_dma_desc *vdesc;
+> +	u16 csr;
+> +
+> +	lockdep_assert_held(&fsl_chan->vchan.lock);
+> +
+> +	if (!(flags & FSL_EDMA_DRV_SPLIT_REG))
+> +		return;
+> +
+> +	vdesc = list_last_entry_or_null(&fsl_chan->vchan.desc_issued,
+> +					struct virt_dma_desc, node);
+> +	if (!vdesc)
+> +		vdesc = list_last_entry_or_null(&fsl_chan->vchan.desc_submitted,
+> +						struct virt_dma_desc, node);
+> +	if (!vdesc)
+> +		return;
 
-CONFIG_DEBUG_KMEMLEAK=y
-CONFIG_KASAN=y
-CONFIG_PROVE_LOCKING=y
-CONFIG_SLUB_DEBUG_ON=y
-CONFIG_UBSAN=y
+Suppose you only check submit queue,
 
-Example test:
-  $ qemu-system-x86_64 -m 4G -smp 4 -kernel ~/bzImage -nographic \
-    -append 'console=ttyS0 debug sdxi.dma_channels=2 dmatest.polled=0 \
-     dmatest.iterations=10000 dmatest.run=1 dmatest.threads_per_chan=2 \
-     sdxi.dyndbg=+p' -device vfio-pci,host=0000:01:02.1 \
-     -initrd ~/rootfs.cpio -M q35 -accel kvm
-  [...]
-  # dmesg | grep -i -e sdxi -e dmatest
-  dmatest: No channels configured, continue with any
-  sdxi 0000:00:03.0: allocated 64 vectors
-  sdxi 0000:00:03.0: sdxi_dev_stop: function state: stopped
-  sdxi 0000:00:03.0: SDXI 1.0 device found
-  sdxi 0000:00:03.0: sdxi_dev_start: function state: active
-  sdxi 0000:00:03.0: activated
-  dmatest: Added 2 threads using dma0chan0
-  dmatest: Added 2 threads using dma0chan1
-  dmatest: Started 2 threads using dma0chan0
-  dmatest: Started 2 threads using dma0chan1
-  dmatest: dma0chan1-copy1: summary 10000 tests, 0 failures
-  dmatest: dma0chan1-copy0: summary 10000 tests, 0 failures
-  dmatest: dma0chan0-copy1: summary 10000 tests, 0 failures
-  dmatest: dma0chan0-copy0: summary 10000 tests, 0 failures
+issue transfer will move submit queue to issue queue.
 
-Co-developed-by: Wei Huang <wei.huang2@amd.com>
-Signed-off-by: Wei Huang <wei.huang2@amd.com>
-Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
----
- drivers/dma/sdxi/Kconfig  |   1 +
- drivers/dma/sdxi/Makefile |   1 +
- drivers/dma/sdxi/device.c |   2 +
- drivers/dma/sdxi/dma.c    | 499 ++++++++++++++++++++++++++++++++++++++++++++++
- drivers/dma/sdxi/dma.h    |  11 +
- 5 files changed, 514 insertions(+)
-
-diff --git a/drivers/dma/sdxi/Kconfig b/drivers/dma/sdxi/Kconfig
-index 39343eb85614..41158e77b991 100644
---- a/drivers/dma/sdxi/Kconfig
-+++ b/drivers/dma/sdxi/Kconfig
-@@ -1,6 +1,7 @@
- config SDXI
- 	tristate "SDXI support"
- 	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
- 	help
- 	  Enable support for Smart Data Accelerator Interface (SDXI)
- 	  Platform Data Mover devices. SDXI is a vendor-neutral
-diff --git a/drivers/dma/sdxi/Makefile b/drivers/dma/sdxi/Makefile
-index 419c71c2ef6a..80b1871fe7b5 100644
---- a/drivers/dma/sdxi/Makefile
-+++ b/drivers/dma/sdxi/Makefile
-@@ -6,6 +6,7 @@ sdxi-objs += \
- 	context.o     \
- 	descriptor.o  \
- 	device.o      \
-+	dma.o         \
- 	ring.o
- 
- sdxi-$(CONFIG_PCI_MSI) += pci.o
-diff --git a/drivers/dma/sdxi/device.c b/drivers/dma/sdxi/device.c
-index 79bd77639479..1c5c6741eadb 100644
---- a/drivers/dma/sdxi/device.c
-+++ b/drivers/dma/sdxi/device.c
-@@ -21,6 +21,7 @@
- #include <linux/xarray.h>
- 
- #include "context.h"
-+#include "dma.h"
- #include "hw.h"
- #include "mmio.h"
- #include "sdxi.h"
-@@ -314,6 +315,7 @@ static int sdxi_device_init(struct sdxi_dev *sdxi)
- 	if (err)
- 		return err;
- 
-+	sdxi_dma_register(sdxi);
- 	return 0;
- }
- 
-diff --git a/drivers/dma/sdxi/dma.c b/drivers/dma/sdxi/dma.c
-new file mode 100644
-index 000000000000..6c0ab04c1939
---- /dev/null
-+++ b/drivers/dma/sdxi/dma.c
-@@ -0,0 +1,499 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * SDXI dmaengine provider
-+ *
-+ * Copyright Advanced Micro Devices, Inc.
-+ */
-+
-+#include <linux/cleanup.h>
-+#include <linux/delay.h>
-+#include <linux/dev_printk.h>
-+#include <linux/container_of.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/dmaengine.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/overflow.h>
-+#include <linux/spinlock.h>
-+
-+#include "../dmaengine.h"
-+#include "../virt-dma.h"
-+#include "completion.h"
-+#include "context.h"
-+#include "descriptor.h"
-+#include "dma.h"
-+#include "ring.h"
-+#include "sdxi.h"
-+
-+static unsigned short dma_channels = 1;
-+module_param(dma_channels, ushort, 0644);
-+MODULE_PARM_DESC(dma_channels, "DMA channels per function (default: 1)");
-+
-+/*
-+ * An SDXI context is allocated for each channel configured.
-+ *
-+ * Each context has a descriptor ring with a minimum of 1K entries.
-+ * SDXI supports a variety of primitive operations, e.g. copy,
-+ * interrupt, nop. Each Linux virtual DMA descriptor may be composed
-+ * of a grouping of SDXI descriptors in the ring. E.g. two SDXI
-+ * descriptors (copy, then interrupt) to implement a
-+ * dma_async_tx_descriptor for memcpy with DMA_PREP_INTERRUPT flag.
-+ *
-+ * dma_device->device_prep_dma_* functions reserve space in the
-+ * descriptor ring and serialize SDXI descriptors implementing the
-+ * operation to the reserved slots, leaving their valid (vl) bits
-+ * clear. A single virtual descriptor is added to the allocated list.
-+ *
-+ * dma_async_tx_descriptor->tx_submit() invokes vchan_tx_submit(),
-+ * which merely assigns a cookie and moves the txd to the submitted
-+ * list without entering the SDXI provider code.
-+ *
-+ * dma_device->device_issue_pending() (sdxi_dma_issue_pending()) sets vl
-+ * on each SDXI descriptor reachable from the submitted list, then
-+ * rings the context doorbell. The submitted txds are moved to the
-+ * issued list via vchan_issue_pending().
-+ */
-+
-+struct sdxi_dma_chan {
-+	struct virt_dma_chan vchan;
-+	struct sdxi_cxt *cxt;
-+	unsigned int vector;
-+	unsigned int irq;
-+	struct sdxi_akey_ent *akey;
-+};
-+
-+struct sdxi_dma_dev {
-+	struct dma_device dma_dev;
-+	size_t nr_channels;
-+	struct sdxi_dma_chan sdchan[] __counted_by(nr_channels);
-+};
-+
-+/*
-+ * A virtual descriptor can correspond to a group of SDXI hardware descriptors.
-+ */
-+struct sdxi_dma_desc {
-+	struct virt_dma_desc vdesc;
-+	struct sdxi_ring_resv resv;
-+	struct sdxi_completion *completion;
-+};
-+
-+static struct sdxi_dma_chan *to_sdxi_dma_chan(const struct dma_chan *dma_chan)
-+{
-+	const struct virt_dma_chan *vchan;
-+
-+	vchan = container_of_const(dma_chan, struct virt_dma_chan, chan);
-+	return container_of(vchan, struct sdxi_dma_chan, vchan);
-+}
-+
-+static struct sdxi_dma_desc *
-+to_sdxi_dma_desc(const struct virt_dma_desc *vdesc)
-+{
-+	return container_of(vdesc, struct sdxi_dma_desc, vdesc);
-+}
-+
-+static void sdxi_tx_desc_free(struct virt_dma_desc *vdesc)
-+{
-+	struct sdxi_dma_desc *sddesc = to_sdxi_dma_desc(vdesc);
-+
-+	sdxi_completion_free(sddesc->completion);
-+	kfree(to_sdxi_dma_desc(vdesc));
-+}
-+
-+static struct sdxi_dma_desc *
-+prep_memcpy_intr(struct dma_chan *dma_chan, const struct sdxi_copy *params)
-+{
-+	struct sdxi_cxt *cxt = to_sdxi_dma_chan(dma_chan)->cxt;
-+	struct sdxi_akey_ent *akey = to_sdxi_dma_chan(dma_chan)->akey;
-+	struct sdxi_desc *copy, *intr;
-+
-+	struct sdxi_completion *comp __free(sdxi_completion) = sdxi_completion_alloc(cxt->sdxi);
-+	if (!comp)
-+		return NULL;
-+
-+	struct sdxi_dma_desc *sddesc __free(kfree) = kzalloc(sizeof(*sddesc), GFP_NOWAIT);
-+	if (!sddesc)
-+		return NULL;
-+
-+	if (sdxi_ring_try_reserve(cxt->ring_state, 2, &sddesc->resv))
-+		return NULL;
-+
-+	copy = sdxi_ring_resv_next(&sddesc->resv);
-+	(void)sdxi_encode_copy(copy, params); /* Caller checked validity. */
-+	sdxi_desc_set_fence(copy); /* Conservatively fence every descriptor. */
-+	sdxi_completion_attach(copy, comp);
-+
-+	sddesc->completion = no_free_ptr(comp);
-+
-+	intr = sdxi_ring_resv_next(&sddesc->resv);
-+	sdxi_encode_intr(intr, &(const struct sdxi_intr) {
-+			.akey = sdxi_akey_index(cxt, akey),
-+		});
-+	/* Raise the interrupt only after the copy has completed. */
-+	sdxi_desc_set_fence(intr);
-+	return_ptr(sddesc);
-+}
-+
-+static struct sdxi_dma_desc *
-+prep_memcpy_polled(struct dma_chan *dma_chan, const struct sdxi_copy *params)
-+{
-+	struct sdxi_cxt *cxt = to_sdxi_dma_chan(dma_chan)->cxt;
-+	struct sdxi_desc *copy;
-+
-+	struct sdxi_completion *comp __free(sdxi_completion) = sdxi_completion_alloc(cxt->sdxi);
-+	if (!comp)
-+		return NULL;
-+
-+	struct sdxi_dma_desc *sddesc __free(kfree) = kzalloc(sizeof(*sddesc), GFP_NOWAIT);
-+	if (!sddesc)
-+		return NULL;
-+
-+	if (sdxi_ring_try_reserve(cxt->ring_state, 1, &sddesc->resv))
-+		return NULL;
-+
-+	copy = sdxi_ring_resv_next(&sddesc->resv);
-+	(void)sdxi_encode_copy(copy, params); /* Caller checked validity. */
-+	sdxi_completion_attach(copy, comp);
-+
-+	sddesc->completion = no_free_ptr(comp);
-+	return_ptr(sddesc);
-+}
-+
-+static struct dma_async_tx_descriptor *
-+sdxi_dma_prep_memcpy(struct dma_chan *dma_chan, dma_addr_t dst,
-+		     dma_addr_t src, size_t len, unsigned long flags)
-+{
-+	struct sdxi_akey_ent *akey = to_sdxi_dma_chan(dma_chan)->akey;
-+	struct sdxi_cxt *cxt = to_sdxi_dma_chan(dma_chan)->cxt;
-+	u16 akey_index = sdxi_akey_index(cxt, akey);
-+	struct sdxi_dma_desc *sddesc;
-+	struct sdxi_copy copy = {
-+		.src = src,
-+		.dst = dst,
-+		.src_akey = akey_index,
-+		.dst_akey = akey_index,
-+		.len = len,
-+	};
-+
-+	/*
-+	 * Perform a trial encode to a dummy descriptor on the stack
-+	 * so we can reject bad inputs without touching the ring
-+	 * state.
-+	 */
-+	if (sdxi_encode_copy(&(struct sdxi_desc){}, &copy))
-+		return NULL;
-+
-+	sddesc = (flags & DMA_PREP_INTERRUPT) ?
-+		prep_memcpy_intr(dma_chan, &copy) :
-+		prep_memcpy_polled(dma_chan, &copy);
-+
-+	if (!sddesc)
-+		return NULL;
-+
-+	return vchan_tx_prep(to_virt_chan(dma_chan), &sddesc->vdesc, flags);
-+}
-+
-+static enum dma_status sdxi_tx_status(struct dma_chan *chan,
-+				      dma_cookie_t cookie,
-+				      struct dma_tx_state *state)
-+{
-+	struct sdxi_dma_chan *sdchan = to_sdxi_dma_chan(chan);
-+	struct sdxi_dma_desc *sddesc;
-+	enum dma_status status;
-+	struct virt_dma_desc *vdesc;
-+
-+	status = dma_cookie_status(chan, cookie, state);
-+	if (status == DMA_COMPLETE)
-+		return status;
-+
-+	guard(spinlock_irqsave)(&sdchan->vchan.lock);
-+
-+	vdesc = vchan_find_desc(&sdchan->vchan, cookie);
-+	if (!vdesc)
-+		return status;
-+
-+	sddesc = to_sdxi_dma_desc(vdesc);
-+
-+	if (WARN_ON_ONCE(!sddesc->completion))
-+		return DMA_ERROR;
-+
-+	if (!sdxi_completion_signaled(sddesc->completion))
-+		return DMA_IN_PROGRESS;
-+
-+	if (sdxi_completion_errored(sddesc->completion))
-+		return DMA_ERROR;
-+
-+	list_del(&vdesc->node);
-+	vchan_cookie_complete(vdesc);
-+
-+	return dma_cookie_status(chan, cookie, state);
-+}
-+
-+static void sdxi_dma_issue_pending(struct dma_chan *dma_chan)
-+{
-+	struct virt_dma_chan *vchan = to_virt_chan(dma_chan);
-+	struct virt_dma_desc *vdesc;
-+	u64 dbval = 0;
-+
-+	scoped_guard(spinlock_irqsave, &vchan->lock) {
-+		/*
-+		 * This can happen with racing submitters.
-+		 */
-+		if (list_empty(&vchan->desc_submitted))
-+			return;
-+
-+		list_for_each_entry(vdesc, &vchan->desc_submitted, node) {
-+			struct sdxi_dma_desc *sddesc = to_sdxi_dma_desc(vdesc);
-+			struct sdxi_desc *hwdesc;
-+
-+			sdxi_ring_resv_foreach(&sddesc->resv, hwdesc)
-+				sdxi_desc_make_valid(hwdesc);
-+			/*
-+			 * The reservations ought to be ordered
-+			 * ascending, but use umax() just in case.
-+			 */
-+			dbval = umax(sdxi_ring_resv_dbval(&sddesc->resv), dbval);
-+		}
-+
-+		vchan_issue_pending(vchan);
-+	}
-+
-+	/*
-+	 * The implementation is required to handle out-of-order
-+	 * doorbell updates; we can do this after dropping the
-+	 * lock.
-+	 */
-+	sdxi_cxt_push_doorbell(to_sdxi_dma_chan(dma_chan)->cxt, dbval);
-+}
-+
-+static int sdxi_dma_terminate_all(struct dma_chan *dma_chan)
-+{
-+	struct virt_dma_chan *vchan = to_virt_chan(dma_chan);
-+	u64 dbval = 0;
-+
-+	/*
-+	 * Allocated and submitted txds are in the ring but not valid
-+	 * yet. Overwrite them with nops and then set their valid
-+	 * bits.
-+	 *
-+	 * The implementation may start consuming these as soon as the
-+	 * valid bits flip. sdxi_dma_synchronize() will ensure they're
-+	 * all done.
-+	 */
-+	scoped_guard(spinlock_irqsave, &vchan->lock) {
-+		struct virt_dma_desc *vdesc;
-+		LIST_HEAD(head);
-+
-+		list_splice_tail_init(&vchan->desc_allocated, &head);
-+		list_splice_tail_init(&vchan->desc_submitted, &head);
-+
-+		if (list_empty(&head))
-+			return 0;
-+
-+		list_for_each_entry(vdesc, &head, node) {
-+			struct sdxi_dma_desc *sddesc = to_sdxi_dma_desc(vdesc);
-+			struct sdxi_desc *hwdesc;
-+
-+			sdxi_ring_resv_foreach(&sddesc->resv, hwdesc) {
-+				sdxi_serialize_nop(hwdesc);
-+				sdxi_desc_make_valid(hwdesc);
-+			}
-+
-+			dbval = umax(sdxi_ring_resv_dbval(&sddesc->resv), dbval);
-+		}
-+
-+		list_splice_tail(&head, &vchan->desc_terminated);
-+	}
-+
-+	sdxi_cxt_push_doorbell(to_sdxi_dma_chan(dma_chan)->cxt, dbval);
-+
-+	return 0;
-+}
-+
-+static void sdxi_dma_synchronize(struct dma_chan *dma_chan)
-+{
-+	struct sdxi_cxt *cxt = to_sdxi_dma_chan(dma_chan)->cxt;
-+	struct sdxi_ring_resv resv;
-+	struct sdxi_desc *nop;
-+	int err;
-+
-+	/* Submit a single nop with fence and wait for it to complete. */
-+
-+	if (sdxi_ring_reserve(cxt->ring_state, 1, &resv))
-+		return;
-+
-+	struct sdxi_completion *comp __free(sdxi_completion) = sdxi_completion_alloc(cxt->sdxi);
-+	if (!comp)
-+		return;
-+
-+	nop = sdxi_ring_resv_next(&resv);
-+	sdxi_serialize_nop(nop);
-+	sdxi_completion_attach(nop, comp);
-+	sdxi_desc_set_fence(nop);
-+	sdxi_desc_make_valid(nop);
-+	sdxi_cxt_push_doorbell(cxt, sdxi_ring_resv_dbval(&resv));
-+
-+	err = sdxi_completion_poll(comp);
-+	WARN_ONCE(err, "got %d polling cst_blk", err);
-+
-+	vchan_synchronize(to_virt_chan(dma_chan));
-+}
-+
-+static irqreturn_t sdxi_dma_cxt_irq(int irq, void *data)
-+{
-+	struct sdxi_dma_chan *sdchan = data;
-+	struct virt_dma_chan *vchan = &sdchan->vchan;
-+	struct virt_dma_desc *vdesc;
-+	bool completed = false;
-+
-+	guard(spinlock_irqsave)(&vchan->lock);
-+
-+	while ((vdesc = vchan_next_desc(vchan))) {
-+		struct sdxi_dma_desc *sddesc = to_sdxi_dma_desc(vdesc);
-+
-+		if (!sdxi_completion_signaled(sddesc->completion))
-+			break;
-+
-+		list_del(&vdesc->node);
-+		vchan_cookie_complete(&sddesc->vdesc);
-+		completed = true;
-+	}
-+
-+	if (completed)
-+		sdxi_ring_wake_up(sdchan->cxt->ring_state);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int sdxi_dma_alloc_chan_resources(struct dma_chan *dma_chan)
-+{
-+	struct sdxi_dev *sdxi = dev_get_drvdata(dma_chan->device->dev);
-+	struct sdxi_dma_chan *sdchan = to_sdxi_dma_chan(dma_chan);
-+	int vector, irq, err;
-+
-+	sdchan->cxt = sdxi_cxt_new(sdxi);
-+	if (!sdchan->cxt)
-+		return -ENOMEM;
-+	/*
-+	 * This irq and akey setup should perhaps all be pushed into
-+	 * the context allocation.
-+	 */
-+	err = vector = sdxi_alloc_vector(sdxi);
-+	if (vector < 0)
-+		goto exit_cxt;
-+
-+	sdchan->vector = vector;
-+
-+	err = irq = sdxi_vector_to_irq(sdxi, vector);
-+	if (irq < 0)
-+		goto free_vector;
-+
-+	sdchan->irq = irq;
-+
-+	/*
-+	 * Note this akey entry is used for both the completion
-+	 * interrupt and source and destination access for copies.
-+	 */
-+	sdchan->akey = sdxi_alloc_akey(sdchan->cxt);
-+	if (!sdchan->akey)
-+		goto free_vector;
-+
-+	*sdchan->akey = (typeof(*sdchan->akey)) {
-+		.intr_num = cpu_to_le16(FIELD_PREP(SDXI_AKEY_ENT_VL, 1) |
-+					FIELD_PREP(SDXI_AKEY_ENT_IV, 1) |
-+					FIELD_PREP(SDXI_AKEY_ENT_INTR_NUM,
-+						   vector)),
-+	};
-+
-+	err = request_irq(sdchan->irq, sdxi_dma_cxt_irq,
-+			  IRQF_TRIGGER_NONE, "SDXI DMAengine", sdchan);
-+	if (err)
-+		goto free_akey;
-+
-+	err = sdxi_start_cxt(sdchan->cxt);
-+	if (err)
-+		goto free_irq;
-+
-+	return 0;
-+free_irq:
-+	free_irq(sdchan->irq, sdchan);
-+free_akey:
-+	sdxi_free_akey(sdchan->cxt, sdchan->akey);
-+free_vector:
-+	sdxi_free_vector(sdxi, vector);
-+exit_cxt:
-+	sdxi_cxt_exit(sdchan->cxt);
-+	return err;
-+}
-+
-+static void sdxi_dma_free_chan_resources(struct dma_chan *dma_chan)
-+{
-+	struct sdxi_dma_chan *sdchan = to_sdxi_dma_chan(dma_chan);
-+
-+	sdxi_stop_cxt(sdchan->cxt);
-+	free_irq(sdchan->irq, sdchan);
-+	sdxi_free_vector(sdchan->cxt->sdxi, sdchan->vector);
-+	sdxi_free_akey(sdchan->cxt, sdchan->akey);
-+	vchan_free_chan_resources(to_virt_chan(dma_chan));
-+	sdxi_cxt_exit(sdchan->cxt);
-+}
-+
-+int sdxi_dma_register(struct sdxi_dev *sdxi)
-+{
-+	struct device *dev = sdxi->dev;
-+	struct sdxi_dma_dev *sddev;
-+	struct dma_device *dma_dev;
-+	int err;
-+
-+	if (!dma_channels)
-+		return 0;
-+	/*
-+	 * Note that this code assumes the device supports the
-+	 * interrupt operation group (IntrGrp), which is optional. See
-+	 * SDXI 1.0 Table 6-1 SDXI Operation Groups.
-+	 *
-+	 * TODO: check sdxi->op_grp_cap for IntrGrp support and error
-+	 * out if it's missing.
-+	 */
-+
-+	sddev = devm_kzalloc(dev, struct_size(sddev, sdchan, dma_channels),
-+			     GFP_KERNEL);
-+	if (!sddev)
-+		return -ENOMEM;
-+
-+	sddev->nr_channels = dma_channels;
-+
-+	dma_dev = &sddev->dma_dev;
-+	*dma_dev = (typeof(*dma_dev)) {
-+		.dev                 = dev,
-+		.src_addr_widths     = DMA_SLAVE_BUSWIDTH_64_BYTES,
-+		.dst_addr_widths     = DMA_SLAVE_BUSWIDTH_64_BYTES,
-+		.directions          = BIT(DMA_MEM_TO_MEM),
-+		.residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR,
-+
-+		.device_alloc_chan_resources = sdxi_dma_alloc_chan_resources,
-+		.device_free_chan_resources  = sdxi_dma_free_chan_resources,
-+
-+		.device_prep_dma_memcpy = sdxi_dma_prep_memcpy,
-+
-+		.device_terminate_all = sdxi_dma_terminate_all,
-+		.device_synchronize = sdxi_dma_synchronize,
-+		.device_tx_status = sdxi_tx_status,
-+		.device_issue_pending = sdxi_dma_issue_pending,
-+	};
-+
-+	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
-+	INIT_LIST_HEAD(&dma_dev->channels);
-+
-+	for (size_t i = 0; i < sddev->nr_channels; ++i) {
-+		struct sdxi_dma_chan *sdchan = &sddev->sdchan[i];
-+
-+		sdchan->vchan.desc_free = sdxi_tx_desc_free;
-+		vchan_init(&sdchan->vchan, &sddev->dma_dev);
-+	}
-+
-+	err = dmaenginem_async_device_register(dma_dev);
-+	if (err)
-+		return dev_warn_probe(dev, err, "failed to register dma device\n");
-+
-+	return 0;
-+}
-diff --git a/drivers/dma/sdxi/dma.h b/drivers/dma/sdxi/dma.h
-new file mode 100644
-index 000000000000..d38870ea7d91
---- /dev/null
-+++ b/drivers/dma/sdxi/dma.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright Advanced Micro Devices, Inc. */
-+
-+#ifndef DMA_SDXI_DMA_H
-+#define DMA_SDXI_DMA_H
-+
-+struct sdxi_dev;
-+
-+int sdxi_dma_register(struct sdxi_dev *sdxi);
-+
-+#endif /* DMA_SDXI_DMA_H */
-
--- 
-2.54.0
-
-
+Frank
+> --
+> 2.54.0
+>
 

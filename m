@@ -1,56 +1,56 @@
-Return-Path: <dmaengine+bounces-10314-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10316-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QJX2LngrAmq/ogEAu9opvQ
-	(envelope-from <dmaengine+bounces-10314-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:18:16 +0200
+	id OB6OL48rAmp0ogEAu9opvQ
+	(envelope-from <dmaengine+bounces-10316-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:18:39 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BB03514FC3
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:18:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A870514FE9
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:18:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 127463054F75
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 19:16:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0A08F305A8AA
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 19:16:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74DFC4D8DB4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 982F44D90AA;
 	Mon, 11 May 2026 19:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YEIV5tk2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2+29k2y"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5194D8D9B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5E34D8DAE;
 	Mon, 11 May 2026 19:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778526998; cv=none; b=XHln7B7287MoAXDNrcm1TFvYBDJtQYpBnRzCBJx83zty+7e/u3pF3KrA2dzMl7XDjNEJPeWmVV2kP2IhtkRSGXvpWE4W3E3XvK4vu0NXJjI6LImURNRpqtHM9ITNfEO+jPJ2yjgfvt4UBa/D7CHjNHJGRdchWib7Xsb18y4innU=
+	t=1778526998; cv=none; b=hxKaz1zYDsTLaaVal1/KzoP6kh9QsoSUNGDOQI/Fu/EWlXmbFNOciG10w29ayJ9u0T3AUdaDHdhfZfSHzS6hDhjO+eeNkdXQFy8zs3JDlyoqQsFo/frQHUp65lBcyQDcT5MOi9MRJqxuGLIagzadZRsTAsTN65gZGXOKmvT/k8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778526998; c=relaxed/simple;
-	bh=JKwGVQ5FA54XgqfdJB1eEmPYEuBAKrERXJttJwx7+QA=;
+	bh=f8ZP4NoQDgLiqWZCpA/POoF2UqoIoEE9M1xIWepDbl8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lHFVgi522XoC/YN5+snQJ8ePr6hdgSdmvsTWufxUQyqKtxznXuayN2HC/2bsqha30o282OnbcRtaGvtpn64bVBD4Yt7+RmLtHU70NIctF46L0GPBqyVmA+k4z1hKbf2FMXhjVOI40Uw1k+SBnCUSFYgW+1k7st8BPlFCiDzkvwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YEIV5tk2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1D95AC4AF4D;
+	 In-Reply-To:To:Cc; b=BXGMMr2EOP3aND61hHFeVsbVsIflDh2liX7dwnid8H/qFZpd3MYTmBoV+Xk0D/lvUMRS8+fW8DQneqtuO2QjpAmGLPs5rt9pdXoX2nPo0zXqA0VUZOUmkcm3cjZs+alzssQ9wPKEJ8Qkx65h3VwH2Cg4GD6ycy994Ohe62xkDYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2+29k2y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 31C05C2BD00;
 	Mon, 11 May 2026 19:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1778526998;
-	bh=JKwGVQ5FA54XgqfdJB1eEmPYEuBAKrERXJttJwx7+QA=;
+	bh=f8ZP4NoQDgLiqWZCpA/POoF2UqoIoEE9M1xIWepDbl8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=YEIV5tk2579Ml4lyIYSxmYOgWOt3jo7dnQiFd+qIIujRrPMPLNPttK86vP/kNB+Z+
-	 gk8CfyfqPQXq9rpVVRwUCBPO4GK8hUMgJR30UIgVFamBOHzatm8SCbTTdpaoylazDT
-	 HlYuXxDqiot5IUk1RunNy1SetsfdOLzyhGY5IHAAoYKKCurxPwx7EMhHxDaxA1wBlI
-	 B8gTA5DPHgcOWNZ4OrnubGU4yAogQxACLKLr9gPJRK3ywCGAvJwNs9YURFoO42ITOe
-	 C/48mEFGhRx/65ocSojRBqzSScTwgM24TzpN2XqqZCifCamD0SxgJPXjsuSluwQYpL
-	 rbKtK4zT5O//Q==
+	b=Z2+29k2yXGUiBzeKgxqTfmAOFa7kImKJ3b3XuJg1gN+rjNKelbVBWgVCa8n12wB1Q
+	 0fqO6n6PUzMQkMMyGwdpXFNdWmWlKt7CYeINAgTJFlilnfa/FJdN/LliCuwYMahYeS
+	 Tjsw0afLPIP4HUUTUarfDF2GajVuNNY9/KKAz5T918n4IM/hRn2rEWgFau3Qocam1d
+	 xWQUrUeRTu6XNYcjbKbfAkfHXYvN8gKcP8dpOmWuXnSYd2aKtW78AXJgJpXYWogAC1
+	 eN3RfA2n7UwAJoQInLt7+fw2uknrmeoUNBbrypLUfZHZKdM0cbb1FTBtTNeAotaewq
+	 xVKTT3xsQG1Mw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EA8CD4840;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A9ECD4851;
 	Mon, 11 May 2026 19:16:38 +0000 (UTC)
 From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Mon, 11 May 2026 14:16:26 -0500
-Subject: [PATCH v2 14/23] dmaengine: sdxi: Attach descriptor ring state to
- contexts
+Date: Mon, 11 May 2026 14:16:27 -0500
+Subject: [PATCH v2 15/23] dmaengine: sdxi: Per-context access key (AKey)
+ table entry allocator
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -59,7 +59,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260511-sdxi-base-v2-14-889cfed17e3f@amd.com>
+Message-Id: <20260511-sdxi-base-v2-15-889cfed17e3f@amd.com>
 References: <20260511-sdxi-base-v2-0-889cfed17e3f@amd.com>
 In-Reply-To: <20260511-sdxi-base-v2-0-889cfed17e3f@amd.com>
 To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>
@@ -74,18 +74,18 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
  Jonathan Cameron <jic23@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
  Nathan Lynch <nathan.lynch@amd.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778526994; l=2755;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778526994; l=4028;
  i=nathan.lynch@amd.com; s=20260410; h=from:subject:message-id;
- bh=ytfFjB0cliTXEDdWXmhsIUkwFIPPuxrcuEaZHoqzV04=;
- b=cqNJ/i1Uw9ae4KhfsFPYCCD6rdrtNNvAMUTeVPKmQpCWykLEmNtgx0p8r+2IYjgQF9Doju2ol
- 7gz0E7R4tSWDKAt5aMeylYupR5M7Mq9Xg60AXGOBwiTxbEf1mFwgxSN
+ bh=ywbLFP7hWI8FtbxVwSucYJFidpzLrlODHvRMRLWe5kg=;
+ b=FPKrS9xlYOsYd0wF/4HzQAS1sa6RrLpLOZRFIsv8dkGgug2lKEYPsNbQWQhSc3HjX7fGqFyLy
+ en6V6rMzlZyDWWw9bQO+8T8yK7E6y4YN8nltEml6/usA01tj/h2pW99
 X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
  pk=PK4ozhq+/z9/2Jl5rgDmvHa9raVomv79qM8p1RAFpEw=
 X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20260410 with
  auth_id=728
 X-Original-From: Nathan Lynch <nathan.lynch@amd.com>
 Reply-To: nathan.lynch@amd.com
-X-Rspamd-Queue-Id: 4BB03514FC3
+X-Rspamd-Queue-Id: 3A870514FE9
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -95,7 +95,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10314-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
+	TAGGED_FROM(0.00)[bounces-10316-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -118,92 +118,118 @@ X-Rspamd-Action: no action
 
 From: Nathan Lynch <nathan.lynch@amd.com>
 
-Attach an instance of struct sdxi_ring_state to each context upon
-allocation. Each ring state has the same lifetime has its context and
-is freed upon context release.
+Each SDXI context has a table of access keys (AKeys). SDXI descriptors
+submitted to a context may refer to an AKey associated with that
+context by its index in the table. AKeys describe properties of the
+access that the descriptor is to perform, such as PASID or a target
+SDXI function, or an interrupt to trigger.
+
+Use a per-context IDA to keep track of used entries in the table.
+Provide sdxi_alloc_akey(), which claims an AKey table entry for the
+caller to program directly; sdxi_akey_index(), which returns the
+entry's index for programming into descriptors the caller intends to
+submit; and sdxi_free_akey(), which clears the entry and makes it
+available again.
+
+The DMA engine provider is currently the only user and allocates a
+single entry that encodes the access properties for copy operations
+and a completion interrupt. More complex use patterns are possible
+when user space gains access to SDXI contexts (not in this series).
 
 Co-developed-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
 Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 ---
- drivers/dma/sdxi/context.c | 14 ++++++++++++++
- drivers/dma/sdxi/context.h |  2 ++
- 2 files changed, 16 insertions(+)
+ drivers/dma/sdxi/context.c |  4 ++++
+ drivers/dma/sdxi/context.h | 24 ++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
 diff --git a/drivers/dma/sdxi/context.c b/drivers/dma/sdxi/context.c
-index c0b294836ede..a9c68227cc32 100644
+index a9c68227cc32..56e21aa08857 100644
 --- a/drivers/dma/sdxi/context.c
 +++ b/drivers/dma/sdxi/context.c
-@@ -23,6 +23,7 @@
- 
- #include "context.h"
- #include "hw.h"
-+#include "ring.h"
- #include "sdxi.h"
- 
- #define DEFAULT_DESC_RING_ENTRIES 1024
-@@ -63,6 +64,7 @@ static void sdxi_free_cxt(struct sdxi_cxt *cxt)
+@@ -15,6 +15,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/dmapool.h>
+ #include <linux/errno.h>
++#include <linux/idr.h>
+ #include <linux/iommu.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+@@ -64,6 +65,7 @@ static void sdxi_free_cxt(struct sdxi_cxt *cxt)
  		dma_free_coherent(sdxi->dev, sq->ring_size,
  				  sq->desc_ring, sq->ring_dma);
  	kfree(cxt->sq);
-+	kfree(cxt->ring_state);
++	ida_destroy(&cxt->akey_ida);
+ 	kfree(cxt->ring_state);
  	kfree(cxt);
  }
- 
-@@ -80,6 +82,10 @@ static struct sdxi_cxt *sdxi_alloc_cxt(struct sdxi_dev *sdxi)
- 
- 	cxt->sdxi = sdxi;
- 
-+	cxt->ring_state = kzalloc_obj(*cxt->ring_state, GFP_KERNEL);
-+	if (!cxt->ring_state)
-+		return NULL;
-+
- 	cxt->sq = kzalloc_obj(*cxt->sq, GFP_KERNEL);
- 	if (!cxt->sq)
- 		return NULL;
-@@ -314,6 +320,8 @@ int sdxi_admin_cxt_init(struct sdxi_dev *sdxi)
- 	sq->cxt_sts->state = FIELD_PREP(SDXI_CXT_STS_STATE, CXTV_RUN);
- 	cxt->id = SDXI_ADMIN_CXT_ID;
+@@ -322,6 +324,7 @@ int sdxi_admin_cxt_init(struct sdxi_dev *sdxi)
  	cxt->db = sdxi->dbs + cxt->id * sdxi->db_stride;
-+	sdxi_ring_state_init(cxt->ring_state, &sq->cxt_sts->read_index,
-+			     sq->write_index, sq->ring_entries, sq->desc_ring);
+ 	sdxi_ring_state_init(cxt->ring_state, &sq->cxt_sts->read_index,
+ 			     sq->write_index, sq->ring_entries, sq->desc_ring);
++	ida_init(&cxt->akey_ida);
  
  	err = sdxi_publish_cxt(cxt);
  	if (err)
-@@ -380,6 +388,8 @@ static void sdxi_cxt_id_assign(struct sdxi_cxt *cxt, struct sdxi_cxt_id *cxt_id)
-  */
- struct sdxi_cxt *sdxi_cxt_new(struct sdxi_dev *sdxi)
- {
-+	struct sdxi_sq *sq;
-+
- 	/*
- 	 * Ensure an ID is available before allocating memory for the
- 	 * context and its control structures.
-@@ -396,6 +406,10 @@ struct sdxi_cxt *sdxi_cxt_new(struct sdxi_dev *sdxi)
+@@ -409,6 +412,7 @@ struct sdxi_cxt *sdxi_cxt_new(struct sdxi_dev *sdxi)
+ 	sq = cxt->sq;
+ 	sdxi_ring_state_init(cxt->ring_state, &sq->cxt_sts->read_index,
+ 			     sq->write_index, sq->ring_entries, sq->desc_ring);
++	ida_init(&cxt->akey_ida);
  
- 	cxt->db = sdxi->dbs + cxt->id * sdxi->db_stride;
- 
-+	sq = cxt->sq;
-+	sdxi_ring_state_init(cxt->ring_state, &sq->cxt_sts->read_index,
-+			     sq->write_index, sq->ring_entries, sq->desc_ring);
-+
  	if (sdxi_publish_cxt(cxt))
  		return NULL;
- 
 diff --git a/drivers/dma/sdxi/context.h b/drivers/dma/sdxi/context.h
-index b422a04ae4db..377e40c61401 100644
+index 377e40c61401..329cafe94fe2 100644
 --- a/drivers/dma/sdxi/context.h
 +++ b/drivers/dma/sdxi/context.h
-@@ -55,6 +55,8 @@ struct sdxi_cxt {
+@@ -6,8 +6,11 @@
+ #ifndef DMA_SDXI_CONTEXT_H
+ #define DMA_SDXI_CONTEXT_H
+ 
++#include <linux/array_size.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
++#include <linux/idr.h>
++#include <linux/string.h>
+ #include <linux/types.h>
+ 
+ #include "hw.h"
+@@ -51,6 +54,7 @@ struct sdxi_cxt {
+ 	struct sdxi_cxt_ctl *cxt_ctl;
+ 	dma_addr_t cxt_ctl_dma;
+ 
++	struct ida akey_ida;
+ 	struct sdxi_akey_table *akey_table;
  	dma_addr_t akey_table_dma;
  
- 	struct sdxi_sq *sq;
-+
-+	struct sdxi_ring_state *ring_state;
- };
+@@ -79,4 +83,24 @@ static inline void sdxi_cxt_push_doorbell(struct sdxi_cxt *cxt, u64 index)
+ 	iowrite64(index, cxt->db);
+ }
  
- int sdxi_admin_cxt_init(struct sdxi_dev *sdxi);
++static inline struct sdxi_akey_ent *sdxi_alloc_akey(struct sdxi_cxt *cxt)
++{
++	unsigned int max = ARRAY_SIZE(cxt->akey_table->entry) - 1;
++	int idx = ida_alloc_max(&cxt->akey_ida, max, GFP_KERNEL);
++
++	return idx < 0 ? NULL : &cxt->akey_table->entry[idx];
++}
++
++static inline unsigned int sdxi_akey_index(const struct sdxi_cxt *cxt,
++					   const struct sdxi_akey_ent *akey)
++{
++	return akey - &cxt->akey_table->entry[0];
++}
++
++static inline void sdxi_free_akey(struct sdxi_cxt *cxt, struct sdxi_akey_ent *akey)
++{
++	memset(akey, 0, sizeof(*akey));
++	ida_free(&cxt->akey_ida, sdxi_akey_index(cxt, akey));
++}
++
+ #endif /* DMA_SDXI_CONTEXT_H */
 
 -- 
 2.54.0

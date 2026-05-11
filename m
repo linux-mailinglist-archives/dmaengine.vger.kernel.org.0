@@ -1,55 +1,56 @@
-Return-Path: <dmaengine+bounces-10319-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10320-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wMG/DjcrAmp0ogEAu9opvQ
-	(envelope-from <dmaengine+bounces-10319-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	id 6LR6BjcrAmp0ogEAu9opvQ
+	(envelope-from <dmaengine+bounces-10320-lists+dmaengine=lfdr.de@vger.kernel.org>)
 	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:17:11 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70EA2514F0B
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDB5D514F0C
 	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 21:17:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 039553011F5A
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7F708301DE6B
 	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2026 19:16:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75774D90C5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7E9E4D90C6;
 	Mon, 11 May 2026 19:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0fWjGYU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVFtu6yD"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B014D8DBC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895124D90A0;
 	Mon, 11 May 2026 19:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778526998; cv=none; b=NWRzOnKODAV6tli8OK7eHai8q0UdCrmmXb36fylXmowvBo1+grtgSp8AQBC8BcoHkpMflFKtkWvOBz3r0GiEk33GERbgyD6bAxOtrLtVP2N4BD9WWsHk93TrajkVMuQZOXjOPBwl/ZvTvOOfFf6izhKk31ekXfHy18T9QYKiXxw=
+	t=1778526998; cv=none; b=Iqe65DqcBvZr3nFb58sX5xH8woUF0FTNj6Oynyt8It/NC8oTbq33jnZ66oYwsyQCUZN6K/Vt8BLAtkPQLiCJGLCFKyvFiBKi0si1Ctyd3p0TUZGDXmTJfjF/gkT/kpe4liOgSE0cTeRNgTtf3TWF9ejP7AbuHc49Eam0+PhCoYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778526998; c=relaxed/simple;
-	bh=N78mZR7LVHgx41BvcKhA5hC7qBeioqtKPANz2+a2lgQ=;
+	bh=lrKmnbwCRdZ0fcO8gKZkDCjleZA/7rgFRaQD3GYezSY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hw+DM4TOFum7OsJfc7QAJrl08XW4bqes9RDchsH+NMvyUZAVflNfFJbEj7ImwBly/Ts6J/wnXLs62t6w9oIPunlrY3sW9tAz0oDK/95KWOOltN45+gkC+dlLq0e09Y47hzl0qNHR8SUnZ0QOR9hDmtAR5c1BQzKOzrDQOt7cvmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0fWjGYU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4CACDC4AF12;
+	 In-Reply-To:To:Cc; b=pxAVNalh03Cy2p5MNLczAzfvwkF5hLhwHejTv9zs6zTvHNim0mmkyBlzp9ZwWjvWrq7gleY+khlM67HkW/uEsDdNoZ3A7FLFFTDBZmCbUD1BRCClBhTPK85bItd1slNa6yiFBS+riOk+TfAA9gXfpCr6lZ4/RFakiLxeESOLLUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVFtu6yD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 62089C4AF19;
 	Mon, 11 May 2026 19:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1778526998;
-	bh=N78mZR7LVHgx41BvcKhA5hC7qBeioqtKPANz2+a2lgQ=;
+	bh=lrKmnbwCRdZ0fcO8gKZkDCjleZA/7rgFRaQD3GYezSY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=L0fWjGYUn6KZRuQcTKuWxyMhipYKsoI0fUPVSvtHUWiuAQTN8nh1X1aISmpKD1Qzo
-	 /YrrOXtflMzr24QrF/2RKhM2gcG0c69gnLrFru+2dm3LhSeiW12/eH14sPjSpeRw9Q
-	 mxpl9gf/BSe2oqi5w0DYIDwhbF5PmeJwIQxsReS5aXpCMy7ZGUsekloYMR2fRktzfK
-	 K4xVe7cJQ9T7KWt35m6k3bwKwQ2c7LA4X//Kd+LyESSWCOp/H5jxCUfO1b+yZ0kVkz
-	 AMKvtMrVW/cJX2zyIS/d9+IoNoYXMGHqgj60bvddyFG9xKCVlWBY2IaZn5mmGpLFIT
-	 Pcla3qpvmvuNw==
+	b=SVFtu6yD0de1X1YK65rsPrD7D/IRDyYFPPi/sg0pwBL4/nUP911tTlj2q5KoSW8h3
+	 lSuhxgynggAn4QfoG7s3AvTMVcV/PnFBh++BCuTmeCu7HAGdaeqeRU2MV/R9VVRkBs
+	 REb9LGfzZqjpu1eGypiM7zAFfsEbG4nanoEpRDDsPkl6+Vt0+a30UeBpBq899trAxx
+	 8NgRGWHnVI3hH7hdGoc0PzypRxW631DSUdxom++jeYYffIIzFrCd5csmD4XyUEH+Yu
+	 wTIv6Qr8c+/3MT75a/1AO6nFabkQkNkPk1JRs4DjdVQ+lUV07dHeD8cmwPq7zbSNlE
+	 NbEHhVjO+8jpA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC3BCD37BE;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9F3CD4855;
 	Mon, 11 May 2026 19:16:38 +0000 (UTC)
 From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Mon, 11 May 2026 14:16:29 -0500
-Subject: [PATCH v2 17/23] dmaengine: sdxi: Add completion status block API
+Date: Mon, 11 May 2026 14:16:30 -0500
+Subject: [PATCH v2 18/23] dmaengine: sdxi: Encode context start, stop, and
+ sync descriptors
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -58,7 +59,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260511-sdxi-base-v2-17-889cfed17e3f@amd.com>
+Message-Id: <20260511-sdxi-base-v2-18-889cfed17e3f@amd.com>
 References: <20260511-sdxi-base-v2-0-889cfed17e3f@amd.com>
 In-Reply-To: <20260511-sdxi-base-v2-0-889cfed17e3f@amd.com>
 To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>
@@ -73,28 +74,28 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
  Jonathan Cameron <jic23@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
  Nathan Lynch <nathan.lynch@amd.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1778526994; l=5618;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1778526994; l=8361;
  i=nathan.lynch@amd.com; s=20260410; h=from:subject:message-id;
- bh=9fepl59gMiRbxFIPaJqwOukhNQRqs6c+J1CU6zShfFU=;
- b=JpF0ZU5r3GJvX0LRqArHM9n+SCqk8dB/BqWXERC9jGVXfTUUFG7xcMA1PC763C2cd6m4oKvAM
- CD3kqs9A2fwBNE1Wuw9o8DnpocPdkHSvyirLx6OUelSNd5aO+f5ktdP
+ bh=dQwO4BfselYk/3ti1YIOa6wwy+gdrN39N2deDB7oPCU=;
+ b=Wfb/KK6lABIgiVXyUno+QM4Vr5LfHKjNWgkUDQV8JkSn8X2Hz0aJod4cm5+Hvm/40nXK8MCxh
+ OC5P6dLxRWCAIpS4Ye/A/gWv/Tgp44WwGqtNQ32DzWyjMoGy2NE0N0R
 X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
  pk=PK4ozhq+/z9/2Jl5rgDmvHa9raVomv79qM8p1RAFpEw=
 X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20260410 with
  auth_id=728
 X-Original-From: Nathan Lynch <nathan.lynch@amd.com>
 Reply-To: nathan.lynch@amd.com
-X-Rspamd-Queue-Id: 70EA2514F0B
+X-Rspamd-Queue-Id: DDB5D514F0C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10319-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
+	TAGGED_FROM(0.00)[bounces-10320-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -109,35 +110,33 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine];
 	HAS_REPLYTO(0.00)[nathan.lynch@amd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,amd.com:mid,amd.com:replyto,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,nxp.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,amd.com:mid,amd.com:replyto,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,nxp.com:email]
 X-Rspamd-Action: no action
 
 From: Nathan Lynch <nathan.lynch@amd.com>
 
-Introduce an API for managing completion status blocks. These are
-DMA-coherent buffers that may be optionally attached to SDXI
-descriptors to signal completion. The SDXI implementation clears the
-signal field (initialized to 1) upon completion, setting an
-error bit in the flags field if problems were encountered executing
-the descriptor.
+Introduce the low-level support for serializing three operation types
+to the descriptor ring of the admin context: context start, context
+stop, and sync. Each operation has its own distinct type that overlays
+the generic struct sdxi_desc, along with a dedicated encoder function
+that accepts an operation-specific parameter struct.
 
-Callers allocate completion blocks from a per-device DMA pool via
-sdxi_completion_alloc(). sdxi_completion_attach() associates a
-completion with a descriptor by encoding the completion's DMA address
-into the descriptor's csb_ptr field.
+The parameter structs (sdxi_cxt_start, sdxi_cxt_stop, sdxi_sync)
+expose only a necessary subset of the available descriptor fields to
+callers, i.e. the target context range. These can be expanded over
+time as needed.
 
-sdxi_completion_poll() busy-waits until the signal field is cleared by
-the implementation, and is intended for descriptors that are expected
-to execute quickly.
-
-sdxi_completion_signaled() and sdxi_completion_errored() query the
-signal field and error flag of the completion, respectively.
-
-struct sdxi_completion is kept opaque to callers. A DEFINE_FREE
-cleanup handler is provided.
+Each encoder function is intended to 1) set any mandatory field values
+for the descriptor type (e.g. SDXI_DSC_FE=1 for context start); and 2)
+translate conventional kernel types (dma_addr_t, CPU-endian values)
+from the parameter block to the descriptor in memory. While they're
+expected to operate directly on descriptor ring memory, they do not
+set the descriptor validity bit. That is left to the caller, which may
+need to make other modifictions to the descriptor, such as attaching a
+completion block, before releasing it to the SDXI implementation.
 
 Co-developed-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
@@ -145,159 +144,263 @@ Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 ---
  drivers/dma/sdxi/Makefile     |  1 +
- drivers/dma/sdxi/completion.c | 87 +++++++++++++++++++++++++++++++++++++++++++
- drivers/dma/sdxi/completion.h | 25 +++++++++++++
- drivers/dma/sdxi/hw.h         |  1 +
- 4 files changed, 114 insertions(+)
+ drivers/dma/sdxi/descriptor.c | 91 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/dma/sdxi/descriptor.h | 46 ++++++++++++++++++++++
+ drivers/dma/sdxi/hw.h         | 64 ++++++++++++++++++++++++++++++
+ 4 files changed, 202 insertions(+)
 
 diff --git a/drivers/dma/sdxi/Makefile b/drivers/dma/sdxi/Makefile
-index 372f793c15b1..dd08f4a5f723 100644
+index dd08f4a5f723..08dd73a45dc7 100644
 --- a/drivers/dma/sdxi/Makefile
 +++ b/drivers/dma/sdxi/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_SDXI) += sdxi.o
- 
+@@ -4,6 +4,7 @@ obj-$(CONFIG_SDXI) += sdxi.o
  sdxi-objs += \
-+	completion.o  \
+ 	completion.o  \
  	context.o     \
++	descriptor.o  \
  	device.o      \
  	ring.o
-diff --git a/drivers/dma/sdxi/completion.c b/drivers/dma/sdxi/completion.c
+ 
+diff --git a/drivers/dma/sdxi/descriptor.c b/drivers/dma/sdxi/descriptor.c
 new file mode 100644
-index 000000000000..7ffd034b129b
+index 000000000000..be2a9244ce19
 --- /dev/null
-+++ b/drivers/dma/sdxi/completion.c
-@@ -0,0 +1,87 @@
++++ b/drivers/dma/sdxi/descriptor.c
+@@ -0,0 +1,91 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * SDXI Descriptor Completion Status Block handling.
++ * SDXI descriptor encoding.
 + *
 + * Copyright Advanced Micro Devices, Inc.
 + */
-+#include <linux/cleanup.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/dmapool.h>
-+#include <linux/jiffies.h>
-+#include <linux/slab.h>
 +
-+#include "completion.h"
-+#include "descriptor.h"
++#include <kunit/visibility.h>
++#include <linux/bitfield.h>
++#include <linux/types.h>
++#include <asm/byteorder.h>
++
 +#include "hw.h"
++#include "descriptor.h"
 +
-+struct sdxi_completion {
-+	struct sdxi_dev *sdxi;
-+	struct sdxi_cst_blk *cst_blk;
-+	dma_addr_t cst_blk_dma;
-+};
-+
-+struct sdxi_completion *sdxi_completion_alloc(struct sdxi_dev *sdxi)
++int sdxi_encode_cxt_start(struct sdxi_desc *desc,
++			  const struct sdxi_cxt_start *params)
 +{
-+	struct sdxi_cst_blk *cst_blk;
-+	dma_addr_t cst_blk_dma;
++	u64 csb_ptr;
++	u32 opcode;
 +
-+	/*
-+	 * Assume callers can't tolerate GFP_KERNEL and use
-+	 * GFP_NOWAIT. Add a gfp_t flags parameter if that changes.
-+	 */
-+	struct sdxi_completion *sc __free(kfree) = kmalloc(sizeof(*sc), GFP_NOWAIT);
-+	if (!sc)
-+		return NULL;
++	opcode = (FIELD_PREP(SDXI_DSC_FE, 1) |
++		  FIELD_PREP(SDXI_DSC_SUBTYPE, SDXI_DSC_OP_SUBTYPE_CXT_START_NM) |
++		  FIELD_PREP(SDXI_DSC_TYPE, SDXI_DSC_OP_TYPE_ADMIN));
 +
-+	cst_blk = dma_pool_zalloc(sdxi->cst_blk_pool, GFP_NOWAIT, &cst_blk_dma);
-+	if (!cst_blk)
-+		return NULL;
++	csb_ptr = FIELD_PREP(SDXI_DSC_NP, 1);
 +
-+	cst_blk->signal = cpu_to_le64(1);
-+
-+	*sc = (typeof(*sc)) {
-+		.sdxi        = sdxi,
-+		.cst_blk     = cst_blk,
-+		.cst_blk_dma = cst_blk_dma,
++	*desc = (typeof(*desc)) {
++		.cxt_start = (typeof(desc->cxt_start)) {
++			.opcode = cpu_to_le32(opcode),
++			.cxt_start = cpu_to_le16(params->range.cxt_start),
++			.cxt_end = cpu_to_le16(params->range.cxt_end),
++			.csb_ptr = cpu_to_le64(csb_ptr),
++		},
 +	};
 +
-+	return_ptr(sc);
++	return 0;
 +}
++EXPORT_SYMBOL_IF_KUNIT(sdxi_encode_cxt_start);
 +
-+void sdxi_completion_free(struct sdxi_completion *sc)
++int sdxi_encode_cxt_stop(struct sdxi_desc *desc,
++			  const struct sdxi_cxt_stop *params)
 +{
-+	dma_pool_free(sc->sdxi->cst_blk_pool, sc->cst_blk, sc->cst_blk_dma);
-+	kfree(sc);
-+}
++	u64 csb_ptr;
++	u32 opcode;
 +
-+int sdxi_completion_poll(const struct sdxi_completion *sc)
++	opcode = (FIELD_PREP(SDXI_DSC_FE, 1) |
++		  FIELD_PREP(SDXI_DSC_SUBTYPE, SDXI_DSC_OP_SUBTYPE_CXT_STOP) |
++		  FIELD_PREP(SDXI_DSC_TYPE, SDXI_DSC_OP_TYPE_ADMIN));
++
++	csb_ptr = FIELD_PREP(SDXI_DSC_NP, 1);
++
++	*desc = (typeof(*desc)) {
++		.cxt_stop = (typeof(desc->cxt_stop)) {
++			.opcode = cpu_to_le32(opcode),
++			.cxt_start = cpu_to_le16(params->range.cxt_start),
++			.cxt_end = cpu_to_le16(params->range.cxt_end),
++			.csb_ptr = cpu_to_le64(csb_ptr),
++		},
++	};
++
++	return 0;
++}
++EXPORT_SYMBOL_IF_KUNIT(sdxi_encode_cxt_stop);
++
++int sdxi_encode_sync(struct sdxi_desc *desc, const struct sdxi_sync *params)
 +{
-+	unsigned long deadline = jiffies + msecs_to_jiffies(1000);
++	u64 csb_ptr;
++	u32 opcode;
++	u8 cflags;
 +
-+	while (le64_to_cpu(READ_ONCE(sc->cst_blk->signal)) != 0) {
-+		if (time_after(jiffies, deadline))
-+			return -ETIMEDOUT;
-+		cpu_relax();
-+	}
++	opcode = (FIELD_PREP(SDXI_DSC_SUBTYPE, SDXI_DSC_OP_SUBTYPE_SYNC) |
++		  FIELD_PREP(SDXI_DSC_TYPE, SDXI_DSC_OP_TYPE_ADMIN));
 +
-+	return sdxi_completion_errored(sc) ? -EIO : 0;
++	cflags = FIELD_PREP(SDXI_DSC_SYNC_FLT, params->filter);
++
++	csb_ptr = FIELD_PREP(SDXI_DSC_NP, 1);
++
++	*desc = (typeof(*desc)) {
++		.sync = (typeof(desc->sync)) {
++			.opcode = cpu_to_le32(opcode),
++			.cflags = cflags,
++			.cxt_start = cpu_to_le16(params->range.cxt_start),
++			.cxt_end = cpu_to_le16(params->range.cxt_end),
++			.csb_ptr = cpu_to_le64(csb_ptr),
++		},
++	};
++
++	return 0;
 +}
++EXPORT_SYMBOL_IF_KUNIT(sdxi_encode_sync);
+diff --git a/drivers/dma/sdxi/descriptor.h b/drivers/dma/sdxi/descriptor.h
+index c0f01b1be726..5b8fd7cbaa03 100644
+--- a/drivers/dma/sdxi/descriptor.h
++++ b/drivers/dma/sdxi/descriptor.h
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <linux/bitfield.h>
++#include <linux/minmax.h>
+ #include <linux/ratelimit.h>
+ #include <linux/types.h>
+ #include <asm/byteorder.h>
+@@ -61,4 +62,49 @@ static inline void sdxi_desc_set_sequential(struct sdxi_desc *desc)
+ 	desc->opcode = cpu_to_le32(opcode);
+ }
+ 
++struct sdxi_cxt_range {
++	u16 cxt_start;
++	u16 cxt_end;
++};
 +
-+bool sdxi_completion_signaled(const struct sdxi_completion *sc)
++static inline struct sdxi_cxt_range sdxi_cxt_range(u16 a, u16 b)
 +{
-+	dma_rmb();
-+	return (sc->cst_blk->signal == 0);
++	return (struct sdxi_cxt_range) {
++		.cxt_start = min(a, b),
++		.cxt_end   = max(a, b),
++	};
 +}
 +
-+bool sdxi_completion_errored(const struct sdxi_completion *sc)
++static inline struct sdxi_cxt_range sdxi_cxt_range_single(u16 nr)
 +{
-+	dma_rmb();
-+	return FIELD_GET(SDXI_CST_BLK_ER_BIT, le32_to_cpu(sc->cst_blk->flags));
++	return sdxi_cxt_range(nr, nr);
 +}
 +
++struct sdxi_cxt_start {
++	struct sdxi_cxt_range range;
++};
 +
-+void sdxi_completion_attach(struct sdxi_desc *desc,
-+			    const struct sdxi_completion *cs)
-+{
-+	sdxi_desc_set_csb(desc, cs->cst_blk_dma);
-+}
-diff --git a/drivers/dma/sdxi/completion.h b/drivers/dma/sdxi/completion.h
-new file mode 100644
-index 000000000000..2d11568ac2b9
---- /dev/null
-+++ b/drivers/dma/sdxi/completion.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright Advanced Micro Devices, Inc. */
-+#ifndef DMA_SDXI_COMPLETION_H
-+#define DMA_SDXI_COMPLETION_H
++int sdxi_encode_cxt_start(struct sdxi_desc *desc,
++			  const struct sdxi_cxt_start *params);
 +
-+#include <linux/compiler_attributes.h>
-+#include "sdxi.h"
++struct sdxi_cxt_stop {
++	struct sdxi_cxt_range range;
++};
 +
-+/*
-+ * Polled completion status block that can be attached to a
-+ * descriptor.
-+ */
-+struct sdxi_completion;
-+struct sdxi_desc;
-+struct sdxi_completion *sdxi_completion_alloc(struct sdxi_dev *sdxi);
-+void sdxi_completion_free(struct sdxi_completion *sc);
-+int __must_check sdxi_completion_poll(const struct sdxi_completion *sc);
-+void sdxi_completion_attach(struct sdxi_desc *desc,
-+			    const struct sdxi_completion *sc);
-+bool sdxi_completion_signaled(const struct sdxi_completion *sc);
-+bool sdxi_completion_errored(const struct sdxi_completion *sc);
++int sdxi_encode_cxt_stop(struct sdxi_desc *desc,
++			  const struct sdxi_cxt_stop *params);
 +
-+DEFINE_FREE(sdxi_completion, struct sdxi_completion *, if (_T) sdxi_completion_free(_T))
++struct sdxi_sync {
++	enum sdxi_sync_filter  {
++		SDXI_SYNC_FLT_CXT  = 0x0,
++		SDXI_SYNC_FLT_STOP = 0x1,
++		SDXI_SYNC_FLT_AKEY = 0x2,
++		SDXI_SYNC_FLT_RKEY = 0x3,
++		SDXI_SYNC_FLT_FN   = 0x4,
++	} filter;
++	struct sdxi_cxt_range range;
++};
 +
-+#endif /* DMA_SDXI_COMPLETION_H */
++int sdxi_encode_sync(struct sdxi_desc *desc, const struct sdxi_sync *params);
++
+ #endif /* DMA_SDXI_DESCRIPTOR_H */
 diff --git a/drivers/dma/sdxi/hw.h b/drivers/dma/sdxi/hw.h
-index cb1bed2f83f2..178161588bd0 100644
+index 178161588bd0..4dcd0a3ff0fd 100644
 --- a/drivers/dma/sdxi/hw.h
 +++ b/drivers/dma/sdxi/hw.h
-@@ -125,6 +125,7 @@ static_assert(sizeof(struct sdxi_akey_ent) == 16);
- struct sdxi_cst_blk {
- 	__le64 signal;
- 	__le32 flags;
-+#define SDXI_CST_BLK_ER_BIT BIT(31)
- 	__u8 rsvd_0[20];
+@@ -146,12 +146,76 @@ struct sdxi_desc {
+ #define SDXI_DSC_VL  BIT(0)
+ #define SDXI_DSC_SE  BIT(1)
+ #define SDXI_DSC_FE  BIT(2)
++#define SDXI_DSC_SUBTYPE GENMASK(15, 8)
++#define SDXI_DSC_TYPE    GENMASK(26, 16)
+ 
+ /* For csb_ptr field */
++#define SDXI_DSC_NP BIT_ULL(0)
+ #define SDXI_DSC_CSB_PTR GENMASK_ULL(63, 5)
+ 
++#define define_sdxi_dsc(tag_, name_, op_body_)				\
++	struct tag_ {							\
++		__le32 opcode;						\
++		op_body_						\
++		__le64 csb_ptr;						\
++	} __packed name_;						\
++	static_assert(sizeof(struct tag_) ==				\
++		      sizeof(struct sdxi_dsc_generic));			\
++	static_assert(offsetof(struct tag_, csb_ptr) ==			\
++		      offsetof(struct sdxi_dsc_generic, csb_ptr))
++
++		/* SDXI 1.0 Table 6-14: DSC_CXT_START Descriptor Format */
++		define_sdxi_dsc(sdxi_dsc_cxt_start, cxt_start,
++			__u8 rsvd_0;
++			__u8 vflags;
++			__le16 vf_num;
++			__le16 cxt_start;
++			__le16 cxt_end;
++			__u8 rsvd_1[4];
++			__le64 db_value;
++			__u8 rsvd_2[32];
++		);
++
++		/* SDXI 1.0 Table 6-15: DSC_CXT_STOP Descriptor Format */
++		define_sdxi_dsc(sdxi_dsc_cxt_stop, cxt_stop,
++			__u8 rsvd_0;
++			__u8 vflags;
++			__le16 vf_num;
++			__le16 cxt_start;
++			__le16 cxt_end;
++			__u8 rsvd_1[44];
++		);
++
++		/* SDXI 1.0 Table 6-22: DSC_SYNC Descriptor Format */
++		define_sdxi_dsc(sdxi_dsc_sync, sync,
++			__u8 cflags;
++			__u8 vflags;
++			__le16 vf_num;
++			__le16 cxt_start;
++			__le16 cxt_end;
++			__le16 key_start;
++			__le16 key_end;
++			__u8 rsvd_0[40];
++		);
++/* For use with sync.cflags */
++#define SDXI_DSC_SYNC_FLT GENMASK(2, 0)
++
++#undef define_sdxi_dsc
+ 	};
  } __packed;
- static_assert(sizeof(struct sdxi_cst_blk) == 32);
+ static_assert(sizeof(struct sdxi_desc) == 64);
+ 
++/* SDXI 1.0 Table 6-1: SDXI Operation Groups */
++enum sdxi_dsc_type {
++	SDXI_DSC_OP_TYPE_ADMIN   = 0x002,
++};
++
++/* SDXI 1.0 Table 6-2: SDXI Operation Groups, Types, and Subtypes */
++enum sdxi_dsc_subtype {
++	/* Administrative */
++	SDXI_DSC_OP_SUBTYPE_CXT_START_NM = 0x03,
++	SDXI_DSC_OP_SUBTYPE_CXT_STOP     = 0x04,
++	SDXI_DSC_OP_SUBTYPE_SYNC         = 0x06,
++};
++
+ #endif /* DMA_SDXI_HW_H */
 
 -- 
 2.54.0

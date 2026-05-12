@@ -1,55 +1,68 @@
-Return-Path: <dmaengine+bounces-10337-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10338-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uKVuGpV4AmpotQEAu9opvQ
-	(envelope-from <dmaengine+bounces-10337-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 02:47:17 +0200
+	id wNqNJ4mXAmomuwEAu9opvQ
+	(envelope-from <dmaengine+bounces-10338-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 04:59:21 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72F34517F8D
-	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 02:47:16 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 097C15191AB
+	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 04:59:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id DF059301284D
-	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 00:47:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 71C083068ECD
+	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 02:57:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 051E4234964;
-	Tue, 12 May 2026 00:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0026F378830;
+	Tue, 12 May 2026 02:57:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tt9OVl51"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="i0iMKBqD"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013071.outbound.protection.outlook.com [40.107.162.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45DA1A9B24;
-	Tue, 12 May 2026 00:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778546820; cv=none; b=XQcDod4XDqe39k4L8dukYxYQYLsxRtVP90A3U7IY2ziEv8NlYV80Sc2bSMOnc4w3a0f3a1NzPaDXtJQlKdlTd7HJ9Cb1f25OJPQDCuUPlAhoNEZ94NuTiYFmshLSuU9kRnVK12r2CEncdNDjbGI87TNNCI2PGizoXQePWLa/fZA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778546820; c=relaxed/simple;
-	bh=nAStgxDrILHcHBeKraq8IhW1NnoPOLY/Yn9N0sOuGOg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g2SnKnj1C0DN/pRE7Hei0A+v9bHzzpGmOY3/qk2IFciZtE9DNtXvsY3cOUXN7s/5fAE2U1lKvi2PrwK4Ba5QqQ4Nb3sL+esmF8spknOrm+yhVbHJk0O1s+bJkd9hCLDcCnHEBMFhoUmiMvBH3AEhC5DpAtYtvjCARjmToY6VJt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tt9OVl51; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79FC7C2BCB0;
-	Tue, 12 May 2026 00:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778546820;
-	bh=nAStgxDrILHcHBeKraq8IhW1NnoPOLY/Yn9N0sOuGOg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tt9OVl510AUmHO0p1IfBYvhOgGKzbIKfpqfHYBsKz13+FMYMBmLpLpVBOmYAcwyQI
-	 Vy+EKK4zr/+vGU07Js65Hyo4aDbG+6QaHrEFOUB1TXFH+naRL1H1Uhw1KD6+aHWT23
-	 /LdGTZO90nGqF6+J9xhNmNUVGqv7ns5XsLMZq8M5Ax399+7RKgCmTtMHJ7AWL8Gt6I
-	 2mqWct4eRPEY0bxDP6ePKqAHat1g6xoJl7HHI8It4lQOgChMCaIzm7+PnR5enBxcj0
-	 ms6krrI/cN7bLEWOKOrdAlrlFSYkd5I84c3JRoZZ4fJYR7TDmR8mYyHrQN2TfkYcXs
-	 rO51hs5zz4rjQ==
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-	id 75C0B1AC58C2; Tue, 12 May 2026 01:46:57 +0100 (BST)
-Date: Tue, 12 May 2026 09:46:57 +0900
-From: Mark Brown <broonie@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2148337AA70;
+	Tue, 12 May 2026 02:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778554622; cv=fail; b=AWmRASAzTQasZAGNh2QuV4nlikAdU4gR7j6DWL8B5WMcoTsOiBeICdB1aLaqYVsuiAIIivN4pwYsxVLszwtE33ZTgmQP5KoMqU623Bdu7PWXL0qx0UZZOF/5iyHTlkuYpAK0r3S632bOjbpgiVHQ/g563DvpwHO9C7QbsuWci7M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778554622; c=relaxed/simple;
+	bh=pkLpq0YkmQwmIEWeMoHLBiqZO3ExyF7LLMRMP9F3CNk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Vm5FtHPxrOyR5MKZ5vBCNy6/HH5oh0LVRBwRQ4llKOOfqZrSALA9ODabIxXfrV5k9Qt5t4IZyxOJyorDBLE2G0s/jrbP86U8VCcTMPrSz0nfb4xQE7mLLBtc+vbGkc+SFnwQFAJzzzI5OT1HgeZGcNV6NepS8xNxnjFhyZO4UYM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=i0iMKBqD; arc=fail smtp.client-ip=40.107.162.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ljwebpQxParQKqTnSQpkYNpkxpqzBB5zXyggCQTFWMv4uMvRe6D1XxBhLx70ve3r8kD9aoFZoL6I0MlkDFLJQKE9Cy3dfDA8M7Xo6Sz56ORYIPM7z3ia+QadO+2YputWg5efzXRSlHUjcfeRS7b9vFazNQ6JtbY9Nul44pSJKmxpu64DtAH7INiAyzcfR4jnZ5mfPUPxnMrxli/u+kNuqqJrBarIL2uumwrtY0h5YuvvI+jSa4TiLEIrViFCxQmTd01QTO21YscY+5D5QCvnoMsqSDXlJcO4d4MeoNRFSNwpBgTDpXwjq4s433dy/EV4jDi2h5YlxmgBzW9rBZxyNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qB9Z1XISuE5TmIN+wzSo7EmWgnYHriGeI4H1K/EhnJ8=;
+ b=eEb4Pyamym4ocKFJxNlp3bNJka+3HQZcY4ESB4xB3No+GRxLkD+N/RXVZYqbC+Bu8hnKA8DHTndg55+kIEp0S5t2Ea0RIGsiPL6OGPkZyZWAy5K7sxdUkrahYpUXRizvvJyroSkwIqOsNCScZ1NCSonYsxLmH4F5T479bBPmgfuA5dQEtNrqvyGK8XxIHn0vXdv4VA53Ka+4euBWlUtnJ28ASKH5EaQ7DhRnSJBbNmC5BG+zm/MV9PTM30DvL9tCK1ovPHZ7J4p/XAw5E3jS260G3XPdaIiF0wAw5TO0x4b36EqDCBHzgBqY+FS5ziastbCfz8DYqXcFlzzJGjwtJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qB9Z1XISuE5TmIN+wzSo7EmWgnYHriGeI4H1K/EhnJ8=;
+ b=i0iMKBqDCDZ5li+h2EM3uIkh8Vs0s6qHfX3sH+quHmuZ2MF3Pjn6F8nZ9fGXIj/qLn3L/zpACEWCXaG/D+r/2GE1o2SjFSQgTNSd9eDdcm39Vm9a3UoON4USBqwvhigEwpcA2p3KJCKkYTPVK9tmrVTBTHNo1RSESldpDA5aXWN5HP+vJht7ZjLnjgqKujb+zR/wOc/0au/Bk+m/KOpKwl4+/bkZaDRqWU3o9ZMZW+IMxG+0xcsyeY7NyERdSztDFXgrN8caj5mVJqstmkds59M4bFVtq6e912gx3QwodZqhDn0Zc8udedKuIEjSKsTnFgMiBdbm3rzdHV4kq77CVw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS1PR04MB9287.eurprd04.prod.outlook.com (2603:10a6:20b:4dd::8)
+ by PAXPR04MB9023.eurprd04.prod.outlook.com (2603:10a6:102:212::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9913.11; Tue, 12 May
+ 2026 02:56:49 +0000
+Received: from AS1PR04MB9287.eurprd04.prod.outlook.com
+ ([fe80::6f30:763d:17d2:b79c]) by AS1PR04MB9287.eurprd04.prod.outlook.com
+ ([fe80::6f30:763d:17d2:b79c%3]) with mapi id 15.20.9891.021; Tue, 12 May 2026
+ 02:56:48 +0000
+Date: Tue, 12 May 2026 10:57:59 +0800
+From: Liu Ying <victor.liu@nxp.com>
 To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Liu Ying <victor.liu@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+Cc: Philipp Zabel <p.zabel@pengutronix.de>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Maxime Ripard <mripard@kernel.org>,
 	Thomas Zimmermann <tzimmermann@suse.de>,
@@ -93,6 +106,7 @@ Cc: Liu Ying <victor.liu@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>,
 	Jerome Brunet <jbrunet@baylibre.com>,
 	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
 	Michal Simek <michal.simek@amd.com>,
+	Mark Brown <broonie@kernel.org>,
 	Matthias Brugger <matthias.bgg@gmail.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Linus Walleij <linusw@kernel.org>,
@@ -113,78 +127,112 @@ Cc: Liu Ying <victor.liu@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>,
 	linux-remoteproc@vger.kernel.org, linux-amlogic@lists.infradead.org,
 	linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org
 Subject: Re: [PATCH] dt-bindings: Consolidate "sram" property definition
-Message-ID: <agJ4gfH0HgmbOr5X@sirena.co.uk>
+Message-ID: <agKXN3Nmfqcdu8XZ@raspi>
 References: <20260511165942.2774868-1-robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260511165942.2774868-1-robh@kernel.org>
+X-ClientProxiedBy: MA1P287CA0005.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a00:35::19) To AS1PR04MB9287.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4dd::8)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3xlBjuC8zHYeQx3+"
-Content-Disposition: inline
-In-Reply-To: <20260511165942.2774868-1-robh@kernel.org>
-X-Cookie: Truckers welcome.
-X-Rspamd-Queue-Id: 72F34517F8D
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS1PR04MB9287:EE_|PAXPR04MB9023:EE_
+X-MS-Office365-Filtering-Correlation-Id: fae848d6-322c-4c53-1174-08deafd21c4d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|19092799006|7416014|376014|366016|56012099003|18002099003|22082099003|11063799003;
+X-Microsoft-Antispam-Message-Info:
+	i65/kxoFCtN8uVYhAkDIwx6i4aXCDz8yhOgmByjJxx8iqrRME3ifmpANzfsXijKEiIUm93iNUbooyZssin+4SeeJAYuDYoHNp8ruFz2SBCC+KMoUElkoBkR6UDyBwZwmfapJkD6026qbu6bjDVNPoUXWZd2tydBt1SfyxgVTcnEZQnWhG5hBAyZa+iVwICsXD+zjLq1oykP9Crxxqc25rzvog56dpuz7q8k9cQ6R1xj5+WS2WUa1ZJWE7Yw4ij4wg9WMag5xnSn+zAo/S9SchXbGhQSEpakiv4KWDbCoWtNQhGhZQXKXkiICROP+jwNffAbV0TNfSj2JHW09rKbJAH36a5b7y16wwsxJF+funirRN1YoJZ1F9GSMePKANv70k8Nmsd1pT1CMMd3Os4RYvClPwda9QyR0dnmpdkaNGS4sPP0zTXLBPPrd5HnUqrIVIJjEpel38TqLyE95/vhpTLl1KFh0WQQ7b4tOEunpngSteTjLXeIOzM+JHhxJrmxUCXR+y/601lISVlZcJ1lNBDCXa+vwfPEKp2QW5M0zsrtyQZqHEB5d50FgDs9XqsTCoRjP/1RvujCL157ODD1q/Tj3VoGwBJ863Ph36AnDWmHqUfRq0I6XGqjdrN0487G9kfqCeqv2IaSAQec/9iYlpdonSzjhUynUNY/rc/Wp15mR+uf2WdRltdVWsKPuZvwh
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS1PR04MB9287.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(7416014)(376014)(366016)(56012099003)(18002099003)(22082099003)(11063799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?FqDaVSi8/2cSWzMoof3hJoHqJ8Akda0YefkoOhWp5frsAFmOLN/C40sMnJ1c?=
+ =?us-ascii?Q?iRk5nLOKLDBaPZYEAaFqZ+6WNUqZsaBxR4NDraO1BCL13cWwK3CZQIAsWZyu?=
+ =?us-ascii?Q?gx/vMJhVG5q3pi/XbkAOY+9UFJMOyaH7ck9f0E4pAU2RScfXjUngpLHaqHap?=
+ =?us-ascii?Q?mfTQI+/isiCTfp2qJmtHobLvkoxpmQ25+kfb0oGQZ5wdvTaS/p3siGV8g8Cw?=
+ =?us-ascii?Q?J+U4t2kAEXaDQWApPS1GQq2kl9d6xyCo6qMOjGFvixGQ4+Xfdi+PwiCPbpbt?=
+ =?us-ascii?Q?uLz/g7zW5rS+RpyWzcNsMQO60a/qL32LMz2IFNrSK2FWtcXGwzbgd66nO6PX?=
+ =?us-ascii?Q?kcGq0gEPqfHFFjaVdYp++dOw7gx/T5BPA16WMZLQSrhCtImc6HpfiS4uFAev?=
+ =?us-ascii?Q?HdYP4pzffXolHjv+oKfguMm7cgc+2XG1QbmenQFn+Q5hActpPxB8afbolm2r?=
+ =?us-ascii?Q?KGdK/zEeC+jN55hWBmjCep5/jqHbBpa9PMVJfmer5h5MHkPgPL8DQ6euVCVL?=
+ =?us-ascii?Q?DuXUcjGTdk8EqDpjVhPqfOVJ15kdGiFtwogjZBN5/nKUJ59k151g5JotW+pa?=
+ =?us-ascii?Q?2239PqNfYRMr1ThNBvSMcEXJS5XLkMrYN+JnUOoiLjvsX/zcqpS0GkZIGYgz?=
+ =?us-ascii?Q?JDuVEIo/pqlfJp5dSq1s0uHzUSjiwDoztbZQAAWG+GHEBR7NZa3TPwYnbXuD?=
+ =?us-ascii?Q?Dw/8XqvBu61rm5GKNAcG/kPNbROngtBN6TUE0HbXv8vHpzQ/GMO3pkEytMZl?=
+ =?us-ascii?Q?DmY8o9knZ0d9BzeB3POofqZY32JA2bMvcTI/VvmN0UWw5wXqCezM8OuIgAzs?=
+ =?us-ascii?Q?tw2fpkJxrbVnyuGGuYDUZjFkkVXDyfQE0NhzHVcWj99B8UWDHNeg5FpEBJrr?=
+ =?us-ascii?Q?9Hunv2nfXSxE8xfr0DgY6M2bPBLuwm1m8+jh/w7DhmSaLZUEQhJP42LvFGwt?=
+ =?us-ascii?Q?1UQqFXXqFscKWpNUWsRbUWlpN9E4JTMiluYAXRlMRQsMkS2Fk/LjXfVYROCx?=
+ =?us-ascii?Q?Cv+fRzAxs8G3tffVvK1hX13EDWG8ZDHVaMmQCaLBz2ueeHGo86FH4jGQRaQx?=
+ =?us-ascii?Q?8jNVua1Waq4jMKmaMg9SnqyuXoUPGsoWX7CqCf4Vg2PysRl4zArreDgrBdCG?=
+ =?us-ascii?Q?KvW7NNy/cVMgmscLC7qtKUa6IiFmUF8RvHIJbUn7ZCrRTlKKcU4nBoMCweIW?=
+ =?us-ascii?Q?sgzJmAFy+/HAgN3zBR9u2zjvwCgtorj29wz3bAtxaUxOalaeNAQQPBRlgaLy?=
+ =?us-ascii?Q?x+B7ZgYaCnJNK7r/9IjIu/yPPmMy1H6AXwNYd7JFy25PKH6Qa9nhHTQ15CXZ?=
+ =?us-ascii?Q?FVlB9n4sVsSasOZVSJSTucLquHOtf6qaLFiyjrDt51JpZgCrYf2Hv2bvB26X?=
+ =?us-ascii?Q?wuPSz0e+vK/Rbl0ohQJA+PBSiLSJXJGfylhNFM2VZPv75BzYrjeiNd+AHBR5?=
+ =?us-ascii?Q?+GK1LY8YFRx9FGfPexkusYOxKTmOdG3lpFCHUUCzdXY4pxR40HEB5HfPY1/p?=
+ =?us-ascii?Q?oNjT01A9vVCIpPuELU7Fv42bdXH7MmfNYRLTFaRCs65ezYS74qWIayTiXdti?=
+ =?us-ascii?Q?UFElTtQjNfVl/TTDKkr7+i6HhH9eQ9gOnNprMJwB3jflijZSOYQiJfM4Gqyl?=
+ =?us-ascii?Q?ot7ZZiUPK8dOaca8lg6Xs+2/O8uVEQCE9Ra/1r5vpVpRtu5ZE6w7YZ/c85Xo?=
+ =?us-ascii?Q?dsqR51RTJ3xjzx1kEY7HTfMQCoH9AHgXcPwfeM7/ZBpmQpnNayr36b6CkNbX?=
+ =?us-ascii?Q?54DsVfYq8g=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fae848d6-322c-4c53-1174-08deafd21c4d
+X-MS-Exchange-CrossTenant-AuthSource: AS1PR04MB9287.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2026 02:56:48.8907
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ujWXCB0yCLO6GHxiUCgb/xLJDnkArGspbiq1fTy9hRS7tcGIMY11BXjON09xMtd+4uLGrsCR6DShxJtMKl1wmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9023
+X-Rspamd-Queue-Id: 097C15191AB
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [1.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[nxp.com,pengutronix.de,linux.intel.com,kernel.org,suse.de,gmail.com,ffwll.ch,oss.qualcomm.com,poorly.run,linux.dev,somainline.org,chipsnmedia.com,collabora.com,vanguardiasur.com.ar,sntech.de,foss.st.com,lunn.ch,davemloft.net,google.com,redhat.com,ti.com,couthit.com,linaro.org,baylibre.com,googlemail.com,amd.com,nbd.name,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,lists.infradead.org,st-md-mailman.stormreply.com];
-	TAGGED_FROM(0.00)[bounces-10337-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[pengutronix.de,linux.intel.com,kernel.org,suse.de,gmail.com,ffwll.ch,nxp.com,oss.qualcomm.com,poorly.run,linux.dev,somainline.org,chipsnmedia.com,collabora.com,vanguardiasur.com.ar,sntech.de,foss.st.com,lunn.ch,davemloft.net,google.com,redhat.com,ti.com,couthit.com,linaro.org,baylibre.com,googlemail.com,amd.com,nbd.name,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,lists.infradead.org,st-md-mailman.stormreply.com];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10338-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[broonie@kernel.org,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[victor.liu@nxp.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[nxp.com:+];
 	RCPT_COUNT_GT_50(0.00)[79];
 	TAGGED_RCPT(0.00)[dmaengine,dt,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sirena.co.uk:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,nxp.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-
---3xlBjuC8zHYeQx3+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
 On Mon, May 11, 2026 at 11:59:36AM -0500, Rob Herring (Arm) wrote:
-> The "sram" property has become a de facto standard property, so create a
-> common schema for it and drop all the duplicated definitions.
+>  .../imx/fsl,imx8qxp-dc-command-sequencer.yaml |  2 +-
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Liu Ying <victor.liu@nxp.com> #fsl,imx8qxp-dc-command-sequencer.yaml
 
---3xlBjuC8zHYeQx3+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmoCeIAACgkQJNaLcl1U
-h9CAeQf/d29Uvfn8GPawCZ+l4UnMHO/18slnjGlircCx5bFlOKWLyqPq14JkP32t
-feVK/h8PnpOWbJCebOgL+As1iNYcMRPjw2C4eq+HfdBppx/1NZ7FK7CmBQjRgccv
-yKyirduSqH7pUKJ3lNom3Q0qkCjzezWH9fFxqic/P9T3aEsx6rjZ+y9zAl3pskdi
-LaMYflOJv7ca2tEWSY+RNNjsmfq2JIsZAwkMRlWtFK4maNWi0dw84s6d5egY76oJ
-6ZI//3nGXP8Xy3i48UmCoJDpNhMA3+1PW9i1ylSGK9F0KOttz/cmIG3cUleEVd9f
-WXPmJksEzyt97BKPha3/6IKICQtmdw==
-=XKlR
------END PGP SIGNATURE-----
-
---3xlBjuC8zHYeQx3+--
+-- 
+Regards,
+Liu Ying
 

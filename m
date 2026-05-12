@@ -1,258 +1,543 @@
-Return-Path: <dmaengine+bounces-10340-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10341-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8EgFA1LFAmp7wQEAu9opvQ
-	(envelope-from <dmaengine+bounces-10340-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 08:14:42 +0200
+	id SFDGFNHyAmo9zAEAu9opvQ
+	(envelope-from <dmaengine+bounces-10341-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 11:28:49 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78A7151ACAF
-	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 08:14:41 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7E4451DAFE
+	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 11:28:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B6789322CC26
-	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 05:49:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 17D3B3021B0B
+	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 09:15:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B87163CFF41;
-	Tue, 12 May 2026 05:49:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20B1F42EEDA;
+	Tue, 12 May 2026 09:15:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTUxUrUC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C0JSfZQZ"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7C63D7D87;
-	Tue, 12 May 2026 05:49:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB47D3BBA07;
+	Tue, 12 May 2026 09:15:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778564969; cv=none; b=SdAKICfTJJM79IeNR5y7MxUGDVmq/Ltz4oYRH4jhOaoLRQm3XEfPROkwqY2on9sExCO7HbedRQZhOKmjVv9Kh9aXikxyqoePJEk8RoJtFKUWIVXFcV2hDwr/lPOXflfx2eOqC4MYydWVW2FBaWG4DZFVm9E4kL/6MUOuzNq8+Jg=
+	t=1778577315; cv=none; b=P5nybtulD3GUdzTQrZu0q7aUKknbto9ZLo5PEAzY+gDq2bsEeQWmgLAsL9hdQPbNLnj/oEEzJYEziGrKaVFoEOpSwLf8HOgvi6NqS3dZb5KRKoM/jyysWkCgXTlUkQFPHS3TQyC3AFIgsRApQ3/jzBVA3smhny1FZLIDfDXXxbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778564969; c=relaxed/simple;
-	bh=Q65TO1rQfRL6O7q8oidi7Dfsx4Yk8cOPu4mQ582VQbM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=H8H66QVFof6AozHQXzZgx3guGvT6lbMj4hmYPmRWGZ+OIQajQ85oMgrQAECwhhOdqDJm9Sqw4esDE+kC1X4g+r6JLi2870zCrNOOb8wxGRB5wOstsjVUemKnL0SZNB0eUHT9pp5Zbp7A83jFQKepi8Jca0nG422luvl60MPAxEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTUxUrUC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE1FFC2BCB0;
-	Tue, 12 May 2026 05:49:27 +0000 (UTC)
+	s=arc-20240116; t=1778577315; c=relaxed/simple;
+	bh=tQrx4ZRS7IpQ4Yeb3zvXcMC5gRyGgc0EqCTTskuD72c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WKgZzyDBzBHcujWSJNoiWj6drNMCQT2e3zTyJCOfEPDPkGcYq8K7iot7dR7Y6f+fQk9PdBLx/4oz7F8jMzc/Az4VJywUZE5uEYz9NTDi2CNwaruNKcGk8xHCOxQ+k4wqWruGCxeuw3Umck3LTLz46AwZCXff9jvKMINpAN030V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C0JSfZQZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56EA8C2BCB0;
+	Tue, 12 May 2026 09:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778564968;
-	bh=Q65TO1rQfRL6O7q8oidi7Dfsx4Yk8cOPu4mQ582VQbM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=UTUxUrUCAowt/CBaPTnuAyKqfjEWpuQ/8ffhMublkcGj3xsELLcTaOfWo4Umqhs8V
-	 +/f//v95aeZ5bpaUzbnMdQObZvNtZvi9oDG21yIPZgPVlv82RwYqJcRk53obyUXwfd
-	 pYrQ8Lt/Ix25p+4AGBhtgaTuH0/adCDjUQdwSNkhw1S61FxrrtojLzatpKe5gJrocq
-	 kt6DZr/4ePTB1U30qIOWYUn12fprCJc9/XAynmc9t11f+CF7VeaGdQ/VxVWIsyP8sn
-	 bRw+/RL6BVq3sIkyx3QkizC9nku+ITQOyYuXhRecUWUn0dMA0+wk3tWtlkarrG9e3D
-	 SuHP6y+86zl+g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 2/2] dmaengine: fsl-edma: Support dynamic
- scatter/gather chaining
-Reply-To: sashiko@lists.linux.dev
-To: =?utf-8?b?QmVub8OudCBNb25pbg==?= <benoit.monin@bootlin.com>
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org, imx@lists.linux.dev
-In-Reply-To: <20260511-fsl-edma-dyn-sg-v3-2-98a181775dae@bootlin.com>
-References: <20260511-fsl-edma-dyn-sg-v3-2-98a181775dae@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 12 May 2026 05:49:27 +0000
-Message-Id: <20260512054927.CE1FFC2BCB0@smtp.kernel.org>
+	s=k20201202; t=1778577314;
+	bh=tQrx4ZRS7IpQ4Yeb3zvXcMC5gRyGgc0EqCTTskuD72c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C0JSfZQZpjD/Tvilt+ZydSoCODb9Cfdg9R/yccRDlcfaoqRM8iSMCNxRaMjr8pF/7
+	 PxuXXBLtVyINXXEJr8VmMbnEE0/2uqGdkKSzC5ft2lBFgjHBi9yZiITxp1XcstcHE8
+	 EK0wfXtuOs/5/GoVOCWIbJO9H5aWRYiL2sW/8mKhWqyNPtknH75fuBTGJanoB7tqpX
+	 +cGkXvFkkkcFpNm7iZLpVnNQbTZqufS2LlzPV9BVyeUykqzjr9aaSWmCmrrMhNnzm9
+	 IA1oPOljf0GEIfzjcMt4eZSfvURwoY6rIUz8dwJ6TrRoOWfY0pZEi/8r4DRSb4tS/f
+	 A6nDUfzh5Gj5Q==
+Date: Tue, 12 May 2026 11:15:12 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Liu Ying <victor.liu@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Sean Paul <sean@poorly.run>, Konrad Dybcio <konradybcio@kernel.org>,
+	Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Abhinav Kumar <abhinav.kumar@linux.dev>,
+	Jessica Zhang <jesszhan0024@gmail.com>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Nas Chung <nas.chung@chipsnmedia.com>,
+	Jackson Lee <jackson.lee@chipsnmedia.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Mirela Rabulea <mirela.rabulea@nxp.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Hugues Fruchet <hugues.fruchet@foss.st.com>,
+	Alain Volmat <alain.volmat@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	MD Danish Anwar <danishanwar@ti.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Parvathi Pudi <parvathi@couthit.com>,
+	Mohan Reddy Putluru <pmohan@couthit.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Linus Walleij <linusw@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+	"Andrew F. Davis" <afd@ti.com>,
+	Hussain Khaja <basharath@couthit.com>, Suman Anna <s-anna@ti.com>,
+	Ben Levinsky <ben.levinsky@amd.com>,
+	Tanmay Shah <tanmay.shah@amd.com>,
+	Erwan Leray <erwan.leray@foss.st.com>,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Roger Quadros <rogerq@ti.com>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+	dmaengine@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com, netdev@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, linux-amlogic@lists.infradead.org,
+	linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: Consolidate "sram" property definition
+Message-ID: <agLvoBCkUf_TN5b-@lore-desk>
+References: <20260511165942.2774868-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: 78A7151ACAF
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="DRGrXT3EJq+RYIF3"
+Content-Disposition: inline
+In-Reply-To: <20260511165942.2774868-1-robh@kernel.org>
+X-Rspamd-Queue-Id: B7E4451DAFE
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-2.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lists.linux.dev:replyto,bootlin.com:email];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10340-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-10341-lists,dmaengine=lfdr.de];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FREEMAIL_CC(0.00)[nxp.com,pengutronix.de,linux.intel.com,kernel.org,suse.de,gmail.com,ffwll.ch,oss.qualcomm.com,poorly.run,linux.dev,somainline.org,chipsnmedia.com,collabora.com,vanguardiasur.com.ar,sntech.de,foss.st.com,lunn.ch,davemloft.net,google.com,redhat.com,ti.com,couthit.com,linaro.org,baylibre.com,googlemail.com,amd.com,nbd.name,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,lists.infradead.org,st-md-mailman.stormreply.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[79];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[lorenzo@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_NO_DN(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko@lists.linux.dev]
+	TAGGED_RCPT(0.00)[dmaengine,dt,netdev];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,devicetree.org:url]
 X-Rspamd-Action: no action
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
-- [Critical] Hardware executes dynamically linked descriptors before issue_=
-pending() is called, causing missed interrupts and double execution.
-- [Critical] TOCTOU race condition with the channel DONE bit in the interru=
-pt handler causes double execution of chained descriptors.
-- [High] Incorrect list check order in fsl_edma_link_sg() drops intermediat=
-e descriptors from the hardware scatter-gather chain.
-- [High] Clearing the channel DONE bit during dynamic linking causes a perm=
-anent DMA channel stall.
-- [High] Missing memory barrier when updating in-memory scatter-gather link=
-s risks torn hardware reads and system bus errors.
---
 
-commit 09e7fbe06b869eaaa82c7821bd60464f115cd6b5
-Author: Beno=C3=AEt Monin <benoit.monin@bootlin.com>
+--DRGrXT3EJq+RYIF3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-dmaengine: fsl-edma: Support dynamic scatter/gather chaining
+> The "sram" property has become a de facto standard property, so create a
+> common schema for it and drop all the duplicated definitions.
+>=20
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-This commit implements dynamic linking of scatter/gather transfers to enable
-chaining multiple DMA descriptors without stopping the channel. It adds
-fsl_edma_link_sg() which is called during tx_submit() to link the new
-descriptor to the previously submitted one.
+Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-> index c10190164926a..b83d1b91dca2b 100644
-> --- a/drivers/dma/fsl-edma-common.c
-> +++ b/drivers/dma/fsl-edma-common.c
-> @@ -58,7 +58,10 @@ void fsl_edma_tx_chan_handler(struct fsl_edma_chan *fs=
-l_chan)
->  		list_del(&fsl_chan->edesc->vdesc.node);
->  		vchan_cookie_complete(&fsl_chan->edesc->vdesc);
->  		fsl_chan->edesc =3D NULL;
-> -		fsl_chan->status =3D DMA_COMPLETE;
-> +		if (!(fsl_edma_drvflags(fsl_chan) & FSL_EDMA_DRV_SPLIT_REG) ||
-> +		    (edma_readl_chreg(fsl_chan, ch_csr) & EDMA_V3_CH_CSR_DONE)) {
-> +			fsl_chan->status =3D DMA_COMPLETE;
-> +		}
-
-If the hardware dynamically chains from descriptor A to descriptor B, it
-still raises an interrupt for A. If the CPU is delayed and the hardware
-finishes executing B and halts, setting the DONE bit, won't the ISR for A
-see the DONE bit set here, set the status to DMA_COMPLETE, and then later
-explicitly re-enable the channel to execute B again, causing memory
-corruption?
-
->  	} else {
->  		vchan_cyclic_callback(&fsl_chan->edesc->vdesc);
->  	}
-
-[ ... ]
-
-> @@ -673,6 +676,68 @@ struct dma_async_tx_descriptor *fsl_edma_prep_dma_cy=
-clic(
->  	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
->  }
+> ---
+>  .../imx/fsl,imx8qxp-dc-command-sequencer.yaml |  2 +-
+>  .../devicetree/bindings/display/msm/gpu.yaml  |  6 +----
+>  .../bindings/dma/stericsson,dma40.yaml        |  8 ++----
+>  .../bindings/media/cnm,wave521c.yaml          |  2 +-
+>  .../bindings/media/nxp,imx8-jpeg.yaml         |  6 ++---
+>  .../bindings/media/rockchip,vdec.yaml         |  5 ++--
+>  .../bindings/media/st,stm32-dcmi.yaml         |  6 ++---
+>  .../devicetree/bindings/net/mediatek,net.yaml |  3 +--
+>  .../bindings/net/ti,icssg-prueth.yaml         |  2 +-
+>  .../bindings/net/ti,icssm-prueth.yaml         |  2 +-
+>  .../remoteproc/amlogic,meson-mx-ao-arc.yaml   |  7 +----
+>  .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  |  8 ------
+>  .../bindings/remoteproc/ti,k3-r5f-rproc.yaml  |  8 ------
+>  .../remoteproc/xlnx,zynqmp-r5fss.yaml         |  9 +------
+>  .../devicetree/bindings/spi/st,stm32-spi.yaml | 10 +++----
+>  .../bindings/sram/sram-consumer.yaml          | 26 +++++++++++++++++++
+>  16 files changed, 48 insertions(+), 62 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sram/sram-consumer.=
+yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx8qxp-dc=
+-command-sequencer.yaml b/Documentation/devicetree/bindings/display/imx/fsl=
+,imx8qxp-dc-command-sequencer.yaml
+> index 27118f4c0d28..fd095e5742c5 100644
+> --- a/Documentation/devicetree/bindings/display/imx/fsl,imx8qxp-dc-comman=
+d-sequencer.yaml
+> +++ b/Documentation/devicetree/bindings/display/imx/fsl,imx8qxp-dc-comman=
+d-sequencer.yaml
+> @@ -41,7 +41,7 @@ properties:
+>        - const: sw3
 > =20
-> +static void fsl_edma_link_sg(struct fsl_edma_chan *fsl_chan, struct fsl_=
-edma_desc *fsl_desc)
-> +{
-> +	u32 flags =3D fsl_edma_drvflags(fsl_chan);
-> +	struct fsl_edma_hw_tcd *last_tcd;
-> +	struct fsl_edma_desc *prev_desc;
-> +	struct virt_dma_desc *vdesc;
-> +	u16 csr;
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> +    maxItems: 1
+>      description: phandle pointing to the mmio-sram device node
+> =20
+>  required:
+> diff --git a/Documentation/devicetree/bindings/display/msm/gpu.yaml b/Doc=
+umentation/devicetree/bindings/display/msm/gpu.yaml
+> index 04b2328903ca..358759fad8dc 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gpu.yaml
+> +++ b/Documentation/devicetree/bindings/display/msm/gpu.yaml
+> @@ -84,13 +84,9 @@ properties:
+>      maxItems: 64
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle-array
+>      minItems: 1
+>      maxItems: 4
+> -    items:
+> -      maxItems: 1
+> -    description: |
+> -      phandles to one or more reserved on-chip SRAM regions.
+> +    description:
+>        phandle to the On Chip Memory (OCMEM) that's present on some a3xx =
+and
+>        a4xx Snapdragon SoCs. See
+>        Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
+> diff --git a/Documentation/devicetree/bindings/dma/stericsson,dma40.yaml =
+b/Documentation/devicetree/bindings/dma/stericsson,dma40.yaml
+> index 607da11e7baa..d8f92838f4c9 100644
+> --- a/Documentation/devicetree/bindings/dma/stericsson,dma40.yaml
+> +++ b/Documentation/devicetree/bindings/dma/stericsson,dma40.yaml
+> @@ -136,13 +136,9 @@ properties:
+>      maxItems: 1
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle-array
+> -    description: A phandle array with inner size 1 (no arg cells).
+> -      First phandle is the LCPA (Logical Channel Parameter Address) memo=
+ry.
+> -      Second phandle is the  LCLA (Logical Channel Link base Address) me=
+mory.
+> -    maxItems: 2
+>      items:
+> -      maxItems: 1
+> +      - description: LCPA (Logical Channel Parameter Address) memory.
+> +      - description: LCLA (Logical Channel Link base Address) memory.
+> =20
+>    memcpy-channels:
+>      $ref: /schemas/types.yaml#/definitions/uint32-array
+> diff --git a/Documentation/devicetree/bindings/media/cnm,wave521c.yaml b/=
+Documentation/devicetree/bindings/media/cnm,wave521c.yaml
+> index 6a11c1d11fb5..6cd33dfd095d 100644
+> --- a/Documentation/devicetree/bindings/media/cnm,wave521c.yaml
+> +++ b/Documentation/devicetree/bindings/media/cnm,wave521c.yaml
+> @@ -37,7 +37,7 @@ properties:
+>      maxItems: 1
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> +    maxItems: 1
+>      description:
+>        The VPU uses the SRAM to store some of the reference data instead =
+of
+>        storing it on DMA memory. It is mainly used for the purpose of red=
+ucing
+> diff --git a/Documentation/devicetree/bindings/media/nxp,imx8-jpeg.yaml b=
+/Documentation/devicetree/bindings/media/nxp,imx8-jpeg.yaml
+> index 18cc6315a821..6ba668aa633d 100644
+> --- a/Documentation/devicetree/bindings/media/nxp,imx8-jpeg.yaml
+> +++ b/Documentation/devicetree/bindings/media/nxp,imx8-jpeg.yaml
+> @@ -56,10 +56,10 @@ properties:
+>      maxItems: 5               # Wrapper and 4 slots
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> +    maxItems: 1
+>      description:
+> -      Optional phandle to a reserved on-chip SRAM regions. The SRAM can
+> -      be used for descriptor storage, which may improve bus utilization.
+> +      The SRAM can be used for descriptor storage, which may improve bus
+> +      utilization.
+> =20
+>  required:
+>    - compatible
+> diff --git a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml b=
+/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> index 42022401d0ff..4f38a0ef29d8 100644
+> --- a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> +++ b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+> @@ -91,9 +91,8 @@ properties:
+>      maxItems: 1
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> -    description: |
+> -      phandle to a reserved on-chip SRAM regions.
+> +    maxItems: 1
+> +    description:
+>        Some SoCs, like rk3588 provide on-chip SRAM to store temporary
+>        buffers during decoding.
+> =20
+> diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b=
+/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> index d9fbb90b0977..7c2ddd27780f 100644
+> --- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> +++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+> @@ -47,10 +47,10 @@ properties:
+>      maxItems: 1
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> +    maxItems: 1
+>      description:
+> -      phandle to a reserved SRAM region which is used as temporary
+> -      storage memory between DMA and MDMA engines.
+> +      SRAM region which is used as temporary storage memory between DMA =
+and
+> +      MDMA engines.
+> =20
+>    port:
+>      $ref: /schemas/graph.yaml#/$defs/port-base
+> diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Do=
+cumentation/devicetree/bindings/net/mediatek,net.yaml
+> index cc346946291a..6bbd83c6aaf7 100644
+> --- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> +++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> @@ -67,8 +67,7 @@ properties:
+>        - const: ppe
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> -    description: phandle to mmio SRAM
+> +    maxItems: 1
+> =20
+>    mediatek,ethsys:
+>      $ref: /schemas/types.yaml#/definitions/phandle
+> diff --git a/Documentation/devicetree/bindings/net/ti,icssg-prueth.yaml b=
+/Documentation/devicetree/bindings/net/ti,icssg-prueth.yaml
+> index c296e5711848..883033b19b8f 100644
+> --- a/Documentation/devicetree/bindings/net/ti,icssg-prueth.yaml
+> +++ b/Documentation/devicetree/bindings/net/ti,icssg-prueth.yaml
+> @@ -21,7 +21,7 @@ properties:
+>        - ti,am654-sr1-icssg-prueth  # for AM65x SoC family, SR1.0
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> +    maxItems: 1
+>      description:
+>        phandle to MSMC SRAM node
+> =20
+> diff --git a/Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml b=
+/Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml
+> index a98ad45ca66f..9370c43bc66a 100644
+> --- a/Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml
+> +++ b/Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml
+> @@ -24,7 +24,7 @@ properties:
+>        - ti,am3359-prueth   # for AM33x SoC family
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> +    maxItems: 1
+>      description:
+>        phandle to OCMC SRAM node
+> =20
+> diff --git a/Documentation/devicetree/bindings/remoteproc/amlogic,meson-m=
+x-ao-arc.yaml b/Documentation/devicetree/bindings/remoteproc/amlogic,meson-=
+mx-ao-arc.yaml
+> index 76e8ca44906a..3f710433e937 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/amlogic,meson-mx-ao-ar=
+c.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/amlogic,meson-mx-ao-ar=
+c.yaml
+> @@ -48,12 +48,7 @@ properties:
+>      minItems: 1
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> -    description:
+> -      phandles to a reserved SRAM region which is used as the memory of
+> -      the ARC core. The region should be defined as child nodes of the
+> -      AHB SRAM node as per the generic bindings in
+> -      Documentation/devicetree/bindings/sram/sram.yaml
+> +    maxItems: 1
+> =20
+>    amlogic,secbus2:
+>      $ref: /schemas/types.yaml#/definitions/phandle
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc=
+=2Eyaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> index b51bb863d759..8b1ed384ef22 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> @@ -75,16 +75,8 @@ properties:
+>  # --------------------
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle-array
+>      minItems: 1
+>      maxItems: 4
+> -    items:
+> -      maxItems: 1
+> -    description: |
+> -      phandles to one or more reserved on-chip SRAM regions. The regions
+> -      should be defined as child nodes of the respective SRAM node, and
+> -      should be defined as per the generic bindings in,
+> -      Documentation/devicetree/bindings/sram/sram.yaml
+> =20
+>  allOf:
+>    - if:
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc=
+=2Eyaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+> index 775e9b3a1938..14e6b2f817b3 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+> @@ -224,16 +224,8 @@ patternProperties:
+>            at 0x0) or 0 (BTCM at 0x0), default value is 1 if omitted.
+> =20
+>        sram:
+> -        $ref: /schemas/types.yaml#/definitions/phandle-array
+>          minItems: 1
+>          maxItems: 4
+> -        items:
+> -          maxItems: 1
+> -        description: |
+> -          phandles to one or more reserved on-chip SRAM regions. The reg=
+ions
+> -          should be defined as child nodes of the respective SRAM node, =
+and
+> -          should be defined as per the generic bindings in,
+> -          Documentation/devicetree/bindings/sram/sram.yaml
+> =20
+>      required:
+>        - compatible
+> diff --git a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5f=
+ss.yaml b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.ya=
+ml
+> index ee63c03949c9..c7d5e58330d6 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml
+> @@ -106,20 +106,13 @@ patternProperties:
+>            - const: rx
+> =20
+>        sram:
+> -        $ref: /schemas/types.yaml#/definitions/phandle-array
+>          minItems: 1
+>          maxItems: 8
+> -        items:
+> -          maxItems: 1
+> -        description: |
+> +        description:
+>            phandles to one or more reserved on-chip SRAM regions. Other t=
+han TCM,
+>            the RPU can execute instructions and access data from the OCM =
+memory,
+>            the main DDR memory, and other system memories.
+> =20
+> -          The regions should be defined as child nodes of the respective=
+ SRAM
+> -          node, and should be defined as per the generic bindings in
+> -          Documentation/devicetree/bindings/sram/sram.yaml
+> -
+>        memory-region:
+>          description: |
+>            List of phandles to the reserved memory regions associated wit=
+h the
+> diff --git a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml b/Do=
+cumentation/devicetree/bindings/spi/st,stm32-spi.yaml
+> index 472e92974714..6d7d595e4ab3 100644
+> --- a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
+> +++ b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
+> @@ -89,12 +89,10 @@ properties:
+>        - const: rxm2m
+> =20
+>    sram:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> -    description: |
+> -      Phandles to a reserved SRAM region which is used as temporary
+> -      storage memory between DMA and MDMA engines.
+> -      The region should be defined as child node of the AHB SRAM node
+> -      as per the generic bindings in Documentation/devicetree/bindings/s=
+ram/sram.yaml
+> +    maxItems: 1
+> +    description:
+> +      SRAM region which is used as temporary storage memory between DMA =
+and
+> +      MDMA engines.
+> =20
+>    power-domains:
+>      maxItems: 1
+> diff --git a/Documentation/devicetree/bindings/sram/sram-consumer.yaml b/=
+Documentation/devicetree/bindings/sram/sram-consumer.yaml
+> new file mode 100644
+> index 000000000000..f00087bd2879
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sram/sram-consumer.yaml
+> @@ -0,0 +1,26 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sram/sram-consumer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	lockdep_assert_held(&fsl_chan->vchan.lock);
+> +title: SRAM Consumers
 > +
-> +	if (!(flags & FSL_EDMA_DRV_SPLIT_REG))
-> +		return;
+> +maintainers:
+> +  - Rob Herring <robh@kernel.org>
 > +
-> +	vdesc =3D list_last_entry_or_null(&fsl_chan->vchan.desc_issued,
-> +					struct virt_dma_desc, node);
-> +	if (!vdesc)
-> +		vdesc =3D list_last_entry_or_null(&fsl_chan->vchan.desc_submitted,
-> +						struct virt_dma_desc, node);
+> +select: true
+> +
+> +properties:
+> +  sram:
+> +    description:
+> +      Phandles to one or more reserved on-chip SRAM regions. The regions
+> +      should be defined as child nodes of the respective SRAM node, and
+> +      should be defined as per the generic bindings in,
+> +      Documentation/devicetree/bindings/sram/sram.yaml
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +      maxItems: 1
+> +
+> +additionalProperties: true
+> +...
+> --=20
+> 2.53.0
+>=20
 
-If desc_issued is not empty but there are also descriptors in
-desc_submitted, this will link against the tail of desc_issued instead of
-the newest descriptor at the tail of desc_submitted. Will this cause the
-hardware to skip intermediate submissions and corrupt the transfer sequence?
+--DRGrXT3EJq+RYIF3
+Content-Type: application/pgp-signature; name=signature.asc
 
-> +	if (!vdesc)
-> +		return;
-> +
-> +	prev_desc =3D to_fsl_edma_desc(vdesc);
-> +	last_tcd =3D prev_desc->tcd[prev_desc->n_tcds - 1].vtcd;
-> +
-> +	csr =3D fsl_edma_get_tcd_to_cpu(fsl_chan, last_tcd, csr);
-> +	if (!(csr & EDMA_TCD_CSR_D_REQ))
-> +		return;
-> +
-> +	fsl_edma_set_tcd_to_le(fsl_chan, last_tcd, fsl_desc->tcd[0].ptcd, dlast=
-_sga);
-> +
-> +	csr &=3D ~EDMA_TCD_CSR_D_REQ;
-> +	csr |=3D EDMA_TCD_CSR_E_SG;
-> +	fsl_edma_set_tcd_to_le(fsl_chan, last_tcd, csr, csr);
+-----BEGIN PGP SIGNATURE-----
 
-Is a write memory barrier like dma_wmb() needed between updating dlast_sga
-and setting the E_SG bit in the csr? If the CPU or compiler reorders these
-writes, could the actively running eDMA controller observe the E_SG bit set
-with a stale dlast_sga pointer and trigger a bus error?
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCagLvoAAKCRA6cBh0uS2t
+rB3PAQDUyipx/50v+HQH37ZQgQgNXN+WyuErXdljPkPOAGPQXQEA5AF8C1BtXXr0
+ThfwiDvqyao6viviV65dKTdINUDRXA4=
+=S+zT
+-----END PGP SIGNATURE-----
 
-> +
-> +	if (prev_desc =3D=3D fsl_chan->edesc && prev_desc->n_tcds =3D=3D 1) {
-> +		if (flags & FSL_EDMA_DRV_CLEAR_DONE_E_SG)
-> +			edma_writel_chreg(fsl_chan, edma_readl_chreg(fsl_chan, ch_csr), ch_cs=
-r);
-
-If the hardware has just finished executing the transfer and halted before
-this register access, the DONE bit is already set. Writing it back clears
-it. Will the subsequent completion interrupt ISR then wrongly assume the
-channel chained successfully, leaving the state as DMA_IN_PROGRESS and
-causing a permanent channel stall?
-
-> +
-> +		edma_cp_tcd_to_reg(fsl_chan, last_tcd, dlast_sga);
-> +		edma_cp_tcd_to_reg(fsl_chan, last_tcd, csr);
-> +	}
-> +
-> +	trace_edma_link_sg(fsl_chan, last_tcd);
-> +}
-> +
-> +static dma_cookie_t fsl_edma_tx_submit(struct dma_async_tx_descriptor *t=
-x)
-> +{
-> +	struct virt_dma_desc *vd =3D container_of(tx, struct virt_dma_desc, tx);
-> +	struct fsl_edma_chan *fsl_chan =3D to_fsl_edma_chan(tx->chan);
-> +	struct fsl_edma_desc *fsl_desc =3D to_fsl_edma_desc(vd);
-> +	struct virt_dma_chan *vc =3D to_virt_chan(tx->chan);
-> +	dma_cookie_t cookie;
-> +
-> +	guard(spinlock_irqsave)(&fsl_chan->vchan.lock);
-> +
-> +	fsl_edma_link_sg(fsl_chan, fsl_desc);
-
-By dynamically chaining the new descriptor to the currently running hardware
-here, the hardware could start executing it before dma_async_issue_pending()
-is called.
-
-If the hardware completes the new descriptor while it is still in the
-desc_submitted list, could the interrupt handler ignore its completion
-because it only processes desc_issued?
-
-If so, would this result in double execution later when issue_pending() is
-finally called and the software explicitly restarts the already-completed
-descriptor?
-
-> +	cookie =3D dma_cookie_assign(tx);
-> +	list_move_tail(&vd->node, &vc->desc_submitted);
-> +
-> +	return cookie;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260511-fsl-edma-d=
-yn-sg-v3-0-98a181775dae@bootlin.com?part=3D2
+--DRGrXT3EJq+RYIF3--
 

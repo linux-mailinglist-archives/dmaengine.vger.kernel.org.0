@@ -1,50 +1,50 @@
-Return-Path: <dmaengine+bounces-10362-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10363-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UBVpHXc/A2rO2AEAu9opvQ
-	(envelope-from <dmaengine+bounces-10362-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 16:55:51 +0200
+	id 6AA5AZw9A2po2AEAu9opvQ
+	(envelope-from <dmaengine+bounces-10363-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 16:47:56 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E61C5230DE
-	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 16:55:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DBEC522E1B
+	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 16:47:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 52EAE30B944B
-	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 14:01:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C09A23316DB3
+	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2026 14:04:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5934B3A48DC;
-	Tue, 12 May 2026 14:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B6373ABDBE;
+	Tue, 12 May 2026 14:03:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsrKNSBj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gX7jChaU"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3424D39EB74;
-	Tue, 12 May 2026 14:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854A73ABD9B;
+	Tue, 12 May 2026 14:03:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778594461; cv=none; b=TiJyVN0Bp0AdIWVSrnAKcGvL0dn2jZe6DNyVhq00h3eFKXSHIFuiWCWElNRMwna8KL4ajpa/WU0udMXqfFs5Ag5xo0geyYFvZI29pjTZS5hOFB1V0JN8xAzHf+tgvBHgr4mEOUL1Wk60iDhVomrY+w5eG3y8Wbk+6HNU+BXBRvA=
+	t=1778594606; cv=none; b=a2+E9emIFZRDUWLwgZcskACpqNPu29iHWx6GUkH1YED0OSgjKKb5VXFRA11yRkr0iLPUrRCTYJoZ7Lm2j6fSdikeKXKtIggNs4GuDlAwmIbKnXWzNv//42WF7jozo/MqGjibvQdOBnQL6eUwt2vV0Azv7/fP/gIaTZk4p45P+zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778594461; c=relaxed/simple;
-	bh=73KY+PJnQz0DVDO55WQRtqfL9KC8eXib5SBHC0nL4q0=;
+	s=arc-20240116; t=1778594606; c=relaxed/simple;
+	bh=GjrbKqt7UhV0Fd7/x9yogisk1zMvp87XUhU2BO+jtOc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gdkJXMUubQZowBBm/+8VeZwJZxpzDyeTlMw0ZoYP9fzJPZaCVzaMexoPmpBOf/ezjy4X1fvRDkDGJLPI2TCFTNyNfX6fXdyRwmhNB/W+LH34X/Al05Z2qtp4/a4DnB32J/LUCamUCw3OEvYBtofQaxwwa6JdEl38g0e8x/ICFxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsrKNSBj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9917AC2BCB0;
-	Tue, 12 May 2026 14:00:53 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=KDxynR7x/9K4qwYn6OVOtfJXf+ndyirHzzN2/j7Ix0D75k3cH5BX9JCMg6DGT+evAfiCZ67poTXRJohPEwox1d8iCmSgLcZFYq5geY4BD9CpCR+D3Kzw13jN/dELpo//CAXm75Qgv4uAn3gv/xSdVoPcycN2jOI/d32Xf/aQigg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gX7jChaU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0F40C2BCF6;
+	Tue, 12 May 2026 14:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778594461;
-	bh=73KY+PJnQz0DVDO55WQRtqfL9KC8eXib5SBHC0nL4q0=;
+	s=k20201202; t=1778594606;
+	bh=GjrbKqt7UhV0Fd7/x9yogisk1zMvp87XUhU2BO+jtOc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZsrKNSBjdZ8JvOL/tIch5tetu7d3acvdP5ngcZ/dXyTCzoko34LlvoSPIZ9/qZlTh
-	 egHfZkdRrTx0Uo21xIA5NrREt/v2pxE1tzGFKPJIfrK6gqDKzfGJ3R8bLpd6+VzY4G
-	 gMNIe8FwHDcazuujib9FDMzNaCbiMrLeWcOVu3JN/Iwn4/zsD+wa3OsS8Yus8UGDMM
-	 sSS8ohJOJOuDov8UFLtFUZUhUFBKXasF5J2Omz892ggz40wNHyHEIDI+ZLVcbpmo3L
-	 IZAxFO9v/6onKxqq9P2tadE/BIjvjeMkudjmW/IkUThvGD/EhwRAkXAfDPmPOkfdLY
-	 w5/HoxASJrzgA==
-Date: Tue, 12 May 2026 19:30:37 +0530
+	b=gX7jChaUGVKoBPZH/623LQEbqKANOyAyzsgX07zPjtXQUkJ9Hrc4sSMclR6oEhB9l
+	 BBi153bMAkA/PjdEBfqppW9jl3rlG2FMvTmLqXZIylLYVnKt7xCBn12YQoWliOEqJo
+	 e0aEXfKBLYqE3/bkb0iWwjKLOA1JDOY4uY0vRBpvmjjwK+tkbdmWxugDX0f9gvKg2T
+	 prICu0IymXygx5olXk6vqboutJujjEscqoPhn7ZXhCQ4/fMwE/bbxB988pVIu+XmOA
+	 q8sNTePhE4v4/589EAltLChYFbtotfWdqcBPpeeEN75hY2o51JK4Ajue4m2UmZK2sc
+	 rub6PZ9aElcyA==
+Date: Tue, 12 May 2026 19:33:15 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: Vinod Koul <vkoul@kernel.org>, 
@@ -57,11 +57,11 @@ Cc: Vinod Koul <vkoul@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, 
 	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev
-Subject: Re: [PATCH v4 1/9] dmaengine: Add API to combine configuration and
- preparation (sg and single)
-Message-ID: <77s7y2zu5y2jtauczrqvdtedrhqsmtcnkic2zgm77xopcyazxm@xubtnmcppcni>
+Subject: Re: [PATCH v4 2/9] dmaengine: Add safe API to combine configuration
+ and preparation
+Message-ID: <zaf2zeguq7oyrygv5fdokuo4w3btbcoysi2wmtyzremmdov3xe@reo3hnu7wpgi>
 References: <20260506-dma_prep_config-v4-0-85b3d22babff@nxp.com>
- <20260506-dma_prep_config-v4-1-85b3d22babff@nxp.com>
+ <20260506-dma_prep_config-v4-2-85b3d22babff@nxp.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -71,8 +71,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260506-dma_prep_config-v4-1-85b3d22babff@nxp.com>
-X-Rspamd-Queue-Id: 1E61C5230DE
+In-Reply-To: <20260506-dma_prep_config-v4-2-85b3d22babff@nxp.com>
+X-Rspamd-Queue-Id: 4DBEC522E1B
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -86,7 +86,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10362-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10363-lists,dmaengine=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[24];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
@@ -100,197 +100,120 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Wed, May 06, 2026 at 04:44:13PM -0400, Frank Li wrote:
-> Previously, configuration and preparation required two separate calls. This
-> works well when configuration is done only once during initialization.
+On Wed, May 06, 2026 at 04:44:14PM -0400, Frank Li wrote:
+> Introduce dmaengine_prep_config_single_safe() and
+> dmaengine_prep_config_sg_safe() to provide a reentrant-safe way to
+> combine slave configuration and transfer preparation.
 > 
-> However, in cases where the burst length or source/destination address must
-> be adjusted for each transfer, calling two functions is verbose and
-> requires additional locking to ensure both steps complete atomically.
-> 
-> Add a new API dmaengine_prep_config_single() and dmaengine_prep_config_sg()
-> and callback device_prep_config_sg() that combines configuration and
-> preparation into a single operation. If the configuration argument is
-> passed as NULL, fall back to the existing implementation.
+> Drivers may implement the new device_prep_config_sg() callback to perform
+> both steps atomically. If the callback is not provided, the helpers fall
+> back to calling dmaengine_slave_config() followed by
+> dmaengine_prep_slave_sg() under per-channel mutex protection.
 > 
 > Tested-by: Niklas Cassel <cassel@kernel.org>
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-
-My only concern is that since these APIs are defined as 'inline' functions,
-adding more code will end up increasing the kernel Image size.
-
-- Mani
-
 > ---
-> change in v4
-> - drop context in device_prep_config_sg()
+> chagne in v4
+> - use spinlock() to protect config() and prep()
 > 
 > change in v3
-> - remove Deprecated for callback device_prep_slave_sg().
-> - Move condition check before sg init.
-> - split function at return type.
-> - move safe version to next patch
-> 
-> change in v2
-> - add () for function
-> - use short name device_prep_sg(), remove "slave" and "config". the 'slave'
-> is reduntant. after remove slave, the function name is difference existed
-> one, so remove _config suffix.
+> - new patch
 > ---
->  Documentation/driver-api/dmaengine/client.rst |  9 ++++
->  include/linux/dmaengine.h                     | 63 +++++++++++++++++++++++----
->  2 files changed, 64 insertions(+), 8 deletions(-)
+>  drivers/dma/dmaengine.c   |  2 ++
+>  include/linux/dmaengine.h | 58 +++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 60 insertions(+)
 > 
-> diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
-> index d491e385d61a98b8a804cd823caf254a2dc62cf4..5ee5d4a3596dd986b02f1bce3078ca6c4c1fb45a 100644
-> --- a/Documentation/driver-api/dmaengine/client.rst
-> +++ b/Documentation/driver-api/dmaengine/client.rst
-> @@ -80,6 +80,10 @@ The details of these operations are:
->  
->    - slave_sg: DMA a list of scatter gather buffers from/to a peripheral
->  
-> +  - config_sg: Similar with slave_sg, just pass down dma_slave_config
-> +    struct to avoid calling dmaengine_slave_config() every time adjusting the
-> +    burst length or the FIFO address is needed.
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index 405bd2fbb4a3b94fd0bf44526f656f6a19feaad0..ba29e60160c1a0148793bb299849bccfebb6d32b 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -1099,6 +1099,8 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+>  	chan->dev->device.parent = device->dev;
+>  	chan->dev->chan = chan;
+>  	chan->dev->dev_id = device->dev_id;
+> +	spin_lock_init(&chan->lock);
 > +
->    - peripheral_dma_vec: DMA an array of scatter gather buffers from/to a
->      peripheral. Similar to slave_sg, but uses an array of dma_vec
->      structures instead of a scatterlist.
-> @@ -106,6 +110,11 @@ The details of these operations are:
->  		unsigned int sg_len, enum dma_data_direction direction,
->  		unsigned long flags);
->  
-> +     struct dma_async_tx_descriptor *dmaengine_prep_config_sg(
-> +		struct dma_chan *chan, struct scatterlist *sgl,
-> +		unsigned int sg_len, enum dma_transfer_direction dir,
-> +		unsigned long flags, struct dma_slave_config *config);
-> +
->       struct dma_async_tx_descriptor *dmaengine_prep_peripheral_dma_vec(
->  		struct dma_chan *chan, const struct dma_vec *vecs,
->  		size_t nents, enum dma_data_direction direction,
+>  	if (!name)
+>  		dev_set_name(&chan->dev->device, "dma%dchan%d", device->dev_id, chan->chan_id);
+>  	else
 > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index b3d251c9734e95e1b75cf6763d4d2c3a1c6a9910..defa377d2ef54d94e6337cdfa7826a091295535e 100644
+> index defa377d2ef54d94e6337cdfa7826a091295535e..23728f3d60804e49cd4cbbd3a513c4936eed5836 100644
 > --- a/include/linux/dmaengine.h
 > +++ b/include/linux/dmaengine.h
-> @@ -835,6 +835,7 @@ struct dma_filter {
->   *	where the address and size of each segment is located in one entry of
->   *	the dma_vec array.
->   * @device_prep_slave_sg: prepares a slave dma operation
-> + * @device_prep_config_sg: prepares a slave DMA operation with dma_slave_config
->   * @device_prep_dma_cyclic: prepare a cyclic dma operation suitable for audio.
->   *	The function takes a buffer of size buf_len. The callback function will
->   *	be called after period_len bytes have been transferred.
-> @@ -934,6 +935,10 @@ struct dma_device {
->  		struct dma_chan *chan, struct scatterlist *sgl,
->  		unsigned int sg_len, enum dma_transfer_direction direction,
->  		unsigned long flags, void *context);
-> +	struct dma_async_tx_descriptor *(*device_prep_config_sg)(
-> +		struct dma_chan *chan, struct scatterlist *sgl,
-> +		unsigned int sg_len, enum dma_transfer_direction direction,
-> +		unsigned long flags, struct dma_slave_config *config);
->  	struct dma_async_tx_descriptor *(*device_prep_dma_cyclic)(
->  		struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
->  		size_t period_len, enum dma_transfer_direction direction,
-> @@ -974,22 +979,44 @@ static inline bool is_slave_direction(enum dma_transfer_direction direction)
->  	       (direction == DMA_DEV_TO_DEV);
+> @@ -322,6 +322,8 @@ struct dma_router {
+>   * @slave: ptr to the device using this channel
+>   * @cookie: last cookie value returned to client
+>   * @completed_cookie: last completed cookie for this channel
+> + * @lock: protect between config and prepare transfer when driver have not
+> + *	  implemented callback device_prep_config_sg().
+>   * @chan_id: channel ID for sysfs
+>   * @dev: class device for sysfs
+>   * @name: backlink name for sysfs
+> @@ -341,6 +343,12 @@ struct dma_chan {
+>  	dma_cookie_t cookie;
+>  	dma_cookie_t completed_cookie;
+>  
+> +	/*
+> +	 * protect between config and prepare transfer because *_prep() may be
+> +	 * called from complete callback, which is in GFP_NOSLEEP context.
+> +	 */
+> +	spinlock_t lock; /* protect between config and prepare transfer since */
+
+Why two comments?
+
+> +
+>  	/* sysfs */
+>  	int chan_id;
+>  	struct dma_chan_dev *dev;
+> @@ -1068,6 +1076,56 @@ dmaengine_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+>  	return dmaengine_prep_config_sg(chan, sgl, sg_len, dir, flags, NULL);
 >  }
 >  
-> -static inline struct dma_async_tx_descriptor *dmaengine_prep_slave_single(
-> -	struct dma_chan *chan, dma_addr_t buf, size_t len,
-> -	enum dma_transfer_direction dir, unsigned long flags)
+> +/*
+> + * dmaengine_prep_config_single(sg)_safe() is re-entrant version.
+> + *
+> + * The unsafe variant (without the _safe suffix) falls back to calling
+> + * dmaengine_slave_config() and dmaengine_prep_slave_sg() separately.
+> + * In this case, additional locking may be required, depending on the
+> + * DMA consumer's usage.
+> + *
+> + * If dmaengine driver have not implemented call back device_prep_config_sg()
+> + * safe version use per-channel spinlock to protect call dmaengine_slave_config()
+> + * and dmaengine_prep_slave_sg().
+> + */
+
+Use proper kernel-doc comments please...
+
 > +static inline struct dma_async_tx_descriptor *
-> +dmaengine_prep_config_single(struct dma_chan *chan, dma_addr_t buf, size_t len,
-> +			     enum dma_transfer_direction dir,
-> +			     unsigned long flags,
-> +			     struct dma_slave_config *config)
->  {
->  	struct scatterlist sg;
+> +dmaengine_prep_config_sg_safe(struct dma_chan *chan, struct scatterlist *sgl,
+> +			      unsigned int sg_len,
+> +			      enum dma_transfer_direction dir,
+> +			      unsigned long flags,
+> +			      struct dma_slave_config *config)
+> +{
+> +	struct dma_async_tx_descriptor *tx;
 > +
 > +	if (!chan || !chan->device)
 > +		return NULL;
 > +
->  	sg_init_table(&sg, 1);
->  	sg_dma_address(&sg) = buf;
->  	sg_dma_len(&sg) = len;
->  
-> -	if (!chan || !chan->device || !chan->device->device_prep_slave_sg)
-> +	if (chan->device->device_prep_config_sg)
-> +		return chan->device->device_prep_config_sg(chan, &sg, 1, dir,
-> +							   flags, config);
+> +	if (!chan->device->device_prep_config_sg)
+> +		spin_lock(&chan->lock);
 > +
-> +	if (config)
-> +		if (dmaengine_slave_config(chan, config))
-> +			return NULL;
+> +	tx = dmaengine_prep_config_sg(chan, sgl, sg_len, dir, flags, config);
 > +
-> +	if (!chan->device->device_prep_slave_sg)
->  		return NULL;
->  
->  	return chan->device->device_prep_slave_sg(chan, &sg, 1,
->  						  dir, flags, NULL);
->  }
->  
-> +static inline struct dma_async_tx_descriptor *
-> +dmaengine_prep_slave_single(struct dma_chan *chan, dma_addr_t buf, size_t len,
-> +			    enum dma_transfer_direction dir,
-> +			    unsigned long flags)
-> +{
-> +	return dmaengine_prep_config_single(chan, buf, len, dir, flags, NULL);
+> +	if (!chan->device->device_prep_config_sg)
+> +		spin_unlock(&chan->lock);
+> +
+> +	return tx;
 > +}
 > +
->  /**
->   * dmaengine_prep_peripheral_dma_vec() - Prepare a DMA scatter-gather descriptor
->   * @chan: The channel to be used for this descriptor
-> @@ -1010,17 +1037,37 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_peripheral_dma_vec(
->  							    dir, flags);
->  }
->  
-> -static inline struct dma_async_tx_descriptor *dmaengine_prep_slave_sg(
-> -	struct dma_chan *chan, struct scatterlist *sgl,	unsigned int sg_len,
-> -	enum dma_transfer_direction dir, unsigned long flags)
-> +static inline struct dma_async_tx_descriptor *
-> +dmaengine_prep_config_sg(struct dma_chan *chan, struct scatterlist *sgl,
-> +			 unsigned int sg_len, enum dma_transfer_direction dir,
-> +			 unsigned long flags, struct dma_slave_config *config)
->  {
-> -	if (!chan || !chan->device || !chan->device->device_prep_slave_sg)
-> +	if (!chan || !chan->device)
-> +		return NULL;
-> +
-> +	if (chan->device->device_prep_config_sg)
-> +		return chan->device->device_prep_config_sg(chan, sgl, sg_len,
-> +				dir, flags, config);
-> +
-> +	if (config)
-> +		if (dmaengine_slave_config(chan, config))
-> +			return NULL;
-> +
-> +	if (!chan->device->device_prep_slave_sg)
->  		return NULL;
->  
->  	return chan->device->device_prep_slave_sg(chan, sgl, sg_len,
->  						  dir, flags, NULL);
->  }
->  
-> +static inline struct dma_async_tx_descriptor *
-> +dmaengine_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
-> +			unsigned int sg_len, enum dma_transfer_direction dir,
-> +			unsigned long flags)
-> +{
-> +	return dmaengine_prep_config_sg(chan, sgl, sg_len, dir, flags, NULL);
-> +}
-> +
->  #ifdef CONFIG_RAPIDIO_DMA_ENGINE
->  struct rio_dma_ext;
->  static inline struct dma_async_tx_descriptor *dmaengine_prep_rio_sg(
-> 
-> -- 
-> 2.43.0
-> 
+
+Missing kernel-doc.
+
+- Mani
 
 -- 
 மணிவண்ணன் சதாசிவம்

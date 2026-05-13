@@ -1,51 +1,51 @@
-Return-Path: <dmaengine+bounces-10418-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10419-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aFl7GH2EBGrVKwIAu9opvQ
-	(envelope-from <dmaengine+bounces-10418-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 16:02:37 +0200
+	id oGzTOHWFBGrVKwIAu9opvQ
+	(envelope-from <dmaengine+bounces-10419-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 16:06:45 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E8BD5349B0
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 16:02:36 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E847534AE6
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 16:06:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id F3AD731898A5
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 13:39:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4555B31C8540
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 13:40:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD0E43F4127;
-	Wed, 13 May 2026 13:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47D073101C8;
+	Wed, 13 May 2026 13:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQyRCV17"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcKqh1P3"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E893F4124;
-	Wed, 13 May 2026 13:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AF630CD92;
+	Wed, 13 May 2026 13:35:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778679303; cv=none; b=MsGJT8G1jUJz/h7vZiOOgqXy3IntPv2jBoZPNk5xAO4bpYWk0BXc6FsCa9vN3qqWcrhlVIaMBIOC84jZ5EjlrjHEVbRRNNdDRf+vdxWchwRLzDYTuLHgUV0fBAUp09zMNnUuXN6QF/N+0ykYyr3BOidsUMLURRqnjoKXM+VqE/o=
+	t=1778679352; cv=none; b=i3Mco9IKu2bFKpBC0xo5pRxzbJxSRiPQYir/F+J7TXTHQCgYiprPLr9AJX4MI8HVRRP2G9oXGYMELwIUUzgI6FAXZm3rslixsizjIB/Y7ZEN6aioYKjWt4Q/FOlC7LDQS0m01kkj5PqiLDRVBtr0edvw/VOtt6H7Edt5trAEJOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778679303; c=relaxed/simple;
-	bh=3VeMbMY1AOL2o82Oo+2ts6NUi06EqjZABaZifMYNeus=;
+	s=arc-20240116; t=1778679352; c=relaxed/simple;
+	bh=gRzMQkyMkW76rEWqtz1pVibIlYxd9sVYad/ToeB8y7k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mTayC5bPHpifwpNtLJ9odz3Y58SC+VzkZkjDfb3L+N1qYAvV7gy39B0YJriCXxJKJNOLqoJXMpGqUm25WzPSpwFd9pVaRml2mlTM3bmhsS6HTtGNFy0w9Qj5p++CsemC4olZMh3MyqlanYEU+SWjDFKTMvmfdfUl3EnSSuJVkd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQyRCV17; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6264C2BCB7;
-	Wed, 13 May 2026 13:34:58 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=mjj4m45K+ScN+uJ6jKxyEqkZJZnLmROapeRbkCXge1SW7dWatrcNHCTF1OWdUNRwaJL3RgAX21jsxoKL4SM/f0jxalXhpvdVBcNMILdp92eJOpwZQHitB+GvzYk8MlVNfXltQVj+wWAHNVUFS7kW+I7BrGuYe94j2YMTZlcOMQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcKqh1P3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F2DC2BCB7;
+	Wed, 13 May 2026 13:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778679303;
-	bh=3VeMbMY1AOL2o82Oo+2ts6NUi06EqjZABaZifMYNeus=;
+	s=k20201202; t=1778679351;
+	bh=gRzMQkyMkW76rEWqtz1pVibIlYxd9sVYad/ToeB8y7k=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TQyRCV17bWYM1kxOmLl0tJgguCbJyBIpzFU4ROVvnK00j1RMpOL7nn0hI6PRtSFBW
-	 yGnCYlrEKjrjdYseV3H/TAYBrUIw9V8meu8noDxd+0/h1wBggD5maDTNy9bSuUpGVF
-	 M9RS1v9AOrBhSdcVXdtui7RkShsQ41egS1wMZJVdnrWudMg3YL7CcjLf5+bwROfueL
-	 n1DvBPym3qmmo1jiqV0gshxuEAjafEhTaeOxoy3hAnSMqcFpAC07oNqub6AcqIKt85
-	 QAel9avNPuyGcxqDkjWSLUNJFGiYU3dr+9TdVVTg6nlFRgn7p1CZZApKCbeC3EOoZ9
-	 0rPBUMGYwPMhg==
-Message-ID: <f42c561d-8473-4d3b-a105-844de9cfeed1@kernel.org>
-Date: Wed, 13 May 2026 16:34:57 +0300
+	b=IcKqh1P3558a+LdBfaXzEJExCO971yEZFsWXBGOZIyCPm3/0raLxrXvpmKp5ejhI2
+	 a9RNw8L5E2iisdPyR41wdMha6zs152Cv8s2tiZxkaoLHme1VDbvf4bFukHQWEW1td8
+	 5xPfqxi1/178pcRMYPslx4Gov05sv1lI5CY9dI4FHx7xQ9wmCLQbY+vwFq2lEl8Xrg
+	 8LG1E1gYP3E8lPFpUE+ORQAhyEK/B1xd/P7eLctSfN8lYiApgT+WLKROGKx8eFEDIm
+	 s1eSd3CtHgCLExJT4nKnj+hElLdipcXIuoBvhbIqjj0Ai+7PUj2pAYjcoTJ+ysPzGL
+	 V077ZXRWOvZUA==
+Message-ID: <b079eddc-7080-4d7f-bce3-64f0dfc430a3@kernel.org>
+Date: Wed, 13 May 2026 16:35:45 +0300
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -53,8 +53,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 09/17] dmaengine: sh: rz-dmac: Use virt-dma APIs for
- channel descriptor processing
+Subject: Re: [PATCH v5 10/17] dmaengine: sh: rz-dmac: Refactor pause/resume
+ code
 To: Frank Li <Frank.li@nxp.com>,
  Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 Cc: vkoul@kernel.org, Frank.Li@kernel.org, lgirdwood@gmail.com,
@@ -66,25 +66,25 @@ Cc: vkoul@kernel.org, Frank.Li@kernel.org, lgirdwood@gmail.com,
  linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
  linux-renesas-soc@vger.kernel.org
 References: <20260512121219.216159-1-claudiu.beznea.uj@bp.renesas.com>
- <20260512121219.216159-10-claudiu.beznea.uj@bp.renesas.com>
- <agOdyrPVur-NGfhq@lizhi-Precision-Tower-5810>
+ <20260512121219.216159-11-claudiu.beznea.uj@bp.renesas.com>
+ <agOe8ibuEjDPklKt@lizhi-Precision-Tower-5810>
 Content-Language: en-US
 From: Claudiu Beznea <claudiu.beznea@kernel.org>
-In-Reply-To: <agOdyrPVur-NGfhq@lizhi-Precision-Tower-5810>
+In-Reply-To: <agOe8ibuEjDPklKt@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 3E8BD5349B0
+X-Rspamd-Queue-Id: 5E847534AE6
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10418-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10419-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -101,56 +101,72 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,renesas];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,renesas.com:email]
 X-Rspamd-Action: no action
 
 Hi, Frank,
 
-On 5/13/26 00:38, Frank Li wrote:
-> On Tue, May 12, 2026 at 03:12:10PM +0300, Claudiu Beznea wrote:
->> The driver used a mix of virt-dma APIs and driver specific logic to
->> process descriptors. It maintained three internal queues: ld_free,
->> ld_queue, and ld_active as follows:
->> - ld_free: stores the descriptors pre-allocated at probe time
->> - ld_queue: stores descriptors after they are taken from ld_free and
->>    prepared. At the same time, vchan_tx_prep() queues them to
->>    vc->desc_allocated. The vc->desc_allocated list is then checked in
->>    rz_dmac_issue_pending() and rz_dmac_irq_handler_thread() before
->>    starting a new transfer via rz_dmac_xfer_desc(). In turn,
->>    rz_dmac_xfer_desc() grabs the next descriptor from vc->desc_issued and
->>    submits it for transfer
->> - ld_active: stores the descriptors currently being transferred
+On 5/13/26 00:43, Frank Li wrote:
+> On Tue, May 12, 2026 at 03:12:11PM +0300, Claudiu Beznea wrote:
+>> Subsequent patches will add suspend/resume and cyclic DMA support to the
+>> rz-dmac driver. This support needs to work on SoCs where power to most
+>> components (including DMA) is turned off during system suspend. For this,
+>> some channels (for example cyclic ones) may need to be paused and resumed
+>> manually by the DMA driver during system suspend/resume.
 >>
->> The interrupt handler moved a completed descriptor to ld_free before
->> invoking its completion callback. Once returned to ld_free, the
->> descriptor can be reused to prepare a new transfer. In theory, this
->> means the descriptor could be re-prepared before its completion
->> callback is called.
+>> Refactor the pause/resume support so the same code can be reused in the
+>> system suspend/resume path.
 >>
->> Commit fully back the driver by the virt-dma APIs. With this, only ld_free
->> need to be kept to track how many free descriptors are available. This
->> is now done as follows:
->> - the prepare stage removes the first descriptor from the ld_free and
->>    prepares it
->> - the completion calls for it vc->desc_free() (rz_dmac_virt_desc_free())
->>    which re-adds the descriptor at the end of ld_free
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>> ---
 >>
->> With this, the critical areas in prepare callbacks were minimized to only
->> getting the descriptor from the ld_free list.
+>> Changes in v5:
+>> - none
+>>
+>> Changes in v4:
+>> - reset channel->status in rz_dmac_free_chan_resources() and
+>>    rz_dmac_terminate_all()
+>>
+>> Changes in v3:
+>> - none, this patch new new
+>>
+>>   drivers/dma/sh/rz-dmac.c | 73 ++++++++++++++++++++++++++++++++++------
+>>   1 file changed, 62 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+>> index 53ee9fe65261..2bf796dcc5f6 100644
+>> --- a/drivers/dma/sh/rz-dmac.c
+>> +++ b/drivers/dma/sh/rz-dmac.c
+>> @@ -18,6 +18,7 @@
+>>   #include <linux/irqchip/irq-renesas-rzv2h.h>
+>>   #include <linux/irqchip/irq-renesas-rzt2h.h>
+>>   #include <linux/list.h>
+>> +#include <linux/lockdep.h>
+>>   #include <linux/module.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_dma.h>
+>> @@ -63,6 +64,14 @@ struct rz_dmac_desc {
+>>
+>>   #define to_rz_dmac_desc(d)	container_of(d, struct rz_dmac_desc, vd)
+>>
+>> +/**
+>> + * enum rz_dmac_chan_status: RZ DMAC channel status
+>> + * @RZ_DMAC_CHAN_STATUS_PAUSED: Channel is paused though DMA engine callbacks
+>> + */
+>> +enum rz_dmac_chan_status {
+>> +	RZ_DMAC_CHAN_STATUS_PAUSED,
+>> +};
+>> +
 > 
-> Do you plan remove ld_free also?
+> Not sure why use BIT() for each status? suppose only one certain state
 
-I thought about it. But I prefer to keep it aside from this set as it is already 
-big enough and I haven't notice any possible issue with it.
+Later (in the next patches), a channel could be paused (or paused internally) 
+and cyclic at the same time. This way we can keep a single member in struct 
+rz_dmac_chan for all these and execute a single instruction when clearing the 
+status bit (e.g. in rz_dmac_free_chan_resources(), rz_dmac_terminate_all()).
 
-> 
->>
->> This change introduces struct rz_dmac_chan::desc to keep track of the
-> 
-> Remove "this change", just Introduce ...
-
-OK
+I consider this more compact than having individual state variables for all these.
 
 -- 
 Thank you,

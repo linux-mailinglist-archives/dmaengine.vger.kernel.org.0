@@ -1,67 +1,67 @@
-Return-Path: <dmaengine+bounces-10403-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10404-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2IfGOGfzA2prBAIAu9opvQ
-	(envelope-from <dmaengine+bounces-10403-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 05:43:35 +0200
+	id 8H4xDxb2A2o7BQIAu9opvQ
+	(envelope-from <dmaengine+bounces-10404-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 05:55:02 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DC2C52CE8F
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 05:43:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD77852D0BF
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 05:55:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 21DA330ECA66
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 03:38:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CEA163006143
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 03:54:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 536D838F247;
-	Wed, 13 May 2026 03:35:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FB343803E9;
+	Wed, 13 May 2026 03:54:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ML/UGvmE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLOY+Hp/"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE43364032;
-	Wed, 13 May 2026 03:35:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A52B375F7C;
+	Wed, 13 May 2026 03:54:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778643343; cv=none; b=DChKyVRZWAy839gWINI2Xl4d5C6af86qxcCpA+zVaKuso9DLxBqaG5AXvkIZ+8c30n0wOWJqTMt+JqkPglDKaRyKNBoI1qrKNVEGIQ3SjH6Y0fUKEkZ2V3lSDS0Z6CSprUYtW+o1sc4Kd9FqyIbHQ0O9ISVwvUbsCsdCGEQqNaU=
+	t=1778644472; cv=none; b=VVrkpfAcFiOYgf+0qUfK3teHiCzZg1sFrlKqGAhaF7Ym9hr9floeYaoCz5C2CJF28gGa88rSZYCh6QCXTP3CO0bT6pKMFueikqwKsHRBgwyw0ZSqBCFcQn1Tch9W1yYc7RoKVDMp/yKjfTo8DuQbM1qISQBYoLAm5S7w4hZBuDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778643343; c=relaxed/simple;
-	bh=2OlKZqLKPXUqQjcg8lr2tkBNWTsEMroIAyO2KJRQ6eU=;
+	s=arc-20240116; t=1778644472; c=relaxed/simple;
+	bh=p4u93eZYM7ImmEMVxoOiAAqCgTpTSRI042sRxK1qoek=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ivDoz09P0ORMhpzOfiINIzGc/TcgYRaENER6Mt2sFy7CjPVYNAxpTCy7Fo6eJP3cQl27JYjOcxxTUWiN+60k12NAl/AsXi87deOATVcsH0FBiNkyTLHKJKwxrCETPd0+f8ZzRodLPn3V1IDyIwP0WVjwxc+bhojXYWLH6PEEylM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ML/UGvmE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAD8BC2BCC9;
-	Wed, 13 May 2026 03:35:42 +0000 (UTC)
+	 Message-Id; b=d+hvmhxLfntk+WbmY/7aD0VknEDwsdA4V0xTG9Ca/+Y5swrqIyA8mrVB5SroHFNZZNfEDSnQXM/tmpZhE9xrhD0ujqzzXMk5mz1OY3Yla0u++CywdbReZ3OVakxjFYUcdEA9PZd1LqEt4mH69rt1xgC3PO84bUKPiAXOkrQ6H/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLOY+Hp/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41FEFC2BCC7;
+	Wed, 13 May 2026 03:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778643343;
-	bh=2OlKZqLKPXUqQjcg8lr2tkBNWTsEMroIAyO2KJRQ6eU=;
+	s=k20201202; t=1778644471;
+	bh=p4u93eZYM7ImmEMVxoOiAAqCgTpTSRI042sRxK1qoek=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=ML/UGvmEjQvtQzBU2j3cA4u6xnTCsO/3leSTrJupsaGptRsWW/JH4tWWXJjNo/KRs
-	 mZNHK3DLHxyHwXDA79GSAe/myvtbYsGaGmhZbKeW/3Xww+P5Mu0ktoLWEYmvM8uhTr
-	 8LxiI9bnmSaIJRuoczU1sh5lNc9sXJiPmF+4jNipbiGt1NpSb388V1iTWUr4dDKceb
-	 uIvu8StVFfXmE3kWi3NjtNBdq7x2sTRhUz+xftT+be+Yv8Hz1EDvHF5uAY9vslAbb0
-	 PNdqLQw24Ke/lE9D5MKd/lCtI2Ec1tuChOIK1Dg+x/GCoP20bMvjCYJGur2qGJn4xB
-	 KWUj1xLrzDrRQ==
+	b=FLOY+Hp/LYnNHfJh86CHnyGWTG0G8wwrWyPrCavpinVbn2kYpTPxKC3gvXgh/CqdU
+	 qRb4tpfvd/KXzloBIzYfWaacxcg7Xbe4C6mzmsRIXYjOFc16PU2wK9ViOAAL6WYWzd
+	 SCCnhoVSg+DgPehJBUSU6g7cTWMzTuI02RkyyP9iqIChuklRhJd7J6T69X9eePXgJO
+	 626du6/d1rMV0x6QtWBnXQyCtXafAY8e0ge24Ns6Wv10miwfuvHudoqFzfbYG1B/sv
+	 2z1vKLPKic3j1PVuXz+OdjzCoR7vzrCTCcx6woCLnW5jrxAwOoSBrVoMZeCGNo+DP7
+	 fAeil9AVNnhMQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 09/23] dmaengine: sdxi: Start functions on probe,
- stop on remove
+Subject: Re: [PATCH v2 10/23] dmaengine: sdxi: Complete administrative
+ context jump start
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Nathan Lynch via B4 Relay" <devnull+nathan.lynch.amd.com@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260511-sdxi-base-v2-9-889cfed17e3f@amd.com>
-References: <20260511-sdxi-base-v2-9-889cfed17e3f@amd.com>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org, linux-pci@vger.kernel.org
+In-Reply-To: <20260511-sdxi-base-v2-10-889cfed17e3f@amd.com>
+References: <20260511-sdxi-base-v2-10-889cfed17e3f@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 May 2026 03:35:42 +0000
-Message-Id: <20260513033542.DAD8BC2BCC9@smtp.kernel.org>
+Date: Wed, 13 May 2026 03:54:30 +0000
+Message-Id: <20260513035431.41FEFC2BCC7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: 3DC2C52CE8F
+X-Rspamd-Queue-Id: AD77852D0BF
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
@@ -72,9 +72,9 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,lists.linux.dev:replyto,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,smtp.kernel.org:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lists.linux.dev:replyto,sashiko.dev:url,smtp.kernel.org:mid];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10403-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10404-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -97,137 +97,72 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Action: no action
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Critical] Missing device stop on activation timeout leads to a DMA Use-A=
-fter-Free.
-- [Critical] `sdxi_unregister()` ignores `sdxi_dev_stop()` timeout errors, =
-leading to a DMA Use-After-Free.
-- [High] `sdxi_dev_stop()` inadvertently resets the device if it is already=
- in the `SDXI_GSV_STOP` state, leading to a silent initialization race cond=
-ition.
+- [High] Using a non-atomic 64-bit fallback for a hardware doorbell registe=
+r causes torn writes and device state corruption on 32-bit architectures.
 --
 
-commit a7e5a52eac2766c976c5e81c97c4837046aa44e9
+commit 1c8a47b1b7cac23ca82b3d7ffe7b54c6cf98827e
 Author: Nathan Lynch <nathan.lynch@amd.com>
+dmaengine: sdxi: Complete administrative context jump start
 
-dmaengine: sdxi: Start functions on probe, stop on remove
+This commit completes the SDXI administrative context initialization by
+writing to its doorbell once the function is placed in the active state.
+It introduces a new helper function for pushing the doorbell, which will
+be used across all descriptor submission paths.
 
-Following admin context setup in the previous patch, drive each SDXI
-function to active state during probe. Introduce sdxi_unregister() to
-stop the function during remove and wire it up via the pci_driver
-.remove callback.
-
-> diff --git a/drivers/dma/sdxi/device.c b/drivers/dma/sdxi/device.c
-> index 9d8729b626858..204841afa5b77 100644
-> --- a/drivers/dma/sdxi/device.c
-> +++ b/drivers/dma/sdxi/device.c
-> @@ -89,6 +89,42 @@ static void sdxi_write_fn_gsr(struct sdxi_dev *sdxi, e=
-num sdxi_fn_gsr cmd)
->  	sdxi_write64(sdxi, SDXI_MMIO_CTL0, ctl0);
->  }
+> diff --git a/drivers/dma/sdxi/context.h b/drivers/dma/sdxi/context.h
+> index 65b773446ba31..8dd6beb7a6424 100644
+> --- a/drivers/dma/sdxi/context.h
+> +++ b/drivers/dma/sdxi/context.h
+> @@ -7,6 +7,7 @@
+>  #define DMA_SDXI_CONTEXT_H
 > =20
-> +/*
-> + * Transition the function from stopped state to active.
-> + * See SDXI 1.0 4.1 SDXI Function State.
-> + */
-> +static int sdxi_dev_start(struct sdxi_dev *sdxi)
-> +{
-> +	enum sdxi_fn_gsv status =3D sdxi_dev_gsv(sdxi);
-> +	int ret;
-> +
-> +	if (status !=3D SDXI_GSV_STOP) {
-> +		dev_err(sdxi->dev,
-> +			"can't activate busy device (unexpected gsv: %s)\n",
-> +			gsv_str(status));
-> +		return -EBUSY;
-> +	}
-> +
-> +	sdxi_write_fn_gsr(sdxi, SDXI_GSRV_ACTIVE);
-> +
-> +	ret =3D sdxi_dev_gsv_poll(sdxi, status,
-> +				status =3D=3D SDXI_GSV_ACTIVE ||
-> +				status =3D=3D SDXI_GSV_ERROR);
-> +	if (ret) {
-> +		dev_err(sdxi->dev, "activation timed out, current state: %s\n",
-> +			gsv_str(status));
-> +		return ret;
+>  #include <linux/dma-mapping.h>
+> +#include <linux/io-64-nonatomic-lo-hi.h>
 
-If this activation times out, could the hardware still complete its
-activation asynchronously?
+Does including linux/io-64-nonatomic-lo-hi.h in a shared header risk
+polluting the compilation unit? It appears this might blindly convert all
+missing 64-bit I/O operations into non-atomic fallbacks for any file that
+includes context.h.
 
-Returning an error here causes the probe to fail, and the devres framework
-will unwind allocations in LIFO order, freeing the DMA-mapped L1_table
-and L2_table before the PCI device is disabled and its Bus Master bit
-is cleared.
-
-If the hardware eventually completes activation and is not explicitly halted
-in this error path, could it perform DMA operations to the freed physical
-pages?
-
-> +	}
-> +
-> +	if (status =3D=3D SDXI_GSV_ERROR) {
-> +		dev_err(sdxi->dev, "went to error state during activation\n");
-> +		return -EIO;
-> +	}
-> +
-> +	dev_dbg(sdxi->dev, "activated\n");
-> +	return 0;
-> +}
+>  #include <linux/types.h>
+> =20
+>  #include "hw.h"
 
 [ ... ]
 
-> @@ -281,3 +321,10 @@ int sdxi_register(struct device *dev, const struct s=
-dxi_bus_ops *ops)
+> @@ -58,4 +59,9 @@ struct sdxi_cxt {
 > =20
->  	return sdxi_device_init(sdxi);
->  }
-> +
-> +void sdxi_unregister(struct device *dev)
+>  int sdxi_admin_cxt_init(struct sdxi_dev *sdxi);
+> =20
+> +static inline void sdxi_cxt_push_doorbell(struct sdxi_cxt *cxt, u64 inde=
+x)
 > +{
-> +	struct sdxi_dev *sdxi =3D dev_get_drvdata(dev);
-> +
-> +	sdxi_dev_stop(sdxi);
+> +	iowrite64(index, cxt->db);
 
-If the soft stop (SDXI_GSRV_STOP_SF) in sdxi_dev_stop() times out, it retur=
-ns
-an error without escalating to a hard stop or reset.
+On 32-bit architectures without native 64-bit I/O, the non-atomic fallback
+splits this 64-bit write into two 32-bit writes (lower 32 bits, then upper
+32 bits).
 
-Since sdxi_unregister() ignores this return value, the removal process will
-proceed and devres will free all DMA allocations while the device might rem=
-ain
-active with its Bus Master bit enabled.
+Since this is a doorbell register that triggers hardware actions, could a t=
+orn
+write expose a transient, invalid index to the device before the upper bits
+are written?
 
-Could this cause background DMA transfers into freed memory if the device
-gets stuck in a state like SDXI_GSV_STOPG_SF?
+For example, if the index crosses a 32-bit boundary, the hardware might
+observe a corrupted index and begin processing an invalid ring state.
 
-
-Also looking at sdxi_dev_stop(), if the device is already in the
-SDXI_GSV_STOP state, the switch statement lacks a case for it:
-
-	switch (status) {
-	case SDXI_GSV_INIT:
-	case SDXI_GSV_ACTIVE:
-		...
-	default:
-		/* Unrecognized state; try a reset. */
-		sdxi_write_fn_gsr(sdxi, SDXI_GSRV_RESET);
-		break;
-	}
-
-This causes execution to fall through to the default case and issue a
-hardware reset. The subsequent polling loop immediately reads the
-SDXI_GSV_STOP state and returns success before the hardware actually
-begins processing the reset.
-
-Because sdxi_fn_activate() calls sdxi_dev_stop() just before configuring
-registers like SDXI_MMIO_CTL2, could the hardware reset asynchronously in
-the background and wipe these configurations?
+Should the driver depend on CONFIG_64BIT if atomic 64-bit writes are
+mandatory, or use a safe, hardware-specific 32-bit doorbell mechanism
+instead?
 
 > +}
+> +
+>  #endif /* DMA_SDXI_CONTEXT_H */
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260511-sdxi-base-=
-v2-0-889cfed17e3f@amd.com?part=3D9
+v2-0-889cfed17e3f@amd.com?part=3D10
 

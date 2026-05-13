@@ -1,71 +1,70 @@
-Return-Path: <dmaengine+bounces-10444-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10445-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4FkdNcPwBGr7QQIAu9opvQ
-	(envelope-from <dmaengine+bounces-10444-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 23:44:35 +0200
+	id oHQVEknzBGrMQgIAu9opvQ
+	(envelope-from <dmaengine+bounces-10445-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 23:55:21 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 400AD53B275
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 23:44:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA81353B310
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 23:55:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8641A30136A1
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 21:44:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2BCCA302DA0C
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 21:55:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFB493C1412;
-	Wed, 13 May 2026 21:44:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 547C23C9896;
+	Wed, 13 May 2026 21:55:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e8pw5ybz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WSUNMpLw"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1373C0634
-	for <dmaengine@vger.kernel.org>; Wed, 13 May 2026 21:44:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3142C3C9885;
+	Wed, 13 May 2026 21:55:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778708672; cv=none; b=SLEe38BYbEBBhMgRzNw8gR5wHd7s3nsO/o4HPa2lvH/k5IzHmOATKMcIo6AihU9LEQfW5VhyaegNOAeK4NLISJlEfd+6yNyKGgGCtKv1A2uxN8XkhYKZUYHrEaQCdbOAqiW+nynsKqSpsvdhgARoWS7GnCC4a38D5ctZwZ/Bqe0=
+	t=1778709315; cv=none; b=e1yduajV+iJcN8VhMGl0bYAZfoL/zsDCZNNiA+nQztYJDEvjqp7ty5JIbkuVw60xySEp9+WcRGZyq0XsiundMvN+ZBYBf13Dhdw3gA28XkzBH9oZfVWhEymsYWmkYmZbCKCwCSla4pBopwUn5wxIF9Srk/XP/N09W9nJGJAVtQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778708672; c=relaxed/simple;
-	bh=5QwVMKeI05U1obHYu/hxqahUr/5nuUzqhiQkAac84J8=;
+	s=arc-20240116; t=1778709315; c=relaxed/simple;
+	bh=rClCLv508MgKfMk65rpVSbbndmrOOFfdMf+W8DfDhlA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=XPaNJljmbNMXn3Snj98/bWp6o4m4f+7jLhRak8kiTjXCerWYxPwfW1V7nXg/JC7N1pzZmugvMd9KSSjkpK8d5FSMkteqIBWrN+jF0PXY/n9Ex64NZe/ZcZgo4FkS2lTQHbDA81AfO5UvlMVsu71awHxiuEYE4I20wuYyq+Inegs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e8pw5ybz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44781C19425;
-	Wed, 13 May 2026 21:44:32 +0000 (UTC)
+	 Message-Id; b=Fl4jjTaQQ1qufrg39f0yLZaJzGOCplQwltdGiN1GJOwpZHxe5RqI/ey1cCKGX7WzncUn5PI7VaxoQXakFL1ofNIs5wHGa7anoeIpSOq/xukgdlP/8bIpygxZo2sX887ya4JzgplNQP/nv5rPZFgU+2DScJKHSYlDJfpbFNtQ1ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WSUNMpLw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD78DC19425;
+	Wed, 13 May 2026 21:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778708672;
-	bh=5QwVMKeI05U1obHYu/hxqahUr/5nuUzqhiQkAac84J8=;
+	s=k20201202; t=1778709314;
+	bh=rClCLv508MgKfMk65rpVSbbndmrOOFfdMf+W8DfDhlA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=e8pw5ybzoZnRijGIG23rV11DU1eNgKC5KcoaxwlZZPHM7drmpVgAy5o2v9bMg8JU7
-	 qoro0CCZbDvFzfAnzO7mTEcjpO1WQupv91GB6VkneP7KJu+LmYU4shRt04u5Wo16UA
-	 a5zSh1lyyV8wW8dixA5BXwjXoVtRk8uuiNtVWc3UiyQ4mfGP72rRatWJ9uETjAZuAv
-	 411mNwsDnJ/DrviPouWHYShvXTi8geBdWo7zSbiL1nG8DXgH5THFeVfvSucDiY5OGc
-	 3FGCnhL04jXy1WnDhdzz5VnY2QQiKuX3PN5cLE5kdbN9ExlARNzHXk+kffr8jgsquK
-	 OFLemEQCH3XIg==
+	b=WSUNMpLw3+lNg2crcjQLDqtZO+qoEYIhOQOP58HAXlprmYemZpWCQD4skpr7uUPiQ
+	 AdtJQ2cNNawYqKgGd2Bo2JRpzkCwe+qp93ua79eNYiTxeC9/oMSkGfhdS4aMExrhmE
+	 NuOagihDMlLNED7/cT+1jnPa0aZf0JxNn9BhGQIZOnH9oHgPDgPAHoJxqVKtLQetkN
+	 l+Mo/fqzUdOuJUU6m2KtvFOPIu9h3+dwMkr+PAZoi4U+BlMbNIiF5YY9W3W9+oC979
+	 IGIWW1LlxhzLK5tZLJhqrHhvRGkEh2j9RcyO3jY/vpBmfW2v28IjGm8rM/XCuLKrOz
+	 QIWMtgLDlS3NA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 01/17] dmaengine: sh: rz-dmac: Move interrupt request
- after everything is set up
+Subject: Re: [PATCH v2 21/23] dmaengine: sdxi: Add unit tests for descriptor
+ encoding
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Claudiu Beznea" <claudiu.beznea.uj@bp.renesas.com>
-Cc: vkoul@kernel.org, wsa+renesas@sang-engineering.com, dmaengine@vger.kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260512121219.216159-2-claudiu.beznea.uj@bp.renesas.com>
-References: <20260512121219.216159-2-claudiu.beznea.uj@bp.renesas.com>
+To: "Nathan Lynch via B4 Relay" <devnull+nathan.lynch.amd.com@kernel.org>
+Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, linux-pci@vger.kernel.org
+In-Reply-To: <20260511-sdxi-base-v2-21-889cfed17e3f@amd.com>
+References: <20260511-sdxi-base-v2-21-889cfed17e3f@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 May 2026 21:44:31 +0000
-Message-Id: <20260513214432.44781C19425@smtp.kernel.org>
+Date: Wed, 13 May 2026 21:55:14 +0000
+Message-Id: <20260513215514.AD78DC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: 400AD53B275
+X-Rspamd-Queue-Id: DA81353B310
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
@@ -73,15 +72,15 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,smtp.kernel.org:mid];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10444-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10445-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,smtp.kernel.org:mid,sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -90,7 +89,7 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	TAGGED_RCPT(0.00)[dmaengine,nathan.lynch.amd.com];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[5];
@@ -98,88 +97,134 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Action: no action
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [High] Asynchronous pm_runtime_put() used immediately before pm_runtime_d=
-isable() leaves hardware in incorrect state.
-- [High] Hardware is placed in reset and powered down while devm-managed in=
-terrupts are still active, risking a kernel crash.
-- [High] Missing tasklet_kill() during probe error and removal paths leads =
-to a Use-After-Free.
+- [Medium] Tests for `copy`, `cxt_start`, and `cxt_stop` bypass the `packin=
+g` API verification by directly checking encoded descriptor fields.
+- [Low] The `cxt_stop` test incorrectly references the `cxt_start` union me=
+mber when verifying fields.
+- [Low] The `sdxi_serialize_nop` encoder is entirely omitted from the test =
+suite.
+- [Low] The test suite setup function (`generic_desc_setup_device`) registe=
+rs an unused mock device.
 --
 
-commit db01e5ee3e302bfa4e29d74e8df1953929f696eb
-Author: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+commit aa4cdaba4b4a985bdcf2f80d3a44e02557352cc5
+Author: Nathan Lynch <nathan.lynch@amd.com>
+Subject: dmaengine: sdxi: Add unit tests for descriptor encoding
 
-dmaengine: sh: rz-dmac: Move interrupt request after everything is set up
+This commit adds KUnit tests for encoding descriptors in the SDXI driver.
+The tests use the packing API to decode descriptors produced by the driver
+to verify the correct bit offsets without relying on bitmask macros.
 
-This patch fixes potential invalid memory access during probe by moving the
-interrupt request to the end of the channel initialization, ensuring all
-data structures are fully set up before the interrupt handler can run. It
-also switches to dmam_alloc_coherent() to simplify the error and removal
-paths.
+> Test the encoder function for each descriptor type currently used by
+> the driver.
 
-> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-> index 625ff29024de0..9f206a33dcc6b 100644
-> --- a/drivers/dma/sh/rz-dmac.c
-> +++ b/drivers/dma/sh/rz-dmac.c
+Does this statement overlook the sdxi_serialize_nop encoder? It appears the
+test suite entirely omits tests for sdxi_serialize_nop, leaving this API
+untested.
+
+> diff --git a/drivers/dma/sdxi/descriptor_kunit.c b/drivers/dma/sdxi/descr=
+iptor_kunit.c
+> new file mode 100644
+> index 0000000000000..1f3c2e7ab2ddf
+> --- /dev/null
+> +++ b/drivers/dma/sdxi/descriptor_kunit.c
 
 [ ... ]
 
-> @@ -1210,16 +1207,6 @@ static int rz_dmac_probe(struct platform_device *p=
-dev)
->  dma_register_err:
->  	of_dma_controller_free(pdev->dev.of_node);
->  err:
->  	reset_control_assert(dmac->rstc);
->  err_pm_runtime_put:
->  	pm_runtime_put(&pdev->dev);
-> @@ -1232,18 +1219,9 @@ static int rz_dmac_probe(struct platform_device *p=
-dev)
->  static void rz_dmac_remove(struct platform_device *pdev)
->  {
->  	struct rz_dmac *dmac =3D platform_get_drvdata(pdev);
-> =20
->  	dma_async_device_unregister(&dmac->engine);
->  	of_dma_controller_free(pdev->dev.of_node);
->  	reset_control_assert(dmac->rstc);
->  	pm_runtime_put(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
->  }
+> +static void copy(struct kunit *t)
+> +{
 
-While reviewing these changes, I noticed a few pre-existing regressions that
-remain after this patch.
+[ ... ]
 
-Does calling pm_runtime_put() asynchronously right before pm_runtime_disabl=
-e()
-leave the hardware active?
+> +	KUNIT_EXPECT_EQ(t, 0,
+> +			sdxi_encode_copy(&desc,
+> +					 &(struct sdxi_copy) {
+> +						 .src =3D 0x1000,
+> +						 .dst =3D 0x2000,
+> +						 .len =3D 0x100,
+> +						 .src_akey =3D 1,
+> +						 .dst_akey =3D 2,
+> +					 }));
+> +	KUNIT_EXPECT_EQ(t, 0x1000, le64_to_cpu(desc.copy.addr0));
+> +	KUNIT_EXPECT_EQ(t, 0x2000, le64_to_cpu(desc.copy.addr1));
+> +	KUNIT_EXPECT_EQ(t, 0x100, 1 + le32_to_cpu(desc.copy.size));
+> +	KUNIT_EXPECT_EQ(t, 1, le16_to_cpu(desc.copy.akey0));
+> +	KUNIT_EXPECT_EQ(t, 2, le16_to_cpu(desc.copy.akey1));
 
-pm_runtime_put() queues an idle request, but the subsequent
-pm_runtime_disable() cancels pending async operations via
-__pm_runtime_barrier(). Should this use pm_runtime_put_sync() instead to
-ensure the device actually suspends and doesn't leak power resources?
+The commit message states the tests use the packing API to decode descripto=
+rs
+without relying on bitmask definitions. Do these assertions bypass the pack=
+ing
+API verification by directly reading the encoded descriptor fields from the
+struct?
 
-Also, the hardware reset is asserted (reset_control_assert) and PM is
-disabled before returning. Since the interrupts are registered with
-devm_request_irq() and devm_request_threaded_irq(), they will be freed by
-devres only after returning.
+If the struct layout in the header file is incorrect, could this allow both=
+ the
+driver and test code to share the same bug undetected?
 
-If a spurious or delayed interrupt fires during this window, could the IRQ
-handler access hardware registers while the IP block is in reset and uncloc=
-ked,
-leading to a crash?
+[ ... ]
 
-Finally, vchan_init() initializes a tasklet (channel->vc.task) for each
-channel. Since the channels array is allocated with devm_kcalloc(), it is
-automatically freed by devres on removal or probe failure.
+> +static void cxt_start(struct kunit *t)
+> +{
+> +	struct unpacked_desc unpacked;
+> +	struct sdxi_cxt_start start =3D {
+> +		.range =3D sdxi_cxt_range_single(2),
+> +	};
+> +	struct sdxi_desc desc;
+> +
+> +	desc_poison(&desc);
+> +	KUNIT_ASSERT_EQ(t, 0, sdxi_encode_cxt_start(&desc, &start));
+> +
+> +	unpack_cxt_start(&unpacked, &desc);
+> +
+> +	/* Check op-specific fields. */
+> +	KUNIT_EXPECT_EQ(t, 0, desc.cxt_start.vflags);
 
-However, there is no explicit tasklet_kill() during removal or probe error
-handling. Although devres frees the IRQ, free_irq() only syncs the handler
-and thread, not pending tasklets. If the tasklet is scheduled before the IRQ
-is freed, could it remain on the system softirq queue and execute after
-devres frees the channel memory, causing a use-after-free?
+Does this also bypass the packing API by directly reading the encoded descr=
+iptor
+field instead of verifying via the unpacked struct?
+
+[ ... ]
+
+> +static void cxt_stop(struct kunit *t)
+> +{
+> +	struct unpacked_desc unpacked;
+> +	struct sdxi_cxt_stop stop =3D {
+> +		.range =3D sdxi_cxt_range_single(2),
+> +	};
+> +	struct sdxi_desc desc;
+> +
+> +	desc_poison(&desc);
+> +	KUNIT_ASSERT_EQ(t, 0, sdxi_encode_cxt_stop(&desc, &stop));
+> +
+> +	unpack_cxt_stop(&unpacked, &desc);
+> +
+> +	/* Check op-specific fields. */
+> +	KUNIT_EXPECT_EQ(t, 0, desc.cxt_start.vflags);
+
+In addition to bypassing the packing API, does this incorrectly reference t=
+he
+cxt_start union member instead of cxt_stop when verifying fields?
+
+[ ... ]
+
+> +static int generic_desc_setup_device(struct kunit *t)
+> +{
+> +	struct device *dev =3D kunit_device_register(t, "sdxi-mock-device");
+> +
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(t, dev);
+> +	t->priv =3D dev;
+> +	return 0;
+> +}
+
+Is this mock device actually used by any of the tests in this suite? Lookin=
+g at
+the test cases, they appear to operate exclusively on memory buffers without
+requiring a device.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512121219.2161=
-59-1-claudiu.beznea.uj@bp.renesas.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260511-sdxi-base-=
+v2-0-889cfed17e3f@amd.com?part=3D21
 

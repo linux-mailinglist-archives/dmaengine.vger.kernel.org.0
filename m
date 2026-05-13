@@ -1,80 +1,80 @@
-Return-Path: <dmaengine+bounces-10440-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10441-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iEVJKl7dBGoMQAIAu9opvQ
-	(envelope-from <dmaengine+bounces-10440-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 22:21:50 +0200
+	id KFb+Mp3hBGqAQAIAu9opvQ
+	(envelope-from <dmaengine+bounces-10441-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 22:39:57 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FFAA53A700
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 22:21:50 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BEA953A915
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 22:39:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2977A300D473
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 20:21:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 47F7F3008506
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2026 20:38:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76D753AC0CB;
-	Wed, 13 May 2026 20:21:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED99375AB5;
+	Wed, 13 May 2026 20:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWZXrEpO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kXnFDbC9"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529D330F7F7;
-	Wed, 13 May 2026 20:21:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4DD37472A;
+	Wed, 13 May 2026 20:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778703676; cv=none; b=pVJsT0md80tSV9hql+lQcQcdovUqhrr4GCtQqcccyXyz2Z1aSIjtXHNGqzyOYteiwmXbZUHRZoPdrx1FVaGFeBoHrC2rrK2AsmVAQIR5CsQTBjkYlfcvZj5DCA4HZytlSkwLvx7CGAJBJkFO9KjIVLb38Gj6EZqf5DUWbWTYdho=
+	t=1778704710; cv=none; b=P58N+TsHgc6uGtPOq0Wm0zdVIByeyi9QRuZBDIrUa7P2+D+6PXPQz3mPsCl1qfqtQIq05JFK7lALw5e0BIf5X82XVPrdtjkLlo2blGJBwpzn4Fj7GXPlLAUczj+uiccQ+dKSWFIZqWel7H1VDsQuivRBYufPNxNV6VCifiVees8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778703676; c=relaxed/simple;
-	bh=tdRb6uTF26YxJafhOlxG2RkhZSnSyrlLFAf4EcUzkcE=;
+	s=arc-20240116; t=1778704710; c=relaxed/simple;
+	bh=6BEGjjzP5b/WKrqic3Bz65bOTfbiEJ398jSokxM4d64=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QhukJAmvInU/5rbDsp/n04wO4XEQ54JggrHJTpVqFMemdXJcpWdwjXYG+i04B+qjSzR8cNUFuXzw22t9PmY7x7w5gXr2oqlVpy73EQgv40fYmzWc3ijXiIRNO8sRqwNP+1koxcNOvsGibKu9XFpDM3L+b32fim9RfSIqc4Eonmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWZXrEpO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B748AC19425;
-	Wed, 13 May 2026 20:21:15 +0000 (UTC)
+	 Message-Id; b=YZgrdtbXxLdlJIUMEbKEndtIvLCjQ40mmhCFcu58JP8GGfO+e9W9OOkrLWVNgO+qVywIwojynVEP+X6Fwfy1IHVqrmaDwwBpadyHfuNdX9bDoRUwQaRiGBsGh8VX/W5CNu7BvxU+KETQH9F8vr3djiEnHpgixFGDtv8xN9h+Gcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kXnFDbC9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F757C19425;
+	Wed, 13 May 2026 20:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778703676;
-	bh=tdRb6uTF26YxJafhOlxG2RkhZSnSyrlLFAf4EcUzkcE=;
+	s=k20201202; t=1778704710;
+	bh=6BEGjjzP5b/WKrqic3Bz65bOTfbiEJ398jSokxM4d64=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=aWZXrEpO+kmajpTnUTyUMRgurh4imzjJW8Ny/s2noG9yHQA4zQGPs3+sTusFeKCNV
-	 HOW7TrbzaYFqXZphoG0uznTjp0o+z8yVIlzd+0tDX2e9SOP6/sCp5RJ37wWDJ4hmXA
-	 qlCV9RDV0vFrqO0tecuX+8Zsu/4yROQ9gKg2oeMPbuhRQFI+kbWNGhnJmGiJGNvUVk
-	 rG19GKfAOf2MsdvP6VNcL8ol+GQpEduom4sUsqQ1STDY+HeWHpEUpQxItW30sBuV6C
-	 3RI05/loxLedndcFVcLh5U4g7lJ+ov9A0juL53s6W32QhLyVngJrmBnWEu1aYn4fPG
-	 3N3sdd928Cy6A==
+	b=kXnFDbC95AsKoTEND1pTZaKSVyupTDc7cF3Gtyn6Z4rf17HXJjgG3JD9F8dIsAj50
+	 XiryYddN3Rxyh0iF2y/LacHVfN7P6LCPbH8jKpztZhyDYsL7luqpxmX/EbDCaH6ZT3
+	 Du+XMkiECr2SzBbRH+upOglxyvq3hTWJ+dy5FrqwkBskAqHKBrQF0U0mmPSz+9cVZm
+	 yEmOHNMe01M6EMeBaBcIZhvBYZ0zaIapsx+gg0tlStn9Is8gNhlmKMa7SpzmlPxCaA
+	 SF/ddLywOHnj1WpLfEv/AG/5dBZtYRDcJOLW6DcZ5ENXiaMYxK5hH4liX8p08cNSVy
+	 1D8dYwmE72bTQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 16/23] dmaengine: sdxi: Generic descriptor
- manipulation helpers
+Subject: Re: [PATCH v2 17/23] dmaengine: sdxi: Add completion status block
+ API
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Nathan Lynch via B4 Relay" <devnull+nathan.lynch.amd.com@kernel.org>
-Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260511-sdxi-base-v2-16-889cfed17e3f@amd.com>
-References: <20260511-sdxi-base-v2-16-889cfed17e3f@amd.com>
+Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, linux-pci@vger.kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260511-sdxi-base-v2-17-889cfed17e3f@amd.com>
+References: <20260511-sdxi-base-v2-17-889cfed17e3f@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 13 May 2026 20:21:14 +0000
-Message-Id: <20260513202115.B748AC19425@smtp.kernel.org>
+Date: Wed, 13 May 2026 20:38:29 +0000
+Message-Id: <20260513203830.2F757C19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: 0FFAA53A700
+X-Rspamd-Queue-Id: 4BEA953A915
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sashiko.dev:url,amd.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,smtp.kernel.org:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,smtp.kernel.org:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lists.linux.dev:replyto];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10440-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10441-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -90,87 +90,82 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,nathan.lynch.amd.com];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[5];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Action: no action
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] Data race and TOCTOU race in descriptor ownership validation defea=
-ts the safety check.
-- [Medium] Severe performance degradation due to Read-Modify-Write (RMW) on=
- Write-Combining (WC) DMA memory.
+- [High] Misplaced memory barrier in `sdxi_completion_signaled()` allows sp=
+eculative stale reads.
+- [High] Unsafe use of `jiffies` for an excessive 1-second busy-wait loop i=
+n potentially atomic contexts.
+- [Medium] False timeout failure in `sdxi_completion_poll()` due to missing=
+ final check (TOCTOU race).
 --
 
-commit 54eb4223ce2b3ad6354bf153f2d7fc8aa53474e0
+commit 06424605658df30b37e1f10fa36bddfa9f3b20e8
 Author: Nathan Lynch <nathan.lynch@amd.com>
 
-dmaengine: sdxi: Generic descriptor manipulation helpers
+    dmaengine: sdxi: Add completion status block API
 
-Introduce small helper functions for manipulating certain common properties
-of descriptors after their operation-specific encoding has been performed b=
-ut
-before they are submitted.
+This commit introduces an API for managing DMA-coherent completion status
+blocks for SDXI descriptors. It includes functions for allocating, polling,
+and querying the status of these completion blocks.
 
-> diff --git a/drivers/dma/sdxi/descriptor.h b/drivers/dma/sdxi/descriptor.h
+> diff --git a/drivers/dma/sdxi/completion.c b/drivers/dma/sdxi/completion.c
 > new file mode 100644
-> index 0000000000000..c0f01b1be726d
+> index 0000000000000..7ffd034b129b8
 > --- /dev/null
-> +++ b/drivers/dma/sdxi/descriptor.h
+> +++ b/drivers/dma/sdxi/completion.c
 [ ... ]
-> +static inline void sdxi_desc_vl_expect(const struct sdxi_desc *desc, boo=
-l expected)
+> +int sdxi_completion_poll(const struct sdxi_completion *sc)
 > +{
-> +	u8 vl =3D FIELD_GET(SDXI_DSC_VL, le32_to_cpu(desc->opcode));
+> +	unsigned long deadline =3D jiffies + msecs_to_jiffies(1000);
 > +
-> +	WARN_RATELIMIT(vl !=3D expected, "expected vl=3D%u but got %u\n", expec=
-ted, vl);
+> +	while (le64_to_cpu(READ_ONCE(sc->cst_blk->signal)) !=3D 0) {
+> +		if (time_after(jiffies, deadline))
+> +			return -ETIMEDOUT;
+
+Could this cause a spurious timeout if the thread is preempted or delayed
+between the signal check and the timeout check? If the hardware completes t=
+he
+DMA request during the delay, jiffies will have advanced past the deadline
+when the thread resumes, causing the function to incorrectly return
+-ETIMEDOUT. A final read of the signal field after the timeout condition
+might prevent this race.
+
+Also, is it safe to busy-wait using jiffies for up to 1 second here? The
+use of GFP_NOWAIT in sdxi_completion_alloc() suggests this API might be
+called from atomic or interrupt-disabled contexts. Busy-waiting for 1 second
+could cause severe latency or soft lockups. Furthermore, if interrupts are
+disabled on the CPU responsible for the timer tick, jiffies will not
+increment, potentially resulting in an infinite loop.
+
+> +		cpu_relax();
+> +	}
+> +
+> +	return sdxi_completion_errored(sc) ? -EIO : 0;
 > +}
-
-The descriptor ring is often mapped as DMA coherent memory, which on many
-architectures is Write-Combining or uncached. Does reading desc->opcode
-here and in the calling functions trigger synchronous, non-posted PCIe read=
-s?
-
-If these helpers are called directly on the DMA ring, this read-modify-write
-pattern might cause multiple PCIe reads per descriptor and artificially cap
-the DMA engine's throughput. Is there a way to redesign the API to avoid
-reading from the ring, perhaps by returning the modified opcode or passing
-it as state?
-
-[ ... ]
-
-> +static inline void sdxi_desc_set_fence(struct sdxi_desc *desc)
-> +{
-> +	u32 opcode =3D le32_to_cpu(desc->opcode);
 > +
-> +	sdxi_desc_vl_expect(desc, 0);
+> +bool sdxi_completion_signaled(const struct sdxi_completion *sc)
+> +{
+> +	dma_rmb();
+> +	return (sc->cst_blk->signal =3D=3D 0);
 
-Can this double-read sequence lead to a time-of-check to time-of-use race?
+Does this read memory barrier need to be executed after checking the signal
+field instead of before? Placing dma_rmb() before evaluating the
+DMA-coherent signal allows the CPU to speculatively fetch payload data
+before confirming the device has actually signaled completion. Moving the
+barrier after a successful check (and using READ_ONCE) would ensure the
+payload reads are properly ordered.
 
-If the driver erroneously calls this helper on an active descriptor (vl=3D1=
-),
-the first read of desc->opcode into the local opcode variable fetches vl=3D=
-1.
-If the hardware then completes the operation and writes vl=3D0 to desc->opc=
-ode
-in memory, the second read inside sdxi_desc_vl_expect() fetches vl=3D0.
-
-The validation check would then succeed, bypassing the WARN_RATELIMIT safety
-net. The helper then writes back the stale local opcode (which still has
-vl=3D1) to memory, silently re-submitting the completed descriptor.
-
-Could desc->opcode be read exactly once using READ_ONCE(), and that local
-value passed into sdxi_desc_vl_expect() to avoid this race?
-
-> +	FIELD_MODIFY(SDXI_DSC_FE, &opcode, 1);
-> +	desc->opcode =3D cpu_to_le32(opcode);
 > +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260511-sdxi-base-=
-v2-0-889cfed17e3f@amd.com?part=3D16
+v2-0-889cfed17e3f@amd.com?part=3D17
 

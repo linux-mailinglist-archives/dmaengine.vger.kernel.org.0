@@ -1,67 +1,67 @@
-Return-Path: <dmaengine+bounces-10464-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10465-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mPqvHNlVBWqAVAIAu9opvQ
-	(envelope-from <dmaengine+bounces-10464-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 06:55:53 +0200
+	id YD2FAIZbBWomVQIAu9opvQ
+	(envelope-from <dmaengine+bounces-10465-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 07:20:06 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2F7C53DC82
-	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 06:55:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5003753DF6C
+	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 07:20:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 99BA83026C0F
-	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 04:55:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5CAB53012EA6
+	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 05:18:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1329E3B895D;
-	Thu, 14 May 2026 04:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDD5D3911D5;
+	Thu, 14 May 2026 05:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzQ0caEZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/op5/0w"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E430A3B8950;
-	Thu, 14 May 2026 04:55:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C6E38F934;
+	Thu, 14 May 2026 05:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778734550; cv=none; b=jvkmRiS7Cbrrlb5mSht1LC2NrN83GSq7fEoGfgAYvA34POliZ3ue47dPAuQacNQBysZxMnKirLtYnNpUK3usaub/ye52nq2cBUhsYdJ4hr2cQGLlatJTXNz+vIEiMLJsVWOXaXR0zracN/Jv95STtFAN+CktVYDqrCQoiRyCoO0=
+	t=1778735922; cv=none; b=DYf34qAvtuxNNOEDW2GPTPUnNCND73X3PxEqrnxyOns0oGq1C3T8E6M1ssQI2peCKpbPrrtcCpvh5IEZajP14gKssb4bMxLK4d6tGvaW/fGE7C3TudoRbWIsnRI1yrjIa93T1MFQOrzBT5lUaCHE3Ron5Te9+mCGc6wcNPZRmT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778734550; c=relaxed/simple;
-	bh=GiCsnbj5xJtYzAw8DqcmNOV4R8sx7quJIngvYKzo0J0=;
+	s=arc-20240116; t=1778735922; c=relaxed/simple;
+	bh=sYwbwqRF98uuFyhlJII/S/CDAenAqNuV3CAHUgEgjew=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=asipbRUnUztftyOxu7nJtxn9/aCQtjueQlqCQ5jCHIhloTvDaJAZ7EICXvLPg5tps7o9YfBxqiQgbXpC5F+nOi5FMWBonjX8z39VaDKlJoJMuMcQxz2Jx153lK/LTMfYoO2Mexenubv2vkHDo8LcdtV2Hs9KMdlPri11EZ20LVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzQ0caEZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 484CDC2BCB7;
-	Thu, 14 May 2026 04:55:49 +0000 (UTC)
+	 Message-Id; b=d25RQGAd1ULbNA2lA48viclOX1eLhlgCiq1Vo3ETiH9+MEX/wDfkTIrYzNp4cfFBTKUSVwrEbjkyv4IMQVFQuAGvBCHvaRtNmbYY06d6BK390OtCoXY4ZvZDZGQHd24Zdw4GR2/vwVbcEIWc+MYzKTmB0MgLJFXl9FqY1+EaMDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/op5/0w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B727C2BCB7;
+	Thu, 14 May 2026 05:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778734549;
-	bh=GiCsnbj5xJtYzAw8DqcmNOV4R8sx7quJIngvYKzo0J0=;
+	s=k20201202; t=1778735922;
+	bh=sYwbwqRF98uuFyhlJII/S/CDAenAqNuV3CAHUgEgjew=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=KzQ0caEZqNctlB4t6vyLGjlg7kVTWWs4N98tRoD48W8Cr3UrmUutSsuL9gQEbX/yZ
-	 +9n9SuKXc1hcdnKU5LOWUndi/Ia79UyGyDwnG/+FhaqYUi6YSE60waYvYjR32geLB3
-	 t9Rqt8ZNDVN3inelHxFsQQzD9deAv22INfWmXkDLB/kS8QZyIcgvZus14KKtMIOh2X
-	 OJhrXXuNlP2cnRAYeWT1x6dBJ8l9ZEve/7gRVVzvnVfXwBA84h/D0vQV4wKss9dS7i
-	 FuFY1nf0XbUR/OtejnkKWLtc0q+ONsGUYVb/9GuwqWi1pFVUKQbPP8tCzqR6DDLglz
-	 NdB8HVwPpootA==
+	b=U/op5/0w3y/zN3rz33jMyASMvSLyZ58VjKkS95U8AhEZPn9pVH+t3qixejR94DwzB
+	 YJZKWHhNJ69wf/wNXog+KwyEibkkP5oT7ia+uAvV0LyPM88Kvrx4Obbnu6ZyJnN1Hl
+	 V+R3lEDyYls17yCyu4UtnLrIVjHSz3Y2f0grYzhfG+khB/91D/jBL51RS805PnpX81
+	 r0mulOZ/mmSwGpUObAoRzfs+YNfAKUmI6D2XSL4MjO8d9Bi71M6vaG4BQOjPjFs6ss
+	 zU3+iuQ5R79oafQL01+qIMfO8juufTx6IHnUmng1gv7A0gAaT28A6rv3yWW9PH0LlF
+	 nY+v+BuWeFgmw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/4] dmaengine: fsl-edma: use
- devm_clk_get_optional_enabled() for DMA engine clock
+Subject: Re: [PATCH v5 3/4] dmaengine: fsl-edma: convert DMAMUX clock
+ handling to bulk clock API
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Joy Zou" <joy.zou@nxp.com>
-Cc: imx@lists.linux.dev, dmaengine@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260513-b4-b4-edma-runtime-opt-v5-2-1e595bfb8423@nxp.com>
-References: <20260513-b4-b4-edma-runtime-opt-v5-2-1e595bfb8423@nxp.com>
+Cc: Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org, imx@lists.linux.dev
+In-Reply-To: <20260513-b4-b4-edma-runtime-opt-v5-3-1e595bfb8423@nxp.com>
+References: <20260513-b4-b4-edma-runtime-opt-v5-3-1e595bfb8423@nxp.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 04:55:48 +0000
-Message-Id: <20260514045549.484CDC2BCB7@smtp.kernel.org>
+Date: Thu, 14 May 2026 05:18:41 +0000
+Message-Id: <20260514051842.1B727C2BCB7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: C2F7C53DC82
+X-Rspamd-Queue-Id: 5003753DF6C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
@@ -72,9 +72,9 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,lists.linux.dev:replyto,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,nxp.com:email];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,smtp.kernel.org:mid,sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:email];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10464-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10465-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -97,82 +97,95 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Action: no action
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Removing mandatory clock validation risks kernel crashes on miscon=
-figured device trees.
-- [Medium] API Mismatch: `devm_clk_get_optional_enabled()` conflicts with t=
-he stated runtime PM intent, leading to unbalanced clock disables.
+- [High] Switching to `devm_clk_bulk_get_optional_enable()` silently drops =
+validation for missing DMAMUX clocks, leading to a system bus hang during p=
+robe on misconfigured device trees.
 --
 
-commit 571d7197ad2ed67c4508436798804c62669d46f2
+commit ac85fd72d931ccb00828f78ca0682e23cee58abe
 Author: Joy Zou <joy.zou@nxp.com>
 
-dmaengine: fsl-edma: use devm_clk_get_optional_enabled() for DMA engine clo=
-ck
+dmaengine: fsl-edma: convert DMAMUX clock handling to bulk clock API
 
-This commit replaces devm_clk_get_enabled() with
-devm_clk_get_optional_enabled() for the eDMA engine clock and removes the
-FSL_EDMA_DRV_HAS_DMACLK flag. The stated goal is to simplify clock handling
-and prepare for adding channel runtime PM support.
-
->     Prepare to add channel runtime pm support.
-
-If the intention is to manage this clock via runtime PM, does using
-devm_clk_get_optional_enabled() conflict with that?
-
-The devm_clk_get_optional_enabled() helper registers a devres action that
-automatically calls clk_disable_unprepare() upon driver unbind. If the devi=
-ce
-is runtime suspended and the clock is already disabled when the driver is
-unbound, the devres cleanup will attempt to disable the clock again.
-
-Can this trigger a WARN_ON in the clock core for an unbalanced enable count?
-
-Should the driver use devm_clk_get_optional() and manually handle
-clk_prepare_enable() instead?
+This commit converts the DMAMUX clock management from individual clock
+operations to the bulk clock API to simplify the code. This is in
+preparation for adding runtime PM support.
 
 > diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
-> index 87f575d6ccaff..ecd14967bfbc0 100644
+> index ecd14967bfbc0..c12126ea6552d 100644
 > --- a/drivers/dma/fsl-edma-main.c
 > +++ b/drivers/dma/fsl-edma-main.c
 
 [ ... ]
 
-> @@ -733,13 +733,11 @@ static int fsl_edma_probe(struct platform_device *p=
+> @@ -747,23 +739,28 @@ static int fsl_edma_probe(struct platform_device *p=
 dev)
->  		regs =3D &fsl_edma->regs;
+>  		fsl_edma->chan_masked |=3D chan_mask[0];
 >  	}
 > =20
-> -	if (drvdata->flags & FSL_EDMA_DRV_HAS_DMACLK) {
-> -		fsl_edma->dmaclk =3D devm_clk_get_enabled(&pdev->dev, "dma");
-> -		if (IS_ERR(fsl_edma->dmaclk))
+> -	for (i =3D 0; i < fsl_edma->drvdata->dmamuxs; i++) {
+> -		char clkname[32];
+> -
+> -		fsl_edma->muxbase[i] =3D devm_platform_ioremap_resource(pdev,
+> -								      1 + i);
+> -		if (IS_ERR(fsl_edma->muxbase[i])) {
+> -			/* on error: disable all previously enabled clks */
+> -			fsl_disable_clocks(fsl_edma, i);
+> -			return PTR_ERR(fsl_edma->muxbase[i]);
+> +	if (fsl_edma->drvdata->dmamuxs) {
+> +		fsl_edma->muxclk =3D devm_kcalloc(&pdev->dev, fsl_edma->drvdata->dmamu=
+xs,
+> +						sizeof(*fsl_edma->muxclk), GFP_KERNEL);
+> +		if (!fsl_edma->muxclk)
+> +			return -ENOMEM;
+> +
+> +		for (i =3D 0; i < fsl_edma->drvdata->dmamuxs; i++) {
+> +			fsl_edma->muxbase[i] =3D devm_platform_ioremap_resource(pdev, 1 + i);
+> +			if (IS_ERR(fsl_edma->muxbase[i]))
+> +				return PTR_ERR(fsl_edma->muxbase[i]);
+> +
+> +			fsl_edma->muxclk[i].id =3D devm_kasprintf(&pdev->dev, GFP_KERNEL,
+> +								"dmamux%d", i);
+> +			if (!fsl_edma->muxclk[i].id)
+> +				return -ENOMEM;
+>  		}
+> =20
+> -		sprintf(clkname, "dmamux%d", i);
+> -		fsl_edma->muxclk[i] =3D devm_clk_get_enabled(&pdev->dev, clkname);
+> -		if (IS_ERR(fsl_edma->muxclk[i]))
 > -			return dev_err_probe(&pdev->dev,
-> -					     PTR_ERR(fsl_edma->dmaclk),
-> -					     "Missing DMA block clock.\n");
-> -	}
-> +	fsl_edma->dmaclk =3D devm_clk_get_optional_enabled(&pdev->dev, "dma");
-> +	if (IS_ERR(fsl_edma->dmaclk))
-> +		return dev_err_probe(&pdev->dev,
-> +				     PTR_ERR(fsl_edma->dmaclk),
-> +				     "Failed to get/enable DMA clock.\n");
+> -					     PTR_ERR(fsl_edma->muxclk[i]),
+> -					     "Missing DMAMUX block clock.\n");
+> +		ret =3D devm_clk_bulk_get_optional_enable(&pdev->dev, fsl_edma->drvdat=
+a->dmamuxs,
+> +							fsl_edma->muxclk);
 
-Does removing the driver-level validation for this clock risk kernel crashes
-on misconfigured device trees?
+Does using devm_clk_bulk_get_optional_enable() silently drop validation for
+missing DMAMUX clocks?
 
-On platforms where the eDMA engine clock is physically required (e.g.,
-i.MX7ULP, i.MX8ULP, i.MX93), a missing "dma" clock in the device tree
-previously caused a graceful probe failure. Now,
-devm_clk_get_optional_enabled() will silently return NULL and probing will
-continue.
+The previous code used devm_clk_get_enabled(), which safely aborted the pro=
+be
+if clocks were missing. Because the optional variant returns 0 when the clo=
+cks
+are missing in the device tree, the probe will continue.
 
-If the driver subsequently writes to unclocked eDMA registers, such as duri=
-ng
-edma_write_tcdreg(), can this trigger a synchronous external abort (bus fau=
-lt)
-and panic the kernel?
+If the probe continues without the clocks enabled, the driver later calls
+fsl_edma_chan_mux() which accesses the unclocked muxbase registers. On NXP
+SoCs, accessing unclocked registers can trigger a system bus hang or
+asynchronous external abort.
+
+Should this use a mandatory bulk clock API to ensure the clocks are actually
+present and enabled?
+
+> +		if (ret)
+> +			return dev_err_probe(&pdev->dev, ret,
+> +					     "Failed to enable DMAMUX block clock.\n");
+>  	}
+>
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513-b4-b4-edma=
--runtime-opt-v5-0-1e595bfb8423@nxp.com?part=3D2
+-runtime-opt-v5-0-1e595bfb8423@nxp.com?part=3D3
 

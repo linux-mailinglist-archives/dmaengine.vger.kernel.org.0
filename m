@@ -1,335 +1,243 @@
-Return-Path: <dmaengine+bounces-10467-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10468-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KJmqEcJjBWqOVwIAu9opvQ
-	(envelope-from <dmaengine+bounces-10467-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 07:55:14 +0200
+	id oEq9DExmBWoZWAIAu9opvQ
+	(envelope-from <dmaengine+bounces-10468-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 08:06:04 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97CF553E209
-	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 07:55:13 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C5F853E316
+	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 08:06:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CC4E7301E3C1
-	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 05:55:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D6CD53034ED9
+	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 06:05:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B32439EB4B;
-	Thu, 14 May 2026 05:55:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF2C63AB48C;
+	Thu, 14 May 2026 06:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="op+pnWRx"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="T9d3vKN3";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="FhOzAQ2c"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381CB30E0CC;
-	Thu, 14 May 2026 05:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7D43AE1B9
+	for <dmaengine@vger.kernel.org>; Thu, 14 May 2026 06:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778738110; cv=none; b=E1ODzK58sElSvxwyNxdKXYO5kWtLRw5aGAP7zrpnnfjDUVFwxkq9ZhDgqhQVg0eENI11NJvqnn+ce3tFJNOBDdpfSRMolrHVpq/XF6MpUMByPdBKZA6VRFIu9lk/VLKFG/3irE51dvfD8U9qNrQxgJadSwUpNuD3/VqOCrC36lU=
+	t=1778738735; cv=none; b=VkBFc/5/dpsqciwACUH6yhrK6BV/c9CpVBppzYf5lv0YVla3ZRq/b7dGgAIfIBWYQ6YiB5ie92QKfWiZzqcOVLwdpf9BYmRETOFHNGhpDOs1lfaFpO64LzCeAbXh/tlQziga5DWyd5Xfqh4BnG4ut3ZunE8340JI+YeOP+9A8jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778738110; c=relaxed/simple;
-	bh=RAdR8/gNXVMQT+EGlj4+JLWsFJzkqXct04sDr14+dXc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=qxMG4lstbkoMZ9VFUTx8ZV2tX0WRUG43/EwfrpaBTFEW6dfJCPKgrFLmGQWh9xKQ64BSIQ2KbbLqvycYnTyDksifOVenQLcCcDGB7mhO9/hZdY05jyXG33ZFZeBn8isJnRKU+sLq/Sda9JzF7/ixi757rjZ2e48L6NwKpp9so4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=op+pnWRx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A379BC2BCB7;
-	Thu, 14 May 2026 05:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778738109;
-	bh=RAdR8/gNXVMQT+EGlj4+JLWsFJzkqXct04sDr14+dXc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=op+pnWRxbC2gqQ8Aau0NMY/CPkR0jRXsWcS57t+su+gigjQAzjndXOYCPCBTK0G26
-	 AA3tNUpoBMmynzz/q5SdX1Rb1uIoJmFFo1Ryk+v1QVc0699kC7bm+ORGAifjCmLDoN
-	 mHnA7hG1CFATLjhHH+673iRaxiv6PZxKtd01eCoKancUTleEc6/6Pigs3cX/hXzw+9
-	 BGYoMMdT53DGTwcaIkiiofw8z1opDg3uh4PnhCGVMDn/Pxe4YfUKJQH5jtMVwIvwMv
-	 7iKkUqO/lmNikaumfUMA4WuqO4gdcdq5UecO7qfLEgkQaGo1ymPhRCSfksbkX+/d4x
-	 zKc14NJOvTteg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 4/4] dmaengine: fsl-edma: add runtime suspend/resume
- support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Joy Zou" <joy.zou@nxp.com>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org, imx@lists.linux.dev
-In-Reply-To: <20260513-b4-b4-edma-runtime-opt-v5-4-1e595bfb8423@nxp.com>
-References: <20260513-b4-b4-edma-runtime-opt-v5-4-1e595bfb8423@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 05:55:09 +0000
-Message-Id: <20260514055509.A379BC2BCB7@smtp.kernel.org>
+	s=arc-20240116; t=1778738735; c=relaxed/simple;
+	bh=sfLQhQwFGpTeogFBIPpVZh0bM1trgBhBsW8I4eM8Xng=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tLpBKWSujIGprR7LP/PdayXyoE36yrjuS0R+h5Gt3nRrGN1+zq+JbMA8E+sBnmhnMYZ8xeaqWwlA2izsIrxYoQ7gfTjhwqOikpYexc4ONY6BSBWyQYSYr0fmTzlzoMmSyWVDqbEMb7Ajm/EZYtN4flclyL8kf0HzSI//DbckcIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=T9d3vKN3; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=FhOzAQ2c; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64E56mh2828347
+	for <dmaengine@vger.kernel.org>; Thu, 14 May 2026 06:05:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=NKZ1yNxecwzk1ARo+imIXjA4pi6YLl/Pq2B
+	diROAYPo=; b=T9d3vKN3D1YHGlGSs6Gk5LVz1otIyxk3RNjF+TPtITHJHHIEOsK
+	0iROJ0uA8U6wWCmUJ++ofP2CKOrvf88mSiS8i9dA3+AxzZpwLfZy89CCUqxivbFn
+	bAr9TXx+9ijBJW2FbxoB6O9vI6fhqZKrYeBnHzH3Sjs6Yo4XR8PT7uMlXDMTxrl9
+	RU9yyxyYNnJJyb46Q7WEpjFde7YGSpwGRsuDVLiZ+obC3iPa6BonITpgKQrOxmVQ
+	Qc5ty4ndgwSeTycMBJfvx2dqXXl1WrPmtdxY9ijhkHXx+w63Ifc63QPvYqEfxgVw
+	VbAvHzttL0l05JTcJrxpiGD5myLKp9tEN6A==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e57y7g5eq-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Thu, 14 May 2026 06:05:33 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-50faf575af4so174025271cf.0
+        for <dmaengine@vger.kernel.org>; Wed, 13 May 2026 23:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1778738732; x=1779343532; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NKZ1yNxecwzk1ARo+imIXjA4pi6YLl/Pq2BdiROAYPo=;
+        b=FhOzAQ2clXsiVInwsgf1Z5GON8yAxRcy1HRfjfNrYUvWHqTacQJK7nkVkaNtcRa85X
+         a/0l61ppV0SnlqW+Y3rMmlNEMQarwqSZeQ6yk1dQisjJcGM2GeWKfaXVg7QSa/8lBi+Y
+         5Hb8QEJ8gRPSkjzOEr1gSAVzUtp/C5//qyYs+eJb/8/haVaAcMNG9efsP7wz7Km4ebAl
+         iqQD267C76efOV9bDihW9AZW/dN0myq50EPTIAYa4r7VokdXY2qogO8sboFAZTXY5UOE
+         8ztCrSA0VrX4JcBQijYydh3XPy3msBcvNs7aVlxYizktP705OZ07azzaIdBKQ1uI42vp
+         dSDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778738732; x=1779343532;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NKZ1yNxecwzk1ARo+imIXjA4pi6YLl/Pq2BdiROAYPo=;
+        b=qTEqj79RAjOpMHInBP9GgYnHSJTdARvVYJxnIRl8Q491mJsvznbj8Mo2hVYeRN7wvg
+         T11WPFRW3AvOUOX9/02ZptHOUSQHmCCGg4Nigk0Wrgp2vDzvFoPFJV6qw9kgDVHBFlW+
+         bz/oBd1r0gYmRvsVmCf7EJW+vuUSMqfe3r0XVgDMjgm5eGTSkMJtLFlR8R0cANo5qctr
+         CaYNaYc8MbJiwZpJp7PP7K0OrBSODDcjFfAiCB7oP7RUienYimL9AfplccWnpiTqvY8h
+         n64FCF82fFPYDNUhNR5btrgSqqjTmk44WxJZUxaOSKnCVdN59iQw+ddVnKpsAaxgp9xq
+         o7Hw==
+X-Forwarded-Encrypted: i=1; AFNElJ9+Cf5zkXqo9wL1UTf8p03AiuK1icKj6hxbII4RJuL35/GCWyhaVTDCdqScVjYhFwxos3hCZUa/HJg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlNLZoFJuQqD3k5ixPnTXiTcUNiYifexMkeRs8POcHN2LMS0vS
+	Bep2/LIwZTlVpBTcjIV7rGUtb8iPNt7d5j+i8a6ge4n1Wfc1rEa4EqJ2VqLO/l13/xbUs6OMOgp
+	j+QPo1OMBRN45PdcIRJKhMmY0XfMpuPczuA/YCBZuAsprf6PasQRgv9UX15rEJ6s=
+X-Gm-Gg: Acq92OFQa1Je8+6FKoRPBqlpQahUDDdvrm7j8fosfjvsfyIbnoxyLM+dOAAOT5q4euV
+	wBqq4TG9a03mZncdMzd1Uk6EBc+5zcfJYu/uhW4/KLuntIFRj92G+DjStruEqtWEDKzzXuRlGgt
+	SoqgiqyLYZMHCRHW14qaCTX5mUf+9guY4KNhvySTfr4VOrgPeDQ42oqEnis4I8UYHfDhfLREm/O
+	sBZbC8/FOLCCE75c5yWefJXBmIyDaAP7xwUneaJVqUwHwDlmuVaMhGGrR0Gl3Tvo/0jZ7fN6FBt
+	C8bqE2vi/zvRS7sqkxOU+c01TlWkyN1ISksyidiurSNagSmt3DL6pJDxq5IfVN+6uBn+elXL/h1
+	jVBJu1kC6vILwPCoTwh3hffd9sRnui8030+4WLZg6xAnGcbk=
+X-Received: by 2002:a05:622a:2c7:b0:50f:bc57:d69 with SMTP id d75a77b69052e-5162f2b77eamr86175661cf.0.1778738732454;
+        Wed, 13 May 2026 23:05:32 -0700 (PDT)
+X-Received: by 2002:a05:622a:2c7:b0:50f:bc57:d69 with SMTP id d75a77b69052e-5162f2b77eamr86175381cf.0.1778738731967;
+        Wed, 13 May 2026 23:05:31 -0700 (PDT)
+Received: from quoll ([178.197.219.94])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9e767d16sm4342243f8f.6.2026.05.13.23.05.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2026 23:05:31 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+To: Zhou Wang <wangzhou1@hisilicon.com>, Longfang Liu <liulongfang@huawei.com>,
+        Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+        Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v2] dmaengine: Move MODULE_DEVICE_TABLE next to the table itself
+Date: Thu, 14 May 2026 08:05:26 +0200
+Message-ID: <20260514060525.9253-2-krzysztof.kozlowski@oss.qualcomm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: 97CF553E209
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2121; i=krzysztof.kozlowski@oss.qualcomm.com;
+ h=from:subject; bh=sfLQhQwFGpTeogFBIPpVZh0bM1trgBhBsW8I4eM8Xng=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBqBWYlqiaiC3doRpw6RU1Ex2452Gw4wZ1J/kx5z
+ CfKqPoaORSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCagVmJQAKCRDBN2bmhouD
+ 1+1zD/9g+oasiyg6mKW6uB6ZY3o6jNWFmcKOALFTFxHsyP/DjNZyKXJvZ2gc73g0pvCpurQuXd6
+ ru2tpRZbSKDNkTXtxeK30eWLwCigbbHUy7/69yl+0q1bMXOauFbeH5rID8NxrT2cpk5tgFr2R8a
+ zfvpXUzm0352sDBaN1idNTMCZ0o0j2yf/f1vQ2VsXmEHxRNSM4f8V4sg1BNAJiYcYehdYHzw3Q5
+ UFmN/RBcyv4IeAKxnzt6GbWBJMUDFYFytx0brerr8Jzgjy0+qdn8t+m0NTQCWKBI4887UcLd16T
+ y+drYhjbQsm5i13+dk3CdA1M8Po8Wneu3/3oqjgCd9ofXMtQI7TyRChDA8IYnxDnUkRah//BqHS
+ s5arn0B4L4tXAW2j/yAgmKoG1Ntqs0j6LDCXzhCwB6Ml3HDuokA+nkELKIOiRPJoVesQN+DZfsc
+ In9RyHI5ZsyU+PnGYrJS/H/Sd4PcLWyFzqmUeNlTGAUlpnMoukfvstnlVChCFU7RMUNtWKeX7lh
+ +QsOdi5FuZM23uOHuhnv+JarYKapAPM9lyjBlTI521o0ps1UnqDGr/Xsutxe8wm5vR+e2HEL99g
+ qsTCvqFIWi1bi9QfIwQAnlkSyJKyXwvpRPi19NUmtsRUubSKzkwue9Yt8FhVnotuVF/vOskUBn2 Wme1uVbzrCoBfZw==
+X-Developer-Key: i=krzysztof.kozlowski@oss.qualcomm.com; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: ZKfnD83d0rQhJbaaQZOuXStoqhqz9V2E
+X-Authority-Analysis: v=2.4 cv=UY9hjqSN c=1 sm=1 tr=0 ts=6a05662d cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=gOEeR9iKwsj33Yj5oN/cWg==:17
+ a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22 a=zd2uoN0lAAAA:8
+ a=8AirrxEcAAAA:8 a=EUspDBNiAAAA:8 a=BTeA3XvPAAAA:8 a=QyXUC8HyAAAA:8
+ a=UPwjdVLwzqKTMXskr54A:9 a=a_PwQJl-kcHnX1M80qC6:22 a=ST-jHhOKWsTCqRlWije3:22
+ a=tafbbOV3vt1XuEhzTjGK:22
+X-Proofpoint-GUID: ZKfnD83d0rQhJbaaQZOuXStoqhqz9V2E
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE0MDA1OCBTYWx0ZWRfX9c+tz9QNJ6V5
+ W/sTt0m4jZTaAx4zDpQHMXNWeVN3xYXUu02s63snJ9T51Q2PpbMDNdgADqD62yTGd1apV89MkWA
+ eiaxulygahibcfCoDzpnoSKbeCmPIvxNOQNH8PpuH2eQHpF/1gipB5l69Wo1BkRBwcLtVlLRxc9
+ immMDFFFMqrsawZL/BjKJuYCVaIlQbRrgxUudfLg6PPYRVOZQhPz13W2K3BUhimMcDFlbIIWkp7
+ hI8MtalB3FCn7mBRWDziVDF6ntA4xxf+0R94yMrhUdSjH+GzqhfpQcaH8YBOnzeOG5mY9QaTLh3
+ EWwzi+qdpvwSbt4lbra6r/wKySrluv9xUMprx3EnrWkQXR4TsxfxqUWPiowLEb4w+G5VVph4jAQ
+ wZTxbkr2mMv22rPA5Qz8ii/OVhmCtcDukXoicqlmFRt4NUutNgo6zJcmGC3bvQeLcDB+YE198Rt
+ hZdIkEoS3AK836UTMrg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-14_01,2026-05-13_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605050000
+ definitions=main-2605140058
+X-Rspamd-Queue-Id: 9C5F853E316
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,lists.linux.dev:replyto,smtp.kernel.org:mid];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10467-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10468-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_NO_DN(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzysztof.kozlowski@oss.qualcomm.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,hisilicon.com:email,nxp.com:email,intel.com:email];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-Thank you for your contribution! Sashiko AI review found 9 potential issue(=
-s) to consider:
-- [Critical] Double-free and Use-After-Free in the probe error path if devi=
-ce_link_add() fails.
-- [Critical] Use-After-Free during driver unbind due to manual device link =
-deletion after core purging.
-- [Critical] Pre-existing Use-After-Free vulnerability in `fsl_edma3_detach=
-_pd`.
-- [Critical] Unclocked register access in shared IRQ handlers causing syste=
-m crashes.
-- [High] Initialization race condition exposing uninitialized DMA channels =
-to consumers.
-- [High] System hang risk due to enabling channel clocks before their corre=
-sponding power domains are resumed.
-- [High] Unbalanced clock disable and CCF underflow on driver removal.
-- [High] Hardware remains inaccessible, crashing the system if CONFIG_PM is=
- disabled.
-- [High] Unclocked register access during system resume (`resume_early`).
---
+By convention MODULE_DEVICE_TABLE() immediately follows the ID table it
+exports, because this is easier to read and verify.  It also makes more
+sense since #ifdef for ACPI or OF could hide both of them.
 
-commit 29a9c658afa0aacc5ffd271f1b4ac1fc006b0536
-Author: Joy Zou <joy.zou@nxp.com>
+Most of the drivers already have this correctly placed, so adjust
+the missing ones.  No functional impact.
 
-dmaengine: fsl-edma: add runtime suspend/resume support
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
-Introduce runtime suspend and resume support for FSL eDMA. Enable
-per-channel power domain management to facilitate runtime suspend and
-resume operations.
+---
 
-> diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
-> index c12126ea6552d..9446a0c3bc576 100644
-> --- a/drivers/dma/fsl-edma-main.c
-> +++ b/drivers/dma/fsl-edma-main.c
-> @@ -629,7 +629,6 @@ static void fsl_edma3_detach_pd(struct fsl_edma_engin=
-e *fsl_edma)
->  			device_link_del(fsl_chan->pd_dev_link);
+Changes in v2:
+1. Fix typo p->d in commit msg
+2. Add tags
+---
+ drivers/dma/hisi_dma.c | 2 +-
+ drivers/dma/pch_dma.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-During driver unbind, the devres cleanups are executed in reverse order.
-The DMA engine and its channel devices are unregistered first via
-dmaenginem_async_device_unregister(), which triggers device_links_purge()
-to delete all links where the channel is a consumer.=20
+diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
+index 32a0e95c6a20..28bf818f9aa6 100644
+--- a/drivers/dma/hisi_dma.c
++++ b/drivers/dma/hisi_dma.c
+@@ -1037,6 +1037,7 @@ static const struct pci_device_id hisi_dma_pci_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, 0xa122) },
+ 	{ 0, }
+ };
++MODULE_DEVICE_TABLE(pci, hisi_dma_pci_tbl);
+ 
+ static struct pci_driver hisi_dma_pci_driver = {
+ 	.name		= "hisi_dma",
+@@ -1050,4 +1051,3 @@ MODULE_AUTHOR("Zhou Wang <wangzhou1@hisilicon.com>");
+ MODULE_AUTHOR("Zhenfa Qiu <qiuzhenfa@hisilicon.com>");
+ MODULE_DESCRIPTION("HiSilicon Kunpeng DMA controller driver");
+ MODULE_LICENSE("GPL v2");
+-MODULE_DEVICE_TABLE(pci, hisi_dma_pci_tbl);
+diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
+index e9fbfd5a3d51..bf805f1024f6 100644
+--- a/drivers/dma/pch_dma.c
++++ b/drivers/dma/pch_dma.c
+@@ -970,6 +970,7 @@ static const struct pci_device_id pch_dma_id_table[] = {
+ 	{ PCI_VDEVICE(ROHM, PCI_DEVICE_ID_ML7831_DMA2_4CH), 4}, /* SPI */
+ 	{ 0, },
+ };
++MODULE_DEVICE_TABLE(pci, pch_dma_id_table);
+ 
+ static SIMPLE_DEV_PM_OPS(pch_dma_pm_ops, pch_dma_suspend, pch_dma_resume);
+ 
+@@ -987,4 +988,3 @@ MODULE_DESCRIPTION("Intel EG20T PCH / LAPIS Semicon ML7213/ML7223/ML7831 IOH "
+ 		   "DMA controller driver");
+ MODULE_AUTHOR("Yong Wang <yong.y.wang@intel.com>");
+ MODULE_LICENSE("GPL v2");
+-MODULE_DEVICE_TABLE(pci, pch_dma_id_table);
+-- 
+2.51.0
 
-When the devres action later calls fsl_edma3_detach_pd() and reaches this
-device_link_del(), will it cause a use-after-free by attempting to delete
-a link that has already been purged by the driver core?
-
->  		if (fsl_chan->pd_dev) {
->  			dev_pm_domain_detach(fsl_chan->pd_dev, false);
-> -			pm_runtime_dont_use_autosuspend(fsl_chan->pd_dev);
->  			pm_runtime_set_suspended(fsl_chan->pd_dev);
-
-This issue pre-dates the patch, but could this cause a use-after-free?
-
-For power domains attached via dev_pm_domain_attach_by_id(), calling
-dev_pm_domain_detach() unregisters and frees the underlying virtual device.
-Passing fsl_chan->pd_dev to pm_runtime_set_suspended() immediately after
-appears to use a freed pointer.
-
-[ ... ]
-
-> @@ -684,6 +668,29 @@ static int fsl_edma3_attach_pd(struct platform_devic=
-e *pdev, struct fsl_edma_eng
->  	return -EINVAL;
->  }
-> =20
-> +/* Per channel dma power domain */
-> +static int fsl_edma_chan_runtime_suspend(struct device *dev)
-> +{
-> +	struct fsl_edma_chan *fsl_chan =3D dev_get_drvdata(dev);
-> +
-> +	clk_disable_unprepare(fsl_chan->clk);
-> +
-> +	return 0;
-> +}
-
-Does this function need to call synchronize_irq() before disabling the cloc=
-k?
-
-Since the driver uses shared interrupts (IRQF_SHARED), if another device on
-the same IRQ line triggers an interrupt while the channel is suspended,
-the eDMA interrupt handler might attempt to read hardware registers while t=
-he
-clock is disabled.
-
-Should the interrupt handlers (like fsl_edma3_tx_handler) also use
-pm_runtime_get_if_active() to ensure the device is powered before checking
-status registers?
-
-[ ... ]
-
-> @@ -869,6 +872,51 @@ static int fsl_edma_probe(struct platform_device *pd=
-ev)
->  		return dev_err_probe(&pdev->dev, ret,
->  				     "Can't register Freescale eDMA engine.\n");
-
-Is there a race condition here?
-
-By calling dmaenginem_async_device_register() before setting up the runtime
-PM domains and hardware registers below, clients can immediately request a
-channel.
-
-If a client allocates a channel concurrently, it could call
-fsl_edma_alloc_chan_resources() before devm_pm_runtime_enable() is called,
-or race with the unconditional clk_disable_unprepare() and edma_write_tcdre=
-g()
-in the loop below, potentially corrupting hardware state.
-
-> +	ret =3D devm_pm_runtime_enable(&pdev->dev);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "Can't enable eDMA engine PM run=
-time!");
-> +
-> +	for (i =3D 0; i < fsl_edma->n_chans; i++) {
-> +		struct fsl_edma_chan *fsl_chan =3D &fsl_edma->chans[i];
-> +		struct device *chan_dev;
-> +
-> +		if (fsl_edma->chan_masked & BIT(i))
-> +			continue;
-> +
-> +		chan_dev =3D &fsl_chan->vchan.chan.dev->device;
-> +		dev_set_drvdata(chan_dev, fsl_chan);
-> +		dev_pm_domain_set(chan_dev, &fsl_edma_chan_pm_domain);
-> +
-> +		if (fsl_chan->pd_dev) {
-> +			fsl_chan->pd_dev_link =3D device_link_add(chan_dev, fsl_chan->pd_dev,
-> +								DL_FLAG_STATELESS |
-> +								DL_FLAG_PM_RUNTIME);
-> +			if (!fsl_chan->pd_dev_link) {
-> +				fsl_edma3_detach_pd(fsl_edma);
-> +				return dev_err_probe(&pdev->dev, -EINVAL,
-> +						     "Failed to add device_link to %d\n", i);
-
-If device_link_add() fails, fsl_edma3_detach_pd() is called manually to det=
-ach
-domains and delete links, but it doesn't clear the pointers.
-
-Since devm_fsl_edma3_detach_pd() was already registered as a devres action
-earlier in probe, returning an error here will cause the devres framework to
-call fsl_edma3_detach_pd() a second time. Could this lead to a double-free
-of the device link and double-detach of the PM domain?
-
-> +			}
-> +		}
-> +		ret =3D devm_pm_runtime_enable(chan_dev);
-> +		if (ret)
-> +			return dev_err_probe(&pdev->dev, ret,
-> +					     "Can't enable eDMA channel PM runtime!");
-> +
-> +		if (fsl_chan->pd_dev) {
-> +			ret =3D pm_runtime_resume_and_get(fsl_chan->pd_dev);
-
-Since the earlier loop in probe acquires the channel clocks with
-devm_clk_get_optional_enabled(), the clocks are already enabled before we
-reach this point.
-
-Because the previous DL_FLAG_RPM_ACTIVE flag was removed from the device li=
-nk,
-does enabling the channel clock before its parent power domain is resumed
-risk an asynchronous external abort on NXP SoCs?
-
-> +			if (ret)
-> +				return dev_err_probe(&pdev->dev, ret,
-> +						     "Failed to power on eDMA channel %d\n",
-> +						     fsl_chan->vchan.chan.chan_id);
-> +		}
-> +
-> +		edma_write_tcdreg(fsl_chan, cpu_to_le32(0), csr);
-> +		fsl_edma_chan_mux(fsl_chan, 0, false);
-> +		clk_disable_unprepare(fsl_chan->clk);
-
-If the kernel is compiled with CONFIG_PM=3Dn, pm_runtime_resume_and_get()
-evaluates to 1 (success) but does not call the runtime PM resume callbacks.
-
-By unconditionally disabling the clocks here, do they remain permanently
-disabled when CONFIG_PM=3Dn, leading to bus faults on subsequent DMA reques=
-ts?
-
-> +		if (fsl_chan->pd_dev)
-> +			pm_runtime_put_sync_suspend(fsl_chan->pd_dev);
-> +	}
-> +
->  	ret =3D devm_of_dma_controller_register(&pdev->dev, np,
->  			drvdata->dmamuxs ? fsl_edma_xlate : fsl_edma3_xlate,
->  			fsl_edma);
-> @@ -880,6 +928,9 @@ static int fsl_edma_probe(struct platform_device *pde=
-v)
->  	if (!(drvdata->flags & FSL_EDMA_DRV_SPLIT_REG))
->  		edma_writel(fsl_edma, EDMA_CR_ERGA | EDMA_CR_ERCA, regs->cr);
-> =20
-> +	clk_disable_unprepare(fsl_edma->dmaclk);
-> +	clk_bulk_disable_unprepare(fsl_edma->drvdata->dmamuxs, fsl_edma->muxclk=
-);
-
-These clocks were acquired using devm_clk_get_optional_enabled() earlier in
-probe.
-
-If they are manually disabled here, and the device is suspended during
-driver unbind, won't the devres cleanup attempt to disable them again,
-causing a Common Clock Framework underflow warning?
-
-Similarly, if CONFIG_PM=3Dn, these engine clocks will never be re-enabled.
-
-[ ... ]
-
-> @@ -928,6 +992,13 @@ static int fsl_edma_resume_early(struct device *dev)
->  		fsl_chan =3D &fsl_edma->chans[i];
->  		if (fsl_edma->chan_masked & BIT(i))
->  			continue;
-> +
-> +		if (pm_runtime_status_suspended(&fsl_chan->vchan.chan.dev->device) ||
-> +		    (!(fsl_edma->drvdata->flags & FSL_EDMA_DRV_HAS_PD) &&
-> +		     (fsl_edma->drvdata->flags & FSL_EDMA_DRV_SPLIT_REG) &&
-> +		     !fsl_chan->srcid))
-> +			continue;
-> +
->  		fsl_chan->pm_state =3D RUNNING;
->  		edma_write_tcdreg(fsl_chan, 0, csr);
->  		if (fsl_chan->srcid !=3D 0)
-> @@ -940,6 +1011,35 @@ static int fsl_edma_resume_early(struct device *dev)
->  	return 0;
->  }
-
-Before returning, fsl_edma_resume_early() writes to regs->cr:
-
-    if (!(fsl_edma->drvdata->flags & FSL_EDMA_DRV_SPLIT_REG))
-        edma_writel(fsl_edma, EDMA_CR_ERGA | EDMA_CR_ERCA, regs->cr);
-
-If all channels were idle prior to system suspend, the eDMA engine is in a
-runtime-suspended state and dmaclk is gated. Since the PM core doesn't
-automatically wake runtime-suspended devices during resume_early, could
-writing to regs->cr while dmaclk is gated trigger a bus fault?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260513-b4-b4-edma=
--runtime-opt-v5-0-1e595bfb8423@nxp.com?part=3D4
 

@@ -1,87 +1,86 @@
-Return-Path: <dmaengine+bounces-10456-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10457-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qDzpMfEdBWoASwIAu9opvQ
-	(envelope-from <dmaengine+bounces-10456-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 02:57:21 +0200
+	id MLiQNtMiBWpySwIAu9opvQ
+	(envelope-from <dmaengine+bounces-10457-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 03:18:11 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0EC453C7B1
-	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 02:57:20 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F44753CA60
+	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 03:18:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 844973008FFC
-	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 00:57:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 79FB330134B6
+	for <lists+dmaengine@lfdr.de>; Thu, 14 May 2026 01:16:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7D5C2F3600;
-	Thu, 14 May 2026 00:57:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE078175A8B;
+	Thu, 14 May 2026 01:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uVi6CRRz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="slLnwpqD"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51682F5A12
-	for <dmaengine@vger.kernel.org>; Thu, 14 May 2026 00:57:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7DD199FAB;
+	Thu, 14 May 2026 01:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778720227; cv=none; b=J111g4DJKL9DuDFjgWSev02Bz95hQy7T7m6PpZ9VrAUhvy3n4qmXZHrNm7tJqvEkrTuCn/BBDh5PuAHA297rHAvCWPAn07nHWGJ/sZI5kdtETm06TpO79QMLyGhUW1MTWazwTFi6Ty+8DhD7o5SWSyN29Y2WeiysIrqKmhRa+So=
+	t=1778721381; cv=none; b=QogNnEmwoOq4pa2LhUL+iKw5JBkp61htkM6KmVyPUnBau2/asC52Fo162josYnNcxIFWyJaLPxLM4hnMjuDIk4NctGOX9CpetwTei/yjkh9cTJvd4ao1JwRtrQkS0M5BC3MjX8d0mdPIRitGgLRoqlkJvnu8WNqR192RM+nMbAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778720227; c=relaxed/simple;
-	bh=79PLLt3H5bZJ+Igkwi4VuK86lvaseSatQnS/uvwPxWk=;
+	s=arc-20240116; t=1778721381; c=relaxed/simple;
+	bh=3T4/l0cYcsvO43u+Nr4UWLZS9aaPPniMiBrtIhuG2Zk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=e6eY3R9x8ye0PIJHKTKN32199xtvA+FD1SmvKtB7o+hdgXYoxIt2BFNwa/Mw3RIHhPqeqg+yFCSMvL+GNUgO5dXOeUryIbLPF72Oz+9q+XtpuMOD7T/BXYgQyCdPK6JNTpspNYsVVxbshPl8oehSTFcvRxp1u2xZjdlsEO+fOH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uVi6CRRz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63ECEC19425;
-	Thu, 14 May 2026 00:57:07 +0000 (UTC)
+	 Message-Id; b=AdXfGCCeLBjaYa8xglK3Rm8aDe0DD2xmVvv1D92EarRgPk09WhVE+PfmD/rnFgBz159YISju/nmbhAh7+5ke8sWv5ZiCWq6XvQbS5duNcCm/7FOSDAvFXL7GsLt61ddEiv/Fm2hGCH8EC+pBL5k8Uuq/k2otcFIdbF+ERfH+oUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=slLnwpqD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 065FDC19425;
+	Thu, 14 May 2026 01:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778720227;
-	bh=79PLLt3H5bZJ+Igkwi4VuK86lvaseSatQnS/uvwPxWk=;
+	s=k20201202; t=1778721381;
+	bh=3T4/l0cYcsvO43u+Nr4UWLZS9aaPPniMiBrtIhuG2Zk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=uVi6CRRz8mBKiqfQbIfKvgBrU/haoRcw50PR4w7mRAotztvVw5sMzUpR5VXn0V8t6
-	 2vMA77Ioqzwu2XEWjU4LNQ2QVtu23bcSjwLl0XmeXt4tXe0BLEVR2Wnn6E9skH2fXd
-	 SxSGz8COMDgwZphNWxy+uGoPNRQzWBcIm+kX1gaujsz/ajY3z++ydpSrUTn7XV7xPY
-	 187eYzmddgQ40fGeC2WfjM20rulxktQID2lJGQUGevJ6KXuG7Tsds2iA5YkAgB1gUy
-	 xrtjlIfpGutEjVUYNosYRM1G2Rud9LMsCFTq6F29H/j1PgZ8WvK3ceKLapNYg50e4G
-	 Kky0M2BzLx5ig==
+	b=slLnwpqDAuifXWl50CVAEz85b8gjXuXA3eEV0RMXaoF7f3W0RQfRwVBYHBPBdLYSl
+	 8de0kYgqB7Gg/VWfJImW7lXSNKw8qDr7tenRCrSFbChbuOV3CVEwRWxD+1/zF+k4kH
+	 Awy5uWgh67GfqlEhEsO209odkjPzaXVY1/xZUOQKgZ/didqe43PRj7/rwM44sWD9bC
+	 ddwWOFIbrmfIIOw1PNORAeT9VsewlQV/3C9tRCJeXBUX9M6ikEmz/wq9LRq/hhzuMw
+	 hvTqijyVCca8uGS5tb23SMKnzzpDep1vEvrANJz/osbWB3jo+4uH++N9BYHvhMOlfT
+	 bFX7L0Genh8hw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 10/17] dmaengine: sh: rz-dmac: Refactor pause/resume
- code
+Subject: Re: [PATCH v5 7/9] nvmet: pci-epf: Use
+ dmaengine_prep_config_single_safe() API
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Claudiu Beznea" <claudiu.beznea.uj@bp.renesas.com>
-Cc: dmaengine@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org, wsa+renesas@sang-engineering.com
-In-Reply-To: <20260512121219.216159-11-claudiu.beznea.uj@bp.renesas.com>
-References: <20260512121219.216159-11-claudiu.beznea.uj@bp.renesas.com>
+To: "Frank Li" <Frank.Li@nxp.com>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, linux-pci@vger.kernel.org, imx@lists.linux.dev, dmaengine@vger.kernel.org
+In-Reply-To: <20260512-dma_prep_config-v5-7-26865bf7d935@nxp.com>
+References: <20260512-dma_prep_config-v5-7-26865bf7d935@nxp.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 14 May 2026 00:57:06 +0000
-Message-Id: <20260514005707.63ECEC19425@smtp.kernel.org>
+Date: Thu, 14 May 2026 01:16:20 +0000
+Message-Id: <20260514011621.065FDC19425@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: C0EC453C7B1
+X-Rspamd-Queue-Id: 3F44753CA60
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lists.linux.dev:replyto,nxp.com:email,sashiko.dev:url];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10456-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10457-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,smtp.kernel.org:mid,sashiko.dev:url,lists.linux.dev:replyto];
 	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -90,77 +89,111 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_FIVE(0.00)[6];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Action: no action
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Hardware is prematurely resumed when multiple pause sources are ac=
-tive.
-- [High] Software status bitmask is incorrectly updated even if the hardwar=
-e resume operation times out.
+- [High] Removing the DMA serialization mutex causes severe CPU starvation,=
+ spurious timeouts, and cascading DMA transfer aborts.
+- [Low] Unused local variable triggers a compiler warning and leaves dead m=
+utexes in the device structure.
 --
 
-commit 6c32a478012b8f47e162dfe05b689182e89ba6c2
-Author: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+commit 4b68a703ef44d7ed4b6b20d869ad94bab23d5076
+Author: Frank Li <Frank.Li@nxp.com>
 
-dmaengine: sh: rz-dmac: Refactor pause/resume code
+nvmet: pci-epf: Use dmaengine_prep_config_single_safe() API
 
-This commit refactors the pause/resume functionality to introduce _set
-variants using a channel->status bitmask. This prepares the driver for
-suspend/resume and cyclic DMA support where multiple pause sources might
-exist.
+This commit uses the new dmaengine_prep_config_single_safe() API to combine
+DMA configuration and descriptor preparation into a single call. It also
+removes the mutex that was previously used in the DMA transfer path.
 
-> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-> --- a/drivers/dma/sh/rz-dmac.c
-> +++ b/drivers/dma/sh/rz-dmac.c
+> Since dmaengine_prep_config_single_safe() performs the configuration and
+> preparation atomically and the mutex can be removed.
+
+Is this description entirely accurate?
+
+While the configuration and preparation might now be atomic, the mutex also
+strictly serialized the DMA transaction pipeline.
+
+> diff --git a/drivers/nvme/target/pci-epf.c b/drivers/nvme/target/pci-epf.c
+> index 2afe8f4d0e461..04d8f48d69503 100644
+> --- a/drivers/nvme/target/pci-epf.c
+> +++ b/drivers/nvme/target/pci-epf.c
+> @@ -388,22 +388,15 @@ static int nvmet_pci_epf_dma_transfer(struct nvmet_=
+pci_epf *nvme_epf,
+>  		return -EINVAL;
+>  	}
+> =20
+> -	mutex_lock(lock);
+
+Does removing this mutex introduce concurrency regressions with the shared =
+DMA
+channel during the wait phase?
+
+With the mutex removed, multiple concurrent NVMe worker threads can submit
+transfers to the same channel. Since dma_sync_wait() busy-waits using
+cpu_relax(), could multiple threads spinning simultaneously lead to severe =
+CPU
+starvation?
+
+Additionally, dma_sync_wait() has a hardcoded 5-second timeout computed at
+entry. If concurrent transfers queue up, could later transfers spuriously
+time out while waiting for earlier ones to finish in hardware?
+
+If a spurious timeout occurs, the error path further down calls
+dmaengine_terminate_sync(chan). Does this unconditionally abort all active
+and pending transfers on the shared channel, potentially causing cascading
+data transfer failures?
+
+Could unbounded concurrent submissions also exhaust the DMA channel's
+fixed-size descriptor pool under load?
+
+> -
+>  	dma_dev =3D dmaengine_get_dma_device(chan);
+>  	dma_addr =3D dma_map_single(dma_dev, seg->buf, seg->length, dir);
+>  	ret =3D dma_mapping_error(dma_dev, dma_addr);
+>  	if (ret)
+> -		goto unlock;
+> -
+> -	ret =3D dmaengine_slave_config(chan, &sconf);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to configure DMA channel\n");
+> -		goto unmap;
+> -	}
+> +		return ret;
+
 [ ... ]
-> @@ -795,35 +811,70 @@ static enum dma_status rz_dmac_tx_status(struct dma=
-_chan *chan,
-[ ... ]
-> +static int rz_dmac_device_resume_set(struct rz_dmac_chan *channel,
-> +				     unsigned long clear_bitmask)
-> +{
-> +	int ret =3D 0;
-> +	u32 val;
-> +
-> +	lockdep_assert_held(&channel->vc.lock);
-> +
-> +	/* Do not check CHSTAT_SUS but rely on HW capabilities. */
-> +
-> +	rz_dmac_ch_writel(channel, CHCTRL_CLRSUS, CHCTRL, 1);
 
-If there are multiple active pause sources (for example, paused by the DMA
-client and by system suspend), will writing CHCTRL_CLRSUS here resume the
-hardware prematurely?
+> @@ -426,9 +419,6 @@ static int nvmet_pci_epf_dma_transfer(struct nvmet_pc=
+i_epf *nvme_epf,
+>  unmap:
+>  	dma_unmap_single(dma_dev, dma_addr, seg->length, dir);
+> =20
+> -unlock:
+> -	mutex_unlock(lock);
+> -
+>  	return ret;
+>  }
 
-Since this function is designed to clear a specific bitmask from the channel
-status, should the hardware resume operation only be performed if there are
-no other pause bits remaining in channel->status?
+This isn't a bug, but does leaving the local lock variable and its assignme=
+nts
+in the preceding switch statement trigger a -Wunused-but-set-variable compi=
+ler
+warning?
 
-> +	ret =3D read_poll_timeout_atomic(rz_dmac_ch_readl, val,
-> +				       !(val & CHSTAT_SUS), 1, 1024, false,
-> +				       channel, CHSTAT, 1);
-> +
-> +	channel->status &=3D ~clear_bitmask;
-
-If the hardware resume operation times out and returns an error, is it
-expected to clear the status bitmask anyway?
-
-If a caller receives an error and attempts to retry the resume operation,
-the channel->status bit will already be cleared. Does this prevent the retry
-from succeeding, leaving the hardware stuck in a paused state?
-
-> +
-> +	return ret;
-> +}
+Also, since dma_rx_lock and dma_tx_lock in struct nvmet_pci_epf are no
+longer used anywhere else, should they be removed from the structure to avo=
+id
+leaving dead code?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512121219.2161=
-59-1-claudiu.beznea.uj@bp.renesas.com?part=3D10
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260512-dma_prep_c=
+onfig-v5-0-26865bf7d935@nxp.com?part=3D7
 

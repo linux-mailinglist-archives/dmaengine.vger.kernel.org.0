@@ -1,348 +1,230 @@
-Return-Path: <dmaengine+bounces-10488-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10489-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SO7gLljtCWp6vQQAu9opvQ
-	(envelope-from <dmaengine+bounces-10488-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 18:31:20 +0200
+	id UExMCF8aCmpawwQAu9opvQ
+	(envelope-from <dmaengine+bounces-10489-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 21:43:27 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E82A562443
-	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 18:31:19 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89D5C5639A9
+	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 21:43:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 64F3630099B5
-	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 16:31:18 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 07A67300954E
+	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 19:43:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 602A03264D8;
-	Sun, 17 May 2026 16:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 533EC3D332B;
+	Sun, 17 May 2026 19:43:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dJhRIVko"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="O1oKSyVv"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011001.outbound.protection.outlook.com [52.101.62.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E1F2E175F;
-	Sun, 17 May 2026 16:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5C92F3621
+	for <dmaengine@vger.kernel.org>; Sun, 17 May 2026 19:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779035477; cv=fail; b=jpeyTk0YoSrqkIxzGA0Hs0aB+UXlyxpYtbVWtB1M6KSCl39Zlp6O8dy4Ak2oyzhXSVPnA02QXWcyKMSzm/1C/5jwKHPccjrBCn73gILUFMSimKswN+yzyNw7ZydT9s6Ra2Z4Lyc2V9DK8NwOA0Ag3O6UrTQK5AcihEIYJPls1oU=
+	t=1779047004; cv=pass; b=csCRA4GoEtC6b14B95ZkhD6ItckAigFVpBFjcrt4Jp8uBnRJPNTeeTJGVqx9qPgnb6Mri4vkj81He0ZYqHLlFODcMQU8fX5+1YD9nml+bGULCfBNx3pufc0s5afbe8emdEO0k9Pk9tBquegLLRvtwNbr2U7ig2aMv8+vZcFH0/A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779035477; c=relaxed/simple;
-	bh=9zik3uUK0I6P7LkWofwWl921j31cswiUxPsKpa2noEY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dWbxmBIb7STUUsH6LC6bxtEw6DO3BcIS7yEmj4FH0z+RSIXkwDLodDfQGgoYCl1puXBNuhxn/wZGev1ru1xUb1uUDY5xJk0ZwN6MG+CxtkkayF1EsOCTKmRsYQmL1oXPZWCr3vpD5j44UjMTXZNBGKCxKajsYdNy2PJZvlgTUNY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dJhRIVko; arc=fail smtp.client-ip=52.101.62.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SXA8VTXIELx14gPaDoQ1F2GRU8H+8fo6vGcKbQZqNDsX1ChxaXdZdwHO4r4JU+ainAoH9aTctr3Ukw7GXvSZD5MpS9C7B2B6mdM7WB2ME4KSUHc02eIVG4W6CpPLWTBaU8jvzgzGWeLrGU4gnX9oTEVFvqtPjiCm8zFhQSYHYTwoLgs4L7212bbqT1oRtc6wMX9wefbc4je5r+oO2JKdoJsfD4z3vwpneu42Ook3GbKzHqYhfBdYCd31Fvn65ImvDDji6aMRUEMy2FeS1T6o0veWxQcFvXAwsRQw2rtNxczDQxbdap79/ecyDJBAPvZ1zwy+gB3jRYs1LXMDVMpxhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zR4InExSttsgzuhSWH4gFbAhbqBU8TwyRKOfqTurJ9w=;
- b=hGsshtBIV0yRGG5U5Ucf64AdFppFCT2K5u5+HpAK9YVO1r4xK2aksBbekVcyR0Ocw3A1YEjmAEhL+ZEZXhXHjsNwvppvio/yqurEGo+s4F2/gRJPxHf53UARtLDl5p5Rs7hf0cnZ3LF9fbRMsHMrA3w04LFeFCeE7FWeix9ftNVCh6+VWBaqo6qGHqbEagIFjTOzli8vQl9m1Tay0kvVSCviddRdQp80aqr23K1o2Bga+NX0WC+144FHo6ZhGsiOrteWSk9LLXn8y+3nC2WjMLqfoXmERVsc/5SuV5b7rpu8FgaQwPxkjiiuQ3k+smbJYh8J3Pwb+J6/7AIxC9qUUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zR4InExSttsgzuhSWH4gFbAhbqBU8TwyRKOfqTurJ9w=;
- b=dJhRIVkozt4+dGvsPb7usjfNwOTC9TnJIpOAPWw6HqBNFmxLCDuwfkbjPXfK1uKaiTK0dFYQ6qrwgpJv0+gEC0d+qgKwM6SOXcqX7XaFPRTki865FIdylguzGVZaxd9+K2iQbpdOA4AeBrcJggsHJw9pnXhWBJevF1enYEUpERQ54Hh0CGQ/rzeWpbwIonO3lGG+npd8kbR3oIzQup7qmkDvfhj9pbiKYh+giY0LJJ32tmNWxWcAQvxw3WQojroi2G8tazPlNsRDubP7F4qNrLtJ6p8Iow/jvwCSyUyfgjKGk+XHK9XF9fZq9SLUnYvwu4ivROr9+RwlSziRRZuFIw==
-Received: from PH7PR17CA0065.namprd17.prod.outlook.com (2603:10b6:510:325::9)
- by SA0PR12MB4413.namprd12.prod.outlook.com (2603:10b6:806:9e::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.23; Sun, 17 May
- 2026 16:31:10 +0000
-Received: from MW1PEPF0001615F.namprd21.prod.outlook.com
- (2603:10b6:510:325:cafe::62) by PH7PR17CA0065.outlook.office365.com
- (2603:10b6:510:325::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.25.22 via Frontend Transport; Sun, 17
- May 2026 16:31:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- MW1PEPF0001615F.mail.protection.outlook.com (10.167.249.90) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.71.0 via Frontend Transport; Sun, 17 May 2026 16:31:09 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Sun, 17 May
- 2026 09:30:46 -0700
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Sun, 17 May
- 2026 09:30:46 -0700
-Received: from build-sheetal-bionic-20251202.nvidia.com (10.127.8.14) by
- mail.nvidia.com (10.129.68.7) with Microsoft SMTP Server id 15.2.2562.20 via
- Frontend Transport; Sun, 17 May 2026 09:30:45 -0700
-From: Sheetal <sheetal@nvidia.com>
-To: Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
-CC: Laxman Dewangan <ldewangan@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>,
-	Frank Li <Frank.Li@kernel.org>, Thierry Reding <thierry.reding@kernel.org>,
-	Mohan Kumar <mkumard@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
-	<linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Sheetal
-	<sheetal@nvidia.com>
-Subject: [PATCH v7] dmaengine: tegra210-adma: Add error logging on failure paths
-Date: Sun, 17 May 2026 16:30:45 +0000
-Message-ID: <20260517163045.363444-1-sheetal@nvidia.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1779047004; c=relaxed/simple;
+	bh=qohdw6c5XY/Mph5vnXjfspO9h70+dVSKRCgfLeBy8yM=;
+	h=From:References:MIME-Version:In-Reply-To:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OPy8434HklgKV5Iws1Xo1LNe4gEdD5ywmy3omvSXm4xGzh5s6Xg0VFLCtduAmQOYb96MMp0Wo1X7/UVAdqKzig4f4yZL+enqszwhAUrYJBqGh1EnABygzsUOCUdiwdt3x7YvqQLMtClqYXUwukorhLp6B6PNQnabWF4Il8ArDAI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=O1oKSyVv; arc=pass smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-bd4f8260e4eso342013466b.1
+        for <dmaengine@vger.kernel.org>; Sun, 17 May 2026 12:43:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779047000; cv=none;
+        d=google.com; s=arc-20240605;
+        b=YlL3LKSXbYH9YQzIDmA+wgTi3IC9G7rG5kqexNsLGXLWXH0fXk/c49cLblgRFke987
+         tzjsAi6A5qH1u/D7j/kW7u9ffDdI3LmYa56slQ8x2cRiyKzUr16S8NLjmCwjF43q7bH+
+         usw4Vr//W+psGh9fc7lVhPRKJR36et9xlN453Hw8n4Pea93cYv4lM1VfcrHuI6EwweW7
+         KkXKE+Td5A6e4FUXANIt3yeFXvrBmNwAXZbmN3l21hgS3+UZ8sfWqyO3/NCvyg7WNh/J
+         5vsWdya0dikJlYXimDlGJZgbp+Uh8tYsosLrt/WJSRhWH5giTnqxIVMZjqdXIjRFduqx
+         tGTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:in-reply-to:mime-version:references
+         :from:dkim-signature;
+        bh=j6Mto1oYp8fxMNax/4CSsHkuQNzcdJnt+Yi59gbd/34=;
+        fh=/Z7n5wSUnj2+eTpW4qXEdks0Gbp6OXssf9kz3z4qY70=;
+        b=T6wnq+fzKQ1ibLK/bmQsHuukRMBoJexIU6mQEeMA+McNQVG/z59APOYvjEZyRVoFKj
+         GqpHfK8wpOVNllwxf+3zIsVgx6EzAg/0+wy2q4jU+4ASIyu6XHEDvhB8gtMldouciDmK
+         2Uy5InBvajwYGOsF6GNGRgsn+7C/m8huh6Jbw3vmnCIEAF8I4oSFfSKVLCr3bNbR/Ldr
+         vePTm9wbPkesdrs8a0YEVxgXJujNLLJIgvcbbkyjzLnqOECGp1bbycUN4R+K4tQHuc6z
+         R3RbAsynv006T3+mnRkGQDzmDjYZZQsIBJFEBMJdSdFElJMbHZanjUOwkYIUQ3eAg2ln
+         pm2A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1779047000; x=1779651800; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:in-reply-to:mime-version:references
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=j6Mto1oYp8fxMNax/4CSsHkuQNzcdJnt+Yi59gbd/34=;
+        b=O1oKSyVvQI4s7vPrStCGQYiyPmyqNHQroE6uKzZDznpIG8Uw2DwXDmcYIj6LiDShMe
+         o5RtRmwOAgxfQZLTb2mooQeDL+pX+WzD+G5aKl3PkQ9fCBaxwKcJhh7+W03gZ1TiGUAA
+         mxlrVCj/iPTIu1aitA9noatwI0DlC6/yDBBGczPO3mmEyk79uQ3t0i7fZYnxkez3+2HN
+         YTnoWBNfB/1DgnqJr2+aoNDgBd3NSw2WBKYcodMADb4sfNYH7aEPX+rv+lhXG0hDnyHF
+         rwU6u3+Hhrj0bp+DWf+II0IGh8/Vtz+2GlR7WYYMeoR5+ne9fc3cEIYrBNXWwy/5IMRu
+         G8bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779047000; x=1779651800;
+        h=cc:to:subject:message-id:date:in-reply-to:mime-version:references
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j6Mto1oYp8fxMNax/4CSsHkuQNzcdJnt+Yi59gbd/34=;
+        b=bWjSw5E6zbnfGxBU8CLpTfofyzONym2UOkZwP17mOp5+gh8jVskaRqBh82f5w69rcU
+         TDF3iMFQCikJRzuf5AO7lwv2g4LlaYGzjJLoTRlxX9dqyW5Psz7EC59SeQyyGIJCOWE2
+         R6DJ4JV+gRhSuByAuuhDL3vFqk4pQq/bliD/OCn9R9xKuybsamcorfP45sbkS1ZLZnUi
+         P8ENdNRK4cF9EpXGbvVq+85wvhCpwdBLJEPnsc5mv2xD+FOMX1D9p49kPB6iv/hqRwd/
+         gduIGMEOnvv6+Gg454LY2ZUYbbGn0cCpXOgSgoBINw5QzucwkzMS7gOW2DqD6Kw/uGx2
+         YzQQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/1Ou7oPqKQyRQPukP7luv2ihBVAXi4jFIR9pj6B00jfkPUl+x6VTp+wTl0NsOGkgTKhH5eeGh9yzo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaHplAIwBjEyCJ+15YGPTVn7K7m7palONOtVfwhR3zIT7SOjaL
+	CPfgsKpaJCpmcuElOvH5WYMk1EeFEFk30XWIfOK63iW3gpsgGwlDPOZMYXBvaYU7zlrefEVX5+R
+	WLRh1TK3JsDcefZoZHHSo7vpYgRchBlwcZ8jYrZ5p/A==
+X-Gm-Gg: Acq92OGPfP0R/uBbP4UdxDgkpe0pfJ70lkJzkCiI9OEYLjNtmY92aszG1k9eTYN0lqx
+	8Mn2rDZkRLlvUKoSlZ0V67oPWQi/nLy24kbcNuP9AwkoNnJEC0+Apz0FPnQYIGTLPIihdpEJpFr
+	lpy2+UuqRQRGL8vvhMsDl3CW3ZdkSV+85Mtn2SUxirpnNpRcHeP/ZZda4WZtEUjw8r4g4i6i+72
+	VBoqs0BVk1UvPG+mSmRc7zLAe8Eqxub5hq5Tg3Hh5tx4DOt99lV8hEMh+PdkD9t+sAFsoNNkO7H
+	fgzhUU71emGJsutoAkEBkKIdilxUixH1or6UGObfPxlNgLQ=
+X-Received: by 2002:a17:907:1c9c:b0:b98:40e:f335 with SMTP id
+ a640c23a62f3a-bd51795070cmr615382266b.34.1779047000052; Sun, 17 May 2026
+ 12:43:20 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Sun, 17 May 2026 12:43:19 -0700
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Sun, 17 May 2026 12:43:19 -0700
+From: Angelo Dureghello <adureghello@baylibre.com>
+References: <20260506142644.3234270-2-gerg@kernel.org> <20260506142644.3234270-8-gerg@kernel.org>
+ <40aefc39-bd98-460d-8aa7-5dd79f562e0d@app.fastmail.com> <fdd6fc14-f607-4186-8db4-25de973ac322@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW1PEPF0001615F:EE_|SA0PR12MB4413:EE_
-X-MS-Office365-Filtering-Correlation-Id: a1a74ec2-bf58-4430-4fb2-08deb431b3c9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700016|376014|82310400026|56012099003|18002099003|3023799003|11063799003;
-X-Microsoft-Antispam-Message-Info:
-	7UkW3xtS0IIcBCz7Y93un3HrTFdjOuhtL7gcNe0aRgnHM6RYbn9ueqIQ7YPOzYs8H5qu/HE7OZmgQpqpob9B9yopDn7SBuMr2F7ZlZmX931jDXf7eIE6pkQBcyF6gzNTbAhMJw6CPv9BYmQ9GjDTFkkTS1/PB235+jOgYHDWIWsfXZZuEmFJdSUTZQkl9BM2ZBg2xCKrH0Xtm0XJjbf6MZA4EC6BBhawOffUSarpb2PytbyJ8zajP0MNvBK4tJxSjJoM0e0E4OGN97yHlRyNELWVFEOG8VbSwCdR6MqbUNIooCimYbC4nxNXci8LuR/9Afs2SFLMTJfKI0WDNoPoVhXMHHLHuOhfIoVXFkBY5cN+mPca4JgVLyGpufSZPCbq0gID3yJY1Y6Hd2OZIkrPzV+OvMjIcFW1bhYL+6FU59qeuB5n7IYdvtuLena63eMTf29bOf2i6uJUGIhD96E9YuFHgFKyiMqcpd96MEkOw+CK/WKtPaP7p6EIzwloxcgNm5tbtX0ynDxL0QGUWu7JseSQ7b2Wv9ekaDXt3hqjgivT4oMw48HalqbOCPdW1MzTMkmO24jj7+e4WB3XurlKTCoxKkJ9Ipxaq8Rkin2IjWcmJuu0x0HylJfDjAEUu/X/eanuUS5rzkPHrFwa0A0ab9M9idiJOjJOCOaYNJNZLYI+1bcWFFNl3lmq1N6APrQnnokHg/eCm1+MBq99tsveUTGUJQKJlbw0yraiOmthbFE=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(376014)(82310400026)(56012099003)(18002099003)(3023799003)(11063799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	/QbA7Et5bKrkykBcS6SOIqlajMC+j2leCyyra8Wf0wQYyXcpJGutKfukCTrSfudx7HbdgwZrJ5kBTFEkpSPBtJ735MAr4APPwB3G3uRjyuP1stLwJdUyVwplfrDRzWQSebyoa2TUUqAttb9ExMWT8W42bEtE3Fi67RG/XEt3ssg1RzJnJGjP3xMhbypUT7gFsm0LyCqTlFw7APOr4yW8hAkapGIUfZ/6o48LCrGLvwuqxw2BBxMmMmr7yvG7eHeZ2rIVU6DNGXBlOK19A/O9n0oyNTpIOsnmnZ6GjyB7YTQ5rx36YaTttcpCxQgnnSq22i9eoZEEsUTCVj80t4XoNhZHJoN02gcSRtdHrscwx1tOHJ+L4meWJV7UxPG8GIO7Ds2tYfX1Cn/TooF2xhpZI7yC5PTiOyZRANTTh9x5I5avimtMDPiCOS74ZhqiSHPr
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2026 16:31:09.4452
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1a74ec2-bf58-4430-4fb2-08deb431b3c9
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MW1PEPF0001615F.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4413
-X-Rspamd-Queue-Id: 2E82A562443
+In-Reply-To: <fdd6fc14-f607-4186-8db4-25de973ac322@kernel.org>
+Date: Sun, 17 May 2026 12:43:19 -0700
+X-Gm-Features: AVHnY4LTi1UepgBp7RlwHGhgQikPAAttg6_8VSJjgHVMj7UNTEH_cv4_jkSHs5E
+Message-ID: <CALSJ-wCrNDv3N2Kdo0uoXsKGtp0GthJRBeYTNQA1gGE2akUWFg@mail.gmail.com>
+Subject: Re: [RFC 4/4] m68k: coldfire: fix non-standard readX()/writeX() functions
+To: Greg Ungerer <gerg@kernel.org>
+Cc: Arnd Bergmann <arnd@kernel.org>, linux-m68k@lists.linux-m68k.org, 
+	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-can@vger.kernel.org, linux-spi@vger.kernel.org, 
+	Vladimir Oltean <olteanv@gmail.com>, Angelo Dureghello <adureghello@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Rspamd-Queue-Id: 89D5C5639A9
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+X-Spamd-Result: default: False [-1.66 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[baylibre-com.20251104.gappssmtp.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10488-lists,dmaengine=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim,nvidia.com:email,nvidia.com:mid];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,lists.linux-m68k.org,vger.kernel.org,gmail.com,baylibre.com];
+	TAGGED_FROM(0.00)[bounces-10489-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sheetal@nvidia.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[baylibre.com];
+	DKIM_TRACE(0.00)[baylibre-com.20251104.gappssmtp.com:+];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	FROM_NEQ_ENVFROM(0.00)[adureghello@baylibre.com,dmaengine@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCVD_COUNT_SEVEN(0.00)[9]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,baylibre-com.20251104.gappssmtp.com:dkim]
 X-Rspamd-Action: no action
 
-Add dev_err/dev_err_probe logging across failure paths to improve
-debuggability of DMA errors during runtime and probe.
+Hi all,
 
-Use return dev_err_probe() pattern where no cleanup is required in the
-probe function. On error paths that need explicit unwind, store the
-dev_err_probe() return value in ret before jumping to the cleanup label.
-Also convert existing dev_err calls in probe to dev_err_probe for
-consistency, and use dev_err in non-probe functions.
+sorry that i could check this now only, hope is not too late.
 
-Keep explicit runtime PM and DMA registration unwind instead of managed or
-scoped cleanup. The scoped runtime PM guard releases the usage count with
-pm_runtime_put(), while this probe error path needs pm_runtime_put_sync()
-before pm_runtime_disable(). The OF DMA registration failure path also
-needs to unregister the DMA engine before dropping the runtime PM reference.
+On Thu, May 07, 2026 at 10:43:01PM +1000, Greg Ungerer wrote:
+> Hi Arnd,
+>
+> On 7/5/26 05:12, Arnd Bergmann wrote:
+> > On Wed, May 6, 2026, at 16:26, Greg Ungerer wrote:
+> >
+> > > drivers/dma/mcf-edma-main.c
+> > >    Supports big-endian access by setting the big-endian flag of
+> > >    the drivers struct fsl_edma_engine. But locally should be using
+> > >    ioread32be() and iowrite32be() instead of ioread32() and iowrite32().
+> >
+> > I'm still a bit confused about how this works at the moment,
+> > since the drivers/dma/fsl-edma-common.h file already contains
+> > checks for the edma->big_endian flag, which is set in
+> > mcf_edma_probe(). The version after your patch makes sense
+> > to me, but it looks like the existing code cannot work.
+>
+> Yes, it certainly doesn't look right to me either.
+>
+> Angelo: you look to be the original author of this driver, can you shed any
+> light on its working status in mainline currently?
+>
 
-Signed-off-by: Sheetal <sheetal@nvidia.com>
----
-Changes in v7:
-- Keep explicit runtime PM unwind instead of using a scoped runtime PM guard
-  and devm_pm_runtime_enable(), because the guard releases with
-  pm_runtime_put() while this path needs pm_runtime_put_sync() before
-  pm_runtime_disable().
-- Keep manual DMA registration unwind instead of using
-  dmaenginem_async_device_register() so DMA unregister happens before the
-  runtime PM reference is dropped on OF DMA registration failure.
-- Restore the explicit IRQ cleanup path instead of using managed IRQ disposal.
+I was some years far from this driver (and the kernel itself), but i have
+seen there are several changes in the edma common part from that time.
+I remember i reviewed/tested some of them, some other unfortunately not.
 
----
- drivers/dma/tegra210-adma.c | 63 ++++++++++++++++++++++++++-----------
- 1 file changed, 44 insertions(+), 19 deletions(-)
+I realized last month, that i was back working on this board (stmark2)
+that somehting related to edma or dspi looks broken in mainline now:
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 14e0c408ed1e..ceaee1e33e68 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -335,8 +335,16 @@ static int tegra_adma_request_alloc(struct tegra_adma_chan *tdc,
- 	struct tegra_adma *tdma = tdc->tdma;
- 	unsigned int sreq_index = tdc->sreq_index;
- 
--	if (tdc->sreq_reserved)
--		return tdc->sreq_dir == direction ? 0 : -EINVAL;
-+	if (tdc->sreq_reserved) {
-+		if (tdc->sreq_dir != direction) {
-+			dev_err(tdma->dev,
-+				"DMA request direction mismatch: reserved=%s, requested=%s\n",
-+				dmaengine_get_direction_text(tdc->sreq_dir),
-+				dmaengine_get_direction_text(direction));
-+			return -EINVAL;
-+		}
-+		return 0;
-+	}
- 
- 	if (sreq_index > tdma->cdata->ch_req_max) {
- 		dev_err(tdma->dev, "invalid DMA request\n");
-@@ -665,8 +673,11 @@ static int tegra_adma_set_xfer_params(struct tegra_adma_chan *tdc,
- 	const struct tegra_adma_chip_data *cdata = tdc->tdma->cdata;
- 	unsigned int burst_size, adma_dir, fifo_size_shift;
- 
--	if (desc->num_periods > ADMA_CH_CONFIG_MAX_BUFS)
-+	if (desc->num_periods > ADMA_CH_CONFIG_MAX_BUFS) {
-+		dev_err(tdc2dev(tdc), "invalid DMA periods %zu (max %u)\n",
-+			desc->num_periods, ADMA_CH_CONFIG_MAX_BUFS);
- 		return -EINVAL;
-+	}
- 
- 	switch (direction) {
- 	case DMA_MEM_TO_DEV:
-@@ -1029,8 +1040,8 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 
- 	cdata = of_device_get_match_data(&pdev->dev);
- 	if (!cdata) {
--		dev_err(&pdev->dev, "device match data not found\n");
--		return -ENODEV;
-+		return dev_err_probe(&pdev->dev, -ENODEV,
-+				     "device match data not found\n");
- 	}
- 
- 	tdma = devm_kzalloc(&pdev->dev,
-@@ -1056,7 +1067,8 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 			unsigned int ch_base_offset;
- 
- 			if (res_page->start < res_base->start)
--				return -EINVAL;
-+				return dev_err_probe(&pdev->dev, -EINVAL,
-+						     "invalid page/global resource order\n");
- 			page_offset = res_page->start - res_base->start;
- 			ch_base_offset = cdata->ch_base_offset;
- 			if (!ch_base_offset)
-@@ -1064,7 +1076,9 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 
- 			page_no = div_u64(page_offset, ch_base_offset);
- 			if (!page_no || page_no > INT_MAX)
--				return -EINVAL;
-+				return dev_err_probe(&pdev->dev, -EINVAL,
-+						     "invalid page number %llu\n",
-+						     (unsigned long long)page_no);
- 
- 			tdma->ch_page_no = page_no - 1;
- 			tdma->base_addr = devm_ioremap_resource(&pdev->dev, res_base);
-@@ -1079,7 +1093,8 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 			if (IS_ERR(tdma->base_addr))
- 				return PTR_ERR(tdma->base_addr);
- 		} else {
--			return -ENODEV;
-+			return dev_err_probe(&pdev->dev, -ENODEV,
-+					     "failed to get memory resource\n");
- 		}
- 
- 		tdma->ch_base_addr = tdma->base_addr + cdata->ch_base_offset;
-@@ -1087,8 +1102,8 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 
- 	tdma->ahub_clk = devm_clk_get(&pdev->dev, "d_audio");
- 	if (IS_ERR(tdma->ahub_clk)) {
--		dev_err(&pdev->dev, "Error: Missing ahub controller clock\n");
--		return PTR_ERR(tdma->ahub_clk);
-+		return dev_err_probe(&pdev->dev, PTR_ERR(tdma->ahub_clk),
-+				     "failed to get ahub clock\n");
- 	}
- 
- 	tdma->dma_chan_mask = devm_kzalloc(&pdev->dev,
-@@ -1104,8 +1119,8 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 					 (u32 *)tdma->dma_chan_mask,
- 					 BITS_TO_U32(tdma->nr_channels));
- 	if (ret < 0 && (ret != -EINVAL)) {
--		dev_err(&pdev->dev, "dma-channel-mask is not complete.\n");
--		return ret;
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "dma-channel-mask is not complete.\n");
- 	}
- 
- 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
-@@ -1127,11 +1142,13 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 					cdata->global_ch_config_base + (4 * i);
- 		}
- 
--		tdc->irq = of_irq_get(pdev->dev.of_node, i);
--		if (tdc->irq <= 0) {
--			ret = tdc->irq ?: -ENXIO;
-+		ret = of_irq_get(pdev->dev.of_node, i);
-+		if (ret <= 0) {
-+			ret = dev_err_probe(&pdev->dev, ret ?: -ENXIO,
-+					    "failed to get IRQ for channel %d\n", i);
- 			goto irq_dispose;
- 		}
-+		tdc->irq = ret;
- 
- 		vchan_init(&tdc->vc, &tdma->dma_dev);
- 		tdc->vc.desc_free = tegra_adma_desc_free;
-@@ -1141,12 +1158,18 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
- 
- 	ret = pm_runtime_resume_and_get(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		ret = dev_err_probe(&pdev->dev, ret,
-+				    "runtime PM resume failed\n");
- 		goto rpm_disable;
-+	}
- 
- 	ret = tegra_adma_init(tdma);
--	if (ret)
-+	if (ret) {
-+		ret = dev_err_probe(&pdev->dev, ret,
-+				    "failed to initialize ADMA\n");
- 		goto rpm_put;
-+	}
- 
- 	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
-@@ -1172,14 +1195,16 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 
- 	ret = dma_async_device_register(&tdma->dma_dev);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "ADMA registration failed: %d\n", ret);
-+		ret = dev_err_probe(&pdev->dev, ret,
-+				    "ADMA registration failed\n");
- 		goto rpm_put;
- 	}
- 
- 	ret = of_dma_controller_register(pdev->dev.of_node,
- 					 tegra_dma_of_xlate, tdma);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "ADMA OF registration failed %d\n", ret);
-+		ret = dev_err_probe(&pdev->dev, ret,
-+				    "ADMA OF registration failed\n");
- 		goto dma_remove;
- 	}
- 
--- 
-2.17.1
+[    2.270000] fsl-dspi fsl-dspi.0: Not able to get desc for DMA xfer
+[    2.280000] fsl-dspi fsl-dspi.0: DMA transfer failed
+[    2.280000] spi_master spi0: failed to transfer one message from queue
+[    2.290000] spi_master spi0: noqueue transfer failed
+[    2.290000] spi-nor spi0.1: probe with driver spi-nor failed with error -5
+
+DSPI is using edma, i will try to understand where the issue is asap.
+
+About how it works:
+- for accesses to edma module (IP) mmio registers, must be native
+big_endian, so using the "be" suffix in "mcf"_edma looks ok for me.
+- for accessing the "tcd" memory structure, that must be, from what i
+remember, anyway in little endian, independently from the cpu core
+endiannes, this is the reason that big_endian flag is needed, it is
+used for tcd area accesses, so the IP module was built.
+The tcd area may be similar to pci accesses (see mcf54415 RM 19.4.16).
+
+Anyway, tested the patch, nothing looks changed nor in better or worst.
+Will look into this in the next days.
+
+>
+> > > drivers/spi/spi-fsl-dspi.c
+> > >    Setting the regmap format_endian flags to use native endian will
+> > >    force driver to use appropriate big or little endian access on
+> > >    whatever platform it is built for.
+> > >
+> > > These drivers have only been compile tested.
+> >
+> > I would suggest marking these as explicit BIG_ENDIAN rather than
+> > NATIVE_ENDIAN. The effect should be the same since coldfire CPUs
+> > cannot run little-endian code, but the way that hardware usually
+> > works is that the endianess is fixed at the bus level to one way
+> > or the other. NATIVE_ENDIAN to me implies that the registers
+> > have configurable endianess that is switched along with the CPU
+> > mode.
+>
+> Ok, will change. I chose native endian in this case since the regmap config
+> entry used for the m5441x family is also used by the vf610 devce (which looks
+> to be an ARM imx SoC). So it will need a duplicate setup with those endian
+> flags set to BIG_ENDIAN. But that is no problem.
+>
+> Thanks
+> Greg
+>
+
+Regards,
+angelo
 

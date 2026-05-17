@@ -1,188 +1,239 @@
-Return-Path: <dmaengine+bounces-10490-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10491-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kEF3Ak8gCmrkwwQAu9opvQ
-	(envelope-from <dmaengine+bounces-10490-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 22:08:47 +0200
+	id GDJoAgUlCmqpxAQAu9opvQ
+	(envelope-from <dmaengine+bounces-10491-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 22:28:53 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A965563AFD
-	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 22:08:46 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 933F5563C39
+	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 22:28:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CB30F300CE4D
-	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 20:08:44 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A15C9300D738
+	for <lists+dmaengine@lfdr.de>; Sun, 17 May 2026 20:28:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B6EB30C179;
-	Sun, 17 May 2026 20:08:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92DC730FF37;
+	Sun, 17 May 2026 20:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skn4WbDv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxOhZ9Ks"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183F3223708
-	for <dmaengine@vger.kernel.org>; Sun, 17 May 2026 20:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779048524; cv=none; b=PsMQkakNCwnd0DqntIscQWQ6jvWP7ba7aPrq8UHJyAZomo0HP0SVhQJKwtpVBwF1+e9B5kveeXe+mUE2yPF9IsZICjC3d++1d/6Dud5N6PzKWxPJFBfyPIIDl8nCzPfOHqIoArmI06DZJdGdsinuy+3CBL/OK45r6CLsvUzkTnc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779048524; c=relaxed/simple;
-	bh=zf+st0yI5heHtI4FZ1FB5w9AS2N7hIXhtUlFxWhN0A0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=RSv1Qx6kzC6gn7vsNWuEVK+ExdIcaiyEcGxSczsbZbSXl+Uu/D6E+dww91pV6paytT5GnHtIPR+Lbh0qoeSUZKbadFdJQrCb+DXUbeTaNF6e46nmV0gs8apXl2UzvMayM54vvH+BIyaKVquOr4RpphvTg5kuvVXY9eRAJS3HQJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skn4WbDv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF64CC4AF09;
-	Sun, 17 May 2026 20:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779048523;
-	bh=zf+st0yI5heHtI4FZ1FB5w9AS2N7hIXhtUlFxWhN0A0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=skn4WbDvz+YzVITEc2A8jMQWG/mEwxA1MR+1BDPd+IfvSaGYnSZ9lHk/QLpM49Q6T
-	 c0LlbgxeLH4cPOwqeh1j4tokTG8lkBim9yAp4xlNXejrTuSE4dN5trJLNKAjfubCyQ
-	 qvBpa6ElOb6MJT9zJHDqLNY6TRi7RnZJndmwy+XIk6F/TsBFY/mnzVPCymlRBgLTXd
-	 3eVUD1nkIyhutnjHanw9a7II5F3eY2ADvBb/0YjfTpxM8oJo87qM7lssEfu/PWF1Cp
-	 bAXT2WEHmuXQ4HV7ErGjDvlzbXSCLv546B1GJIGE4c7DuMtjF+26q+kebOKJvksx+R
-	 c2u+VNkBuEIJw==
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C860BF4007A;
-	Sun, 17 May 2026 16:08:42 -0400 (EDT)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-04.internal (MEProxy); Sun, 17 May 2026 16:08:42 -0400
-X-ME-Sender: <xms:SiAKajBOiIDolb2a-kfqXaAxniwDVxeyJ3C8HynOWI8qwMgSTYi72Q>
-    <xme:SiAKakU-F8DyfzAbbYSvmyQROv5ynEHlx7fw9HE4l4kBDZHIYU0nPOpy6o0_L0-2d
-    cV4vtZ1_lbnQ_eR7J5fLOhLDW_VAawJuxJhX8yIlecxTa0BMTljwOk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufeeiledtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
-    htvghrnhepjeejffetteefteekieejudeguedvgfeffeeitdduieekgeegfeekhfduhfel
-    hfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedtvdeg
-    qddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrdguvg
-    dpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprggu
-    uhhrvghghhgvlhhlohessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepohhlthgvrg
-    hnvhesghhmrghilhdrtghomhdprhgtphhtthhopehgvghrgheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqmheikehksehlihhsthhsrdhlihhnuhigqdhmieekkh
-    drohhrghdprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqtggrnhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehlihhnuhigqdhsphhisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:SiAKakTianBIt_kJfTpAUmYEDEIsRbz-RK4e6Tn06xUqLrBqrGtXeQ>
-    <xmx:SiAKaiMlHYWf2OJPGa0E8bXjTkpF2wUjEXjTjbDZuGSiH8Nc2n3Y4A>
-    <xmx:SiAKaig-ETwcDW2Bs9qgLLZp2xq0cxnQ8FQ8o0l1WRMYU6rDzDByng>
-    <xmx:SiAKavlN24Wb70sjBSt7-4YEC_WTmYn4eUwrlV0pEiWMCpa-NsW10Q>
-    <xmx:SiAKaughoEk4-LIi6rkg2hjw1pPG16O79DVmftYomWtTb3OCI6X8tIjv>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A509E182007A; Sun, 17 May 2026 16:08:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6B430E85B
+	for <dmaengine@vger.kernel.org>; Sun, 17 May 2026 20:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779049721; cv=pass; b=qDA7qSPol5MIhETa5yyqPDbEHMNGTDaciG3jAPWjSFP8lMh2nh888j5Wp7rxLQW+aZoAju8SKWsLyQc97gIWytj9ctZKb6ejlynDihj46b33fxPaYXjHjJLKJK+hJ9xv3pjTtdF+oRHzpIZchwdSHvzTMFJJPWtPgmDHcPzI8/0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779049721; c=relaxed/simple;
+	bh=2RwNPXEv6s2JoaROSCh5jyEVahMOlqAe4M3ndGU/g1M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mzqZo/IaRqLr2/aLOwaiEyUVrBeV6+LxKEs2FFu1JGlJ/hhOE2vTudMyYs1u09hleF9rq0hWTYEbHGb9D1tAs/ItaPIcFErOTa5V1cNeXPySFiZWLz26hMQLHHUfswqbe10NVwMaoPqY45WThJ+Lv7DEu1v14DDoL/NPc43150k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rxOhZ9Ks; arc=pass smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-67c1e0229acso2645976a12.1
+        for <dmaengine@vger.kernel.org>; Sun, 17 May 2026 13:28:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779049718; cv=none;
+        d=google.com; s=arc-20240605;
+        b=XgSRYF5mAibVCeADblvPtIo13DZuK3YOXnpAbpKHeExEIekQizlbICSK8BlJsQZOxS
+         d0LTLGL6MjMpQD62ULlWoCA2QpJXULo9SR0oIEC9XFkaF95vRggD+oKCa6cl61SPfhze
+         fzwl2MOlm0SwSAunII0/Vx0fgrttgEpefidOghZxqNrHPXxuTUkUdd24YbL4Xx0TPISq
+         6FiiXEvTAdx77KyyI4kRyhG3D/lRiWWbRa+V5M/yhGNc7EB471S7hQjvcSIfGqt7xJBe
+         mhB+DnBKi/kQ7TPd8Lh+gISCWQ2mXKfPalK4bTrv+b87fEisMHHzU2vIUNqpNsulDSmt
+         GdHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=0KvnfTYk6N67AKhY+UfuwULwRynjPAQarihdrw81Qgs=;
+        fh=TetZ0/espx2WNaT47jWHJyWhTgPGdilRsfSUDC9eikw=;
+        b=BwfPL79einS21zDZwiqUqOAfzGSR7OXPK8QzmU/DS3SQcIHu+PljOUtzMNX93CaEeq
+         aYbeayK9QWS4FwA6OlVMBT26rJwzYLwgqZurb4ZzTZrBRIAGvyVbNVQ21SRNt9myyxvy
+         nSULHw3ZsrrAuk5+9zQylpSmafLHv/Uf//JAfrFvB6G0s4r2fPSIbXnGUY8hBoBNujJ0
+         A6gF9EDCd9LzlSijXK7Yn3SC7BXZrB51oYaHM9NuLxTzRs2UQrts/jq8F8X8CM7LMvI0
+         agxNXVnpbqwAcWi9mCbMfDmIS6BON4IgvrrsETMAOER+YwhHV/gDYspkET8+EqJR6x1B
+         uf2Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779049718; x=1779654518; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0KvnfTYk6N67AKhY+UfuwULwRynjPAQarihdrw81Qgs=;
+        b=rxOhZ9KsSQxCitRDEEsviYwA9xjhX9qjszTWzLrYvOtQl6SAJCqjYzzhb89Ze4nSoS
+         CeTu2Wznwbyb/J4arsw41Hf0IfEiRF/5vOWu6SrpFNaV/TzgvSrdP40gLxM8bDIQRSmT
+         xwEoDXRGAF8SeP5gi5I34JXH0BkcRDW2t7Y2AGqC8r78cpfyVeElEGt2T9kcsEt2I4Hi
+         WE8aXr+7ub0JatvQXnyhkC5v7Vkm22b22t5743tV5snBQeBlUdjon/VTtTW+uaLRgCza
+         qshmT3qwddMndXy25auNvFEJy0THQxXQhcAUc8e7J5RwW0bB4N9KlVgNV/qMv//QURFw
+         9/yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779049718; x=1779654518;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0KvnfTYk6N67AKhY+UfuwULwRynjPAQarihdrw81Qgs=;
+        b=CGxah/+iF+z2PwM+Os2vEU6ToUXaaLMj3eUa9cvUe17IG4jIiaBPcpfZEFcdwDJJhH
+         yzaVyZcIRw3vm3sb5yamIU0QSW41rRv0o48oaJlb6hf3KMYBtf2JUWVicP74Df+Fo3xX
+         JQ1dn/LbAzM5jFE1gUFQK7JX2ACaCmSeAgnTv7+eJ1u6gUkRyg0jIuJp7+c8zkxCkimd
+         5OcrcqQZRILJgOn0uFPuoCf9aci4xFpF9AqJ3LwDykchHfSaybxnxbicDXOqR1w1JadA
+         4ziJRiAVpTD1zNGhZox4YKqhqmtYgc1Dq9vzkqzLm6VDC84dYizUQJJGSZdJQsSswb7T
+         nO5g==
+X-Forwarded-Encrypted: i=1; AFNElJ/WCpCGBo0mZ4BqN+fNc5V9toq9tQFRhYOr7HtWsaNELONiXBbTn5ZkSbg/6aqG4+itlmrE2/lD9UY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3YtKZBlXPWZo2xIevtXASucRtt0HRT+QpjGQ3h4oVElVhOf6T
+	Q9EFucQQflIzCJPG6ydIAV+h/P3ok3xDl5Ak9d5Rjvjf74Zifz+fFeiuXgzpvOw6U+h6BWpNs16
+	NPIVe0SvNwnIaGxXU6AD8brmywAD9shg3eHov3zfW8A==
+X-Gm-Gg: Acq92OFAPT1BjF0imcuDiPbmnnMCAV1WFQaOQxTgfkhW2YBY4PiEoeQjWzJRlt6jj5p
+	Dg0WlNwKp8hdJDS49r7p0hxpP8wV0/FhsSOxWqvuffhBjzmnMXLy8UTvfyQHyRNBHj31sqHT92x
+	yp+fH981R+BiTh3rMqffSfrxBe9o+Kk7zNh2p3jx8A6AfJ3EEXM8HUwFNvFX75t/sfTOYjUDun3
+	kFxTPv6AOt5SD0bsGQQimuDiAjfcXC0heWG49wE0p3GooV3GjdzCnWwzkfV1PJt2vjsxJwmYbVh
+	xU1KlcQ=
+X-Received: by 2002:aa7:c78c:0:b0:677:1ce0:c08d with SMTP id
+ 4fb4d7f45d1cf-683bd58a162mr3936886a12.18.1779049718038; Sun, 17 May 2026
+ 13:28:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Am-_gogYW4uZ
-Date: Sun, 17 May 2026 22:08:22 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Angelo Dureghello" <adureghello@baylibre.com>,
- "Greg Ungerer" <gerg@kernel.org>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-can@vger.kernel.org,
- linux-spi@vger.kernel.org, "Vladimir Oltean" <olteanv@gmail.com>
-Message-Id: <9391b782-7727-47fa-ac37-05cd50821d35@app.fastmail.com>
-In-Reply-To: 
- <CALSJ-wCrNDv3N2Kdo0uoXsKGtp0GthJRBeYTNQA1gGE2akUWFg@mail.gmail.com>
-References: <20260506142644.3234270-2-gerg@kernel.org>
- <20260506142644.3234270-8-gerg@kernel.org>
- <40aefc39-bd98-460d-8aa7-5dd79f562e0d@app.fastmail.com>
- <fdd6fc14-f607-4186-8db4-25de973ac322@kernel.org>
- <CALSJ-wCrNDv3N2Kdo0uoXsKGtp0GthJRBeYTNQA1gGE2akUWFg@mail.gmail.com>
-Subject: Re: [RFC 4/4] m68k: coldfire: fix non-standard readX()/writeX() functions
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 5A965563AFD
+References: <20260515142623.793549-1-dbgh9129@gmail.com> <8407feed-0619-4b94-95c7-0d2f27c643c3@intel.com>
+In-Reply-To: <8407feed-0619-4b94-95c7-0d2f27c643c3@intel.com>
+From: =?UTF-8?B?7LWc7Jyg7Zi4?= <dbgh9129@gmail.com>
+Date: Sun, 17 May 2026 16:28:26 -0400
+X-Gm-Features: AVHnY4JqF3qO5nzUeJD3ZHApPOfeMuKpojr6RhYzE6m--LFENhqVSjUCqkyK0z0
+Message-ID: <CACrCO_XjRw74R36OVOeVUCvsF1g4bPEEf+uEduG0sJWB=o1n6w@mail.gmail.com>
+Subject: Re: [PATCH v2] dmaengine: idxd: fix deadlock and double free in idxd_cdev_open()
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vinod Koul <vkoul@kernel.org>, 
+	Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 933F5563C39
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[lists.linux-m68k.org,vger.kernel.org,gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10490-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,app.fastmail.com:mid];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-10491-lists,dmaengine=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dbgh9129@gmail.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	RCPT_COUNT_FIVE(0.00)[6];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:email]
 X-Rspamd-Action: no action
 
-On Sun, May 17, 2026, at 21:43, Angelo Dureghello wrote:
-> On Thu, May 07, 2026 at 10:43:01PM +1000, Greg Ungerer wrote:
->> On 7/5/26 05:12, Arnd Bergmann wrote:
->> > On Wed, May 6, 2026, at 16:26, Greg Ungerer wrote:
+Thanks for the review.
+Understood regarding mixing scope-based cleanup and gotos. I initially
+introduced the scope-based cleanup following the first feedback in v1
+but it became complicated. Since fully converting the function with
+auto cleanup would be overly complex, I will send v3 with gotos.
+
+Best regards,
+Yuho
+
+
+On Fri, 15 May 2026 at 11:53, Dave Jiang <dave.jiang@intel.com> wrote:
 >
-> [    2.270000] fsl-dspi fsl-dspi.0: Not able to get desc for DMA xfer
-> [    2.280000] fsl-dspi fsl-dspi.0: DMA transfer failed
-> [    2.280000] spi_master spi0: failed to transfer one message from queue
-> [    2.290000] spi_master spi0: noqueue transfer failed
-> [    2.290000] spi-nor spi0.1: probe with driver spi-nor failed with error -5
 >
-> DSPI is using edma, i will try to understand where the issue is asap.
 >
-> About how it works:
-> - for accesses to edma module (IP) mmio registers, must be native
-> big_endian, so using the "be" suffix in "mcf"_edma looks ok for me.
-
-The twist here is that with the way that readl() is defined on
-coldfire as a non-swapping operation, and the generic
-definition assuming the opposite in
-
-static inline u32 ioread32be(const void __iomem *addr)
-{
-        return swab32(readl(addr));
-}
-
-the function called ioread32be() actually tries to access
-the registers as little-endian. I can see two possible ways
-we got here, but don't know which one is currect:
-
-a) the device actually has little-endian registers (like it
-   does on i.MX, but unlike all other coldfire devices), and
-   you just never noticed because using ioread32be() worked
-   as you expected.
-
-b) you tested the driver using an ioread32be() definition that
-   did not have a byteswap and it correctly accessed big-endian
-   registers at the time, but the version in mainline today does
-   not.
-
-> - for accessing the "tcd" memory structure, that must be, from what i
-> remember, anyway in little endian, independently from the cpu core
-> endiannes, this is the reason that big_endian flag is needed, it is
-> used for tcd area accesses, so the IP module was built.
-> The tcd area may be similar to pci accesses (see mcf54415 RM 19.4.16).
-
-edma_read_tcdreg() calls into edma_readl(), which is the same function
-that is used for normal register access, so from what I can tell,
-they always use the same endianess here.
-
-      Arnd
+> On 5/15/26 7:26 AM, Yuho Choi wrote:
+> > The failed_dev_add and failed_dev_name error paths in idxd_cdev_open()
+> > drop the file-device reference while still holding wq->wq_lock. If this
+> > is the last reference, put_device(fdev) runs idxd_file_dev_release(),
+> > which takes wq->wq_lock again and deadlocks.
+> >
+> > Those error paths also fall through into the later ctx cleanup labels
+> > after idxd_file_dev_release() has already freed ctx. This can make
+> > idxd_xa_pasid_remove(ctx) operate on freed memory and can later free ct=
+x
+> > again at the failed label.
+> >
+> > Use scoped put_device() cleanup for fdev and return from the fdev setup
+> > failure path after unlocking wq->wq_lock. Take the WQ reference before
+> > fdev can be released so idxd_file_dev_release() always balances a
+> > matching idxd_wq_get().
+> >
+> > Fixes: e6fd6d7e5f0fe ("dmaengine: idxd: add a device to represent the f=
+ile opened")
+> > Signed-off-by: Yuho Choi <dbgh9129@gmail.com>
+> > ---
+> > Changes in v2:
+> > - Use __free(put_device) for the file-device reference.
+> > - Take the WQ reference before fdev can be released so the release
+> >   callback's idxd_wq_put() has a matching idxd_wq_get().
+> >
+> >  drivers/dma/idxd/cdev.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+> > index 0366c7cf3502..18ff29118d12 100644
+> > --- a/drivers/dma/idxd/cdev.c
+> > +++ b/drivers/dma/idxd/cdev.c
+> > @@ -216,7 +216,7 @@ static int idxd_cdev_open(struct inode *inode, stru=
+ct file *filp)
+> >       struct idxd_user_context *ctx;
+> >       struct idxd_device *idxd;
+> >       struct idxd_wq *wq;
+> > -     struct device *dev, *fdev;
+> > +     struct device *dev, *fdev __free(put_device) =3D NULL;
+>
+> It's probably not a good idea to mix scope based cleanups with gotos. Use=
+ one or the other and not both. Otherwise the whole thing become a mess to =
+read and maintain. In this function it looks to be pretty difficult to comp=
+letely convert to scope based cleanups so I suggest avoiding it.
+>
+> DJ
+>
+> >       int rc =3D 0;
+> >       struct iommu_sva *sva =3D NULL;
+> >       unsigned int pasid;
+> > @@ -289,6 +289,7 @@ static int idxd_cdev_open(struct inode *inode, stru=
+ct file *filp)
+> >       fdev->bus =3D &dsa_bus_type;
+> >       fdev->type =3D &idxd_cdev_file_type;
+> >
+> > +     idxd_wq_get(wq);
+> >       rc =3D dev_set_name(fdev, "file%d", ctx->id);
+> >       if (rc < 0) {
+> >               dev_warn(dev, "set name failure\n");
+> > @@ -301,13 +302,14 @@ static int idxd_cdev_open(struct inode *inode, st=
+ruct file *filp)
+> >               goto failed_dev_add;
+> >       }
+> >
+> > -     idxd_wq_get(wq);
+> > +     fdev =3D NULL;
+> >       mutex_unlock(&wq->wq_lock);
+> >       return 0;
+> >
+> >  failed_dev_add:
+> >  failed_dev_name:
+> > -     put_device(fdev);
+> > +     mutex_unlock(&wq->wq_lock);
+> > +     return rc;
+> >  failed_ida:
+> >  failed_set_pasid:
+> >       if (device_user_pasid_enabled(idxd))
+>
 

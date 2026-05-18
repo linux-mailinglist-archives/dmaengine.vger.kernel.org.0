@@ -1,301 +1,217 @@
-Return-Path: <dmaengine+bounces-10505-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10506-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gGASAyHQCmru8QQAu9opvQ
-	(envelope-from <dmaengine+bounces-10505-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2026 10:38:57 +0200
+	id p9POIf/dCmqP8wQAu9opvQ
+	(envelope-from <dmaengine+bounces-10506-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2026 11:38:07 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6479D568FBD
-	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2026 10:38:56 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5DE1569D96
+	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2026 11:38:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6CEEC30221E0
-	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2026 08:36:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E468A30078EB
+	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2026 09:32:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 090313E2ACD;
-	Mon, 18 May 2026 08:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 139643E63B2;
+	Mon, 18 May 2026 09:32:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GWRPL/Si"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Vt0ThH1r";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="d7Zrs/v1"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011066.outbound.protection.outlook.com [52.101.57.66])
+Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227C83E2AC8;
-	Mon, 18 May 2026 08:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779093415; cv=fail; b=FVXvJ0XkItmYdRVwDAhOQGrOG2o2h1TBZ5M46TdJH9E6JU7z4eoXaLnhro8FefbQLY/PSTVK8pUkwHIBZcayPRvKbOTPTKomOBiUZ4pB/KxCqhLklsfUHT+YV6DgEjpjIrxSrBe+IZEQKy9s02MttZYK9pj4i1XV7ADvd0WCjxQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779093415; c=relaxed/simple;
-	bh=/Og1lG8pR4sY+kftidFkIp1heQMONf1Mvocs0/KEl1o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=anM9rTzwYIDnVHFZ0Oofb9P5FP1QccZU09D0VklfQWlFE8QQml0c29myLDIsf6M8b51iUt/LlgWmsDyA4OJn6JPAgeeof706trrS6hFRQoyPybQvKhoeUGDV8KLLkI/6qK6tb2T87m5/JFbwMX3bNqYYHgNt7BPG9qyTZqJrpVY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GWRPL/Si; arc=fail smtp.client-ip=52.101.57.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u/esTwh6L7r9YOItUyUnUmrnAqD6Ti9rzyK4rN1qeUDTqGTw/vQGoo96jg70ELFaPLNAa/XzTGmaLpIQ9gtTshOlibg0qAnQHg8NBvXNE7VfL+93pY2YXlRlKOfddFSSgnQW+h3vgu+FEWCExc+FzVJgpVPnQMx93zjwTUeU71UYL/4BPshWQs5xp/E91HVEhm8PwSnPEh+YuVy+EzzrzWSaF7hflinGpSmF/fHE8hphgEyt5tSByBU3tN2mSpG8Xqggfm268NJVM8SMarvTJTDiY8Dj2CkB/eXcjTKoZAkhQReJlB9AqWi0Jn6DFdnnRUJ//68KYitC/D0IJDiP2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7A3Z8+5ib0bemV2lf5nKz3AkYhvzY/84byhmcRUt9rM=;
- b=YPc+rEJfgznY/lOy+gakzJijPnIhMXhUl4aMu3vgX5+6fqcwuETaut4QuOR4Jn/XvxUq4M67DPxUhnlbEbGh8hKf/Vr5sKXZHcXZUB9fa3JSs8L3qp0E9JWYMpRp39l2DgVBLbbpRffZy+8Rm11k4AnjKOlOeyeUEDpEavfirLq49bGkbwR9YaXVkBtEFPjjwC5iOGVpKXI+ApL5ZZ/Il9ie34DGIh87RchApIvLyAsgSGqovfAQSFfQPac/txEqQmTz7l3Pa29R236mLHomsykzdsmekwgDPefY9Vis/XT9Z2aMutL8klCoDNWQTlhrdwfELR8TFk3d5osTr8MIJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.21.194) smtp.rcpttodomain=nxp.com smtp.mailfrom=ti.com; dmarc=pass
- (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7A3Z8+5ib0bemV2lf5nKz3AkYhvzY/84byhmcRUt9rM=;
- b=GWRPL/SixVVnK88PnLx7kErOAgMh7n8Y9Kf0HdrgB7EvKAxvQbuXLt6v0Xi5DzuQ0t41R/dbej2kK9I4zCvOt8yg8IuyJ0/WHKN8Pqa+8bI+m5PrkhoeO69iOexBqololOD1bEQ2puRIC8Fb4CCGo+zyykPL4C5pRURTa8gx5r0=
-Received: from SJ0PR03CA0133.namprd03.prod.outlook.com (2603:10b6:a03:33c::18)
- by DS7PR10MB5037.namprd10.prod.outlook.com (2603:10b6:5:3a9::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.23; Mon, 18 May
- 2026 08:36:49 +0000
-Received: from SJ5PEPF000001D2.namprd05.prod.outlook.com
- (2603:10b6:a03:33c:cafe::a4) by SJ0PR03CA0133.outlook.office365.com
- (2603:10b6:a03:33c::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.25.23 via Frontend Transport; Mon, 18
- May 2026 08:36:49 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.194)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.21.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.21.194; helo=flwvzet200.ext.ti.com; pr=C
-Received: from flwvzet200.ext.ti.com (198.47.21.194) by
- SJ5PEPF000001D2.mail.protection.outlook.com (10.167.242.54) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.48.11 via Frontend Transport; Mon, 18 May 2026 08:36:48 +0000
-Received: from DFLE206.ent.ti.com (10.64.6.64) by flwvzet200.ext.ti.com
- (10.248.192.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Mon, 18 May
- 2026 03:36:47 -0500
-Received: from DFLE215.ent.ti.com (10.64.6.73) by DFLE206.ent.ti.com
- (10.64.6.64) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 18 May
- 2026 03:36:47 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE215.ent.ti.com
- (10.64.6.73) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37 via Frontend
- Transport; Mon, 18 May 2026 03:36:47 -0500
-Received: from [172.24.233.239] (uda0498651.dhcp.ti.com [172.24.233.239])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 64I8ag7D1503492;
-	Mon, 18 May 2026 03:36:43 -0500
-Message-ID: <a90cb680-02aa-4630-9992-68788603800e@ti.com>
-Date: Mon, 18 May 2026 14:06:41 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1514C3E3C59;
+	Mon, 18 May 2026 09:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779096739; cv=none; b=n5K7EiX+3imEzbBoYIomkyKXWQB9iI9mwA9/BVXmLpiRp0KarTwUlvQQnONr0alMtZwkqzXDTHfUkQZqBV8M9jXVm99U3yxsiNon9McOjumG/HGVX3l2Sicqi+5tYXcmjvq7QHkk4TuYcaf7IaGq421OEZtTSR4GwsLPIADNZvw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779096739; c=relaxed/simple;
+	bh=ypzeTVt77Q2YbxNzeBXoLlB99i/DAfX/BMXiXdWvVGE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=R8CjqA5q1PvxkAKfHKMWOoN1zXwm4hCiDyeNbCgWSlCaTEfAlBngES4jlmOwp7FUAjRyhxfrCwcMLSuo5GKWnaYec27h+FQ8/bfuE4bgvJwBeZ+V/uYaNLpkreranjZlOJ2UT6rXiGfSpBtyA26m/LXd02NZH2XIgHY+B+zz4K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Vt0ThH1r; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=d7Zrs/v1; arc=none smtp.client-ip=202.12.124.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id 91C52130011D;
+	Mon, 18 May 2026 05:32:14 -0400 (EDT)
+Received: from phl-imap-05 ([10.202.2.95])
+  by phl-compute-04.internal (MEProxy); Mon, 18 May 2026 05:32:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1779096734;
+	 x=1779103934; bh=Q1EsgrhmOtBlhH6lTl5Uo51ZkO0kpI0RkBVnwq5QUz4=; b=
+	Vt0ThH1rLYcI1Ix28b0JP5KyKVSNK7tWRDDAnyloBA5/OwJqvN0ri23ATRKH/uyF
+	y8piX8XfSOJ2Bufr6N0+eUn5rg446FLnMUuwx7hDbKGF/j7vqGhTISTNEbVMBtD3
+	Er3HNGz+7bqwmkQZXphusyxP6gZ5RoN5+grgyIc2fAVd5zF9uz9rWHF2yR2iKE6c
+	j5CWOhjqbuvDbRqe9DRYBaSya//gp1ZPuFln02tSYpandTwCO8xeGVrBKM1uBGsV
+	9p2JckdJcHMQXLay3F89Y+/C/8zpBN5u1/pireYxLZJvV/0ez2Hvrz9lErx9PSRW
+	EsZ3YkVJzigHewFB4l4G1A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1779096734; x=
+	1779103934; bh=Q1EsgrhmOtBlhH6lTl5Uo51ZkO0kpI0RkBVnwq5QUz4=; b=d
+	7Zrs/v1i2pD7/PQEYdz7BPzqLdbR898qrLSWf/HozUAsyPe+XrqlKiGdfOVHUinw
+	6Q0TqsEx4aDRD2knrLMZmE8pGW7wNnAsh4iVY1NGQyME8dm34CKZoUYySoSwGt3m
+	WO5a6SL/c0VjK4nrTWAgl+UOgREv8GocunpjwMzoH2o93J9K6JzFGz0Nv/ew5u7v
+	otDT3CesstoEPlNlDbtFawhwJUvW/W1HcemrhTjADJgyRVPcEmoEpY9owJYiw0so
+	hKSiM+D0KAtC7+FYC/VwBnzCVieL8gHr9uBPe1fZUpAoCDiIEatJShmPKAswwKNf
+	PdCn7RLUd8Xkv45idAYWQ==
+X-ME-Sender: <xms:m9wKaiS1nRXcm5q7ZK6FjXk-vPvsJCwaGlPICQR9d8H9UXzQ4G_8uA>
+    <xme:m9wKailMo_Vsg2pUTHY2LO2mRgZMiiYsetrfaJAgSSwVAluO1sPqyU7-v1LlFoahd
+    gD4YhMSwmAQLKH7qOY_UXwDIOVaw4Ju_GOiNEeGM_TfF_ltikUCbgY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufeekhedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhepgfetleektedtheehheegffdtgfejvddvveeigfehjedvkefguefffedvhfehkeeu
+    necuffhomhgrihhnpehsohhurhgtvgifrghrvgdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhn
+    sggprhgtphhtthhopeehtddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhhunh
+    hordhsrgesrghnrghlohhgrdgtohhmpdhrtghpthhtohepughlvggthhhnvghrsegsrgih
+    lhhisghrvgdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvg
+    htpdhrtghpthhtohepughpvghnkhhlvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
+    vghnvghlshhonhhmohhorhgvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepnhhpihhggh
+    hinhesghhmrghilhdrtghomhdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgv
+    rdgtohhmpdhrtghpthhtohepugiimheludeshhhushhtrdgvughurdgtnhdprhgtphhtth
+    hopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrgh
+X-ME-Proxy: <xmx:m9wKaoXO8csU_OfH3IC96vXBm6hf3_s4i74Aa2ze3_cRkDErTRhnQA>
+    <xmx:m9wKavCYpT9XIqZZ3KxcyxUwagyNayqYTaDfbOM66aYrE-DDmC3CvQ>
+    <xmx:m9wKaqGfXgsGxAHGFR9PVXMFX8vv_m3SQ0OhOrBlqJJ6MAENfFzlyA>
+    <xmx:m9wKameOBxifjWiOCFYmJ24tKTUi0NpUiwxhzkeayVo8Iddh1ByhbA>
+    <xmx:ntwKarDXvcCscqze7RatHo9_OeoAzcLLCvtlqj7thJsDiA792-MymQA7>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5AE44182007E; Mon, 18 May 2026 05:32:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 13/19] dt-bindings: dma: ti: Add K3 BCDMA V2
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nm@ti.com>,
-	<ssantosh@kernel.org>, <dmaengine@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
-	<Frank.li@nxp.com>, <r-sharma3@ti.com>, <gehariprasath@ti.com>
-References: <20260428085202.1724548-1-s-adivi@ti.com>
- <20260428085202.1724548-14-s-adivi@ti.com>
- <20260430-orthodox-athletic-agama-be4111@quoll>
-Content-Language: en-US
-From: Sai Sree Kartheek Adivi <s-adivi@ti.com>
-In-Reply-To: <20260430-orthodox-athletic-agama-be4111@quoll>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D2:EE_|DS7PR10MB5037:EE_
-X-MS-Office365-Filtering-Correlation-Id: 466c9c78-9fef-4b5f-4422-08deb4b899e7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700016|82310400026|18002099003|22082099003|56012099003|4143699003|3023799003;
-X-Microsoft-Antispam-Message-Info:
-	pdpVpWmflqPBVODUXDF2tcULbtZD7EYQl9xwONFPb7Dwa5eyp9P8Ulm6KbjRFo3NI7VDYTI2uhWavqrVgJ9ffJQcJJL55Ml2GKgObNzJ1XGuyarB8pQr3WdT+l7irZmIK1tDwFvCRNvKPf43BHdJPasG6tEt3/0j5HIMuAZIuyQx06aDkEDxmG1i9bT3E37QvZMUuweCCqlNwQilD6R6zjTY7eMgpNQ2cDH/dKG2HmkI2ck8CLLCYrUxuTWNnCjw9GYLizPkmBNHp4Oe8A/rZbwzv0nlGlg5xd5VasSUQj3qBsz83/wcgRDpcsKdzrjA/7wNFOYJqa1mLSSWqMmX2coBYiYuvC96GcEy7pQk3l9sPNY25y4gIc8NUh2w+Vuk71XwlVlzLsTMRWIaJCBbYFBxqhF1E7pKXEYlzORZDxko7Gi2tGw0kUgRRubcheP7vN3GovHMXCGKX6FVJRupzm4zcqYncPRi/ZSIQn/lvS3pINjEO4XuH8K3xjC5zC0k5FFGpPoQ3uDd21wlIvs0z/2BXrOQtP4H7IMt5X5FXzIbqthS5dUgTprrLzhYcBbE1akweh4mBoF3xBLXK2KFh6yGP3CzDNdpG6ghte6GSjsh2SVhqdIE800sY0V+ERsd6incvg49vOL2khO+ObGXgP5hFm5fdoNbQD5NBBIRZiLDj2CCkDqTOEO7vqm9GMd2
-X-Forefront-Antispam-Report:
-	CIP:198.47.21.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet200.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700016)(82310400026)(18002099003)(22082099003)(56012099003)(4143699003)(3023799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	b6tiDtIm97YYnEzLxYfVJqHrFr3E8E23bM7iXpe69ts8jmC1PTvob4K4HkBlpCjQK5uibFv5JcWFbns+jSAW6KtBp/vLEQPV1V/itUiva7zH5GdHz2D79ozBOD71PsAYKyn6rnX7saeusXfHacFQsbMdhH8axZWk+naqTb5FqOmW5Qs22oU6/Uhrg02E9E2rKXUY0Z7CAFwW/7VHoi9jdEUYKYMNvaRR9ZryFS6VxMVpv+ArucDI3MUfc03E2fzXk32gCFi4sK6myYVGXCMKYDru51+ODv8YLlOGUUB8lKXn89bhQgNz+N9kvBqrilynnBmyE6Q0Hdpw3PznyOITLUkVo6RQcPm3p7+PD/Q3AwYXBm5xZAgjO7IdwiBOUDA7VzGdwVNIO1LlVVKZkfwxyF7ng6elJxmYV2kyLg1Nzdb80MaNV7MVbtP333CeMP5m
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2026 08:36:48.0866
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 466c9c78-9fef-4b5f-4422-08deb4b899e7
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.194];Helo=[flwvzet200.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5037
-X-Rspamd-Queue-Id: 6479D568FBD
+X-ThreadId: AoFiOxpvQUXV
+Date: Mon, 18 May 2026 11:29:48 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ethan Nelson-Moore" <enelsonmoore@gmail.com>, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, workflows@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>, dmaengine@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+ Netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kbuild@vger.kernel.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>
+Cc: "Jonathan Corbet" <corbet@lwn.net>,
+ "Shuah Khan" <skhan@linuxfoundation.org>,
+ "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Daniel Lezcano" <daniel.lezcano@kernel.org>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Alex Shi" <alexs@kernel.org>,
+ "Yanteng Si" <si.yanteng@linux.dev>, "Dongliang Mu" <dzm91@hust.edu.cn>,
+ "Hu Haowen" <2023002089@link.tyut.edu.cn>,
+ "Dinh Nguyen" <dinguyen@kernel.org>, "Kees Cook" <kees@kernel.org>,
+ "Oleg Nesterov" <oleg@redhat.com>, "Will Deacon" <will@kernel.org>,
+ "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Vinod Koul" <vkoul@kernel.org>,
+ "Frank Li" <Frank.Li@kernel.org>, "Dave Penkler" <dpenkler@gmail.com>,
+ "Andi Shyti" <andi.shyti@kernel.org>,
+ "Jonathan Cameron" <jic23@kernel.org>,
+ "David Lechner" <dlechner@baylibre.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ "Andy Shevchenko" <andy@kernel.org>,
+ "Andrew Lunn" <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ "Simon Schuster" <schuster.simon@siemens-energy.com>,
+ "Andreas Oetken" <andreas.oetken@siemens-energy.com>
+Message-Id: <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
+In-Reply-To: <20260518042833.272221-1-enelsonmoore@gmail.com>
+References: <20260518042833.272221-1-enelsonmoore@gmail.com>
+Subject: Re: [PATCH] nios2: remove the architecture
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: D5DE1569D96
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
+X-Spamd-Result: default: False [-0.65 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[ti.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[ti.com:s=selector1];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
+	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm2,messagingengine.com:s=fm3];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10505-lists,dmaengine=lfdr.de];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,ti.com,vger.kernel.org,lists.infradead.org,nxp.com];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ti.com:email,ti.com:mid,ti.com:dkim,devicetree.org:url];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[s-adivi@ti.com,dmaengine@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-10506-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ti.com:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[lwn.net,linuxfoundation.org,kernel.org,linux.dev,hust.edu.cn,link.tyut.edu.cn,redhat.com,linux-foundation.org,gmail.com,infradead.org,baylibre.com,analog.com,lunn.ch,davemloft.net,google.com,siemens-energy.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
+	RCPT_COUNT_GT_50(0.00)[50];
+	TAGGED_RCPT(0.00)[dmaengine,dt,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[10]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,messagingengine.com:dkim,arndb.de:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sourceware.org:url]
 X-Rspamd-Action: no action
 
-Hi Krzysztof,
-
-On 30/04/26 12:59, Krzysztof Kozlowski wrote:
-> On Tue, Apr 28, 2026 at 02:21:42PM +0530, Sai Sree Kartheek Adivi wrote:
->> New binding document for
-> I don't see improvements.
+On Mon, May 18, 2026, at 06:28, Ethan Nelson-Moore wrote:
+> The Nios II architecture is a soft-core architecture developed by
+> Altera (since acquired by Intel) and intended to run on their FPGAs.
 >
->> Texas Instruments K3 Block Copy DMA (BCDMA) V2.
->>
->> BCDMA V2 is introduced as part of AM62L.
->>
->> Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
->> ---
->>  .../bindings/dma/ti/ti,am62l-dmss-bcdma.yaml  | 121 ++++++++++++++++++
->>  1 file changed, 121 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/dma/ti/ti,am62l-dmss-bcdma.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/dma/ti/ti,am62l-dmss-bcdma.yaml b/Documentation/devicetree/bindings/dma/ti/ti,am62l-dmss-bcdma.yaml
->> new file mode 100644
->> index 0000000000000..28dcfce5633ce
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/ti/ti,am62l-dmss-bcdma.yaml
->> @@ -0,0 +1,121 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +# Copyright (C) 2024-25 Texas Instruments Incorporated
->> +# Author: Sai Sree Kartheek Adivi <s-adivi@ti.com>
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/dma/ti/ti,am62l-dmss-bcdma.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Texas Instruments K3 DMSS BCDMA V2
->> +
->> +maintainers:
->> +  - Sai Sree Kartheek Adivi <s-adivi@ti.com>
->> +
->> +description:
->> +  The BCDMA V2 is intended to perform similar functions as the TR
->> +  mode channels of K3 UDMA-P.
->> +  BCDMA V2 includes block copy channels and Split channels.
->> +
->> +  Block copy channels mainly used for memory to memory transfers, but with
->> +  optional triggers a block copy channel can service peripherals by accessing
->> +  directly to memory mapped registers or area.
->> +
->> +  Split channels can be used to service PSI-L based peripherals.
->> +  The peripherals can be PSI-L native or legacy, non PSI-L native peripherals
->> +  with PDMAs. PDMA is tasked to act as a bridge between the PSI-L fabric and the
->> +  legacy peripheral.
->> +
->> +allOf:
->> +  - $ref: /schemas/dma/dma-controller.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    const: ti,am62l-dmss-bcdma
->> +
->> +  reg:
->> +    items:
->> +      - description: BCDMA Control & Status Registers region
->> +      - description: Block Copy Channel Realtime Registers region
->> +      - description: Channel Realtime Registers region
->> +      - description: Ring Realtime Registers region
->> +
->> +  reg-names:
->> +    items:
->> +      - const: gcfg
->> +      - const: bchanrt
->> +      - const: chanrt
->> +      - const: ringrt
->> +
->> +  "#address-cells":
->> +    const: 0
-> Why do you need address-cells?
+> Licenses for the architecture have not been available for purchase
+> since 2024 [1], and support for it has been removed from GCC 15 [2],
+> Buildroot [3], and QEMU [4].
 >
->> +
->> +  "#dma-cells":
->> +    const: 4
->> +    description: |
->> +      cell 1: Trigger type for the channel
->> +        0 - disable / no trigger
->> +        1 - internal channel event
->> +        2 - external signal
->> +        3 - timer manager event
->> +
->> +      cell 2: parameter for the trigger:
->> +        if cell 1 is 0 (disable / no trigger):
->> +          Unused, ignored
->> +        if cell 1 is 1 (internal channel event):
->> +          channel number whose TR event should trigger the current channel.
->> +        if cell 1 is 2 or 3 (external signal or timer manager event):
->> +          index of global interfaces that come into the DMA.
->> +
->> +          Please refer to the device documentation for global interface indexes.
->> +
->> +      cell 3: Channel number for the peripheral
->> +
->> +        Please refer to the device documentation for the channel map.
->> +
->> +      cell 4: ASEL value for the channel
->> +
->> +  interrupts:
->> +    minItems: 1
->> +    maxItems: 144
->> +    description:
->> +      Interrupts for DMA channels.
-> And interrupts are flexible because?
-
-I understand the issues now:
-
-1. address-cells: remove this property - it should be a fixed hardware
-
-   constant, not a binding property.
-
-2. interrupts: replace minItems/maxItems ranges with a fixed count specific
-
-   to ti,am62l-dmss-bcdma hardware.
-
-The binding should encode hardware facts as fixed properties, not
-flexible ranges.
-
-I'll address both in v7. Please let me know if I still misunderstood
-something.
-
-
-Best regards
-
+> Given all of these factors, it is time to remove Nios II support from
+> the kernel. The maintainer stated in 2024 that they were planning to do
+> so soon [5], but this did not come to pass.
 >
-> Best regards,
-> Krzysztof
->
+> Remove Nios II support from the kernel and move the former maintainer
+> to CREDITS. Thank you, Dinh Nguyen, for maintaining Nios II support!
+
+Hi Ethan,
+
+We last discussed this a year ago when Simon Schuster mentioned[1]
+that Siemens Energy is still using NIOS-2 in production and would
+prefer to have this still included in Linux for at least another
+few years until the obligation for kernel updates ends.
+
+My feeling is that the maintenance burden of keeping nios2 is
+relatively low. On the other hand, maintaining it out of tree
+as a patch set is also something that should not be all that
+hard if it does get removed.
+
+Simon mentioned that he expected others to also use nios2 with
+new kernels, but I have not heard from anyone else actually
+doing it.
+
+I've added Simon and Andreas to Cc here to let them comment
+more here.
+
+     Arnd
+
+[1] https://sourceware.org/pipermail/binutils/2025-March/140140.html
 

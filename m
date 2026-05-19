@@ -1,61 +1,60 @@
-Return-Path: <dmaengine+bounces-10552-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10553-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4BnhJExqDGo8hQUAu9opvQ
-	(envelope-from <dmaengine+bounces-10552-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 15:49:00 +0200
+	id wJRNA6FqDGo8hQUAu9opvQ
+	(envelope-from <dmaengine+bounces-10553-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 15:50:25 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 981D657FFB4
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 15:48:59 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38B1A580016
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 15:50:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D939D301B309
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 13:48:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id F0135305CB9C
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 13:48:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B808C3403F4;
-	Tue, 19 May 2026 13:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 845B23ED3A5;
+	Tue, 19 May 2026 13:48:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/P4EjWB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iylfxz3i"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E012745E
-	for <dmaengine@vger.kernel.org>; Tue, 19 May 2026 13:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624AA39D6DD
+	for <dmaengine@vger.kernel.org>; Tue, 19 May 2026 13:48:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779198484; cv=none; b=aUggfsO6U+sIbyHGCauddDG1OBOu0ZwO9SYDU4vphOTC4Il35pRxbCD6KKeXQ27sHvvGYack6bSlwkcKe3ZzFWgF4sDtl9HcXW8JhRBjKoyi3JuBnvr4akbzg0aGx9V9Dhr6Rjh5fNc7xKpBCTOPnr+IhoKXnVxrtXzKbjPU92I=
+	t=1779198523; cv=none; b=qittxYUoOMafelq4BE16B277vVcREyna1WmDVT/Yc5eWC1LzDW0u9aLA6hFz8he5Fpyt+FSSqAar4OgJeNmbpl4WmPKseR7YE780oG09vQktg7dwnOFAOckQpwy08/Ee8/sbs09LoAPn52aNcGRebp+7dXWnrzOGYrS0PTV/zGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779198484; c=relaxed/simple;
-	bh=IkQ203RTWP5cyltCCUHa+zw6uku9cbkTsBMRMuGwA4Y=;
+	s=arc-20240116; t=1779198523; c=relaxed/simple;
+	bh=3mTAX3gg7xWAAELRKrnbF7uZS0riBSLTv+e0FZknT68=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nbuIPeUjo+AKcgqoor2jMnCl28KClIN0or/sr/52vuLd4HYQzrYIddcN1z0nmdaNaJL8qVbUsKcHOKXPoxlaVZ+OR3ogCysK3RQB6Hj3GG4yG93KFI8hDGFzwzbulUIK3G6CXtjbO1EfmrULxCaqwL8NlYUjBUnEFWnqQQQqRAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/P4EjWB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 000F8C2BCC7;
-	Tue, 19 May 2026 13:48:03 +0000 (UTC)
+	 Message-Id; b=Bxs1aTtvRi8JAZwE3bBks1PoQFeJj1pgfzNeHQMvBlnu7NaGjqR4Oi9mhTXADQofp57Ovy+DGm3iBduSFQBdLMkc2Y/wn82mL9UaqQsP5jxBgB/rD1+gQAO9uPIE/7saxNU1sJ5O70BzqMXBVUFYXe6VDKaG6VbhnfRoQ4V9uL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iylfxz3i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7A6AC2BCB8;
+	Tue, 19 May 2026 13:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779198484;
-	bh=IkQ203RTWP5cyltCCUHa+zw6uku9cbkTsBMRMuGwA4Y=;
+	s=k20201202; t=1779198523;
+	bh=3mTAX3gg7xWAAELRKrnbF7uZS0riBSLTv+e0FZknT68=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
-	b=N/P4EjWBy9aNxZvZhMqiM05pVTiDa48HItFRMWIGC2hLByqArhxIonl9KHrZiAlHQ
-	 JKatky+iXEPAEcOSzLy4QlWoT34yc6q5Zw02/nc2U6qvIhJI9wW+2+51/ENvBU/5gt
-	 vuVTG64ZCSQjCoEuyzFb+1dnN44S2UiX/MKMDGsVecPC2KMDvspHbHz0QgqjysLTgQ
-	 Zy7NFYlnQpP105BFQTUHsE/Fu1TkTjJl5oAQpa7lvp2b50D6nTz+eQgUHW9QbHH+fA
-	 OIO7TZvtvV+CXLXOGKp0XjZnAH/WVD+9RCDlVrzX6kuM1Ue/j/Wgnkz+M9opNRQsiX
-	 Q0GddHwfuAMUw==
+	b=Iylfxz3itJIAP69aqju9wKrPYpvcX+Ri1TpxalWbMu8O9OAOZhMrpiSp4b9DwT9Zi
+	 OiEkRrS9/9pvdmVzig3gFiEorSxCAnLOzqbBD8xvblmhOUDqOCNtx9ZC8iihLgzDuv
+	 UwEijRPHn3WIxYNKcftME0jh8xzVjrjlRUNFFVVgim9u006Myp72gAoqTK15/+EGji
+	 D+lILdiWv1NKKenOxJjP2hMjPLXfyGOEUkQgMhlIAt/PENEwcQmDVCjWLkaPsxeHO2
+	 kDq07ElUl78ql5J+9Jh8Ej+wC35qh6wR10xVzzEdS9A8YtaKpnz5zrscJWcm6Iqi1/
+	 h8Fn54ryi/EzA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v17 02/14] dmaengine: qcom: bam_dma: free interrupt
- before the clock in error path
+Subject: Re: [PATCH v17 09/14] crypto: qce - Remove unused ignore_buf
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260519-qcom-qce-cmd-descr-v17-2-53a595414b79@oss.qualcomm.com>
-References: <20260519-qcom-qce-cmd-descr-v17-2-53a595414b79@oss.qualcomm.com>
+Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260519-qcom-qce-cmd-descr-v17-9-53a595414b79@oss.qualcomm.com>
+References: <20260519-qcom-qce-cmd-descr-v17-9-53a595414b79@oss.qualcomm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 19 May 2026 13:48:02 +0000
-Message-Id: <20260519134804.000F8C2BCC7@smtp.kernel.org>
+Date: Tue, 19 May 2026 13:48:42 +0000
+Message-Id: <20260519134842.D7A6AC2BCB8@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -65,13 +64,13 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10552-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10553-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
@@ -88,107 +87,82 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,lists.linux.dev:replyto,sashiko.dev:url,smtp.kernel.org:mid,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 981D657FFB4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,smtp.kernel.org:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,lists.linux.dev:replyto]
+X-Rspamd-Queue-Id: 38B1A580016
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] The patch fails to resolve the unclocked register access bug in `b=
-am_dma_remove()`, resulting in a deterministic crash on device removal.
-- [High] Race condition in `bam_dma_probe()` can trigger an IRQ storm resul=
-ting in a permanently disabled interrupt.
+- [Critical] qce_dma_release() frees the DMA channels and result buffer wit=
+hout explicitly terminating in-flight background DMA operations.
+- [Critical] The surrounding error rollback loop in devm_qce_register_algs(=
+) uses the wrong loop variable, leaking registered algorithms and causing s=
+ubsequent UAF.
 --
 
-commit 39d4da1e9be1c385de4964ad3c6f55d2aea52136
-Author: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+commit 86b6706b62fa03437f8e5e0bdb45e4e4d945b1d3
+Author: Bartosz Golaszewski <brgl@kernel.org>
 
-dmaengine: qcom: bam_dma: free interrupt before the clock in error path
+crypto: qce - Remove unused ignore_buf
 
-This commit replaces the devres-managed IRQ allocation with manual IRQ
-requesting and freeing. It ensures the interrupt is freed before
-disabling the clock in the probe error path to prevent unclocked
-register accesses if the IRQ fires.
+This commit removes the ignore_buf field from struct qce_dma_data and the
+assignment in devm_qce_dma_request() because it was unused. It also moves t=
+he
+QCE_IGNORE_BUF_SZ macro definition into dma.c since it is only used locally.
 
-Fixes: e7c0fe2a5c84 ("dmaengine: add Qualcomm BAM dma driver")
-Closes: https://sashiko.dev/#/patchset/20260427-qcom-qce-cmd-descr-v16-0-94=
-5fd1cafbbc%40oss.qualcomm.com?part=3D2
-
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index 19116295f8325..cea44833201d6 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -1302,8 +1302,7 @@ static int bam_dma_probe(struct platform_device *pd=
-ev)
->  	for (i =3D 0; i < bdev->num_channels; i++)
->  		bam_channel_init(bdev, &bdev->channels[i], i);
+> diff --git a/drivers/crypto/qce/dma.c b/drivers/crypto/qce/dma.c
+> index 68cafd4741ad3..08bf3e8ec1243 100644
+> --- a/drivers/crypto/qce/dma.c
+> +++ b/drivers/crypto/qce/dma.c
+> @@ -9,6 +9,8 @@
 > =20
-> -	ret =3D devm_request_irq(bdev->dev, bdev->irq, bam_dma_irq,
-> -			IRQF_TRIGGER_HIGH, "bam_dma", bdev);
-> +	ret =3D request_irq(bdev->irq, bam_dma_irq, IRQF_TRIGGER_HIGH, "bam_dma=
-", bdev);
->  	if (ret)
->  		goto err_bam_channel_exit;
+>  #include "dma.h"
+> =20
+> +#define QCE_IGNORE_BUF_SZ		(2 * QCE_BAM_BURST_SIZE)
+> +
+>  static void qce_dma_release(void *data)
+>  {
+>  	struct qce_dma_data *dma =3D data;
 
-This isn't a new regression, but since the goal is to safely manage the BAM
-interrupt, could requesting the IRQ here before PM runtime is enabled lead
-to an IRQ storm?
+While reviewing this code, I noticed a pre-existing regression in
+qce_dma_release().
 
-If an interrupt asserts after request_irq() but before pm_runtime_enable()
-is called later in the probe sequence, bam_dma_irq() will execute and call
-pm_runtime_get_sync().
+When the driver is unbound, devres cleanup calls qce_dma_release(), which
+drops the DMA channel references via dma_release_channel() and then frees
+dma->result_buf.
 
-Because PM runtime is disabled, this returns -EACCES. The handler then
-returns IRQ_NONE without clearing the hardware interrupt status.
+Since dma_release_channel() does not stop active DMA transfers, could the B=
+AM
+DMA engine continue to write data to the newly freed result_buf if a crypto
+request is in-flight?
 
-Since the interrupt is level-triggered (IRQF_TRIGGER_HIGH), the hardware
-will continuously re-assert it, causing an IRQ storm until the kernel's
-spurious IRQ detector permanently disables the interrupt line.
+Would this lead to a use-after-free and memory corruption?
 
-Should PM runtime be enabled and marked active before requesting the IRQ?
+Should the driver explicitly call dmaengine_terminate_sync() before releasi=
+ng
+the channels?
 
 [ ... ]
 
-> @@ -1379,7 +1380,7 @@ static void bam_dma_remove(struct platform_device *=
-pdev)
->  	/* mask all interrupts for this execution environment */
->  	writel_relaxed(0, bam_addr(bdev, 0,  BAM_IRQ_SRCS_MSK_EE));
-> =20
-> -	devm_free_irq(bdev->dev, bdev->irq, bdev);
-> +	free_irq(bdev->irq, bdev);
+I also noticed another pre-existing regression in devm_qce_register_algs()
+regarding the error rollback loop.
 
-The commit message notes that disabling the clock before freeing or masking
-the interrupt can lead to unclocked BAM register accesses. Does this same
-regression still exist here in bam_dma_remove()?
+When ops->register_algs(qce) fails at index i, the rollback loop correctly
+counts backward with j =3D i - 1, but it appears to fail to update the ops
+pointer to qce_ops[j].
 
-At the beginning of bam_dma_remove(), pm_runtime_force_suspend() is called:
+Does this result in repeatedly calling unregister_algs() for the failed
+qce_ops[i] instead of the successfully registered algorithms?
 
-static void bam_dma_remove(struct platform_device *pdev)
-{
-	struct bam_device *bdev =3D platform_get_drvdata(pdev);
-	u32 i;
-
-	pm_runtime_force_suspend(&pdev->dev);
-        ...
-
-This invokes bam_dma_runtime_suspend() which explicitly disables the BAM
-clock.
-
-Immediately afterward, the driver executes the writel_relaxed() shown above
-to mask interrupts. Writing to BAM hardware registers with the clock gated
-will deterministically trigger a synchronous external abort (bus crash) on
-Qualcomm platforms. Furthermore, free_irq() is called after the clock is
-disabled, leaving the same race condition open.
-
-To safely tear down the device, would it be better to wake the device via
-pm_runtime_get_sync(), mask and free the IRQ, terminate DMA, and only then
-disable PM runtime and clocks?
+If probe fails and devres frees the device memory, is it possible these
+leaked algorithms pointing to freed memory cause a use-after-free when
+accessed by the crypto subsystem?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260519-qcom-qce-c=
-md-descr-v17-0-53a595414b79@oss.qualcomm.com?part=3D2
+md-descr-v17-0-53a595414b79@oss.qualcomm.com?part=3D9
 

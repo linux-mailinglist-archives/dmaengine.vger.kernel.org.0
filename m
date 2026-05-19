@@ -1,62 +1,62 @@
-Return-Path: <dmaengine+bounces-10564-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10565-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WK2mAwKhDGq8jwUAu9opvQ
-	(envelope-from <dmaengine+bounces-10564-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 19:42:26 +0200
+	id 8BiKAxWhDGq8jwUAu9opvQ
+	(envelope-from <dmaengine+bounces-10565-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 19:42:45 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF1A05833F7
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 19:42:25 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B58058340E
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 19:42:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 18B0E306F02F
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 17:40:55 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 4C3BF302AE0E
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 17:40:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A0573438A3;
-	Tue, 19 May 2026 17:40:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF6CF34389E;
+	Tue, 19 May 2026 17:40:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hsPMgnku"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V61Eqpl5"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F0E343894;
-	Tue, 19 May 2026 17:40:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB16343894;
+	Tue, 19 May 2026 17:40:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779212454; cv=none; b=mbHugfWYn7/OBloehHMbKGfOEoaxPMYJm1kDd/KxZtgBd5Qhuh0N245UFMNT92ppLALkIcJO7yB04GvkAPWdzL/WUZYWIvmfqsIDz1FfXNJXYkDn8eY4LN5o1PazBDvoV6YSPpq6Wj5dsA7ENdTiIaAIIREE84WCFo63pCWhg7A=
+	t=1779212457; cv=none; b=iLNxsj96bQaa9FEzSlSArE8qeaIfLH4H3CxeSNW9fngoJAMEh3VbeEm/mQtXLYB8F5DGTh+212nr9UILw/xdAwTNO6tXh/XX1zf3aI3YNtM3V1b8dP176Nro3Rhw+gbwOw1bcwUuNO4TPv2ASuVzRV8930+61J0b3Xy2+e6Stj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779212454; c=relaxed/simple;
-	bh=AvGnWQwn3+7/CykX7PGFPD87Hn27WmsYM8LaCcXaYoE=;
+	s=arc-20240116; t=1779212457; c=relaxed/simple;
+	bh=/+2OhO49oO91nzKhtp7u9BtU8+5Z6Mb5Yhp+eJ5MVqU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=iI98BKS8JksY6hJqYNV0Gl7uOQIzvH4OI17RiNl4NqeEaqLvyQX8bGZjht5XumX5KN7MFx834cSvHcYJURWn4tBQj+4H/lBNzpm2PGwS+9nro1y2ugYWC1qwu8ZaExTKR78Jmzgs8GcPLUYvv/wGVPP/i7ZQOak50z7YLwruQoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hsPMgnku; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1651C2BCB3;
-	Tue, 19 May 2026 17:40:50 +0000 (UTC)
+	 MIME-Version:Content-Type; b=pA3Dm2lPqgj2UeYA01BWEOXqDNiY0T4e5oHb9lyJHPnwlhbZunldd4dNfBC3h1r4CTPqeuwRngq30Yuz7Q1bL1eAbhBwVM3f5OmoPIpL+6N7mFW2yofEoT5BSQo+m2CQvlBNjrAyIkR6gMgoB0wsO3MUCu8gDE1h9v4FIWyXhoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V61Eqpl5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D05B0C2BCC9;
+	Tue, 19 May 2026 17:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779212454;
-	bh=AvGnWQwn3+7/CykX7PGFPD87Hn27WmsYM8LaCcXaYoE=;
+	s=k20201202; t=1779212457;
+	bh=/+2OhO49oO91nzKhtp7u9BtU8+5Z6Mb5Yhp+eJ5MVqU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=hsPMgnkuKZ7M28pQxBK3zufolowLcOEtn7JMIAiJy8GdUewfsLvRQULgFRTbvB5/2
-	 37vR3kKy9u303/QX3RoybZ6pVgVQ3zTpfxyfqe9N5n09IcGqHKrHIr368B8lwlz2Fi
-	 328vHAjndylLAUUxPbYPZhhD63c7V/W22c5RbutWe3MIUKp9i4VVWYFmIjGW36sOqv
-	 5f4+brc1icnqSeoyMNA5rY2YR7IlioRHBv4RsTgMKYpU+4gciUKIiAyTG/hC4I9FTO
-	 7jdWHe1DcmTA/Q2frxxt1IChOH6+9c4Eh/UpZwdqpJRduXknky32i+8PcQF0PtbpB6
-	 T0vs+QVmI+xZA==
+	b=V61Eqpl5k+hlaKj5rpEulF3bu6tfXsEBFKIOHbEHYol/gfrrYdlFK/Bsn+AEu2w5L
+	 QOus7K9KBFMMXYrN6TmG2AndOOIooYyhUtLwE6cG9yUR75bKpKPk6YdZM7jTYJD5PF
+	 qP3y+gG4slwxBB1sMxa5oe6ZFaNyLk++h0zdbGwt1292whk+Bl0OcfDUvsclv4W9Og
+	 ldJM1nVusgMjFDpsDFD1nSbxx8TOb/a9nNScYAr+XAi+7BoUcLD2D3D/MdCODoCD0P
+	 FLsVz9xlH9x3UQQPaJD+RsB4WmWQWh2dXFH4kjgG7uJ03LvkXOz9cI3FFD3UqNrd+q
+	 9SAACESEIHpDA==
 From: Vinod Koul <vkoul@kernel.org>
-To: Frank Li <Frank.Li@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Abel Vesa <abel.vesa@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+To: Zhou Wang <wangzhou1@hisilicon.com>, 
+ Longfang Liu <liulongfang@huawei.com>, Frank Li <Frank.Li@kernel.org>, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-In-Reply-To: <20260515-eliza-gpi-dma-v2-1-1255b43d5ca9@oss.qualcomm.com>
-References: <20260515-eliza-gpi-dma-v2-1-1255b43d5ca9@oss.qualcomm.com>
-Subject: Re: [PATCH v2] dt-bindings: dma: qcom,gpi: Document the Eliza GPI
- DMA engine
-Message-Id: <177921245049.339411.6679441832968153093.b4-ty@kernel.org>
-Date: Tue, 19 May 2026 23:10:50 +0530
+Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>, 
+ Frank Li <Frank.Li@nxp.com>
+In-Reply-To: <20260514060525.9253-2-krzysztof.kozlowski@oss.qualcomm.com>
+References: <20260514060525.9253-2-krzysztof.kozlowski@oss.qualcomm.com>
+Subject: Re: [PATCH v2] dmaengine: Move MODULE_DEVICE_TABLE next to the
+ table itself
+Message-Id: <177921245437.339411.17021175669623816769.b4-ty@kernel.org>
+Date: Tue, 19 May 2026 23:10:54 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -69,12 +69,12 @@ X-Mailer: b4 0.13.0
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10564-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10565-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -85,29 +85,31 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: CF1A05833F7
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 0B58058340E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
-On Fri, 15 May 2026 14:39:36 +0300, Abel Vesa wrote:
-> Document the GPI DMA engine found on the Eliza SoC.
+On Thu, 14 May 2026 08:05:26 +0200, Krzysztof Kozlowski wrote:
+> By convention MODULE_DEVICE_TABLE() immediately follows the ID table it
+> exports, because this is easier to read and verify.  It also makes more
+> sense since #ifdef for ACPI or OF could hide both of them.
 > 
-> It is fully compatible with the GPI DMA engine found on SM6350,
-> thus using qcom,sm6350-gpi-dma as fallback compatible.
+> Most of the drivers already have this correctly placed, so adjust
+> the missing ones.  No functional impact.
 > 
-> 
+> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: dma: qcom,gpi: Document the Eliza GPI DMA engine
-      commit: 33a6c96b31035fccf6968e2d35e3b727cd42580b
+[1/1] dmaengine: Move MODULE_DEVICE_TABLE next to the table itself
+      commit: 362ee0c0dc522bcf585bde59ceba2038ec583b7d
 
 Best regards,
 -- 

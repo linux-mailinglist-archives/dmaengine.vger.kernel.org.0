@@ -1,204 +1,233 @@
-Return-Path: <dmaengine+bounces-10524-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10525-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0OpAMdANDGqJVAUAu9opvQ
-	(envelope-from <dmaengine+bounces-10524-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 09:14:24 +0200
+	id 8CL5DDoQDGoZVQUAu9opvQ
+	(envelope-from <dmaengine+bounces-10525-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 09:24:42 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26380578CA7
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 09:14:24 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 415B9578FDB
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 09:24:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9BF1E3041A5E
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 07:09:41 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6011D305C956
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2026 07:18:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 092713B47F1;
-	Tue, 19 May 2026 07:09:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C40F3D090E;
+	Tue, 19 May 2026 07:18:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="k8TnIJgz";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="KAueQnj/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEVcD5r6"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70CF3B3BE4
-	for <dmaengine@vger.kernel.org>; Tue, 19 May 2026 07:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496D93CF042
+	for <dmaengine@vger.kernel.org>; Tue, 19 May 2026 07:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779174578; cv=none; b=XVcSPKa42UUmsfWDaMNBj8ZLd0SXLNRNefWIEnxcmb+aCU7fxplEmY4oRpZ/sbs0lxljNF6P1+EXiNzA5ayUgwVoMhmKWLc7+gW4zheZ+n2BF9UyD8akNyaRnpuiWP3X1lIZiZ1BdFEp/WuSGej/lJvyn04EXO2b/hvCxAXQBcs=
+	t=1779175096; cv=none; b=cGTjOpP4xOb+Rph/pjGqn4P4J/j+Lim/ugTnN3sG6PAcgc6Dj/cj+4hQYEkYLcb4zlLfSD3C1DnRrEGhDcNJEVh9kO07uvqf2JigfCPqAUxxkaxKbUKMUKa72MDCp8Nu6fb2wkjxE3BQgQZ5b5oH/DC1h0ZB2lzkj4RNc2QavC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779174578; c=relaxed/simple;
-	bh=HwXDOwJ/n8kwN5m65KMuiRC57ObOd4uZu5RS7F3aRHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WDRGz2IO9yccsCSODi+39ERJlbdiqsPRBwPBTYSP13pHLzACIYKs5SC7ZyxWLVSTjzxnN7/ZP1a9V7DvRnn75aHjawBCYuXS/RGazT4KkNHLJvECk21GMCumt3Hqz/+2Yi+M1/XC6uUiovULjokkm2vmOM3xZT/VOWDiAufzIy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=k8TnIJgz; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=KAueQnj/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64J6gqpt1737169
-	for <dmaengine@vger.kernel.org>; Tue, 19 May 2026 07:09:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	flpjn8w2XFi3HDGFXRZoiV0RXVmGTmh3woS4zlIQX2s=; b=k8TnIJgzFnzTAcNk
-	Xznrj3F6dsjV/bSW5iDpbg8odUQ1Ym0tIJhj7zRmnUu8YclwkG506SS5Mv4S1e/d
-	oOpn6g4mKRqAL4PQSa0k2Uu+B2Lb0CQK30evFwtOxxX12iFnz9c4V7vbosXDVTEo
-	kWgnCIwPsmLT48erBtYQnli4qUhxsNQiy0tnQojDVBst2f6p4zoMnd4R0VDmWsCL
-	W1R7QJWgDTEj1kzjOja1pA7c4CYtNCKJ6N1/sh/a98aX3wTNM+1eehcrvrzHJOig
-	hvN0U8L9wQlO3sYbzOcy1y3vpFJIxwAExe/KvB4h6dJnDqppoYt59kTUNGSw4l+n
-	IaK/cA==
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e8ju903jg-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Tue, 19 May 2026 07:09:36 +0000 (GMT)
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-c802545ae0eso2006825a12.2
-        for <dmaengine@vger.kernel.org>; Tue, 19 May 2026 00:09:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1779174576; x=1779779376; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=flpjn8w2XFi3HDGFXRZoiV0RXVmGTmh3woS4zlIQX2s=;
-        b=KAueQnj/Sk42xz+DEI30livgaBIsFHXbtVokiCm25E1hwRFUn7KDAQcvwcBxzCD5OQ
-         o5WOihfokimBXC3uhkz+Go8Aa+wY+vDj8yd8HRwh8yuX07Q4xqvYGGA/GfQ1vBznlJv9
-         wO4Dh/DXKgk6s4BsdjiqkOYRACaZnYv44QPRVcz/CB15Hq0VYiWrG802+E9txRrHrDyd
-         0VmXl9e4cO/HxtNZ83KXlIVwfI20POZjOk4k9T9YeInHDVcQA82l2n/VTNPD1XcftrWd
-         9NDc+aM+2zDJiMnvsBQykusZv0rZgR0Inpv/pWt07W9xYkpZiD+Yqn5i1ifKEsNN8TEv
-         fpTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779174576; x=1779779376;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=flpjn8w2XFi3HDGFXRZoiV0RXVmGTmh3woS4zlIQX2s=;
-        b=VCTyl0SUMp8SXrJvr0SMSCSRaSIq0FpVIBXv/zkKFfPQnKp3sJSmkunR08xDLtBxS/
-         WClav+Zx2hqgYRK6YdydUmtckBI/yErBdvLa5XjNs79bFS/R4iffJs0F4A9QNHpG/A8a
-         gM+yy/9Vi4CoiXWFUjHZIvSxu2OHV5bgOZEbN8aiN3WZ9KiDOzNtxqTp68xXPOeq1i2d
-         EV/cfHoeHYsO54dsqBnSoVnM9bS68FPlO7/UKlZuB50kOjLDxXKKt+Q27QBvpVGjNaQH
-         z4Ehpt/x/NmjreugfIjl+SuZB56LC7lIXXpnZogJDAnikAYIkgAVJU10IrE10O5i5hAc
-         pkOA==
-X-Forwarded-Encrypted: i=1; AFNElJ+tg/Ialcc8S3TnE1fk/EVXH+AgpnPbgXR/TDJGHs59tw4dQTEEc4CFhaQPO28OAG0iy9C9/o+Q3oU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ4xajXdT152fQYQV2LW+WvoU0fme1BClwSM+GQS/n5AAEnail
-	9lOpPRwaBEAL7xFOyOYC1PtPYdNeREWjU/la5px5FlkAcunEXReobamSb18MWTAgHVTixDxaoYO
-	Mut3allYhq48FLr44TG5YzL0irjz23RvTj2CWtmm/eai1o8hzWOrMMrKn6HXt/PDEzfCSfqs=
-X-Gm-Gg: Acq92OG58vPZ5yhrQwEma9rRE1PfO/0QfLgC3VyXHq9rdBSrKSWTN05nfKEwp9B/4ZY
-	UCzj4UJ77UNzdaLAJGFkKJpO7ugUxULmj9OFrqsDdrxfBShPm5+r0GuWbnvzDLCqR3kq0SPI9U3
-	Xe6TYTRbMq6W6r774pOUnoTZ0P3xF52UdKINw/s3F51P847UEMy10hDNzubr80hA1qe0rLOM7bC
-	FcmJ9fMjTlVkCRQZuzIEi4aeHP9G/3Tm8J/N+dWSg2i6fe5MK3blVkmpiem4LpW7SmcRv8coRst
-	YyRAL8YXDAKwpsTe0+/fpr07nHpUfjbhwy4SMYn65AMQRdJur+hY8D7Apl1kaDta4cqY7DO2Dsh
-	CtqfyOYbJzpRcVd+iBwpNxcUlL22g3fXUgqbQRVXaHTzyahURq0U1
-X-Received: by 2002:a05:6a00:4fc8:b0:82f:48e:241c with SMTP id d2e1a72fcca58-83f33d8ba87mr18630223b3a.23.1779174575612;
-        Tue, 19 May 2026 00:09:35 -0700 (PDT)
-X-Received: by 2002:a05:6a00:4fc8:b0:82f:48e:241c with SMTP id d2e1a72fcca58-83f33d8ba87mr18630188b3a.23.1779174575082;
-        Tue, 19 May 2026 00:09:35 -0700 (PDT)
-Received: from [10.92.176.107] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83f19c7f202sm16288753b3a.43.2026.05.19.00.09.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2026 00:09:34 -0700 (PDT)
-Message-ID: <f40798ef-e066-4814-a26c-729dcdb9f5b1@oss.qualcomm.com>
-Date: Tue, 19 May 2026 12:39:27 +0530
+	s=arc-20240116; t=1779175096; c=relaxed/simple;
+	bh=NXfQyjSa8/XG4PHYnjXFo12TwzRr3wd8DLMGw/d8n7k=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=X6Qy8JWpfc4huwIkXVNQBoPCai5r0arnfKC3m0+wPWiFdNPTqlC8nafCEyjLj1312pKNCZPmGfXu2ohA+MdXyCllpRM1caAg/KJkYgNcLfXgIX4RIoNKmDG8olBOWXL7Rsqf5DRiWxCrrZvYwqrmb256RcC+z5zM/DV4yfIpXlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZEVcD5r6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC443C2BCC6;
+	Tue, 19 May 2026 07:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779175096;
+	bh=NXfQyjSa8/XG4PHYnjXFo12TwzRr3wd8DLMGw/d8n7k=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date:From;
+	b=ZEVcD5r6hpB21NJerWuU5GbVTPTG9SXT16k9aeWctEc8x1Pd2xLoFppf27xGRMTlG
+	 SiEJ9J6Qr5LCg5tr63TMRpMURW+thobti4gs5SzEOpVsGehHMghypFoiQ7IEZMWzSj
+	 yqXAWaqA6O+5bAfrJS8/LlSfBd38eVNjI5WjsL5sx3vuJbIgivyPCrLX+H35ZEzsk0
+	 FBczunyQZ5maquMDgkSnRuGArgvKYHW4r4B0kegtRsHOtfp3YwBtMZXthrjS4UwL2y
+	 2HLYNz8sUZ+gvSj40NU5l2vVFrVTSEcaJOFlDUrLCQRLKwWBPwDfNbuSdvWTaUwAGT
+	 ac7Bv1a5jLsPg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] dma: altera-msgdma: Replace memcpy with io32write in
+ msgdma_copy_one
+Reply-To: sashiko-reviews@lists.linux.dev
+To: tze.yee.ng@altera.com
+Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
+In-Reply-To: <4586c39b43aa3b9480989940fe905dac40c8cefc.1779173156.git.tze.yee.ng@altera.com>
+References: <4586c39b43aa3b9480989940fe905dac40c8cefc.1779173156.git.tze.yee.ng@altera.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 19 May 2026 07:18:15 +0000
+Message-Id: <20260519071815.EC443C2BCC6@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: crypto: qcom-qce: Document the Shikra
- crypto engine
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Thara Gopinath <thara.gopinath@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Frank Li <Frank.Li@kernel.org>, Andy Gross <agross@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org
-References: <20260515-shikra_qcrypto-v1-0-80f07b345c29@oss.qualcomm.com>
- <20260515-shikra_qcrypto-v1-1-80f07b345c29@oss.qualcomm.com>
- <181abfec-a6f9-49d3-9428-21a169a94246@kernel.org>
-Content-Language: en-US
-From: Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
-In-Reply-To: <181abfec-a6f9-49d3-9428-21a169a94246@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: A8bo7h9Fa2tVID8R6GSgA_Ox7W7CqpY9
-X-Authority-Analysis: v=2.4 cv=eeUNubEH c=1 sm=1 tr=0 ts=6a0c0cb0 cx=c_pps
- a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22
- a=EUspDBNiAAAA:8 a=nVgdB394IWv0AcZ3mQQA:9 a=QEXdDO2ut3YA:10
- a=_Vgx9l1VpLgwpw_dHYaR:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE5MDA2OCBTYWx0ZWRfX1vnp+dM8Gjjn
- lTsg1Y1tO5SxT+4nfzP1rJw/veWVDY5QaZnMPc+TZfVuHcqLw5GLky2ezUyuRRKe6pEUof6k7BQ
- UZ75TdFXYXVtDuYjnbegJgDZ6cnxHAHVK0Ech8vnR0o8sYKIW2Pe80Bjit1zIcASjJafZGpV0ha
- aFW06FdwrJNh+kPZWIFF6nKrE6piAuf1N+4FYRc4VT8BqG6UFvmZzYlBRQrFSiIiL0ccqrk9Hft
- 96+diFMQ6RXFSEk0+vhJsEZolu6pXyWZXaknCF4WCSGgtccuB+X2kw2EQTwE9oLKVgrqF7HoIPM
- 0tWGa6r0VeWzoMy/FlF3os806qkVGR8hkAAypq4ihcc1HqrYGjAQIdocE6V3x7blxYfDPJQbXR1
- kvVrtjOSXF/OCbVJRkq6MuQaX3YCcCbN0HAX6SWCyNkTPlGRBC2Ci9QK5o20d3w4rxgbJQFLJcR
- 6zJIJP7MQutpoRJF2+Q==
-X-Proofpoint-ORIG-GUID: A8bo7h9Fa2tVID8R6GSgA_Ox7W7CqpY9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-19_02,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501 clxscore=1015
- impostorscore=0 phishscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605190068
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10524-lists,dmaengine=lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,gondor.apana.org.au,davemloft.net];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-10525-lists,dmaengine=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kuldeep.singh@oss.qualcomm.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 26380578CA7
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	FROM_NO_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,smtp.kernel.org:mid,altera.com:email,lists.linux.dev:replyto,sashiko.dev:url]
+X-Rspamd-Queue-Id: 415B9578FDB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 15-05-2026 16:30, Krzysztof Kozlowski wrote:
-> On 14/05/2026 21:23, Kuldeep Singh wrote:
->> Document the crypto engine on the Shikra platform.
->>
->> Signed-off-by: Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
->> ---
-> 
-> Same comments as for IPQ, Nord. I gave the same feedback internally more
-> than once.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] Unbounded busy-waiting with mdelay(1) inside a hard IRQ handler ca=
+uses severe latency spikes and hard lockups. (Pre-existing issue)
+- [High] Clearing the interrupt status after starting a new transfer create=
+s a race condition leading to lost interrupts and a hung DMA pipeline. (Pre=
+-existing issue)
+- [Medium] The patch introduces excessive heavy memory barriers on the DMA =
+fast path by using iowrite32() in a loop.
+--
 
-If i understand you correctly, you are looking for more descriptive
-commit message?
+commit 64f4d2469744b57d2ca64e78f8cef229de2c5eae
+Author: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
 
--- 
-Regards
-Kuldeep
+dma: altera-msgdma: Replace memcpy with io32write in msgdma_copy_one
 
+This commit replaces memcpy() with an explicit iowrite32() loop when
+writing descriptors into the DMA controller's FIFO. This ensures that
+MMIO writes are not reordered by the compiler or architecture, guaranteeing
+that the control word is always written last.
+
+> diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
+> index b46999c81df00..5816973d2c70a 100644
+> --- a/drivers/dma/altera-msgdma.c
+> +++ b/drivers/dma/altera-msgdma.c
+> @@ -495,6 +495,9 @@ static void msgdma_copy_one(struct msgdma_device *mde=
+v,
+>  			    struct msgdma_sw_desc *desc)
+>  {
+>  	void __iomem *hw_desc =3D mdev->desc;
+> +	const u32 *src =3D (const u32 *)&desc->hw_desc;
+> +	unsigned int i, nwords =3D offsetof(struct msgdma_extended_desc, contro=
+l) /
+> +				 sizeof(u32);
+> =20
+>  	/*
+>  	 * Check if the DESC FIFO it not full. If its full, we need to wait
+> @@ -505,16 +508,16 @@ static void msgdma_copy_one(struct msgdma_device *m=
+dev,
+>  		mdelay(1);
+
+This isn't a regression from this patch, but can this unbounded busy-wait
+inside a hard IRQ handler cause severe latency spikes and hard lockups?
+
+If a large scatter-gather list is submitted that exceeds the hardware FIFO
+size, msgdma_start_transfer() will attempt to push all of them at once.
+The CPU will spin in mdelay(1) for each subsequent descriptor while the DMA
+engine processes the transfers.
+
+Waiting for hundreds of milliseconds with IRQs disabled could trigger a ker=
+nel
+hard lockup watchdog panic. Furthermore, if the hardware stalls due to a bus
+error, the CPU will spin forever.
+
+Would it be possible to implement a proper timeout mechanism and software
+queuing here instead?
+
+[ ... ]
+
+> -	 * The descriptor needs to get copied into the descriptor FIFO
+> -	 * of the DMA controller. The descriptor will get flushed to the
+> -	 * FIFO, once the last word (control word) is written. Since we
+> -	 * are not 100% sure that memcpy() writes all word in the "correct"
+> -	 * order (address from low to high) on all architectures, we make
+> -	 * sure this control word is written last by single coding it and
+> -	 * adding some write-barriers here.
+> +	 * The descriptor must be written into the descriptor FIFO of the DMA
+> +	 * controller. The FIFO is flushed and the descriptor becomes valid once
+> +	 * the last word (the control word) is written. To guarantee the orderi=
+ng
+> +	 * of MMIO writes across all architectures, we write each 32-bit word
+> +	 * individually using iowrite32(), and handle the control word separate=
+ly
+> +	 * at the end. This ensures the control word is always written last and
+> +	 * prevents memcpy() or the compiler from reordering accesses.
+>  	 */
+> -	memcpy((void __force *)hw_desc, &desc->hw_desc,
+> -	       sizeof(desc->hw_desc) - sizeof(u32));
+> +	for (i =3D 0; i < nwords; i++)
+> +		iowrite32(src[i], hw_desc + i * sizeof(u32));
+
+Does this introduce excessive heavy memory barriers on the DMA fast path?
+
+The iowrite32() macro maps to writel(), which includes an implicit heavy
+memory barrier before the write to ensure memory accesses are visible to the
+device.
+
+Executing this barrier in a tight loop for every word of the DMA descriptor
+could significantly degrade performance on the submission hot path.
+
+Since the hardware merely requires the descriptor words to be written
+sequentially before writing the final control word, could writel_relaxed()
+be used instead to avoid the per-word barrier overhead? An explicit wmb()
+is already present before the final control word write to ensure correct
+ordering.
+
+This isn't a regression from this patch, but could clearing the interrupt
+status after starting a new transfer create a race condition leading to
+lost interrupts and a hung DMA pipeline?
+
+drivers/dma/altera-msgdma.c:msgdma_irq_handler() {
+	if ((status & MSGDMA_CSR_STAT_BUSY) =3D=3D 0) {
+		/* Start next transfer if the DMA controller is idle */
+		spin_lock(&mdev->lock);
+		mdev->idle =3D true;
+		msgdma_start_transfer(mdev);
+		spin_unlock(&mdev->lock);
+	}
+
+	tasklet_schedule(&mdev->irq_tasklet);
+
+	/* Clear interrupt in mSGDMA controller */
+	iowrite32(MSGDMA_CSR_STAT_IRQ, mdev->csr + MSGDMA_CSR_STATUS);
+}
+
+If the newly started DMA transfer completes extremely quickly, before the
+CPU reaches the iowrite32() instruction, the hardware will assert the IRQ
+bit again.
+
+The unconditional clear will then clear this new interrupt event, and becau=
+se
+the event is lost, the tasklet will not be scheduled for the second transfe=
+r.
+
+On systems without a response FIFO, the tasklet completes exactly one
+descriptor per run, so losing the interrupt could strand the second descrip=
+tor
+in the active_list permanently.
+
+Should the interrupt status be cleared before initiating the next transfer?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/4586c39b43aa3b94809=
+89940fe905dac40c8cefc.1779173156.git.tze.yee.ng@altera.com?part=3D1
 

@@ -1,300 +1,223 @@
-Return-Path: <dmaengine+bounces-10568-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10569-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id fgfuEdJSDWrAwAUAu9opvQ
-	(envelope-from <dmaengine+bounces-10568-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 08:21:06 +0200
+	id wEz/EXpeDWpuwgUAu9opvQ
+	(envelope-from <dmaengine+bounces-10569-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 09:10:50 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90A0C58815C
-	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 08:21:05 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE084588B44
+	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 09:10:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 695EF300E61B
-	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 06:21:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E95DD300737A
+	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 07:07:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36BE727B32C;
-	Wed, 20 May 2026 06:21:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9BAC34DCC8;
+	Wed, 20 May 2026 07:07:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="v9zG3vuk"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="B653PIVe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GnYd28z8"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010034.outbound.protection.outlook.com [52.101.56.34])
+Received: from flow-a7-smtp.messagingengine.com (flow-a7-smtp.messagingengine.com [103.168.172.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCAE33B6D9
-	for <dmaengine@vger.kernel.org>; Wed, 20 May 2026 06:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.34
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779258062; cv=fail; b=so0Tralsak9T0qDKbjFERZ/b/oRue0QAWMgdG+IcRovJ2v4ikyagq5j4upDPQeYMF4uuH+Tp3QilnR8fVcif42g7k4jQ3RuE5AnvsMqjBo17S72580KubNM+KksXLmXYLgq3FySzoNrzE0Vz12X7XZgDnxyWz7m+j5ASLJ+CEdQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779258062; c=relaxed/simple;
-	bh=RjkWeqtG5tb+BZ9K4Ka0a9YLCG4sv4LWXjpEso3G2xU=;
-	h=Content-Type:Message-ID:Date:Subject:To:Cc:References:From:
-	 In-Reply-To:MIME-Version; b=mjWKIsClDkyXBeOSvBjOVvTkfEeuHBMHgPvSymLBX6T+E+WC26HzigX82K7zqk7Ay0NhO80fXylbYJtN3eRU3MlaFDJFP3AaL5ckqnlI2I6LFvU4tckrV8L5mtXVFu17tWqYacCiVkV617+FmQ7MS1/4ES9x4uzLvmtdQBbovKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=v9zG3vuk; arc=fail smtp.client-ip=52.101.56.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=exFuLsJqsY+mTOF92KBmr8sGVRxzAVSKORkdCTr4OMIHTo6QlZ/dzfVo3Iy5PfrC+e5RLEU84d9QHLRzVFEN838aQfEQ9/14aWJn9gQFLk5YY4aQn7Zj/TEJ29w5jF89z4yq6ZnKafzj3P9xT+U/diDKG4LiP+/JP3EafTgluUSROaY3BrtJuA9xOxoIFjwsEiStdW7FJc1H8kHauLAqhHITfBn8VQuRGjTUf7s5dq5z9QU2S94WilfbctG3U3eGHv8W+6AjCx5Wvs19Qoq7FyPVD2OjiDwRTzJJQpP1Z9zaYFc6SbU+J2VuFzvu0bp45Hp8USyScgM/e+xDBxSE6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EwLYNMRHErWydzCVXyJyE/x1MioqrY5z+25SUHd/b2A=;
- b=lAGApat8PDIQME2zTe+8cLFZOTUTDpbEyPssRIYzKKk/PZ/Z2Nz1RNKRnbN47t10u/bT/MiqhAa4fq0amD5xuXL0wk+Hj3odpPjZNvlst9Hh4rnA/PNDfIrHc+RTIdjgXxuwAjiTTvrD0IO9T0vZCCzmu/fpfGNjAJUsJ2lSgpU6IS6ioAB9hmN78TDb0Kz3UOpFMr0kMEv9ZEe0s/RWokaKRcNFKr7avRbUqWMKlBScO9DEy/l7vdqov/G8e/rD2OqsP4N5A2lspS6Xdp19I+mRwOy6efNropWsNKukUc0iQmGbTdP6XIhckGPnMCZD2hNDJMqFpNdlvU+vMlSXKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EwLYNMRHErWydzCVXyJyE/x1MioqrY5z+25SUHd/b2A=;
- b=v9zG3vukQgR6pliBDk5rfMSpSli6xVcV8xAdQaLsoqYl+uLYd3O6Xv8Bur6FRshqGg90yEPJcMR1d8Y19SGs2ceX1HQjjV3OpY+pj4sa0sX3m2E0Iyc86iZ7NNN2/quywmgBBDHxUG3qGKTaascvCB8lbEnoP2115izPsuHnuLg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5263.namprd12.prod.outlook.com (2603:10b6:5:39b::23)
- by DM6PR12MB4219.namprd12.prod.outlook.com (2603:10b6:5:217::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.14; Wed, 20 May
- 2026 06:20:57 +0000
-Received: from DM4PR12MB5263.namprd12.prod.outlook.com
- ([fe80::d735:a4dd:992b:2886]) by DM4PR12MB5263.namprd12.prod.outlook.com
- ([fe80::d735:a4dd:992b:2886%3]) with mapi id 15.21.0048.013; Wed, 20 May 2026
- 06:20:57 +0000
-Content-Type: multipart/mixed; boundary="------------QCgfrrxZq2hwwzY2uh3O6ktk"
-Message-ID: <fab85d17-e893-4907-81fa-7f339b872883@amd.com>
-Date: Wed, 20 May 2026 11:50:33 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: Fix device kref underflow in dma_chan_put()
-To: sashiko-reviews@lists.linux.dev
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org,
- logang@deltatee.com
-References: <20260518-dmaengine-kref-fix-v1-1-4d6125048fb7@amd.com>
- <20260518082920.B9BB1C2BCB7@smtp.kernel.org>
-Content-Language: en-US
-From: "Garg, Shivank" <shivankg@amd.com>
-In-Reply-To: <20260518082920.B9BB1C2BCB7@smtp.kernel.org>
-X-ClientProxiedBy: PN5P287CA0023.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:265::7) To BN9PR12MB5259.namprd12.prod.outlook.com
- (2603:10b6:408:100::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4244E34F48F;
+	Wed, 20 May 2026 07:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.142
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779260838; cv=none; b=TIlg7HfUyxC/70SZ9cp9lQyxmA0dtk43pfGLApyJL14loTKSHMfDIJJIw0zKrElg6WhmUwVB8BO07lAbGutoPVFPphUk5Q9WPWWdp7FrFLaSDxy35Nbr5RBOr/Ys6kVs4KSzTvvenfOA0+HideBAW7cV5iz//0a6RrIHSna+mLk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779260838; c=relaxed/simple;
+	bh=4UmG7P11W8AQAGwVtiZgMyYozzVFcf+K+iTyto2DY7Y=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=sNicx4et+RJK5dvWIppul5rrp4JpCXvKPpOQS/eMRzU4WDlrTpRAje3//EBe2D9pe4IDHOhbeihbboNjO4SXBjqR8KIa/Ap2meps7Uj/CzjTj9HF5p6ujYyXZAzOpUmWk3kpGw9x2piBnRQPouNAEm9Rar5SGztdC5YvJjcQU14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=B653PIVe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GnYd28z8; arc=none smtp.client-ip=103.168.172.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.phl.internal (Postfix) with ESMTP id 45A361380030;
+	Wed, 20 May 2026 03:07:16 -0400 (EDT)
+Received: from phl-imap-05 ([10.202.2.95])
+  by phl-compute-04.internal (MEProxy); Wed, 20 May 2026 03:07:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1779260836;
+	 x=1779268036; bh=Yc0JG1Xn3Wha37rB1V4lbZPt4g1XIowSANBWVbYnYYg=; b=
+	B653PIVeT6uaYy3t2lF/YnNdWPHqubwh3EDKNnOtFGEz+Fddi3+jLGVO7gIb6ZUN
+	hPyzpzE00vzBB4FUos8RIMr4sCwlZQpGssPQnPh+6czAOoLwAftWa5e1FK7RpDEN
+	rS1WcM+Dv1v71YncQWjBS35nP08DYu5Ci394FOzWskEmJ1U37vNqd1lTu+CTCQg/
+	2t+eqXZfsHVisrfl284hE1uvTVn8jJCt8YJ/NiT8bobdKukP2Rvu2stuc7BJj4dU
+	+e7h4wtogZIit97VsX07EyugTest4kUhBIiLUt7JGVFixgka05hqGjMuy1DkLN43
+	JC41BZdEsZ0FWLTi7N1XUw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1779260836; x=
+	1779268036; bh=Yc0JG1Xn3Wha37rB1V4lbZPt4g1XIowSANBWVbYnYYg=; b=G
+	nYd28z87pqNi+9PdJzaxXZwhv0d9XOb673uhc0dQ12SOzgua/kwGuDzdJ3P/KXA7
+	3wKhVpJEAcXpNHTMZjPSz28yz7/3VQlDPOAQEm8pe7MlfINyfzK1hcoKLwbdpURI
+	Hk6It8Ms0Ab1wLvCqX/Z2v+VOAMREM55Dx6cyIGrz1qDwQxY6oJnQ0TQmVLsz6a7
+	x18qidBeC6dQgG9AvzVdYaWz5fGH40LJZ6ICpW87Lz8JV+55ZXVQG7ntZsHwiC8V
+	BjtLpJkbmlL+6zqwsHrCwc+QHrWJR7sdcp/88nuk4YWvM1bzHvuomb2vkFPiWzjW
+	LpQlE35CMXRAm71I7taXw==
+X-ME-Sender: <xms:oV0NahcvhCqxyShf_GQCxcWNLGoQg7kHPo8XsyEnOyzCH8smWX_kgw>
+    <xme:oV0NaqCKWROXJfx0jBWTTTa4aw69uXBky8ZqSpccGHX2CA4W7mw9j4kFLNIqCjeZm
+    zj3xBZN6UG3wcMx_NUU-6KlVXgXHDLkNGayRxRAMjlYL0TbkACmeo0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddugeefleelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhepkedvheeghfehlefhvdehfffggfdukeekkeehleeuvdeijeeuteevgeejvdefueet
+    necuffhomhgrihhnpedujedrrghsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    hedtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnuhhnohdrshgrsegrnhgrlh
+    hoghdrtghomhdprhgtphhtthhopegulhgvtghhnhgvrhessggrhihlihgsrhgvrdgtohhm
+    pdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhope
+    guphgvnhhklhgvrhesghhmrghilhdrtghomhdprhgtphhtthhopegvnhgvlhhsohhnmhho
+    ohhrvgesghhmrghilhdrtghomhdprhgtphhtthhopehnphhighhgihhnsehgmhgrihhlrd
+    gtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphht
+    thhopeguiihmledusehhuhhsthdrvgguuhdrtghnpdhrtghpthhtohepphgvthgvrhiise
+    hinhhfrhgruggvrggurdhorhhg
+X-ME-Proxy: <xmx:ol0Nah2ii_y-TksNBCT-MowRFapYyZydyI7H4QxxQH4g9XTtz8bobg>
+    <xmx:ol0NarIfG5ugU7JqBORV9sTbHmRBn4g4EaMGJ4YY0AclQPdkv_bZmw>
+    <xmx:ol0Nav-OOvCx4WVvnznx03vUOOFvzfTjft2gLXlcAKL364cJsd6-WA>
+    <xmx:ol0NaiQ9xIABZU_YgIC_PxsPzaYvVcygjExJvggA16DtUstR3GpVrg>
+    <xmx:pF0NagQ9B6Q70cBKcBExfrRFa4A-4wY7ab5nhbQQey_V9mP7bRvenXP2>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id DE0EA182007A; Wed, 20 May 2026 03:07:13 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5263:EE_|DM6PR12MB4219:EE_
-X-MS-Office365-Filtering-Correlation-Id: fbc04df3-52cc-400c-a67e-08deb637eb4a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|6049299003|366016|4053099003|22082099003|56012099003|4143699003|18002099003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	XGZmFo1gzKcHYNZce2rzxDMYP3GUpOZ4/Q7/4E3f6QLTPPLnftBZ3YN0FA1gxjjNw2LJC3Dq8haRghN50uDZBzJ0zsbpjPP7gIInTV1FwWJhrh0o+IeqXHsE86Ca/CLo+rQNDVDlwd0pIi6X8gIkzddK3Gd9cgJaPrVdNVZuPWeys8HEL4fL8vGfrDVk5ROjl3KC3LJa0ppsVwLyCerTR7hL55gAeWs+jY+BAE2NXNlsMKo+9j/a6IAp1HxbwLMt3fvTOX+YlVWMp8w39XRamGyZYdPBjOcL4bIn/y9cPoUDLmho6gWHiGT7879D7ptuPi9sEdMvV7303/Dttn+1ZJdM7jC4bMVuFcqxVpJ8RmPEHgcRSL/JFp5IyJ618OjEKQHgjeaf6rJ3yC7L1915xOKQer/qn0l7BpuuMCh218P9EYKxyphrvJJQGE4xR9ttwZmwtbA9rPjAvnyopPiTCb8B0BnwbZ83lES9CuYg6EGvMi42s5JPOHVXDsvRL0RMuPPOogmHnNWsQOxrvvesb2RJ0n7bV29wnGaSIjKzqL3huU4wQmC+o33QojoK690Cp0aXLRWdOlP/YEB7rchi3ur+rGtDXhhhf71Pcsh2wMBrhyEwvIHJ1NxQQSeT//rH1zoLSfsWqiN0Zxa8UkdeDA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5263.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(6049299003)(366016)(4053099003)(22082099003)(56012099003)(4143699003)(18002099003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VkZ0SFJ4WUIrSG1wdmxiSkpibFMrdDM2bnkxM2ExZXpkNEp6bWZpVEk2M1ZN?=
- =?utf-8?B?K29NOFRsYTA4c1QvMExHUzVKRUtzUTBuMjVaenZ0ZU5uR3cxYitYSnFoMyt3?=
- =?utf-8?B?K1dtMnFMREFOalMvcmIvT1VxRm5TajZQU2tjdXJ4VkRBOHA3dE04c1kxNmdT?=
- =?utf-8?B?emFwK3lPRDRqdkYzWmFiMFJORHhaa2RZNGowVmRCOG9JRFdsMkcrQ3lrY2kx?=
- =?utf-8?B?Y1JpT2taa0xVc3BIN0NZUG5qYnpVMUlKVkcxMTZ6a0FhMkU2ZW5oNHBiK2Rw?=
- =?utf-8?B?R0xiRFg3NlFsNlpRM0svc0NvckZzZzNtcWNCWERZcmpRMEFSc0RWUFc2cnhs?=
- =?utf-8?B?ZGtyMUU2aUZwZDVOZVZRS2h1MmdnQ3p3dGI2WDZaSUxrRFVxU2Rxc2VnOXhv?=
- =?utf-8?B?c2hSeVJ3L2dGRFZxeENkYjVuamszRXpqeW9xV0tsNmsrMVdTZjhtcCtrRzlX?=
- =?utf-8?B?Y1NKODhIRUVMSVVQL0MwRGg3ZDdESklpU3BrZCtrdlpCRi9RVnJXVjV6Nysx?=
- =?utf-8?B?bXY0SVF3Y0xWM0Fmd0hqZEFEdlM5cDBSQk9UV3UwOXVNVWExeVVFbmpzNUVE?=
- =?utf-8?B?ZFRuakgvTVYyRkswdnNMSEpGc05vK2VuQlBwaW5VWDk5VmJFWXJjRlU0OXBt?=
- =?utf-8?B?MzRFN0RmZWdFMHFmSGNPT2I5YkJZdUk1NnZpWDA3eGR0RDhSUUpXSWRlOFgw?=
- =?utf-8?B?OG12bjN3Z3hyUWQwM0RpdnErdEhiQ1FaVVczb092U2Q2WjI4UmZWcGIyUDIw?=
- =?utf-8?B?SlE2a2pyL0h4RXBQNEdzbWVkbGViaU5sV2o2THBXMEFST25ETDdPcEJrZTI5?=
- =?utf-8?B?UWJQVW4zQ3NzU1FEaGlmRnRtVkdVSXZwTjBFcWgyL3ZyUDlWSTR2ajdNbDhD?=
- =?utf-8?B?TWtibUZSVGlkTUQ0eFRBdFZKdlVFOFJyWjNzT1hUSDg1Z2crTVJYN2pyelNj?=
- =?utf-8?B?eTR4a1BzbXEzYWE0SWJGcjY1OEdTQWxpaEpZeFB4UVp1UjJoRHFFQ3hyVTBx?=
- =?utf-8?B?Y2ZKMElOR2dQcnFmc1VWNmhJYVFOYjFjZDZ1WEE0eXUrYlMwMDg4QW5SMzky?=
- =?utf-8?B?N2RzV2ZSbGU2YjlQZ09MSk9MZlBEWGpYOTZOV3FXZHY0TXFDaUU0NWFKYmF5?=
- =?utf-8?B?citoNHk3VkliM3FacHNNd0NaNVpnUnB6cHhqTzZoQndEb2QvZHY1SVVQYXhy?=
- =?utf-8?B?dk1XUXRmNnovS0x4ODdJd0psajFVRTJ4aEFLTjFjTWZnZkV1L0YzNHF3SUF0?=
- =?utf-8?B?eW5rQkxzc0RCSldIT3kwV1pGelE4ei9TVVhzckRlRHNML3pjcTVVR3NtdjBU?=
- =?utf-8?B?Q1pvQXRSUFBXQWNySlcyRHdHTW5vYkFaV2JtNGUzMnpmUlRBSE5wRFEvdHBi?=
- =?utf-8?B?bUNrTWxjQlFtRjgxU0VBSXpDQ0lrMGZxZWF0VnpRd080WXBBSUNMcjhFbEll?=
- =?utf-8?B?WEZXTjR1VDg2ZU1id1Q4Si9kODlIMU1zd1d3emRiOEdFTXZYaUhBZnR5alli?=
- =?utf-8?B?WitZcEwyaWxTQXVPUk1xWFZuYmpvUlA4Ky9NbHcxcUtRRHpza1AxaUNNZzla?=
- =?utf-8?B?SmlPa1JRYlRvcG5kQlpwSUJmUVBFMXlVZHR3WUpHUU5pekxkV2pQOVBGQ2Rn?=
- =?utf-8?B?N0Y1d1dvbWdzSXpmYkNyYUFDVktBSjBBL3N2TkxCTkpJM0pHdElOb0J4ZDZv?=
- =?utf-8?B?eWZ3elZWV2FxSDJGTlEwZWpGY3pvN1hBLy8xdytWWnozdmp3REFnUjVJVUly?=
- =?utf-8?B?SWhjQVRZMDVRSjFQb2J3RTQzb1NUbEJQLzJIbmFCbmp0QktZclNhL1gxY3Jl?=
- =?utf-8?B?ZmVhVkhuVEt6ZnBzYnVIVUNTM2MrTVgzNW5CMTNab0Y1eDhFSEwzT0hEc3or?=
- =?utf-8?B?R3hyMEFHU3pHMTJ2NlJ0VDBuYmwxWG1wcENKTThoTFlCME94WE43S1Ztc1g5?=
- =?utf-8?B?N0JzbzZQR0pjVVYyMGdSc3ZhdHNUdWVsN1ZtV24wTVYzcnZOV1dVMGNwbXhC?=
- =?utf-8?B?Yzd0dUpKM1dBVGtRWTRvTHczK3ZBazdHVEMvc1RWanV2SytmWFdkdW9BWGhQ?=
- =?utf-8?B?YktCNFhBMXE2VllHOUlhaDNwQmE2S1F5Y1krczJZY2ZaMDkxZ05OM2VYaURJ?=
- =?utf-8?B?MVZ5ZEJWN3BXM3haMGZIOXJuSmhwejhzYkZhczErQklNNG9jaUFyNFRoNVdP?=
- =?utf-8?B?RXZ0R3pSbVQ5d1NObCs1a2N3MTJ5QzlKaTVoYWdDQVpBdWhVUGd1RWgyRHpz?=
- =?utf-8?B?a2ZXL0txZ2h5UFYzNnQyV21yc0pBcEJDL3AwVTZDdUdYN0RNcVRiUlBFY1gr?=
- =?utf-8?B?b3VjMHp0bk84ZEtvMFpzaXdDTXNLQ3FROGNCR2FBazV4UEVKTUwrZz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbc04df3-52cc-400c-a67e-08deb637eb4a
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5259.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2026 06:20:57.0258
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sW7bmW1kfExUp3vP9qX2G8BT4bLuBRHKYO7KpBKhoBKkCSho9TfFxyFmEI3mxgeObGFwuAYtSIqLQA1T27ex+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4219
-X-Spamd-Result: default: False [0.94 / 15.00];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+X-ThreadId: AoFiOxpvQUXV
+Date: Wed, 20 May 2026 09:06:33 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "schuster.simon@siemens-energy.com" <schuster.simon@siemens-energy.com>,
+ "Ethan Nelson-Moore" <enelsonmoore@gmail.com>,
+ "Wolfram Sang" <wsa+renesas@sang-engineering.com>
+Cc: "Peter Zijlstra" <peterz@infradead.org>,
+ "Dinh Nguyen" <dinguyen@kernel.org>, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, workflows@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>, dmaengine@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+ Netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kbuild@vger.kernel.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ "Jonathan Corbet" <corbet@lwn.net>,
+ "Shuah Khan" <skhan@linuxfoundation.org>,
+ "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Daniel Lezcano" <daniel.lezcano@kernel.org>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Alex Shi" <alexs@kernel.org>,
+ "Yanteng Si" <si.yanteng@linux.dev>, "Dongliang Mu" <dzm91@hust.edu.cn>,
+ "Hu Haowen" <2023002089@link.tyut.edu.cn>, "Kees Cook" <kees@kernel.org>,
+ "Oleg Nesterov" <oleg@redhat.com>, "Will Deacon" <will@kernel.org>,
+ "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Nicholas Piggin" <npiggin@gmail.com>, "Vinod Koul" <vkoul@kernel.org>,
+ "Frank Li" <Frank.Li@kernel.org>, "Dave Penkler" <dpenkler@gmail.com>,
+ "Andi Shyti" <andi.shyti@kernel.org>,
+ "Jonathan Cameron" <jic23@kernel.org>,
+ "David Lechner" <dlechner@baylibre.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ "Andy Shevchenko" <andy@kernel.org>,
+ "Andrew Lunn" <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ "Andreas Oetken" <andreas.oetken@siemens-energy.com>
+Message-Id: <76af64fa-7820-4d92-8aa9-826c3bd812a1@app.fastmail.com>
+In-Reply-To: <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
+References: <20260518042833.272221-1-enelsonmoore@gmail.com>
+ <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
+ <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
+ <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
+ <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
+ <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
+Subject: Re: [PATCH] nios2: remove the architecture
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.65 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
+	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm2,messagingengine.com:s=fm3];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[multipart/mixed,text/plain];
-	MIME_BASE64_TEXT(0.10)[];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10568-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:+];
-	DKIM_TRACE(0.00)[amd.com:+];
+	TAGGED_FROM(0.00)[bounces-10569-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[siemens-energy.com,gmail.com,sang-engineering.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[infradead.org,kernel.org,vger.kernel.org,lwn.net,linuxfoundation.org,linux.dev,hust.edu.cn,link.tyut.edu.cn,redhat.com,linux-foundation.org,gmail.com,baylibre.com,analog.com,lunn.ch,davemloft.net,google.com,siemens-energy.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shivankg@amd.com,dmaengine@vger.kernel.org];
-	HAS_ATTACHMENT(0.00)[];
-	TO_DN_NONE(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
+	RCPT_COUNT_GT_50(0.00)[51];
+	TAGGED_RCPT(0.00)[dmaengine,renesas,dt,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 90A0C58815C
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,arndb.de:dkim,app.fastmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: DE084588B44
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
---------------QCgfrrxZq2hwwzY2uh3O6ktk
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+On Tue, May 19, 2026, at 12:30, Simon Schuster wrote:
+> On Mon, May 18, 2026 at 05:13:58PM -0700, Ethan Nelson-Moore wrote:
+>
+> 2035 is still a rather tight timeframe for our typical support/phase-out
+> period (we would hope to get close to 2040 with the SLTS extensions),
+> which is also the reason for our targeted 'lifetime extension' for the
+> nios2 architecture for approximately 5 years, or more precisely ~2-3
+> SLTS kernels assuming the usual cadence of 2 years between SLTS versions
+> (+ some safety margin).
 
+I think that is a reasonable target. We have a bunch of embedded
+architectures that have a similarly small user base and I expect
+that we will want to remove most of them at some point, as we did
+for seven architectures in linux-4.17.
 
+As long as there is a maintainer for nios2 and it's not actively
+getting in the way of a specific treewide change, I don't see any
+reason to remove this any earlier than the other ones.
 
-On 5/18/2026 1:59 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] Pre-existing Use-After-Free vulnerabilities in dma_chan_put() and dma_release_channel() due to device memory release before teardown completes.
-> --
-> 
-> commit dcce1cbcc027c7a50b03bed56fe875a7390be677
-> Author: Shivank Garg <shivankg@amd.com>
-> 
-> dmaengine: Fix device kref underflow in dma_chan_put()
-> 
-> This commit addresses a device kref underflow by ensuring the device reference
-> is only dropped when the client count reaches zero, matching the slow-path get.
-> 
->> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
->> --- a/drivers/dma/dmaengine.c
->> +++ b/drivers/dma/dmaengine.c
->> @@ -515,7 +515,9 @@ static void dma_chan_put(struct dma_chan *chan)
->>               chan->route_data = NULL;
->>       }
->>
->> -     dma_device_put(chan->device);
->> +     /* This channel is not in use anymore, drop the device ref */
->> +     if (!chan->client_count)
->> +             dma_device_put(chan->device);
->>       module_put(dma_chan_to_owner(chan));
->>  }
-> 
-> This isn't a bug introduced by this patch, but does this sequence present
-> a use-after-free risk?
-> 
-> If dma_device_put() drops the final reference to the device (for example,
-> if the provider module previously unregistered the DMA device), it can
-> trigger the device release callback and free the dma_device and dma_chan
-> memory.
-> 
-> If that happens, module_put(dma_chan_to_owner(chan)) will dereference the
-> freed memory, as dma_chan_to_owner() accesses chan->device->owner.
-> 
-> Additionally, when dma_chan_put() is called from dma_release_channel(),
-> returning from this function leads to further accesses of the freed memory.
-> dma_release_channel() continues to access chan->device->privatecnt,
-> chan->device->cap_mask, chan->slave, and chan->name, which could cause a
-> series of use-after-free issues during teardown or hot-unplug.
-> 
-> --
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260518-dmaengine-kref-fix-v1-1-4d6125048fb7@amd.com?part=1
+Obviously at some point nios2 will have to get removed because
+of the limit to gcc-14 or older, but that should not be a problem
+for the next few LTS releases.
 
-Attached the patch addressing the Sashiko reported issues for additional review
-comments before sending out v2.
+> Sure, I'd be glad to do so, but so far I refrained from it as I was a bit
+> unsure about the netiquette (can I simply do so by self-proclamation? At
+> least the git history seems to suggest so...).
 
-Thanks,
-Shivank
---------------QCgfrrxZq2hwwzY2uh3O6ktk
-Content-Type: text/plain; charset=UTF-8;
- name="0001-dmaengine-fix-use-after-free-in-dma_chan_put-and-dma.patch"
-Content-Disposition: attachment;
- filename*0="0001-dmaengine-fix-use-after-free-in-dma_chan_put-and-dma.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
+Dinh already replied that he welcomes the help, and I also suggested
+the same thing a year ago. As the only known user that has contributed
+patches in a long time, you are obviously qualified.
 
-RnJvbSBjMDJjZThjNjFhY2M0YTJmNGUyYzlmMDliZDE2ODFjNzJhOThjNGExIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBTaGl2YW5rIEdhcmcgPHNoaXZhbmtnQGFtZC5jb20+CkRhdGU6
-IE1vbiwgMTggTWF5IDIwMjYgMTE6NDk6MDkgKzAwMDAKU3ViamVjdDogW1BBVENIXSBkbWFlbmdp
-bmU6IGZpeCB1c2UtYWZ0ZXItZnJlZSBpbiBkbWFfY2hhbl9wdXQoKSBhbmQKIGRtYV9yZWxlYXNl
-X2NoYW5uZWwoKQoKV2hlbiBkbWFfZGV2aWNlX3B1dCgpIGRyb3BzIHRoZSBsYXN0IHJlZmVyZW5j
-ZSBvbiBjaGFuLT5kZXZpY2UtPnJlZiwKZG1hX2RldmljZV9yZWxlYXNlKCkgcnVucyBhbmQgbWF5
-IGZyZWUgdGhlIGRtYV9kZXZpY2UgYWxvbmcgd2l0aCBpdHMKY2hhbm5lbHMuCgpUd28gcGF0aHMg
-c3RpbGwgcmVhZCB0aGF0IG1lbW9yeSBhZnRlciB0aGUgcHV0OgogLSBkbWFfY2hhbl9wdXQoKSBy
-ZWFkcyBjaGFuLT5kZXZpY2UtPm93bmVyIHZpYSBkbWFfY2hhbl90b19vd25lcigpCiAgIGZvciB0
-aGUgdHJhaWxpbmcgbW9kdWxlX3B1dCgpLgogLSBkbWFfcmVsZWFzZV9jaGFubmVsKCkgY2FsbHMg
-ZG1hX2NoYW5fcHV0KCkgZmlyc3QsIHRoZW4gcmVhZHMKICAgY2hhbi0+ZGV2aWNlLT5wcml2YXRl
-Y250LCBjaGFuLT5zbGF2ZSwgY2hhbi0+bmFtZSBhbmQKICAgY2hhbi0+ZGJnX2NsaWVudF9uYW1l
-LgoKS0FTQU4gY2F0Y2hlcyB0aGUgZmlyc3Qgb25lOgoKCXNsYWItdXNlLWFmdGVyLWZyZWUgaW4g
-ZG1hX2NoYW5fcHV0KzB4M2U2LzB4NGMwCglSZWFkIG9mIHNpemUgOCBieSB0YXNrIGluc21vZC82
-MzE5CglGcmVlZCBieSB0YXNrIDYzMTk6CgkgIGtmcmVlKzB4MjI1LzB4NDcwCgkgIGRtYV9jaGFu
-X3B1dCsweDM5NS8weDRjMAoJICBkbWFlbmdpbmVfcHV0KzB4ZjgvMHgxNjAKCkNhY2hlIHRoZSBt
-b2R1bGUgb3duZXIgaW4gZG1hX2NoYW5fcHV0KCkgYmVmb3JlIHRoZSBwdXQgc28gdGhlIHRyYWls
-aW5nCm1vZHVsZV9wdXQoKSBkb2VzIG5vdCBuZWVkIGNoYW4tPmRldmljZS4gSW4gZG1hX3JlbGVh
-c2VfY2hhbm5lbCgpLCBtb3ZlCmRtYV9jaGFuX3B1dCgpIHRvIHRoZSBlbmQsIGFmdGVyIGV2ZXJ5
-IGNoYW4vZGV2aWNlIHJlYWQuCgpGaXhlczogOGFkMzQyYTg2MzU5ICgiZG1hZW5naW5lOiBBZGQg
-cmVmZXJlbmNlIGNvdW50aW5nIHRvIGRtYV9kZXZpY2Ugc3RydWN0IikKU3VnZ2VzdGVkLWJ5OiBT
-YXNoaWtvIDxzYXNoaWtvLWJvdEBrZXJuZWwub3JnPgpMaW5rOiBodHRwczovL3Nhc2hpa28uZGV2
-LyMvcGF0Y2hzZXQvMjAyNjA1MTgtZG1hZW5naW5lLWtyZWYtZml4LXYxLTEtNGQ2MTI1MDQ4ZmI3
-QGFtZC5jb20KU2lnbmVkLW9mZi1ieTogU2hpdmFuayBHYXJnIDxzaGl2YW5rZ0BhbWQuY29tPgot
-LS0KIGRyaXZlcnMvZG1hL2RtYWVuZ2luZS5jIHwgNyArKysrKy0tCiAxIGZpbGUgY2hhbmdlZCwg
-NSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1h
-L2RtYWVuZ2luZS5jIGIvZHJpdmVycy9kbWEvZG1hZW5naW5lLmMKaW5kZXggNjA1YmZhNDc3YTAw
-Li45YzRlMjA2ZjI0NjggMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZG1hL2RtYWVuZ2luZS5jCisrKyBi
-L2RyaXZlcnMvZG1hL2RtYWVuZ2luZS5jCkBAIC00OTUsMTAgKzQ5NSwxMyBAQCBzdGF0aWMgaW50
-IGRtYV9jaGFuX2dldChzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4pCiAgKi8KIHN0YXRpYyB2b2lkIGRt
-YV9jaGFuX3B1dChzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4pCiB7CisJc3RydWN0IG1vZHVsZSAqb3du
-ZXI7CisKIAkvKiBUaGlzIGNoYW5uZWwgaXMgbm90IGluIHVzZSwgYmFpbCBvdXQgKi8KIAlpZiAo
-IWNoYW4tPmNsaWVudF9jb3VudCkKIAkJcmV0dXJuOwogCisJb3duZXIgPSBkbWFfY2hhbl90b19v
-d25lcihjaGFuKTsKIAljaGFuLT5jbGllbnRfY291bnQtLTsKIAogCS8qIFRoaXMgY2hhbm5lbCBp
-cyBub3QgaW4gdXNlIGFueW1vcmUsIGZyZWUgaXQgKi8KQEAgLTUxOCw3ICs1MjEsNyBAQCBzdGF0
-aWMgdm9pZCBkbWFfY2hhbl9wdXQoc3RydWN0IGRtYV9jaGFuICpjaGFuKQogCS8qIFRoaXMgY2hh
-bm5lbCBpcyBub3QgaW4gdXNlIGFueW1vcmUsIGRyb3AgdGhlIGRldmljZSByZWYgKi8KIAlpZiAo
-IWNoYW4tPmNsaWVudF9jb3VudCkKIAkJZG1hX2RldmljZV9wdXQoY2hhbi0+ZGV2aWNlKTsKLQlt
-b2R1bGVfcHV0KGRtYV9jaGFuX3RvX293bmVyKGNoYW4pKTsKKwltb2R1bGVfcHV0KG93bmVyKTsK
-IH0KIAogZW51bSBkbWFfc3RhdHVzIGRtYV9zeW5jX3dhaXQoc3RydWN0IGRtYV9jaGFuICpjaGFu
-LCBkbWFfY29va2llX3QgY29va2llKQpAQCAtOTA3LDcgKzkxMCw2IEBAIHZvaWQgZG1hX3JlbGVh
-c2VfY2hhbm5lbChzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4pCiAJbXV0ZXhfbG9jaygmZG1hX2xpc3Rf
-bXV0ZXgpOwogCVdBUk5fT05DRShjaGFuLT5jbGllbnRfY291bnQgIT0gMSwKIAkJICAiY2hhbiBy
-ZWZlcmVuY2UgY291bnQgJWQgIT0gMVxuIiwgY2hhbi0+Y2xpZW50X2NvdW50KTsKLQlkbWFfY2hh
-bl9wdXQoY2hhbik7CiAJLyogZHJvcCBQUklWQVRFIGNhcCBlbmFibGVkIGJ5IF9fZG1hX3JlcXVl
-c3RfY2hhbm5lbCgpICovCiAJaWYgKC0tY2hhbi0+ZGV2aWNlLT5wcml2YXRlY250ID09IDApCiAJ
-CWRtYV9jYXBfY2xlYXIoRE1BX1BSSVZBVEUsIGNoYW4tPmRldmljZS0+Y2FwX21hc2spOwpAQCAt
-OTI0LDYgKzkyNiw3IEBAIHZvaWQgZG1hX3JlbGVhc2VfY2hhbm5lbChzdHJ1Y3QgZG1hX2NoYW4g
-KmNoYW4pCiAJa2ZyZWUoY2hhbi0+ZGJnX2NsaWVudF9uYW1lKTsKIAljaGFuLT5kYmdfY2xpZW50
-X25hbWUgPSBOVUxMOwogI2VuZGlmCisJZG1hX2NoYW5fcHV0KGNoYW4pOwogCW11dGV4X3VubG9j
-aygmZG1hX2xpc3RfbXV0ZXgpOwogfQogRVhQT1JUX1NZTUJPTF9HUEwoZG1hX3JlbGVhc2VfY2hh
-bm5lbCk7CgpiYXNlLWNvbW1pdDogMDc1MDcyYjhmMDRlZDg5N2RkYzA3OWYwMDA1ZjE1ZmQ1Nzk3
-ZWRmOAotLSAKMi40My4wCgo=
+Sending a patch for the MAINTAINERS file to Dinh is the first step,
+once he has sent that upstream, you can (optionally) apply for
+kernel.org account that would let you host a git tree on kernel.org
+or have a tree that you both have access to.
 
---------------QCgfrrxZq2hwwzY2uh3O6ktk--
+     Arnd
 

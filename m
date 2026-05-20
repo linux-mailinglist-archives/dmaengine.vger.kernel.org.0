@@ -1,203 +1,230 @@
-Return-Path: <dmaengine+bounces-10570-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10571-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yLnGOW7MDWqq3QUAu9opvQ
-	(envelope-from <dmaengine+bounces-10570-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 16:59:58 +0200
+	id QNVRJW7VDWrW3wUAu9opvQ
+	(envelope-from <dmaengine+bounces-10571-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 17:38:22 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61A4059058E
-	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 16:59:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F0A7B591103
+	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 17:38:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 025FE3032657
-	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 14:37:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1ADC83252B08
+	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 15:21:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A75E3A1E89;
-	Wed, 20 May 2026 14:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4AF43EF65F;
+	Wed, 20 May 2026 15:20:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="RfAMS1bl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZLigGPg"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAB83E277C;
-	Wed, 20 May 2026 14:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B763EF647
+	for <dmaengine@vger.kernel.org>; Wed, 20 May 2026 15:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779287870; cv=none; b=JaYq2r7DKReMfRcie37YBXF/V7zQi77qMBnQr0ffrZIkUVyF4FojdTyY63pKRvwsXhzz4B1AFpuGHTc2YTcmWexgzfx23RWM01hayzEuINuLbktToEBIlZlH+f5dy45zjLsLO3NebolGR/g1U2tASLqfhnIcGOJq+XA3g+nNCCw=
+	t=1779290452; cv=none; b=HjuHdJAFgfkcvQMUvE7vZeGYXO7y7rwsRMq4trejZnt6JdsuFJ51OGejIpVMLidUC4HKwoqNvKeo87HWl29BzxCnElWLWh8tIlbmGZSKP8LiwNmr3mR5SLWLOljXj5N3crqX+kfQApocespUc7/4+1HjcG7r7Nk+KUp9z30tEOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779287870; c=relaxed/simple;
-	bh=bzSTQCZOrBFSOsvbvDnpacFl5fPNGDFOQPEqbe+W6G8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RL/TJflO+e9N0vabZZhMSB/Ju4nmSWTSGyeFkl+yHrkGkdFUbYLGVDQU92sTFWAqzgOiebdmZ7lG1HO6FHHALhzZeXvCOQzQEZjgPGD1w6+rwdZxVt8svljyl4O5PaoxrPho+yipf5u2tIXLkcChuZOrywk2TBHpssOdo5MA6hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=RfAMS1bl; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
-Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64KE4JQr2574521;
-	Wed, 20 May 2026 14:37:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pps0720; bh=m+z9wNOWDyOlXsbnO7ZPmGxfgPL235d3JQGEO
-	IPdDrE=; b=RfAMS1blEM27Z//6XZ5j1qtv1APGBTZiQQ/W+FggQKPNNGgLNpe63
-	0jvXCt21byw7lb57nFvj9t78ItJzbW3SiNu5Qnzn9H/Zy2rqsGQyUDbELDXvquS8
-	NHkKnYEEZwjedB2dkCx1/Ll4nk1e051KF9cN5ie2RnDxg89fIaeCU277ToAuc6K6
-	h7MWqymiTXKeMSDzcGVHTIwjbr4+MGyNp2kHdLxGvrFwWQS5AKKh1xTCk0o2uSFq
-	t+6FwjLURKeSMwKQbPThy/V29ia7cVwIQ10rfWg/P/PXBgtWL8tKz6vToAEoZKXD
-	Ok5N7eqgF/XSj0cIGESYa+7SvrKRCSBeQ==
-Received: from p1lg14880.it.hpe.com (p1lg14880.it.hpe.com [16.230.97.201])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 4e9ed88efk-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 20 May 2026 14:37:33 +0000 (GMT)
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 920C681B869;
-	Wed, 20 May 2026 14:37:33 +0000 (UTC)
-Received: from owl.eag.rdlabs.hpecorp.net (unknown [16.231.227.39])
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTP id 2C31F808721;
-	Wed, 20 May 2026 14:37:33 +0000 (UTC)
-Received: by owl.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-	id 8C70527BF7F; Wed, 20 May 2026 09:37:32 -0500 (CDT)
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Steve Wahl <steve.wahl@hpe.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
-Subject: [PATCH] dmaengine: idxd: fix problems on initialization error path.
-Date: Wed, 20 May 2026 09:37:32 -0500
-Message-ID: <20260520143732.119407-1-steve.wahl@hpe.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1779290452; c=relaxed/simple;
+	bh=U78t2XTsdrkSpcOvUZs+LVTmlnbRVaN74O53WhwC1MI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=rpSSKUF0Fs6XBN/1pXqe3nKsWlj8Pz6zTzGPXWWeSDsG3g4sMCkhWgiMld4d3qTV2uM4ko3Q4ZELHhcb4P31oqxeUqnTFbgLxqqfpzV61Y8ReUSMex4EgIhi7l87XusDKUSJrFhMgw0Yy+HHlCSfrG5BTQqNdkpveNf+zznvSo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZLigGPg; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BFA01F000E9;
+	Wed, 20 May 2026 15:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779290451;
+	bh=iDBpk58XcX3X6MEiBEReNCQfEt0+qC/zNj6OgOvFmaQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=AZLigGPgKBWXjT56ZKwPTt/SQvk80BfgTJaYFQ4ukFi74UyoFvVEBWGB4ofC8X9dA
+	 tGUrh58bYI9sL0kgD5bHdP5UBJ4H/zH3zkmrZaIeInRJL0YP3Xb3q7Rq5CR0P+Lrmd
+	 SO0XDplX/LpGZ4IJFxPoFhCcph6VUZwS3rFhPlGVHBNq1b40DbByxcIvpsLPIOqupE
+	 ywn76POB1bcC6BJ8jKwNOF0VjLhJU0hqIabfej7LYC7gr12MiJ/AZKR4MTRxz3vl/P
+	 7nOJJkwngduGc2nU4KkNwuMXkzUDvZmDmcjTH66HFh108cVXMkRA8NhWE6K0vMPi0x
+	 nXC8M1wagvHlg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] dmaengine: idxd: fix problems on initialization error
+ path.
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Steve Wahl" <steve.wahl@hpe.com>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260520143732.119407-1-steve.wahl@hpe.com>
+References: <20260520143732.119407-1-steve.wahl@hpe.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 20 May 2026 15:20:49 +0000
+Message-Id: <20260520152050.8BFA01F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=a+sAM0SF c=1 sm=1 tr=0 ts=6a0dc72d cx=c_pps
- a=A+SOMQ4XYIH4HgQ50p3F5Q==:117 a=A+SOMQ4XYIH4HgQ50p3F5Q==:17
- a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=gQcMVamqm3wCPoSYhaRC:22
- a=6_mrDcixewTG61oOsKN3:22 a=MvuuwTCpAAAA:8 a=BfhZxvNQlJ6Rn41qmWYA:9
-X-Proofpoint-GUID: X0pwTLlWog3NHyTTOVKLaq5_PxIXMCmo
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIwMDE0MiBTYWx0ZWRfX0zVObHs1pSzh
- tUVo9OIEh305hyjt9FmrpPB3W1FaVwIOdI9MpNHKOHgnlonb4C+zYTYlMcLVK7EYEeLuvswpxt+
- MaqSU6ZO3vqH79i+xK7FV58zwXCbg85qKYbL1/whfkpsjV872kokF47/XT5GOyk6x873swGmeZ1
- uXtHvD33zFdF15fgJ33P3FVIad4YwANJvlG7g69pDqUFw99xcBTy+QvQ+30ZKaYHrW4lAhLkOav
- 62wwtTLHPw46kQvsqAzXxE29Hkv8XKflUIHZIRQd8lO9FEbOB1eZ185baBEnDCBglqXtw5YvNNn
- 7SzIM8pLmMigoOk7HsvFLwr2C74Jr3xowEX77cU1L5w2+ZVYD4tmCdmOEcQcCD11ElVe5X9o9kd
- OzK/jHyxp9L1zmORM+ek0fWvAWrygSB4wO8ghNJkiKkpWDZ7YSDotN4x371Z4XT8QSgIGBZ1Com
- SWNibkLPvOBZPryKTKA==
-X-Proofpoint-ORIG-GUID: X0pwTLlWog3NHyTTOVKLaq5_PxIXMCmo
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-20_02,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 priorityscore=1501 malwarescore=0 adultscore=0
- lowpriorityscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
- definitions=main-2605200142
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[hpe.com,reject];
-	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[hpe.com:s=pps0720];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10570-lists,dmaengine=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[steve.wahl@hpe.com,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[hpe.com:+];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-10571-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[8]
-X-Rspamd-Queue-Id: 61A4059058E
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,smtp.kernel.org:mid,sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: F0A7B591103
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Some error paths within idxd_pci_probe_alloc and functions it calls
-did not keep proper track of what has already been allocated or freed,
-resulting in calling destroy_workqueue with a null pointer, and once
-that was fixed, attempting to free structures more than once.  These
-conditions were hit running in a kexec'd kdump kernel with reduced
-resources, causing the "Device is HALTED!" branch in
-idxd_device_init_reset to be taken.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-In idxd_conf_device_release, check that the workqueue has been
-allocated before trying to destroy it.  And in idxd_free and
-idxd_alloc, do not attempt to free allocations that
-idxd_conf_device_release, called through put_device, will already have
-freed.
+Pre-existing issues:
+- [High] Incomplete Fix / Double Free & Double Destroy
+- [High] Immediate Double Free in child device cleanup functions
+- [High] Use-After-Free and Double Free due to dangling pointers in registr=
+ation rollback
+--
 
-Fixes: 3d33de353b1f ("dmaengine: idxd: Fix not releasing workqueue on .release()")
+commit 36d73f2b6ed131031e13332b322a76ce56830ad7
+Author: Steve Wahl <steve.wahl@hpe.com>
+Subject: dmaengine: idxd: fix problems on initialization error path.
 
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
----
- drivers/dma/idxd/init.c  | 10 ++++++----
- drivers/dma/idxd/sysfs.c |  3 ++-
- 2 files changed, 8 insertions(+), 5 deletions(-)
+This patch fixes double frees and NULL pointer dereferences in the IDXD
+initialization error paths by ensuring allocations are freed only once
+during the device release callback, and checking if the workqueue exists
+before destroying it.
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index f1cfc7790d95..227e323cc5a0 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -607,9 +607,6 @@ static void idxd_free(struct idxd_device *idxd)
- 		return;
- 
- 	put_device(idxd_confdev(idxd));
--	bitmap_free(idxd->opcap_bmap);
--	ida_free(&idxd_ida, idxd->id);
--	kfree(idxd);
- }
- 
- static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_data *data)
-@@ -649,8 +646,13 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
- 	return idxd;
- 
- err_name:
-+	/*
-+	 * once device_initialize(conf_dev) is called,
-+	 * put_device(conf_dev) will end up calling
-+	 * idxd_conf_device_release() which will free the rest.
-+	 */
- 	put_device(conf_dev);
--	bitmap_free(idxd->opcap_bmap);
-+	return NULL;
- err_opcap:
- 	ida_free(&idxd_ida, idxd->id);
- err_ida:
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 6d251095c350..d5ffc641c856 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -1836,7 +1836,8 @@ static void idxd_conf_device_release(struct device *dev)
- {
- 	struct idxd_device *idxd = confdev_to_idxd(dev);
- 
--	destroy_workqueue(idxd->wq);
-+	if (idxd->wq)
-+		destroy_workqueue(idxd->wq);
- 	kfree(idxd->groups);
- 	bitmap_free(idxd->wq_enable_map);
- 	kfree(idxd->wqs);
--- 
-2.43.0
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index f1cfc7790d950..227e323cc5a0b 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
 
+[ ... ]
+
+> @@ -649,8 +646,13 @@ static struct idxd_device *idxd_alloc(struct pci_dev=
+ *pdev, struct idxd_driver_d
+>  	return idxd;
+> =20
+>  err_name:
+> +	/*
+> +	 * once device_initialize(conf_dev) is called,
+> +	 * put_device(conf_dev) will end up calling
+> +	 * idxd_conf_device_release() which will free the rest.
+> +	 */
+>  	put_device(conf_dev);
+
+[Severity: High]
+This is a pre-existing issue, but does a similar pattern cause immediate do=
+uble
+frees in the child device cleanup functions?
+
+In functions like idxd_clean_wqs(), idxd_clean_groups(), and
+idxd_clean_engines() (as well as their setup error paths), cleanup is perfo=
+rmed
+by calling put_device() on the child kobjects.
+
+This drops the reference count to 0 and synchronously invokes the sysfs rel=
+ease
+callback (e.g., idxd_conf_wq_release(), idxd_conf_group_release()), which s=
+afely
+frees the structure (kfree(wq)) and its internal allocations.
+
+However, immediately after put_device() returns, these cleanup functions
+explicitly call kfree() on the exact same device structure (and inner point=
+ers
+like wq->wqcfg). Will this result in immediate double frees when unloading =
+the
+driver or failing initialization?
+
+
+[Severity: High]
+This isn't a bug introduced by this patch, but are there dangling pointers =
+in
+the registration rollback that cause a use-after-free?
+
+If idxd_register_wq_devices() (or equivalent engine/group registration
+functions) fails, its error rollback drops references to all child devices =
+via
+put_device() or device_unregister(), which invokes their release callbacks =
+and
+frees them.
+
+It does not remove the dangling pointers from the idxd->wqs (or groups/engi=
+nes)
+arrays.
+
+The error then bubbles up to idxd_pci_probe_alloc(), which jumps to
+err_dev_register and calls idxd_cleanup(). This eventually calls
+idxd_clean_wqs(), which iterates over the full idxd->wqs array and
+unconditionally calls put_device() and kfree() on the already-freed pointer=
+s.
+
+> +	return NULL;
+>  err_opcap:
+>  	ida_free(&idxd_ida, idxd->id);
+>  err_ida:
+
+[ ... ]
+
+> diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+> index 6d251095c350f..d5ffc641c8567 100644
+> --- a/drivers/dma/idxd/sysfs.c
+> +++ b/drivers/dma/idxd/sysfs.c
+> @@ -1836,7 +1836,8 @@ static void idxd_conf_device_release(struct device =
+*dev)
+>  {
+>  	struct idxd_device *idxd =3D confdev_to_idxd(dev);
+> =20
+> -	destroy_workqueue(idxd->wq);
+> +	if (idxd->wq)
+> +		destroy_workqueue(idxd->wq);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but do the error paths from
+idxd_probe() still cause a double free and double destroy?
+
+If an error occurs in idxd_probe() (e.g., idxd_device_load_config() fails),
+idxd_cleanup_internals() or idxd_setup_internals() error paths are invoked.
+These functions manually free arrays (idxd->groups, idxd->wqs, idxd->engine=
+s)
+and destroy the workqueue (destroy_workqueue(idxd->wq)) but leave the point=
+ers
+non-NULL.
+
+When the error propagates up to idxd_pci_probe_alloc(), it calls idxd_free()
+which calls put_device(). This triggers idxd_conf_device_release().
+
+Because the pointers are still non-NULL, idxd_conf_device_release()
+unconditionally calls kfree() on the arrays a second time and executes
+destroy_workqueue(idxd->wq) again on the already-destroyed workqueue.
+
+>  	kfree(idxd->groups);
+>  	bitmap_free(idxd->wq_enable_map);
+>  	kfree(idxd->wqs);
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260520143732.1194=
+07-1-steve.wahl@hpe.com?part=3D1
 

@@ -1,223 +1,203 @@
-Return-Path: <dmaengine+bounces-10569-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10570-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wEz/EXpeDWpuwgUAu9opvQ
-	(envelope-from <dmaengine+bounces-10569-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 09:10:50 +0200
+	id yLnGOW7MDWqq3QUAu9opvQ
+	(envelope-from <dmaengine+bounces-10570-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 16:59:58 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE084588B44
-	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 09:10:49 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61A4059058E
+	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 16:59:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E95DD300737A
-	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 07:07:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 025FE3032657
+	for <lists+dmaengine@lfdr.de>; Wed, 20 May 2026 14:37:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9BAC34DCC8;
-	Wed, 20 May 2026 07:07:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A75E3A1E89;
+	Wed, 20 May 2026 14:37:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="B653PIVe";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GnYd28z8"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="RfAMS1bl"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from flow-a7-smtp.messagingengine.com (flow-a7-smtp.messagingengine.com [103.168.172.142])
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4244E34F48F;
-	Wed, 20 May 2026 07:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAB83E277C;
+	Wed, 20 May 2026 14:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779260838; cv=none; b=TIlg7HfUyxC/70SZ9cp9lQyxmA0dtk43pfGLApyJL14loTKSHMfDIJJIw0zKrElg6WhmUwVB8BO07lAbGutoPVFPphUk5Q9WPWWdp7FrFLaSDxy35Nbr5RBOr/Ys6kVs4KSzTvvenfOA0+HideBAW7cV5iz//0a6RrIHSna+mLk=
+	t=1779287870; cv=none; b=JaYq2r7DKReMfRcie37YBXF/V7zQi77qMBnQr0ffrZIkUVyF4FojdTyY63pKRvwsXhzz4B1AFpuGHTc2YTcmWexgzfx23RWM01hayzEuINuLbktToEBIlZlH+f5dy45zjLsLO3NebolGR/g1U2tASLqfhnIcGOJq+XA3g+nNCCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779260838; c=relaxed/simple;
-	bh=4UmG7P11W8AQAGwVtiZgMyYozzVFcf+K+iTyto2DY7Y=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=sNicx4et+RJK5dvWIppul5rrp4JpCXvKPpOQS/eMRzU4WDlrTpRAje3//EBe2D9pe4IDHOhbeihbboNjO4SXBjqR8KIa/Ap2meps7Uj/CzjTj9HF5p6ujYyXZAzOpUmWk3kpGw9x2piBnRQPouNAEm9Rar5SGztdC5YvJjcQU14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=B653PIVe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GnYd28z8; arc=none smtp.client-ip=103.168.172.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailflow.phl.internal (Postfix) with ESMTP id 45A361380030;
-	Wed, 20 May 2026 03:07:16 -0400 (EDT)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-04.internal (MEProxy); Wed, 20 May 2026 03:07:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1779260836;
-	 x=1779268036; bh=Yc0JG1Xn3Wha37rB1V4lbZPt4g1XIowSANBWVbYnYYg=; b=
-	B653PIVeT6uaYy3t2lF/YnNdWPHqubwh3EDKNnOtFGEz+Fddi3+jLGVO7gIb6ZUN
-	hPyzpzE00vzBB4FUos8RIMr4sCwlZQpGssPQnPh+6czAOoLwAftWa5e1FK7RpDEN
-	rS1WcM+Dv1v71YncQWjBS35nP08DYu5Ci394FOzWskEmJ1U37vNqd1lTu+CTCQg/
-	2t+eqXZfsHVisrfl284hE1uvTVn8jJCt8YJ/NiT8bobdKukP2Rvu2stuc7BJj4dU
-	+e7h4wtogZIit97VsX07EyugTest4kUhBIiLUt7JGVFixgka05hqGjMuy1DkLN43
-	JC41BZdEsZ0FWLTi7N1XUw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1779260836; x=
-	1779268036; bh=Yc0JG1Xn3Wha37rB1V4lbZPt4g1XIowSANBWVbYnYYg=; b=G
-	nYd28z87pqNi+9PdJzaxXZwhv0d9XOb673uhc0dQ12SOzgua/kwGuDzdJ3P/KXA7
-	3wKhVpJEAcXpNHTMZjPSz28yz7/3VQlDPOAQEm8pe7MlfINyfzK1hcoKLwbdpURI
-	Hk6It8Ms0Ab1wLvCqX/Z2v+VOAMREM55Dx6cyIGrz1qDwQxY6oJnQ0TQmVLsz6a7
-	x18qidBeC6dQgG9AvzVdYaWz5fGH40LJZ6ICpW87Lz8JV+55ZXVQG7ntZsHwiC8V
-	BjtLpJkbmlL+6zqwsHrCwc+QHrWJR7sdcp/88nuk4YWvM1bzHvuomb2vkFPiWzjW
-	LpQlE35CMXRAm71I7taXw==
-X-ME-Sender: <xms:oV0NahcvhCqxyShf_GQCxcWNLGoQg7kHPo8XsyEnOyzCH8smWX_kgw>
-    <xme:oV0NaqCKWROXJfx0jBWTTTa4aw69uXBky8ZqSpccGHX2CA4W7mw9j4kFLNIqCjeZm
-    zj3xBZN6UG3wcMx_NUU-6KlVXgXHDLkNGayRxRAMjlYL0TbkACmeo0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddugeefleelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhepkedvheeghfehlefhvdehfffggfdukeekkeehleeuvdeijeeuteevgeejvdefueet
-    necuffhomhgrihhnpedujedrrghsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    hedtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnuhhnohdrshgrsegrnhgrlh
-    hoghdrtghomhdprhgtphhtthhopegulhgvtghhnhgvrhessggrhihlihgsrhgvrdgtohhm
-    pdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhope
-    guphgvnhhklhgvrhesghhmrghilhdrtghomhdprhgtphhtthhopegvnhgvlhhsohhnmhho
-    ohhrvgesghhmrghilhdrtghomhdprhgtphhtthhopehnphhighhgihhnsehgmhgrihhlrd
-    gtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphht
-    thhopeguiihmledusehhuhhsthdrvgguuhdrtghnpdhrtghpthhtohepphgvthgvrhiise
-    hinhhfrhgruggvrggurdhorhhg
-X-ME-Proxy: <xmx:ol0Nah2ii_y-TksNBCT-MowRFapYyZydyI7H4QxxQH4g9XTtz8bobg>
-    <xmx:ol0NarIfG5ugU7JqBORV9sTbHmRBn4g4EaMGJ4YY0AclQPdkv_bZmw>
-    <xmx:ol0Nav-OOvCx4WVvnznx03vUOOFvzfTjft2gLXlcAKL364cJsd6-WA>
-    <xmx:ol0NaiQ9xIABZU_YgIC_PxsPzaYvVcygjExJvggA16DtUstR3GpVrg>
-    <xmx:pF0NagQ9B6Q70cBKcBExfrRFa4A-4wY7ab5nhbQQey_V9mP7bRvenXP2>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DE0EA182007A; Wed, 20 May 2026 03:07:13 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1779287870; c=relaxed/simple;
+	bh=bzSTQCZOrBFSOsvbvDnpacFl5fPNGDFOQPEqbe+W6G8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RL/TJflO+e9N0vabZZhMSB/Ju4nmSWTSGyeFkl+yHrkGkdFUbYLGVDQU92sTFWAqzgOiebdmZ7lG1HO6FHHALhzZeXvCOQzQEZjgPGD1w6+rwdZxVt8svljyl4O5PaoxrPho+yipf5u2tIXLkcChuZOrywk2TBHpssOdo5MA6hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=RfAMS1bl; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
+	by mx0a-002e3701.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64KE4JQr2574521;
+	Wed, 20 May 2026 14:37:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pps0720; bh=m+z9wNOWDyOlXsbnO7ZPmGxfgPL235d3JQGEO
+	IPdDrE=; b=RfAMS1blEM27Z//6XZ5j1qtv1APGBTZiQQ/W+FggQKPNNGgLNpe63
+	0jvXCt21byw7lb57nFvj9t78ItJzbW3SiNu5Qnzn9H/Zy2rqsGQyUDbELDXvquS8
+	NHkKnYEEZwjedB2dkCx1/Ll4nk1e051KF9cN5ie2RnDxg89fIaeCU277ToAuc6K6
+	h7MWqymiTXKeMSDzcGVHTIwjbr4+MGyNp2kHdLxGvrFwWQS5AKKh1xTCk0o2uSFq
+	t+6FwjLURKeSMwKQbPThy/V29ia7cVwIQ10rfWg/P/PXBgtWL8tKz6vToAEoZKXD
+	Ok5N7eqgF/XSj0cIGESYa+7SvrKRCSBeQ==
+Received: from p1lg14880.it.hpe.com (p1lg14880.it.hpe.com [16.230.97.201])
+	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 4e9ed88efk-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Wed, 20 May 2026 14:37:33 +0000 (GMT)
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 920C681B869;
+	Wed, 20 May 2026 14:37:33 +0000 (UTC)
+Received: from owl.eag.rdlabs.hpecorp.net (unknown [16.231.227.39])
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTP id 2C31F808721;
+	Wed, 20 May 2026 14:37:33 +0000 (UTC)
+Received: by owl.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
+	id 8C70527BF7F; Wed, 20 May 2026 09:37:32 -0500 (CDT)
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Steve Wahl <steve.wahl@hpe.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
+Subject: [PATCH] dmaengine: idxd: fix problems on initialization error path.
+Date: Wed, 20 May 2026 09:37:32 -0500
+Message-ID: <20260520143732.119407-1-steve.wahl@hpe.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AoFiOxpvQUXV
-Date: Wed, 20 May 2026 09:06:33 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "schuster.simon@siemens-energy.com" <schuster.simon@siemens-energy.com>,
- "Ethan Nelson-Moore" <enelsonmoore@gmail.com>,
- "Wolfram Sang" <wsa+renesas@sang-engineering.com>
-Cc: "Peter Zijlstra" <peterz@infradead.org>,
- "Dinh Nguyen" <dinguyen@kernel.org>, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, workflows@vger.kernel.org,
- Linux-Arch <linux-arch@vger.kernel.org>, dmaengine@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
- Netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kbuild@vger.kernel.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- "Jonathan Corbet" <corbet@lwn.net>,
- "Shuah Khan" <skhan@linuxfoundation.org>,
- "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Daniel Lezcano" <daniel.lezcano@kernel.org>,
- "Thomas Gleixner" <tglx@kernel.org>, "Alex Shi" <alexs@kernel.org>,
- "Yanteng Si" <si.yanteng@linux.dev>, "Dongliang Mu" <dzm91@hust.edu.cn>,
- "Hu Haowen" <2023002089@link.tyut.edu.cn>, "Kees Cook" <kees@kernel.org>,
- "Oleg Nesterov" <oleg@redhat.com>, "Will Deacon" <will@kernel.org>,
- "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Nicholas Piggin" <npiggin@gmail.com>, "Vinod Koul" <vkoul@kernel.org>,
- "Frank Li" <Frank.Li@kernel.org>, "Dave Penkler" <dpenkler@gmail.com>,
- "Andi Shyti" <andi.shyti@kernel.org>,
- "Jonathan Cameron" <jic23@kernel.org>,
- "David Lechner" <dlechner@baylibre.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- "Andy Shevchenko" <andy@kernel.org>,
- "Andrew Lunn" <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- "Andreas Oetken" <andreas.oetken@siemens-energy.com>
-Message-Id: <76af64fa-7820-4d92-8aa9-826c3bd812a1@app.fastmail.com>
-In-Reply-To: <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
-References: <20260518042833.272221-1-enelsonmoore@gmail.com>
- <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
- <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
- <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
- <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
- <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
-Subject: Re: [PATCH] nios2: remove the architecture
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.65 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=a+sAM0SF c=1 sm=1 tr=0 ts=6a0dc72d cx=c_pps
+ a=A+SOMQ4XYIH4HgQ50p3F5Q==:117 a=A+SOMQ4XYIH4HgQ50p3F5Q==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=gQcMVamqm3wCPoSYhaRC:22
+ a=6_mrDcixewTG61oOsKN3:22 a=MvuuwTCpAAAA:8 a=BfhZxvNQlJ6Rn41qmWYA:9
+X-Proofpoint-GUID: X0pwTLlWog3NHyTTOVKLaq5_PxIXMCmo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIwMDE0MiBTYWx0ZWRfX0zVObHs1pSzh
+ tUVo9OIEh305hyjt9FmrpPB3W1FaVwIOdI9MpNHKOHgnlonb4C+zYTYlMcLVK7EYEeLuvswpxt+
+ MaqSU6ZO3vqH79i+xK7FV58zwXCbg85qKYbL1/whfkpsjV872kokF47/XT5GOyk6x873swGmeZ1
+ uXtHvD33zFdF15fgJ33P3FVIad4YwANJvlG7g69pDqUFw99xcBTy+QvQ+30ZKaYHrW4lAhLkOav
+ 62wwtTLHPw46kQvsqAzXxE29Hkv8XKflUIHZIRQd8lO9FEbOB1eZ185baBEnDCBglqXtw5YvNNn
+ 7SzIM8pLmMigoOk7HsvFLwr2C74Jr3xowEX77cU1L5w2+ZVYD4tmCdmOEcQcCD11ElVe5X9o9kd
+ OzK/jHyxp9L1zmORM+ek0fWvAWrygSB4wO8ghNJkiKkpWDZ7YSDotN4x371Z4XT8QSgIGBZ1Com
+ SWNibkLPvOBZPryKTKA==
+X-Proofpoint-ORIG-GUID: X0pwTLlWog3NHyTTOVKLaq5_PxIXMCmo
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-20_02,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 priorityscore=1501 malwarescore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
+ definitions=main-2605200142
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
-	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm2,messagingengine.com:s=fm3];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[hpe.com,reject];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[hpe.com:s=pps0720];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10569-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[siemens-energy.com,gmail.com,sang-engineering.com];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[infradead.org,kernel.org,vger.kernel.org,lwn.net,linuxfoundation.org,linux.dev,hust.edu.cn,link.tyut.edu.cn,redhat.com,linux-foundation.org,gmail.com,baylibre.com,analog.com,lunn.ch,davemloft.net,google.com,siemens-energy.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10570-lists,dmaengine=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[steve.wahl@hpe.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
-	RCPT_COUNT_GT_50(0.00)[51];
-	TAGGED_RCPT(0.00)[dmaengine,renesas,dt,netdev];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,arndb.de:dkim,app.fastmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: DE084588B44
+	DKIM_TRACE(0.00)[hpe.com:+];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[8]
+X-Rspamd-Queue-Id: 61A4059058E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, May 19, 2026, at 12:30, Simon Schuster wrote:
-> On Mon, May 18, 2026 at 05:13:58PM -0700, Ethan Nelson-Moore wrote:
->
-> 2035 is still a rather tight timeframe for our typical support/phase-out
-> period (we would hope to get close to 2040 with the SLTS extensions),
-> which is also the reason for our targeted 'lifetime extension' for the
-> nios2 architecture for approximately 5 years, or more precisely ~2-3
-> SLTS kernels assuming the usual cadence of 2 years between SLTS versions
-> (+ some safety margin).
+Some error paths within idxd_pci_probe_alloc and functions it calls
+did not keep proper track of what has already been allocated or freed,
+resulting in calling destroy_workqueue with a null pointer, and once
+that was fixed, attempting to free structures more than once.  These
+conditions were hit running in a kexec'd kdump kernel with reduced
+resources, causing the "Device is HALTED!" branch in
+idxd_device_init_reset to be taken.
 
-I think that is a reasonable target. We have a bunch of embedded
-architectures that have a similarly small user base and I expect
-that we will want to remove most of them at some point, as we did
-for seven architectures in linux-4.17.
+In idxd_conf_device_release, check that the workqueue has been
+allocated before trying to destroy it.  And in idxd_free and
+idxd_alloc, do not attempt to free allocations that
+idxd_conf_device_release, called through put_device, will already have
+freed.
 
-As long as there is a maintainer for nios2 and it's not actively
-getting in the way of a specific treewide change, I don't see any
-reason to remove this any earlier than the other ones.
+Fixes: 3d33de353b1f ("dmaengine: idxd: Fix not releasing workqueue on .release()")
 
-Obviously at some point nios2 will have to get removed because
-of the limit to gcc-14 or older, but that should not be a problem
-for the next few LTS releases.
+Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+---
+ drivers/dma/idxd/init.c  | 10 ++++++----
+ drivers/dma/idxd/sysfs.c |  3 ++-
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
-> Sure, I'd be glad to do so, but so far I refrained from it as I was a bit
-> unsure about the netiquette (can I simply do so by self-proclamation? At
-> least the git history seems to suggest so...).
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index f1cfc7790d95..227e323cc5a0 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -607,9 +607,6 @@ static void idxd_free(struct idxd_device *idxd)
+ 		return;
+ 
+ 	put_device(idxd_confdev(idxd));
+-	bitmap_free(idxd->opcap_bmap);
+-	ida_free(&idxd_ida, idxd->id);
+-	kfree(idxd);
+ }
+ 
+ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_data *data)
+@@ -649,8 +646,13 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
+ 	return idxd;
+ 
+ err_name:
++	/*
++	 * once device_initialize(conf_dev) is called,
++	 * put_device(conf_dev) will end up calling
++	 * idxd_conf_device_release() which will free the rest.
++	 */
+ 	put_device(conf_dev);
+-	bitmap_free(idxd->opcap_bmap);
++	return NULL;
+ err_opcap:
+ 	ida_free(&idxd_ida, idxd->id);
+ err_ida:
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index 6d251095c350..d5ffc641c856 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -1836,7 +1836,8 @@ static void idxd_conf_device_release(struct device *dev)
+ {
+ 	struct idxd_device *idxd = confdev_to_idxd(dev);
+ 
+-	destroy_workqueue(idxd->wq);
++	if (idxd->wq)
++		destroy_workqueue(idxd->wq);
+ 	kfree(idxd->groups);
+ 	bitmap_free(idxd->wq_enable_map);
+ 	kfree(idxd->wqs);
+-- 
+2.43.0
 
-Dinh already replied that he welcomes the help, and I also suggested
-the same thing a year ago. As the only known user that has contributed
-patches in a long time, you are obviously qualified.
-
-Sending a patch for the MAINTAINERS file to Dinh is the first step,
-once he has sent that upstream, you can (optionally) apply for
-kernel.org account that would let you host a git tree on kernel.org
-or have a tree that you both have access to.
-
-     Arnd
 

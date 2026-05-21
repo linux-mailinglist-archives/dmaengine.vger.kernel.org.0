@@ -1,168 +1,185 @@
-Return-Path: <dmaengine+bounces-10628-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10631-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4C1iCFu6DmrBBgYAu9opvQ
-	(envelope-from <dmaengine+bounces-10628-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 09:55:07 +0200
+	id uLEGK6y/DmrXBwYAu9opvQ
+	(envelope-from <dmaengine+bounces-10631-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 10:17:48 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1774A5A074B
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 09:55:06 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18AD05A0E5D
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 10:17:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id F29363019056
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 07:52:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0F0C23037E6C
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 08:12:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8BA8348C47;
-	Thu, 21 May 2026 07:52:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB7EC3A3826;
+	Thu, 21 May 2026 08:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ad4Oh2M9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jDvWzpJ0"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709EC1A9F97;
-	Thu, 21 May 2026 07:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C4C38423B;
+	Thu, 21 May 2026 08:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779349975; cv=none; b=eDv6Tyu2kCmkTB6J3sGEyMymY/+HQEWlNMALVp6Ds+hrxSeFaUFiLa8fxld52TAseMn26gx2DX27mL5Cv14YzgIkoJMDmC63UkZsy0Csi971ZXn4LfXxP41gAr0kFyzEA35GJHksEUB3BO5m4fVt42g2oIvDW58r1NXD8YMxwP4=
+	t=1779351174; cv=none; b=evAZP6v9ozQiPXtXnR1pPECKpVi4hrHprkCX8uZL4CLJ4odCqmzAZBSriA2UnSeG97F0HHcOjteOKMXy22hFhiopHOrYZNUlLtCZwDB+8Y2E1uIppoxPaGkq4mb/exJx7Fwo1LiZKkVq9W+o7AfhRvtvynNwe9Su2K+qkIqF8JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779349975; c=relaxed/simple;
-	bh=HBWxyKqJgOMS5IWUOxQ21BzEb/uQXQYMeOTHw/N3flw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SV9eLWokWsseTD4ceJNX1WXQuLxdsi5QbEW5C+e9KvrE9SOKiWGpU48VgwK8HUSXMJTxRJtU61EP7FbnTl7VeJE8mrx8Oib5G/cWd0YQE6VbXvXVg6A2+i0s8z6x/xpc20w5W3VA+lPXnhESjUfdZuPYcVxgxfLjDjwHNfZLDLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ad4Oh2M9; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B88E71F000E9;
-	Thu, 21 May 2026 07:52:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779349974;
-	bh=bw7poT7ZxwEMD/0IoEGHTJ3x+a21BZC4NsTxmvZOp4E=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Ad4Oh2M9x0dWEPCu7X8mN5CfLoLF0StVRH2ih0z9xchjFsYQRFEq4+8tx6Jm38tCQ
-	 dNw0ZC+x0rF1j0owWbzSKMDLNX1cpZ6G0gF8yPjv+XV0nexnObCFXHIGO7L/5GOKju
-	 b9Nw583AmuyNI4JzfJhzfG9yDECGBD+zNSbTzRdS/5VqSIMnWVfRzzPYQv4Fiwep/D
-	 JXFraQRJcULX1HNQkU51TRpaKgQ7ZmoFV6al15W1sP8ZL4AbUysJOTCBJnqu979Hei
-	 SBgpzyTFhci/9E63bkDXN9N6LgARCkclp6SltWOvCgPEeiC34RlZ1+NxajCBvidDNp
-	 22lv/h5lXTHRw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 1/2] dmaengine: arm-dma350: enable ANYCH interrupt
- for shared IRQ wiring
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Jun Guo" <jun.guo@cixtech.com>
-Cc: robh@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Frank.Li@kernel.org, conor+dt@kernel.org
-In-Reply-To: <20260521072924.3000282-2-jun.guo@cixtech.com>
-References: <20260521072924.3000282-2-jun.guo@cixtech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 21 May 2026 07:52:53 +0000
-Message-Id: <20260521075253.B88E71F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1779351174; c=relaxed/simple;
+	bh=hzuY+yyFO4sjo8dhrrxQOewW27XSqB9N4XeCHFH8Bqw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GEUMArAknJq5J/S/+RgzSCqf2SygEoeS2KL75AtfOiy2keQfRLZKTgFMLOnznegH55djgVfZDcsNMYgffODr38abvBTBep9mgZEPIZSuOARK/DOb6K2LWbuq0Smfqez2QmWmnfEyMFmE1MzQnec9/Dp+Vpbg5bjc4mtMmTcbEe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jDvWzpJ0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 36642C2BCB4;
+	Thu, 21 May 2026 08:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779351174;
+	bh=hzuY+yyFO4sjo8dhrrxQOewW27XSqB9N4XeCHFH8Bqw=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=jDvWzpJ0Tg46huG0qtCO6n9siW+ORI289/aRALbc6QT+6699spl/L80hID+tYJgSC
+	 fqg6qzuBkhG+mOGIlHmbBW40Mq2ZGpqBcMgvvvW76D0XPh9EmdsaML9LjIQXYE/SXT
+	 09piLu0PzZ675f7rCW663JQGlHut9sabtncz1TdeYQcJXahfHZvRoDETSixVLY48hX
+	 /UJvZZeczBdCUWwnN1Q4aFe7uyhhFyT09o4Ug9tbPHIVX7pCIrwVQE2NCU7/24VDVN
+	 DiUH0PuSvtyQaKoJZJO7uqVD38DAiomIoq553pOl7xnWHpk2P8dDPF8+PNlvkLWJEc
+	 Xp3o5MAI1cldQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6BBCD5BAC;
+	Thu, 21 May 2026 08:12:54 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Subject: [PATCH v8 0/3] Add Amlogic general DMA
+Date: Thu, 21 May 2026 08:12:42 +0000
+Message-Id: <20260521-amlogic-dma-v8-0-86cc2ce94142@amlogic.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHq+DmoC/23OTWrDMBAF4KsEratijWYkq6veI3Qhe8aJoI6LX
+ UxK8N0rh4b4p8sn8b03NzVIn2RQb4eb6mVMQ+ouOZQvB1Wf4+UkOnHOCgogA4Z0bD+7U6o1t1H
+ 7gN4z1QwOVRZfvTTpem87fuR8TsN31//cy0czvz563KpnNLrQAmUQ8hJc9O9/v69116q5aYSHd
+ oUBv9aQNRIQW/DskffaPjUUm22bNbmmCg0FYYC9xoXebmPWDZCgMyih+udyempb4FpT1jEiWTb
+ YMNq9dksd1tpl7azFwGArxmqv/ULDZtvPl5dVMCImQG3WepqmX6z2Ue0cAgAA
+X-Change-ID: 20251215-amlogic-dma-79477d5cd264
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Frank Li <Frank.Li@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779351171; l=2587;
+ i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
+ bh=hzuY+yyFO4sjo8dhrrxQOewW27XSqB9N4XeCHFH8Bqw=;
+ b=oEdhIYPsTCEUZteX9hT0ke1NATls0bgvNDdiBomI7mCB0YBdDQOlt1AsoeipLBqwO+ctQwEiH
+ xWcwlvsf3dwCcQOUnc1657XU3u1U/SGz75RMgtXZv+XGdmpUQGFEQLb
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
+ auth_id=578
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10628-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-10631-lists,dmaengine=lfdr.de,xianwei.zhao.amlogic.com];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
+	TO_DN_SOME(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	HAS_REPLYTO(0.00)[xianwei.zhao@amlogic.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	FROM_NO_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,cixtech.com:email,smtp.kernel.org:mid,sashiko.dev:url]
-X-Rspamd-Queue-Id: 1774A5A074B
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amlogic.com:replyto,amlogic.com:mid,amlogic.com:email]
+X-Rspamd-Queue-Id: 18AD05A0E5D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Enabling the global ANYCH interrupt before clearing channel states=
- and handling error paths can cause spurious interrupt storms and break sha=
-red IRQ lines.
---
+Add DMA driver and bindigns for the Amlogic SoCs.
 
-commit 0bf9d17ebbd8be17166134ed8865c553f2b5eec7
-Author: Jun Guo <jun.guo@cixtech.com>
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+Changes in v8:
+- Use kzalloc instead of kmalloc.
+- Initialize the temporary variable and fix a spelling mistake.
+- Link to v7: https://lore.kernel.org/r/20260324-amlogic-dma-v7-0-f8b91ee192c1@amlogic.com
 
-dmaengine: arm-dma350: enable ANYCH interrupt for shared IRQ wiring
+Changes in v7:
+- Take use vchan to support mltiple txns.
+- Link to v6: https://lore.kernel.org/r/20260309-amlogic-dma-v6-0-63349d23bd4b@amlogic.com
 
-This commit enables DMANSECCTRL.INTREN_ANYCHINTR during probe so that chann=
-el
-interrupts are propagated when integrators wire DMA-350 channels onto a sha=
-red
-IRQ line.
+Changes in v6:
+- Some minor modifications according to Frank's suggestion.
+- Link to v5: https://lore.kernel.org/r/20260304-amlogic-dma-v5-0-aa453d14fd43@amlogic.com
 
-> diff --git a/drivers/dma/arm-dma350.c b/drivers/dma/arm-dma350.c
-> index 84220fa83029d..09403aca8bb06 100644
-> --- a/drivers/dma/arm-dma350.c
-> +++ b/drivers/dma/arm-dma350.c
+Changes in v5:
+- Rename head file and rename macro definition.
+- Rename the subject in [2/3] from "dma" to "dmaengine".
+- Link to v4: https://lore.kernel.org/r/20260227-amlogic-dma-v4-0-f25e4614e9b7@amlogic.com
 
-[ ... ]
+Changes in v4:
+- Support split transfer when data len > MAX_LEN.
+- When a module fails or exits, perform de-initialization.
+- Some other minor modifications.
+- Link to v3: https://lore.kernel.org/r/20260206-amlogic-dma-v3-0-56fb9f59ed22@amlogic.com
 
-> @@ -582,6 +587,10 @@ static int d350_probe(struct platform_device *pdev)
->  	dmac->dma.device_issue_pending =3D d350_issue_pending;
->  	INIT_LIST_HEAD(&dmac->dma.channels);
-> =20
-> +	reg =3D readl_relaxed(base + DMANSECCTRL + NSEC_CTRL);
-> +	writel_relaxed(reg | INTREN_ANYCHINTR_EN,
-> +		       base + DMANSECCTRL + NSEC_CTRL);
-> +
+Changes in v3:
+- Adjust the format of binding according to Frank's suggestion.
+- Some code format modified according to Frank's suggestion.
+- Support one prep_sg and one submit, drop multi prep_sg and one submit.
+- Keep pre state when resume from pause status.
+- Link to v2: https://lore.kernel.org/r/20260127-amlogic-dma-v2-0-4525d327d74d@amlogic.com
 
-[Severity: High]
-Will enabling INTREN_ANYCHINTR_EN here, before clearing the individual chan=
-nel
-states, potentially cause an interrupt storm on shared IRQ lines?
+Changes in v2:
+- Introduce what the DMA is used for in the A9 SoC.
+- Some minor modifications were made according to Krzysztof's suggestions.
+- Some modifications were made according to Neil's suggestions.
+- Fix a build error.
+- Link to v1: https://lore.kernel.org/r/20251216-amlogic-dma-v1-0-e289e57e96a7@amlogic.com
 
-If a bootloader left a channel with a pending interrupt, this will immediat=
-ely
-assert the shared interrupt line before the DMA driver has registered its I=
-RQ
-handler or cleared the channel state in the loop below.
+---
+Xianwei Zhao (3):
+      dt-bindings: dma: Add Amlogic A9 SoC DMA
+      dmaengine: amlogic: Add general DMA driver for A9
+      MAINTAINERS: Add an entry for Amlogic DMA driver
 
-Additionally, if the probe fails midway (for instance, if platform_get_irq
-returns an error for a channel):
+ .../devicetree/bindings/dma/amlogic,a9-dma.yaml    |  65 ++
+ MAINTAINERS                                        |   7 +
+ drivers/dma/Kconfig                                |  10 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/amlogic-dma.c                          | 682 +++++++++++++++++++++
+ include/dt-bindings/dma/amlogic,a9-dma.h           |   8 +
+ 6 files changed, 773 insertions(+)
+---
+base-commit: 0b1f98df9cf024e9f1a43e0ef9c16d3466d17746
+change-id: 20251215-amlogic-dma-79477d5cd264
 
-drivers/dma/arm-dma350.c:d350_probe() {
-        ...
-        dch->irq =3D platform_get_irq(pdev, i);
-        if (dch->irq < 0)
-            return dev_err_probe(dev, dch->irq, ...);
-}
+Best regards,
+-- 
+Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Does this error path leave the global ANYCH interrupt enabled without sendi=
-ng
-CH_CMD_CLEAR to the remaining channels? Any uncleared pending interrupt on
-those remaining channels could permanently assert the shared IRQ line,
-eventually causing the kernel to disable the shared IRQ entirely.
 
->  	/* Would be nice to have per-channel caps for this... */
->  	memset =3D true;
->  	for (int i =3D 0; i < nchan; i++) {
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521072924.3000=
-282-1-jun.guo@cixtech.com?part=3D1
 

@@ -1,251 +1,185 @@
-Return-Path: <dmaengine+bounces-10687-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10688-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oAeaLFAqD2q3HQYAu9opvQ
-	(envelope-from <dmaengine+bounces-10687-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 17:52:48 +0200
+	id AKgjNNk6D2otIAYAu9opvQ
+	(envelope-from <dmaengine+bounces-10688-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:03:21 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BAB45A8AF8
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 17:52:48 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 523F85A9D0B
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:03:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1C54A319EAAF
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 15:35:30 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9178C3682F92
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 15:38:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEAC2368D7D;
-	Thu, 21 May 2026 15:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D49C368D40;
+	Thu, 21 May 2026 15:37:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="ifgmwrd3"
+	dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b="MMFq36yT";
+	dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b="Zq3CXr0l"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010036.outbound.protection.outlook.com [52.101.69.36])
+Received: from mta-65-142.flowmailer.net (mta-65-142.flowmailer.net [185.136.65.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2AC3806DB;
-	Thu, 21 May 2026 15:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.36
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779377630; cv=fail; b=iO08ynVMM7huy2UFkPM4kDrDsNuA4WQ0rTfH2t5QXY/rg/umUsFYrz90/OFUrcWtTL+vLlNJIS8A+XFyEwFc6bJGFX+MVv9fQolljLuiY8UVAxqzGTER7xw2u6j0En5G2/xVm0Ed+gkLh/mToQfd8vXXN/ngwlcz17RH9NupqJU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779377630; c=relaxed/simple;
-	bh=Xxxb3WvNGrZnopGky0RMx4nHthEr92Nj/Z1vHabT314=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=F2vQjMvRn1v+riKpWJUwdmu8mest0Cn+db+WFvUuXEWnWVwO5KZdVfp91fjcUVLwt3bb2j9hO2Nw9PcIb9sd/4PAl1vQeLXSo57d8PxYt4ca41bGMah9pOij26czc/UY920riXhlqw3lz/fmlNFqZZRuCz9dExFHkPbF6pR4+Jk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=ifgmwrd3; arc=fail smtp.client-ip=52.101.69.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HVe+Om98naWVp5Y12fvKnVhZrVyUqaVRt+KfbjvgXwvSHS314SaSX9tBHha3YZ36X0RTCFmTivJ+mDGKkGgOrO5asc/LisVT0Y83UnCAQIJjRwxzJutnkzkMH5SDiutFeGnVRZf8k5h2kqj7ZQ7DSSp+MEpj/mo3aA+5S1IRS0NY8A8z+7Zw2mCd1YdZUOUNVNuAA+kg1a2sKqyPe5/LslyWL9mwqxBHPKZGi2tQoHEykqHa8eFtr3HlBUDD5ZbI/ED7SDwu8gyHRopSoRxZar1HxtN5LJqtpn7nL7uhFfr7w8BMcB51DuGYGf9CaNoPPibphk+DcJyaa1NkdLoMVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i/ReP1rgqWrU4/sMzuwdfH3iluXexvaN58iUOEqpsAA=;
- b=nRxV6FDo5Tf71vdghvmN3fvS6D9Ec5ECra/6YNhJKuUQBfJKaVk4TtxuxchO8Aqgkr5g3AOhiEBJewh3OQXMhg9Ah/Hne1T617tyISFUmCCalS/PVpkM9CYnJoRLVJjWNM1zeTSvMzjsA4Ltf038RVYeLRVvsMPuOWrUTFUXmh8PJBH1Cgy91mGF1OQ9b177RmJj/56QcKG+y/3kTGHKD7hN+Sw4pjJ7NqJDVgiixS5GnJMsqRbqMfj7MfBkQNJcJRHMdU4RVYgNBhrni5BsGQJA6L9x2es60WrmO99lwYnqYODOs02b2de997kRSwU2d4v/VHv8jRamlvRC+dI2lw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i/ReP1rgqWrU4/sMzuwdfH3iluXexvaN58iUOEqpsAA=;
- b=ifgmwrd3NzlV/Y9b1w3xEBRZqr2FAPqp5kUxJtlks6KDCSu4AW3t4iByDpGBR2xSFGEeRvdAeavvk6C4oTy9Jcp/oniYxrSL6g+QKgkQNaz0ePEU6ocJ2DKpRh+q4CnP2I49/XIh89AO/BLJOaktnZ7/9cQGzGj1v9MxtNwtqtgI+5h1GvcY0anNDpvi/K0Hm91gJCUrbjBuad6AoHybad/9iHGYkoXBmntD1sCfgnAXNUNLVyW/0SgmNGUdlpGLMQpUJ9/f17hgDjTMif2PCi9ecUw5t2Wybhqk492WSHKftSw17ltPuAMBPAJl0M8eiMbniRKJulUf+capuJZ+3g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU4PR04MB11791.eurprd04.prod.outlook.com (2603:10a6:10:623::11)
- by AMDPR04MB11581.eurprd04.prod.outlook.com (2603:10a6:20b:71d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.16; Thu, 21 May
- 2026 15:33:45 +0000
-Received: from DU4PR04MB11791.eurprd04.prod.outlook.com
- ([fe80::11ca:6b74:3234:d7de]) by DU4PR04MB11791.eurprd04.prod.outlook.com
- ([fe80::11ca:6b74:3234:d7de%4]) with mapi id 15.21.0048.013; Thu, 21 May 2026
- 15:33:45 +0000
-From: Frank.Li@oss.nxp.com
-Date: Thu, 21 May 2026 11:32:55 -0400
-Subject: [PATCH v7 9/9] crypto: atmel: Use dmaengine_prep_config_sg() API
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260521-dma_prep_config-v7-9-1f73f4899883@nxp.com>
-References: <20260521-dma_prep_config-v7-0-1f73f4899883@nxp.com>
-In-Reply-To: <20260521-dma_prep_config-v7-0-1f73f4899883@nxp.com>
-To: Vinod Koul <vkoul@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- "David S. Miller" <davem@davemloft.net>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, Koichiro Den <den@valinux.co.jp>, 
- Niklas Cassel <cassel@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, 
- mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
- linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779377571; l=1773;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=erGKLaAZMNXPQALsbiq4uU1FrELcrAtTPXSGZhnyQ3o=;
- b=QKHbZQEkp18U2ITWjZrhkJW46/m4B+DMU571m2yZa9yPRvBA7Xpft6riw3YWQHf519CY3JuIX
- w+7v6kkHY+YBqLDcZ1yAf95BCXLfCAeCDKXwwRVaoWhQnXhUs32Sk2k
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: PH8P220CA0042.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:2d9::14) To DU4PR04MB11791.eurprd04.prod.outlook.com
- (2603:10a6:10:623::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002B5345CBD
+	for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 15:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.142
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779377863; cv=none; b=SZ9bjb1ez+Rd3QS0ied0xVq0j6eN/SlK4kRCZoJvZJeejE972Oi78lQh4gtLng4Alss7VmzQVcZz+O3hYCzelC9zTiycnoeTs3iZaa5V4m5ZON/Sj50B6lMYwugvslGQu2htevSFGMW0O0Ql5M2YQnh04aPYz1gy/L5BnqFkVCM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779377863; c=relaxed/simple;
+	bh=ueEF+bxWvWqR586sT6h/9OE/noXhk1FsLD5ozFIo48g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ca8Tl0GLP+3NlMoxBMmR+pEZECvlo3cTKjxLg6lyhpZh6obrUOCGULAOm70chPFF6dteJIS7zBUt+w3edSSgRTnYIFHYZlIMUM+y5wxQeoGtOlxuvduQT3cH05rgRbTGJDD/qqRW1Tv2+pSrKf4X0zXVMq8HgL0ys6Rrb06vPd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com; dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b=MMFq36yT; dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b=Zq3CXr0l; arc=none smtp.client-ip=185.136.65.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com
+Received: by mta-65-142.flowmailer.net with ESMTPSA id 20260521153732fa24ffd4bf0019fd3d
+        for <dmaengine@vger.kernel.org>;
+        Thu, 21 May 2026 17:37:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=s1;
+ d=flowmailer.net;
+ h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
+ bh=KcRzYfxPkdiV7UzaW+6lIfDEOBCRNUcUcG27X2U1VSs=;
+ b=MMFq36yTf/DJOdkiWD8dxyVJTeBb2CpUxQWl6ikCBdoeyzPO1YF1TlVatLLSDsvGHWcQd5
+ VDsmO4GbpHypEfkjO53Qz6kghqkYW63SBOu0Z3QcrtuSqWyhCWSOJvxnT/UwU+hUbYuuGM0J
+ HuZSr59c5et2+K6wbsqMmvXOzxMIc=;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm3;
+ d=siemens-energy.com; i=schuster.simon@siemens-energy.com;
+ h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
+ bh=KcRzYfxPkdiV7UzaW+6lIfDEOBCRNUcUcG27X2U1VSs=;
+ b=Zq3CXr0liSNgT0BCELoEs6XA0YM8cHIjZYr0stylqb6wFZbahGV2hbEmOBF/1TqoTWIGML
+ pQmKEA14s3UI+M6MccDXkCrApiCPspbcb8X1z4i0qqkc0XKsEuZWyaX++RCNyx2Oho4OkebH
+ CljyjSOBruD/mCsSnEVDpu/bRn9huDA1sfKAPLG4TnjoGEs76ifH2dvqbyplGH4LM/bN//MJ
+ TbAfvH9UHgJigDJ9qujRe7uPZe7uulWgnP1HXFpgW6KlqYd6iasg0kXPD7frFGW+6jdQlaQd
+ pc5Ftr3JZPBE4ZdvXY4aK24gQwmJHg5mcdt41zeDIsJIor2N0FKdzstA==;
+Date: Thu, 21 May 2026 17:37:29 +0200
+From: Simon Schuster <schuster.simon@siemens-energy.com>
+To: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Ethan Nelson-Moore <enelsonmoore@gmail.com>, Peter Zijlstra
+ <peterz@infradead.org>, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, workflows@vger.kernel.org, Linux-Arch
+ <linux-arch@vger.kernel.org>, dmaengine@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, Netdev
+ <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, "linux-csky@vger.kernel.org"
+ <linux-csky@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <skhan@linuxfoundation.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Daniel
+ Lezcano <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, Dongliang
+ Mu <dzm91@hust.edu.cn>, Hu Haowen <2023002089@link.tyut.edu.cn>, Kees Cook
+ <kees@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Will Deacon
+ <will@kernel.org>, "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Nicholas Piggin
+ <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>, Frank Li
+ <Frank.Li@kernel.org>, Dave Penkler <dpenkler@gmail.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>, David Lechner
+ <dlechner@baylibre.com>, =?ISO-8859-1?Q?Nuno_S=E1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof
+ WilczyDski <kwilczynski@kernel.org>, Andreas Oetken
+ <andreas.oetken@siemens-energy.com>
+Subject: Re: [PATCH] nios2: remove the architecture
+Message-ID: <20260521153729.ig2xgvskkbg3nx47@dev-vm-schuster>
+References: <20260518042833.272221-1-enelsonmoore@gmail.com>
+ <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
+ <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
+ <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
+ <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
+ <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
+ <76af64fa-7820-4d92-8aa9-826c3bd812a1@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU4PR04MB11791:EE_|AMDPR04MB11581:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb9c4b1d-7dff-45fb-b05a-08deb74e58ae
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|19092799006|11063799006|6133799003|22082099003|56012099003|18002099003|921020;
-X-Microsoft-Antispam-Message-Info:
-	s862SAwdPXq3ZM6se5Au7e+/kEnxXj/A2PXnixdhPWF/KiumghN4v5mBXBzWcLfDqeNcOkVecz2LSYIFHs+74x06rRRmahoJYjEtFuu4J7fB1qxJ0qmliiZdN6vYJIXxW70YrPi2+26teX3AO2aDBEqSOWFstuWVFEd1ljsEVbzAITpsenm/a0Ukp6K+x/hjk6QI0WhpmIVDaZZE60Lk5tTohpDViVSz+kggVNkkHy18xSodhIdhwF9qRMAxQmNfAxapdx48q4QQBv4EHpchABc8fP2/fplQRIHp4RmPLP6hSPvOokHItSfhdEygjaQu5RraGjJ9+JqN5oQlNXhwF1k2qdrOPaBiCIf7h8jPZL43ZcRdzoiLWoKf3hXOpmh3RxqZmRO/9rC0znqVhYD5uln618Gttx/PDn2NM4xlQ35ssTdeS0q8cL7y38hxS4r6KQQKmHAPK1/+J5/qTFeAJqqMA9zbNb3da5Dbu++vfdItlNmPoXTheUXUeKEDFEyq7m7jvBcjX+s6oVao2Ml2MBIxT2vJ4SEecVIduiTopL3+nDltKzWca4m41VTfcDjEmVcrdoUbwJOZe4L8N2mReU6eKhh3bH2dOVNs0weHRsWVHcROznFS9vq/He10j+xLi7k/750e1GaML5o6K6f5yPUUizpbh8hj5Kr6RzOUF1D+v1n3TBO3IYlAIsKzQWoOc2pD1DJRxDpSir/zpnRru59AHgJCFWGdxKS86aUhO1w=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU4PR04MB11791.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(19092799006)(11063799006)(6133799003)(22082099003)(56012099003)(18002099003)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SVpGUVJVM0hMUllueE9FNHRuTnRwQnk4Sjl3K0o1SHU2V0YvUHZoNVc1RlZZ?=
- =?utf-8?B?VDF3UWx1UG1IOVBPNzJ3VTIvS3NpNjMwNTcyS1JlYVJIVzE5WWh2YlE3ZGNi?=
- =?utf-8?B?U0tvWlZCNVVzbzdKa1hYNGhlWGN4TzlWZGlqM28wbk53a0dzMnYxTVIzQnNU?=
- =?utf-8?B?TUlqM1ZkVTV0Q2g1a1RoNzMvMjJoRVdoMlVYWFRDcFdjS3dpd0pPT3VUM0I2?=
- =?utf-8?B?aWFCbzE4QzlmQUdOZ1VqaVQzQ1ltY2hzWkxWeHhseUlEVER0U2NESWJkbmhy?=
- =?utf-8?B?Wk9DdTVWWlpKNEtQS21Ga3B0Ti9wR25Kcy93ZHovM2FiN0xsL2pUUGowL21K?=
- =?utf-8?B?N1VJZjJwci84YXg1REpDUVIzbmQxREdwWlh0YjFTQjU0VVZQQlZKb2VLYi9R?=
- =?utf-8?B?YXA1L2xid1pYRnBGaUZYNGN1aFViUm9EbFA0ckUwSFFjMFkzWkx2ZG8vMW9j?=
- =?utf-8?B?cnExZmNpS2RQNHNGTCs4R05ubm1DWFdnQUZycFZhdXo4YVgzeFp2OEd1b1l1?=
- =?utf-8?B?VFZQR2dsNFpYUFd6dFRTQ1BPTitRemFyVkkrMUNxaW9xaG1UdkI4ZWFsZ2dI?=
- =?utf-8?B?V0N4a0pMdWU2dEpJT0pxVzg3ek9MeDhFb0s4Z3BpeGV1TVNLeXM3NWczZVE1?=
- =?utf-8?B?ODJwYnFGbTNqMDczU3YwdWRieXBFN3VLbHhZalNNQ05TQ25pbHgvKzBtbndN?=
- =?utf-8?B?cVAxbmFCeTNLMjV4S1NXdDBPRm1JRUlWN0ZLUzRoMFo0NDJ4T2FzcDdaN0I0?=
- =?utf-8?B?cXdtSGdaZ0xBNnFBMlk3bnFveTR6d2ZEOVd5RHowV2NvcjRvMlcyMVJIOVp0?=
- =?utf-8?B?Mlc3cUMzVk5XeG1EQmZMUjdCVVEvcVE0dHhaSmgyWU43OTVVZlZQaUtzMTk4?=
- =?utf-8?B?YWtqc2hLUWczcGpGdXF1ZUV4ZXVHMWN6UFJJUUY2WmJITjB3R3ZUZkVoOUlr?=
- =?utf-8?B?bGhudE1wcCtNSXhVb0gzQW0rb3BBK1VsK1BKL0YzYW9MNjE4RTVaQ1htWU15?=
- =?utf-8?B?RGJXTGdZTGRYbFBJZm1LWE5Lc2Jwc0tYK3FhYW9QM1B5eWZTT3BabExVUStF?=
- =?utf-8?B?Z2YzanFzTy9aL2xNZm5yRlBSWHVPS2Z3bmthQWtlQjVtTnlScnBtUm01Qjcw?=
- =?utf-8?B?ZFNpcy9Ndm1YY2JDdUNTVWZZZExHN3lxK284a2dmTVp5Yll5WHpEOUVxK0lv?=
- =?utf-8?B?YlV6UzJEM3NvZzFydnZvTUVEbFp3OHpnM3gwNjdkS3NSU0llZlMwQ09qL3A0?=
- =?utf-8?B?U2xIcDc2MGUvWnlaOVk2SmhwdkhPQmVqQ3hQTTdUTmpNWTVvNVJQalcyVFIx?=
- =?utf-8?B?QXovWlFWakh0YXh5cXlWcjEzQzBNNnBEa1FiZGpWbDI1anFHTmFFNSt2THVH?=
- =?utf-8?B?OGJLTEFiOWwwb3FqYk04eldxRTVhZEkzNGhiY1A4ejFrZXA2YXVwN2FYK0JV?=
- =?utf-8?B?TGRVSE00bjZKdndsTkNYekR2TzJmNnV3SnE0RTcrYjNwNzdtMmZYeEYrYVJH?=
- =?utf-8?B?QXJKY0NNakVLZS92aE9sMEdQZ3ZpNWI4THcxbU4rT1djNTBpV2V6T1FOdkJS?=
- =?utf-8?B?b2RyTmQxT1RXdGYvN3dBeCtHckZQZ044UXIyYy82MmdEV09LbHplQmNhQ3hh?=
- =?utf-8?B?QU1XeFI3bDVPNlpFMmNXbUlpUXhEM3MraU96RnhxVnIxSENYOTdURHhZYlhT?=
- =?utf-8?B?SStudmFpd0tMOG1pWW1QWEt0b0FvN0xOSGp4cC93MlRmNjFuQVBUd3hUdytG?=
- =?utf-8?B?TTJLY1g0aThkRmZ1YXRIOStHWkVOZm1EeGlDUW9BRWkxdEdCbDdPbnRVUHVY?=
- =?utf-8?B?TUhQQjZRZGdCTWsrR1diUDhpQVFGLzA1QTZKMlc4eXVqeE9heHJCZ3ZIbThT?=
- =?utf-8?B?T3Z1aHRkL2lzYkhvK09KaGdyV1dmWWE5WWJvTGNhdVd6REZkUVZHMnZsQXll?=
- =?utf-8?B?RTN3RHJ3U0pQclpDZmZTdkFIUGdkT1ErZnV0QmFyN1JvRSs1UWJ4bWRNYThK?=
- =?utf-8?B?VjYyK1VpR1J4R2oyWTF5NnlWY0tIMlNFT3B3YStMMjlGK1FIQTlBdTNaWGwy?=
- =?utf-8?B?ZmFDcFVZbnBFZGN4cld2dzd1QXA0SHc1QVJWd0prb1lHekozM25sazNQeHha?=
- =?utf-8?B?a0tvNXlha3dReXU4d1lNeGxBeXJNbk1RS3RpVC9lMEFzYUI0STByWk4rRkls?=
- =?utf-8?B?MjZNZ2IxVC9oQ2RINXkwSUxyTUpYSWhDOW1qQ3ZFcHZFMjkwUENOdVBuTWNr?=
- =?utf-8?B?clR0RDNWL01OVitXbnRPTk5QSGhhNEJiQUpLck1qWHVSTUVJNXBhRkRhcUw2?=
- =?utf-8?B?RWIxeDNEUEtsTVVwWXVDUHU0UndpTHpMK0pIK2JValJ2MzJVUFY1TDRSMXBa?=
- =?utf-8?Q?sbmQX8QGQIbN/BJ7Z/Uc0AHVsSrbbaMmDFtaC?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb9c4b1d-7dff-45fb-b05a-08deb74e58ae
-X-MS-Exchange-CrossTenant-AuthSource: DU4PR04MB11791.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 15:33:45.7760
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hX7jpJwtZzeD+hsUATEhTrhY0HzVGcARJcr1fyT2nrHCddtfQgSpxwMbvDoB0UPFwEgt6uLYvKRVFur9a/BUf7MSPY6fJYoF90AVd7mvKdJdZn401Aab2xidmLrLlset
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AMDPR04MB11581
-X-Spamd-Result: default: False [0.44 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <76af64fa-7820-4d92-8aa9-826c3bd812a1@app.fastmail.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[siemens-energy.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[flowmailer.net:s=s1,siemens-energy.com:s=fm3];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10687-lists,dmaengine=lfdr.de];
-	FROM_NEQ_ENVFROM(0.00)[Frank.Li@oss.nxp.com,dmaengine@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
-	FROM_NO_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10688-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[arndb.de,kernel.org,sang-engineering.com,gmail.com];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[gmail.com,infradead.org,vger.kernel.org,lwn.net,linuxfoundation.org,kernel.org,linux.dev,hust.edu.cn,link.tyut.edu.cn,redhat.com,linux-foundation.org,baylibre.com,analog.com,lunn.ch,davemloft.net,google.com,siemens-energy.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[52];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[schuster.simon@siemens-energy.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[flowmailer.net:+,siemens-energy.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[NXP1.onmicrosoft.com:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,nxp.com:mid,nxp.com:email]
-X-Rspamd-Queue-Id: 6BAB45A8AF8
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,renesas,dt,netdev];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[siemens-energy.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,flowmailer.net:dkim]
+X-Rspamd-Queue-Id: 523F85A9D0B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Frank Li <Frank.Li@nxp.com>
+Hi Arnd, Dinh, Wolfram, and Miguel,
 
-Using new API dmaengine_prep_config_sg() to simple code.
+thank you for your explanations and encouragement; I've now sent my
+application for co-maintainership for arch/nios2 to you, Dinh.
 
-dmaengine_prep_config_sg() does not distinguish between configuration
-failures and descriptor preparation failures, as both are reported through
-a NULL return value. Converting both cases to -ENOMEM is therefore
-acceptable and consistent with the helper's abstraction.
+On Wed, May 20, 2026 at 09:06:33AM +0200, Arnd Bergmann wrote:
+> I think that is a reasonable target. We have a bunch of embedded
+> architectures that have a similarly small user base and I expect
+> that we will want to remove most of them at some point, as we did
+> for seven architectures in linux-4.17.
+> 
+> As long as there is a maintainer for nios2 and it's not actively
+> getting in the way of a specific treewide change, I don't see any
+> reason to remove this any earlier than the other ones.
+> 
+> Obviously at some point nios2 will have to get removed because
+> of the limit to gcc-14 or older, but that should not be a problem
+> for the next few LTS releases.
 
-In practice, most users only care whether the operation succeeds or fails,
-and do not depend on the exact errno value returned from this path.
+This all sounds quite reasonable, including the toolchain
+considerations. Thank you for the offer to keep it around a bit.
+If any issues arise with tree-wide changes I'd be happy to look into
+what can be done on the arch/nios2 side; now that the issues should
+reliably reach me via mail.
 
-Tested-by: Niklas Cassel <cassel@kernel.org>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-change in v6
-- add commit message about error propagation (sashaki AI)
----
- drivers/crypto/atmel-aes.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+> > Sure, I'd be glad to do so, but so far I refrained from it as I was a bit
+> > unsure about the netiquette (can I simply do so by self-proclamation? At
+> > least the git history seems to suggest so...).
+> 
+> Dinh already replied that he welcomes the help, and I also suggested
+> the same thing a year ago. As the only known user that has contributed
+> patches in a long time, you are obviously qualified.
+> 
+> Sending a patch for the MAINTAINERS file to Dinh is the first step,
+> once he has sent that upstream, you can (optionally) apply for
+> kernel.org account that would let you host a git tree on kernel.org
+> or have a tree that you both have access to.
 
-diff --git a/drivers/crypto/atmel-aes.c b/drivers/crypto/atmel-aes.c
-index b393689400b4c..d890b5a277b9c 100644
---- a/drivers/crypto/atmel-aes.c
-+++ b/drivers/crypto/atmel-aes.c
-@@ -795,7 +795,6 @@ static int atmel_aes_dma_transfer_start(struct atmel_aes_dev *dd,
- 	struct dma_slave_config config;
- 	dma_async_tx_callback callback;
- 	struct atmel_aes_dma *dma;
--	int err;
- 
- 	memset(&config, 0, sizeof(config));
- 	config.src_addr_width = addr_width;
-@@ -820,12 +819,9 @@ static int atmel_aes_dma_transfer_start(struct atmel_aes_dev *dd,
- 		return -EINVAL;
- 	}
- 
--	err = dmaengine_slave_config(dma->chan, &config);
--	if (err)
--		return err;
--
--	desc = dmaengine_prep_slave_sg(dma->chan, dma->sg, dma->sg_len, dir,
--				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	desc = dmaengine_prep_config_sg(dma->chan, dma->sg, dma->sg_len, dir,
-+					DMA_PREP_INTERRUPT | DMA_CTRL_ACK,
-+					&config);
- 	if (!desc)
- 		return -ENOMEM;
- 
+I've sent the patch, I'm sure we can work everything else out from
+there.
 
--- 
-2.43.0
-
+Best regards,
+Simon
 

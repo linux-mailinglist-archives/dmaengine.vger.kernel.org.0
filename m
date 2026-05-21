@@ -1,255 +1,182 @@
-Return-Path: <dmaengine+bounces-10708-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10709-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sH/SFixGD2ptIgYAu9opvQ
-	(envelope-from <dmaengine+bounces-10708-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:51:40 +0200
+	id SKxeB8NJD2ptIgYAu9opvQ
+	(envelope-from <dmaengine+bounces-10709-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 20:06:59 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B44365AA9A1
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:51:39 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B750E5AAC3E
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 20:06:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8DC893046FDF
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 17:45:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3C52F313F4A4
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 17:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 012093ED3C7;
-	Thu, 21 May 2026 17:45:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9036D3F20F9;
+	Thu, 21 May 2026 17:56:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eBU4r6q/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VfSyHBKf"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7423E316F;
-	Thu, 21 May 2026 17:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03343383999;
+	Thu, 21 May 2026 17:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779385511; cv=none; b=GNtIVJx6BEryH7o0QxHw2xDcIdEmI2ln/G6C69DJQi97hjAlPZswGcYbGJtl5EcGMrNryzMlN6F7Rj+mjNXHYIE9o896G2KILf415BP86HO40TFvMVq5vnXymYB7o+nkfI9uGwsd80tIwY8xM8N8WvWLUVTtaAobtcL2X4Zd0yU=
+	t=1779386214; cv=none; b=CH1+SKkSbrNeuhTBYfJSwgcRyJL2y6ibRF6vxIVmziu0TEUJEXDoVhzhmaER7apaK9STL/T4ARWaEl+MrQshpePXL5OiX2YYBwBxX8XwLy+xuX4LszrfnywUIp87UepPIa5vIn0Tr0Y63oxx3KPelnhnJjbNVVn8VJU/p4rs8+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779385511; c=relaxed/simple;
-	bh=sU3q4ei5VqXFeemg2pdBcbpXy8Z2qTRY4hHBwMHyr+A=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=I5VemjC8tNPsOFG/yt8vxNVmvKftc53qZd2Mr9eCU/OJUeqHL7x0cOR3FXdtpNul2f2z4WGi3cvLXFTY3X2ILV/dU4AaKtxgstfXrS7EVosx5UKQNO2oi6ZV3MIl2DOcN4RYGpep8j2DEXNK3qHHzF9mRkQMSWi3hiqWeJ4acys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eBU4r6q/; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779385510; x=1810921510;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=sU3q4ei5VqXFeemg2pdBcbpXy8Z2qTRY4hHBwMHyr+A=;
-  b=eBU4r6q/Pfly7X1yJqCLEHmyhpQJlV2crbXifUpUKCUV7dlTkEqmae1a
-   AKceYkxuO1zsrSOCHkjdDFGmvavXdwKnO5at9Ha77MIU+4AQNzCNl91t3
-   gn/G98vXvWp3nOTNJa5kS7jQCy7kdG5BgwPqzrtr5jAam2wVSnH/ecHI4
-   GxTC6OsY/Gte2p/rlOIc+UMKrRW/k2kpLoDax7m+oSw1fpBccCyzualiP
-   Sn6OUbc5OrTCm6t/8e2kHMIcl3aWYHH6VE2JhwXCsGbyIMLanNaefDSrT
-   3Fx6S9FQEF/3FNAkW3k8tLsaFhlaDR13eozETdv3PTBgoc/MLi7Gw7BPq
-   g==;
-X-CSE-ConnectionGUID: 9yrXBPapSeugoewNSa8U/g==
-X-CSE-MsgGUID: Jeaco58dQ0KT6LTcn38xnw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11793"; a="105773552"
-X-IronPort-AV: E=Sophos;i="6.24,160,1774335600"; 
-   d="scan'208";a="105773552"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2026 10:45:08 -0700
-X-CSE-ConnectionGUID: sVvxl8W3QX2Yx8AK13BLJw==
-X-CSE-MsgGUID: XZM0S5M8QcaTj4wM3UKoHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,160,1774335600"; 
-   d="scan'208";a="236347421"
-Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.244.167])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2026 10:44:41 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Pengpeng Hou <pengpeng@iscas.ac.cn>, Petr
- Pavlu <petr.pavlu@suse.com>, Richard Weinberger <richard@nod.at>, Anton
- Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len
- Brown <lenb@kernel.org>, Corey Minyard <corey@minyard.net>, Gabriel Somlo
- <somlo@cmu.edu>, "Michael S. Tsirkin" <mst@redhat.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Bart Van Assche <bvanassche@acm.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Laurent
- Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede
- <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, Hannes Reinecke <hare@suse.de>, "James E.J.
- Bottomley" <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
- <martin.petersen@oracle.com>, Daniel Lezcano <daniel.lezcano@kernel.org>,
- Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Jason Wang
- <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio
- =?utf-8?Q?P=C3=A9rez?= <eperezma@redhat.com>, Jason Baron
- <jbaron@akamai.com>, Jim Cromie
- <jim.cromie@gmail.com>, Tiwei Bie <tiwei.btw@antgroup.com>, Benjamin Berg
- <benjamin.berg@intel.com>, Ilpo =?utf-8?Q?J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>,
- "David E. Box" <david.e.box@linux.intel.com>, "Maciej W. Rozycki"
- <macro@orcam.me.uk>, Srinivas Pandruvada
- <srinivas.pandruvada@linux.intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Sean Christopherson <seanjc@google.com>, Paolo
- Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Vinod Koul <vkoul@kernel.org>, Frank Li
- <Frank.Li@kernel.org>, Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>, Alexander
- Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Dmitry
- Vyukov <dvyukov@google.com>, Andrew Morton <akpm@linux-foundation.org>,
- John Johansen <john.johansen@canonical.com>, Paul Moore
- <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn"
- <serge@hallyn.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Georgia Garcia <georgia.garcia@canonical.com>, kvm@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-modules@vger.kernel.org,
- kasan-dev@googlegroups.com, linux-mm@kvack.org, apparmor@lists.ubuntu.com,
- linux-security-module@vger.kernel.org, linux-um@lists.infradead.org,
- linux-acpi@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
- qemu-devel@nongnu.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
- linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-pm@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org,
- linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, netdev@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 10/11] treewide: Manually convert custom
- kernel_param_ops .get callbacks
-In-Reply-To: <20260521133326.2465264-10-kees@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
- 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
-References: <20260521133315.work.845-kees@kernel.org>
- <20260521133326.2465264-10-kees@kernel.org>
-Date: Thu, 21 May 2026 20:44:37 +0300
-Message-ID: <5cd0c8dde3687d0aea765f2f21f5e1cd8ba83028@intel.com>
+	s=arc-20240116; t=1779386214; c=relaxed/simple;
+	bh=XRoTVbnIyqP475fih3SVHdWXf6t892ryq6slZqiiCCE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=WJ5RazSuUsd2XEnou8bv7tY7AFQb2Qe8fZlx8kRvoxoc4v1mO29k+F0vcmlBU1rBZwFPuRjS58ThonQT+7WVQEw/YEN11AjRsP0L1wEdEemAoGiwfC3pTBApamG5y/+FhXFS+jkzQANElKwASJ3bG1VLfZLztDIFuufOexQq6zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VfSyHBKf; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A6D21F000E9;
+	Thu, 21 May 2026 17:56:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779386212;
+	bh=eB/j6ATIwgsH3uci5eOfboJ2Yx8Cpf2o0kuamFrN578=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=VfSyHBKfeeCbnabMfK5hR7EUDsv3qgqQvFJnrkmoWIZlat1TJMl8h9PLapHzxJpGL
+	 N0epgHsFlt0i0xgTpo6UqthhlYbeu/UZ5vsV446/wEE91FMSdlyztNSzkTzJQMKdrx
+	 a52f5qK8IDkkkba3aMFVDe6S9e6RL8m6Jf3+asbH8p/0TqieQcAKfyiSsZSd1VjDVH
+	 hJBiYIH0LbngHJ8ca/t9sjQSumb3N8d2JtujibLAm0FfYX5RHe75aQ2DisAmKYocCr
+	 kMRYqpyMdWV2nOw6cdnLilerTZFfLKva7mC5J4lgwOlJvYoUqIYr7Noidku6eYF9wT
+	 CxKZCn17xuFzQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 4/9] dmaengine: dw-edma: Use new
+ .device_prep_config_sg() callback
+Reply-To: sashiko-reviews@lists.linux.dev
+To: Frank.Li@oss.nxp.com
+Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, imx@lists.linux.dev, Frank.Li@kernel.org, linux-pci@vger.kernel.org
+In-Reply-To: <20260521-dma_prep_config-v7-4-1f73f4899883@nxp.com>
+References: <20260521-dma_prep_config-v7-4-1f73f4899883@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 21 May 2026 17:56:51 +0000
+Message-Id: <20260521175652.5A6D21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10709-lists,dmaengine=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,lists.linux.dev:replyto,smtp.kernel.org:mid,sashiko.dev:url,nxp.com:email];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,iscas.ac.cn,suse.com,nod.at,cambridgegreys.com,sipsolutions.net,minyard.net,cmu.edu,redhat.com,linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,acm.org,ziepe.ca,ideasonboard.com,google.com,suse.de,HansenPartnership.com,oracle.com,arm.com,linuxfoundation.org,rowland.harvard.edu,linux.alibaba.com,akamai.com,antgroup.com,orcam.me.uk,infradead.org,linux.ibm.com,alien8.de,zytor.com,atomlin.com,linux-foundation.org,canonical.com,paul-moore.com,namei.org,hallyn.com,vger.kernel.org,googlegroups.com,kvack.org,lists.ubuntu.com,lists.infradead.org,lists.sourceforge.net,nongnu.org,lists.freedesktop.org,lists.ozlabs.org,lists.one-eyed-alien.net,lists.linux.dev];
-	TAGGED_FROM(0.00)[bounces-10708-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jani.nikula@linux.intel.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	FROM_NO_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TO_DN_NONE(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_GT_50(0.00)[99];
-	TAGGED_RCPT(0.00)[dmaengine];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:mid,intel.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: B44365AA9A1
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_FIVE(0.00)[6];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+X-Rspamd-Queue-Id: B750E5AAC3E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 21 May 2026, Kees Cook <kees@kernel.org> wrote:
-> diff --git a/drivers/gpu/drm/i915/i915_mitigations.c b/drivers/gpu/drm/i915/i915_mitigations.c
-> index 6061eae84e9c..99cb38f355b6 100644
-> --- a/drivers/gpu/drm/i915/i915_mitigations.c
-> +++ b/drivers/gpu/drm/i915/i915_mitigations.c
-> @@ -95,33 +95,37 @@ static int mitigations_set(const char *val, const struct kernel_param *kp)
->  	return 0;
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] The `dw_edma_device_prep_config_sg` callback modifies channel conf=
+iguration locklessly, breaking the atomicity guarantee expected by the DMA =
+engine framework.
+--
+
+commit be13dc9c4b2aec5db6e6e0dc4003902282d50c88
+Author: Frank Li <Frank.Li@nxp.com>
+
+dmaengine: dw-edma: Use new .device_prep_config_sg() callback
+
+This commit implements the new device_prep_config_sg() callback for the
+dw-edma driver. It aims to combine configuration and descriptor preparation
+into a single step.
+
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-=
+edma-core.c
+> index c2feb3adc79fa..92572dd8131e6 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+[ ... ]
+> @@ -577,10 +577,11 @@ dw_edma_device_transfer(struct dw_edma_transfer *xf=
+er)
 >  }
->  
-> -static int mitigations_get(char *buffer, const struct kernel_param *kp)
-> +static int mitigations_get(struct seq_buf *buffer,
-> +			   const struct kernel_param *kp)
+> =20
+>  static struct dma_async_tx_descriptor *
+> -dw_edma_device_prep_slave_sg(struct dma_chan *dchan, struct scatterlist =
+*sgl,
+> -			     unsigned int len,
+> -			     enum dma_transfer_direction direction,
+> -			     unsigned long flags, void *context)
+> +dw_edma_device_prep_config_sg(struct dma_chan *dchan, struct scatterlist=
+ *sgl,
+> +			      unsigned int len,
+> +			      enum dma_transfer_direction direction,
+> +			      unsigned long flags,
+> +			      struct dma_slave_config *config)
 >  {
->  	unsigned long local = READ_ONCE(mitigations);
-> -	int count, i;
->  	bool enable;
-> +	int i;
+>  	struct dw_edma_transfer xfer;
+> =20
+> @@ -591,6 +592,9 @@ dw_edma_device_prep_slave_sg(struct dma_chan *dchan, =
+struct scatterlist *sgl,
+>  	xfer.flags =3D flags;
+>  	xfer.type =3D EDMA_XFER_SCATTER_GATHER;
+> =20
+> +	if (config && dw_edma_device_config(dchan, config))
+> +		return NULL;
 
-I'm fine with what you have, and I can do these as a follow-up later if
-it's too much trouble, but I suggest something like this:
+[Severity: High]
+Does this lockless configuration introduce a race condition?
 
-	const char *sep = "";
+The dmaengine_prep_config_sg_safe API is documented to be re-entrant and
+skips acquiring the per-channel spinlock if the driver implements the
+device_prep_config_sg callback, relying entirely on the driver to ensure
+atomic configuration and descriptor preparation.
 
->  
-> -	if (!local)
-> -		return scnprintf(buffer, PAGE_SIZE, "%s\n", "off");
-> +	if (!local) {
-> +		seq_buf_printf(buffer, "%s\n", "off");
-> +		return 0;
-> +	}
->  
->  	if (local & BIT(BITS_PER_LONG - 1)) {
-> -		count = scnprintf(buffer, PAGE_SIZE, "%s,", "auto");
-> +		seq_buf_printf(buffer, "%s,", "auto");
+However, dw_edma_device_prep_config_sg() directly calls
+dw_edma_device_config(), which mutates shared channel state (such as
+chan->config, chan->non_ll, and chan->configured) without taking any
+internal locks.
 
-		seq_buf_printf(buffer, "%s%s", sep, "auto");
-		sep = ",";
+If multiple threads concurrently prepare transfers on the same channel,
+these updates will race. This could lead to corrupted channel states where
+dw_edma_device_transfer() may read interleaved or invalid parameters, such
+as an incorrect non_ll flag.
 
-(In the printf the sep is just for future expansion, though I don't
-expect one.)
-
->  		enable = false;
->  	} else {
->  		enable = true;
-> -		count = 0;
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(names); i++) {
->  		if ((local & BIT(i)) != enable)
->  			continue;
-> -
-> -		count += scnprintf(buffer + count, PAGE_SIZE - count,
-> -				   "%s%s,", enable ? "" : "!", names[i]);
-> +		seq_buf_printf(buffer, "%s%s,", enable ? "" : "!", names[i]);
-
-		seq_buf_printf(buffer, "%s%s%s", sep, enable ? "" : "!", names[i]);
-		sep = ",";
-
->  	}
-
-	seq_buf_puts(buffer, "\n");
-
->  
-> -	buffer[count - 1] = '\n';
-> -	return count;
-> +	/* Replace the trailing comma with a newline. */
-> +	if (!seq_buf_has_overflowed(buffer) && buffer->len > 0 &&
-> +	    buffer->buffer[buffer->len - 1] == ',')
-> +		buffer->buffer[buffer->len - 1] = '\n';
-
-Drop the above.
-
-I.e. keep track of sep while printing to avoid removing it later.
-
-BR,
-Jani.
+Note that even if a subsequent patch in the series partially mitigates this
+by passing the config object to resolve source and destination address race=
+s,
+it still calls dw_edma_device_config() which locklessly modifies chan->non_=
+ll
+and chan->config, leaving the underlying race on the shared channel state
+unresolved.
 
 > +
-> +	return 0;
+>  	return dw_edma_device_transfer(&xfer);
 >  }
->  
->  static DEFINE_KERNEL_PARAM_OPS(ops, mitigations_set, mitigations_get);
 
--- 
-Jani Nikula, Intel
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521-dma_prep_c=
+onfig-v7-0-1f73f4899883@nxp.com?part=3D4
 

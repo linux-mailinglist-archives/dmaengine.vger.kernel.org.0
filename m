@@ -1,263 +1,178 @@
-Return-Path: <dmaengine+bounces-10704-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10705-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AGzzEyY9D2ocIQYAu9opvQ
-	(envelope-from <dmaengine+bounces-10704-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:13:10 +0200
+	id 4Jv1JH87D2qZIAYAu9opvQ
+	(envelope-from <dmaengine+bounces-10705-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:06:07 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A684A5A9F7C
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:13:09 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 354AC5A9DA7
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:06:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DC5B432AF633
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 16:47:00 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id AFFDE300337D
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 16:56:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DC9E39AD45;
-	Thu, 21 May 2026 16:46:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73553385D75;
+	Thu, 21 May 2026 16:56:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hAiFXflX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NXjOtQrp"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E103812F6
-	for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 16:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E07B385D82
+	for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 16:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779382000; cv=none; b=DHw9v2rzguX9wI5KQMGm7gQ20DU53hTNXj2h+MKA10jZRQG1AIj3jXwoIEdO7IUZpa9lmRi3CsMcog6wtgwONF02WzG3wseC7AZFxNjF8U1gJhki6UIG9/thjEWJKr43ACUQmNCMZ8x61NWmRXyd8bbnvvRkfR8lLt5exp9ByME=
+	t=1779382612; cv=none; b=CNrzp9UnSUVlMT1jvIGDGkD2C8zc4SwSm8I1yTrBMkflm6glxxWus+B8qxaROTQ4Kj1wcjDELGd5UYANHjQp0lkXi73jEnsVZKboITZ/e2+i+aUbMTFIBm+OLlrUYsl40jmoS1+jR2gJ0ub0HgejJ6jMUSlIPop3nF41Pajc3MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779382000; c=relaxed/simple;
-	bh=55HpdrZ1XWqM3uwC+a47+vakAvshOA/Toys7NpGVJzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LP3Yop5iXcI+xc/vYXgK/hCBa7PAWdOQLPE2JAcibmkws/H+TWIJHQjV7MhOITPljVAGMGtNG3e1mPrwiCs4+kcOJrPVoKRAkFAp14xxhnwWId8Qx4zwLayvLSvZMQNtpc++0t0muNgfCFnvuRZgCCOHCKqBUA8jAu+5X0OYOhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hAiFXflX; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-490388fd0dbso8750315e9.0
-        for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 09:46:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779381995; x=1779986795; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NA/nM16UoxaTsk3A7SWQL7q3HkgK647mNtY2rDcRyyc=;
-        b=hAiFXflXTEbRl6U5Air/vBGryJ1P7DUwv5y5hFcBfrvyOOjvwLAPWk6boHEMfrP+03
-         djrSF/MmhRRc4oKAARffcHojm9lrMfH/yxDwEmaCsT4BFCL3flmfjoZXGq6TFSC3TeHl
-         JsiTufiR6et1mz+pI8XV2U+9x+ymMfxMCAW0bX+y+95+67AVxLZvt8B0iLXkU9d/aiqe
-         9TLZTYgekPiyf54s88p+J1C3j1Lc4MyofWrYIv5jQC1MQsWTxKDTJulTH9sW3bkKM6Er
-         8ENfEnS8Rye+RBlr7U5dk7H7qISkWK2Sz6IRcVfJFcdljcS2gaAHhL/dDTECxI2slWnI
-         yang==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779381995; x=1779986795;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NA/nM16UoxaTsk3A7SWQL7q3HkgK647mNtY2rDcRyyc=;
-        b=hYyFJC/AX24163XrG58hfEntXCq2Zew6tSKuHxRViQUDnnusRnmIzJPVVToeXB4+AO
-         uXAh9U1U2ijbN7peUOVipimFFETDehueLODfKxmriqwr/Ydw03wbZrd3U+0XHBkfnR6w
-         VJaxDyb6qCSsXiGeC+XJS1LjWW107JghBBSwHNsbVHW0J4543RHZnEMYaIuIs11CYlEX
-         RnR/RDOxrWZRLgduq4kQzWqE3UVdRAvd8uNPNmsGYX5ce4QD7d388nOM/8EoybLAoYEy
-         6VlIVqildFIZdpDGwVwK9V4f/w9uKQds8/Krfqhuz+set6A1LVgDcUMUnFyNmNwHnkAu
-         X+Sw==
-X-Forwarded-Encrypted: i=1; AFNElJ9ZdKZhEafe2hmGLV4hC9KBC6C4Zl2MYu50offI3gufdWelX16iceVkSBq8uXRUezo5ku5nk5wBfn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzioPMVGuYdoPxoAMh9dUNwyehT5Y98f/3oeg/RVxBKP+Xxw6kx
-	zG+1grcJf1ngVOqZ9T8Ymuq/ReKUmw/H3upE1jAyI3DrVrIGnjlCxTgA
-X-Gm-Gg: Acq92OFebdRxd7ySjZDyojwkopU1VxF8YNIgn7ub4+P0BzIXDg0PGRLTZ5xlBkFPQ4U
-	d3czIDIj/H4MWqBjWsyaIyEqIifkb4+YI8+OWnNUIzTMwzfRJnQ0Aq8selSuJEILDaaHEHhIMM6
-	5AkNtlYRm3g60fDJmby6rQT3W+WoHWp7t+sNkaXIj3pLuVw8EjqaxK0sB2x8mXjWELTfxYDXrhj
-	zWkVhhAy+eyrfo077KeBMH2oFOU/BEPnQIgEOiIN6tDMbljBcFKYUZjPpaDWeWW/j7erbnH+2/I
-	P6u/qm1Q+EOPuuqDFlWlcC/EBEImXSVD20eIW6D7SsnpJdX0Liv53r15anJBnesIy/1Uuo6ojoO
-	CHChiwYBvRuMkgVhJ4j9JvsllIwVk0oDsZHI4zGrMye50RGlwdttcbpYruuLkN0obawWs6b10k8
-	wTKgtzf80P1Uq+qUkCyrroGjrebMSAOHYHtaSM2H+f2m4wlGvwGsAnUler218z+1F+
-X-Received: by 2002:a05:600c:45c6:b0:488:ac01:72de with SMTP id 5b1f17b1804b1-49036033502mr53623425e9.5.1779381994891;
-        Thu, 21 May 2026 09:46:34 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49035ecac15sm31613075e9.6.2026.05.21.09.46.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2026 09:46:34 -0700 (PDT)
-Date: Thu, 21 May 2026 17:46:31 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Pengpeng Hou
- <pengpeng@iscas.ac.cn>, stable@vger.kernel.org, Petr Pavlu
- <petr.pavlu@suse.com>, Richard Weinberger <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len
- Brown <lenb@kernel.org>, Corey Minyard <corey@minyard.net>, Gabriel Somlo
- <somlo@cmu.edu>, "Michael S. Tsirkin" <mst@redhat.com>, Jani Nikula
- <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Bart Van Assche <bvanassche@acm.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Laurent
- Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede
- <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, Hannes Reinecke <hare@suse.de>, "James E.J.
- Bottomley" <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
- <martin.petersen@oracle.com>, Daniel Lezcano <daniel.lezcano@kernel.org>,
- Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Jason Wang
- <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio
- =?UTF-8?B?UMOpcmV6?= <eperezma@redhat.com>, Jason Baron
- <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>, Tiwei Bie
- <tiwei.btw@antgroup.com>, Benjamin Berg <benjamin.berg@intel.com>, Ilpo
- =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, "David E. Box"
- <david.e.box@linux.intel.com>, "Maciej W. Rozycki" <macro@orcam.me.uk>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Vinod Koul <vkoul@kernel.org>, Frank Li
- <Frank.Li@kernel.org>, Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>, Alexander
- Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Dmitry
- Vyukov <dvyukov@google.com>, Andrew Morton <akpm@linux-foundation.org>,
- John Johansen <john.johansen@canonical.com>, Paul Moore
- <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn"
- <serge@hallyn.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Georgia Garcia <georgia.garcia@canonical.com>, kvm@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-modules@vger.kernel.org,
- kasan-dev@googlegroups.com, linux-mm@kvack.org, apparmor@lists.ubuntu.com,
- linux-security-module@vger.kernel.org, linux-um@lists.infradead.org,
- linux-acpi@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
- qemu-devel@nongnu.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
- linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-pm@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org,
- linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, netdev@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 01/11] params: bound array element output to the
- caller's page buffer
-Message-ID: <20260521174631.71a06440@pumpkin>
-In-Reply-To: <20260521133326.2465264-1-kees@kernel.org>
-References: <20260521133315.work.845-kees@kernel.org>
-	<20260521133326.2465264-1-kees@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	s=arc-20240116; t=1779382612; c=relaxed/simple;
+	bh=Sd7Tm8rne9pkUNE3u2qem3fwF6/RjummTHb/jpaBvZo=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Ekpsn32wLxcOWr0k/s87CItqGa+maq00XaQ+fMwnSIUPmHaSzT7rbt1rrQ74OVg/3lDf3Px+IkibnwrcaTzlWCvJnsL6Fqbs9BNjhwj4vW3r0M7707/q58MnAZ3ITwxm49e+L72npidqAH621TgGaOuZYxs3168CwYHdJbFk614=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NXjOtQrp; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 534061F00A3B;
+	Thu, 21 May 2026 16:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779382610;
+	bh=nJj1H11Tt7S3rVId/M7qASEWqeE4i8dkoeDYPLxT7N4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=NXjOtQrpCUbwNfPOBws3QZU2Kpo1hQLObOuHFk3r7JQ40Qv6UhNVUTAqOvRYOhx1s
+	 MB2YJCyUmOFHCxpifN+jRhztnFL4yUY6CMjgJ0M8/hxZzgyFUk6Vx5Bz4HU3eprTzk
+	 HSUr4becd+ht3eMeaKOcOaQUUotAigDUuyk97ARn2NFxG9dV8wZ62G7flHeYEvECHJ
+	 EsUHVzswkI1ONNToBc4Woynqb4c26v4vE7Aoaf6QGvGXndhqx+HRz+1McxQnpITbON
+	 HTLNeXkVYGakbgR0Rn+L88a+ry1LhiGhuqUe2miMBPUn6i6q+J7L5/kG4i6qYGI7LK
+	 xziMbbPLtH4iA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 4/4] dmaengine: dw-edma: Add spinlock to protect
+ DONE_INT_MASK and ABORT_INT_MASK
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Koichiro Den" <den@valinux.co.jp>
+Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
+In-Reply-To: <20260521142153.2957432-5-den@valinux.co.jp>
+References: <20260521142153.2957432-5-den@valinux.co.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 21 May 2026 16:56:49 +0000
+Message-Id: <20260521165650.534061F00A3B@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,iscas.ac.cn,vger.kernel.org,suse.com,nod.at,cambridgegreys.com,sipsolutions.net,minyard.net,cmu.edu,redhat.com,linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,acm.org,ziepe.ca,ideasonboard.com,google.com,suse.de,HansenPartnership.com,oracle.com,arm.com,linuxfoundation.org,rowland.harvard.edu,linux.alibaba.com,akamai.com,antgroup.com,orcam.me.uk,infradead.org,linux.ibm.com,alien8.de,zytor.com,atomlin.com,linux-foundation.org,canonical.com,paul-moore.com,namei.org,hallyn.com,googlegroups.com,kvack.org,lists.ubuntu.com,lists.infradead.org,lists.sourceforge.net,nongnu.org,lists.freedesktop.org,lists.ozlabs.org,lists.one-eyed-alien.net,lists.linux.dev];
-	TAGGED_FROM(0.00)[bounces-10704-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[davidlaightlinux@gmail.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCPT_COUNT_GT_50(0.00)[100];
+	TAGGED_FROM(0.00)[bounces-10705-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
 	NEURAL_HAM(-0.00)[-1.000];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,suse.com:email]
-X-Rspamd-Queue-Id: A684A5A9F7C
+	FROM_NO_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,nxp.com:email,lists.linux.dev:replyto,sashiko.dev:url,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 354AC5A9DA7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 21 May 2026 06:33:14 -0700
-Kees Cook <kees@kernel.org> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-> From: Pengpeng Hou <pengpeng@iscas.ac.cn>
-> 
-> param_array_get() appends each element's string representation into the
-> shared sysfs page buffer by passing buffer + off to the element getter.
-> 
-> That works for getters that only write a small bounded string, but
-> param_get_charp() and similar helpers format against PAGE_SIZE from the
-> pointer they receive. Once off is non-zero, an element getter can
-> therefore write past the end of the original sysfs page buffer.
-> 
-> Collect each element into a temporary PAGE_SIZE buffer first and then
-> copy only the remaining space into the caller's page buffer.
+Pre-existing issues:
+- [High] The teardown sequence in `dw_edma_remove` incorrectly powers off t=
+he hardware and frees interrupts before unregistering the DMA device, expos=
+ing a race window.
+--
 
-Should this be using a 4k buffer on all architectures?
-Initially perhaps just using a different name for the constant until
-all the associated PAGE_SIZE limits have been removed.
+commit 3dac310797da8c464a27d4656c26826f3d2a7401
+Author: Frank Li <Frank.Li@nxp.com>
 
--- David
+dmaengine: dw-edma: Add spinlock to protect DONE_INT_MASK and ABORT_INT_MASK
 
-> 
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
-> Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->  kernel/params.c | 26 ++++++++++++++++++++------
->  1 file changed, 20 insertions(+), 6 deletions(-)
-> 
-> diff --git a/kernel/params.c b/kernel/params.c
-> index 74d620bc2521..752721922a15 100644
-> --- a/kernel/params.c
-> +++ b/kernel/params.c
-> @@ -475,22 +475,36 @@ static int param_array_set(const char *val, const struct kernel_param *kp)
->  static int param_array_get(char *buffer, const struct kernel_param *kp)
->  {
->  	int i, off, ret;
-> +	char *elem_buf;
->  	const struct kparam_array *arr = kp->arr;
->  	struct kernel_param p = *kp;
->  
-> +	elem_buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-> +	if (!elem_buf)
-> +		return -ENOMEM;
+This commit adds a spinlock to dw_edma_v0_core_start() to serialize access
+to the shared DONE_INT_MASK and ABORT_INT_MASK registers. This prevents
+race conditions from concurrent updates across multiple channels.
+
+Link: https://lore.kernel.org/dmaengine/20260109-edma_ll-v2-1-5c0b27b2c664@=
+nxp.com/
+
+> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/=
+dw-edma-v0-core.c
+> index 69e8279adec81..cfdd6463252e6 100644
+> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+[ ... ]
+> @@ -408,6 +409,8 @@ static void dw_edma_v0_core_start(struct dw_edma_chun=
+k *chunk, bool first)
+>  			}
+>  		}
+>  		/* Interrupt unmask - done, abort */
+> +		raw_spin_lock_irqsave(&dw->lock, flags);
 > +
->  	for (i = off = 0; i < (arr->num ? *arr->num : arr->max); i++) {
-> -		/* Replace \n with comma */
-> -		if (i)
-> -			buffer[off - 1] = ',';
->  		p.arg = arr->elem + arr->elemsize * i;
->  		check_kparam_locked(p.mod);
-> -		ret = arr->ops->get(buffer + off, &p);
-> +		ret = arr->ops->get(elem_buf, &p);
->  		if (ret < 0)
-> -			return ret;
-> +			goto out;
-> +		ret = min(ret, (int)(PAGE_SIZE - 1 - off));
-> +		if (!ret)
-> +			break;
-> +		/* Replace the previous element's trailing newline with a comma. */
-> +		if (i)
-> +			buffer[off - 1] = ',';
-> +		memcpy(buffer + off, elem_buf, ret);
->  		off += ret;
-> +		if (off == PAGE_SIZE - 1)
-> +			break;
->  	}
->  	buffer[off] = '\0';
-> -	return off;
-> +	ret = off;
-> +out:
-> +	kfree(elem_buf);
-> +	return ret;
->  }
->  
->  static void param_array_free(void *arg)
 
+[Severity: High]
+This is a pre-existing issue, but I noticed a potential race window related=
+ to
+how dw_edma_remove() interacts with this code.
+
+In dw_edma_remove(), the driver teardown sequence calls dw_edma_core_off() =
+to
+disable the engine and mask interrupts, then frees the IRQs, and only
+subsequently calls dma_async_device_unregister().
+
+Since the DMA device remains registered in the dmaengine framework during t=
+his
+window, can concurrent DMA clients still issue new transfers?
+
+If a client calls dmaengine_submit() and dma_async_issue_pending(), the
+execution traces down to dw_edma_v0_core_start().
+
+Could this write to the engine_en register and unmask interrupts here,
+unexpectedly re-enabling the hardware? Since the IRQs have already been fre=
+ed,
+would this result in the transfer completion never being signaled, leading =
+to
+a hung task?
+
+Should the teardown sequence call dma_async_device_unregister() first to
+safely quiesce the subsystem and prevent new requests before stopping the
+hardware and freeing IRQs?
+
+>  		tmp =3D GET_RW_32(dw, chan->dir, int_mask);
+>  		tmp &=3D ~FIELD_PREP(EDMA_V0_DONE_INT_MASK, BIT(chan->id));
+>  		tmp &=3D ~FIELD_PREP(EDMA_V0_ABORT_INT_MASK, BIT(chan->id));
+> @@ -416,6 +419,9 @@ static void dw_edma_v0_core_start(struct dw_edma_chun=
+k *chunk, bool first)
+>  		tmp =3D GET_RW_32(dw, chan->dir, linked_list_err_en);
+>  		tmp |=3D FIELD_PREP(EDMA_V0_LINKED_LIST_ERR_MASK, BIT(chan->id));
+>  		SET_RW_32(dw, chan->dir, linked_list_err_en, tmp);
+> +
+> +		raw_spin_unlock_irqrestore(&dw->lock, flags);
+> +
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521142153.2957=
+432-1-den@valinux.co.jp?part=3D4
 

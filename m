@@ -1,61 +1,61 @@
-Return-Path: <dmaengine+bounces-10691-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10692-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EL1QLXM4D2rUHwYAu9opvQ
-	(envelope-from <dmaengine+bounces-10691-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 18:53:07 +0200
+	id cGXCHKxED2ptIgYAu9opvQ
+	(envelope-from <dmaengine+bounces-10692-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:45:16 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA2B65A9A7E
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 18:53:06 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E1B85AA7B9
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:45:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4B16C31BB0D8
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 15:58:37 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 112943138368
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 16:05:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 156AD36AB54;
-	Thu, 21 May 2026 15:58:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CE01372048;
+	Thu, 21 May 2026 16:05:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBun0dw+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhuMatyt"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45B4363097
-	for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 15:58:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D1C371063
+	for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 16:05:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779379117; cv=none; b=rgD7KgBa0wwHtvcChEsSDCmFDuEtSd5PBFweb+wKLwNiY9mX06yWC1unzYFHpqyH9hTOTprgmzw6r9WYYp/zAHh44su5oHUxRTd5GCm8Zu+6ixU6GHAViULMYFgLBA+H5AfIENtLrEAE2/Tb2YlLIjnPoL+D15lU+EiLLzU0qVk=
+	t=1779379502; cv=none; b=Uyx25LT+R/Rd1CQbUe2zDqBk7/fPJQJmB5jStjdzMRF5IQsTjP/gAs4g1B5VIfl+9Q6lDq9+rUfSzzPGWS1/cINhtlNSgBJZVr6mwyTK1cYGxqpxbzHcVf7SFxFXxRc6Fm8w26I063s4TLz3VKZJfDgk21Gw64sEI96Aw0fcF10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779379117; c=relaxed/simple;
-	bh=Q+pdGepvO4sxq2URs98VJ5lXzq63xrjzMa5zIjjeVpo=;
+	s=arc-20240116; t=1779379502; c=relaxed/simple;
+	bh=LIP+8XHxFjsqzZjdRHeK1w2i9r4zEfx/4uROMjNauDk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=a4iyg5zuYwLuqZtLNqsiFYZYENGPb+QZjHjuCRSk4rPzXCBQMDADDU/nlJHkJXSEsh494hvLKrUJ7qJJ/RI7udWgSN0HRky7YZDIFNLRvUwnF3gQ4YCK2vqBYnsdxMxQ0NV9nQymcu05J6zn7Z1ftKqCv6yoexRHB9fouj1JsxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBun0dw+; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8DFF1F00A3C;
-	Thu, 21 May 2026 15:58:34 +0000 (UTC)
+	 Message-Id; b=j5cKBFos7KV6IInUZtBgIAx2LzW1S2eabweaAkU8vDnCPso1IvhZI2l5NsiGuwRMWR9/OIPyDa8pVvI54C6vPw/JkSwbcUCVJ98eG6FOJ2PJmRbKHCYffCV8xnOsAYluFcd7ljVk6O4+Dbc/azoPPlxqaU/BcyiPajp8fBU1G6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhuMatyt; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A49DB1F000E9;
+	Thu, 21 May 2026 16:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779379115;
-	bh=xguLcyYNQfxR14nysbCR2kjxy4mGB+wR/DJssc3HWEM=;
+	s=k20260515; t=1779379501;
+	bh=gxtsbm/SmAye+VzXYga2kcjyEf3JozifgScqceB3nR8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SBun0dw+RB8aXqolW0eR7WgIT2SRCcogiC30o/tBo1CoScxUfNivuZ8rRTLbLzN8S
-	 25dS66RbLZeJi5jsDVs49Sex6wvLNnEfXkg7Bfw/qUzHH6w6oUlJDCsL8sCx/cUrw/
-	 KHVa+TCSH1mzFMuNl+a+/Cl6be88419zMI2vlgUIrJK/1VtC7Y7cofb77/7ZVvUDyG
-	 gUPH6yuTP0v7AitWhTtm6w+E3IYhwFU3+NcXxzALX69k3+AcQWhd1/y7OHOaOh9qRp
-	 R9QVa7b8u1aMMHX/kk82MXhBNB/I+IVDTwg51/qQfUFZvbZ+zmSX4O/WB5+hOySeNt
-	 6hd9lyiWd/NZg==
+	b=jhuMatytlMEBKSquLDsXhidMvdeQDCxXmOtrllCDKxvjup9myaKcZkpwuXJsgX3/7
+	 kXFAqqpuPiusJxSULpJq+i2QOHkhf/czH4aZSsy84z2gLypOfZRMCd7e9+LYK0Ea+m
+	 vdTZxCwJhyHxCBRZAUjYFonv3ZL3X7Cbar4kFoKvTSHqwSTyKkD+cXklzPloVak48F
+	 7uhSn8koQkKUOKgMZOBbWNiCbv/iYFWxfnHNxM1qHKu8+czTXHWHPtnki0S8bCf1rc
+	 deED1ODSJo3V2MyM2CulxjibUhAiWr4clsBqt/s0oL1TFmmiastNlrr3Af6KHiNU1j
+	 HfdCGfzh2PM0g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/4] dmaengine: dw-edma: Initialize IRQ data before
- requesting IRQs
+Subject: Re: [PATCH 2/2] dmaengine: rz-dmac: fix dead empty check in
+ rz_dmac_chan_get_residue()
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Koichiro Den" <den@valinux.co.jp>
-Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
-In-Reply-To: <20260521142153.2957432-4-den@valinux.co.jp>
-References: <20260521142153.2957432-4-den@valinux.co.jp>
+To: "Maoyi Xie" <maoyixie.tju@gmail.com>
+Cc: dmaengine@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org, wsa+renesas@sang-engineering.com
+In-Reply-To: <20260521144755.3476353-3-maoyixie.tju@gmail.com>
+References: <20260521144755.3476353-3-maoyixie.tju@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 21 May 2026 15:58:34 +0000
-Message-Id: <20260521155834.D8DFF1F00A3C@smtp.kernel.org>
+Date: Thu, 21 May 2026 16:05:00 +0000
+Message-Id: <20260521160500.A49DB1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,99 +66,107 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-10692-lists,dmaengine=lfdr.de];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10691-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,smtp.kernel.org:mid,sashiko.dev:url,lists.linux.dev:replyto];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
 	TO_DN_SOME(0.00)[];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url,lists.linux.dev:replyto,valinux.co.jp:email,smtp.kernel.org:mid]
-X-Rspamd-Queue-Id: AA2B65A9A7E
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+X-Rspamd-Queue-Id: 6E1B85AA7B9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
+New issues:
+- [High] The patch introduces a logic error that falsely reports pending un=
+issued transfers as DMA_COMPLETE.
+
 Pre-existing issues:
-- [High] A race condition exists where shared interrupt handlers can access=
- uninitialized channel structures (like spinlocks and list heads), leading =
-to a kernel crash. The patch fixes one early-IRQ NULL dereference but leave=
-s this secondary crash exposed.
+- [High] Race condition where unsubmitted descriptors are prematurely execu=
+ted by the hardware.
 --
 
-commit f0655e3acfc0eee2ccdf6dbee38ba6bad6f04ae5
-Author: Koichiro Den <den@valinux.co.jp>
+commit 0e410e8d5063eb51746f71d6bfff0bc38f086e9b
+Author: Maoyi Xie <maoyixie.tju@gmail.com>
+Subject: dmaengine: rz-dmac: fix dead empty check in rz_dmac_chan_get_resid=
+ue()
 
-dmaengine: dw-edma: Initialize IRQ data before requesting IRQs
+This commit changes list_first_entry to list_first_entry_or_null in
+rz_dmac_chan_get_residue to properly check if the active list is empty.
+If the list is empty, it now safely returns a zero residue instead of
+reading from invalid neighboring memory.
 
-This commit fixes a NULL pointer dereference caused by passing an
-uninitialized pointer to request_irq(). It resolves the issue by setting
-the back pointer for each IRQ before the handler is installed.
-
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-=
-edma-core.c
-> index c2feb3adc79fa..d221e3efcb36b 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -929,7 +929,6 @@ static int dw_edma_channel_setup(struct dw_edma *dw, =
-u32 wr_alloc, u32 rd_alloc)
->  		else
->  			irq->rd_mask |=3D BIT(chan->id);
+> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+> index 625ff29024de0..3dd76615881ff 100644
+> --- a/drivers/dma/sh/rz-dmac.c
+> +++ b/drivers/dma/sh/rz-dmac.c
+> @@ -723,8 +723,8 @@ static u32 rz_dmac_chan_get_residue(struct rz_dmac_ch=
+an *channel,
+>  	u32 crla, crtb, i;
 > =20
-> -		irq->dw =3D dw;
+>  	/* Get current processing virtual descriptor */
+> -	current_desc =3D list_first_entry(&channel->ld_active,
+> -					struct rz_dmac_desc, node);
+> +	current_desc =3D list_first_entry_or_null(&channel->ld_active,
+> +						struct rz_dmac_desc, node);
+>  	if (!current_desc)
+>  		return 0;
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does this sequence still lea=
-ve
-a race condition?
+If a client queries the status of a transfer that has been prepared but not
+yet issued, or while it is pending in ld_queue waiting for previous
+transfers, ld_active will be empty. With this patch, current_desc will be
+null and the function will immediately return 0.
 
-Since dw_edma_irq_request() already registered the shared IRQs before
-dw_edma_channel_setup() is called, setting irq->wr_mask or irq->rd_mask
-makes the channel visible to the interrupt handler.
+Does returning 0 residue here cause rz_dmac_tx_status() to prematurely
+report the transfer as finished with a DMA_COMPLETE status?
 
-If a shared interrupt fires immediately after the mask is updated but
-before vchan_init() is called later in this loop:
+Before this patch, the invalid pointer coincidentally bypassed the null
+check, which allowed the code to continue, correctly search ld_queue, and
+return the full descriptor length. Returning early here could cause
+clients to free or reuse buffers while the hardware is still scheduled to
+access them.
 
-		if (chan->dir =3D=3D EDMA_DIR_WRITE)
-			irq->wr_mask |=3D BIT(chan->id);
-		...
-		vchan_init(&chan->vc, dma);
+[Severity: High]
+This is a pre-existing issue, but looking at how descriptors are queued,
+is there a race condition where unsubmitted descriptors are prematurely
+executed by the hardware?
 
-Could the handler process the channel and call dw_edma_done_interrupt()
-or dw_edma_abort_interrupt()?
+In rz_dmac_prep_slave_sg() and rz_dmac_prep_dma_memcpy(), prepared
+descriptors are immediately placed into channel->ld_queue before the
+client calls dmaengine_submit(). If an existing transfer completes, the
+hardware interrupt handler rz_dmac_irq_handler_thread() appears to blindly
+pull the next descriptor from ld_queue and initiates the transfer via
+rz_dmac_xfer_desc().
 
-If so, these functions would attempt to lock the uninitialized
-chan->vc.lock and call vchan_next_desc() on the zeroed desc_issued list
-head, which may lead to a crash.
-
->  		memcpy(&chan->msi, &irq->msi, sizeof(chan->msi));
-> =20
->  		dev_vdbg(dev, "MSI:\t\tChannel %s[%u] addr=3D0x%.8x%.8x, data=3D0x%.8x=
-\n",
-[ ... ]
+Could this result in the hardware executing transfers before the client
+has filled the data buffers or actually submitted the transfer?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521142153.2957=
-432-1-den@valinux.co.jp?part=3D3
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521144755.3476=
+353-1-maoyixie.tju@gmail.com?part=3D2
 

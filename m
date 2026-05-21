@@ -1,65 +1,65 @@
-Return-Path: <dmaengine+bounces-10602-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10603-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GEVsJ+emDmr6AwYAu9opvQ
-	(envelope-from <dmaengine+bounces-10602-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 08:32:07 +0200
+	id iJRMD+mmDmr6AwYAu9opvQ
+	(envelope-from <dmaengine+bounces-10603-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 08:32:09 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4599C59F6E9
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 08:32:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2703759F6F0
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 08:32:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 408A83032525
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 06:31:44 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0696230327FC
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 06:31:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B5533955C5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 278D7395AF4;
 	Thu, 21 May 2026 06:31:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="w3VLvbef"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="p8l7JIwE"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11020112.outbound.protection.outlook.com [52.101.228.112])
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11020087.outbound.protection.outlook.com [52.101.228.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D37395AD9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FA939280A;
 	Thu, 21 May 2026 06:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.112
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.87
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779345091; cv=fail; b=TtzS9XEoFD/dRJ5KEtYN7EX/rNPSd35nK35H59/1QBHKuuvHVwNfEu0Ixb4eRTS891UUXJvb7WcMpOpXGXDyw89OAjri4lkYJwIQTvNfonQ6GrV6W6SrVXICu/X/iITt62e+IIOR+F+lM196RBgsKjGiS13Zr4TNARr80whTdr0=
+	t=1779345092; cv=fail; b=CI6Pb/NjrrpME5Mm7tdKFkKulTgCoZiOP94AWDjSi69cKnFVs4Ww/TyNDNdNVSQM8ftPD8qXbs9YVjYY+NbN1Wnd1Fc+/cA9106tis4/3YnW2kSQDancqthvhsmeKXD5b3bvlSOisGwaS6np/72oSYXZx5xjymLFr/Z0sw9oNRk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779345091; c=relaxed/simple;
-	bh=0KIawX3aRrJQzeecinO/V7Ffn6FsJ8P9do+EdIt4tUo=;
+	s=arc-20240116; t=1779345092; c=relaxed/simple;
+	bh=AskA2I3sJCzBMDbM7e8u5sW170JweAex7VKcO8APvA0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=N5/AkkrBc6SdxHyIvgOlg9hvikp9opu9Vnlf0ImU6Fkh7Xp1iQ1vaE1DQQVr2hx5t068jTELOQoGRLXqa4u/AlwUS1L3qOip7wVdk1FiMEPxq/TB27GWu47QDR0zHkhC7LB3SvsoHK7tUqrfSIXwS5TJVxt+2S7xG5ujIOLfXxM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=w3VLvbef; arc=fail smtp.client-ip=52.101.228.112
+	 Content-Type:MIME-Version; b=RxIzyPfZvNj0vgPK8jUTXlxy92m+9VU3TRVLGhKRUJ5xUT3BeMtJ/VZOU5Ik2m6tk/qfT2KS2g35drHfMO1AJwOns0yp7EGuY0P3x592bqyj+IAzTl7lNEEWJDQ/Wk2WE083rgs8Wi3LiNHyIfej96KbpD5o+IA1YaX+n6OdiHE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=p8l7JIwE; arc=fail smtp.client-ip=52.101.228.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VUgqgmebTrYg8jIrm0456DkH56Nmr27RrffDMtZIFn4Dbz/9TTFfldKo6qlqJwyUiUl6NPRp0oFMfKTkZ0KwTbf27pJWyxWk8n65mScH65Sem70wvyT0dytzrrwlrTxEelnYlpafVJZINDNOlaYRApoFBdGopAOUJ/PgltlovMd1ZQth9i+m0Fkx4tPly4tCqr9918UzFYmFOdGpxKrRbcSR9KYEYQZS6wjL0F1eg/eCUPgUJONtaPRYGNi2tjRbULCGqoFu2sh2BcFh8RTREUe+pw8TMxdIVoEPmeWY/ZVELjMq2gRkyqs+b3GaJkVUclc3k7kHs1YtOT/c9hfc3g==
+ b=XnyFRCcs8GVpHKT7yfYbEHuyDsN85SJ+H2YtFaBgSGsuAyVptWghcDF/dHoXZZlO9LoP+XiFo3upqZ4IMd2pSn/cfHRIpg12kTltDCWRx8UpTD9Zui8AtcYsg9z3RbzoKZ6V9/4odhGNHGf7dibQ7pYvsx9NKvZFhwkbDxhOh/UjRC+NrpjurPArsf+w/0KlqBwZfPWTes0dnhVtn0mpJVbAlSE3dJP6TrfS2YnuYMv3Ub7cKPXk4SuA6HD0am9B3JLi1SaQe13H0qHgXdGWkM2cF41gj0esiFDgCextJSSe4ydVZSCUi5i7QUYtGisQ/0z1GYVA17ghNHLcr8S/pg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8HcgQ6IRqg/kLgZJ5/4TPbqATlmJ9iRfIBWA4i3AyPM=;
- b=fIYSoIZF0wBbADIeZ7q5bQI9q4GYiVXKEBLXR+ortIrH8aQ6U/RRA4KyrubErIHNDHugcEQE+Y1VVGc0Qz9uKmxopi0ieE3l0N5gbOFRj4LbMRL9KDCwLAfRcE7s7UDGdo6SD78BvYAuyQM7voI+3KbOcT4lLS4He5tmKKDYLdsobjxBAlO4JaSu8gAIDOtMzhfGtdAY1rRtif8iPgcrzDGMQJQ2c0m1c9zUte5nfZuA1rP6vTVJiv7uNvgBETCHXHKeMXaQCqH30FhDshdlf+4BYjLzzBoGHXZ9uVKS3xG7ClT9LAFFvBq0x7KjH/6roO3bAdNCEsUPa/3nIEGxDQ==
+ bh=XcKlDAezGyzJptobqspWBXdpzI3uAN4M0TEirzYhRY4=;
+ b=amn9dPnbVQIYbRrIkI4+ZONKY62UOjix114iH8OkOVL9ivFceyVklYTDc2PdHtkGc4iv+/+cLAInHx+kuk6OI8WGg79HeeQSXT3gyUI18CUw/1n/nZ1GsdzcMcNFu9MM0qxKe0ciBzSWWEofkv2hPisasw9BO3TmEQ5hbJBWQMMv9DYYb8Cel1hoJm0JeYxD1uikotUfA1/JT18C9kCbt9DVMs7BsspNbQH6nMJdrcRQwNliy6dB9s4zgwNaNogrmuZpoFCKqGePRCVQ0I5ehQIEVb7kXZKiOro/rVL4dOLy7iRv7eswNLCW0G8Px2yHC1N6k0DJJE7OnrqUMXJ8KQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8HcgQ6IRqg/kLgZJ5/4TPbqATlmJ9iRfIBWA4i3AyPM=;
- b=w3VLvbefym5L6QvSYqCfcIRJgKMUzemY1we1fTgECvzNflA/cweLagAsFMh+sGxSeg2uXGJ2Bp5764yQjb8bhgtpUS8hLawoa3wUiLCGCKUIRYVwU6mtnr1XrO5KUuNLykuEwQDsSgEr+s9kjbIdaS8ipNia7EfnuoGXu3VXip0=
+ bh=XcKlDAezGyzJptobqspWBXdpzI3uAN4M0TEirzYhRY4=;
+ b=p8l7JIwEiTOwLIow2MyCCaBQC4OT5FV0K/iIIjBXEG53LV9URo37+7zFF8EBKBRXeIwb0Z/62JQ8GiN94VGbtZkFvS22/CZPaNtKLU+Mn/5JB7+aRo1QuWuPgQHAaUkwnTUuoqMZDonLfuBodhBdjwSQBvLJpZWKP4Xn10YXU7o=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=valinux.co.jp;
 Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
  by OS9P286MB7818.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:473::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.17; Thu, 21 May
- 2026 06:31:24 +0000
+ 2026 06:31:25 +0000
 Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.21.0048.016; Thu, 21 May 2026
- 06:31:24 +0000
+ 06:31:25 +0000
 From: Koichiro Den <den@valinux.co.jp>
 To: Vinod Koul <vkoul@kernel.org>,
 	Frank Li <Frank.Li@kernel.org>,
@@ -68,16 +68,16 @@ Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
 	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 06/12] dmaengine: dw-edma-pcie: Rename DMA data copy
-Date: Thu, 21 May 2026 15:31:09 +0900
-Message-ID: <20260521063115.2842238-7-den@valinux.co.jp>
+Subject: [PATCH 07/12] dmaengine: dw-edma-pcie: Add default IRQ match data
+Date: Thu, 21 May 2026 15:31:10 +0900
+Message-ID: <20260521063115.2842238-8-den@valinux.co.jp>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260521063115.2842238-1-den@valinux.co.jp>
 References: <20260521063115.2842238-1-den@valinux.co.jp>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TY4P301CA0022.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:405:2b1::14) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-ClientProxiedBy: TYCP286CA0074.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:31a::19) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -87,57 +87,57 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|OS9P286MB7818:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0e76ca8-828d-4611-590d-08deb70294a1
+X-MS-Office365-Filtering-Correlation-Id: 778309f4-fa58-4a39-d416-08deb7029525
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|10070799003|376014|18002099003|22082099003|56012099003|6133799003|3023799007;
+	BCL:0;ARA:13230040|1800799024|366016|10070799003|376014|18002099003|22082099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	KHV0JbIqSz46qdlkHIPWm4dxoXVjpXaoTUpaYjNPbOOx6FwOyoV4nRRg9kN9OIeNKuz73dXlPKThWsBZ+UKb63tgoG3JJcxbzOvoRPIK49/W6VQTaplP/BEZG6qt8/STTtVZbk9IkglBUc5Wx/5wM0+e2rNT+SyTca/WB4i2Ccb+gOx85vlMmp0T+iRfD8yCPvdSaPiabsPoMo6tosMB/3ZjkkS5tyRI5D0pkm04hmgLL6/7dROXh1EsBU7w7HBIduGzgFJYOdxQIC6rKBXrJz3gb5Lv5Wjec1l3hiJFLn8Rs6ygFKB42gWSXPXmLY9iInkBnRojjqTQxnIt55d0JeSzLxI9qVDqvck3USgtdWJf7UE+/W3cZEqjeBJWtVtkiKjcrIQOYS7iDF/uh17T7PwJ8UZk0n/STPgHupRV/GkBeWuHv8BLUTFs2ZoCCjXZT5KxjKsVwlWOHMEb+DQeFsYK2IPwUlr50SsSkL/bD0eTdfR03dsstao+PhJU1zFddXx8wg9B0u9PmIJlJG6yL1cA5lRR2jx/hLlIMA093Z8bZOqZX2+ocXDdfmWSSs/Y8YPsBINStDwzmDBquV86xuWN/FPQz1XEcsGCyCw9mD7XicmzA4ZmJcdLrPboG6vf8knK84ykRNoQqyprq3N0EqOyXtYcv0VX+a6dJ+zcYgtiRzufbraNPI/3JazlkOTY
+	mw4jqU3r1SzJ7CMwnnmKfA73Zk9AH/GI+5tt0fI/hDSpSX59RQwx7jFi39sdlTWwHNPta5ikDW8RQZFxXe3NQ3mjrnUYZNKnOd4Wg3uUEzApNIgt+TceYTqEjf+4b5vQOX0HCmG/aNTVg3z4Wz01kFfwXJPufUmgxLDZ1MTgkItSq0cbY1olRolJCi0jhfmTnR9n4ColcX71ZX8HqshPOSbsHaqo/azWsvxrV0vhzj1rNkiQzXS0sYsli2DQ1IERzNVIavKmPvW1hkoTf/xX3k5KVhepby1eILgeURcuCM/ZFxxogpSIpaKGno4quBN1stPMZIbln3lCIqVkt7SHM4ITiFwZUdpaEQmF7nnc+1FeJciaNDvEAxHNsRzLqSVC0e2Vuq8TL2f/a3xjAxwfAKLCn0FrUIsqiYcwDEm0ugGiD4gn+CjVe9DuLjq7p5YrByziGFtJAaSMld4qFrrfhnRIICzS960xvJPmdmwrJ/zZKoOTQAg7p0KPiWZh/IkEo9PSPqgbcrVvxcIqxx2ZXIWx9XpDrMQCJ0fH46hKnUQcQiUu2Hxt0shdazS7iEf+7UdjHG/NdptP/1YrM1m0yJjyx+WjSV9xdACwEWGTw0a+IDkRgxM5rRBGGEbnQfmd8b70PfeXB9oBZTTrsWa3H7nwtCl4D/CBuc8dgse/UqsSmKGhRWAngJpfkXdCUOTK
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(376014)(18002099003)(22082099003)(56012099003)(6133799003)(3023799007);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(376014)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?aI62eT1LuMjvO+osfopqGZ63qKub6rAbO/wnDt23UE2dzfypSbz8GJ1XIP3y?=
- =?us-ascii?Q?QcSIk6LcXvPxZ5eAiBktJQ1rmFow818l/p2uCkfN5MOOarj7I9Jx8BZUy/XU?=
- =?us-ascii?Q?GY36DccxMX87ihomzWEk9jnq9vuhunnkfO5VcPWYqY4uAoRjUWl0YSE/YR5l?=
- =?us-ascii?Q?a/TeFVyH8j/PiCReoR4z+wGMdUq1aG999TZKxk5kOoVPqNmJQNeVlUHn5La0?=
- =?us-ascii?Q?RcVaEE7AyWiBv4xWJyZBcychkHgkrL+EuEOfn4ytPUDvtW5Wq4JD5uRPFe3C?=
- =?us-ascii?Q?nf2JJBKfvw0fpoL3BEhO0ymWi/ggelbIfh7ziNwcU+dTAOpQVV9kDA4VPf62?=
- =?us-ascii?Q?jn6EpLT3JdRrcj/84n19X1FzegQ79kuuV0nf/qjOp6XXZW6piT6+/dDqFS6Y?=
- =?us-ascii?Q?4sMZaa8us3d2uQrxDue/36I4h2WGLhjVR/yi7sQ+Ehwi7B4X2TN3+laqbTPo?=
- =?us-ascii?Q?moXKE/EB0pTqC0exjGbcNTTOxiMMjQ9NW5OLfgS8QKuPvBGZCXa1xH+iplvs?=
- =?us-ascii?Q?TGL0uHx6TSLhs2I+z1+N2BclkLjw07C5jQ9LhyrpZ/lkMllbNwu6xsExdAFa?=
- =?us-ascii?Q?QcLjTOmqYzfUi8pOvAkoelKIusK/WHHBHJ3sJYPhHNKAp9RYAmdSEFlVanaK?=
- =?us-ascii?Q?DP3so21MVkWpGLYwXpNhSIe3IKfh6LiL7lG8mYcXFnklhniOY8vCDRZJmteb?=
- =?us-ascii?Q?xrF3H+fTOyI4wMJq98EOPBqCMINVV5gFwQt+JxNnGqE1fDZndspUj5bJkYlY?=
- =?us-ascii?Q?g3zIzpcWBw+Ws8QMG9dRVW4jwVa/vAW8E0QTWOHDPYWxNGMRIv+xCns8IJ+c?=
- =?us-ascii?Q?AQdxDedKo7sVGqL2hsUhfqO2y7xaWjeupyYI/BibHBG1Exn5XMv6V+pS11qq?=
- =?us-ascii?Q?RF69hoadqBD4aqni4/uKcAMxdnsKak13fwfwv6Jw+hpd7SumNMfuFMw7MYpw?=
- =?us-ascii?Q?w5+VDGCoZu2T0mpOG492IoNroNPU4fFBBh/UOlp0HjWF1/SceZ99KSo025bH?=
- =?us-ascii?Q?g96BBYruN/k0HwX5N7jtf/vytgfLlkOBWiiDMx13y/dL8ql+HHOL6jU46VlO?=
- =?us-ascii?Q?EVlN+pCNqpzbjBZSneuzMb0mAcmUlDcR65RQgEgJ4oabhUkd9pIrQsya17OP?=
- =?us-ascii?Q?jCiCwTGy/FiCFLdBPeHZHG9N2Wn4PAK4p9eO3PHdiMWPZ9cRpSDcHBsDybix?=
- =?us-ascii?Q?jOs5ziZWH6q31QlvhzW6X9MNiM2zfZiHzOW1cJqb2ecrErBldbImBYFtr4hu?=
- =?us-ascii?Q?wt3ElNqg85TZcVJbZ0kLyiFgomeq6rZNP2CMym63VzXObwXy44iYjB849NG+?=
- =?us-ascii?Q?unU5zKyd11ipd5mNBK0D7PyK8WUM/M4XRe6oK729q9y6Z5i3G+1xqH0erCXJ?=
- =?us-ascii?Q?b5bOazJ87Lflumom4A8WdVeDgyJ9/DnxomaTpRd354R01YlThoxCspz4VvwI?=
- =?us-ascii?Q?O7oQso5B2+a4B9ty47tehtXc4e0LhfPY4nbe+rs5Vt5vPpqgN6etJws6rORj?=
- =?us-ascii?Q?mHaTstaCXCRk/I1qckoUAysQzJBs0ooz4H2WHExFggpghMCYqQsaY868BMR2?=
- =?us-ascii?Q?VYKVca4dxra44ysv29FaC3eCkveP3CUsNtUYNoxwsqyhCVjIQUaS6rvFmpz0?=
- =?us-ascii?Q?q93VfsSoYJw5FsqdctZ26u8DS0DCqUXrOa1YMGbS7wPjJYYRMaLu/+KildMc?=
- =?us-ascii?Q?LlONr5jXqQMcTMInT3wYSKK4beAlpGRViEyGxy3xGKgmohpcEsqBkLFrKpZR?=
- =?us-ascii?Q?RYwsYvR2WgmRbg7/fRMGZRih85NdOuR3eZIOyFHkqLIW9qSjm7+R?=
+	=?us-ascii?Q?yfhIdYY+Rb8dgXbIBxI9U4p/dhzR4eGAofjzuUIq2nzXw96R0PdwEtAM/TF0?=
+ =?us-ascii?Q?Lf4mn7XE9yjjVLC9PUq4ImabfkVFPeXhaOJdFugQ4IrcTKGS7YaaNKbiLX2s?=
+ =?us-ascii?Q?XWy1rR4PsKJWTcvKX/Gv5oyrcB0Eezh9ZOHxuRwGWDcP8vHtn2yXcmg/u/Wl?=
+ =?us-ascii?Q?9yZXVvMqresC4tnDOmFKyfPYSZKo630mBy7uvPE7igjzASV3YJunCcOuDIZQ?=
+ =?us-ascii?Q?pZvoVPTUO+ezywYIuIF/VaR6B1pndLGxqOiKuzcC+V+Oz2dFrM7UxISQ6UwT?=
+ =?us-ascii?Q?qdBDHXkIsNCtAKpqKa8qBAAc+34IbxzWZP6pV+2NLHV40OAT3buj54YXDmoO?=
+ =?us-ascii?Q?Vd8CAqlF3IJ/fUCenQtTaBjqxgvjicZuWDnRJcN9Ff/1Kjr8iR6BhxV9Sy1J?=
+ =?us-ascii?Q?4DrhXvlwNKW2sycUXEsk016u58D+eGKIdR2FHtIoQNEQpZRNY7YFk/57Yf1A?=
+ =?us-ascii?Q?PKNkPZgLIi99MFgGUSRuI/XKf8KvAzFCZoX+E9kO+/OQKN07Skpb8liPmm0u?=
+ =?us-ascii?Q?yY4I43s6Z4rSJMTqt9xd0J+3rVcIVHmxUm8WJbWKQ7sHkdmv721NuUTwMXZr?=
+ =?us-ascii?Q?DLGwpCUMVjvpp3RF5sEuCixNsw+XhFrciw0/EtPNCSbvhL0J1n/nLy/MXJt/?=
+ =?us-ascii?Q?KJJqXXFs7M4Ez7tRvwGM5RH+rUckCOrvoyVX2B/T8ihSZivJErxYYP3vE04P?=
+ =?us-ascii?Q?vjOaFgveGE+mmYKuGVQ7Syxmyy7uDgL9CNxdjqKid8T1bjwYAGgZnbnYYQxM?=
+ =?us-ascii?Q?jWMcULi32HD5yL+rRuaz0yk9fBVCWhx6od/FnxWIy1CemHbcgYWwHIgeW1iS?=
+ =?us-ascii?Q?cXhn966fjYm2aufv8o2IDZi6++/IKZxpmcYJyrULFS7H52n29/6YlResLcEp?=
+ =?us-ascii?Q?Vjbd0tgEgY/nap4NUbOrzqdNKlKp7iqIJtCMeXkMF05mK6GxTQ0jFwSPhHa6?=
+ =?us-ascii?Q?QHSXWlY4Oy8O6mCiC4/krli2cZQ+Tb0yKh9QPVtXaHCVQH1LgV55srh9iO3Q?=
+ =?us-ascii?Q?mK2yINqFyjZuny0bkdSI4TnygO6/chsJrVYJrqJab83BEyJsAnZsWE50t/Hd?=
+ =?us-ascii?Q?xBMWhExl3XVpxxboXjQ+mbgYrpSswO6uvfzUE0fruHBgn/0PQd3K5IzAxmOS?=
+ =?us-ascii?Q?3bN+c4ioRxbUWhv1FWOLXYEH5CI88V16wleg0Dtd9QnLiAxBMyfqYTRV6Bdt?=
+ =?us-ascii?Q?6yXT38ZrJctut/NCAtp6xNscWmu4GZozoO0W6ANviUGWGNdS94OaahnCHc1u?=
+ =?us-ascii?Q?7+z6t7ZlPY0l/yE0veGfgHOuPbWQAhf0mPN6kn//ZrINJQvJ8YhZMM0YiW5f?=
+ =?us-ascii?Q?yxj5fZa+Ox9OBVqN3kPE4k+vGHIHDK6qYyASqG9GKIUQUBtwT/faEUUWpw/N?=
+ =?us-ascii?Q?S5nsX+xhn90MUmvM+4j93Ll6GPz2cLj1WuzM4y8OU7ZN47mKgztEsSD6Qkvm?=
+ =?us-ascii?Q?1FXii3u0wZ7t80E9h820vJnSR0aThvP1zpquY55LjFk73I143mR9VhQVhCGs?=
+ =?us-ascii?Q?Ojnh17D0vvCAAh//YTcxkfiga4uxfShcXIc9rnLh20akXPtK+cNekiKpTNgA?=
+ =?us-ascii?Q?3zL9+f0SNTD1B7V0ziCkkRdefpYvqEIMsvg/OHv0rl0tiT6hvzhLqFh4hXz1?=
+ =?us-ascii?Q?BKGne5G7yVnQ/WoHG2EZbKxvf0oJfMywaTh9Ib7wC2HNam1jvpkpryAsJuPe?=
+ =?us-ascii?Q?wb/tgViAoedJH59cO1eoU9QvsU5mTckjP7A1aVFX5N3XF+agayuYgg4nZP/t?=
+ =?us-ascii?Q?mEh4UHUA3aDopIb58dlTWgABe5A7C6zi4J3/wJ3GYB/tJCAkCc57?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0e76ca8-828d-4611-590d-08deb70294a1
+X-MS-Exchange-CrossTenant-Network-Message-Id: 778309f4-fa58-4a39-d416-08deb7029525
 X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 06:31:24.5276
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 06:31:25.3960
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1iMotH1rHNHJ04Ge5axuUaJUxH1w2ymcsMh65rVO5Gewd1M+MtHj7u72xrXj420QobTvmbddjnSLVj3ZjWH8tw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9FgqAWIxCu2QDE2IoHSWBCT49PL6af+YrNEm+Y1t/xcPBw1F5AGYyLSujpyQdEShq/B2dtdLSzg8HqdDlJpkag==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9P286MB7818
 X-Spamd-Result: default: False [1.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
@@ -150,7 +150,7 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-10602-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10603-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[valinux.co.jp:+];
@@ -165,204 +165,41 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine,renesas];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,valinux.co.jp:email,valinux.co.jp:mid,valinux.co.jp:dkim]
-X-Rspamd-Queue-Id: 4599C59F6E9
+X-Rspamd-Queue-Id: 2703759F6F0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-dw_edma_pcie_probe() now obtains DMA layout data through device-specific
-capability callbacks, not only from PCIe Vendor-Specific Extended
-Capabilities. Rename the local data copy from vsec_data to dma_data
-before adding endpoint DMA BAR metadata discovery, which does not rely
-on VSEC.
+Store the default per-channel interrupt routing mode in dw-edma-pcie
+match data and copy it into dw_edma_chip during probe.
 
-No functional change intended.
+No functional change intended. Existing Synopsys EDDA and AMD/Xilinx MDB
+matches leave the field zero, which is DW_EDMA_CH_IRQ_DEFAULT.
 
 Signed-off-by: Koichiro Den <den@valinux.co.jp>
 ---
- drivers/dma/dw-edma/dw-edma-pcie.c | 70 +++++++++++++++---------------
- 1 file changed, 34 insertions(+), 36 deletions(-)
+ drivers/dma/dw-edma/dw-edma-pcie.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index 043a7f73bf79..8ae164169c7e 100644
+index 8ae164169c7e..cf2f09f1891c 100644
 --- a/drivers/dma/dw-edma/dw-edma-pcie.c
 +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -369,11 +369,6 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	int i, mask;
- 	bool non_ll = false;
+@@ -83,6 +83,7 @@ struct dw_edma_pcie_match_data {
+ 	int (*parse_caps)(struct pci_dev *pdev,
+ 			  struct dw_edma_pcie_data *pdata, bool *non_ll);
+ 	unsigned long flags;
++	enum dw_edma_ch_irq_mode default_irq_mode;
+ };
  
--	struct dw_edma_pcie_data *vsec_data __free(kfree) =
--		kmalloc_obj(*vsec_data);
--	if (!vsec_data)
--		return -ENOMEM;
--
- 	/* Enable PCI device */
- 	err = pcim_enable_device(pdev);
- 	if (err) {
-@@ -381,25 +376,28 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		return err;
- 	}
- 
--	memcpy(vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
-+	struct dw_edma_pcie_data *dma_data __free(kfree) =
-+		kmemdup(pdata, sizeof(*dma_data), GFP_KERNEL);
-+	if (!dma_data)
-+		return -ENOMEM;
- 
- 	/* Let device-specific discovery override the static template data. */
- 	if (!match->parse_caps)
- 		return -EINVAL;
- 
--	err = match->parse_caps(pdev, vsec_data, &non_ll);
-+	err = match->parse_caps(pdev, dma_data, &non_ll);
- 	if (err)
- 		return err;
- 
- 	/* Mapping PCI BAR regions */
--	mask = BIT(vsec_data->rg.bar);
--	for (i = 0; i < vsec_data->wr_ch_cnt; i++) {
--		mask |= BIT(vsec_data->ll_wr[i].bar);
--		mask |= BIT(vsec_data->dt_wr[i].bar);
-+	mask = BIT(dma_data->rg.bar);
-+	for (i = 0; i < dma_data->wr_ch_cnt; i++) {
-+		mask |= BIT(dma_data->ll_wr[i].bar);
-+		mask |= BIT(dma_data->dt_wr[i].bar);
- 	}
--	for (i = 0; i < vsec_data->rd_ch_cnt; i++) {
--		mask |= BIT(vsec_data->ll_rd[i].bar);
--		mask |= BIT(vsec_data->dt_rd[i].bar);
-+	for (i = 0; i < dma_data->rd_ch_cnt; i++) {
-+		mask |= BIT(dma_data->ll_rd[i].bar);
-+		mask |= BIT(dma_data->dt_rd[i].bar);
- 	}
- 	err = pcim_iomap_regions(pdev, mask, pci_name(pdev));
- 	if (err) {
-@@ -422,7 +420,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		return -ENOMEM;
- 
- 	/* IRQs allocation */
--	nr_irqs = pci_alloc_irq_vectors(pdev, 1, vsec_data->irqs,
-+	nr_irqs = pci_alloc_irq_vectors(pdev, 1, dma_data->irqs,
- 					PCI_IRQ_MSI | PCI_IRQ_MSIX);
- 	if (nr_irqs < 1) {
- 		pci_err(pdev, "fail to alloc IRQ vector (number of IRQs=%u)\n",
-@@ -433,23 +431,23 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	/* Data structure initialization */
+ #define DW_EDMA_PCIE_F_DEVMEM_PHYS_OFF	BIT(0)
+@@ -432,6 +433,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
  	chip->dev = dev;
  
--	chip->mf = vsec_data->mf;
-+	chip->mf = dma_data->mf;
+ 	chip->mf = dma_data->mf;
++	chip->default_irq_mode = match->default_irq_mode;
  	chip->nr_irqs = nr_irqs;
  	chip->ops = &dw_edma_pcie_plat_ops;
  	chip->cfg_non_ll = non_ll;
- 
--	chip->ll_wr_cnt = vsec_data->wr_ch_cnt;
--	chip->ll_rd_cnt = vsec_data->rd_ch_cnt;
-+	chip->ll_wr_cnt = dma_data->wr_ch_cnt;
-+	chip->ll_rd_cnt = dma_data->rd_ch_cnt;
- 
--	chip->reg_base = pcim_iomap_table(pdev)[vsec_data->rg.bar];
-+	chip->reg_base = pcim_iomap_table(pdev)[dma_data->rg.bar];
- 	if (!chip->reg_base)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < chip->ll_wr_cnt && !non_ll; i++) {
- 		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
- 		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
--		struct dw_edma_block *ll_block = &vsec_data->ll_wr[i];
--		struct dw_edma_block *dt_block = &vsec_data->dt_wr[i];
-+		struct dw_edma_block *ll_block = &dma_data->ll_wr[i];
-+		struct dw_edma_block *dt_block = &dma_data->dt_wr[i];
- 
- 		ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
- 		if (!ll_region->vaddr.io)
-@@ -457,7 +455,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 
- 		ll_region->vaddr.io += ll_block->off;
- 		ll_region->paddr = dw_edma_get_phys_addr(pdev, match,
--							 vsec_data, ll_block->bar);
-+							 dma_data, ll_block->bar);
- 		ll_region->paddr += ll_block->off;
- 		ll_region->sz = ll_block->sz;
- 
-@@ -467,7 +465,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 
- 		dt_region->vaddr.io += dt_block->off;
- 		dt_region->paddr = dw_edma_get_phys_addr(pdev, match,
--							 vsec_data, dt_block->bar);
-+							 dma_data, dt_block->bar);
- 		dt_region->paddr += dt_block->off;
- 		dt_region->sz = dt_block->sz;
- 	}
-@@ -475,8 +473,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	for (i = 0; i < chip->ll_rd_cnt && !non_ll; i++) {
- 		struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
- 		struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
--		struct dw_edma_block *ll_block = &vsec_data->ll_rd[i];
--		struct dw_edma_block *dt_block = &vsec_data->dt_rd[i];
-+		struct dw_edma_block *ll_block = &dma_data->ll_rd[i];
-+		struct dw_edma_block *dt_block = &dma_data->dt_rd[i];
- 
- 		ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
- 		if (!ll_region->vaddr.io)
-@@ -484,7 +482,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 
- 		ll_region->vaddr.io += ll_block->off;
- 		ll_region->paddr = dw_edma_get_phys_addr(pdev, match,
--							 vsec_data, ll_block->bar);
-+							 dma_data, ll_block->bar);
- 		ll_region->paddr += ll_block->off;
- 		ll_region->sz = ll_block->sz;
- 
-@@ -494,7 +492,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 
- 		dt_region->vaddr.io += dt_block->off;
- 		dt_region->paddr = dw_edma_get_phys_addr(pdev, match,
--							 vsec_data, dt_block->bar);
-+							 dma_data, dt_block->bar);
- 		dt_region->paddr += dt_block->off;
- 		dt_region->sz = dt_block->sz;
- 	}
-@@ -512,31 +510,31 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", chip->mf);
- 
- 	pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p)\n",
--		vsec_data->rg.bar, vsec_data->rg.off, vsec_data->rg.sz,
-+		dma_data->rg.bar, dma_data->rg.off, dma_data->rg.sz,
- 		chip->reg_base);
- 
- 
- 	for (i = 0; i < chip->ll_wr_cnt; i++) {
- 		pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
--			i, vsec_data->ll_wr[i].bar,
--			vsec_data->ll_wr[i].off, chip->ll_region_wr[i].sz,
-+			i, dma_data->ll_wr[i].bar,
-+			dma_data->ll_wr[i].off, chip->ll_region_wr[i].sz,
- 			chip->ll_region_wr[i].vaddr.io, &chip->ll_region_wr[i].paddr);
- 
- 		pci_dbg(pdev, "Data:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
--			i, vsec_data->dt_wr[i].bar,
--			vsec_data->dt_wr[i].off, chip->dt_region_wr[i].sz,
-+			i, dma_data->dt_wr[i].bar,
-+			dma_data->dt_wr[i].off, chip->dt_region_wr[i].sz,
- 			chip->dt_region_wr[i].vaddr.io, &chip->dt_region_wr[i].paddr);
- 	}
- 
- 	for (i = 0; i < chip->ll_rd_cnt; i++) {
- 		pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
--			i, vsec_data->ll_rd[i].bar,
--			vsec_data->ll_rd[i].off, chip->ll_region_rd[i].sz,
-+			i, dma_data->ll_rd[i].bar,
-+			dma_data->ll_rd[i].off, chip->ll_region_rd[i].sz,
- 			chip->ll_region_rd[i].vaddr.io, &chip->ll_region_rd[i].paddr);
- 
- 		pci_dbg(pdev, "Data:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
--			i, vsec_data->dt_rd[i].bar,
--			vsec_data->dt_rd[i].off, chip->dt_region_rd[i].sz,
-+			i, dma_data->dt_rd[i].bar,
-+			dma_data->dt_rd[i].off, chip->dt_region_rd[i].sz,
- 			chip->dt_region_rd[i].vaddr.io, &chip->dt_region_rd[i].paddr);
- 	}
- 
 -- 
 2.51.0
 

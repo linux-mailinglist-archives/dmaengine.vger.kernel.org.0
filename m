@@ -1,284 +1,349 @@
-Return-Path: <dmaengine+bounces-10644-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10646-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yLvyAQwND2p7EgYAu9opvQ
-	(envelope-from <dmaengine+bounces-10644-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 15:47:56 +0200
+	id oNILGL4PD2p7EgYAu9opvQ
+	(envelope-from <dmaengine+bounces-10646-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 15:59:26 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71E3B5A6397
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 15:47:54 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 044A55A69DD
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 15:59:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 07A4C32A5195
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 13:20:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C2AE930AC693
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 13:34:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAE1C3EB801;
-	Thu, 21 May 2026 13:18:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 981043DB626;
+	Thu, 21 May 2026 13:33:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="naYUHffm";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ZYXFwAKZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENRvP//N"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0693EB7E5
-	for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 13:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4073D7D86;
+	Thu, 21 May 2026 13:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779369516; cv=none; b=otFpm9CF3Kj4b0qSeHZdD3FGjt7nn1MV0pw3NMML7syrqyYS3cESwWUVA2fJo06w4Klczs1utbgWuufTSxBB5XptWl6nf6cjlDh/qdqv907cH0qqkeTRhVbqJodUyPjwmAWUxiN2br2HDLjwJMzLbHr6gjBwqZxUrEdONsbSW2Q=
+	t=1779370408; cv=none; b=msZuTohy1Coz0X1mKGojk3iyC61JeT5McJoCceZJjZvt/N6f1M2D10D0V26kxde+Ejhz/Fl4zRRmHS5l8XzP/bKmEqHNDRq7eCueyiJy0xL4LkInSJc4nXCt5NUmvZ+JZ+wGyvqi7Skb6dS7ouPjLTEGrD8lhtUp16vvY28Fk+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779369516; c=relaxed/simple;
-	bh=71QGoKw4hlhoAusTkKJ02qxBM0g2iiqJRMAT3ERYG2M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TS3d5Tnmq7QNeS0fokIKKttoMnBkyI06O/uP12z4/FkXwKvMSrV5i+2u54YOQ2ucc/n1PzNsvvEzC5qRVQf7tp5wd+xJh524Q7adloQ38lgU4r8ZndWKR1OGVjqpTVyfVExQmA5OqIG3SheLdt2x8hVg9D1tlnLbv0ur0mJMHsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=naYUHffm; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ZYXFwAKZ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64L9AL8u3555946
-	for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 13:18:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Jig0qKN5FrrmSyaV7bk3ZY31KsQ3KF1EZdnYMtpttkM=; b=naYUHffm4Tq45TaC
-	zZSmti0/U7/OiREEX3cqHTN7WwgffEsI4VknxwYQzQrjFaddD1RCsjGlPzrj2kgg
-	EhqQ62UcB2pulapliQONr7P01A1xWzf68wOUo9HcOXrltG0Xn2EGWjc2IOOqPzMm
-	nJ9S4tFgNGfiVtHSS+zA+LzCLo8rJMHuPtyJGH9l3DqXHP1HXZFLl3W9y8gw7CsU
-	l86YmARZ7e/Cmu7NrTQLu3J13BKR2vFb/fxpj1Ymrzr2z+zF9zntx2HFFfO8CHBC
-	ymx84TYz0ByZE6hVEQm1EkiGXkKQwwF+z5kNw3GtEaZz31dUXqXZ7a4eeH39TkWt
-	lr0CFA==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e9fb6mnp7-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 13:18:34 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-c82c84be9c3so2887482a12.0
-        for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 06:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1779369514; x=1779974314; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Jig0qKN5FrrmSyaV7bk3ZY31KsQ3KF1EZdnYMtpttkM=;
-        b=ZYXFwAKZTVLelbD7OgMl6fjZqIpi88c2E5XnIYzHE/M0UUgZb79bo/A0lPI7bOZE64
-         lMmm80tzzkUTFgEWAyLvZBnK7Sx5qliUWLMue6LdmSmL5EuC8tWqE2kiWXDWy81aBroy
-         Kfgs1qtlHUhXs9iXYTBzoZ1zSMG8N0KCyhBgpAQNLK8aAr59fgSQtfnax3oLWoIbDhQ1
-         4FxV+xTXCTy3DekLzEvQM+hOsjwJSo43EObWpiD52K5CrnPhC+ncF3wWms5LfVH70KPB
-         bIUPazjsADaBSa+o4MqJmUdmbJjZWCGRzGiP3JoWxONMHEEDrzQ2t9W1VUEfg3TSh6hx
-         COeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779369514; x=1779974314;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Jig0qKN5FrrmSyaV7bk3ZY31KsQ3KF1EZdnYMtpttkM=;
-        b=K6R63/oSIZ34fSr3exnMZ951knnKpOBwpvNsaVEof6sbsyButTNOEWLEnmovc1bZYI
-         6vjK0eKowYGt5KyOf4p3JdLTkMwsSvr6PHdMlBdQwLsUTjSvWF8zvXaGsdK/WlCsJKuk
-         fBa2tPXK9TZdM7QcHUJ9vMzXcv+p4bUheVaRUYDwYbIKIQoAAlBdC3xM2Zw50wpwXk03
-         HA+rnAz2ueM5dwjR63kDfbTVNjKCfeI4DqX3sSi8awVZSp3mmojiKPE7dCVd1/jjOorE
-         CPoqKYDrkXgeKneY60bJ5ho9LacpSB0sMTooSBn6BuRGQatTLkT95IjKp0caZGQ75Cjj
-         Bo5A==
-X-Forwarded-Encrypted: i=1; AFNElJ+bdmcYLjkkoclk8/dCUFvP/ueb2b8ErqY7RrEHNcmC5VY4joP1nL13hoWuVL5z5JXIeYazeHbnoVw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykLGEBUtiq+IN9TEqpo8KBGxd/nDuCEHdj9eaK63nMix1SirBW
-	TBZW626buZGL24lvahOA3erLl5Ovpcv7hLJMJURzi5JOcYh/10Ci1ySPniOcLUPoovbOlx9iRWC
-	k+OmlfAC4xSaxBVkE5fNUOdm/vfeE2U2V9PDVdsw9zWl4IDAljYgQd7vOedJhMHVShZBfzy8=
-X-Gm-Gg: Acq92OEjGWgMfxaNyEoCxrMLi66yhRsABmuZx8D4Z1I0Gc0Hxhrw5VXgLMK+GWl1D3E
-	blTay8/0PMqbFhdV46owxpnwSWTHMmWsaktN4eVNsNx/QXCWDu61j81VG0hF/gjM6bMeze1qHfH
-	Xwo4kEhCXR8U66L7qSatilYsYC88ICNaOpW3UV9Ub1HYnFG6JPeikRqgw8RoBu5PCtdzb6leNg/
-	JxR8AW2EVWn1FWuUwiYUPRRe/vnBSe+hArxlGMh+IKCxVL4JGxLPFOkDcn88V2XInEbuQ06nbwn
-	kW0I/ztCYAbetxcFl9VUeZwBeb7/2McAxARXvsGj5BsB06xyn5xv25JEF+YESoVgs/dCVujhxpU
-	lXvWZxy9VTWc0uoFKvPkmRU9zVHCf/LjTt6hOJe+RfoVkedq3My4kBAI=
-X-Received: by 2002:a05:6a00:10d0:b0:838:af72:fb27 with SMTP id d2e1a72fcca58-8414ac6b3c1mr3011220b3a.9.1779369513924;
-        Thu, 21 May 2026 06:18:33 -0700 (PDT)
-X-Received: by 2002:a05:6a00:10d0:b0:838:af72:fb27 with SMTP id d2e1a72fcca58-8414ac6b3c1mr3011167b3a.9.1779369513359;
-        Thu, 21 May 2026 06:18:33 -0700 (PDT)
-Received: from hu-kuldsing-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84154e22f1esm1687731b3a.47.2026.05.21.06.18.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2026 06:18:32 -0700 (PDT)
-From: Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
-Date: Thu, 21 May 2026 18:47:12 +0530
-Subject: [PATCH 5/5] arm64: dts: qcom: shikra: Add ICE, TRNG and QCE nodes
+	s=arc-20240116; t=1779370408; c=relaxed/simple;
+	bh=iRiRSOifqAhDEW+rM5ucutf2vqbqOCl0n39wA2pC2nE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RvUoM6syI9lAANqwABW2l+OlOvTta3WDZM7mK3NrbFqjJmCGYg+xmL3RTgoqz9G5Xq7ilU/VfrrgMw/tupLGLkjTnZSrVecWCfphJuW0yqVhELu5Bw4fC71qhPbroOJX1VoIv84B+TV5OAznCPKcHbnoxcCwgYlDtQIyLGFibec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENRvP//N; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B451F000E9;
+	Thu, 21 May 2026 13:33:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779370406;
+	bh=JMvTXrLi2fecyuCzobJPBmjEJITlU0vYIW862WydbuI=;
+	h=From:To:Cc:Subject:Date;
+	b=ENRvP//NxlPse9MxCJOFh1AogZslAel87SB2mSCIhsf3jItcOS+woGIBwiFJXxxJO
+	 /vrcLfGb5f9Zgybo+8/jwPpcfxzDdtk9qobrtYv1Jx7qF2CaHOv9To+pMFVf+CxBaj
+	 Txk/IJPdMMNkgGbRiVQjeh8OyeTtBQ2jV3/sTZSlJcvRZB5VWyLoc9rDPU3aPLI4HL
+	 h0jOm1f2w6p8YOUlM5pSaTCh9uIPDhngu0K2kHqivFsRg/751UQV/kKlDAKhtjc0hL
+	 ruCH8xG0ElU6V7TuBi+cEWySHRlk4t3CmGbCJy8V2gQGUgE/wtg5mB81jG8Jj8LiQq
+	 dMkB09LzsXQtw==
+From: Kees Cook <kees@kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Pengpeng Hou <pengpeng@iscas.ac.cn>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Corey Minyard <corey@minyard.net>,
+	Gabriel Somlo <somlo@cmu.edu>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Hannes Reinecke <hare@suse.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Jason Baron <jbaron@akamai.com>,
+	Jim Cromie <jim.cromie@gmail.com>,
+	Tiwei Bie <tiwei.btw@antgroup.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Georgia Garcia <georgia.garcia@canonical.com>,
+	kvm@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-acpi@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	qemu-devel@nongnu.org,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-rdma@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-serial@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 00/11] Convert moduleparams to seq_buf
+Date: Thu, 21 May 2026 06:33:13 -0700
+Message-Id: <20260521133315.work.845-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260521-shikra_crypto_changse-v1-5-0154cc9cc0de@oss.qualcomm.com>
-References: <20260521-shikra_crypto_changse-v1-0-0154cc9cc0de@oss.qualcomm.com>
-In-Reply-To: <20260521-shikra_crypto_changse-v1-0-0154cc9cc0de@oss.qualcomm.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Thara Gopinath <thara.gopinath@gmail.com>,
-        Konrad Dybcio <konradybcio@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Andy Gross <agross@kernel.org>
-Cc: Harshal Dev <harshal.dev@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
-X-Mailer: b4 0.15.1
-X-Authority-Analysis: v=2.4 cv=do/rzVg4 c=1 sm=1 tr=0 ts=6a0f062a cx=c_pps
- a=rz3CxIlbcmazkYymdCej/Q==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22
- a=EUspDBNiAAAA:8 a=xxl85nrD-HDipQLZo70A:9 a=QEXdDO2ut3YA:10
- a=bFCP_H2QrGi7Okbo017w:22
-X-Proofpoint-ORIG-GUID: sOUwLaG98f0mTajYZ1Cxzkzui_BAtER6
-X-Proofpoint-GUID: sOUwLaG98f0mTajYZ1Cxzkzui_BAtER6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIxMDEzMiBTYWx0ZWRfX2ldQ9Kz94pbz
- VtakJPox7AwSQpfwMCeHjJJIcJpO2z5KdH3VSWb3J/kCJm4c3fOvUlDkXHj4s9Mak+l45/cBI/6
- zsFvrWOES/1we//QU2fvd+XisZDp0+ATs1u5Din1JUIVp8Nq0Oeg0LRgZRHZUOKqZADMXdYXkpQ
- Tady8dWW7KgkBNRcPW6g2rL4kIpUYywwdvOY77PkbbKr83MX590Hc76TFFxqf+SQivm6a/6OONe
- I04ngxP2/MmYxs4wrQrthZbBGKgWbSYJ4KOHm3X/e4COLgWLCGs52KKzhCr10+btel7O4S4RW84
- B/pAEmWQmjXC8DYeYmefgR7ne0c7NRyB7AHOPWZPCWhoaS32AwIgOcFu57dQ8Mx+B4yiWIXWGoS
- +BVJs+VgHtldDPUofAvoElZXH+FvLdjDJr7jtQ1WZY9Xjd5wFFfMUjkWNawYa4gw4kLByCMhD0D
- U5jOC1EfbNRvcCBdyPg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-21_02,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 clxscore=1015
- spamscore=0 malwarescore=0 phishscore=0 priorityscore=1501 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605210132
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8383; i=kees@kernel.org; h=from:subject:message-id; bh=iRiRSOifqAhDEW+rM5ucutf2vqbqOCl0n39wA2pC2nE=; b=owGbwMvMwCVmps19z/KJym7G02pJDFn8nPP5NjJqfrXdrfdzgRzzhL0cEUvVFLTFyz0Emuo2S cuk+1zsKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmMjpjYwMW1sezs9aJ6S4pvfM 9cD7+tJ32F5enlDXEpZXkNZ/g4mVnZFh3zrv5UmSl4OP8839kFvnc/3g3qNPdE9ob/yzv04h4/U XTgA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10644-lists,dmaengine=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
-	FREEMAIL_TO(0.00)[gondor.apana.org.au,davemloft.net,kernel.org,gmail.com];
+	FREEMAIL_CC(0.00)[kernel.org,iscas.ac.cn,suse.com,nod.at,cambridgegreys.com,sipsolutions.net,minyard.net,cmu.edu,redhat.com,linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,acm.org,ziepe.ca,ideasonboard.com,google.com,suse.de,HansenPartnership.com,oracle.com,arm.com,linuxfoundation.org,rowland.harvard.edu,linux.alibaba.com,akamai.com,antgroup.com,orcam.me.uk,infradead.org,linux.ibm.com,alien8.de,zytor.com,atomlin.com,linux-foundation.org,canonical.com,paul-moore.com,namei.org,hallyn.com,vger.kernel.org,googlegroups.com,kvack.org,lists.ubuntu.com,lists.infradead.org,lists.sourceforge.net,nongnu.org,lists.freedesktop.org,lists.ozlabs.org,lists.one-eyed-alien.net,lists.linux.dev];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kuldeep.singh@oss.qualcomm.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10646-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kees@kernel.org,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_GT_50(0.00)[99];
+	TAGGED_RCPT(0.00)[dmaengine];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 71E3B5A6397
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 044A55A69DD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add device tree nodes describing the crypto hardware blocks present
-on the Qualcomm Shikra platform:
+Hi,
 
-- BAM DMA controller used by the Qualcomm crypto engine
-- QCE (crypto) engine with DMA support
-- TRNG hardware random number generator
-- Inline crypto engine (ICE)
+I tried to trim the CC list here, but it's still pretty huge...
 
-Also connect the SDHC controller to ICE via "qcom,ice" property to
-support inline encryption.
+We've had a long-standing issue with "write to a string pointer" callbacks
+that don't bounds check the destination (and for which the bounds is
+also not part of the callback prototype, even if it is "known" to be
+PAGE_SIZE, which sysfs_emit() depends on). Both moduleparams and sysfs
+use this pattern. As a first step, and to test the migration method,
+migrate moduleparams first.
 
-Signed-off-by: Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
----
- arch/arm64/boot/dts/qcom/shikra.dtsi | 52 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+There are 2 "mechanical" treewide patches that are handled by Coccinelle:
+- treewide: Convert struct kernel_param_ops initializers to DEFINE_KERNEL_PARAM_OPS
+- treewide: Convert custom kernel_param_ops .get callbacks to seq_buf via cocci
 
-diff --git a/arch/arm64/boot/dts/qcom/shikra.dtsi b/arch/arm64/boot/dts/qcom/shikra.dtsi
-index 31d0126e5b3e..b617735650ac 100644
---- a/arch/arm64/boot/dts/qcom/shikra.dtsi
-+++ b/arch/arm64/boot/dts/qcom/shikra.dtsi
-@@ -546,6 +546,41 @@ config_noc: interconnect@1900000 {
- 			#interconnect-cells = <2>;
- 		};
- 
-+		cryptobam: dma-controller@1b04000 {
-+			compatible = "qcom,bam-v1.7.4", "qcom,bam-v1.7.0";
-+			reg = <0x0 0x01b04000 0x0 0x24000>;
-+			interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH 0>;
-+			#dma-cells = <1>;
-+			iommus = <&apps_smmu 0x84 0x0011>,
-+				 <&apps_smmu 0x86 0x0011>,
-+				 <&apps_smmu 0x92 0x0>,
-+				 <&apps_smmu 0x94 0x0011>,
-+				 <&apps_smmu 0x96 0x0011>,
-+				 <&apps_smmu 0x98 0x0001>,
-+				 <&apps_smmu 0x9f 0x0>;
-+			qcom,ee = <0>;
-+			qcom,controlled-remotely;
-+			num-channels = <16>;
-+			qcom,num-ees = <4>;
-+		};
-+
-+		crypto: crypto@1b3a000 {
-+			compatible = "qcom,shikra-qce", "qcom,sm8150-qce", "qcom,qce";
-+			reg = <0x0 0x01b3a000 0x0 0x6000>;
-+			dmas = <&cryptobam 4>, <&cryptobam 5>;
-+			dma-names = "rx", "tx";
-+			iommus = <&apps_smmu 0x84 0x0011>,
-+				 <&apps_smmu 0x86 0x0011>,
-+				 <&apps_smmu 0x92 0x0>,
-+				 <&apps_smmu 0x94 0x0011>,
-+				 <&apps_smmu 0x96 0x0011>,
-+				 <&apps_smmu 0x98 0x0001>,
-+				 <&apps_smmu 0x9f 0x0>;
-+			interconnects = <&system_noc MASTER_CRYPTO_CORE0 0
-+					 &mc_virt SLAVE_EBI_CH0 0>;
-+			interconnect-names = "memory";
-+		};
-+
- 		qfprom: efuse@1b44000 {
- 			compatible = "qcom,shikra-qfprom", "qcom,qfprom";
- 			reg = <0x0 0x01b44000 0x0 0x3000>;
-@@ -585,6 +620,11 @@ spmi_bus: spmi@1c40000 {
- 			qcom,ee = <0>;
- 		};
- 
-+		rng: rng@4454000 {
-+			compatible = "qcom,shikra-trng", "qcom,trng";
-+			reg = <0x0 0x04454000 0x0 0x1000>;
-+		};
-+
- 		rpm_msg_ram: sram@45f0000 {
- 			compatible = "qcom,rpm-msg-ram", "mmio-sram";
- 			reg = <0x0 0x045f0000 0x0 0x7000>;
-@@ -646,6 +686,7 @@ &mc_virt SLAVE_EBI_CH0 RPM_ALWAYS_TAG>,
- 			mmc-hs400-enhanced-strobe;
- 
- 			resets = <&gcc GCC_SDCC1_BCR>;
-+			qcom,ice = <&sdhc_ice>;
- 
- 			status = "disabled";
- 
-@@ -668,6 +709,17 @@ opp-384000000 {
- 			};
- 		};
- 
-+		sdhc_ice: crypto@4748000 {
-+			compatible = "qcom,shikra-inline-crypto-engine",
-+				     "qcom,inline-crypto-engine";
-+			reg = <0x0 0x04748000 0x0 0x18000>;
-+			clocks = <&gcc GCC_SDCC1_ICE_CORE_CLK>,
-+				 <&gcc GCC_SDCC1_AHB_CLK>;
-+			clock-names = "core",
-+				      "iface";
-+			power-domains = <&rpmpd RPMHPD_CX>;
-+		};
-+
- 		qupv3_0: geniqup@4ac0000 {
- 			compatible = "qcom,geni-se-qup";
- 			reg = <0x0 0x04ac0000 0x0 0x2000>;
+The last treewide patch is manual, and may need to be broken up into
+per-subsystem patches, though I'd prefer to avoid this, as it would
+extend the migration from 1 relase to at least 2 releases. (1 to
+release the migration infrastructure, then 1 release to collect all the
+subsystem changes, and possibly 1 more release to remove the migration
+infrastructure.)
+
+Thoughts, questions?
+
+-Kees
+
+Kees Cook (10):
+  panic: Replace panic_print_get() with generic helper
+  moduleparam: Add DEFINE_KERNEL_PARAM_OPS macro family
+  treewide: Convert struct kernel_param_ops initializers to
+    DEFINE_KERNEL_PARAM_OPS
+  moduleparam: Rename .get field to .get_str
+  moduleparam: Add seq_buf-based .get callback alongside .get_str
+  moduleparam: Route DEFINE_KERNEL_PARAM_OPS get pointer via _Generic
+  params: Convert generic kernel_param_ops .get helpers to seq_buf
+  treewide: Convert custom kernel_param_ops .get callbacks to seq_buf
+    via cocci
+  treewide: Manually convert custom kernel_param_ops .get callbacks
+  moduleparam: Drop legacy kernel_param_ops .get_str field and dispatch
+    logic
+
+Pengpeng Hou (1):
+  params: bound array element output to the caller's page buffer
+
+ include/linux/dynamic_debug.h                 |   8 +-
+ include/linux/moduleparam.h                   |  65 +++++++---
+ security/apparmor/include/lib.h               |   3 +-
+ mm/kfence/core.c                              |  15 ++-
+ arch/powerpc/kvm/book3s_hv.c                  |   5 +-
+ arch/s390/kernel/perf_cpum_sf.c               |  12 +-
+ arch/um/drivers/vfio_kern.c                   |   9 +-
+ arch/um/drivers/virtio_uml.c                  |  18 +--
+ arch/x86/kernel/msr.c                         |  11 +-
+ arch/x86/kvm/mmu/mmu.c                        |  28 ++--
+ arch/x86/kvm/svm/avic.c                       |  14 +-
+ arch/x86/kvm/vmx/vmx.c                        |  24 ++--
+ arch/x86/platform/uv/uv_nmi.c                 |  24 ++--
+ block/disk-events.c                           |   6 +-
+ drivers/acpi/button.c                         |  19 ++-
+ drivers/acpi/ec.c                             |  14 +-
+ drivers/acpi/sysfs.c                          | 114 ++++++++--------
+ drivers/block/loop.c                          |  12 +-
+ drivers/block/null_blk/main.c                 |  12 +-
+ drivers/block/rnbd/rnbd-srv.c                 |   6 +-
+ drivers/block/ublk_drv.c                      |  12 +-
+ drivers/char/ipmi/ipmi_msghandler.c           |  12 +-
+ drivers/char/ipmi/ipmi_watchdog.c             |  50 +++----
+ drivers/crypto/hisilicon/hpre/hpre_main.c     |  16 +--
+ drivers/crypto/hisilicon/sec2/sec_main.c      |  23 +---
+ drivers/crypto/hisilicon/zip/zip_crypto.c     |   5 +-
+ drivers/crypto/hisilicon/zip/zip_main.c       |  21 +--
+ drivers/dma/dmatest.c                         |  34 ++---
+ drivers/edac/i10nm_base.c                     |   6 +-
+ drivers/firmware/efi/efi-pstore.c             |   6 +-
+ drivers/firmware/qcom/qcom_scm.c              |  18 +--
+ drivers/firmware/qemu_fw_cfg.c                |  40 +++---
+ drivers/gpu/drm/drm_panic.c                   |  13 +-
+ drivers/gpu/drm/i915/i915_mitigations.c       |  31 ++---
+ drivers/gpu/drm/imagination/pvr_fw_trace.c    |   6 +-
+ drivers/hid/hid-cougar.c                      |   6 +-
+ drivers/hid/hid-steam.c                       |   6 +-
+ drivers/infiniband/hw/hfi1/driver.c           |  12 +-
+ drivers/infiniband/ulp/iser/iscsi_iser.c      |   6 +-
+ drivers/infiniband/ulp/isert/ib_isert.c       |   6 +-
+ drivers/infiniband/ulp/srp/ib_srp.c           |  12 +-
+ drivers/infiniband/ulp/srpt/ib_srpt.c         |   5 +-
+ drivers/input/misc/ati_remote2.c              |  23 ++--
+ drivers/input/mouse/psmouse-base.c            |  15 ++-
+ drivers/md/md.c                               |   5 +-
+ drivers/media/pci/tw686x/tw686x-core.c        |   6 +-
+ drivers/media/usb/uvc/uvc_driver.c            |  14 +-
+ drivers/misc/lis3lv02d/lis3lv02d.c            |   5 +-
+ drivers/net/wireless/ath/wil6210/main.c       |  10 +-
+ drivers/nvme/host/multipath.c                 |  17 +--
+ drivers/nvme/host/pci.c                       |  18 +--
+ drivers/nvme/target/rdma.c                    |   5 +-
+ drivers/nvme/target/tcp.c                     |   5 +-
+ drivers/pci/pcie/aspm.c                       |  17 ++-
+ drivers/platform/x86/acerhdf.c                |   5 +-
+ drivers/power/supply/bq27xxx_battery.c        |   6 +-
+ drivers/power/supply/test_power.c             | 122 +++++++++---------
+ drivers/scsi/fcoe/fcoe_transport.c            |  22 ++--
+ drivers/scsi/sg.c                             |   6 +-
+ drivers/target/target_core_user.c             |  25 ++--
+ .../processor_thermal_soc_slider.c            |  24 ++--
+ drivers/thermal/intel/intel_powerclamp.c      |  34 ++---
+ drivers/tty/hvc/hvc_iucv.c                    |  24 ++--
+ drivers/tty/sysrq.c                           |   6 +-
+ drivers/ufs/core/ufs-fault-injection.c        |  12 +-
+ drivers/ufs/core/ufs-mcq.c                    |  18 +--
+ drivers/ufs/core/ufs-txeq.c                   |   5 +-
+ drivers/ufs/core/ufshcd.c                     |  12 +-
+ drivers/usb/core/quirks.c                     |   6 +-
+ drivers/usb/gadget/legacy/serial.c            |   5 +-
+ drivers/usb/storage/usb.c                     |  25 ++--
+ drivers/vhost/scsi.c                          |  12 +-
+ drivers/virt/nitro_enclaves/ne_misc_dev.c     |   6 +-
+ drivers/virtio/virtio_mmio.c                  |  27 ++--
+ fs/ceph/super.c                               |  10 +-
+ fs/fuse/dir.c                                 |   5 +-
+ fs/nfs/namespace.c                            |  12 +-
+ fs/nfs/super.c                                |   6 +-
+ fs/ocfs2/dlmfs/dlmfs.c                        |   5 +-
+ fs/overlayfs/copy_up.c                        |   5 +-
+ fs/ubifs/super.c                              |   6 +-
+ kernel/locking/locktorture.c                  |  12 +-
+ kernel/panic.c                                |  11 +-
+ kernel/params.c                               | 122 +++++++++---------
+ kernel/power/hibernate.c                      |   6 +-
+ kernel/rcu/tree.c                             |  24 ++--
+ kernel/sched/ext.c                            |  11 +-
+ kernel/workqueue.c                            |  18 ++-
+ lib/dynamic_debug.c                           |  16 ++-
+ lib/test_dynamic_debug.c                      |  12 +-
+ mm/damon/lru_sort.c                           |  33 +++--
+ mm/damon/reclaim.c                            |  33 +++--
+ mm/damon/stat.c                               |  16 +--
+ mm/memory_hotplug.c                           |  30 +++--
+ mm/page_reporting.c                           |  11 +-
+ mm/shuffle.c                                  |   6 +-
+ mm/zswap.c                                    |  14 +-
+ net/batman-adv/bat_algo.c                     |   6 +-
+ net/ceph/ceph_common.c                        |  10 +-
+ net/ipv4/tcp_dctcp.c                          |   6 +-
+ net/sunrpc/auth.c                             |  12 +-
+ net/sunrpc/svc.c                              |   5 +-
+ net/sunrpc/xprtsock.c                         |  18 +--
+ samples/damon/mtier.c                         |   6 +-
+ samples/damon/prcl.c                          |   6 +-
+ samples/damon/wsse.c                          |   6 +-
+ security/apparmor/lib.c                       |  27 ++--
+ security/apparmor/lsm.c                       |  75 +++++------
+ sound/hda/controllers/intel.c                 |   5 +-
+ sound/usb/card.c                              |   7 +-
+ 110 files changed, 854 insertions(+), 1066 deletions(-)
 
 -- 
 2.34.1

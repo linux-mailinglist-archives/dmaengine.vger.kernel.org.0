@@ -1,213 +1,263 @@
-Return-Path: <dmaengine+bounces-10703-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10704-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AHZjCHc+D2pNIQYAu9opvQ
-	(envelope-from <dmaengine+bounces-10703-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:18:47 +0200
+	id AGzzEyY9D2ocIQYAu9opvQ
+	(envelope-from <dmaengine+bounces-10704-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:13:10 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B9AB5AA0EE
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:18:45 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A684A5A9F7C
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:13:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7DA09319B0C0
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 16:41:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DC5B432AF633
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 16:47:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B37037E315;
-	Thu, 21 May 2026 16:41:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DC9E39AD45;
+	Thu, 21 May 2026 16:46:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="hxyMmbvG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hAiFXflX"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013021.outbound.protection.outlook.com [40.107.162.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922A137DAD0;
-	Thu, 21 May 2026 16:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779381700; cv=fail; b=MknPVSZDbHl0gPJ47hWNRGRq41vD7/sg22uV0c5+ymlkuPfl0Bod0HwTbXrvTqzIpF32fdtz+ND+0hP3clS+G2rkUyBfncDT8J94yY+78bkwXBmPOoQ4xh+ujCiqzzgStAmZo6lG6yMR+4muE9Y1JGPKAUbiOyFuabGIu3Scm4s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779381700; c=relaxed/simple;
-	bh=o/YuqwoYTTjHjTFuH3CJJSIZFUVZJGDH3HQQzC33yqU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=tbCpkSDpXaDb4YQ7Q55I6KkfzesZCOVTg2q9hAy2IWMPfmQ0hdvyu/opndcb5SKSKikIAxVR5qNB7xsOrt6cAdETcWAu9lLIcT67CCL+8yU68KYbBfgPUKtqmhLIoJsOU/MWkRzd0dV3NCksWtwlQI2GHQ3VF/C25HyAHsrHQV8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=hxyMmbvG; arc=fail smtp.client-ip=40.107.162.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EPCBHMoQNWmBbrPM5kVMkb+BJLX27xncWbstEspjMAd5SnrhbyLxoL695ABP06Ez+e4vIc+lQ0qn5H0AY99Zo6eR/YmYh9rSIaneJsb2/bWv8Jl6gTJMxxU7/5Kn/ddHu1WYWRDhYo1k9PwqRkJiBdQnfMh1jUrl8ANR3ygVJUgxQq99NZsR+6U1gHfmECCHi3a+DbgyxZW/UbFpnnoea3LmfOWAiJJc5uH0zJ42TAbX9AFLsAm48qxaKcTYMlyPxEmOfVXtQ3ARKg9OGZ2yOmGkpM9rCrRYEEw5bCN8qergxt2/1cyNEL2r98/RKxYOkKpxXy5AEQwkhOb6I6Zmmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xVc9g2D3zKgcBVw+rn1EYayupC58TCP4/sUnzBlHxO4=;
- b=DkSYZ6VH97TUwD+nfZbGattAn42k2DlXKTbfeWJ5kWYhGCQg54OZeTRtE7mGIfjfVGLUj46C95xTGzOtkyftsxM1CSAARn/3reaClZPxaVv62x01ofJyPy8/kbRhwshTAUokkLh0CTyy6aX2rdprxlQK2LL0URgn8p0Pjy1yz13kcGELhvZm/rk60k4a+oPM5d5pR6exWNv2aa9L2NLWk4v8766CCLkcmifY0xSw07JkdB9rI3j6pcLHWzDrKGl9cn2a5gnaueYKG6iI3W4NBv+e443Z6QljDnGZuPMjJKeAzIUbQvASRwQ2EBLIFY3F4EhK2frvSpr7iOsI1RlE5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xVc9g2D3zKgcBVw+rn1EYayupC58TCP4/sUnzBlHxO4=;
- b=hxyMmbvGhPIZISi6OSq6tgAdcq3pyAHOpSI6MBZ7AafiOQeOJKAs3v2rsiQ2KgysQQ1cQNaRzL2SSrDWWMIQhsQENnZf9TiixRnI2/FTpXZR75/xxvELBM9+7R/Ckk7JTDM+RNriI1jTfjLyCQP88YRej0QjZHSFuwQaXFILmle1BaSmZAz67eueW8kj3uyBWgWgpHFDSwSILlJm1iBfGpbvbsqzUOD8U5dbHY2tMJtNzyF74r94LF+PNCZMYobAMK0XTe5SbcK/L5+Kren3sZGz38ozEHZIBwZw1UbWtey17SLnGEw4MSs8nz0BuR+M8HU5Yesxt18snzBt8TymkQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by AS1PR04MB9407.eurprd04.prod.outlook.com (2603:10a6:20b:4d9::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.14; Thu, 21 May
- 2026 16:41:35 +0000
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588%3]) with mapi id 15.21.0048.013; Thu, 21 May 2026
- 16:41:35 +0000
-Date: Thu, 21 May 2026 12:41:29 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-	imx@lists.linux.dev, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH] dt-bindings: dma: fsl-edma: add optional iommus property
-Message-ID: <ag81ufhDhE5zdIKn@lizhi-Precision-Tower-5810>
-References: <20260521-edma-iommu-v1-1-6eec3f24c306@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260521-edma-iommu-v1-1-6eec3f24c306@nxp.com>
-X-ClientProxiedBy: SA1P222CA0162.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c3::13) To PA4PR04MB9366.eurprd04.prod.outlook.com
- (2603:10a6:102:2a9::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E103812F6
+	for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 16:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779382000; cv=none; b=DHw9v2rzguX9wI5KQMGm7gQ20DU53hTNXj2h+MKA10jZRQG1AIj3jXwoIEdO7IUZpa9lmRi3CsMcog6wtgwONF02WzG3wseC7AZFxNjF8U1gJhki6UIG9/thjEWJKr43ACUQmNCMZ8x61NWmRXyd8bbnvvRkfR8lLt5exp9ByME=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779382000; c=relaxed/simple;
+	bh=55HpdrZ1XWqM3uwC+a47+vakAvshOA/Toys7NpGVJzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LP3Yop5iXcI+xc/vYXgK/hCBa7PAWdOQLPE2JAcibmkws/H+TWIJHQjV7MhOITPljVAGMGtNG3e1mPrwiCs4+kcOJrPVoKRAkFAp14xxhnwWId8Qx4zwLayvLSvZMQNtpc++0t0muNgfCFnvuRZgCCOHCKqBUA8jAu+5X0OYOhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hAiFXflX; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-490388fd0dbso8750315e9.0
+        for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 09:46:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779381995; x=1779986795; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NA/nM16UoxaTsk3A7SWQL7q3HkgK647mNtY2rDcRyyc=;
+        b=hAiFXflXTEbRl6U5Air/vBGryJ1P7DUwv5y5hFcBfrvyOOjvwLAPWk6boHEMfrP+03
+         djrSF/MmhRRc4oKAARffcHojm9lrMfH/yxDwEmaCsT4BFCL3flmfjoZXGq6TFSC3TeHl
+         JsiTufiR6et1mz+pI8XV2U+9x+ymMfxMCAW0bX+y+95+67AVxLZvt8B0iLXkU9d/aiqe
+         9TLZTYgekPiyf54s88p+J1C3j1Lc4MyofWrYIv5jQC1MQsWTxKDTJulTH9sW3bkKM6Er
+         8ENfEnS8Rye+RBlr7U5dk7H7qISkWK2Sz6IRcVfJFcdljcS2gaAHhL/dDTECxI2slWnI
+         yang==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779381995; x=1779986795;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=NA/nM16UoxaTsk3A7SWQL7q3HkgK647mNtY2rDcRyyc=;
+        b=hYyFJC/AX24163XrG58hfEntXCq2Zew6tSKuHxRViQUDnnusRnmIzJPVVToeXB4+AO
+         uXAh9U1U2ijbN7peUOVipimFFETDehueLODfKxmriqwr/Ydw03wbZrd3U+0XHBkfnR6w
+         VJaxDyb6qCSsXiGeC+XJS1LjWW107JghBBSwHNsbVHW0J4543RHZnEMYaIuIs11CYlEX
+         RnR/RDOxrWZRLgduq4kQzWqE3UVdRAvd8uNPNmsGYX5ce4QD7d388nOM/8EoybLAoYEy
+         6VlIVqildFIZdpDGwVwK9V4f/w9uKQds8/Krfqhuz+set6A1LVgDcUMUnFyNmNwHnkAu
+         X+Sw==
+X-Forwarded-Encrypted: i=1; AFNElJ9ZdKZhEafe2hmGLV4hC9KBC6C4Zl2MYu50offI3gufdWelX16iceVkSBq8uXRUezo5ku5nk5wBfn8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzioPMVGuYdoPxoAMh9dUNwyehT5Y98f/3oeg/RVxBKP+Xxw6kx
+	zG+1grcJf1ngVOqZ9T8Ymuq/ReKUmw/H3upE1jAyI3DrVrIGnjlCxTgA
+X-Gm-Gg: Acq92OFebdRxd7ySjZDyojwkopU1VxF8YNIgn7ub4+P0BzIXDg0PGRLTZ5xlBkFPQ4U
+	d3czIDIj/H4MWqBjWsyaIyEqIifkb4+YI8+OWnNUIzTMwzfRJnQ0Aq8selSuJEILDaaHEHhIMM6
+	5AkNtlYRm3g60fDJmby6rQT3W+WoHWp7t+sNkaXIj3pLuVw8EjqaxK0sB2x8mXjWELTfxYDXrhj
+	zWkVhhAy+eyrfo077KeBMH2oFOU/BEPnQIgEOiIN6tDMbljBcFKYUZjPpaDWeWW/j7erbnH+2/I
+	P6u/qm1Q+EOPuuqDFlWlcC/EBEImXSVD20eIW6D7SsnpJdX0Liv53r15anJBnesIy/1Uuo6ojoO
+	CHChiwYBvRuMkgVhJ4j9JvsllIwVk0oDsZHI4zGrMye50RGlwdttcbpYruuLkN0obawWs6b10k8
+	wTKgtzf80P1Uq+qUkCyrroGjrebMSAOHYHtaSM2H+f2m4wlGvwGsAnUler218z+1F+
+X-Received: by 2002:a05:600c:45c6:b0:488:ac01:72de with SMTP id 5b1f17b1804b1-49036033502mr53623425e9.5.1779381994891;
+        Thu, 21 May 2026 09:46:34 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49035ecac15sm31613075e9.6.2026.05.21.09.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2026 09:46:34 -0700 (PDT)
+Date: Thu, 21 May 2026 17:46:31 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Pengpeng Hou
+ <pengpeng@iscas.ac.cn>, stable@vger.kernel.org, Petr Pavlu
+ <petr.pavlu@suse.com>, Richard Weinberger <richard@nod.at>, Anton Ivanov
+ <anton.ivanov@cambridgegreys.com>, Johannes Berg
+ <johannes@sipsolutions.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len
+ Brown <lenb@kernel.org>, Corey Minyard <corey@minyard.net>, Gabriel Somlo
+ <somlo@cmu.edu>, "Michael S. Tsirkin" <mst@redhat.com>, Jani Nikula
+ <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Bart Van Assche <bvanassche@acm.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Laurent
+ Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede
+ <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Bjorn
+ Helgaas <bhelgaas@google.com>, Hannes Reinecke <hare@suse.de>, "James E.J.
+ Bottomley" <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, Daniel Lezcano <daniel.lezcano@kernel.org>,
+ Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Jason Wang
+ <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio
+ =?UTF-8?B?UMOpcmV6?= <eperezma@redhat.com>, Jason Baron
+ <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>, Tiwei Bie
+ <tiwei.btw@antgroup.com>, Benjamin Berg <benjamin.berg@intel.com>, Ilpo
+ =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, "David E. Box"
+ <david.e.box@linux.intel.com>, "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>, Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Vinod Koul <vkoul@kernel.org>, Frank Li
+ <Frank.Li@kernel.org>, Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>, Alexander
+ Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Dmitry
+ Vyukov <dvyukov@google.com>, Andrew Morton <akpm@linux-foundation.org>,
+ John Johansen <john.johansen@canonical.com>, Paul Moore
+ <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn"
+ <serge@hallyn.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Georgia Garcia <georgia.garcia@canonical.com>, kvm@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-modules@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-mm@kvack.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-acpi@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+ qemu-devel@nongnu.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-pm@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org,
+ linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+ virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, netdev@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 01/11] params: bound array element output to the
+ caller's page buffer
+Message-ID: <20260521174631.71a06440@pumpkin>
+In-Reply-To: <20260521133326.2465264-1-kees@kernel.org>
+References: <20260521133315.work.845-kees@kernel.org>
+	<20260521133326.2465264-1-kees@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|AS1PR04MB9407:EE_
-X-MS-Office365-Filtering-Correlation-Id: 147d91ca-9340-428b-c3bf-08deb757d233
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|1800799024|376014|366016|19092799006|38350700014|56012099003|18002099003|11063799006|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	Gny1YFxW9OqoR+S0LDwbADxR3K8eT+TAeVFKjerHzKcdyB1DxDM6mVxyWIXdXGgWXsTa5n6R48vP97Fodm0AXxs2qgnK5DT6VpsU9WgckyGVcGHQ0hk7Ox75U35z9xQeiGa1+qMjA2WTHku9caR5c9w+5jdRcinypkTVc/DdvLLujgDWtBvYYe1WOR6FIraxyuuykBl/ItvzEcWJMCx0Ni+OxT0ht9tKvLkZMFKL+EyVb12c5RzUTlGlJWypnZaSGlYJ0WZoDgPIdMjbu5O2TkgNFvSlZwx4KJ/coFPJI+1SN8+Cjq8n1ADLSw7yLhhjNdLSPn4mPJwgLwUSHoWn3AiqDhqpHivLr323SWnqWv7r9/FlHVFZuxqSkFBe3p1/9q36GtAyGuE773B/NECBvU4OM4JZxoFRr1iBqDhH22ronh+fYwf+1D3u2AeI9TP7eQW0ItjnBaC64hRLQk4mlfizoMmf2lGlFtnKyoHz9AlYw6kmubfTnZjjUxnSiCslhf1VoWQ6eXq1x4VNzDnIQbU6AfVEnMF5K26jGVrQIzkaQEqxsk+xIIfOqS2PDM6NZWrbFgALMTE+/0xkxypojdaZAjDhfeDC3wTA81fGa3tS4Nm1gVHmAsJF8JnF3p6z8eD+DJ+Yxw2ZYUhlswZZW45xtOkr0PQIMUQA0uk6SJN+I1Krik7ajZu2kGOIMALtlXpl+TvMDICx8Cc7/HBfdfxwmpqbL9iLSalPDrn/fzl1BPMms5eVObdYNW6l8BaI
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(376014)(366016)(19092799006)(38350700014)(56012099003)(18002099003)(11063799006)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UAa0j9W/MlN2mQMIBpoG3TgQekQ6YyreHoabx23p5YwRwJVNQUU52jCxptQ1?=
- =?us-ascii?Q?WprjznXikllO3X1w5vw9PkVSY+m5vSnRIWAGbMyr/vmhir3IVfSrijH+mUDp?=
- =?us-ascii?Q?CA8XlfdwiOthFXdbwY+CY1grSK/w/RGCVX0CQCAM2r0TLIKKrGfLzd+MjcAE?=
- =?us-ascii?Q?1JSoBB+pD6fOkADjSdFu8Oiq4dkcw4DFru8TR0RktN0JGjW8E3DcEg+DAI0z?=
- =?us-ascii?Q?nYDWQ/Yv3TYSYSGXb6kvtFVQ+KIyfmofTyT8871mQe2L8/g9k/7A/ddbdfze?=
- =?us-ascii?Q?Ewp4mZpUWP5eG8SBkQl0EN4vAGymclRdEqqYazkCAMK7W3W+0xjlYx4dKR+L?=
- =?us-ascii?Q?rLIQU+qEWE4Uwj6qjzKxAWXPj6Jvc2WHIsg1sp+rhcvdI2Lddtia79e5aht7?=
- =?us-ascii?Q?icCjDTfWguL7kC7ttj1UkrrjvlsX7BSWLR8dfR9JWX9F72hQO/slW5Opjc4S?=
- =?us-ascii?Q?yJeJsCkOjouRbAALaiZ0YkXFOItFkqfQzbTWLrcPEvR/8pCKy2pC+UKHsPrf?=
- =?us-ascii?Q?jfSPu7WJ5tyuPMXDP2N6ZmbdbI8aVa4BWxvHfUMOgTXFsAqCutya/hYKPr7F?=
- =?us-ascii?Q?KPW1Ho8mEZfGfvlhy8A8B6Mgghr0mZKmcZ7g08pC5g3ezfxqjF3DT/S2JwBl?=
- =?us-ascii?Q?P5P97ZYflS2fYKNyj8CJnMHv3WSFb5TDscWv78MqyTZFGPfZwDZ/a0j7MqhJ?=
- =?us-ascii?Q?9lc660Cks28YfMytOD5Z4KQNnx2pnLnLQ+04mfJorNsTcIVPI30h62ncw+oi?=
- =?us-ascii?Q?lNvam6c3ybEFCdhPSINXqiXc+vP/iXASbFtkdnr1FrQikxBceeIatCSEZpuM?=
- =?us-ascii?Q?g9VTV5JZFVU+TCezYFpIL49Pd2w1Bzq6hSSsMmWFJTLC/NYbgYlO7qbm23fw?=
- =?us-ascii?Q?SDlw4Pg+i+KyqR+aC2cW2ajeaXc171phc11LXXl9aseV58PxfLNiFPi37lsR?=
- =?us-ascii?Q?pS3VRASqLb1hk93nADzpv21T4BJhLWiT3xPOWETfF0k9yjpFs5FZDHDcPPRh?=
- =?us-ascii?Q?rz8bv/Y2fLdBgIuay6N3n3MP6FrFBwrBxiqmj6jrEoXPJdcWySUcEqZZ0Ayc?=
- =?us-ascii?Q?qS+sbs0+elKsUoUy/14HscFrz+hsPfs2JFmtFRzUsHZvnA3os6z3r1wZaJZD?=
- =?us-ascii?Q?+7+SlFF5R41ieQkrbMLE04D8heKpoB/5y+ElQsZbw5v/SXPYK9xoqPbl8T/h?=
- =?us-ascii?Q?JxXiJQ2Zp4lL8qanaO5ddM6MLsjaWcbB2nyJMU6qTQXkoJUqeiZdXHdDkFrB?=
- =?us-ascii?Q?gO6elyJI9ztlwidGDOUm5h6X0tKgIhqi0dJrHGVBhWm0EV2VRnpGU7mS+E0A?=
- =?us-ascii?Q?QYL4pfEdMZ1CEPROS8D6JzNsCmKV5Yj29qZAMKhCg+tTsLJmD7FlqMX+u87N?=
- =?us-ascii?Q?uuVqzDdL2fHbN+uWZmvORcC3JhRq3G4tpkpSBKbkvC8euIXjPTAlWf+U5CoV?=
- =?us-ascii?Q?ABWbJKUKpPQKHiGSEfqWEQ2FFzWdnJIioBg2NEQSYSSyOjr66ymmIhvnLlXG?=
- =?us-ascii?Q?LMAGpCsJCu/zHddKYjTLDVWdcPynE3DlcSThUD/gQyRau+LRnH7oHrgyDmZM?=
- =?us-ascii?Q?TX63nkCYRRGmx0nlv5kLW/1Tr6o2yxd72bstVWv1EGwLaya2Oouy0bNP6bum?=
- =?us-ascii?Q?iyVVfaEzqYdvj03lctDSYuFKpYlbG95fOgta3G8y+qSQ/uyMJp/SN4KypIDE?=
- =?us-ascii?Q?FGnD27Ee7ckrQIDNC7AckimW06+VFBR4bTMMGNgYtt+GBcrC?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 147d91ca-9340-428b-c3bf-08deb757d233
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 16:41:35.1261
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LbZX+SToeHhmzyG1KNhNcR4nOpUUTqM7qHcVU8h0AOlqn6QYjOtLKKzIGo4aaKl1VhBpC0CwihEKRpPaVIbSFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9407
-X-Spamd-Result: default: False [1.84 / 15.00];
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10703-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[nxp.com:+];
-	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,iscas.ac.cn,vger.kernel.org,suse.com,nod.at,cambridgegreys.com,sipsolutions.net,minyard.net,cmu.edu,redhat.com,linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,acm.org,ziepe.ca,ideasonboard.com,google.com,suse.de,HansenPartnership.com,oracle.com,arm.com,linuxfoundation.org,rowland.harvard.edu,linux.alibaba.com,akamai.com,antgroup.com,orcam.me.uk,infradead.org,linux.ibm.com,alien8.de,zytor.com,atomlin.com,linux-foundation.org,canonical.com,paul-moore.com,namei.org,hallyn.com,googlegroups.com,kvack.org,lists.ubuntu.com,lists.infradead.org,lists.sourceforge.net,nongnu.org,lists.freedesktop.org,lists.ozlabs.org,lists.one-eyed-alien.net,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-10704-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[davidlaightlinux@gmail.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCPT_COUNT_GT_50(0.00)[100];
+	TAGGED_RCPT(0.00)[dmaengine];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,nxp.com:email,nxp.com:dkim]
-X-Rspamd-Queue-Id: 2B9AB5AA0EE
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,suse.com:email]
+X-Rspamd-Queue-Id: A684A5A9F7C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, May 21, 2026 at 12:05:04PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
->
-> Add iommus property with each channel could use one IOMMU entry. i.MX95
-> supports max 64 channels, so set [minItems,maxItems] to [1,64].
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+On Thu, 21 May 2026 06:33:14 -0700
+Kees Cook <kees@kernel.org> wrote:
+
+> From: Pengpeng Hou <pengpeng@iscas.ac.cn>
+> 
+> param_array_get() appends each element's string representation into the
+> shared sysfs page buffer by passing buffer + off to the element getter.
+> 
+> That works for getters that only write a small bounded string, but
+> param_get_charp() and similar helpers format against PAGE_SIZE from the
+> pointer they receive. Once off is non-zero, an element getter can
+> therefore write past the end of the original sysfs page buffer.
+> 
+> Collect each element into a temporary PAGE_SIZE buffer first and then
+> copy only the remaining space into the caller's page buffer.
+
+Should this be using a 4k buffer on all architectures?
+Initially perhaps just using a different name for the constant until
+all the associated PAGE_SIZE limits have been removed.
+
+-- David
+
+> 
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+> Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
->  Documentation/devicetree/bindings/dma/fsl,edma.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> index fa4248e2f1b9cecd00f1535744bfe6d9ecdba613..bb8de804da53fdc47703f722f18453853742209d 100644
-> --- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> @@ -54,6 +54,11 @@ properties:
->      minItems: 1
->      maxItems: 65
->
-> +  iommus:
-> +    minItems: 1
-> +    maxItems: 64
-> +    description: Up to 1 IOMMU entry per DMA channel.
+>  kernel/params.c | 26 ++++++++++++++++++++------
+>  1 file changed, 20 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/params.c b/kernel/params.c
+> index 74d620bc2521..752721922a15 100644
+> --- a/kernel/params.c
+> +++ b/kernel/params.c
+> @@ -475,22 +475,36 @@ static int param_array_set(const char *val, const struct kernel_param *kp)
+>  static int param_array_get(char *buffer, const struct kernel_param *kp)
+>  {
+>  	int i, off, ret;
+> +	char *elem_buf;
+>  	const struct kparam_array *arr = kp->arr;
+>  	struct kernel_param p = *kp;
+>  
+> +	elem_buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
+> +	if (!elem_buf)
+> +		return -ENOMEM;
 > +
+>  	for (i = off = 0; i < (arr->num ? *arr->num : arr->max); i++) {
+> -		/* Replace \n with comma */
+> -		if (i)
+> -			buffer[off - 1] = ',';
+>  		p.arg = arr->elem + arr->elemsize * i;
+>  		check_kparam_locked(p.mod);
+> -		ret = arr->ops->get(buffer + off, &p);
+> +		ret = arr->ops->get(elem_buf, &p);
+>  		if (ret < 0)
+> -			return ret;
+> +			goto out;
+> +		ret = min(ret, (int)(PAGE_SIZE - 1 - off));
+> +		if (!ret)
+> +			break;
+> +		/* Replace the previous element's trailing newline with a comma. */
+> +		if (i)
+> +			buffer[off - 1] = ',';
+> +		memcpy(buffer + off, elem_buf, ret);
+>  		off += ret;
+> +		if (off == PAGE_SIZE - 1)
+> +			break;
+>  	}
+>  	buffer[off] = '\0';
+> -	return off;
+> +	ret = off;
+> +out:
+> +	kfree(elem_buf);
+> +	return ret;
+>  }
+>  
+>  static void param_array_free(void *arg)
 
-If difference channel use difference's iommus, should it use iommu-map?
-
-iommus here suppose all channel share 1 IOMMU entry.
-
-Frank
-
->    "#dma-cells":
->      description: |
->        Specifies the number of cells needed to encode an DMA channel.
->
-> ---
-> base-commit: 687da68900cd1a46549f7d9430c7d40346cb86a0
-> change-id: 20260521-edma-iommu-c025e1d28eba
->
-> Best regards,
-> --
-> Peng Fan <peng.fan@nxp.com>
->
 

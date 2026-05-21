@@ -1,54 +1,54 @@
-Return-Path: <dmaengine+bounces-10606-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10608-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gJRcEfWnDmr6AwYAu9opvQ
-	(envelope-from <dmaengine+bounces-10606-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 08:36:37 +0200
+	id EPTwN+WnDmr6AwYAu9opvQ
+	(envelope-from <dmaengine+bounces-10608-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 08:36:21 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9690959F7D9
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 08:36:36 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54A1D59F7D1
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 08:36:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 90B7F30470F8
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 06:31:53 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3376630D3C34
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 06:32:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0661C39891F;
-	Thu, 21 May 2026 06:31:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E30DB39A7F7;
+	Thu, 21 May 2026 06:31:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="sHMmRgod"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="GL903VQ2"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11020087.outbound.protection.outlook.com [52.101.228.87])
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11020112.outbound.protection.outlook.com [52.101.228.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADF1395AFB;
-	Thu, 21 May 2026 06:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E678E1B142D;
+	Thu, 21 May 2026 06:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779345093; cv=fail; b=WOeRT3ZV+4INg9rgNFr5SrwuV9QxsTvtf8OyB9NiJezNhwCslbK4rUadrqukG6PRay8V/gh5n+lOvAdtKNo5CW5ZaT3OkoRqkQwuWehTLgA83CFEvU+O6/FYbyTPzblYorIHP+2g1ED1EEL0ZHWd3/AGJeIIEtJNUSzBQnqNoZY=
+	t=1779345095; cv=fail; b=Ic/ooPBoJgXeDIEk+Gah2Y6Tuh7MXUVHBQ5kMbAk3HvQvSQTUhyiAQxCV0AXmXbhWp8yFOC0wjr4ku98NOBeOkVnnARF1T43Sci8PLkJBwQVToY/QTBcPfA6GLx0HL2F/b1cBC+n70Mhr7Ebh5Tbf3+aFRnVVE74JKGyxJ2vq/c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779345093; c=relaxed/simple;
-	bh=4LnvNkcVJ+CYElxCYIVAkGZIDEyexpBhMyE0dX73Xf4=;
+	s=arc-20240116; t=1779345095; c=relaxed/simple;
+	bh=eLDUe3L7yCrKADv6SGZDQTJDaLzMpPaPXYjz8Qainjc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oTbCRCc3rk4N9ggRFUP6Vc1YYwA1YvdvR1zzYNPucBOAUwOw0c0/7fb74LGVJWYCaWM6cuHB6wF19B8dfjPGhDnJj5zS+6ttof+MCH+JmEO92yWoEQ7hhXrXMbhUIq99rFaI8CnznQ99eTX249iD3VCjCz4/TlblL/MsBodn9h0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=sHMmRgod; arc=fail smtp.client-ip=52.101.228.87
+	 Content-Type:MIME-Version; b=YjSv+Ie23lO0dvAnMyxPO8Eg16iKCkmvjZMElurGVcsstJSYnbi2g/mlGdSt9EGHJn4mUc5eHHKiYisXKS95JU6neegncmf0b7IuB1OKCZje0qRG1UnSuk3oZTAty5jVkiHn11KJpPB3BYGtHyMfPrRT7PC6cd0sngRB7BOzSg4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=GL903VQ2; arc=fail smtp.client-ip=52.101.228.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iUkTD5zxNMLG/9HRgsoEsvQoDMh9RdDGESrl3qV/u1/KLhv9BysGVd6FYopv1P1tteLN+rvSSJTuEjJE8S+iT4BpiYJBXPJojaFfFWZknLWpoZI5/XkdIu6Fl0UcIXvzSrszcJl9HYzmFq/3gAdKHdNfvOAxEyMGokhoto1FxRYN01T0wk7L5n8PcJly+sxZeqBBZYxCSlmIdahBRW5J91WQGuWUqS5QnMDB1WMHDPKPsG8VWNEw6gek1LErCgK1hIjXVfo92W90KmNAMWn9XDFEi1lBzO5HvyvdZL64Y3lGzS57+adk73bRdBFVNBFKBKxon6tOcbvt0p7YUQ6XCA==
+ b=gSM/Lfo8y+C1KgClxHuiIhIezRm7inbv+70BHcxDke01twFnuXKg5luYOWtMFq7Io8zUtkK7k1XbRaZCUcdy6abyBw6XTzKF+QWknluQzSGDOmuQ9NmJeeoVJBnd3Ggbv0BS6mGgfxCu0AXBSmxk3qsPeqAiU26pdBw5d/G/AQCMLGNWtrrFX10ffbY2rUR0Iy8lDVputsrlQIpodFuY109giU0LVK8gFamKRvV3hufMlrPzHIm4bO6rYZS+09BQN01fYNKgJPHt2v4VGQ/J4iuKk9WYqtFyxqqCYMO87v/5fc4Z5SMTVw/XlyDlxwgGlYDpRs9KFPi6gvBXHucIAw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dmnGxT8hcOuayYvFZ21Yr0EFoHoE8p/jb6JY7jK/9xE=;
- b=Xszo/mTbv8sHfJmivvRpUy0meut13V2waQnZ3CVG996JZlhJ/PTLKPD+LJixD9BrY0Pb0Ccn02t5MJH0nKIyPOAUP9gtPZgQkKAT3nVEx5vQY5R2VluoBS6gxTZNQZGJStoqNJB2fbDVlwYTlL12S3qQR4TUXFFMTdVzmq6LHjr+pgbwxGBuCHwiAFf4apTOsBMnp7QKvgcvLWKIA13gQLfUZuwaLFXKfWIX0+0neItoD0Aie/WY9sslsMFEmjQhf6gAKuf6t5rdar0rEhp9IffwX9B85eWPLw2CZGPzmyQAUXsULCxNKi+RcAybeKqZDTdO0wC3Z1pbwGvMlOwPxg==
+ bh=1swTebOBibyUDONu1zA6JAMuNFEks/SLFN4Wr8kuGb0=;
+ b=WlgV8cgSD8PpKqqICJtF5Jx4hmvnCNMcPAvsLoUdImMq1fgJJQZVFgJXQWhwQ2OmKtY8DJgxMIF4sMsmXlp9JskeyHC6/RM3GHwkX4pjpU6tKut/SuX32FHviL7PLw6SOKHe3gw9k1QA/P7dIlPkgg2JKnD8uBaMXp0mFYJ/eLRgESo/yF2ee6y7iPLgLGLWr7vdmGeJFdSDA3eBmjEOOK7Fgo2cX2L75T4pUhPGg7YvxgK2FuSR/CxADrHH1mJxQaLpGbr/tz7mjy2wmTXh106UkXVqjyFgJ58gY2Qp6U2a1jiGWYJvrVzekDuWK+i1x+eDIwWgpSPBjejOYQ05Uw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dmnGxT8hcOuayYvFZ21Yr0EFoHoE8p/jb6JY7jK/9xE=;
- b=sHMmRgodKQZvBaOQMCHcVniYDisNkEK2SXdACzNYVl0NEpzxEAazZvZciari0Z0WokhiY4q76Y8B4shT10ywYqPoACM/70P25pbyUmE5MbP5rkKVHaWSlssmpXlwydeODLqlXlB4O/vN5fls9BHXoAdIRlweywEEg7Wj8LvRAEM=
+ bh=1swTebOBibyUDONu1zA6JAMuNFEks/SLFN4Wr8kuGb0=;
+ b=GL903VQ2Qfi59nuXusXY69gUpYuhvvRM2LRaq0fs7jwjR7yFp16X1bXq4wwT6mJImnpuIBHuSpPQMvB7VtPyYTh3FMJSWVmK6tmoFBsCdYkCi4EMWiVkhqjmujNMcBDouz+ODWuEyBZEAP4kW57brhyWDZIUd4Q3NzCYKgj0Naw=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=valinux.co.jp;
 Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
@@ -68,16 +68,16 @@ Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
 	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 09/12] dmaengine: dw-edma-pcie: Add register offset match flag
-Date: Thu, 21 May 2026 15:31:12 +0900
-Message-ID: <20260521063115.2842238-10-den@valinux.co.jp>
+Subject: [PATCH 10/12] dmaengine: dw-edma-pcie: Factor descriptor block addresses
+Date: Thu, 21 May 2026 15:31:13 +0900
+Message-ID: <20260521063115.2842238-11-den@valinux.co.jp>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260521063115.2842238-1-den@valinux.co.jp>
 References: <20260521063115.2842238-1-den@valinux.co.jp>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TYCP286CA0161.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:383::6) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-ClientProxiedBy: TY4P301CA0076.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:405:36f::18) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -87,74 +87,74 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|OS9P286MB7818:EE_
-X-MS-Office365-Filtering-Correlation-Id: 624f2c49-b60a-4f24-33d3-08deb7029617
+X-MS-Office365-Filtering-Correlation-Id: b0561395-0037-4c17-f234-08deb7029693
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|10070799003|376014|18002099003|22082099003|56012099003;
+	BCL:0;ARA:13230040|1800799024|366016|10070799003|376014|18002099003|22082099003|56012099003|3023799007;
 X-Microsoft-Antispam-Message-Info:
-	KhLnK5q0br3+7V6oDoNti2dwlaTYudrQ4Ggt6DjbY3R+fq3ho9eqgewatRaw6iUul5KnSY2JGoPZfC/mLtKN+rp2AB2/boQzkood7q1xYq5QUK7Ig53SqjDXY9VEj4L4Sv3by438AJv5GFIpmla+E4F7om17MRkGp4n4b55PBbK0UOynlRTsUMxBNFBwZtgi3K1JmZ550CfBiIhmOhvV0WWDsaxdg6Lgu8A/gN86eXGNJ5x33bgd2Ta2aPtGn1YTBcAW6QFv8/sm5saGFTGSFhKkaCep6OyzRQfXtp7bLMvYDnI7EptdOcBP6P9odmKMmMVWxxRGGqqgrJoWJBNUY76/aNZsbdaZHFkUdzS4GzsnQ7o/yepKKWXV62X6f7QZn+8vFPzFmtycqn1jWCIu9btDA475FVS6UVQAvLuMhianN3hixJm0Y6TgtigwYdlowgcAMcUZk9smLPW866xRlNPiHMDirzCxT1XEn1iCvU9yt4wiQMasuS+yBntSs+gDvATOVXtdW9dnKJGpqeBP1jMOIvRELqIUmPu4wyVs2tHxkxbi5t0KVN2Cd+o6bIA7cEOgylEgeZ0kRcNGV/Gl8yszealJ5nx1CRLpG5LUWIdPtHCeuInYTwlG2fM+NYOk3Z3ZyU5S6GVdp5TsXoxcKZyMY8L5KEZE9OhQqCgh0h37Bp0j7lddTiW9Pa9kVLug
+	RjyK/urbvUeylm5NNGj5r958cIs/hDt9Xw7dxaWVaPJBhMKNu/lSeENjMyD4Ll4fBCxpFX7DZfY32gKORFVDbK90JByrcA5kVJ0tHEytNsno6fQXmkAXa7DFBjfAyTOjBv4Mh7sf7NPz0ZX9d709UZ3wp5mRmNMp/tj6eJwxYZJbjJBeoZ677tn+r0RCLotJejYjbS9M4OYvhVOzIx7NJJuPPgOqUo4h6FCJ4Aqk5wlXYYyeMtQS/IZhRCfhuD/2V1An16l5ycgeHFySwah3A9z3mP6z3sGpvCigFkmM6W4I4vIIoEFv57jkI1uty+tMZLFwmN1YNHI7zwh2XjxKNND3fYqeLH0WlQIptgWWi0tUnwK8Snm1YznfV4mofnlPpy68hVwKkpuLA37PgPRJz9+4azas5JVY1PlbnKHtpPx+A5zZKNi2SFKeaV7BGg9LDD88yPNq/NQldt9ABqeUYvTR9lhKEuPwQ2nO3/dX5jn0+J+GlIt2S5ZWBCSa2M6KR8CQvcVWzlDRzGYYX4uBfHKL9uGZHFgIlulx04K3LflO0Lw7ZHByoDZYnsuNrMJZi4U62mSXBsIhf3OJM8Sg4QsG9UH/d5qQXFShzxUfH/KpS9PzYitaD4BnMArofDfFDDBmb205SsdBlkF8A7fmXN1a28c4bYLXQVD7gx+3886csXvojKxemgLde48gWSTV
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(376014)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(376014)(18002099003)(22082099003)(56012099003)(3023799007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DeAJssneVIDR8ezSajHeK6bZRevJIwIQI35tnFH5TXAZ3GAoNij3I1gEUXUF?=
- =?us-ascii?Q?7QjZIwpcxlHOyTS93m7SnYvrz53ro62y/KqexGL78seaZixrUPB3Q9ZrTAsc?=
- =?us-ascii?Q?by4cLnKIjcoLOTwmhYSekmoHfxiQXNzBYamcHxm6JcXaOitAvcctxEERhnmK?=
- =?us-ascii?Q?ilNrY89x+5UzgIn2W/gQfOxMhEBCNFUXTy+qLqHgif3qDj6pskXG6mIUxy82?=
- =?us-ascii?Q?jPv5YqHLr4ea4+cvMoSuX3DxaODwPwg5AJY40Bx1R5uoFzkx6EdAuTPtWUg4?=
- =?us-ascii?Q?tSsOIOFSwsJfc65pGPo0JO9vUsXWVA61q+oJ7ZjGqZbU77uoAJe1waopNoSE?=
- =?us-ascii?Q?MTiWRsDf4GRL0yY+lHeOeCfwUKmldRPf8me64rRJaseoupbPXbVOMSm4g06s?=
- =?us-ascii?Q?iqME9QdeKewKm5hZOB5W6WSX2CkOS5RigamlHdB61VsGJYBBae7VBbnGliBG?=
- =?us-ascii?Q?QN6kug7v/NS7KI4gNL7cxv9Yl2opXEawcl9PRC7Fd9LJkCvH6X9bT0y75rPF?=
- =?us-ascii?Q?0gC6US0662sdYEsoUcDejwvQTERVjE2bzKdVtY61pn/UkKsUaRdZ9jhxfecI?=
- =?us-ascii?Q?qqhD0sy/sD4n0o6ZYlo9XIsVGzr2OWr+5fPqTUcKsUTdPrLvVOLEhU4LkiNm?=
- =?us-ascii?Q?QF7bPB0i44JSUdY+O9Co9KvlW0JKzWNPtCv3Jj+90wAbULn0FTP8QXNGsu5y?=
- =?us-ascii?Q?7lrQt3vOLwSvr4VZStH6ytVvSPcU3GQus4sjvvvh4eDHCpItoooUTTXASiaa?=
- =?us-ascii?Q?2G/8+i7Z+ddOFzCxlhiTuSIWVZfYVmFFcYf58UFJUjsH5JZuTwJC26omMYi+?=
- =?us-ascii?Q?p2xJ5j2SDnTOOrnM2mwiU/MsDniAkfJWXXdZlB/oVn8GIH2s6b/8N9koTGkc?=
- =?us-ascii?Q?A2ob6RWTmSVeuz4dkz4+IqkM6WO2cw+mcaxckbQaZCBD0hl41/X57fnqIK80?=
- =?us-ascii?Q?zvGAFngvUWrPGchc/vv2qduT+Wa2BF63UHBwp8Pq4f81YbVdUmGeEd8PCRYE?=
- =?us-ascii?Q?c7zeQRbemfHhqkPVZ019xElkMcKZi3hmsuZyUN8B2GDW8BIC2RSkYyIGMPFE?=
- =?us-ascii?Q?WOecBQLcQswKKpOkoz4tR/ySXzEMXlFSRiBy9pFvafEA/qro8varVbEvMhoo?=
- =?us-ascii?Q?080kLZkd3bYaScUA7y2d6d+Gt44i3tODu4mmU+jl4g9gewwRf8PXyJgmLtMJ?=
- =?us-ascii?Q?8TMh10FqHO7/7JaGhDSsanZmlcuedyScnX56/GohdJ7cRlL9tFx7g9Aq1iCP?=
- =?us-ascii?Q?hfd0MWhpcz8zU6N0biLmj2e52qs89HKIy2bo6EXcgg5kRvJQR4phVwdd23PL?=
- =?us-ascii?Q?rxS309CXz2Ej1qECeo3EB5pxfX0wjPaqNHyopYNf41Cj9MD9eiUfpS/TNC6d?=
- =?us-ascii?Q?bXo/r+kGbG/EnvI+8Cf118ztmL1U+G5dAZscDXH06j9r/w8GHMTMwPFoBhE5?=
- =?us-ascii?Q?19SyVCvMy2e8MLL/0WMbNHkn16Fv6C3WyzTcx1m3mFsH3/5csIaxPhGH/1Xq?=
- =?us-ascii?Q?RebU41lnQUTil3d1tUhT9lX/cRVEpjBdTf+tBp7rNSxpG674fH91Koo1IF8C?=
- =?us-ascii?Q?XwRA6OrVsqh47rT4kX1W2SWXiHYnq3N3ocnAuke6Tuc8kZLanFhxbZXcESHu?=
- =?us-ascii?Q?vIoIqHwRKAmamk+6n5G2Pk/M/TW4aX8OcfwquKoUh8/MZIvidD3dDqQ/cTlO?=
- =?us-ascii?Q?cbIWxCiWkfTmYotbRux1lvJsAm7dUdztoweu/3R7lbFAx/8mJ3B52UTZtqck?=
- =?us-ascii?Q?n9lS4EjWJ9a84qzJ4UrRBPFeSfCqN9qplSSKw0rtL6HuA8mACHzL?=
+	=?us-ascii?Q?foA2BbOCirFbcdozKHYKZQLGf7MBYvxWlO3u0QCxfPEfE7yuooOm2uhdv9B5?=
+ =?us-ascii?Q?IcdGP18kRUw5PkjKPhZH4jxVAXyNXDr4mEFB+OyZu05NM32QpgrLCka9fVWb?=
+ =?us-ascii?Q?NIRV14lRhkZ8fMgPqZVtx+Papb9JIFAqvOQuid+lewZ5C4Dcm0K5pkWpw6cB?=
+ =?us-ascii?Q?zclZcNEr4mEa36hn1CUPwby8fROXTFjDrMMgTQZH2tjCs9IhYHTspZUpAUp3?=
+ =?us-ascii?Q?QSctkUc5nOWMskpQQmCKz423/6qOO6rUrKa2xUu7++tVUPdltrh6cVMzc4sb?=
+ =?us-ascii?Q?sC9eFTny9y5MgeUb1Qg3GchoQa+/QvYtDrEbtRfg/CsoIo2cGhZ5NrdWGGe2?=
+ =?us-ascii?Q?DHcOhCQOnKPW1uIHl2wugX594lTMg/MpaClitcpiRC2CymG9QoWvlbqHe6BX?=
+ =?us-ascii?Q?KycNYi+9Do7L2duOOCDy70OSIQuv6sDwsxCpp5W89I2vYWjUZTjumoe8fP82?=
+ =?us-ascii?Q?HXdIgburK+UDbwUY1MJTLRkQWWhHT2rwdLltFS5CH4pUxi4cJ3Bmmoc2mcJR?=
+ =?us-ascii?Q?Pz9wJuETsq318DqC/jG5agQ2ms5EhD36nDiOMwvBuqjswvpwFttZRgdKihBC?=
+ =?us-ascii?Q?eUmLRLS3d/DN4Zri1JddCpqYL1G/+UnOAEXTlZxFXFo+IEkN8qAksb7YQfYf?=
+ =?us-ascii?Q?Tuuok+BJzbRd4CB9Br7sZWThi3x1bx6QhJ0DqmcbNZbJ9O5tZkCLWclJ3F8Q?=
+ =?us-ascii?Q?q6Up+pjphiyvA9Jeo/WmS9Feu0n0FHftBlQlF8yKo6E8nawraugfTMpkUI1y?=
+ =?us-ascii?Q?z/mywpGMB1KsbTbiCbYprNSLYxEQtSJeg6olh/O5LoHtzwu0/r4WcKZIqN6p?=
+ =?us-ascii?Q?fQcgFcqHO3pUb+NY9oAnIFdt6Jdokl+ISaTW1DFBY2nv4m0R3QGUwz161ulq?=
+ =?us-ascii?Q?nJXVvZGBTnSPbttRFOr602qo3fIdsp+HkPVTPih+CN+BHifRHuGv9zUaKefq?=
+ =?us-ascii?Q?lNC/jY1+s3t2eTqMfN40N3V6iyGyLDVhuJqVQNnaAc6OPw6hPRicR/ej1w4l?=
+ =?us-ascii?Q?xl0oJ831dX4afxDII7ZjickoZMenCvei4g58AekvHu/ewJPW1rGaNvQD8rTG?=
+ =?us-ascii?Q?+ViiVymJBlZTIPyoJczzpPG4GUYEj7ncTlQ8jYsYB8pJymmuzqyP7+T+Cqfc?=
+ =?us-ascii?Q?nFM3tb1W+Lv3Pz1oPSe7LSqVfWk7cSfAm6nUAOEW1ySFEfzYkKPnYxs1AmXx?=
+ =?us-ascii?Q?fHEVpbZIZLXCRxRvb8hjHd67v3Z4Vd8Q7KI3iuqvjNYXmR0YcDl8bISZHTsE?=
+ =?us-ascii?Q?9eUZBaFN3KL+8r/ZLKcywTAkjO4KSgu59noHjrfymXNdE1fgqtGfBYmB6XiU?=
+ =?us-ascii?Q?dm07ptwSsvl/gRmTUh1qNfGEAOc4ZeWW5YBOyOSpOixmfMiHL8nrnoEeIjB8?=
+ =?us-ascii?Q?9wMlaWPHcjQ4g+SS8lKooxOTXSF5wqK2oerGbh3462e0oMAvLGNZuMLbcpz1?=
+ =?us-ascii?Q?68jucTUYB4A3XFnSuSGhPTO6p7PcGJZED9B/BX514iY/d3jqsimrnW41REh/?=
+ =?us-ascii?Q?SXaikR6DwDvo7Jtyu5GGYzgJuw7S0Zr0EApEtd0p2pKReBLPTpcXIVxxNkgK?=
+ =?us-ascii?Q?HNZyplrM3wLIBQfA+KFpP38jGcXJZhwPFnw+O9feW5awNC8yetAjm7KPewUs?=
+ =?us-ascii?Q?MP55lqPe/HBNZwiDefzq/6gvfnwLSRqp4Vs7EYYoV39tAj/r95NxeJPUJwkN?=
+ =?us-ascii?Q?WhWk0GVfWXiqShDuo9VFUnJ+ACxoRY41uMa+Ma6qAk0iAdfa93ffpWgYCW9z?=
+ =?us-ascii?Q?eAszFsQbzhmdx4PSLsztpM61f+ujzNzM2Hz/AAErelIrm+eFdntq?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: 624f2c49-b60a-4f24-33d3-08deb7029617
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0561395-0037-4c17-f234-08deb7029693
 X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 06:31:26.9678
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 06:31:27.7908
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nqc/W++5KN6+Nwc9r+qNZu6LBC/V0R7BZDn68qraGJZL5iYp+zxk4R/N1vLkKahDCY/h59Pt9WfMMfYcU1rRrg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: brp+YXu8E8W9s66agHhutu4EnGlYKyJ/7nMZenCqiVYImyo59jWynRKJlm0wBqZ8tjQJM/n2d0E67nlac/LiJg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9P286MB7818
 X-Spamd-Result: default: False [1.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-10606-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10608-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[valinux.co.jp:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
@@ -164,43 +164,103 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,valinux.co.jp:email,valinux.co.jp:mid,valinux.co.jp:dkim]
-X-Rspamd-Queue-Id: 9690959F7D9
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,valinux.co.jp:email,valinux.co.jp:mid,valinux.co.jp:dkim]
+X-Rspamd-Queue-Id: 54A1D59F7D1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add a match-data flag for devices whose DMA register block starts at an
-offset inside the mapped BAR. Existing Synopsys EDDA and AMD/Xilinx MDB
-matches keep using the BAR mapping base directly.
+Add an optional physical address override to struct dw_edma_block and
+use a helper to compute descriptor block addresses.
 
-No functional change intended.
+No functional change intended. Existing EDDA and MDB block descriptors
+leave the override unset, so the helper still returns the same
+pci_bus_address() plus block offset value.
 
 Signed-off-by: Koichiro Den <den@valinux.co.jp>
 ---
- drivers/dma/dw-edma/dw-edma-pcie.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/dw-edma/dw-edma-pcie.c | 34 +++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index 651269708cc5..6b375a58c550 100644
+index 6b375a58c550..2a95fb9d5fc3 100644
 --- a/drivers/dma/dw-edma/dw-edma-pcie.c
 +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -88,6 +88,7 @@ struct dw_edma_pcie_match_data {
+@@ -54,6 +54,8 @@
+ struct dw_edma_block {
+ 	enum pci_barno			bar;
+ 	off_t				off;
++	u64				paddr;
++	bool				paddr_valid;
+ 	size_t				sz;
+ };
  
- #define DW_EDMA_PCIE_F_DEVMEM_PHYS_OFF	BIT(0)
- #define DW_EDMA_PCIE_F_RAW_SLAVE_ADDR	BIT(1)
-+#define DW_EDMA_PCIE_F_REG_OFFSET	BIT(2)
+@@ -365,6 +367,18 @@ static u64 dw_edma_get_phys_addr(struct pci_dev *pdev,
+ 	return pci_bus_address(pdev, bar);
+ }
  
- static const struct dw_edma_pcie_data snps_edda_data = {
- 	/* eDMA registers location */
-@@ -450,6 +451,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	chip->reg_base = pcim_iomap_table(pdev)[dma_data->rg.bar];
- 	if (!chip->reg_base)
- 		return -ENOMEM;
-+	if (match->flags & DW_EDMA_PCIE_F_REG_OFFSET)
-+		chip->reg_base += dma_data->rg.off;
++static u64 dw_edma_get_block_addr(struct pci_dev *pdev,
++				  const struct dw_edma_pcie_match_data *match,
++				  struct dw_edma_pcie_data *pdata,
++				  const struct dw_edma_block *block)
++{
++	if (block->paddr_valid)
++		return block->paddr;
++
++	return dw_edma_get_phys_addr(pdev, match, pdata, block->bar) +
++	       block->off;
++}
++
+ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 			      const struct pci_device_id *pid)
+ {
+@@ -465,9 +479,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 			return -ENOMEM;
  
- 	for (i = 0; i < chip->ll_wr_cnt && !non_ll; i++) {
- 		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+ 		ll_region->vaddr.io += ll_block->off;
+-		ll_region->paddr = dw_edma_get_phys_addr(pdev, match,
+-							 dma_data, ll_block->bar);
+-		ll_region->paddr += ll_block->off;
++		ll_region->paddr = dw_edma_get_block_addr(pdev, match, dma_data,
++							  ll_block);
+ 		ll_region->sz = ll_block->sz;
+ 
+ 		dt_region->vaddr.io = pcim_iomap_table(pdev)[dt_block->bar];
+@@ -475,9 +488,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 			return -ENOMEM;
+ 
+ 		dt_region->vaddr.io += dt_block->off;
+-		dt_region->paddr = dw_edma_get_phys_addr(pdev, match,
+-							 dma_data, dt_block->bar);
+-		dt_region->paddr += dt_block->off;
++		dt_region->paddr = dw_edma_get_block_addr(pdev, match, dma_data,
++							  dt_block);
+ 		dt_region->sz = dt_block->sz;
+ 	}
+ 
+@@ -492,9 +504,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 			return -ENOMEM;
+ 
+ 		ll_region->vaddr.io += ll_block->off;
+-		ll_region->paddr = dw_edma_get_phys_addr(pdev, match,
+-							 dma_data, ll_block->bar);
+-		ll_region->paddr += ll_block->off;
++		ll_region->paddr = dw_edma_get_block_addr(pdev, match, dma_data,
++							  ll_block);
+ 		ll_region->sz = ll_block->sz;
+ 
+ 		dt_region->vaddr.io = pcim_iomap_table(pdev)[dt_block->bar];
+@@ -502,9 +513,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 			return -ENOMEM;
+ 
+ 		dt_region->vaddr.io += dt_block->off;
+-		dt_region->paddr = dw_edma_get_phys_addr(pdev, match,
+-							 dma_data, dt_block->bar);
+-		dt_region->paddr += dt_block->off;
++		dt_region->paddr = dw_edma_get_block_addr(pdev, match, dma_data,
++							  dt_block);
+ 		dt_region->sz = dt_block->sz;
+ 	}
+ 
 -- 
 2.51.0
 

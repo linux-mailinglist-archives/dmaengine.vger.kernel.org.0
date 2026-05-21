@@ -1,163 +1,255 @@
-Return-Path: <dmaengine+bounces-10707-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10708-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iGMQCU1ID2r5IgYAu9opvQ
-	(envelope-from <dmaengine+bounces-10707-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 20:00:45 +0200
+	id sH/SFixGD2ptIgYAu9opvQ
+	(envelope-from <dmaengine+bounces-10708-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:51:40 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 907F55AAB71
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 20:00:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B44365AA9A1
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 19:51:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 82E2A306E651
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 17:31:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8DC893046FDF
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 17:45:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1E003DF00F;
-	Thu, 21 May 2026 17:31:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 012093ED3C7;
+	Thu, 21 May 2026 17:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7v2z8ZR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eBU4r6q/"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8903D9036;
-	Thu, 21 May 2026 17:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7423E316F;
+	Thu, 21 May 2026 17:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779384662; cv=none; b=nAp4ImNR41GarK2aMU0rN3xdxJAJkVaY/J4LymHQwzlkG1fIbhLRouddKHfpGD2NUPqaqbW1qziwqHKZqVF0+4Ux4Sv9Ug6PNkuuJUkmrmrL6kJYVaVuuj+VqA/mGrpHabOS1CBDd2PCaL3OOXdxNHb0uE0t9QrzamW/WvgfqOA=
+	t=1779385511; cv=none; b=GNtIVJx6BEryH7o0QxHw2xDcIdEmI2ln/G6C69DJQi97hjAlPZswGcYbGJtl5EcGMrNryzMlN6F7Rj+mjNXHYIE9o896G2KILf415BP86HO40TFvMVq5vnXymYB7o+nkfI9uGwsd80tIwY8xM8N8WvWLUVTtaAobtcL2X4Zd0yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779384662; c=relaxed/simple;
-	bh=9XJdbfgv4z9kk1tnll5YqOQVu2RhWQi9Uybxyermr78=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RkqV12WfpieWndm7tux27I5lAG/ggwJBoRIBRH+83RHrrlryHwCbuaqadz+cE5TYOFRZFqljm6bT/c/mTJyPv3+bWHrPql3wajiDMpppcT8aG9+2tV2fe6H8NX56VkW/+Ksu1AYhJVGOqAFDs4YfZrxjVJpzKvwSPemZ7oFh9UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7v2z8ZR; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A7131F000E9;
-	Thu, 21 May 2026 17:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779384661;
-	bh=8njoPscqTq937OjwscNew/6YWYe+q4Hky/XitnHgDjw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=k7v2z8ZRmoeQ7KtOjeJ55ogR0hqmrxP9Q7Hd/l0Mdfz7asL+6KeXcC+w37tgQAmmQ
-	 ql146zABwqAqsNx5hTB02yul/BS7YQBdoyNp/PO4U5VfVZ8fzl/BjhZO7O862SmiJd
-	 hiRVb5SKKh7eFahRL5zhpSyunmvckgNsHiEheeq9P90wHOzF0foWKsww8dxoNa6of5
-	 JNGDIKodtTJ/mgbFEu7d2Q+BvBizdbuMYvtB1J+0djv72dHgbCj10/PFZU9f62Mrxx
-	 awQHh8isG7KV9T4gufh40gr8K0w6xFgvfNb7YjbrX1eNlRUQhOhaLI0FYb+pgnftK3
-	 /V1FW544/QA1Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 3/9] PCI: endpoint: pci-epf-test: Use
- dmaenigne_prep_config_single() to simplify code
-Reply-To: sashiko-reviews@lists.linux.dev
-To: Frank.Li@oss.nxp.com
-Cc: linux-pci@vger.kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org, imx@lists.linux.dev, vkoul@kernel.org
-In-Reply-To: <20260521-dma_prep_config-v7-3-1f73f4899883@nxp.com>
-References: <20260521-dma_prep_config-v7-3-1f73f4899883@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 21 May 2026 17:31:00 +0000
-Message-Id: <20260521173101.0A7131F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1779385511; c=relaxed/simple;
+	bh=sU3q4ei5VqXFeemg2pdBcbpXy8Z2qTRY4hHBwMHyr+A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=I5VemjC8tNPsOFG/yt8vxNVmvKftc53qZd2Mr9eCU/OJUeqHL7x0cOR3FXdtpNul2f2z4WGi3cvLXFTY3X2ILV/dU4AaKtxgstfXrS7EVosx5UKQNO2oi6ZV3MIl2DOcN4RYGpep8j2DEXNK3qHHzF9mRkQMSWi3hiqWeJ4acys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eBU4r6q/; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779385510; x=1810921510;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=sU3q4ei5VqXFeemg2pdBcbpXy8Z2qTRY4hHBwMHyr+A=;
+  b=eBU4r6q/Pfly7X1yJqCLEHmyhpQJlV2crbXifUpUKCUV7dlTkEqmae1a
+   AKceYkxuO1zsrSOCHkjdDFGmvavXdwKnO5at9Ha77MIU+4AQNzCNl91t3
+   gn/G98vXvWp3nOTNJa5kS7jQCy7kdG5BgwPqzrtr5jAam2wVSnH/ecHI4
+   GxTC6OsY/Gte2p/rlOIc+UMKrRW/k2kpLoDax7m+oSw1fpBccCyzualiP
+   Sn6OUbc5OrTCm6t/8e2kHMIcl3aWYHH6VE2JhwXCsGbyIMLanNaefDSrT
+   3Fx6S9FQEF/3FNAkW3k8tLsaFhlaDR13eozETdv3PTBgoc/MLi7Gw7BPq
+   g==;
+X-CSE-ConnectionGUID: 9yrXBPapSeugoewNSa8U/g==
+X-CSE-MsgGUID: Jeaco58dQ0KT6LTcn38xnw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11793"; a="105773552"
+X-IronPort-AV: E=Sophos;i="6.24,160,1774335600"; 
+   d="scan'208";a="105773552"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2026 10:45:08 -0700
+X-CSE-ConnectionGUID: sVvxl8W3QX2Yx8AK13BLJw==
+X-CSE-MsgGUID: XZM0S5M8QcaTj4wM3UKoHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,160,1774335600"; 
+   d="scan'208";a="236347421"
+Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.244.167])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2026 10:44:41 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Pengpeng Hou <pengpeng@iscas.ac.cn>, Petr
+ Pavlu <petr.pavlu@suse.com>, Richard Weinberger <richard@nod.at>, Anton
+ Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg
+ <johannes@sipsolutions.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len
+ Brown <lenb@kernel.org>, Corey Minyard <corey@minyard.net>, Gabriel Somlo
+ <somlo@cmu.edu>, "Michael S. Tsirkin" <mst@redhat.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Bart Van Assche <bvanassche@acm.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Laurent
+ Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede
+ <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Bjorn
+ Helgaas <bhelgaas@google.com>, Hannes Reinecke <hare@suse.de>, "James E.J.
+ Bottomley" <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, Daniel Lezcano <daniel.lezcano@kernel.org>,
+ Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Jason Wang
+ <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio
+ =?utf-8?Q?P=C3=A9rez?= <eperezma@redhat.com>, Jason Baron
+ <jbaron@akamai.com>, Jim Cromie
+ <jim.cromie@gmail.com>, Tiwei Bie <tiwei.btw@antgroup.com>, Benjamin Berg
+ <benjamin.berg@intel.com>, Ilpo =?utf-8?Q?J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>,
+ "David E. Box" <david.e.box@linux.intel.com>, "Maciej W. Rozycki"
+ <macro@orcam.me.uk>, Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>, Sean Christopherson <seanjc@google.com>, Paolo
+ Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Vinod Koul <vkoul@kernel.org>, Frank Li
+ <Frank.Li@kernel.org>, Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Aaron Tomlin <atomlin@atomlin.com>, Alexander
+ Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Dmitry
+ Vyukov <dvyukov@google.com>, Andrew Morton <akpm@linux-foundation.org>,
+ John Johansen <john.johansen@canonical.com>, Paul Moore
+ <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn"
+ <serge@hallyn.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Georgia Garcia <georgia.garcia@canonical.com>, kvm@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-modules@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-mm@kvack.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-acpi@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+ qemu-devel@nongnu.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-pm@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org,
+ linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+ virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, netdev@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 10/11] treewide: Manually convert custom
+ kernel_param_ops .get callbacks
+In-Reply-To: <20260521133326.2465264-10-kees@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
+ 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
+References: <20260521133315.work.845-kees@kernel.org>
+ <20260521133326.2465264-10-kees@kernel.org>
+Date: Thu, 21 May 2026 20:44:37 +0300
+Message-ID: <5cd0c8dde3687d0aea765f2f21f5e1cd8ba83028@intel.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
 X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10707-lists,dmaengine=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,smtp.kernel.org:mid,nxp.com:email,lists.linux.dev:replyto,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,iscas.ac.cn,suse.com,nod.at,cambridgegreys.com,sipsolutions.net,minyard.net,cmu.edu,redhat.com,linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,acm.org,ziepe.ca,ideasonboard.com,google.com,suse.de,HansenPartnership.com,oracle.com,arm.com,linuxfoundation.org,rowland.harvard.edu,linux.alibaba.com,akamai.com,antgroup.com,orcam.me.uk,infradead.org,linux.ibm.com,alien8.de,zytor.com,atomlin.com,linux-foundation.org,canonical.com,paul-moore.com,namei.org,hallyn.com,vger.kernel.org,googlegroups.com,kvack.org,lists.ubuntu.com,lists.infradead.org,lists.sourceforge.net,nongnu.org,lists.freedesktop.org,lists.ozlabs.org,lists.one-eyed-alien.net,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-10708-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	FROM_NO_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_NONE(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jani.nikula@linux.intel.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_GT_50(0.00)[99];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_FIVE(0.00)[6];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
-X-Rspamd-Queue-Id: 907F55AAB71
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:mid,intel.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: B44365AA9A1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On Thu, 21 May 2026, Kees Cook <kees@kernel.org> wrote:
+> diff --git a/drivers/gpu/drm/i915/i915_mitigations.c b/drivers/gpu/drm/i915/i915_mitigations.c
+> index 6061eae84e9c..99cb38f355b6 100644
+> --- a/drivers/gpu/drm/i915/i915_mitigations.c
+> +++ b/drivers/gpu/drm/i915/i915_mitigations.c
+> @@ -95,33 +95,37 @@ static int mitigations_set(const char *val, const struct kernel_param *kp)
+>  	return 0;
+>  }
+>  
+> -static int mitigations_get(char *buffer, const struct kernel_param *kp)
+> +static int mitigations_get(struct seq_buf *buffer,
+> +			   const struct kernel_param *kp)
+>  {
+>  	unsigned long local = READ_ONCE(mitigations);
+> -	int count, i;
+>  	bool enable;
+> +	int i;
 
-Pre-existing issues:
-- [High] Unvalidated `size` from PCIe test registers leads to arbitrarily l=
-arge `kzalloc` allocations, potentially triggering kernel warnings or panic=
-s.
---
+I'm fine with what you have, and I can do these as a follow-up later if
+it's too much trouble, but I suggest something like this:
 
-commit a2e73aaa3ad55ca4f65ceeb2cf567d9f9ac1f014
-Author: Frank Li <Frank.Li@nxp.com>
+	const char *sep = "";
 
-PCI: endpoint: pci-epf-test: Use dmaenigne_prep_config_single() to simplify=
- code
+>  
+> -	if (!local)
+> -		return scnprintf(buffer, PAGE_SIZE, "%s\n", "off");
+> +	if (!local) {
+> +		seq_buf_printf(buffer, "%s\n", "off");
+> +		return 0;
+> +	}
+>  
+>  	if (local & BIT(BITS_PER_LONG - 1)) {
+> -		count = scnprintf(buffer, PAGE_SIZE, "%s,", "auto");
+> +		seq_buf_printf(buffer, "%s,", "auto");
 
-This commit simplifies the DMA configuration code by replacing
-dmaengine_slave_config() and dmaengine_prep_slave_single() with a single
-call to dmaengine_prep_config_single().
+		seq_buf_printf(buffer, "%s%s", sep, "auto");
+		sep = ",";
 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/=
-endpoint/functions/pci-epf-test.c
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -182,12 +182,8 @@ static int pci_epf_test_data_transfer(struct pci_epf=
-_test *epf_test,
->  		else
->  			sconf.src_addr =3D dma_remote;
-> =20
-> -		if (dmaengine_slave_config(chan, &sconf)) {
-> -			dev_err(dev, "DMA slave config fail\n");
-> -			return -EIO;
-> -		}
-> -		tx =3D dmaengine_prep_slave_single(chan, dma_local, len, dir,
-> -						 flags);
-> +		tx =3D dmaengine_prep_config_single(chan, dma_local, len,
-> +						  dir, flags, &sconf);
+(In the printf the sep is just for future expansion, though I don't
+expect one.)
 
-[Severity: High]
-This is a pre-existing issue, but I noticed a potential problem with how the
-len parameter is handled by the callers of this transfer code.
-
-The functions pci_epf_test_copy(), pci_epf_test_read(), and
-pci_epf_test_write() read a 32-bit size value directly from the memory-mapp=
-ed
-reg->size register, which is controlled by an external PCIe host.
-
-This raw size is then passed directly to kzalloc() without any bounds check=
-ing
-or validation.
-
-Could this allow a malicious or misconfigured PCIe host to pass an arbitrar=
-ily
-large size to kzalloc(), triggering a page allocator warning and stack trace
-that might remotely crash the endpoint kernel if it is configured with
-panic_on_warn?
-
+>  		enable = false;
 >  	} else {
->  		tx =3D dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len,
->  					       flags);
+>  		enable = true;
+> -		count = 0;
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(names); i++) {
+>  		if ((local & BIT(i)) != enable)
+>  			continue;
+> -
+> -		count += scnprintf(buffer + count, PAGE_SIZE - count,
+> -				   "%s%s,", enable ? "" : "!", names[i]);
+> +		seq_buf_printf(buffer, "%s%s,", enable ? "" : "!", names[i]);
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521-dma_prep_c=
-onfig-v7-0-1f73f4899883@nxp.com?part=3D3
+		seq_buf_printf(buffer, "%s%s%s", sep, enable ? "" : "!", names[i]);
+		sep = ",";
+
+>  	}
+
+	seq_buf_puts(buffer, "\n");
+
+>  
+> -	buffer[count - 1] = '\n';
+> -	return count;
+> +	/* Replace the trailing comma with a newline. */
+> +	if (!seq_buf_has_overflowed(buffer) && buffer->len > 0 &&
+> +	    buffer->buffer[buffer->len - 1] == ',')
+> +		buffer->buffer[buffer->len - 1] = '\n';
+
+Drop the above.
+
+I.e. keep track of sep while printing to avoid removing it later.
+
+BR,
+Jani.
+
+> +
+> +	return 0;
+>  }
+>  
+>  static DEFINE_KERNEL_PARAM_OPS(ops, mitigations_set, mitigations_get);
+
+-- 
+Jani Nikula, Intel
 

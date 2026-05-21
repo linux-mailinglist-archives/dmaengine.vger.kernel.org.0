@@ -1,183 +1,200 @@
-Return-Path: <dmaengine+bounces-10658-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10660-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wFMTC4YYD2qVFQYAu9opvQ
-	(envelope-from <dmaengine+bounces-10658-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 16:36:54 +0200
+	id wDqEJnsgD2qnGAYAu9opvQ
+	(envelope-from <dmaengine+bounces-10660-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 17:10:51 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C56F95A76AC
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 16:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 889AA5A8019
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 17:10:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id BDE9230DA7F3
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 13:59:45 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 58D00305AF36
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 14:22:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36A483D75C5;
-	Thu, 21 May 2026 13:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 253D73BD228;
+	Thu, 21 May 2026 14:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jodHEZLM"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="nncORnXH"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11020089.outbound.protection.outlook.com [52.101.228.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A5A3CBE97
-	for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 13:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779371976; cv=none; b=Q0Hs7fSWcKC+1PZ2OOVHQdvVZLVqGd/X8rfeH7EazUllzWH5rng+qKczROfIQYU7ki8syxoeyNfhjlilnC694+wjDAoyDZ9WD2uGcDrxSvuJxcp4zBUCxJhBGdjx4vi77eintErj8JWFGJvI0kuyZIT+EZCF76wWsF4OLB55wtM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779371976; c=relaxed/simple;
-	bh=h+4NVJo3wpAjspHwkhwsyzZn+zEl2CEEOehXzRGNdBY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=H8iIa9KoHpK1zTzLxo3M+b7iCSGs6Nhck+TeZO/MUoLGsGRGOnmkgF5WjYb24LyQ3mzhM9is6XDPj+UqTo8SJkkrQTMCpyvfRiIE8MQa0Nkg6z1QWjOveDBuiM/qHgbbo0KoGaDPm3GhMaOWuUJZohMN37nuDvq4JdIfpu/n5KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jodHEZLM; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c829366cf25so9100254a12.0
-        for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 06:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779371975; x=1779976775; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tqeEG6FXEKElqAGUt/Z2qfbIbuB++N7b4Fh1Zt6D5dk=;
-        b=jodHEZLMnrXvcr0U+8aiQ3+8HMthO764B3RtgzEf+7ztkCNfkmkIlQBTfUmc0CO1Gm
-         znKHCX5+9bAECaG80vh/IPP806tKIqZE2l7HZLe1YU0HCE1c+TVzdByotFkWkoU+YEws
-         qLgdufxQuD2gsyG2s9NK2v18HBYBS1w+SMsS+Qi6jr0LEmhA4R7O7tZpYus8VaPMyFeG
-         15VYXBj+eYi7/OswJ5AioWab2qhZVYFRjyf4SpApvc+UkSyiNxbsaWg55EmuzRTPh+T9
-         X183BhHSUrQrVCzdTIOykwkJ84D445JXsSdEAvmO37Cr/WfIjw3mclOhGc8OX4c80G1x
-         Di8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779371975; x=1779976775;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tqeEG6FXEKElqAGUt/Z2qfbIbuB++N7b4Fh1Zt6D5dk=;
-        b=Kznqj5+lBFnkYGUSHwOlEr8D5wyiksGNcVBC2lDmKJKGIzeOMpjxzpegP+WgpvTAcd
-         dEx+2fgRD9DKhKuKzC2vuDycB9oYTHnvyeH6a4tTgj9Lm8SmycXA41uTIayOBie4McE5
-         LEuRU1KKiqkZsyl7RlkdvjfXaIuMD+Ct++dH3ZSYDE3+eLIgyPTQ1ytQMpzh9iHFk4Hq
-         /Do3n/OnvdyTZGo4oMIdJWqXiwPXxb/SWllZ+GzLEw9w8k1Fvn04dYQ+09uCfvxCQeS0
-         x4slAjDYaGTjcmrOn3kvqWW7IQDIP40F1Rc5WB3tJRigCAbx0tODqUwlrWobSJpyXgdQ
-         8Whg==
-X-Forwarded-Encrypted: i=1; AFNElJ+27Ea8cMb7MbQsUsQXFpiboPtTV9LPKRgHYcj6GufRvdm1ScJXN51XzGZH27VOtK4/EiBdDfJcbA4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPqEYqtzqyNCeOB7m4djmhhrFUNpkUyGDwEpHl//fuQa/UcsCe
-	vis+p49Ocv1aPCZAw1Ou234UhGEbew4zhGZJvHxVn6GjxsSWVpsYo1FOXl0LdqECtIdbT26w3Pi
-	vNboP/w==
-X-Received: from pge1.prod.google.com ([2002:a05:6a02:2d01:b0:c79:83b3:cdf8])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:431a:b0:39c:a78e:dba9
- with SMTP id adf61e73a8af0-3b308ac1b14mr3725831637.40.1779371973881; Thu, 21
- May 2026 06:59:33 -0700 (PDT)
-Date: Thu, 21 May 2026 06:59:33 -0700
-In-Reply-To: <20260521133326.2465264-4-kees@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09D93093D3;
+	Thu, 21 May 2026 14:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779373327; cv=fail; b=PJNhW1Jb/dJTaWYq3VhQx5OUJ0fDpPAzSbWR4CCHIx4SLP8Bgae7PKpU+e+f3+PRfjZE5pnYYcSah8/D7w6XnEqwyXbv5G7JKZ26d6WzuM2oxsy+2SrlnAaaUHhDltsiKYuL0tD+JW6nAzvPpzXC/JsiitnmMfhAU/FjeXAUp7o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779373327; c=relaxed/simple;
+	bh=/dfUdUu+0QkJ3/n5gMc7xPvryI/LGij88z0sIM3kEug=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AjfHonHOVja1yxYWlt6HSu6zAP2S6zQ9oIbO84XWpRed8W6ZU+UUAfoPlPENiGniYi4sJEQDEoHHuZi9fxPCWo5fX6uDK0xyKG07GizNJSAhsoXMk/8Z+FCQTcbO1H23T1F4NNoqFWFuzIpGCR5xKNVVqrSWZPM8+AM3NL9ES3Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=nncORnXH; arc=fail smtp.client-ip=52.101.228.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=J9fr4oAPD5bKhEXxi+i6Rb0a7jbutrmqDpsIp0/g4AoPN3dElmJkAGgRA8V89dbV6RnEj5HL5MIVuu6Nqt/VK1MWjW8GtcqzgD2KqOvDMjg5fl1EKqtLTQPaQmaJHe+tmvEXsKFWC2VTFnUyAUGfGVSStFQJEnMimpBGYztLnw/kNcdqQ3hs2qjPFCjeFDNVvdY9DJXwC1re7PaXmlFcDCvWf6dx+EmZNcjeshaaeQYROopI4q+tvyj9DvQfg8qMBQI3ZWfmCZ5JTpCk7g/AZlB+ITBzJAr2qLuqYMoENL7VuJFbaJorDTuxURTNdz0ROTkWaiJeyRaJ5NXZge74Yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=piN/lkaG0/qHFvooOhzlckE2cejxjBEYZiVJIrsnQ1o=;
+ b=i8Qbk8H9b3doQIZc/OFzrT0NI24n/Rrk+TaZNtsrlX18qaXmQCioZbdHPjTJuKeAPzhZOCyEaeRUbOfFUvXmHQ4W+BJEXWC63b5K3xJ1MfWKqTPnJ9U4EjNouUAixHix9K7sOq1k7esRacFPDbZeCmuxrQkW16Iv5ZT3WJstcP7EWkueTLUKmD2FrnVZxjK770cxxfT9asWDQVab+0/CxmpO5Y3/+O6whR0oWSQgPOVlo5osqsYBna3gVabGTlBdbekjgaYOL2kUDYxvAqxH34iw8j8HMRO3K6QkYICURN8jbncJ1P/1bze0ImOp3LItoaF2JJtlWgiZpSg4sIeznQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=piN/lkaG0/qHFvooOhzlckE2cejxjBEYZiVJIrsnQ1o=;
+ b=nncORnXHWjG8n87aboeqx3PhmDJoKdYDsaTEge5a/OB49iHdWx162NnL9UJyftxCWOpjjArt9kghMCLyCa1vP5Yf/BaEr6eOTElvxIXG+edUC4SbwHxh98y7JGuqCBMZvMPQs15lviNZSXXVNeey1QMLcrYNNy3jRGOJAERJbDU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=valinux.co.jp;
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
+ by TY7P286MB6259.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:32c::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.14; Thu, 21 May
+ 2026 14:22:00 +0000
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.21.0048.016; Thu, 21 May 2026
+ 14:21:59 +0000
+From: Koichiro Den <den@valinux.co.jp>
+To: Manivannan Sadhasivam <mani@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] dmaengine: dw-edma: Fix probe paths and register races
+Date: Thu, 21 May 2026 23:21:49 +0900
+Message-ID: <20260521142153.2957432-1-den@valinux.co.jp>
+X-Mailer: git-send-email 2.51.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TY4P286CA0015.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:2b0::15) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260521133315.work.845-kees@kernel.org> <20260521133326.2465264-4-kees@kernel.org>
-Message-ID: <ag8PxTTi5NxT51EW@google.com>
-Subject: Re: [PATCH 04/11] treewide: Convert struct kernel_param_ops
- initializers to DEFINE_KERNEL_PARAM_OPS
-From: Sean Christopherson <seanjc@google.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Pengpeng Hou <pengpeng@iscas.ac.cn>, 
-	Petr Pavlu <petr.pavlu@suse.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Corey Minyard <corey@minyard.net>, 
-	Gabriel Somlo <somlo@cmu.edu>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Bart Van Assche <bvanassche@acm.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Hans de Goede <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Hannes Reinecke <hare@suse.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
-	"Eugenio =?utf-8?B?UMOpcmV6?=" <eperezma@redhat.com>, Jason Baron <jbaron@akamai.com>, 
-	Jim Cromie <jim.cromie@gmail.com>, Tiwei Bie <tiwei.btw@antgroup.com>, 
-	Benjamin Berg <benjamin.berg@intel.com>, 
-	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, 
-	"David E. Box" <david.e.box@linux.intel.com>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
-	Daniel Gomez <da.gomez@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Aaron Tomlin <atomlin@atomlin.com>, Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Georgia Garcia <georgia.garcia@canonical.com>, kvm@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-modules@vger.kernel.org, 
-	kasan-dev@googlegroups.com, linux-mm@kvack.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-um@lists.infradead.org, 
-	linux-acpi@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	qemu-devel@nongnu.org, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org, 
-	linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[google.com:s=20251104];
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TY7P286MB6259:EE_
+X-MS-Office365-Filtering-Correlation-Id: fbdbb905-a77f-4d93-3bca-08deb74451e4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|10070799003|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	k50nXNi/NLtdb6Wy4veCbSUPJpPw620EqrhqxJXjIBZKBTpTBQctARQs2eZxHs6E6e9zF2kUgnSHg9DBnbQ2ENhvkAanD1U/LU9Hqz0mkvqhO2cNGF/PogkIxXynNxtA7OyZKcgmcL3dMyqu9RhbzZQqvwzrOjCeh+IRPvoVEqRGY89TvHgS++3dzSR2xnnR7l8p8cON1MsjDbns4KRVJOZ1bSZOz8ZbwjoevYs/xS3iy+ZqUv3rinhq0trZY7uE8JtuhtC4Ki/6CZQczAt2IxP7LnmRey58uT3fLuu+SpQ/N+NXhT2Uq1HqwJqUh8qyUD/bj5S/vFr3Ki++lFc/vcNc7AAYnMq85/FD1GyzmF5szzhrj/baI4EG25sL7ThWJndenQtngFPHXp0MpIvpbqAfAhuseTpHtBdzZV0mjV2ng1p+EGxkbmJfBjYHmWaYtdJLyGm11Uu+F++ZeZnAsp+b1s+m/8SmIjXY2Ywsi0sHqPlXCtmRDIA+ul8N2pPhfKJ+KU3SWiQAbB1oa7XjMFVTQaFk+TUn3+BJKOJYiLJSk+fuJXemmfN2L0WKfgii9Vjot7tooEMCtQBLaS8pVZ8eB573Vr36CqHMC9pIbZ1haQZP+Hw/CJISjxIGbCLnLDsfKQwegXnk1xel/yKsh+nIg/etngKmgJTlUZ3NECE6tXpxR4h8KfdpXEyrSYvD047UyfCICaiZn8i66He6cw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(10070799003)(56012099003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?2rE1puhcS1fsA+eI0w37wxkoFrt8S7M/JXi8vShN1+lB9gAoO+CHTgEG/QQl?=
+ =?us-ascii?Q?vDhdSHJEKA5tmWjrtjiL+C+OeBnlx4VjUt6FDuzARMp0ZNAPfZFwJbDda11B?=
+ =?us-ascii?Q?nrRnRAG16GaS4QvSlJXI08DDdR7t9yThQblraTE0IK4yOt2qxGP0I82yOTxh?=
+ =?us-ascii?Q?MG2rx34qAYxtrTw5P69ffAlu8AN9aw6N95fYfyJrbx+0Gn87PnWUcXoGST4s?=
+ =?us-ascii?Q?XQ/sMIyWHgtePG2g9ue5pHb+9X7Ao2Boj8lqhGaEMhAjwxA3OBoJMmSIRPqY?=
+ =?us-ascii?Q?ac9Xp+BPjAy8fFpeUSVwwOJVFc72/Q9PVlO6B8EjyriYh1Zxj632QlX1xeai?=
+ =?us-ascii?Q?pJd36ZoH+xv1kVmpticC9eg71WzndAUbQdJ882/I/qGoiceI2O+42RS75w67?=
+ =?us-ascii?Q?Gw+j0UXO8e8IkE+OqL9AkPo+xq61aiq73iIdDnAh8WNcX4KqbpoNTz0PPkNo?=
+ =?us-ascii?Q?kl/T6AZGTWunbERAof7ssLkr8rzKvHEg95kBJjJ1P4AnDIHMuDO2+MW6Tm9I?=
+ =?us-ascii?Q?3PkLC1RVDa7H1ELgEZHB/lnNvcyHjXXtmv9xUZi9szurvRxFOGh8rISITFlY?=
+ =?us-ascii?Q?e9KpaQuCS8og195QLPgEA8FmRLjL/BaVUGTaOT3PFCmQ4iPe6U0/EjkIS9n8?=
+ =?us-ascii?Q?48e1ZsYd6jhiOgKhU73AJRPxfBfsItWNcu9jO+hJr1FNbgjwoaoN4Ca3Iwek?=
+ =?us-ascii?Q?sOZgnljyaiZgKyuJ3Xro5wEKHZqTrJweYyHvB0OgXpR8DLJZuD9ndT+TxXlw?=
+ =?us-ascii?Q?M0rsnZd6ezyQFOodNLkKpC6q8k4LkcC2OCoUrDeFrA7YUCbAEUMqMVD4mB3L?=
+ =?us-ascii?Q?JOLQgJs9+gN+Uvoeaf5c3iJNYKGCZVm80oDcpI7qDCQC4fjCuplnzQu4OGZS?=
+ =?us-ascii?Q?+K0KNBczlwlNRemC8d1hc0YcbzmrQz/XPNpi24C7DoRK1vjbgAfOjznHtEjN?=
+ =?us-ascii?Q?e4YXtZSxe+SFfVs6oRAJtV0nH87hTApbMlMa9fYS0VnOn4JTvylRmvS9ppPh?=
+ =?us-ascii?Q?Rc3aAddi3zyh03QZthtqff2M8wc2STkh8hyc6ctou73GqmwSDBD8oxFtX4BT?=
+ =?us-ascii?Q?tnd0UXNBQ+W0sgQJaKwXsKdy+SevJ82B0E1Op+Un/A0P+WXuMp93jBvAb+he?=
+ =?us-ascii?Q?YuIJvgZXO14/KBSQ6yps8xjtKuKkF23SvF08IrstSiupzHiy+NRMQmOhxDDh?=
+ =?us-ascii?Q?nf8xg/rna2dFBtrznuYdHGNl6QgxYYhmiAwTZjCi4/ocYVjZkA098l9CfWx+?=
+ =?us-ascii?Q?kKhcsgvOQt7RVBT3Hs60UARRnrcuUKPMhoEQ9UGvbkDA8puMNBzfLbZH3CN8?=
+ =?us-ascii?Q?6p8CEltU4KfE3qk6Om86HJ96NPg7rsrgtjZPGWu+IDD9e+KA/O5zVq23JVsc?=
+ =?us-ascii?Q?8E26EHmooRIqe83HIcHKeq5csGNy8DCDzXEBFrxai1p6gLKOKoS07VOKbTi7?=
+ =?us-ascii?Q?6X4daZCSO+xwaHYT/ilscgsGmi2HCi4zxfVbG2SgnwmGKPgGvhqVPZ3qrdCS?=
+ =?us-ascii?Q?5+/sA/PlAWfe0zGQxbI8ID0zr4Tc12sc4qQY3yTn7DeH+H3MM6z6K5D5KHNV?=
+ =?us-ascii?Q?m5Tjm684opwxsuzUUBg+dgbE6RFbgf+dbIWQJIOqGWYm3AX91+S+cbrH3F6M?=
+ =?us-ascii?Q?e7ec+hzWyCQ9zQZnIg4nKStj9F8WCoUIXQcObKyUhNYCVbpUjzxp34XOyKtW?=
+ =?us-ascii?Q?oNKgg7luMyV/Yj38QLg6k4ZU/DziDP0aDMh0xiq4v+WB1hcXMfpbdoQFY6pv?=
+ =?us-ascii?Q?tH9a/Zu9cvHiJ5mp0msNmsUtLPwqRO6LjLLP1jsjKs+yhRIZT+KK?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbdbb905-a77f-4d93-3bca-08deb74451e4
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 14:21:59.3444
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KsY32cH6jcmi9KaAihLHGvNkJUhpea1gwaug1Qdcj3TKSUXeBEDE9L+zZD4hekJM+Y8ySyeUFoCkAzxbSP69sg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY7P286MB6259
+X-Spamd-Result: default: False [1.34 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
+	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,iscas.ac.cn,suse.com,nod.at,cambridgegreys.com,sipsolutions.net,minyard.net,cmu.edu,redhat.com,linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,acm.org,ziepe.ca,ideasonboard.com,google.com,suse.de,hansenpartnership.com,oracle.com,arm.com,linuxfoundation.org,rowland.harvard.edu,linux.alibaba.com,akamai.com,antgroup.com,orcam.me.uk,infradead.org,linux.ibm.com,alien8.de,zytor.com,atomlin.com,linux-foundation.org,canonical.com,paul-moore.com,namei.org,hallyn.com,vger.kernel.org,googlegroups.com,kvack.org,lists.ubuntu.com,lists.infradead.org,lists.sourceforge.net,nongnu.org,lists.freedesktop.org,lists.ozlabs.org,lists.one-eyed-alien.net,lists.linux.dev];
-	TAGGED_FROM(0.00)[bounces-10658-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[google.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[98];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[seanjc@google.com,dmaengine@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-10660-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[valinux.co.jp:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[dmaengine];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: C56F95A76AC
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[valinux.co.jp:mid,valinux.co.jp:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 889AA5A8019
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, May 21, 2026, Kees Cook wrote:
-> Using Coccinelle, rewrite every struct kernel_param_ops initializer that
-> sets .get into a DEFINE_KERNEL_PARAM_OPS-family macro invocation,
-> for example:
-> 
-> @@
-> declarer name DEFINE_KERNEL_PARAM_OPS;
-> identifier OPS;
-> expression SET, GET;
-> @@
-> - const struct kernel_param_ops OPS = {
-> -       .set = SET,
-> -       .get = GET,
-> - };
-> + DEFINE_KERNEL_PARAM_OPS(OPS, SET, GET);
+Hi,
 
-IMO, "OPS, GET, SET" is more intuitive, especially since that's the order used
-by DEFINE_SIMPLE_ATTRIBUTE and DEFINE_DEBUGFS_ATTRIBUTE.
+This series fixes pre-existing dw-edma issues flagged by Sashiko in:
+https://lore.kernel.org/dmaengine/20260521063115.2842238-1-den@valinux.co.jp/
+
+Note: Patch 4 was based on a patch Frank posted in January:
+      https://lore.kernel.org/dmaengine/20260109-edma_ll-v2-1-5c0b27b2c664@nxp.com/
+      Since it has not been merged, I included it here. Frank, please let me
+      know if you prefer a different handling.
+
+Best regards,
+Koichiro
+
+
+Frank Li (1):
+  dmaengine: dw-edma: Add spinlock to protect DONE_INT_MASK and
+    ABORT_INT_MASK
+
+Koichiro Den (3):
+  dmaengine: dw-edma-pcie: Free IRQ vectors on probe failures
+  dmaengine: dw-edma-pcie: Reject devices without driver data
+  dmaengine: dw-edma: Initialize IRQ data before requesting IRQs
+
+ drivers/dma/dw-edma/dw-edma-core.c    |  3 +-
+ drivers/dma/dw-edma/dw-edma-core.h    |  2 +-
+ drivers/dma/dw-edma/dw-edma-pcie.c    | 42 +++++++++++++++++++--------
+ drivers/dma/dw-edma/dw-edma-v0-core.c |  6 ++++
+ 4 files changed, 39 insertions(+), 14 deletions(-)
+
+-- 
+2.51.0
+
 

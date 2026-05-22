@@ -1,148 +1,166 @@
-Return-Path: <dmaengine+bounces-10713-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10714-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0Mb0FI13D2pEMgYAu9opvQ
-	(envelope-from <dmaengine+bounces-10713-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 23:22:21 +0200
+	id abQGGzDED2p5PgYAu9opvQ
+	(envelope-from <dmaengine+bounces-10714-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 04:49:20 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CC8E5AC19B
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 23:22:20 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C028A5AE253
+	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 04:49:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 96C993021B2D
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2026 21:22:18 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 977C4302BBF3
+	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 02:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 422D62F99B8;
-	Thu, 21 May 2026 21:22:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A92629AB1A;
+	Fri, 22 May 2026 02:49:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MK0AAIZF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LxjXGqF0"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98252BDC29
-	for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 21:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A3117C203;
+	Fri, 22 May 2026 02:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779398537; cv=none; b=Qhusun3KREQdsiVXKdsmHY6ezddDB9rTIn+88cHzcwLy0Fw9fogp5/m4V4x7yLV2VUFWVq7hrsBIkm0lchL0Mm0J4dOJ+MM48sG/SCz364KaZcVJQXFmmz1lobgy+JLo8JYmPGuvInejkAEKBpsrfFgxXzoVCETLxtg92jrPcdI=
+	t=1779418157; cv=none; b=XSXWDHHxgDk8BrCSXZFrWSfH359ArKAbIheM3ZZ6b+NRf4tQtfClktDKBecys0+qfLciY3hFuGup4D3LKxgIxnG9z4tUyBMQ97HlpEFRRbQSzln3iFp3Mv0eAJLX2A6vK+VFUbFW+On1uvp3uJPQQGqCh0P1LDcgFKQsY8PHX+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779398537; c=relaxed/simple;
-	bh=tnHXTr9FKZWeKp2C6XnlPZdelHbA9EjSIlUMO5BVtjc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jfuRVq9VpdfFfZ6gvy4VamxqBraVLi9ttFyu+Ri0zEBS4s7VlvZGhlNS9WiUMG7ACPPhxvI0bBEcr9sh2/3hbAG+gl3CCliEk55XB9GKjlB6VC8MsxZSefUBKyff/BKZ1FhrGUPND7EowHJ9EFbmV/UJ99lUVKwA/02D/VIqbG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MK0AAIZF; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-49040362e4aso4789515e9.0
-        for <dmaengine@vger.kernel.org>; Thu, 21 May 2026 14:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779398534; x=1780003334; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tnHXTr9FKZWeKp2C6XnlPZdelHbA9EjSIlUMO5BVtjc=;
-        b=MK0AAIZFTNWH7+x6uSQFK7lKetw1klAQ3UYkbpFZcF6m72Vu3qmFL7V8HvxylzBwR7
-         asusl5TCU9WE+rWXDfwTrqI3GD4GFj/uzKPSqQ3rvzblTYa4sBhPvPaU9rzRhBIobVQg
-         Bragb41kF8Lmw03bg0N6y5QCuZP7QT7lrHHMC/D48hFfGjGUZWyMxnVbIR87x69my6rK
-         Sxdo8H8yl2pqLaM+qnRqJ9l+XLhrP4gGlXSBsbxG16U8YBLsJIlc4AnOreAtDeKXHkDB
-         VHiZYCXkHHZI7lf/EdwG2Pb8kYnQ7I4g4MFWrWflr0QpUXeppy2bXYxE/ae/Wiv93hah
-         Rn1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779398534; x=1780003334;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tnHXTr9FKZWeKp2C6XnlPZdelHbA9EjSIlUMO5BVtjc=;
-        b=VH5wvHs59d5vrXAyB+0WfIh0l1Y4Tac/ZDrSN3JzMjKIPIVHKeVM5jMPDBDwvGIfnq
-         ObXd6SsjZA7aqpeyfyxTpz5XavzOt2g5apfT8ZerscO2KI2H9Fl3WpHCL8mu4W1dLcq4
-         dADwxcohWyVvRyn6bndjoUOtXLJ5YuOnaOA2D9/RfXhvKuQg+YV31R7+myEp45wAb4+i
-         1dUi+dfN0zRRFhBT3zVY/XUzOa//36hAXG1cD/uF+v4IjVYB66TPtzI1jqQdFhMd+7Pb
-         BS5I1CNr/6CMPrDQs/x7sOC+nlworRbL7K3Wy7kfScLZ305om4UT3/4PLoPYVhDFAghk
-         kdXQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9EBaNfHZx9CurkrxHVzZJsEthgP6cV6WdmsZGKRO3DuR7hO0NOlxnDr9Tl+iS2+AwidOYfJpIckZc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBwwBBCregRnrhWqwP6hNdGkZ8KGxrrQuFL1sQ+1sZhag65XPn
-	Sbh1IqO03VFlCf++8OmoMsy3ALmKcauXnp87x1OtFKcyR8UEsIfaN1mao+fRjQvJ
-X-Gm-Gg: Acq92OFOionWHGf9vq6hiYMM9B5Blyi9VVjrqfOKJHuH4xy1jhMAKVmVgr8rNHnS8q8
-	btbjPSx7zpp7/YW2ThzOswG2wEpJZi55kTQNK1wF3stQdfxUFDrqe2LoiThw70y+Tnl3SO7e6F2
-	kEwmLN+yl7yq4JZFmlx3+P4f6VavngaZenkkFTwwCNPmlqiu4hg6E1vBE/iN4UWfJDpQALIAeQf
-	t4g3oFLnCqQcEB2kvFqNA8fitPnUHDh1fiS66KP+fFmK3Hj3QOCGpV1h/7VKs5EhhNGvTDVIeqg
-	TP9axrh7+u42z/UvUGJtlSeUNKB01F6oP2hE6CIkf2j9DdZMavfkuy+KVJd6d3tfStIZgnlXUdU
-	ZMLf/372Cmv/KtLuMRJZV8ihJdwXu0KnFNPTJ9xBNEI/ebdCOp98ujyVVY4xsLrSIB5ws1oHxUj
-	3LoeMqTFBjEf8Lq7vLH7faWgjn+Z+lO2y7Z2q85BorND3oJ9rXZ83ioiizvZZVSzbRU8ED+2jao
-	pKIx2oC96U=
-X-Received: by 2002:a05:600c:470f:b0:489:1c5f:3a9e with SMTP id 5b1f17b1804b1-490424b61admr5406585e9.13.1779398534266;
-        Thu, 21 May 2026 14:22:14 -0700 (PDT)
-Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45eb4977c97sm43043f8f.13.2026.05.21.14.22.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2026 14:22:13 -0700 (PDT)
-From: David Carlier <devnexen@gmail.com>
-To: vkoul@kernel.org
-Cc: kelvin.cao@microchip.com,
-	logang@deltatee.com,
-	Frank.Li@kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	David Carlier <devnexen@gmail.com>
-Subject: Re: [PATCH] dmaengine: switchtec-dma: fix FIELD_GET misuse when programming SE threshold
-Date: Thu, 21 May 2026 22:22:11 +0100
-Message-ID: <20260521212211.21942-1-devnexen@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260317083252.13224-1-devnexen@gmail.com>
-References: <20260317083252.13224-1-devnexen@gmail.com>
+	s=arc-20240116; t=1779418157; c=relaxed/simple;
+	bh=D5IeiSDjugFZkn9oVzBYaOh7lDTbyPXK3WT8ekIrXGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bxUmT5dr8xtHk8787tpSjBkpGmPtfO4qm7hZQlPBnlxYF532YUASSBoeVUXbN5DH5yecBxxPVRHNlciAJgS9WQQDdkB8qzUYU/WTDrMR1BmkqoGvsflWuGqcFZdkdiH4pY7euS2+PPgzyhNZOnTT6XfxZSkODS5dKNX6sV+VNv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LxjXGqF0; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AFE71F000E9;
+	Fri, 22 May 2026 02:49:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779418155;
+	bh=wJP22E17iBj58Uahxubvv9bXvoAsoKOzmX0UJr70Oes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=LxjXGqF02gmrQMXYUKSfx0Ahu9Qo4unz2eZiLS5foXC13a7sMwNg4NzBWfzhn/9A9
+	 ZMCBmzOnAlIZf4RpIOUNRzwIdnNTid78nJzovMGIozK5a9MlASMY2XHxA8207eqSSH
+	 bh0CIL1Ij3ols761ddpKsSN2rHGT5cgKyYP3D59USl0iHNUzp9JISgHI2q/ypbCIiL
+	 bZIKbW9l8oHIQZY5oDsdlapATf2qKO2s8OIUfgSw0zYNNZQyW+lRO67cyzXITUM8Sl
+	 pElanEJ1eFvd8W5G3aZfOmjnsZagn37CUrvZy+YST7pkQZZhpkfux9g69vjEAyNFxk
+	 ryJg7ad40Y6mg==
+Date: Thu, 21 May 2026 21:49:12 -0500
+From: Eric Biggers <ebiggers@kernel.org>
+To: Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
+Cc: Thara Gopinath <thara.gopinath@gmail.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+	Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH 0/3] Add support for qcrypto on shikra
+Message-ID: <20260522024912.GC5937@quark>
+References: <20260515-shikra_qcrypto-v1-0-80f07b345c29@oss.qualcomm.com>
+ <20260514194735.GA1939213@google.com>
+ <d4d35e17-84fa-4c95-9bfb-abfd25ea7f4a@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4d35e17-84fa-4c95-9bfb-abfd25ea7f4a@oss.qualcomm.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-10714-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[microchip.com,deltatee.com,kernel.org,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-10713-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnexen@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[gmail.com,gondor.apana.org.au,davemloft.net,kernel.org,vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_RCPT(0.00)[dmaengine];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ebiggers@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 9CC8E5AC19B
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,qualcomm.com:email]
+X-Rspamd-Queue-Id: C028A5AE253
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Vinod,=0D
-=0D
-Following up on this one-line fix. The bug is still present in=0D
-linux-next as of next-20260521 at drivers/dma/switchtec_dma.c:1102 =E2=80=
-=94=0D
-FIELD_GET extracts a zero from the 9-bit thresh value against the=0D
-bits 23-31 mask, so the SE threshold field is never actually written.=0D
-=0D
-Original posting:=0D
-https://lore.kernel.org/dmaengine/20260317083252.13224-1-devnexen@gmail.com=
-/=0D
-=0D
-Thanks,=0D
-David=0D
+On Thu, May 21, 2026 at 12:21:41PM +0530, Kuldeep Singh wrote:
+> On 15-05-2026 01:17, Eric Biggers wrote:
+> > On Fri, May 15, 2026 at 12:53:35AM +0530, Kuldeep Singh wrote:
+> >> Add qcrypto and cryptobam DT nodes for enabling qcrypto on kaanapali.
+> >> Shikra bam dma supports 7 iommus so update dt-bindings accordingly.
+> >>
+> >> The patchset depends on below. There's recursive dependency so referred
+> >> to base DT patch here.
+> >> - https://lore.kernel.org/all/20260512-shikra-dt-v1-0-716438330dd0@oss.qualcomm.com/
+> >>
+> >> Validations:
+> >> - make ARCH=arm64 DT_CHECKER_FLAGS=-m DT_SCHEMA_FILES=Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml dt_binding_check
+> >> - make ARCH=arm64 qcom/shikra-cqs-evk.dtb CHECK_DTBS=1 DT_SCHEMA_FILES=Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> >> - cryptobam and crypto driver probe
+> >> - kcapi test
+> >>
+> >> Signed-off-by: Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
+> > 
+> > What specific kernel features would this be useful for, and what
+> > specific performance improvements are you seeing with those features?
+> 
+> I hope you mean 7 iommu entries.
+> 
+> Please note, shikra is an old platform and differs with latest platforms
+> like kaanapali in terms of iommus#.
+> Kaanapali is optimised(in terms of iommus#) as same pipe index/sid i.e
+> 4/5 can be used for general purpose or for any other usecase like
+> DRM/HDCP etc.
+> Whereas for shikra, there's dedicated iommu entry for each usecase and
+> same pipe index/sid cannot be used for other usecases.
+> 
+> The performance will be be effectively similar.
+
+It sounds like you don't actually have an answer to my questions, then.
+
+Performance tests (e.g.
+https://lore.kernel.org/r/20250615031807.GA81869@sol/) have clearly
+shown that this driver is an order of magnitude slower than the CPU.
+
+This driver has historically been quite harmful.  People were using it
+accidentally and encountering very bad performance, as well as bugs such
+as crashes and filesystem hangs.  We fixed that by lowering its
+cra_priority.  But for the same reason, even when enabled on a platform,
+it's not actually used.  Linux would be better without this driver.
+
+We seem to be seeing the usual drivers/crypto/ pattern here: this crypto
+offload driver is being pushed by the hardware manufacturer, with no
+awareness of the fact that it's actually useless in Linux.
+
+I've had enough of this.  Please consider this series:
+
+    Nacked-by: Eric Biggers <ebiggers@kernel.org>
+
+FWIW: the approaches that are actually used and work well in Linux are
+ICE and the CPU-accelerated crypto.
+
+- Eric
 

@@ -1,61 +1,61 @@
-Return-Path: <dmaengine+bounces-10772-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10773-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wKdwDt/REGpyeAYAu9opvQ
-	(envelope-from <dmaengine+bounces-10772-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 23:59:59 +0200
+	id 5iaMMd7dEGquewYAu9opvQ
+	(envelope-from <dmaengine+bounces-10773-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 23 May 2026 00:51:10 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8825A5BADB5
-	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 23:59:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 213DE5BB432
+	for <lists+dmaengine@lfdr.de>; Sat, 23 May 2026 00:51:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5D3B3300B125
-	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 21:59:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3B5FC3006965
+	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 22:51:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B11038E8CB;
-	Fri, 22 May 2026 21:59:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A523833F8B1;
+	Fri, 22 May 2026 22:51:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q36ScUAS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHxh/Oow"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D19306742
-	for <dmaengine@vger.kernel.org>; Fri, 22 May 2026 21:59:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624AD34EF05
+	for <dmaengine@vger.kernel.org>; Fri, 22 May 2026 22:51:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779487161; cv=none; b=dSZnUWYzwnkoCRmQys0/tPVMs9v4vOsY9351rhYRPPtrgBdQoEn1S/kne8uBEICPwjQonLOTc+TdNSjG6G3EhSl+XgXnsO5VQFIlul2Y5sq2Hbft8HSqhMqUuIWMTIF3KzJOgR4ggxbq92w+D8WJkqDg6O+ahmHyWKMt5Xqftp4=
+	t=1779490267; cv=none; b=SvUTAwhe02ZYEvMxrqwoZVGz7qg9nJtmbyPAGQBEwmvBNN2FWQUKFUpKJzRoJwViNYfDkl8qw12Cn4kvK8o6PkWp8rrZUxrTtCybT7QXAtMC/JZhkPtEoGfXQeF8G/H6eo/jY9PA8tyInSacEXvqmrw7vqfhuBDmHLbOQTxtHJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779487161; c=relaxed/simple;
-	bh=NTVvQr9iuGZ9/gaXbXtvMVr4Mx4GmahapAuGDeIzamM=;
+	s=arc-20240116; t=1779490267; c=relaxed/simple;
+	bh=41AEb8Ylu6ZQTtPo+Peg4189qUuQ6gUpf9yzB98nklI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=aXCepWSBgOWOc3q0VXIba67EphyL2bdNTvYbeis6WE+AgWYOa+66hap/v4tTMX7NQW/gWCBD5xKr/RYYfHtm8dCZS5NDDvE2ryjBTSJqwi1pYCb2YVXWzch7hLmoFQWYlFx0RIyyrL9kKeYCnJ8sBAOVVMGMf3cUV/2c0xNFxCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q36ScUAS; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65D8C1F000E9;
-	Fri, 22 May 2026 21:59:19 +0000 (UTC)
+	 Message-Id; b=oJR9q/Q0O8tR8Lfv4VNNUzJd8k43zjjYpoTVyMtYPZIG8N3DoyvRd0EAyWPYooYTP2lab9T5qZDn64ltYXjEa9nEg+vChBMngnG1RH13X3NFF7Uh7cZVRD38wiUZz03jo1knXX5S9Gv0qi/LiaZK9PI3ULnA1kLekeBj66e4O8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHxh/Oow; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E7A1F000E9;
+	Fri, 22 May 2026 22:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779487159;
-	bh=BSvl0Fn+97WxpAzACyClnEmJBTO1ko6MtgkNxug71ZE=;
+	s=k20260515; t=1779490266;
+	bh=8WHU8B7vLM1TSkptJmovd9IefgPffqCyT+IjJND8HWo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Q36ScUAS8rf1xhiUAF9xYNIhjjJgz+7mJxcT51YR00V9CBb3QQHGUfBD8qLZ2nOSg
-	 j8C69H1Pi6djg6M4LwKQPG9DS3OliRYytk4Kffo8NPrhorEqACSID+A0jC57MUccPD
-	 iKn9bJ6GsZ+IyJQMC4PeRMPIgi9lseTvyuLQaZhgY+IG8PuW36eT2rnRcd0pTcmKHa
-	 A9RLOKoTxTf2A+v4dIL23RUSNFVZ84tfrL03xGvpCpVhQR4LWTmCVSH/0rxp/IOzbS
-	 P4BWbtsTHcB6bJwaLIF+js/Lq83JlLx2XRr2jbu3krOeZMwTxtmxTbPdg4XQ6oTOe+
-	 2jgu2U5kfAecg==
+	b=nHxh/OowaMcPQ13dXGV6gE0uX4WgSG7Z+h+KiT4wfuMj1jW4e747DO/NoJNmjS2NT
+	 nyE4Dg3lsiCryyOoj5sytKrUCsS1E/IlncOQIE1MNza50mXw4NkNmAqJgzSeJMIt1/
+	 WGdz1PR0Eq+szpeH940wfCmyc72gqZ5ErPpo12CV+IDtrYT9HlxJAKm4zi0UyC5PYi
+	 5S3GSYc4jMnpzceb8ugEv6ejHJzTM6vv3e1tqCJySkAbeAmrSiuk65uMmj1hb9fve8
+	 8c6zPpQjVTRmEQm8eRHJ3txIINefBty1j/KT+DJICQsmN7MgVUdoxVCQUne8hTcMmD
+	 tSl2giNtE6d8A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/2] dmaengine: idxd: Do not call destroy_workqueue
- with null idxd->wq
+Subject: Re: [PATCH v2 2/2] dmaengine: idxd: fix duplicate memory frees on
+ initialization error path.
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Steve Wahl" <steve.wahl@hpe.com>
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260522203414.336549-1-steve.wahl@hpe.com>
-References: <20260522203414.336549-1-steve.wahl@hpe.com>
+Cc: dmaengine@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org
+In-Reply-To: <20260522203414.336549-2-steve.wahl@hpe.com>
+References: <20260522203414.336549-2-steve.wahl@hpe.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 22 May 2026 21:59:19 +0000
-Message-Id: <20260522215919.65D8C1F000E9@smtp.kernel.org>
+Date: Fri, 22 May 2026 22:51:05 +0000
+Message-Id: <20260522225105.D5E7A1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,14 +66,14 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10772-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10773-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -92,108 +92,102 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,lists.linux.dev:replyto,smtp.kernel.org:mid,hpe.com:email]
-X-Rspamd-Queue-Id: 8825A5BADB5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 213DE5BB432
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [Critical] The driver violates Linux device model lifetime rules, causing=
- widespread double-free and use-after-free bugs in error paths and cleanup =
-routines.
-- [Critical] Error cleanup loops for sysfs device registration incorrectly =
-use `while (j--)`, causing an out-of-bounds access or a resource leak depen=
-ding on the failure iteration.
-- [High] The patch adds a NULL check for `idxd->wq` in `idxd_conf_device_re=
-lease()` but fails to handle dangling pointers, leaving a double-destroy vu=
-lnerability.
+- [High] Double frees of child objects (workqueues, engines, groups) remain=
+ unaddressed in their respective cleanup functions and setup error paths.
+- [High] Dangling pointers left by `idxd_cleanup_internals()` result in a s=
+econd wave of double frees when `idxd_conf_device_release()` is triggered.
 --
 
-commit b2f5425f47723d096641d78d72f8c45caffb8a7a
+commit 4ee711bb61961f88e9ddb1a67af212cce348ee26
 Author: Steve Wahl <steve.wahl@hpe.com>
-Subject: dmaengine: idxd: Do not call destroy_workqueue with null idxd->wq
 
-This patch prevents calling destroy_workqueue() with a null pointer in
-idxd_conf_device_release() by checking that idxd->wq is allocated. This
-avoids a crash during error paths where the allocation has not yet occurred.
+dmaengine: idxd: fix duplicate memory frees on initialization error path.
 
-> diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-> index 6d251095c350f..d5ffc641c8567 100644
-> --- a/drivers/dma/idxd/sysfs.c
-> +++ b/drivers/dma/idxd/sysfs.c
-> @@ -1836,7 +1836,8 @@ static void idxd_conf_device_release(struct device =
-*dev)
->  {
->  	struct idxd_device *idxd =3D confdev_to_idxd(dev);
+This commit removes duplicate memory frees in idxd_alloc() and idxd_free()
+by relying on the device release callback triggered by put_device() to
+handle the cleanup of the idxd structure and its internal allocations.
+
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index f1cfc7790d950..227e323cc5a0b 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -607,9 +607,6 @@ static void idxd_free(struct idxd_device *idxd)
+>  		return;
 > =20
-> -	destroy_workqueue(idxd->wq);
-> +	if (idxd->wq)
-> +		destroy_workqueue(idxd->wq);
+>  	put_device(idxd_confdev(idxd));
 
 [Severity: High]
-This is a pre-existing issue, but is there a double-destroy regression
-here if idxd_cleanup_internals() was called?
+This is a pre-existing issue, but does idxd_cleanup_internals() leave
+dangling pointers that could cause a second wave of double frees here?
 
-If idxd_register_devices() fails, the cleanup code calls
-idxd_cleanup_internals() which explicitly destroys idxd->wq but does not set
-it to null. When the error propagates to idxd_free() and put_device() is
-called, this release callback will be triggered. Because idxd->wq retains i=
-ts
-stale pointer, this check will pass and we will call destroy_workqueue() a
+During device initialization in idxd_probe(), if an error occurs after
+idxd_setup_internals() succeeds (e.g., idxd_device_load_config() fails),
+idxd_cleanup_internals() is called. This function explicitly frees
+sub-allocations (idxd->wqs, idxd->engines, idxd->groups) and calls
+destroy_workqueue(idxd->wq), but it doesn't set these pointers to NULL.
+
+When the error propagates back to idxd_pci_probe_alloc(), it calls
+idxd_free(), which reaches this put_device() call. This triggers the
+idxd_conf_device_release() callback, which blindly attempts to free the
+exact same dangling pointers again and calls destroy_workqueue(idxd->wq) a
 second time.
 
-Should idxd_cleanup_internals() set idxd->wq to null after destroying it?
+> -	bitmap_free(idxd->opcap_bmap);
+> -	ida_free(&idxd_ida, idxd->id);
+> -	kfree(idxd);
+>  }
 
->  	kfree(idxd->groups);
->  	bitmap_free(idxd->wq_enable_map);
->  	kfree(idxd->wqs);
+[ ... ]
 
-[Severity: Critical]
-This isn't a bug introduced by this patch, but are there use-after-free and
-double-free regressions due to device model lifetime violations?
+> @@ -649,8 +646,13 @@ static struct idxd_device *idxd_alloc(struct pci_dev=
+ *pdev, struct idxd_driver_d
+>  	return idxd;
+> =20
+>  err_name:
+> +	/*
+> +	 * once device_initialize(conf_dev) is called,
+> +	 * put_device(conf_dev) will end up calling
+> +	 * idxd_conf_device_release() which will free the rest.
+> +	 */
+>  	put_device(conf_dev);
 
-When put_device() drops the refcount to 0, it automatically triggers this
-release callback which correctly frees the parent structures and nested
-allocations like idxd->wqs and idxd->groups.
+[Severity: High]
+This isn't a bug introduced by this patch, but are there similar duplicate
+frees remaining for child objects like workqueues, engines, and groups?
 
-However, in init.c routines like idxd_clean_wqs(), the code explicitly calls
-kfree(wq) and bitmap_free(wq->opcap_bmap) before or after calling
-put_device(). Does this cause a double-free when the release callbacks also
-free these resources?
+While this patch correctly removes the duplicate frees for the main idxd
+object, the exact same pattern appears to exist for child objects in functi=
+ons
+like idxd_setup_wqs(), idxd_setup_engines(), and idxd_setup_groups(), as we=
+ll
+as their cleanup counterparts.
 
-Additionally, when arrays like idxd->wqs are freed in those cleanup functio=
-ns
-but not set to null, won't this release callback free them a second time wh=
-en
-called via idxd_free()?
+In those functions, put_device(conf_dev) is called to drop the reference
+count, which synchronously invokes the device's release callback (e.g.,
+idxd_conf_wq_release()). The callback explicitly frees the inner members and
+the object itself (kfree(wq)).
 
-[Severity: Critical]
-This is a pre-existing issue, but does the error cleanup loop for sysfs
-device registration in idxd_register_engine_devices() and similar functions
-cause an out-of-bounds access or leak?
+However, immediately after put_device() returns, the manual cleanup code
+incorrectly calls kfree() and bitmap_free() on those exact same pointers
+again. Could this lead to double frees during initialization failure or dev=
+ice
+removal?
 
-In those functions, the error paths do this:
-
-    j =3D i - 1;
-    while (j--) {
-        device_unregister(...);
-    }
-
-If device_add() fails on the very first element (i =3D 0), j initializes to=
- -1.
-Because -1 evaluates to true, the loop executes and decrements j to -2,
-which could trigger an out-of-bounds array read (e.g., idxd->wqs[-2]) and a
-crash.
-
-If device_add() fails on the next iteration (i =3D 1), j initializes to 0.
-The condition while (0--) evaluates to false, terminating immediately witho=
-ut
-unregistering the successfully added element at index 0, leaking the device.
+> -	bitmap_free(idxd->opcap_bmap);
+> +	return NULL;
+>  err_opcap:
+>  	ida_free(&idxd_ida, idxd->id);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260522203414.3365=
-49-1-steve.wahl@hpe.com?part=3D1
+49-1-steve.wahl@hpe.com?part=3D2
 

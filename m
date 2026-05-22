@@ -1,157 +1,259 @@
-Return-Path: <dmaengine+bounces-10720-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10721-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2LcMLNgVEGqsTQYAu9opvQ
-	(envelope-from <dmaengine+bounces-10720-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 10:37:44 +0200
+	id KLmrCYMYEGoITgYAu9opvQ
+	(envelope-from <dmaengine+bounces-10721-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 10:49:07 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB26B5B0A82
-	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 10:37:43 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9152F5B0B86
+	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 10:49:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4697A3004427
-	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 08:37:40 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 453DF3018423
+	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 08:49:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33BDD3655D5;
-	Fri, 22 May 2026 08:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A64B53A3834;
+	Fri, 22 May 2026 08:49:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCRYXG2f"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="HNeEnmg5"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11021106.outbound.protection.outlook.com [40.107.74.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B971AB6F1
-	for <dmaengine@vger.kernel.org>; Fri, 22 May 2026 08:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA08346777
+	for <dmaengine@vger.kernel.org>; Fri, 22 May 2026 08:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.106
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779439059; cv=pass; b=aoVOUj/py41I3xeHa144pwXBmSRtzP/jVBK0x7PE3CEme6spovwECaJZNIG5SneMzhpAH1tbYbVljXJIxSP+ZY/YN11pkp5AFnjtHr8QTH2MMkgGe7J8VLD6hAHWdYV2nMRUC4M03xXvNldpfGFgaN4t/iHsPO7nABB5gdlxm20=
+	t=1779439743; cv=fail; b=DSwUW92Sp4jsX+6GunRMTeqGaLJYxhXnGEI1Q9M5XCicP3OpKhb3sqIP5HeluK83ReqskQopahF6vNqM3WGSdwLL3If+rytBoZyIeVg8mDyGsncGq3Yesm5X76DT9/KuZHbehweEBGg+7bFUzQuQWiT0xEBLDgG0G3FVgxI8a/g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779439059; c=relaxed/simple;
-	bh=5nZquihbPzKQf2TTL4InKJfLQQ8/TPP//zh58s9RtqU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OylWSSzj5Z5Bqpwj4HMomm+ad9ODlykOrECli7Cywx9W67zNWI08zGpujSGFvKIchHcB4s/BegaPkQzx77choUYLw9I2CtdFuoeCLr5krWIUbyltN2EKq7ODzUE/G124dPRHdEGkj9o/KY7ZLBaAODBL2+2n6E6yXmhJbdzroO0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fCRYXG2f; arc=pass smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-453903ee4adso3624708f8f.3
-        for <dmaengine@vger.kernel.org>; Fri, 22 May 2026 01:37:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779439056; cv=none;
-        d=google.com; s=arc-20240605;
-        b=jGNi/osBkaiQ7htwV/hbvXcZhlOhXDdfzHElQGrDMKQxgAgVGDxDA+G33ngCFipmb5
-         DC2ePEQYvV3s2k3sa2EVB4cJSLaUEtFaJKL2D3l6vezy8C4rKsAV08qTIvzMeAT9b17C
-         Yt08nmVG5aB2wGT+pj4hdWrqxLWZy1UWkrEASx0qKt+yA4MwaLWJ8s0sMtN8i23M6xSv
-         uNYTXb1IvU9wyH7QeDc+58abDFiWwhWpx2NyDPJzL7Ra3QX4fdgKY272AIjFA2gS4O7s
-         kVNwxgy5pqb1CCHAymFRShmpLG4pssljjTo14WwJKjZbkB4GhvIPeSny1y7NEit3zzQT
-         b+/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=5nZquihbPzKQf2TTL4InKJfLQQ8/TPP//zh58s9RtqU=;
-        fh=gXv4s4sQJvBle2pTc1jLdXhw1XBgG06HmH7r8PSL35U=;
-        b=A2t2dXt8HLTnLmiGBID3nYtKzch+vZWYeds28p0ewB9xFOdsXrwNRLpcLj4lZXXL+3
-         wNVePi/FzOoyAt33NuwOfS8Oex+BeNIFlhghv29opM6JlLVy9raQZCb606rfgathaUTt
-         I+C0Z27T5CoeIE2lKdosL1tq/93IVrqtXd8pmZ9oG1q03Q4+7VKdJLqO/BrEsEF1rHrP
-         btorQvZwFWwlxgQlod6yudKpXEWvj892jAbkfED04Q5uvURevfZzGA3kvavkiThDnddJ
-         fdDIpm0gEzU+QN/PfFGRAm4m6eoJ/woOQdUmgtBpsHnSiyRIminxO17zLtobcMtNOvWm
-         Z10w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779439056; x=1780043856; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5nZquihbPzKQf2TTL4InKJfLQQ8/TPP//zh58s9RtqU=;
-        b=fCRYXG2f8rUjFAlDN4Et0aelckEz0AqVX+4TokxuA5aOdyxglggKuTytLKVJnDg/GS
-         zr53NSpcMzUOzoecTGNSw8+jMpoog/XrTGya4AEqQobiOsLvUqD+fZLmO3Yg6a/Krp0n
-         F4Tk6f+eeTHisp2PY0gR49B8UYUdUFxwboBcPEbDRt9wz5z9fAhQbRROdZU4GLOJFQn2
-         Phzs0ziXdtq5NsWRgjzuIAFBcLCM4uar2HE63sQiX9afLzGolbXsBVpb48S0sIS0z5mV
-         PKD3hXN7WPLY8i+3q2dSQM3q3McFY7YIPIgOMJPKaC9qLG/chNOwaZJOQ+8vvn/09dlH
-         36jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779439056; x=1780043856;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5nZquihbPzKQf2TTL4InKJfLQQ8/TPP//zh58s9RtqU=;
-        b=qcFhoxJM1gI5igDomoZnNbOMfTJuD8N1dfMAEdbWSrPr/ayzmYvcjLx/7kPbhgsP9y
-         Bgc4gcR7a5Acljrbo/SFsg9CrznQ87tEigMmFuOPl+G4k0PNbEPcjk2jLfFPxFOfMFUr
-         jjCnohPXk11khI73q2deZE644hKxM0fNWdvg/aC88SvEKw+utDPpPoZCzl2MX0ndcDdy
-         eID/I4xbYGne/KofMTcFKDYTpAEY4wvtuklY3w/Ku6OV//4OiKrs5lZaMSJq3y8MMV14
-         6YOC7hB/bzz0qVHGZR0vJvGpNGKnpuOROWULLoK76sqRKO1bESZP8lcYPk2j29S0eqhm
-         SV7A==
-X-Forwarded-Encrypted: i=1; AFNElJ9L0kFIV25F271wqiElmsu7WUBp7cQ4dWmbqiby3pCcwSAmV5TWc14RuVeFiLvUOrW/GJRFNv/KXuE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJlTqjRIE68Gsh+H6D+iLIH/4D4bW40HEPYA5/WVAEahhQbtSR
-	rVrLm5aBSlitUtiB8h9Iw4JOqbG8gNBObrDAEVvJBjVJ8dzqh4W3f+knh0AJ3KhZDsVDTFleFLY
-	9J/lkgvGG5JuWgBNcuFLcROcZPwyHmuo=
-X-Gm-Gg: Acq92OEM/mIMtavmWQ0LXMC7zwc1sPt9G2gwH0rYe+TWeWTMGV4GwI3M9b44DicZa8/
-	7wkiJKgTG3DT52H/6lAgkBksbEveHMnDg8LAUxDGpGIUX70PDXExXn+EoCmpzIXPKUbmOfzeVha
-	4IifpSKtp8XX83pmCQQ3uc4jyNnii7I77l5s0KBlnK3vMN3nMCiBYbU1v0+y6soi4dG6bIIn1ru
-	0E7VW2NNXdtsvNdzK6daZttT9K6aGy60XEW+DvAcMnaC83G7xRCs4Sdp9T4OY6awB2P+XGvcGek
-	Fn9BX9tr09YapS2muV6OXhh3szgLwA==
-X-Received: by 2002:a05:6000:298e:20b0:45e:9db6:89ab with SMTP id
- ffacd0b85a97d-45eb38b38f7mr2456719f8f.25.1779439056071; Fri, 22 May 2026
- 01:37:36 -0700 (PDT)
+	s=arc-20240116; t=1779439743; c=relaxed/simple;
+	bh=rG6R5m3LNFOa+RLbnl4naWwbL7SfhWBUpewEykulS1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=DrA8Oq5Z9hHOIuEzPkC/XVey2D5bzJtt6aGgj0xEn4gf2fmWoQEMhcIGZMm41AA0nI+kYSId65UFFlmQmrKbid8tnzLdRxFJrf3LgY+NKjsdeq9Qq3LkWqWm8NuKRUG7V3ewoh51MBTgYAf5Q5luMGOR+TMzgUCaU4P6IJksdIA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=fail (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=HNeEnmg5 reason="signature verification failed"; arc=fail smtp.client-ip=40.107.74.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kuuer6NA2QB/dqjT5OuKyda6I2s7k/tFvqtsxtqBZ6LElEVGEIFXeu4kluoBHqiDkJHaJCz50WIq2x6Wai8yqNz5kUKdAoyMf0L/yypT/E/qiKywpFyRqqW6RClQXPbtotrz9OZJX1/jpz8QgZr6poCY2gGgErkJ0I58ZahDcBVQvArcOmVGRDQvbIOqa2aKVMuOiYddxjblcuniRIUSow0BSDc2N2zAnddY36PONCepQXHz3cdIcTd/itT4nHXpxqisru4SVGvhT87kH2iwpOhbUyOzPn8lCPpICi6N7kIi9YhHoxDQu+Nu3XHkb8EWrXFGZwpSgp/FeEH/dK18GA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hRqpOCbaZxf/wbF7AwZYG2cmyDppWqwIw2WB6XvyMmU=;
+ b=nx67pJ9nZZxi7BZVU/Oeu2LO4r26iTTV75irFK+X3pRUYgUkD54BMSG/Iwh0FjIY3VG5PeqXrUJH3dHxA2jnMh8ossbsbOWUTwNtX9Z8OZFbF5eroxGWdgaAG1dBIMc3PyxXdbi03G99KeyPTqGlzRwOabgrigNyUWPk8xgbdVUL8qO9HzffGJ8tCViGW88FtBGn62BpoFG9ws/feGeCHBj9VAeJjwg5aPJfym9Xzd0DG1Lree4C0DTOq/bXWkeAeWwQGk9h8QBI855EbgsWnB2kNsxmVFjVxHeAgkdrqX9yKV6GA8l5IQ2WjtQf2Il3ZnDcU3STCx/9ZDinf2jd0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hRqpOCbaZxf/wbF7AwZYG2cmyDppWqwIw2WB6XvyMmU=;
+ b=HNeEnmg5pLXBTBy/FNd0vulL6KlTvgdcuhq/73KMfpL85bHv6d41fsQLf4+q9eNwele2Ug6fN41atlIQMONlV3gQf30WoFtYIsKSNne2VWpUB9FlMBKGFgANZLZjNVAUYlyrRO84QCLNj6nKf722AIDDGFf81CVOYQnzliMo00c=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=valinux.co.jp;
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
+ by TYWP286MB3272.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:2d1::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.17; Fri, 22 May
+ 2026 08:48:58 +0000
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.21.0048.016; Fri, 22 May 2026
+ 08:48:58 +0000
+Date: Fri, 22 May 2026 17:48:56 +0900
+From: Koichiro Den <den@valinux.co.jp>
+To: sashiko-reviews@lists.linux.dev
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
+Subject: Re: [PATCH 2/4] dmaengine: dw-edma-pcie: Reject devices without
+ driver data
+Message-ID: <a6gnzihfbl6ai4f3xzykx3ppidkihzicofp7flyh27lgsjepom@p5mjzhy7atq6>
+References: <20260521142153.2957432-3-den@valinux.co.jp>
+ <20260521151504.69BA61F00A3D@smtp.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260521151504.69BA61F00A3D@smtp.kernel.org>
+X-ClientProxiedBy: TY4PR01CA0015.jpnprd01.prod.outlook.com
+ (2603:1096:405:2bf::10) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260521144755.3476353-1-maoyixie.tju@gmail.com>
- <20260521144755.3476353-3-maoyixie.tju@gmail.com> <CAMuHMdUOrE0ouHo5759k8ULpFPBS=gyqd7A_k-RTnSSk+MPGvQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdUOrE0ouHo5759k8ULpFPBS=gyqd7A_k-RTnSSk+MPGvQ@mail.gmail.com>
-From: Maoyi Xie <maoyixie.tju@gmail.com>
-Date: Fri, 22 May 2026 16:37:24 +0800
-X-Gm-Features: AVHnY4IZW9UefcyONbqHFIZtE2bXlYDU3wowxWRCUtBJtijkfj1oSK5EbNUHndc
-Message-ID: <CAHPEe=FT4giuwRdCTGt6YKSa8CDJTo3aFXOAzrpn5Uh4KZ5aZA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dmaengine: rz-dmac: fix dead empty check in rz_dmac_chan_get_residue()
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Vinod Koul <vkoul@kernel.org>, 
-	Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TYWP286MB3272:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e842e32-c422-48cc-d1ec-08deb7def6bf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|1800799024|366016|376014|18002099003|22082099003|56012099003|5023799004|6133799003|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	flelqY7MuqN7dh4kcMNJ4WcxLZ8iJmupFLOzBHJKFYRAwIE5a63WiJEduaedZ8JSHf4pphdYS6dqSGhrKEhATKmCJQqKRQhnQwC8epPf3DiokhAoeRQR5zKXY9IbCCCG8ykVREEhlK3hcF0jAinFvELCaAX9ttI7dkc7XQL2CmjevUav22n52mkHgSyv/E8uYBRqIpcTxFsMEkdJs4KZP9Amz2wZ6Wb8bQjfYcwb7b0Vc5cU2YIqc1ym+kImxWGaBtZRWm2Bh74mFYSA/vNkCxdyVYFGgl2TklFyawLFVMP2VLzZcRfpV5xwNtaM813ZhobaV9L6Sqsu0eVGBUD5apqwbMbIjKYeQsUOOf0vLPcX91FbVcXocByU8W74xcGam/2V0ztNlyVaTwU5W2kzbYEx8vO2Kt9On1Mv2tycncWrIwBfZbXGR5J+3PmhDgr6OAzUFylALWEVXigYp8gWqczmpIcqckcL8/gQmLVQs6Ddku+xUHLPHU4QVzOYoeQgkdYrIP0B7uGBK1HmQa09+x1NhlvFJwHUcTpoDo4Ov3QnCaFew4Itd22SRctW4nZcl/3Ctc6tD3pA57qr63/SZa+yqvHawNKKw6aWAyYnnm11dx2zT16MhYDMrZtdnWp55l7iQmvaFBk2uNBcWcrhsg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(376014)(18002099003)(22082099003)(56012099003)(5023799004)(6133799003)(4143699003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?TvRovMc48cW+Lq/Cj89E34znFxj6ixYXus+RqtYMg0Ez2U0oFGD8Wti3ru?=
+ =?iso-8859-1?Q?hLnoHqJ/+Bb07Apclq6CVq0OEA/m6kVoH15p64mCVJB8SxCYLM9cAlUX1u?=
+ =?iso-8859-1?Q?9FlmmPBzvu9hq7ZtczoA5dD0PeB7auuyTHTxg0sp9ePvxff6MVpKPtUv2K?=
+ =?iso-8859-1?Q?guvRVTB/ifNNv/KXWNm5hNc0xGudvPXfQh8duahD/tP2q8POpiXjSzJyfQ?=
+ =?iso-8859-1?Q?Hk47STbMbqD7m6gfJdrbxJRrcgWedVHYBehnzoPaixLM9njKVxNOPT6vRl?=
+ =?iso-8859-1?Q?nAsMENBt4WzGW+PbwtOk/ut5qtvfpUL0byiHmXvMLTL+cgQGHMhXabX3eX?=
+ =?iso-8859-1?Q?x5sYUMzCok+YheXC1bzot0Y8OLc2KWAyLg4mwadbjy3v+kfRHaNDPqfcm8?=
+ =?iso-8859-1?Q?oJy4itIuZViBp4ATCbcQDe47Z8pIc8LhleBsUyBKakDstlKDHShNUAQcEt?=
+ =?iso-8859-1?Q?f2UBs/CC06YlkmCzD3BK6f3aEUoh3hCBL4nPo0t5fHyafv4KAABpa02Yxe?=
+ =?iso-8859-1?Q?B2bkUy2yESkQ1UNyYx+szmYgIYSNSR+jKuWJDszu3jPuFoZ/22AMe2nwim?=
+ =?iso-8859-1?Q?VTc5xlHU7Dqnare5aT29QDVuld6EeXUMYvRdpTreJA/fYVhoaSLd05+d7z?=
+ =?iso-8859-1?Q?hPZYgpJS4kcKjFpnRsbFTmuyKckSZGFtwbDz0W2DiRAamXP+KKYUMBdYAx?=
+ =?iso-8859-1?Q?WvewPCjCndZHV3L2PglYjHGMFk9R+TJYIAiOD4+bkj0f5pXfoxFmVROp/g?=
+ =?iso-8859-1?Q?aSFr0kZwHIKlbZI3Aq11/l2Uuf9KHc7FZUMFyMZPbs30uwZ9RnaDIMcD8B?=
+ =?iso-8859-1?Q?Sx9EhRje29gy1Jze+bXySvkmwhFF1a4yF23nUTDFr6KeifEPQAirGkO6zL?=
+ =?iso-8859-1?Q?bLffKBC1vh8UESE9m4NKVoAiMipRbtRsTtM/dSzaSbIVMcYxw6k6cNywIV?=
+ =?iso-8859-1?Q?G9JpgvcyCaX8+3KVECZBoDFn6cI/sFFkGIYqwHBAZm0xPLpHxsOe8l6S4A?=
+ =?iso-8859-1?Q?lKcV+sl4FdyTrwdTC36v/+BbXiNASUzjVyNu2Kr+J6is4vjnvfl7JX/opf?=
+ =?iso-8859-1?Q?oE5yWwLZ+tym7iluzBqUt+5nVJlveTs3TntANPLknx9i3awYzGnnd94IF3?=
+ =?iso-8859-1?Q?8FhJaDkJ+FpCT4ssqtMKsS+FSf3U1gSq1/v1sNjhiUCJqvxiP1kbgnDa78?=
+ =?iso-8859-1?Q?mUEWYz11+mBfSTaU4xwtDAeTu5DELD+OFwVnKyqjj8polnSBVAOBBkcWeE?=
+ =?iso-8859-1?Q?d0Rb5Nz6rkuVI/bg2iYhSscLt23Ude57ymLBf9Q4mqVCE+SUGvkpEfgr0T?=
+ =?iso-8859-1?Q?pW6ge2FxG460PZ5sdK+RzEprfpomZAl7a6Q5XemTp6ESKafRIWNG85738f?=
+ =?iso-8859-1?Q?rjws2x1Lu1Rle+bxKsdAS9ZGQhFxcSD3v0DkNtaiLMMiUhaGT/aTBLZiOZ?=
+ =?iso-8859-1?Q?itA2uT8ZS8ON1zvK5ClmhvWYJ+9ADZCPPIEV7ItjHoKy25y3nKN4uBfK2Z?=
+ =?iso-8859-1?Q?hzyF0UHotaxmqAdCrNYmpUC1ot3Mnu6fl62D7j/Q/A0Lz8KiBr+dTwk7UA?=
+ =?iso-8859-1?Q?bmFkNDnElcf8mlnOUXS0a7cGfTFpLFJQ8/dKOSL/KT29EgTgEHCcu/zoAQ?=
+ =?iso-8859-1?Q?ZYeC19ykvKDnS7i9yhKbsa5edy+O5y6JS6Sj5rjHKknlJFFNAoZWZmANLK?=
+ =?iso-8859-1?Q?f7RGQyhwhJwfenXfMcCuaTAHVdV6hfzH8Z2aP6pt1zrsaoDG8No7zvDBLj?=
+ =?iso-8859-1?Q?ktt+wmZ9kIzZdgqNlbFVd93hKazJRkJWRr0KNrzIfGqQ0uu8j/nvBidnlu?=
+ =?iso-8859-1?Q?5Diz9WjINRNqQh4NPDu4fxXtIcutZudhwEyagCH77l6gZwaPDQeh?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e842e32-c422-48cc-d1ec-08deb7def6bf
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2026 08:48:58.4258
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KOc8wip0iZ2Rt7iHi3gqYFvtDPDPAmiSWnUs7sM4Z5X8l9RbwYUUUqrlzc5QG4RrtvTU9yl55ItXKlIxXFHvcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWP286MB3272
+X-Spamd-Result: default: False [2.14 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_DKIM_REJECT(1.00)[valinux.co.jp:s=selector1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[valinux.co.jp : SPF not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-10721-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10720-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[valinux.co.jp:-];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
 	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[maoyixietju@gmail.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: BB26B5B0A82
+	NEURAL_HAM(-0.00)[-0.980];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 9152F5B0B86
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Geert,
+On Thu, May 21, 2026 at 03:15:03PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> 
+> New issues:
+> - [Medium] Mixing goto-based error handling with scope-based cleanup (__free) in the same function.
 
-Thanks for the pointer. I had not seen Claudiu's v5 09/17 series.
-Looking at it, rz_dmac_chan_get_residue() is rewritten through
-virt_dma APIs (vchan_find_desc + channel->desc) and ld_active is
-removed. The fix I sent is superseded.
+This should be gone after dropping patch 1.
 
-I will drop the rz-dmac patch from v2 of this series and send only
-the mpc512x patch.
+See:
+https://lore.kernel.org/dmaengine/xcrbweipase44isv6lfrgqos4mrfhc7o3v4f3lzlovekvsubim@yoz4kfxhka33/
 
-Thanks,
-Maoyi
+> 
+> Pre-existing issues:
+> - [High] Missing bounds check for the hardware-provided BAR index when accessing the `pcim_iomap_table()` array.
+
+I do not think the exact OOB concern (See (A) below) is correct since commit
+f09d3937d400 ("PCI: Fix wrong length of devres array") (v6.15+). But I agree
+that the VSEC-provided BAR fields might be worth validating against
+PCI_STD_NUM_BARS.
+
+> --
+> 
+> commit 451669b3f83e6d7ef131e591fd15b9e144ab9005
+> Author: Koichiro Den <den@valinux.co.jp>
+> Subject: dmaengine: dw-edma-pcie: Reject devices without driver data
+> 
+> This commit adds a check to reject devices without driver data during
+> dw_edma_pcie_probe. This prevents a NULL pointer dereference when a device
+> bound dynamically via sysfs matches the driver without that data.
+> 
+> > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > index 87c31d01fb102..c2024fa824e03 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > @@ -314,6 +314,9 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >  	int i, mask;
+> >  	bool non_ll = false;
+> >  
+> > +	if (!pdata)
+> > +		return -ENODEV;
+> > +
+> >  	struct dw_edma_pcie_data *vsec_data __free(kfree) =
+> >  		kmalloc_obj(*vsec_data);
+> 
+> [Severity: Medium]
+> The kernel's cleanup subsystem guidelines state that goto-based error
+> handling and scope-based cleanup should not be mixed in the same function.
+> 
+> Since dw_edma_pcie_probe() uses goto-based cleanup labels on failure paths
+> like goto err_free_irq_vectors, could mixing them with the __free attribute
+> here lead to confusing ownership semantics or resource tracking bugs?
+> 
+> Would it be better to either convert all cleanups in this function to
+> scope-based guards, or avoid using the __free attribute entirely?
+> 
+> [ ... ]
+> 
+> >  	chip->ll_wr_cnt = vsec_data->wr_ch_cnt;
+> >  	chip->ll_rd_cnt = vsec_data->rd_ch_cnt;
+> >  
+> >  	chip->reg_base = pcim_iomap_table(pdev)[vsec_data->rg.bar];
+> 
+> [Severity: High]
+> This is a pre-existing issue, but does this code properly validate the
+> hardware-provided BAR index before using it as an array index?
+> 
+> The value for vsec_data->rg.bar is extracted from the PCIe VSEC
+> capabilities, which can yield values up to 7. However,
+> pcim_iomap_table(pdev) returns a pointer to an array of size
+> PCI_STD_NUM_BARS, which is 6.
+  ^^^^^^^^^^^^^^^^
+          '--- (A)
+> 
+> If a misconfigured or malicious device provides a BAR index of 6 or 7,
+> could accessing this array result in an out-of-bounds memory read and
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+                                                      '--- (A)
+
+Best regards,
+Koichiro
+
+> crash the kernel when the resulting invalid pointer is dereferenced?
+> 
+> >  	if (!chip->reg_base) {
+> >  		err = -ENOMEM;
+> >  		goto err_free_irq_vectors;
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260521142153.2957432-1-den@valinux.co.jp?part=2
 

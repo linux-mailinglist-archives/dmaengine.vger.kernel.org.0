@@ -1,82 +1,82 @@
-Return-Path: <dmaengine+bounces-10722-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10723-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mN4NHActEGqSUgYAu9opvQ
-	(envelope-from <dmaengine+bounces-10722-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 12:16:39 +0200
+	id cP1sNOQsEGphUgYAu9opvQ
+	(envelope-from <dmaengine+bounces-10723-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 12:16:04 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A5595B1DAD
-	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 12:16:38 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A1735B1D7F
+	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 12:16:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 98AD53011C42
-	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 10:09:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B4703304EA20
+	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 10:10:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DE763C5528;
-	Fri, 22 May 2026 10:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CDB13C5DB6;
+	Fri, 22 May 2026 10:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+I5Ehaq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnpYdhy+"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80875272E56
-	for <dmaengine@vger.kernel.org>; Fri, 22 May 2026 10:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96155351C2E
+	for <dmaengine@vger.kernel.org>; Fri, 22 May 2026 10:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779444557; cv=none; b=DBvxOEpr0r/huj84exmBRaSbQxutLdw6TWok1cQI5lbeU61N440lt5zMPOS38StbtYUb1iiUqUBZCSrMDWS82a3Y7MTjA9I8Z1+e3olrALAuaMt0TpY2xm1nPm2prj/lFtC1mqFILgQiABpMOS0a3P9mGre8yeFXu8OF3mHYiaE=
+	t=1779444630; cv=none; b=o5r3wS6+9W4ILhddLBPvdgMyODLHASgPvEIoitMo7ksKt9FGRCE0AUnqLul32m0+hd4GrjU6XwIKVW6jweH2kI00pQIYFVpQ43fgx+Wu8UlNvZSs5A0+KXlg5i+KT7cvMesknXAML9uI1HL0tOcSR3EOAgdUnsETUz4UI1rBfkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779444557; c=relaxed/simple;
-	bh=tXc0GLTLQkLv5ed8xLAOzgZ/WOFmTaW0lEw88YWLwMo=;
+	s=arc-20240116; t=1779444630; c=relaxed/simple;
+	bh=nUDx/Hx8QDCc2KH4E9IN4IE6QLtAgB3+QS3Q1sgq2N0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XcAb4/5Sx2XFI1hhbOrBjJXfwvL0bqNXGM6t6cdkAZKJ2IyIyxZEGZNS0+NRzg4clGALNU9eUXIrFt4oREhOe6SjoQ+1ctIMIEwKs8ARKTvp6NH2RZTncWnNLQFh4W3Q/Waftm2yLVbunawXClwPePHhBGjJ+A3lGlqy1S5fG2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+I5Ehaq; arc=none smtp.client-ip=209.85.128.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=AiBCnlXguyT1AkCnsgbkB1wcBTxvRCvbA+g1r6Iru6tzrJdIqgvB3A8knr6u5rQY4yHktvAVcbehmHlOfrJk59UKdRYDLRA9zQp9YL7FnlZZrWN+3GmAwC3CRoqfonCWJhzCIWUPoXRBF5YeS26Ys5ttrTOuZl8vkETwfLbZZtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RnpYdhy+; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4903cbfad68so10413335e9.0
-        for <dmaengine@vger.kernel.org>; Fri, 22 May 2026 03:09:15 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-48fe26a177cso53767675e9.1
+        for <dmaengine@vger.kernel.org>; Fri, 22 May 2026 03:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779444554; x=1780049354; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779444627; x=1780049427; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4zz81ZxdfpEspL0BWo4PKiQavHk71+JXORK+v8WVheM=;
-        b=j+I5EhaqgmEyqiI/EWYUdEL4+5FRAESVrhF3MHjlg1PkuuQwj08RNRYqcOcj6kteQX
-         n0Cd3nkamEak0C0cUuAqpxvlS6HEfl5aStC0Uoup/5pR2bMdTMlQm7PDDy4SF7I9UhBg
-         LTAymzVm9JOXSD1PuPa5glyAZR9xAFiLEg0/S4Uy/aXQjHnslt1PC6ZD90V/E3aMlb9h
-         8CLmwSeH+htPuG9i0aentvC2V3nWkotVEiXXMj0P361pkZA4iKsyQ8DSAEyrThtk2AR1
-         pCvLdsePPNaBDpfdX1GufcJlD9D03cdA5dwpaYF1iF2UmBJ3Z0w5/Osu9TIS1ES8Id4a
-         lGGQ==
+        bh=ksYNE5DgGi8aj7hSjdkwqCdfXo+PZrlzO7PfP46SpzY=;
+        b=RnpYdhy+bzbYrqzy6uw6pFfgsGKs7VZhW0Crea3JkSmhYM7lk0JGXr0IGa7GnRPPDg
+         Kq+t4rD+gxncYSUw4bj6X0MJMQYZrvjfv/JK0/YeehEjzd7fbOwhAP8wf+BBjwCn2iTS
+         xHgOpMrysrPabCsb7FvnVzz8fYB5GymHuwhEq5EE+o1KMZNRMzqhZzLjiQYs87+Jzf2k
+         ecQsmUKZHGbNRjK1Y9QE8XeT3Fy79K+r4EBdNogP0c4dj7e7SVejHI/L6zLuQudrf71e
+         kWP61PH5+rBtdsqelxde7DAlIQGJJDKNr0QTJutj+2eyJZ+mHOdukhdXBVjKi4AeikFv
+         0z8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779444554; x=1780049354;
+        d=1e100.net; s=20251104; t=1779444627; x=1780049427;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4zz81ZxdfpEspL0BWo4PKiQavHk71+JXORK+v8WVheM=;
-        b=Y71tfl+bNjWxKxBXmIBIku2iJnm/baX+QuSJrFbcuc4DlKzYt7HA8dj+N6dkZvKf9V
-         EwesnylfGlWZqaQKPioosfB7bBgAu9u680NqhABqsMEPqGreFfSp+qbFrlaX89gr+cj1
-         1EZFCyfBufplLbB9lZ1zDN4GGkcnu/wB4uEguV71wyG2pD9nqtw2d/zcpPYYOrpxP16Q
-         pDvLO40nYSUT6TtQpAGrRVZs11X7ssTE/HJG30pJ0CzCbUZF2N4U0v34d61PIVeLmhZn
-         jO0M/bMC/A8+lnQ2DPVuZfvLRusod3rEhLFhfzI4ffidZ2Q0cxJaamSYwadYORERP5VI
-         QOdw==
-X-Forwarded-Encrypted: i=1; AFNElJ+jiGA5MOqs0WWsluELcdLXYoDaXui04PWEvW6xkDFTyEHoIHnTd2xWNJQmTYZxy/kqIdyyUlGgp6s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/m9g55wI49kxnw0G7pNaBCg/Cj/5T82BD3mo242wxB01/FAd5
-	oV+Ye6tFJP/Fx3pzQwDUL3plHTJZoxzpES7kNREz5dP+yAj9hjpsqGrI
-X-Gm-Gg: Acq92OHuphSmmJ7Cw7R6PxWu6n9r/z2mbmNnRvJ5GBdE3rV09KY4YOCFTkVHW0Uu3Y+
-	+KTt1QqwESvjFORTC2uMwg1kK+QAyokGkNNxYrf1/gq7zIIJ4aPVn9TOBD1JuKtRmNIspv/+z3a
-	6Je3QOL7sv582nPK4EWD7hU7OnYBXdOooQOlt/oguMR+E6kNmD+cn9z0ZLYnX70niIJlkd/Id0o
-	3Y2fUKPYnMlsVsVK79Om+cQgXCDEeV8XPi995eHMy6zquo+a0dMa5oipuMldn8ILNXCiFivPww2
-	+wqQOJYGcDzu4bdVZuNVO/E1CA0Xq4Rp/DmxRqEd/+S6ceFERs02rGal1e1YRagB61sY/FbHC8Q
-	jhA4GNw5CVhJPqGuSbkTB+Gl+NkazLKw6Mgav6cPR94or2nzZ3rULsqhpZsPTDZIx8WvuhFggvP
-	v1U2ukMqjVuBbRutlHpa2V6+m2p7T/47YEZB4Or7OwizIjd+VrsZjUX/OR0J/nrBbjDov39YRow
-	mxYrXodKynLgA==
-X-Received: by 2002:a05:600c:1992:b0:48a:79d8:a8d6 with SMTP id 5b1f17b1804b1-4904245f54cmr27207905e9.7.1779444553576;
-        Fri, 22 May 2026 03:09:13 -0700 (PDT)
+        bh=ksYNE5DgGi8aj7hSjdkwqCdfXo+PZrlzO7PfP46SpzY=;
+        b=pM9iZdj1AqkzJaCXrh/pt98LkvXYWdZI3YX6AUwbJBGZaDBo89E34L2UWUhgqOgkFA
+         LqhLAyHz5v5SihBKUUSIpRR2M3pAF+PSpQcH29r4G26ZEDsYy/OPm8sFeS8J/JKXmDTA
+         j9m/LwPk3SFwd/gL5tD9NF7xMG7jtuSFWMeFArHJxJaaf4QByQFjPaVLRHdEjWamdVu5
+         geM35hNlh4GP3i1KgDvmDLRWcYEI1vbG+Um2yTfD0sxyb7xI+H38ek75q2bKBiIdhZ93
+         LAxnvifMKruP6SMW0Rm35wCB5lvtryykmZo0GDDA5922d411qvc8uFdyEl94RmWKrmxZ
+         xNMA==
+X-Forwarded-Encrypted: i=1; AFNElJ8LmmZPdHFzTFR10CHqQF2h01iS1beU4QjHo83wfKeY5zlUV4nujqR8fhXTwdCeXSFNQ3AWCh4EyRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIVARpDB/2T+Lx0Z3ur0NfJ2WxvJKeDYzdJ/cSM9ft133pZwDY
+	tHnMROLuF2LR7+iABZ1E2Fa2L8WXEgTvh+CrfWKSuL5JQFV3ubBSR4wr
+X-Gm-Gg: Acq92OHB2OqSPx72KW5clHWN/na8cJzAKATZuZzUjlEN7K4uL4Pr7j4WISYRbGjewzi
+	jyXid5AEhQsP6tR3Vm86oSE5hpyBCjVTrJ1wj4KJta1n5vc8r9dAVGDgzO36M0L4vBU6+6iJZEg
+	wFZTseDZbcohAWVhT93hU4/vu1ePfNSLkKa/w82qgqSO/8/1RBpgVPyNAsAaQVwFHyDU/lh55s8
+	QWQNfJR/tft1PW7cnCFe6SA/psYztYbJQ+ATuXTvBbQ5AxaPEkW+W8rlX+M3MZD04v2iyk7JGJl
+	XeCwR9RAYYQRuI2NrJjnomAPBKL973SMnWwly7ecRgebqOJsjINclouBVn2P4jCOXnesxrd0NNG
+	wqeWHMyVfnS6iwOPiAyBYI1bQZ7roNsf4bLjjyi4EnRSNDDHRTiGVFt/i9sKaa/nqjw0u8tfVqS
+	d6Dc5zrLXhCx6CkG5jQYxbLOmpQIDxCN8WzUYKZP/s0tIpd//sOqpDkvQ4YK8rXzIivA0x7fUmA
+	FTLpHbIehlmcA==
+X-Received: by 2002:a05:600d:640f:10b0:490:3ff5:737f with SMTP id 5b1f17b1804b1-490426cefe0mr28149535e9.18.1779444626854;
+        Fri, 22 May 2026 03:10:26 -0700 (PDT)
 Received: from orome (p200300e41f291e00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f29:1e00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490428e03d4sm16430345e9.9.2026.05.22.03.09.10
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45eb6d4850dsm2798642f8f.17.2026.05.22.03.10.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2026 03:09:11 -0700 (PDT)
-Date: Fri, 22 May 2026 12:09:09 +0200
+        Fri, 22 May 2026 03:10:25 -0700 (PDT)
+Date: Fri, 22 May 2026 12:10:23 +0200
 From: Thierry Reding <thierry.reding@gmail.com>
 To: Akhil R <akhilrajeev@nvidia.com>
 Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
@@ -85,11 +85,11 @@ Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
 	Laxman Dewangan <ldewangan@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
 	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 01/10] dt-bindings: dma: nvidia,tegra186-gpc-dma: Make
- reset optional
-Message-ID: <ahArPRE7rddUDQxm@orome>
+Subject: Re: [PATCH v6 03/10] dt-bindings: dma: nvidia,tegra186-gpc-dma: Add
+ iommu-map property
+Message-ID: <ahArhz2rJrUx-3As@orome>
 References: <20260331102303.33181-1-akhilrajeev@nvidia.com>
- <20260331102303.33181-2-akhilrajeev@nvidia.com>
+ <20260331102303.33181-4-akhilrajeev@nvidia.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -97,9 +97,9 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cba7btxxm4dnjqoy"
+	protocol="application/pgp-signature"; boundary="cfuujhnhen7f4kbw"
 Content-Disposition: inline
-In-Reply-To: <20260331102303.33181-2-akhilrajeev@nvidia.com>
+In-Reply-To: <20260331102303.33181-4-akhilrajeev@nvidia.com>
 X-Spamd-Result: default: False [-3.76 / 15.00];
 	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
@@ -107,18 +107,18 @@ X-Spamd-Result: default: False [-3.76 / 15.00];
 	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10722-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10723-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[13];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -128,63 +128,57 @@ X-Spamd-Result: default: False [-3.76 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,nvidia.com:email]
-X-Rspamd-Queue-Id: 0A5595B1DAD
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 6A1735B1D7F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---cba7btxxm4dnjqoy
+--cfuujhnhen7f4kbw
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 01/10] dt-bindings: dma: nvidia,tegra186-gpc-dma: Make
- reset optional
+Subject: Re: [PATCH v6 03/10] dt-bindings: dma: nvidia,tegra186-gpc-dma: Add
+ iommu-map property
 MIME-Version: 1.0
 
-On Tue, Mar 31, 2026 at 03:52:54PM +0530, Akhil R wrote:
-> On Tegra264, GPCDMA reset control is not exposed to Linux and is handled
-> by the boot firmware.
+On Tue, Mar 31, 2026 at 03:52:56PM +0530, Akhil R wrote:
+> Add iommu-map property to specify separate stream IDs for each DMA
+> channel. This enables each channel to be in its own IOMMU domain,
+> keeping memory isolated from other devices sharing the same DMA
+> controller.
 >=20
-> Although reset was not exposed in Tegra234 as well, the firmware supported
-> a dummy reset which just returns success on reset without doing an actual
-> reset. This is also not supported in Tegra264 BPMP. Therefore mark 'reset'
-> and 'reset-names' properties as required only for devices prior to
-> Tegra264.
+> Define the constraints such that if the channel and stream IDs are
+> contiguous, a single entry can map all the channels, but if the
+> channels or stream IDs are non-contiguous support multiple entries.
 >=20
-> This also necessitates that the Tegra264 compatible be standalone and
-> cannot have the fallback compatible of Tegra186. Since there is no
-> functional impact, we keep reset as required for Tegra234 to avoid
-> breaking the ABI.
->=20
-> Fixes: bb8c97571db5 ("dt-bindings: dma: Add Tegra264 compatible string")
 > Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
 > Acked-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  .../bindings/dma/nvidia,tegra186-gpc-dma.yaml | 23 +++++++++++++------
->  1 file changed, 16 insertions(+), 7 deletions(-)
+>  .../devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---cba7btxxm4dnjqoy
+--cfuujhnhen7f4kbw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmoQK0UACgkQ3SOs138+
-s6EvWw//RWCFZQ9T5C4dp8mVROoGcJewvvJHj46nkOp0utsLoYqLxlyBAndZ4kjp
-EXuaATKAZbfG2HAMtwunnvWgwGfFYzQzNqfO4bqXAKGltGU8X5NPai06UZ4ljxYR
-WTsV0ZexSKoOXL4jaKU/ZRabzsXm63ldoMpfJv4ahxyoWH6Y2kOqILa7FLlb7GHS
-FvCyV9lb6CWA+QA5opFdz3qqC+WxhYaKET1F4q5xbFD5PagVYShaEaYt8MRv0iil
-AMyn/NwaX6lOjGTL1CpvJ/jnmlf2Gu7temInUkZANF8wJzYY0xVU4J00bzryvsXO
-eSzZwAemjwGTyLF1hsMbmSyqjLLHe7eDq/Y4DEKX3xFGVSd8zKy/vN+zUhFp+9HQ
-oxRLORiWrIC8nCgMC7weCZ3ufNIf9Oh+IMxcx9bYghGkOFcwPw/mQB29LmZ7zuyi
-IqY9bdEILNNqnTXrULGByqQ2ywvZkZItadnWV1WgXeHRHdLNLzgy7ZfaQsdnBG+w
-6WrRkzN8o26x3rtL8umBdxgUrjPomamGU0F97/zy8+aHzrT8/AvL03008euSMliV
-sF5OyIHPVRCgyKhe1nuOWXX56BT9+R66zECG68/tWN9OBU25SNy5Q8pYH7x577Xf
-IxAPlE5nxcOYxP4CAZfTCnEoq7uYRM/zhhLM/ocmPMkvwZchP7g=
-=T5zQ
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmoQK48ACgkQ3SOs138+
+s6GAew/+JcdwaY780zCzuK455YnQ+eLwg86S3a4AOS3x5iG0/m8f2Amil+VB72nZ
+ci4+qK7+yV8+3+6uldI0g7LZDzGflpyZrUDNuQLCfj+vYmEb61o1JoZbNhoE9+ic
+nag0sS5coucJKY2Gc3RD357norEY3DBhMNTr28tn58ydg442Uq2gx/6ZVK9GnYfF
+XgK3rr80mq7WB2bVqK3GTiC814TPhlldNXxFxqRV8y4h/D764MMQ9qHocmgx2qW4
+5I8InPisLbTCb8p8HBwRlA3h8YYMsMth3CHVUXXkmTb8NBEmjfQnoDWB4pxmIpf/
+KzJb+/Qk9OTBOhy86/zUp+fCY4KZvNKcD8csC84lEIzPzUuRcIFv6ILoGvzUo4EO
+YwuDJpsMrOf1K1K5hHm9qGugZ2DBSK4Vx4fOUBWoZIjGH2/TRCg7Pn6JBhJuT5o8
+hThxuFO8909jWAoKMknu1oQD6ShIuVj+FbDWHhYAlbI5Dj+mT7QtQ1z750r0gtj0
+2RkRveEDOOUuv+Zla1iw3NQkkSLogplGwIp/OVbyzkNCkxClBkWP/7/D2c9+ZdOU
+orMrAVeNg3+t+xWUKNNsTIJs7UHY/Ijp9T+msaNIZnojc0XnIGHfcTHDJIWeXhnD
+Ze6C+O9gJTwgdsYARNevxitPP2/O4tnp6JP22PWc6ueoyrvbSxA=
+=xacF
 -----END PGP SIGNATURE-----
 
---cba7btxxm4dnjqoy--
+--cfuujhnhen7f4kbw--
 

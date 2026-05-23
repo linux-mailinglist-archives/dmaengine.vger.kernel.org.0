@@ -1,193 +1,234 @@
-Return-Path: <dmaengine+bounces-10773-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10774-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 5iaMMd7dEGquewYAu9opvQ
-	(envelope-from <dmaengine+bounces-10773-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 23 May 2026 00:51:10 +0200
+	id UBznLvn2EGoxgAYAu9opvQ
+	(envelope-from <dmaengine+bounces-10774-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 23 May 2026 02:38:17 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 213DE5BB432
-	for <lists+dmaengine@lfdr.de>; Sat, 23 May 2026 00:51:09 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 660595BC11B
+	for <lists+dmaengine@lfdr.de>; Sat, 23 May 2026 02:38:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3B5FC3006965
-	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2026 22:51:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7BD9D3017270
+	for <lists+dmaengine@lfdr.de>; Sat, 23 May 2026 00:38:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A523833F8B1;
-	Fri, 22 May 2026 22:51:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED1701F4174;
+	Sat, 23 May 2026 00:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHxh/Oow"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/qwAMS1"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624AD34EF05
-	for <dmaengine@vger.kernel.org>; Fri, 22 May 2026 22:51:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B0DFC0A;
+	Sat, 23 May 2026 00:38:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779490267; cv=none; b=SvUTAwhe02ZYEvMxrqwoZVGz7qg9nJtmbyPAGQBEwmvBNN2FWQUKFUpKJzRoJwViNYfDkl8qw12Cn4kvK8o6PkWp8rrZUxrTtCybT7QXAtMC/JZhkPtEoGfXQeF8G/H6eo/jY9PA8tyInSacEXvqmrw7vqfhuBDmHLbOQTxtHJM=
+	t=1779496689; cv=none; b=IQaTe+gCPBiaxl9+p3IJ+Q2Dnx8XI+G+pTfJVka1+ANrXw66sfyQdzcpuLaHEvymnKjBn4j8AgF7NkyhUJA3G8LQBrUOAEOrft/w5Uk+2yxOqunFajPet5mztBeQyJJmebCAyRUdnTttV2eezOlU7cYtWqfHllQ9ue2Vu82L7Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779490267; c=relaxed/simple;
-	bh=41AEb8Ylu6ZQTtPo+Peg4189qUuQ6gUpf9yzB98nklI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=oJR9q/Q0O8tR8Lfv4VNNUzJd8k43zjjYpoTVyMtYPZIG8N3DoyvRd0EAyWPYooYTP2lab9T5qZDn64ltYXjEa9nEg+vChBMngnG1RH13X3NFF7Uh7cZVRD38wiUZz03jo1knXX5S9Gv0qi/LiaZK9PI3ULnA1kLekeBj66e4O8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHxh/Oow; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E7A1F000E9;
-	Fri, 22 May 2026 22:51:05 +0000 (UTC)
+	s=arc-20240116; t=1779496689; c=relaxed/simple;
+	bh=5mcnBS5MtgC9UfAOoDlmY0BQO+Ao/SdQLXT9dBQtNkk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rNlIIwOGjatOkritxjJNEUAlz2vwjWZJ9JMwAJxKdCkcyRKjimih0PPF61skI2pMDAiLsTReITEBhwjWSn7QL5XDnPnSbMfHBgGBXEpi6C3SGDhBlbluVCZk9doqKgOCp8tV3xZgEeRSgcBIPobl/b95etFlgHkeUg3y6JsD5d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/qwAMS1; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDCE81F000E9;
+	Sat, 23 May 2026 00:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779490266;
-	bh=8WHU8B7vLM1TSkptJmovd9IefgPffqCyT+IjJND8HWo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nHxh/OowaMcPQ13dXGV6gE0uX4WgSG7Z+h+KiT4wfuMj1jW4e747DO/NoJNmjS2NT
-	 nyE4Dg3lsiCryyOoj5sytKrUCsS1E/IlncOQIE1MNza50mXw4NkNmAqJgzSeJMIt1/
-	 WGdz1PR0Eq+szpeH940wfCmyc72gqZ5ErPpo12CV+IDtrYT9HlxJAKm4zi0UyC5PYi
-	 5S3GSYc4jMnpzceb8ugEv6ejHJzTM6vv3e1tqCJySkAbeAmrSiuk65uMmj1hb9fve8
-	 8c6zPpQjVTRmEQm8eRHJ3txIINefBty1j/KT+DJICQsmN7MgVUdoxVCQUne8hTcMmD
-	 tSl2giNtE6d8A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/2] dmaengine: idxd: fix duplicate memory frees on
- initialization error path.
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Steve Wahl" <steve.wahl@hpe.com>
-Cc: dmaengine@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org
-In-Reply-To: <20260522203414.336549-2-steve.wahl@hpe.com>
-References: <20260522203414.336549-2-steve.wahl@hpe.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 22 May 2026 22:51:05 +0000
-Message-Id: <20260522225105.D5E7A1F000E9@smtp.kernel.org>
+	s=k20260515; t=1779496688;
+	bh=ke0QgGP72oU1/KHDzVSs1lh/gkg7Mw8fFDTolKbzoHA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=W/qwAMS1ok+56HAwvYiYz0R5wmKsD0RscuUhy5BVEzThMnr+wQxbKIW0Yk+lqtg0R
+	 dxN4FM+nLAHenqFi1JvSelOt20CYFnYpdSX3hvz5/mvzq/JXO7gcBTjSStG/A5FM8j
+	 0Dk4RFZ90/nX0Xzby8V+5D3uQDTYP8o1bo3XSKlx4rKPB6vCO/Oui18woqanoP+n4U
+	 enXhw+/EJeP6Kw2ZiII29eiMOdyHFC3VD0U1T97Mm+aD6rZa6A+hyeA7zcgLPdsptw
+	 8LWGxoojes1mewesgkVxxy+dLIhtJlwu3XyRYodcKxBzIRSnWjQs++a/owD5p2CmBM
+	 RNz3sazG7iMhQ==
+From: SeongJae Park <sj@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Pengpeng Hou <pengpeng@iscas.ac.cn>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Corey Minyard <corey@minyard.net>,
+	Gabriel Somlo <somlo@cmu.edu>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Hannes Reinecke <hare@suse.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Jason Baron <jbaron@akamai.com>,
+	Jim Cromie <jim.cromie@gmail.com>,
+	Tiwei Bie <tiwei.btw@antgroup.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Georgia Garcia <georgia.garcia@canonical.com>,
+	kvm@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-acpi@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	qemu-devel@nongnu.org,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-rdma@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-serial@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 04/11] treewide: Convert struct kernel_param_ops initializers to DEFINE_KERNEL_PARAM_OPS
+Date: Fri, 22 May 2026 17:38:01 -0700
+Message-ID: <20260523003801.86344-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260521133326.2465264-4-kees@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10773-lists,dmaengine=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,iscas.ac.cn,suse.com,nod.at,cambridgegreys.com,sipsolutions.net,minyard.net,cmu.edu,redhat.com,linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,acm.org,ziepe.ca,ideasonboard.com,google.com,suse.de,HansenPartnership.com,oracle.com,arm.com,linuxfoundation.org,rowland.harvard.edu,linux.alibaba.com,akamai.com,antgroup.com,orcam.me.uk,infradead.org,linux.ibm.com,alien8.de,zytor.com,atomlin.com,linux-foundation.org,canonical.com,paul-moore.com,namei.org,hallyn.com,vger.kernel.org,googlegroups.com,kvack.org,lists.ubuntu.com,lists.infradead.org,lists.sourceforge.net,nongnu.org,lists.freedesktop.org,lists.ozlabs.org,lists.one-eyed-alien.net,lists.linux.dev];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10774-lists,dmaengine=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_GT_50(0.00)[100];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sj@kernel.org,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 213DE5BB432
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 660595BC11B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+On Thu, 21 May 2026 06:33:17 -0700 Kees Cook <kees@kernel.org> wrote:
 
-Pre-existing issues:
-- [High] Double frees of child objects (workqueues, engines, groups) remain=
- unaddressed in their respective cleanup functions and setup error paths.
-- [High] Dangling pointers left by `idxd_cleanup_internals()` result in a s=
-econd wave of double frees when `idxd_conf_device_release()` is triggered.
---
+> Using Coccinelle, rewrite every struct kernel_param_ops initializer that
+> sets .get into a DEFINE_KERNEL_PARAM_OPS-family macro invocation,
+> for example:
+> 
+> @@
+> declarer name DEFINE_KERNEL_PARAM_OPS;
+> identifier OPS;
+> expression SET, GET;
+> @@
+> - const struct kernel_param_ops OPS = {
+> -       .set = SET,
+> -       .get = GET,
+> - };
+> + DEFINE_KERNEL_PARAM_OPS(OPS, SET, GET);
+> 
+> Using the macro for initialization means future changes can manipulate
+> the struct layout and callback prototypes without having to change every
+> initializer.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+[...]
+>  mm/damon/lru_sort.c                           | 19 ++---
+>  mm/damon/reclaim.c                            | 19 ++---
+>  mm/damon/stat.c                               |  6 +-
+[...]
+>  samples/damon/mtier.c                         |  6 +-
+>  samples/damon/prcl.c                          |  6 +-
+>  samples/damon/wsse.c                          |  6 +-
 
-commit 4ee711bb61961f88e9ddb1a67af212cce348ee26
-Author: Steve Wahl <steve.wahl@hpe.com>
+For the above DAMON part changes,
 
-dmaengine: idxd: fix duplicate memory frees on initialization error path.
+Reviewed-by: SeongJae Park <sj@kernel.org>
 
-This commit removes duplicate memory frees in idxd_alloc() and idxd_free()
-by relying on the device release callback triggered by put_device() to
-handle the cleanup of the idxd structure and its internal allocations.
 
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index f1cfc7790d950..227e323cc5a0b 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -607,9 +607,6 @@ static void idxd_free(struct idxd_device *idxd)
->  		return;
-> =20
->  	put_device(idxd_confdev(idxd));
+Thanks,
+SJ
 
-[Severity: High]
-This is a pre-existing issue, but does idxd_cleanup_internals() leave
-dangling pointers that could cause a second wave of double frees here?
-
-During device initialization in idxd_probe(), if an error occurs after
-idxd_setup_internals() succeeds (e.g., idxd_device_load_config() fails),
-idxd_cleanup_internals() is called. This function explicitly frees
-sub-allocations (idxd->wqs, idxd->engines, idxd->groups) and calls
-destroy_workqueue(idxd->wq), but it doesn't set these pointers to NULL.
-
-When the error propagates back to idxd_pci_probe_alloc(), it calls
-idxd_free(), which reaches this put_device() call. This triggers the
-idxd_conf_device_release() callback, which blindly attempts to free the
-exact same dangling pointers again and calls destroy_workqueue(idxd->wq) a
-second time.
-
-> -	bitmap_free(idxd->opcap_bmap);
-> -	ida_free(&idxd_ida, idxd->id);
-> -	kfree(idxd);
->  }
-
-[ ... ]
-
-> @@ -649,8 +646,13 @@ static struct idxd_device *idxd_alloc(struct pci_dev=
- *pdev, struct idxd_driver_d
->  	return idxd;
-> =20
->  err_name:
-> +	/*
-> +	 * once device_initialize(conf_dev) is called,
-> +	 * put_device(conf_dev) will end up calling
-> +	 * idxd_conf_device_release() which will free the rest.
-> +	 */
->  	put_device(conf_dev);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but are there similar duplicate
-frees remaining for child objects like workqueues, engines, and groups?
-
-While this patch correctly removes the duplicate frees for the main idxd
-object, the exact same pattern appears to exist for child objects in functi=
-ons
-like idxd_setup_wqs(), idxd_setup_engines(), and idxd_setup_groups(), as we=
-ll
-as their cleanup counterparts.
-
-In those functions, put_device(conf_dev) is called to drop the reference
-count, which synchronously invokes the device's release callback (e.g.,
-idxd_conf_wq_release()). The callback explicitly frees the inner members and
-the object itself (kfree(wq)).
-
-However, immediately after put_device() returns, the manual cleanup code
-incorrectly calls kfree() and bitmap_free() on those exact same pointers
-again. Could this lead to double frees during initialization failure or dev=
-ice
-removal?
-
-> -	bitmap_free(idxd->opcap_bmap);
-> +	return NULL;
->  err_opcap:
->  	ida_free(&idxd_ida, idxd->id);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260522203414.3365=
-49-1-steve.wahl@hpe.com?part=3D2
+[...]
 

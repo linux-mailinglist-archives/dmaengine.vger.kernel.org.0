@@ -1,210 +1,180 @@
-Return-Path: <dmaengine+bounces-10859-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10860-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YNPPLlsoFGrfKAcAu9opvQ
-	(envelope-from <dmaengine+bounces-10859-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 12:45:47 +0200
+	id qGk0BZMpFGrfKAcAu9opvQ
+	(envelope-from <dmaengine+bounces-10860-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 12:50:59 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27FD65C957C
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 12:45:46 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 791575C96F0
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 12:50:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5640A301CA68
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 10:44:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E3A1C3001AFB
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 10:50:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93592372662;
-	Mon, 25 May 2026 10:44:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13D6A3783DB;
+	Mon, 25 May 2026 10:50:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Pbx/bydp";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="M7yGZl8m"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FOyLfkT2"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011020.outbound.protection.outlook.com [40.93.194.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C7636F91A
-	for <dmaengine@vger.kernel.org>; Mon, 25 May 2026 10:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779705848; cv=none; b=awFtJT8n7Yy6cjZMQ5vqqFDiA94P3UwtWyrG/iWgC83l+iVeRFMUtkU43wo7fWFz/RnKopbXQyifAf7Itts9+hmLYuHhmS+TmYNxYhI9OADSDWn5MN2KTRPULkhyFtlLVA4tRDl/ux/mwtF7S30Km3hscLFtPlBDGFOch11TTQA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779705848; c=relaxed/simple;
-	bh=h/uqjF3R3sz2YKYkVBCkZA1z2qZxypPsZhVBXAZQnQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t7Ngx9anQ088kl75u709wNx3dqFkQd2Ac7bLOJfAtfhtZoFg5pAbzD6dJEXiWK/CyuU+IU4YSKqOVs8hKN+s83L2Du2IdWtX0nfLZcif4/JcPCc5ZNKU42S/faC2jXKYqi9Dee2j6zK5WitIu/yiuWcFnhuSraUp3X/eoFz5p00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Pbx/bydp; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=M7yGZl8m; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64P9cjdE1802476
-	for <dmaengine@vger.kernel.org>; Mon, 25 May 2026 10:44:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Z1raWWhLV0vMOZgDp8fhNzwX
-	X9rXSsNT5f68RVt1IR8=; b=Pbx/bydpwQyQYuMslTHRkLL4d+B4FFarFnUiFEtQ
-	nfjVfqqnpE1888w+zQ/1LKvErVSPgda8jYbtOdBHGN7q8JHna9pjtoSwP9DVr/GP
-	alz465/XGeLqOUQ7XksPA9I0zOWj47T1wbIQW2iAV5bJ/NVTHoEUs3Y/EFwQQcXy
-	qOb7GLuDgRub0JzWPheKVNfad4QrCyU4wp4kPvn1b4u7Vn+ze6VPVuDKVVqrIhUX
-	DUfAmo9RTbs3Qmkm2MuGjq8dZQKo2cLyTOeEEc3dfZ8gElVks2pNI3cxMOGnAWtp
-	aL7CFmncY4aHBvVZIqMRicBub7OA3TYCJWHKbZvMPkiazA==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eckyqg7kx-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Mon, 25 May 2026 10:44:03 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-50faf575af4so246231101cf.0
-        for <dmaengine@vger.kernel.org>; Mon, 25 May 2026 03:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1779705843; x=1780310643; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z1raWWhLV0vMOZgDp8fhNzwXX9rXSsNT5f68RVt1IR8=;
-        b=M7yGZl8mrd+GW1/lCmROMiSBCIVn7OheKqCWe9/xr5BopDRgJO/+YHyGephHV5oBDb
-         We8f46OV2qmuavVgXx8emJZ/QwGaIkkPIN5tEgcZBOf3dhA6ZRPc1gr7U4Wo1ThE3eau
-         7xwbRfGjtXQrm181jvVh0OD3lrboWiWSWp9xarc7h5U8vDWPwmEqHgn829oHAtU2sex8
-         Kz+8Ti9rL6C+gN702QKezwS5HC6kQoM9qeXZOZq0S8etm6HPOaX4u1jtqm9pihBqgNC6
-         FaVd4F+yJy8kZlBH74eOPIIr/A9vq4kf5KmE0xyba1J/9hrM2CBJgBQWb2tZbPwoveTc
-         QC+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779705843; x=1780310643;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z1raWWhLV0vMOZgDp8fhNzwXX9rXSsNT5f68RVt1IR8=;
-        b=L4raMKwf1NPUze7Ompc0YrEUSzymIyA1cRC1H8Nq5IMA/F4Lp5+uoCoDKnx6rbHiQ3
-         4Kmf+Ft67snxT57m713oddXOP5+/UMRlbs7C9rB6IMeiFxihX3mPP+boF5onEFCXlZeE
-         12bCWeueVl1S8iUgHyf40ILLeHdXHKhQvBDNPfC3svJr5TyMG5UoK44fupvLOvHHX4LH
-         4pnGmlkQ2kR8YF+AzqGi/2UeUH5iUCWaoBdPcOpNP7daYl5o/uaZ5JYscA2UVeYPgsc+
-         FJRp794isK2lapHqFxFt3QB+aygkCqg3SbxwqlVhS2NryEqi73zmm8/ufuJZ9f+cDza4
-         erSQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8Jh+y4lXex0MnuoPwGcRZ9TABKE2VljP5EBZmj/X761kQbF/queL6vuooXtt5Ge6ekAKNkCWWXloA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ+1BXNXrFE+UAHvy7D70mvrxxjH+or8tMUHR1DNrlcq+1vhek
-	MMCWpTOpjQ56N/vE4YXahnbMNuWgRJ/+V5n/9uvQBqUK0kbc71lmDPlcZayd93QTkbEG9/vazEJ
-	5EBu7qd5uQSC5TXKeVAgVMsHszrbrXGtt3rRtMSujVIVHndAAKpDRcXKw4tA1qnY=
-X-Gm-Gg: Acq92OH0s2eXkxgO2lTj4aiFcAmkzTxwg8boGUl6+3wpCL/FCCcpyHpI9cOaSiocAiX
-	VkVrGe+5fGfINpvfZ6bwS5XTl903zW1I2kGfNasJ9o9kzJP62bA11YLHElx6qpFGZyzQWFkIGZM
-	WuUMnwVDnAul7L0ZPhs2JUp2Tp2NVBBNSJil1O6H+ehNOLPCt/4pVCnhsYErTEFHgmU5/5s9eI9
-	90AENImDoEk45MUC3LKZaLKuS6Na5td2kpWkCJFJSrHu3hPC655GiWVTaCtKVCZ1nPPjHRfwoL2
-	YD0nCL9FwaE2AGaZ2GIgRG6kFzKfrutF8d8fkiyzT/E+ODHsyokIySUVGRewNSt61YNN98eAqcs
-	lKPAxidHaR1ApNtuzdso0czMl536IRRBZ7L7wBk6q6wEuTpcLu30+vzBvlvmH1PS/g6HLc/PEK8
-	woZai2+LC++vwfgMOQhmeYX5N0+GKgtivswYM=
-X-Received: by 2002:a05:622a:418b:b0:50f:be4f:465e with SMTP id d75a77b69052e-516d466fb5dmr185267081cf.53.1779705843012;
-        Mon, 25 May 2026 03:44:03 -0700 (PDT)
-X-Received: by 2002:a05:622a:418b:b0:50f:be4f:465e with SMTP id d75a77b69052e-516d466fb5dmr185266741cf.53.1779705842593;
-        Mon, 25 May 2026 03:44:02 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-395dcc0a9d8sm22226301fa.26.2026.05.25.03.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2026 03:44:01 -0700 (PDT)
-Date: Mon, 25 May 2026 13:43:59 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Thara Gopinath <thara.gopinath@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Frank Li <Frank.Li@kernel.org>, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: shikra: Add qcrypto node support
-Message-ID: <cadke5cbqfnnbcwlafgajy6g2xj3s2apmtpzp5uwb5limtehyx@4nnoww2kmytp>
-References: <20260515-shikra_qcrypto-v1-0-80f07b345c29@oss.qualcomm.com>
- <20260515-shikra_qcrypto-v1-3-80f07b345c29@oss.qualcomm.com>
- <8dfa0670-7605-497b-9d53-db9b4a8a3d8d@oss.qualcomm.com>
- <57c26520-42dd-4159-bd2a-69874945cbbe@oss.qualcomm.com>
- <algvollvttjlu4qpawi3gnhwponwml6pts47ebmcvrjvlryl3a@qjq5ildo4qsm>
- <8a1d6c78-fd16-4994-bae9-cf75b1e7e3c5@oss.qualcomm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FC5352C54;
+	Mon, 25 May 2026 10:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779706256; cv=fail; b=UqpRt7t9OkN57AwQHPnt4A2NnfmE5oxn/ZjvNKaUTJUOgUhzC5D+iFpnARnCpQifEPHR7qvSQCSsqhLxq5y7csiUlBBgGP1N/6Z9E7M9zXcRFC0EP9OlMeYVfXmK0oGppnKvf3La8rYKl2bThqkOGJ26kzJemmsHdz0cJBx98mM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779706256; c=relaxed/simple;
+	bh=WzgxidO4loxKyGayhKKI33Fdv6UYma2U7/cWWmSva7g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hGkpWDkMTzdc2wfDsiXE15h3sXcilByWv3aG2KxgQYHbNCvxAWfUwisQxw4YkXMTTIT2LQHHpBa75ztt3AZeQKfIqlYFeYM61rfFl0IGN0DSlsaMY6NXJmzRFnv702cTulOb7vx6yJ19FRNabsGqgv9XWM4ZT/RtN8u30oIqNmc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FOyLfkT2; arc=fail smtp.client-ip=40.93.194.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Zfama6BsKmOjJt0cxgCMD8JR2yQrN5KApPQsoB3N36MJZyU4EP5h8oItUAvUksoZbI9pUGEt7zsUGcjEph+PBhK0u1fyQAwcHHcLRXEJOS4ne2P8rKSlnu5Pdz9m4U7+DWCWltdbhsR+SdOnuJO+GgSMFO4j8nPLiicL07PpZLf97pJWStqnMA2hZ1KBqegs4llkrTKxDGcHN+k8Yl01LCzb1TUu58A3PWNcsUbyEMKcXq3gj+QvpQ/k04JzY5Zdl4QlgQGIu5PBINdVADPr4EpCC7KdKc/SeSzAKVT23KBuVub5U3EymTuWHc+vhBzPYUw7BWrGg1rSVe1JCNqITg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Roi+Q9ko3sGht9cTAIHr34o1RfYrFDnBLN0pAJ5zTvw=;
+ b=SAo89+R5wES6aY3SlgV7BCPuXX68ft0K65K2SYWUN5y1kREnRy8UpyzViMgCyYkx92pUhd06myRfJkLHuxkAlq2W6K0LTB9AkbwAdbe8WcQPn9Wn1bKASq29E14/tLWZrN27wVYfbTtGZRCk6mg6eF8ppAgP574CYDLQLskCBgNGB2fYlDB2ICStJgkgdXJaSqutrc3Tr/u4LYwKrXnXHffsgL0G6fH1fV5KwHTO7k8NyPlDvJCNRqQIfCM02vOa/uny5vWk94nAyLG4sij33IeJgYBQtbhSv71qZjrorIokak0IrFqbD8x0Ew+wYGSIEOebRL6oxvRQzDq211Fl5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Roi+Q9ko3sGht9cTAIHr34o1RfYrFDnBLN0pAJ5zTvw=;
+ b=FOyLfkT2fPWpLbTLGf39WhvLLQV/4S2RyTeZnVrDw/vRzuyu0POoEB8/3JDvnBPr0cmytqN0jXUBszYwlxHe1WbNZ2gBz6A8HKnePrNpatha4rPU/YLDvasVFOIb3snJis7deoiMTd5ipNx/8iTWPCzkB2g2GfluwaU9heXbndA=
+Received: from SJ0PR03CA0191.namprd03.prod.outlook.com (2603:10b6:a03:2ef::16)
+ by CY8PR12MB8313.namprd12.prod.outlook.com (2603:10b6:930:7d::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.19; Mon, 25 May
+ 2026 10:50:49 +0000
+Received: from SJ5PEPF000001EF.namprd05.prod.outlook.com
+ (2603:10b6:a03:2ef:cafe::56) by SJ0PR03CA0191.outlook.office365.com
+ (2603:10b6:a03:2ef::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.48.20 via Frontend Transport; Mon, 25
+ May 2026 10:50:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ5PEPF000001EF.mail.protection.outlook.com (10.167.242.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.71.7 via Frontend Transport; Mon, 25 May 2026 10:50:49 +0000
+Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 25 May
+ 2026 05:50:48 -0500
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb09.amd.com
+ (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 25 May
+ 2026 03:50:47 -0700
+Received: from xhdappanad40.xilinx.com (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
+ Transport; Mon, 25 May 2026 05:50:43 -0500
+From: Golla Nagendra <nagendra.golla@amd.com>
+To: <vkoul@kernel.org>, <Frank.Li@kernel.org>, <michal.simek@amd.com>,
+	<robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<nagendra.golla@amd.com>, <jay.buddhabhatti@amd.com>,
+	<harini.katakam@amd.com>, <m.tretter@pengutronix.de>,
+	<radhey.shyam.pandey@amd.com>, <abin.joseph@amd.com>, <kees@kernel.org>,
+	<sakari.ailus@linux.intel.com>
+CC: <git@amd.com>, <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/2] dmaengine: zynqmp_dma: Add per-channel reset support
+Date: Mon, 25 May 2026 16:20:40 +0530
+Message-ID: <20260525105042.2249542-1-nagendra.golla@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8a1d6c78-fd16-4994-bae9-cf75b1e7e3c5@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=RMyD2Yi+ c=1 sm=1 tr=0 ts=6a1427f3 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22 a=eCBvbIXyoX1lJJg6tWAA:9
- a=CjuIK1q_8ugA:10 a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-ORIG-GUID: j5yrQEtjJSqM1ByVFyaazDVyJsWJfSva
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI1MDEwOSBTYWx0ZWRfX4BRvF2xmDiPt
- jN/KLON9lIJb3k+ICTkeOisj7cDgf/eSqCjJpojykLHPB+LwBqW/hu8cnmgkqrFCwVA+DuoThBL
- j6pIiK7x6rgixkAO+eDmi3RkTMEFs7fHGOaeIkJ6gdGBFCER7AcZSC2HFdg2BNM4v/v4GfEDngY
- 8vmCNyMDulS3qtpY4w/eFTJqHSKY0kz30wBwd7du/lrFnbcLJuktc+FtM6HL7dsuqiBptxdr+l1
- aEPWMSbtG2LerED6cLnM7OsXwScbBwKd0K8+A1dFf6mFfb6+ZR8/9BVJDG6fDF5OvSNdnqaEkj+
- 1iEMV34DZDufzJaX3Iu7qO/HhGdVzcT4MgK+f02l5i2L75qtDtm9woCJUoKFbAuXqSstHmNrC7h
- WVLKP8u2t10QbRxJYPjHNSt/1Ch8hP6ocYFvxlyFVNDHVfZuc4zhZ6F9Hs1koFmurjLUE49o0s7
- nFIgXht0RgXnS1RiQ5A==
-X-Proofpoint-GUID: j5yrQEtjJSqM1ByVFyaazDVyJsWJfSva
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-25_03,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 malwarescore=0 suspectscore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 adultscore=0 impostorscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605250109
-X-Spamd-Result: default: False [-0.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001EF:EE_|CY8PR12MB8313:EE_
+X-MS-Office365-Filtering-Correlation-Id: ee565dfd-7e09-458c-9f0c-08deba4b7bd7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|36860700016|376014|921020|11063799006|6133799003|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	htt4TGYhUk8/cBc2sHVyd6XLDVxneJ7LUCCa8A6+cVYZHtnFHtbhXBwzR1AyG/JZybaHTS800gqyu2KnamEcIEqjh0HORtDlB1lVimmIXNI5ilX61Hyq0E3WmEfwsgZR/lAOEDv95ldhtIoMS8lNSOztqhGs2biTy4ruMOm3EO8pVYDGKccDPV0ReIgEUvMo7meCO1x2Bx8waoRklIPljUlK2EEL97BDOMUVP8BlQYXkaVxqz9CQqLpWRY2s5QI53751Kx6PeMuYfWUvIUunGE3h+4ZU7A2vZxRX8FbPA+RCOE0yEllPhiduLo86tOdW76Ci9aRSQXD91DDEA/LkUZq0BiNt4vGkSOXeTnEfEmGQpjXfRlcBCPzAjb2vCAjSwA7kjmBNC9IvGr//lDid7tULRI3KjFk1nOdrIcJQRogclnYiLo2tC8OM4g/9ikjYhZ8NZW3yUCK3DTeF3ZnAsN9wm9SqF9gtSgnGsrQVC5qTiGYSTbLsazwAcCC9fJu34lK7j+3+eDSU++CiHvMyU7y+XLGlxfvaYt1tWv1vgtnqRAiy+2i2d/7Asc2cryvTraRTyXTW5ZRtwuYbf3OaWR3mmLqEgFFDnJXGVoJrkqupQnEXRTtJANr1eSOUpn3DiRkPsMg9VvzmJEaebFpSVrj857BRu+pCq3r7JhrcsYuAaF7jsyIMTvQRfg+jxy2Pp//KO7UrTh+N6wkNme2lBNxnV5YysW+P7iRmVeDw3oJb5ykR6DrZ+5dhB8ep59Nt5OSwy3UNbOVEaNH3RTbAEw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(36860700016)(376014)(921020)(11063799006)(6133799003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	S7Uojf/LasGG4ffTMqIz6VIpULM3RZezOydQ2ZGODZysIa474HoQSuvs64BkZ4PTuRorL1Nvf/Rv49kYbA98u9QsZBhQ0WLlQfuDncbmHng6WBAhLwiwfUsYstvDHuRS8/IfB7bfP7Ed8SiEy8AL2QCRCpQsnjO/ejQhEf47ybSFclWNM0hZ4HmdAcJC5HirLuPd0q4aQD2rICW5xR3BSX3Oz7GLB0pejwgfs631UcZGzwCzDGTWJ2UEJRKpzw9e03So71Arh/TapXvnL8X2b8MsJaFLuH/Rfm88aA1XSoAtu4YNZY0PALHNgso2wdqA9B8IKYf6xd59h7BH91e7qG6Lb6g7TnB1jNF5DwpXPvutkI1q0Tz1heaBaWndi9/ZJO5YRaXPX6E4Zai8YgvUF4hHI9rwTT4FTxWKFErgdirfQCpFVepLF25w1YsjJP79
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2026 10:50:49.4965
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee565dfd-7e09-458c-9f0c-08deba4b7bd7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001EF.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8313
+X-Spamd-Result: default: False [2.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	TAGGED_FROM(0.00)[bounces-10859-lists,dmaengine=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[oss.qualcomm.com,gmail.com,gondor.apana.org.au,davemloft.net,kernel.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-10860-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dmitry.baryshkov@oss.qualcomm.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	FROM_NEQ_ENVFROM(0.00)[nagendra.golla@amd.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[amd.com:+];
+	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 27FD65C957C
+	NEURAL_HAM(-0.00)[-0.996];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[9]
+X-Rspamd-Queue-Id: 791575C96F0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, May 25, 2026 at 03:39:17PM +0530, Kuldeep Singh wrote:
-> >>> These two entries are logically the same (SID & ~mask) as the first two,
-> >>> does it still work if you remove them?
-> >>
-> >> Yes, resulting sid is same for 84/94 and 86/92.
-> >> Basically, the resulting sid could be same, it's an optimization which
-> >> smmu is doing which can result in same SMR(Stream matching register)
-> >> routing 2 different sid to same context bank.
-> >> So, 2 sid can be used even though resulting sid remains same.
-> >>
-> >> Also, DT usually dictates what hw capabilities are supported and hence,
-> >> captured all apps entries here to match the hardware description.
-> >>
-> >> I hope this answers your query.
-> > 
-> > It doesn't. Can we drop them?
-> 
-> Could you please explain more on what's missing?
+This series adds per-channel reset support to the ZynqMP DMA driver using the generic
+reset framework, along with the corresponding dt-bindings update.
 
-Usually we don't have duplciate SIDs in DT. Why is it not the case for
-this device?
+Patch 1 adds the optional 'resets' property to the ZynqMP DMA dt-binding.
+
+Patch 2 adds reset control handling in the channel probe path to assert
+and deassert the channel reset during initialization.
+
+Golla Nagendra (1):
+  dmaengine: zynqmp_dma: Add per-channel reset support
+
+Jay Buddhabhatti (1):
+  dt-bindings: dma: xilinx: Add optional resets property for ZDMA
+
+ .../devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml | 3 +++
+ drivers/dma/xilinx/zynqmp_dma.c                             | 6 ++++++
+ 2 files changed, 9 insertions(+)
 
 -- 
-With best wishes
-Dmitry
+2.43.0
+
 

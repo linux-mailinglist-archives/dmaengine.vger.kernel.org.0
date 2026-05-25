@@ -1,135 +1,143 @@
-Return-Path: <dmaengine+bounces-10885-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10886-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aANxI32RFGrnOQcAu9opvQ
-	(envelope-from <dmaengine+bounces-10885-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 20:14:21 +0200
+	id 0C5aJJeyFGoHPgcAu9opvQ
+	(envelope-from <dmaengine+bounces-10886-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 22:35:35 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C58645CD93C
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 20:14:20 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36EEE5CE8E7
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 22:35:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 699243013A90
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 18:14:19 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8E11E3024F8F
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 20:33:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 080A234E761;
-	Mon, 25 May 2026 18:14:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2F7D3A9871;
+	Mon, 25 May 2026 20:32:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="PLOr+M1X"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQXg9+0g"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F9734D929
-	for <dmaengine@vger.kernel.org>; Mon, 25 May 2026 18:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EC839C63E;
+	Mon, 25 May 2026 20:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779732858; cv=none; b=oSYBM/QCVvAWOTA2I6fOeC9SE70dn0tQRupAlkElPG8RRQJ823ESYAkEuARivz2X36RfW4DIuxFHkjSiEIyfW6Zudu8tD/V/q3HpvYnDGKkN44ltPQlwhiAKpUEJZWpCVlBVi8grZ4BM8Y+x46gxaotVmw+ijioQQnowIYnVkNg=
+	t=1779741131; cv=none; b=DloYS/3KG5hl13BLHLQX37gwO8ppMIBfl06WUFk10ClyudSc804XKpSa8MstzRHKwXuLAe5DiRFan6utsYdCFtJ+BqeSiDEIGV+8XrxMRdmfpsr6KcQxlVpFcqpif3j2iD9VvLKDK0rIoI6zQMo431uWNvdUPjus1Yxbh+eKFCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779732858; c=relaxed/simple;
-	bh=Zdb6qlIBOgGM3tN1a+65vupLceom4UoJtB8lJlswxTI=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Content-Type:Subject; b=UekhdUgUu5crWwpeNSRagEBMI1hMIchGrEwhO6FMa/2RgIPgX2Hqs1P/NgbhJnr/6em0xA520m6gXJARME0NBtV/p9wzMBmxYDDNThYt9t/5ibVMk8F6PYFArdYM9UfU1UxWoBwlCgCFelV+ZIrM04frupzAVDK1sXaDXGwaWkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=PLOr+M1X; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:From:Cc:To:MIME-Version:Date:Message-ID
-	:references:content-disposition:in-reply-to;
-	bh=Zdb6qlIBOgGM3tN1a+65vupLceom4UoJtB8lJlswxTI=; b=PLOr+M1XM61SQ7P8RKjKihM0r2
-	u5869KxFOxPx4Qv4uAVF76NYf2UNeIN5P5Jd451txQquPhbks/rzDMHRg3a0Cg7uZUT5ouM6d4nN9
-	sHxoaUKp0kovV7RY9swWaD+vRS8UZQcmdXhm+/GylCBN3ppsq3iBNQo0Bz/ob9i2Yt0JfArazcAbD
-	Q5QqApxOXhbm0a7oKsTiqM6X1tz1YEX81Xj4M8agUTZ6QSzy7TSa8ju5USLtbCt8woT3inkuLJOqf
-	gmC2XspxbLwpz5nLxsO5P+dgYjinr3Q0h+/wkojwgD3+B02ZO2W5a7MGWxeYx3D7ShTKtuB7W0MT3
-	X8eFYkAA==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.2)
-	(envelope-from <logang@deltatee.com>)
-	id 1wRZoe-000000004KA-1p7o;
-	Mon, 25 May 2026 12:14:17 -0600
-Message-ID: <73349ba3-2755-4acb-812c-75edb9ff6ec7@deltatee.com>
-Date: Mon, 25 May 2026 12:14:05 -0600
+	s=arc-20240116; t=1779741131; c=relaxed/simple;
+	bh=h3kNNf9bQmpIEMHsGOEF4OitjEbuQUeFi9LDNYzBmc4=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=nzfyQqddWShi0Ds/Y0Rby2pRA1kIOgu9BBt+54OqEkgXKwI4YuDJts3KVyLr/5/EKZqWQ7Xd7UpsKmKybUJcf7ZQIWLxA7TKWvdgiKMoIVlM2w9Zolc7kXs7Sm4n0PleqIykSvOGTJ4o9Zj7abYE3DhBrzGhMXLUK7A2aYswPgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQXg9+0g; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 339801F00A3A;
+	Mon, 25 May 2026 20:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779741130;
+	bh=h3kNNf9bQmpIEMHsGOEF4OitjEbuQUeFi9LDNYzBmc4=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References;
+	b=OQXg9+0gBgVvIfqDGCcwOipVvzHltjs1bqpls3vPAz8N44CvRFNDtNwIu9hXODWgr
+	 k7vkypfYfp0ftClTxflM7Xl3RmPknAACAwXkRPXpzN9hgYQ9XWWxo8GkTQI3lvu76D
+	 kB4K7UxIvXuEAMZc0hC7zird+pw4vlZ92t9txln80Wi5NfjXZh6Edg34Z7QDv+Gh/r
+	 Ro+97wk90VkdyixHl01L4LGYTuErJXaBbJJ1Du0NJCseYZ8qu0gukwI0/79VdCUkm3
+	 TD0oWz8vnd7XC4N7wX8xDwuClwCG/2aNISAwHgz/P9BIuPI4khVX9nEWhxuWDStH7S
+	 R3DCHRFBh0rgA==
+Date: Mon, 25 May 2026 22:32:06 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Koichiro Den <den@valinux.co.jp>
+CC: Manivannan Sadhasivam <mani@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>, Vinod Koul <vkoul@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Damien Le Moal <dlemoal@kernel.org>,
+ Marek Vasut <marek.vasut+renesas@mailbox.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_0/3=5D_PCI=3A_endpoint=3A_Add?=
+ =?US-ASCII?Q?_PCI_DMA_endpoint_function_=28part_3/3=29?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <3dkicfydmrlm2i6ks34kwjdmlvb22ryftkfw2yj62o4rtj5xvl@f4gby5vlwtdf>
+References: <20260525063456.3317509-1-den@valinux.co.jp> <xnfnxv64hpil6if4ikyohxnarvsekbmjcc37k5zej264ix46z3@qtu6xj2uy3xi> <ahQJ4kuaBKMhj52L@ryzen> <3dkicfydmrlm2i6ks34kwjdmlvb22ryftkfw2yj62o4rtj5xvl@f4gby5vlwtdf>
+Message-ID: <F31848F5-5481-4402-9B45-9EC7BCC8B0B6@kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-CA
-To: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Frank Li <Frank.li@nxp.com>, Kelvin Cao <Kelvin.Cao@microchip.com>
-From: Logan Gunthorpe <logang@deltatee.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: dmaengine@vger.kernel.org, vkoul@kernel.org, hch@lst.de, Frank.li@nxp.com, Kelvin.Cao@microchip.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Question on adding sysfs entries to dmaengine devices
-X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [0.55 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	SUBJ_EXCESS_QP(1.20)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[deltatee.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[deltatee.com:s=20200525];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-10885-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10886-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	NEURAL_HAM(-0.00)[-0.814];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[logang@deltatee.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[deltatee.com:+];
+	FROM_NEQ_ENVFROM(0.00)[cassel@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: C58645CD93C
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,valinux.co.jp:email]
+X-Rspamd-Queue-Id: 36EEE5CE8E7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi,
+On 25 May 2026 16:03:35 CEST, Koichiro Den <den@valinux=2Eco=2Ejp> wrote:
+>On Mon, May 25, 2026 at 10:35:46AM +0200, Niklas Cassel wrote:
+>> On Mon, May 25, 2026 at 04:05:02PM +0900, Koichiro Den wrote:
+>>=20
+>> If so, but do really all endpoint controllers / endpoint controller dri=
+vers
+>> support binding to multiple EPFs?
+>
+>No=2E For example, R-Car S4's PCIe controller supports multi-functions, w=
+hile
+>RK3588's PCIe controller seems not=2E So with this scheme, RK3588 would n=
+ot
+>support the NTB transport backed by PCI EP DMA=2E
 
-Now that the switchtec-dma driver is merged there is some work we have
-started to add some sysfs attributes which can be used to tune the
-hardware. However, we have some questions on the best way to do that as
-the existing approaches are a bit questionable.
+I guess it depends on 'max-functions' being set in device tree or not:
+https://github=2Ecom/torvalds/linux/blob/master/drivers/pci/controller/dwc=
+/pcie-designware-ep=2Ec#L1365-L1367
 
-We need to add configuration attributes on a per-channel basis. ioat
-seems to be the only existing driver that does this. We considered
-copying the implementation, but it's a bit questionably as it uses
-kobject_init_and_add() directly to manually add attributes to the dma
-channel's device object. Which doesn't seem great.
-
-We considered adding attributes to the PCI driver instead of the dma
-device as that is in the control of the switchtec-dma driver, however,
-that is complicated because it would have to create a new sysfs
-directory for every channel so I'm not sure the resulting code will be
-much cleaner.
-
-I'd appreciate any advice we can get on the best approach here.
-
-I'm leaning towards cleaning up the ioat code to make adding channel
-attributes a feature of the dma-engine instead of having the low lever
-bits done in ioat. Then we would use the same interface in switchtec-dma.
-
-Thanks,
-
-Logan
+AFAICT, this value depends on how the DWC PCI controller hardware configur=
+ation=2E
 
 
+>
+>That restriction should be documented with the new NTB transport, which I=
+ will
+>submit if the direction taken by this series is acceptable=2E
+
+This is easy for me to say, since I am not the NTB maintainer, but it woul=
+d be nice if we could somehow come up with a design where we don't only sup=
+port EPCs that have 'max-functions' !=3D 1, because IIRC, most PCI EPCs hav=
+e 'max-functions' =3D=3D 1=2E
+
+
+Kind regards,
+Nikla
 

@@ -1,228 +1,198 @@
-Return-Path: <dmaengine+bounces-10867-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10868-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +Fj8L6QzFGo/KwcAu9opvQ
-	(envelope-from <dmaengine+bounces-10867-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 13:33:56 +0200
+	id 8KiyIrZGFGr0LwcAu9opvQ
+	(envelope-from <dmaengine+bounces-10868-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 14:55:18 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65C635C9F83
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 13:33:56 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E942C5CAC58
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 14:55:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 328C1300B479
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 11:33:52 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2AD003019802
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 12:55:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BDFD37DAA0;
-	Mon, 25 May 2026 11:33:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B3EE38331A;
+	Mon, 25 May 2026 12:55:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSjNbcHw"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="c4WijiTT";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="kvXxRQpr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2B0335555;
-	Mon, 25 May 2026 11:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD64382F2D
+	for <dmaengine@vger.kernel.org>; Mon, 25 May 2026 12:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779708831; cv=none; b=YNI2pbH016fXzzxnDuxJbt0IzPd8smCYDyKiI2jyKJ+V1/poBndm0AZPlSTcn04wXmvlGJSvOMPDvor9nOr3RS6ZxojW+LCo06CYwDpGwJcdOOE9KaNGbHEI3B2pSVlhOwxtUCAvfzV7VeLb8qfc9g4OLPTcL3h5EELDw2BtcAw=
+	t=1779713711; cv=none; b=UcZyZcrlB/q2KW9AfOuyPa9nF33NVv1pSN+vrBLvA7OIVcHlzRWBGdf2fve4sRZa/QHec59ZA5714JzbC3DlPHYueh3FNsPpYuVFoFbljauS1Y6JoVi9MPh155d/jWTe06gEFf7Kw2IZ6/YcNdFN/funxUPREKxTrfmgmVASkQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779708831; c=relaxed/simple;
-	bh=Laov1FUjobcUTu/tQOih70AjqKBWirqKflwXsTQLhlQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dZcrCYtqciVFdziOVOG4sBMkmvRjERqh6Sit7uuxI0lQAnfQVLaR4K/MqwkCUuoGF23Yf/uNhIAkoDjzrYFGLT/TWl7vQSCvg/i6ntB3UBOI7+HBEnIZsZ0z8mZmbLqR94/HbsT6onK0k/GS5PH81/qnDEXrhI2k5wyIRBjRyxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSjNbcHw; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68D6E1F00A3D;
-	Mon, 25 May 2026 11:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779708829;
-	bh=VCjaGzAn78vEBMsChjUib0AiS3nKSv5EcGC4aMT3l6w=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PSjNbcHw6OgwTSGOhMKNCRFFfjmL8aXZ9Vab2ek42E5Jyt8iXN8fSU5hwp+KdGgEF
-	 RYj/1VkysRA+DEq4Y/Nsj5yvFOsoM4X8Ehx+lrADRo1kiKEoqzY9utqi+1qoiHo5s3
-	 hN+3SRoXgIjdg8zCpmQvJy7Zrp2PgJn5DZg3Wvv3JkkP9lEER3k9MBlTOOi4xs1FYM
-	 3XeSUYsyVu5GI4EXhcSq4W0d7/VxRK/24sVRF1Xsi/OB2gbQCPSwAifBmT3eaNM7AX
-	 THGpaYv//z0tpJFBy7Wk88eGzJyL6DUNvO+aUgt5Y6bgPx1mAf6ekGWGgn3XOeEeZu
-	 Tbr4HJCtZbU6g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/2] dmaengine: zynqmp_dma: Add per-channel reset
- support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Golla Nagendra" <nagendra.golla@amd.com>
-Cc: robh@kernel.org, devicetree@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org, conor+dt@kernel.org
-In-Reply-To: <20260525105042.2249542-3-nagendra.golla@amd.com>
-References: <20260525105042.2249542-3-nagendra.golla@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 25 May 2026 11:33:49 +0000
-Message-Id: <20260525113349.68D6E1F00A3D@smtp.kernel.org>
+	s=arc-20240116; t=1779713711; c=relaxed/simple;
+	bh=jrPHDUm/+lT1kV/7BLXHI5qniXBpJQbPWvYor1QGy8A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o8CVxDMgX/wWbysE3lzwx1k+zx8CNCpgfasoRzqRYea6iEAsSViv0kKotF3oI4kPCFrMVwqN2tkK7Yzu4nk4SFYy7naZT4cmGOIFxjG+8qkf8eAbuz/vYI0MT4sN7M7ixvnrT034aW6fUa/FidnumqETMSlOIfibkD64gPKqrJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=c4WijiTT; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=kvXxRQpr; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64P7J60O2222127
+	for <dmaengine@vger.kernel.org>; Mon, 25 May 2026 12:55:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	V8RZuW+ZV8JwXDg+pkBPy+nHPlIxyE92twuTWRnC91s=; b=c4WijiTTAlmEp0+w
+	/W9j6w2M5I4CbSLHhOQhb+GKTEYs6b/OyTaOphOP74L6RDMMf3sEf4JnH6f1Lb4D
+	Gbad1SpCEyDbZNfP/3IEQKmwxEziephhfeC6gGKPOxzb3Ix4mIXvPXJV662XC/1p
+	gnf9FCQfPD8KVVAauCuWkLJKmnR4m3jA11oKs9BYn2Xca7R+8vo+f77CfwNKuq+l
+	BvHCltqO7wwY/JKd3jpNZgfBKOhYoyuxZ/oc9AGEyXVDa4/Ds3/meBl29qAIaeS9
+	ohsd4NVxhiPI3Vdeu+MvPhm8l6uqv50zNVH7lXYN5l6Wj3aLA1xl62uM32hC74Pv
+	onstzw==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eb4m7pnfe-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Mon, 25 May 2026 12:55:08 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-90fef17f6f5so214546485a.1
+        for <dmaengine@vger.kernel.org>; Mon, 25 May 2026 05:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1779713708; x=1780318508; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V8RZuW+ZV8JwXDg+pkBPy+nHPlIxyE92twuTWRnC91s=;
+        b=kvXxRQprFh21m87JzIZHdzrslb1EVeRg+FDQLLY1UZs14BhoBo6JfmtcijT0HoifMu
+         woJmWQk47P2iWqace2TfImQ9kopGb4FUyo+FQJTUEGZxnt5EfciCKvd3YyK8JYj/zu0C
+         kbUKbaOgRMqZraNvm9t6rlIlNjCFixfNKwaA/bNqZbQ1vlZmC2kZoAueTE3+D8EVMCEt
+         PGXmR9yukg1jzeMerTaHL5TPj6mdjRaB2KWZv8b+sgyU8MiAiRzXXoev+l1uxzLJsKtW
+         EDECNp5Cd8Jg5ADfBT7JZv4J2OxW+JOOuKIBer64+4lmuq54pLBqSWLu3f8DvRAK6ADS
+         wNSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779713708; x=1780318508;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=V8RZuW+ZV8JwXDg+pkBPy+nHPlIxyE92twuTWRnC91s=;
+        b=jak3kmmvmf0wWg3tQh9I66u8WkI/jMoUUaQCK1QTkcggM8+Lqlyxc+Y8AitXxWz5gf
+         g6uAlSSNb5EgLY35hniUyABbVtuxQDXtVvS9QXZf8Q/3UgM1tfpxWAFrFKGc3fxY4tcV
+         h2yvDzFs/y6yjEXIvstxZkGvBiopRjn7dE9Vi9UKZb0VaOLSU3BY/Gj2Q3lxaLhFDFhd
+         c4Ylkv76q4f0xQinyhsmYyP5dD/dmSvcRRTgj0+BnG92a4pnOZ+zQHGprPc0wnyNRan6
+         /msSUNceFjdacoPNcqIjfSffyjZKVU81Lcuct5plIw3HbUWBmewwbE46/sTUoDC7c7R1
+         mbVA==
+X-Forwarded-Encrypted: i=1; AFNElJ8qEcElwYBBZMCe0jDJCkNVNR7Hrmcp7Ap2THuWwkW6niB56KSExFT2Vo5DBT/Q2nEuqtLwY/+BrxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywo2LZiuQZql60ceZpj4TjYjIVvFkgasKavOGSKHtJjdczV1Zx0
+	F/MT3RnePMVCnclucKwD0OQC6ltYUt8h67/GE2gK3fvKGDGh2+IsAVBQquKqceSU5YITnKRLx76
+	MxXClnxTeONavmRdlhlzcqg4F3l+WxtE09rSp9UziiC3Qz+wIrB+xbtH18AC2qls=
+X-Gm-Gg: Acq92OF5PH8sJMyJfIYVi43fcxYOq9SLkWf139FGM/8r6EACqpcyCMw5eA6n+i65/mq
+	E/fQIfQNMqlCGiLbUn4YkVET2M2x0FO7kKdAxHg3bzSWQQk/dcZS+x8XLlGtjyWESXSyFbUmAo5
+	cPU+PmzBUC1TTUjDWAxZYaj+vCcjWSlLHUtM6oW0SbuDj0e+8UocjlrhLvW6JeBcD3ppd2xRHbA
+	VdjoSicMHI+WQaMANL5JIfBiirvOVV7HYjn2ChJmsiaSMPoXBOArlide5bBPr0J/UycS5T5EE6V
+	vGpPCev1aGUidAkLpx/uejWvidAPO3KdMIEkhrAxycxuDla80Nw6Ty90AoeAya9+DboSZgrpg9e
+	t6nBBp20PrtzabdCgNolokyd9XlvZMM1HP+kZxgaa19xTCw==
+X-Received: by 2002:a05:620a:6230:b0:914:c589:7945 with SMTP id af79cd13be357-914c58983dcmr702815585a.2.1779713708472;
+        Mon, 25 May 2026 05:55:08 -0700 (PDT)
+X-Received: by 2002:a05:620a:6230:b0:914:c589:7945 with SMTP id af79cd13be357-914c58983dcmr702812185a.2.1779713708003;
+        Mon, 25 May 2026 05:55:08 -0700 (PDT)
+Received: from [192.168.119.254] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bddc264feb2sm397057366b.10.2026.05.25.05.55.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 May 2026 05:55:07 -0700 (PDT)
+Message-ID: <78ce80bb-e8f6-427c-9620-53ae1edcb3e8@oss.qualcomm.com>
+Date: Mon, 25 May 2026 14:55:04 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/16] arm64: dts: qcom: shikra: Add cpufreq scaling node
+To: Komal Bajaj <komal.bajaj@oss.qualcomm.com>, Vinod Koul
+ <vkoul@kernel.org>,
+        Frank Li <Frank.Li@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Georgi Djakov <djakov@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, Imran Shaik <imran.shaik@oss.qualcomm.com>,
+        Aastha Pandey <aastha.pandey@oss.qualcomm.com>
+References: <20260525-shikra-dt-m1-v1-0-f51a9838dbaa@oss.qualcomm.com>
+ <20260525-shikra-dt-m1-v1-4-f51a9838dbaa@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260525-shikra-dt-m1-v1-4-f51a9838dbaa@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: d9aTmjnUScEGoxicd7UQG30D3zOtPGQt
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI1MDEzMiBTYWx0ZWRfX0CBhVW4Q0RGh
+ o3akc3Jo/aNeub346MQKwWe2zQDn/DePQf0WJBPqhZwblrC3Kj33e379wzQe5AJllQvLCE609Dc
+ TH2Pk7t+C8VyoOvP9D0D6F2nvjErmZMmnwkDgnluR67zXTlk7SZyXOq0U4itovMGHaWhtsAffbu
+ FzCbkRtVtQzh3PaRhR7SasF7eFYjCos4KdL4jN8xMwD8SXFprnpUCRKNOCV7yhqrTehHLlb9Rpw
+ uqkm4JGioSxLz0YJV0nMzwHIZXYiIyBTh2MFCDciZZZEMsy4ENRfGTJMO47lOA1OXgKp6/PG0n6
+ Shl+LuXdz9Xsph1jOkxj4z3MCcdt6G1zUzuALGtyzL5EMd+lGEPXE+FUc9hb2Khj2j9kWtJh9Sl
+ nYWT8GwW0N8qJEscFRlSSH4Ywid31gnVjR/GkK4BwBfQzUPmf27c4vHxviqsmZ9CpXihkyBdmwu
+ pojWEd6sdDkn/Hs8w9w==
+X-Authority-Analysis: v=2.4 cv=MrJiLWae c=1 sm=1 tr=0 ts=6a1446ac cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
+ a=EUspDBNiAAAA:8 a=gR7PYC-x2pxtVi67x8UA:9 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-ORIG-GUID: d9aTmjnUScEGoxicd7UQG30D3zOtPGQt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-25_03,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 priorityscore=1501 phishscore=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 bulkscore=0 malwarescore=0 spamscore=0
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
+ definitions=main-2605250132
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10867-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	TAGGED_FROM(0.00)[bounces-10868-lists,dmaengine=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	NEURAL_HAM(-0.00)[-1.000];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,qualcomm.com:email,qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:dkim];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[konrad.dybcio@oss.qualcomm.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	FROM_NO_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,smtp.kernel.org:mid,lists.linux.dev:replyto,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url]
-X-Rspamd-Queue-Id: 65C635C9F83
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: E942C5CAC58
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+On 5/24/26 9:49 PM, Komal Bajaj wrote:
+> From: Imran Shaik <imran.shaik@oss.qualcomm.com>
+> 
+> Add cpufreq-hw node to support cpufreq scaling on Qualcomm Shikra SoCs.
+> 
+> Co-developed-by: Aastha Pandey <aastha.pandey@oss.qualcomm.com>
+> Signed-off-by: Aastha Pandey <aastha.pandey@oss.qualcomm.com>
+> Signed-off-by: Imran Shaik <imran.shaik@oss.qualcomm.com>
+> Signed-off-by: Komal Bajaj <komal.bajaj@oss.qualcomm.com>
 
-Pre-existing issues:
-- [High] The probe error path leaks a runtime PM usage counter reference, p=
-ermanently breaking runtime PM and leaving hardware clocks enabled.
-- [High] Dropping the spinlock inside `list_for_each_entry_safe` allows con=
-current modification of the list, leading to memory corruption.
-- [High] Hardware registers are accessed in the IRQ handler without verifyi=
-ng if the device is active, risking a kernel panic on spurious interrupts.
---
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-commit b2d2a678f48614c7188f8d81cbc70143b2bdfc0f
-Author: Golla Nagendra <nagendra.golla@amd.com>
-Subject: dmaengine: zynqmp_dma: Add per-channel reset support
-
-This commit introduces per-channel reset support for Versal Gen 2 and
-Versal Net SoCs. It adds reset handling in the channel probe path using
-device_reset_optional() to trigger a reset pulse during initialization.
-Platforms without per-channel reset are unaffected.
-
-> diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_=
-dma.c
-> index f6a812e49ddca..51c831760372c 100644
-> --- a/drivers/dma/xilinx/zynqmp_dma.c
-> +++ b/drivers/dma/xilinx/zynqmp_dma.c
-[ ... ]
-> @@ -916,6 +917,11 @@ static int zynqmp_dma_chan_probe(struct zynqmp_dma_d=
-evice *zdev,
->  	if (IS_ERR(chan->regs))
->  		return PTR_ERR(chan->regs);
-> =20
-> +	err =3D device_reset_optional(&pdev->dev);
-> +	if (err)
-> +		return dev_err_probe(&pdev->dev, err,
-> +				     "failed to reset channel\n");
-> +
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does this error path leak a
-runtime PM usage counter reference?
-
-In zynqmp_dma_probe(), pm_runtime_resume_and_get() is called to increment
-the runtime PM usage counter and enable the device clocks. If a subsequent
-initialization step fails, such as the newly added device_reset_optional()
-returning -EPROBE_DEFER, the code jumps to the err_disable_pm label:
-
-zynqmp_dma_probe()
-    ...
-	ret =3D pm_runtime_resume_and_get(zdev->dev);
-    ...
-	ret =3D zynqmp_dma_chan_probe(zdev, pdev);
-	if (ret) {
-		dev_err_probe(&pdev->dev, ret, "Probing channel failed\n");
-		goto err_disable_pm;
-	}
-    ...
-err_disable_pm:
-	if (!pm_runtime_enabled(zdev->dev))
-		zynqmp_dma_runtime_suspend(zdev->dev);
-	pm_runtime_disable(zdev->dev);
-	return ret;
-
-Since the device is still runtime PM enabled, it skips
-zynqmp_dma_runtime_suspend() and fails to drop the usage counter with
-pm_runtime_put_noidle().
-
-Because -EPROBE_DEFER is a normal occurrence during boot, this path can
-be hit multiple times. Will this permanently leave the usage counter above
-zero, preventing the device from ever entering runtime suspend and leaving
-its clocks enabled indefinitely?
-
->  	chan->bus_width =3D ZYNQMP_DMA_BUS_WIDTH_64;
->  	chan->dst_burst_len =3D ZYNQMP_DMA_MAX_DST_BURST_LEN;
-
-[Severity: High]
-This is a pre-existing issue, but does dropping the spinlock inside
-list_for_each_entry_safe() in zynqmp_dma_chan_desc_cleanup() allow concurre=
-nt
-modification of the list, leading to memory corruption?
-
-When zynqmp_dma_chan_desc_cleanup() temporarily drops the lock to invoke
-the DMA callback:
-
-zynqmp_dma_chan_desc_cleanup()
-    ...
-	list_for_each_entry_safe(desc, next, &chan->done_list, node) {
-        ...
-		if (dmaengine_desc_callback_valid(&cb)) {
-			spin_unlock_irqrestore(&chan->lock, irqflags);
-			dmaengine_desc_callback_invoke(&cb, NULL);
-			spin_lock_irqsave(&chan->lock, irqflags);
-		}
-
-A client driver can concurrently invoke dmaengine_terminate_sync(), which
-calls zynqmp_dma_device_terminate_all() and executes
-zynqmp_dma_free_descriptors(). This moves all remaining elements, including
-the prefetched next pointer, from done_list to free_list.
-
-When zynqmp_dma_chan_desc_cleanup() reacquires the lock, won't it continue
-iterating using the corrupted next pointer that now resides in free_list,
-eventually interpreting the list head &chan->free_list as a struct
-zynqmp_dma_desc_sw and resulting in out-of-bounds memory accesses?
-
-[Severity: High]
-This is a pre-existing issue, but are hardware registers accessed in the
-IRQ handler without verifying if the device is active, risking a kernel
-panic on spurious interrupts?
-
-The IRQ handler zynqmp_dma_irq_handler() directly reads the ISR and IMR
-hardware registers:
-
-zynqmp_dma_irq_handler()
-    ...
-	isr =3D readl(chan->regs + ZYNQMP_DMA_ISR);
-	imr =3D readl(chan->regs + ZYNQMP_DMA_IMR);
-
-According to the Power Management Subsystem guidelines, IRQ handlers must
-use pm_runtime_get_if_active() before accessing hardware registers.
-
-Although this IRQ is not shared, spurious interrupts can still occur. If a
-spurious interrupt fires while the device is in a suspended state with its
-clocks disabled via zynqmp_dma_runtime_suspend(), could this unprotected
-register read lead to a synchronous external abort and crash the kernel?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260525105042.2249=
-542-1-nagendra.golla@amd.com?part=3D2
+Konrad
 

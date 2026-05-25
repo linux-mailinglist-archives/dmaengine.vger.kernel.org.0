@@ -1,51 +1,51 @@
-Return-Path: <dmaengine+bounces-10840-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10841-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QGJXAar6E2puHwcAu9opvQ
-	(envelope-from <dmaengine+bounces-10840-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 09:30:50 +0200
+	id 8GayD1v7E2puHwcAu9opvQ
+	(envelope-from <dmaengine+bounces-10841-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 09:33:47 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7330F5C728A
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 09:30:48 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28F125C72F2
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 09:33:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C2027300351D
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 07:30:47 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 932E53003812
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 07:33:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE2D83AC0CB;
-	Mon, 25 May 2026 07:30:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F4093D1CA4;
+	Mon, 25 May 2026 07:33:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LxSTqck5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWjiqyPS"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FF13AC0FD;
-	Mon, 25 May 2026 07:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB58A36E469;
+	Mon, 25 May 2026 07:33:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779694244; cv=none; b=iE9uws4tQKCxhd/BblUYQubJ+Dh4OMOXAV2Ix1edZ+hJvD4Rvb7ZrG7RsAuc8apReYUJdwjRJRk51+fh80CTPP8XKVFi5x5O/EVXE9kK7iyq1zhRb/CNLyytUaxVQyd4j9ONEgbmcIWdbNmyys9rqf/XVZM1f+3GWEXcUcW94Wk=
+	t=1779694423; cv=none; b=rbf5RP8GchNw8JRRu291uHlgjKnRS+EVTTvetatGXSWr+RNJjYB4cQs38LLr1STQ9ylVBwYqhmB/4uJ0cgqABemYSMQXN56eokFnAxycKA17P9RM2UldTB+40VUYeGAHRwQyZLvpWcQEF9bQeS0eyiJNKwFTfITl7KRXLzfcYWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779694244; c=relaxed/simple;
-	bh=It8iZuM6QP7I6MwV9Ai3AdUjJEiAZ1wpyqKVZaW76yE=;
+	s=arc-20240116; t=1779694423; c=relaxed/simple;
+	bh=tSV7SQd0EWTymtLoyCIduOOv2+iAlufFcDJfxDL7yLs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A49XG+b1iKTHdzaB3LGbywl/8AHNw5OyrS09Q3ZkLh1ISmHfuj9PRYSwBdwX0zKVYqDHimhTgtvX4MLBX2u6TlQyxw7l30a9h+IFod/Aul+1zYpjm6p05rP23R7a5W/d2Pd117Z1YmzTwYuQ8lh4M/8GR/JYEAr2OITAYZoKGTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LxSTqck5; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDD771F000E9;
-	Mon, 25 May 2026 07:30:38 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=JrWos+K0hCq3FhDmE7bbfOKcr2Buo85tNncTQBJ1onfAHak6mETp2v5WgpbPzr7/dCVn6g1kzUfRqNpwj3xCGObQBs3RDawKyFL0/Zri5v6FTrkWapXxBBqEoMk4Vdyf0hBww5Hvz865OgdJQFAOWufL6UzYXTL0kORCrvU7nFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWjiqyPS; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79F0C1F000E9;
+	Mon, 25 May 2026 07:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779694243;
-	bh=H/GJXMbIrHfp+EV5iYznnCqyd/ERlgXKCLBbiVMKu1k=;
+	s=k20260515; t=1779694421;
+	bh=pnmbkMl2xDu/8awN4SRZnDiwM/lHHq169JfBYgrjKUw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LxSTqck5DjG47msvzDgb4i41t/eYv5iLLU+QtWBGUSvR9/b552UO3PgIaxuO7p69N
-	 NnSUug6vsqjPFHKzSEx0iQnO6aspKfYT9Qa4Ht261lf8oCzaEl1d0eTAaZq+mtC6WT
-	 47pB+i+Y8tkp5AtnJUlELoYxPhQLEkPaonZRBz8CvFUnv+A8ws+1ncf40ZDZPm21k7
-	 Zqmyap6z60P5i+l6t9SrtPpijvKaG06M286Zzef83o7s73wdThGKBAe3OEzpdRbrK3
-	 uuxQ05/dWr5u0drqnN7+wOwQncxTiv+0Uw7FpZBNoxbvnsmLuTSU2zZBUxkwCLpKVl
-	 kvjME/eguSFhg==
-Message-ID: <cd75b429-3259-456d-9551-272fe32780c0@kernel.org>
-Date: Mon, 25 May 2026 10:30:37 +0300
+	b=FWjiqyPSYYs/HbFGyzFRa2Hmda3l8FU7O7Af8p9bBnQnwsqZNExHPdpjshjoXDaS3
+	 X2FulI7i2GXdbWAnXCestjSty/54UrrvOkAwllCGXQLv8N7l0jV3eRtxXoyPRz/Tsi
+	 D500A2TI9Q7vT1BeROuHEbxK489+rhgg+MJfzHAMrPTar+gcWEhPDI7mtEaLQpsJ76
+	 ewaa3Osuvc/IdKC2FG6pfo0v7K08PmcoPk1pyxPWSABXQxOnqU41GIpdus925vtgR8
+	 dTDA1azHkUJ04r9rUCd1PYdOgBv6QITQp0QCgwI22Ojw1JhtDa1ByKgFu4pgrMUPSk
+	 UNnFxzWSbNmUQ==
+Message-ID: <4c266a28-1d43-4453-a776-2c2f022f5c85@kernel.org>
+Date: Mon, 25 May 2026 10:33:34 +0300
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -53,8 +53,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: sashiko review (Re: [PATCH v5 13/17] dmaengine: sh: rz-dmac: Add
- runtime PM support)
+Subject: sashiko review (Re: [PATCH v5 14/17] dmaengine: sh: rz-dmac: Add
+ suspend to RAM support)
 To: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, vkoul@kernel.org,
  Frank.Li@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
  perex@perex.cz, tiwai@suse.com, biju.das.jz@bp.renesas.com,
@@ -64,10 +64,10 @@ To: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, vkoul@kernel.org,
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-sound@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 References: <20260512121219.216159-1-claudiu.beznea.uj@bp.renesas.com>
- <20260512121219.216159-14-claudiu.beznea.uj@bp.renesas.com>
+ <20260512121219.216159-15-claudiu.beznea.uj@bp.renesas.com>
 Content-Language: en-US
 From: Claudiu Beznea <claudiu.beznea@kernel.org>
-In-Reply-To: <20260512121219.216159-14-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20260512121219.216159-15-claudiu.beznea.uj@bp.renesas.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -75,12 +75,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10840-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10841-lists,dmaengine=lfdr.de];
 	FREEMAIL_TO(0.00)[bp.renesas.com,kernel.org,gmail.com,perex.cz,suse.com,pengutronix.de,glider.be,renesas.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -89,130 +89,209 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
+	NEURAL_HAM(-0.00)[-0.999];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@kernel.org,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,renesas];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 7330F5C728A
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 28F125C72F2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
- >commit 537bc713380d43d1dfa0d61269accb53a834436d
+ >commit 536ec6e9c07fa47423de7d20ebc829e45cbcedfb
  >Author: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
- >dmaengine: sh: rz-dmac: Add runtime PM support
- >This commit protects driver exposed APIs with runtime PM suspend/resume
- >calls before accessing HW registers. The changes avoid accessing HW
- >registers after a failed system suspend leaves the runtime PM state
- >improperly reinitialized, preparing the driver for suspend-to-RAM support.
+ >Subject: dmaengine: sh: rz-dmac: Add suspend to RAM support
+ >This commit adds suspend to RAM support for the Renesas RZ/G3S SoC by
+ >saving and restoring the DMA IP registers. It adds specific suspend and
+ >resume handling for cyclic channels, and waits for non-cyclic channels
+ >to finish before suspending.
  >> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
- >> index d6ad070be705c..df91657fd5e3d 100644
+ >> index df91657fd5e3d..b0a8590f4a9da 100644
  >> --- a/drivers/dma/sh/rz-dmac.c
  >> +++ b/drivers/dma/sh/rz-dmac.c
- >> @@ -488,7 +488,15 @@ static void rz_dmac_prepare_descs_for_cyclic(struct 
-rz_dmac_chan *channel)
+ >[ ... ]
+ >> @@ -1002,20 +1008,57 @@ static int rz_dmac_device_pause(struct dma_chan *chan)
+ >>      return rz_dmac_device_pause_set(channel, BIT(RZ_DMAC_CHAN_STATUS_PAUSED));
+ >>  }
  >>
- >>  static void rz_dmac_xfer_desc(struct rz_dmac_chan *chan)
- >>  {
- >> +    struct dma_chan *ch = &chan->vc.chan;
- >> +    struct rz_dmac *dmac = to_rz_dmac(ch->device);
- >>      struct virt_dma_desc *vd;
- >> +    int ret;
- >> +
- >> +    PM_RUNTIME_ACQUIRE_IF_ENABLED(dmac->dev, pm);
- >> +    ret = PM_RUNTIME_ACQUIRE_ERR(&pm);
- >> +    if (ret)
- >> +            return;
- >Does this return early without pulling the descriptor from the queue? If PM
- >acquisition fails, it seems the descriptor is left permanently stranded on the
- >virtual channel's issued list, and the channel queue could silently stall.
-
-The rz_dmac_xfer_desc() is called dma_async_issue_pending() or after each 
-descriptor is completed. The documentation of dma_async_issue_pending states:
-
-/**
-  * dma_async_issue_pending - flush pending transactions to HW
-  * @chan: target DMA channel
-  *
-  * This allows drivers to push copies to HW in batches,
-  * reducing MMIO writes where possible.
-  */
-
-Thus, I'm not sure we should free the descriptors on this path. I think that's 
-the scope of ->device_terminate_all() and ->device_free_chan_resources()
-
  >[ ... ]
- >> @@ -549,6 +557,12 @@ static void rz_dmac_free_chan_resources(struct dma_chan 
-*chan)
- >>      struct rz_dmac *dmac = to_rz_dmac(chan->device);
- >>      struct rz_dmac_desc *desc, *_desc;
- >>      unsigned long flags;
- >> +    int ret;
- >> +
- >> +    PM_RUNTIME_ACQUIRE_IF_ENABLED(dmac->dev, pm);
- >> +    ret = PM_RUNTIME_ACQUIRE_ERR(&pm);
- >> +    if (ret)
- >> +            return;
- >If the runtime PM acquisition fails, does returning early bypass all subsequent
- >software state cleanup like vchan_free_chan_resources() and freeing allocated
- >DMA descriptors? Even if the hardware cannot be accessed, shouldn't the
- >software-allocated resources still be freed to avoid memory leaks?
-
-I'll adjust it like this.
-
- >[ ... ]
- >> @@ -697,8 +711,15 @@ rz_dmac_prep_dma_cyclic(struct dma_chan *chan, 
-dma_addr_t buf_addr,
- >>  static int rz_dmac_terminate_all(struct dma_chan *chan)
+ >>  static int rz_dmac_device_resume_set(struct rz_dmac_chan *channel,
+ >>                                   unsigned long clear_bitmask)
  >>  {
- >>      struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
- >> +    struct rz_dmac *dmac = to_rz_dmac(chan->device);
- >>      unsigned long flags;
- >>      LIST_HEAD(head);
+ >> -    int ret = 0;
+ >>      u32 val;
+ >> +    int ret;
+ >>
+ >>      lockdep_assert_held(&channel->vc.lock);
+ >>
+ >[ ... ]
+ >> +    rz_dmac_ch_writel(channel, CHCTRL_CLRSUS | CHCTRL_SETEN, CHCTRL, 1);
+ >>
+ >> -    rz_dmac_ch_writel(channel, CHCTRL_CLRSUS, CHCTRL, 1);
+ >>      ret = read_poll_timeout_atomic(rz_dmac_ch_readl, val,
+ >> -                                   !(val & CHSTAT_SUS), 1, 1024, false,
+ >> -                                   channel, CHSTAT, 1);
+ >> +                                   ((val & (CHSTAT_SUS | CHSTAT_EN)) == 
+CHSTAT_EN),
+ >> +                                   1, 1024, false, channel, CHSTAT, 1);
+ >Can this condition time out spuriously for short non-cyclic DMA transfers? If
+ >a transfer finishes successfully before the first poll read, the hardware
+ >would clear CHSTAT_EN to 0. The polling condition would then evaluate to
+ >false, causing the macro to incorrectly return -ETIMEDOUT.
+
+Yes, in theory that can happen.
+
+ >>
+ >>      channel->status &= ~clear_bitmask;
+ >>
+ >[ ... ]
+ >> @@ -1406,6 +1459,151 @@ static void rz_dmac_remove(struct platform_device *pdev)
+ >>      pm_runtime_disable(&pdev->dev);
+ >>  }
+ >>
+ >> +static int rz_dmac_suspend_prepare(struct device *dev)
+ >> +{
+ >> +    struct rz_dmac *dmac = dev_get_drvdata(dev);
  >> +    int ret;
  >> +
  >> +    PM_RUNTIME_ACQUIRE_IF_ENABLED(dmac->dev, pm);
  >> +    ret = PM_RUNTIME_ACQUIRE_ERR(&pm);
  >> +    if (ret)
  >> +            return ret;
- >Similarly, does returning early here skip clearing the virt-dma lists? Failing
- >to do so could leave orphaned descriptors active, which might lead to
- >use-after-free issues when the client subsequently frees its DMA buffers.
-
-I'll adjust it.
-
- >[ ... ]
- >> @@ -909,8 +935,15 @@ static enum dma_status rz_dmac_tx_status(struct 
-dma_chan *chan,
- >>                                       struct dma_tx_state *txstate)
- >>  {
- >>      struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
- >> +    struct rz_dmac *dmac = to_rz_dmac(chan->device);
- >>      enum dma_status status;
- >>      u32 residue;
- >> +    int ret;
  >> +
- >> +    PM_RUNTIME_ACQUIRE_IF_ENABLED(dmac->dev, pm);
- >> +    ret = PM_RUNTIME_ACQUIRE_ERR(&pm);
+ >> +    for (unsigned int i = 0; i < dmac->n_channels; i++) {
+ >> +            struct rz_dmac_chan *channel = &dmac->channels[i];
+ >> +
+ >> +            guard(spinlock_irqsave)(&channel->vc.lock);
+ >> +
+ >> +            /* Wait for transfer completion, except in cyclic case. */
+ >> +            if (channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC))
+ >> +                    continue;
+ >> +
+ >> +            if (rz_dmac_chan_is_enabled(channel))
+ >> +                    return -EAGAIN;
+ >Could returning -EAGAIN here cause a CPU livelock? In dpm_prepare(), an
+ >-EAGAIN error is cleared and retried continuously in a while
+ >(!list_empty(&dpm_list)) loop. Since the device is not advanced on error,
+ >the PM core might loop infinitely without any backoff until the transfer
+ >completes.
+ >Also, is there a race condition with non-cyclic channels after this callback
+ >returns 0? Since the DMA controller's prepare callback runs before consumer
+ >peripherals, an active consumer could immediately submit new non-cyclic
+ >transfers before the actual suspend phase begins.
+
+The expectation was to wait until all the transfers complete. But, indeed, there 
+might be some issues with this approach. E.g., the serial driver simulates 
+cyclic transfers for rx by enqueuing individual SG transfers, and, after each SG 
+is completed a new SG is enqueued. So, at any time, the channel is enabled. That 
+would lead to the suspend being blocked at this point. As I don't see a way to 
+go out of this, for the moment I will drop the prepare callback until the serial 
+RX DMA will be adjusted (maybe, to use the cyclic support).
+
+
+ >> +    }
+ >> +
+ >> +    return 0;
+ >> +}
+ >> +
+ >[ ... ]
+ >> +static int rz_dmac_suspend(struct device *dev)
+ >> +{
+ >> +    struct rz_dmac *dmac = dev_get_drvdata(dev);
+ >> +    int ret = 0;
+ >> +
+ >> +    for (unsigned int i = 0; i < dmac->n_channels; i++) {
+ >> +            struct rz_dmac_chan *channel = &dmac->channels[i];
+ >> +
+ >> +            guard(spinlock_irqsave)(&channel->vc.lock);
+ >This isn't a bug, but does this function mix scope-based guard() cleanup
+ >with goto-based error handling? The cleanup guidelines suggest that
+ >functions should either convert all resources to scope-based cleanup or
+ >convert none of them to avoid confusing ownership semantics.
+ >> +
+ >> +            if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC)))
+ >> +                    continue;
+ >> +
+ >> +            ret = rz_dmac_device_pause_internal(channel);
+ >> +            if (ret) {
+ >> +                    dev_err(dev, "Failed to suspend channel %s\n",
+ >> +                            dma_chan_name(&channel->vc.chan));
+ >> +                    break;
+ >> +            }
+ >> +
+ >> +            channel->pm_state.nxla = rz_dmac_ch_readl(channel, NXLA, 1);
+ >Does saving only the NXLA register result in data loss for cyclic channels?
+ >When a cyclic channel is paused, it stops at its current descriptor. Without
+ >saving and restoring the Current Link Address and Current Transfer Byte
+ >count, resuming the channel might force it to skip the remaining bytes of the
+ >interrupted descriptor and start fetching the next one.
+
+This is something expected, hardware have no capability to overcome this issue.
+
+ >> +    }
+ >> +
  >> +    if (ret)
- >> +            return ret;
- >Is it valid to return a negative integer error code directly as an
- >enum dma_status? Client drivers might check the status against specific
- >enumeration constants like DMA_ERROR, and could fail to recognize this
- >raw error code.
+ >> +            goto suspend_recover;
+ >> +
+ >> +    ret = reset_control_assert(dmac->rstc);
+ >Since non-cyclic channels are unconditionally skipped in the loop above and
+ >the hardware reset is asserted here, could newly queued non-cyclic requests
+ >from consumers be violently interrupted mid-transfer?
 
-Indeed, I'll adjust it.
+The expectation is that non-cyclic transfers have already been paused by the 
+time this code executes.
 
- >Also, does this add unnecessary PM locking overhead on the hot path for
- >software-only status queries? Since dma_cookie_status() might resolve the
- >status entirely in software, and hardware residue is only queried if the
- >status is DMA_IN_PROGRESS and txstate is not NULL, could the PM acquisition
- >be deferred until after verifying that reading the hardware residue is
- >actually necessary?
+ >> +    if (ret)
+ >> +            goto suspend_recover;
+ >> +
+ >> +    ret = pm_runtime_put_sync(dev);
+ >> +    if (ret < 0)
+ >> +            goto reset_deassert;
+ >> +
+ >> +    return 0;
+ >> +
+ >> +reset_deassert:
+ >> +    reset_control_deassert(dmac->rstc);
+ >> +suspend_recover:
+ >> +    rz_dmac_suspend_recover(dmac);
+ >> +    return ret;
+ >> +}
+ >> +
+ >[ ... ]
+ >> +static const struct dev_pm_ops rz_dmac_pm_ops = {
+ >> +    .prepare = rz_dmac_suspend_prepare,
+ >This isn't a bug, but should rz_dmac_suspend_prepare be wrapped in
+ >pm_sleep_ptr() here? The power management subsystem guidelines recommend
+ >using pm_sleep_ptr() for individual callbacks within the ops structure to
+ >prevent dead code and unused variable warnings when CONFIG_PM_SLEEP is
+ >disabled.
 
-This will be adjusted as well.
+I will drop this function here in the next version as I discovered some issues 
+with it and the serial RX DMA.
+
+ >> +    SYSTEM_SLEEP_PM_OPS(rz_dmac_suspend, rz_dmac_resume)
+ >> +};
+ >> +
+ >>  static const struct rz_dmac_info rz_dmac_v2h_info = {
+ >>      .icu_register_dma_req = rzv2h_icu_register_dma_req,
+ >>      .default_dma_req_no = RZV2H_ICU_DMAC_REQ_NO_DEFAULT,
+ >> @@ -1432,6 +1630,7 @@ static struct platform_driver rz_dmac_driver = {
+ >>      .driver         = {
+ >>              .name   = "rz-dmac",
+ >>              .of_match_table = of_rz_dmac_match,
+ >> +            .pm     = pm_sleep_ptr(&rz_dmac_pm_ops),
+ >This isn't a bug, but should pm_ptr() be used for the dev_pm_ops structure
+ >pointer instead of pm_sleep_ptr()? The power management guidelines recommend
+ >using pm_ptr() for the structure pointer, while reserving pm_sleep_ptr() for
+ >the individual sleep callbacks inside the structure.
+
+OK, will switch to pm_ptr()
+
+ >>      },
+ >>      .probe          = rz_dmac_probe,
+ >>      .remove         = rz_dmac_remove,
 

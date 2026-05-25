@@ -1,190 +1,202 @@
-Return-Path: <dmaengine+bounces-10875-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10876-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6DQqCVhaFGofMwcAu9opvQ
-	(envelope-from <dmaengine+bounces-10875-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 16:19:04 +0200
+	id 8N4PEvpcFGqPMwcAu9opvQ
+	(envelope-from <dmaengine+bounces-10876-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 16:30:18 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E4A85CBA94
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 16:19:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A64085CBBC1
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 16:30:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8DE163014C30
-	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 14:16:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6B6D8300D173
+	for <lists+dmaengine@lfdr.de>; Mon, 25 May 2026 14:28:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45E8B3B4E9A;
-	Mon, 25 May 2026 14:16:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F234C3EBF15;
+	Mon, 25 May 2026 14:28:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DGIMW12u"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SDMizhPw"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397A33B2FDF
-	for <dmaengine@vger.kernel.org>; Mon, 25 May 2026 14:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB933859DC;
+	Mon, 25 May 2026 14:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779718571; cv=none; b=jVAx+hvlJCfoFZhltCWYYquwpGFYd4KELmWiup6YLzsEdhncVcM/G0ex+OhYemKht4/ndvP8ynRrCW9HWgBp4NlbvUCbloIndy3CD4dP9MXPMRBrUFGWvZOKbLaG3PwKN3BPb4ZggzH68F+uKBjUDGz3DEuw18wprBrgsnx1UZ4=
+	t=1779719327; cv=none; b=TozRAIe73Y94yYwfd5l93XPUcS96HN3s8rfA/V15Zf6V3INZfwas3/5dP3uML1aj6/eYqztTR2+Bmt+add48Ys5IZ4XjPt2amyxmmLRGuM88hymo/O+KRAK1/pGBvk/qxivJWZRxAGt8U6bZO1EOozXQVsf4l8LamSBP1M3pWDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779718571; c=relaxed/simple;
-	bh=97TcSk7c6BRe9ZZo0iCmpFWTVvCvOAMfpbkGNdYidDc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vc0xVR1ys3hY/WPZUk//FO4d4h5aSSwIoe2lPrmTg3eOV+F0j792qiU0MNLAwnaz0onlCKZ2iKEjoJPYcUsf6nnOO6tK2Jki5SM9z/bKdcPxRb82vSIjdY/xS6MP0OyB6peFrq92+fP/fEH3WrDoKiSfNtvri8An7ujrOJ5xGwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DGIMW12u; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7e568ab0bc5so10478281a34.0
-        for <dmaengine@vger.kernel.org>; Mon, 25 May 2026 07:16:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779718561; x=1780323361; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TnXyCVWggg3/qEkvLDg7uPlDc01HqQ/Q3+WVp/VlN0w=;
-        b=DGIMW12uCBivuUxH6a+VlhdI2nc8YiI/Aa0Tu0Mjzm+4fD/IG06awA8dFj4v3wxhkn
-         DKC19jhdWlKQwnl3ZgbJkJTlyMX3gFTSSQ6GlC5giiBjlusl38UpkdiKN3ocjuW0GOXJ
-         MckumuEbOmOB9paqcxO35GjV1pvzLzuL5mQ/JhbcyP+sn/W73YzlHpdSEa9GwEolFOuJ
-         ZG+UPiAqTi+oPpAdJxcNgq8LdfQmsEzwTXuSyporEj6gWJDGow8nvJujRta07pXaq14M
-         rlFFxyTO1s06oECKpbR3xu7LVxTtvXC7LlzWqPhM8BBUSAQWrFIsNVuKyhAgpvoVROjH
-         f21A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779718561; x=1780323361;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TnXyCVWggg3/qEkvLDg7uPlDc01HqQ/Q3+WVp/VlN0w=;
-        b=BCouUB5R0K8gWabYUHqON51ENfh9cKsa6NzRaxQn4RIs/7ZSrinY16tJcqZ880RkPU
-         XxC9hfISBCArxGManzPILxIHTkY7ki4UYfpT7br4Sod6qcMdCt22oM865bu1yViR5+Aw
-         zr5UyYuWXgwTPbDiPugzCUySP1Jlehve/EiCpoYhWkKXSKpJSCSQcgYQQfPfuxhNoV9v
-         ZkG/bIgmGWCrZNWwxSoTXxy+dwTegA4O4VGeLyphhPL5Roco8RFPBUVoLekcLYWPVstB
-         SwBkBlT23TxzfdS9PArfjJYoK0nYzqbVA1JroAcRNZjZYQwqyjaOjhxfnZr9QDdttAZq
-         NKvg==
-X-Forwarded-Encrypted: i=1; AFNElJ+ZoFCN7lLUdvEHKIiXYldPCtt5DlZQUxftQnBjjaVVOr8qJCAvZLNLHfpfb2/IKZ/CTnrX7USdJlk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwU9ga0CZk9LLaXHy6ArHiLZ3828FUTjoICQRFuH5wyAoYIE5Y1
-	4Fo32aHSp59nBk/ot1F3DTGng1dvybwflGOXwTucM1B43M2dTerwl6Hf
-X-Gm-Gg: Acq92OF/LmT6xJgSL7wpTY19ZF/17wOlEl1j2NuqkRaLvqo+yUP/eH+x6JKdv1fad64
-	M4+CJWbzntqqrTbbu/qPAGZ5VqLMqmK+jmBDM0s4p7wEQWZG9FI3XUuzv3f/UVnUBL0Mnnvhd2A
-	prlmQPt+tMCqTxX61NzbfIXPKP2JPQdNuXmmC2KYtnaFZDvEx0IdEFlU5Yq52f+jKG5HwzN2+hb
-	T78MdzwxdKW98ZwLWZE0OkYWm2KLdU4s3Q8Pt7pcu2kSa7Hur6fdXZI8d/ACiLvdvK4o0Xf1vcu
-	0fb1pmKTYbsAV+5F25qn5zrl05xWuoqnC4Mpjn5RZgYnfUWyt07CelLGpOxmTvtwbgMWGw/v9iZ
-	0xqWrQZtCW71PvLbBF/pxpg4cz0ME2vBQ1b/0rGbOq+GHaDzctaaG3+Gy9H2A221P22PaV0NlcW
-	ocglfAwjcq+W9o/c2tfCEdPJgOGbBfkPcwDAgL8xwy32xDlaMulSw=
-X-Received: by 2002:a05:6830:6e0c:b0:7e6:69f:d208 with SMTP id 46e09a7af769-7e6069fd4f3mr5253693a34.2.1779718561041;
-        Mon, 25 May 2026 07:16:01 -0700 (PDT)
-Received: from i4-gl-tmk5904.ad.psu.edu ([130.203.156.186])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cc812e657csm121728406d6.24.2026.05.25.07.16.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2026 07:16:00 -0700 (PDT)
-From: Yuho Choi <dbgh9129@gmail.com>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Frank Li <Frank.Li@kernel.org>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yuho Choi <dbgh9129@gmail.com>
-Subject: [PATCH v3] dmaengine: idxd: fix fdev setup failure cleanup in idxd_cdev_open()
-Date: Mon, 25 May 2026 10:15:50 -0400
-Message-ID: <20260525141550.1385581-1-dbgh9129@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1779719327; c=relaxed/simple;
+	bh=6cb6z2BBZRQJ7bnscG0pV7ki/3VvomBAR+MXNL+zNi0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=neECjLS4+NfxqZBQT+GlW+JxgxZdTNcefy+eXJjFAXSC+tvUQfaqopFpGtZxisBPXdM7MK4UeqC/EajxTq76yW5RrL5/AVF9kgk/vWFAMrW4ke6vbc/RWotizMS1TxZRakJOm4PD1xbHgWgZnHb9ROzC/8Ec9ekONMx9whoLjAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SDMizhPw; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED79D1F000E9;
+	Mon, 25 May 2026 14:28:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779719326;
+	bh=Gc8TIeAOC4qdMwFacD5GmDdKx0GJXpEWvPVgjCfPElw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=SDMizhPwX0xZzS0fH+xUwBftFY6sa12bt5uSBmGojFP4irF9V6vpdUvbPEnAWKn/r
+	 9XhKPl2ahdJofwQsrW2L+m4SK6rTYIN2SUYSFr+2I/IlTnMmmh9z6bXnLCf9Sbs8Jo
+	 eC/ksxNRPEoUzXFg1pado0o7Lwdutvw4esnSRt6/aRC50UINhTrHErVuCrqxh7o3kI
+	 //zGPX0gI48jnu+d4HCln3KwbWQ+cSXKBCFQultWv/zUxTP06eEzvul65vGT6Xpdl6
+	 VzhZsZ/c1ySzIvgzNEVkxyCv2VwnXKznBE2d84MzFZK08bXTXKKZkazZgI+L8Y9GfA
+	 izBxEdV9jQZVw==
+Date: Mon, 25 May 2026 09:28:43 -0500
+From: Eric Biggers <ebiggers@kernel.org>
+To: Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
+Cc: Thara Gopinath <thara.gopinath@gmail.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+	Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Gaurav Kashyap <gaurav.kashyap@oss.qualcomm.com>,
+	Neeraj Soni <neeraj.soni@oss.qualcomm.com>
+Subject: Re: [PATCH 0/3] Add support for qcrypto on shikra
+Message-ID: <20260525142843.GA2018@quark>
+References: <20260515-shikra_qcrypto-v1-0-80f07b345c29@oss.qualcomm.com>
+ <20260514194735.GA1939213@google.com>
+ <d4d35e17-84fa-4c95-9bfb-abfd25ea7f4a@oss.qualcomm.com>
+ <20260522024912.GC5937@quark>
+ <c1697372-54ec-4f57-85d9-ad375ff1a44d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c1697372-54ec-4f57-85d9-ad375ff1a44d@oss.qualcomm.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-10876-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[intel.com,kernel.org,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-10875-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dbgh9129@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[gmail.com,gondor.apana.org.au,davemloft.net,kernel.org,vger.kernel.org,oss.qualcomm.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_RCPT(0.00)[dmaengine];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ebiggers@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 7E4A85CBA94
+X-Rspamd-Queue-Id: A64085CBBC1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The failed_dev_add and failed_dev_name paths drop the file-device
-reference while wq->wq_lock is still held. If put_device(fdev) drops the
-last reference, idxd_file_dev_release() runs synchronously and tries to
-take wq->wq_lock again, deadlocking.
+On Mon, May 25, 2026 at 11:10:10AM +0530, Kuldeep Singh wrote:
+> > It sounds like you don't actually have an answer to my questions, then.
+> > 
+> > Performance tests (e.g.
+> > https://lore.kernel.org/r/20250615031807.GA81869@sol/) have clearly
+> > shown that this driver is an order of magnitude slower than the CPU.
+> > 
+> > This driver has historically been quite harmful.  People were using it
+> > accidentally and encountering very bad performance, as well as bugs such
+> > as crashes and filesystem hangs.  We fixed that by lowering its
+> > cra_priority.  But for the same reason, even when enabled on a platform,
+> > it's not actually used.  Linux would be better without this driver.
+> >
+> 
+> +Bartosz, Gaurav, Neeraj
+> 
+> Hi Eric,
+> 
+> GPCE is relevant in terms of providing hardware security.
+> There are multiple usecases coming up for example to handle DRM/secure
+> buffer usecases to improve overall throughput for secure content.
+> 
+> Regarding performance, it's currently slower compared to arm CE but
+> provides an edge by giving hardware security which is considered more
+> secure.
+> 
+> Btw, there's been performance improvement with new targets and we are
+> expecting to achieve far more better performance with new SoCs family.
+> Pakala:    GPCE - 550MBps, ARMv8 - 8GBps
+> Kaanapali: GPCE - 3GBps,   ARMv8 - 10GBps
+> 
+> Please note, there's almost 5x improvement in kaanapali compared to
+> pakala. Though overall is still slower compared to arm but as mentioned,
+> expecting better performance with hardware improvements as we progress.
+> 
+> Also, currently qce driver exhibit stability issues and that's what we
+> are putting effort in stabilizing the software on immediate basis.
+> 
+> There's parallel effort ongoing by Bartosz to introduce baseline for
+> secure buffer usecases.
+> https://lore.kernel.org/lkml/20260522-qcom-qce-cmd-descr-v18-0-99103926bafc@oss.qualcomm.com/
+> There's active development ongoing and i believe lowering cra_priority
+> for qce is fine as of now and can scale values once qce becomes
+> performance efficient.
+> 
+> Please share your thoughts. Thanks!
 
-Those paths also fall through into the later ctx cleanup labels even
-though idxd_file_dev_release() owns that cleanup and frees ctx. This can
-make idxd_xa_pasid_remove(ctx) and kfree(ctx) operate on a freed context.
+ARMv8 Crypto Extensions are "hardware" as well, just in the CPU.  They
+provide constant-time execution, for example.
 
-Move idxd_wq_get() before file-device setup can fail, since the release
-callback always calls idxd_wq_put(). Then unlock wq->wq_lock before
-put_device(fdev) and return directly from the file-device setup failure
-path, leaving ctx cleanup to the release callback.
+Granted, they don't protect from power analysis and electromagnetic
+emanation attacks.  Does QCE actually provide those protections, though?
 
-Fixes: e6fd6d7e5f0fe ("dmaengine: idxd: add a device to represent the file opened")
-Signed-off-by: Yuho Choi <dbgh9129@gmail.com>
----
-Changes in v3:
-- Drop scoped __free(put_device) cleanup and use explicit cleanup, as
-  suggested by Dave Jiang.
-- Keep idxd_wq_get() before file-device setup can fail so the release
-  callback always balances a matching WQ reference.
-Changes in v2:
-- Use __free(put_device) for the file-device reference.
-- Take the WQ reference before fdev can be released so the release
-  callback's idxd_wq_put() has a matching idxd_wq_get().
+Either way, it doesn't really matter in this case.  There are multiple
+aspects to security, and before even considering these advanced
+protections, the basics of security need to be absolutely solid.  That
+is, the driver needs to always compute the crypto algorithms correctly,
+and it needs to be completely robust when fuzzed by unprivileged
+userspace (because it can accessed in that way).
 
- drivers/dma/idxd/cdev.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Yet, this driver "exhibits stability issues", fails the self-tests, and
+doesn't even have exclusive access to the hardware!  These are all
+security bugs.  That very much defeats the claimed point.  (Plus, due to
+the performance issues no one wants to use it in Linux anyway.)
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index 0366c7cf3502..82b07cf942ef 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -288,6 +288,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 	fdev->parent = cdev_dev(idxd_cdev);
- 	fdev->bus = &dsa_bus_type;
- 	fdev->type = &idxd_cdev_file_type;
-+	idxd_wq_get(wq);
- 
- 	rc = dev_set_name(fdev, "file%d", ctx->id);
- 	if (rc < 0) {
-@@ -301,13 +302,14 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 		goto failed_dev_add;
- 	}
- 
--	idxd_wq_get(wq);
- 	mutex_unlock(&wq->wq_lock);
- 	return 0;
- 
- failed_dev_add:
- failed_dev_name:
-+	mutex_unlock(&wq->wq_lock);
- 	put_device(fdev);
-+	return rc;
- failed_ida:
- failed_set_pasid:
- 	if (device_user_pasid_enabled(idxd))
--- 
-2.43.0
+As for "decrypting into secure buffers": if added that would be a new
+feature, separate from the driver's current features.  It's not even
+supported by the crypto API.  So regardless of whether this would be a
+useful feature or not (it's unclear it would be), using it as an
+argument that the current features of the driver are useful is nonsense.
 
+As for performance getting higher over time, it's still irrelevant when
+it's still much slower than the CPU, especially in practical conditions.
+Yet, somehow this driver is documented as an "accelerator":
+
+        config CRYPTO_DEV_QCE                                                            
+            tristate "Qualcomm crypto engine accelerator"
+
+The CPU is just much a better approach performance-wise.  It has no
+overhead in setting up DMA, waking/notifying the hardware, and context
+switching.  The CPU has a lot of room to improve too, via further
+optimizations to hardware and the ISA, and in some cases software
+optimizations such as interleaving.  We've already seen this play out on
+x86_64, where Vector AES boosted the AES throughput by a further 2-4x
+from its already-super-fast performance.
+
+- Eric
 

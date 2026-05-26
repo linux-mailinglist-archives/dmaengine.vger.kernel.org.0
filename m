@@ -1,189 +1,153 @@
-Return-Path: <dmaengine+bounces-10955-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10956-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IGdpFNurFWrgXgcAu9opvQ
-	(envelope-from <dmaengine+bounces-10955-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 16:19:07 +0200
+	id 8H97FKC0FWpxYAcAu9opvQ
+	(envelope-from <dmaengine+bounces-10956-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 16:56:32 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C00705D7537
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 16:19:06 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C15D55D81E9
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 16:56:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1D4BC300E16F
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 14:17:40 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8AD333003413
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 14:49:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10A893B9935;
-	Tue, 26 May 2026 14:17:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 636453FF88A;
+	Tue, 26 May 2026 14:49:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fxotj6Tc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gE39uIiv"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A15358375
-	for <dmaengine@vger.kernel.org>; Tue, 26 May 2026 14:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F072B3FF8BE;
+	Tue, 26 May 2026 14:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779805058; cv=none; b=eNc/s6uNIFzhIaspZaysLwIQACl7zv9c9BQ+u0q0GzaebdwuzGQdCtnf5oSjhgMDNVjgeD0Gx1No0Yu+f0kNh3dzBi12z/0dBul+Eua5WxZBDRKAgj9QbnzFFf6++uIOgMcn+7bfI7SmeRyUB4+j7p18NCF6kdCnat7MZsyE1Hc=
+	t=1779806954; cv=none; b=p9NU9udrjIGuurm8ta/B2pN4jIn8mXcmBFmb5j9h7df1zyJN0dNr56govBbMZ9znLrej1fonufdD2FyiftLgdU9/yURI5vm9Dxbgr+sMGXQ5ENNpym+BWHbYkG/iXIb/7bBaA4Chqsb7YlKIcMsQKPEgqZEWqCArdwDZsCI/D2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779805058; c=relaxed/simple;
-	bh=2wHs4jj3JzSVuItMJAnIDdMzEmCTB5om4CaqcvWE+0o=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Zq5FvxIUkrjw+9kwmtZHODeJGcY/ZRBVHWpSJnCXeWSvxXLnK5DbsENOB+kNfuolek7itCRzqXEr0n/bjbDzKCGr5IVHI5EM+FyiD0JUzrBLaUFqXWmL09odJA7EDsnKUdLBdkJxuh1T8xCeNnswrukRnV6FDawz3rPlkXzDMf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fxotj6Tc; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5071A1F00A3A;
-	Tue, 26 May 2026 14:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779805056;
-	bh=qbdSIAUSAoy1WIAQuBWJuGX5h+C3yIChmgXUEQyv4j4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Fxotj6TcEJWa2Vii7r3nJsMpVJNrbv2g9WSbR53/1gtoKoSpDGkZADgo8uwS20+Ei
-	 nf7doOlfpV5Q/x18G5j5W6apS47TIYZUW2LmvREyn0r8EJ5LSGYXzxo8MKK0pOm0MU
-	 DAvCFzt68EkfF1d/yjXbXdl+rPCSWcbBK83OGbPMwSgwDsoiwwFuonz6EQZtvBfGfF
-	 +5Z9sTHe6Ti4E3HNOm/CP/kOG4xSEXRAgEHHgHx8rRC98mAyrz5Os29Mw04q7iHPMu
-	 RUQ075CAaY3p/15rmcrd+1maVPAEAfvOA3IjySVImEPCIHASKC7s8AseIyuSO6coFL
-	 thK3zyzh5xIuQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v19 03/14] dmaengine: qcom: bam_dma: convert tasklet to
- a BH workqueue
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
-Cc: dmaengine@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org
-In-Reply-To: <20260526-qcom-qce-cmd-descr-v19-3-08472fdcbf4a@oss.qualcomm.com>
-References: <20260526-qcom-qce-cmd-descr-v19-3-08472fdcbf4a@oss.qualcomm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 26 May 2026 14:17:35 +0000
-Message-Id: <20260526141736.5071A1F00A3A@smtp.kernel.org>
+	s=arc-20240116; t=1779806954; c=relaxed/simple;
+	bh=S/bbYY63e2x5qHcXV3JnvP/utXpDTgekaSGUMFwMp4g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UytnXwyvbnruFXWN/+o4S5nfBkWV3tvLNE/wo1TGJUxloBVcsVFsDkX+liCecSFzWhwLIoIG5w9UjvYn2woU0MLEDkJHunAriHiMZx2HA7HDe1jzlVTpGklwAaqRUwp/VgDBb9ITQihPDNjB7knm5nv2FUT1nMMOepXpCZ/+W9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gE39uIiv; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779806953; x=1811342953;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=S/bbYY63e2x5qHcXV3JnvP/utXpDTgekaSGUMFwMp4g=;
+  b=gE39uIivpncrFZdGdV0mUz/G6wZQ5PvFGNiV6PLnfJGxTfpylMDzvtdk
+   yMFgMy6c8fmYh3YLDc2AA1xwhA1yCiWnyVV1bda9sDpzsj7R1RKA58jun
+   dUYrBkTrSPYM/rvT3Psk2t9JFXgpc2rvdFlUWvTaO3Rg7SfJyk2pD6dgR
+   OqQlstVcWwoOMw8Y/hLXW/CDiTNfY1iDJhUSo4e0RCqX5h2CA2Dvs4X1s
+   b7cX3Klyx0iGCfqpoypQHawjsv+ljY52qMvsCBF/c9kq63ap8mYYDClml
+   +bKIKKVIEebaNM1cgzt7RgqnZbA3cRvQMkSq+rA9oMWtvNZU9Ocwe8sam
+   w==;
+X-CSE-ConnectionGUID: 43xCK37uRZ+Dr+klxa7Suw==
+X-CSE-MsgGUID: 0ZjK8UDrTiqYmFcfjbV9Dw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11797"; a="80680229"
+X-IronPort-AV: E=Sophos;i="6.24,169,1774335600"; 
+   d="scan'208";a="80680229"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 07:49:12 -0700
+X-CSE-ConnectionGUID: v3H7+Q7CQyax5/H0NfgCfA==
+X-CSE-MsgGUID: CNLe7ZNwRK+uy3GuQ/HptA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,169,1774335600"; 
+   d="scan'208";a="265796824"
+Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.201]) ([10.125.110.201])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 07:49:11 -0700
+Message-ID: <9461e4b3-d42b-4550-a931-19532588bdbc@intel.com>
+Date: Tue, 26 May 2026 07:49:10 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: ioatdma: use !kstrtoint(), not sscanf()!=-1
+To: "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+ Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Ujjal Singh <ujjal.singh@intel.com>,
+ "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM"
+ <dmaengine@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20260526061321.6123-1-grandmaster@al2klimov.de>
+ <20260526061321.6123-3-grandmaster@al2klimov.de>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260526061321.6123-3-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10955-lists,dmaengine=lfdr.de];
+	SUBJECT_HAS_EXCLAIM(0.00)[];
+	TO_DN_ALL(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10956-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_HAS_DN(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,qualcomm.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,lists.linux.dev:replyto,smtp.kernel.org:mid]
-X-Rspamd-Queue-Id: C00705D7537
+	FROM_NEQ_ENVFROM(0.00)[dave.jiang@intel.com,dmaengine@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MIME_TRACE(0.00)[0:+]
+X-Rspamd-Queue-Id: C15D55D81E9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] Incorrect teardown sequence in `bam_dma_remove` leads to a synchro=
-nous external abort (bus fault) when masking interrupts.
-- [High] The IRQ handler accesses hardware registers before ensuring the de=
-vice clock is enabled, leading to a potential bus fault.
-- [High] Failing to clear a level-triggered interrupt when `pm_runtime_get_=
-sync` fails causes an interrupt storm and device disablement.
---
 
-commit 6a70ab3d7ea9134c2e9e75e415cbff4d0dd6592a
-Author: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+On 5/25/26 11:13 PM, Alexander A. Klimov wrote:
+> Depending on the user input, sscanf() may return 0 for 0 success.
+> But intr_coalesce_store() wants sscanf() to parse one number,
+> so expect 1 from sscanf(), not any int except -1.
+> 
+> While on it, fix typo in %du by using just %d,
+> as this interface expects %d or %d\n.
+> Latter made scripts/checkpatch.pl complain,
+> so use kstrtoint() instead of sscanf().
+> 
+> Fixes: 268e2519f5b7 ("dmaengine: ioatdma: Add intr_coalesce sysfs entry")
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  drivers/dma/ioat/sysfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/ioat/sysfs.c b/drivers/dma/ioat/sysfs.c
+> index e796ddb5383f..f59df569956a 100644
+> --- a/drivers/dma/ioat/sysfs.c
+> +++ b/drivers/dma/ioat/sysfs.c
+> @@ -144,7 +144,7 @@ size_t count)
+>  	int intr_coalesce = 0;
+>  	struct ioatdma_chan *ioat_chan = to_ioat_chan(c);
+>  
+> -	if (sscanf(page, "%du", &intr_coalesce) != -1) {
+> +	if (!kstrtoint(page, 10, &intr_coalesce)) {
 
-dmaengine: qcom: bam_dma: convert tasklet to a BH workqueue
+looks good. We can probably use kstrtouint() since we are expecting a positive number always.
 
-This commit converts the BAM DMA driver from legacy tasklets to use the
-modern high-priority variant of the BH workqueue.
+DJ
 
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index b3d36ea799843..1c62f845ac0b9 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
+>  		if ((intr_coalesce < 0) ||
+>  		    (intr_coalesce > IOAT_INTRDELAY_MASK))
+>  			return -EINVAL;
 
-[ ... ]
-
-> @@ -893,9 +894,9 @@ static irqreturn_t bam_dma_irq(int irq, void *data)
-> =20
->  	srcs |=3D process_channel_irqs(bdev);
-
-[Severity: High]
-This is a pre-existing issue, but does process_channel_irqs() access
-hardware registers before the device clock is guaranteed to be enabled?
-
-In process_channel_irqs(), it immediately reads from BAM_IRQ_SRCS_EE. If a
-spurious or delayed interrupt occurs while the device is runtime suspended,
-could reading this register with the clock disabled cause a synchronous
-external abort?
-
-> =20
-> -	/* kick off tasklet to start next dma transfer */
-> +	/* kick off the work queue to start next dma transfer */
->  	if (srcs & P_IRQ)
-> -		tasklet_schedule(&bdev->task);
-> +		queue_work(system_bh_highpri_wq, &bdev->work);
-> =20
->  	ret =3D pm_runtime_get_sync(bdev->dev);
->  	if (ret < 0)
-
-[Severity: High]
-This is also a pre-existing issue, but if pm_runtime_get_sync() fails,
-the handler returns IRQ_NONE immediately without clearing the hardware
-interrupt source.
-
-Since the interrupt is registered as level-triggered (IRQF_TRIGGER_HIGH),
-will exiting the handler without writing to BAM_IRQ_CLR cause the
-interrupt controller to immediately re-assert it? Could this lead to an
-interrupt storm that permanently disables the IRQ line?
-
-[ ... ]
-
-> @@ -1394,7 +1394,7 @@ static void bam_dma_remove(struct platform_device *=
-pdev)
->  			    bdev->channels[i].fifo_phys);
->  	}
-> =20
-> -	tasklet_kill(&bdev->task);
-> +	cancel_work_sync(&bdev->work);
-> =20
->  	clk_disable_unprepare(bdev->bamclk);
->  }
-
-[Severity: High]
-This is a pre-existing issue, but earlier in bam_dma_remove(), the device
-is forced into suspend:
-
-bam_dma_remove()
-    pm_runtime_force_suspend(&pdev->dev);
-    ...
-    writel_relaxed(0, bam_addr(bdev, 0,  BAM_IRQ_SRCS_MSK_EE));
-
-Does pm_runtime_force_suspend() disable the device clock? If so, will the
-subsequent writel_relaxed() write to an unclocked register and trigger a
-synchronous external abort during driver unbind?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260526-qcom-qce-c=
-md-descr-v19-0-08472fdcbf4a@oss.qualcomm.com?part=3D3
 

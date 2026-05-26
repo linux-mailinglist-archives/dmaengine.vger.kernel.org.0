@@ -1,195 +1,133 @@
-Return-Path: <dmaengine+bounces-10891-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10892-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qDLfLBMxFWouTgcAu9opvQ
-	(envelope-from <dmaengine+bounces-10891-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 07:35:15 +0200
+	id OJGZOh86FWpETwcAu9opvQ
+	(envelope-from <dmaengine+bounces-10892-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 08:13:51 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 388485D0DF8
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 07:35:15 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC2BC5D11D4
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 08:13:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 26BF33007893
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 05:35:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id C24B23008446
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 06:13:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 004DB314A84;
-	Tue, 26 May 2026 05:35:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 612F13BFAEF;
+	Tue, 26 May 2026 06:13:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZeGcnLF"
+	dkim=pass (2048-bit key) header.d=al2klimov.de header.i=@al2klimov.de header.b="AHaq0/gf"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mta.al2klimov.de (mta.al2klimov.de [162.55.223.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FCA288C2D;
-	Tue, 26 May 2026 05:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9AB3C0602;
+	Tue, 26 May 2026 06:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.55.223.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779773710; cv=none; b=rH++ALKnQGMx90/t9l7+wEq99Q1QMgvsRLSp0SnWzfUPJeLYqFneJ7EAKN0JMqhU9IUu9tI1F9lCDGta2VTbaTHXogycSuK6pVfC+wFvZv7pi5iU55sGA4pIJWqRzJDgfuhgoXEfMnxRm7nFsX6HlckelQK3QPpNsKNBSGxplt0=
+	t=1779776026; cv=none; b=IsO+tAwsWsqMNUAa7Fq1m5euS9Do+u0eq/mFxxphBpt5UhJ+JB/5r+d5EfMc48B6ihzj3lGiGRyXONlr7DLfZNtG/TTeK3+qdESzqZ4YTFE7PHNl5ey/7vaD45DuH1abvjmDObPxM8J53xvz2lZA5nIKEwz3VuhMzmIhmptesu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779773710; c=relaxed/simple;
-	bh=BCZ2U2fo+yH+zZPLh+gZxROwJlkA/+J2mSkfKof/QbA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=HDFyGNJGpLHcb/TASFwjB9V7zn8b0mIVfoPlJSFrlLFT9lXuAusAmkeCIQ6yeANJsBw5YeXoyBN9B62zSqIBW4rot7/wf/sjR6EU6T1qAW52dAtHmdwqyIzwRT5i2JcKvPtplweKRD87sCGviPU45SvTr6p02sIGHwnBNBPbqmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZeGcnLF; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A5A91F000E9;
-	Tue, 26 May 2026 05:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779773709;
-	bh=BZeCFiWwomXsNSoC7p5OXyKFyX+acoYY9otOOgn2FJ0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References;
-	b=NZeGcnLFvKxmYXoy9mb+eGDs/eV9D6KkS6d2B7ZuB8Anx/O02L34gwFNZdAVS71TX
-	 XTW1hnNcj4J56+d7gK8TB9YH6l/C2obr78iLkmzLBdm0wvMkFaF88R2eT2WIRmqkIH
-	 Xxfgpsii4SR9c7k4uKh/acFZ0FQT7oVENeg3/o20veqXPIXIjA40GlDtDwfF/CViA3
-	 65vPTnSawSXL6e0de5d/ANoutOuSivQPH8qOinWjntbcmMME5qw2ypDrCjkztDcRZe
-	 jNEauHN4jBCD9pMPe/6PJVK7BQokskE24Mw5S5Du2jOCsXDiWOpAWZP/bE3/dcxGfy
-	 2IP02AT77tIcA==
-Date: Tue, 26 May 2026 07:35:06 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Koichiro Den <den@valinux.co.jp>
-CC: Manivannan Sadhasivam <mani@kernel.org>, Frank Li <Frank.Li@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, Vinod Koul <vkoul@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Damien Le Moal <dlemoal@kernel.org>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_0/3=5D_PCI=3A_endpoint=3A_Add?=
- =?US-ASCII?Q?_PCI_DMA_endpoint_function_=28part_3/3=29?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <ll76isrjb62ieiz4vhn3u3upp46vnzed3slpqxnni5hymsc4mw@avbx7k473uo4>
-References: <20260525063456.3317509-1-den@valinux.co.jp> <xnfnxv64hpil6if4ikyohxnarvsekbmjcc37k5zej264ix46z3@qtu6xj2uy3xi> <ahQJ4kuaBKMhj52L@ryzen> <3dkicfydmrlm2i6ks34kwjdmlvb22ryftkfw2yj62o4rtj5xvl@f4gby5vlwtdf> <F31848F5-5481-4402-9B45-9EC7BCC8B0B6@kernel.org> <ll76isrjb62ieiz4vhn3u3upp46vnzed3slpqxnni5hymsc4mw@avbx7k473uo4>
-Message-ID: <F8664D81-EABE-4E36-B0C9-2B0C7FA36DC0@kernel.org>
+	s=arc-20240116; t=1779776026; c=relaxed/simple;
+	bh=UWoMs7WVQoGSmSi/0rQmo0+uN8uahYwGCaHIi35TQC0=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MvKi7/Uil2G2/nR6SyMaxr8B+91XGl8ZIOMtu5zpMbhLUqNbnbebvFyGNvKTEX/AoVNs9v9VxRlOCWfzrNZCBYyQrtqqi0avkVS7zatN+noAzqi5Y+INNJLSEIF+UwY5BDrVJVyJb9rZu/Owb7uNEyEAm6Y4yRiz0/b6KpvcgBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=al2klimov.de; spf=pass smtp.mailfrom=al2klimov.de; dkim=pass (2048-bit key) header.d=al2klimov.de header.i=@al2klimov.de header.b=AHaq0/gf; arc=none smtp.client-ip=162.55.223.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=al2klimov.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=al2klimov.de
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=default; bh=UWoMs7WVQoGS
+	mSi/0rQmo0+uN8uahYwGCaHIi35TQC0=; h=references:in-reply-to:date:
+	subject:to:from; d=al2klimov.de; b=AHaq0/gfH4b8fmrwIfZg5uWHptFmWY0/PpC
+	Ey4HCWA9k2Ddesv1FsZBCyHcTBu6NIeRSykSbVV8kwDpcxl/9C47I6m+mZbo+5eKHhAcrY
+	Mqmi52F6yRJg3+cwMtdr+DOJuivgb0gi3NLDOrY8TGBCZe0zFct1p1VowqIvHYHc/6nlZ3
+	T/the8nczEwKnQdqagmen/3+Na+noV+OA91SpWDXGypxUyedAHySgC2DQgDKejgX4So4V2
+	sTGTnVIgoX2JgD0fcHhesu3yx/M3Sr6ajTMgsAGDVY1niBSSpDcTPXmn4vJUwr7WRJdoLl
+	dfhT80qsF/Wdn5wghElTxlee5sw==
+Received: from cachy-ak (88.215.123.80.dyn.pyur.net [88.215.123.80])
+	by mta.al2klimov.de (OpenSMTPD) with ESMTPSA id b5769de9 (TLSv1.3:TLS_CHACHA20_POLY1305_SHA256:256:NO);
+	Tue, 26 May 2026 06:13:40 +0000 (UTC)
+From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To: Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	"Alexander A. Klimov" <grandmaster@al2klimov.de>,
+	Ujjal Singh <ujjal.singh@intel.com>,
+	dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] dmaengine: ioatdma: use !kstrtoint(), not sscanf()!=-1
+Date: Tue, 26 May 2026 08:13:14 +0200
+Message-ID: <20260526061321.6123-3-grandmaster@al2klimov.de>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260526061321.6123-1-grandmaster@al2klimov.de>
+References: <20260526061321.6123-1-grandmaster@al2klimov.de>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [0.55 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	SUBJ_EXCESS_QP(1.20)[];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[al2klimov.de,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[al2klimov.de:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10891-lists,dmaengine=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-10892-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
+	SUBJECT_HAS_EXCLAIM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[al2klimov.de:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[grandmaster@al2klimov.de,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.738];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cassel@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 388485D0DF8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,al2klimov.de:email,al2klimov.de:mid,al2klimov.de:dkim]
+X-Rspamd-Queue-Id: DC2BC5D11D4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hello Koichiro,
+Depending on the user input, sscanf() may return 0 for 0 success.
+But intr_coalesce_store() wants sscanf() to parse one number,
+so expect 1 from sscanf(), not any int except -1.
 
-On 26 May 2026 04:04:07 CEST, Koichiro Den <den@valinux=2Eco=2Ejp> wrote:
->On Mon, May 25, 2026 at 10:32:06PM +0200, Niklas Cassel wrote:
->> On 25 May 2026 16:03:35 CEST, Koichiro Den <den@valinux=2Eco=2Ejp> wrot=
-e:
->> >On Mon, May 25, 2026 at 10:35:46AM +0200, Niklas Cassel wrote:
->> >> On Mon, May 25, 2026 at 04:05:02PM +0900, Koichiro Den wrote:
->> >>=20
->> >That restriction should be documented with the new NTB transport, whic=
-h I will
->> >submit if the direction taken by this series is acceptable=2E
->>=20
->> This is easy for me to say, since I am not the NTB maintainer, but it w=
-ould be nice if we could somehow come up with a design where we don't only =
-support EPCs that have 'max-functions' !=3D 1, because IIRC, most PCI EPCs =
-have 'max-functions' =3D=3D 1=2E
->
->Yes, that's fair point=2E As a quick check on v7=2E1-rc5, among DWC-based=
- EP nodes,
->only 6 out of 45 set max-functions > 1 (about 13%)=2E Assuming there are =
-no cases
->where the hardware supports more functions than the DT advertises, that m=
-eans only
->about 13% of DWC-based EP instances described in DT could support the "NT=
-B
->transport backed by PCI EP DMA" use case=2E If I also count non-DWC EP no=
-des, I
->get 15 out of 64 (about 23%)=2E
+While on it, fix typo in %du by using just %d,
+as this interface expects %d or %d\n.
+Latter made scripts/checkpatch.pl complain,
+so use kstrtoint() instead of sscanf().
 
-The only DMA "backend" added in your 3-part series is the eDMA in DWC-base=
-d controllers=2E
+Fixes: 268e2519f5b7 ("dmaengine: ioatdma: Add intr_coalesce sysfs entry")
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+---
+ drivers/dma/ioat/sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So if all three of your series lands, then 13% of the DWC-based endpoint c=
-ontrollers can theoretically use this new feature=2E
+diff --git a/drivers/dma/ioat/sysfs.c b/drivers/dma/ioat/sysfs.c
+index e796ddb5383f..f59df569956a 100644
+--- a/drivers/dma/ioat/sysfs.c
++++ b/drivers/dma/ioat/sysfs.c
+@@ -144,7 +144,7 @@ size_t count)
+ 	int intr_coalesce = 0;
+ 	struct ioatdma_chan *ioat_chan = to_ioat_chan(c);
+ 
+-	if (sscanf(page, "%du", &intr_coalesce) != -1) {
++	if (!kstrtoint(page, 10, &intr_coalesce)) {
+ 		if ((intr_coalesce < 0) ||
+ 		    (intr_coalesce > IOAT_INTRDELAY_MASK))
+ 			return -EINVAL;
+-- 
+2.54.0
 
-
->
->If supporting single-function EPCs is a requirement, then the separate PC=
-I DMA
->EPF model is not a good choice for that NTB transport use case=2E We woul=
-d need to
->keep the DMA delegation metadata inside the vNTB function, or use some ot=
-her
->single-function design=2E
->
->That is basically option 2 from my earlier mail:
->https://lore=2Ekernel=2Eorg/linux-pci/xnfnxv64hpil6if4ikyohxnarvsekbmjcc3=
-7k5zej264ix46z3@qtu6xj2uy3xi/
->
->    [snip]
->    2=2E Treat endpoint DMA as a first-class part of vNTB=2E The RC-side =
-ntb_hw_epf
->       would create an auxiliary device, and a new dw-edma-aux driver wou=
-ld create
->       the delegated DMA channels on the RC side=2E
->   =20
->       [PATCH 00/15] PCI: endpoint: Remote DMA support via vNTB
->       https://lore=2Ekernel=2Eorg/linux-pci/20260312165005=2E1148676-1-d=
-en@valinux=2Eco=2Ejp/
->   =20
->       I added an ASCII diagram for the overview as a follow-up comment h=
-ere:
->       https://lore=2Ekernel=2Eorg/all/sn67hi7kljh7cgmgodatb3naz2astlaklq=
-fobdbxyyzgoohxqb@4nnetbhqwba4/
->    [snip]
->
->Do you prefer the vNTB-integrated model over this series?
-
-My take:
-
-I do think that the design in  this series is more elegant that the vNTB-i=
-ntegrated model=2E
-
-However, if the design in this series only supports 13% of DWC-based endpo=
-int controllers, when the vNTB-integrated model can support 100% of DWC-bas=
-ed endpoint controllers=2E=2E=2E
-
-What good it is to have an elegant design if in reality, it supports drast=
-ically fewer SoCs?
-
-But please don't listen only to my opinion, Mani is the maintainer, so it =
-would be interesting to hear his thoughts as well=2E
-
-
-Kind regards,
-Niklas
 

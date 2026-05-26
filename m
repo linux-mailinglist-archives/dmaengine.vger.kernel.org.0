@@ -1,61 +1,61 @@
-Return-Path: <dmaengine+bounces-10925-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10926-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2JKyANFsFWoYVAcAu9opvQ
-	(envelope-from <dmaengine+bounces-10925-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 11:50:09 +0200
+	id wFPLFvJrFWoEVAcAu9opvQ
+	(envelope-from <dmaengine+bounces-10926-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 11:46:26 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46ECD5D3B21
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 11:50:07 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C20E25D3A22
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 11:46:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4EFFB3059A6B
+	by tor.lore.kernel.org (Postfix) with ESMTP id ED2B330479A1
 	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 09:43:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBBEE3D9023;
-	Tue, 26 May 2026 09:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11C483B7770;
+	Tue, 26 May 2026 09:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FaiZ+pjn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODXXB/WS"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799993D9035
-	for <dmaengine@vger.kernel.org>; Tue, 26 May 2026 09:43:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A639E3D891A
+	for <dmaengine@vger.kernel.org>; Tue, 26 May 2026 09:43:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779788591; cv=none; b=UWoqS+aIX0Wib4KsrDY8IF+R86qorWoI4Lw/Ni8HBTRofAOUtAEywP42nxD+o4dQLbaStEmV63J1ibloyozP/5uJ/3gOTUYQ/egcw7K1PJygriPL94k1+rJd+s+OrAuKGlA6WTirR5wtj9AdPOgWH7vpq1VOhIz0U6v0I52ppBU=
+	t=1779788593; cv=none; b=XLUOvar6FfkrjUMyVncjZtSj8sd7ir+uOzDyoo6YkMsRXWdxsPt3mHfVnXWGQwrH1paD0ejpPU+WRo6rGf8jwp722BJmPfGDHo7e/sBxO7inQXDA+Nu5KyY3RcTXtl5vE6eFbyyk5aXLxFGe28FiWnz2glHMdu+UrHEMgZ6LD20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779788591; c=relaxed/simple;
-	bh=xt+pWEtU4Zyeck6siShLZG5Yhuu4hj8eiaHYiIvUJbE=;
+	s=arc-20240116; t=1779788593; c=relaxed/simple;
+	bh=lcnZ9VwEVwrmZl1T/9mmG9sMM7x3CzlxnavXuABSDZ8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=M4yqEliyb43bQyTeOono5vdVwO1kdTHONQIVOJJ3hV84Zum//xve1i2+6HNuWi7EgcP+Ft/CdQWKobtvLH4Ogiqb4jAdJ0bEFzAnRHZ08NJDVU3lmgM3R/5pHBqrh4EkkPWqfFSqxpu+t8lST7yUak80Cl49wxIcEJFrWiE3830=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FaiZ+pjn; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3316C1F000E9;
-	Tue, 26 May 2026 09:43:10 +0000 (UTC)
+	 Message-Id; b=V9pNO1FjaRPgkpWZ2DB7YvVT+cO5NvDbcK7XNLkN0TJP/pVnkFa2Lio8oMovxzoYANo2i++IxeZv1bKgQnBDxrEWTE8jFRpMjxIpNq3PBAKSv1HLGsS+7vCC7yb/6J1wuVpo/xSuGIsh3dmdqYvdaqetnr7khuF1cO2xGlU9OaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODXXB/WS; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 123341F00A3A;
+	Tue, 26 May 2026 09:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779788590;
-	bh=Wf1hbnV4EW8RBBUEkyMtmTqyA/vftPL6E0NhSKhgvms=;
+	s=k20260515; t=1779788591;
+	bh=+Gyl/kAJ+j+NAEFsixxAivETb308NNotM3OaCrAC0eA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FaiZ+pjnPeH8j7LGNqE0vW4ZbOxY7Am0VLxPY9/2VPcBwUpwwpDeyUGLcsEQkShvo
-	 m5gUWWEJWNvYA2Y1GLEcxE96j25IqZsZSgcSWMEtQcZxdrJKnSFySl1F1pRDCdeWC7
-	 +4skz3je5BaL1BsCwWuwzS2l/tF19CcFTXezidgFyaqB5Q2IU6iizgtnba7Mznb3Ag
-	 XaxU6EfeXtkZk5McUpdVuSPzJXPWnZj+Iu2JnaflgFQEUEBBzUbOSncld+sGaxEX6d
-	 SDv/BOe82QbJKORREbGr+HPr9ZxzbEI6eZhEyZiWZSHjmA+67sssK2JyWVJ2hiksqP
-	 wk5hzrgj/YGrg==
+	b=ODXXB/WSjPLzvyiDbFebteg9Q/2lklfp9KrbhiQBkJ3anGB5TdCW+LbaOlNVjo9al
+	 lu8f+mSHVnTbpNzDlN+cTjH/vxlEAHMRYX81yM4MIEhZnRzO6YrdVcshdM62KQflYN
+	 NH/FECf1TXJmYIoZLTQzD9qVRpXR8fGb1Izqfqb8scZTQ8vtvfV38h8snhU+0Amhdl
+	 Zz54BGap3fMJXJogIIM769s6Ly+tmKI3crfryNapODMxzNpFxlO33E3owwNq1yH14n
+	 iAc7vwKUMcSaU44yXSVik4fIwB9jWbo4wBolIu9xUyNy1y7c/kB6aIxk7b1hD2QH4o
+	 zqEsGY2vzfd1Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 18/18] dmaengine: sh: rz-dmac: Set the Link End (LE)
- bit on the last descriptor
+Subject: Re: [PATCH v6 15/18] dmaengine: sh: rz-dmac: Add suspend to RAM
+ support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Claudiu Beznea" <claudiu.beznea@kernel.org>
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org, wsa+renesas@sang-engineering.com
-In-Reply-To: <20260526084710.3491480-19-claudiu.beznea@kernel.org>
-References: <20260526084710.3491480-19-claudiu.beznea@kernel.org>
+Cc: vkoul@kernel.org, wsa+renesas@sang-engineering.com, Frank.Li@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260526084710.3491480-16-claudiu.beznea@kernel.org>
+References: <20260526084710.3491480-16-claudiu.beznea@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 26 May 2026 09:43:09 +0000
-Message-Id: <20260526094310.3316C1F000E9@smtp.kernel.org>
+Date: Tue, 26 May 2026 09:43:10 +0000
+Message-Id: <20260526094311.123341F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,13 +66,13 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,lists.linux.dev:replyto,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,renesas.com:email,smtp.kernel.org:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,sashiko.dev:url,lists.linux.dev:replyto,smtp.kernel.org:mid,renesas.com:email];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-10925-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-10926-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -88,104 +88,171 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,renesas];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[5];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
-X-Rspamd-Queue-Id: 46ECD5D3B21
+X-Rspamd-Queue-Id: C20E25D3A22
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Missing validation for `sg_len` in `rz_dmac_prep_slave_sg` and `pe=
-riods` in `rz_dmac_prep_dma_cyclic` leads to either an infinite loop (kerne=
-l hard lockup) or descriptor ring buffer overflow and silent data corruptio=
-n.
-- [High] The DMA residue calculation logic in `rz_dmac_calculate_residue_by=
-tes_in_vd` is broken due to incorrect descriptor matching and off-by-one er=
-rors, resulting in bogus residue reports.
+- [Critical] The error recovery path in `rz_dmac_suspend()` fails to restor=
+e essential hardware registers before re-enabling cyclic channels.
+- [High] Error paths in system suspend and resume callbacks fail to properl=
+y manage the runtime PM usage counter, causing an imbalance that leads to u=
+nderflows.
+- [High] The IRQ handler accesses hardware registers without verifying the =
+device power state, risking a crash if an interrupt fires during or after s=
+ystem suspend.
+- [Medium] The `rz_dmac_suspend()` function incorrectly mixes scope-based `=
+guard()` locking with `goto`-based error handling.
 --
 
-commit 1936bc22a913ae590a18e0828fe08cbdd4e5a588
+commit 2944b998cf54bad86273dc3ee963623d49e8fffa
 Author: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-dmaengine: sh: rz-dmac: Set the Link End (LE) bit on the last descriptor
+dmaengine: sh: rz-dmac: Add suspend to RAM support
 
-This patch sets the Link End (LE) bit on the last descriptor of a transfer
-to inform the DMA engine that it is the final descriptor. This prevents the
-DMA engine from loading an invalid descriptor and raising a descriptor erro=
-r.
+This patch adds suspend to RAM support for the Renesas RZ/G3S SoC DMA IP to
+save and restore DMA IP registers. It adds specific handling for cyclic
+channels by pausing and resuming them during system suspend/resume.
 
 > diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-> index 2a7124e4aea3a..f1174d25da849 100644
+> index bd4ca8e939f17..2a7124e4aea3a 100644
 > --- a/drivers/dma/sh/rz-dmac.c
 > +++ b/drivers/dma/sh/rz-dmac.c
 [ ... ]
-> @@ -425,7 +426,7 @@ static void rz_dmac_prepare_descs_for_slave_sg(struct=
- rz_dmac_chan *channel)
->  		lmdesc->chext =3D 0;
->  		if (i =3D=3D (sg_len - 1)) {
->  			lmdesc->chcfg =3D (channel->chcfg & ~CHCFG_DEM);
+> @@ -1421,6 +1474,122 @@ static void rz_dmac_remove(struct platform_device=
+ *pdev)
+[ ... ]
+> +static void rz_dmac_suspend_recover(struct rz_dmac *dmac)
+> +{
+> +	int ret;
+> +
+> +	PM_RUNTIME_ACQUIRE_IF_ENABLED(dmac->dev, pm);
+> +	ret =3D PM_RUNTIME_ACQUIRE_ERR(&pm);
+> +	if (ret)
+> +		return;
+> +
+> +	for (unsigned int i =3D 0; i < dmac->n_channels; i++) {
+> +		struct rz_dmac_chan *channel =3D &dmac->channels[i];
+> +
+> +		guard(spinlock_irqsave)(&channel->vc.lock);
+> +
+> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC)))
+> +			continue;
+> +
+> +		rz_dmac_device_resume_internal(channel);
+
+[Severity: Critical]
+Does this error recovery path fail to restore essential hardware registers
+before re-enabling cyclic channels?
+
+If pm_runtime_put_sync() fails in rz_dmac_suspend(), the driver jumps to
+reset_deassert, calls reset_control_deassert(), and then executes this
+function. However, the prior reset_control_assert() wiped the hardware stat=
+e.
+
+This function simply calls rz_dmac_device_resume_internal(), which writes
+CHCTRL_SETEN to start the channel. Since essential configuration registers
+like NXLA, CHCFG, and DCTRL are never restored, the hardware could attempt =
+to
+execute DMA transfers with zeroed configurations, potentially causing wild
+memory accesses or silent data corruption.
+
+> +	}
+> +}
+> +
+> +static int rz_dmac_suspend(struct device *dev)
+> +{
+> +	struct rz_dmac *dmac =3D dev_get_drvdata(dev);
+> +	int ret =3D 0;
+> +
+> +	for (unsigned int i =3D 0; i < dmac->n_channels; i++) {
+> +		struct rz_dmac_chan *channel =3D &dmac->channels[i];
+> +
+> +		guard(spinlock_irqsave)(&channel->vc.lock);
+
+[Severity: Medium]
+Does this function mix guard() based locking with goto based error handling?
+
+According to the subsystem cleanup guidelines, a single function must never
+mix goto statements with __free() or guard() declarations. This function us=
+es
+guard(spinlock_irqsave)(&channel->vc.lock) inside the loop, while
+goto suspend_recover and goto reset_deassert are used for error handling
+outside the loop.
+
+> +
+> +		if (!(channel->status & BIT(RZ_DMAC_CHAN_STATUS_CYCLIC)))
+> +			continue;
+> +
+> +		ret =3D rz_dmac_device_pause_internal(channel);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to suspend channel %s\n",
+> +				dma_chan_name(&channel->vc.chan));
+> +			break;
+> +		}
+> +
+> +		channel->pm_state.nxla =3D rz_dmac_ch_readl(channel, NXLA, 1);
+> +	}
+> +
+> +	if (ret)
+> +		goto suspend_recover;
+> +
+> +	ret =3D reset_control_assert(dmac->rstc);
 
 [Severity: High]
-This is a pre-existing issue, but is the DMA residue calculation broken?
+Does this logic risk a regression if an interrupt fires during or after sys=
+tem
+suspend?
 
-The logic to calculate remaining bytes in
-rz_dmac_calculate_residue_bytes_in_vd() appears to have several issues:
+This driver implements system suspend using SIMPLE_DEV_PM_OPS, so this
+function runs during the normal suspend phase where device interrupts are
+still enabled. This function asserts the hardware reset and powers down the
+DMA controller.=20
 
-1) The search loop while (lmdesc->nxla !=3D crla) erroneously matches the n=
-ext
-link address against the current link address (crla), causing lmdesc to
-incorrectly resolve to the descriptor preceding the currently executing one.
+If a delayed interrupt fires concurrently on another CPU,
+rz_dmac_irq_handle_channel() will execute and directly read the CHSTAT
+register. Since the driver neither disables the IRQ, calls synchronize_irq(=
+),
+nor verifies the power state via pm_runtime_get_if_active(), the handler wi=
+ll
+read from powered-off or reset hardware.
 
-2) The subsequent sum adds the total bytes (lmdesc->tb) of this
-already-completed preceding descriptor, and then double-counts the current
-descriptor (whose remaining bytes are already added via crtb).
-
-3) Because CHCFG_DEM is intentionally cleared on the final descriptor here,
-the accumulation loop while (lmdesc->chcfg & CHCFG_DEM) terminates early
-and fails to include the byte count of the last descriptor.
-
-Could this impact subsystems like ALSA audio and serial UART that rely on
-precise DMA residue?
-
-> -			lmdesc->header =3D HEADER_LV;
-> +			lmdesc->header =3D HEADER_LV | HEADER_LE;
+> +	if (ret)
+> +		goto suspend_recover;
+> +
+> +	ret =3D pm_runtime_put_sync(dev);
+> +	if (ret < 0)
+> +		goto reset_deassert;
 
 [Severity: High]
-This is a pre-existing issue, but does the lack of validation for sg_len and
-periods cause problems?
+Does this error path fail to properly manage the runtime PM usage counter?
 
-If dma_map_sg() returns 0 and the client passes sg_len =3D=3D 0, the
-initialization loop is skipped entirely, leaving all descriptor headers as =
-0.
+pm_runtime_put_sync() unconditionally decrements the usage counter. If it
+fails, the function jumps to reset_deassert and aborts system suspend witho=
+ut
+restoring the usage counter via pm_runtime_get_noresume().=20
 
-When rz_dmac_enable_hw() is called, rz_dmac_lmdesc_recycle() enters an
-infinite loop because no descriptor has the HEADER_LV bit set:
+Because the system suspend is aborted, the resume callback will be skipped,
+leaving the usage counter permanently decremented. Subsequent suspends could
+underflow the counter and break runtime PM functionality.
 
-	while (!(lmdesc->header & HEADER_LV))
-
-This could cause a kernel hard lockup with spinlocks held.
-
-Additionally, if a client submits a transfer with more than 64 segments
-(sg_len or periods > DMAC_NR_LMDESC), the fixed-size ring buffer overflows
-and wraps around.
-
-Because the last segment will overwrite the beginning of the transfer
-with the HEADER_LE bit added by this patch, the hardware will only execute
-the corrupted tail of the scatterlist and immediately stop.
-
-Could this lead to silent data corruption?
-
->  		} else {
->  			lmdesc->chcfg =3D channel->chcfg;
->  			lmdesc->header =3D HEADER_LV;
+> +
+> +	return 0;
+> +
+> +reset_deassert:
+> +	reset_control_deassert(dmac->rstc);
+> +suspend_recover:
+> +	rz_dmac_suspend_recover(dmac);
+> +	return ret;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260526084710.3491=
-480-1-claudiu.beznea@kernel.org?part=3D18
+480-1-claudiu.beznea@kernel.org?part=3D15
 

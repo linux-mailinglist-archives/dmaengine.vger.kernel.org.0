@@ -1,193 +1,172 @@
-Return-Path: <dmaengine+bounces-10965-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10966-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OLJXO5D/FWozgwcAu9opvQ
-	(envelope-from <dmaengine+bounces-10965-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 22:16:16 +0200
+	id sF99LPwFFmr/gwcAu9opvQ
+	(envelope-from <dmaengine+bounces-10966-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 22:43:40 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F7465DC42A
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 22:16:16 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13E955DC6DF
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 22:43:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C064E3016C40
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 20:16:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 057493007ACC
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 20:41:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 841373BA22C;
-	Tue, 26 May 2026 20:16:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90D1E3537FB;
+	Tue, 26 May 2026 20:41:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DUdFhHFj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0CM0hGo"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5920339732C
-	for <dmaengine@vger.kernel.org>; Tue, 26 May 2026 20:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646893AE190
+	for <dmaengine@vger.kernel.org>; Tue, 26 May 2026 20:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779826574; cv=none; b=LCItg/ehE07j+DHEV8Fy75ZrDp6BS1PDAaz/rngb+Zpp1+e2j79G9hVgnR1EkeArHSK2CtzL0TLGOaHhH6T5wtENCJnzyOMqy11m0hy56oQNk69KIT2WxcjMqixDPfSFOCZ9EPxDxCHvMQgYboUlR0Vg2haCt0oWmiv8HSki8wY=
+	t=1779828099; cv=none; b=act0mnlfLcEE+VECBIeUMGnqm076U34QdDbVcninAKcDWRLnqGXSEGvloizaDmJTZg1K5JlPj4LcABlkA9f3Zk2ClOobL0w+p1WcWjvdCBMnWuYygJpgIVDzjwl7m5jyP7EUW4Fycp582fKWUTu8v2OqOgOw1yNTCLcI41sUf8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779826574; c=relaxed/simple;
-	bh=MzyTjID+CWb/MWHklcG9BXLprF41TsBCJfGI/gConv8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SmGLAeCReFRt5k/weTurST/bILcSQUG9AZ/8tCPHDSaAwBvV8ijl2xSR3DsIbOrzpsw9kTPA0xuulqpNitoFpP3QWu+Ea99yjiT721NPC6qLXTYmQsVjIR+Y/pdjXaNL8YJSU94T1MDB+OGVslMwoc/FDnD91Ctigrtm+sK1RHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DUdFhHFj; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-50e63771d91so102984981cf.0
-        for <dmaengine@vger.kernel.org>; Tue, 26 May 2026 13:16:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779826571; x=1780431371; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ku/vxDrBu7T4TGqb3O0QJz0UZRxcqf3H+SXkaiCq2AE=;
-        b=DUdFhHFjDGpUyuPlF6VKN9qOXlnBqBa5NcLWJYlFCJQvdunvi5c+10MSDkhGmAgLbW
-         X6GpIfNvVRyp+axHvrfnglG1hldkExhYeweu3sRk4UBhPnESfg+gAm90KVVGblKXCTUC
-         QWFf3zFbo/HJKBNIqNG6oEt63cb+aJTa3WceVVx/YHT2y1jJcdAFXfajAFPQ+GsI7SJ/
-         b5ortALFpnIRsjANgkkAMvERXVHnhkaqDWSQ4OyopTY/CTOsI0bTZa2CqdNrA+4tZNJ0
-         zi6K8+37j1eJ8lO73W9bvfRQdDwuoXzunpuldv71/w5Td0nLIaxkshDG/ailnSYIl4BO
-         w3vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779826571; x=1780431371;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ku/vxDrBu7T4TGqb3O0QJz0UZRxcqf3H+SXkaiCq2AE=;
-        b=Mfj4pB1ZxDdAbmvX8hZrTojJzEQzuTbVmMc84DA7YWqMOgIp5GxD/681pH9Re+OZxX
-         WsB267io0aFEOlJ0TXQr4jADGCpHP8kjGvBgSVbneUuTCZxjLZ7wBBIFTzYAAWPn360h
-         PHzznw/3vIX+p+V4e+HcEdMn20NXYm9iwFq0pSGzp2AUezzBFa1mgNZjJUesVjNkhjtT
-         89CW8cndDns1DLpF9yepjHASIOeRt6acMhjTkPW+RTpXJqpSoxng3lXgMIlY0I9XWvTb
-         OupPPW4s/fuM0N+oiLBRG5rVvALfH6gAyayftUSB6vZhewApy0b6ila3nHmbdWi45h+6
-         15gw==
-X-Gm-Message-State: AOJu0YxZooz9mgN/Gd47UpebzYudZnqNshskfVkvy2z32kwD+x1VfSg3
-	qUSUxmKAsWSNukWdi+ZhZCgAxuE0TK+kka8u2eqg0OYQtaVeQ7PRv54g584POD9o
-X-Gm-Gg: Acq92OH1+HtpzRrYQk6W7QIUPD8x+2ZTIc94GtXUvR8WloEa+E6TWhZyZ3hKk42sF0e
-	zEiKjmyBd0d6PtRMRpvM3MHTxVMpg5rINvjjZpmmKw6ZP+upNsxJAqrDpZ8T+ueyKQ2uwqVq7NF
-	uUMvHJc2MbHi4Sp7P6zSkGMhb6Mr/jwHaiT2gLF75hvwBtiBzPiFo0W1Seh8OklEnoUqTBvNrxn
-	kcq9MjS9Rul2Gd1AgKukwakEapi8xO1cz6TlUmKAnQKbdfFE6copmnNZj59pQ9LnY56coSzl0UX
-	3hGfFZItalzK5jWx13dhehjGs4RsLE2ZxNKBbbU4yw17FFeRLwdxVyQc+OFz4OcjJv1oXcX/Ph2
-	b5u4mho3mpIB9FGVp4bCOaWjVF1r6L/cm9Ykr1+NiTykk9nPn0TieLE7nlGy7HaM1mqekfjsTG/
-	wWAO/Rbye9HtLNj8MKI1v6SnxiWUc5hRXT96U/uDTbk1pj6MVQFS5L8nIonE3IM46A3F1Ql/bLZ
-	z8TUbhyQshg+NWRma6J+1iwt6EQlrADtYoLMf54oV60kA==
-X-Received: by 2002:a05:622a:4a09:b0:50f:bd79:2642 with SMTP id d75a77b69052e-516d463bd85mr282690521cf.48.1779826571221;
-        Tue, 26 May 2026 13:16:11 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51706adc9cfsm25433541cf.19.2026.05.26.13.16.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2026 13:16:10 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Linus Walleij <linusw@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/NOMADIK/Ux500 ARCHITECTURES),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] dmaengine: ste_dma40: turn d40_base phy_chans into a flexible array
-Date: Tue, 26 May 2026 13:15:52 -0700
-Message-ID: <20260526201552.13376-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1779828099; c=relaxed/simple;
+	bh=YzYFShYYIIMoNQUVEGshtTHKCnnvQMaYiPm3FWYIha8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=HQx5eGTlK0DqUwVoNANeiILz6k6pw+g2/rpFecmUDQytdCDHM50C4jv5jFcYAQCNOi9khoehmzc/eG+qukdHiKz9DrzJreNitJRpar1tAHGvG69wAd19ys4MMLxM6+zhXBELhUQ6OCL3YdGvr+sk8YWkcfe/AzlPbuylMV+hBLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D0CM0hGo; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE3BE1F000E9;
+	Tue, 26 May 2026 20:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779828098;
+	bh=uUVLsxBoEsJ+9B3Wk3igbOuhIX6/jUvUCFobrjO6Rl4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=D0CM0hGoC5JRd/s5OHbLItExW1QDCZ1GOAbVQVpbK3LY/uBr8ILLoPnXU4oA4R/T4
+	 C7ABDKwd2KQ1wgIM8RkRkO13/NOe3sdL/dOZK9Kea72vgsdIWuE1lr54kSSEhjr4vN
+	 /m6thfkrSkby17ZzR1eb0AVSFABNdTCtyyLpKX/nX3WFFAhlDmniOt/VElpYIszRNm
+	 EotvFRiX4g5pH8e9lL+YV9wK445E1demtJZaP4uzyAKVtYYXRJQHeq2HCWSwlkgtV7
+	 w79AWLD8DUkVVR7WK0JbhF4RTqVundwi3cknbwDgv2M076KpwpPI01MFaN9fTaP50e
+	 FbnSLiTsohr8A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] dmaengine: ste_dma40: turn d40_base phy_chans into a
+ flexible array
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Rosen Penev" <rosenp@gmail.com>
+Cc: Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260526201552.13376-1-rosenp@gmail.com>
+References: <20260526201552.13376-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 26 May 2026 20:41:37 +0000
+Message-Id: <20260526204137.CE3BE1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-10965-lists,dmaengine=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10966-lists,dmaengine=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 8F7465DC42A
+	FROM_NO_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,smtp.kernel.org:mid,sashiko.dev:url]
+X-Rspamd-Queue-Id: 13E955DC6DF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+
+New issues:
+- [High] Adding directly to the saturated result of `struct_size()` bypasse=
+s integer overflow protection.
+
+Pre-existing issues:
+- [High] Missing `free_irq()` on the error path in `d40_probe()` leads to a=
+ resource leak and use-after-free.
+--
+
+commit 4d4cd912af1facbb011b5847b403605ba43b7f48
+Author: Rosen Penev <rosenp@gmail.com>
+
+dmaengine: ste_dma40: turn d40_base phy_chans into a flexible array
+
 Convert the separately-offset phy_chans pointer to a C99 flexible array
 member at the end of struct d40_base, and switch the allocation to
-struct_size(). The log_chans and memcpy_chans slots continue to live
-in the same allocation immediately after phy_chans, indexed via
-base->log_chans. This removes the hand-rolled pointer fixup that
-recomputed phy_chans from base + ALIGN(sizeof(struct d40_base), 4).
+struct_size().
 
-Assisted-by: Claude:Opus-4.7
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/dma/ste_dma40.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+> diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
+> index 9b803c0aec254..d3e3c4cd43f17 100644
+> --- a/drivers/dma/ste_dma40.c
+> +++ b/drivers/dma/ste_dma40.c
 
-diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-index 9b803c0aec25..d3e3c4cd43f1 100644
---- a/drivers/dma/ste_dma40.c
-+++ b/drivers/dma/ste_dma40.c
-@@ -602,7 +602,6 @@ struct d40_base {
- 	struct dma_device		  dma_both;
- 	struct dma_device		  dma_slave;
- 	struct dma_device		  dma_memcpy;
--	struct d40_chan			 *phy_chans;
- 	struct d40_chan			 *log_chans;
- 	struct d40_chan			**lookup_log_chans;
- 	struct d40_chan			**lookup_phy_chans;
-@@ -621,6 +620,7 @@ struct d40_base {
- 	u32				 *regs_interrupt;
- 	u16				  gcc_pwr_off_mask;
- 	struct d40_gen_dmac		  gen_dmac;
-+	struct d40_chan			 phy_chans[];
- };
- 
- static struct device *chan2dev(struct d40_chan *d40c)
-@@ -3128,6 +3128,7 @@ static int __init d40_hw_detect_init(struct platform_device *pdev,
- 	struct clk *clk;
- 	void __iomem *virtbase;
- 	struct d40_base *base;
-+	size_t alloc_size;
- 	int num_log_chans;
- 	int num_phy_chans;
- 	int num_memcpy_chans;
-@@ -3197,10 +3198,9 @@ static int __init d40_hw_detect_init(struct platform_device *pdev,
- 		 "hardware rev: %d with %d physical and %d logical channels\n",
- 		 rev, num_phy_chans, num_log_chans);
- 
--	base = devm_kzalloc(dev,
--		ALIGN(sizeof(struct d40_base), 4) +
--		(num_phy_chans + num_log_chans + num_memcpy_chans) *
--		sizeof(struct d40_chan), GFP_KERNEL);
-+	alloc_size = struct_size(base, phy_chans, num_phy_chans);
-+	alloc_size += sizeof(*base->log_chans) * (num_log_chans + num_memcpy_chans);
-+	base = devm_kzalloc(dev, alloc_size, GFP_KERNEL);
- 
- 	if (!base)
- 		return -ENOMEM;
-@@ -3213,7 +3213,6 @@ static int __init d40_hw_detect_init(struct platform_device *pdev,
- 	base->virtbase = virtbase;
- 	base->plat_data = plat_data;
- 	base->dev = dev;
--	base->phy_chans = ((void *)base) + ALIGN(sizeof(struct d40_base), 4);
- 	base->log_chans = &base->phy_chans[num_phy_chans];
- 
- 	if (base->plat_data->num_of_phy_chans == 14) {
--- 
-2.54.0
+[ ... ]
 
+> @@ -3197,10 +3198,9 @@ static int __init d40_hw_detect_init(struct platfo=
+rm_device *pdev,
+>  		 "hardware rev: %d with %d physical and %d logical channels\n",
+>  		 rev, num_phy_chans, num_log_chans);
+> =20
+> -	base =3D devm_kzalloc(dev,
+> -		ALIGN(sizeof(struct d40_base), 4) +
+> -		(num_phy_chans + num_log_chans + num_memcpy_chans) *
+> -		sizeof(struct d40_chan), GFP_KERNEL);
+> +	alloc_size =3D struct_size(base, phy_chans, num_phy_chans);
+> +	alloc_size +=3D sizeof(*base->log_chans) * (num_log_chans + num_memcpy_=
+chans);
+
+[Severity: High]
+Can this unprotected addition bypass the integer overflow protection provid=
+ed
+by struct_size()?
+
+If struct_size() saturates and returns SIZE_MAX, the subsequent addition
+will wrap around to a small value. This could allow devm_kzalloc() to
+successfully allocate an undersized buffer, which might result in a heap
+buffer overflow when the channel arrays are written out of bounds. The
+manual multiplication also appears to lack overflow protection.
+
+[ ... ]
+
+[Severity: High]
+This is a pre-existing issue, but I noticed a potential resource leak and
+use-after-free in d40_probe().
+
+If the probe function fails after requesting the interrupt (for example,
+during regulator_get() or d40_dmaengine_init()) and jumps to the
+destroy_cache label, it appears to return an error without freeing the
+requested interrupt.
+
+Because the base structure is automatically freed by the devres framework
+upon probe failure, if an interrupt triggers subsequently, could the
+interrupt handler d40_handle_interrupt() execute and access the freed
+base structure?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260526201552.1337=
+6-1-rosenp@gmail.com?part=3D1
 

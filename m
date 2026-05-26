@@ -1,226 +1,275 @@
-Return-Path: <dmaengine+bounces-10929-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-10930-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aKazEAVvFWojVAcAu9opvQ
-	(envelope-from <dmaengine+bounces-10929-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 11:59:33 +0200
+	id MLoyFXZwFWpbVAcAu9opvQ
+	(envelope-from <dmaengine+bounces-10930-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 12:05:42 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39AF85D3D6E
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 11:59:31 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD7C85D3E96
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 12:05:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8AE6B3014B24
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 09:51:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 29A5B30488DD
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2026 09:57:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF7663CC7FB;
-	Tue, 26 May 2026 09:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B71923C4B87;
+	Tue, 26 May 2026 09:57:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="ixf4SD8J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZBpzkmO"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010014.outbound.protection.outlook.com [52.101.229.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691803BB136;
-	Tue, 26 May 2026 09:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779789075; cv=fail; b=EiT3xbAc9Lflm+uMKuQDYUJKP639IXWbEvvfHN3widvCENbskyDudnO3+lhR9sMCbR0oS7ob7iHh8qMZumN0XdCfooLfJ/S+1fANi7Gd3JehDU2IfOfTNZpj3pM/XUl0e2dNJCpp2QV05pEvZK2OkY7YOgsYvhUCoaV8LvzVpew=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779789075; c=relaxed/simple;
-	bh=rEb1W/HeLgibp67tJ4bd1+NVpz9Wdwe3rzwWm5ALqkg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=TqtWUUKSq7C2En+bazYsNrSe70C5bgw/RC/ochHTxMmqzRZbGiIZKTX0DlAvKx9YjQwTHKGgPbJYR4EJr1pTJnQkteAPPlR5nCByV8UCNMfK8+FT1uaaYOqpgCJMqLfMBJEwGxVhL4BOgAAMmkhUsBAlgDO4QRBXfjxfKBPf6+o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=ixf4SD8J; arc=fail smtp.client-ip=52.101.229.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Fwsa4bz6PjjcW4ii9NvtyvxKgJeSQuODw1JBhYJNTePBjMQQlPfNH08ncDGRVV9UYpk0RHfSOB/2+x2YIIRQgfDR0mHRb+53jgR7F29Qv6Cf0FF9jJt7cSW6g/sEvIvsakTR+9Dsb/L/cBLei0yECn5QOy0MBoKcPfjMZymYKlB1jMHnHiG6rV+a1juJfB96CMSjJMC2XZi9qcX4b0OQTS3gCbWdMaVJRXXQAFTRzCP1k6bWC5Y/9pjCesBqIagcmzjoL2Nw33pG+jhThdEoUQ/ncqh5eCvvivudFWNWy2dqh3XW6LP7FFi00ehxGgLtFmqxUchYRqiKvW5WMRojLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rEb1W/HeLgibp67tJ4bd1+NVpz9Wdwe3rzwWm5ALqkg=;
- b=Vwp1O6xJmata4gl35pNEYItGrFN+XANHcONxXc9Za94IY8rt90XSNyPINsNfVuERDdLW7Hcz3DxglZPDjamaReWP6+9HcScH27XdKCjxwNQCzYDZnX0HUg5e28zyAQas1gxt6ozgKzWj9pMYDbm3/Hwp+5EETQMiV+hqI5fKSVVvcepJ3A2xgw0H1EuRXeJy268vxpM+j76rCvyptOiqTKsHwg001BZgXzdRNtBj5DQa7OQG9ta7gwKXaKw3td2McqrcX0SfxzwRhoXvHfECj2rxHgR2dmm/YhAQQARme7wonsCUXsA+udowFlMeufeLJhV5EK9WCG9qTfoYkfKwxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rEb1W/HeLgibp67tJ4bd1+NVpz9Wdwe3rzwWm5ALqkg=;
- b=ixf4SD8JRz7SzqwIN1iDlWUqQxAJjjC3swB7z5njDOzmVwvLzHYK0JFD9yfWj5aVyKFya20YwR7FP54qwlW+JBfGmL60iuioF9H6BEWSa6qsCbffDd41Nh4hW1NBwrsEtfxzfMjBp/ieSwpxFlawA4SndptjxNRuQJZM2fDIHE0=
-Received: from TYCPR01MB11332.jpnprd01.prod.outlook.com (2603:1096:400:3c0::7)
- by TYCPR01MB10667.jpnprd01.prod.outlook.com (2603:1096:400:294::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.20; Tue, 26 May
- 2026 09:51:07 +0000
-Received: from TYCPR01MB11332.jpnprd01.prod.outlook.com
- ([fe80::2511:10cd:e497:4d97]) by TYCPR01MB11332.jpnprd01.prod.outlook.com
- ([fe80::2511:10cd:e497:4d97%6]) with mapi id 15.21.0048.019; Tue, 26 May 2026
- 09:51:00 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Claudiu Beznea <claudiu.beznea@kernel.org>, "vkoul@kernel.org"
-	<vkoul@kernel.org>, "Frank.Li@kernel.org" <Frank.Li@kernel.org>,
-	"lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org"
-	<broonie@kernel.org>, "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com"
-	<tiwai@suse.com>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "geert+renesas@glider.be"
-	<geert+renesas@glider.be>, Kuninori Morimoto
-	<kuninori.morimoto.gx@renesas.com>, Long Luu <long.luu.ur@renesas.com>
-CC: Claudiu.Beznea <claudiu.beznea@tuxon.dev>, "dmaengine@vger.kernel.org"
-	<dmaengine@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-sound@vger.kernel.org"
-	<linux-sound@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>, Claudiu Beznea
-	<claudiu.beznea.uj@bp.renesas.com>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>, Frank Li <Frank.Li@nxp.com>, John Madieu
-	<john.madieu.xa@bp.renesas.com>
-Subject: RE: [PATCH v6 01/18] dmaengine: sh: rz-dmac: Move interrupt request
- after everything is set up
-Thread-Topic: [PATCH v6 01/18] dmaengine: sh: rz-dmac: Move interrupt request
- after everything is set up
-Thread-Index: AQHc7OxJ+K5vYSqOKUeeUPNEYC8zxrYf/50wgAAPWgCAAAC1wA==
-Date: Tue, 26 May 2026 09:51:00 +0000
-Message-ID:
- <TYCPR01MB1133214647B09C658AC96A4D9860B2@TYCPR01MB11332.jpnprd01.prod.outlook.com>
-References: <20260526084710.3491480-1-claudiu.beznea@kernel.org>
- <20260526084710.3491480-2-claudiu.beznea@kernel.org>
- <TY3PR01MB11346AC919B1D62FADB18FB20860B2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <8dcf50ee-94b7-4b27-895d-2448eb772c08@kernel.org>
-In-Reply-To: <8dcf50ee-94b7-4b27-895d-2448eb772c08@kernel.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYCPR01MB11332:EE_|TYCPR01MB10667:EE_
-x-ms-office365-filtering-correlation-id: 86731418-f8f6-4260-840f-08debb0c4ac3
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|1800799024|366016|56012099003|22082099003|18002099003|921020|38070700021|4143699003|6133799003|11063799006;
-x-microsoft-antispam-message-info:
- qQG+N2juRpjVzXlTOV1gsYlH1Z38XGUC0vGRP0h1D2yLpgVWAJBI3vo5t4vM4OUZsRNjAeVpaMcIy+ybMeTRaeHBamrxC4i58gnDcuTx2NUIxVLiDJMuXteDqoI6xw76sACHnNPJUeuwx+r52/RZyNAN5BY1CwWtVpLQYgPVjzIGCt+T7NqGgqCTNHhwY5pd+SuCpeK8ANUnzvDTExrLM4U0mfzQkaaxn+uULwr3AB5r2jcWa7uKxUTvtf0Zz1tBnxNbfer72M3KU0Xw8VChwMaW0PCZPNUKQkDaL0lYsy+CyCrFBsrd+M3SZeLQizxabHZrZ7vQC0JEaPmPMW05U2rVIoelI34Ha/yBZBdvWIE3E+qhsY6g5arn2VWgVdVY+O5WOzPhgY8KZa9dbwkuRGfzXpOz8GJ6YsYH/8H41F0BFr/S+2CN9Q2ubLIGiMvVMo8NcL9MEW/MreyEB8Y2EtNSnDc6NDcYWMcMnwJsu+nwKGrwGfDEZALCG9J4rZksi+3LeE7eq4nI2b2aDjPxFKwTiUHMmaKsWXgIkgMrp52P9dHVbrWMxiOYxwkRGlYhuPzrZ9RV1WsAukYyHAnZIjVh/RnvBwBgSKUa/9PWbbD2qP6dh30CLxiuR5uUXm7Xiy+fEvZSgZJgZ8x5b5mo5oxRaGWse+Df4ctoxR4qhWhmNk4o4LmUoN0mIlowGDt+VzJQHo6tA1EAq4o4GdNNYcyGtPoY2An0mk/5gTTNEt8RJtzcy5XoREeme/PQgu/06bbc+3ib/JLW5G3r6VgalQ==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11332.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(56012099003)(22082099003)(18002099003)(921020)(38070700021)(4143699003)(6133799003)(11063799006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?UzdITUVNT1R2OFNmOHFGeS9BajJobGlBWG5Ra2drT1BRVEVNYWtiVDAreDVF?=
- =?utf-8?B?NjJwUzlyc1J5VXg5eXVkSy90RW1kR2NSb3kvTDRKY1pGd3RQSFJjWHZaN291?=
- =?utf-8?B?K0tyWFY1SjFZWWNDMEw5dVhNcmFRMytnckVMN1pYNUlleUZGeXZORis0S0po?=
- =?utf-8?B?UzlKVzd4RXpkYm9ZdUlVVEs1NUc2UVI2Y1M0WXNraG1jL2hUOGRGSjA5cXJU?=
- =?utf-8?B?Q0E3bXZ4cTNpWHBZZDJiZFluUjdQdTFDVWFPaHFMeExyalJVeHZLZ0JjTU9F?=
- =?utf-8?B?ZEdWS0FDRC96Tm91YWtXYjZoVi9JMVJ1Z25CQ0F1OGNBOE9KUlFsUVErMjE1?=
- =?utf-8?B?dDVVb3NQRXlxcDhjRnVOZ1hTeHczWU15MmczT3VRK0tZRGxsT0lsWnQ2dWRW?=
- =?utf-8?B?bU9FWUNjY1l0M003TitYOFRTQ0ZkYVBUZXgzMkpQbm1QVEdqbTFkOVJ2cGxW?=
- =?utf-8?B?eUIwOCttb2VKWkYzREdBUk90ZXZQOEVVZzRrZ0NVS0NrWWh0WDRhQXp1SktL?=
- =?utf-8?B?Vk40M3psa0hQelJPYjMyMnp1MWhMNUVQa2ZOeUJobEtZeWRzSmxSV01YK0RJ?=
- =?utf-8?B?WUdTOHhnMER2eThKNTRmTzhzNVJIUDVqYVZwdjllSkZ5KzdXYlh2QURPRmpa?=
- =?utf-8?B?WlF0ZnJGOFN2cW1idm1qcEREVnBLR0Q1dHFubFlrUjdTWU9BWVFiTC9hQ0ZH?=
- =?utf-8?B?QU9oRVpJQW5VU0dJa1drYU8wWnRUSGI2WkVQMEJwR0xoamZLSGNraXBwRnZK?=
- =?utf-8?B?c2N1RDEwSkNNNVZnZmZDNFRsemp0SHc3b3NzbTR0TEN0b1JnZnZrNFdsSmNq?=
- =?utf-8?B?MGhwMlZFbUwzNUVpalg4dXJJMEdSZ3ZFbVBJeERLb2hvQUxVWW50NGpUdDFW?=
- =?utf-8?B?R3YwOHVpNm5sRklKOHBHdjdDZWNqdXRSdTlDdWJJYk1OMDJ3aE9Tb3JSMWxV?=
- =?utf-8?B?VkhLeXlKM1NwUXJMbUl6WmpjdmMzSFNPamdYc0Y0ZFZJUVZaa1BZdVU3NVVG?=
- =?utf-8?B?OE02SXpPbzQ3eU02NmZMUmFrZGdRdTJoMkNZcnNRR0RFa3B2RXFDeExvMkUw?=
- =?utf-8?B?N3Y3NW14NVRRdFVYY0ltdDFsQVVpdUlOZEtzemVmWFVzT0hmZWpBblJsS1Rx?=
- =?utf-8?B?aWY4TGx4cVVsUFJTcG43YnVsRFQvZ0c3L3BmdFhjc3gyMko1NUc4OEhzRTRw?=
- =?utf-8?B?aDNwK1VkM2h1cnZzb2hzdDFjT2ozTmFveDM5WTlCd1BvZS9vZUNoaGY5bTdp?=
- =?utf-8?B?T2VXZUlLOGhPR3FBbS9mdFFkcW1pNVA0VUJzOVZWZFRLKzdvWnRmbU52anhx?=
- =?utf-8?B?d05zb3ArdEpLbnd2Tmtzbkhuc3hBdGFuRTJhQnRQTnNuS2djbFlSb0puTEhw?=
- =?utf-8?B?RlAxaUhzS3k3MUxSbGg4M1haL2hocmo2ZmhVQVYyMVJDU2hRR3R6N08zeXcr?=
- =?utf-8?B?dlN5d3BOTk5HMXhUK3ZiV1h2Vm9BZ2F6RWZudDN5RGthZlpKUXc5TmtqRlZv?=
- =?utf-8?B?dWo0ek0zTlEyVjY4Q0dpaFVuODNURnMzVkxLR2lLM2FsQjJyaE9YSzRVbEsv?=
- =?utf-8?B?UmVoenpLUmhsU1hTbG5IZ3FlL1hxTjIwbFZmZmxMWnJyN1ZIRVMxRWl4MndE?=
- =?utf-8?B?cUxvTVlFWkJvL1ZsMzkreE1QdXNzWnZuQStzUXRvcGFVVERRc3o4VEw1bGNo?=
- =?utf-8?B?akJObk4xREh4RnpnUHVkWWlVR0FnVUNLZHRLYUZybGN6Mm9tOFZwQ0NmcFdE?=
- =?utf-8?B?NElsY24yejVKNmxReGNGanlUdDRKSWtYaWRTUnc3SXA0eFFlb2gwc0FDc241?=
- =?utf-8?B?K0xKN0dUZU9UWkx5VFBFeTQvSEV5ZStNNUVNcnlQYWtxRmpYQnJqTlhUaWRM?=
- =?utf-8?B?eWp4Nlo1dlhQeFkzdDUwbG15cDkrUXg3NUk5dHBiN1FkaGcvc3ZzbTVpM2c3?=
- =?utf-8?B?ZkI0S0w1NHpHZ2tVVFp1Zk9mY1JweTU1VU1EMG5tU3IyRE02ejRNbmxyUmZL?=
- =?utf-8?B?RU9QckZURWtZVVQwQ0gyS09lcVNYaVNWWTR5ZWwwbGhKSG5QeFdjTEE1cGdJ?=
- =?utf-8?B?YUp6Yk1lOFFiMW4zUGwyeWI5aWVnbjZ0THZOYkJ0UllidlNnWXdhbGszS2tV?=
- =?utf-8?B?M200Z3ZkNms3Y2VuRjJoeEJCUDJrZnNyeVNWWk0rem9mdFpHWmZ2Ukl2ZEZV?=
- =?utf-8?B?SGNkOFgwZHE3WkFSQUFJOTMvYXZEc05CaVFCWG95NXV2dlZic2NIV0F5cHM4?=
- =?utf-8?B?eTVSckVNbTJYRklyZjJWMTljOExITXRQcFk3ZkZ3bmdoY3BMWFJteTFYZ2tu?=
- =?utf-8?B?MnNWeWh2OHgvV3RFeEJYYjBxQTl6UGVGZ3BPaXFJR2c2aFVMblQ3dz09?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1D93D8907
+	for <dmaengine@vger.kernel.org>; Tue, 26 May 2026 09:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779789475; cv=none; b=l91U6v5UWtbrtkRnCi/8sB46gaEqiAU+WE8RYu643OLjIlcD7a6Z3PRyYxroF8dUv6rNAbIYI2Umo3F39XuEYxYf+yxAAMA3kBE11+E2/lZOEFP5biPUv7gTqk/v7zRit/AXM4NRPyDsdcXUL1+iF6QY6+5eQCcpFqnFH1fEWM4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779789475; c=relaxed/simple;
+	bh=FQMEb8+DaNCzCEIQH9SwSRf/hxyx7Na1mtkTgETinF4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=ZDhy3ebfFmPXPJWypHLsKT/toVVnk1MiFEAm2sIZb6tHLUHUKAfcX2jRLLSLYchWpIPcczzGPR1z2ld66A/8nr/qyep22XHv4KwK1qIZ7nexzG7hEMSlKMwN2xPsefl7JdQDHyv6fiaByCXlvxBB5HOCnJdbHzgd31wbLIwyWmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZBpzkmO; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5CF51F000E9;
+	Tue, 26 May 2026 09:57:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779789473;
+	bh=/1e0/MSgdxT31wrDbdmrMOUBV8yaI/kXifFySqPRqOU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=EZBpzkmOZF/LiZwExVz5IV6LY0Nzy/hGgoXDWv5pcJ3dd6xX38+eLkIQRfOj5co/k
+	 aCi/wylDZCaSXQGpSPPEnffPaQ8DoerB4PRDg2UXn0PJTCuHIbw3qb+yQvxudrfSGI
+	 a6SCKeCNbUEos4ah3CY5H8ZMFxkB8RmcZIXV9hEIeCmaNUpciE0S0GEMSTdBBVhaVM
+	 pavxDiJlKzZXhR97+i6luO390a5B2W0LfOHabZFvPT5XcaRlEtsjDfIiG8ql4s8OQ/
+	 sEy+t9k+UwwBFV3wCE4cDPxUwUl2uNEPKURDJFPoxfIXnYElMvl31viyeA7r600zhc
+	 6RK/YG4afUF7A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 14/18] dmaengine: sh: rz-dmac: Add runtime PM support
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Claudiu Beznea" <claudiu.beznea@kernel.org>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, wsa+renesas@sang-engineering.com, dmaengine@vger.kernel.org
+In-Reply-To: <20260526084710.3491480-15-claudiu.beznea@kernel.org>
+References: <20260526084710.3491480-15-claudiu.beznea@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 26 May 2026 09:57:53 +0000
+Message-Id: <20260526095753.A5CF51F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11332.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86731418-f8f6-4260-840f-08debb0c4ac3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2026 09:51:00.0910
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: axGISv0ML0xLc5AhlJIr46VsyQSmpZfejmFr4K6vQHFV8BNLXHLfwFieqdx536ZydUM4fEMQSrAEJ2ZUY8NzAAi6LLmqYxSTeKHZDy5uUMk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB10667
-X-Spamd-Result: default: False [2.44 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[bp.renesas.com:s=selector1];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	MISSING_MIME_VERSION(2.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-10929-lists,dmaengine=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[21];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,lists.linux.dev:replyto,renesas.com:email];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-10930-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,perex.cz,suse.com,bp.renesas.com,pengutronix.de,glider.be,renesas.com];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[bp.renesas.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[biju.das.jz@bp.renesas.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
-	NEURAL_SPAM(0.00)[0.528];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[TYCPR01MB11332.jpnprd01.prod.outlook.com:mid,renesas.com:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,bp.renesas.com:dkim]
-X-Rspamd-Queue-Id: 39AF85D3D6E
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+X-Rspamd-Queue-Id: BD7C85D3E96
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-SGkgQ2xhdWRpdSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDbGF1
-ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAa2VybmVsLm9yZz4NCj4gU2VudDogMjYgTWF5IDIw
-MjYgMTA6NDYNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NiAwMS8xOF0gZG1hZW5naW5lOiBzaDog
-cnotZG1hYzogTW92ZSBpbnRlcnJ1cHQgcmVxdWVzdCBhZnRlciBldmVyeXRoaW5nIGlzIHNldA0K
-PiB1cA0KPiANCj4gDQo+IA0KPiBPbiA1LzI2LzI2IDExOjU0LCBCaWp1IERhcyB3cm90ZToNCj4g
-PiBIaSBDbGF1ZGl1LA0KPiA+DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+
-IEZyb206IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBrZXJuZWwub3JnPg0KPiA+PiBT
-ZW50OiAyNiBNYXkgMjAyNiAwOTo0Nw0KPiA+PiBTdWJqZWN0OiBbUEFUQ0ggdjYgMDEvMThdIGRt
-YWVuZ2luZTogc2g6IHJ6LWRtYWM6IE1vdmUgaW50ZXJydXB0DQo+ID4+IHJlcXVlc3QgYWZ0ZXIg
-ZXZlcnl0aGluZyBpcyBzZXQgdXANCj4gPj4NCj4gPj4gRnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNs
-YXVkaXUuYmV6bmVhLnVqQGJwLnJlbmVzYXMuY29tPg0KPiA+Pg0KPiA+PiBPbmNlIHRoZSBpbnRl
-cnJ1cHQgaXMgcmVxdWVzdGVkLCB0aGUgaW50ZXJydXB0IGhhbmRsZXIgbWF5IHJ1biBpbW1lZGlh
-dGVseS4NCj4gPg0KPiA+IERvIHlvdSBtZWFuIHNwdXJpb3VzIGludGVycnVwdD8NCj4gPg0KPiA+
-IEFmdGVyIERNQSBkcml2ZXIgcHJvYmUgb25seSwgY29uc3VtZXIgZGV2aWNlIGNhbiBhY2Nlc3Mg
-dGhlIERNQSBoYW5kbGUNCj4gPiByaWdodD8gb3IgYW0gSSBtaXNzaW5nIHNvbWV0aGluZyBoZXJl
-Pw0KPiANCj4gSW4gdGhlb3J5IHRoZXJlIGNvdWxkIGJlIHBlbmRpbmcgaW50ZXJydXB0cyBub3Qg
-eWV0IHNlcnZlZCAoZS5nLiBkdWUgdG8gdGhlIHByZXZpb3VzIHVzYWdlIG9mIHRoZQ0KPiBjb250
-cm9sbGVyLCBIVyBiZWhhdmlvciwgZXRjKS4gVGhvc2UgY291bGQgdHJpZ2dlciB0aGUgZXhlY3V0
-aW9uIG9mIHRoZSBJUlEgaGFuZGxlciBvbmNlIHRoZSBpbnRlcnJ1cHQNCj4gaXMgcmVxdWVzdGVk
-Lg0KDQpZb3UgbWVhbiBETUEgY29uc3VtZXJzIGNvbmZpZ3VyZWQgYnkgYm9vdGxvYWRlciBhbmQg
-bGludXggcHJvYmluZyB0aGUgRE1BIGRyaXZlciBjYW4NCnRyaWdnZXIgSVJRPyANCg0KQ2hlZXJz
-LA0KQmlqdQ0K
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+s) to consider:
+
+New issues:
+- [High] Early return on PM resume failure in rz_dmac_issue_pending() leave=
+s descriptors in the submitted list, causing incorrect residue reporting.
+- [Low] Misplaced exclamation mark in error message formatting (\n!).
+
+Pre-existing issues:
+- [High] Asynchronous pm_runtime_put() immediately followed by pm_runtime_d=
+isable() leaves hardware in an incorrect state.
+- [High] IRQ handlers access hardware registers without verifying that the =
+device is runtime active.
+- [High] Race condition between devm-managed IRQs and device removal leads =
+to hardware register access while the device is in reset or suspended.
+--
+
+commit 1bdb517f551fc047d57449a7201275740a491091
+Author: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: dmaengine: sh: rz-dmac: Add runtime PM support
+
+This patch protects exposed APIs with runtime PM calls before accessing
+hardware registers. It also marks the DMA device as pm_runtime_irq_safe()
+to support APIs called from atomic context. Error handling paths in
+termination and cleanup functions are updated to skip hardware access if
+RPM resume fails.
+
+> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+> index 93394b9934c89..bd4ca8e939f17 100644
+> --- a/drivers/dma/sh/rz-dmac.c
+> +++ b/drivers/dma/sh/rz-dmac.c
+> @@ -549,12 +549,22 @@ static void rz_dmac_free_chan_resources(struct dma_=
+chan *chan)
+>  	struct rz_dmac *dmac =3D to_rz_dmac(chan->device);
+>  	struct rz_dmac_desc *desc, *_desc;
+>  	unsigned long flags;
+> +	int ret;
+> +
+> +	PM_RUNTIME_ACQUIRE_IF_ENABLED(dmac->dev, pm);
+> +	ret =3D PM_RUNTIME_ACQUIRE_ERR(&pm);
+> +	if (ret) {
+> +		dev_err(dmac->dev, "RPM resume failed for channel %s, ret=3D%d\n!",
+> +			dma_chan_name(chan), ret);
+> +	}
+
+[Severity: Low]
+Does this error message format string place the exclamation mark correctly?
+
+The "\n!" sequence places the exclamation mark at the beginning of the next
+line instead of the end of the sentence, breaking the intended log output.
+
+[ ... ]
+
+> @@ -716,13 +737,20 @@ static int rz_dmac_terminate_all(struct dma_chan *c=
+han)
+>  	spin_unlock_irqrestore(&channel->vc.lock, flags);
+>  	vchan_dma_desc_free_list(&channel->vc, &head);
+> =20
+> -	return 0;
+> +	return ret;
+>  }
+> =20
+>  static void rz_dmac_issue_pending(struct dma_chan *chan)
+>  {
+>  	struct rz_dmac_chan *channel =3D to_rz_dmac_chan(chan);
+> +	struct rz_dmac *dmac =3D to_rz_dmac(chan->device);
+>  	unsigned long flags;
+> +	int ret;
+> +
+> +	PM_RUNTIME_ACQUIRE_IF_ENABLED(dmac->dev, pm);
+> +	ret =3D PM_RUNTIME_ACQUIRE_ERR(&pm);
+> +	if (ret)
+> +		return;
+
+[Severity: High]
+If this returns early on failure, does it leave newly submitted descriptors
+stuck in the vc.desc_submitted list?
+
+If vchan_issue_pending() is skipped, descriptors are never moved to the
+vc.desc_issued list. Later, if a client calls dmaengine_tx_status(),
+rz_dmac_chan_get_residue() will use vchan_find_desc() which only checks
+the desc_issued list:
+
+drivers/dma/virt-dma.c:vchan_find_desc() {
+	list_for_each_entry(vd, &vc->desc_issued, node)
+		if (vd->tx.cookie =3D=3D cookie)
+			return vd;
+}
+
+This will fail to find the pending descriptor, causing
+rz_dmac_chan_get_residue() to incorrectly return 0 for the residue.
+
+This could mislead the client into thinking the transfer has fully completed
+while the status remains DMA_IN_PROGRESS. Should vchan_issue_pending()
+still be called to update the software state correctly?
+
+[ ... ]
+
+> @@ -1274,6 +1327,7 @@ static int rz_dmac_probe(struct platform_device *pd=
+ev)
+>  		return dev_err_probe(&pdev->dev, PTR_ERR(dmac->rstc),
+>  				     "failed to get resets\n");
+> =20
+> +	pm_runtime_irq_safe(&pdev->dev);
+
+[Severity: High]
+This is a pre-existing issue, but does adding pm_runtime_irq_safe() expose
+the interrupt handlers to accessing powered-down hardware?
+
+The IRQ handler rz_dmac_irq_handle_channel() directly reads hardware
+registers like rz_dmac_ch_readl().
+
+If a spurious or delayed interrupt occurs while the device is runtime
+suspended (e.g., after a failed system suspend or during driver teardown),
+it will access hardware without verifying it is powered, resulting in a
+kernel crash.
+
+Should IRQ handlers use pm_runtime_get_if_active() to verify the device is
+powered before touching registers?
+
+[Severity: High]
+This is also a pre-existing issue, but is there a race condition between
+the devm-managed IRQs and device removal?
+
+The driver requests channel IRQs using devm_request_threaded_irq(). During
+module removal in rz_dmac_remove(), it asserts the hardware reset and
+suspends the device:
+
+drivers/dma/sh/rz-dmac.c:rz_dmac_remove() {
+	...
+	reset_control_assert(dmac->rstc);
+	pm_runtime_put(&pdev->dev);
+	pm_runtime_disable(&pdev->dev);
+}
+
+Because devm-managed resources are freed only after the remove() function
+returns, an in-flight interrupt can execute concurrently with or immediately
+after the reset assertion and suspension.
+
+The interrupt handler will attempt to read hardware registers while the
+controller is held in reset or suspended, leading to a system hang or
+synchronous abort.
+
+Should synchronize_irq() be called, or the IRQs manually freed, before
+asserting the hardware reset and disabling runtime PM?
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does the error handling in
+rz_dmac_probe() and rz_dmac_remove() leave the hardware in an incorrect sta=
+te?
+
+In rz_dmac_probe() error paths and rz_dmac_remove(), the driver calls
+pm_runtime_put() immediately followed by pm_runtime_disable():
+
+drivers/dma/sh/rz-dmac.c:rz_dmac_probe() {
+	...
+err_pm_runtime_put:
+	pm_runtime_put(&pdev->dev);
+err_pm_disable:
+	pm_runtime_disable(&pdev->dev);
+}
+
+Calling pm_runtime_put() queues an async idle notification, but
+pm_runtime_disable() invokes __pm_runtime_barrier() which cancels any
+pending asynchronous requests. This causes the device to never enter the
+runtime suspended state, leaving hardware resources powered on.
+
+Should pm_runtime_put_sync() be used instead?
+
+>  	pm_runtime_enable(&pdev->dev);
+>  	ret =3D pm_runtime_resume_and_get(&pdev->dev);
+>  	if (ret < 0) {
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260526084710.3491=
+480-1-claudiu.beznea@kernel.org?part=3D14
 

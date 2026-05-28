@@ -1,152 +1,169 @@
-Return-Path: <dmaengine+bounces-11017-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11019-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +GWGKhOBGGpPkggAu9opvQ
-	(envelope-from <dmaengine+bounces-11017-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2026 19:53:23 +0200
+	id 1CRALJKiGGrKlggAu9opvQ
+	(envelope-from <dmaengine+bounces-11019-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2026 22:16:18 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1E4A5F5EF6
-	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2026 19:53:22 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA8D25F8388
+	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2026 22:16:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 1318F3002D26
-	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2026 17:52:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AD06531AC94E
+	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2026 20:06:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 966A53FFAA1;
-	Thu, 28 May 2026 17:52:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C77B3304BB3;
+	Thu, 28 May 2026 20:06:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3RWVWIS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nSYwJsRr"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DEE3B4EA3;
-	Thu, 28 May 2026 17:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58351335566;
+	Thu, 28 May 2026 20:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779990739; cv=none; b=YV16JzzaUva8nU4sKujD8dREU/CPRuAmtHGawruBXKX/ZHejg9BbRoSDJzIv9lUllrH5od925gCMhqqi33F7I1xDAmByUWOGJgozDcHuAvI1w/Qs5KnKz7mcSRq4t0N9fkzXEMgksaZfM9BIs8zvMIDfbEkeqrfv2FyoKy4ocWc=
+	t=1779998789; cv=none; b=bOSvSbAYjNYujGEgv30RnKA9pgOjknOo1JxjNakwSMbddVwkku4DF9qLpwMCvAE5RPOVzZOQIN4hVRvcU4/Ctr31Kq3QR9ON8nFJQrIxpJjekAaRzgeT3XYFuDJOTo/+EhrgKi7KhSPlycO2fjOV+vt9bKnPw3VqEbxOd6/evXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779990739; c=relaxed/simple;
-	bh=/WevIpPK3SaYeqJ1HmkSOi3MW+1TONCBYE4elIAounc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uryyft7CQ06RkVxxB0fGhZWEsNNbJ6sdpBFoAjAAilF9b3J8QWNjeVVdh1/NOZPgMNjY51FfGCQSUFEnfYJXtKN4mMZZIZmBJVCTKXEevuoTq0jqnBxoS0Xz0oKJ3S7HVbSKzsVRWl6lBx0uFwl0sM5kI4jMcWX1Ig2YG50KRqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3RWVWIS; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB45B1F000E9;
-	Thu, 28 May 2026 17:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779990736;
-	bh=wA+h2LHJqTGA0QJnfQ0FCObieUhoPZ0RdKo+Y/z5Xyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=h3RWVWIS+mWdQxZ5uz+s4obm8+Xaok4BxvqhGUauCmCTRepK6hIMUzS7G3R6gcT+Q
-	 9VOU+EiIiKShxPH++HQ8NedDIZl4IJYwy6tzFmD+HKQ74yPcphUdWbIxzQ8pA4u8C5
-	 LKrsQryP6HyEOU8VYRp6OQJP16pQiuqlz5UCVA4xB1+VT5Jk+R5Hggtr2RB8zY3whg
-	 R5Ch+8C+k5x8dbdmUSIhV8uKjSqaMc3efUjj9xVGZ5SbV+I3DIwDJDQLf0cnsSg+zA
-	 gMhjZjCOKcgsFrtiTy9ODdBazicvw5YEJ0NMueTgWpcBfzpipKY8ZcbvDPGSwJZ7vd
-	 H6+eDYAfggBmA==
-Date: Thu, 28 May 2026 17:52:14 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>,
-	Thara Gopinath <thara.gopinath@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-	Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Gaurav Kashyap <gaurav.kashyap@oss.qualcomm.com>,
-	Neeraj Soni <neeraj.soni@oss.qualcomm.com>
-Subject: Re: [PATCH 0/3] Add support for qcrypto on shikra
-Message-ID: <20260528175214.GA3936298@google.com>
-References: <20260515-shikra_qcrypto-v1-0-80f07b345c29@oss.qualcomm.com>
- <20260514194735.GA1939213@google.com>
- <d4d35e17-84fa-4c95-9bfb-abfd25ea7f4a@oss.qualcomm.com>
- <20260522024912.GC5937@quark>
- <c1697372-54ec-4f57-85d9-ad375ff1a44d@oss.qualcomm.com>
- <20260525142843.GA2018@quark>
- <e49c4a45-6455-47f3-a91f-c32c1a0b99be@oss.qualcomm.com>
- <CAMRc=MfC6CEwOXYttsav3mwqyJ2F4sburBj+zNJ25qMoweyL-Q@mail.gmail.com>
- <lj7geczhthury476ilkjym2k5fblo5pqroefsbdfgh5jcf7zy2@qrss5xc7umn3>
- <CAMRc=Me6cqasdBknbAjUZ5BqcpERYwV+NvseRJp4P0aTSYAMUw@mail.gmail.com>
+	s=arc-20240116; t=1779998789; c=relaxed/simple;
+	bh=OPwLlGa+LZEYicR+OR7g/UZyMEoDMmofYPdn5PM3XQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=vD4kZS9e7gxFD6FOAHU895VuzVqxb3qtvZ4SN0VL5YidjXHwSjqlfHr71wFQbEaQF/dI+CBgNWenFw+EAlMGcDOre7g2bEiuiLU71MKjsvDUyUmtcmQFZThdU7iBAZDz2aXOaQjsVhdBxczBVilCzRHkhyg5mcSGOcsAFyFUnZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nSYwJsRr; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779998787; x=1811534787;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=OPwLlGa+LZEYicR+OR7g/UZyMEoDMmofYPdn5PM3XQ4=;
+  b=nSYwJsRru7hVn/NcL18+rcclmQ7D2m7sE+ABi3Z0h79UI9vLCQ9ewuPJ
+   1iFcZiQRALLopq1UyuTX1bieWkbjPvRUKIDG1Azo8UQ14d5DrCK1W/7fB
+   trY3k++D0Z5OkvLNb6gmAW+WRWiM+RzOeRWLqL2gXQJgrhL+BzH9bGEM0
+   uHg44zXhsiBWIIsLsvMm524gz+Ta+vgxa2XgAIXp+xRNFV4ixWTUQeMF0
+   NFeOpDdA32Do6Uhpeu2s57tdhO3GqOj5P+Zpx+V6qCFgZN1uBBdaltM9t
+   YsrASrka1CzGubgOAknAqGV9qLbgDx7CQXTUzO2LId9v0rovG0oVZCsb3
+   A==;
+X-CSE-ConnectionGUID: BU1UihbpSoufdI7ZNNI20Q==
+X-CSE-MsgGUID: u6C/rf7nTbWwCGa9wOlgNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="68387061"
+X-IronPort-AV: E=Sophos;i="6.24,174,1774335600"; 
+   d="scan'208";a="68387061"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 13:06:26 -0700
+X-CSE-ConnectionGUID: 2EruNyLwRPK0egDF1IVcZQ==
+X-CSE-MsgGUID: oHCFenBmSrSpczK2WLOSOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,174,1774335600"; 
+   d="scan'208";a="244466256"
+Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.111.91]) ([10.125.111.91])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 13:06:26 -0700
+Message-ID: <da523982-576f-4bf8-95b6-79cecf683f55@intel.com>
+Date: Thu, 28 May 2026 13:06:25 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Me6cqasdBknbAjUZ5BqcpERYwV+NvseRJp4P0aTSYAMUw@mail.gmail.com>
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: ioatdma: use !kstrtoint(), not sscanf()!=-1
+To: "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+ Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Ujjal Singh <ujjal.singh@intel.com>,
+ "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM"
+ <dmaengine@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20260526061321.6123-1-grandmaster@al2klimov.de>
+ <20260526061321.6123-3-grandmaster@al2klimov.de>
+ <9461e4b3-d42b-4550-a931-19532588bdbc@intel.com>
+ <48fac400-4813-4b14-986d-8392c7faf936@al2klimov.de>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <48fac400-4813-4b14-986d-8392c7faf936@al2klimov.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11017-lists,dmaengine=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	SUBJECT_HAS_EXCLAIM(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11019-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_CC(0.00)[oss.qualcomm.com,gmail.com,gondor.apana.org.au,davemloft.net,kernel.org,vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TO_DN_ALL(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ebiggers@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: B1E4A5F5EF6
+	FROM_NEQ_ENVFROM(0.00)[dave.jiang@intel.com,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,intel.com:mid,intel.com:dkim,al2klimov.de:email]
+X-Rspamd-Queue-Id: EA8D25F8388
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, May 28, 2026 at 11:13:47AM -0400, Bartosz Golaszewski wrote:
-> On Thu, 28 May 2026 15:50:10 +0200, Dmitry Baryshkov
-> <dmitry.baryshkov@oss.qualcomm.com> said:
-> > On Thu, May 28, 2026 at 09:13:23AM -0400, Bartosz Golaszewski wrote:
-> >> On Thu, 28 May 2026 13:54:51 +0200, Kuldeep Singh
-> >> <kuldeep.singh@oss.qualcomm.com> said:
-> >> >>> +Bartosz, Gaurav, Neeraj
-> >>
-> >> I know about the self-tests etc., I will address them next.
-> >
-> > My 2c, the self-tests would be more important, as they are fixes. Doing
-> > the crypto in a wrong way is a bad idea...
-> >
+
+
+On 5/26/26 11:06 AM, Alexander A. Klimov wrote:
 > 
-> Then let that be "in parallel". :)
+> 
+> On 5/26/26 16:49, Dave Jiang wrote:
+>>
+>>
+>> On 5/25/26 11:13 PM, Alexander A. Klimov wrote:
+>>> Depending on the user input, sscanf() may return 0 for 0 success.
+>>> But intr_coalesce_store() wants sscanf() to parse one number,
+>>> so expect 1 from sscanf(), not any int except -1.
+>>>
+>>> While on it, fix typo in %du by using just %d,
+>>> as this interface expects %d or %d\n.
+>>> Latter made scripts/checkpatch.pl complain,
+>>> so use kstrtoint() instead of sscanf().
+>>>
+>>> Fixes: 268e2519f5b7 ("dmaengine: ioatdma: Add intr_coalesce sysfs entry")
+>>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>>> ---
+>>>   drivers/dma/ioat/sysfs.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/dma/ioat/sysfs.c b/drivers/dma/ioat/sysfs.c
+>>> index e796ddb5383f..f59df569956a 100644
+>>> --- a/drivers/dma/ioat/sysfs.c
+>>> +++ b/drivers/dma/ioat/sysfs.c
+>>> @@ -144,7 +144,7 @@ size_t count)
+>>>       int intr_coalesce = 0;
+>>>       struct ioatdma_chan *ioat_chan = to_ioat_chan(c);
+>>>   -    if (sscanf(page, "%du", &intr_coalesce) != -1) {
+>>> +    if (!kstrtoint(page, 10, &intr_coalesce)) {
+>>
+>> looks good. We can probably use kstrtouint() since we are expecting a positive number always.
+> 
+> This would break `return -EINVAL;` below
 
-The race conditions between Linux and other environments (modem, TEE,
-etc) are of course about correctness as well, even though the self-tests
-don't expose race condition bugs.  The self-tests have always just done
-a few serialized tests.  That's sufficient for CPU-based code, but not
-for offload drivers, which need to be stress-tested to find the
-concurrency bugs that occur during actual use.
+Shouldn't we just drop the < 0 compare since it's no longer needed?
 
-Is there a plan to improve the tests to do stress testing as well?
+> 
+>>
+>> DJ
+>>
+>>>           if ((intr_coalesce < 0) ||
+>>>               (intr_coalesce > IOAT_INTRDELAY_MASK))
+>>>               return -EINVAL;
+>>
+> 
 
-It's kind of odd that they don't do that yet.  But it makes sense: the
-CPU-based code doesn't need it, while the offload driver authors have
-never cared enough about correctness and test coverage to add it.
-
-I still don't really see a path forward here, given the track record and
-poor performance numbers.  This approach just doesn't work.
-
-- Eric
 

@@ -1,311 +1,214 @@
-Return-Path: <dmaengine+bounces-11022-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11023-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cCnlA0XRGGqunggAu9opvQ
-	(envelope-from <dmaengine+bounces-11022-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2026 01:35:33 +0200
+	id EHvBHGbaGGpDoAgAu9opvQ
+	(envelope-from <dmaengine+bounces-11023-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2026 02:14:30 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4B825FB74F
-	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2026 01:35:31 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83D185FBA59
+	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2026 02:14:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 61BA8300AB1D
-	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2026 23:35:31 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1E6B130074E1
+	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2026 00:14:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46B66366DB4;
-	Thu, 28 May 2026 23:35:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BDF44F5E0;
+	Fri, 29 May 2026 00:14:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJF0fj93"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OriaXuDY"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFFB324B2C
-	for <dmaengine@vger.kernel.org>; Thu, 28 May 2026 23:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEFA35966
+	for <dmaengine@vger.kernel.org>; Fri, 29 May 2026 00:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780011328; cv=none; b=UV8Sx76/DQ9fC2SkErDpgNf3JPtvN6Yv//jf7kHgtlw5QIcEhjo1UjmDDUfqNdYjVYB1Ka4Bfm2lNmDvd0jaozy76/jn4ByWB7nBwCMo2DXtFwvEYdJUNbuMirLba73YvsOXI2ShyKKWlCmMNSBmAIJjCChTCDLDi4TLkRm8OhM=
+	t=1780013662; cv=none; b=mjKfKTlZfgwtV7ST3WUpato+D3QlQqAEkGSRUBl90Aac9/SqipTuCTRiY6cZniTgylewX2DhKTtpXnVk5lCd1cJKrkyOmvdku3auidEqGF9Otuj7yusrBKXvLxrMs2uHiLAiWRby+T/OAE45GdBN8tn7Coh4BZkU6aRZTENjBac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780011328; c=relaxed/simple;
-	bh=9pKtI2QgcaBOz0lUGXwCQ1mn7dz+nAgtsXGXTfTDCd8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sg6Hcg7Geq+0Gu2DtEtKiAHDHoP8ikLQDB9+TcenV30pnbUqGEiGLYoNqaOaMtsVlWLgQuSKQaG/7Mnc8bQfiWDE70WbErAyiijDwAkzU0ozMGfGR7WOjAUbYmZ4C9ekKoN4+x/e+j6bGa2OxlaKz2hYe7kjZs2sdrtcrZR2SCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iJF0fj93; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-82f8893bff3so6237837b3a.2
-        for <dmaengine@vger.kernel.org>; Thu, 28 May 2026 16:35:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780011326; x=1780616126; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sFFR7mhAlYa32tib5Eg4h8cRwr9DtOLR8Gu0te51xXw=;
-        b=iJF0fj93JQdIWKig46zgk0DlR+moi4NdSiMH7RYglu3x083jYtE0QtOQePRAW0nNSg
-         stwdGQqHF3pPPswjQBcxX0SpJS1HU+FYBBo84yNmkCRfgxJntHHmspaNVQYLbURvl8Gq
-         KlKV+XywHc6SEXGsgEC/zSiUNVxY+YryR33pdQrDAAMIk4X5nklf6dNycLkftPE1zl+m
-         dPHlzoarq4k6r6vgzOblapUkxuziG3gisOVWcqGaR9KoGOo4hPB8hKSMbj+yY4/XxUuA
-         h8DZ6kCi7bXeO2Jwo+/UHd/K1txIAwsJX0QhkcMQMlHdP1jqZ+bvk9sfKfvu0LTNlsDb
-         BZ+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780011326; x=1780616126;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sFFR7mhAlYa32tib5Eg4h8cRwr9DtOLR8Gu0te51xXw=;
-        b=dPhVUL7XP4fo/iXUSTWg8ZsdOSrZ6FT6Rsw5I4cYBs5JuqeoAQYeJ4ZRbhPBvN5gl4
-         Lx7Nc2k9GJfXdr+7xkCYESb50DiPZzCvfRg7vbdOp8j0EoMo2vmVvSEjLDVA5sNj+COP
-         dMUE3IW937UYt3HBOM9ap+i5vZa6qeqWFXbhyCDj6OGK+GzlD2+4HkID9RbfsTKcHbuP
-         cSGDj9at/Y/8Eo+gdZOl5yXsWudsfrxsMNOOt2Asqjxujh17ApxBH3nC2KMpMyUmPMOH
-         JikDncRx2hUr5sCJpNPugPDTEYHE4mADWxuYY/7yNzKBlr1UwIty+PuF5WizFF7ZRffa
-         NNEA==
-X-Gm-Message-State: AOJu0YwrzmFLd5EcHmIeCQOMAXWF857IomUMiKo125SQHy+F92GPkGue
-	PsGI9wn27Qr10Wa90YVB5N2/cR1AbAJaa+AnZbWUbb04GOZR8qGFaujDo3960II6
-X-Gm-Gg: Acq92OErLSMNR4N7xxovnfZ7pIxi/pIR+8WSbymxW9abKPgFbjuSLxIb/ftZqI7NW86
-	sgd+Eyiboyjwf9AxcJRj5o+QBCeubmw31t64Upj/B3xXdeBJcJijjAls9QeKxXriHQF1N1eFBlg
-	EztowguIUJXLCL1sD98J/X+GOH9wsrt+TFPOhZUrP9iArfFNHb42dZAj3P/COJ5y441LV26TL/v
-	qv/J+FlJbVmTjnzltfzRGr+xibL3f/upH2yCjwwSbBralYQJds0N9Cz4Xb9w4p5C8D1DpzCOS7C
-	QNtR3rgxH5XTpFJG+EChuhwHJs4cjpKq0YQ7z2VcntbIi9SnQlbGSL67GJvobCZJLQChhrQyiIZ
-	Y8RmqAPJidYBWZqSXqr38g+vyZY4g65WHS63Gx48T1kQaWJ3/7TtZHN94IfVDB68SY6rLw4VlPl
-	HK2e0SQL8qengYEnaEZV/rjtz3Y8MsfckX1yZQPpEfUcM+1wPbXMisdiB66QOH65ZdoNucfehI7
-	iFuGcQR6WdEUbiVnjrV7Qsk7Zz4lMqf9/QOczkAtz0G0Q==
-X-Received: by 2002:a05:6a00:1906:b0:829:809e:8977 with SMTP id d2e1a72fcca58-84212dab758mr285424b3a.49.1780011325851;
-        Thu, 28 May 2026 16:35:25 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8421310d01dsm78111b3a.15.2026.05.28.16.35.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 16:35:25 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
-Subject: [PATCHv3] dmaengine: ti: omap-dma: turn lch_map into a flexible array
-Date: Thu, 28 May 2026 16:35:07 -0700
-Message-ID: <20260528233507.305178-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	s=arc-20240116; t=1780013662; c=relaxed/simple;
+	bh=OAfBOpD3nCIri+ml/6sODtP8Lk+soLwkRzQyjrNZkUc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=EfFau9CVG8OylzgjMGBgSaRLnE7kIqbe4zsF4ropm3IqDcxxDvpQQKVsGVwIRGAaf29Z3AR+wsjD6wpROIWpVhKEbtIGvTBAmKsyo1b2WNyexy1niWKJUAlkhyqgUadieSLZVX5iKQ72aR1gbWWHa1vlypwmdUty2yQTJa0T5CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OriaXuDY; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B4951F000E9;
+	Fri, 29 May 2026 00:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780013660;
+	bh=aq5MvAAFQXKoiDWJPE5n8gWrPB3SYlr6e0kYxRJfytI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=OriaXuDY6337K5vHzlQH8JBAZNv4/BSmDllJQn6i00lm4pXc09gVc5NQtNZgTWwhZ
+	 Kd6ss+rhYxwDEF6TU6f38/uEnC+9FfDPJaNixfSiT/PQQHWLBSo5zdQIa3YRvzcU6R
+	 emSVC9V9Q5BOWaC1x7n+U5YaKf/FppS47ZXiWj7YRm6txKXV86bGlVfRebkb6sv4H7
+	 3DzBv2Spa1EZkYFjj8/aE0Nu4QLZ/bLwd93RhH9qSr518DDPKWB028L/hFO7ZA2BNu
+	 lY66P6m/EOkp8JGd0khgaA6UU3oboHuU1pdLXhK6sfjQLysmK6sf8BGfvbtIvkDBB2
+	 t1ZYlfksUZgsg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCHv3] dmaengine: ti: omap-dma: turn lch_map into a flexible
+ array
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Rosen Penev" <rosenp@gmail.com>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260528233507.305178-1-rosenp@gmail.com>
+References: <20260528233507.305178-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 29 May 2026 00:14:19 +0000
+Message-Id: <20260529001420.1B4951F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-11022-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	TAGGED_FROM(0.00)[bounces-11023-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: A4B825FB74F
+	FROM_NO_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+X-Rspamd-Queue-Id: 83D185FBA59
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+
+Pre-existing issues:
+- [High] Freeing the shared IRQ handler before properly disabling hardware =
+interrupts can cause an interrupt storm.
+- [High] The late error path in probe frees channels while the shared IRQ h=
+andler is active, leading to UAF.
+- [High] Destroying the descriptor pool before killing virt-dma tasklets ca=
+uses a UAF when tasklets free memory.
+--
+
+commit b8aab98ec296892e7aaf7bec47814ddd0493ced7
+Author: Rosen Penev <rosenp@gmail.com>
+
+dmaengine: ti: omap-dma: turn lch_map into a flexible array
+
 Convert the separately-allocated lch_map pointer array to a C99
 flexible array member at the end of struct omap_dmadev and annotate it
-with __counted_by(lch_count). The probe is reordered so platform_data
-lookup and the lch_count determination happen before the parent
-allocation, letting struct_size() size the FAM and the dedicated
-devm_kcalloc() for lch_map go away.
+with __counted_by(lch_count). This patch also adds fixes for a missing
+return, a needs_busy_check, and a free_irq ordering issue.
 
-Two allocations collapse into one and the runtime bounds checks from
-__counted_by now apply to every lch_map[] access.
+> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+> index 55ece7fd0d99a..7c46be2755be7 100644
+> --- a/drivers/dma/ti/omap-dma.c
+> +++ b/drivers/dma/ti/omap-dma.c
+[ ... ]
+> @@ -1828,6 +1828,7 @@ static int omap_dma_probe(struct platform_device *p=
+dev)
+>  			if (od->ll123_supported)
+>  				dma_pool_destroy(od->desc_pool);
+>  			omap_dma_free(od);
+> +			return rc;
+>  		}
+>  	}
 
-Add some fixes reported by Sashiko. Missing return and missing check for
-needs_busy_check. Also a free_irq ordering issue.
+[Severity: High]
+This isn't a bug introduced by this patch, but does destroying the descript=
+or
+pool before freeing the channels lead to a use-after-free?
 
-Assisted-by: Claude:Opus-4.7
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- v3: fix sashiko warnings again
- v2: fix sashiko warnings
- drivers/dma/ti/omap-dma.c | 82 ++++++++++++++++++++-------------------
- 1 file changed, 42 insertions(+), 40 deletions(-)
+omap_dma_free() kills the virt-dma tasklets:
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 55ece7fd0d99..7c46be2755be 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -48,7 +48,7 @@ struct omap_dmadev {
- 	const struct omap_dma_config *cfg;
- 	struct notifier_block nb;
- 	struct omap_dma_context context;
--	int lch_count;
-+	u32 lch_count;
- 	DECLARE_BITMAP(lch_bitmap, OMAP_SDMA_CHANNELS);
- 	struct mutex lch_lock;		/* for assigning logical channels */
- 	bool legacy;
-@@ -57,7 +57,7 @@ struct omap_dmadev {
- 	unsigned dma_requests;
- 	spinlock_t irq_lock;
- 	uint32_t irq_enable_mask;
--	struct omap_chan **lch_map;
-+	struct omap_chan *lch_map[] __counted_by(lch_count);
- };
+drivers/dma/ti/omap-dma.c:omap_dma_free() {
+	while (!list_empty(&od->ddev.channels)) {
+        ...
+		tasklet_kill(&c->vc.task);
+		kfree(c);
+	}
+}
 
- struct omap_chan {
-@@ -1656,36 +1656,55 @@ static const struct omap_dma_config default_cfg;
- static int omap_dma_probe(struct platform_device *pdev)
- {
- 	const struct omap_dma_config *conf;
-+	struct omap_system_dma_plat_info *plat;
- 	struct omap_dmadev *od;
-+	u32 lch_count;
- 	int rc, i, irq;
- 	u32 val;
+Because tasklets can run concurrently until they are explicitly killed, cou=
+ld a
+pending tasklet invoke omap_dma_desc_free() and attempt to return memory to=
+ the
+already destroyed od->desc_pool?
 
--	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
--	if (!od)
--		return -ENOMEM;
--
--	od->base = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(od->base))
--		return PTR_ERR(od->base);
--
- 	conf = of_device_get_match_data(&pdev->dev);
- 	if (conf) {
--		od->cfg = conf;
--		od->plat = dev_get_platdata(&pdev->dev);
--		if (!od->plat) {
-+		plat = dev_get_platdata(&pdev->dev);
-+		if (!plat) {
- 			dev_err(&pdev->dev, "omap_system_dma_plat_info is missing");
- 			return -ENODEV;
- 		}
- 	} else if (IS_ENABLED(CONFIG_ARCH_OMAP1)) {
--		od->cfg = &default_cfg;
--
--		od->plat = omap_get_plat_info();
--		if (!od->plat)
-+		plat = omap_get_plat_info();
-+		if (!plat)
- 			return -EPROBE_DEFER;
- 	} else {
- 		return -ENODEV;
- 	}
+[Severity: High]
+This is also a pre-existing issue, but is it safe to free the channels while
+the shared IRQ handler is still active?
 
-+	/* Number of available logical channels */
-+	if (!pdev->dev.of_node) {
-+		lch_count = plat->dma_attr->lch_count;
-+		if (unlikely(!lch_count))
-+			lch_count = OMAP_SDMA_CHANNELS;
-+	} else if (of_property_read_u32(pdev->dev.of_node, "dma-channels", &lch_count)) {
-+		dev_info(&pdev->dev, "Missing dma-channels property, using %u.\n",
-+			 OMAP_SDMA_CHANNELS);
-+		lch_count = OMAP_SDMA_CHANNELS;
-+	}
-+
-+	if (lch_count > OMAP_SDMA_CHANNELS) {
-+		dev_err(&pdev->dev, "invalid dma-channels value %u\n", lch_count);
-+		return -EINVAL;
-+	}
-+
-+	od = devm_kzalloc(&pdev->dev, struct_size(od, lch_map, lch_count), GFP_KERNEL);
-+	if (!od)
-+		return -ENOMEM;
-+
-+	od->lch_count = lch_count;
-+	od->plat = plat;
-+	od->cfg = conf ? conf : &default_cfg;
-+
-+	od->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(od->base))
-+		return PTR_ERR(od->base);
-+
- 	od->reg_map = od->plat->reg_map;
+The IRQ handler was registered with devm_request_irq() earlier in probe(), =
+so
+it remains active during this error path since devres hasn't cleaned it up =
+yet.
 
- 	dma_cap_set(DMA_SLAVE, od->ddev.cap_mask);
-@@ -1730,19 +1749,6 @@ static int omap_dma_probe(struct platform_device *pdev)
- 			 OMAP_SDMA_REQUESTS);
- 	}
+If a shared interrupt fires, could omap_dma_irq() dereference the freed cha=
+nnel
+pointers in od->lch_map?
 
--	/* Number of available logical channels */
--	if (!pdev->dev.of_node) {
--		od->lch_count = od->plat->dma_attr->lch_count;
--		if (unlikely(!od->lch_count))
--			od->lch_count = OMAP_SDMA_CHANNELS;
--	} else if (of_property_read_u32(pdev->dev.of_node, "dma-channels",
--					&od->lch_count)) {
--		dev_info(&pdev->dev,
--			 "Missing dma-channels property, using %u.\n",
--			 OMAP_SDMA_CHANNELS);
--		od->lch_count = OMAP_SDMA_CHANNELS;
--	}
--
- 	/* Mask of allowed logical channels */
- 	if (pdev->dev.of_node && !of_property_read_u32(pdev->dev.of_node,
- 						       "dma-channel-mask",
-@@ -1754,12 +1760,6 @@ static int omap_dma_probe(struct platform_device *pdev)
- 	if (od->plat->dma_attr->dev_caps & HS_CHANNELS_RESERVED)
- 		bitmap_set(od->lch_bitmap, 0, 2);
+[ ... ]
+> @@ -1852,17 +1853,18 @@ static void omap_dma_remove(struct platform_devic=
+e *pdev)
+>  	struct omap_dmadev *od =3D platform_get_drvdata(pdev);
+>  	int irq;
+> =20
+> -	if (od->cfg->may_lose_context)
+> +	if (od->cfg->needs_busy_check || od->cfg->may_lose_context)
+>  		cpu_pm_unregister_notifier(&od->nb);
+> =20
+>  	if (pdev->dev.of_node)
+>  		of_dma_controller_free(pdev->dev.of_node);
+> =20
+> -	irq =3D platform_get_irq(pdev, 1);
+> -	devm_free_irq(&pdev->dev, irq, od);
+> -
+>  	dma_async_device_unregister(&od->ddev);
+> =20
+> +	irq =3D platform_get_irq(pdev, 1);
+> +	if (irq > 0)
+> +		devm_free_irq(&pdev->dev, irq, od);
+> +
+>  	if (!omap_dma_legacy(od)) {
+>  		/* Disable all interrupts */
+>  		omap_dma_glbl_write(od, IRQENABLE_L0, 0);
 
--	od->lch_map = devm_kcalloc(&pdev->dev, od->lch_count,
--				   sizeof(*od->lch_map),
--				   GFP_KERNEL);
--	if (!od->lch_map)
--		return -ENOMEM;
--
- 	for (i = 0; i < od->dma_requests; i++) {
- 		rc = omap_dma_chan_init(od);
- 		if (rc) {
-@@ -1828,6 +1828,7 @@ static int omap_dma_probe(struct platform_device *pdev)
- 			if (od->ll123_supported)
- 				dma_pool_destroy(od->desc_pool);
- 			omap_dma_free(od);
-+			return rc;
- 		}
- 	}
+[Severity: High]
+This isn't a bug introduced by this patch, but does freeing the shared IRQ
+handler before disabling hardware interrupts create a window for an interru=
+pt
+storm?
 
-@@ -1852,17 +1853,18 @@ static void omap_dma_remove(struct platform_device *pdev)
- 	struct omap_dmadev *od = platform_get_drvdata(pdev);
- 	int irq;
+Since the IRQ is requested with IRQF_SHARED, if the handler is freed before
+the hardware stops asserting the interrupt, the unhandled interrupt might c=
+ause
+the kernel to permanently disable the shared IRQ line.
 
--	if (od->cfg->may_lose_context)
-+	if (od->cfg->needs_busy_check || od->cfg->may_lose_context)
- 		cpu_pm_unregister_notifier(&od->nb);
+Additionally, probe() configures IRQENABLE_L1 to enable interrupts, but this
+code attempts to disable them by writing to IRQENABLE_L0. Does this mean the
+hardware interrupts may not actually be disabled here?
 
- 	if (pdev->dev.of_node)
- 		of_dma_controller_free(pdev->dev.of_node);
-
--	irq = platform_get_irq(pdev, 1);
--	devm_free_irq(&pdev->dev, irq, od);
--
- 	dma_async_device_unregister(&od->ddev);
-
-+	irq = platform_get_irq(pdev, 1);
-+	if (irq > 0)
-+		devm_free_irq(&pdev->dev, irq, od);
-+
- 	if (!omap_dma_legacy(od)) {
- 		/* Disable all interrupts */
- 		omap_dma_glbl_write(od, IRQENABLE_L0, 0);
---
-2.54.0
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260528233507.3051=
+78-1-rosenp@gmail.com?part=3D1
 

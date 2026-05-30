@@ -1,61 +1,61 @@
-Return-Path: <dmaengine+bounces-11036-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11037-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uNSZFQo0GmrQ2AgAu9opvQ
-	(envelope-from <dmaengine+bounces-11036-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 02:49:14 +0200
+	id UM/SMBE0GmrQ2AgAu9opvQ
+	(envelope-from <dmaengine+bounces-11037-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 02:49:21 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CD1660A604
-	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 02:49:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D37460A62A
+	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 02:49:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A1625304FA8F
-	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 00:46:20 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9058930509AB
+	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 00:46:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F9382ECD32;
-	Sat, 30 May 2026 00:46:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 066CC2F617C;
+	Sat, 30 May 2026 00:46:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GaxTetCI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XRAtuKuE"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CEC2D8393;
-	Sat, 30 May 2026 00:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF6C2DB7BF;
+	Sat, 30 May 2026 00:46:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780101964; cv=none; b=Br+u17Tma/rBkNtF31RIWZ23LFUfvtYx+FcoLl4B9NpIOY5q3VPza7VG+TrAz76T6vAtZWmcHqbssN3cJYjIHUB2TuN4umCpsSHUatIuiF5E0pDKivH4a1uYE7RDk6ku/n8lMDHyBtWAt5J+0sClPACrl9GJmPiPk9e+mtN7coM=
+	t=1780101964; cv=none; b=EbrQxqUHlgX+PVreew3Ba7fZ6VV5gwJRLiLujbZAx629bxfV7exNbh4bWZI3NVDIp/5BtsurSJip+SyuqPblEowomxkCJmmOdBXm3rYam7JdetcA1orfS0EQhN3UlFaos9lQHUyBOyoBwBtPRRI7g2HApZKXPEZl+lY7QPEDeWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780101964; c=relaxed/simple;
-	bh=T6StIc+S7LmpMRyXVlAjVPZFElYigxub0A+lfzhMZoY=;
+	bh=K0+J+UcsLatDZgMrzII2EndHog2w4aS02JUTm38DK/A=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fMg7x9KCoGibLAlZeutALX1ez4r2oM6wtlpcde8c0UzhSx9BiPauarT8et0ihtfdkkjXfttut/Xsbx0CvaiqXy7+BBkiYZlYNzcX33e0B+AgxhLobL1fVKskq5hY8pnihF7IYSY6GP6SpVS6FEYQqto5n8tjBjENNZwyZ+xwI6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GaxTetCI; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 430391F00899;
-	Sat, 30 May 2026 00:46:00 +0000 (UTC)
+	 Message-Id; b=PQ7oJiPUI/zKM3sf56numfew1j/5aCIUkL2QNebKM+4Zn3R/T4eYVkGfcAPlVMr2rENu6Hh0WVi3c5pfRA5iPA5Qwqz5mUt41dLu0eyCC2cC3Ty4YT2K8fXqTl6tlVrMGlP5m5FCRKm9HrWznjQhdlhQe14k9nO0GPX1bpqCPS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XRAtuKuE; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82F6D1F00893;
+	Sat, 30 May 2026 00:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1780101961;
-	bh=s1vN3UitLlzLcD29lzcFPKhjjvtfv2O+YVSzGjb5VXg=;
+	bh=tgcInZqyhkkP4msOEISdWXRIsJwIfldxBc7ekr2WWpY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GaxTetCIIOcASlpnP929drAaCahncV9klHyxTiHKs9Yvaz5pWpQr5OYu8cPgTKrXA
-	 0VP5bwQPqb7hBCNMOzxm4gEPBHJPb3+uXYNwe6wf/pxNCuAfhg/dgubCqCmv5dyQ9q
-	 p90bwwsbeAbMkEwSa9j4nrqct4VIs2bpWi9uIRbSweQlvJveRDUWgONybB7gurGl/u
-	 6Wsq5bfv4oeYkXhWnzy3VajGK0TsMuGrvu/C+VLNNzKr4QoL9F0qQ3NPun2VkfveTj
-	 w5X9LNJB4/3O+VV3bPANnHX6Cwx4L0FhwiMnQyjaPNU3GyLdMtqyeoLJVT9+JKDzbm
-	 k3BLXtNLN9aSQ==
+	b=XRAtuKuEXgLh/hjMC8cC8ApyruWRCX+1Xaa2KU0mjtakH9Fc6EJ7z6djMhhKbT1id
+	 hYgRP6SmITSVyy7tgVUaO0XX0vsLDrqJv5/CZKdtzjL8UsoNnmz6Ze6+Fp5lSzgulg
+	 f2x4HI7FfZfjSLSlcBgGWTe92YmJv/P8a5D5krnS9gYZsXh0bT08Vj2RrM1MpHzlPr
+	 epkRIVdaEHWOpnMzQ9EO+BV97V39EFjbd26woMtDBwdXFm/882cz4N144+QnMzVLJU
+	 /fjjq2BpVN8BCU5/DR6tgnXPpbnFy8DX8IdbR2T7M+nXEGvtZJuxWj5W3pC5Ybjala
+	 rv+YiqJ6zq1yw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 08/11] params: Convert generic kernel_param_ops .get
- helpers to seq_buf
+Subject: Re: [PATCH 11/11] moduleparam: Drop legacy kernel_param_ops
+ .get_str field and dispatch logic
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Kees Cook" <kees@kernel.org>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-modules@vger.kernel.org, linux-media@vger.kernel.org, kvm@vger.kernel.org, Frank.Li@kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260521133326.2465264-8-kees@kernel.org>
-References: <20260521133326.2465264-8-kees@kernel.org>
+Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, kvm@vger.kernel.org, linux-modules@vger.kernel.org, linux-pci@vger.kernel.org, Frank.Li@kernel.org, linux-media@vger.kernel.org
+In-Reply-To: <20260521133326.2465264-11-kees@kernel.org>
+References: <20260521133326.2465264-11-kees@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 30 May 2026 00:45:59 +0000
-Message-Id: <20260530004600.430391F00899@smtp.kernel.org>
+Date: Sat, 30 May 2026 00:46:01 +0000
+Message-Id: <20260530004601.82F6D1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -72,7 +72,7 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11036-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11037-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -93,103 +93,73 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	FROM_NO_DN(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sashiko.dev:url,lists.linux.dev:replyto,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 5CD1660A604
+X-Rspamd-Queue-Id: 0D37460A62A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Information Leak / Uninitialized Memory Disclosure in param_array_=
-get()
+
+Pre-existing issues:
+- [High] Unconditional call to `arr->ops->get()` without a NULL check can c=
+ause a kernel panic if the array parameter element lacks a `.get` callback.
 --
 
-commit 4bb10449d07e3a1b177001d61d53053c25dd4767
+commit a252ae87a187a5b644d160fded352c545493a611
 Author: Kees Cook <kees@kernel.org>
 
-params: Convert generic kernel_param_ops .get helpers to seq_buf
+moduleparam: Drop legacy kernel_param_ops .get_str field and dispatch logic
 
-This commit converts the generic kernel parameter .get helpers in
-kernel/params.c to use the seq_buf signature instead of char pointers. It
-allows param_array_get to write element output directly into the parent
-seq_buf when supported, updating various dependent callers to match the new
-signature.
+All struct kernel_param_ops .get callbacks have been migrated to using
+struct seq_buf. Drop the migration scaffolding.
 
 > diff --git a/kernel/params.c b/kernel/params.c
-> index 4eda2d23ddf28..25f0c8d5d19f3 100644
+> index 25f0c8d5d19f3..6b410189297b1 100644
 > --- a/kernel/params.c
 > +++ b/kernel/params.c
 [ ... ]
-> @@ -453,36 +457,46 @@ static int param_array_set(const char *val, const s=
-truct kernel_param *kp)
-[ ... ]
-> -static int param_array_get(char *buffer, const struct kernel_param *kp)
-> +static int param_array_get(struct seq_buf *s, const struct kernel_param =
-*kp)
->  {
-[ ... ]
-> -	for (i =3D off =3D 0; i < (arr->num ? *arr->num : arr->max); i++) {
-> +	for (i =3D 0; i < (arr->num ? *arr->num : arr->max); i++) {
-> +		size_t before =3D s->len;
-> =20
+> @@ -470,23 +469,9 @@ static int param_array_get(struct seq_buf *s, const =
+struct kernel_param *kp)
 >  		p.arg =3D arr->elem + arr->elemsize * i;
 >  		check_kparam_locked(p.mod);
-> -		ret =3D arr->ops->get_str(elem_buf, &p);
-> -		if (ret < 0)
-> -			goto out;
-> -		ret =3D min(ret, (int)(PAGE_SIZE - 1 - off));
-> -		if (!ret)
-> +
-> +		if (arr->ops->get) {
-> +			ret =3D arr->ops->get(s, &p);
-> +			if (ret < 0)
-> +				goto out;
-> +		} else {
+> =20
+> -		if (arr->ops->get) {
+> -			ret =3D arr->ops->get(s, &p);
+> -			if (ret < 0)
+> -				goto out;
+> -		} else {
 [ ... ]
-> +			ret =3D arr->ops->get_str(elem_buf, &p);
-> +			if (ret < 0)
-> +				goto out;
-> +			seq_buf_putmem(s, elem_buf, ret);
-> +		}
-> +
-> +		/* Nothing got written (e.g. overflow) =E2=80=94 stop. */
-> +		if (s->len =3D=3D before)
->  			break;
+> -		}
+> +		ret =3D arr->ops->get(s, &p);
 
 [Severity: High]
-When a seq_buf overflows, it calls seq_buf_set_overflow() which sets
-s->len =3D s->size. Because of this, does s->len actually equal before
-when an overflow occurs?
+This isn't a bug introduced by this patch, but does this unconditional call=
+ to
+arr->ops->get() need a NULL check to avoid a kernel panic?
 
-If s->len becomes s->size, the condition s->len =3D=3D before will evaluate
-to false, causing the loop to continue for one more iteration rather than
-breaking. On the next iteration, before will be s->size, the write will
-fail again, and the loop will finally break.
+If a module defines a write-only array parameter where the element's
+kernel_param_ops struct lacks a .get callback, and assigns it write-only sy=
+sfs
+permissions, root can still attempt to read the file. When this happens, sy=
+sfs
+invokes param_attr_show().
 
-Because the overflow mechanism sets the length to the buffer size without
-actually writing data into the remaining space, could this leak uninitializ=
-ed
-kernel heap memory to userspace when sysfs returns the buffer?
+For normal parameters, param_attr_show() has a safety check that rejects the
+read if ops->get is NULL. However, for array parameters, ops resolves to
+param_array_ops which has a valid .get callback, bypassing the safeguard.
 
-> +
-> +		/* Replace the previous element's trailing newline with a comma. */
-> -		if (i)
-> -			buffer[off - 1] =3D ',';
-> -		memcpy(buffer + off, elem_buf, ret);
-> -		off +=3D ret;
-> -		if (off =3D=3D PAGE_SIZE - 1)
-> -			break;
-> +		if (i && s->buffer[before - 1] =3D=3D '\n')
-> +			s->buffer[before - 1] =3D ',';
->  	}
-> -	buffer[off] =3D '\0';
-> -	ret =3D off;
-> +	ret =3D 0;
->  out:
->  	kfree(elem_buf);
->  return ret;
->  }
+Could this result in a NULL pointer dereference when arr->ops->get(s, &p) is
+executed? Before this patch, the code fell back to calling .get_str(), which
+would also be NULL for a write-only type, resulting in the same kernel pani=
+c.
+
+> +		if (ret < 0)
+> +			return ret;
+> =20
+>  		/* Nothing got written (e.g. overflow) =E2=80=94 stop. */
+>  		if (s->len =3D=3D before)
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521133315.work=
-.845-kees@kernel.org?part=3D8
+.845-kees@kernel.org?part=3D11
 

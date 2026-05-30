@@ -1,87 +1,87 @@
-Return-Path: <dmaengine+bounces-11038-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11039-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8P9OEeQ0Gmp+2AgAu9opvQ
-	(envelope-from <dmaengine+bounces-11038-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 02:52:52 +0200
+	id gFMJMkg9Gmq02QgAu9opvQ
+	(envelope-from <dmaengine+bounces-11039-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 03:28:40 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08B8E60A76C
-	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 02:52:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 44F5B60AC44
+	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 03:28:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9E84F3109CC9
-	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 00:47:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9476B30146A2
+	for <lists+dmaengine@lfdr.de>; Sat, 30 May 2026 01:26:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89290279DAD;
-	Sat, 30 May 2026 00:47:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50E0D247DE1;
+	Sat, 30 May 2026 01:26:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLL78CNq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZjOfYBS"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CA91D6BB
-	for <dmaengine@vger.kernel.org>; Sat, 30 May 2026 00:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B453241686
+	for <dmaengine@vger.kernel.org>; Sat, 30 May 2026 01:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780102028; cv=none; b=VLpO82F6D8lR89cywF0MzMG8cgxWkJq86Ey0c/D1r6dMfC+b7ihZEOtM0C4tXhKBDrPhQqMJcJNpqE3+0bFRDUOaFw4L8bHJOTX4hes95X2s2w4VKlcPYG/6sZ8ua0d+3J6lsD2Hdy4tDleCFr7lG6Dk2l+vAfCBTlwj6WJSJDo=
+	t=1780104375; cv=none; b=VgDtuuEw26k+yiZmqfUeYM6hKmb/zLNtwskOxaVoiSolJwUSplj52pnn29s6L1R+IOrjWlbnLZk0+Er1PgJdYAtbi2ea0T5KO31DsirUxJ6E9Zn9t2r3YI+1+H11047T8sbjNG8VW7TNmAVwnxvNtMYMBxoxXrCS+DFWTMJwPH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780102028; c=relaxed/simple;
-	bh=jAP1iU3jk2BplcKEfUj40peyaJ9Vq+hgp3oGNJX1Zag=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YsZ2aITvpE2HxuGc9IofN7PyJIrKhpm/KgQHMXgn6S3b3Ml3wX0JKHjXRNl6eVGoRKb4QUSZccTpyLuSp3ZDBeTKjM6I6lFPNe+PFzqFfygS3Lkvv1g8WYIl+jcGiAC2KyZqmQHRIdmzyh2bbBFUXlGzPPTZfFUQlHL7LL/uZpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NLL78CNq; arc=none smtp.client-ip=209.85.160.180
+	s=arc-20240116; t=1780104375; c=relaxed/simple;
+	bh=ANnqrdj8KyfUNmk/0JRlqx6jfz8VGeaznSo7wqngpcs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uQtwo1+tXfSQhP+ouekii893SsJ+FvHSqXXPwUPmCf3oDgtAkvp0ND4Ah/vSSG6T/iOPLSM5RS6SScIjIuIEMAgzKLBDhsGJs+ALqS+XMIWdOBK8URBH3nR3oI4ETwwE4Fdc88ezsVPP44P/VAF0oh18AzWF33TycF1c3DWSJk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eZjOfYBS; arc=none smtp.client-ip=209.85.219.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-50fc496c8baso159156061cf.3
-        for <dmaengine@vger.kernel.org>; Fri, 29 May 2026 17:47:06 -0700 (PDT)
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-8cccdf044e7so26978946d6.2
+        for <dmaengine@vger.kernel.org>; Fri, 29 May 2026 18:26:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780102025; x=1780706825; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780104373; x=1780709173; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YVTB6NuLGwCrcvRiceoAwSAM7RIs7a/SwGXiXJu2gTA=;
-        b=NLL78CNq9+31F8jUrwDDzPzfom8gy/DMdvChtIvauNdCbbWp7SL8rgPvOjCvs3BDbl
-         LdzahPy3BRWmPHB/nK6OSZTrHbRS6m/TNL9g8ZqtLzFntJnwQMjESinI9kzuZp06qNxb
-         0lSDdbcLqb3Y3dNlUxOlfVSjp2AGG3B8mAPuIcFzxSiwTHmDVMiS7MNqJX5Ue+MRdNdZ
-         gaZJkngPEkb0AaL3EPDVdVmPsrySULB4lyoJ9wTTbCPQrdpBZ9g/g4h4L8R3/a81jcTF
-         iI1E2YVRrcU2TFLPEjYRy3RrRK9MgnK9/ZVEhjUGjtH9ntcC344YFmeyXAvO3EmHrn8E
-         kLJA==
+        bh=E7CXfCEIYRdM6U6uM6cH4x4hmATdBRQ5XKyC3LDk+ZY=;
+        b=eZjOfYBSp970eLc50xhuOfJUwXpUgxZM71z0s09QMBPFyIwg3LaL5jR+vFdC/XBi9k
+         JHIzYljjLWXZRDXCZS18WTN0cnLy90iGkCPozRQXPkrBNy2gLtqDLERdVEs0JICTHTEP
+         lLAteDDMPof5Lu99E0JX2sNDEzkAwAJnFcm6e3pp4sC+N8G6hX4l9OLVbi8c7bwwS9fv
+         gf6C/XZX+IUQhXjjzXVeTfTT+YbktWZ4r9fqAhBZp7vfy9I5aiwlpbNwUQ4j7AKwAjqo
+         TU25TK9U6IKY+YRhhqWv+zabFYDnWQc8rlPEyW/967iLkdMuFVsL3r9gU6eYj+gKHykV
+         Ao2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780102025; x=1780706825;
+        d=1e100.net; s=20251104; t=1780104373; x=1780709173;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YVTB6NuLGwCrcvRiceoAwSAM7RIs7a/SwGXiXJu2gTA=;
-        b=gyqAM+KKSim/7Fv75hGeW4Hscqonv1kcJfHHH1XVEVpAOkbhaN4r8/k9CeyWlBmBPB
-         Xo8BlhfP6MvXuOAHUVe3thCL6iTXQXDuX+OmNL+869Q/apcj74IaRElcTwj0CTSWmkod
-         WeKgSu7EP4NCIlfVtipLgtch5Q4oQ1IgXoCz+d28fU4JuVDSIytzzpiP9cG/x/AIDYaJ
-         +sZfN/WHW78vEfGTJTZV7o9VJsrPLMhkZuxkUQF5eBWksUUoB1udCkrPkMJOYhHvjh/D
-         6uzupC46dYcehAoix3wu9Fx21uPy3FdmpAVhyu+JUh861Abdf6VCeqSQMzN8dTO0xZEg
-         0QiA==
-X-Gm-Message-State: AOJu0YzEKXtAZMEAcBVU6Wv1uEWqucCBlfaVcBsNeMtbBAFbZApe6hyQ
-	ij+wYr+HX7YlObIZERIZbm1OmJ5v4WT4m5hKLvQAnoakIFFVH3rR3Hn+NBq5dA==
-X-Gm-Gg: Acq92OGgZW3jGpsYq8wGzjDckveyxn4DOWERXJJ30JRwjtOBPFRVAF0wgITL3XniUzP
-	z63WqUbuOq5tqiW22T8zJajOQzzINBvtZ1IIt92VIZ9DUIrGcbjGFOfWNCWQ8j7TP7zrs1ml/Tq
-	na4CXK2RxrhM3PaZVDMK2t3LAOU2tbAKpfbneud+rogXZywXwuYfQ48pyLjvsAtAgCSMS10kErQ
-	nJOs41J917Z4iC0YwFfMjRsXykegPvept0Ib5y+JzDgYYTncutwyOAowrg+2dU4q360fbyBxYX6
-	uG6jTz51XrqajDmKteJvXYix3+eU5h2koy/se66uIcloPMAhh+e58jt9J/VDIXhn+XYD61gTw3m
-	i36KvZXEFbM8evIU6gILoIbl3qD6u6KynQFKKT5xawMyafY3CCGfG7RdmAmJwc0GDLHtihTc6S6
-	d9hIsS8MNi+c6pffWNPoghVUEPa9FHQJ+GIBcB1AlU8LF6F92oSQIfB3m77BLCfHyWweiUfJ/Uw
-	XJoqfeI9iKtKvjMa5vOkde1Hwq2czkyUSd1THg1yMFiOg==
-X-Received: by 2002:a05:622a:17cf:b0:50e:a1ab:67ea with SMTP id d75a77b69052e-5173a7d7d8cmr28243011cf.40.1780102025514;
-        Fri, 29 May 2026 17:47:05 -0700 (PDT)
+        bh=E7CXfCEIYRdM6U6uM6cH4x4hmATdBRQ5XKyC3LDk+ZY=;
+        b=kRmQvd551UzewG7SvgcNGXpl1Jov+U3PRVLJkmQeWOBgKRK9NQi/FgSV4Gk93x878+
+         QTQTZYRVmzPXALUZJ1SHXGe3iinZGPj0HthAFtX7I8f6ov5QGRitc5BC1kaAGeXPhVsJ
+         wxxK3gKy5dq5zY1gJxeSrOx2CQzoZshU5eR3dA1FCZ/9Ezt1JCC6wr4XMothKEMTG6bx
+         /NEnQuVDaZpbynyGyvE9x8J8f4b/DC+QS9Xy9r2qEg6+PkJFH7NF5rVz3i64+9FQMPos
+         hlN9reoqQEY1i4bm8RFNGgf7Oke1pft+gDlh8Hg3oFILJi8914YDjk7rACOUF1Bbr4De
+         tZEw==
+X-Gm-Message-State: AOJu0YwCos+HOXgkBBK2N653ud8we6GmFZgcsqwHLHiAmah5yvRe4dbQ
+	5POFRx0GzIBJ2+9EubgJ7aF3jihXOOYVTqqa4ZbPQZpYMXSfkfNP5B2G8WZaCaUE
+X-Gm-Gg: Acq92OES5Rcw4wOELt743nk1Am3s7OarByawyRpuTYfSep6WR6kBP2QXuvQSGdxCrxC
+	9wzLR36OKxQ6Gi/X8PsL2bIwRIlkh5dXvLcokBrsCHmgAS20ucwIUzBLKS2qq2ZOew+huJpZDOq
+	AmONkUPiMtTbGLqbTbvNmDotBvlPY8Osw8pBhEf7M8TP9V8iGTEXs2Dc3drgEp6eKuCzrwKgh26
+	AHLejc6FCFDVpW4DMgJgCnO0omY8J4uWPSWvr4zHZSLKG8j4wnDL3umdrvGSjSqTNABwVDxmb+7
+	yHryjev6hr7sGBXqs/v5uucvgsPm1yVSJ3cCjlWZPN8AEWvFHRUyM9vjTWHjoi0DTm8ctiz2Yef
+	Fy55zrFeiLuzSfjeVc5uQoD+i09XaW4JriMpxbon5x+9i9iRHJy28tD+3lDlNp/V/fqPqxKpw7f
+	tinVWAjhm3LIG9fLv/2GbCGTDDokzarPexyFHVVPlAw9u7VjTrYihOhViPsncunZi/kf/SSOpju
+	TSSadAE4N6g15G3D2JhxbOx1wppJSghLJabYCRA4oo9kg==
+X-Received: by 2002:a05:6214:2c0a:b0:8ac:b471:efbb with SMTP id 6a1803df08f44-8ccefdbd94dmr38864786d6.24.1780104373151;
+        Fri, 29 May 2026 18:26:13 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5172eb71624sm34780791cf.22.2026.05.29.17.47.04
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ccea2163b0sm33572586d6.38.2026.05.29.18.26.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2026 17:47:04 -0700 (PDT)
+        Fri, 29 May 2026 18:26:12 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
 To: dmaengine@vger.kernel.org
 Cc: Vinod Koul <vkoul@kernel.org>,
 	Frank Li <Frank.Li@kernel.org>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCHv2] dmaengine: bestcomm: Enable compile testing
-Date: Fri, 29 May 2026 17:46:47 -0700
-Message-ID: <20260530004647.43388-1-rosenp@gmail.com>
+Subject: [PATCHv2] dma: bestcomm: gen_bd: split struct bcom_psc_params from array definition
+Date: Fri, 29 May 2026 18:25:54 -0700
+Message-ID: <20260530012554.68605-1-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -103,7 +103,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11038-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11039-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
@@ -118,38 +118,58 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 08B8E60A76C
+X-Rspamd-Queue-Id: 44F5B60AC44
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Allow the BestComm DMA engine to be selected for PowerPC
-compile-test builds.
+The combined struct-definition-with-initializer pattern confuses the
+kernel-doc parser. Split into separate struct definition and array
+declaration.
 
-Assisted-by: Codex:GPT-5.5
+Also now that it's fixed, it warns on missing members. Add those as
+well.
+
+Since this is just a lookup table and not modified, make it const so
+that it can be moved to read only memory.
+
+Assisted-by: Opencode:Big-pickle
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- v2: remove PATA driver change.
- drivers/dma/bestcomm/Kconfig | 3 +--
- 1 file changed, 1 insertions(+), 2 deletions(-)
+ v2: add const and add variable descriptions
+ drivers/dma/bestcomm/gen_bd.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/bestcomm/Kconfig b/drivers/dma/bestcomm/Kconfig
-index 5dd437295964..153b5492c93c 100644
---- a/drivers/dma/bestcomm/Kconfig
-+++ b/drivers/dma/bestcomm/Kconfig
-@@ -5,7 +5,7 @@
+diff --git a/drivers/dma/bestcomm/gen_bd.c b/drivers/dma/bestcomm/gen_bd.c
+index 8a24a5cbc263..61b5746e1a97 100644
+--- a/drivers/dma/bestcomm/gen_bd.c
++++ b/drivers/dma/bestcomm/gen_bd.c
+@@ -254,17 +254,23 @@ EXPORT_SYMBOL_GPL(bcom_gen_bd_tx_release);
+  */
  
- config PPC_BESTCOMM
- 	tristate "Bestcomm DMA engine support"
--	depends on PPC_MPC52xx
-+	depends on PPC_MPC52xx || (PPC && COMPILE_TEST)
- 	default n
- 	select PPC_LIB_RHEAP
- 	help
-@@ -34,4 +34,3 @@ config PPC_BESTCOMM_GEN_BD
- 	depends on PPC_BESTCOMM
- 	help
- 	  This option enables the support for the GenBD tasks.
--
+ /**
+- * bcom_psc_parameters - Bestcomm initialization value table for PSC devices
++ * struct bcom_psc_params - Bestcomm initialization value table for PSC devices
++ * @rx_initiator: RX initiator ID
++ * @rx_ipr: RX interrupt priority register value
++ * @tx_initiator: TX initiator ID
++ * @tx_ipr: TX interrupt priority register value
+  *
+  * This structure is only used internally.  It is a lookup table for PSC
+  * specific parameters to bestcomm tasks.
+  */
+-static struct bcom_psc_params {
++struct bcom_psc_params {
+ 	int rx_initiator;
+ 	int rx_ipr;
+ 	int tx_initiator;
+ 	int tx_ipr;
+-} bcom_psc_params[] = {
++};
++
++static const struct bcom_psc_params bcom_psc_params[] = {
+ 	[0] = {
+ 		.rx_initiator = BCOM_INITIATOR_PSC1_RX,
+ 		.rx_ipr = BCOM_IPR_PSC1_RX,
 -- 
 2.54.0
 

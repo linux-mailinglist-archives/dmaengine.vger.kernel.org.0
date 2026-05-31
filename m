@@ -1,211 +1,149 @@
-Return-Path: <dmaengine+bounces-11071-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11072-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id xj+lCm6gG2qDEwkAu9opvQ
-	(envelope-from <dmaengine+bounces-11071-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 04:43:58 +0200
+	id CImkM8f/G2o3IQkAu9opvQ
+	(envelope-from <dmaengine+bounces-11072-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 11:30:47 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6608D6143F8
-	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 04:43:56 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C27661562F
+	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 11:30:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3348C302D96B
-	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 02:43:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B905C3014641
+	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 09:30:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7C132D9EFF;
-	Sun, 31 May 2026 02:43:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EEBD33F5BE;
+	Sun, 31 May 2026 09:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oa3lFUAU"
+	dkim=pass (2048-bit key) header.d=al2klimov.de header.i=@al2klimov.de header.b="EtjMW2t1"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mta.al2klimov.de (mta.al2klimov.de [162.55.223.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9347A22424C
-	for <dmaengine@vger.kernel.org>; Sun, 31 May 2026 02:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AE033FE15;
+	Sun, 31 May 2026 09:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.55.223.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780195434; cv=none; b=Ng75DG8b9XxCu6mugJ3AWx6mA+FRokJydwwvxXSFJP6CS/GboPfEf1hgWVK8eMoyTbE3vZ3UjLLc+j4TqRUSq79UOyUbw4f8Tqjnv2o7bMUrNSiNrWbx4RYqQGPjtatpBDIiVZOk+cOtPuXZenTqinznA3saO9uYnJ3xNtFq0B4=
+	t=1780219799; cv=none; b=TxU592xIwPcWpiY3BbXjxcMa6ManPXUO9RQ7A4F3Mst8Kfyudkx/lq9HSms/2KspCmtcL6Rel+PeOqbBlq8tsIEVm7pvzwb3pdNV7TKwu650JAg/H7EP4XSl6hQmO6Z2/VKeWiUotIlgdFCoN+FLRbHHof/t5o7aKb51sPx9Uqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780195434; c=relaxed/simple;
-	bh=Hqw0ohWWSLEd2EbMSxg6AxZ2prK/79GGstweZqrPv4o=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=cS5jZkvlyUOcJNPqRjYZvPizWSzb2edzcLPNUhwFZziBT8uONZbsVQV8q/g0hIP5vnlUYFVNMqbqjhtpcYM+B3kHALXYZXy7QFYEUOFogN1rwr1pOJNuLDvWjfW3SbC0fG2iXkoNFBhRwMnjEkyqfjISO6t8Bal7APnhCWowsWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oa3lFUAU; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E51461F00893;
-	Sun, 31 May 2026 02:43:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780195433;
-	bh=NatqT1uBZTULBnBQ3uIVQqPmArXnaPRvoI7MGUkL32c=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Oa3lFUAU9z67WScBrmtMXDFktAujAq5FoX3dK1G8XOLlBTaPGE3hGGQrKFP1j9VbM
-	 KhOeVuHJ0lB56vGvh+1KVUlFowl1ha3uOz8LVJkzqAdyvYaQjhQoaKOgzj/b2Vig7T
-	 f3J7OC1xYLsUCb9dsYZzfeTM9p/Air262hgKbBa8EUcMKJ3xtcT6W8PtmEUorfXKiK
-	 HI4g971pPh/nx8ZGctVgZwDWxDJtTx0xR0EmvI4TOLdDCpBP/vlQO4FcCi1SZBHeqe
-	 wp4QxhOwrwiAm4rlgcK8nC8AuMxk8JlfNKBsHWzDVy5JgourUtMSMyNmID1IwX75wJ
-	 wPdVFnb36H79w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/4] dmaengine: ti: omap-dma: fix interrupt handling in
- remove
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Rosen Penev" <rosenp@gmail.com>
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260531020535.594460-5-rosenp@gmail.com>
-References: <20260531020535.594460-5-rosenp@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 31 May 2026 02:43:52 +0000
-Message-Id: <20260531024352.E51461F00893@smtp.kernel.org>
+	s=arc-20240116; t=1780219799; c=relaxed/simple;
+	bh=nOGLe9zt9RLyrCg+dZcKXfPKxklIDT+1SJcbhu4vyRs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=HxLcVEcCrENJrsaE3rzcqBtfPR4ZjUMOBC6LHUDvkjmiGtAsBoIG5mqfBIjH5BfsIqyT0+BOh6A0+/Ex28Aym3IfOh4ok1waenKwIC6UPJIJeI5JEWIyb5Db4r0Pm6rU8zwbrV4xBoTJXDSO/MIRiXeF+1+Kh2aFXz1rn98W4M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=al2klimov.de; spf=pass smtp.mailfrom=al2klimov.de; dkim=pass (2048-bit key) header.d=al2klimov.de header.i=@al2klimov.de header.b=EtjMW2t1; arc=none smtp.client-ip=162.55.223.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=al2klimov.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=al2klimov.de
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=default; bh=nOGLe9zt9RLy
+	rCg+dZcKXfPKxklIDT+1SJcbhu4vyRs=; h=in-reply-to:from:references:to:
+	subject:date; d=al2klimov.de; b=EtjMW2t1Jq61ywXlVajR6lSXhf1vkwed6QEPL7
+	yF2DpKDz5/gNteZqTDx2+3SsVh9MhzxTMWjxBznuRxrUY256bOcfoNcc2UsxNniNpVMHHt
+	oJv8qcPe8HkCk/xfKVHyz50hY8uvEA7Ri0o7bbrLuDi0+jJN5/GiPEz/GzKqaAvZVHEUUo
+	gajuOdkItuh4Kd3nvbE+3blpL1L2I9fXeVmjLVTSh6fp8/ZX1zl4Bav/Dj1ic6+iceJWHu
+	kr9DcES+wlG7acpfdbpplx08qP6vtifR7waXohmLVF/HMaU3gEqQWCyHY1rIhagOOcA7sf
+	GD8mP0JjLQnYX8m30JdwZJMA==
+Received: from [192.168.0.101] (88.215.123.80.dyn.pyur.net [88.215.123.80])
+	by mta.al2klimov.de (OpenSMTPD) with ESMTPSA id 98504ab4 (TLSv1.3:TLS_CHACHA20_POLY1305_SHA256:256:NO);
+	Sun, 31 May 2026 09:29:48 +0000 (UTC)
+Message-ID: <ef38b0e8-2b6f-4f65-bac5-177b981479ae@al2klimov.de>
+Date: Sun, 31 May 2026 10:56:08 +0200
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: ioatdma: use !kstrtoint(), not sscanf()!=-1
+To: Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+ Frank Li <Frank.Li@kernel.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>, Ujjal Singh <ujjal.singh@intel.com>,
+ "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM"
+ <dmaengine@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20260526061321.6123-1-grandmaster@al2klimov.de>
+ <20260526061321.6123-3-grandmaster@al2klimov.de>
+ <9461e4b3-d42b-4550-a931-19532588bdbc@intel.com>
+ <48fac400-4813-4b14-986d-8392c7faf936@al2klimov.de>
+ <da523982-576f-4bf8-95b6-79cecf683f55@intel.com>
+Content-Language: en-US
+From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+In-Reply-To: <da523982-576f-4bf8-95b6-79cecf683f55@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	DMARC_POLICY_ALLOW(-0.50)[al2klimov.de,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[al2klimov.de:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11071-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	FREEMAIL_TO(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-11072-lists,dmaengine=lfdr.de];
+	SUBJECT_HAS_EXCLAIM(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
+	TO_DN_ALL(0.00)[];
+	DKIM_TRACE(0.00)[al2klimov.de:+];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[grandmaster@al2klimov.de,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,smtp.kernel.org:mid]
-X-Rspamd-Queue-Id: 6608D6143F8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 4C27661562F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
 
-New issues:
-- [High] Data race when modifying IRQ enable mask leaves interrupts vulnera=
-ble to storms.
 
-Pre-existing issues:
-- [Critical] Use-after-free of DMA channels during forced unbind.
-- [High] Missing IO flush before freeing the shared IRQ handler allows unha=
-ndled interrupts.
---
+On 5/28/26 22:06, Dave Jiang wrote:
+> 
+> 
+> On 5/26/26 11:06 AM, Alexander A. Klimov wrote:
+>>
+>>
+>> On 5/26/26 16:49, Dave Jiang wrote:
+>>>
+>>>
+>>> On 5/25/26 11:13 PM, Alexander A. Klimov wrote:
+>>>> Depending on the user input, sscanf() may return 0 for 0 success.
+>>>> But intr_coalesce_store() wants sscanf() to parse one number,
+>>>> so expect 1 from sscanf(), not any int except -1.
+>>>>
+>>>> While on it, fix typo in %du by using just %d,
+>>>> as this interface expects %d or %d\n.
+>>>> Latter made scripts/checkpatch.pl complain,
+>>>> so use kstrtoint() instead of sscanf().
+>>>>
+>>>> Fixes: 268e2519f5b7 ("dmaengine: ioatdma: Add intr_coalesce sysfs entry")
+>>>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>>>> ---
+>>>>    drivers/dma/ioat/sysfs.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/dma/ioat/sysfs.c b/drivers/dma/ioat/sysfs.c
+>>>> index e796ddb5383f..f59df569956a 100644
+>>>> --- a/drivers/dma/ioat/sysfs.c
+>>>> +++ b/drivers/dma/ioat/sysfs.c
+>>>> @@ -144,7 +144,7 @@ size_t count)
+>>>>        int intr_coalesce = 0;
+>>>>        struct ioatdma_chan *ioat_chan = to_ioat_chan(c);
+>>>>    -    if (sscanf(page, "%du", &intr_coalesce) != -1) {
+>>>> +    if (!kstrtoint(page, 10, &intr_coalesce)) {
+>>>
+>>> looks good. We can probably use kstrtouint() since we are expecting a positive number always.
+>>
+>> This would break `return -EINVAL;` below
+> 
+> Shouldn't we just drop the < 0 compare since it's no longer needed?
 
-commit cf02a74f5cf0d9275769507da876fed12689ebdf
-Author: Rosen Penev <rosenp@gmail.com>
-
-dmaengine: ti: omap-dma: fix interrupt handling in remove
-
-This commit aims to fix three interrupt handling bugs in the remove path.
-It changes the interrupt disable logic to write to IRQENABLE_L1 instead
-of IRQENABLE_L0, disables hardware interrupts before freeing the shared
-IRQ handler, and adds a return value check for platform_get_irq().
-
-> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-> index fd1ad3b4268c9..ad90ca226db35 100644
-> --- a/drivers/dma/ti/omap-dma.c
-> +++ b/drivers/dma/ti/omap-dma.c
-> @@ -1859,16 +1859,17 @@ static void omap_dma_remove(struct platform_devic=
-e *pdev)
->  	if (pdev->dev.of_node)
->  		of_dma_controller_free(pdev->dev.of_node);
-> =20
-> -	irq =3D platform_get_irq(pdev, 1);
-> -	devm_free_irq(&pdev->dev, irq, od);
-> -
->  	dma_async_device_unregister(&od->ddev);
-> =20
->  	if (!omap_dma_legacy(od)) {
-> -		/* Disable all interrupts */
-> -		omap_dma_glbl_write(od, IRQENABLE_L0, 0);
-> +		od->irq_enable_mask =3D 0;
-> +		omap_dma_glbl_write(od, IRQENABLE_L1, 0);
-
-[Severity: High]
-Does clearing od->irq_enable_mask and writing to IRQENABLE_L1 without
-holding spin_lock_irq(&od->irq_lock) introduce a data race?
-
-If an interrupt fires concurrently, the IRQ handler (omap_dma_irq) might
-read the cleared mask, evaluate status &=3D 0, and return IRQ_NONE without
-acknowledging the pending hardware interrupt.
-
-Furthermore, if a client releases a channel concurrently:
-
-omap_dma_free_chan_resources() {
-    spin_lock_irqsave(&od->irq_lock, flags);
-    ...
-    omap_dma_glbl_write(od, IRQENABLE_L1, od->irq_enable_mask);
-    spin_unlock_irqrestore(&od->irq_lock, flags);
-}
-
-This could write a non-zero mask to IRQENABLE_L1 immediately after this
-remove path disabled it, leaving hardware interrupts active right before
-devm_free_irq() removes the handler.
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does the posted write to
-IRQENABLE_L1 require a dummy read to flush the interconnect's write
-buffers before freeing the IRQ?
-
-Because there is no subsequent flush before devm_free_irq() is called,
-the hardware disable command may not reach the DMA controller in time.
-
-If the controller asserts an interrupt during this window, the CPU will
-see an unhandled interrupt on a shared line, which can prompt the
-generic IRQ subsystem to permanently disable the shared IRQ line.
-
->  	}
-> =20
-> +	irq =3D platform_get_irq(pdev, 1);
-> +	if (irq > 0)
-> +		devm_free_irq(&pdev->dev, irq, od);
-> +
->  	omap_dma_free(od);
-
-[Severity: Critical]
-This is a pre-existing issue, but can the call to omap_dma_free() result
-in a use-after-free if a manual sysfs unbind occurs?
-
-omap_dma_free() unconditionally frees all channel structures:
-
-omap_dma_free() {
-    while (!list_empty(&od->ddev.channels)) {
-        ...
-        kfree(c);
-    }
-}
-
-Since the DMA subsystem does not automatically create strict device links
-for consumers, a sysfs unbind of the DMA controller will not synchronously
-unbind its consumers.
-
-Active clients will thus continue to access their held channels and
-eventually call dma_release_channel() on the freed memory.
-
-> =20
->  	if (od->ll123_supported)
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260531020535.5944=
-60-1-rosenp@gmail.com?part=3D4
+Wouldn't that change behavior shown to userspace from return -EINVAL
+on negative int input to return count?
 

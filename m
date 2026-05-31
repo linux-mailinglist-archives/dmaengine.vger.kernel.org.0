@@ -1,288 +1,196 @@
-Return-Path: <dmaengine+bounces-11073-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11074-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aMKhLss6HGq1LgkAu9opvQ
-	(envelope-from <dmaengine+bounces-11073-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 15:42:35 +0200
+	id CH/7CYphHGrpNQkAu9opvQ
+	(envelope-from <dmaengine+bounces-11074-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 18:27:54 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CC75616668
-	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 15:42:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D9FCE6171E3
+	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 18:27:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C2AEE300C260
-	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 13:42:33 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 178F43017BEE
+	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 16:27:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5C902D7DEA;
-	Sun, 31 May 2026 13:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B53E1391E5F;
+	Sun, 31 May 2026 16:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXsRDvi/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vbou+zIi"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F5629ACDD;
-	Sun, 31 May 2026 13:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD2E38887B
+	for <dmaengine@vger.kernel.org>; Sun, 31 May 2026 16:27:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780234952; cv=none; b=sw70o3c+/JpwWSSiAwaz5FIxNr7s5QA6LosJny5DkJnbozp6mV0B6x7fRIuyQAgPZ2SorbVIajigHgCnBPMwHNRBVTwvB660hHzKS+L2ZFv5VBV0tArtGt5qNNvF7qQsCh6VY2LCtCeLo7k1Too1mfOEuDnYxjAyJyof7/gDKk8=
+	t=1780244867; cv=none; b=VQBUdWCveHER5DSyfkX6SeJD4fKHB4aZuqUgDbtcqpCzUwku9wiXkG9drphfFLhChnQa0Isuy0/qY/tSj+cko145aWHpXryTjNQMDAOdrelgj51YHyERtt9aEQy193leJBx3gJKUByGj72chyUEj/rpfXu+JPlij1MVLqA2iCBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780234952; c=relaxed/simple;
-	bh=zR05hWiH8Rlw66oNAUtRAX4ISbevpkF+05gVF+o8TOI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pgBCByvc0ilfWLdJO+o8Ygi5J6KtJ4f59ta5WgfetYhhemA/qzMDenQTpyLzSsmspEavEZE8kyfnvVk57GPom+EPQuVmmKxIE3F/YJJgVuCAwkz+kfEGWEEPXln63YEhzBoUvF9c6BoH2moYTTERen1PC7nUpa6NyXG203zchrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXsRDvi/; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 292F41F00893;
-	Sun, 31 May 2026 13:42:28 +0000 (UTC)
+	s=arc-20240116; t=1780244867; c=relaxed/simple;
+	bh=0Z7N0xCYu6VkyFfhnSi8o2vTsl4Gm9ruQYGU2oUarIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IvqQq/jvjjC1edQwRx4r/MVNrcI9SZM+nWqq067qsYYcJ1vbrp/G89A1yWCjpJfpP50iD42BXwjUcIJm813XJCC8IaUejrIvDWFvP0f00wldCMBr09U/SsyW1m3kAxOQd4a9JEKji4eSgV5YH2Jh7iTH7AaHA0hB9VjTMBtHLlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vbou+zIi; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1276E1F0089F
+	for <dmaengine@vger.kernel.org>; Sun, 31 May 2026 16:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780234951;
-	bh=dSjHAroP5+L4GQyBa+FNhJO3ihTn8ULsRc3iTGS7mDA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=cXsRDvi/iiCxcm/KxbaJf9zvaok8JsIXFHPo0E7kunRCe3kAoGRmggGMBZhV3+J1M
-	 aBtew1idHllMUPngx2cKEvhiUqvyMeJvHto5gwOoIy/NM/J6qCviVP+j8mT9/+esaI
-	 I19uZ/k1Qk8zp/neDywXwiSTtYAHgdjDrteA2ukGXtYtf1sGIPhgtOx5onzx0vbRGu
-	 uRtxcrgygRELyKumKRmwQIZP03gzFGUarcsHAB8nVrjXyp8Eb1DizwAdhr3mtefN8L
-	 /g/YB8P4e8WgBkLOzO5H4SsGU9/4mlGAA0uXE+ts7cKNJeMh2//ZoZD5qsNEF4pUL0
-	 fdr2Fo8BEoOzA==
-Message-ID: <2b532d56-dce4-4f6d-84e0-2fd87d5494f8@kernel.org>
-Date: Sun, 31 May 2026 23:42:26 +1000
+	s=k20260515; t=1780244866;
+	bh=b/T/RdXiN7bhTsikP7tDXhBU6HaNdabK8ZTbQ4skuK0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=Vbou+zIiA3Mr4kpYeiYJTqi2gIfmOZkK11YoGOHJXJolFeVAEfBS1YmHpT2wbl7E4
+	 1TtFyx5TF2YuygGadxrQcJ1BbSDjThQNgIQTDV+k7mbJnCEVnmCp/WdYdPgTqysu3r
+	 iMc/SXEPVkZBePzOusjof6PMTt34N5mN/BWjlITLi6GWFVDZrYjjZMV3nyOz0eZh0H
+	 nSY9BsHNYDHM9flWN3Wyu66qytrnINpASR4KeaMgIHf179bUlLCtBEgwXjc2B1+jsG
+	 pI0eIsJ5J4yCzh+imQOSoXBDCyq6QOJRceCoO6RwRvc+V1+Aw4d5g0j4MWmuAfjJGI
+	 iJoGujrTk1fCg==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5aa63daf2a5so918291e87.3
+        for <dmaengine@vger.kernel.org>; Sun, 31 May 2026 09:27:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/wWBCcMZXqgiZvOXXRiknlY8WYD4/m89NtXWayFXUcflEzRqEU1nLlhZyLaCTj0O0Tbk0bNx0FvII=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhYsoHHMScmBubwxBVGCOvs2d8hC7SquyAhi3e02MYvw2XZG23
+	jvl6u6K1vlvP7rdN5+vduDAAK1ADA1ApMFjVVuHr3/jR17wQkgwmfIfw0/cuatD5Hj1/gkCZ5zv
+	w5HkNsXOAkfonrGteQlb1j5uGdiqwDZXHf+Jm+RHrqA==
+X-Received: by 2002:a05:6512:800d:10b0:5a8:fca6:a537 with SMTP id
+ 2adb3069b0e04-5aa608ff3d8mr1341020e87.22.1780244864645; Sun, 31 May 2026
+ 09:27:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 4/4] m68k: coldfire: fix non-standard readX()/writeX()
- functions
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Arnd Bergmann <arnd@kernel.org>, linux-m68k@lists.linux-m68k.org,
- linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-can@vger.kernel.org, linux-spi@vger.kernel.org,
- Vladimir Oltean <olteanv@gmail.com>, Christoph Hellwig <hch@lst.de>
-References: <20260506142644.3234270-2-gerg@kernel.org>
- <20260506142644.3234270-8-gerg@kernel.org>
- <40aefc39-bd98-460d-8aa7-5dd79f562e0d@app.fastmail.com>
- <fdd6fc14-f607-4186-8db4-25de973ac322@kernel.org>
- <CALSJ-wCrNDv3N2Kdo0uoXsKGtp0GthJRBeYTNQA1gGE2akUWFg@mail.gmail.com>
- <9391b782-7727-47fa-ac37-05cd50821d35@app.fastmail.com>
- <CALSJ-wBRmUpjz-_ehZ0U0Gu+fPqRUeAn47E0_pwpXQa0tCNzVA@mail.gmail.com>
- <CALSJ-wCuZs9cBJsuOOYMEYM6xOXZbdOm_pr=70d3HRYYSYJ0KA@mail.gmail.com>
- <CALSJ-wDm8NoB8mF3KSx49XMSWz1vjwFhSmgJZWq8pN2pCf12mw@mail.gmail.com>
- <CALSJ-wDY_8SMAvKT0L6wMbH1=w5pZNmV=xyeX1REb=BMRZWj-g@mail.gmail.com>
-Content-Language: en-US
-From: Greg Ungerer <gerg@kernel.org>
-In-Reply-To: <CALSJ-wDY_8SMAvKT0L6wMbH1=w5pZNmV=xyeX1REb=BMRZWj-g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+References: <20260526-qcom-qce-cmd-descr-v19-0-08472fdcbf4a@oss.qualcomm.com> <20260529162251.GB2706@sol>
+In-Reply-To: <20260529162251.GB2706@sol>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Sun, 31 May 2026 18:27:32 +0200
+X-Gmail-Original-Message-ID: <CAMRc=MdJ5GN_Lbi9PeCoW=fNnjCz-WAq66TSa8f=fZGOHFZ41Q@mail.gmail.com>
+X-Gm-Features: AVHnY4KA4mut6jG-LIp_D5JMZD7phc05G5rBuCgHgHRyzFVSAKUzF_CQJazrdyg
+Message-ID: <CAMRc=MdJ5GN_Lbi9PeCoW=fNnjCz-WAq66TSa8f=fZGOHFZ41Q@mail.gmail.com>
+Subject: Re: [PATCH v19 00/14] crypto/dmaengine: qce: introduce BAM locking
+ and use DMA for register I/O
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Vinod Koul <vkoul@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Thara Gopinath <thara.gopinath@gmail.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
+	Udit Tiwari <quic_utiwari@quicinc.com>, Md Sadre Alam <mdalam@qti.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>, Michal Simek <michal.simek@amd.com>, 
+	Frank Li <Frank.Li@kernel.org>, Andy Gross <agross@codeaurora.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, dmaengine@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,lists.linux-m68k.org,vger.kernel.org,gmail.com,lst.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11073-lists,dmaengine=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11074-lists,dmaengine=lfdr.de];
+	FREEMAIL_CC(0.00)[oss.qualcomm.com,kernel.org,lwn.net,gmail.com,gondor.apana.org.au,davemloft.net,quicinc.com,qti.qualcomm.com,linaro.org,amd.com,codeaurora.org,vger.kernel.org,lists.infradead.org];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gerg@kernel.org,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,linux-m68k.org:email]
-X-Rspamd-Queue-Id: 3CC75616668
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,mail.gmail.com:mid,linaro.org:email]
+X-Rspamd-Queue-Id: D9FCE6171E3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Angelo,
+On Fri, May 29, 2026 at 6:24=E2=80=AFPM Eric Biggers <ebiggers@kernel.org> =
+wrote:
+>
+> On Tue, May 26, 2026 at 03:10:48PM +0200, Bartosz Golaszewski wrote:
+> > I feel like I fell into the trap of trying to address pre-existing
+> > issues reported by sashiko and in the process provoking more reports so
+> > let this be the last iteration where I do this. Vinod can we get this
+> > queued for v7.2 now and iron out any previously existing problems in
+> > tree?
+> >
+> > Merging strategy: there are build-time dependencies between the crypto
+> > and DMA patches so the best approach is for Vinod to create an immutabl=
+e
+> > branch with the DMA part pulled in by the crypto tree.
+> >
+> > This iteration continues to build on top of v12 but uses the BAM's NWD
+> > bit on data descriptors as suggested by Stephan. To that end, there are
+> > some more changes like reversing the order of command and data
+> > descriptors queuedy by the QCE driver.
+> >
+> > Currently the QCE crypto driver accesses the crypto engine registers
+> > directly via CPU. Trust Zone may perform crypto operations simultaneous=
+ly
+> > resulting in a race condition. To remedy that, let's introduce support
+> > for BAM locking/unlocking to the driver. The BAM driver will now wrap
+> > any existing issued descriptor chains with additional descriptors
+> > performing the locking when the client starts the transaction
+> > (dmaengine_issue_pending()). The client wanting to profit from locking
+> > needs to switch to performing register I/O over DMA and communicate the
+> > address to which to perform the dummy writes via a call to
+> > dmaengine_desc_attach_metadata().
+> >
+> > In the specific case of the BAM DMA this translates to sending command
+> > descriptors performing dummy writes with the relevant flags set. The BA=
+M
+> > will then lock all other pipes not related to the current pipe group, a=
+nd
+> > keep handling the current pipe only until it sees the the unlock bit.
+> >
+> > In order for the locking to work correctly, we also need to switch to
+> > using DMA for all register I/O.
+> >
+> > On top of this, the series contains some additional tweaks and
+> > refactoring.
+> >
+> > The goal of this is not to improve the performance but to prepare the
+> > driver for supporting decryption into secure buffers in the future.
+> >
+> > Tested with tcrypt.ko, kcapi and cryptsetup.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.co=
+m>
+>
+> None of these fixes are Cc'ed to stable, so stable kernels will remain
+> vulnerable to these race conditions.
+>
+> Shouldn't this be preceded by a patch, Cc'ed to stable, that marks the
+> driver as BROKEN?  As discussed in the other thread
+> (https://lore.kernel.org/linux-crypto/20260515-shikra_qcrypto-v1-0-80f07b=
+345c29@oss.qualcomm.com/T/#u),
+> none of the current functionality of this driver is actually useful in
+> Linux.  It's just been causing problems.
+>
 
-(Adding Christoph to CC list)
+I don't believe any of it should be backported. This is not a
+regression, multiple EEs were never supported, so it's a new feature.
+Also: backporting of over 500 diff lines across two subsystems doesn't
+sound like a good idea to me.
 
-On 25/5/26 07:34, Angelo Dureghello wrote:
-> On Sun, May 24, 2026 at 02:17:07PM -0700, Angelo Dureghello wrote:
->> Hi All,
->>
->> On Sun, May 17, 2026 at 03:41:31PM -0700, Angelo Dureghello wrote:
->>> Hi,
->>>
->>> On Sun, May 17, 2026 at 03:04:23PM -0700, Angelo Dureghello wrote:
->>>> Hi Arnd,
->>>>
->>>> On Sun, May 17, 2026 at 10:08:22PM +0200, Arnd Bergmann wrote:
->>>>> On Sun, May 17, 2026, at 21:43, Angelo Dureghello wrote:
->>>>>> On Thu, May 07, 2026 at 10:43:01PM +1000, Greg Ungerer wrote:
->>>>>>> On 7/5/26 05:12, Arnd Bergmann wrote:
->>>>>>>> On Wed, May 6, 2026, at 16:26, Greg Ungerer wrote:
->>>>>>
->>>>>> [    2.270000] fsl-dspi fsl-dspi.0: Not able to get desc for DMA xfer
->>>>>> [    2.280000] fsl-dspi fsl-dspi.0: DMA transfer failed
->>>>>> [    2.280000] spi_master spi0: failed to transfer one message from queue
->>>>>> [    2.290000] spi_master spi0: noqueue transfer failed
->>>>>> [    2.290000] spi-nor spi0.1: probe with driver spi-nor failed with error -5
->>>>>>
->>>
->>> About this issue, it fails on dma_pool_alloc(), so tomorrow will check,
->>> i probably lost some dma config option.
->>>
->>
->> so i worked on this open issue above:
->>
->> - moved to master and rebased,
->> - crated a wip/edma branch,
->> - bisected and found the offending commit, before this, mcf-edma driver
->>    and connected spi-fsl-dspi (using edma) was both working correctly.
->>
->> 7a360df941a4bd60847208de59f1ac8b166265a2 is the first bad commit
->> commit 7a360df941a4bd60847208de59f1ac8b166265a2 (HEAD)
->> Author: Christoph Hellwig <hch@lst.de>
->> Date:   Thu Oct 12 09:52:27 2023 +0200
->>
->>      m68k: don't provide arch_dma_alloc for nommu/coldfire
->>
->>      Coldfire cores configured with a data cache can't provide coherent
->>      DMA allocations at all.
->>
->>      Instead of returning non-coherent kernel memory in this case,
->>      return NULL and fail the allocation.
->>
->>      The only driver that used to rely on the previous behavior (fec) has
->>      been switched to use non-coherent allocations for this case recently.
->>
->>      Signed-off-by: Christoph Hellwig <hch@lst.de>
->>      Reviewed-by: Greg Ungerer <gerg@linux-m68k.org>
->>      Tested-by: Greg Ungerer <gerg@linux-m68k.org>
->>
->>   arch/m68k/Kconfig      |  1 -
->>   arch/m68k/kernel/dma.c | 23 -----------------------
->>   2 files changed, 24 deletions(-)
->>
->> So i can try next week a patch for edma looking what has been done
->> in fec, and since i am probably the only with mcf54415, will test it
->> here.
->>
-> 
-> Looking into this better, looks like the above commit was meant for the
-> majority on non-mmu ColdFire. I think mcf5441x and some other with mmu
-> enabled can flag pages as "page cache disabled".
+On the other hand, if marking the driver as BROKEN for the time being
+allows for a faster pace of queuing any changes to it, then I'm for
+it. Let's unmark it once we fix it.
 
-I don't think that is right. The way the underlying data cache is setup for
-MMU ColdFire (via the ACR/CACR registers) means that individual pages cannot
-be marked as non-cached. So coherent memory allocations are not possible -
-at least the way things are today.
-
-It would be possible to set aside a chunk of RAM at kernel startup time
-to use as a pool for coherent allocations (since it could be marked as
-non-cached via the ACR/CACR registers), but there is no code to support doing
-that today.
-
-Regards
-Greg
-
-
-> So i would re-enabled that code only for such mmu families.
-> 
-> Please let me know if i am correct.
-> Thanks.
-> 
->>>>>> DSPI is using edma, i will try to understand where the issue is asap.
->>>>>>
->>>>>> About how it works:
->>>>>> - for accesses to edma module (IP) mmio registers, must be native
->>>>>> big_endian, so using the "be" suffix in "mcf"_edma looks ok for me.
->>>>>
->>>>> The twist here is that with the way that readl() is defined on
->>>>> coldfire as a non-swapping operation, and the generic
->>>>> definition assuming the opposite in
->>>>>
->>>>> static inline u32 ioread32be(const void __iomem *addr)
->>>>> {
->>>>>          return swab32(readl(addr));
->>>>> }
->>>>>
->>>>> the function called ioread32be() actually tries to access
->>>>> the registers as little-endian. I can see two possible ways
->>>>> we got here, but don't know which one is currect:
->>>>>
->>>>> a) the device actually has little-endian registers (like it
->>>>>     does on i.MX, but unlike all other coldfire devices), and
->>>>>     you just never noticed because using ioread32be() worked
->>>>>     as you expected.
->>>>>
->>>>> b) you tested the driver using an ioread32be() definition that
->>>>>     did not have a byteswap and it correctly accessed big-endian
->>>>>     registers at the time, but the version in mainline today does
->>>>>     not.
->>>>
->>>> Ok. The ioread32be now works properly since i had applied Greg patches.
->>>> I generated an error in _probe on edma channel 2, reading status reg.
->>>> looks consistent:
->>>>
->>>> 	iowrite16(2121, regs->erqh);
->>>> 	iowrite8(0x77, regs->serq);
->>>> 	iowrite8(0x12, regs->ssrt);
->>>> 	
->>>> 	u32 status = ioread32be(regs->es);
->>>> 	printk("%s() status: %04x\n", __func__, status);
->>>>
->>>> [    0.140000] mcf_edma_probe() entering
->>>> [    0.140000] mcf_edma_probe(): allocating data
->>>> [    0.140000] mcf_edma_probe() status: 800012f8
->>>>
->>>> If i am not loosing myself in this r/w labyrinth, the path should be:
->>>>
->>>> 1) Greg removed coldfire readl/writel, leaving now the standard LE r/w,
->>>> 2) So the ioread32be swaps the standard LE read giving BE.
->>>>
->>>> Am i correct ?
->>>>
->>>>
->>>>>
->>>>>> - for accessing the "tcd" memory structure, that must be, from what i
->>>>>> remember, anyway in little endian, independently from the cpu core
->>>>>> endiannes, this is the reason that big_endian flag is needed, it is
->>>>>> used for tcd area accesses, so the IP module was built.
->>>>>> The tcd area may be similar to pci accesses (see mcf54415 RM 19.4.16).
->>>>>
->>>>> edma_read_tcdreg() calls into edma_readl(), which is the same function
->>>>> that is used for normal register access, so from what I can tell,
->>>>> they always use the same endianess here.
->>>>>
->>>>
->>>> If edma_readl was using
->>>>
->>>>          if (edma->big_endian)
->>>>                  val = ioread32be(addr);
->>>>
->>>> and never changed, without Greg patch, it was likely returning little
->>>> endian for coldfire and correct LE for other arch ? :)
->>>>
->>>> I remember something about tcd area was coded LE, but will investigate
->>>> better, now i am over midnight.
->>>>
->>>> Regards,
->>>> angelo
->>>>
->>>>>        Arnd
->>>
->>> Regards,
->>> angelo
->>
->> Regards,
->> angelo
-> 
-> Regards,
-> angelo
-
+Bart
 

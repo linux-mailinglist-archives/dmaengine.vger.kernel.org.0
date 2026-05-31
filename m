@@ -1,61 +1,61 @@
-Return-Path: <dmaengine+bounces-11069-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11070-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kxkoNzebG2pWEgkAu9opvQ
-	(envelope-from <dmaengine+bounces-11069-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 04:21:43 +0200
+	id uGrUHG2dG2r9EgkAu9opvQ
+	(envelope-from <dmaengine+bounces-11070-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 04:31:09 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE0E66143AC
-	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 04:21:42 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E39B46143DC
+	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 04:31:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A110E3004D19
-	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 02:21:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7DCE7301F17A
+	for <lists+dmaengine@lfdr.de>; Sun, 31 May 2026 02:31:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6E411A5BAE;
-	Sun, 31 May 2026 02:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 430041A9FA8;
+	Sun, 31 May 2026 02:31:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8Xt8UTM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IRxDAQ3k"
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BEA194A6C
-	for <dmaengine@vger.kernel.org>; Sun, 31 May 2026 02:21:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6CC188596
+	for <dmaengine@vger.kernel.org>; Sun, 31 May 2026 02:30:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780194096; cv=none; b=fQjh1c/IkMDJgbS5onui5etiRxsk2e9LBjagscsfstGNYY/D1ioJtWf4EQI9vCbM5hHHa5TQ8ESDErTW7bONOShJeBSpm0O4ttwaltohJglNKCjOm4ecUbU9u37u8gTo6I97UpTOwudb37NeScw1RrZ1bkEY/QZc+SPqEP6q40o=
+	t=1780194660; cv=none; b=oosK4Lh4y4I5sBvnBcMNsr9kPMfgiJIMgWfKekuosP9e88dLvUT8fDkU495h2wX0+sHKiNROBzj8zXpfQHa3KdHERfUfw2qyk7wmbJHXgQMYqUGiSqtGsmEJgXubJ6Ja/E3+SOyT0KPh97bw+lbbaEGX720yoEA5NFpcjZZWT9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780194096; c=relaxed/simple;
-	bh=iTfA5bxADvrDo+jbG9cF5TOGO4AqPKGrZuZaAq/23tk=;
+	s=arc-20240116; t=1780194660; c=relaxed/simple;
+	bh=8wqxugk1eo9GmwZawmHJMW8W7ToGhH/X/BKDuxS3Qz8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=HtSR6qfSEBP+vaqN1g1PJI+vEou7G69gTPADanbVsfZqav1Uba5iCgECagSAmkuQd6BWe6emvb481wmChDRJn0UYmSjZyfCXTzY8e7KhuJJIDrhuWIoW2AduUZ3bXYlp3/WUTS9yK7tpBnFdib4zaCS9rLo3s96zgEy3AFIcY58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8Xt8UTM; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2B4F1F00893;
-	Sun, 31 May 2026 02:21:34 +0000 (UTC)
+	 Message-Id; b=FnnHcjLHfUuq8BSD2S8mr+pQLrPL2vc9mFyqt2PjDl2sJ2ZxYgnCUpqlsbvCXWSGhj8zuuKJiNbFoFKrlb/GmRoBIUIAg09Q48IQKJxSZjVTbrYVwci8U6kbpydzOTUxs7gjxxzepCSYipsTW47xqZdw/35hPY7BG3tJHqvu2xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IRxDAQ3k; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B163E1F00893;
+	Sun, 31 May 2026 02:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780194095;
-	bh=xoqBdyV1q3yyHvXaLGRox9VMhksHteso3ufis4v5kPQ=;
+	s=k20260515; t=1780194658;
+	bh=HbYlvgXf3yVqsmuJjxRwY4jdTcqfZkW4u1iUEqWGA6M=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=G8Xt8UTMqW3kTuQuiGBrnygvtxB5cz+ZLD9BnhSZzy4sXRfV4P8DnyqDlIeoLmzPW
-	 8PpEeJIFtXrqhrrhgNoR2dMxi1on8NDm3kmnXRsbiJm551nUJzY2QXP9CxztHJizG8
-	 jbY93F+3JXReYJeSzxTU5QNk7owC8tNhciShK5HCkvHUu0ackhXIrpWsLg7q4rZgF2
-	 vasJcdo/6knCaLXaTHbDagJ0wWxZEfyXvHIjlk9RI3hXrGmIKpxYvcKNg5XtmHMgKF
-	 G2z3mhbcjf4O1yx41Fs3KYXchQ+jtZxMQuZrU14LgflfN79yPxN9Cm7RbqKKwiy5i0
-	 esyb2Q7AYSLVw==
+	b=IRxDAQ3kxLe+ie17qIK4Rn4P+rmzXsBORn7c+AVrOGxJctyW0x0HKF9E60dRX0I3S
+	 I4L3Tx6UqdpPKQ6rH4yF7XKAGjUgWt0mudz6CMtGeeY7uLpdCqR6xyTXz+cIWXOkpn
+	 HuKmYXkmMSoVQ02wAqoA5xFAlH1L85A8J0f3V+BU8XEV0iiI6GAYeFkePMOPsxnL+k
+	 B+l1Bmbe8SE1ggZXJTWv1fFLogaXlLjEl3/ZENVK2pfb4kPSUCICJ8I/t20VbavWyV
+	 RcVzy7F8e+LAn84W0BtdasCx/tuXTG8kRV5WWzHAB6RitVVpgQN89imUTbZgo8uHRe
+	 UAxZRAtnr45hA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCHv3] dmaengine: ste_dma40: turn d40_base phy_chans into a
- flexible array
+Subject: Re: [PATCH 3/4] dmaengine: ti: omap-dma: fix dma_pool_destroy
+ before omap_dma_free in error paths
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Rosen Penev" <rosenp@gmail.com>
-Cc: Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260531020843.594892-1-rosenp@gmail.com>
-References: <20260531020843.594892-1-rosenp@gmail.com>
+Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260531020535.594460-4-rosenp@gmail.com>
+References: <20260531020535.594460-4-rosenp@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 31 May 2026 02:21:34 +0000
-Message-Id: <20260531022134.E2B4F1F00893@smtp.kernel.org>
+Date: Sun, 31 May 2026 02:30:58 +0000
+Message-Id: <20260531023058.B163E1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,14 +66,14 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11069-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11070-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -89,88 +89,130 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
-X-Rspamd-Queue-Id: CE0E66143AC
+X-Rspamd-Queue-Id: E39B46143DC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Out-of-bounds read and write on `dma40_memcpy_channels` due to inc=
-orrect array size and clamping limit.
+- [High] Potential Use-After-Free in the IRQ handler during the `of_dma_con=
+troller_register` error path in probe.
+- [High] Unsafe unbind and devm anti-pattern due to lack of `device_release=
+` callback and failure to drain virt-dma descriptors.
 --
 
-commit f80ed233c1567c0d1ee4933ba428492ac35dc443
+commit 7feb24e91af080b6fba5d126723a162d39a35206
 Author: Rosen Penev <rosenp@gmail.com>
 
-dmaengine: ste_dma40: turn d40_base phy_chans into a flexible array
+dmaengine: ti: omap-dma: fix dma_pool_destroy before omap_dma_free in error=
+ paths
 
-Convert the separately-offset phy_chans pointer to a C99 flexible array
-member at the end of struct d40_base, and switch the allocation to
-struct_size().
+omap_dma_free() tears down channels and may free t2_desc entries from
+the descriptor pool via tasklet cleanup. Destroying the pool before
+omap_dma_free() is a use-after-free. Move omap_dma_free() ahead of
+dma_pool_destroy() in both probe error paths and the remove path.
 
-> diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-> index 9b803c0aec254..0d9ffa3e26639 100644
-> --- a/drivers/dma/ste_dma40.c
-> +++ b/drivers/dma/ste_dma40.c
+> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+> index 839e04f53fc2d..fd1ad3b4268c9 100644
+> --- a/drivers/dma/ti/omap-dma.c
+> +++ b/drivers/dma/ti/omap-dma.c
 
 [ ... ]
 
-> @@ -3185,22 +3186,24 @@ static int __init d40_hw_detect_init(struct platf=
-orm_device *pdev,
->  	else
->  		num_phy_chans =3D 4 * (readl(virtbase + D40_DREG_ICFG) & 0x7) + 4;
-> =20
-> +	num_phy_chans =3D min(num_phy_chans, STEDMA40_MAX_PHYS);
-> +
->  	/* The number of channels used for memcpy */
->  	if (plat_data->num_of_memcpy_chans)
->  		num_memcpy_chans =3D plat_data->num_of_memcpy_chans;
->  	else
->  		num_memcpy_chans =3D ARRAY_SIZE(dma40_memcpy_channels);
-> =20
-> +	num_memcpy_chans =3D min(num_memcpy_chans, D40_MEMCPY_MAX_CHANS);
+> @@ -1825,9 +1825,9 @@ static int omap_dma_probe(struct platform_device *p=
+dev)
+>  		if (rc) {
+>  			pr_warn("OMAP-DMA: failed to register DMA controller\n");
+>  			dma_async_device_unregister(&od->ddev);
+> +			omap_dma_free(od);
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does this clamping limit all=
-ow
-out-of-bounds accesses on the dma40_memcpy_channels array?
+This is a pre-existing issue, but does this error path leave us vulnerable =
+to
+a use-after-free if an interrupt fires during probe failure?
 
-The dma40_memcpy_channels array has exactly 6 elements, but
-D40_MEMCPY_MAX_CHANS is 8.
+If of_dma_controller_register() fails, the probe error path calls
+omap_dma_free(), which frees the channel objects via kfree().
 
-When d40_of_probe() is called, it permits num_memcpy up to 8 and writes
-them into the array:
+However, it does not appear to stop active DMA hardware, clear
+od->irq_enable_mask, or unregister the IRQ. Because the DMA device was
+already exposed by a successful dma_async_device_register() earlier in
+probe, a concurrent client could have allocated a channel and started a
+transfer, enabling hardware interrupts.
 
-drivers/dma/ste_dma40.c:d40_of_probe() {
+If a hardware interrupt fires before devres cleanup unwinds the IRQ:
+
+omap_dma_irq() {
     ...
-    of_property_read_u32_array(np, "memcpy-channels",
-                               dma40_memcpy_channels,
-                               num_memcpy);
-    ...
-}
-
-Can this cause an out-of-bounds write corrupting adjacent memory?
-
-Additionally, because num_memcpy_chans is clamped to 8 here in
-d40_hw_detect_init(), it allows up to 8 memcpy channels to be registered.
-
-When clients allocate these channels, d40_config_memcpy() indexes the array:
-
-drivers/dma/ste_dma40.c:d40_config_memcpy() {
-    ...
-    d40c->dma_cfg.dev_type =3D dma40_memcpy_channels[d40c->chan.chan_id];
+    c =3D od->lch_map[i];
+    if (c) {
+        spin_lock_irqsave(&c->vc.lock, flags);
+        ...
+        tasklet_schedule(&c->vc.task);
     ...
 }
 
-If chan_id is 6 or 7, won't this result in an out-of-bounds read?
+Would this read the freed channel structure from od->lch_map and schedule
+a tasklet using a freed pointer?
+
+>  			if (od->ll123_supported)
+>  				dma_pool_destroy(od->desc_pool);
+> -			omap_dma_free(od);
+>  			return rc;
+>  		}
+>  	}
+
+[ ... ]
+
+> @@ -1869,10 +1869,10 @@ static void omap_dma_remove(struct platform_devic=
+e *pdev)
+>  		omap_dma_glbl_write(od, IRQENABLE_L0, 0);
+>  	}
+> =20
+> +	omap_dma_free(od);
+
+[Severity: High]
+This is a pre-existing issue, but does forcefully freeing channel structures
+here bypass dma_device refcounting and leak descriptor lists?
+
+The driver does not seem to provide a .device_release callback for the
+dma_device and forcefully frees the omap_chan structures using kfree() in
+omap_dma_free():
+
+omap_dma_free() {
+    ...
+    list_del(&c->vc.chan.device_node);
+    tasklet_kill(&c->vc.task);
+    kfree(c);
+    ...
+}
+
+Because omap_dmadev is allocated with devm_kzalloc(), a forced unbind while=
+ a
+client holds a channel reference will result in devm freeing omap_dmadev and
+omap_dma_free() freeing omap_chan. This bypasses dma_device refcounting and
+could cause a use-after-free when the client later attempts to call
+dma_release_channel().
+
+Additionally, omap_dma_free() does not drain the internal virt-dma lists
+(desc_allocated, desc_submitted, etc.). Does this permanently leak any pend=
+ing
+virt_dma_desc items allocated by clients?
+
+> +
+>  	if (od->ll123_supported)
+>  		dma_pool_destroy(od->desc_pool);
+> -
+> -	omap_dma_free(od);
+>  }
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260531020843.5948=
-92-1-rosenp@gmail.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260531020535.5944=
+60-1-rosenp@gmail.com?part=3D3
 

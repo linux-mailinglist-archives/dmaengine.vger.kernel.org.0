@@ -1,81 +1,81 @@
-Return-Path: <dmaengine+bounces-11079-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11080-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kJnNDYnUHGqUTAkAu9opvQ
-	(envelope-from <dmaengine+bounces-11079-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 02:38:33 +0200
+	id MIEzDLLUHGqUTAkAu9opvQ
+	(envelope-from <dmaengine+bounces-11080-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 02:39:14 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BD9F6187AC
-	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 02:38:32 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FBB56187D1
+	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 02:39:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3928A3026F24
-	for <lists+dmaengine@lfdr.de>; Mon,  1 Jun 2026 00:36:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6AB0430416D1
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Jun 2026 00:36:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D44431D798E;
-	Mon,  1 Jun 2026 00:36:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 360A01F09A8;
+	Mon,  1 Jun 2026 00:36:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ItnLthEj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIBZd50x"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F78175A83
-	for <dmaengine@vger.kernel.org>; Mon,  1 Jun 2026 00:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA451C84DC
+	for <dmaengine@vger.kernel.org>; Mon,  1 Jun 2026 00:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780274174; cv=none; b=uYak6VS0CkysdyDtfZDZ85rENCRHaAc8pUtD80XDMf4qvQbPG03HzZVnELcpCFxMx+zu6JbEOoScUvECv8Oqt2j51vOmJJhBzcj+AlvnsC+H7EzKIXO4YwZPzQb1jA28YEY4xhAwIYz7KxmmVEDRlLdGoGsXTtQNq8k/WplXwd8=
+	t=1780274176; cv=none; b=SgxeFKLsHllRHy43W/H79+pHfteYOVT7m6tFlXVk50nsVOQaZ4PgpwhFZWQWdTgah/Vr4gm/KmMYK/7LtMgUPR+PLhxRjw/1PHVEvUTxlaHiU7/e3tsS8sZrPG96C6+2t7bEmPrNj0qmYH6XTslGOhVIiL4bG+CzTvVMeAktD3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780274174; c=relaxed/simple;
-	bh=IQfxgm2MWgvf9AN1+HadB8z6n3kjnD8BRuJ/NOZfTVg=;
+	s=arc-20240116; t=1780274176; c=relaxed/simple;
+	bh=uuAw+Wh8b6dndSMT4KfsWlWqDY3OC7zXcn/LPa8xH08=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mc8dDaHYyWQq2O6CXcc9fg9c7pqNT+sA2faapBhXBVwO2UORmBrs9wKHnOlNWv9kSwk7Gng4mYH+aqYO1YIJblFbY6LVxF7lQmJhxGmrXwHnXOZCG8xbMikDz20Fw5YVLV5ywHov4EC26dmMxGPZqeHJ2X29AZH4HfRC0n3i5hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ItnLthEj; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=fKn3N7W5xM6utiyO8I6uISIwNC1vgOhm0UH/c7DceOXQ4/mLTeQIQd7MStyq0UDtrqFLJ0fM2Hoi4bUr/WscWd7iAnsxntW2PZe9BSBERQSK+2AA/+kYeWKvpCLXf8pSJEzA3+XAVqFNIcfYC8HjipRL84UiV4tJWBOfD7pqakw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UIBZd50x; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2bf30d530bdso21531235ad.3
-        for <dmaengine@vger.kernel.org>; Sun, 31 May 2026 17:36:13 -0700 (PDT)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2c0a5354da1so8571245ad.0
+        for <dmaengine@vger.kernel.org>; Sun, 31 May 2026 17:36:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780274173; x=1780878973; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780274174; x=1780878974; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ev7p7h9heSSNp8XX7uho86JPebrwudJ97FaZXIjk1zc=;
-        b=ItnLthEjG6BRR3uZqcEr6OCP+yLHKI8gJQvfXw/GbO1FzwWbQzDoQW74AZiwU5ve1K
-         RG4qIlpDRkfUrTv0HddR+fYiqV/fF1UsXa23pwwsJABveVWEQJpO3PpjjUGAQlOnYTmg
-         JGHYvoNQeE94S4NAZbmT/zDSAPdkANtp5I9gvPfhg8qL596qVngdMPD5KjCVhiedDy7E
-         JE3hxbrjb2scKdJ0W5xmY3KC7IQTMQZdrhMTa8s3Vf0x0jp+x2/B3mYwA6DgsKHAdZaV
-         xQ7HwCK8ESWWYes34CJoZ8Wg4C7nD01RibGuls2CscYxz9UEubJTTlAsNZ05MYTIVwl+
-         GR7Q==
+        bh=URm5CekzJYxc5s9juYhDgo8eAbfkbMZqryXqUOBN3KQ=;
+        b=UIBZd50x/9C+1VtnBElodaXc9/yLfW4es93wn2zOS3miRnXHByC/HL5/hfVIIqTG8d
+         1R+NLAx4Okp7ecYs5bv90s7JmsacrrRLbWuZ0i1Pcx/jD/Yz1okx5Qvgct94mT8OytZu
+         LfDBLCR+4SrIlvzIAwxolyJ+3XP4JP36e+m8G669Cky5yIg1u5pxDdxMvyDNH0DQWb0Z
+         tHw9ICr4mLEiIxwo17n0LMi2DtowpVs2fn/U2wz/2hGssA0OoNLmvOyI3QZ609XKp7qp
+         1en5vLv4bd+d7niJcUCH4nCUXDGPaLWz5bECKKwZjgVawgTHSVDPVCbpNdlLS+Bas7Z1
+         ztkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780274173; x=1780878973;
+        d=1e100.net; s=20251104; t=1780274174; x=1780878974;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Ev7p7h9heSSNp8XX7uho86JPebrwudJ97FaZXIjk1zc=;
-        b=hD6/ov/IKJUqYlD9zLKounUOeHTBFnxPuHZAqA0cdxTmjcIfzObKqI3LPJtj2zVbg6
-         48tilj9wsu2nVw1u1ugS18G5w7zp3YXe/oz/HfUGUji27xI7wmNYDWoVRDNP4qziDwP7
-         MQGherRGw3eAr2md1Kua101X7dwSjZhbUkn21Rn26Q5xH8BkOkRzanAbIOnNRJQmnovI
-         EOrt7rijGFoQZmBVSO8rg39cEf5xICOTnl9NbXXYgs6ttsjgSc8CZ1qSMPt6S0fRWVAN
-         27gRDuMF8fh10TZK+WtwRhdh/f1tdBIo/MzxJyI4/cG/K61KJWj6n6NLqA16ahYWD0wH
-         9kTg==
-X-Gm-Message-State: AOJu0YzoRc0Y7UvIBWDZgZPj2i/l6/1kWZfHdf3elrPrA+x52qQb0F9j
-	swLrA0ZpR+8a0kSYqeM5c1Q+NnR4L4YgLEfDjuBWPNpAeSMH8HHSm/sSgcbKdw==
-X-Gm-Gg: Acq92OE+dQP1VMd4FSYQHOsb2JZdtdpCnlWxdtCI04fjQazgLu3H+Cx+bwtYU6mVCi1
-	Nn995vKcguhN2CLRPilxpNBEKGYujt8b77HDqkkgvs9h+upGggBikQ2xS1DRByEUH5YcNDNkcXg
-	2W4+vh47sPoFWQ1W+48HFiLsbIrkcCnATtEOWtF68Ha+XLstisG7a7de1ezL9VPSUQ1My3bWYiQ
-	h2JGd/V1Hbu33w4yAv3eNEJatO/Lw8hgV1Re8oUmJqp7tqg/aeD7nWFLcYlXQMoxEItaw5b1Y1d
-	blO3AFA3ZBNtnK9aJu6bqWVVHNIFdXWXhuel1WWMPkx6G5sKzWOb4wzblT4E1rYXewnSwce/LpK
-	G9TMgtMSR6oe7ZvOSsnUflB6vtJTd1IJ4S/iSzel94au+OT7B+CHBwxH+3lwPjG2rrkljXgg+c+
-	llyF1OOZLQOl4nI8yG1CvN0ivDU0NiZUHreJrxTAYl97tGb3TQ7agA7OwQJYtrO3oBtKpx8KayH
-	yu2W1fqt/D46L6jrZw2I1iJShM6Dm0JFjdwUR3F6A9B2g==
-X-Received: by 2002:a17:902:c942:b0:2be:39bd:8dd8 with SMTP id d9443c01a7336-2bf36841438mr103458605ad.33.1780274172925;
-        Sun, 31 May 2026 17:36:12 -0700 (PDT)
+        bh=URm5CekzJYxc5s9juYhDgo8eAbfkbMZqryXqUOBN3KQ=;
+        b=l3oBrN6zyl0sbzUBsVzflm6UQzwq6EGKFIpFdz0okTRZdZRb3iQBzb6m7ZsN2iBaFO
+         qEsXySAEv9l7tO8ENtnqUWVzcsC3tTm15D6lU9LeaPt/bh3dTrsDL66OnLzUtihb95c/
+         gaEbjPUtOC4IK7UdltQYhHRr82HtCqd4zt8LZlkNg6/GuaJOP9hX2KDH4p1ZRM1L/rc6
+         noFO83ivT284b4JzHlMwiYRF3hdus2hnqfUSyU/K+YpSwRUtlKGW5o3rFYaRgwRk0D0N
+         9Ysz93Ggi1MBobKMR5oMNQW/F331D2fvp5B6rM4Bgw+kQEfvvY0xoQlJRs2VmAPsdFFp
+         Ca3A==
+X-Gm-Message-State: AOJu0YxPNDN1pkuAs9hdQR7OYbtYoODJ6IIihVpmeIsr4+NIj7eM/sXV
+	BzeN6z8QpJSBtSiwNOrZ7ipmgm0aIoFWmCRNbT4GWKs1qSfk2Wu1IzyRARmq2Q==
+X-Gm-Gg: Acq92OGqbZD0G8M6LZqNMMcUopI7kpYMomdXVkxWdHkPeqPX126I+7v/0+SBLVNpzoY
+	atTUxDvdtNeP4p7qYVYJIy6ocfNnfjeXAUlAEgqqtm4UAU+4+iY2PXzVTZwCgup12ubFpTlL1vN
+	WAHSdK23lLQMJ7COEVufAzVs1LWaSt5flrowNOqPvPWCWNv+XrJa5enAm0DXQuw4hY9m0hNdxwF
+	FOxv2UGKlCLVRA/aoLrF9hf5hIdjpvnt4FaYUpl/sPnsWdlCHTAHJsWUizST9xWORHHCXBjfnY+
+	X9umj5Hbb/a7X1KjqLrhlGx58s2LWciR/j6RWSIuAqsu3cyb1qoq2Sa2JBeDYtKGj8fwbMYkdVv
+	bhy/o4ymJ0In5EvVPY98bP9L3YPhB6YxZvpMtixI6Oe7+5JFo6twn4F6+NqDDwWeaaxVtekZ0c4
+	fBchQgd9KmbLqJWEnMnkdOXItvPNJ44denDJ0faX7sme9JKSuSxtldPnWGowe0ISOuHaEJRCyEj
+	bdSmBT53o+1KluW8HFA4RE/ZOjWbfD+xBIAjr6yLe6Hvg==
+X-Received: by 2002:a17:903:2acd:b0:2b2:4bbc:14b0 with SMTP id d9443c01a7336-2bf20533582mr107605305ad.20.1780274174045;
+        Sun, 31 May 2026 17:36:14 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bf23b011f7sm111929565ad.41.2026.05.31.17.36.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bf23b011f7sm111929565ad.41.2026.05.31.17.36.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 May 2026 17:36:12 -0700 (PDT)
+        Sun, 31 May 2026 17:36:13 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
 To: dmaengine@vger.kernel.org
 Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
@@ -83,9 +83,9 @@ Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
 	Frank Li <Frank.Li@kernel.org>,
 	Haotian Zhang <vulab@iscas.ac.cn>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/5] dmaengine: ti: omap-dma: fix notifier leak in remove
-Date: Sun, 31 May 2026 17:35:50 -0700
-Message-ID: <20260601003553.72573-3-rosenp@gmail.com>
+Subject: [PATCH v2 3/5] dmaengine: ti: omap-dma: fix dma_pool_destroy before omap_dma_free in error paths
+Date: Sun, 31 May 2026 17:35:51 -0700
+Message-ID: <20260601003553.72573-4-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260601003553.72573-1-rosenp@gmail.com>
 References: <20260601003553.72573-1-rosenp@gmail.com>
@@ -102,18 +102,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	FREEMAIL_CC(0.00)[gmail.com,kernel.org,iscas.ac.cn,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-11079-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11080-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
@@ -125,35 +125,96 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 8BD9F6187AC
+X-Rspamd-Queue-Id: 7FBB56187D1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The notifier may be registered for needs_busy_check (omap2420) rather than
-may_lose_context (omap3). The remove path only checks may_lose_context,
-leaving the notifier registered during driver removal. Check both flags.
+The probe error paths and remove path called omap_dma_free() after
+dma_pool_destroy(), leaving the desc_pool dangling while freeing
+channel descriptors that may reference it.  Reorder so omap_dma_free()
+comes first.
+
+While here, fix two additional pre-existing issues:
+
+- The probe error paths that run after the IRQ handler is registered
+  did not disable hardware interrupts before freeing channels.  If an
+  IRQ fires concurrently, the handler could access freed channel
+  memory via lch_map[].  Disable IRQENABLE_L1 and clear
+  irq_enable_mask under the spinlock, then readback the register to
+  flush the posted write, before calling omap_dma_free().
+
+- omap_dma_free() did not drain the virt-dma descriptor lists
+  (desc_allocated, desc_submitted, desc_issued, desc_completed) before
+  kfree() of the channel.  This leaked pending descriptors when the
+  error or remove path tore down channels without going through
+  omap_dma_free_chan_resources().  Call vchan_free_chan_resources()
+  before freeing the channel structure.
 
 Fixes: 2e1136acf8a8 ("dmaengine: omap-dma: fix dma_pool resource leak in error paths")
 Cc: stable@vger.kernel.org
 Assisted-by: Opencode:BigPickle
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/dma/ti/omap-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/ti/omap-dma.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 0f6dd6b0a301..839e04f53fc2 100644
+index 839e04f53fc2..dde270646bb9 100644
 --- a/drivers/dma/ti/omap-dma.c
 +++ b/drivers/dma/ti/omap-dma.c
-@@ -1853,7 +1853,7 @@ static void omap_dma_remove(struct platform_device *pdev)
- 	struct omap_dmadev *od = platform_get_drvdata(pdev);
- 	int irq;
+@@ -1522,6 +1522,7 @@ static void omap_dma_free(struct omap_dmadev *od)
  
--	if (od->cfg->may_lose_context)
-+	if (od->cfg->needs_busy_check || od->cfg->may_lose_context)
- 		cpu_pm_unregister_notifier(&od->nb);
+ 		list_del(&c->vc.chan.device_node);
+ 		tasklet_kill(&c->vc.task);
++		vchan_free_chan_resources(&c->vc);
+ 		kfree(c);
+ 	}
+ }
+@@ -1808,9 +1809,14 @@ static int omap_dma_probe(struct platform_device *pdev)
+ 	if (rc) {
+ 		pr_warn("OMAP-DMA: failed to register slave DMA engine device: %d\n",
+ 			rc);
++		spin_lock_irq(&od->irq_lock);
++		od->irq_enable_mask = 0;
++		omap_dma_glbl_write(od, IRQENABLE_L1, 0);
++		spin_unlock_irq(&od->irq_lock);
++		omap_dma_glbl_read(od, IRQENABLE_L1);
++		omap_dma_free(od);
+ 		if (od->ll123_supported)
+ 			dma_pool_destroy(od->desc_pool);
+-		omap_dma_free(od);
+ 		return rc;
+ 	}
  
- 	if (pdev->dev.of_node)
+@@ -1825,9 +1831,14 @@ static int omap_dma_probe(struct platform_device *pdev)
+ 		if (rc) {
+ 			pr_warn("OMAP-DMA: failed to register DMA controller\n");
+ 			dma_async_device_unregister(&od->ddev);
++			spin_lock_irq(&od->irq_lock);
++			od->irq_enable_mask = 0;
++			omap_dma_glbl_write(od, IRQENABLE_L1, 0);
++			spin_unlock_irq(&od->irq_lock);
++			omap_dma_glbl_read(od, IRQENABLE_L1);
++			omap_dma_free(od);
+ 			if (od->ll123_supported)
+ 				dma_pool_destroy(od->desc_pool);
+-			omap_dma_free(od);
+ 			return rc;
+ 		}
+ 	}
+@@ -1869,10 +1880,10 @@ static void omap_dma_remove(struct platform_device *pdev)
+ 		omap_dma_glbl_write(od, IRQENABLE_L0, 0);
+ 	}
+ 
++	omap_dma_free(od);
++
+ 	if (od->ll123_supported)
+ 		dma_pool_destroy(od->desc_pool);
+-
+-	omap_dma_free(od);
+ }
+ 
+ static const struct omap_dma_config omap2420_data = {
 -- 
 2.54.0
 

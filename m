@@ -1,133 +1,60 @@
-Return-Path: <dmaengine+bounces-11109-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11110-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2EgFEX7qHWp0fwkAu9opvQ
-	(envelope-from <dmaengine+bounces-11109-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 22:24:30 +0200
+	id qOPuLx37HWpSgQkAu9opvQ
+	(envelope-from <dmaengine+bounces-11110-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 23:35:25 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B586625093
-	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 22:24:28 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 828E1625919
+	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 23:35:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 6D4CE3004428
-	for <lists+dmaengine@lfdr.de>; Mon,  1 Jun 2026 20:24:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4D064304971A
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Jun 2026 21:35:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE59E37BE83;
-	Mon,  1 Jun 2026 20:24:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE6D73672BA;
+	Mon,  1 Jun 2026 21:35:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JD/rgItE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z9dejrFP"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEA337E30F;
-	Mon,  1 Jun 2026 20:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E80A3438BF;
+	Mon,  1 Jun 2026 21:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780345463; cv=none; b=JO064iHtiRGhJk9CJ4YVy46rjntTacS25eTJ07t9K8lFea9Zul7ipvEaYd3kc1mNZSou95kS2n6JrECnIp28EFG7gy1OylAKMmcpcmQzmnWe+A/l/mD8j212K/AFIp6LcF6k6loDmeBIe6J7XfrRI0sbkZzG19SSZ/YrW3BvIQk=
+	t=1780349721; cv=none; b=rcAiJ04zaRPwai7CyIAejQgv/RjvFfrMk17M0naOtCawKg85wGqL+kwwLhqBO89D1ypRHYw3MIsCHqSDWMG/+mqsWMWdp2PWPbL1PFQh52Vm2eXb0i+R85NuF33bcTa2HJPgIywfr7qcVUlQpHT9WHLsCVUuYaRpCQi4oInssCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780345463; c=relaxed/simple;
-	bh=l3dLCfo8STCCjPr/FqdtQ/3GS1wUw1HahkL+2RftIZg=;
+	s=arc-20240116; t=1780349721; c=relaxed/simple;
+	bh=JX3a56ROqRUJYWv7JLOrWtKCiHHjyk6kNHGwYD50qlY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UKPrEQh6Hps01Kb1Y3KPK/oWFn31YcWM9+QDtgSb9mSjBJ1PNpVBSf7I/+diJFqLeJ8hN4t9rehpbW+p8R3slESZqltvauOcgj3SYTlPnXHJSnqjStNlCx+FNG7vVkVdnBSYlDCvy9QStDile0PiVm+V09+876wSH+sMVXiveYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JD/rgItE; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6/5W0G6Gs1Q9GB3IxcldPERQvThA7tz7U249bqa4a9U=; b=JD/rgItEItTF3waKZU0fyhZfOO
-	p6KhOF2dIKsWbBlXDH6Szda6v6pwxYE0KSLQ6p9Jvu4aC0kMd1Jp91bHbXXGW1JY4kLAuzDZFSXs9
-	P7bQk5/xrqJRa6GrGWdxnMhnM9cOr/Mh7DhOreUlDgBnF2TcRdtGfQbRd9WsBVDwHFqfKKNmW2p+o
-	Eq81r5ZCto6v0j62Ti/4LX0nmYsBAqhcbZ6JenvK3VL8pcuJJabuzAf2wJL1ohACsCSDs/sp5+nbD
-	m2tuZulS6JhmLQAZ2oWemvoJrOfuaHp1Sctzmp2YTWfFeramTBO8sylg/IQVtL1hc2i3NQH4Kt9qQ
-	+ovW+CfA==;
-Received: from willy by casper.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wU9Av-00000000iHG-2DOC;
-	Mon, 01 Jun 2026 20:23:53 +0000
-Date: Mon, 1 Jun 2026 21:23:53 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
-	Pengpeng Hou <pengpeng@iscas.ac.cn>, stable@vger.kernel.org,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Corey Minyard <corey@minyard.net>,
-	Gabriel Somlo <somlo@cmu.edu>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Hannes Reinecke <hare@suse.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>,
-	Tiwei Bie <tiwei.btw@antgroup.com>,
-	Benjamin Berg <benjamin.berg@intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>, Daniel Gomez <da.gomez@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	John Johansen <john.johansen@canonical.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Georgia Garcia <georgia.garcia@canonical.com>, kvm@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-modules@vger.kernel.org,
-	kasan-dev@googlegroups.com, linux-mm@kvack.org,
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-	linux-um@lists.infradead.org, linux-acpi@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net, qemu-devel@nongnu.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-	usb-storage@lists.one-eyed-alien.net,
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, netdev@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 01/11] params: bound array element output to the caller's
- page buffer
-Message-ID: <ah3qWZ4cqhrbHZcl@casper.infradead.org>
-References: <20260521133315.work.845-kees@kernel.org>
- <20260521133326.2465264-1-kees@kernel.org>
- <20260521174631.71a06440@pumpkin>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rPOh9KlxsIPmHB9Hh4mAuL1PvCmhOeHraS4HetMgi4Zt1V/lv3cAtkgGJLpZ57J6Enig3m+ETlH39o6se+s+hdjSWqxWeWzfA0vFKS2glmVuzkah4X94IijBpsIZOY4yboeBpz+ET/Wf12WucmEUkM79OUNsIX6lC6g0/aXeAe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z9dejrFP; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BC201F00893;
+	Mon,  1 Jun 2026 21:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780349720;
+	bh=+xqhpciIcKX86EWtkX3wT2FdsVnifRlQ0F7pq6tZMiQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Z9dejrFPuPoHWEQu5J2ko0Bd57NtHTtxh7XkdxgglKT0olwbazk0EO95ebcLPiAbq
+	 ydau/rHrvi3Il01J5S1F1hIIx4JknI89rn3dcE7g28QdiRtnZB7WcJyGWKNgu9iQWn
+	 kZlsNhcV7iakiP896Cmu/5WTL6h06fNWAQLtgZNebkSUDo38jyvCb3Qm7OeCz4JzK9
+	 UN244FgYdszXzPwKivqUiFIravi8yfzYlAdw7gu1c5S87c1DaEbseDASdfe1Ea5Rmq
+	 Txpcb+gFOqmKDqDblvmG85NdGtpcyzIrlwrdrDVm/7+4ruyE3Bdl0sFPzuwFPKHZU2
+	 Ut3CmaLmjvoxw==
+Date: Mon, 1 Jun 2026 16:35:19 -0500
+From: Rob Herring <robh@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: CL Wang <cl634@andestech.com>, vkoul@kernel.org, conor+dt@kernel.org,
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+	Frank.Li@kernel.org
+Subject: Re: [PATCH v4 1/3] dt-bindings: dmaengine: Add support for
+ ATCDMAC300 DMA engine
+Message-ID: <20260601213519.GA28688-robh@kernel.org>
+References: <20260601094846.1097678-2-cl634@andestech.com>
+ <20260601095846.3B2431F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -136,51 +63,83 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260521174631.71a06440@pumpkin>
-X-Spamd-Result: default: False [-0.66 / 15.00];
+In-Reply-To: <20260601095846.3B2431F00893@smtp.kernel.org>
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11109-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11110-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[kernel.org,iscas.ac.cn,vger.kernel.org,suse.com,nod.at,cambridgegreys.com,sipsolutions.net,minyard.net,cmu.edu,redhat.com,linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,acm.org,ziepe.ca,ideasonboard.com,google.com,suse.de,hansenpartnership.com,oracle.com,arm.com,linuxfoundation.org,rowland.harvard.edu,linux.alibaba.com,akamai.com,antgroup.com,orcam.me.uk,infradead.org,linux.ibm.com,alien8.de,zytor.com,atomlin.com,linux-foundation.org,canonical.com,paul-moore.com,namei.org,hallyn.com,googlegroups.com,kvack.org,lists.ubuntu.com,lists.infradead.org,lists.sourceforge.net,nongnu.org,lists.freedesktop.org,lists.ozlabs.org,lists.one-eyed-alien.net,lists.linux.dev];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[101];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[willy@infradead.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[dmaengine];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,infradead.org:dkim,casper.infradead.org:mid]
-X-Rspamd-Queue-Id: 6B586625093
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[andestech.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 828E1625919
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, May 21, 2026 at 05:46:31PM +0100, David Laight wrote:
-> On Thu, 21 May 2026 06:33:14 -0700
-> Kees Cook <kees@kernel.org> wrote:
-> > Collect each element into a temporary PAGE_SIZE buffer first and then
-> > copy only the remaining space into the caller's page buffer.
+On Mon, Jun 01, 2026 at 09:58:45AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Low] The Device Tree schema uses `additionalProperties: false` alongside an `allOf: [ { $ref: dma-controller.yaml# } ]` inclusion, which violates DT schema guidelines and prevents the use of standard generic DMA properties.
+> --
 > 
-> Should this be using a 4k buffer on all architectures?
-> Initially perhaps just using a different name for the constant until
-> all the associated PAGE_SIZE limits have been removed.
+> commit 65ee89a1dfc4e52aa6a4083163369bef3de2c374
+> Author: CL Wang <cl634@andestech.com>
+> 
+> dt-bindings: dmaengine: Add support for ATCDMAC300 DMA engine
+> 
+> This commit documents the devicetree bindings for the Andes ATCDMAC300
+> DMA engine. The IP is embedded in AndesCore-based platforms or SoCs
+> such as AE350 and Qilai.
+> 
+> > diff --git a/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml b/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
+> > new file mode 100644
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
+> [ ... ]
+> > +allOf:
+> > +  - $ref: dma-controller.yaml#
+> > +
+> > +properties:
+> [ ... ]
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - "#dma-cells"
+> > +
+> > +additionalProperties: false
+> 
+> [Severity: Low]
+> Does this cause a regression during schema validation when standard DMA
+> properties are used?
+> 
+> Since this binding references dma-controller.yaml# via an allOf block, using
+> additionalProperties: false will reject generic properties like dma-channels
+> or dma-requests if they are present in the device tree node. 
+> 
+> Should this be unevaluatedProperties: false instead to properly allow the
+> inherited properties?
 
-If we're acually going to think about this, even 4KiB is too big.
-An 80x25 terminal is 2000 bytes (assuming no utf8), so 4KiB is two
-entire screenfuls.  Limiting to 2048 would seem reasonable to me.
+No, it is fine as-is.
+
+Rob
 

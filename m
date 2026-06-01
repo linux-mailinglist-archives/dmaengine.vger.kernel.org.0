@@ -1,172 +1,182 @@
-Return-Path: <dmaengine+bounces-11106-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11107-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UHs/NseiHWrmcgkAu9opvQ
-	(envelope-from <dmaengine+bounces-11106-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 17:18:31 +0200
+	id iHlQG2TWHWptfQkAu9opvQ
+	(envelope-from <dmaengine+bounces-11107-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 20:58:44 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87D9B6217FB
-	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 17:18:30 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12E4962458C
+	for <lists+dmaengine@lfdr.de>; Mon, 01 Jun 2026 20:58:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4EAC83049703
-	for <lists+dmaengine@lfdr.de>; Mon,  1 Jun 2026 15:13:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D61AB3006941
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Jun 2026 18:45:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9935F3DA5B6;
-	Mon,  1 Jun 2026 15:12:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F094782899;
+	Mon,  1 Jun 2026 18:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dm7JAemL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X5ptUMw1"
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0273D9028;
-	Mon,  1 Jun 2026 15:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80540356754;
+	Mon,  1 Jun 2026 18:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780326739; cv=none; b=GV2g6TqsoJ9KwSW8Oaf1NbbJYmVqesyG4v41Wtj364Pr5r7jCdU6nnwgG/B7f5wNNJ6YokpaBgTyfmmoAf1cIcRUyFnOb3Pi9gg0qKVi3YxpEjMw1lpUbihjZgWef+LW7sGy9KM41gNsQFq1l8Lu58wcBPg+f9lA1rni/P7tG7w=
+	t=1780339531; cv=none; b=RIFGfqVXlNROo8OFU0q9slsXnaciC9PwzhEtmmNpukp9v1q4SaTDkdCQ3qP0nIlRLWnaNC3MHat0MMbX5pzd0TWVZP9icLXp8/UnDWmXn12KEldNeuTvxn7TPgd6QyvlD6E9iqD4yfCv//lLmGEphkHYGP0gDlar8/0kQaBbswQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780326739; c=relaxed/simple;
-	bh=2saUA1jn4UBCFlo11E7lmGLbC/fnZCl5La8sqtYuxaE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=MIMvvuoB7/uh3r0Vrp+E3ZIOLA6Vg7XxbfhyX4wBpjYkXc+N4kDviblfRB9Xx8G9mZlXSsrqSEEbgEf9RVuLRrG5fcZZzaNdcSBojhcuNhvSxOhpzvzZ3+aFJ0A41Aq+R+dizpzE1qKclxH1fAn2MkGoWJWsr0oFFKm7gvVZhjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dm7JAemL; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1780339531; c=relaxed/simple;
+	bh=BmmM3CBFTQZCQU+w4853+LDZeg7z0nEO7q87wn69SUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MpU73Hdz5m9aHWsXTYhXAjdIa9mViXpFefMf7gvNy4Xavsxr7BXT3SVZTTFoB74ERrbXjehkaiC5Lq5yQ0gDAQ0IhpgI7w1hu7yOBBlpTMQT+FijLQXVmIPeQsmcN0R5MeeFoXX0N3HVosOXlRZpnXPCa5DWpP3CK1SwPTpYYHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X5ptUMw1; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780326734; x=1811862734;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=2saUA1jn4UBCFlo11E7lmGLbC/fnZCl5La8sqtYuxaE=;
-  b=Dm7JAemLztpBPySFuo5Fs3XLYkh/JDCOS1K6UvrS8mMwHCCWjI+av6ki
-   rRsdhn2no4tNQY+WeGsyx1jcsL30iiJ1GN0+6fkSdF7vJBJQOSvH0hPFa
-   u627SgCFimaq/C9iK2Cqof6vkNNyIXDYdPqyeNyHMbo5Hyr5hI6QdGNV8
-   RchSgbvMhE7RhFvudmbNC6RuGsIpgMdYSjpt8V574ZaQgq8rkOaUiA4ef
-   7TxB1fkBRKOJdfmX3qB4scIsSmbCOtCox5Z7urzDZSslbmPkOgoiUuhOw
-   1Urgi7hMjxkZ1LRbhqebYPKSx7i789Nv6l05f8km74AtPJyzfSY43Qj5L
-   g==;
-X-CSE-ConnectionGUID: kZVG8tcaTdmM0SPvrawr4g==
-X-CSE-MsgGUID: Ql+WUjBeR7SzURZa8p6k7g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="68621200"
+  t=1780339528; x=1811875528;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=BmmM3CBFTQZCQU+w4853+LDZeg7z0nEO7q87wn69SUM=;
+  b=X5ptUMw1c+ivlxAAdBiyOSsa/go2f07/k46GZMNZ5Ehi6KsPLvv//cwf
+   uPP2VukrxotiXnX9FIZHZ5ZJDLBPX0unPXRyr8jMuqoWKJ0twzZaTHuFd
+   NB84a9iKmG1htNuUv0AF5bNTJE1oyWspXnnYWGZOeuCZHqP3B4bvwQKxO
+   qFnxlzwqOU7HPJDLwmvd1rl1Xx9HTwT6+v/uFujunCyRlmTVAGzSuc/p6
+   szsHcFQyWKMCqiGCOw5sktJbd3y1UsqAdmFzf//jiMTJBI3ulFV5ycfRB
+   vai3gfQnKClfMeMvsaJDuUKOHz9AT9JesRVnrWpsDXYXKsWsw5oe7KY98
+   A==;
+X-CSE-ConnectionGUID: YO8rKSvcSmiO0wBMTofpAg==
+X-CSE-MsgGUID: bPcf+nYoSpO74l9U5kA8tg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="81291917"
 X-IronPort-AV: E=Sophos;i="6.24,181,1774335600"; 
-   d="scan'208";a="68621200"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 08:12:13 -0700
-X-CSE-ConnectionGUID: E4oYExVPQA6ZQMObcnhcOA==
-X-CSE-MsgGUID: tU6dUduTQtOd135+CW50EA==
+   d="scan'208";a="81291917"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 11:45:26 -0700
+X-CSE-ConnectionGUID: NmWlB6JjTFi2MkYO7+qV0g==
+X-CSE-MsgGUID: Wq1Y0qG8Ssmkmo/xuEvNew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,181,1774335600"; 
-   d="scan'208";a="242549205"
-Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.125.111.248]) ([10.125.111.248])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 08:12:12 -0700
-Message-ID: <ab53cd17-894b-471c-959d-52cfdafb0d22@intel.com>
-Date: Mon, 1 Jun 2026 08:12:11 -0700
+   d="scan'208";a="273937250"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.111])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 11:45:14 -0700
+Date: Mon, 1 Jun 2026 21:45:11 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Simon Schuster <schuster.simon@siemens-energy.com>,
+	Ethan Nelson-Moore <enelsonmoore@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@kernel.org>,
+	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
+	workflows@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-iio@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+	linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Alex Shi <alexs@kernel.org>,
+	Yanteng Si <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>,
+	Hu Haowen <2023002089@link.tyut.edu.cn>,
+	Kees Cook <kees@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nicholas Piggin <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>, Dave Penkler <dpenkler@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof WilczyDski <kwilczynski@kernel.org>,
+	Andreas Oetken <andreas.oetken@siemens-energy.com>
+Subject: Re: [PATCH] nios2: remove the architecture
+Message-ID: <ah3TN93e7lRpVihW@ashevche-desk.local>
+References: <20260518042833.272221-1-enelsonmoore@gmail.com>
+ <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
+ <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
+ <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
+ <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
+ <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
+ <CANiq72=6oYtHf0Q1NaLXZ+25uQyYbej2xnvUhtgpHyvozhP7_Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: ioatdma: use !kstrtoint(), not sscanf()!=-1
-To: "Alexander A. Klimov" <grandmaster@al2klimov.de>,
- Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Ujjal Singh <ujjal.singh@intel.com>,
- "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM"
- <dmaengine@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20260526061321.6123-1-grandmaster@al2klimov.de>
- <20260526061321.6123-3-grandmaster@al2klimov.de>
- <9461e4b3-d42b-4550-a931-19532588bdbc@intel.com>
- <48fac400-4813-4b14-986d-8392c7faf936@al2klimov.de>
- <da523982-576f-4bf8-95b6-79cecf683f55@intel.com>
- <ef38b0e8-2b6f-4f65-bac5-177b981479ae@al2klimov.de>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <ef38b0e8-2b6f-4f65-bac5-177b981479ae@al2klimov.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+In-Reply-To: <CANiq72=6oYtHf0Q1NaLXZ+25uQyYbej2xnvUhtgpHyvozhP7_Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	SUBJECT_HAS_EXCLAIM(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11106-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_ALL(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11107-lists,dmaengine=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[siemens-energy.com,gmail.com,sang-engineering.com,infradead.org,arndb.de,kernel.org,vger.kernel.org,lwn.net,linuxfoundation.org,linux.dev,hust.edu.cn,link.tyut.edu.cn,redhat.com,linux-foundation.org,baylibre.com,analog.com,lunn.ch,davemloft.net,google.com];
 	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dave.jiang@intel.com,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCPT_COUNT_GT_50(0.00)[53];
+	TAGGED_RCPT(0.00)[dmaengine,renesas,dt,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,al2klimov.de:email,intel.com:mid,intel.com:dkim]
-X-Rspamd-Queue-Id: 87D9B6217FB
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,ashevche-desk.local:mid,intel.com:dkim,siemens-energy.com:email]
+X-Rspamd-Queue-Id: 12E4962458C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-
-
-On 5/31/26 1:56 AM, Alexander A. Klimov wrote:
+On Tue, May 19, 2026 at 01:07:46PM +0200, Miguel Ojeda wrote:
+> On Tue, May 19, 2026 at 12:41 PM Simon Schuster
+> <schuster.simon@siemens-energy.com> wrote:
+> >
+> > Sure, I'd be glad to do so, but so far I refrained from it as I was a bit
+> > unsure about the netiquette (can I simply do so by self-proclamation? At
+> > least the git history seems to suggest so...).
 > 
+> Up to the existing maintainer, in general.
 > 
-> On 5/28/26 22:06, Dave Jiang wrote:
->>
->>
->> On 5/26/26 11:06 AM, Alexander A. Klimov wrote:
->>>
->>>
->>> On 5/26/26 16:49, Dave Jiang wrote:
->>>>
->>>>
->>>> On 5/25/26 11:13 PM, Alexander A. Klimov wrote:
->>>>> Depending on the user input, sscanf() may return 0 for 0 success.
->>>>> But intr_coalesce_store() wants sscanf() to parse one number,
->>>>> so expect 1 from sscanf(), not any int except -1.
->>>>>
->>>>> While on it, fix typo in %du by using just %d,
->>>>> as this interface expects %d or %d\n.
->>>>> Latter made scripts/checkpatch.pl complain,
->>>>> so use kstrtoint() instead of sscanf().
->>>>>
->>>>> Fixes: 268e2519f5b7 ("dmaengine: ioatdma: Add intr_coalesce sysfs entry")
->>>>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->>>>> ---
->>>>>    drivers/dma/ioat/sysfs.c | 2 +-
->>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/dma/ioat/sysfs.c b/drivers/dma/ioat/sysfs.c
->>>>> index e796ddb5383f..f59df569956a 100644
->>>>> --- a/drivers/dma/ioat/sysfs.c
->>>>> +++ b/drivers/dma/ioat/sysfs.c
->>>>> @@ -144,7 +144,7 @@ size_t count)
->>>>>        int intr_coalesce = 0;
->>>>>        struct ioatdma_chan *ioat_chan = to_ioat_chan(c);
->>>>>    -    if (sscanf(page, "%du", &intr_coalesce) != -1) {
->>>>> +    if (!kstrtoint(page, 10, &intr_coalesce)) {
->>>>
->>>> looks good. We can probably use kstrtouint() since we are expecting a positive number always.
->>>
->>> This would break `return -EINVAL;` below
->>
->> Shouldn't we just drop the < 0 compare since it's no longer needed?
-> 
-> Wouldn't that change behavior shown to userspace from return -EINVAL
-> on negative int input to return count?
+> I would also suggest changing the support level to "Supported",
+> instead of "Maintained" -- that would help justify keeping it in
+> mainline.
 
-No a negative value would trigger parsing error and return -EINVAL. Same behavior for user.
+Supported implies that one gets real money for the job. Is this the case here?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 

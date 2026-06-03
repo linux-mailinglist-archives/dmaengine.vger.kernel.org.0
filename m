@@ -1,178 +1,167 @@
-Return-Path: <dmaengine+bounces-11126-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11127-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id a449OigHH2qtdgAAu9opvQ
-	(envelope-from <dmaengine+bounces-11126-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 02 Jun 2026 18:39:04 +0200
+	id comaAdqaH2rYngAAu9opvQ
+	(envelope-from <dmaengine+bounces-11127-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 03 Jun 2026 05:09:14 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 865C5630462
-	for <lists+dmaengine@lfdr.de>; Tue, 02 Jun 2026 18:39:04 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 519ED633C64
+	for <lists+dmaengine@lfdr.de>; Wed, 03 Jun 2026 05:09:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=linaro.org header.s=google header.b=Dhp1RuoM;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11126-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11126-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=linaro.org;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=ApqJlwAB;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11127-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11127-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DA4733006124
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Jun 2026 16:38:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2EAE3303280B
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Jun 2026 03:08:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADE6D371048;
-	Tue,  2 Jun 2026 16:38:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83A743D811E;
+	Wed,  3 Jun 2026 03:08:14 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B5936F917
-	for <dmaengine@vger.kernel.org>; Tue,  2 Jun 2026 16:38:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628D53074A1
+	for <dmaengine@vger.kernel.org>; Wed,  3 Jun 2026 03:08:13 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780418320; cv=none; b=quXvJ/hnRPkUuINpB3yDLKUVoAUK4FI+gPUVWSsYThdynjCent6IFp6vkaVa4AQJN6WSeg3606viA109bFaUuW5RLW1V6Mq+UCplnHU/rJ91x1B+BA2BmJCm+ahOd2iX7w0GT/ZcVIet2rIgq6bX7dSCur8DUNv63YHKbbSECPs=
+	t=1780456094; cv=none; b=uAwJsUx4Zs+0sumPYbdzUq5vTENhhRFtvt8ti8BNy35av9poQvf0xePNqr5SdwJ+UKNeIANCZRJSk4b+4PqxaV/ly7jRrykF19r2y5QS6cBfxDYPGMjz1wmbJ9W51LVWlIPEW3oJyGeuzhKB8wGqA8vuQ5LN5Sk+z8Gfv/NNgAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780418320; c=relaxed/simple;
-	bh=SqqoX5qQzGE5eNHSgLyrNrWlqXnwPa/uOKYx/N6zAZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=deeaQWooMoyifU6zYFnBoaZgTuxuBbk9quFSXuyRJPJrbxCnzvYOkjUgOMhh9bAtU0GNERsC1iseBjqaxUqjVM8E5VqiHUi6Eh9dvgSaLRYzfau75oG05RZRL0SbtDG7+OYWjFjvXosjS76uLO3N8MyGZnX+C+OxR4P28ptWXgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Dhp1RuoM; arc=none smtp.client-ip=209.85.128.52
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-490b12270b3so7674135e9.1
-        for <dmaengine@vger.kernel.org>; Tue, 02 Jun 2026 09:38:39 -0700 (PDT)
+	s=arc-20240116; t=1780456094; c=relaxed/simple;
+	bh=DS2KjsxpIBAcucsz1q8RcEDoe7sdgP1JDn5kIURjHks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SuwilqdOGJSFZ2s8BRJm9PtY8njI9HlfgFcfkpjX0/fDIfbFIq/JsVqBgFzhcAT2HK2hR4hkI7hbJ/AJxODw5zfUqQfoZIYO2xfxDrSSr2kkrWr2Pz4JfLB3FTf1Dw9P+WcBrejFN/4+mh+ULTWpuYujkxoZSVZdHEtXoJjt1kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ApqJlwAB; arc=none smtp.client-ip=209.85.216.41
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-36b9b15af73so5618949a91.0
+        for <dmaengine@vger.kernel.org>; Tue, 02 Jun 2026 20:08:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780418318; x=1781023118; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SqqoX5qQzGE5eNHSgLyrNrWlqXnwPa/uOKYx/N6zAZQ=;
-        b=Dhp1RuoMIgkOz1tIgivCGlzcEfCM/F0TwNwrOlD30SOrPUP9X0pk1jKf45MVZXD2qB
-         Y0U2Vh/tibUVKER8x1Wo8FLqPs+VhIPGR222R58rC2yCrEfGdyQvYBOE+pEfchOdbhkt
-         pU0giNtPmGEguen+ViRMghJUGwIMgKi17GuJksCNJtyfUNChDz/NmidxQjstu3eUEQOs
-         xrFrShXa3Na1mri/KdchGz82zqQrrsxTxWshTVVGcANc39kYo8SSegNQ/J3H84x6x7S4
-         aphwriiQvgNf31lUKqNreRJvIPavKKUfsDPrxRkdD/3WnNff4c7FXxWQCPyX6HXerUQT
-         PGuQ==
+        d=gmail.com; s=20251104; t=1780456092; x=1781060892; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SzR8b8HqOe9R9dNLngX1HGRIqKkTWTema1bE7iFLv2U=;
+        b=ApqJlwABKJyNWYT9Dmkz//cBZUyDVMfSOwZlkm4T12JL5yZGbSjriHpKvzTyzZlrv5
+         0wkNu5lEpvJOVCyolsoyC2p337YoooFzD/BXhnROQHuKYilFZMltr4KP3vpfrXzc9YXq
+         mVkZmFPk41YARpMw3cwSJF6NcJXWSjJlPFZXIeuUErkDskESZJjk3DhJ2g2ZTlyRTUFg
+         v2MyHyt0KO13CTm/Namo2zNAT/h99OSzQdZV6kKgSiPPMR287kVyQWsucyS43JK8mwDE
+         axcpYNf15I9lXV/f3lPJoniD9+cSk2lunWF2sjpPoJtiH1vq15/SK/00McrG9Pj19rB5
+         uBCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780418318; x=1781023118;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SqqoX5qQzGE5eNHSgLyrNrWlqXnwPa/uOKYx/N6zAZQ=;
-        b=JrsR68qsINsvXDUiCRuSY5S16R/irAGyRC9nng4KH2WSwj9enhyjKX5t22HcPZgHPE
-         4RuVKGJKI/XZPxZ3YVGagJFleHmBZPgtERqCJRGV/BVXz3Ky2EXhBTbkX9X3O4Somi6s
-         3Zt6Fe290jwoAGcBgki2kZUsrLhVRdTpQT9L/eJrVhp+NG201ll3XTRlDjzUYnI9wCP8
-         Hdu5e1zoZEbPnsQvxwI6zIgd7hHYB89Vwm7936MSewwpx4ycOXydrNc0q42eYENaj+nf
-         YZf9VXkmZD96lhLis8VOIHNqcit5vb5+mv5Kqhl/XTIsvvWIW/+HAeFF2m+lD95vUZJ5
-         eBWw==
-X-Forwarded-Encrypted: i=1; AFNElJ/XjjCHcA5mGss2F/cT4D3ktF1kxc33/9V6k8tfu6zVf1YcuAXMm2MMNmucDIAATTqxNZZjFIXTdgk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFXIFNeXfG68AuWNolnUkoot1WCtlLtEbTkk/5K2HfhtQq9ELs
-	wASGM7d6tLu4vKki01noNnfGRcrQX2Ne9N46m0hwFC/Xi2v8e9BZAX7IstixuLL6Fts6rM6WTnm
-	RZw526yE=
-X-Gm-Gg: Acq92OET/YMmn5UFuGLGQG2etl9TsOPSfcjK19OlzdSSayYD0t3KWncDolHVniMw4R4
-	dSFZtt9YEZgKHc4CvUi5UYU3P1Hd8nA4GXZlsp6Sr8dTwuvQhW1r2q6nhEre6BQk6WHYVbvEvkh
-	VukPegKq1eE83B0YaimYlDyWG3Bmn8pcfSBRUy5u+5aLnP5lhVZxMgr0lVmOkfI6hdECC5dhdCv
-	HPaFPZykmLfcDUDjiivgu3KmSlGOE7qaIyIV+gXIkViabm1vDOuMcgL5gApgn+ScPVZ2gZ19LIm
-	TxZIljwgnoO9ZYXkgj4I1UMz2sdV59qaCd2r1W5YAbEEwBSDqxoUBIkY83VGFjJt4aVRGYpW51W
-	svEWRJzGDGY8Lpmrhe/whoiMIdgUAjJiO50qDefZrAx32nex1FGqtWqFdc3kcqTzyfy7FcVmd13
-	9bwjb1H5LunAL0yXuQqDXbEmncNwAFmVV2fsDqaY7sthjw1w==
-X-Received: by 2002:a05:600c:608e:b0:48f:d1c0:5cd3 with SMTP id 5b1f17b1804b1-490b5065ee5mr8757815e9.13.1780418317804;
-        Tue, 02 Jun 2026 09:38:37 -0700 (PDT)
-Received: from linaro.org ([2a02:2454:ff23:4410:9db1:6daa:c0a7:d3cf])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2e4b18sm407269f8f.10.2026.06.02.09.38.36
+        d=1e100.net; s=20251104; t=1780456092; x=1781060892;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SzR8b8HqOe9R9dNLngX1HGRIqKkTWTema1bE7iFLv2U=;
+        b=sgl0/7CevGmJw7yw1VEJJr3CVmOqf+0rlk7JeGbRUpVg5WrasGGHsT3T8Arqokl5ut
+         isdVFLoozkw2KWds5KC/ooV8WkbxkarVSEMSE4yAnQxLQwckUcKo/F0bNGY2/ep3RgWZ
+         1NZ4LCV9VoXoGsMrKhScOWIhvgHChCyyv45M397IsBO33EIUXTRQ/ADXjp35GF/CkMxf
+         noAMiTY23GuCLtd6W60m6p55UKAoo0sa57QoulYtSEx8xGNiOfgS8eDKwgz/VSlMOWKZ
+         fwWRPsh1z6D3h0ViTXNxJ+87yiq0tvF6VK+7llCK8v6iov3ne2CFxGcAd5Bo6sbwX4cZ
+         dNDw==
+X-Gm-Message-State: AOJu0YybRQFeiGC67zuy4ao/NhgfWV0S/kFPrWrX4uopugLty8VcsXXK
+	1vdfxf64wqhmUoVebmvqzSuakgCFd5bevLZdo2TjZ/22NXADUGEKw3jcszAQbMsI
+X-Gm-Gg: Acq92OFrcNR6k94mWtSvaMO6LC+mo0QhlbnvUwSOnJq4x2/jwmebdO1mXLswZtLz58G
+	zt62jYb5OEfs9BWZ5unjkfHC68y8xYTjSO+QczqzBJi+zLLeW/aqRQq8y+cVSVZTgCqONjf+xCY
+	t7ZryPe6Qo5cuXeMpWavAoM3eCsD19lTu6EyME7PIP9UEK9c3ev7UloioZt+tsBo2bOTdN7vJ0N
+	fKLmogXEfKt7MyKkZT1IPVki/CeuvkQTPdt/x4igOtYlLZAUOOJpaMSr9JtToMG68hnKBAPJZJK
+	LkKiuoQc0JpUp7rQ+NGLJ9i57Xq2UJSp6BYxRI+66AYi7zZqqJ/qiSigWn0iLv9w3mVskjfciHZ
+	9Le6t0isRL6xzOUV4Bcwn2Lb75k4GiNv7IrmJ0FK0cJZM6E3cWcALycdvj5pil4tD7+AAG8EfE7
+	MBGNwFrOw0ADhIV98eQNtf33Ea5dI4AAcR5srcTaRjqH8ScJndcy0u0kR/a64suXW2hJ41k2ysh
+	pkTQAy8JIWKdbyf4m2lwKDtrdh6q37HqbM7clPLYOffzQ==
+X-Received: by 2002:a17:90b:3f90:b0:36b:71e6:3de8 with SMTP id 98e67ed59e1d1-36e34770907mr1461244a91.24.1780456092659;
+        Tue, 02 Jun 2026 20:08:12 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36e0a186741sm1247102a91.8.2026.06.02.20.08.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 09:38:37 -0700 (PDT)
-Date: Tue, 2 Jun 2026 18:38:21 +0200
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Thara Gopinath <thara.gopinath@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Udit Tiwari <quic_utiwari@quicinc.com>,
-	Md Sadre Alam <mdalam@qti.qualcomm.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Michal Simek <michal.simek@amd.com>, Frank Li <Frank.Li@kernel.org>,
-	Andy Gross <agross@codeaurora.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	dmaengine@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	brgl@kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v19 00/14] crypto/dmaengine: qce: introduce BAM locking
- and use DMA for register I/O
-Message-ID: <ah8G_ajPS1KhgPP_@linaro.org>
-References: <20260526-qcom-qce-cmd-descr-v19-0-08472fdcbf4a@oss.qualcomm.com>
+        Tue, 02 Jun 2026 20:08:11 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: dmaengine@vger.kernel.org
+Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Haotian Zhang <vulab@iscas.ac.cn>,
+	Tony Lindgren <tony@atomide.com>,
+	Russell King <rmk+kernel@arm.linux.org.uk>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be|_ptr)?\b)
+Subject: [PATCH v3 0/8] dmaengine: ti: omap-dma: probe/remove bug fixes and cleanup
+Date: Tue,  2 Jun 2026 20:07:46 -0700
+Message-ID: <20260603030754.288757-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260526-qcom-qce-cmd-descr-v19-0-08472fdcbf4a@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
-	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,lwn.net,gmail.com,gondor.apana.org.au,davemloft.net,quicinc.com,qti.qualcomm.com,amd.com,codeaurora.org,linaro.org,vger.kernel.org,lists.infradead.org,oss.qualcomm.com];
-	TAGGED_FROM(0.00)[bounces-11126-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:vkoul@kernel.org,m:corbet@lwn.net,m:thara.gopinath@gmail.com,m:herbert@gondor.apana.org.au,m:davem@davemloft.net,m:quic_utiwari@quicinc.com,m:mdalam@qti.qualcomm.com,m:lumag@kernel.org,m:mani@kernel.org,m:andersson@kernel.org,m:peter.ujfalusi@gmail.com,m:michal.simek@amd.com,m:Frank.Li@kernel.org,m:agross@codeaurora.org,m:neil.armstrong@linaro.org,m:dmaengine@vger.kernel.org,m:linux-doc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-msm@vger.kernel.org,m:linux-crypto@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:brgl@kernel.org,m:bartosz.golaszewski@linaro.org,m:dmitry.baryshkov@oss.qualcomm.com,m:konrad.dybcio@oss.qualcomm.com,m:tharagopinath@gmail.com,m:peterujfalusi@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	FORGED_SENDER(0.00)[stephan.gerhold@linaro.org,dmaengine@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[linaro.org:+];
-	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,iscas.ac.cn,atomide.com,arm.linux.org.uk,vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11127-lists,dmaengine=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:dmaengine@vger.kernel.org,m:peter.ujfalusi@gmail.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:kees@kernel.org,m:gustavoars@kernel.org,m:vulab@iscas.ac.cn,m:tony@atomide.com,m:rmk+kernel@arm.linux.org.uk,m:linux-kernel@vger.kernel.org,m:linux-hardening@vger.kernel.org,m:peterujfalusi@gmail.com,m:rmk@arm.linux.org.uk,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[stephan.gerhold@linaro.org,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linaro.org:mid,linaro.org:from_mime,linaro.org:dkim,sashiko.dev:url,vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[dmaengine,kernel];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 865C5630462
+X-Rspamd-Queue-Id: 519ED633C64
 
-On Tue, May 26, 2026 at 03:10:48PM +0200, Bartosz Golaszewski wrote:
-> I feel like I fell into the trap of trying to address pre-existing
-> issues reported by sashiko and in the process provoking more reports so
-> let this be the last iteration where I do this. Vinod can we get this
-> queued for v7.2 now and iron out any previously existing problems in
-> tree?
+Fix several bugs in the omap-dma driver's probe error and remove paths:
+missing return after failure, CPU PM notifier leaks and missing RCU
+synchronization, channels freed without stopping hardware, IRQs left
+enabled during teardown, descriptor pool destroyed too early, wrong
+interrupt register used in remove, and a flexible array conversion.
 
-Thanks a lot for working on fixing all these issues!
+v3: Address remaining review comments:
+  - Split CPU PM notifier fix into leak fix + RCU sync
+  - Add missing return in probe error path
+  - Guard IRQENABLE_L1 accesses for legacy platforms
+v2: Fix sashiko comments and add extra patch
 
-I agree there is no point addressing all the "pre-existing issues"
-pointed out by Sashiko, but have you looked through the other comments
-for new issues pointed out for your patches?
+Rosen Penev (8):
+  dmaengine: ti: omap-dma: fix missing return in probe error path
+  dmaengine: ti: omap-dma: synchronize CPU PM notifier removal
+  dmaengine: ti: omap-dma: fix CPU PM notifier leak
+  dmaengine: ti: omap-dma: stop channels during teardown
+  dmaengine: ti: omap-dma: disable IRQs on probe failure
+  dmaengine: ti: omap-dma: destroy descriptor pool last
+  dmaengine: ti: omap-dma: fix interrupt handling in remove
+  dmaengine: ti: omap-dma: turn lch_map into a flexible array
 
-Out of curiosity, I was looking a bit at the comments for [PATCH v19
-06/14] dmaengine: qcom: bam_dma: add support for BAM locking [1]. There
-are 8 open comments there (Critical: 1, High: 6 and Medium: 1). From a
-quick look I would say most of these could be valid. The critical one
-about the usage of dma_cookie_assign() sounds a bit concerning to me, if
-it is true we would be basically breaking parts of the dmaengine API for
-consumers by inserting the lock descriptor in front of everything else.
+ drivers/dma/ti/omap-dma.c | 122 +++++++++++++++++++++++---------------
+ 1 file changed, 74 insertions(+), 48 deletions(-)
 
-[1]: https://sashiko.dev/#/patchset/20260526-qcom-qce-cmd-descr-v19-0-08472fdcbf4a%40oss.qualcomm.com?part=6
+--
+2.54.0
 
-Thanks,
-Stephan
 

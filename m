@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-11138-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11139-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id R7EAI8qdH2rVnwAAu9opvQ
-	(envelope-from <dmaengine+bounces-11138-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 03 Jun 2026 05:21:46 +0200
+	id +hhkI1WeH2o/oAAAu9opvQ
+	(envelope-from <dmaengine+bounces-11139-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 03 Jun 2026 05:24:05 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27C8B633D7C
-	for <lists+dmaengine@lfdr.de>; Wed, 03 Jun 2026 05:21:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B909633E27
+	for <lists+dmaengine@lfdr.de>; Wed, 03 Jun 2026 05:24:05 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=DisjDu90;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11138-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11138-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=J10I2urx;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11139-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11139-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 831F8302F18E
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Jun 2026 03:21:45 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 98074303E252
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Jun 2026 03:24:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B00A23ED12C;
-	Wed,  3 Jun 2026 03:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6762C3EE1E3;
+	Wed,  3 Jun 2026 03:24:02 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10023F0ABE
-	for <dmaengine@vger.kernel.org>; Wed,  3 Jun 2026 03:21:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB26A3F164E
+	for <dmaengine@vger.kernel.org>; Wed,  3 Jun 2026 03:24:00 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780456902; cv=none; b=ARcSKjzh1icpZTlpMmM0UUro7BU+cz1cLFhVZppjQdQdRT7IqO3jM0MITblAAseR2EgSIC7lkL/8jiNGWtddFykWJYzYN5cJ8K0q28L8X6E/JU2gRTABSxGo14AzyQdHawOWA18WhJwT4SYC3aU8Hfy2nYl4coSH5GY/YWPcRcQ=
+	t=1780457042; cv=none; b=a2jz3vagf7TP6LvujPdxiRdL9+dMxuSIEFUO/iaAcVvyZWrZRw3j/Z5ujzpJL0Xsue3CPy/kSTXqof5Soo2EU/BGkmfRPQYdtJa2sPz1Om3wa2Lu3uBz94MxZHpZUCBq3fV3jhTWxeydJPm+sezT6f+B5EurTuhJdKXRhl9sYk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780456902; c=relaxed/simple;
-	bh=msEblLpyLiM8Fmuhdu8jIbsmKOH4khqo2uqpD7eUu8E=;
+	s=arc-20240116; t=1780457042; c=relaxed/simple;
+	bh=1COY9GRpTK309zdbd0UA/NxzLcfXbSHzI1tF8oakITw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ToWpf5kU6w4DhAC3ZxeuRWXclVP6wG0yUitKH0BJM4kV4WOYuCJNva326t1M+1KWIvIRIr10EJSPke7Gs5jo0Ttu4LlPIWS8p+p1YbVNx1LEZPDwupyGk4GY/+BItAu5fA2c9rPCXyf2cWcqgZE+li0ZeQuJGV4wO4ZLgEeDKQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DisjDu90; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E3C1F00893;
-	Wed,  3 Jun 2026 03:21:38 +0000 (UTC)
+	 Message-Id; b=gGAgoKcnLxYASOcPRAf1NRF+vDh310Ja5JZfWypjwf2mf7gdw9EN6ZRaAdqXTbAHhy1BD7XUEEQrouJpNtn0T2QpgaZ6St9robcX7VKDz1jMyt64WjhpHzgOZAdKvBlMQUsrYIyVgPC3cwFkdvbdy66OP66woxk4Sf2BbX+Je78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J10I2urx; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 595881F00893;
+	Wed,  3 Jun 2026 03:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780456898;
-	bh=Id7Nct797daXCVQnmaenXDuw7gGj0ngPAnyoQf9lgzo=;
+	s=k20260515; t=1780457040;
+	bh=1COY9GRpTK309zdbd0UA/NxzLcfXbSHzI1tF8oakITw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DisjDu90voALWx75ytXOctmI9ALipdaReFGM6nK20UXrDJluIbShHPt3Gb0d14Mds
-	 g8vjIT3WJ4bRONbiZjNwa4nyK1h9JzRVi+bRl5Hk5DXG7z25o2lWyDyYSLuqWCNbc8
-	 piFSBxp9m8x6VoEzYICfqSLDYQsCa72QsgpvZ8KynFfHFGgizYdrLvliojYbmhOp7u
-	 1rCV+gJsGggXUItKhCyJm3me8xALRPgpeNrLsdDbKxp6+xlSIeF68o0gNdPifXrDJX
-	 eDsbZB8fJwVjyupmBxtK0vg/rus0urvsP6MHOkUxh6JzsAtn5mOJqqeksdTnxI+8NB
-	 c/IOkvcfpcbzQ==
+	b=J10I2urxtBFk52xhOpLVEkaehPWeeyhRPXrY212Qbjo9sXt+DMvlPJ5jgvjz3mEH8
+	 NAj6AZL1HNe0mMXZngPyuA6mDFx4VZ55bezhbGy0e1F3gzF9qkXokiw3emQAMmINu4
+	 UAwKrV4i5eHBMLyOCrSRbTg5YY+6ZuVLTDuPQAeueyBfhoKXnygj6A84kJi/Cgtgt3
+	 8KLketqr8c9fXY0g5rULC4DnWrlNfANhBEvi+PeCTZMGSCF+xHCkBlWXELhdAyX2l6
+	 woO1/G1ylNvBbMouvPohMEVMYQbei4xYVp74DJBE0b3wN4+4kPzmBvNU7hYt4kW0pj
+	 i/O9SMjBqTbQw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCHv3 5/8] dmaengine: ti: omap-dma: disable IRQs on probe
- failure
+Subject: Re: [PATCHv3 8/8] dmaengine: ti: omap-dma: turn lch_map into a
+ flexible array
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Rosen Penev" <rosenp@gmail.com>
-Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
-In-Reply-To: <20260603030754.288757-6-rosenp@gmail.com>
-References: <20260603030754.288757-6-rosenp@gmail.com>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260603030754.288757-9-rosenp@gmail.com>
+References: <20260603030754.288757-9-rosenp@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 03 Jun 2026 03:21:38 +0000
-Message-Id: <20260603032138.A4E3C1F00893@smtp.kernel.org>
+Date: Wed, 03 Jun 2026 03:23:59 +0000
+Message-Id: <20260603032400.595881F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -77,8 +77,8 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11138-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11139-lists,dmaengine=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -101,170 +101,61 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,sashiko.dev:url,vger.kernel.org:from_smtp,smtp.kernel.org:mid,lists.linux.dev:replyto]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,lists.linux.dev:replyto,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp,smtp.kernel.org:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 27C8B633D7C
+X-Rspamd-Queue-Id: 2B909633E27
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Missing `return rc;` in the `of_dma_controller_register` error pat=
-h causes probe to fall through and register a CPU PM notifier using memory =
-that will subsequently be freed.
-- [High] Missing `cpu_pm_unregister_notifier` on module removal for configu=
-rations with `needs_busy_check`, leading to a dangling PM notifier.
-- [High] Wrong interrupt enable register (`IRQENABLE_L0`) is cleared during=
- `omap_dma_remove`, risking an unhandled IRQ storm.
-- [High] Division by zero in SG transfer preparation if `maxburst` is confi=
-gured to 0.
+- [High] Use-After-Free due to dangling CPU PM notifier on probe failure or=
+ device unbind
 --
 
-commit 2fb0d3495f0f7caa9bb739f8dcae6f87cb0dcd07
+Note: The format of this review has been altered due to recitation restrict=
+ions.
+No code from the patch is directly quoted below.
+
+commit 8df6bfe3cea1126b3e862e90d788d6cedc19c9bf
 Author: Rosen Penev <rosenp@gmail.com>
-Subject: dmaengine: ti: omap-dma: disable IRQs on probe failure
 
-The probe failure paths after IRQ setup free channel state while hardware
-interrupts can still be enabled. A concurrent interrupt can then walk
-lch_map[] and access channel memory that teardown is releasing. Disable
-IRQENABLE_L1 and clear irq_enable_mask under irq_lock before teardown,
-then read IRQENABLE_L1 back to flush the posted write.
+dmaengine: ti: omap-dma: turn lch_map into a flexible array
 
-> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-> index 55ece7fd0d99a..a5dc07bcbeb87 100644
-> --- a/drivers/dma/ti/omap-dma.c
-> +++ b/drivers/dma/ti/omap-dma.c
-
-[ ... ]
-
-> @@ -1825,6 +1832,13 @@ static int omap_dma_probe(struct platform_device *=
-pdev)
->  		if (rc) {
->  			pr_warn("OMAP-DMA: failed to register DMA controller\n");
->  			dma_async_device_unregister(&od->ddev);
-> +			if (!omap_dma_legacy(od)) {
-> +				spin_lock_irq(&od->irq_lock);
-> +				od->irq_enable_mask =3D 0;
-> +				omap_dma_glbl_write(od, IRQENABLE_L1, 0);
-> +				spin_unlock_irq(&od->irq_lock);
-> +				omap_dma_glbl_read(od, IRQENABLE_L1);
-> +			}
->  			if (od->ll123_supported)
->  				dma_pool_destroy(od->desc_pool);
->  			omap_dma_free(od);
->  		}
+This commit converts the lch_map pointer array to a C99 flexible array memb=
+er=20
+at the end of struct omap_dmadev. The probe function is reordered to look u=
+p=20
+platform data and determine the logical channel count before allocation,=20
+collapsing two allocations into one and enabling bounds checking.
 
 [Severity: High]
-This is a pre-existing issue, but shouldn't this error path in
-omap_dma_probe() return the error code?
+This isn't a bug introduced by this patch, but there is a pre-existing=20
+issue with CPU PM notifier registration in omap_dma_probe() and cleanup=20
+in omap_dma_remove().
 
-If of_dma_controller_register() fails, the code frees the resources and
-cleans up, but execution falls through instead of returning. It then procee=
-ds
-to register a CPU PM notifier on the newly freed memory:
+In omap_dma_probe(), if of_dma_controller_register() fails, the code cleans
+up some resources, but it doesn't return early. Instead, execution drops=20
+through to the end of the function, where it registers the CPU PM notifier=
+=20
+by calling cpu_pm_register_notifier(&od->nb) before finally returning the=20
+error code. Since the probe failed, the memory for the device structure wil=
+l=20
+be freed, but the notifier remains in the global chain.
 
-drivers/dma/ti/omap-dma.c:omap_dma_probe() {
-    ...
-	if (od->cfg->needs_busy_check) {
-		od->nb.notifier_call =3D omap_dma_busy_notifier;
-		cpu_pm_register_notifier(&od->nb);
-    ...
-}
+Additionally, in omap_dma_remove(), cpu_pm_unregister_notifier() is only=20
+called if od->cfg->may_lose_context is true. However, in omap_dma_probe(),=
+=20
+the notifier is registered if either needs_busy_check or may_lose_context=20
+is true. If a platform has needs_busy_check set but may_lose_context false,=
+=20
+the notifier is never unregistered during device removal.
 
-When devres releases the od structure, od->nb will become a dangling
-pointer, which could cause a use-after-free on the next CPU power transitio=
-n.
-
-[ ... ]
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does omap_dma_remove()
-correctly unregister the CPU PM notifier in all configurations?
-
-In omap_dma_probe(), the notifier is conditionally registered like this:
-
-drivers/dma/ti/omap-dma.c:omap_dma_probe() {
-    ...
-	if (od->cfg->needs_busy_check) {
-		od->nb.notifier_call =3D omap_dma_busy_notifier;
-		cpu_pm_register_notifier(&od->nb);
-	} else if (od->cfg->may_lose_context) {
-		od->nb.notifier_call =3D omap_dma_context_notifier;
-		cpu_pm_register_notifier(&od->nb);
-	}
-    ...
-}
-
-But in omap_dma_remove(), it only unregisters if may_lose_context is true:
-
-drivers/dma/ti/omap-dma.c:omap_dma_remove() {
-    ...
-	if (od->cfg->may_lose_context)
-		cpu_pm_unregister_notifier(&od->nb);
-    ...
-}
-
-If needs_busy_check is true and may_lose_context is false, the notifier is
-never unregistered, leaving a dangling pointer when the module is removed.
-
-[ ... ]
-
-[Severity: High]
-This is a pre-existing issue, but does omap_dma_remove() disable the correct
-interrupt enable register?
-
-During omap_dma_remove(), the code attempts to disable interrupts:
-
-drivers/dma/ti/omap-dma.c:omap_dma_remove() {
-    ...
-	if (!omap_dma_legacy(od)) {
-		/* Disable all interrupts */
-		omap_dma_glbl_write(od, IRQENABLE_L0, 0);
-	}
-    ...
-}
-
-The driver configures interrupts on IRQENABLE_L1 during probe and channel
-allocation. By clearing IRQENABLE_L0 instead, active channels remain enable=
-d in
-IRQENABLE_L1. After the IRQ handler is unregistered, any pending hardware
-interrupt could cause an unhandled IRQ storm.
-
-[ ... ]
-
-[Severity: High]
-This isn't a bug introduced by this patch, but could a client passing 0 for
-maxburst cause a division by zero in omap_dma_prep_slave_sg()?
-
-In omap_dma_prep_slave_sg(), the burst variable is initialized directly from
-the client's configuration:
-
-drivers/dma/ti/omap-dma.c:omap_dma_prep_slave_sg() {
-    ...
-	if (dir =3D=3D DMA_DEV_TO_MEM) {
-        ...
-		burst =3D c->cfg.src_maxburst;
-    ...
-	en =3D burst;
-	frame_bytes =3D es_bytes[es] * en;
-    ...
-}
-
-Later in the scatterlist loop, frame_bytes is used in a division:
-
-drivers/dma/ti/omap-dma.c:omap_dma_prep_slave_sg() {
-    ...
-	for_each_sg(sgl, sgent, sglen, i) {
-		struct omap_sg *osg =3D &d->sg[i];
-        ...
-		osg->fn =3D sg_dma_len(sgent) / frame_bytes;
-    ...
-}
-
-If a client passes 0 for maxburst, frame_bytes will be 0, leading to an
-unhandled division by zero.
+Could these paths leave a dangling pointer in the CPU PM notifier chain,=20
+resulting in a use-after-free when a subsequent power management event=20
+triggers the callback?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260603030754.2887=
-57-6-rosenp@gmail.com?part=3D1
+57-9-rosenp@gmail.com?part=3D1
 

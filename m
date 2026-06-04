@@ -1,270 +1,179 @@
-Return-Path: <dmaengine+bounces-11162-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11163-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id yPf/FhRiIWrqFQEAu9opvQ
-	(envelope-from <dmaengine+bounces-11162-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 04 Jun 2026 13:31:32 +0200
+	id IfjRIlRoIWrYFwEAu9opvQ
+	(envelope-from <dmaengine+bounces-11163-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 04 Jun 2026 13:58:12 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4A6063F701
-	for <lists+dmaengine@lfdr.de>; Thu, 04 Jun 2026 13:31:31 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3844563FA48
+	for <lists+dmaengine@lfdr.de>; Thu, 04 Jun 2026 13:58:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=amd.com header.s=selector1 header.b=lUiF2qVo;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11162-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11162-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=amd.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=gTa53yJV;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11163-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11163-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3C2D9303F061
-	for <lists+dmaengine@lfdr.de>; Thu,  4 Jun 2026 11:28:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8266F31D90D8
+	for <lists+dmaengine@lfdr.de>; Thu,  4 Jun 2026 11:51:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2803A413D8B;
-	Thu,  4 Jun 2026 11:28:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDDA142B72D;
+	Thu,  4 Jun 2026 11:50:52 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013028.outbound.protection.outlook.com [40.93.201.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB155381B00;
-	Thu,  4 Jun 2026 11:28:17 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780572499; cv=fail; b=I79zxVpV4Xdc5uClClKIYUMOWCR1a4lW1Ws1NItsPB5HJKxz2BpqCdEqngRLAd7ZNsfCnsqWLbQQDYslVoMw37YaF8kmDIusNZWfJApL+vWbVk5gH5i80wYWCpi+9JE6fQSVzjnnvWZcI8A0Yz7aP2d7UaQDPO9dB/Y0bHawvrQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780572499; c=relaxed/simple;
-	bh=qNU2yJmUip0nN+nPRsTy4FkxvSswBTpicBUnYHtinDo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aAh1zNsHgJA4U/5nvjXvj0F8M4VS1djxsBRa5ScW7ndREvwbEVQoXZDATQEyL3DyDfFO2qx81wV6xke1d1Hj+A76U5v9I6a4XxaFyCdPpgm7Z55ggHsXdfAAfPes+L8XKZ0brY2JWyPYyfzRj7rpCzr3qIoOAbGmm4Kd6Ygt8ug=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lUiF2qVo; arc=fail smtp.client-ip=40.93.201.28
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k1UYeDNxGgvnS/37c7TQ3TQyHTYSwIvK50buRs7FptCWN1kmEKOnH0gxtrvvDJcKAPVPtwi4o7UZwMN/3pKty4okKl5yvsF7nw874+RugwsvwDu0HxHWTVoT+6JNmlcGDea4AAoAOYSVAcmFehbm/XCWwHL2UXTXS9NqLVK0gs9Z9pdtaKSCO+z/PIYMC6cglkJVC7RjH4+XfGXyjktjQLqW4SWWgABJWOz1ug74vmfZNkEWsUoCP4RxlitkDj+m19MUvPf+dU8cPAgqzbz6H9hfamkl4/Oqv7wDEBjGx20auoTnYoaVgi6r2Tcqj1Velp+TjvtkIkzBAXgpGfManQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SylsoA4Fvi60Qx5Ep2DqkuT5kdRNPUEYSTOepUZHcAs=;
- b=C1e3t0YSQbnwTNlwm/MySpA+xfV24sYukFW4mio0Y0jGyXA57DEXi85ZMjcxtFZrLsIR3cKJp/xJS8HsT5sPE44ryx051+0HP8e2os9XtFbbtyHZh346r0rnCPFZOAPmOGsLrrBYYFJ8+9ilRQ4i7kazLaP0806owdchdUBaiLsZQR2yz4sXk91N3Erq2K3SJt+zdX1QbEsFmowWwTblw9M28wmA1OWifz2mO7Ozpg54xQyEX3Bh5KyA31qUWz+2WSmIEOMrPVR+8oXdWFDRIPwjD3VntrmUBaIKW+vI3Wj2Ax4oFSfYQjAhvCmBOsAUNZXYCwzOfxEwxGoCI+twPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SylsoA4Fvi60Qx5Ep2DqkuT5kdRNPUEYSTOepUZHcAs=;
- b=lUiF2qVoNWBeSpPo4X9vBhxrWevCheLTtdBfaqG9XQrcFkTyibP9RS4tY/avkajiWbRE7fhc2gbi3gRPxXeI1gvNvjJUUxAImnCpJDFnl+kNCDfVyji4lFs+6l7xteteXsMHf68Axm2UJ2fvDp2QqPxy7d+EvPXMm3oYMNT2rV4=
-Received: from DS4PR12MB999075.namprd12.prod.outlook.com (2603:10b6:8:2fc::20)
- by SA1PR12MB6776.namprd12.prod.outlook.com (2603:10b6:806:25b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Thu, 4 Jun 2026
- 11:28:14 +0000
-Received: from DS4PR12MB999075.namprd12.prod.outlook.com
- ([fe80::4c9d:851d:3f44:800f]) by DS4PR12MB999075.namprd12.prod.outlook.com
- ([fe80::4c9d:851d:3f44:800f%3]) with mapi id 15.21.0092.006; Thu, 4 Jun 2026
- 11:28:14 +0000
-From: "Golla, Nagendra" <Nagendra.Golla@amd.com>
-To: Conor Dooley <conor@kernel.org>, "sashiko-reviews@lists.linux.dev"
-	<sashiko-reviews@lists.linux.dev>
-CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh@kernel.org"
-	<robh@kernel.org>, "vkoul@kernel.org" <vkoul@kernel.org>,
-	"Frank.Li@kernel.org" <Frank.Li@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>
-Subject: RE: [PATCH 1/2] dt-bindings: dma: xilinx: Add optional resets
- property for ZDMA
-Thread-Topic: [PATCH 1/2] dt-bindings: dma: xilinx: Add optional resets
- property for ZDMA
-Thread-Index: AQHc7DR3iNIqcbqW70Cn0v+WtZBYg7YekveAgABlNgCAD1lsQA==
-Date: Thu, 4 Jun 2026 11:28:14 +0000
-Message-ID:
- <DS4PR12MB999075E402F2396B652F00DED28E102@DS4PR12MB999075.namprd12.prod.outlook.com>
-References: <20260525105042.2249542-2-nagendra.golla@amd.com>
- <20260525110025.E5A6A1F00A3A@smtp.kernel.org>
- <20260525-petition-yogurt-27f2999d4968@spud>
-In-Reply-To: <20260525-petition-yogurt-27f2999d4968@spud>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Enabled=True;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_SetDate=2026-06-04T11:26:36.0000000Z;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Name=AMD
- General
- v26;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_ContentBits=3;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Method=Standard
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS4PR12MB999075:EE_|SA1PR12MB6776:EE_
-x-ms-office365-filtering-correlation-id: ae083765-21bf-4cd6-85a7-08dec22c5de8
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|1800799024|18002099003|22082099003|38070700021|3023799007|4143699003|11063799006|56012099006;
-x-microsoft-antispam-message-info:
- 1iaxzotQKaUSKi34BFGbR33TeBCeAi+uoohKs/a0JarbZfNtHPtNVR5Lsxu7ub3YZgitkYHBFIJBHA62fmX3DM/m5NhwND0Em/1NlrOE3yzZN5l+/8dOvA7bvKZ6mkxHw61E4ZmJLbnSN2HZSuQtKuvPGUtQ/4J8wz/EIG7ZCt0rwGiIGrACUwVqswsWB3LLkS7ad1/nFiSZb0ITlSDCsNQXqyHACHMJUV8bbrH/V+9kgar2CabDAjBN+mB6tiMV/PAxak6ftWJmI4wfV3GbKa7EnlNcyTPFgNaITMCFsEh6Zu5KNEPIs13/aRxaCwj6WIlUxoAqi1C8FMEESi1AhQbJFHs4wRVdpm2Z6AccU1pkg0o5eIppOAZzV1/OSrcYa/5Uk80OmWsgNFvUZIRw32sCy2p/owj0VHciUU5GEQAhDkrjFTOpkmOcEwvPww4yikqBIr685xmJWHGkxxl8EVM0l0+bOQei+jmpt4G6Pote1oykrYdZGL0ml+AA8y3iFP73qtu9xSOHOTjDhPJUwptahr4lOWYk2rnho9k77Khbfhqt54yQJUfXcfrdhJkpjKe3He52Ug6BumgC/HR6TBjWhUy80aYShSX+Zq/jOVmuObYCp3U6mAg0BuysAcXCQPXy05B8d4pJND/OMIzLByu2GFdtMJUCHb1EAS6jeeiNPpxfA5AIOA3y+wFxDHEm
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PR12MB999075.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(18002099003)(22082099003)(38070700021)(3023799007)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?DgfhPQQabkz140xniv77RG8iya15/4oiNjJTLPI61zdBRHPniL4QpRtKds0W?=
- =?us-ascii?Q?pfCnYAX9sQh6r/Kf6EgPSnWP2TgjO2XMHxh07zOxaUhnYbbzEYrTBcwr8R4K?=
- =?us-ascii?Q?BWp/jHcgxNECWdV4VvpC1G+4f5ID3y1PA60CwI3jjiaZngZhKrj2IMZd+ZGB?=
- =?us-ascii?Q?ykJlbf2SuwMofqWnGiofNGyFfKO5v3S+vKJyhA4jrbNRh3bFHe1yufusHNYk?=
- =?us-ascii?Q?jIGT4ye3z7gfjt8WkyqKIYwBA1Q0LGd7N4KmN4ej4Xfa1n6RmRvvygXXjmRn?=
- =?us-ascii?Q?ja5RwKll+tppe02pkjSx2P4HG22N9TQJzOfyYVFmLAiJmyszMAbYPs/jWN2s?=
- =?us-ascii?Q?zVhG9b53oskiCbiV10za4LR3qbWxSbcGs75ZT2WVgmbKXknH/7OcCh7O8QOl?=
- =?us-ascii?Q?cXquOZ7/F3pqfz+U+wcW1EXxmToaEWctgHYN2vKMHEd508G0GrXYv2cxuHM6?=
- =?us-ascii?Q?8Xa9uMGjTPuzOzY3+RnTg1B5/qmq9Ls9845YIlFFPKf7sHPkfrEhbebuHwGm?=
- =?us-ascii?Q?ZhFkafMwS8a5KQYAeFtetOSfEXibhW2rHf5J0NWjeKFCHuJOZlrtceHRppBd?=
- =?us-ascii?Q?PuKJHRa0bLdygcp6i5+HV7r/K98vj7PGu4UQxnIXxl4I/s/MyhBFxhGMnTJ5?=
- =?us-ascii?Q?n06vCmCukFb/7gs6YomBt4Qsk5hPP0IjW9Zlql3PKcG7hb5WlFk7jQjX3Ae0?=
- =?us-ascii?Q?tqKgcdrWcj91zWdX/mlCsdW8Y5xs6/wB057KJ1cPbiefpYSoqXqpyM1pHIlC?=
- =?us-ascii?Q?NZRwXXJ5g85XmCvQNXZmvnSH4qLPxBvlGQJjM+qclWKEDdZBUEKTCzsOVM1R?=
- =?us-ascii?Q?tXypwKz9tR9MmRRnPGqd4vDOCOsNugJl2HbzkeJHlpy3ScpYskbhNCySDJMa?=
- =?us-ascii?Q?x4MiP8z5zPxSxXlujRteceBvm4zqg14iwp4RgcrdXw7wFYZp2HFu1um5++Be?=
- =?us-ascii?Q?0BB7q6cQy47AO5kcmCvEiinNcbQDjIdFYksIUIOk3SC24Q4lpTZUY/X4Y0LW?=
- =?us-ascii?Q?JDlLKeodZHgdqRgvl6MZMzdNMqNyVORDd/9CcxZtZkJGncawotwTZM2kAiMm?=
- =?us-ascii?Q?zgL3IFyuEEx3eaN7GDvcJy1OpOf3TDoQYJc0yBuF3XE5eAksbYS3DhO65hGE?=
- =?us-ascii?Q?pODoauxslpTyzI5kFdXCnHMab5pgkp/BNV6AhVeLYIvZin3/qD/Etsp5yULp?=
- =?us-ascii?Q?fBVWvezfkHZ+xizX4Pq41eP9GdouRfGF+zDZO458kVD3OtJmjTSSqtetOBrz?=
- =?us-ascii?Q?1p1IesZfu6Cdf1HesOPQz28/hzQGTlN/QL5/F2cd7QbrYu+uUJyTm7hM/Wvy?=
- =?us-ascii?Q?JMmbQF49BhdS4YpM8g/Vda7fh4Ohm0Q8mQLK4h6lcO5uMQDiscTAngATVewJ?=
- =?us-ascii?Q?LEgw48YlVROosCKxP71rYo7/Iv89qoq3W6aiv6doAVw+GiTqe2aOEPhXSuTb?=
- =?us-ascii?Q?Mselzj0TwXFMe2H2BX6OzYESyZIrIrARlKYfxhgEqTedy2bM3boAeH4kltoa?=
- =?us-ascii?Q?GcoFbEYcZBMnVjXxSvUMBYbVWPoUTcvp7+4AUcgYhfCltlFjVYHk28zWtUnu?=
- =?us-ascii?Q?4LJ4EOmNUVJcSZv15UYmHkGhpFBZPdIgjaA3YDnG63z4Q8EF7tmepDoqymnE?=
- =?us-ascii?Q?xSK65srIbRAPkZJ2UW8PCEkdCZm7/f2dVXm7ICd+xP6WQ33gEmklFb5rfTc6?=
- =?us-ascii?Q?lIaO54UnBh8b6W7z3dtefUL3X97GejwKC+y6E6G5ddAFtca1?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588F6402B96
+	for <dmaengine@vger.kernel.org>; Thu,  4 Jun 2026 11:50:51 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780573852; cv=none; b=c+hvL/6lgKb2/ySv/f9ETauw/TIeiiEJ5YnCDNCLQjmdS7MjRQjKQ1tfXDj/OfvVGmwvp3vQPf77cVRnwQnGmTFwCRRC+O6ofPK1d+nHuGhLOoqrZRx5gCKwIneGHu8xeh1UadnSYf4WQGnKAX0/hbqQHLkZG0Dz8mEtieX4L0c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780573852; c=relaxed/simple;
+	bh=+AP/U3cPeU0fXOEAiHxHazm6k88v5P4k80O8mHj3UmM=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YmuQAGYEWOTxBiG+Bhy9rq6cWMM5dtxABeqa/0ot/VGZdCQorBLoQMMEjXCC3XPTDV3yy3KtJXsqyUY2mESVoIxPcxPtZoTpZjbe4e+0sUF7LvPmv6uAgV5stATg+tM8dmRXkRA0tV5m4cx+gmoXEWZG5jlVgzZWxz7K2Lar0x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTa53yJV; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CDF91F008A2
+	for <dmaengine@vger.kernel.org>; Thu,  4 Jun 2026 11:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780573851;
+	bh=+AP/U3cPeU0fXOEAiHxHazm6k88v5P4k80O8mHj3UmM=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=gTa53yJV3FNKREqub3QPIdJdIBpiqctfla9UV9JKkXPKWxEGfDkIQGwtIbrwOVEqN
+	 6WUPv32i6BvWBnugDJsvR0knou13vTeL+0tk6S2on+t5TVox8/U7gzRhhksbVI+CDS
+	 DXBwwMvHmfdHMs3AaYmyrqMsscl1JRvo17pC0WJN7BTevi805aE/nsJ8ZlPQFMdpmu
+	 szHsdO6T4b5MpCHi7GvCmN6haPkT45wpzJs9dJIjcgyWtCVlm3ZSPES/ITluPyJx6m
+	 J4vpo+0RaYOmuw8lJTYIaqn0csIPQUuyzgt8xlbtd+n+faRoZB1D+erw6WnEMC3FTC
+	 6D5/6Dz4A+9+w==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-396669329fbso16446291fa.0
+        for <dmaengine@vger.kernel.org>; Thu, 04 Jun 2026 04:50:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9pkULmorMvkYmiIiNreJad/i5345tgchjJOrsiQEskh4XJRdMSq4Crl4EDDde6P7plSjPN04PSN+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2IU1KVc1iMXZbgIroCgztHL2VIxMSdAxDPa3sr23WgpYnaWV9
+	vAkF3SkFfAXbnE9GCaSr0OFXSj69/xGw2elsOK2+mrgE02nY7i0rFCqcf5VLn1UMd/JVXZITQxp
+	wKSQ6UPA3345n6YNw9WSv+P7AWyC7ZjnB0sFbIv4xng==
+X-Received: by 2002:a05:651c:242:b0:38b:dd55:b71 with SMTP id
+ 38308e7fff4ca-396bbb2b99dmr9083771fa.20.1780573849639; Thu, 04 Jun 2026
+ 04:50:49 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 4 Jun 2026 04:50:48 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 4 Jun 2026 04:50:48 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <aiFScCW_NEY3CsEf@vaman>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS4PR12MB999075.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae083765-21bf-4cd6-85a7-08dec22c5de8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2026 11:28:14.3041
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pTrAEhI45yHQDAaS6smb+MNBJvyCREvWL5TTLkS9OtYSmGHFMiZK4z+pCjngWbK1eg13OpbKen1H2EoMf2GIdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6776
+References: <20260526-qcom-qce-cmd-descr-v19-0-08472fdcbf4a@oss.qualcomm.com>
+ <ah8G_ajPS1KhgPP_@linaro.org> <aiFScCW_NEY3CsEf@vaman>
+Date: Thu, 4 Jun 2026 04:50:48 -0700
+X-Gmail-Original-Message-ID: <CAMRc=McYB+S1LmqRJbWKirMGqwJHZCTWj6KnB6Z8qUsYQWBqkw@mail.gmail.com>
+X-Gm-Features: AVHnY4ItlnHzBWkZf26uoYFprN5coNBr4vZZe2XdpgFnq6HAZyN9LACZLu6Trcg
+Message-ID: <CAMRc=McYB+S1LmqRJbWKirMGqwJHZCTWj6KnB6Z8qUsYQWBqkw@mail.gmail.com>
+Subject: Re: [PATCH v19 00/14] crypto/dmaengine: qce: introduce BAM locking
+ and use DMA for register I/O
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Thara Gopinath <thara.gopinath@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Udit Tiwari <quic_utiwari@quicinc.com>, 
+	Md Sadre Alam <mdalam@qti.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>, Michal Simek <michal.simek@amd.com>, 
+	Frank Li <Frank.Li@kernel.org>, Andy Gross <agross@codeaurora.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, dmaengine@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, brgl@kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11162-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:conor@kernel.org,m:sashiko-reviews@lists.linux.dev,m:devicetree@vger.kernel.org,m:dmaengine@vger.kernel.org,m:robh@kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:conor+dt@kernel.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[Nagendra.Golla@amd.com,dmaengine@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[27];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-11163-lists,dmaengine=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[amd.com:+];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:bartosz.golaszewski@oss.qualcomm.com,m:corbet@lwn.net,m:thara.gopinath@gmail.com,m:herbert@gondor.apana.org.au,m:davem@davemloft.net,m:quic_utiwari@quicinc.com,m:mdalam@qti.qualcomm.com,m:lumag@kernel.org,m:mani@kernel.org,m:andersson@kernel.org,m:peter.ujfalusi@gmail.com,m:michal.simek@amd.com,m:Frank.Li@kernel.org,m:agross@codeaurora.org,m:neil.armstrong@linaro.org,m:dmaengine@vger.kernel.org,m:linux-doc@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-arm-msm@vger.kernel.org,m:linux-crypto@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:brgl@kernel.org,m:bartosz.golaszewski@linaro.org,m:dmitry.baryshkov@oss.qualcomm.com,m:konrad.dybcio@oss.qualcomm.com,m:stephan.gerhold@linaro.org,m:tharagopinath@gmail.com,m:peterujfalusi@gmail.com,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Nagendra.Golla@amd.com,dmaengine@vger.kernel.org];
+	FORGED_SENDER(0.00)[brgl@kernel.org,dmaengine@vger.kernel.org];
+	FREEMAIL_CC(0.00)[oss.qualcomm.com,lwn.net,gmail.com,gondor.apana.org.au,davemloft.net,quicinc.com,qti.qualcomm.com,kernel.org,amd.com,codeaurora.org,linaro.org,vger.kernel.org,lists.infradead.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sashiko.dev:url,linux.dev:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amd.com:dkim,amd.com:from_mime,amd.com:email,DS4PR12MB999075.namprd12.prod.outlook.com:mid]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C4A6063F701
+X-Rspamd-Queue-Id: 3844563FA48
 
-AMD General
+On Thu, 4 Jun 2026 12:24:48 +0200, Vinod Koul <vkoul@kernel.org> said:
+> On 02-06-26, 18:38, Stephan Gerhold wrote:
+>> On Tue, May 26, 2026 at 03:10:48PM +0200, Bartosz Golaszewski wrote:
+>> > I feel like I fell into the trap of trying to address pre-existing
+>> > issues reported by sashiko and in the process provoking more reports so
+>> > let this be the last iteration where I do this. Vinod can we get this
+>> > queued for v7.2 now and iron out any previously existing problems in
+>> > tree?
+>>
+>> Thanks a lot for working on fixing all these issues!
+>>
+>> I agree there is no point addressing all the "pre-existing issues"
+>> pointed out by Sashiko, but have you looked through the other comments
+>> for new issues pointed out for your patches?
+>
+> I hope Bart and Qualcomm can fix these driver issues as well
+>>
+>> Out of curiosity, I was looking a bit at the comments for [PATCH v19
+>> 06/14] dmaengine: qcom: bam_dma: add support for BAM locking [1]. There
+>> are 8 open comments there (Critical: 1, High: 6 and Medium: 1). From a
+>> quick look I would say most of these could be valid. The critical one
+>> about the usage of dma_cookie_assign() sounds a bit concerning to me, if
+>> it is true we would be basically breaking parts of the dmaengine API for
+>> consumers by inserting the lock descriptor in front of everything else.
+>
+> Yes this seems to be a valid one. Attaching another descriptor for lock
+> does not sound right to me, as in this case causes descriptor to be
+> marked 'done' prematurely.
+>
 
->-----Original Message-----
->From: Conor Dooley <conor@kernel.org>
->Sent: Monday, May 25, 2026 10:33 PM
->To: sashiko-reviews@lists.linux.dev
->Cc: Golla, Nagendra <Nagendra.Golla@amd.com>; devicetree@vger.kernel.org;
->dmaengine@vger.kernel.org; robh@kernel.org; vkoul@kernel.org;
->Frank.Li@kernel.org; conor+dt@kernel.org
->Subject: Re: [PATCH 1/2] dt-bindings: dma: xilinx: Add optional resets pro=
-perty
->for ZDMA
->
->On Mon, May 25, 2026 at 11:00:25AM +0000, sashiko-bot@kernel.org wrote:
->> Thank you for your contribution! Sashiko AI review found 1 potential iss=
-ue(s)
->to consider:
->> - [Medium] The `resets` property is added globally without conditional
->constraints, allowing it to pass validation on older SoCs that do not supp=
-ort it in
->hardware.
->> --
->>
->> commit 832c482914e7639cb1a410d061bf9d631b41ae68
->> Author: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
->>
->> dt-bindings: dma: xilinx: Add optional resets property for ZDMA
->>
->> This commit adds an optional resets property for ZDMA on newer SoCs
->> like Versal Gen2 and Versal-Net. Older SoCs do not have a reset line pro=
-vision.
->>
->> > diff --git
->> > a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.y
->> > aml
->> > b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.y
->> > aml index 2da86037ad79e..dff16763e11b9 100644
->> > ---
->> > a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.y
->> > aml
->> > +++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1
->> > +++ .0.yaml
->> > @@ -56,6 +56,9 @@ properties:
->> >    iommus:
->> >      maxItems: 1
->> >
->> > +  resets:
->> > +    maxItems: 1
->> > +
->>
->> [Severity: Medium]
->> The commit message notes that older SoCs do not support this reset line.
->> Since the resets property is added to the top-level properties block,
->> will this allow device trees for older hardware to erroneously define
->> a reset line and silently pass validation?
->>
->> Should this be guarded by an allOf conditional block restricting the
->> resets property to the newer hardware compatible strings?
->
->Additionally, should it be required on the new platforms?
+Yes, I have a fix for this queued.
 
-Hi,
+> Honestly, I am not quite happy with the way lock is being handled here.
+> I would hope we can have some better suggestions. Adding a descriptor
+> for lock does not look right to me. We are adding odd hardware/firmware
+> behaviour on engine apis.
+>
+> I had earlier suggested to lock always or lock only for hw/sw versions
+> supported inside the driver, that might be simplist solution without the
+> complexity added here
+>
 
-Currently, the resets property is optional for both Versal Net and Versal G=
-en 2. If future platforms add per-channel reset support, we
-can add an allOf conditional at that point to make the resets property requ=
-ired for those specific compatible strings.
+I'm not sure what you mean here. Several iterations ago it was deferred to
+consumer drivers. Mani objected and Bjorn and you agreed. I reworked it to move
+the locking logic into the DMA driver as requested.
 
-Thanks,
-Nagendra
-
->
->
->Either way,
->pw-bot: changes-requested
->
->
->>
->> >    power-domains:
->> >      maxItems: 1
->>
->> --
->> Sashiko AI review *
->> https://sashiko.dev/#/patchset/20260525105042.2249542-1-
->nagendra.golla
->> @amd.com?part=3D1
+Bart
 

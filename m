@@ -1,81 +1,80 @@
-Return-Path: <dmaengine+bounces-11176-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11177-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id EnsxBbf1IWr0QwEAu9opvQ
-	(envelope-from <dmaengine+bounces-11176-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 05 Jun 2026 00:01:27 +0200
+	id Hv0KNqw0ImpaTwEAu9opvQ
+	(envelope-from <dmaengine+bounces-11177-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 05 Jun 2026 04:30:04 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99977643B9D
-	for <lists+dmaengine@lfdr.de>; Fri, 05 Jun 2026 00:01:26 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32EED644B12
+	for <lists+dmaengine@lfdr.de>; Fri, 05 Jun 2026 04:30:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=fail ("body hash did not verify") header.d=nxp.com header.s=selector1 header.b=BnaP9hJ1;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11176-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="dmaengine+bounces-11176-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=fail reason="SPF not aligned (relaxed)" header.from=nxp.com (policy=none);
+	dkim=pass header.d=valinux.co.jp header.s=selector1 header.b=EgQfV7Fm;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11177-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11177-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=valinux.co.jp;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 06BD63003363
-	for <lists+dmaengine@lfdr.de>; Thu,  4 Jun 2026 22:01:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AD44730247C7
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Jun 2026 02:26:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29A8A72617;
-	Thu,  4 Jun 2026 22:01:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42F53845D5;
+	Fri,  5 Jun 2026 02:26:42 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013050.outbound.protection.outlook.com [40.107.162.50])
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11020092.outbound.protection.outlook.com [52.101.228.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856A230D3E5;
-	Thu,  4 Jun 2026 22:01:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1497A1EF39E;
+	Fri,  5 Jun 2026 02:26:31 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780610484; cv=fail; b=UJcmduh6Ub0nIbnLWZGP9XC4WE405dRz60Yb6IDiZkPrZnj/fRP7dsxdbzcMwXEi2D0Af94prHKveIj3yEwJbByjmb2qGfycXvaednJUEbJBQiicPFElnAd5qqFCi/Cozm5dNvf9bQZazM1cVCYhC606aMZQ8hCCM/A+9l61VPM=
+	t=1780626402; cv=fail; b=lYJrSHg8NzivW0/Uqu8LlUiveS/0eLor00WwCvbr2JQLjZRd1z1ZCi+YZRN1/MXh4rXK4h6ymsNN0LDt5E9wrnyLlZmawY+AYvRnAp02naHWbyW1KsUlXU37ab8uuc0ONR+fnUiusy/lGlk5xxvPdVc6WXBpqpqIkWnkDoPwBQ4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780610484; c=relaxed/simple;
-	bh=01vqkYvVdTGy8h4UPdojWR7qCJ7hSpgfD29kTzC988Q=;
+	s=arc-20240116; t=1780626402; c=relaxed/simple;
+	bh=TWLPW3V4J4w22PlFm0BnI2rBuChnnPBmKQolKkTKhHg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dKo566WZnSw8mny+6sQVPLR/yRMDXBE5VCMk/Fbqd8snkyJ1XudRKDoOqE64McDBsIEhTajgkBLD2d6V2A7RMMAnVXqO/PvKyaje7w6UDvrGIOI3JHE9vZm7rWl+rvEZYF67ea7fIYhPVQtGzoDLJAVRMOG0mXF8jUcJCF3dKQY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=BnaP9hJ1 reason="signature verification failed"; arc=fail smtp.client-ip=40.107.162.50
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WPYdcaC2BQNmn//Bi9LMenlcrCLtjLgnrtMJHQqFLHmfXEjbGBSEKS2Rddbt0ggjH50re7k91dgRH8HoHrYz5KIq2wZnbwWqeKssOmi5kwIF1XgYoHoobhpEhKo7V3kqAE6Nhwtes7LQvoxWdtT0l16QIUMKbElXGhVNScVF+xQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=EgQfV7Fm; arc=fail smtp.client-ip=52.101.228.92
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=frpQZuX4xBXPRyZJ7yJw3fD8kcnbiGN0nue7CgE7Ws9GjAksfIXugzpFfTiYMoXTslLaBSgxR8PHJdMblA/AyKsBuIxAkLd4AISybhpUDbT+8YpT4e7Tte6scflV3WHZ3/W+PugvFr8cfi1yhfOqis4Fmi5sPYnIMc7EWEkfSPfM+J+GcWiYWK6w/iDgU3/toQRk8PrRZ7gNB734y10I++3K8Bo73JmI/bP5moVUqele4USFTwl5MKwv71snKBVI22LhVYLL2NvBbvQ3vJcBWZugdhwlCsRSH2L8P9DhCcAMDYOlg2a3VBC4cAnucjTDfhzEkHYg7wCkZZnwKpaYYA==
+ b=sJS7LHRkkHeGZJNPWKOPLyL2NRch2qeI3o0OweqvpyECtJ/ZEmJ30e4JB5EBP3OdVx1YnJLuBNm83gUWRFPMfSMZafHdwyRAoeS0e4mfqfvtVf9D09UcmxwrZIZOMs87SExZ5VbXgKgyYfeCoeK1mMASJRjWWsV3fHWxvezjai2Qxj0qIkoE9+ZtmAsf4gzZ9liW14367LDlbL2aY7/ymT/I2o1nkiKzBsmOAnAsyoAoJVsEVXgxOxwfS8d/9oqm3MacB0WJYOew1aaC+tYB0ysXrKzqm6FIATWL4LKVjeX9fwv+sAlSbLbIi8aEhHXVi0kiZXQ5a0sSutbGMZl17g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1g7IJTGYBZ9HnnMESvAK7RzkcaHyDgHJB7W/GWWbpbs=;
- b=hODdcvlFkqWM8OjvUTE78xgxce6YUo7ckTvlmFFZUthGVxKs6GTGmU7PxJD7y2aADPE888WNN8xRdj3r+iM+4iXEOqYWKiEVf2adsVPRV216+RaL25qGEOgFQMkUo1uoo46Q0+CHqZslFJWVC5hqoPubl242sfCrfMu0fomVAyYCgX5h9RAhRXlGskP0MQWgHxTtQyxrRWZxhSJdLMg8Nmws5ewBwiUo6rjBSywP7tb3pW1iBtYiwbFghVS15QD8UWDaOapCocnHatnmE1U/vB/S0SufnyZim/MqFB0F2IEntd8voSQFtcUfksPL9kKO1x1arMRebJoabxc04J1XFA==
+ bh=9Nl0Z+P3vQprTnf8107lLFZh+jA54Io5YnVyMVvz9aQ=;
+ b=TUmLdTSVe8wM2sfZ8CU39h2SjpX4jrDIS10pGmrhKaObGPTvPee0awsQmV3wCT8ty6gQ/6mSrl4RlIPrGDfWGHQH6DcEc7wa0BnryrwxzNRDuz4B18bPpirSv78I9/SOMqQRk4rh49L6kcCTMEwVklAevLnMKAMLSyN2oDTRnopXbxUTUBo0F0p4qhrxovjjEhO/52Gq3CI/kqKfsyTw/PgsH/uqFZI9ACY8n7B4BOJ3eRrsSnFDOmy/DUWne7SDz+9l0Pl8cMXOjHUXtMfoHNxFcDBHicYqhweUFOajHgADUY233ytagtsxMLXK8le3k24NMtKOfW5rzRtHWohC/g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1g7IJTGYBZ9HnnMESvAK7RzkcaHyDgHJB7W/GWWbpbs=;
- b=BnaP9hJ1bnEsbUr8WPiy06OWkSibeFD5L7AIg4HYiF0Wkr7DQvPcOT2e+J5QS2DR+6ybQzB8uUCcHgtq6iINlHSjkQaS3r3xbNQqXvo7AD947Bi3AfcwH6/1gFatC4I5V8l36ftxTwrfKSN7MH5j3jYbbMxzBOGEUxDPqILW3JQzCYOgHu2z/tx69uWBzBHlSqNLWYb410CgJcA8pmZOL5UPgGJh+Ec/LaXLZ1ypcmXkphde8HFcmKlKUKyGT6NKD0AqoYqyyM4/BDk9E05RaZOA4pvIsOMTBKnXGSqFBvhY5Yj1R8YDuhnK6A98kzBO65o+pGEQ1xqpx1lW2pYcdQ==
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by PR3PR04MB7305.eurprd04.prod.outlook.com (2603:10a6:102:83::12) with
+ bh=9Nl0Z+P3vQprTnf8107lLFZh+jA54Io5YnVyMVvz9aQ=;
+ b=EgQfV7Fme5ONkbOYbsQJ+1J++R+yPdOjuxxVl/htOTrylWi+rtCyjhtXgyf9TXmu6+xhc2K4K0urVP2wsIv/9/DLtpoEsVxLlG0eEmfMxWDLMJYxF463PR1jDyU2hyxIayCoZW7z8UeKG/n7tMfz4cj+wTLD+4BLWy1EN1Zsb1U=
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
+ by TY7P286MB6881.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:31f::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Thu, 4 Jun 2026
- 22:01:19 +0000
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588%3]) with mapi id 15.21.0092.006; Thu, 4 Jun 2026
- 22:01:18 +0000
-Date: Thu, 4 Jun 2026 18:01:13 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: =?iso-8859-1?Q?Beno=EEt?= Monin <benoit.monin@bootlin.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Frank Li <Frank.Li@kernel.org>, imx@lists.linux.dev,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] dmaengine: fsl-edma: Support dynamic
- scatter/gather chaining
-Message-ID: <aiH1qDT5yoanBE_2@lizhi-Precision-Tower-5810>
-References: <20260518-fsl-edma-dyn-sg-v4-0-8ce7d95b1ce9@bootlin.com>
- <20260518-fsl-edma-dyn-sg-v4-2-8ce7d95b1ce9@bootlin.com>
-Content-Type: text/plain; charset=iso-8859-1
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.8; Fri, 5 Jun 2026
+ 02:26:28 +0000
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.21.0092.007; Fri, 5 Jun 2026
+ 02:26:27 +0000
+Date: Fri, 5 Jun 2026 11:26:27 +0900
+From: Koichiro Den <den@valinux.co.jp>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Marek Vasut <marek.vasut+renesas@mailbox.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/12] dmaengine: dw-edma: Add hardware channel filter
+Message-ID: <54dmyjswl3ndn74o5zk34yuqrp6aytpi3oytmwc4ft7ihlivys@gwayafimmpbz>
+References: <20260525062420.3315904-1-den@valinux.co.jp>
+ <20260525062420.3315904-2-den@valinux.co.jp>
+ <aiHipgrBEKYRZqhg@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260518-fsl-edma-dyn-sg-v4-2-8ce7d95b1ce9@bootlin.com>
-X-ClientProxiedBy: SA0PR11CA0037.namprd11.prod.outlook.com
- (2603:10b6:806:d0::12) To PA4PR04MB9366.eurprd04.prod.outlook.com
- (2603:10a6:102:2a9::8)
+In-Reply-To: <aiHipgrBEKYRZqhg@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: TY6PR01CA0031.jpnprd01.prod.outlook.com
+ (2603:1096:405:3bd::13) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -83,308 +82,220 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PR3PR04MB7305:EE_
-X-MS-Office365-Filtering-Correlation-Id: 011ed8bf-f12a-4a84-d713-08dec284ce57
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TY7P286MB6881:EE_
+X-MS-Office365-Filtering-Correlation-Id: 64cc9cc5-7dc7-4e7c-b4fc-08dec2a9d8e2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|19092799006|1800799024|366016|376014|38350700014|3023799007|22082099003|18002099003|4143699003|11063799006|56012099006;
+	BCL:0;ARA:13230040|10070799003|1800799024|366016|376014|18002099003|22082099003|4143699003|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	ZYMXjHsNtoQIrzK2UWUzy4TKxaLG9NU5NjkzancyD8IRj30OHVtpwo+KNw/cbW1NqEjrocc7UMWvUfL6iX3GJd/Ksr4BVIUPOfgE+mxdKikB9VRnxk48Ilbls+2Eztf3qQo+p40cGQg9o+eDQACrpu/YK5DRLyYJgkJYKpIZp6lj+ey73PSjD9IEkBHqqA0mG4Zxq232elwVHo82mBw7sD/VGE+uTfSrj4ZVS08nhnfVvf2EhDPHFFlZRdcnOO6d6onUZCgFlIgt8H5te74TdcugOBbUB8mKxdV65yQFWDCYjXtK5Wr7Wk98jTUhcR2BwNhsScHrsHNSHYS1cmNk5+mCZcHUFSHj4WqqQidbWfVrO9Dz2UV0SJb553Hkim/XwMN5b2XeVYtAkkTqO2oV/i5OubbGsW24253w7CfT0BkPG0Gyv78g31NkfHZeDe2UompE3VK70QQSFNBDLkT2FyA5Wq3NaO6dxAre/9skcm64FyFnB+5YTnBhQDTZu9xAQVuI0blYwgXU5EtX861CD1N77vlVqwUblXwnfwfE4OSYt5H2GWbrLcV1KlwFl1PWpMYOFuXQCZfjn0kdcAQELDkdwBzZ4B2KPrwTzHc7PIpwoVoDkqoe6ss7snxQZ9YqWUfAIbVizDnz0oCkqAMBNXB3JyT93K2W0MX/lct5emJn+FmyeLmA4NlJbqxd1RhBJgIzqZHRZuJMXeZS0peo0YLUbh7B0i9jtWhOnd1ugo5NiZA3idZayi7Ln+g3EnAw
+	R4ZXasLJjGiydgsRvBZVRkn/u7MMbnvP0wNKZK43bkNLH2oAKm3TwXGNx3JW1Un2zsBVwz+zs3Tw6lUUnwosQbkcUz/onUyHGovGiXTxZSR4Y64I0E93n/WjT91HVMvmu+9yV438MHEj1F985Ha5+oNHWVuTCinRiodfCTpggdUgUiq//kkCTe/cU0YFksHhRZnr/2AFvldtj3JXRqeBNpSjzn1cp+U9M+g1XtM/nHWG7P8po7Hy2wI/EUI3w4cfl6wxGSsTBAf98yFUZ/AVmCle5I0UEHX/czS2+unTSM02ShAjFQ3hTs2fPrC7C2D+qsUil7edI4QErc8nz7MeqVYu+FPRb4Y+UArrWNkSu0ewXFS2QMj6sUqpjZobjk+69I38e1IEAhgNnKYM0lsrRS5ondjI9XEteDqYI5N/MMa3+/5VBOkxYJs0w977kt1dWJKettwacYMk2ScwotV2AJWwhTb+C1kjudQ1WYch0Za1yf9dosCFwO/5QjXCspBH21pO+3sRQXCracas2aixJo6dMByv5Zid+F7oRaBxCCWrmgA+un3Clep5U7so1knhbXzeABc403+dayeaud8AQUK4aVMzFOa/fjf3eaqgO6bmEiWoEyhtXQ3nuVcZQrZUifAzvi96Cpn9xKwDHZVoSGdYPZDEv/8LAfRGyGe9+K0i+KMEymNoy+rflfeo6u9KCdJrOpAtpQ0ZHjUXWuiZEg==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(19092799006)(1800799024)(366016)(376014)(38350700014)(3023799007)(22082099003)(18002099003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(376014)(18002099003)(22082099003)(4143699003)(56012099006);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?AaYGILtE6qwcZOV1kXhnVsG5xt6pfJuoloxdwuh/Qj+ealEVbq3p7P55lV?=
- =?iso-8859-1?Q?VwrI1FQr087A+brcvs9D4m6Vd9I6VaxdULhK4Q2CfMaEefJavkQ/Tl88uC?=
- =?iso-8859-1?Q?3QVDE9edQI7Henr6TbqnCszcKmHGMI+ggf5tQah+FhZc39KP35wXbRywjp?=
- =?iso-8859-1?Q?LhM6txjSfelu65JHq9W2u6WgnfrixYqkmB1I6N6O52Imt6dy5PND6ftIkM?=
- =?iso-8859-1?Q?QU/iBYrZfxfeSnU1aLekWRdgGkCBhGF/VaOW32A5dNSc7iHgo3qmxS/tWB?=
- =?iso-8859-1?Q?Hyq+eWftpaauqhXdgCHde9cg2eWClxJxY4WAS11elGJaQV7hI4Ci91cAGq?=
- =?iso-8859-1?Q?Hijd6hJfpatmgExoFdjhS2/0YsU245pdne6yHdAjtqEMcmyIqa66EftLom?=
- =?iso-8859-1?Q?mxzvdBh7Gee+ESpi4FQry3dCp7/XJzyJhrgNYht3i4A8anTY91zWMfB9xd?=
- =?iso-8859-1?Q?6YyQkZUle9OZfBxkfpiXKZ0GLREXDsyHk1HHf2cKBUXtahDrxkOLg0GYuR?=
- =?iso-8859-1?Q?yVh0WIx+u1sCFdAsaF678XtuXgsLWbJpWE7Ll3YCgTfLdt+VE+ZW7E5jgh?=
- =?iso-8859-1?Q?z9q79jaSJCbIR0kvQr3dHiu939QFiiLqU7YMi0z9YOpHV/+riJKCr3ehzR?=
- =?iso-8859-1?Q?CC3764gO/zR7YGt4f6tsL+Y8KsHkUr0HIoC0xIku2CmrBcj3mSGo3fxSg2?=
- =?iso-8859-1?Q?1h4RZTne3u+a+RwNjNtg+gQbPGuK1hlCcczv7s3eJrhocRS/kheS1kobFk?=
- =?iso-8859-1?Q?yfDxO2HGJ7x/m5QYGW8b8peLAFB3mmlxlAKOlqR5+99W3/TElzLuxJHw4D?=
- =?iso-8859-1?Q?PtwwojSqDXlVG1W6apAMTsxZNYdvXXpYLLaQaILGVzvXG6YCr05BJkD8T1?=
- =?iso-8859-1?Q?F4/tt6Vo9TUcveM41xmI8xngOFXwhVOgfGFb6a3KewHl4HtHEHl6ziaylz?=
- =?iso-8859-1?Q?DXYvcx9VXw3hKPSDurFRoZNdHBetqpNoEQeML/Is3pI0y8+9FRlqG9oM4j?=
- =?iso-8859-1?Q?HZXGZ1t2tXYAPXqUf17Kah8+Za/ATV7OeghSTZTvAZrEkKLQLQpzCrG9NB?=
- =?iso-8859-1?Q?VXDOqtILdoUBPHa3vyd7IY+i1MvwWE9MQLch1iyrnv8JVjvQROhTQIeOm6?=
- =?iso-8859-1?Q?2Z4PVqxpJXzYpnZK/80SP0P/D87eE0nvvROcxAfS4/oeqoANR8VHeBRb51?=
- =?iso-8859-1?Q?px2BiTr5pzjg+P052tSlTyGlgRPuUhQDYXp3/8SIvaiM1fbakkzyg5H/FX?=
- =?iso-8859-1?Q?1Yq88dwBYEcPhBe7IjPfq/sCDSPbEBRxwDiaFqjq/4Gzvtqkjx5Jah9rhW?=
- =?iso-8859-1?Q?93vXc2+kgw5K1BRbVMBfY8px3m+oDR4r29+4vPKpn5XTQFzzZoYtXcyhjm?=
- =?iso-8859-1?Q?Dj3iPfjwx0Ok+ZrVquk1j0uDBfr+as+vEonQAica/4CrgLODczf4M8KlH7?=
- =?iso-8859-1?Q?olTY7qAm4aqCEKhPD1raN0l4b4pic0Dof0mtiXR/icRk/QqRXlYKTRHVQX?=
- =?iso-8859-1?Q?T/4cHjG7joBM7cgmCF9CgSc0G2oe3F4PkqCVYRXd8clezJKXr/3a9otXqQ?=
- =?iso-8859-1?Q?6WsmmaS4oFZZ/aLxnUGIYWYwlRsGFpwG0IyLTQ562Fer7B7J/z+pl4S8Oz?=
- =?iso-8859-1?Q?OYzFXD8DrR5DDTZVI6IZCmgpirnq2BAjtDbtCX7xP+fT3RCjqn+eH+dbPK?=
- =?iso-8859-1?Q?g/rnzKbpPDZjHZVXnPDKXeirxXFAy2nfJHTbtsE8xI93d4b1HS/Qw5NuIv?=
- =?iso-8859-1?Q?IkpNIq97ldy1JLPRYZomUlNaj2z8ZrS86tLzPTPZRX1zQAiT8VE6BEr1/S?=
- =?iso-8859-1?Q?uR5LVeztZA=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 011ed8bf-f12a-4a84-d713-08dec284ce57
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+	=?us-ascii?Q?MesgqcVlDOFffqdDSxbS7SV4zoUbVF6BcKMnZSaSK6Af/LNjWvpdbMiaSUFu?=
+ =?us-ascii?Q?AoDTFSUFUPMfDZUH75d6ShB3M3qlyOWABj3vmLdPXyYwLkCQutz+9lhL0CVD?=
+ =?us-ascii?Q?0HQrwNB651uXQKm8vwhgCWavnCpsw+Yh4KzBDdVfrzi16o6q8sADOrxg2wf+?=
+ =?us-ascii?Q?KwL7ZCTsAt1ZDd7QGGbr6496+FUkM4uYWo5xrxJW4rpUSWax2UOfzWwivP8W?=
+ =?us-ascii?Q?SljihFeJZXyiFVh8OOm9ko8/ur/DK5gO4qWwj0vjw+eOHaZoNINewbqsnZDe?=
+ =?us-ascii?Q?ut/B/rdjOLKSGWQKY/beeOj6IYnnmYTVe0TyTP02UvTlfAb5upwpi7kfYN7Y?=
+ =?us-ascii?Q?E9P6uMntvNFDlkKL4byj5/uDLHuqG/kxHRbAiHoLYeTSMSBHNwc4I6IIJ7iY?=
+ =?us-ascii?Q?sVDCO9onqe8eDJfUyT0jMrbj4H7Ogw9loln4PBxXNyNplUFEgN5yKzBqMljC?=
+ =?us-ascii?Q?Gidlaw0lbBwfRvCPz/T62kYwtVWwQbhMQ506F1OWHIgzynVODd4kZAio+lll?=
+ =?us-ascii?Q?G+yIb79wH3WrWf0mPHz6Eo6z3ambdGHwN8uUn8W8Xx1UhfhGd9N7x+Qaxe7q?=
+ =?us-ascii?Q?2nZYFOfWcddiuGOi3EXciswo4zkEN2P8xY+czgYGAQMYBPZeTKEXWV1N5r1u?=
+ =?us-ascii?Q?tYX3b1oigeid0Eiw2bDi3FiYsX8UTgz2F4CSRvZdMnTPqJ+QvlzoEN5uB26g?=
+ =?us-ascii?Q?IOb3oTAXF1hUIpiw4fGbg4xTXsm5MAglix2Vdbxzs7wGcwJ+YxZ4GYT3m4Zh?=
+ =?us-ascii?Q?o/Qlvf71FMg1OpbtStfWv/Xh0ThA0St5vC3iF8Hlv5J4sJGTn5jhr5IZR0rV?=
+ =?us-ascii?Q?fhae7ol6AVx5ovOwzBBSvFGa8/xLQu3MbrMlmxcgAOcSI4uQu2E6hyyfY8Iy?=
+ =?us-ascii?Q?2sPHWW+0/5kbXvIkv+3HRRHB7WP3EwBxWDb4ptXQjUKEiWZ2Bon5M4VcdHCu?=
+ =?us-ascii?Q?PsUXMwbKOx7vTPh4bmYde1gqfm6UxkMPs06K0VXUkZ8EeWuFNnnIjBSVw9YU?=
+ =?us-ascii?Q?ZssQn052QXbSkn84ycQ1WfVs2ek+gIEyLe+q3Z3or+nt93WmXGVktA7HHjPC?=
+ =?us-ascii?Q?o5Z619Hkgd+68DLqkTRlp25gASqN9FZIwAYK3HDdsDqhSruMz3nJSNGWPKzY?=
+ =?us-ascii?Q?QmApyB8i0702BGE0iKP8fQvLGEHtanAJ/TIRzxkIbe69i4Jh2Lx380MqYQzz?=
+ =?us-ascii?Q?SFk0h3asVaee+Ej2GxMjHRDv7pcNldXU5Avt44QYi4QheBW8S4+xJZ3Y9Xi0?=
+ =?us-ascii?Q?HN/h1338DK5c/izeC+AHlS+JLKvcPfUqeGjYhJilDsx4VA/Ayf3Zlk1T15oN?=
+ =?us-ascii?Q?KYc5pXmGtwELjlVWGCIog6JCpcqMMmyUnNPCJUZ8+lUGTQ4FptvK8KT9+8B0?=
+ =?us-ascii?Q?MiR3McKRtWxlpM1RZ2V4O7/miU1UjMnLt2yL+RTw07dECyFiZn2HJNHwcVu8?=
+ =?us-ascii?Q?H6unnO4TkuSfs8PI/ZT2nJSmnVfAZjlSzIYCl35tcYZRXwrmnHyLKQxTgOVI?=
+ =?us-ascii?Q?XIlfvrM1AFLiw/s/Bp8O4a2qRv6JwiGeGH/QxIDwZEGrkXSwHWbWkJ2cRsuQ?=
+ =?us-ascii?Q?lBbY5Mb/oaNZgHnPBUre7hslzFKyRus5R6Tv4d5zroDOH1NKnI7gxmWiW0Zk?=
+ =?us-ascii?Q?2aTGqb0kQUV4JDe/+fcbvNG0K1IjcYnzRvkpgl+PDuFbXS5lNyBDg7C5hmvw?=
+ =?us-ascii?Q?LVNBenWLxYrdk7dvCRdKS1BPWcfJFzBl2IptvanKb9LzNdk6a+Nd9CSDd1Dx?=
+ =?us-ascii?Q?N9PsfNdsxldyhDUpueJq0+d2/2gGRM+E68qsV0/hlmWuCmAx3GoZ?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 64cc9cc5-7dc7-4e7c-b4fc-08dec2a9d8e2
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2026 22:01:18.8068
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2026 02:26:27.8587
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bwQpQKK+NAwRQUcZs8jXfugXzIAl867whtS3E5AKvyiIX0BS2MBjCWnn25SrNFISBAsI9Nh90cQTsZYmc5S5+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7305
+X-MS-Exchange-CrossTenant-UserPrincipalName: QL4/RhtlLmxHTI7Z8yIfXOfTxs9bfFuanSbFPOowVSQ+QU8WASJ57cYKOaZRKEDi9PiKSTySsJLszgeBnMqOyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY7P286MB6881
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [2.14 / 15.00];
-	R_DKIM_REJECT(1.00)[nxp.com:s=selector1];
+X-Spamd-Result: default: False [1.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
+	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11176-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:benoit.monin@bootlin.com,m:vkoul@kernel.org,m:thomas.petazzoni@bootlin.com,m:Frank.Li@kernel.org,m:imx@lists.linux.dev,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[nxp.com:-];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:Frank.li@nxp.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:mani@kernel.org,m:marek.vasut+renesas@mailbox.org,m:yoshihiro.shimoda.uh@renesas.com,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:marek.vasut@mailbox.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11177-lists,dmaengine=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[valinux.co.jp:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine];
-	TO_DN_SOME(0.00)[]
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,synopsys.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 99977643B9D
+X-Rspamd-Queue-Id: 32EED644B12
 
-On Mon, May 18, 2026 at 02:36:45PM +0200, Benoît Monin wrote:
-> Implement dynamic linking of scatter/gather transfers to enable
-> chaining multiple DMA descriptors without stopping the channel.
-> This avoids waiting for the channel to go idle if there is another
-> transaction already issued.
->
-> Add fsl_edma_link_sg() to dynamically link the last TCD of a previously
-> submitted descriptor to the first TCD of a new descriptor by setting
-> the scatter/gather address and the E_SG flag, and keeping the channel
-> active by clearing the DREQ bit.
->
-> Linking is done when the transaction is submitted by fsl_edma_tx_submit().
-> To do so, the .tx_submit() callback is overridden for non-cyclic
-> transactions prepared by fsl_edma_prep_peripheral_dma_vec() and
-> fsl_edma_prep_slave_sg(). This ensures that transactions are linked
-> in the order they are submitted.
->
-> Update fsl_edma_xfer_desc() to avoid re-initializing the hardware when a
-> transfer is already in progress, allowing seamless chaining of descriptors.
->
-> Modify the transfer completion handler to check the DONE flag in the
-> channel CSR before marking the transfer complete. Since this flag is
-> only available on SoC with the split registers layout, we only link
-> transactions for DMA controllers flagged with FSL_EDMA_DRV_SPLIT_REG.
->
-> Add trace event for scatter/gather linking operations.
->
-> Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
-> ---
->  drivers/dma/fsl-edma-common.c | 90 +++++++++++++++++++++++++++++++++++++++----
->  drivers/dma/fsl-edma-trace.h  |  5 +++
->  2 files changed, 88 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-> index c10190164926..6e5820051f29 100644
-> --- a/drivers/dma/fsl-edma-common.c
-> +++ b/drivers/dma/fsl-edma-common.c
-> @@ -58,7 +58,10 @@ void fsl_edma_tx_chan_handler(struct fsl_edma_chan *fsl_chan)
->  		list_del(&fsl_chan->edesc->vdesc.node);
->  		vchan_cookie_complete(&fsl_chan->edesc->vdesc);
->  		fsl_chan->edesc = NULL;
-> -		fsl_chan->status = DMA_COMPLETE;
-> +		if (!(fsl_edma_drvflags(fsl_chan) & FSL_EDMA_DRV_SPLIT_REG) ||
-> +		    (edma_readl_chreg(fsl_chan, ch_csr) & EDMA_V3_CH_CSR_DONE)) {
-> +			fsl_chan->status = DMA_COMPLETE;
-> +		}
->  	} else {
->  		vchan_cyclic_callback(&fsl_chan->edesc->vdesc);
->  	}
-> @@ -673,6 +676,68 @@ struct dma_async_tx_descriptor *fsl_edma_prep_dma_cyclic(
->  	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
->  }
->
-> +static void fsl_edma_link_sg(struct fsl_edma_chan *fsl_chan, struct fsl_edma_desc *fsl_desc)
-> +{
-> +	u32 flags = fsl_edma_drvflags(fsl_chan);
-> +	struct fsl_edma_hw_tcd *last_tcd;
-> +	struct fsl_edma_desc *prev_desc;
-> +	struct virt_dma_desc *vdesc;
-> +	u16 csr;
-> +
-> +	lockdep_assert_held(&fsl_chan->vchan.lock);
-> +
-> +	if (!(flags & FSL_EDMA_DRV_SPLIT_REG))
-> +		return;
-> +
-> +	vdesc = list_last_entry_or_null(&fsl_chan->vchan.desc_submitted,
-> +					struct virt_dma_desc, node);
-> +	if (!vdesc)
-> +		vdesc = list_last_entry_or_null(&fsl_chan->vchan.desc_issued,
-> +						struct virt_dma_desc, node);
-> +	if (!vdesc)
-> +		return;
-> +
-> +	prev_desc = to_fsl_edma_desc(vdesc);
-> +	last_tcd = prev_desc->tcd[prev_desc->n_tcds - 1].vtcd;
-> +
-> +	csr = fsl_edma_get_tcd_to_cpu(fsl_chan, last_tcd, csr);
-> +	if (!(csr & EDMA_TCD_CSR_D_REQ))
-> +		return;
-> +
-> +	fsl_edma_set_tcd_to_le(fsl_chan, last_tcd, fsl_desc->tcd[0].ptcd, dlast_sga);
-> +
-> +	csr &= ~EDMA_TCD_CSR_D_REQ;
-> +	csr |= EDMA_TCD_CSR_E_SG;
+On Thu, Jun 04, 2026 at 04:40:06PM -0400, Frank Li wrote:
+> On Mon, May 25, 2026 at 03:24:09PM +0900, Koichiro Den wrote:
+> > Add a dma_request_channel() filter that matches a DesignWare eDMA
+> > write/read hardware channel by hardware channel number.
+> >
+> > PCI endpoint resource enumeration can describe hardware channel metadata
+> > and let consumers claim it through the normal DMAengine request path.
+> > This avoids returning an unclaimed dma_chan pointer to the caller and does
+> > not require making dma_get_slave_channel() public.
+> >
+> > Signed-off-by: Koichiro Den <den@valinux.co.jp>
+> > ---
+> > Changes in v2:
+> >   - New patch. Replace the raw channel lookup helper with a
+> >     dma_request_channel() filter.
+> >   - Do not make dma_get_slave_channel() public.
+> >     Patch 01/12 "dmaengine: Make dma_get_slave_channel() public" is
+> >     dropped.
+> >
+> >  drivers/dma/dw-edma/dw-edma-core.c | 15 +++++++++++++++
+> >  include/linux/dma/edma.h           | 18 ++++++++++++++++++
+> >  2 files changed, 33 insertions(+)
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index c2feb3adc79f..80b4a168225b 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -1189,6 +1189,21 @@ int dw_edma_remove(struct dw_edma_chip *chip)
+> >  }
+> >  EXPORT_SYMBOL_GPL(dw_edma_remove);
+> >
+> > +bool dw_edma_filter_hw_chan(struct dma_chan *dchan, void *param)
+> > +{
+> > +	struct dw_edma_hw_chan_filter *filter = param;
+> > +	struct dw_edma_chan *chan;
+> > +
+> > +	if (!filter || dchan->device->dev != filter->dma_dev)
+> > +		return false;
+> > +
+> > +	chan = dchan2dw_edma_chan(dchan);
+> > +
+> > +	return chan->dir == (filter->write ? EDMA_DIR_WRITE : EDMA_DIR_READ) &&
+> > +	       chan->id == filter->id;
+> > +}
+> > +EXPORT_SYMBOL_GPL(dw_edma_filter_hw_chan);
+> > +
+> >  MODULE_LICENSE("GPL v2");
+> >  MODULE_DESCRIPTION("Synopsys DesignWare eDMA controller core driver");
+> >  MODULE_AUTHOR("Gustavo Pimentel <gustavo.pimentel@synopsys.com>");
+> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> > index 1fafd5b0e315..3e15cf83b784 100644
+> > --- a/include/linux/dma/edma.h
+> > +++ b/include/linux/dma/edma.h
+> > @@ -106,10 +106,23 @@ struct dw_edma_chip {
+> >  	bool			cfg_non_ll;
+> >  };
+> >
+> > +/**
+> > + * struct dw_edma_hw_chan_filter - DesignWare eDMA hardware channel selector
+> > + * @dma_dev: DMA controller device to match
+> > + * @write: true to select a write channel, false to select a read channel
+> > + * @id: hardware channel number within the selected direction
+> > + */
+> > +struct dw_edma_hw_chan_filter {
+> > +	struct device	*dma_dev;
+> > +	bool		write;
+> > +	u16		id;
+> > +};
+> > +
+> 
+> I have not seen user for this, not sure why it need be in this public header
 
-suppose here need dma_wmb() to make sure dlast_sga happen before csr.
+Thanks for the review.
 
-I remember ask dma risk condition problem, but I forget detail.
+It is used by the DesignWare EP resource provider added in part 2:
+https://lore.kernel.org/linux-pci/20260525063129.3316894-4-den@valinux.co.jp/
+Since that provider lives outside drivers/dma/dw-edma, the filter definition
+needs to be visible outside the dw-edma core.
 
- TCD1
- TCD2
- TCD3 (last one),
+As a side note, this was added in v2, after Sashiko's feedback [1]. The v2 model
+is:
 
-If DMAengine already load TCD3 to register and moving data,
+  - The PCI aux resource provider describes static HW channel resources, rather
+    than potentially unstable dma_chan pointers.
+  - When the EPF delegates some of the channels to the peer host, it requests
+    the channel by matching the HW channel id.
 
-You update TCD3's dlast_sga? Does DMA engine fetch again TCD3 to get
-updated dlast_sga?
+If the lifetime/removal model changes based on your feedback on [PATCH v2
+03/12], we could possibly go back to the v1 model [2], where the PCI aux
+resource provider describes channel resources with dma_chan pointers. In that
+case, we would need to document that those dma_chan pointers must remain valid
+for the lifetime of the aux resource consumer, and this dw_edma_hw_chan_filter
+helper would no longer be needed; dw_edma_find_channel() could be revived [3].
 
-Frank
+[1] https://lore.kernel.org/dmaengine/20260521065525.C65DB1F000E9@smtp.kernel.org/
+[2] https://lore.kernel.org/linux-pci/20260521063405.2842644-3-den@valinux.co.jp/
+[3] https://lore.kernel.org/dmaengine/20260521063115.2842238-3-den@valinux.co.jp/
 
+Best regards,
+Koichiro
 
-
-> +	fsl_edma_set_tcd_to_le(fsl_chan, last_tcd, csr, csr);
-> +
-> +	if (prev_desc == fsl_chan->edesc && prev_desc->n_tcds == 1) {
-> +		if (flags & FSL_EDMA_DRV_CLEAR_DONE_E_SG)
-> +			edma_writel_chreg(fsl_chan, edma_readl_chreg(fsl_chan, ch_csr), ch_csr);
-> +
-> +		edma_cp_tcd_to_reg(fsl_chan, last_tcd, dlast_sga);
-> +		edma_cp_tcd_to_reg(fsl_chan, last_tcd, csr);
-> +	}
-> +
-> +	trace_edma_link_sg(fsl_chan, last_tcd);
-> +}
-> +
-> +static dma_cookie_t fsl_edma_tx_submit(struct dma_async_tx_descriptor *tx)
-> +{
-> +	struct virt_dma_desc *vd = container_of(tx, struct virt_dma_desc, tx);
-> +	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(tx->chan);
-> +	struct fsl_edma_desc *fsl_desc = to_fsl_edma_desc(vd);
-> +	struct virt_dma_chan *vc = to_virt_chan(tx->chan);
-> +	dma_cookie_t cookie;
-> +
-> +	guard(spinlock_irqsave)(&fsl_chan->vchan.lock);
-> +
-> +	fsl_edma_link_sg(fsl_chan, fsl_desc);
-> +	cookie = dma_cookie_assign(tx);
-> +	list_move_tail(&vd->node, &vc->desc_submitted);
-> +
-> +	return cookie;
-> +}
-> +
->  struct dma_async_tx_descriptor *
->  fsl_edma_prep_peripheral_dma_vec(struct dma_chan *chan, const struct dma_vec *vecs,
->  				 size_t nb, enum dma_transfer_direction direction,
-> @@ -680,6 +745,7 @@ fsl_edma_prep_peripheral_dma_vec(struct dma_chan *chan, const struct dma_vec *ve
->  {
->  	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
->  	dma_addr_t src_addr, dst_addr, last_sg;
-> +	struct dma_async_tx_descriptor *tx;
->  	struct fsl_edma_desc *fsl_desc;
->  	u16 soff, doff, iter;
->  	u32 nbytes;
-> @@ -779,7 +845,10 @@ fsl_edma_prep_peripheral_dma_vec(struct dma_chan *chan, const struct dma_vec *ve
->  		}
->  	}
->
-> -	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
-> +	tx = vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
-> +	if (!fsl_desc->iscyclic)
-> +		tx->tx_submit = fsl_edma_tx_submit;
-> +	return tx;
->  }
->
->  struct dma_async_tx_descriptor *fsl_edma_prep_slave_sg(
-> @@ -788,9 +857,10 @@ struct dma_async_tx_descriptor *fsl_edma_prep_slave_sg(
->  		unsigned long flags, void *context)
->  {
->  	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
-> +	dma_addr_t src_addr, dst_addr, last_sg;
-> +	struct dma_async_tx_descriptor *tx;
->  	struct fsl_edma_desc *fsl_desc;
->  	struct scatterlist *sg;
-> -	dma_addr_t src_addr, dst_addr, last_sg;
->  	u16 soff, doff, iter;
->  	u32 nbytes;
->  	int i;
-> @@ -882,7 +952,10 @@ struct dma_async_tx_descriptor *fsl_edma_prep_slave_sg(
->  		}
->  	}
->
-> -	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
-> +	tx = vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
-> +	tx->tx_submit = fsl_edma_tx_submit;
-> +
-> +	return tx;
->  }
->
->  struct dma_async_tx_descriptor *fsl_edma_prep_memcpy(struct dma_chan *chan,
-> @@ -924,9 +997,12 @@ void fsl_edma_xfer_desc(struct fsl_edma_chan *fsl_chan)
->  	if (!vdesc)
->  		return;
->  	fsl_chan->edesc = to_fsl_edma_desc(vdesc);
-> -	fsl_edma_set_tcd_regs(fsl_chan, fsl_chan->edesc->tcd[0].vtcd);
-> -	fsl_edma_enable_request(fsl_chan);
-> -	fsl_chan->status = DMA_IN_PROGRESS;
-> +
-> +	if (fsl_chan->status != DMA_IN_PROGRESS) {
-> +		fsl_edma_set_tcd_regs(fsl_chan, fsl_chan->edesc->tcd[0].vtcd);
-> +		fsl_edma_enable_request(fsl_chan);
-> +		fsl_chan->status = DMA_IN_PROGRESS;
-> +	}
->  }
->
->  void fsl_edma_issue_pending(struct dma_chan *chan)
-> diff --git a/drivers/dma/fsl-edma-trace.h b/drivers/dma/fsl-edma-trace.h
-> index d3541301a247..ac319d2dbb90 100644
-> --- a/drivers/dma/fsl-edma-trace.h
-> +++ b/drivers/dma/fsl-edma-trace.h
-> @@ -119,6 +119,11 @@ DEFINE_EVENT(edma_log_tcd, edma_fill_tcd,
->  	TP_ARGS(chan, tcd)
->  );
->
-> +DEFINE_EVENT(edma_log_tcd, edma_link_sg,
-> +	     TP_PROTO(struct fsl_edma_chan *chan, void *tcd),
-> +	     TP_ARGS(chan, tcd)
-> +);
-> +
->  #endif
->
->  /* this part must be outside header guard */
->
-> --
-> 2.54.0
->
+> 
+> Frank
+> 
+> >  /* Export to the platform drivers */
+> >  #if IS_REACHABLE(CONFIG_DW_EDMA)
+> >  int dw_edma_probe(struct dw_edma_chip *chip);
+> >  int dw_edma_remove(struct dw_edma_chip *chip);
+> > +bool dw_edma_filter_hw_chan(struct dma_chan *chan, void *param);
+> >  #else
+> >  static inline int dw_edma_probe(struct dw_edma_chip *chip)
+> >  {
+> > @@ -120,6 +133,11 @@ static inline int dw_edma_remove(struct dw_edma_chip *chip)
+> >  {
+> >  	return 0;
+> >  }
+> > +
+> > +static inline bool dw_edma_filter_hw_chan(struct dma_chan *chan, void *param)
+> > +{
+> > +	return false;
+> > +}
+> >  #endif /* CONFIG_DW_EDMA */
+> >
+> >  #endif /* _DW_EDMA_H */
+> > --
+> > 2.51.0
+> >
 

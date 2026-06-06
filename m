@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-11255-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11256-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wFvfBV1oI2potAEAu9opvQ
-	(envelope-from <dmaengine+bounces-11255-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:22:53 +0200
+	id 32AzBGhoI2pwtAEAu9opvQ
+	(envelope-from <dmaengine+bounces-11256-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:23:04 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7790464BFFC
-	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:22:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8128D64C004
+	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:23:03 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=avy6G10z;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11255-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11255-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=i3MLPdJj;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11256-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11256-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 731913014C54
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Jun 2026 00:22:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 87B433014C7D
+	for <lists+dmaengine@lfdr.de>; Sat,  6 Jun 2026 00:23:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FE721EB19B;
-	Sat,  6 Jun 2026 00:22:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6857A1EB19B;
+	Sat,  6 Jun 2026 00:23:01 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2451C199385;
-	Sat,  6 Jun 2026 00:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F962199385;
+	Sat,  6 Jun 2026 00:22:59 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780705370; cv=none; b=hAnUxdYxEwVQ2iM4dEoChB4tE+fF+NzUxT2UjXxikMrCCt0hpoPkOTp+bty09i8oXT93RdpcWK72JiTFQbCDiyPPUM6IvHU2bIp729d0Zr7Euk8Al5UW+c4RJo2W113tLCHSSngHEk9J45du67Z84OEfIxvk3lDDD4RGQspEPDg=
+	t=1780705381; cv=none; b=ln1xPtMINP7wmfmCUWI6mpzxdktRDCHHWEzQOqle6vsp6SmcrZguZQIzxx9AObEXAIiDa63mk9zoUP2yetwfuY1/jvKJaG5uMOzjLapuEBPKKpjG3Zg9JTFoiSTaqmSfhD3+c9yw4sLY8V2XPliwtYHXoj2YEFc16l6ni5NIkH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780705370; c=relaxed/simple;
-	bh=jB5iNEmDjf6EW9KcP+YJLwWKvrfcpWkMTGgIt7zKDpU=;
+	s=arc-20240116; t=1780705381; c=relaxed/simple;
+	bh=UJoEbhqXsQ04lBoC+yJODTBQX1DKC92XIdNSL8fQTjY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=agw/JPybPQ0pQMm2yV10O+ChuS0QMzmN3NS2YF91PPQjYJI+IAT5GcTaCPXZOPTwJPXqAVor385HhGVvazeQREfkRvdiAanbX1eFjxJS2y2bJVJh9reVu+QWEl2SkLJ0UXPz2fWwl+AorU/L4c4Zhd+CB3t0uj8A/QWB4Gl+9yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avy6G10z; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BDA71F00893;
-	Sat,  6 Jun 2026 00:22:48 +0000 (UTC)
+	 Message-Id; b=glsUYXEcjsgVSou1H24Al5LHySSCbPDKKBZxSwbHdUauKovt5N+UI5Z7P3HVZyRfiHUMzbW+OIwqSJzGzQkH5GRfC8vTh6TKPq9UDLTi7ftvg0vczIEODkugx7EAZ0xVcmc/DbiIYvmS4mq13gaO4kQxDNAFuYKgMNkVSMLX8RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3MLPdJj; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A35DB1F00893;
+	Sat,  6 Jun 2026 00:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780705368;
-	bh=DBfD3CfCkfF8zT8GCRswpOw+X+oxnk7tG8v487CC6wQ=;
+	s=k20260515; t=1780705379;
+	bh=qeByog+RWT14GnISKe1EeP55EiD71JAqKpnvlRh6dZU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=avy6G10zMSnjoYj90qE15tlgdFSum+fBWgGmxi7iycVB7OgvKHJcRLpTYDzAH2wrp
-	 sILHQ2lqxNWErZ0b5Nfru1iv2xoOtoVff0pcg1VXDUTfyQ/lHEFYcHgd9/WtCiPBPl
-	 9ky/BfK+ezvaLb93gfVa3LMggGkv5FAuQvxdlNMRAmKVgytpqTPgrEq031HhLTGG9I
-	 vvtKHXki4tsHIhB9GFieE7XdXMdJCbnsgIJbFfMek8dH1H5EFeK5ybkpkqxrsXFVpO
-	 fmpiw3T/Zw4TzJyp+I8+EgfCoWBinZH3pInlVs3IdIH7hLwobOxWv7jinyySfDh647
-	 IYI1HWz1ioVzA==
+	b=i3MLPdJjUipnMibueXd5Rly1ogcf3rSWDQP71uxrs8+Tv8LsHeev0IYJjkmJ5Aqb8
+	 GB52Tq+B9+9hlVqwtzA7RWaGKoX3YR9fgU3RS2+qz+55TuANtA9TS9OrLqbjQP0eHK
+	 xhxxbbx+Jslloi28e8BIrT0154uMtaqvB7eg9NFWApvw6k1pUQenudt8OxJhsldR0N
+	 /9OMC5FH2n7yelnrXhW1LReSLbKs3Ysy4nG/XNDgoWJM+1a1X+Ho8jA68rC7QA6qDj
+	 jBO2VGczrRVpbz9CGh0h++UJnotR2XE5Xvc4FsM72p6eBjgM5E2We/sw67923D4763
+	 1aFo9ooU1eCUw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 19/23] dmaengine: sdxi: Provide context start and
- stop APIs
+Subject: Re: [PATCH v3 11/23] dmaengine: sdxi: Add client context alloc and
+ release APIs
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Nathan Lynch via B4 Relay" <devnull+nathan.lynch.amd.com@kernel.org>
-Cc: vkoul@kernel.org, linux-pci@vger.kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260605-sdxi-base-v3-19-4d38ca2bdffe@amd.com>
-References: <20260605-sdxi-base-v3-19-4d38ca2bdffe@amd.com>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, linux-pci@vger.kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260605-sdxi-base-v3-11-4d38ca2bdffe@amd.com>
+References: <20260605-sdxi-base-v3-11-4d38ca2bdffe@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 06 Jun 2026 00:22:48 +0000
-Message-Id: <20260606002248.8BDA71F00893@smtp.kernel.org>
+Date: Sat, 06 Jun 2026 00:22:59 +0000
+Message-Id: <20260606002259.A35DB1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -73,12 +73,12 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,amd.com:email,smtp.kernel.org:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,sashiko.dev:url];
-	TAGGED_FROM(0.00)[bounces-11255-lists,dmaengine=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,amd.com:email,smtp.kernel.org:mid,sashiko.dev:url,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	TAGGED_FROM(0.00)[bounces-11256-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:devnull+nathan.lynch.amd.com@kernel.org,m:vkoul@kernel.org,m:linux-pci@vger.kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,m:devnull@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:devnull+nathan.lynch.amd.com@kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:linux-pci@vger.kernel.org,m:dmaengine@vger.kernel.org,m:devnull@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
@@ -102,110 +102,103 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FROM_NO_DN(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[5]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7790464BFFC
+X-Rspamd-Queue-Id: 8128D64C004
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Critical] Silent failures in `sdxi_stop_cxt` do not stop the hardware bu=
-t provide no error to the caller, leading to subsequent use-after-free of c=
-ontext resources.
-- [High] DMA memory use-after-free triggered by `sdxi_completion_poll` time=
-out in `sdxi_start_cxt` and `sdxi_stop_cxt`.
+- [Critical] Inverted teardown sequence in `sdxi_unregister()` causes DMA U=
+se-After-Free and host Use-After-Free by freeing contexts while active.
+- [High] Context DMA memory is freed without hardware synchronization, lead=
+ing to use-after-free by the device.
 --
 
-commit 6a36436cc92c4877bfb050c28457f1ac8dbaf6a2
+commit f66266c7bb64ddb6a5bf8b858f8554af8ba46c5a
 Author: Nathan Lynch <nathan.lynch@amd.com>
+Subject: dmaengine: sdxi: Add client context alloc and release APIs
 
-dmaengine: sdxi: Provide context start and stop APIs
-
-This commit introduces high-level context start and stop APIs for SDXI.
-These APIs encapsulate submitting administrative descriptors and waiting
-for completion signaling.
+This commit exposes sdxi_cxt_new() and sdxi_cxt_exit() to create and release
+SDXI contexts, tracking them in an xarray. It also introduces logic to
+invalidate a context's L1 entry upon deallocation.
 
 > diff --git a/drivers/dma/sdxi/context.c b/drivers/dma/sdxi/context.c
-> index 9b0984842d9a7..afd3414163428 100644
+> index cc99fe9ecf928..2f9a29df5d9ce 100644
 > --- a/drivers/dma/sdxi/context.c
 > +++ b/drivers/dma/sdxi/context.c
 
 [ ... ]
 
-> +int sdxi_start_cxt(struct sdxi_cxt *cxt)
+> +/* Invalidate a context. */
+> +static void sdxi_rescind_cxt(struct sdxi_cxt *cxt)
 > +{
-> +	struct sdxi_cxt *adm =3D to_admin_cxt(cxt);
-> +	struct sdxi_desc *desc;
+> +	u8 l1_idx =3D ID_TO_L1_INDEX(cxt->id);
+> +	struct sdxi_cxt_L1_ent *ent =3D &cxt->sdxi->L1_table->entry[l1_idx];
+> +
+> +	invalidate_L1_entry(ent);
+> +	invalidate_cxtl_ctl(cxt->cxt_ctl);
+> +	/* todo: need to send DSC_CXT_UPD to admin */
+> +}
 
 [ ... ]
 
-> +	sdxi_completion_attach(desc, sc);
-> +	sdxi_desc_make_valid(desc);
-> +	sdxi_cxt_push_doorbell(adm, sdxi_ring_resv_dbval(&resv));
+> +void sdxi_cxt_exit(struct sdxi_cxt *cxt)
+> +{
+> +	if (WARN_ON(sdxi_cxt_is_admin(cxt)))
+> +		return;
 > +
-> +	return sdxi_completion_poll(sc);
+> +	sdxi_rescind_cxt(cxt);
+> +	sdxi_free_cxt(cxt);
 > +}
 
 [Severity: High]
-If sdxi_completion_poll() times out here, does this return early and
-trigger the scope-based cleanup of the sdxi_completion structure?
+Does this code free context DMA memory without synchronizing with the hardw=
+are?
 
-If the hardware operation is just delayed and not actually aborted, could
-the hardware later write to this completion block address after it has
-been freed back to the DMA pool?
+By clearing the valid bits but leaving the DSC_CXT_UPD synchronization for a
+later TODO in sdxi_rescind_cxt(), the device is not notified and its intern=
+al
+caches may still reference these context structures.
 
-> +void sdxi_stop_cxt(struct sdxi_cxt *cxt)
-> +{
-> +	struct sdxi_cxt *adm =3D to_admin_cxt(cxt);
-> +	struct sdxi_desc *stop, *sync;
-> +	struct sdxi_ring_resv resv;
-> +	int err;
-> +
-> +	might_sleep();
-> +
-> +	struct sdxi_completion *sc __free(sdxi_completion) =3D
-> +		sdxi_completion_alloc(cxt->sdxi);
-> +
-> +	if (!sc)
-> +		return;
-
-[Severity: Critical]
-Since sdxi_stop_cxt() returns void, do these silent early returns leave
-the caller unaware that the hardware context was never actually stopped?
-
-If a caller proceeds to tear down the context and free its backing
-descriptor ring and memory, could the active DMA engine continue processing
-descriptors and corrupt memory?
-
-> +	/* This is not how to stop the admin context. */
-> +	if (WARN_ON(adm =3D=3D cxt))
-> +		return;
-> +
-> +	err =3D sdxi_ring_reserve(adm->ring_state, 2, &resv);
-> +	if (WARN_ON_ONCE(err))
-> +		return;
-
-[Severity: Critical]
-Similarly, if reserving space in the admin ring fails here, the function
-returns silently without stopping the hardware. Could this lead to the same
-scenario where context memory is freed while still in use by the hardware?
-
-> +	stop =3D sdxi_ring_resv_next(&resv);
-> +	sync =3D sdxi_ring_resv_next(&resv);
+When sdxi_cxt_exit() immediately calls sdxi_free_cxt() afterwards, could the
+hardware perform DMA accesses on memory that has been returned to the
+allocators, leading to a device use-after-free?
 
 [ ... ]
 
-> +	sdxi_completion_attach(sync, sc);
-> +	sdxi_desc_make_valid(stop);
-> +	sdxi_desc_make_valid(sync);
-> +	sdxi_cxt_push_doorbell(adm, sdxi_ring_resv_dbval(&resv));
-> +
-> +	WARN_ON(sdxi_completion_poll(sc));
-> +}
+> diff --git a/drivers/dma/sdxi/device.c b/drivers/dma/sdxi/device.c
+> index b875d8cdb58af..d3d1ad2f2effe 100644
+> --- a/drivers/dma/sdxi/device.c
+> +++ b/drivers/dma/sdxi/device.c
 
-[Severity: High]
-Just as in sdxi_start_cxt(), if the poll function times out here, does the
-early return free the in-use DMA memory without aborting the pending DMA
-stop/sync operation?
+[ ... ]
+
+> @@ -346,6 +348,12 @@ EXPORT_SYMBOL_NS_GPL(sdxi_register, "SDXI");
+>  void sdxi_unregister(struct device *dev)
+>  {
+>  	struct sdxi_dev *sdxi =3D dev_get_drvdata(dev);
+> +	struct sdxi_cxt *cxt;
+> +	unsigned long index;
+> +
+> +	xa_for_each(&sdxi->client_cxts, index, cxt)
+> +		sdxi_cxt_exit(cxt);
+> +	xa_destroy(&sdxi->client_cxts);
+> =20
+>  	sdxi_dev_stop(sdxi);
+>  }
+
+[Severity: Critical]
+Does this teardown sequence result in DMA memory corruption and a host
+double-free?
+
+By forcefully freeing all client context DMA memory via sdxi_cxt_exit()
+before calling sdxi_dev_stop(), the device hardware is still active and the
+contexts themselves have never been stopped via sdxi_stop_cxt().
+
+Furthermore, since these contexts are allocated per channel, won't the DMA
+engine framework later invoke sdxi_dma_free_chan_resources() on channel
+release or devres teardown, which will attempt to stop and free the already
+freed sdchan->cxt?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605-sdxi-base-=
-v3-0-4d38ca2bdffe@amd.com?part=3D19
+v3-0-4d38ca2bdffe@amd.com?part=3D11
 

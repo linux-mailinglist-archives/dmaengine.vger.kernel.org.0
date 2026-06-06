@@ -1,57 +1,58 @@
-Return-Path: <dmaengine+bounces-11233-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11235-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id PA4FMlhkI2ptsQEAu9opvQ
-	(envelope-from <dmaengine+bounces-11233-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:05:44 +0200
+	id lEZeAWZkI2p2sQEAu9opvQ
+	(envelope-from <dmaengine+bounces-11235-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:05:58 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A20264BECC
-	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:05:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 954E164BED4
+	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:05:57 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=ceHoYd7V;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11233-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11233-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b="hx/eyYE9";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11235-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11235-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8C2F63037BA0
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Jun 2026 00:02:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2C261303A527
+	for <lists+dmaengine@lfdr.de>; Sat,  6 Jun 2026 00:02:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52C2023393A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E2892571D7;
 	Sat,  6 Jun 2026 00:02:23 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9981E376C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4155722068D;
 	Sat,  6 Jun 2026 00:02:23 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780704143; cv=none; b=eQISRIG1Sx7K77UyBoDi57+9O9SEsujjKc9bo/QxrPJkM3E9poLe672GHeMtj2lbvTkQcAFZv57WSJgDNaT7V0ZsXHq9u+T20V3P8glMKRiVMRzKpzOG02XlmhWMdxQ9Oy8fNA1idnml46rCsrVFMXcI8LybgcoQzuFarcZ42GI=
+	t=1780704143; cv=none; b=WOJHgl1Huk5aT0pXj+ctDvlUJNCq+Ge+kv5w1KNdoe2HsYxs8jjTD4YtIXPQdS3LcYyxU3mXiLAfHT7tTQ0uXoG7he5UOK3nbtozYTvjNC7Lj+SeEQ/hDiwZeaYrPzxwCL9PP5bkJ0/5AA2YQ+ypB17FTeKog7qzb7oJJyKZ3E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780704143; c=relaxed/simple;
-	bh=3r8qAeadjqF7U6wgSq1wgMd5o+VrpDZ0Osek0TCOqQA=;
+	bh=Flk3OzgFJwdu7qVBc8FGZ7a1yxRFBhW7x/D8pU+MqB0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bzmageyuIQDKyLRdeIKmPhboobJ2DJC4mgZmgpQNO0FM4rcYNjB6lxPt8ID80PvZSPvGtzLv5OO5X5HnMNRMtfTV9rfbimIVk3ha2op0HKzlvn55dZy7oIMtt5pMSRF9tLRqC0ooKN+BFH0nsj///oGdiytr7qX2EzjdRgRG5qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ceHoYd7V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0BD4FC2BCFB;
+	 In-Reply-To:To:Cc; b=lHu3WFENB5iTMrlw2qL72EpDiodoYVdWp6cB+wMIGPgtRVFl8x9r71wdcfC9o8L67Tpa1peoZOPdb7vp6Vk9ZwdFm/ZDJ86VNY6iY9It2sJNoU6SS7uyu7Xiiu7/xkA9ka2xXcMRMT5oFvTaNtdqGatgvYENwocOJEDOY4bs8w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hx/eyYE9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1FAC8C4AF0F;
 	Sat,  6 Jun 2026 00:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1780704143;
-	bh=3r8qAeadjqF7U6wgSq1wgMd5o+VrpDZ0Osek0TCOqQA=;
+	bh=Flk3OzgFJwdu7qVBc8FGZ7a1yxRFBhW7x/D8pU+MqB0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ceHoYd7VNVDv/3Kpi9ukx8+QJ9Q0wv5m/T3XS//wugDkCnMCPhvGRWbFTvM2B6hS0
-	 unxH8u+SAGNbk3/VsDQ5ijsce1jjSvuII7iZttW0hdfoTvMBSHaXJuERiQXgfYi270
-	 Wa+sCUc2fxtUMHyOxJpPUsD9APpJBsJ1n+0+GOqQO3RpF6bD0qNunA+88TXM7kKvh3
-	 Zz0jQn6yQdyFF5SPVkHCz2WG3HGMO6QdBF8NXRZaumuJ0NuvqvrsRX9WMRvYeuTerW
-	 SoZvy2HIZQWDdCywlDVQiRhvnXJGEk4OCVu7Cz/8jiBSESGlBYqAvDnmk+pIeqiCbl
-	 vFs+Ap9AlOPSA==
+	b=hx/eyYE9DYjsY8Buz7C/ZhgC2646nMWG1767LVHdi+/QdPv8neyhZu/YpX0KHvu6J
+	 PMMxaivuMjQe6VP9MAc4MU5idE5WjFZKpKtqUfOl8lYUJF5l3xO6+KKDmFzwcLJ2QS
+	 +XNcaW2EwhQa7xiKu33dU3Ybzf8GDIPUyXAGY6KpbW7bmoH3960vH6UmDMsGMdyG7Y
+	 Z9S5tiOlL04jjMWiRtMWaFsquGJHNYTSN6GnMrM5EiKdoXbmYGJAw02cZcFQdfOsZy
+	 uYKcT91jvhQ37jKohGWRhz7GqyhnoOmTa3lNc9UZ6sn8H7AHL5q0PB5nFN49DLFOox
+	 t9mRmy8givqPg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05224CD6E7C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FF2CD6E7B;
 	Sat,  6 Jun 2026 00:02:23 +0000 (UTC)
 From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Fri, 05 Jun 2026 19:02:15 -0500
-Subject: [PATCH v3 12/23] dmaengine: sdxi: Add descriptor ring management
+Date: Fri, 05 Jun 2026 19:02:16 -0500
+Subject: [PATCH v3 13/23] dmaengine: sdxi: Add unit tests for descriptor
+ ring reservations
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -60,7 +61,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260605-sdxi-base-v3-12-4d38ca2bdffe@amd.com>
+Message-Id: <20260605-sdxi-base-v3-13-4d38ca2bdffe@amd.com>
 References: <20260605-sdxi-base-v3-0-4d38ca2bdffe@amd.com>
 In-Reply-To: <20260605-sdxi-base-v3-0-4d38ca2bdffe@amd.com>
 To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>
@@ -74,11 +75,11 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
  dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-pci@vger.kernel.org, Nathan Lynch <nathan.lynch@amd.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780704140; l=9311;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780704140; l=5291;
  i=nathan.lynch@amd.com; s=20260410; h=from:subject:message-id;
- bh=dJ2kLZpgYp+5rraz3GSkb+EuvGuJnIu5vJ8Fkw1RpTc=;
- b=uYXRsuaJsLgpTfCQzCpN60PLsGx021Ah9Z17RB7p+PmgeT9VvYEztIcuJ6KxHy3kBDUKxmiSy
- c06dU1wXds9C7osbsx+TVN84obv55Isq3zaRkz66fGY2zzfeAz0tCQl
+ bh=AjqlcR1J/MdjgT8HA14M/iwSkOjphEY9WGqJW4+YCzE=;
+ b=D0VFz6DmNWL9JA+2QGNBo5wg4j3HDEu7MZMwXhngMRfX1Tsd46uFat+ytjhWOuWlk3/NxUDjb
+ UtfW0FaBUrhBLYJphGbugTqK1aY978WWZ00cwFNUKAAINj3m9HFmrHH
 X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
  pk=PK4ozhq+/z9/2Jl5rgDmvHa9raVomv79qM8p1RAFpEw=
 X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20260410 with
@@ -95,7 +96,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11233-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
+	TAGGED_FROM(0.00)[bounces-11235-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
 	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:bhelgaas@google.com,m:rientjes@google.com,m:John.Kariuki@amd.com,m:jic23@kernel.org,m:kinseyho@google.com,m:mario.limonciello@amd.com,m:PradeepVineshReddy.Kodamati@amd.com,m:shivankg@amd.com,m:Stephen.Bates@amd.com,m:tycho@kernel.org,m:wei.huang2@amd.com,m:weixugc@google.com,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nathan.lynch@amd.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -119,309 +120,185 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,amd.com:mid,amd.com:email,amd.com:replyto,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6A20264BECC
+X-Rspamd-Queue-Id: 954E164BED4
 
 From: Nathan Lynch <nathan.lynch@amd.com>
 
-Introduce a library for managing SDXI descriptor ring state. It
-encapsulates determining the next free space in the ring to deposit
-descriptors and performing the update of the write index correctly, as
-well as iterating over slices (reservations) of the ring without
-dealing directly with ring offsets/indexes.
+Add KUnit tests for the descriptor ring reservation API, covering:
 
-The central abstraction is sdxi_ring_state, which maintains the write
-index and a wait queue. An internal spin lock serializes checks for
-space in the ring and updates to the write index.
+- Valid reservations: full-ring and single-slot after advancing the
+  read pointer.
 
-Reservations (sdxi_ring_resv) are intended to be short-lived on-stack
-objects representing slices of the ring for callers to populate with
-descriptors. Both blocking and non-blocking reservation APIs are
-provided.
+- Error paths: zero or over-capacity count (-EINVAL), inconsistent
+  index state (-EIO), and insufficient space (-EBUSY).
 
-Descriptor access within a reservation is provided via
-sdxi_ring_resv_next() and sdxi_ring_resv_foreach().
+A .kunitconfig is included ease of use:
 
-Completion handlers must call sdxi_ring_wake_up() when descriptors
-have been consumed so that blocked reservations can proceed.
+  $ tools/testing/kunit/kunit.py run \
+         --kunitconfig=drivers/dma/sdxi/.kunitconfig
+
+No SDXI hardware is required to run these tests.
 
 Co-developed-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 ---
- drivers/dma/sdxi/Makefile |   3 +-
- drivers/dma/sdxi/ring.c   | 159 ++++++++++++++++++++++++++++++++++++++++++++++
- drivers/dma/sdxi/ring.h   |  84 ++++++++++++++++++++++++
- 3 files changed, 245 insertions(+), 1 deletion(-)
+ drivers/dma/sdxi/.kunitconfig |   4 ++
+ drivers/dma/sdxi/Kconfig      |  10 ++++
+ drivers/dma/sdxi/Makefile     |   3 ++
+ drivers/dma/sdxi/ring_kunit.c | 105 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 122 insertions(+)
 
+diff --git a/drivers/dma/sdxi/.kunitconfig b/drivers/dma/sdxi/.kunitconfig
+new file mode 100644
+index 000000000000..16a1ae04b156
+--- /dev/null
++++ b/drivers/dma/sdxi/.kunitconfig
+@@ -0,0 +1,4 @@
++CONFIG_KUNIT=y
++CONFIG_DMADEVICES=y
++CONFIG_SDXI_CORE=y
++CONFIG_SDXI_KUNIT_TEST=y
+diff --git a/drivers/dma/sdxi/Kconfig b/drivers/dma/sdxi/Kconfig
+index b91b44231a04..7217375c9216 100644
+--- a/drivers/dma/sdxi/Kconfig
++++ b/drivers/dma/sdxi/Kconfig
+@@ -26,3 +26,13 @@ config SDXI_PCI
+ 
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be named "sdxi-pci".
++
++config SDXI_KUNIT_TEST
++	tristate "SDXI unit tests" if !KUNIT_ALL_TESTS
++	depends on SDXI_CORE && KUNIT
++	default KUNIT_ALL_TESTS
++	help
++	  KUnit tests for parts of the SDXI driver. Does not require
++	  SDXI hardware.
++
++	  If unsure, say N.
 diff --git a/drivers/dma/sdxi/Makefile b/drivers/dma/sdxi/Makefile
-index cdf8a455077b..bfcb443f1e64 100644
+index bfcb443f1e64..00e3f1cb0808 100644
 --- a/drivers/dma/sdxi/Makefile
 +++ b/drivers/dma/sdxi/Makefile
-@@ -2,7 +2,8 @@
- obj-$(CONFIG_SDXI_CORE) += sdxi-core.o
- sdxi-core-y := \
- 	context.o     \
--	device.o
-+	device.o      \
-+	ring.o
+@@ -7,3 +7,6 @@ sdxi-core-y := \
  
  obj-$(CONFIG_SDXI_PCI) += sdxi-pci.o
  sdxi-pci-y := pci.o
-diff --git a/drivers/dma/sdxi/ring.c b/drivers/dma/sdxi/ring.c
++
++obj-$(CONFIG_SDXI_KUNIT_TEST) += \
++	ring_kunit.o
+diff --git a/drivers/dma/sdxi/ring_kunit.c b/drivers/dma/sdxi/ring_kunit.c
 new file mode 100644
-index 000000000000..91b28c7afbbf
+index 000000000000..3bc7073e0c39
 --- /dev/null
-+++ b/drivers/dma/sdxi/ring.c
-@@ -0,0 +1,159 @@
++++ b/drivers/dma/sdxi/ring_kunit.c
+@@ -0,0 +1,105 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * SDXI descriptor ring state management. Handles advancing the write
-+ * index correctly and supplies "reservations" i.e. slices of the ring
-+ * to be filled with descriptors.
++ * SDXI descriptor ring management tests.
 + *
 + * Copyright Advanced Micro Devices, Inc.
 + */
-+#include <kunit/visibility.h>
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/lockdep.h>
-+#include <linux/range.h>
-+#include <linux/sched.h>
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+#include <linux/wait.h>
-+#include <asm/barrier.h>
-+#include <asm/byteorder.h>
-+#include <asm/div64.h>
-+#include <asm/rwonce.h>
++#include <kunit/device.h>
++#include <kunit/test-bug.h>
++#include <kunit/test.h>
++#include <linux/container_of.h>
++#include <linux/dma-mapping.h>
++#include <linux/module.h>
++#include <linux/packing.h>
++#include <linux/string.h>
 +
 +#include "ring.h"
-+#include "hw.h"
 +
-+/*
-+ * Initialize ring management state. Caller is responsible for
-+ * allocating, mapping, and initializing the actual control structures
-+ * shared with hardware: the indexes and ring array.
-+ */
-+void sdxi_ring_state_init(struct sdxi_ring_state *rs, const __le64 *read_index,
-+			  __le64 *write_index, u32 entries,
-+			  struct sdxi_desc descs[static SZ_1K])
++MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
++
++static void valid(struct kunit *t)
 +{
-+	WARN_ON_ONCE(!read_index);
-+	WARN_ON_ONCE(!write_index);
-+	/*
-+	 * See SDXI 1.0 Table 3-1 Memory Structure Summary. Minimum
-+	 * descriptor ring size in bytes is 64KB; thus 1024 64-byte
-+	 * entries.
-+	 */
-+	WARN_ON_ONCE(entries < SZ_1K);
++	__le64 wi, ri;
++	struct sdxi_ring_state r;
++	struct sdxi_ring_resv resv;
++	struct sdxi_desc *descs, *desc;
 +
-+	*rs = (typeof(*rs)) {
-+		.write_index = le64_to_cpu(*write_index),
-+		.write_index_ptr = write_index,
-+		.read_index_ptr = read_index,
-+		.entries = entries,
-+		.entry = descs,
-+	};
-+	spin_lock_init(&rs->lock);
-+	init_waitqueue_head(&rs->wqh);
-+}
-+EXPORT_SYMBOL_IF_KUNIT(sdxi_ring_state_init);
 +
-+static u64 sdxi_ring_state_load_ridx(struct sdxi_ring_state *rs)
-+{
-+	lockdep_assert_held(&rs->lock);
-+	return le64_to_cpu(READ_ONCE(*rs->read_index_ptr));
-+}
++	descs = kunit_kmalloc_array(t, SZ_1K, sizeof(descs[0]),
++				    GFP_KERNEL | __GFP_ZERO);
++	KUNIT_ASSERT_NOT_NULL(t, descs);
 +
-+static void sdxi_ring_state_store_widx(struct sdxi_ring_state *rs, u64 new_widx)
-+{
-+	lockdep_assert_held(&rs->lock);
-+	rs->write_index = new_widx;
-+	WRITE_ONCE(*rs->write_index_ptr, cpu_to_le64(new_widx));
-+}
++	ri = wi = 0;
++	sdxi_ring_state_init(&r, &ri, &wi, SZ_1K, descs);
 +
-+/* Non-blocking ring reservation. Callers must handle ring full (-EBUSY). */
-+int sdxi_ring_try_reserve(struct sdxi_ring_state *rs, size_t nr,
-+			  struct sdxi_ring_resv *resv)
-+{
-+	u64 new_widx;
-+
-+	/*
-+	 * Caller bug, warn and reject.
-+	 */
-+	if (WARN_ONCE(nr < 1 || nr > rs->entries,
-+		      "Reservation of size %zu requested from ring of size %u\n",
-+		      nr, rs->entries))
-+		return -EINVAL;
-+
-+	scoped_guard(spinlock_irqsave, &rs->lock) {
-+		u64 ridx = sdxi_ring_state_load_ridx(rs);
-+
-+		/*
-+		 * Bug: the read index should never exceed the write index.
-+		 * TODO: sdxi_err() or similar; need a reference to
-+		 * the device.
-+		 */
-+		if (ridx > rs->write_index)
-+			return -EIO;
-+
-+		new_widx = rs->write_index + nr;
-+
-+		/*
-+		 * Not enough space available right now.
-+		 * TODO: sdxi_dbg() or tracepoint here.
-+		 */
-+		if (new_widx - ridx > rs->entries)
-+			return -EBUSY;
-+
-+		sdxi_ring_state_store_widx(rs, new_widx);
++	KUNIT_EXPECT_EQ(t, sdxi_ring_try_reserve(&r, r.entries, &resv), 0);
++	KUNIT_EXPECT_EQ(t, resv.range.start, 0);
++	KUNIT_EXPECT_EQ(t, resv.range.end, r.entries - 1);
++	KUNIT_EXPECT_EQ(t, le64_to_cpu(wi), r.entries);
++	sdxi_ring_resv_foreach(&resv, desc) {
++		KUNIT_EXPECT_NOT_NULL_MSG(t, sdxi_ring_resv_next(&resv),
++			"unexpected null descriptor for index %llu", resv.iter);
 +	}
 +
-+	*resv = (typeof(*resv)) {
-+		.rs = rs,
-+		.range = {
-+			.start = new_widx - nr,
-+			.end = new_widx - 1,
-+		},
-+		.iter = new_widx - nr,
-+	};
++	ri = cpu_to_le64(1);
++	KUNIT_EXPECT_EQ(t, sdxi_ring_try_reserve(&r, 1, &resv), 0);
++	KUNIT_EXPECT_EQ(t, le64_to_cpu(wi), r.entries + 1);
++	KUNIT_EXPECT_NOT_NULL(t, sdxi_ring_resv_next(&resv));
++}
 +
++static void invalid(struct kunit *t)
++{
++	__le64 wi, ri;
++	struct sdxi_ring_state rs;
++	struct sdxi_ring_resv resv;
++	struct sdxi_desc *descs;
++
++	descs = kunit_kmalloc_array(t, SZ_1K, sizeof(descs[0]),
++				    GFP_KERNEL | __GFP_ZERO);
++	KUNIT_ASSERT_NOT_NULL(t, descs);
++
++	ri = wi = 0;
++	sdxi_ring_state_init(&rs, &ri, &wi, SZ_1K, descs);
++
++	KUNIT_EXPECT_EQ(t, sdxi_ring_try_reserve(&rs, 0, &resv), -EINVAL);
++	KUNIT_EXPECT_EQ(t, sdxi_ring_try_reserve(&rs, rs.entries + 1, &resv), -EINVAL);
++
++	ri = cpu_to_le64(1);
++	KUNIT_EXPECT_EQ(t, sdxi_ring_try_reserve(&rs, 1, &resv), -EIO);
++
++	ri = 0;
++	wi = cpu_to_le64(rs.entries);
++	sdxi_ring_state_init(&rs, &ri, &wi, SZ_1K, descs);
++	KUNIT_EXPECT_EQ(t, sdxi_ring_try_reserve(&rs, 1, &resv), -EBUSY);
++
++	ri = cpu_to_le64(rs.entries);
++	wi = cpu_to_le64(rs.entries + 1);
++	sdxi_ring_state_init(&rs, &ri, &wi, SZ_1K, descs);
++	KUNIT_EXPECT_EQ(t, sdxi_ring_try_reserve(&rs, rs.entries, &resv), -EBUSY);
++}
++
++static struct kunit_case testcases[] = {
++	KUNIT_CASE(valid),
++	KUNIT_CASE(invalid),
++	{}
++};
++
++static int setup_device(struct kunit *t)
++{
++	struct device *dev = kunit_device_register(t, "sdxi-mock-device");
++
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(t, dev);
++	t->priv = dev;
 +	return 0;
 +}
-+EXPORT_SYMBOL_IF_KUNIT(sdxi_ring_try_reserve);
 +
-+/* Blocking ring reservation. Retries until success or non-transient error. */
-+int sdxi_ring_reserve(struct sdxi_ring_state *rs, size_t nr,
-+		      struct sdxi_ring_resv *resv)
-+{
-+	int ret;
-+
-+	wait_event(rs->wqh,
-+		   (ret = sdxi_ring_try_reserve(rs, nr, resv)) != -EBUSY);
-+
-+	return ret;
-+}
-+
-+/* Completion code should call this whenever descriptors have been consumed. */
-+void sdxi_ring_wake_up(struct sdxi_ring_state *rs)
-+{
-+	wake_up_all(&rs->wqh);
-+}
-+
-+static struct sdxi_desc *
-+sdxi_desc_ring_entry(const struct sdxi_ring_state *rs, u64 index)
-+{
-+	return &rs->entry[do_div(index, rs->entries)];
-+}
-+
-+struct sdxi_desc *sdxi_ring_resv_next(struct sdxi_ring_resv *resv)
-+{
-+	if (resv->range.start <= resv->iter && resv->iter <= resv->range.end)
-+		return sdxi_desc_ring_entry(resv->rs, resv->iter++);
-+	/*
-+	 * Caller has iterated to the end of the reservation.
-+	 */
-+	if (resv->iter == resv->range.end + 1)
-+		return NULL;
-+	/*
-+	 * Should happen only if caller messed with internal
-+	 * reservation state.
-+	 */
-+	WARN_ONCE(1, "reservation[%llu,%llu] with iter %llu",
-+		  resv->range.start, resv->range.end, resv->iter);
-+	return NULL;
-+}
-+EXPORT_SYMBOL_IF_KUNIT(sdxi_ring_resv_next);
-diff --git a/drivers/dma/sdxi/ring.h b/drivers/dma/sdxi/ring.h
-new file mode 100644
-index 000000000000..d5682687c05c
---- /dev/null
-+++ b/drivers/dma/sdxi/ring.h
-@@ -0,0 +1,84 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright Advanced Micro Devices, Inc. */
-+#ifndef DMA_SDXI_RING_H
-+#define DMA_SDXI_RING_H
-+
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/range.h>
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+#include <linux/wait.h>
-+#include <asm/barrier.h>
-+#include <asm/byteorder.h>
-+#include <asm/div64.h>
-+#include <asm/rwonce.h>
-+
-+#include "hw.h"
-+
-+/*
-+ * struct sdxi_ring_state - Descriptor ring management.
-+ *
-+ * @lock: Guards *read_index_ptr (RO), *write_index_ptr (RW),
-+ *   write_index (RW). *read_index is incremented by hw.
-+ * @write_index: Cached write index value, minimizes dereferences in
-+ *   critical sections.
-+ * @write_index_ptr: Location of the architected write index shared with
-+ *   the SDXI implementation.
-+ * @read_index_ptr: Location of the architected read index shared with
-+ *   the SDXI implementation.
-+ * @entries: Number of entries in the ring.
-+ * @entry: The descriptor ring itself, shared with the SDXI implementation.
-+ * @wqh: Pending reservations.
-+ */
-+struct sdxi_ring_state {
-+	spinlock_t lock;
-+	u64 write_index; /* Cache current value of write index. */
-+	__le64 *write_index_ptr;
-+	const __le64 *read_index_ptr;
-+	u32 entries;
-+	struct sdxi_desc *entry;
-+	wait_queue_head_t wqh;
++static struct kunit_suite generic_desc_ts = {
++	.name = "SDXI descriptor ring management",
++	.test_cases = testcases,
++	.init = setup_device,
 +};
++kunit_test_suite(generic_desc_ts);
 +
-+/*
-+ * Ring reservation and iteration state.
-+ */
-+struct sdxi_ring_resv {
-+	const struct sdxi_ring_state *rs;
-+	struct range range;
-+	u64 iter;
-+};
-+
-+void sdxi_ring_state_init(struct sdxi_ring_state *ring, const __le64 *read_index,
-+			  __le64 *write_index, u32 entries,
-+			  struct sdxi_desc descs[static SZ_1K]);
-+void sdxi_ring_wake_up(struct sdxi_ring_state *rs);
-+int sdxi_ring_reserve(struct sdxi_ring_state *ring, size_t nr,
-+		      struct sdxi_ring_resv *resv);
-+int sdxi_ring_try_reserve(struct sdxi_ring_state *ring, size_t nr,
-+			  struct sdxi_ring_resv *resv);
-+struct sdxi_desc *sdxi_ring_resv_next(struct sdxi_ring_resv *resv);
-+
-+/* Reset reservation's internal iterator. */
-+static inline void sdxi_ring_resv_reset(struct sdxi_ring_resv *resv)
-+{
-+	resv->iter = resv->range.start;
-+}
-+
-+/*
-+ * Return the value that should be written to the doorbell after
-+ * serializing descriptors for this reservation, i.e. the value of the
-+ * write index after obtaining the reservation.
-+ */
-+static inline u64 sdxi_ring_resv_dbval(const struct sdxi_ring_resv *resv)
-+{
-+	return resv->range.end + 1;
-+}
-+
-+#define sdxi_ring_resv_foreach(resv_, desc_)			\
-+	for (sdxi_ring_resv_reset(resv_),			\
-+	     desc_ = sdxi_ring_resv_next(resv_);		\
-+	     desc_;						\
-+	     desc_ = sdxi_ring_resv_next(resv_))
-+
-+#endif /* DMA_SDXI_RING_H */
++MODULE_DESCRIPTION("SDXI descriptor ring tests");
++MODULE_AUTHOR("Nathan Lynch");
++MODULE_LICENSE("GPL");
 
 -- 
 2.54.0

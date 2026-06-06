@@ -1,248 +1,344 @@
-Return-Path: <dmaengine+bounces-11221-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11224-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id rX5mHHxbI2p+qwEAu9opvQ
-	(envelope-from <dmaengine+bounces-11221-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 01:27:56 +0200
+	id YDziCRVkI2o4sQEAu9opvQ
+	(envelope-from <dmaengine+bounces-11224-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:04:37 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01BB564BCE1
-	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 01:27:55 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AB5864BE94
+	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:04:36 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=amd.com header.s=selector1 header.b="hv7x+s/+";
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11221-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11221-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=amd.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b=HblXOeMg;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11224-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11224-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id E43A330347DB
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jun 2026 23:26:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C6BBD3022943
+	for <lists+dmaengine@lfdr.de>; Sat,  6 Jun 2026 00:02:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF6C03B42FB;
-	Fri,  5 Jun 2026 23:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3B8B175A76;
+	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013040.outbound.protection.outlook.com [40.93.201.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802A73D333B;
-	Fri,  5 Jun 2026 23:26:48 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780702009; cv=fail; b=EN/IaWDPqUAOR8W/rO2M+mbGtmk/p6034yJ4dBy7z6soscSyAUe5KRuzcLjaNTcOWuYTQjQK0I7kEfme/JJ8MHXz4S79rfFucKeUkdMa/LQ3jdI/zy+MyOV7UTnhp14eZb3rht4ba6gu57U/w/pmLGtgfdYYRVdZ0aea8NcrBFQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780702009; c=relaxed/simple;
-	bh=L41a86jmyLp6lO7jhykgClXroux/cGkqLO/dMTFRjoI=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UO5e86+L3YdPqccJbZGtxkwUeTpEpx+nlFFLVJeSRGDXDIxedCATdf90QVg5GVEjqx4BwX9d7vk/HRYriH4rU3dsBYHyTbEojXJKYHzrFkgpn23CpR6uVDduu9ZlIocecjWRKrxk2SPripmNLzSkv0EKVqu4xisEVjFA18EbTM8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hv7x+s/+; arc=fail smtp.client-ip=40.93.201.40
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fcm7PXON8ynnwSlPigwCsWTs8QLUPJNKbgc1/ERuPx1kSSsqLqfFflEp2EWcxEo5olJy9ddN+QM3XBgzcWhX34jPXKL9Njncw4apGeYQjWnWYjOYZLLLyS+T+A0s/i6f3sbZwry5c6geJ3nsArPqYy51w88JgErE/t7k1hTHXNfIbs+TPQjkua+qiEteRu7l4D23Ng1OaKrC8AMCFSszRL4H+8F9HUQhOalNwJHTlf10EIXJ6Gy/mzomMPQ8OZdVCTiRvG1LuFvbC7Pt1MzyMvV4GbE7ZyrhawW2hy1m1/bQMjiA3+PEMK6Q12N5DAWf1ew7ZrcyTjJvM1hSjjwK5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ymCQEqQpsXU+m7DMNHrYlVlphOPHa1sLKZjhD0FeCt4=;
- b=R59Ftl7ocauxXQSgYY0vIgp4EXC8Xf6q27HG6qw0l2Edzeh6o4lQFjuzi+Z+DsAO7lgEral68urHIcz1rOFxUkIdg1ZTlJx/bn1EZ/QVIuDrzH5dOlBKDRFRTvAorXaFL6B07mj7mAbyR/zjjBEbYvYJ+PdnGFLYaAxORV3PVpqfGlPLLzeil0nwIsb44RP6zIQbMAXXQPdbhD3g1oYFOGEjOXvutT7D+0RZ4/vT5KH+ME9qySJlCrplpMRcDsLDIOMZT3t5vO+XVXEaCQgCuoDxN2jeUSKWHHsnPMgaRwf8OxGe8RVGQKbG3VC3n8AeZGqzJcRBc8/eOyzs/5XxjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ymCQEqQpsXU+m7DMNHrYlVlphOPHa1sLKZjhD0FeCt4=;
- b=hv7x+s/+i7khvEPG40fN+qoaPpUR6cOnNKVK+Vey3MRrrF3h6mqItHB9S1HqJJV3nGlonIgB+ooEguSz2+7j5YsxUa2D9oxtFxOkVUU2ZJkOonzmU6z3B09X8MCQtp5knrBhEwgnFn32mBuEE8mVj6H/vaZRn6MidwpGB5Q2/bE=
-Received: from CY5PR15CA0146.namprd15.prod.outlook.com (2603:10b6:930:67::15)
- by LV5PR12MB9779.namprd12.prod.outlook.com (2603:10b6:408:301::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.8; Fri, 5 Jun 2026
- 23:26:45 +0000
-Received: from DS2PEPF00003443.namprd04.prod.outlook.com
- (2603:10b6:930:67:cafe::ad) by CY5PR15CA0146.outlook.office365.com
- (2603:10b6:930:67::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.92.9 via Frontend Transport; Fri, 5
- Jun 2026 23:26:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- DS2PEPF00003443.mail.protection.outlook.com (10.167.17.70) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.92.5 via Frontend Transport; Fri, 5 Jun 2026 23:26:44 +0000
-Received: from localhost (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Fri, 5 Jun
- 2026 18:26:43 -0500
-From: Nathan Lynch <nathan.lynch@amd.com>
-To: <sashiko-reviews@lists.linux.dev>
-CC: <vkoul@kernel.org>, <Frank.Li@kernel.org>, <linux-pci@vger.kernel.org>,
-	<dmaengine@vger.kernel.org>
-Subject: Re: [PATCH v2 08/23] dmaengine: sdxi: Install administrative context
-In-Reply-To: <20260513031712.0C8EDC2BCB0@smtp.kernel.org>
-References: <20260511-sdxi-base-v2-8-889cfed17e3f@amd.com>
- <20260513031712.0C8EDC2BCB0@smtp.kernel.org>
-Date: Fri, 5 Jun 2026 18:26:42 -0500
-Message-ID: <87pl24d0wd.fsf@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97502AE8D;
+	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780704142; cv=none; b=iuHh1f1WmHJCf2Kx+MUEWGLeU6GjOPNOYQtkzMB42Gy2eFDLkT5k8mZpJrRj2yUZrOqa+v1h6ia4RcFQa/QjBAWFw8ETiZgOqFV5qOESklwcZ3s8XPCysuncan0g1LMZi/N4Z9VjVLn4z6ByR6RLBqSQ30z/QAtHDWfGA6f4hbo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780704142; c=relaxed/simple;
+	bh=GPeLELwKUxb5g3CMxcLjsNEd5OdsvCqnB57pdS86BWU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GU9D9hcJeGehe/SUTiS17jVjywNBY8atlCZzbFuGp4AsyX6jFhweZVKOL6aX/zCY9aHszI/SYDKi71xRIcxEFBVwSINP2AS6yeDv1Cmx8eNtmlDwoMjyxFDgp9P27tsvVeHZDFXBCcmnAmpTsB+BPdNnrAcVBwpCr/VL87UtsBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HblXOeMg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4B3B6C2BCB4;
+	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1780704142;
+	bh=GPeLELwKUxb5g3CMxcLjsNEd5OdsvCqnB57pdS86BWU=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=HblXOeMgds2XSzUejZAwhrIPJzeFhlDaBJFIQ+F34oeC6WfE0W5QJ4AS5DrcnvnLV
+	 kJhwtUg79VCsGwI0ehJoiJjqPkbr7H+2eYk/ThzL8r1WXIyhlC1oEk8GNFG6ert4jo
+	 wTyR34Y1km1ZNUf3Z5jFGEm9tKQ6Paxxx6qJoJ4r4IBuJxgKadIJ9fEJRpaSWodrqQ
+	 wqrJwFLBkRxCi2ivif7jjAR/Fu43IJajSgPqBmADvA6W/uC1SHr7j0pDjpg1dkuTLN
+	 SZt7WiWPTmtQj+Qj5eDCouF9LwLze/Lrxv2ISVRvLudQ+KW8QYf++VVZBrZZlkf4hv
+	 aCsBHnEklNv6w==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D461CD6E7C;
+	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
+From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
+Subject: [PATCH v3 00/23] dmaengine: Smart Data Accelerator Interface
+ (SDXI) basic support
+Date: Fri, 05 Jun 2026 19:02:03 -0500
+Message-Id: <20260605-sdxi-base-v3-0-4d38ca2bdffe@amd.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF00003443:EE_|LV5PR12MB9779:EE_
-X-MS-Office365-Filtering-Correlation-Id: e8894267-39a3-4739-3575-08dec359e7d8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700016|82310400026|1800799024|4143699003|56012099006|11063799006|5023799004|6133799003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	6Gi5YIWoAPbG5c0xoEfvX/+Ud4cQhhobnWRyIQJbq2HxFMczkOaGXgvQs1KzAjDk+3F3tbMKHdahkuYqYgBxlqPzqVuBoUXKX0EqgvRog2jEuz8CLiU+Mqgw8NyKdCN8IoDXh3OYGbqbY9hi88mtuJJMjiZzgxjon8i+ZazbSpNPIPauWMPsRPFSqQJis/Sp4ngnuqfMIwZHv6YThn1RelOQmtXGBIXB9m32YmswYZp4JNbJ6suVlPEWuWb1T0OzeqAVVRKDMIn+FvYAjHelmTic3fX6H36/MAzuqrvPDoRR5GiPGzkVTcAa4flxNHuLpAsZfsNudh5xU9f7dRD42NT2BCtsFbycbLolnDpD5+bmVyA7IOAHmeRx7RKNlv6LKz20sNEbI1WYjNTEgOgHDHZQOXUKQtIYHbDhP60K7+zNH/l8BGbgpUR+QOx5GxfeHwu4PkLXS2ZE4RlbTbdY2azlSTxmQm1SasmKam1XXI+phgiVx7jMLs5P/MBho8aFUrqltHIv93Eaf7jdw4If4zLqsN3jWIWkMH3aQRajPV3kQdyuVFlarpjAKMZPNF2zOPtupNdPOuq/3hl97Ua6yH730zmzMMFm5bm4ywYzfMF+rh+g8Lcm4o8h/9+2Bns+Wg2S3Ipl6sU8BVJLu2SitsVr27PVgfFczpN01tv3KW7ATvxRWKKWIuyEk60DmK0VW0K1KBQBuSYswdeqrC0x9f7C+9/xHVVJKnbFiju5wWY=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700016)(82310400026)(1800799024)(4143699003)(56012099006)(11063799006)(5023799004)(6133799003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	+9lwD7cfL4fthK6ns+gmBBAlUObsALR4jO/bqISRzfYRMr5PS2SIFLzj4iizM6aeEiIAjg7WD3jaEaNToW9OLiQx+GDhameu5hOMyiJ/X8uoGWVMC6d8f4OFC/FIdImTOcMbAJJN86hOwbT7e7lEqY3wJqCd4GYMHV34od6OSP7KAtWL1miKGQJZCDxcVVZezalaJ4b2VEKfjBVO0EaHKCEeK9PGDAwQo4Qe8T2ily+8Q5eqLZruNHlIMIlKxLdG0/lvBKRoE0oJvUtvHjkXVUPuMzDzMKP3Oa1PKWK7TY+Uq7wthIBwsERa6RwXqvI2BWxwJgAvMmj/VJ+urxW6osI+cVoMg1fqr5arVJaxYBwGHg0u8KUlcC1qFfB8KhovALqyXik8hFHppU8+nRttcs8KEP4atLKYvHBF2cH1qZIl8uV9CH4y7B91eflSjlIz
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2026 23:26:44.1957
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8894267-39a3-4739-3575-08dec359e7d8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF00003443.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV5PR12MB9779
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/12NQQrCMBREr1KyNvJ/0jSJK+8hLtL81GbRFhoJS
+ undjYq0uBoG3ptZWApzDImdqoXNIccUp7EUeaiY7914CzxS6UyAUGBQ8kSPyFuXAteStLcd+aA
+ 0K3wf032an5+pjCUuX8uC2lkZOXACWaNDYUXrzm6go5+G90ThG6gR/nkkNLVvlW9g469FyOL30
+ 4BC3HuieMZY3wVCHWS3eeu6vgDOesE8+AAAAA==
+X-Change-ID: 20250813-sdxi-base-73d7c9fdce57
+To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, 
+ David Rientjes <rientjes@google.com>, John.Kariuki@amd.com, 
+ Jonathan Cameron <jic23@kernel.org>, Kinsey Ho <kinseyho@google.com>, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ PradeepVineshReddy.Kodamati@amd.com, Shivank Garg <shivankg@amd.com>, 
+ Stephen Bates <Stephen.Bates@amd.com>, Tycho Andersen <tycho@kernel.org>, 
+ Wei Huang <wei.huang2@amd.com>, Wei Xu <weixugc@google.com>, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Nathan Lynch <nathan.lynch@amd.com>, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780704140; l=9954;
+ i=nathan.lynch@amd.com; s=20260410; h=from:subject:message-id;
+ bh=GPeLELwKUxb5g3CMxcLjsNEd5OdsvCqnB57pdS86BWU=;
+ b=eq/NXwRQl2LzAQrXu7aGIiRLzP/pY0lxz3TvMgZYnr9DbWPNQU2mfMNbJvTBPmtI3Kw1vtDn8
+ Hm13iDj08CSDmdM7uiQkecqcSzsOpmWXoBs5Xwgp14c1UEgb3lh6pOw
+X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
+ pk=PK4ozhq+/z9/2Jl5rgDmvHa9raVomv79qM8p1RAFpEw=
+X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20260410 with
+ auth_id=728
+X-Original-From: Nathan Lynch <nathan.lynch@amd.com>
+Reply-To: nathan.lynch@amd.com
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.34 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11224-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:bhelgaas@google.com,m:rientjes@google.com,m:John.Kariuki@amd.com,m:jic23@kernel.org,m:kinseyho@google.com,m:mario.limonciello@amd.com,m:PradeepVineshReddy.Kodamati@amd.com,m:shivankg@amd.com,m:Stephen.Bates@amd.com,m:tycho@kernel.org,m:wei.huang2@amd.com,m:weixugc@google.com,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nathan.lynch@amd.com,m:Frank.Li@nxp.com,s:lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER(0.00)[devnull@kernel.org,dmaengine@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11221-lists,dmaengine=lfdr.de];
-	FORGED_SENDER(0.00)[nathan.lynch@amd.com,dmaengine@vger.kernel.org];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[amd.com:+];
-	FORGED_RECIPIENTS(0.00)[m:sashiko-reviews@lists.linux.dev,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:linux-pci@vger.kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	HAS_REPLYTO(0.00)[nathan.lynch@amd.com];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nathan.lynch@amd.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:mid,amd.com:dkim,amd.com:from_mime,amd.com:email,vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amd.com:mid,amd.com:email,amd.com:replyto,snia.org:url,msgid.link:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 01BB564BCE1
+X-Rspamd-Queue-Id: 8AB5864BE94
 
-sashiko-bot@kernel.org writes:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> - [Critical] Hardware Use-After-Free due to missing admin context teardown
-> - [High] Torn writes on 32-bit platforms exposing incomplete addresses to hardware
-> - [Medium] Incorrect error check for `dma_pool_zalloc()` using the DMA handle instead of the virtual pointer
-> --
->
-> commit 794d6cb84f7ad6a7699311744a5e9c87b9d20316
-> Author: Nathan Lynch <nathan.lynch@amd.com>
->
-> dmaengine: sdxi: Install administrative context
->
-> This commit serializes the context control block, akey table, and L1 entry for
-> the admin context. It makes the descriptor ring, write index, and context
-> status block visible to the SDXI implementation once activated.
->
->> diff --git a/drivers/dma/sdxi/context.c b/drivers/dma/sdxi/context.c
->> index 27821cfaf0311..c0b55c945cc4e 100644
->> --- a/drivers/dma/sdxi/context.c
->> +++ b/drivers/dma/sdxi/context.c
->
-> [ ... ]
->
->> @@ -106,6 +112,152 @@ static struct sdxi_cxt *sdxi_alloc_cxt(struct sdxi_dev *sdxi)
->
-> [ ... ]
->
->> +static int configure_cxt_ctl(struct sdxi_cxt_ctl *ctl, const struct sdxi_cxt_ctl_cfg *cfg)
->> +{
->> +	u64 ds_ring_ptr, cxt_sts_ptr, write_index_ptr;
->
-> [ ... ]
->
->> +	ds_ring_ptr = FIELD_PREP(SDXI_CXT_CTL_VL, 1) |
->> +		      FIELD_PREP(SDXI_CXT_CTL_QOS, cfg->qos) |
->> +		      FIELD_PREP(SDXI_CXT_CTL_SE, cfg->se) |
->> +		      FIELD_PREP(SDXI_CXT_CTL_CSA, cfg->csa) |
->> +		      FIELD_PREP(SDXI_CXT_CTL_DS_RING_PTR,
->> +				 cfg->ds_ring_ptr >> DESC_RING_BASE_PTR_SHIFT);
->> +	/* Ensure other fields are visible before hw sees vl=1. */
->> +	dma_wmb();
->> +	WRITE_ONCE(ctl->ds_ring_ptr, cpu_to_le64(ds_ring_ptr));
->
-> Can this introduce a regression with torn writes on 32-bit platforms?
+The Smart Data Accelerator Interface (SDXI) is a vendor-neutral
+architecture for memory-to-memory data movement offload designed for
+kernel bypass and virtualization.
 
-As mentioned elsewhere the driver will just depend on CONFIG_64BIT for
-now.
+General information on SDXI may be found at:
+https://www.snia.org/sdxi
+
+This submission adds a driver with basic support for PCIe-hosted SDXI
+1.0 implementations and includes a DMA engine provider with memcpy
+capability.
+
+Planned future SDXI work (out of scope for this series):
+
+* Character device for exposing SDXI contexts to user space.
+
+* Support for operation types to be added in future SDXI revisions.
+
+* Greater configurability for control structures, e.g. descriptor ring
+  size.
+
+The latest released version of the SDXI specification is 1.0:
+https://www.snia.org/sites/default/files/technical-work/sdxi/release/SNIA-SDXI-Specification-v1.0a.pdf
+
+Draft versions of future SDXI specifications in development may be found at:
+https://www.snia.org/tech_activities/publicreview#sdxi
+
+The DMA engine provider included here survives dmatest runs with both
+polled and interrupt-signaled completion modes, with the following
+debug options and sanitizers enabled:
+
+CONFIG_DEBUG_KMEMLEAK=y
+CONFIG_KASAN=y
+CONFIG_PROVE_LOCKING=y
+CONFIG_SLUB_DEBUG_ON=y
+CONFIG_UBSAN=y
+
+Example test:
+  $ qemu-system-x86_64 -m 4G -smp 4 -kernel ~/bzImage -nographic \
+    -append 'console=ttyS0 debug sdxi_core.dma_channels=2
+    dmatest.polled=0 dmatest.iterations=10000 dmatest.run=1 \
+    dmatest.threads_per_chan=2 sdxi_core.dyndbg=+p \
+    sdxi_pci.dyndbg=+p' -device vfio-pci,host=0000:01:02.1 \
+    -initrd ~/rootfs.cpio -M q35 -accel kvm
+  [...]
+  # dmesg | grep -i -e sdxi -e dmatest
+  dmatest: No channels configured, continue with any
+  sdxi 0000:00:03.0: allocated 64 vectors
+  sdxi 0000:00:03.0: attempting stop, current state: stopped
+  sdxi 0000:00:03.0: SDXI 1.0 device found
+  sdxi 0000:00:03.0: activated
+  dmatest: Added 2 threads using dma0chan0
+  dmatest: Added 2 threads using dma0chan1
+  dmatest: Started 2 threads using dma0chan0
+  dmatest: Started 2 threads using dma0chan1
+  dmatest: dma0chan0-copy0: summary 10000 tests, 0 failures
+  dmatest: dma0chan0-copy1: summary 10000 tests, 0 failures
+  dmatest: dma0chan1-copy1: summary 10000 tests, 0 failures
+  dmatest: dma0chan1-copy0: summary 10000 tests, 0 failures
+
+---
+Changes in v3:
+
+(I'm continuing to work through the Sashiko-reported issues/comments
+from the v2 submission, but IMO there's enough of a delta here to
+respin.)
+
+- Fix akey allocation error path in dma.c to return a proper
+  error value. (Tycho Andersen)
+- Disable SR-IOV in PCI removal. (TA)
+- Update the Rust list of PCI class codes simultaneously with the C
+  header. (Sashiko)
+- Properly build the bus-agnostic core support as a separate
+  module (sdxi-core) from the PCI driver (sdxi-pci). (Sashiko)
+- Add dependency on CONFIG_64BIT to simplify assumptions around MMIO
+  and control structure accesses. (Sashiko)
+- Use readq/writeq instead of ioread64/iowrite64 since we don't need
+  to handle port space. (Sashiko)
+- Correct vector allocation range to ensure the error IRQ index (0) is
+  reserved. (Sashiko)
+- Fix context control block dma pool allocation failure
+  check. (Sashiko)
+- Ensure device is in stopped state before clearing MMIO_CTL0
+  configuration during init. (Sashiko)
+- Add explicit alignment attributes to packed control structure
+  types. (Sashiko)
+- Rename prep_memcpy_polled() to prep_memcpy_nointr(). (Frank Li)
+- Link to v2: https://patch.msgid.link/20260511-sdxi-base-v2-0-889cfed17e3f@amd.com
+
+Changes in v2:
+- Drop unneeded dma_set_mask_and_coherent() result check. (Frank Li)
+- Inline SDXI_DRV_DESC directly into MODULE_DESCRIPTION(). (FL)
+- Drop unneeded braces from simple conditionals. (FL)
+- Drop sdxi logging wrapper macros; use dev_dbg, dev_info etc
+  directly. (FL)
+- Reordering of commit message (patch 04, "Feature
+  discovery..."). (FL)
+- Use read_poll_timeout() for function start and stop routines. (FL)
+- Align multi-line FIELD_PREP() uses. (FL)
+- Drop sdxi_create_dma_pool() helper. (FL)
+- Remove unneeded dma_wmb() before iowrite64() to doorbell. (FL)
+- Use WRITE_ONCE() to update descriptor ring write index. (FL)
+- Make sdxi_completion_poll() eventually time out and adjust call
+  sites. (FL)
+- Remove vestigial sdxi_dma_unregister() declaration. (FL)
+- Reserve context ID before allocating context data structures instead
+  of after.
+- Update context ID class to transfer ownership of ID to context
+  object; sdxi_free_cxt() now responsible for releasing ID once
+  assigned.
+- Align small frequently-updated DMA pool objects to cacheline
+  boundaries.
+- Drop redundant dma_set_mask_and_coherent() from DMA provider.
+- Log unarchitected function status values in sdxi_dev_gsv().
+- Remove sdxi_to_dev(); the abstraction is unnecessary and sdxi->dev
+  is shorter.
+- Link to v1: https://patch.msgid.link/20260410-sdxi-base-v1-0-1d184cb5c60a@amd.com
+
+Changes in v1:
+- Reorder series and introduce functionality incrementally while
+  remaining buildable and functional at each step. (Jonathan Cameron)
+- Use devres APIs where possible for device resources (JC)
+- Use cleanup APIs to significantly reduce use of goto-oriented error
+  unwinding. (JC)
+- Drop SDXI_DEBUG config option. (JC)
+- Cite SDXI spec version and section number consistently throughout. (JC)
+- Combine local variable declarations of same type. (JC)
+- Mark descriptor structs __packed. (JC)
+- Use designated initializers in descriptor encoding functions. (JC)
+- Prefer dev_err_probe() over sdxi_err() in sdxi_pci_init(). (JC)
+- Prune unnecessary includes throughout source files. (JC)
+- Remove unnecessary/unhelpful comments in several places. (JC)
+- Remove SDXI spec material from "Add SNIA SDXI accelerator sub-class"
+  commit message and reword the remainder. (Bjorn Helgaas)
+- Remove unnecessary local for DMA_BIT_MASK() argument in
+  sdxi_pci_init(). (BH)
+- Use "{ }" for final null entry in id table, not "{ 0, }". (BH)
+- Replace sample descriptor submission code from the SDXI spec with an
+  improved API that has unit tests, eliminates a copy step for
+  callers, and can block until ring space becomes available if
+  desired.
+- Omit the error log facility for now; it can be reintroduced later.
+- Use a per-device xarray to allocate context IDs and map them to
+  context objects.
+- Implement interrupt-based completion signaling for memcpy operations
+  in the DMA engine provider, DMA provider code mostly rewritten.
+
+Non-changes in v1:
+- Mario suggested that pci_clear_master() is needed in
+  sdxi_pci_init()'s error path and in sdxi_pci_exit() (now
+  sdxi_pci_remove()). However, sdxi uses pcim_enable_device(), which
+  appears to ensure that master is cleared for the device. Happy to
+  revisit this if I'm mistaken.
+
+- Link to RFC: https://lore.kernel.org/r/20250905-sdxi-base-v1-0-d0341a1292ba@amd.com
+
+---
+Nathan Lynch (23):
+      PCI: Add SNIA SDXI accelerator sub-class
+      MAINTAINERS: Add entry for SDXI driver
+      dmaengine: sdxi: Add PCI initialization
+      dmaengine: sdxi: Feature discovery and initial configuration
+      dmaengine: sdxi: Configure context tables
+      dmaengine: sdxi: Allocate DMA pools
+      dmaengine: sdxi: Allocate administrative context
+      dmaengine: sdxi: Install administrative context
+      dmaengine: sdxi: Start functions on probe, stop on remove
+      dmaengine: sdxi: Complete administrative context jump start
+      dmaengine: sdxi: Add client context alloc and release APIs
+      dmaengine: sdxi: Add descriptor ring management
+      dmaengine: sdxi: Add unit tests for descriptor ring reservations
+      dmaengine: sdxi: Attach descriptor ring state to contexts
+      dmaengine: sdxi: Per-context access key (AKey) table entry allocator
+      dmaengine: sdxi: Generic descriptor manipulation helpers
+      dmaengine: sdxi: Add completion status block API
+      dmaengine: sdxi: Encode context start, stop, and sync descriptors
+      dmaengine: sdxi: Provide context start and stop APIs
+      dmaengine: sdxi: Encode nop, copy, and interrupt descriptors
+      dmaengine: sdxi: Add unit tests for descriptor encoding
+      dmaengine: sdxi: MSI/MSI-X vector allocation and mapping
+      dmaengine: sdxi: Add DMA engine provider
+
+ MAINTAINERS                         |   7 +
+ drivers/dma/Kconfig                 |   2 +
+ drivers/dma/Makefile                |   1 +
+ drivers/dma/sdxi/.kunitconfig       |   4 +
+ drivers/dma/sdxi/Kconfig            |  40 +++
+ drivers/dma/sdxi/Makefile           |  16 ++
+ drivers/dma/sdxi/completion.c       |  87 +++++++
+ drivers/dma/sdxi/completion.h       |  25 ++
+ drivers/dma/sdxi/context.c          | 507 ++++++++++++++++++++++++++++++++++++
+ drivers/dma/sdxi/context.h          | 109 ++++++++
+ drivers/dma/sdxi/descriptor.c       | 198 ++++++++++++++
+ drivers/dma/sdxi/descriptor.h       | 135 ++++++++++
+ drivers/dma/sdxi/descriptor_kunit.c | 484 ++++++++++++++++++++++++++++++++++
+ drivers/dma/sdxi/device.c           | 371 ++++++++++++++++++++++++++
+ drivers/dma/sdxi/dma.c              | 501 +++++++++++++++++++++++++++++++++++
+ drivers/dma/sdxi/dma.h              |  11 +
+ drivers/dma/sdxi/hw.h               | 254 ++++++++++++++++++
+ drivers/dma/sdxi/mmio.h             |  60 +++++
+ drivers/dma/sdxi/pci.c              | 117 +++++++++
+ drivers/dma/sdxi/ring.c             | 159 +++++++++++
+ drivers/dma/sdxi/ring.h             |  84 ++++++
+ drivers/dma/sdxi/ring_kunit.c       | 105 ++++++++
+ drivers/dma/sdxi/sdxi.h             | 138 ++++++++++
+ include/linux/pci_ids.h             |   1 +
+ rust/kernel/pci/id.rs               |   1 +
+ 25 files changed, 3417 insertions(+)
+---
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+change-id: 20250813-sdxi-base-73d7c9fdce57
+
+Best regards,
+--  
+Nathan Lynch <nathan.lynch@amd.com>
 
 
->> +static void free_admin_cxt(void *ptr)
->> +{
->> +	struct sdxi_dev *sdxi = ptr;
->> +
->> +	sdxi_free_cxt(sdxi->admin_cxt);
->> +}
->
-> Does this sequence cause a use-after-free regression?
->
-> In sdxi_publish_cxt(), the admin context is published to the hardware by
-> setting the valid bit (VL=1) in the L1_table.
->
-> When the context is torn down via the devres cleanup action free_admin_cxt(),
-> it directly invokes sdxi_free_cxt(), which frees the DMA memory for the
-> context control block, descriptor ring, and akey table.
->
-> However, the VL bit in the hardware's L1 table entry is never cleared. Could
-> this leave the hardware actively fetching from freed physical
-> addresses?
-
-No I don't think so, the code as written ensures the device is in
-stopped state when we get to the point of freeing the admin context
-control structures.
-
-
-> Additionally, looking at the sdxi_alloc_cxt() implementation, the return value
-> of dma_pool_zalloc() is checked via the DMA address instead of the virtual
-> pointer:
->
-> 	cxt->cxt_ctl = dma_pool_zalloc(sdxi->cxt_ctl_pool, GFP_KERNEL,
-> 				       &cxt->cxt_ctl_dma);
-> 	if (!cxt->cxt_ctl_dma)
-> 		return NULL;
->
-> Since physical address 0 is a valid DMA address on many architectures and IOMMU
-> configurations, could this regression incorrectly abort initialization if a
-> successful allocation returns DMA address 0? Should this code check the
-> returned virtual pointer (!cxt->cxt_ctl) instead?
-
-Valid bug but I think this is a redundant report, the bot pointed it out
-elsewhere in the thread.
 

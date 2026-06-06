@@ -1,58 +1,57 @@
-Return-Path: <dmaengine+bounces-11225-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11227-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id YIjIMJNjI2rVsAEAu9opvQ
-	(envelope-from <dmaengine+bounces-11225-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:02:27 +0200
+	id eRbJF5ZjI2rYsAEAu9opvQ
+	(envelope-from <dmaengine+bounces-11227-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:02:30 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18AB564BE48
-	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:02:27 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6178B64BE50
+	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:02:29 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=eDJbyknj;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11225-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11225-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b=NkOoyPtz;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11227-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11227-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 21A2B301FB21
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Jun 2026 00:02:25 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7A23D301083B
+	for <lists+dmaengine@lfdr.de>; Sat,  6 Jun 2026 00:02:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F139417A31C;
-	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28D211DC9B5;
+	Sat,  6 Jun 2026 00:02:23 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC46F3A1B5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04AD13B584;
 	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780704142; cv=none; b=lXuiCK7kYIm0row9C7WOH54MoYjdHvWQIzG33NUh8sPfw4TFb5v5vQZOe4m2GUdzwXRfr+nURLLXzSR6G00JLnafTt2a5HHYehYc0/qdNRDvkfI+W4N8ojBVhlW7j+jXdXoeO7HHfleOQtE0xeQ8igjPcad4dUleJ94pxZGuOdE=
+	t=1780704143; cv=none; b=VtMddG0BwcLHBVjuInnBsuFTg94471olcB7X8QWvv/xKBAvbVaOA6h6Wwmv2LRcyoqDsjcT7e6xASFNkTCT3BPaMVJzAJXaQfWplZ+yi1tJkvFB/nHcvsTHa8TK6ltxZ2XnE5AKppDHRz5jtWcqg3envh0rRvF0x1Q+hFrGsD4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780704142; c=relaxed/simple;
-	bh=foTVdj1xR36i1v4eaSphs78f9nNYMPQaV23iQF8PWZc=;
+	s=arc-20240116; t=1780704143; c=relaxed/simple;
+	bh=ZZu0V+rPqT/izsujMkzSmey3aT2Uzj0hjyU/K3uhP+M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=i6rwyu/YOjGQHOqxyz+wx+QkyXUZu+aAol9R/yVm7PduTywKRIH6qF/m81EWp45GKovr0246JCnY6AY6tF6ZViaUJJVJ/xt/UrVLBXhUh5Gtc7AOPKux4oULkBk148GAzZSSFotryQ+nS7l0W6FAeSp0byOq9Wv4UrE9twix6Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDJbyknj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7F6D7C2BCFD;
+	 In-Reply-To:To:Cc; b=kSxyUeo/mYbhjy4AWbkSt6WroBcoOfHx3RSLFN7/QAfu/5yNrx7LL3l8KOLrhFef1BOL/DsGUpdwJWJx7vXkiBk9RflAvR9h+8jVrsucMca/DdA6CBnxa0kgTjoTbuaJdpOEqoa+n4grCB8/br/YAR+vgHTPwZqh5yN+MG5V2Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NkOoyPtz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8C2CBC2BD00;
 	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1780704142;
-	bh=foTVdj1xR36i1v4eaSphs78f9nNYMPQaV23iQF8PWZc=;
+	bh=ZZu0V+rPqT/izsujMkzSmey3aT2Uzj0hjyU/K3uhP+M=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=eDJbyknjwtvck0LgyJ9xnB8Xpg8t8oj+bdjDFK5kz+32nLyg+yWswu7bwRHzm6kHt
-	 X+WoDnokmaziZpinNHQQPsw6RlHTXP8jbS4hD2DZG1gyAhx4kIZpDdVffVQ6EsRgq3
-	 v+h0C8ZMnmMQQZjnUcQOFGbnOgtSroWnsQMwwyxI2BkydaqaLRoZqqifaE4/QKslHK
-	 VJjY3XVqG1+Wk6nj9AeXWgAbGqXbEluKJ6wWdily4Frlq1bYQisOHsqB3bpIiu2znE
-	 hwtGrscTGg+dGwf3HFiwqZ7bPyaEocZwK8H82/FFYe/3kxtXoEgKECmJMGF+BlIjpo
-	 GHUBBZZJ5Igag==
+	b=NkOoyPtz8QKXIxh92SlUlV3fgsbI6e5MLZZy20UEsNKqPUKfH05HMM6f84sb/ZiSi
+	 0GqougSaawt3buCxor8U8SebakiZ7C5cNPfqkhfEVJPitOPieTXgjDXE1Ic4BrCFoQ
+	 bgn47GLGIfXjUQu9hcGuVCNNXLmndRHi1cTL578DDn0EfhxWkgtbvMQrVt8Od8l9pl
+	 nRLX3kchlsX611OVYWiQ1HNofdzxm2CumaKL+G4S6btEM16jPqlhYXPB82JBgAWgT2
+	 3XYbtl2UQPo1Ocu1W2aBXx9IPaSzi4pTPS3Uyd8kibJhc5SNcUqXwXAqkpe+TcqY1q
+	 PzT9EOUfCgL7Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75188CD8C87;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856CFCD6E7C;
 	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
 From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Fri, 05 Jun 2026 19:02:07 -0500
-Subject: [PATCH v3 04/23] dmaengine: sdxi: Feature discovery and initial
- configuration
+Date: Fri, 05 Jun 2026 19:02:08 -0500
+Subject: [PATCH v3 05/23] dmaengine: sdxi: Configure context tables
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,7 +60,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260605-sdxi-base-v3-4-4d38ca2bdffe@amd.com>
+Message-Id: <20260605-sdxi-base-v3-5-4d38ca2bdffe@amd.com>
 References: <20260605-sdxi-base-v3-0-4d38ca2bdffe@amd.com>
 In-Reply-To: <20260605-sdxi-base-v3-0-4d38ca2bdffe@amd.com>
 To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>
@@ -75,11 +74,11 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
  dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-pci@vger.kernel.org, Nathan Lynch <nathan.lynch@amd.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780704140; l=10221;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780704140; l=6949;
  i=nathan.lynch@amd.com; s=20260410; h=from:subject:message-id;
- bh=Y+e5uc6mpl40amHjM2bcjORW4MJ8LG/xiu061nroTCg=;
- b=79DYquEvcvKl0HuU0FpiwfRuASwzlqFkU+RtzH4TrFVc5qjA24st9Ns0yG0+XuXn5zmUFoeQk
- 8BZXM2Ub9O0DBMKriQnQvZUqg7RbmfoB0AlsxZTz21SHYR7wo0WV2vr
+ bh=5rNo0yGohn4V12ghAWHnkY5gG1afoq9X/n+k0EuQ2A4=;
+ b=DIt55UdMe7H1pZIZj69yTIaSIDYB5rLbtl3XjeyXITY+QSnL9HbRQq1s6VMbezBHrCQTxG9uq
+ rMJO7GdRoq7AXQa3Ddi1Pcm2DhL4eYYiPmoka7YGxdtHnGep7DQnPh6
 X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
  pk=PK4ozhq+/z9/2Jl5rgDmvHa9raVomv79qM8p1RAFpEw=
 X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20260410 with
@@ -90,13 +89,13 @@ X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11225-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
+	TAGGED_FROM(0.00)[bounces-11227-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
 	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:bhelgaas@google.com,m:rientjes@google.com,m:John.Kariuki@amd.com,m:jic23@kernel.org,m:kinseyho@google.com,m:mario.limonciello@amd.com,m:PradeepVineshReddy.Kodamati@amd.com,m:shivankg@amd.com,m:Stephen.Bates@amd.com,m:tycho@kernel.org,m:wei.huang2@amd.com,m:weixugc@google.com,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nathan.lynch@amd.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -117,350 +116,218 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[dmaengine];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,amd.com:mid,amd.com:email,amd.com:replyto,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,amd.com:mid,amd.com:email,amd.com:replyto,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 18AB564BE48
+X-Rspamd-Queue-Id: 6178B64BE50
 
 From: Nathan Lynch <nathan.lynch@amd.com>
 
-Discover via the capability registers the doorbell region stride, the
-maximum supported context ID, the operation groups implemented, and
-limits on buffer and control structure sizes. The driver has the
-option of writing more conservative limits to the ctl2 register, but
-it uses those supplied by the implementation for now.
+SDXI uses a two-level table hierarchy to track contexts. There is a
+single level 2 table per function which enumerates up to 512 level 1
+tables. Each level 1 table enumerates up to 128 contexts.
 
-Introduce device register definitions and associated masks via mmio.h.
+Allocate and install the L2 table and a single L1 table, enough for
+context IDs 0-127 (i.e. the admin context with reserved id 0, plus 127
+client contexts). For now, to avoid dynamic management of additional
+L1 tables, cap ctl2.max_cxt to 127.
 
-Add convenience wrappers which are first used here:
-- sdxi_read64()
-- sdxi_write64()
-
-Report the version of the standard to which the device conforms, e.g.
-
-  sdxi 0000:00:03.0: SDXI 1.0 device found
-
-After bus-specific initialization, force the SDXI function to stopped
-state. This is the expected state from reset, but kexec or driver bugs
-can leave a function in other states from which the initialization
-code must be able to recover.
+Since the table allocations are devres-managed, there is no
+corresponding cleanup code required.
 
 Co-developed-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 ---
- drivers/dma/sdxi/device.c | 178 +++++++++++++++++++++++++++++++++++++++++++++-
- drivers/dma/sdxi/mmio.h   |  54 ++++++++++++++
- drivers/dma/sdxi/sdxi.h   |  19 +++++
- 3 files changed, 250 insertions(+), 1 deletion(-)
+ drivers/dma/sdxi/device.c | 40 +++++++++++++++++++++++++++++--
+ drivers/dma/sdxi/hw.h     | 61 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/dma/sdxi/mmio.h   |  6 +++++
+ drivers/dma/sdxi/sdxi.h   |  5 ++++
+ 4 files changed, 110 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dma/sdxi/device.c b/drivers/dma/sdxi/device.c
-index 0974a83bb45c..7c6652f9c3c0 100644
+index 7c6652f9c3c0..fa5e27a4190e 100644
 --- a/drivers/dma/sdxi/device.c
 +++ b/drivers/dma/sdxi/device.c
-@@ -5,15 +5,187 @@
-  * Copyright Advanced Micro Devices, Inc.
-  */
- 
-+#include <linux/bitfield.h>
-+#include <linux/delay.h>
+@@ -8,12 +8,15 @@
+ #include <linux/bitfield.h>
+ #include <linux/delay.h>
  #include <linux/device.h>
++#include <linux/dma-mapping.h>
  #include <linux/export.h>
-+#include <linux/iopoll.h>
-+#include <linux/jiffies.h>
+ #include <linux/iopoll.h>
+ #include <linux/jiffies.h>
++#include <linux/log2.h>
  #include <linux/slab.h>
-+#include <linux/time.h>
+ #include <linux/time.h>
  
-+#include "mmio.h"
++#include "hw.h"
+ #include "mmio.h"
  #include "sdxi.h"
  
-+enum sdxi_fn_gsv {
-+	SDXI_GSV_STOP     = 0,
-+	SDXI_GSV_INIT     = 1,
-+	SDXI_GSV_ACTIVE   = 2,
-+	SDXI_GSV_STOPG_SF = 3,
-+	SDXI_GSV_STOPG_HD = 4,
-+	SDXI_GSV_ERROR    = 5,
-+};
-+
-+static const char *const gsv_strings[] = {
-+	[SDXI_GSV_STOP]     = "stopped",
-+	[SDXI_GSV_INIT]     = "initializing",
-+	[SDXI_GSV_ACTIVE]   = "active",
-+	[SDXI_GSV_STOPG_SF] = "soft stopping",
-+	[SDXI_GSV_STOPG_HD] = "hard stopping",
-+	[SDXI_GSV_ERROR]    = "error",
-+};
-+
-+static const char *gsv_str(enum sdxi_fn_gsv gsv)
-+{
-+	if ((size_t)gsv < ARRAY_SIZE(gsv_strings))
-+		return gsv_strings[(size_t)gsv];
-+
-+	WARN_ONCE(1, "unexpected gsv %u\n", gsv);
-+
-+	return "unknown";
-+}
-+
-+enum sdxi_fn_gsr {
-+	SDXI_GSRV_RESET   = 0,
-+	SDXI_GSRV_STOP_SF = 1,
-+	SDXI_GSRV_STOP_HD = 2,
-+	SDXI_GSRV_ACTIVE  = 3,
-+};
-+
-+static enum sdxi_fn_gsv sdxi_dev_gsv(const struct sdxi_dev *sdxi)
-+{
-+	u64 sts0 = sdxi_read64(sdxi, SDXI_MMIO_STS0);
-+	enum sdxi_fn_gsv gsv = FIELD_GET(SDXI_MMIO_STS0_FN_GSV, sts0);
-+
-+	switch (gsv) {
-+	case SDXI_GSV_STOP ... SDXI_GSV_ERROR:
-+		break;
-+	default:
-+		dev_warn_ratelimited(sdxi->dev, "unknown gsv %u\n", gsv);
-+		break;
-+	}
-+
-+	return gsv;
-+}
-+
-+static const unsigned long gsv_poll_interval_us = USEC_PER_MSEC;
-+static const unsigned long gsv_transition_timeout_us = USEC_PER_SEC;
-+
-+#define sdxi_dev_gsv_poll(sdxi, val, cond)				\
-+	read_poll_timeout(sdxi_dev_gsv, val, cond, gsv_poll_interval_us, \
-+			  gsv_transition_timeout_us, false, sdxi)
-+
-+static void sdxi_write_fn_gsr(struct sdxi_dev *sdxi, enum sdxi_fn_gsr cmd)
-+{
-+	u64 ctl0 = sdxi_read64(sdxi, SDXI_MMIO_CTL0);
-+
-+	FIELD_MODIFY(SDXI_MMIO_CTL0_FN_GSR, &ctl0, cmd);
-+	sdxi_write64(sdxi, SDXI_MMIO_CTL0, ctl0);
-+}
-+
-+/* Get the device to the GSV_STOP state. */
-+static int sdxi_dev_stop(struct sdxi_dev *sdxi)
-+{
-+	enum sdxi_fn_gsv status = sdxi_dev_gsv(sdxi);
-+	int ret;
-+
-+	dev_dbg(sdxi->dev, "attempting stop, current state: %s\n",
-+		gsv_str(status));
-+
-+	switch (status) {
-+	case SDXI_GSV_INIT:
-+	case SDXI_GSV_ACTIVE:
-+		sdxi_write_fn_gsr(sdxi, SDXI_GSRV_STOP_SF);
-+		break;
-+	case SDXI_GSV_STOPG_SF:
-+		sdxi_write_fn_gsr(sdxi, SDXI_GSRV_STOP_HD);
-+		break;
-+	case SDXI_GSV_STOPG_HD:
-+	case SDXI_GSV_ERROR:
-+		/*
-+		 * If hard-stopping, there's nothing to do but wait.
-+		 * If in error state, the reset is issued below.
-+		 */
-+		break;
-+	default:
-+		/* Unrecognized state; try a reset. */
-+		sdxi_write_fn_gsr(sdxi, SDXI_GSRV_RESET);
-+		break;
-+	}
-+
-+	/* Wait for transition to either stop or error state. */
-+	ret = sdxi_dev_gsv_poll(sdxi, status,
-+				status == SDXI_GSV_STOP ||
-+				status == SDXI_GSV_ERROR);
-+
-+	if (ret == 0 && status == SDXI_GSV_ERROR) {
-+		sdxi_write_fn_gsr(sdxi, SDXI_GSRV_RESET);
-+		ret = sdxi_dev_gsv_poll(sdxi, status, status == SDXI_GSV_STOP);
-+	}
-+
-+	if (ret) {
-+		dev_err(sdxi->dev, "stop timed out, current state: %s\n",
-+			gsv_str(status));
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * See SDXI 1.0 4.1.8 Activation of the SDXI Function by Software.
-+ */
-+static int sdxi_fn_activate(struct sdxi_dev *sdxi)
-+{
-+	u64 version, cap0, cap1, ctl0, ctl2;
-+	int err;
+@@ -137,7 +140,8 @@ static int sdxi_dev_stop(struct sdxi_dev *sdxi)
+  */
+ static int sdxi_fn_activate(struct sdxi_dev *sdxi)
+ {
+-	u64 version, cap0, cap1, ctl0, ctl2;
++	u64 version, cap0, cap1, ctl0, ctl2, cxt_l2, lv01_ptr;
++	struct sdxi_cxt_L2_ent *L2_ent;
+ 	int err;
+ 
+ 	/*
+@@ -167,7 +171,13 @@ static int sdxi_fn_activate(struct sdxi_dev *sdxi)
+ 
+ 	cap1 = sdxi_read64(sdxi, SDXI_MMIO_CAP1);
+ 	sdxi->op_grp_cap = FIELD_GET(SDXI_MMIO_CAP1_OPB_000_CAP, cap1);
+-	sdxi->max_cxtid = FIELD_GET(SDXI_MMIO_CAP1_MAX_CXT, cap1);
 +
 +	/*
-+	 * Ensure the function is in GSV_STOP state, then clear ctl0's
-+	 * pasid and error interrupt configuration while preserving
-+	 * any assigned group ID (fn_grp_id).
++	 * Constrain the number of client contexts supported by the
++	 * driver to what fits in a single L1 table.
 +	 */
-+	err = sdxi_dev_stop(sdxi);
-+	if (err)
-+		return err;
-+
-+	ctl0 = sdxi_read64(sdxi, SDXI_MMIO_CTL0);
-+	FIELD_MODIFY(SDXI_MMIO_CTL0_FN_ERR_INTR_EN, &ctl0, 0);
-+	FIELD_MODIFY(SDXI_MMIO_CTL0_FN_PASID_VL, &ctl0, 0);
-+	FIELD_MODIFY(SDXI_MMIO_CTL0_FN_PASID, &ctl0, 0);
-+	sdxi_write64(sdxi, SDXI_MMIO_CTL0, ctl0);
-+
-+	version = sdxi_read64(sdxi, SDXI_MMIO_VERSION);
-+	dev_info(sdxi->dev, "SDXI %llu.%llu device found\n",
-+		  FIELD_GET(SDXI_MMIO_VERSION_MAJOR, version),
-+		  FIELD_GET(SDXI_MMIO_VERSION_MINOR, version));
-+
-+	/* Read capabilities and features. */
-+	cap0 = sdxi_read64(sdxi, SDXI_MMIO_CAP0);
-+	sdxi->db_stride = SZ_4K;
-+	sdxi->db_stride *= 1U << FIELD_GET(SDXI_MMIO_CAP0_DB_STRIDE, cap0);
-+
-+	cap1 = sdxi_read64(sdxi, SDXI_MMIO_CAP1);
-+	sdxi->op_grp_cap = FIELD_GET(SDXI_MMIO_CAP1_OPB_000_CAP, cap1);
-+	sdxi->max_cxtid = FIELD_GET(SDXI_MMIO_CAP1_MAX_CXT, cap1);
-+
-+	/* Apply our configuration. */
-+	ctl2 = FIELD_PREP(SDXI_MMIO_CTL2_MAX_CXT, sdxi->max_cxtid);
-+	ctl2 |= FIELD_PREP(SDXI_MMIO_CTL2_MAX_BUFFER,
-+			   FIELD_GET(SDXI_MMIO_CAP1_MAX_BUFFER, cap1));
-+	ctl2 |= FIELD_PREP(SDXI_MMIO_CTL2_MAX_AKEY_SZ,
-+			   FIELD_GET(SDXI_MMIO_CAP1_MAX_AKEY_SZ, cap1));
-+	ctl2 |= FIELD_PREP(SDXI_MMIO_CTL2_OPB_000_AVL,
-+			   FIELD_GET(SDXI_MMIO_CAP1_OPB_000_CAP, cap1));
-+	sdxi_write64(sdxi, SDXI_MMIO_CTL2, ctl2);
-+
-+	return 0;
-+}
-+
- int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops)
- {
- 	struct sdxi_dev *sdxi;
-+	int err;
++	sdxi->max_cxtid = min(SDXI_L1_TABLE_ENTRIES - 1,
++			      FIELD_GET(SDXI_MMIO_CAP1_MAX_CXT, cap1));
  
- 	sdxi = devm_kzalloc(dev, sizeof(*sdxi), GFP_KERNEL);
- 	if (!sdxi)
-@@ -23,7 +195,11 @@ int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops)
- 	sdxi->bus_ops = ops;
- 	dev_set_drvdata(dev, sdxi);
+ 	/* Apply our configuration. */
+ 	ctl2 = FIELD_PREP(SDXI_MMIO_CTL2_MAX_CXT, sdxi->max_cxtid);
+@@ -179,6 +189,32 @@ static int sdxi_fn_activate(struct sdxi_dev *sdxi)
+ 			   FIELD_GET(SDXI_MMIO_CAP1_OPB_000_CAP, cap1));
+ 	sdxi_write64(sdxi, SDXI_MMIO_CTL2, ctl2);
  
--	return sdxi->bus_ops->init(sdxi);
-+	err = sdxi->bus_ops->init(sdxi);
-+	if (err)
-+		return err;
++	/* SDXI 1.0 4.1.8.2 Context Level 2 Table Setup */
++	sdxi->L2_table = dmam_alloc_coherent(sdxi->dev,
++					     sizeof(*sdxi->L2_table),
++					     &sdxi->L2_dma, GFP_KERNEL);
++	if (!sdxi->L2_table)
++		return -ENOMEM;
 +
-+	return sdxi_fn_activate(sdxi);
++	cxt_l2 = FIELD_PREP(SDXI_MMIO_CXT_L2_PTR, sdxi->L2_dma >> ilog2(SZ_4K));
++	sdxi_write64(sdxi, SDXI_MMIO_CXT_L2, cxt_l2);
++
++	/* SDXI 1.0 4.1.8.3 Context Level 1 Table Setup */
++	sdxi->L1_table = dmam_alloc_coherent(sdxi->dev,
++					     sizeof(*sdxi->L1_table),
++					     &sdxi->L1_dma, GFP_KERNEL);
++	if (!sdxi->L1_table)
++		return -ENOMEM;
++	/*
++	 * SDXI 1.0 4.1.8.3.c: Initialize the Context level 2 table to
++	 * point to the Context Level 1 [table].
++	 */
++	L2_ent = &sdxi->L2_table->entry[0];
++	lv01_ptr = FIELD_PREP(SDXI_CXT_L2_ENT_VL, 1) |
++		   FIELD_PREP(SDXI_CXT_L2_ENT_LV01_PTR,
++			      sdxi->L1_dma >> ilog2(SZ_4K));
++	L2_ent->lv01_ptr = cpu_to_le64(lv01_ptr);
++
+ 	return 0;
  }
- EXPORT_SYMBOL_NS_GPL(sdxi_register, "SDXI");
  
-diff --git a/drivers/dma/sdxi/mmio.h b/drivers/dma/sdxi/mmio.h
+diff --git a/drivers/dma/sdxi/hw.h b/drivers/dma/sdxi/hw.h
 new file mode 100644
-index 000000000000..f07e857691b9
+index 000000000000..00324f45b729
 --- /dev/null
-+++ b/drivers/dma/sdxi/mmio.h
-@@ -0,0 +1,54 @@
++++ b/drivers/dma/sdxi/hw.h
+@@ -0,0 +1,61 @@
 +/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright Advanced Micro Devices, Inc. */
 +
 +/*
-+ * SDXI MMIO register offsets and layouts.
++ * Control structures and constants defined in the SDXI specification,
++ * with low-level accessors. The ordering of the structures here
++ * follows the order of their definitions in the SDXI spec.
 + *
-+ * Copyright Advanced Micro Devices, Inc.
++ * Names of structures, members, and subfields (bit ranges within
++ * members) are written to match the spec, generally. E.g. struct
++ * sdxi_cxt_L2_ent corresponds to CXT_L2_ENT in the spec.
++ *
++ * Note: a member can have a subfield whose name is identical to the
++ * member's name. E.g. CXT_L2_ENT's lv01_ptr.
++ *
++ * All reserved fields and bits (usually named "rsvd" or some
++ * variation) must be set to zero by the driver unless otherwise
++ * specified.
 + */
 +
-+#ifndef DMA_SDXI_MMIO_H
-+#define DMA_SDXI_MMIO_H
++#ifndef DMA_SDXI_HW_H
++#define DMA_SDXI_HW_H
 +
 +#include <linux/bits.h>
++#include <linux/build_bug.h>
++#include <linux/types.h>
++#include <asm/byteorder.h>
 +
-+enum sdxi_reg {
-+	/* SDXI 1.0 9.1 General Control and Status Registers */
-+	SDXI_MMIO_CTL0       = 0x00000,
-+	SDXI_MMIO_CTL2       = 0x00010,
-+	SDXI_MMIO_STS0       = 0x00100,
-+	SDXI_MMIO_CAP0       = 0x00200,
-+	SDXI_MMIO_CAP1       = 0x00208,
-+	SDXI_MMIO_VERSION    = 0x00210,
++/* SDXI 1.0 Table 3-2: Context Level 2 Table Entry (CXT_L2_ENT) */
++struct sdxi_cxt_L2_ent {
++	__le64 lv01_ptr;
++#define SDXI_CXT_L2_ENT_VL       BIT_ULL(0)
++#define SDXI_CXT_L2_ENT_LV01_PTR GENMASK_ULL(63, 12)
++} __packed __aligned(8);
++static_assert(sizeof(struct sdxi_cxt_L2_ent) == 8);
++
++/* SDXI 1.0 3.2.1 Context Level 2 Table */
++#define SDXI_L2_TABLE_ENTRIES 512
++struct sdxi_cxt_L2_table {
++	struct sdxi_cxt_L2_ent entry[SDXI_L2_TABLE_ENTRIES];
 +};
++static_assert(sizeof(struct sdxi_cxt_L2_table) == 4096);
 +
-+/* SDXI 1.0 Table 9-2: MMIO_CTL0 */
-+#define SDXI_MMIO_CTL0_FN_GSR         GENMASK_ULL(1, 0)
-+#define SDXI_MMIO_CTL0_FN_PASID_VL    BIT_ULL(2)
-+#define SDXI_MMIO_CTL0_FN_ERR_INTR_EN BIT_ULL(4)
-+#define SDXI_MMIO_CTL0_FN_PASID       GENMASK_ULL(27, 8)
++/* SDXI 1.0 Table 3-3: Context Level 1 Table Entry (CXT_L1_ENT) */
++struct sdxi_cxt_L1_ent {
++	__le64 cxt_ctl_ptr;
++	__le64 akey_ptr;
++	__le32 misc0;
++	__le32 opb_000_enb;
++	__u8 rsvd_0[8];
++} __packed __aligned(32);
++static_assert(sizeof(struct sdxi_cxt_L1_ent) == 32);
 +
-+/* SDXI 1.0 Table 9-4: MMIO_CTL2 */
-+#define SDXI_MMIO_CTL2_MAX_BUFFER  GENMASK_ULL(3, 0)
-+#define SDXI_MMIO_CTL2_MAX_AKEY_SZ GENMASK_ULL(15, 12)
-+#define SDXI_MMIO_CTL2_MAX_CXT     GENMASK_ULL(31, 16)
-+#define SDXI_MMIO_CTL2_OPB_000_AVL GENMASK_ULL(63, 32)
++/* SDXI 1.0 3.2.2 Context Level 1 Table */
++#define SDXI_L1_TABLE_ENTRIES 128
++struct sdxi_cxt_L1_table {
++	struct sdxi_cxt_L1_ent entry[SDXI_L1_TABLE_ENTRIES];
++};
++static_assert(sizeof(struct sdxi_cxt_L1_table) == 4096);
 +
-+/* SDXI 1.0 Table 9-5: MMIO_STS0 */
-+#define SDXI_MMIO_STS0_FN_GSV GENMASK_ULL(2, 0)
++#endif /* DMA_SDXI_HW_H */
+diff --git a/drivers/dma/sdxi/mmio.h b/drivers/dma/sdxi/mmio.h
+index f07e857691b9..d1ea82b706ee 100644
+--- a/drivers/dma/sdxi/mmio.h
++++ b/drivers/dma/sdxi/mmio.h
+@@ -19,6 +19,9 @@ enum sdxi_reg {
+ 	SDXI_MMIO_CAP0       = 0x00200,
+ 	SDXI_MMIO_CAP1       = 0x00208,
+ 	SDXI_MMIO_VERSION    = 0x00210,
 +
-+/* SDXI 1.0 Table 9-6: MMIO_CAP0 */
-+#define SDXI_MMIO_CAP0_SFUNC          GENMASK_ULL(15, 0)
-+#define SDXI_MMIO_CAP0_DB_STRIDE      GENMASK_ULL(22, 20)
-+#define SDXI_MMIO_CAP0_MAX_DS_RING_SZ GENMASK_ULL(28, 24)
++	/* SDXI 1.0 9.2 Context and RKey Table Registers */
++	SDXI_MMIO_CXT_L2     = 0x10000,
+ };
+ 
+ /* SDXI 1.0 Table 9-2: MMIO_CTL0 */
+@@ -51,4 +54,7 @@ enum sdxi_reg {
+ #define SDXI_MMIO_VERSION_MINOR GENMASK_ULL(7, 0)
+ #define SDXI_MMIO_VERSION_MAJOR GENMASK_ULL(23, 16)
+ 
++/* SDXI 1.0 Table 9-9: MMIO_CXT_L2 */
++#define SDXI_MMIO_CXT_L2_PTR GENMASK_ULL(63, 12)
 +
-+/* SDXI 1.0 Table 9-7: MMIO_CAP1 */
-+#define SDXI_MMIO_CAP1_MAX_BUFFER    GENMASK_ULL(3, 0)
-+#define SDXI_MMIO_CAP1_MAX_AKEY_SZ   GENMASK_ULL(15, 12)
-+#define SDXI_MMIO_CAP1_MAX_CXT       GENMASK_ULL(31, 16)
-+#define SDXI_MMIO_CAP1_OPB_000_CAP   GENMASK_ULL(63, 32)
-+
-+/* SDXI 1.0 Table 9-8: MMIO_VERSION */
-+#define SDXI_MMIO_VERSION_MINOR GENMASK_ULL(7, 0)
-+#define SDXI_MMIO_VERSION_MAJOR GENMASK_ULL(23, 16)
-+
-+#endif  /* DMA_SDXI_MMIO_H */
+ #endif  /* DMA_SDXI_MMIO_H */
 diff --git a/drivers/dma/sdxi/sdxi.h b/drivers/dma/sdxi/sdxi.h
-index d4c61ca2f875..721abf7556d1 100644
+index 721abf7556d1..913292463eee 100644
 --- a/drivers/dma/sdxi/sdxi.h
 +++ b/drivers/dma/sdxi/sdxi.h
-@@ -9,8 +9,12 @@
- #define DMA_SDXI_H
+@@ -39,6 +39,11 @@ struct sdxi_dev {
+ 	u16 max_cxtid;			/* Maximum context ID allowed. */
+ 	u32 op_grp_cap;			/* supported operation group cap */
  
- #include <linux/compiler_types.h>
-+#include <linux/dev_printk.h>
-+#include <linux/io.h>
- #include <linux/types.h>
- 
-+#include "mmio.h"
-+
- struct sdxi_dev;
- 
- /**
-@@ -30,9 +34,24 @@ struct sdxi_dev {
- 	void __iomem *ctrl_regs;	/* virt addr of ctrl registers */
- 	void __iomem *dbs;		/* virt addr of doorbells */
- 
-+	/* hardware capabilities (from cap0 & cap1) */
-+	u32 db_stride;			/* doorbell stride in bytes */
-+	u16 max_cxtid;			/* Maximum context ID allowed. */
-+	u32 op_grp_cap;			/* supported operation group cap */
++	struct sdxi_cxt_L2_table *L2_table;
++	dma_addr_t L2_dma;
++	struct sdxi_cxt_L1_table *L1_table;
++	dma_addr_t L1_dma;
 +
  	const struct sdxi_bus_ops *bus_ops;
  };
  
- int sdxi_register(struct device *dev, const struct sdxi_bus_ops *ops);
- 
-+static inline u64 sdxi_read64(const struct sdxi_dev *sdxi, enum sdxi_reg reg)
-+{
-+	return readq(sdxi->ctrl_regs + reg);
-+}
-+
-+static inline void sdxi_write64(struct sdxi_dev *sdxi, enum sdxi_reg reg, u64 val)
-+{
-+	writeq(val, sdxi->ctrl_regs + reg);
-+}
-+
- #endif /* DMA_SDXI_H */
 
 -- 
 2.54.0

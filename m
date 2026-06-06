@@ -1,57 +1,57 @@
-Return-Path: <dmaengine+bounces-11223-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11222-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id yCg2D5VjI2rXsAEAu9opvQ
-	(envelope-from <dmaengine+bounces-11223-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:02:29 +0200
+	id xJmiMgpkI2owsQEAu9opvQ
+	(envelope-from <dmaengine+bounces-11222-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:04:26 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32A5864BE4D
-	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:02:28 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D29E64BE8C
+	for <lists+dmaengine@lfdr.de>; Sat, 06 Jun 2026 02:04:26 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20201202 header.b=BGnX24KV;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11223-lists+dmaengine=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="dmaengine+bounces-11223-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b=TT9QC63R;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11222-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11222-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 22FB7300CF07
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Jun 2026 00:02:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 68001301E6E4
+	for <lists+dmaengine@lfdr.de>; Sat,  6 Jun 2026 00:02:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0FCA15B0EC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCBCD3BB4A;
 	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B971C2745E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96F1CA4E;
 	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780704142; cv=none; b=Dq2zqzkc92xSL+W9uOeyjF80oPOOAjlglbWxvkbffwMoPv76ZZdd4blaDOruYk/+PbjxeFup9LNYwgHlO0vvwm+Zpn9AmTXJG0E7anZd1uIUNhKDMXPTtULXJFkRqwem30CeeuyXLhaUyJ79sUPW1Fzar+z0w46xdEKAKFYIIYg=
+	t=1780704142; cv=none; b=MLzTJqK/8ql3I7zhS9bf/X7+VZHLQMlQ2I3tLite9O58DO5q17vI1MvivKqd7PZQQcroztIR89XtgRwDa3j9z+cbULrDbrGplFQXyUM4k0GndgwHu1+IyuYE8CVBGs1yd3bU3mJ7cjnwYKpIx8QfCCc9O+kFPA77HvbRhkFE53M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780704142; c=relaxed/simple;
-	bh=poRenvYc2UJwmpUd+sGYuOxBqoO2KziJseV7+TelkSo=;
+	bh=qPK6UugunlFMoeP+8P0TP368mHmANW2O2gkSeilG6ro=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ltpJtw9GRME3ouIFFxN3q4CcA6YnuVI2cny0A5+ZbJmVaMomRb2o0eZJ42ON66ZlZ1myIpUhKXk+/KzpQvhDopPXlVkfCK9BfHnWtG/DSM2gvbIBMZGsj42EHessCNDju1yWJRy2qXUSfKxuu6kGJrzvq4PBinJfg/lGrvCQmmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGnX24KV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 57D18C2BCC6;
+	 In-Reply-To:To:Cc; b=Txj7ZirS32cf+x1R+yxFQM+Cey9j/gWcNrf5F6iXnwkXh3DFQpw/2UVIRpFpB8K0VmoVl6DrfMlTiLZl/eh/vyWM/FquVmh0TAYOvGFNOs3Jw3RhQwuZIpsKhebvfMIfD03JRcm5b7OIh9CpJbRwW1hRX6W8iE2MhZZjMby7hGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TT9QC63R; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 67624C2BCB9;
 	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1780704142;
-	bh=poRenvYc2UJwmpUd+sGYuOxBqoO2KziJseV7+TelkSo=;
+	bh=qPK6UugunlFMoeP+8P0TP368mHmANW2O2gkSeilG6ro=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=BGnX24KVv3TdjWNe2/0afNFiR+pnQwMZ8K1Ta92Afx9DdVrmUh2YkBxz+cVaOHsK0
-	 bLg02Kv+OVxBvq0G4cXhD+WtyliXMOJ4s1rPVdcoAviXm3MIDnio3KU6JvX7hscH4U
-	 K6hPwLzUt86ZVD8/xhMgOvFxryXq49NdmgoDKhtpI8HVYPdXoutaIvHfDe6j9i/GJo
-	 zfzG52fJKlwYXKPYAp8ungVIjfNqj1P6DFquC5Aao/9U2bXSmv8AMdr0MUya2P+trh
-	 5IBVXo88wQUD2uESXB+kbTwrubZaqLdVkxsTyP9TjyGvFGl4d2RH0wT8i/ZXftV0kx
-	 3kgztN9xV7eNQ==
+	b=TT9QC63RcKXz1TtSzUFEyriyQkCtgaSFqRUYqofm1XH7qbUULRutigu+ZIcuVVwKM
+	 snu+ur5gEYEgrHZGp6LBcqlBvTW1CQanvnfSH0WPfB/VNPCsBXlCDT2cY/y385nS+7
+	 nXB/YjhJ/PT8hwAmLwy8YZFIfWDEDRygP9XJQsLYaCT7JgOgpcrpMT+aKn0e/ko5UD
+	 IIYUJDgtzbFbT8Z25y7MD/5DuPxO9bv6CCMY4yjug1AjqioP0072CGttk8MgEo7SCX
+	 QtDOMnIXFhDhx1o58KLHFCKhLSiFzIGwoVsjQwiDQiMxsmzRFRNSXnpa0j9rjMXm5p
+	 6BMokn8rGlJkg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4273CCD6E7E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5409BCD8C81;
 	Sat,  6 Jun 2026 00:02:22 +0000 (UTC)
 From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Fri, 05 Jun 2026 19:02:04 -0500
-Subject: [PATCH v3 01/23] PCI: Add SNIA SDXI accelerator sub-class
+Date: Fri, 05 Jun 2026 19:02:05 -0500
+Subject: [PATCH v3 02/23] MAINTAINERS: Add entry for SDXI driver
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260605-sdxi-base-v3-1-4d38ca2bdffe@amd.com>
+Message-Id: <20260605-sdxi-base-v3-2-4d38ca2bdffe@amd.com>
 References: <20260605-sdxi-base-v3-0-4d38ca2bdffe@amd.com>
 In-Reply-To: <20260605-sdxi-base-v3-0-4d38ca2bdffe@amd.com>
 To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>
@@ -74,11 +74,11 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
  dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-pci@vger.kernel.org, Nathan Lynch <nathan.lynch@amd.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780704140; l=1441;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780704140; l=957;
  i=nathan.lynch@amd.com; s=20260410; h=from:subject:message-id;
- bh=OwdioeWEQcxJLVaFYqBTlKzpo10yCo7NwekOCC/At7U=;
- b=9kwewPyVlVZHqx4QMSTGgh3csIXnMQl80YqCwZI/mMFGfRce66vPzr9fMKonYJTZ4LK5wOWLE
- v68SjNI/wN/CieUMRBpaR1/FmLqdFSFWRFU4a6449acS3/mpBWJ3V+A
+ bh=J7ULZm7Owlmcwbz490UgcmZhmtYpI8wOv94ro2VxLk4=;
+ b=WY+9ghD8czK1AZnfW98i2DKmNdOXlXJaTHLTMGbV8TXdLxgVU2hnEjgwN18KwehyF1v0a6Rht
+ 16DdXEBUB8lCRJytULgwXZfqJbXBhTjMipy+VA7o2S0htC4SPtE3ufK
 X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
  pk=PK4ozhq+/z9/2Jl5rgDmvHa9raVomv79qM8p1RAFpEw=
 X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20260410 with
@@ -89,13 +89,13 @@ X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11223-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
+	TAGGED_FROM(0.00)[bounces-11222-lists,dmaengine=lfdr.de,nathan.lynch.amd.com];
 	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:bhelgaas@google.com,m:rientjes@google.com,m:John.Kariuki@amd.com,m:jic23@kernel.org,m:kinseyho@google.com,m:mario.limonciello@amd.com,m:PradeepVineshReddy.Kodamati@amd.com,m:shivankg@amd.com,m:Stephen.Bates@amd.com,m:tycho@kernel.org,m:wei.huang2@amd.com,m:weixugc@google.com,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nathan.lynch@amd.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -116,50 +116,45 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[dmaengine];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,amd.com:mid,amd.com:email,amd.com:replyto,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amd.com:mid,amd.com:email,amd.com:replyto,vger.kernel.org:from_smtp,snia.org:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 32A5864BE4D
+X-Rspamd-Queue-Id: 2D29E64BE8C
 
 From: Nathan Lynch <nathan.lynch@amd.com>
 
-Make the class code for SNIA Smart Data Accelerator Interface (SDXI)
-functions available to both C and Rust code.
+Add an entry for the SDXI driver to MAINTAINERS. Wei and I will
+maintain the driver.
 
-See PCI Code and ID Assignment spec r1.14, sec 1.19.
+The SDXI specification and other materials may be found at:
+
+  https://www.snia.org/sdxi
 
 Co-developed-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
 Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 ---
- include/linux/pci_ids.h | 1 +
- rust/kernel/pci/id.rs   | 1 +
- 2 files changed, 2 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 24cb42f66e4b..83ab3f27eb5a 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -154,6 +154,7 @@
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2fb1c75afd16..5c6d175a3f42 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -24036,6 +24036,13 @@ L:	sdricohcs-devel@lists.sourceforge.net (subscribers-only)
+ S:	Maintained
+ F:	drivers/mmc/host/sdricoh_cs.c
  
- #define PCI_BASE_CLASS_ACCELERATOR	0x12
- #define PCI_CLASS_ACCELERATOR_PROCESSING	0x1200
-+#define PCI_CLASS_ACCELERATOR_SDXI		0x120100
- 
- #define PCI_CLASS_OTHERS		0xff
- 
-diff --git a/rust/kernel/pci/id.rs b/rust/kernel/pci/id.rs
-index 50005d176561..d5e006cd6641 100644
---- a/rust/kernel/pci/id.rs
-+++ b/rust/kernel/pci/id.rs
-@@ -292,6 +292,7 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-     SP_OTHER                   = bindings::PCI_CLASS_SP_OTHER,                   // 0x118000
- 
-     ACCELERATOR_PROCESSING     = bindings::PCI_CLASS_ACCELERATOR_PROCESSING,     // 0x120000
-+    ACCELERATOR_SDXI           = bindings::PCI_CLASS_ACCELERATOR_SDXI,           // 0x120100
- 
-     OTHERS                     = bindings::PCI_CLASS_OTHERS,                     // 0xff0000
- }
++SDXI (Smart Data Accelerator Interface) DRIVER
++M:	Nathan Lynch <nathan.lynch@amd.com>
++M:	Wei Huang <wei.huang2@amd.com>
++L:	dmaengine@vger.kernel.org
++S:	Supported
++F:	drivers/dma/sdxi/
++
+ SECO BOARDS CEC DRIVER
+ M:	Ettore Chimenti <ek5.chimenti@gmail.com>
+ S:	Maintained
 
 -- 
 2.54.0

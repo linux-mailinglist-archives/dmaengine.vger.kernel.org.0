@@ -1,168 +1,178 @@
-Return-Path: <dmaengine+bounces-11273-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11274-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id kE/KG6KeJWrsJgIAu9opvQ
-	(envelope-from <dmaengine+bounces-11273-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sun, 07 Jun 2026 18:38:58 +0200
+	id /DRwE9itJWqLKQIAu9opvQ
+	(envelope-from <dmaengine+bounces-11274-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sun, 07 Jun 2026 19:43:52 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF7E7650FCF
-	for <lists+dmaengine@lfdr.de>; Sun, 07 Jun 2026 18:38:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 92A2B651189
+	for <lists+dmaengine@lfdr.de>; Sun, 07 Jun 2026 19:43:51 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="dU/uCHa3";
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11273-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11273-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=LEeL4tbW;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11274-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11274-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 47D99300CBE4
-	for <lists+dmaengine@lfdr.de>; Sun,  7 Jun 2026 16:38:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 654DF300F9ED
+	for <lists+dmaengine@lfdr.de>; Sun,  7 Jun 2026 17:43:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0BEE2D3ECF;
-	Sun,  7 Jun 2026 16:38:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DAC53101D4;
+	Sun,  7 Jun 2026 17:43:48 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91FB223DE9
-	for <dmaengine@vger.kernel.org>; Sun,  7 Jun 2026 16:38:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B51E30D404
+	for <dmaengine@vger.kernel.org>; Sun,  7 Jun 2026 17:43:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780850335; cv=none; b=mlCmBzXrPCp3tGTI8dc2l7Ubuc4YS8hTniPDkGrDKX2nK6fMZBkOVKl/oiOJJ+Zh8yfy7prWVtneQbD3cBCa4aL/N/lXkFe4AHeKHfrXz3dQ5anSp6LJZhA0T3sJtEbTZlfnlwNRnZxxm5U2AbvQ7ktJIzdXeRF949qcvohYgsY=
+	t=1780854228; cv=none; b=trq8E0Is/XOBSyCwDKrE406mEj9juVW0LkZcVvaNH04477qUCzlHZaf69T6AvI4Cfo2Yf2XpkGFlJrnE2Oio3f2bPzruQX5xD3ORcCh6DFMiM4OSZqTGorCVJY6ZUL8VvYUZQOPHnJ53JQ97mNYGJIekgY5vlAlNKSQUGUX9xBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780850335; c=relaxed/simple;
-	bh=yHCsQXCG1FXnjVJ6ppzjjlJ7COjAI/TxhAZNMmun1fo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=N+lEwLadz0p+SKF2LTevzu76IoDHFaRBAtMsI9etGlRED2lA6mylGXJLMepgQtYLKSuuXssNAfX041thr4FTj5bQyrrxq4kNjBkppyuCZ/vNZOwv5f9J8O+OaF2C+IDt18U8+yipwhvOp70ogqlaEc5woqxeKn/4VFLYC4md8Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dU/uCHa3; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DCFD1F00893;
-	Sun,  7 Jun 2026 16:38:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780850334;
-	bh=81g1ATF0QlN49WB9tgvfFd7wieo3RG765oW+LPQqrog=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dU/uCHa3S8Ol1ZaxaTYo8CifeMLjv9x4ShQaJFvmcinoDW3xdkfwsBWx44HHnQa4h
-	 tLA05OHoDx3ooBqt87omjb8GRWQ05eGGepZV75a3FpAAWzfrF5sc4a4xZVFuGBVR/3
-	 QUwMYKonXQlQTbjDYTjRjJOjUEcB71AI2nt6uNagFrTvFwxCW3xWeaqjUaN/lJgYDV
-	 QJ9+RFTaa52Islc9uBeTaXAnYTo/Mbk9VZ2WHe/g5CJO+3CnqzO6LjWU0plcso7+HA
-	 Y54R6GB/ZvAfjihDiOVh3Y/jCokkToF3YHeXDWcll6X9oXMewUB37BodJvhEqkV3Em
-	 xNk0M+2ptTO8Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] dmaengine: qcom: hidma: use sysfs_emit() in sysfs show
- callbacks
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Hungyu Lin" <dennylin0707@gmail.com>
-Cc: dmaengine@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org
-In-Reply-To: <20260607163119.78717-1-dennylin0707@gmail.com>
-References: <20260607163119.78717-1-dennylin0707@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 16:38:53 +0000
-Message-Id: <20260607163854.3DCFD1F00893@smtp.kernel.org>
+	s=arc-20240116; t=1780854228; c=relaxed/simple;
+	bh=i0ja/GMMnsxqkiiz4bzIDMyK41VkQXbc7b1PuWg5hTs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=s8LKUiimeBdSd9bkkwvTlHquYZ0MR6aZr4nGvTilW7e4wKpv6vt/XkVm6nuYJAk40BJITmLBEx3JqfQvTRUCkRTZ2WGX2n+T4DSxwUhI6LUCN3M8kl9max5O1qsL2n/euqttaSt2ASy9M97457nq5GRuOzESy8nUVMuJQh78PJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LEeL4tbW; arc=none smtp.client-ip=209.85.214.179
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2c0a5354da1so28249815ad.0
+        for <dmaengine@vger.kernel.org>; Sun, 07 Jun 2026 10:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780854226; x=1781459026; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ljEzNr/52XcURxVXWbkwKLpno+BGAmwJA55/cYldv40=;
+        b=LEeL4tbW1tVdPyFTBYLwyHrwlCwMVA2zRPS1cmr8sqH9kw0mMzsuin4SBPWYaGeHOY
+         Q+VxrEbABtG17v1e1XD5AhIQ2CEyT3sHhhqjWNZvDM7KV44YEbIydC0G465+LyY1U7N/
+         UjL7YRtKZNGL+8DpOijJVGwm8Rp8Onv1fv3ZutpqOjz8mMZEAyfmIfZU5Hp2PYg1pnuQ
+         ZTdL5GZDB+wrNlF6IQibU2VgcuoiJZ42kgE+2oWtpOOHE+iGlfLVoRlunyRfy0bzaSag
+         dC2BNOOI53rvDTtgjRltO29c2oNqRcN11VOn0K/42hqlzik7xA4DEaQw2mAYldAchP+e
+         8Wvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780854226; x=1781459026;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ljEzNr/52XcURxVXWbkwKLpno+BGAmwJA55/cYldv40=;
+        b=bWX0HCpv6ArkA2YALblsb+f+TLVwe6QUhRO5jSQHKsp/66lduQ69nSGdWv4/QLnvTb
+         8+KwPgf2i9GRVFEFEn/Kqr29tpxqVq3jsjNQw2Ic0UPwpvsVIQCzAxKXAystBuXHS9nZ
+         lKKgSgV/bEvOnZwDF9AkU8L7OYxRl1DLroE0mBnlkYmsa8bOlQ2n5ColIxluv17okTDy
+         xmZaGPcCmo9CitdvMJlyKv2bK8BGHBF8udGzblCf/TO1ubbyYB1A8coD/jyZl7o+amAp
+         F0JD7iJHzU2xIeWrZoF7TOnrr1NLIflwUTJsE4ZvClcoy6wmzWmK0D5l+4aGqs61LGG9
+         oiSw==
+X-Forwarded-Encrypted: i=1; AFNElJ9BLHIZ2EARWyw7iSh49nVsPpuYU/ZXTml9h4dG7xBIi2por/e5GmSSrZg4M5yhOHp+cKWNACnL8IM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmUipLCV8d0hu6rClWeHHBMb5Xq499eND7vq9XT3X6E8a2vi41
+	Y5/X4CTiMnPZ3fhq/fCyxi/tj8pb6wmNJlhXMd2uV3X8ByLO+CmNPv7X
+X-Gm-Gg: Acq92OGZechFuQFAQ4UnSSNA8wu6QEa1SIq55jlOBLX3j6vANCCcv285t7SAo8IjO74
+	zHPES0hJZxYDrMAwslqdMm2o5khD/zjO3IjH+12mmC3AEhm88C9xX1euxeczw1TvddNBAerIDgN
+	O/aa96g3zdGnfjaee5+tub/EgYd0doRG5mcGzYASlvA5jBl4VpZUdTrkX2/QEALpm2f2soCQdHM
+	GDsolwCXTMTp8PL/V61h7WnEy02fr1a0eOiT05GKzeRAmDjwP6D1nfkbeghTuC4Vqd/I6ysTukJ
+	fj5njzBUUnCEBjAasDC1jL6UJUqX873lx2vafpaXu+/Vr0pgycrBEnMVC6yp+AC99tHmHYeM9M1
+	YrHc7VFfeVFUNedJstFVRnHfIMyyjv9mVSQUjrW/2ICehZeD1OKLjQcOuOfrT0nbFsAIpHFHidB
+	2fA5Iwfl9L
+X-Received: by 2002:a17:903:2385:b0:2c0:dc5c:9069 with SMTP id d9443c01a7336-2c1ec54cc43mr105352365ad.2.1780854226544;
+        Sun, 07 Jun 2026 10:43:46 -0700 (PDT)
+Received: from [127.0.1.1] ([2a12:a305:4::305d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c16649ab01sm149171185ad.71.2026.06.07.10.43.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2026 10:43:46 -0700 (PDT)
+From: Guodong Xu <docular.xu@gmail.com>
+Subject: [PATCH 0/2] dt-bindings: Add SpacemiT K1 PDMA request-number
+ header and use it in DT
+Date: Sun, 07 Jun 2026 13:41:29 -0400
+Message-Id: <20260607-b4-k1-pdma-req-macros-v1-0-5b2a3955007c@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEmtJWoC/yXMTQ6CQAxA4auQrm0yMzED8SrGxTAtUgg/tmhMC
+ Hd31OW3eG8HYxU2uFQ7KL/EZJkL/KmC3Kf5zihUDMGF6KKrsT3j6HGlKaHyA6eUdTFsKNSRnA+
+ ROijtqtzJ+/e93v62Zztw3r4zOI4Pd+e503kAAAA=
+X-Change-ID: 20260607-b4-k1-pdma-req-macros-8d276d0126df
+To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@kernel.org>, 
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ spacemit@lists.linux.dev, Guodong Xu <docular.xu@gmail.com>
+X-Mailer: b4 0.15.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1161; i=docular.xu@gmail.com;
+ h=from:subject:message-id; bh=i0ja/GMMnsxqkiiz4bzIDMyK41VkQXbc7b1PuWg5hTs=;
+ b=owGbwMvMwCXWtEl1Z3CGpCDjabUkhizVtcf+RTEYiyef1bl9dN0G04D/ube/TrVbUX45bs733
+ K+z78tqd5SyMIhxMciKKbIcPtqSvfWVT7Tvc84fMHNYmUCGMHBxCsBEioQZ/srpuqX/tzrjbmTV
+ Hr3FuMZ4eYexo2uVd2LgE8FAgdZzHAz/AwM7/+b+yk9NPjLj5yf1wG6HYpPr3pKrI1d/PHeppE2
+ aAQA=
+X-Developer-Key: i=docular.xu@gmail.com; a=openpgp;
+ fpr=90B1DC3DF0BD10FD1227BD6344F254AF42F143EE
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11274-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11273-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:dennylin0707@gmail.com,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:dlan@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:linux-kernel@vger.kernel.org,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-riscv@lists.infradead.org,m:spacemit@lists.linux.dev,m:docular.xu@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:docularxu@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[docularxu@gmail.com,dmaengine@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FORWARDED(0.00)[lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[docularxu@gmail.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,smtp.kernel.org:mid,lists.linux.dev:replyto,vger.kernel.org:from_smtp]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AF7E7650FCF
+X-Rspamd-Queue-Id: 92A2B651189
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+Currently, K1 device trees specify PDMA peripheral requests as raw numbers.
+Add a dt-bindings header naming those request lines, point the binding's
+dma-cells description at it, and convert the current user (the K1 SPI3
+node) to the new K1_PDMA_* macros.
 
-Pre-existing issues:
-- [Critical] Missing kobject_put on error paths and driver removal leaves d=
-angling sysfs files, leading to Use-After-Free when accessed.
---
+Patch 1 adds include/dt-bindings/dma/spacemit,k1-pdma.h with the
+  K1_PDMA_* request-number macros and update the spacemit,k1-pdma binding's
+  dma-cells description.
+Patch 2 updates the current pdma user in k1.dtsi to use these request
+  number macros.
 
-commit fad7d7a1746d0d84aca95c02e2a6fd4400ce44f9
-Author: Hungyu Lin <dennylin0707@gmail.com>
+Signed-off-by: Guodong Xu <docular.xu@gmail.com>
+---
+Guodong Xu (2):
+      dt-bindings: dmaengine: Add SpacemiT K1 PDMA request numbers
+      riscv: dts: spacemit: Use symbolic PDMA request numbers on K1
 
-dmaengine: qcom: hidma: use sysfs_emit() in sysfs show callbacks
+ .../devicetree/bindings/dma/spacemit,k1-pdma.yaml  |  4 +-
+ arch/riscv/boot/dts/spacemit/k1.dtsi               |  3 +-
+ include/dt-bindings/dma/spacemit,k1-pdma.h         | 56 ++++++++++++++++++++++
+ 3 files changed, 61 insertions(+), 2 deletions(-)
+---
+base-commit: 793cc54475b49b5b558902b5c13e4bfe66530a50
+change-id: 20260607-b4-k1-pdma-req-macros-8d276d0126df
 
-This commit replaces sprintf() and strlen() patterns in the sysfs show
-callbacks of the hidma driver with the preferred sysfs_emit() helper.
+Best regards,
+--  
+Guodong Xu <docular.xu@gmail.com>
 
-> diff --git a/drivers/dma/qcom/hidma_mgmt_sys.c b/drivers/dma/qcom/hidma_m=
-gmt_sys.c
-> index 930eae0a6257c..9672ef9ee8fc0 100644
-> --- a/drivers/dma/qcom/hidma_mgmt_sys.c
-> +++ b/drivers/dma/qcom/hidma_mgmt_sys.c
-
-[ ... ]
-
-> @@ -143,15 +140,15 @@ static ssize_t show_values_channel(struct kobject *=
-kobj,
->  	struct hidma_chan_attr *chattr;
->  	struct hidma_mgmt_dev *mdev;
-> =20
-> -	buf[0] =3D 0;
->  	chattr =3D container_of(attr, struct hidma_chan_attr, attr);
->  	mdev =3D chattr->mdev;
-
-[Severity: Critical]
-This is a pre-existing issue, but while reviewing these sysfs callbacks,
-could there be a use-after-free triggered here when mdev or chattr are
-accessed?
-
-Looking at hidma_mgmt_init_sys(), kobjects are created in loops:
-
-	chanops =3D kobject_create_and_add("chanops", &mdev->pdev->dev.kobj);
-
-However, there do not appear to be any matching kobject_put() calls on the
-error paths, nor a remove callback to tear them down on driver unbind. Since
-the structures backing these attributes (mdev and chattr) are managed by
-devm_ allocations, they are automatically freed upon probe failure or device
-unbind.
-
-Does this allow the sysfs files to remain accessible in the filesystem,
-triggering a use-after-free when reading or writing to them dereferences
-the freed memory in show_values_channel()?
-
-> +
->  	if (strcmp(attr->attr.name, "priority") =3D=3D 0)
-> -		sprintf(buf, "%d\n", mdev->priority[chattr->index]);
-> +		return sysfs_emit(buf, "%d\n", mdev->priority[chattr->index]);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260607163119.7871=
-7-1-dennylin0707@gmail.com?part=3D1
 

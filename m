@@ -1,61 +1,64 @@
-Return-Path: <dmaengine+bounces-11308-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11309-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id JkgcKoCyJmpKbQIAu9opvQ
-	(envelope-from <dmaengine+bounces-11308-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 14:16:00 +0200
+	id t0xDH5yyJmpVbQIAu9opvQ
+	(envelope-from <dmaengine+bounces-11309-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 14:16:28 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E729656093
-	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 14:16:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 089B16560AF
+	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 14:16:28 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=KYj7Ptgh;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11308-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11308-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=jOAI5eAX;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11309-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11309-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 02E60303B1BC
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Jun 2026 12:12:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 57C2E30422C4
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Jun 2026 12:13:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E7F83783CC;
-	Mon,  8 Jun 2026 12:12:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A7A3783C0;
+	Mon,  8 Jun 2026 12:12:58 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C03A377EC6;
-	Mon,  8 Jun 2026 12:12:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04A237757F;
+	Mon,  8 Jun 2026 12:12:57 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780920775; cv=none; b=Sial/+Z07FXefqY5oYi+DJG7K2xD5/aImETOF0Ed/F5UMwEimmLHzoX/SsDKXniK3rOLE4XHElQprNMcLKOI3dHyQB7wjKxnOxeghmwpMTlPZHxu/j5kqc07Q04RLE1r9PtZKrhQ4C9pHsmKq5+EAQlbDXNGuqKLApCHMIwV55U=
+	t=1780920778; cv=none; b=a20q8FbQkb829Uf6SEuRA0v0JshdvUIi0SweXNsYZkPGpLDZwlkY0wO+RrRdBqjqn2u8z9vIAI6J2bEvH1ZEmnoMeQlZcLEPg3KGgILmwy9zQDt1XQTzLLW45UyaJQKGH+HerSE/QnuEA51zttS7Q1eRQBNsBgA1Z1tLX0qY4kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780920775; c=relaxed/simple;
-	bh=K7WPAieQskxq/oe3MvGGCkx2k20TkYoHaNaN/G/HTks=;
+	s=arc-20240116; t=1780920778; c=relaxed/simple;
+	bh=LXb1fZAbDzM0fEmpucJj1Zu/xweCxXsFltwgZycjxrk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FoXslfj3o1QXI3F+yWlFoRshsCGSIgPDpgEs+aIUr1Jq2gmPw9RedjkyiXlZfs+bUPY1ULQfmO+N4kwJG9Lsh51prA7H3ooGdWWoz23/aF0fQi9bw0ji4ygjlnV2oBZoHW9T7sYM+FAIdoASWDwOzvFKyX14hhZAN1WgglX6870=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KYj7Ptgh; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A19091F00898;
-	Mon,  8 Jun 2026 12:12:51 +0000 (UTC)
+	 MIME-Version:Content-Type; b=SSPdsR/JEbvYG3BmO4TqlVdGQzJgYf5WdyjfI2UTymgGi3MDJNPcZqFA15+hb3MwC1LZDCPpLpCRUnwhH+ZkMzN1+aWJ0w+P33IknoVVx1eQx6fYMdljB2DHjDYJ5qtdnWunuiTqEAmoyRJuQWk4trBgqKpbc1FM2iCDgPlX57I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOAI5eAX; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A77631F00893;
+	Mon,  8 Jun 2026 12:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780920774;
-	bh=SMezmykpoN+CrmmLe+OLzzXM5lkWYZupE6qiHDtf2GE=;
+	s=k20260515; t=1780920777;
+	bh=WHrvd+Ix4XPDs1dyzstSh2JQFRCQOTvcE7ymCQq6LUg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=KYj7Ptgh2BsOvPRmv3Eb5x/YISRikp6hlKWaAvAdTagzqxP2QY1PSNW5ZHSU4XfZh
-	 QiHHZzqpGaI/iyGZCBzzNuiMlaVFMTpTKs2rL/AcP2zZtZ7Wx++qR8XPXl0HfBxL/U
-	 QbTIpqLidvM4MpqEhWScVQJ4j7mPPFeXExIu4V645V2ohk9FHNSxqA+KY7q0RfbaJb
-	 cyk6okH7jILTZScBWtm46Hxx0u+EgflCyX1iHOGO4GPGjwPrX1lLTmpgMAE52eaKSD
-	 4R0GibTbFoM4FY9CqPUSPfa1HkmtBtPa37e45qEiHjGliNilJnoGCp4rIX0jfmPG6C
-	 4BiBbKMDxuTNg==
+	b=jOAI5eAXXFrVUwIVdE7M6fwrmaAEymJvrDAkIvaNqWpi2RJN+L5jKGNcvMvnYaFYY
+	 akkb0Ni2Q247xeweUhIRZtz2APjpxD/5XMWq2aYL4azekQ17L71R6iNBG6p9t2GxNw
+	 zICnZbdKJky0SFraswlXM6pRdml6AjettiCBW3V3lykO4ADErm5erVORwSrPaaSjub
+	 sapcqNFsl5jhg1etdIHa9GHq4isZZXvd+TW/qSvrkqNrCR5uYg2PJ8WAHhoumYXMaN
+	 wg9jn1Vh6nUgkqK09StGOzIOfrsQ7T9OhM4yr5Ob0l39BTcYeZsjwfShai7+Xx9t2y
+	 kG0vdfDk74n0w==
 From: Vinod Koul <vkoul@kernel.org>
-To: bhelgaas@google.com, mani@kernel.org, 
- Devendra K Verma <devendra.verma@amd.com>
-Cc: dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, michal.simek@amd.com, Devendra.Verma@amd.com
-In-Reply-To: <20260605112829.679697-1-devendra.verma@amd.com>
-References: <20260605112829.679697-1-devendra.verma@amd.com>
-Subject: Re: [PATCH v2] dmaengine: dw-edma: Add Xilinx CPM6-DMA DeviceID
-Message-Id: <178092077126.96550.2213347281404197588.b4-ty@kernel.org>
-Date: Mon, 08 Jun 2026 17:42:51 +0530
+To: dmaengine@vger.kernel.org, Sheetal <sheetal@nvidia.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, 
+ Jon Hunter <jonathanh@nvidia.com>, Frank Li <Frank.Li@kernel.org>, 
+ Thierry Reding <thierry.reding@kernel.org>, 
+ Mohan Kumar <mkumard@nvidia.com>, Sameer Pujar <spujar@nvidia.com>, 
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260517163045.363444-1-sheetal@nvidia.com>
+References: <20260517163045.363444-1-sheetal@nvidia.com>
+Subject: Re: [PATCH v7] dmaengine: tegra210-adma: Add error logging on
+ failure paths
+Message-Id: <178092077429.96550.17091975503641429507.b4-ty@kernel.org>
+Date: Mon, 08 Jun 2026 17:42:54 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -74,13 +77,13 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11308-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11309-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:bhelgaas@google.com,m:mani@kernel.org,m:devendra.verma@amd.com,m:dmaengine@vger.kernel.org,m:linux-pci@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:michal.simek@amd.com,m:Devendra.Verma@amd.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:dmaengine@vger.kernel.org,m:sheetal@nvidia.com,m:ldewangan@nvidia.com,m:jonathanh@nvidia.com,m:Frank.Li@kernel.org,m:thierry.reding@kernel.org,m:mkumard@nvidia.com,m:spujar@nvidia.com,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
@@ -91,30 +94,32 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	TAGGED_RCPT(0.00)[dmaengine];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7E729656093
+X-Rspamd-Queue-Id: 089B16560AF
 
 
-On Fri, 05 Jun 2026 16:58:29 +0530, Devendra K Verma wrote:
-> Add Device ID for AMD (Xilinx) CPM6 DMA IP. This IP enables
-> 64 Read and 64 Write Channels.
+On Sun, 17 May 2026 16:30:45 +0000, Sheetal wrote:
+> Add dev_err/dev_err_probe logging across failure paths to improve
+> debuggability of DMA errors during runtime and probe.
 > 
-> Adding the relevant dw_edma_pcie_data to use 8 Read and 8 Write
-> channels for initial commit.
-> 
+> Use return dev_err_probe() pattern where no cleanup is required in the
+> probe function. On error paths that need explicit unwind, store the
+> dev_err_probe() return value in ret before jumping to the cleanup label.
+> Also convert existing dev_err calls in probe to dev_err_probe for
+> consistency, and use dev_err in non-probe functions.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: dw-edma: Add Xilinx CPM6-DMA DeviceID
-      commit: c4441b95ae8012a99c6fe22b4f56155e0ddbd042
+[1/1] dmaengine: tegra210-adma: Add error logging on failure paths
+      commit: b55bfcc677dd58d808a53173e0574b466dc27b9f
 
 Best regards,
 -- 

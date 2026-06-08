@@ -1,64 +1,61 @@
-Return-Path: <dmaengine+bounces-11309-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11310-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id t0xDH5yyJmpVbQIAu9opvQ
-	(envelope-from <dmaengine+bounces-11309-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 14:16:28 +0200
+	id WRfqC7GyJmpdbQIAu9opvQ
+	(envelope-from <dmaengine+bounces-11310-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 14:16:49 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 089B16560AF
-	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 14:16:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 974C96560C2
+	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 14:16:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=jOAI5eAX;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11309-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11309-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=o0xh0eMT;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11310-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11310-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 57C2E30422C4
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Jun 2026 12:13:04 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5008F3046CD6
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Jun 2026 12:13:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A7A3783C0;
-	Mon,  8 Jun 2026 12:12:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62E5D37646B;
+	Mon,  8 Jun 2026 12:13:01 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04A237757F;
-	Mon,  8 Jun 2026 12:12:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9103783D1;
+	Mon,  8 Jun 2026 12:13:00 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780920778; cv=none; b=a20q8FbQkb829Uf6SEuRA0v0JshdvUIi0SweXNsYZkPGpLDZwlkY0wO+RrRdBqjqn2u8z9vIAI6J2bEvH1ZEmnoMeQlZcLEPg3KGgILmwy9zQDt1XQTzLLW45UyaJQKGH+HerSE/QnuEA51zttS7Q1eRQBNsBgA1Z1tLX0qY4kQ=
+	t=1780920781; cv=none; b=L7F9UdvnoiuwvmyPBwMFJSxBEKmqBcRnyRIxrWOTVQyJGEl+NPzYXzEsouz1R2kha/ew1++NjKL5jUhQVBKwvFhpSsvbOIJzep4fIv+V7gADsKF1uDnVgUeIddy6X1F53MVdruk6BfS5qCBLIeKr8+HzAQMAw/G8ua2k/I7+ED4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780920778; c=relaxed/simple;
-	bh=LXb1fZAbDzM0fEmpucJj1Zu/xweCxXsFltwgZycjxrk=;
+	s=arc-20240116; t=1780920781; c=relaxed/simple;
+	bh=nwtc3RE8DgAKJOWQ3Uiri7Jsc1kGu1bDeaVVVDoUyL0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=SSPdsR/JEbvYG3BmO4TqlVdGQzJgYf5WdyjfI2UTymgGi3MDJNPcZqFA15+hb3MwC1LZDCPpLpCRUnwhH+ZkMzN1+aWJ0w+P33IknoVVx1eQx6fYMdljB2DHjDYJ5qtdnWunuiTqEAmoyRJuQWk4trBgqKpbc1FM2iCDgPlX57I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOAI5eAX; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A77631F00893;
-	Mon,  8 Jun 2026 12:12:54 +0000 (UTC)
+	 MIME-Version:Content-Type; b=MpPlRve1tNZZ5gexml2ikveX/uM6xmtrGn+aRg8QbB7dOFpHGwborVDGEO8pq4yKq/Xn2IvmZaPJfDyvVqzPfooIIeslNugSVt6+1wX5QV1OF1Exgtbbg2QCsddC1tfPgSnCmLnNxNnj5vP6+7CpCP5xwLWMGq60BzAdGT2eexs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0xh0eMT; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DBD11F00898;
+	Mon,  8 Jun 2026 12:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780920777;
-	bh=WHrvd+Ix4XPDs1dyzstSh2JQFRCQOTvcE7ymCQq6LUg=;
+	s=k20260515; t=1780920780;
+	bh=0vxDtjZ+UU7C96xeFiCYrDD6u0Vo2RHrNSoMOM3Lu/o=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=jOAI5eAXXFrVUwIVdE7M6fwrmaAEymJvrDAkIvaNqWpi2RJN+L5jKGNcvMvnYaFYY
-	 akkb0Ni2Q247xeweUhIRZtz2APjpxD/5XMWq2aYL4azekQ17L71R6iNBG6p9t2GxNw
-	 zICnZbdKJky0SFraswlXM6pRdml6AjettiCBW3V3lykO4ADErm5erVORwSrPaaSjub
-	 sapcqNFsl5jhg1etdIHa9GHq4isZZXvd+TW/qSvrkqNrCR5uYg2PJ8WAHhoumYXMaN
-	 wg9jn1Vh6nUgkqK09StGOzIOfrsQ7T9OhM4yr5Ob0l39BTcYeZsjwfShai7+Xx9t2y
-	 kG0vdfDk74n0w==
+	b=o0xh0eMTMmCg3uethEwOpYv9/tFaCJq9rKJyDVASkH9PaE5KBfFG6ho4GhGUH4lL6
+	 VwZWAPlY/JUuTfj+PLYfbwGipWW/P1PRVsW7V/wkF1mZ78w0zhj9VeGK+Jit3Q0HBG
+	 w5DqmMFM2aAawIeK45Zcago0EpLvAjr9ow9pYzQU3U2LSMWKust5uIOwBdMncBksmJ
+	 QPI2AG3Bshyww4bsCxLRCkr3EtOc+Og9TM5nsIAhWCSqwTLOp12V7CKqKGyR6TDOeY
+	 fCntxUvBePr/3fjvPg/cR89UJ5GbyJZqPFyrqc9jI7+uz89wEDkmk5JOXc5Uiiy5iE
+	 bsepg9GxgTAiQ==
 From: Vinod Koul <vkoul@kernel.org>
-To: dmaengine@vger.kernel.org, Sheetal <sheetal@nvidia.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, 
- Jon Hunter <jonathanh@nvidia.com>, Frank Li <Frank.Li@kernel.org>, 
- Thierry Reding <thierry.reding@kernel.org>, 
- Mohan Kumar <mkumard@nvidia.com>, Sameer Pujar <spujar@nvidia.com>, 
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260517163045.363444-1-sheetal@nvidia.com>
-References: <20260517163045.363444-1-sheetal@nvidia.com>
-Subject: Re: [PATCH v7] dmaengine: tegra210-adma: Add error logging on
- failure paths
-Message-Id: <178092077429.96550.17091975503641429507.b4-ty@kernel.org>
-Date: Mon, 08 Jun 2026 17:42:54 +0530
+To: dmaengine@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
+Cc: Linus Walleij <linusw@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260531020843.594892-1-rosenp@gmail.com>
+References: <20260531020843.594892-1-rosenp@gmail.com>
+Subject: Re: [PATCHv3] dmaengine: ste_dma40: turn d40_base phy_chans into a
+ flexible array
+Message-Id: <178092077785.96550.7037031640195557298.b4-ty@kernel.org>
+Date: Mon, 08 Jun 2026 17:42:57 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -77,49 +74,48 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11309-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:dmaengine@vger.kernel.org,m:rosenp@gmail.com,m:linusw@kernel.org,m:Frank.Li@kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-11310-lists,dmaengine=lfdr.de];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[vger.kernel.org,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:dmaengine@vger.kernel.org,m:sheetal@nvidia.com,m:ldewangan@nvidia.com,m:jonathanh@nvidia.com,m:Frank.Li@kernel.org,m:thierry.reding@kernel.org,m:mkumard@nvidia.com,m:spujar@nvidia.com,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	TAGGED_RCPT(0.00)[dmaengine];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 089B16560AF
+X-Rspamd-Queue-Id: 974C96560C2
 
 
-On Sun, 17 May 2026 16:30:45 +0000, Sheetal wrote:
-> Add dev_err/dev_err_probe logging across failure paths to improve
-> debuggability of DMA errors during runtime and probe.
-> 
-> Use return dev_err_probe() pattern where no cleanup is required in the
-> probe function. On error paths that need explicit unwind, store the
-> dev_err_probe() return value in ret before jumping to the cleanup label.
-> Also convert existing dev_err calls in probe to dev_err_probe for
-> consistency, and use dev_err in non-probe functions.
+On Sat, 30 May 2026 19:08:43 -0700, Rosen Penev wrote:
+> Convert the separately-offset phy_chans pointer to a C99 flexible array
+> member at the end of struct d40_base, and switch the allocation to
+> struct_size(). The log_chans and memcpy_chans slots continue to live
+> in the same allocation immediately after phy_chans, indexed via
+> base->log_chans. This removes the hand-rolled pointer fixup that
+> recomputed phy_chans from base + ALIGN(sizeof(struct d40_base), 4).
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dmaengine: tegra210-adma: Add error logging on failure paths
-      commit: b55bfcc677dd58d808a53173e0574b466dc27b9f
+[1/1] dmaengine: ste_dma40: turn d40_base phy_chans into a flexible array
+      commit: cc4fea19daeb0460fe3569e0a2d523f427b2bac1
 
 Best regards,
 -- 

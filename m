@@ -1,167 +1,215 @@
-Return-Path: <dmaengine+bounces-11288-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11289-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 5zgKAatZJmoSVQIAu9opvQ
-	(envelope-from <dmaengine+bounces-11288-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 07:56:59 +0200
+	id s08cH09bJmp8VQIAu9opvQ
+	(envelope-from <dmaengine+bounces-11289-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 08:03:59 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53BC3652FC3
-	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 07:56:58 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3B9365302C
+	for <lists+dmaengine@lfdr.de>; Mon, 08 Jun 2026 08:03:58 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=oTLEsb7E;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11288-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11288-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=JrglyURu;
+	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=eu37J4I0;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11289-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11289-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=qualcomm.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 46E16302F71F
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Jun 2026 05:56:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9C195300D639
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Jun 2026 06:03:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C0E138237B;
-	Mon,  8 Jun 2026 05:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FE0B385D61;
+	Mon,  8 Jun 2026 06:03:54 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F473590A9;
-	Mon,  8 Jun 2026 05:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B1929C33F
+	for <dmaengine@vger.kernel.org>; Mon,  8 Jun 2026 06:03:52 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780898167; cv=none; b=E42eHYMiFtaynLurDFs9e1WpQpmrW1ROCVwdjwNRFsMHomRED3AP/PWOay9gfJOsgBrOaLa/uJek1/Ihkk7lWxbhJg5jxSTzaJdYWDsFSUj9xhP0fNsdgZTMEEefrVYjcFoFkslkXOnrl3V6tZN+gfoODGVhjSThKcySvD6MQ0M=
+	t=1780898634; cv=none; b=D+gYE7FrYjUZV2IZg71sgEFEuyeroLk91IH1n+XiX8uqrJKGhPSYLuyIpuNlJpSlnuMPb541mRXxGnKMn3AJF3jMTdOBUl+qfKMgUceWyo5IzYIPSbB06a6LM3kpMmaOPQaMfklr7OQNSB0iEmSFDmoW1yvbXNjzOB8UfFgO74k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780898167; c=relaxed/simple;
-	bh=0MdKOXRySoGARuPpCuOczIDb+WVwxAcv6j9Yr+cjKRA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NcUBFLhCQNn7CRrT8uK9CIEerCLjWstwJUtc+PubI8Z8/5sYW/ZfNuVuz0hy0Fzs2mup4iD/ObDMxUwwaO0nFmbz1ptw/ER5jRM/MJhYGl2L9CcsCOFV9iBL6Z+DWCSFl5DK+00tVwGPbPKj9wIccdh1iXQ46qUOMpuZGwFwrLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTLEsb7E; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CE061F00893;
-	Mon,  8 Jun 2026 05:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780898166;
-	bh=6tTBHhwnLy48LiDCb4fczQwpX7BSRsJ3hkvOsxaWUbQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=oTLEsb7EE3B35cg5dziOrLCNlD/+xoFSKHn9s4Yuvob0WV4BSru84skz6uIrcWEJv
-	 JrrFnHlRKlzT6GtkgDlhndHve9Nf6Um4HOqPNo430WbdGTVdMQKZ6V0A67Miqv4t7j
-	 idotGAKg4hE05FXigEK66u3PGMKTGoUgIe4ptQjVxvDM/9W75w4+qeDgT8+a4OqMXe
-	 RgNNyutar610xBq3koc+Lp/7G+ECGso8DkaydAyJDGjububoSkywBP1XJ7bB8MNc4e
-	 eYShytXK90umG1pBLzuESPmfBkSYCUlRbu0wqW2UL/FmxHHRfyxRmTRRWJYo2vpDFt
-	 rLAR+HvPCAN3g==
-From: Vinod Koul <vkoul@kernel.org>
-To: Frank.Li@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, 
- perex@perex.cz, tiwai@suse.com, biju.das.jz@bp.renesas.com, 
- prabhakar.mahadev-lad.rj@bp.renesas.com, p.zabel@pengutronix.de, 
- geert+renesas@glider.be, kuninori.morimoto.gx@renesas.com, 
- long.luu.ur@renesas.com, Claudiu Beznea <claudiu.beznea@kernel.org>
-Cc: claudiu.beznea@tuxon.dev, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, 
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20260526084710.3491480-1-claudiu.beznea@kernel.org>
-References: <20260526084710.3491480-1-claudiu.beznea@kernel.org>
-Subject: Re: [PATCH v6 00/18] Renesas: dmaengine and ASoC fixes
-Message-Id: <178089816101.15844.5628352417869771177.b4-ty@kernel.org>
-Date: Mon, 08 Jun 2026 11:26:01 +0530
+	s=arc-20240116; t=1780898634; c=relaxed/simple;
+	bh=D43F32dRLsEtsZfTnH6PZw0SGhlJcijecdkwYHf7fmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VQ+cdG66eO2iuZjoZPmMcwEBzVcY1lwhJc1mnVt/ZhyyfDLOoyi+NhjSaB89bE/bPU5O8jtouG5iUawZKLh18586hZS2OffkWbeKyPxF9zjB1vkZOT8KEiRH8R3VL8ntPzg640+ftenUo+3bSEUcadR+DqP2fuhgAjbzsc4F2rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JrglyURu; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=eu37J4I0; arc=none smtp.client-ip=205.220.168.131
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6580EM591574751
+	for <dmaengine@vger.kernel.org>; Mon, 8 Jun 2026 06:03:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Cv5efwx26E7PJcE+ABnkMrhr
+	HPhPIlDSPzTe7GWtSQw=; b=JrglyURu/bXPrqPvVsJvzKFFh5NVOvIn1WUqOjbs
+	ZrkwajJRJiamCNxQtIeCQW3Jfg6LuBQnMm5yRduFWFwdZDDZWbJICVxrQ+sSW9Ql
+	tMWA/9GaRrqtqHPLEfGeMaB51WiXiSlrZ2hsPKyHO6swYlTopoxMdT0Gy6mi3Rja
+	KQLuGqc5uxW/nw1UHVi/E+KGXl/gUzSkaxpz00aw0i79r6ekcBwQYHOenfB8qq0X
+	jT/S3Wx64Mfp0yDXbyrFYqwzpzELixgLDNzgQrl/C2w7yg7gcMSHPbLDTM1i/lAs
+	oIPxUzZ6AAHMESIHgXdCjraMVEPRX2f+z+q8Ou+XCVivMg==
+Received: from mail-vs1-f71.google.com (mail-vs1-f71.google.com [209.85.217.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4em98cxpft-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <dmaengine@vger.kernel.org>; Mon, 08 Jun 2026 06:03:52 +0000 (GMT)
+Received: by mail-vs1-f71.google.com with SMTP id ada2fe7eead31-6c89de84f33so4454149137.0
+        for <dmaengine@vger.kernel.org>; Sun, 07 Jun 2026 23:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1780898631; x=1781503431; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cv5efwx26E7PJcE+ABnkMrhrHPhPIlDSPzTe7GWtSQw=;
+        b=eu37J4I00ou0j9sTDotrT0pOekxwx5TT/25dpTmbTvTFbWd+kCd8lkR76YHFtGAzlp
+         s6nlmdmXCHUOAVvqmjJeA3Wun+9D87laoUnY0KrdbsemKBJWKxHup9/CoBtpvteqMJqj
+         kbsenrovQMrjfIYXFCzx3Hw8baxZ0TfrdpHx5oZkrjNAoy5y8JgJvDeoUEkkUkI7UiRz
+         IF9d+55k1SQCjXmGmRtZZJtrdpQbGDzUbZdrkKNElL2iidAKdlBPeQTVJ+YP8DVWoZsv
+         /Xx5Tr2Q3uy6+HYqbORxLWGrMVGDotQADc75kdit0QUZxXHRRTHAlmxChb6qSG6N4jCr
+         lYzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780898631; x=1781503431;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cv5efwx26E7PJcE+ABnkMrhrHPhPIlDSPzTe7GWtSQw=;
+        b=s0iMU01kl0hf8fRbRndYf4fnljCxPm8/Hr4atJW2iq6HEmHWZnniZplrDte3r7D5mN
+         kAD8hkN8HBF5qYviijK9AkPSmO7L34i6j8J+BvZ0r8ZjU3jfTrlFyb2dmCRTtCbnNZ/T
+         uBIH7FFdp0gLNEHK9LGcwBzc33GEj3d4m7LFSWvacGZmdflRTZD3aKplWBlb/WeMIrwl
+         1eta+K6lqPKRwRxHZw5exmI2UklJr3LEr/87xndhM7bd/L0OyH6MTKzHPirOaC29ZxAz
+         K/xlQMBBv6lTV8eD4CW46UPkQFD94iE5l2SDIuU9oOXEGBlD0EUX4lntuetp9a55jDw6
+         0sHA==
+X-Forwarded-Encrypted: i=1; AFNElJ/z32vIuFBatPWxRxvykNYs8tRjl2hqJlPdR7KT0jV139kG0RVbXUE/WpcoDthTI9+K+1ScmdLh6tM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxL3Pw+4DWyeBrbZirWRSV+Iqx2+gOXYt8JIgu4OUG4wlRLjMSx
+	fdcM2wpr76BLEimCWCBe2uxRf8eWIUwe/zjLiXrQmJnZPYzbiK+RjZpGLyOjSR2JwhrP+p7PPmj
+	p+S+29/u7fYe6TrFMM20qHD6krlV3HTDTAJx3Xh2pjerEVPlmB3qjApNo5zXDK/w=
+X-Gm-Gg: Acq92OFVhb1SmlGZ4GGTPk2Y5j9Bxx0WKyfI+T3SX+lWz8iFn/pk4SBIO6bklYsoYKg
+	2SA/M/nIujP90Rv0k3UdpO2W+GPU8ReRHBNFt6IhEiSSIXW5YbodPmPhihcVVlt9250O/IruNtz
+	8txbV4Jn4+B47rheB6q0gtIjBr2x2HsA2O0OU1nszWXzhCnQsLMtCfiaIGbFTHSTn/DOAbVEHpK
+	Qke85hw545tir1y7/izBm0Wyy7dv+4r5VHF0dAh+XiC9p1Haa5kjUCK2nxgAGc6LJdfb4hFuAzH
+	PnRC5T8vX0bItKJk1QpZTgTZA6RudDq5FKh3kBeRRhxT2ZDTW7ZcsqZCtNlNmfXkPw9hquYiI3O
+	H7hyRgc6P67W4Agi8W4ygNRbRIp3gvb8lvlwHgx7zM4m4dZ9PePxAnygRldTjtY1XjFrhirP3qF
+	6oQMWr4b3DrsMfrb+eVLAZHhqHz87k2Jp1/Hd1H5Nfjf7lsg==
+X-Received: by 2002:a05:6102:3e20:b0:631:28c1:154e with SMTP id ada2fe7eead31-6fef85336damr6839089137.16.1780898630893;
+        Sun, 07 Jun 2026 23:03:50 -0700 (PDT)
+X-Received: by 2002:a05:6102:3e20:b0:631:28c1:154e with SMTP id ada2fe7eead31-6fef85336damr6839085137.16.1780898630543;
+        Sun, 07 Jun 2026 23:03:50 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5aa7b9995b5sm3510351e87.76.2026.06.07.23.03.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2026 23:03:48 -0700 (PDT)
+Date: Mon, 8 Jun 2026 09:03:46 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Md Sadre Alam <md.alam@oss.qualcomm.com>
+Cc: Varadarajan Narayanan <varadarajan.narayanan@oss.qualcomm.com>,
+        Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+        Abhishek Sahu <absahu@codeaurora.org>, mani@kernel.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lakshmi.d@oss.qualcomm.com
+Subject: Re: [PATCH v5] dma: qcom: bam_dma: Fix command element mask field
+ for BAM v1.6.0+
+Message-ID: <6qkgzmrr3oxzj47so4jqw6gk6stzjkxbnaflajk5zw5fgf65cn@yj3d55p5b7do>
+References: <20260514-bam-fix-v5-1-58f6edb34969@oss.qualcomm.com>
+ <agyeh4PZwG0Mu6Wx@vaman>
+ <aiFXPPXtjCHj0Ged@hu-varada-blr.qualcomm.com>
+ <5c24a3f3-a4c0-43ec-9653-bc374a9c5e22@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c24a3f3-a4c0-43ec-9653-bc374a9c5e22@oss.qualcomm.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDA1MyBTYWx0ZWRfXyUpSM1290I9k
+ 3AF3DrlZkKxbH9OiHsq6pJSbWNnghifecYRyuiK99hWbF+hadoAWqQDUZ//QpeKEKHEfzm8i3xK
+ lpV7A8cEh5cKVpvJVpl6oQL76d7WEtBR4vCV6AH0US8QpQ+UpMs2i+ulCF/C0ArtUUCKK2NteBi
+ 0Q4HNZNvTxfXkXzj3XYsTuv/KKGKhGJlOhcmVacwoudLond3yVYToDTHuz7/6fqpiJlwqHXt8TP
+ 67aUAAyV6gxHQK9WgSoYNkztcJTLS1XAHg+WsJa96yBKj8hVVPyWhUyG0dKebVIG4fz103tShGs
+ JHkCyUeQR4nI2Sxw0kO/ikYGrEixO5e/Mu/+e5UldKAyjIsLg1baP60aqaNOorKGwV1LyyEF7bq
+ i0dCKBOGzkrW7lwJieDU8N5R4MHr8+iQ93le75+jIXELjlvZbbx+B5/SfZhBnxcZfd/XGEcfP4E
+ 3aSpc6N12MaK5GhKv1w==
+X-Proofpoint-ORIG-GUID: fACmBfv5tHaPKUEg75qrQiA6LdbvJzyM
+X-Proofpoint-GUID: fACmBfv5tHaPKUEg75qrQiA6LdbvJzyM
+X-Authority-Analysis: v=2.4 cv=A/pc+aWG c=1 sm=1 tr=0 ts=6a265b48 cx=c_pps
+ a=P2rfLEam3zuxRRdjJWA2cw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=IdiP-_C5k5DUui2OaP0A:9 a=CjuIK1q_8ugA:10
+ a=ODZdjJIeia2B_SHc_B0f:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-08_01,2026-06-05_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 bulkscore=0 spamscore=0 malwarescore=0
+ adultscore=0 priorityscore=1501 phishscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605210000
+ definitions=main-2606080053
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11288-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:Frank.Li@kernel.org,m:lgirdwood@gmail.com,m:broonie@kernel.org,m:perex@perex.cz,m:tiwai@suse.com,m:biju.das.jz@bp.renesas.com,m:prabhakar.mahadev-lad.rj@bp.renesas.com,m:p.zabel@pengutronix.de,m:geert+renesas@glider.be,m:kuninori.morimoto.gx@renesas.com,m:long.luu.ur@renesas.com,m:claudiu.beznea@kernel.org,m:claudiu.beznea@tuxon.dev,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-sound@vger.kernel.org,m:linux-renesas-soc@vger.kernel.org,m:claudiu.beznea.uj@bp.renesas.com,m:geert@glider.be,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11289-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,perex.cz,suse.com,bp.renesas.com,pengutronix.de,glider.be,renesas.com];
-	FORGED_SENDER(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	RCVD_COUNT_THREE(0.00)[4];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,qualcomm.com:email,qualcomm.com:dkim,oss.qualcomm.com:from_mime,oss.qualcomm.com:dkim];
+	FORGED_RECIPIENTS(0.00)[m:md.alam@oss.qualcomm.com,m:varadarajan.narayanan@oss.qualcomm.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:absahu@codeaurora.org,m:mani@kernel.org,m:linux-arm-msm@vger.kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:lakshmi.d@oss.qualcomm.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[dmitry.baryshkov@oss.qualcomm.com,dmaengine@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dmitry.baryshkov@oss.qualcomm.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[dmaengine];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 53BC3652FC3
+X-Rspamd-Queue-Id: E3B9365302C
 
-
-On Tue, 26 May 2026 11:46:52 +0300, Claudiu Beznea wrote:
-> This series addresses issues identified in the DMA engine and RZ SSI
-> drivers.
+On Mon, Jun 08, 2026 at 11:20:01AM +0530, Md Sadre Alam wrote:
+> Hi,
 > 
-> As described in the patch "dmaengine: sh: rz-dmac: Set the Link End (LE)
-> bit on the last descriptor", stress testing on the Renesas RZ/G2L SoC
-> showed that starting all available DMA channels could cause the system
-> to stall after several hours of operation. This issue was resolved by
-> setting the Link End bit on the last descriptor of a DMA transfer.
+> On 6/4/2026 4:15 PM, Varadarajan Narayanan wrote:
+> > On Tue, May 19, 2026 at 11:01:51PM +0530, Vinod Koul wrote:
+> > > On 14-05-26, 12:09, Varadarajan Narayanan wrote:
+> > > > From: Md Sadre Alam <md.alam@oss.qualcomm.com>
+> > > > 
+> > > > BAM version 1.6.0 and later changed the behavior of the mask field in
+> > > > command elements for read operations. In newer BAM versions, the mask
+> > > > field for read commands contains the upper 4 bits of the destination
+> > > > address to support 36-bit addressing, while for write commands it
+> > > > continues to function as a traditional write mask.
+> > > 
+> > > But this changes behaviour for all versions. What happens to folks on older
+> > > versions, wont this break for them, if not what am I missing
 > 
-> [...]
+> It will not have any impact on older version of BAM controller. Konrad also
+> had a similar concern. Please refer to [1]
+> 
+> [1] https://lore.kernel.org/linux-arm-msm/2394e63f-1df7-764e-5489-3567065707a1@quicinc.com/
 
-Applied, thanks!
+So, you got this question once, have resent the patches, but didn't
+guess that there will be the similar question from other reviewers?
 
-[01/18] dmaengine: sh: rz-dmac: Move interrupt request after everything is set up
-        commit: 731712403ddb39d1a76a11abf339a0615bc85de7
-[02/18] dmaengine: sh: rz-dmac: Fix incorrect NULL check for list_first_entry()
-        commit: 5fbf3a2a3b96ef5810e6e0fbc601f82067629bc5
-[03/18] dmaengine: sh: rz-dmac: Use list_first_entry_or_null()
-        commit: 89975baaa9ea2490b75d69842561a32ca888b7e5
-[04/18] dmaengine: sh: rz-dmac: Use rz_dmac_disable_hw()
-        commit: 38d4d021228386b8e3fbef2bca5f1e91eacd4fe6
-[05/18] dmaengine: sh: rz-dmac: Add helper to compute the lmdesc address
-        commit: 32a69f1487819766d2084ed32b1350b18f971c10
-[06/18] dmaengine: sh: rz-dmac: Save the start LM descriptor
-        commit: e21aa306e82067457f2297ae56af4c91db86c59a
-[07/18] dmaengine: sh: rz-dmac: Add helper to check if the channel is enabled
-        commit: 7a94c109a5def4f0f25705a82ed5870f794ff4ed
-[08/18] dmaengine: sh: rz-dmac: Add helper to check if the channel is paused
-        commit: 1dddc864dfa844efaf36345eb58b121b2cdffa5f
-[09/18] dmaengine: sh: rz-dmac: Use virt-dma APIs for channel descriptor processing
-        commit: daa6d4617bee722e83f7d8584416e83b709c958a
-[10/18] dmaengine: sh: rz-dmac: Refactor pause/resume code
-        commit: dc86e47ca9b1021e258c366a5a9aa15d71c814a5
-[11/18] dmaengine: sh: rz-dmac: Drop the update of channel->chctrl with CHCTRL_SETEN
-        commit: e8baee1d1cddc8e2be7bc362d6dc3fcb2021e873
-[12/18] dmaengine: sh: rz-dmac: Add cyclic DMA support
-        commit: 172bfb57481c65fcc94ebcae3a730f6df2f953d4
-[13/18] dmaengine: sh: rz-dmac: Adjust rz_dmac_chan_get_residue() to return error codes
-        commit: 16ba40151b1e6a52b28296a2173457bc6c31f022
-[14/18] dmaengine: sh: rz-dmac: Add runtime PM support
-        commit: 7c27a4d54d48d0774518390e4ce6cf3309aac141
-[15/18] dmaengine: sh: rz-dmac: Add suspend to RAM support
-        commit: c13ce43e70719dead7009e7e708971ba1c447568
-[16/18] ASoC: renesas: rz-ssi: Add pause support
-        commit: b4d34819a53964648bc53cabaa3ba9890d4fdf9c
-[17/18] ASoC: renesas: rz-ssi: Use generic PCM dmaengine APIs
-        commit: 9fcaec81ac56c9d2c5d779ffb5a76b622b4d0590
-[18/18] dmaengine: sh: rz-dmac: Set the Link End (LE) bit on the last descriptor
-        commit: cd2d36e8ae61832aaac3bddf5aafdab72821e6b9
+Usually a question means that the commit needs to be improved. Adding a
+simple "Previously this field was ignored for read commands" would have
+saved you from futher questions.
 
-Best regards,
 -- 
-~Vinod
-
-
+With best wishes
+Dmitry
 

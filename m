@@ -1,81 +1,81 @@
-Return-Path: <dmaengine+bounces-11363-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11364-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id G8iPOECSKGqiGQMAu9opvQ
-	(envelope-from <dmaengine+bounces-11363-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:22:56 +0200
+	id BM8kInKSKGqoGQMAu9opvQ
+	(envelope-from <dmaengine+bounces-11364-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:23:46 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 568736648A6
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:22:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E05676648BA
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:23:45 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b="RKdQ/v1u";
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11363-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11363-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=ZONDlq9x;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11364-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11364-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7EE5830EDB24
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2026 22:19:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 68B56310BE61
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2026 22:20:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 828394BCAD7;
-	Tue,  9 Jun 2026 22:19:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F35A43FE348;
+	Tue,  9 Jun 2026 22:20:00 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E224E48A2DE
-	for <dmaengine@vger.kernel.org>; Tue,  9 Jun 2026 22:19:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CAC3F6C2A
+	for <dmaengine@vger.kernel.org>; Tue,  9 Jun 2026 22:19:58 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781043598; cv=none; b=u0tMNHAFlneohx3lKKIN9HuQOWXkl2Xwh3xrnjhuFghDZPPRQ3qx3uu08MHC16fPlcq83PhCbvKdFVLBs5DeXZbNnl/oXYhnmmxF76JAV/XNJt2nLGZZreNDTcvVAkS4Qq1nDNXRZSPyK087LR2hTpjUKQg1CLWQgCt63Zgzlqs=
+	t=1781043600; cv=none; b=aYCWDaa0VAn+mBfNJyguqFQfJGH1tdt2LU3ryNn2tUAk+N3+taeQ90s9j5II81pv9nCd76C93OaZXVyvakmwNYCh/JZr3TpHhpEvxbo0HuKQPc0BDqXrzFMG6vn1Xd1uA26x3syDzLRIT7mY2iHt7uSQD/l3wGI0dBDfTSaKpkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781043598; c=relaxed/simple;
-	bh=lyTXMgabiZFV1r5MchNd6Qy8eKJqo3LxCHLLSTQ8EzE=;
+	s=arc-20240116; t=1781043600; c=relaxed/simple;
+	bh=Q/PgZrUxr7JJJLlNJf1HKxpgmT9Z+J8tRDHEovzB8l0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xa5N9TNLX/lTdez3B6BJ9AVGcHaCIDjZbjUuXP/YeWpW9IsFcE9HTpUOIL9MLqhjrLIMUvsktu6WC6ftQvAuLHMhVptK+nqrIrnMmN58HvOt2REAr5kBDhOlWDF4pobkLPGGqE678TWOgDAPlu7IzeocYvdFuwWkdvkBCbj//cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RKdQ/v1u; arc=none smtp.client-ip=209.85.215.176
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-c855599a77aso3016759a12.0
-        for <dmaengine@vger.kernel.org>; Tue, 09 Jun 2026 15:19:56 -0700 (PDT)
+	 MIME-Version; b=FSSGFlhPiGfMqhfuj5j+UC6jEnyIZAuOmdTXrO4DqWd298fZNgFMt1J9NEeWeHNfjnpvPwlRRiHwXEXpCS9WXF6s1AznlELO03AsC7kvEjUDuYhFqRvn+lc1gNMtxSRv/jcnE2QZ84u/cgnuXvozASSgAOIpTQD1OfJOy11AbQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZONDlq9x; arc=none smtp.client-ip=209.85.215.179
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-c85825bbc4fso3666132a12.2
+        for <dmaengine@vger.kernel.org>; Tue, 09 Jun 2026 15:19:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781043596; x=1781648396; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1781043598; x=1781648398; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Axf2i08FEMNQcDQLuzX7KUZnp7l0NF95o4nFAH7q5yc=;
-        b=RKdQ/v1uAFcxV/ocjx5v6hRmdWG+zS35WfgBSYeRthUQa93HZ0ES+XI4rB8m2KaqkF
-         g5jDDUogZrFBdnv80jOgkkU+qQYH/WSewqkNeIUynlU/QdG731kv0Tc/+Go/xK34T9Gh
-         NsQOA09KqGg5pYGcJCwZo3K2TjHj7z0/MVIg1OtbHBIxZhXXowxJ0VdX/JG2AGGKFgTt
-         IXRUYb0a0HHXO/KBHQ8wztWifJEAqTGCby1RDVCr4t66/qKYWJmVNd4qBJ1XoY4oaJAP
-         peD+TBSnwRgW7nYtzIhWEHUmjz2ab8SRbIOgsu6iB/7zMU4fih5F08KDiI8geU5okjKE
-         UCAg==
+        bh=EHDaxjKNRdlH2zlMKhtRadxGEkWWwDYddu/hmn7v0eI=;
+        b=ZONDlq9xye2J5i8YirIlidaw5Q5V8phYPxwHHJG7N+nAHcRp3f/h3R8dtHYDvjQ2JG
+         goPWOlVtSvW2CCz/QT+Ko77OaiHpC/e8Quior+xcfnOi2X8B5YOA8aF0L+qyD02FyeI2
+         fcYWRmTT2XhLrBnxkFyWWDBhyUyeP2kMxrG9xc20KNJJOyywhkA+p18yAGcaP246KgiW
+         frywjjr3Z6/216XC7w9DJU7JhH9vkDSHHtt4MeJrKkgA7ORrO9DBtl6HZG1d6prleJH/
+         tMYxcncuvUWmcu/raxLANaNmJsQBQRhy4n1mxGufsTX+sQ1OKX7pUXVys1TZUYi74jwy
+         +HHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781043596; x=1781648396;
+        d=1e100.net; s=20251104; t=1781043598; x=1781648398;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Axf2i08FEMNQcDQLuzX7KUZnp7l0NF95o4nFAH7q5yc=;
-        b=bdPBSHncbBELYc95Cp+SyeCVQbo/uMRvuk1ld2pmPFBLgtnuv/sF066tlLIfOwKF+r
-         72NWCno6Tp2XcS2uMJc5on2VAg4svOT8v9Su4QQK9f21ft4OidYV1qFPs3HTdD67+PNp
-         4BfX/UOMrA+qqsoLCbL8+WhGTEyGj6pDh3u7K4uXythgU0kkGas48U5rEsuZP/qUkcz7
-         nV0TMAaPJb6gfRtUg9l90bAx24lXZ+nekUsAk/uxqJqA4fPG6BCHXJZb9iN2YgORopku
-         jyIQLmTh+M5vMAY8Dag5C0FWCoStbSWgop9dVF1b9eTtSGz8Iu2IAedXSu5UatLcUEUa
-         +vHg==
-X-Gm-Message-State: AOJu0Yz8R4I+7ke8z+mN1dCIe41xfNJ9DyFoLewLMg2IJ8bsVk+D0ubq
-	Om9BpjqPDSt9amvpwllQ4qy7DBFrE8xb2JRYALqeLIyUnnKifU/g+4OS1vxI9wKk
-X-Gm-Gg: Acq92OFjDHG199xTDCE7sefm+v4uDpZm7Hu3FB1pcFLZNfUHWr45UqGS/wxoNitc5Y7
-	/cjSKEpgqk3IXZcHwD9st5yxOMweSurYi4DoZhpxjEjoHKPgO3TxlKiKQx/Nra67X37HL/M/A9c
-	vFnb/nTwUqBdP+bf2KnlvVHQldOtI1Nd00gJYwqjz4oiur9nPVY9TLJMzhw6uOetxh8H+Ct9rHj
-	or8cmNtcwf/kta35FWnN0UD/gNjbZGRGdk/GAiu7JZzb+pCM1tJMTInYJDf51AQID8WSq43Sf+Y
-	dFavGC7KcTL3ILT141oMYh3Dm+Qk3YE3RCUve0igmPuwfuTHg+Y5PXOFCZtcAuv4WiHjxwe8V7d
-	MIyts92mE4sl9sJhC88yrFInRz7l+Z9ReDa8jAjzYd/xolgu3d0SwYxe/k6QUllLQ78+Wte4kO+
-	kEvGTtUA9cz2dMztWUhfV5XxklF6ZD62oJ3tcWIhxlKbgBXbg/zpgejXK21pls1EJW0m/FpCNHm
-	zGBmEpecFJ4huQCykrsXxg3WXMvLON/a6cFuzRMPzQoZA==
-X-Received: by 2002:a05:6a21:7a82:b0:3b4:85db:1bea with SMTP id adf61e73a8af0-3b4ccd1b486mr26738313637.5.1781043596210;
-        Tue, 09 Jun 2026 15:19:56 -0700 (PDT)
+        bh=EHDaxjKNRdlH2zlMKhtRadxGEkWWwDYddu/hmn7v0eI=;
+        b=oPXMHEuwXa+BM+/9zJPt/YF3jzWjtgcp+Ye9PBlIa1D/zL71bUcI/ve3bipJd7EyXU
+         ciyVVwcyghYiSIfy0Krh76uqXNDafV7iri20bk60kokuZZYFhY/K6rErpD0Jgnl4kZJT
+         9QDwpXd728GRU1xyuJ32eBjpYfPuFi4CJZGE14e9DMnBOR8QmMRYM7PLfKcSz6COWFLt
+         O1xv6WwuoJB6eY4vkLwBTjIHad2uZG4zTzgg997cHVWHOK1sM8Sy4fctsUOa9REfVOvX
+         5puDN1Sn9bvmSIFKhBlXYisY+pP+wgOrHY1352wqZdiXpy/qqf+OcezleBmX0TeK76/z
+         5SeQ==
+X-Gm-Message-State: AOJu0Yyeev3r1Z1vzHTT1/7f2zgZoYHbbe4NTLnWZWXniM22EaFS1Xnh
+	kLGz13MMTWHg/ZJHOzcVC2kz1rMq40bZNSI//lM50AdtpleE/jn1S+YKyOME4sqO
+X-Gm-Gg: Acq92OHMcOLgJjXoCkHeylNg7/MMX87vqDDv3qzTl/vqyNgPUfgz5lrNnwT3j5yj8IH
+	OSpZFvMgU2ocUBJ+ncQLPiYu+oaw1PHaQdA2+TUO4tm/nDG2R1KttJTkyPIKiQLQhIFm3HCrl8j
+	gh23ZkTv1MEXXTMew0ZL2NKsdWf1EFYWp0TyZy8AQEGY2cT2Eh0lYmhtdf1OiIpDiTP3X8siGIY
+	8ebB58GnEo/lOC3MV0DFRXuWyipBvqVljzdhM7GkT8hf48cOqSJpdd3npmlosdozwNYX7la290q
+	bJd4nwVXrAT012sMUadc3/zd0J+qLi74pbzYoLKR88mOiPGo65hzjIEm0wBeySN13IhBPOekkJU
+	k5LtZlLMBmwJ9qJ9G9BseaueZZLAYSvQ3w1S7dEZP3zpkQntRJsYiKtyT/1Z2v6NQK0i2c4ae47
+	ruh//xWEhvokU7oRVlMxCcld01wWIIEfOh0y6OgwLcTVO20Bms3ZRUWgl/kKVSGDXEs9unNXUo1
+	TSe67IFfhnSt7Dh9mImBxs7yaEF65DI8ucstDcyeLDnNg==
+X-Received: by 2002:a05:6a20:2cf:b0:3b4:b216:2b26 with SMTP id adf61e73a8af0-3b4ccd77495mr28317102637.5.1781043597716;
+        Tue, 09 Jun 2026 15:19:57 -0700 (PDT)
 Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c85df04ff24sm19661834a12.14.2026.06.09.15.19.54
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c85df04ff24sm19661834a12.14.2026.06.09.15.19.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 15:19:55 -0700 (PDT)
+        Tue, 09 Jun 2026 15:19:57 -0700 (PDT)
 From: Rosen Penev <rosenp@gmail.com>
 To: dmaengine@vger.kernel.org
 Cc: Vinod Koul <vkoul@kernel.org>,
@@ -88,9 +88,9 @@ Cc: Vinod Koul <vkoul@kernel.org>,
 	linux-kernel@vger.kernel.org (open list),
 	linuxppc-dev@lists.ozlabs.org (open list:FREESCALE DMA DRIVER),
 	llvm@lists.linux.dev (open list:CLANG/LLVM BUILD SUPPORT:Keyword:\b(?i:clang|llvm)\b)
-Subject: [PATCHv3 05/15] dmaengine: fsldma: check dma_async_device_register() return value
-Date: Tue,  9 Jun 2026 15:19:16 -0700
-Message-ID: <20260609221926.35538-6-rosenp@gmail.com>
+Subject: [PATCHv3 06/15] dmaengine: fsldma: fix probe error path not freeing IRQs
+Date: Tue,  9 Jun 2026 15:19:17 -0700
+Message-ID: <20260609221926.35538-7-rosenp@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260609221926.35538-1-rosenp@gmail.com>
 References: <20260609221926.35538-1-rosenp@gmail.com>
@@ -118,7 +118,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FREEMAIL_CC(0.00)[kernel.org,zh-kernel.org,gmail.com,google.com,vger.kernel.org,lists.ozlabs.org,lists.linux.dev];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11363-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11364-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:zw@zh-kernel.org,m:nathan@kernel.org,m:nick.desaulniers+lkml@gmail.com,m:morbo@google.com,m:justinstitt@google.com,m:linux-kernel@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:llvm@lists.linux.dev,m:nickdesaulniers@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
@@ -138,38 +138,40 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	TAGGED_RCPT(0.00)[dmaengine,lkml];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 568736648A6
+X-Rspamd-Queue-Id: E05676648BA
 
-Check the return value of dma_async_device_register() in the probe
-path and propagate errors instead of silently returning success.
-Previously, a registration failure would cause a NULL pointer
-dereference in list_del_rcu() during remove when
-dma_async_device_unregister() tried to remove the device's
-global_node from a list it was never added to.
+If dma_async_device_register() fails after fsldma_request_irqs()
+succeeded, the error path jumped to out_free_fdev which only removed
+channels but never freed the already-registered IRQs.  A subsequent
+interrupt would access freed memory.
+
+Fix by adding an out_free_irqs label that calls fsldma_free_irqs()
+before falling through to the existing channel cleanup.
 
 Assisted-by: opencode:big-pickle
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/dma/fsldma.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/dma/fsldma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index 43d817f6ded1..3009e1531292 100644
+index 3009e1531292..4475d50a94f5 100644
 --- a/drivers/dma/fsldma.c
 +++ b/drivers/dma/fsldma.c
-@@ -1303,7 +1303,11 @@ static int fsldma_of_probe(struct platform_device *op)
- 		goto out_free_fdev;
+@@ -1306,10 +1306,12 @@ static int fsldma_of_probe(struct platform_device *op)
+ 	err = dma_async_device_register(&fdev->common);
+ 	if (err) {
+ 		dev_err(fdev->dev, "unable to register DMA device\n");
+-		goto out_free_fdev;
++		goto out_free_irqs;
  	}
- 
--	dma_async_device_register(&fdev->common);
-+	err = dma_async_device_register(&fdev->common);
-+	if (err) {
-+		dev_err(fdev->dev, "unable to register DMA device\n");
-+		goto out_free_fdev;
-+	}
  	return 0;
  
++out_free_irqs:
++	fsldma_free_irqs(fdev);
  out_free_fdev:
+ 	for (i = 0; i < FSL_DMA_MAX_CHANS_PER_DEVICE; i++) {
+ 		if (fdev->chan[i])
 -- 
 2.54.0
 

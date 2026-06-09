@@ -1,231 +1,428 @@
-Return-Path: <dmaengine+bounces-11341-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11342-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 1BJwH52mJ2rD0AIAu9opvQ
-	(envelope-from <dmaengine+bounces-11341-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 09 Jun 2026 07:37:33 +0200
+	id SzVEJhmyJ2rU0gIAu9opvQ
+	(envelope-from <dmaengine+bounces-11342-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 09 Jun 2026 08:26:33 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 325BB65C7A5
-	for <lists+dmaengine@lfdr.de>; Tue, 09 Jun 2026 07:37:32 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CF1065CBBF
+	for <lists+dmaengine@lfdr.de>; Tue, 09 Jun 2026 08:26:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=bVeOx00s;
-	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=M4F8AzK3;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11341-lists+dmaengine=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="dmaengine+bounces-11341-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=qualcomm.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=valinux.co.jp header.s=selector1 header.b=soe9vxsZ;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11342-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11342-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=valinux.co.jp;
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B2CB43017CD3
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2026 05:37:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 73ED43028012
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2026 06:23:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2217C3C6A51;
-	Tue,  9 Jun 2026 05:37:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89E8D3D34BC;
+	Tue,  9 Jun 2026 06:23:11 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11020119.outbound.protection.outlook.com [52.101.229.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8983C5832
-	for <dmaengine@vger.kernel.org>; Tue,  9 Jun 2026 05:37:19 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780983441; cv=none; b=qSMYIwmiy7/MRU2cVzIxCViyicea5AVfAETTjK6Na/3zDyiH0pUBv/CvyBV2d9q1dNMgUsjcKWWwKupPx9GIfw3quXg4szoJdBisu2h6dVottTOcroYjRPsuPfOuwg+liR+Qjjsg9En4ZE0yWOmccShK+IVINGLtp6zlsgC0cAw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780983441; c=relaxed/simple;
-	bh=uugD+ZTT3EoWEOXwbqISV+D0swD+cMJ1IGS+gn868C8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AaMAvdTapNpS013Zm94+e0vUh214fnU3YrgejEcYj0nG83Q2NYN8LyBf2BDDYhahi45t4K1o08+z1brFlXNPr/7KT+pviunbTilPCVB+STRiEi4rr1byzWg0tO9uAZAeVCLWkasVxxXziec7VcOQM7YpT7mmy6ZvhAlcPRxd3Po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bVeOx00s; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=M4F8AzK3; arc=none smtp.client-ip=205.220.168.131
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6593wpxa1026276
-	for <dmaengine@vger.kernel.org>; Tue, 9 Jun 2026 05:37:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PR2hiJkiUQvrfmG0FVY4y008fpQ+lbRvpnuUvQasTUk=; b=bVeOx00sUnruNkyL
-	0n5nL7OW4FT6mS9hzPhdOu3hPkJwERH7eRth45itatpDzXferqMtBAUYXGki1MmR
-	l0bJQFmXpP5n7AwoE8F93LhRCvLCdomCDNNeugyX6BP4LBeR4u7gpk5gXEAD5Uld
-	HmhA5AzmK9YNaHURKyrwVqIYcfW9A4l9VEsZdCZ6O82pDuPZbfwKsBHdMW65VYP+
-	Cd6mxvC/AOSjfjra/QYSbOXIkCsnZY5WT8sCOnH39s/HnMVh/4e/LCY4KQXx/TTM
-	62DhaKAJmUHamNX6N7EIRsrxAM3NJiYn0KNgS9psvDjljJCtzNxtdI8lOOOQkVa7
-	it4zzA==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4enunack0h-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Tue, 09 Jun 2026 05:37:18 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-36d97a4e08fso4733033a91.0
-        for <dmaengine@vger.kernel.org>; Mon, 08 Jun 2026 22:37:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1780983438; x=1781588238; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PR2hiJkiUQvrfmG0FVY4y008fpQ+lbRvpnuUvQasTUk=;
-        b=M4F8AzK3eRmkTjN34hQXK9bqACNIalscJM3kjSbl/LcvvUGgNIJxXYdIjtgVqDrKRM
-         t9AberkoqctwPxhUGoNq76auCvvx700gFKJTuUY3IekmqD2Dl4KjvLW63GbEAuFRJ+TO
-         KKfkV23uRtjRplyfdOBYXuxhmqHWo6tmTCm6dCrPly5IHKhpENvslmDzESMDHvL+KxXY
-         CcV137oG3ke+0oaA8+VN0kPkH4SPXP4ROjtZyTuyk8CAwKUWmsTM5Z/jQsciYnAf1su3
-         ma6qZsKznspsGY2vdfeGA45wCrRsSou4/Pk1m6IslDBspaM57wOp+GPRy/scVgT7lS8y
-         E5QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780983438; x=1781588238;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PR2hiJkiUQvrfmG0FVY4y008fpQ+lbRvpnuUvQasTUk=;
-        b=Z59AGp+F4cZzJAwvX3R5r1bEN87qAbjYTWuDDVhc49eg9x1fF18NkpZiM72Ff/tG/x
-         rQKfa6PGP6uVep3wWmqhWw0so5TsWpD1z5ZgX3MmigDxbhcvlP8VuB4fCR7DPwVkUTmm
-         gVoU+HiybFSRE0jUjf/8ZDXJYqSGDS+rUOWFU+XNhWoJIf479dVQKlgv4rtpopDI48lN
-         si2WXm/cftsCkmH7EA5nGbmXRrqopZqQUxTSIMxDOUOuPrQcHPY4y7G0cy5lWQ+VSyGK
-         JlVwvHzcfjh58eB4roikwCynNe60ul2aNN33H9vGVXP0my39buwqrxMBf/jdBNNsdpVj
-         ZC+w==
-X-Forwarded-Encrypted: i=1; AFNElJ/sf8kYq46Js4I/fF7CPGI8h/jq0DsPb5qpSaardQH/yiR33HjL6R1g7tKPFnvuRJ8gn+55qacl1hM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyaq1bhHueP8g5tvW563hR89RnbOJfXYSymGU/1GpnErnMrUzPM
-	aAelGyV4vhaEID2wak7iMmozXBxHTbQzMdk5/0fkLUIvabapj0nvsBB6+72Y2bq358p0mgPnDL7
-	DgrFPkmmoxcmAZj8tLB4dVE5efTnAnmurHwoH+hmjXTUVui5VnDqVZQ/uIGjRCLQ=
-X-Gm-Gg: Acq92OFdTfk2q+Y4pbh35DE9yPsAJrpWXEWRycev0rl9Ix1mgpexvkgsuxo6EucX/3r
-	VJdkS9iiBWf/THg4NwBYN+dqhrZKI+rE4d+NCbMYxKipFiYgMyx3vGVK6BTChDf7wFwNtkCWjIz
-	91ej+ol7yItcywdZzNNzYp9n9kp3nt6oDG2g2YDT2et/dMm3JDvYZHBZmflb1bsOOp7JtttueFx
-	FZtkq9LVnH1P+SVn0YSHToZlf6mS2a8yJhgj2LxveFu/b0XJxLRRCpu+cDHwqDoPi9LL4JwAA6Y
-	GahA0XY9rZBQAdnV8sgFcPJjmtr6LbVZE+K1mbz/vMYo0mPG5DpNpgShXIrc3QG1ZZLaCcfA/Nd
-	IdfeqC0Hzx3OrvNOdyHxO6RXjDpIozp7/cmA2WN2OpX0qgWK+b349by7II5e4gjk=
-X-Received: by 2002:a17:90b:5210:b0:36a:8240:2477 with SMTP id 98e67ed59e1d1-370f0967012mr19947174a91.19.1780983437857;
-        Mon, 08 Jun 2026 22:37:17 -0700 (PDT)
-X-Received: by 2002:a17:90b:5210:b0:36a:8240:2477 with SMTP id 98e67ed59e1d1-370f0967012mr19947132a91.19.1780983437420;
-        Mon, 08 Jun 2026 22:37:17 -0700 (PDT)
-Received: from [10.217.222.59] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36f6d109dcdsm20019455a91.9.2026.06.08.22.37.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2026 22:37:16 -0700 (PDT)
-Message-ID: <26b56175-a83e-4c3e-a871-28fb3aab0725@oss.qualcomm.com>
-Date: Tue, 9 Jun 2026 11:07:09 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C3F22689C;
+	Tue,  9 Jun 2026 06:23:08 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780986191; cv=fail; b=cozV5KRHIgQMoVDzLfxzSJLg1CF30F4IUwtbs4MG5lZOttdKyLZaz0R7IBXWnikUDoC3eOKuw66Qfdv2hXca1qKLy24kXLXP2nB8LXOVw6Tp6NTGOu+8eHfZ8FQwjvjxrXO9v/oqi5ZjSgGJTiHFiMz2vTWxnS+C2b34qucra4k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780986191; c=relaxed/simple;
+	bh=R0rTDDXqFjojGwIkIre4Hq9D1t+fxQp4PajdAKNbc7E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=GCp2j0OjfSQ5KEWefD+WX+VmH5O7UcUjfuIpuUzBIkxznkhnAAx/cRlB+jmNDOY3LZ3wCAbnyZ/724UJ4V1T2AXTRCTxDDjrxYIY7eD0kuwRcTpOlyC3FHV1RXVMEzoO7/+othdM96bDZyUv9u8ThSAYqFEh4o6TEcCLAecjnyQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=soe9vxsZ; arc=fail smtp.client-ip=52.101.229.119
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RJ+7iHc1jb2HrrmhUN0QuK4BlOBLHFFHpC/H4BnEnbn5yGw5w1/fj6wUSP8scn0RgRvZvVuGimyfPhqTe/gcxgXeciuCeqrlkPNCdm61D0RrSKFG+X1M6XLxw2nNcMPt+gEChe0vpOkq5erFF6nijL3c+TJX/kPha2pmR/gtzJNnIGjkQ16LZlnbXabMucAfq8W2+9ZWTUzNJcAdkkTMbQS3cMR0Cy+mTSEvbsWZkX/LLb25bc6mL/IjFC9JYXF3lrZ38aUYmde9IPnIhH6/byJNOjSTSqid6BBN5yjMhUFG3RV/DodEIFCa5TWRB/nRBYcqgJKtplFtASGkiT+Xjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cM8O2z4O7s2YwAsFg0BRWlQyPGfyy6q/HvY0TPXgVDQ=;
+ b=RaK13XnKwtZUUzTRoiqnluhMF9jxFWiiHlkKUqwcfEHRqZhgBiNI8igJaYTPYJn/wtExRNNEKhqXxVnUxKBVoYdzG+E/5xLmyaulTRVIhMZXGOkCRNmHsdmT4tsGS4rHorUwZUtdv+tfGB/Mwn9LgZBsCByr378N/sN1a6Q9dZwrXKPvVPTOhyqEUwvM6i/lpzLvEBRXGYvq7VTIyl7wLxWdwcK2114uMAgVIlYPcbtzP8cFVVplIiXh5Ok0uhKUhVdrbe/KzpKBoA87cIf7Ikro9O4uErUNJJYnedKg8mypumHjBGU9zMs7gTg2jmdH9/AnpoRLUWRIBsbh5mO5wQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cM8O2z4O7s2YwAsFg0BRWlQyPGfyy6q/HvY0TPXgVDQ=;
+ b=soe9vxsZEzzwJqugx3A51rkrG2l8KZxzkkneIgSvKII7EEf4/jh1cNK9o6YTTxVAD9akUe0lsjEj/fqg4WzsYwMOO9P7k34NazJYm3qtt7wZXuBQWvqeGKqjFzCgF23mG1EsfGL77twttt9QtEFIijIQ8lWOGuX6xXgMWhGW/Z4=
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
+ by OS9P286MB6099.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:3b8::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.14; Tue, 9 Jun 2026
+ 06:23:04 +0000
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.21.0092.011; Tue, 9 Jun 2026
+ 06:23:04 +0000
+Date: Tue, 9 Jun 2026 15:23:03 +0900
+From: Koichiro Den <den@valinux.co.jp>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Christoph Hellwig <hch@lst.de>, Niklas Cassel <cassel@kernel.org>, dmaengine@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-nvme@lists.infradead.org, Damien Le Moal <dlemoal@kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH RFT 0/5] dmaengine: dw-edma: support dynamtic add link
+ entry during dma engine running
+Message-ID: <w7fwh4ztgg5svpfqrfvw43kvfznrzn6gystacaq6sbf6zuqwge@ccj4rau7p3hy>
+References: <20260109-edma_dymatic-v1-0-9a98c9c98536@nxp.com>
+ <24a5wo2ncgf7d43mxbv6pacvqkzmiuo4bvuyygfeyoq4lbdt25@kqw4cx7xzrfu>
+ <aiMWmI8QMddHUzL5@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aiMWmI8QMddHUzL5@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: TY4P301CA0123.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:405:37e::6) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] dt-bindings: dma: qcom,bam-dma: Increase iommus
- maxItems to seven
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Thara Gopinath <thara.gopinath@gmail.com>,
-        Konrad Dybcio <konradybcio@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Harshal Dev <harshal.dev@oss.qualcomm.com>,
-        linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org
-References: <20260521-shikra_crypto_changse-v1-0-0154cc9cc0de@oss.qualcomm.com>
- <20260521-shikra_crypto_changse-v1-4-0154cc9cc0de@oss.qualcomm.com>
- <20260530-spiffy-glittering-quail-dff199@quoll>
- <289a5bca-5491-4fc2-92d9-1102aa664021@oss.qualcomm.com>
- <844eccf8-4ad3-46a2-bc8a-67895d629c4f@kernel.org>
-Content-Language: en-US
-From: Kuldeep Singh <kuldeep.singh@oss.qualcomm.com>
-In-Reply-To: <844eccf8-4ad3-46a2-bc8a-67895d629c4f@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA5MDA0OSBTYWx0ZWRfX5GtiqTS4zaGz
- jy0TmmwSdl2VpBmqXZcl1e+sGDCyYcbGks0q1CgyRl8OAKj3mbX8Rr+pr359SVfGw/ltQqQeEpJ
- QibuGG7dIvUing/iEyaunEIJucPFx1WZYYgY193c3AOXm7EslmzZ846gwhKXPRu1hLnBh1SO4D8
- fllMKnPLgo5S94H6Zs4elBo6ZWBxr3eG7rxXh9G/eADU/AzYOFicU5eC0Fx74VmZRSdGgUolt2y
- pOcmEBuF1HTePjAMq4WHr3T1cm155jSTrUuzp6bthCqFAulPMAYDED2anewRdJGQIuUluuVQ+VJ
- yiCGhS0UMTr+jbA5bsvNFKu83g1rhr2SVgElJiZyo8TaFNmE6JQjbU7+C3zZzcHVTe1kxFeMGQn
- fkOmEffUlSGuNNaBWffz3JPfztPRqwHAxrbkA2WwSPoWBzxGX7/IwqZO+Vhe5ery6LOtTk/lrgn
- 4FWHNHX5L4HojGpYPbg==
-X-Authority-Analysis: v=2.4 cv=RfugzVtv c=1 sm=1 tr=0 ts=6a27a68e cx=c_pps
- a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
- a=gEfo2CItAAAA:8 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=3IJvv1DdaQ7zVQMhPnMA:9
- a=QEXdDO2ut3YA:10 a=uKXjsCUrEbL0IQVhDsJ9:22 a=sptkURWiP4Gy88Gu7hUp:22
-X-Proofpoint-ORIG-GUID: td_-R6PsM_R0Qhj8YUGucF6aSvYiBNmC
-X-Proofpoint-GUID: td_-R6PsM_R0Qhj8YUGucF6aSvYiBNmC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-09_01,2026-06-09_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 adultscore=0 spamscore=0 suspectscore=0
- priorityscore=1501 malwarescore=0 clxscore=1015 lowpriorityscore=0
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605210000
- definitions=main-2606090049
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|OS9P286MB6099:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a58261b-1cdf-4943-c1b8-08dec5ef9081
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|10070799003|6133799003|22082099003|18002099003|56012099006|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	upj+DE8p49a3FsQZNrQh9N3bjdTHaN2wVegitw1vtt5XxwkYGMAsTDbY3xNQn31LZArOX+0gKjmiXKjkiHid5nzWWDHqpSqhIhPuvQnZA8CcBaQAqhhS1vaN5M5154UTaTpWKKCx8OudZoDA+RXra7nS3tfwqjXawvSlTUULjFBAYNAHqm+edNsCP1DbnSmkF5cbGdzA7CFHJRu4zhK62vt8t2HontS5VPG6h9uoxQI4G+EYsDfoqKuQCmlku0nUNFAVPEKuryIr8jYa53EB/FoBrUZxwQHZc9PA5vgraVyvhuE5X5rYP52mnTz/IryYBUTU5n6lptQ4XPGB6CBHHYBvkhULBa2dr9LnzJXE72o+WAVOdLak0c2uqhllT6PcPFd40fLEabkI1n6WTqPbN34O7Fci5G+qXqeK5tRFPJc4746L0PasrcOxx5gH3TFltVizpiXdcg/kwNyJ5b9+25pmfYh2cCaAcsZzY2FMSIBKGrAo0c+7gT/gJ4CmXvdAbodEgkIAP8ygjp3iOCu5/Th1oOrv/KNXnTmJslpeYkarMLESe7tE7Iv3XPP1xCAHI3ZQ6HHcUnIcvyHJOG5zH/bD0sof5sPS4SN0T8Md1f5YaCHjk0Xh+xCFAfSqxI8hwaJXfkhXYjI60b1hJ8hBeQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(10070799003)(6133799003)(22082099003)(18002099003)(56012099006)(4143699003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?FnzwXCzzdQ7uYBWUxyGyb+m4eq4pwGsRCmqKnY7XzLL7U/3bATVYpa+QkoXo?=
+ =?us-ascii?Q?lyjSyHgm4F1BUhGvjB7V5Ppd8oXedIQt1DGYmlvqddc7pzTJIgwYX3YiGSzp?=
+ =?us-ascii?Q?dcxDPeVpN769hNAHqU1Wtwh3bQtgh3PsNby2TCWQm/CvuyxEcAYhy5ASGeze?=
+ =?us-ascii?Q?3gHUoehpiOmRPdVzCl8mCGvJ+FWPTJ86pedwofO0mH/UU7iG+Oqlx0FVzgX+?=
+ =?us-ascii?Q?r+ah6Porg2TDgkeID/5osVUVedt33rHG106EHHDN2ncgLZId48LTkMsoXzot?=
+ =?us-ascii?Q?Lb5veXWHAZ2p9EW9WIvoMk8o52z2mYQJtE2LuHwNNxAxAKoEWPahLZtso89F?=
+ =?us-ascii?Q?zl0d747sfobKWalPgjA+QYIwEqy5U6OSqVXHVwuajmRN7V1bKpNNm37LLq3X?=
+ =?us-ascii?Q?0iHtAtRZz8WnhAqOXGwY/BXO2HLi5NXx2Cz/D/p3AS50di+Rihg5VRTYiMtb?=
+ =?us-ascii?Q?jFkmW3fufqF77t5nRRmJqioS4PS6mbZpqTovTviEAV59KNLHklC9v2Npp498?=
+ =?us-ascii?Q?f3DPpV44fEoV60hOyaseUdwZivRQGp7UySJzuMYesoDKId/RSjRyAXywIlwW?=
+ =?us-ascii?Q?oFQx39lhpEG9WfL7Wde/1iRhtfj8IcvIQOXu/dD+f1wjXEi/2jNeNn/XncqW?=
+ =?us-ascii?Q?nhK4T5/MOCh6hGpOU0BX040a6JirHUCgLVXPpcK92idOvbEgsSsuN1a4qurO?=
+ =?us-ascii?Q?LQNh3nWwAYiqbn4pidQBCYBv/o6UcNHUsJbYJmFuiHEx2ukpvlHjjtzRihOf?=
+ =?us-ascii?Q?TfE6iq3rqyGF37j1QXWsEoJ/sqfSxWi6OtL/fthHxSAr50zKottwOUYGED2c?=
+ =?us-ascii?Q?P0A6cmtN5YRCjWClro2oUxjURlSWyhR+Db0VowPezrM7SJQGeHaHhwuRBX98?=
+ =?us-ascii?Q?v8cvY+JYFEw1se/XxVBzZ62mF/OkPcOKPYVsB6EEbcyCTnCrNNuzezRsCjsa?=
+ =?us-ascii?Q?54xxEblCC7AN6nPRjw26oatAbqpQe7pEVr4wuE/uU83RMFtiflyygOzvdgnq?=
+ =?us-ascii?Q?Jk7Xe2HmTFg7GCQ80NnKY2FP8GXPC7V6LfCR4Ya3gvVRu1LqfOHD6Q+b4lEE?=
+ =?us-ascii?Q?6QpawAh0+9a05D/nUy6K/6Bpv4CxItkpL8McskcO7MpENPhDUSIPzCoyvmHg?=
+ =?us-ascii?Q?OpuWRUYzpQNS1sWiFuEsvfKI1leW6sCta2tNU+zy1z8L6BpV35UCjrfRJgBU?=
+ =?us-ascii?Q?4bIv75Qg4Rym+nL/Kz4FcgY4gDdnpqF9OxLzN3NSvqdDOubgyJMm70yJraTA?=
+ =?us-ascii?Q?WV92sSYf7EqSgYKXnTb+0Ymz+Kn8DUXq88/vQuJBxQrakSKNB92JW4e6ZyXY?=
+ =?us-ascii?Q?zoax+3IH2P/CZN/TmgX6aO/i74MszLsxMRGLHEGtNhxDQTkofzeAfoR/0Eq/?=
+ =?us-ascii?Q?GJiZGRyjcCytFwmiSZYaSjwekTeNiFsQ14JGdkWfj7Iaqbz4neZNx6UliCaj?=
+ =?us-ascii?Q?hcHhR9ZIKmvi5uOFxemBk4goxWj2Ldib7et6jX0s9QlHieI4Wt3pdXRt/C+E?=
+ =?us-ascii?Q?q4ojvf3Pii8Req33tT/GOAaGk08iSTRGNFIjSqoWZ/H1ktEJhmbLV/JPH0qG?=
+ =?us-ascii?Q?k4vReSdUtjrKiSBJ2hl/UOznU0W9ZC7M8ugVj7bFF19ahg3g73PenSpLTXjD?=
+ =?us-ascii?Q?V459V3AtmWlX7WH2LycbX1of7C4LjVOvQF5ax0M1huNixB/E86oqljof+WyS?=
+ =?us-ascii?Q?nSmOmQk0KDCapk5nZbvzjpp/pHTZwa9LPPVYU6MUZ5iPRYyWNuIg+VN1EjYZ?=
+ =?us-ascii?Q?RsykJ3652AjW1gTdQcDrSE73iegbbKGhOz+nvicbt9Fbc47UnwcB?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a58261b-1cdf-4943-c1b8-08dec5ef9081
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2026 06:23:04.6806
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hLirn5KNyNGGx6DbiFhPtdytesZDyGlWPAxKdFNh1ZTFdGjIi7I2yOL1JLVC0DgZ4pVChO2PcHV2Vxdm94hs8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9P286MB6099
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
+	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[18];
-	TAGGED_FROM(0.00)[bounces-11341-lists,dmaengine=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-11342-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:krzk@kernel.org,m:herbert@gondor.apana.org.au,m:davem@davemloft.net,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:andersson@kernel.org,m:vkoul@kernel.org,m:thara.gopinath@gmail.com,m:konradybcio@kernel.org,m:Frank.Li@kernel.org,m:agross@kernel.org,m:harshal.dev@oss.qualcomm.com,m:linux-arm-msm@vger.kernel.org,m:linux-crypto@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:dmaengine@vger.kernel.org,m:conor@kernel.org,m:tharagopinath@gmail.com,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:Frank.li@nxp.com,m:mani@kernel.org,m:vkoul@kernel.org,m:Gustavo.Pimentel@synopsys.com,m:kees@kernel.org,m:gustavoars@kernel.org,m:kwilczynski@kernel.org,m:kishon@kernel.org,m:bhelgaas@google.com,m:hch@lst.de,m:cassel@kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-hardening@vger.kernel.org,m:linux-pci@vger.kernel.org,m:linux-nvme@lists.infradead.org,m:dlemoal@kernel.org,m:imx@lists.linux.dev,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[kuldeep.singh@oss.qualcomm.com,dmaengine@vger.kernel.org];
-	FREEMAIL_CC(0.00)[gondor.apana.org.au,davemloft.net,kernel.org,gmail.com,oss.qualcomm.com,vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,devicetree.org:url,qualcomm.com:dkim,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:from_mime];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kuldeep.singh@oss.qualcomm.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[valinux.co.jp:+];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,nxp.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 325BB65C7A5
+X-Rspamd-Queue-Id: 1CF1065CBBF
 
-On 09-06-2026 01:19, Krzysztof Kozlowski wrote:
-> On 06/06/2026 22:59, Kuldeep Singh wrote:
->> On 30-05-2026 16:09, Krzysztof Kozlowski wrote:
->>> On Thu, May 21, 2026 at 06:47:11PM +0530, Kuldeep Singh wrote:
->>>> Shikra bam dma engine support 7 iommu entries and not 6.
->>>> Increase maxItems property for iommus to pass dtbs_check errors.
->>>
->>> What errors? There is no Shikra in upstream so how could we have errors?
->> dt-bindings updates are prerequisites for the DT changes of ice,rng, qce
->> and hence updated bindings in patch [1-4]/5.
->> Also, the commit message mention about shikra and DT change is also in
->> same series.
->>
->> I hope this clarifies.
+On Fri, Jun 05, 2026 at 02:34:00PM -0400, Frank Li wrote:
+> On Thu, Jun 04, 2026 at 04:08:06PM +0900, Koichiro Den wrote:
+> > On Fri, Jan 09, 2026 at 03:13:24PM -0500, Frank Li wrote:
+> > > Patch depend on
+> > > https://lore.kernel.org/imx/20260109-edma_ll-v2-0-5c0b27b2c664@nxp.com/T/#t
+> > >
+> > > Only test eDMA, have not tested HDMA.
+> >
+> > Hi Frank,
+> >
+> > I expect this series may be revisited in the near future, since the first
+> > dependency series reached v7 and looks close to landing.
+> >
+> > With the latest versions of the two dependencies:
+> >   - [PATCH v7 0/9] dmaengine: Add new API to combine configuration and descriptor preparation
+> >     https://lore.kernel.org/dmaengine/20260521-dma_prep_config-v7-0-1f73f4899883@nxp.com/
+> >   - [PATCH v2 00/11] dmaengine: dw-edma: flatten desc structions and simple code
+> >     https://lore.kernel.org/dmaengine/20260109-edma_ll-v2-0-5c0b27b2c664@nxp.com/
+> >
+> > I tested this RFT series with the HDMA engine on a SpacemiT K3.
+> > The test results are below, using the same format as your results:
+> >
+> >   Baseline, before applying the three series (v7 + v2 + this RFT)
+> >
+> >     Rnd read ,     4KB, QD=1 , 1 job :  IOPS=8567, BW=33.5MiB/s (35.1MB/s)
+> >     Rnd read ,     4KB, QD=32, 1 job :  IOPS=55.5k, BW=217MiB/s (227MB/s)
+> >     Rnd read ,     4KB, QD=32, 4 jobs:  IOPS=83.0k, BW=324MiB/s (340MB/s)
+> >     Rnd read ,   128KB, QD=1 , 1 job :  IOPS=3817, BW=477MiB/s (500MB/s)
+> >     Rnd read ,   128KB, QD=32, 1 job :  IOPS=10.8k, BW=1346MiB/s (1411MB/s)
+> >     Rnd read ,   128KB, QD=32, 4 jobs:  IOPS=11.2k, BW=1403MiB/s (1471MB/s)
+> >     Rnd read ,   512KB, QD=1 , 1 job :  IOPS=1515, BW=758MiB/s (794MB/s)
+> >     Rnd read ,   512KB, QD=32, 1 job :  IOPS=2795, BW=1399MiB/s (1467MB/s)
+> >     Rnd read ,   512KB, QD=32, 4 jobs:  IOPS=2795, BW=1404MiB/s (1472MB/s)
+> >     Rnd write,     4KB, QD=1 , 1 job :  IOPS=9035, BW=35.3MiB/s (37.0MB/s)
+> >     Rnd write,     4KB, QD=32, 1 job :  IOPS=38.3k, BW=149MiB/s (157MB/s)
+> >     Rnd write,     4KB, QD=32, 4 jobs:  IOPS=41.8k, BW=163MiB/s (171MB/s)
+> >     Rnd write,   128KB, QD=1 , 1 job :  IOPS=3969, BW=496MiB/s (520MB/s)
+> >     Rnd write,   128KB, QD=32, 1 job :  IOPS=8260, BW=1033MiB/s (1083MB/s)
+> >     Rnd write,   128KB, QD=32, 4 jobs:  IOPS=8295, BW=1038MiB/s (1089MB/s)
+> >     Seq read ,   128KB, QD=1 , 1 job :  IOPS=4609, BW=576MiB/s (604MB/s)
+> >     Seq read ,   128KB, QD=32, 1 job :  IOPS=10.8k, BW=1345MiB/s (1410MB/s)
+> >     Seq read ,   512KB, QD=1 , 1 job :  IOPS=1524, BW=762MiB/s (799MB/s)
+> >     Seq read ,   512KB, QD=32, 1 job :  IOPS=2799, BW=1401MiB/s (1469MB/s)
+> >     Seq read ,     1MB, QD=32, 1 job :  IOPS=1401, BW=1404MiB/s (1472MB/s)
+> >     Seq write,   128KB, QD=1 , 1 job :  IOPS=3722, BW=465MiB/s (488MB/s)
+> >     Seq write,   128KB, QD=32, 1 job :  IOPS=8246, BW=1031MiB/s (1081MB/s)
+> >     Seq write,   512KB, QD=1 , 1 job :  IOPS=1283, BW=642MiB/s (673MB/s)
+> >     Seq write,   512KB, QD=32, 1 job :  IOPS=2072, BW=1038MiB/s (1088MB/s)
+> >     Seq write,     1MB, QD=32, 1 job :  IOPS=1037, BW=1040MiB/s (1091MB/s)
+> >     Rnd rdwr , 4K..1MB, QD=8 , 4 jobs:  IOPS=1540, BW=768MiB/s (805MB/s)
+> >      IOPS=1549, BW=768MiB/s (805MB/s)
+> >
+> >   After your three series (v7 + v2 + this)
+> >
+> >     Rnd read ,     4KB, QD=1 , 1 job :  IOPS=7216, BW=28.2MiB/s (29.6MB/s)
+> >     Rnd read ,     4KB, QD=32, 1 job :  IOPS=61.1k, BW=239MiB/s (250MB/s)
+> >     Rnd read ,     4KB, QD=32, 4 jobs:  IOPS=75.3k, BW=294MiB/s (309MB/s)
+> >     Rnd read ,   128KB, QD=1 , 1 job :  IOPS=4711, BW=589MiB/s (618MB/s)
+> >     Rnd read ,   128KB, QD=32, 1 job :  IOPS=10.8k, BW=1354MiB/s (1420MB/s)
+> >     Rnd read ,   128KB, QD=32, 4 jobs:  IOPS=11.2k, BW=1403MiB/s (1471MB/s)
+> >     Rnd read ,   512KB, QD=1 , 1 job :  IOPS=1497, BW=749MiB/s (785MB/s)
+> >     Rnd read ,   512KB, QD=32, 1 job :  IOPS=2802, BW=1403MiB/s (1471MB/s)
+> >     Rnd read ,   512KB, QD=32, 4 jobs:  IOPS=2798, BW=1405MiB/s (1474MB/s)
+> >     Rnd write,     4KB, QD=1 , 1 job :  IOPS=7411, BW=29.0MiB/s (30.4MB/s)
+> >     Rnd write,     4KB, QD=32, 1 job :  IOPS=39.3k, BW=153MiB/s (161MB/s)
+> >     Rnd write,     4KB, QD=32, 4 jobs:  IOPS=42.9k, BW=167MiB/s (176MB/s)
+> >     Rnd write,   128KB, QD=1 , 1 job :  IOPS=3736, BW=467MiB/s (490MB/s)
+> >     Rnd write,   128KB, QD=32, 1 job :  IOPS=8302, BW=1038MiB/s (1089MB/s)
+> >     Rnd write,   128KB, QD=32, 4 jobs:  IOPS=8314, BW=1041MiB/s (1091MB/s)
+> >     Seq read ,   128KB, QD=1 , 1 job :  IOPS=4092, BW=512MiB/s (536MB/s)
+> >     Seq read ,   128KB, QD=32, 1 job :  IOPS=10.8k, BW=1354MiB/s (1420MB/s)
+> >     Seq read ,   512KB, QD=1 , 1 job :  IOPS=1474, BW=737MiB/s (773MB/s)
+> >     Seq read ,   512KB, QD=32, 1 job :  IOPS=2794, BW=1399MiB/s (1467MB/s)
+> >     Seq read ,     1MB, QD=32, 1 job :  IOPS=1401, BW=1404MiB/s (1472MB/s)
+> >     Seq write,   128KB, QD=1 , 1 job :  IOPS=4135, BW=517MiB/s (542MB/s)
+> >     Seq write,   128KB, QD=32, 1 job :  IOPS=8307, BW=1039MiB/s (1089MB/s)
+> >     Seq write,   512KB, QD=1 , 1 job :  IOPS=1259, BW=630MiB/s (660MB/s)
+> >     Seq write,   512KB, QD=32, 1 job :  IOPS=2073, BW=1038MiB/s (1089MB/s)
+> >     Seq write,     1MB, QD=32, 1 job :  IOPS=1034, BW=1038MiB/s (1088MB/s)
+> >     Rnd rdwr , 4K..1MB, QD=8 , 4 jobs:  IOPS=1531, BW=763MiB/s (801MB/s)
+> >      IOPS=1540, BW=765MiB/s (802MB/s)
+
+This was false. I cleaned up my test environment and retested your three series
+again. It seems that the test cannot even run properly. Sorry for the confusion.
+(Note that the other results, i.e. "Baseline" and "use of HDMA watermark
+interrupts", were re-verified.)
+
+So I looked into why this RFT series does not work well with HDMA. My current
+understanding is that HDMA dynamic append needs watermark interrupts from the
+beginnning.
+
+The PCI Express DMA Controller Databook (6.10a-lca06), Table 7-3 Channel Context
+Register Considerations, says that while the channel is RUNNING, HDMA updates
+HDMA_LLP_* only when a watermark interrupt event occurs. It also says that
+software can use watermark interrupts to obtain the current transfer location
+and recycle descriptors up to the LLP value.
+
+So, without watermark interrupts, I do not think HDMA_LLP_* polling from
+software gives us a reliable/valid running progress point for cookie completion.
+The only conservative completion point left is the STOP interrupt (i.e. the
+current base model).
+
+However, with "dynamic append", software keeps recycling/refilling the ring, so
+the channel may continue running and the STOP interrupt can be delayed
+indefinitely. In that case, DMA cookies are not completed in time, which leads
+to dma_sync_wait() timeouts on my HDMA setup.
+
+Therefore, now I do not think the current STOP-interrupt-only model is suitable
+for HDMA dynamic append. If no objections, I will submit a reworked version of
+this RFT series that keeps many of your original changes, but enables and uses
+HDMA watermark interrupts for the HDMA dynamic-append path.
+
+Best regards,
+Koichiro
+
+> >
+> > On this HDMA setup, I did not observe a clear performance difference from
+> > applying the three series alone. Still, I like the overall direction.
+> >
+> >
+> > P.S.
+> > Separately, as a follow-up experiment, I also prototyped an extra series on top
+> > of your three series that allows us to make use of HDMA watermark interrupts.
+> > With that series, in particular for the high queue-depth cases, the results
+> > improved noticeably on this platform. I haven't posted that series yet though.
 > 
+> Thanks for test it. I am monitor above recondition patch set.
 > 
-> No, nothing is clarified. This commit msg is just misleading.
-Yes, I'll update commit message better in next rev.
-
-I specified error observed after introducing qcrypto DT(with 7 iommus)
-for shikra here[1].
-Sharing just error snippet:
-dma-controller@1b04000 (qcom,bam-v1.7.4): iommus: [[31, 132, 17], [31,
-134, 17], [31, 146, 0], [31, 148, 17], [31, 150, 17], [31, 152, 1], [31,
-159, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/dma/qcom,bam-dma.yaml
-
-[1]
-https://lore.kernel.org/lkml/11c2d639-d2b8-487f-b627-f507bab25d60@oss.qualcomm.com/
-
--- 
-Regards
-Kuldeep
-
+> Frank
+> >
+> >   After your three series (v7 + v2 + this) + use of HDMA watermark interrupts
+> >
+> >     Rnd read ,     4KB, QD=1 , 1 job :  IOPS=8016, BW=31.3MiB/s (32.8MB/s)
+> >     Rnd read ,     4KB, QD=32, 1 job :  IOPS=63.4k, BW=248MiB/s (260MB/s)
+> >     Rnd read ,     4KB, QD=32, 4 jobs:  IOPS=92.7k, BW=362MiB/s (380MB/s)
+> >     Rnd read ,   128KB, QD=1 , 1 job :  IOPS=3530, BW=441MiB/s (463MB/s)
+> >     Rnd read ,   128KB, QD=32, 1 job :  IOPS=12.0k, BW=1500MiB/s (1573MB/s)
+> >     Rnd read ,   128KB, QD=32, 4 jobs:  IOPS=12.4k, BW=1555MiB/s (1631MB/s)
+> >     Rnd read ,   512KB, QD=1 , 1 job :  IOPS=1541, BW=771MiB/s (808MB/s)
+> >     Rnd read ,   512KB, QD=32, 1 job :  IOPS=3116, BW=1560MiB/s (1636MB/s)
+> >     Rnd read ,   512KB, QD=32, 4 jobs:  IOPS=3099, BW=1556MiB/s (1632MB/s)
+> >     Rnd write,     4KB, QD=1 , 1 job :  IOPS=8748, BW=34.2MiB/s (35.8MB/s)
+> >     Rnd write,     4KB, QD=32, 1 job :  IOPS=57.6k, BW=225MiB/s (236MB/s)
+> >     Rnd write,     4KB, QD=32, 4 jobs:  IOPS=80.3k, BW=314MiB/s (329MB/s)
+> >     Rnd write,   128KB, QD=1 , 1 job :  IOPS=3878, BW=485MiB/s (508MB/s)
+> >     Rnd write,   128KB, QD=32, 1 job :  IOPS=9798, BW=1225MiB/s (1285MB/s)
+> >     Rnd write,   128KB, QD=32, 4 jobs:  IOPS=9970, BW=1248MiB/s (1308MB/s)
+> >     Seq read ,   128KB, QD=1 , 1 job :  IOPS=4516, BW=565MiB/s (592MB/s)
+> >     Seq read ,   128KB, QD=32, 1 job :  IOPS=12.0k, BW=1497MiB/s (1570MB/s)
+> >     Seq read ,   512KB, QD=1 , 1 job :  IOPS=1571, BW=786MiB/s (824MB/s)
+> >     Seq read ,   512KB, QD=32, 1 job :  IOPS=3073, BW=1538MiB/s (1613MB/s)
+> >     Seq read ,     1MB, QD=32, 1 job :  IOPS=1573, BW=1576MiB/s (1653MB/s)
+> >     Seq write,   128KB, QD=1 , 1 job :  IOPS=3977, BW=497MiB/s (521MB/s)
+> >     Seq write,   128KB, QD=32, 1 job :  IOPS=9806, BW=1226MiB/s (1286MB/s)
+> >     Seq write,   512KB, QD=1 , 1 job :  IOPS=1404, BW=702MiB/s (736MB/s)
+> >     Seq write,   512KB, QD=32, 1 job :  IOPS=2496, BW=1250MiB/s (1310MB/s)
+> >     Seq write,     1MB, QD=32, 1 job :  IOPS=1252, BW=1256MiB/s (1317MB/s)
+> >     Rnd rdwr , 4K..1MB, QD=8 , 4 jobs:  IOPS=1682, BW=836MiB/s (877MB/s)
+> >      IOPS=1688, BW=838MiB/s (879MB/s)
+> >
+> > Best regards,
+> > Koichiro
+> >
+> > > Corn case have not tested, such as pause/resume transfer.
+> > >
+> > > Before
+> > >
+> > >   Rnd read,    4KB,  QD=1, 1 job :  IOPS=6780, BW=26.5MiB/s (27.8MB/s)
+> > >   Rnd read,    4KB, QD=32, 1 job :  IOPS=28.6k, BW=112MiB/s (117MB/s)
+> > >   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=33.4k, BW=130MiB/s (137MB/s)
+> > >   Rnd read,  128KB,  QD=1, 1 job :  IOPS=1188, BW=149MiB/s (156MB/s)
+> > >   Rnd read,  128KB, QD=32, 1 job :  IOPS=1440, BW=180MiB/s (189MB/s)
+> > >   Rnd read,  128KB, QD=32, 4 jobs:  IOPS=1282, BW=160MiB/s (168MB/s)
+> > >   Rnd read,  512KB,  QD=1, 1 job :  IOPS=254, BW=127MiB/s (134MB/s)
+> > >   Rnd read,  512KB, QD=32, 1 job :  IOPS=354, BW=177MiB/s (186MB/s)
+> > >   Rnd read,  512KB, QD=32, 4 jobs:  IOPS=388, BW=194MiB/s (204MB/s)
+> > >   Rnd write,   4KB,  QD=1, 1 job :  IOPS=6282, BW=24.5MiB/s (25.7MB/s)
+> > >   Rnd write,   4KB, QD=32, 1 job :  IOPS=24.9k, BW=97.5MiB/s (102MB/s)
+> > >   Rnd write,   4KB, QD=32, 4 jobs:  IOPS=27.4k, BW=107MiB/s (112MB/s)
+> > >   Rnd write, 128KB,  QD=1, 1 job :  IOPS=1098, BW=137MiB/s (144MB/s)
+> > >   Rnd write, 128KB, QD=32, 1 job :  IOPS=1195, BW=149MiB/s (157MB/s)
+> > >   Rnd write, 128KB, QD=32, 4 jobs:  IOPS=1120, BW=140MiB/s (147MB/s)
+> > >   Seq read,  128KB,  QD=1, 1 job :  IOPS=936, BW=117MiB/s (123MB/s)
+> > >   Seq read,  128KB, QD=32, 1 job :  IOPS=1218, BW=152MiB/s (160MB/s)
+> > >   Seq read,  512KB,  QD=1, 1 job :  IOPS=301, BW=151MiB/s (158MB/s)
+> > >   Seq read,  512KB, QD=32, 1 job :  IOPS=360, BW=180MiB/s (189MB/s)
+> > >   Seq read,    1MB, QD=32, 1 job :  IOPS=193, BW=194MiB/s (203MB/s)
+> > >   Seq write, 128KB,  QD=1, 1 job :  IOPS=796, BW=99.5MiB/s (104MB/s)
+> > >   Seq write, 128KB, QD=32, 1 job :  IOPS=1019, BW=127MiB/s (134MB/s)
+> > >   Seq write, 512KB,  QD=1, 1 job :  IOPS=213, BW=107MiB/s (112MB/s)
+> > >   Seq write, 512KB, QD=32, 1 job :  IOPS=273, BW=137MiB/s (143MB/s)
+> > >   Seq write,   1MB, QD=32, 1 job :  IOPS=168, BW=168MiB/s (177MB/s)
+> > >   Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=255, BW=128MiB/s (134MB/s)
+> > >    IOPS=266, BW=135MiB/s (141MB/s)
+> > >
+> > > After
+> > >
+> > >   Rnd read,    4KB,  QD=1, 1 job :  IOPS=6148, BW=24.0MiB/s (25.2MB/s)
+> > >   Rnd read,    4KB, QD=32, 1 job :  IOPS=29.4k, BW=115MiB/s (121MB/s)
+> > >   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=38.8k, BW=151MiB/s (159MB/s)
+> > >   Rnd read,  128KB,  QD=1, 1 job :  IOPS=859, BW=107MiB/s (113MB/s)
+> > >   Rnd read,  128KB, QD=32, 1 job :  IOPS=1504, BW=188MiB/s (197MB/s)
+> > >   Rnd read,  128KB, QD=32, 4 jobs:  IOPS=1531, BW=191MiB/s (201MB/s)
+> > >   Rnd read,  512KB,  QD=1, 1 job :  IOPS=238, BW=119MiB/s (125MB/s)
+> > >   Rnd read,  512KB, QD=32, 1 job :  IOPS=390, BW=195MiB/s (205MB/s)
+> > >   Rnd read,  512KB, QD=32, 4 jobs:  IOPS=404, BW=202MiB/s (212MB/s)
+> > >   Rnd write,   4KB,  QD=1, 1 job :  IOPS=5801, BW=22.7MiB/s (23.8MB/s)
+> > >   Rnd write,   4KB, QD=32, 1 job :  IOPS=24.7k, BW=96.6MiB/s (101MB/s)
+> > >   Rnd write,   4KB, QD=32, 4 jobs:  IOPS=32.7k, BW=128MiB/s (134MB/s)
+> > >   Rnd write, 128KB,  QD=1, 1 job :  IOPS=744, BW=93.1MiB/s (97.6MB/s)
+> > >   Rnd write, 128KB, QD=32, 1 job :  IOPS=1278, BW=160MiB/s (168MB/s)
+> > >   Rnd write, 128KB, QD=32, 4 jobs:  IOPS=1278, BW=160MiB/s (168MB/s)
+> > >   Seq read,  128KB,  QD=1, 1 job :  IOPS=853, BW=107MiB/s (112MB/s)
+> > >   Seq read,  128KB, QD=32, 1 job :  IOPS=1511, BW=189MiB/s (198MB/s)
+> > >   Seq read,  512KB,  QD=1, 1 job :  IOPS=240, BW=120MiB/s (126MB/s)
+> > >   Seq read,  512KB, QD=32, 1 job :  IOPS=386, BW=193MiB/s (203MB/s)
+> > >   Seq read,    1MB, QD=32, 1 job :  IOPS=200, BW=201MiB/s (211MB/s)
+> > >   Seq write, 128KB,  QD=1, 1 job :  IOPS=749, BW=93.7MiB/s (98.3MB/s)
+> > >   Seq write, 128KB, QD=32, 1 job :  IOPS=1266, BW=158MiB/s (166MB/s)
+> > >   Seq write, 512KB,  QD=1, 1 job :  IOPS=198, BW=99.0MiB/s (104MB/s)
+> > >   Seq write, 512KB, QD=32, 1 job :  IOPS=352, BW=176MiB/s (185MB/s)
+> > >   Seq write,   1MB, QD=32, 1 job :  IOPS=184, BW=184MiB/s (193MB/s)
+> > >   Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=287, BW=145MiB/s (152MB/s)
+> > >  IOPS=299, BW=149MiB/s (156MB/s)
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > > Frank Li (5):
+> > >       dmaengine: dw-edma: Add dw_edma_core_ll_cur_idx() to get completed link entry pos
+> > >       dmaengine: dw-edma: Move dw_hdma_set_callback_result() up
+> > >       dmaengine: dw-edma: Make DMA link list work as a circular buffer
+> > >       dmaengine: dw-edma: Dynamitc append new request during dmaengine running
+> > >       dmaengine: dw-edma: Add trace support
+> > >
+> > >  drivers/dma/dw-edma/Makefile          |   3 +
+> > >  drivers/dma/dw-edma/dw-edma-core.c    | 215 ++++++++++++++++++++++++----------
+> > >  drivers/dma/dw-edma/dw-edma-core.h    |  42 ++++++-
+> > >  drivers/dma/dw-edma/dw-edma-trace.c   |   4 +
+> > >  drivers/dma/dw-edma/dw-edma-trace.h   | 150 ++++++++++++++++++++++++
+> > >  drivers/dma/dw-edma/dw-edma-v0-core.c |  39 +++++-
+> > >  drivers/dma/dw-edma/dw-hdma-v0-core.c |  17 +++
+> > >  7 files changed, 409 insertions(+), 61 deletions(-)
+> > > ---
+> > > base-commit: 020f6d8442f35105660a29d0d236d3f8650c8142
+> > > change-id: 20251212-edma_dymatic-a57843ff0dfe
+> > >
+> > > Best regards,
+> > > --
+> > > Frank Li <Frank.Li@nxp.com>
+> > >
 

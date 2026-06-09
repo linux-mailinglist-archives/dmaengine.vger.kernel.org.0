@@ -1,215 +1,226 @@
-Return-Path: <dmaengine+bounces-11379-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11380-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 5t22BTCXKGpPGgMAu9opvQ
-	(envelope-from <dmaengine+bounces-11379-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:44:00 +0200
+	id yysWEK+dKGpeGwMAu9opvQ
+	(envelope-from <dmaengine+bounces-11380-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 01:11:43 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 667F9664A34
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:43:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D660E664BCC
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 01:11:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=WIcE8JCE;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11379-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11379-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=OQLqyvEX;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11380-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11380-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1F331303282F
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2026 22:36:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 64A83303CD2E
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2026 23:11:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A0DF3A6EEB;
-	Tue,  9 Jun 2026 22:36:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49C313F076C;
+	Tue,  9 Jun 2026 23:11:26 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2820939524E
-	for <dmaengine@vger.kernel.org>; Tue,  9 Jun 2026 22:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD95301708;
+	Tue,  9 Jun 2026 23:11:24 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781044618; cv=none; b=qfv7NWHCAfvBcT4/TzaadRSvv+t2GqqCr6ekNCrDZoWShYLidaJAWndZNqC4pJE6WG6j3I7IYRNDlvLlBec1MCYp0wkgNQ9mfstbv5r5uJBDF6DFkgM3qGQt8ape1P6B1N40JYe5uEQC3uU3sJwbxUifIIx55QHPMarEAh/9bhg=
+	t=1781046686; cv=none; b=osW2KXCi9X1t9Yoyo2MsjLyoHuF8j8tjGsByZQSzZz0xm2rZAXn4MDTYmHQyJoPgY7Uqxalw+HtTfRlgxLftFfe8XqcJ4fQf7nqmKqxUqoGQ/DC8rlP+NidDg/CDhC90BEpm2CeK3E2lvq8Ke2pOF+kY57sjNFovDyLYx5yFxoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781044618; c=relaxed/simple;
-	bh=zJexg/NBBCOq0fCj+qpiUzOzBmAUD+rWZI9KhNii6YY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fpp9MRZ1NL/4rhvILtBKS8XYmc0RdSvBtvHfAHQ3XNPjrH8CfFwBz//z0rXkwmw1rrdvHVhH+LN8PJrlU47Y1qkmaD6OPBpz+eS6jQkI2aKyTAYHqBIKaWeVxd3Q+PlwfuQj7GNfTdZVBszoReANFebH9fcdNOOHl53qXemwRYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WIcE8JCE; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 828291F00893;
-	Tue,  9 Jun 2026 22:36:56 +0000 (UTC)
+	s=arc-20240116; t=1781046686; c=relaxed/simple;
+	bh=cIUrQfjWhexxtEG3nThdTBHEdFiN5tzrGQ/NU86nAuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dzWalfGQutj+tWeYWLrP8XLiiEXUGsecijxyaiIOsa2miYf3DPPXfEYHigcHgMvz1IU9Vovec83ojw45RVwS5EOD2tk/ABszpd2SCLL9jK3g4nZ8hpkyuvStWeo3qiAUxZTZuEs6GDOxzYImgosrXJDTAQGlZ7p43YvjpGCGiUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQLqyvEX; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D908C1F00893;
+	Tue,  9 Jun 2026 23:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781044616;
-	bh=A2WN6b6qP+MFejUZ08EyYWe8jKo8wM7vZ2FT8yenL9g=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WIcE8JCEFoUzVd73T+AlF+Lz+PqDV/iSxAXjp26kfP/4PP9I2Ds36IoTq2mL67ZND
-	 T2M9iUc/hAh8g5vkojp8rj2B/uARVgRUONHsJnGLFr6sAq646JMCzb7LHL47mt/vk0
-	 T7UvAz0uA4/hSX4dXpOjJkFX63QeecxHyLu8TMIAd/DAwatM+BXHOteBcKE4NMPv/L
-	 uK1L1qTB74CCTL2h68oaKb2Uzmuptu/ynR3fOgy4O8yzTliRZKzkCV+SaAbylnmbd2
-	 ub/5EdEwZDtBQ88Y4kiv+xXlKKmneeoEtk5l5aAZjpTiWjO5DhjKXL/7vPhyrk1y0w
-	 Vug50sskIUNKQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCHv3 13/15] dmaengine: fsldma: replace irq_of_parse_and_map
- with of_irq_get
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Rosen Penev" <rosenp@gmail.com>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260609221926.35538-14-rosenp@gmail.com>
-References: <20260609221926.35538-14-rosenp@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 22:36:56 +0000
-Message-Id: <20260609223656.828291F00893@smtp.kernel.org>
+	s=k20260515; t=1781046684;
+	bh=RTQ7Dfa+YIedQNlrk2pBh0acv1cJxf0hqLHt+u/Ia8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=OQLqyvEXsQZCwc5mO4VNP1T5EDWq5EHl3fArZI4AsaiVQjoGwHMLSdaYH3feXYArf
+	 fA6x7Iqa5b1Vdz7luA+0gDRuJ1XmAEUkt/r7ywxYQMlscO7jIp85Mn7Bt/a3Vkib/K
+	 XHkJTs3ngEVXcvWR3YkCRbm7FYaE6fnBJbU/D1fQUNY1YbBiR8reElwFHflN+o5FMC
+	 2kGiJh2HfnxFpucnbb1auSIIVjs9G8jtku5/p/NM7tHSgcKrFaYMvunEtSYvxtPMY4
+	 VlIIKbCjTFTIquDLJGrYzR9sMbZaVxpIwo4E11M6Qj9dFtBTdmz5wZnGVN4e4fMzNB
+	 U3k49y4B9I9PA==
+Date: Wed, 10 Jun 2026 00:11:19 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Guodong Xu <docular.xu@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] dt-bindings: dmaengine: Add SpacemiT K1 PDMA
+ request numbers
+Message-ID: <20260610-atrophy-gullible-938789978f76@spud>
+References: <20260609-b4-k1-pdma-req-macros-v2-0-5d5d7b997b54@gmail.com>
+ <20260609-b4-k1-pdma-req-macros-v2-1-5d5d7b997b54@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mDjp111cseA+tWiA"
+Content-Disposition: inline
+In-Reply-To: <20260609-b4-k1-pdma-req-macros-v2-1-5d5d7b997b54@gmail.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
+X-Spamd-Result: default: False [-5.26 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:docular.xu@gmail.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:dlan@kernel.org,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:linux-kernel@vger.kernel.org,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-riscv@lists.infradead.org,m:spacemit@lists.linux.dev,m:docularxu@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[conor@kernel.org,dmaengine@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11379-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_THREE(0.00)[4];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,dmaengine@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-11380-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,lists.linux.dev:replyto,smtp.kernel.org:mid,vger.kernel.org:from_smtp,sashiko.dev:url]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 667F9664A34
+X-Rspamd-Queue-Id: D660E664BCC
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
 
-New issues:
-- [High] The patch adds deferred probe support for per-channel IRQs but neg=
-lects the per-controller IRQ.
-- [Medium] Negative error codes from `of_irq_get()` are incorrectly logged =
-and passed to the IRQ mapping subsystem.
+--mDjp111cseA+tWiA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Pre-existing issues:
-- [High] Missing `tasklet_kill()` leads to potential use-after-free of the =
-channel structure.
---
+On Tue, Jun 09, 2026 at 03:46:38PM -0400, Guodong Xu wrote:
+> Add a dt-bindings header that gives symbolic names to the SpacemiT K1
+> PDMA request lines of the non-secure peripherals. Device trees can use
+> these K1_PDMA_* macros instead of magic numbers.
+>=20
+> Signed-off-by: Guodong Xu <docular.xu@gmail.com>
+> ---
+> V2: Drop the #dma-cells description change in spacemit,k1-pdma.yaml; the
+>     request numbers are hardware-fixed and unused by the driver.
 
-commit 2b8b79cb3c43b58e4e60c937bb6a8f2ff23ac916
-Author: Rosen Penev <rosenp@gmail.com>
+Worth noting that while this wasn't the change I wanted, I didn't
+express myself clearly and Guodong is going to send a v3 after I
+clarified:
+https://lore.kernel.org/all/6ycdvhpgygnelzp3ot63xtzcnlvac7emngvj7tviiclst4a=
+7km@kjq7oqvecnxx/
 
-dmaengine: fsldma: replace irq_of_parse_and_map with of_irq_get
-   =20
-Use of_irq_get() which returns a negative error code on failure
-instead of silently returning 0. Split the IRQ validation check
-in fsldma_request_irqs to handle three cases.
+ta,
+Conor.
 
-> The fsldma_free_irqs() function's !chan->irq check is unchanged
-> since both 0 and negative values mean no IRQ to free.
+> ---
+>  include/dt-bindings/dma/spacemit,k1-pdma.h | 56 ++++++++++++++++++++++++=
+++++++
+>  1 file changed, 56 insertions(+)
+>=20
+> diff --git a/include/dt-bindings/dma/spacemit,k1-pdma.h b/include/dt-bind=
+ings/dma/spacemit,k1-pdma.h
+> new file mode 100644
+> index 0000000000000..491976516550a
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/spacemit,k1-pdma.h
+> @@ -0,0 +1,56 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * This header provides DMA request number for non-secure peripherals of
+> + * SpacemiT K1 PDMA.
+> + *
+> + * Copyright (c) 2026 Guodong Xu <docular.xu@gmail.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_DMA_SPACEMIT_K1_PDMA_H_
+> +#define _DT_BINDINGS_DMA_SPACEMIT_K1_PDMA_H_
+> +
+> +#define K1_PDMA_UART0_TX	3
+> +#define K1_PDMA_UART0_RX	4
+> +#define K1_PDMA_UART2_TX	5
+> +#define K1_PDMA_UART2_RX	6
+> +#define K1_PDMA_UART3_TX	7
+> +#define K1_PDMA_UART3_RX	8
+> +#define K1_PDMA_UART4_TX	9
+> +#define K1_PDMA_UART4_RX	10
+> +#define K1_PDMA_I2C0_TX		11
+> +#define K1_PDMA_I2C0_RX		12
+> +#define K1_PDMA_I2C1_TX		13
+> +#define K1_PDMA_I2C1_RX		14
+> +#define K1_PDMA_I2C2_TX		15
+> +#define K1_PDMA_I2C2_RX		16
+> +#define K1_PDMA_I2C4_TX		17
+> +#define K1_PDMA_I2C4_RX		18
+> +#define K1_PDMA_SPI3_TX		19
+> +#define K1_PDMA_SPI3_RX		20
+> +#define K1_PDMA_I2S0_TX		21
+> +#define K1_PDMA_I2S0_RX		22
+> +#define K1_PDMA_I2S1_TX		23
+> +#define K1_PDMA_I2S1_RX		24
+> +#define K1_PDMA_UART5_TX	25
+> +#define K1_PDMA_UART5_RX	26
+> +#define K1_PDMA_UART6_TX	27
+> +#define K1_PDMA_UART6_RX	28
+> +#define K1_PDMA_UART7_TX	29
+> +#define K1_PDMA_UART7_RX	30
+> +#define K1_PDMA_UART8_TX	31
+> +#define K1_PDMA_UART8_RX	32
+> +#define K1_PDMA_UART9_TX	33
+> +#define K1_PDMA_UART9_RX	34
+> +#define K1_PDMA_I2C5_TX		35
+> +#define K1_PDMA_I2C5_RX		36
+> +#define K1_PDMA_I2C6_TX		37
+> +#define K1_PDMA_I2C6_RX		38
+> +#define K1_PDMA_I2C7_TX		39
+> +#define K1_PDMA_I2C7_RX		40
+> +#define K1_PDMA_I2C8_TX		41
+> +#define K1_PDMA_I2C8_RX		42
+> +#define K1_PDMA_CAN0_RX		43
+> +#define K1_PDMA_QSPI_RX		44
+> +#define K1_PDMA_QSPI_TX		45
+> +
+> +#endif /* _DT_BINDINGS_DMA_SPACEMIT_K1_PDMA_H_ */
+>=20
+> --=20
+> 2.43.0
+>=20
 
-[Severity: Medium]
-Is this description accurate? In C, negative values like -EPROBE_DEFER
-evaluate to true. This means !chan->irq will be false for negative error
-codes, skipping the intended check, and potentially passing a negative
-value to free_irq() or irq_dispose_mapping() later.
+--mDjp111cseA+tWiA
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Assisted-by: opencode:big-pickle
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+-----BEGIN PGP SIGNATURE-----
 
-> diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-> index 22d62d958abd9..b2259f8f69ab9 100644
-> --- a/drivers/dma/fsldma.c
-> +++ b/drivers/dma/fsldma.c
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaiidlwAKCRB4tDGHoIJi
+0gqdAQDHkJNkld9XKOrvHNTBvPSzUlW9HGCxoEAZz+aOul9PggD/ZoDUW2fCKmZW
+bBkaF7fEvO7Fd+9eaehZv6GsOP6twgU=
+=vNgE
+-----END PGP SIGNATURE-----
 
-[ ... ]
-
-> @@ -1185,7 +1191,7 @@ static int fsl_dma_chan_probe(struct fsldma_device =
-*fdev,
->  	dma_cookie_init(&chan->common);
-> =20
->  	/* find the IRQ line, if it exists in the device tree */
-> -	chan->irq =3D irq_of_parse_and_map(node, 0);
-> +	chan->irq =3D of_irq_get(node, 0);
-
-[Severity: High]
-Does this change miss updating the per-controller IRQ in fsldma_of_probe()?
-
-If irq_of_parse_and_map() remains in fsldma_of_probe() to set fdev->irq:
-
-    fdev->irq =3D irq_of_parse_and_map(op->dev.of_node, 0);
-
-It will silently return 0 on deferral. The driver then falls back to
-checking per-channel IRQs. If they don't exist, probe fails completely
-with -EINVAL instead of correctly deferring, preventing deferred probe
-from working for the standard per-controller IRQ configuration.
-
-[Severity: Medium]
-Will this logging logic incorrectly evaluate negative error codes? In
-fsl_dma_chan_probe(), just after this block:
-
-    dev_info(fdev->dev, "#%d (%s), irq %d\n", chan->id, compatible,
-             chan->irq ? chan->irq : fdev->irq);
-
-Since chan->irq now stores negative error codes from of_irq_get(), the
-ternary operator will evaluate them as true and log the error code
-instead of falling back to the controller IRQ.
-
-Additionally, is it safe to unconditionally pass a negative error code to
-irq_dispose_mapping() in fsl_dma_chan_remove() if chan->irq failed?
-
-    static void fsl_dma_chan_remove(struct fsldma_chan *chan)
-    {
-        irq_dispose_mapping(chan->irq);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but is it possible for a
-tasklet to trigger a use-after-free here?
-
-During teardown, fsl_dma_chan_remove() does:
-
-    static void fsl_dma_chan_remove(struct fsldma_chan *chan)
-    {
-        irq_dispose_mapping(chan->irq);
-        list_del(&chan->common.device_node);
-        iounmap(chan->regs);
-        kfree(chan);
-    }
-
-It frees the channel memory without first calling
-tasklet_kill(&chan->tasklet). If a tasklet was scheduled and remains
-pending in the softirq queue, it will execute dma_do_tasklet() after the
-chan structure has been freed, dereferencing freed memory.
-
-> =20
->  	/* Add the channel to DMA device channel list */
->  	list_add_tail(&chan->common.device_node, &fdev->common.channels);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609221926.3553=
-8-14-rosenp@gmail.com?part=3D1
+--mDjp111cseA+tWiA--
 

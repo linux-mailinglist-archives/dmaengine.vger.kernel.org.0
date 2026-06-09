@@ -1,202 +1,169 @@
-Return-Path: <dmaengine+bounces-11372-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11374-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 1LF+B1iSKGqkGQMAu9opvQ
-	(envelope-from <dmaengine+bounces-11372-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:23:20 +0200
+	id 3dqdEZCUKGoAGgMAu9opvQ
+	(envelope-from <dmaengine+bounces-11374-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:32:48 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 861696648AE
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:23:19 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38065664984
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:32:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=VWauepGf;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11372-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11372-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="eehznUL/";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11374-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11374-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 84BAF301A438
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2026 22:20:47 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id C2DFC3010809
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2026 22:28:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D89737D133;
-	Tue,  9 Jun 2026 22:20:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 767C6403B14;
+	Tue,  9 Jun 2026 22:28:49 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FED54D2EF1
-	for <dmaengine@vger.kernel.org>; Tue,  9 Jun 2026 22:20:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6734A41167C
+	for <dmaengine@vger.kernel.org>; Tue,  9 Jun 2026 22:28:48 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781043616; cv=none; b=nWzkBMR2jSrmNNZ0+Pg+rjpZ7ixGYTni+f1TSYLhK3y08S5T3ozCn1quV6ITg8o7Be2uIO1SpSCiOhxDYavCt1mocCOR3e00h7iQ0sZZuvpUsHvppHE8tEF9LfkZkCt57aP9xG/GQXkChetHT5+RfADgmyPg7HG6XTOBizVWGbQ=
+	t=1781044129; cv=none; b=F6T49weR2AxqQUhr67yuVws53/BZ3hcHjZDjSudNMaH6Mq/65x3RUiCH/OztFiOwfU2EnOuOZsFdDNmyQjtrtHWFgN39m0ZvQU+c0nDtvuRMSs2/zGtTKjppcJNmvM2hyIoPImHeGu1t29I516g9C8godqpspm69xXJedjkfgWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781043616; c=relaxed/simple;
-	bh=9Yea6xTnMAtPCPNuS9VV3xysMhmXAvdi4sueisMN3io=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HAqasddKHdcPLkrTC6zQYNUB9GpvWWYmOhqOuFA2pFiqfpWNQLLVo++6AYLUUSQbt5HHE0GPql+gQZZXvtmoH7Ri/jOyrp1rKYHAKErRhTIzaqJkSYu7bBa+mqlMcakTv/UG4jVC+UJbfqpnIB/15T9nv/36okho084+exL3Bik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VWauepGf; arc=none smtp.client-ip=209.85.216.53
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-36da8439078so5404453a91.2
-        for <dmaengine@vger.kernel.org>; Tue, 09 Jun 2026 15:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781043614; x=1781648414; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7abx5gUeKQ1VRxaWBSzbzTorD8zfPoqeElZR6g6xg44=;
-        b=VWauepGfrsCMINXFx+icD3YiflHTFMgH8mD3+Nvr6QR41UOr0CFC1tsDgO5uugKnS/
-         6zOx3NEBW2m303t8b4F51gY5xAOPlE5EkX0k3tRTE2QL1P5FtIpVye01bdEBkkuV/Mym
-         kJBzsPc8inemI0RLGDP3NLw7blUURy5t1B2AXhrOBrWaZrwMg0IusQPWUBM4o5hFWIWd
-         RQv6bGYvWP7sW6q34IBNLrPxmZvvKn0kf5ukGdZm9d96kSErADNzFvNtcu55fdvHrCSG
-         g4asjeaFyrOyZ21juY0R6EgZxgG+5qfo90ewfRPr6cq31bRJ4fuMq8/emNobZ6Sn5m8q
-         q75Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781043614; x=1781648414;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7abx5gUeKQ1VRxaWBSzbzTorD8zfPoqeElZR6g6xg44=;
-        b=Kt0mgCvKQCiwXNkvdtLEhnA/L79Z1TtQZiF5OuwoN+Rigp6zz9DsNydUndvwBjJsmy
-         8GGh4FhrPrRh7AJLjuX9BGMHGL5Jmedxje+OWLQABkB7l2U+K28c+Jnh/yms0Dxnne+0
-         5VudFuHaBby5cvr36xC22SHXsTa/eAmPN4YP+zqQuXV3iQDrqfnGvSgwTOlsimRlPpEK
-         Cubk0qGsrlc4p22bfNU9SMDSUmmUl85Svf6Q+SqAiodqyxrfnVDBehVCcS6ZAdnU2W5f
-         YvL5+0exzHMjl36ueUEGLgPibZ0nz7AUTksd7Q251SGVWTWsiDzB45Ou8ttetnkovnzR
-         b4Nw==
-X-Gm-Message-State: AOJu0YxFsS5roTl2Aq6u8xGOf5cIUo5scuRTx7y/N2IhLppUuzw1MLAh
-	/culAd0GB22RZy+wNtKEgcXC9vidbtfdtWbkfKBFalRwIbQpOnxjPRUdTmG3wnph
-X-Gm-Gg: Acq92OH7uujXZac4MQFS98XTsObpJT6IXv1IGhJRLgcONttgiIy8er/F2/qfPS9y+hA
-	8Cv0xZNNsEmHsY6kFM39ets4A3LYXNaHhe/Oeey0VBTgTJS22m6dYmiIup/gsOCCdr4JQRRLM2p
-	4NLft/G773nImrspRvZnL2YOPkIglN8EEfKWwEmtr527nTFjkX1+FVevKHiaAbqlzfPlA3qMHot
-	gnfHm9OBIgThePQtbZREorkIidFIzaVjNtgcoinZTvp1s0ncTEQFx7yW2AZRud4C6G0th5KKpj7
-	h43aBwhH93pvlkFDbcz2NMKE+XESkPlF0uR6Jd4vkncv8LW1GPLLqBx0vSFAZUeU/ScdYBEcS06
-	D83lF1wClC4tolT/mEPpvxhfFNPHu5yqR19B/TK1UyLafTBXFxzgrOvGXVTQJtf9uUsYzSJgEJ8
-	zP+5btsd7f+xBrhp7gsmtIPfTVlADA8meVpQGRpdXv6zrdztJ36/IQEYfGF2vL5+6MIBy59MGys
-	b1Pe3VS0RtUmMqjyl0o3pWATEbx9mXh9y6TTIVXbgpJKHg3dWX6bTEV
-X-Received: by 2002:a17:90b:5204:b0:36d:df4f:ab2 with SMTP id 98e67ed59e1d1-370f0772dd1mr26545593a91.13.1781043614688;
-        Tue, 09 Jun 2026 15:20:14 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c85df04ff24sm19661834a12.14.2026.06.09.15.20.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 15:20:14 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Zhang Wei <zw@zh-kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org (open list),
-	linuxppc-dev@lists.ozlabs.org (open list:FREESCALE DMA DRIVER),
-	llvm@lists.linux.dev (open list:CLANG/LLVM BUILD SUPPORT:Keyword:\b(?i:clang|llvm)\b)
-Subject: [PATCHv3 15/15] dmaengine: fsldma: fix kernel-doc param names to match function signatures
-Date: Tue,  9 Jun 2026 15:19:26 -0700
-Message-ID: <20260609221926.35538-16-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260609221926.35538-1-rosenp@gmail.com>
-References: <20260609221926.35538-1-rosenp@gmail.com>
+	s=arc-20240116; t=1781044129; c=relaxed/simple;
+	bh=DYnL6EG1lGhwXl+DfTqV2ae+Fpv7/Vpwp0n8FMyUp7Y=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=l4L6EBgdnDsLr3QKN7F3j/r2OgZkEDM0zKEe+J3h6TNonGdyds/MXag/nqxG2zuDfckKTRKqlWV7PWALLTXhCqzKl8Z3aWBge2VGySzbDG+qTE5FBtqSsMeAAm59mrJx33LeW8tfBPWUbIoJ8jQmDVnwODD8Ciam+VapCiIRXvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eehznUL/; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA9B1F00898;
+	Tue,  9 Jun 2026 22:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781044127;
+	bh=n/mBjyKIZ5tBtQ5ZxX1Fb1V0zDDT24bIB8IkMCEJ1E0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=eehznUL/DdZzQFQ8est6NE6SXsuGwpjYnjKZcg39q+60ZD9Gbxgs/6BqCzQaLW4FL
+	 OzrpuF0GiGCIztSwPTxzR27XcXefhXxGX2cHdsk5ZJWZ3nH+B26tVknHStIgoyzKSX
+	 aZVSpBPva21CIwdakOFlub69zNS9Fls+U8YiR2Svm1Lsol4reNZhvKw0EfGcMlPFiF
+	 vW8i0vGg5VeFhj88PJFH2Y4Xxm0uyvaufKbpwyTwrjPIsgdPV3B3p/1Tce1V1IqaAH
+	 E52Nwzu01TDcljND9jMYqZIdg49wzLuBWToqvYPKKBWa1mPYgfcJkAECQSqXzpJnHe
+	 plZfWU7fMPYaQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCHv3 07/15] dmaengine: fsldma: fix request_irqs unwind
+ freeing unregistered IRQ
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Rosen Penev" <rosenp@gmail.com>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260609221926.35538-8-rosenp@gmail.com>
+References: <20260609221926.35538-8-rosenp@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 09 Jun 2026 22:28:47 +0000
+Message-Id: <20260609222847.ADA9B1F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,zh-kernel.org,gmail.com,google.com,vger.kernel.org,lists.ozlabs.org,lists.linux.dev];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11372-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:zw@zh-kernel.org,m:nathan@kernel.org,m:nick.desaulniers+lkml@gmail.com,m:morbo@google.com,m:justinstitt@google.com,m:linux-kernel@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:llvm@lists.linux.dev,m:nickdesaulniers@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_TLS_LAST(0.00)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11374-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,lkml];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 861696648AE
+X-Rspamd-Queue-Id: 38065664984
 
-Fix kernel-doc warnings where the documented parameter names
-(@chan) no longer match the actual function signatures (@dchan),
-and add the missing @cookie and @txstate parameters to
-fsl_tx_status.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-These are pre-existing mismatches that predate the recent
-devm conversion series.
+Pre-existing issues:
+- [High] Failure to kill the tasklet before freeing the channel structure l=
+eads to a potential Use-After-Free.
+--
 
-Assisted-by: opencode:big-pickle
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/dma/fsldma.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+commit 5aba4f3ed6853fa11aefa9651d0a60e344f6e486
+Author: Rosen Penev <rosenp@gmail.com>
 
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index d4c9b81ade0d..c0dbcd09999e 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -685,7 +685,7 @@ static void fsldma_cleanup_descriptors(struct fsldma_chan *chan)
- 
- /**
-  * fsl_dma_alloc_chan_resources - Allocate resources for DMA channel.
-- * @chan : Freescale DMA channel
-+ * @dchan : Freescale DMA channel
-  *
-  * This function will create a dma pool for descriptor allocation.
-  *
-@@ -742,7 +742,7 @@ static void fsldma_free_desc_list_reverse(struct fsldma_chan *chan,
- 
- /**
-  * fsl_dma_free_chan_resources - Free all resources of the channel.
-- * @chan : Freescale DMA channel
-+ * @dchan : Freescale DMA channel
-  */
- static void fsl_dma_free_chan_resources(struct dma_chan *dchan)
- {
-@@ -878,7 +878,7 @@ static int fsl_dma_device_config(struct dma_chan *dchan,
- 
- /**
-  * fsl_dma_memcpy_issue_pending - Issue the DMA start command
-- * @chan : Freescale DMA channel
-+ * @dchan : Freescale DMA channel
-  */
- static void fsl_dma_memcpy_issue_pending(struct dma_chan *dchan)
- {
-@@ -891,7 +891,9 @@ static void fsl_dma_memcpy_issue_pending(struct dma_chan *dchan)
- 
- /**
-  * fsl_tx_status - Determine the DMA status
-- * @chan : Freescale DMA channel
-+ * @dchan : Freescale DMA channel
-+ * @cookie : DMA transaction identifier
-+ * @txstate : DMA transaction state
-  */
- static enum dma_status fsl_tx_status(struct dma_chan *dchan,
- 					dma_cookie_t cookie,
--- 
-2.54.0
+dmaengine: fsldma: fix request_irqs unwind freeing unregistered IRQ
 
+This commit fixes the unwind loop in fsldma_request_irqs() to skip the
+failed channel by decrementing the index before the loop. This prevents
+freeing an unregistered IRQ when request_irq() fails.
+
+> diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+> --- a/drivers/dma/fsldma.c
+> +++ b/drivers/dma/fsldma.c
+> @@ -1085,7 +1085,7 @@ static int fsldma_request_irqs(struct fsldma_device=
+ *fdev)
+>  	return 0;
+> =20
+>  out_unwind:
+> -	for (/* none */; i >=3D 0; i--) {
+> +	for (i--; i >=3D 0; i--) {
+
+[Severity: High]
+This is a pre-existing issue, but does the cleanup process fail to kill
+the tasklet before freeing the channel?
+
+If fsldma_request_irqs() fails and triggers this unwind, the error path
+eventually leads to fsldma_of_probe() calling fsl_dma_chan_remove() for
+the previously initialized channels.
+
+fsl_dma_chan_remove() unmaps registers and frees the channel memory via
+kfree(chan), but it omits tasklet_kill(&chan->tasklet):
+
+drivers/dma/fsldma.c:fsl_dma_chan_remove() {
+...
+	irq_dispose_mapping(chan->irq);
+	list_del(&chan->common.device_node);
+	iounmap(chan->regs);
+	kfree(chan);
+}
+
+Since interrupts are shared via IRQF_SHARED, the interrupt handler could
+schedule the tasklet at any point after request_irq() is called. If the
+tasklet is scheduled just before free_irq() executes during this unwind
+path, could it remain pending and run after kfree(chan), resulting in a
+use-after-free?
+
+>  		chan =3D fdev->chan[i];
+>  		if (!chan)
+>  			continue;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609221926.3553=
+8-8-rosenp@gmail.com?part=3D1
 

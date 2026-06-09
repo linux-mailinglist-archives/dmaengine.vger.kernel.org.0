@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-11377-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11378-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id aRhfDkiWKGo5GgMAu9opvQ
-	(envelope-from <dmaengine+bounces-11377-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:40:08 +0200
+	id 9MbEBFGWKGo7GgMAu9opvQ
+	(envelope-from <dmaengine+bounces-11378-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:40:17 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 867E1664A07
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:40:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CB68664A0F
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 00:40:16 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=aYPspgnh;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11377-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11377-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=jxpdsLj7;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11378-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11378-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4151230177B2
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2026 22:31:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E828E30071DB
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2026 22:32:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0F2217A309;
-	Tue,  9 Jun 2026 22:31:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B66B17A309;
+	Tue,  9 Jun 2026 22:32:05 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89ABC3438A0
-	for <dmaengine@vger.kernel.org>; Tue,  9 Jun 2026 22:31:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C1935A387
+	for <dmaengine@vger.kernel.org>; Tue,  9 Jun 2026 22:32:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781044293; cv=none; b=eiVjIerKZI9SXOtv9j3K9GnCo3L2BYKJsCqKImRxnaiL4JbrE+bvd8zYlUc/IPIssKGrXM4yFA8OT2Sp0GIf9/1X7F/s6OqgWEfyXHkBesCBnf7I2A8LLGo6bJVdUWnZ+/rkLYRvkcOum2xVEOYwnrYZF+bJKTZ0TvB3ljMH7uk=
+	t=1781044325; cv=none; b=fFjG/AUV3r4AWUVaKmIwEZMze9c5nqBnpMwvgJKc7yMjW7K+51ZAg87Tv/FrIINueWTMEVK7oSlQMAgqKugJBnPMzHBzC2ia3YI7+of+rcsEjJOweUFySf7zXsPh8kH+4sFIAdZorlSkYaZk6MPrsqoKNgLREY8tgebjbjzHvjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781044293; c=relaxed/simple;
-	bh=p0ZlgPgxaXE3TjfCoLNGgcEJ5r4QoEWdPk+1Xsjd30I=;
+	s=arc-20240116; t=1781044325; c=relaxed/simple;
+	bh=/9YkbTZ5Bsx1Yhujs+V42U2WJ78wfzVKIgLo8lwLZZw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=VE20uQSmfG9gHlNBr40ZuMgBDsFliMTE4YK5b3Po6OWf81OQiGjTIcTW3tIfhBZ6RNP4+XBNSVd5JhGTm8FZMTNa4Oz0du/cCGRkGpqY17+Bye5fq8TTufF6uFur6Rb8htgb3bssDLL0Jrx8qDoMY+Yt/B+YmfFgDPHUBsQIPlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYPspgnh; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060021F00893;
-	Tue,  9 Jun 2026 22:31:31 +0000 (UTC)
+	 Message-Id; b=Bz82KntSXguPZXu6FZRd4jDr09pWok5+ljzyr6DfjHKf0RXc8lR0IaD20z7JZ2bi2gGM+wD8wm0hKZNbIuuvP/VpD9L23wFW4vubs38IhfFc8T7Ne5dlVSeDMtYtBh4RKs+ib09uKTK5sfz8Lpf/Vcu0MKniCxUGdXjRHk4gHI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxpdsLj7; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15D51F00893;
+	Tue,  9 Jun 2026 22:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781044292;
-	bh=iTwi7p2fTp1jHNGCOgXdNjXhOqs+2J3Wb2O90H7QSCc=;
+	s=k20260515; t=1781044323;
+	bh=97CdEc9NWuJbr5LAM6qTEgac5IchBi7yM/lx8tNXfxY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aYPspgnh4Z2nFsIO/H1Y/tE8kHzpJXWviE7EHakgoGUeA4H5hZewERY9M4eprXsgy
-	 rtBnYYwWA7K79HqQ5lM+c4B/VnmW753YbZL3FTi7sPbLwKTseBmAEjiz+CL3gKehg9
-	 RUIqrfsd8QP86WrLmgxS+VCwQmp15nu4JsU6d+e9o4TG4oRseedDNneWPlNS6N7Qsy
-	 TUSce+ErPcJbMP8w7CNxk4HNNfMZSD9GvUnH+L92iyA6M2R480tHGTxZJkAlTj97sM
-	 WrJdfWkEFmW/bnV8GTSe5/cfYfnwwZhDxD1tnlq8ZzQu2pJ2XsNcWmO0qAhhd7q63g
-	 quvYJQ554U1Ag==
+	b=jxpdsLj7HjW85+Zmr1XvywIjjLkF6Te8HWBzu0WTBTXnQ1GD1gP4lHD20/yruM4KC
+	 jyqGqLx72IAxroVzBHA1Mk04zywtLvvKzNoivf1yVRkimfIk3yOx5TyAmQi9l+RQuP
+	 Tgu/bFCtquETj4PlWYK+1uF65p7T2q7NEgfm1CmoZsD6wmCfU2eBnRoPkglXB4Bz3X
+	 ez2DAMS0JPAZs1r/CvI62zAv7CV5sIlyrkSmw7cT1RlU9Q9zT7U5eXVK0YW1DAozKa
+	 cdT2bB/MJnpqzYvctwwiWJznoFqv7ybRhOy5YTWQBmF3P4iungRfv2Pp4o5GymaPaY
+	 m7wL2ATeRLj5Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCHv3 01/15] dmaengine: fsldma: kill tasklet before removing
- channel
+Subject: Re: [PATCHv3 02/15] dmaengine: fsldma: drop desc_lock before
+ invoking client callback
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Rosen Penev" <rosenp@gmail.com>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260609221926.35538-2-rosenp@gmail.com>
-References: <20260609221926.35538-2-rosenp@gmail.com>
+Cc: Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260609221926.35538-3-rosenp@gmail.com>
+References: <20260609221926.35538-3-rosenp@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 22:31:31 +0000
-Message-Id: <20260609223132.060021F00893@smtp.kernel.org>
+Date: Tue, 09 Jun 2026 22:32:03 +0000
+Message-Id: <20260609223203.B15D51F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -78,17 +78,17 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11377-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11378-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:Frank.Li@kernel.org,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
 	ALIAS_RESOLVED(0.00)[];
@@ -104,158 +104,223 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MISSING_XM_UA(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,lists.linux.dev:replyto,sashiko.dev:url,smtp.kernel.org:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 867E1664A07
+X-Rspamd-Queue-Id: 9CB68664A0F
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
 
+New issues:
+- [Critical] Hardware State Corruption due to incorrect `chan->idle` assign=
+ment.
+- [Critical] Premature completion of active descriptors due to stale `curr_=
+phys` caching.
+- [High] Concurrency, callback ordering violation, and completion cookie re=
+gression.
+- [High] Use-After-Free / NULL pointer dereference of descriptor pool durin=
+g teardown.
+
 Pre-existing issues:
-- [High] Unhandled Error Return from dma_async_device_register() leads to s=
-ilent probe failure and resource leaks.
-- [High] Off-by-one error in the fsldma_request_irqs() error unwind path at=
-tempts to free the IRQ that just failed to be requested.
-- [High] Double unlock in fsldma_suspend_late() error path causes unbalance=
-d spinlocks.
-- [High] Client callback is invoked with the channel descriptor spinlock he=
-ld, which can lead to a self-deadlock.
+- [High] Missing `tasklet_kill()` in `fsl_dma_chan_remove` leading to Use-A=
+fter-Free on `chan`.
 --
 
-commit 89849d3f67e5b5c4ccce67310ff8f24602b221dc
+commit 3632dcf83e269dafd0b93a77697b31d6b209bd8a
 Author: Rosen Penev <rosenp@gmail.com>
 
-dmaengine: fsldma: kill tasklet before removing channel
-   =20
-Add tasklet_kill() in fsl_dma_chan_remove() to prevent a race
-where the tasklet, scheduled by the IRQ handler, runs after
-the channel has been freed.
+dmaengine: fsldma: drop desc_lock before invoking client callback
+
+This commit modifies the descriptor cleanup routine in the fsldma driver to
+extract callback information under a lock, drop the lock, and invoke the cl=
+ient
+callback. This is intended to fix a self-deadlock when a client submits a n=
+ew
+transaction from the completion callback.
 
 > diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-> index 22d62d958abd9..0e2f84862261c 100644
+> index 22d62d958abd9..5c8a8fe25617d 100644
 > --- a/drivers/dma/fsldma.c
 > +++ b/drivers/dma/fsldma.c
-> @@ -1205,6 +1205,7 @@ static int fsl_dma_chan_probe(struct fsldma_device =
-*fdev,
-> =20
->  static void fsl_dma_chan_remove(struct fsldma_chan *chan)
+[ ... ]
+> @@ -603,22 +603,23 @@ static void fsldma_cleanup_descriptors(struct fsldm=
+a_chan *chan)
 >  {
-> +	tasklet_kill(&chan->tasklet);
->  	irq_dispose_mapping(chan->irq);
->  	list_del(&chan->common.device_node);
->  	iounmap(chan->regs);
+>  	struct fsl_desc_sw *desc;
+>  	dma_cookie_t cookie =3D 0;
+>  	dma_addr_t curr_phys =3D get_cdar(chan);
+
+[Severity: Critical]
+Is it safe to cache curr_phys outside the while loop when dropping the lock
+inside the loop?
+
+If the lock is dropped inside the loop to invoke callbacks, a concurrent th=
+read
+could enter, process the remaining completed descriptors (including the one
+matching this thread's cached curr_phys), and remove them from ld_running.
+
+When the first thread reacquires the lock, its cached curr_phys is now stal=
+e and
+no longer matches any descriptor in the list. As a result, the loop's safety
+break condition:
+
+        if (desc->async_tx.phys =3D=3D curr_phys) {
+            seen_current =3D 1;
+
+will never be met. The first thread will erroneously process all remaining
+descriptors in ld_running as completed, running their callbacks and freeing=
+ them
+even if the hardware is actively executing them.
+
+>  	int seen_current =3D 0;
+> =20
+>  	fsldma_clean_completed_descriptor(chan);
+> =20
+[ ... ]
+> @@ -662,9 +631,42 @@ static void fsldma_cleanup_descriptors(struct fsldma=
+_chan *chan)
+>  				break;
+>  		}
+> =20
+> -		cookie =3D fsldma_run_tx_complete_actions(chan, desc, cookie);
+> +		cookie =3D fsldma_run_tx_complete_actions(chan, desc, cookie, &cb);
+> =20
+> -		fsldma_clean_running_descriptor(chan, desc);
+> +		/*
+> +		 * Remove from the running list before dropping the lock so
+> +		 * that terminate_all cannot free this descriptor while we
+> +		 * call into the client below.
+> +		 */
+> +		list_del(&desc->node);
+> +
+> +		/*
+> +		 * Prevent dma_run_dependencies() from calling
+> +		 * fsl_chan_xfer_ld_queue() while we are not holding the
+> +		 * lock.  That would splice pending descriptors into
+> +		 * ld_running before they have been completed by hardware.
+> +		 * fsl_chan_xfer_ld_queue at the end of this function will
+> +		 * re-evaluate the situation.
+> +		 */
+> +		chan->idle =3D false;
+> +
+> +		/*
+> +		 * Drop the lock before invoking the client callback, since
+> +		 * the DMAengine API explicitly allows clients to submit new
+> +		 * transactions from their completion callback.  Otherwise
+> +		 * we self-deadlock on chan->desc_lock.
+> +		 */
+> +		spin_unlock(&chan->desc_lock);
+> +		dmaengine_desc_callback_invoke(&cb, NULL);
+> +		dma_run_dependencies(&desc->async_tx);
+> +		spin_lock(&chan->desc_lock);
 
 [Severity: High]
-This is a pre-existing issue, but does fsldma_of_probe() ignore the return
-value of dma_async_device_register()?
+Does dropping the lock here expose the list iteration to concurrent executi=
+on?
 
-If registration fails due to an IDA allocation error, the probe function
-unconditionally returns 0, falsely reporting success to the driver core.
-Later, when the device is removed, fsldma_of_remove() will call
-dma_async_device_unregister() on a device that was never fully registered.
+Since the lock is dropped within the loop over the shared ld_running list,
+multiple threads (such as a tasklet and a thread calling fsl_tx_status()) c=
+an
+concurrently enter fsldma_cleanup_descriptors() and process descriptors
+simultaneously.
 
-Can this corrupt IDA states or trigger assertions and kernel panics?
+This could cause callbacks to be invoked concurrently or out of order.
 
-Will allocated resources like memory, IRQs, and iomappings leak because the
-error cleanup path is bypassed?
+Additionally, each thread updates chan->common.completed_cookie at the end =
+of
+the function using their local cookie variable:
 
-drivers/dma/fsldma.c:fsldma_of_probe() {
+    if (cookie > 0)
+        chan->common.completed_cookie =3D cookie;
+
+If a thread processing an older descriptor finishes after a thread processi=
+ng a
+newer descriptor, the completed_cookie will regress to a smaller value, cau=
+sing
+clients waiting for DMA completion to hang.
+
+> +
+> +		chan->idle =3D true;
+
+[Severity: Critical]
+Can this unconditional assignment to chan->idle mask the active busy state
+of the hardware?
+
+If a descriptor completes, the loop drops the lock, runs the callback,
+reacquires the lock, and sets chan->idle =3D true.
+
+If the next descriptor in the queue is currently being executed by the hard=
+ware,
+the loop breaks. At this point, chan->idle incorrectly remains true from the
+previous iteration, despite the hardware actively processing the current
+descriptor.
+
+When fsl_chan_xfer_ld_queue() is subsequently called at the end of the func=
+tion,
+it checks this variable:
+
+drivers/dma/fsldma.c:fsl_chan_xfer_ld_queue() {
     ...
-	dma_async_device_register(&fdev->common);
-	return 0;
+    if (!chan->idle) {
+        chan_dbg(chan, "DMA controller still busy\n");
+        return;
+    }
+    ...
 }
+
+Because chan->idle is improperly true, fsl_chan_xfer_ld_queue() will bypass=
+ its
+safety check, inappropriately restart the controller, and overwrite the har=
+dware
+registers while the hardware is actively running.
+
+> +
+> +		if (!async_tx_test_ack(&desc->async_tx))
+> +			list_add_tail(&desc->node, &chan->ld_completed);
+> +		else
+> +			dma_pool_free(chan->desc_pool, desc, desc->async_tx.phys);
 
 [Severity: High]
-This is a pre-existing issue, but could the rollback loop in
-fsldma_request_irqs() be missing a decrement of 'i' before the first
-iteration?
+Is it possible for chan->desc_pool to be destroyed by concurrent teardown b=
+efore
+we call dma_pool_free() here?
 
-If request_irq() fails for a channel at index 'i', the code jumps to
-out_unwind and begins the cleanup loop starting at the exact same index 'i'.
-It unconditionally calls free_irq() for this channel. Because request_irq()
-just failed, the IRQ was never successfully allocated.
+Because chan->desc_lock was dropped earlier to invoke callbacks, this breaks
+mutual exclusion with the channel teardown.
 
-Will calling free_irq() on an unrequested IRQ trigger a kernel warning?
-
-drivers/dma/fsldma.c:fsldma_request_irqs() {
+drivers/dma/fsldma.c:fsl_dma_free_chan_resources() {
     ...
-out_unwind:
-	for (/* none */; i >=3D 0; i--) {
-		chan =3D fdev->chan[i];
-		if (!chan)
-			continue;
-
-		if (!chan->irq)
-			continue;
-
-		free_irq(chan->irq, chan);
-	}
+    dma_pool_destroy(chan->desc_pool);
+    chan->desc_pool =3D NULL;
+    ...
 }
+
+If fsl_dma_free_chan_resources() runs on another CPU while the lock is drop=
+ped
+here, it can finish teardown and destroy the pool. When the lock is reacqui=
+red
+and this code is executed, it will dereference the destroyed (NULL) pool.
+
+>  	}
+> =20
+>  	/*
 
 [Severity: High]
-This is a pre-existing issue, but are we double unlocking chan->desc_lock
-in the error path of fsldma_suspend_late()?
+This isn't a bug introduced by this patch, but is there a missing tasklet_k=
+ill()
+when removing the channel?
 
-In fsldma_suspend_late(), the forward loop acquires the lock, updates state,
-and releases it. If a subsequent channel is not idle, it jumps to out: and
-iterates backward, unlocking all previously processed channels:
-
-drivers/dma/fsldma.c:fsldma_suspend_late() {
+drivers/dma/fsldma.c:fsl_dma_chan_remove() {
     ...
-out:
-	for (; i >=3D 0; i--) {
-		chan =3D fdev->chan[i];
-		if (!chan)
-			continue;
-		chan->pm_state =3D RUNNING;
-		spin_unlock_bh(&chan->desc_lock);
-	}
-}
-
-Since the locks for these earlier channels were already released during the
-forward iteration, might this corrupt the lock state and local_bh preemption
-count, leading to warnings and potential crashes?
-
-[Severity: High]
-This is a pre-existing issue, but is the client callback invoked with the
-channel descriptor spinlock held?
-
-In dma_do_tasklet(), chan->desc_lock is acquired before cleaning up complet=
-ed
-descriptors:
-
-drivers/dma/fsldma.c:dma_do_tasklet() {
-    ...
-	spin_lock(&chan->desc_lock);
-
-	/* the hardware is now idle and ready for more */
-	chan->idle =3D true;
-
-	/* Run all cleanup for descriptors which have been completed */
-	fsldma_cleanup_descriptors(chan);
+    kfree(chan);
     ...
 }
 
-The cleanup chain eventually calls dmaengine_desc_get_callback_invoke()
-without dropping the spinlock:
-
-drivers/dma/fsldma.c:fsldma_run_tx_complete_actions() {
-    ...
-		/* Run the link descriptor callback function */
-		dmaengine_desc_get_callback_invoke(txd, NULL);
-    ...
-}
-
-If the client callback attempts to submit new transfers, it reaches
-fsl_dma_tx_submit() which attempts to acquire the same non-recursive lock:
-
-drivers/dma/fsldma.c:fsl_dma_tx_submit() {
-    ...
-	spin_lock_bh(&chan->desc_lock);
-    ...
-}
-
-Could this lead to a self-deadlock?
+If a tasklet is scheduled (e.g., by an interrupt) just before or during cha=
+nnel
+removal, the tasklet will execute dma_do_tasklet() after chan has been free=
+d,
+dereferencing the freed pointer and causing a use-after-free.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609221926.3553=
-8-2-rosenp@gmail.com?part=3D1
+8-3-rosenp@gmail.com?part=3D1
 

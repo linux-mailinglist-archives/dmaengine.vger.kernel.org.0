@@ -1,87 +1,88 @@
-Return-Path: <dmaengine+bounces-11404-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11405-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id jf8eDDxBKWpDTAMAu9opvQ
-	(envelope-from <dmaengine+bounces-11404-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 12:49:32 +0200
+	id MAiVLhBJKWqCTgMAu9opvQ
+	(envelope-from <dmaengine+bounces-11405-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 13:22:56 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EA9B6686FD
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 12:49:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 136BF668B71
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 13:22:56 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=snu.ac.kr header.s=google header.b=vKNDZB6u;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11404-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11404-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=snu.ac.kr header.s=google header.b=Tae21Byx;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11405-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11405-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=snu.ac.kr;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DA91630590A8
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 10:49:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AFB4130CD25B
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 11:21:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FB8138F236;
-	Wed, 10 Jun 2026 10:49:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A6FE3DC873;
+	Wed, 10 Jun 2026 11:21:30 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCE93C109F
-	for <dmaengine@vger.kernel.org>; Wed, 10 Jun 2026 10:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB6E3DCDA2
+	for <dmaengine@vger.kernel.org>; Wed, 10 Jun 2026 11:21:28 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781088567; cv=none; b=k8y2H92Sjr+n93QEEdEiFQiawiWuZ2JOnYXi8MDpqipvWc6e0gWFKJyT9t0BK+xnqETCNSH3L533QaA06PUTW5nlCuewLkntBmPi+RwxTVdAIcpOYEh88RxSA/yJP2SGtpb8EcaibeNz1cc8W0cUaBfjvajrgdYNxTMEQUaKmsQ=
+	t=1781090490; cv=none; b=h9wrAqHgawjdZqnrKlF72z2CttIdW+y0tQmhewv+jrARQmUnwWs2WlW0I1w+Bk+N4xlY6C4rcwh0WxYsEkR0eSTAtj7X+j06BJ+Vzqi0CGfhgB+2k+zBxFrlZJxYV8CpcFeIPpAaOE6WMx0N6cyl7amjqwmrJHg/VZO8XHJtxwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781088567; c=relaxed/simple;
-	bh=55ZWs1otnAdOWyG8tWxfBfD2DHeqcZnS0TDzmZpqw38=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iT6irpSbgEhXT9gtS471Nxh10cXB6RdPOGICInU1Jp7qmCpejA2I43TRdtTgG/pndnkyWZ9jvPzz/nSY9NwK+aRRp59O5z6QwOvpE5GaDXbNTRdMXl5g2yde+neJ4YVlblnl4jpsOf83QdyH/XT2ZoM7HQAJOv2uGqkrv4XXuyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=snu.ac.kr; spf=pass smtp.mailfrom=snu.ac.kr; dkim=pass (1024-bit key) header.d=snu.ac.kr header.i=@snu.ac.kr header.b=vKNDZB6u; arc=none smtp.client-ip=209.85.215.171
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-c8584bbbf2cso4337989a12.3
-        for <dmaengine@vger.kernel.org>; Wed, 10 Jun 2026 03:49:23 -0700 (PDT)
+	s=arc-20240116; t=1781090490; c=relaxed/simple;
+	bh=Hxf9AQn57LX9pKlw/g2S5DXs1l1DgwWTCg6QyNsaMls=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uyuYGLade36YHhyW8OIt/Zj0NWXTouAx8ScmsMN/EO9RtJ7OC8nRQ3DWB9mEP24zo39TfJmvnPc/H5KUH7IhVKHjUgvHq51wgRwthynbcoxN292DHo2VrRmA6lHD+VUl7PkTIlDo3JKSzTl6tcDBHdjQjfNSkhBUsg9m9zJ0jRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=snu.ac.kr; spf=pass smtp.mailfrom=snu.ac.kr; dkim=pass (1024-bit key) header.d=snu.ac.kr header.i=@snu.ac.kr header.b=Tae21Byx; arc=none smtp.client-ip=209.85.210.182
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-842307473b5so4558856b3a.2
+        for <dmaengine@vger.kernel.org>; Wed, 10 Jun 2026 04:21:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snu.ac.kr; s=google; t=1781088563; x=1781693363; darn=vger.kernel.org;
+        d=snu.ac.kr; s=google; t=1781090488; x=1781695288; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cuAyiw5DzCytjlGOrX4/Z7niXhij5PrYCenJJFkIUSo=;
-        b=vKNDZB6u/K/7RDuESaF+wPthfPysGUkux0E6xzpXY+ky7xUblpLs1StlZ5cFH5dRDr
-         JT1SMacWmFwe6YkQT8+RYF1ODjrBVI2VHtOQBSGrCgJndbjDCyK8evPP2FHWEersZCNx
-         4gkUUndoGLQNwV79eAgMi9VOYRO9R0Tj/ExzQ=
+        bh=4ZG5BwbtYHGG6HeCwLlOe2PoqcDJLynQJ4Ahip6IECQ=;
+        b=Tae21ByxLJFogSUkr1wd33pkRu4SYzKJrcL5mrENlEZt2coxpoRbSoznkQgvCMbMk0
+         GYVTMkJL6dS5h8bYJIHigpC/RGZQsFA/dbHqFeAd9R1yB9eKaOkaWK9L6ZmnHl6ICBhv
+         dRQAO6vtJ0LckS2q+GXP9PupNwd1mhYVTAXio=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781088563; x=1781693363;
+        d=1e100.net; s=20251104; t=1781090488; x=1781695288;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cuAyiw5DzCytjlGOrX4/Z7niXhij5PrYCenJJFkIUSo=;
-        b=ITJdetm39iNdwnmsJ/k59CfGLHiHf6Uf55Vm/Gw4lnulyGFtJoLa+kQ9RhPbzfM/FW
-         kDlVsbGjS4WuPLUBGKNzpGOvub3bQv+EbHd4DgQRn4RqoaES5YzuwwvdpYpQac6aqncr
-         2gN9SFJMDtL26jjVp8XrWW/oaQAcWxwJ31Xh/GCNcJWFJzGes0ND4Xunx/RMpW7OqRJI
-         Z89iOh2k9Fx5BkQkDEUxAMBzFo0CA8mCiSNJAYcwCE5jbmd6thykGPr1MClD5v4erZyo
-         IXj3MjvuTKPWYozMiH5haY8Yz1DPBQGK5nCt+GGZywlcyxpCa6uKKOHBywY6eJuuf1Vq
-         mNpw==
-X-Forwarded-Encrypted: i=1; AFNElJ+eJ61Pf0EI+NBtYlXUyTjELYJ/JXs+mCAhrL4HN9+XN5rFY75DXcAtOKJOoUmdZkpuAsjqt2CQxTU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzp9DajikDwMNKdUq/nf1V+wqcihS5j4PFCovPL5/m+r67YTldz
-	DfNEA2fVp/I4vsrYVNnYoZeXLBeQ4iC/e9EFFJjQaWFwR7gDwiCCiGxJsevtGWfcp/A=
-X-Gm-Gg: Acq92OEAzk5kty4dycXEtx9xMLnyfad7GbIHhMRyXMVvAgYMlFZMsEfsZhRh5nDC/gU
-	679cUiPynv05A2hmbp4NDVt0C4dRV3k7eJGSJUzo76Hsk5148pfVy8nGxUaj4nIdm4nUTP7zK+7
-	UjqM6uJUIJ7GLCKHmWeol7bU4s2RrJy35MRB/4U7jcGEIzv6wRUNOJUPVMzE0XtlAzyCBFc6S2h
-	fQ/PE6sRz864+dTntqx3Z4TFIi12fM/6iqI5W5kJ8ubDNhYD6HDIwbQ4rPoC5G4/EXJASaYwN6B
-	4HQ6lLbmUGBIWYnEFf11mswn69hTsJzqX/bU5qkQtxDVNdBh/qlUEZknn/q1BgVxzXgsxOxQC6Y
-	0W7oJCbdoFKjjE+WurvLhegol8FtTc8riKjXGPLr+5bTI6jtwKwkStumeef9tYfYOfpYRmPuR54
-	j9RtHYLpvXrhWTohIj9/Eas3BApWd0i607EKhcriTVFA6AntvgvoWWZgR4MPoNgpkiwjE=
-X-Received: by 2002:a05:6a21:7009:b0:3b4:8717:1c21 with SMTP id adf61e73a8af0-3b4cd02b770mr31411241637.35.1781088562789;
-        Wed, 10 Jun 2026 03:49:22 -0700 (PDT)
+        bh=4ZG5BwbtYHGG6HeCwLlOe2PoqcDJLynQJ4Ahip6IECQ=;
+        b=K15uK/tNe/KvuhUplwvjJYMdZOSKtBrRVGgwnVzhLIp20+BKQlWmSZmBk5nIcMxXwK
+         AvnbVpBPyio74DQqF9/aw558OORniSG5gS7LBdaPNFDCe6hWGu23ZqpxjDHmuxjk6bpA
+         SWXuo53QmZpRAihAMp960GX4ZPcIwKev2HII8pewSGgxV6iwkGfEk/SSrqauUp2HyZwh
+         i4jE7JRr9qJbyJ3ju26bwlhWJmpTrbzo5PUUAIoxCEvpokzgaYatdTXGjRQxlg2d8H2P
+         z5jeZqXRKD7H9yXwU+jtaXdgCpYKQa0lf26EESiiQ18ifBpkzcy4mpgpKGzylP7w5/gM
+         j+0Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8soFtMN0uFVE52XHrhTilmH5z57hyn9a3KERMnXeXBE3fK+qZzutbjrdGlhhHMncw1+qVjc+1PWtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEMRjKSFP7jmi9NZUzJgAB2C/4Z/xjnXpbUt6udSouwpmWxY4G
+	R4+pCVkl9W8EQOfUIyblCcHMWplFZoLk8SJwIMOc8lN/RR+HwnoGjHo/13vCNT0J3kU=
+X-Gm-Gg: Acq92OEOhpd556lIBbFgP/oTakSXyyGGXBDNUs4SXkldBpFQ6ZymC3P8jbQ4XYwn872
+	pM8XHBTl6aG1Mnr9Z3ZM/lbbe3iraslWS1fUhcEZVTnxLCKfzueGVeOKw1ntx6g3u7/GC6rlHT+
+	xG1BBByIlOUR7ZHrLkiDczuLLh6Ihd7lEBsCgnk/sf42Ip5GvvNhCbalOyGKcIPq8jZF0Ycam1F
+	LFDSdkpk+wDrvrqPMiDIO0RZQVqwzBT6kmfZppdztlUZNRwGEt59b+ymRNrwXTrHLKCjybWSSO0
+	OIqr2tp61hdijZiY8ixuLwupEzooMNRBuvK1Yna3qtH8bEGBZCLn0oqhVJGLhTjJQeP+pyGV++x
+	e1pf+eF8HRIeNUfviJcmT0VFIF+9a0msefEhgw6bKY6n1+54D/spJmc4X/chevLsNytq+dInvEe
+	v+C7ylGEss8b/W8IjGdsnNejhVvhYLA3MGgyLxEpEdmMCQhAmMX01y4+HF+/Dt4RR0VSY=
+X-Received: by 2002:a05:6a00:9292:b0:838:1c02:276c with SMTP id d2e1a72fcca58-842b0e95c72mr25824082b3a.40.1781090488197;
+        Wed, 10 Jun 2026 04:21:28 -0700 (PDT)
 Received: from nunu.. (nunu.snu.ac.kr. [147.46.112.82])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c85df0341f6sm21321664a12.7.2026.06.10.03.49.20
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8428222263dsm27644305b3a.2.2026.06.10.04.21.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 03:49:22 -0700 (PDT)
+        Wed, 10 Jun 2026 04:21:27 -0700 (PDT)
 From: Jaeyoung Chung <jjy600901@snu.ac.kr>
-To: Vinod Koul <vkoul@kernel.org>,
+To: Logan Gunthorpe <logang@deltatee.com>,
+	Vinod Koul <vkoul@kernel.org>,
 	Frank Li <Frank.Li@kernel.org>
 Cc: Jaeyoung Chung <jjy600901@snu.ac.kr>,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Sangyun Kim <sangyun.kim@snu.ac.kr>,
 	Kyungwook Boo <bookyungwook@gmail.com>
-Subject: dmaengine: k3dma: KASAN null-ptr-deref in k3_dma_int_handler() on early IRQ
-Date: Wed, 10 Jun 2026 19:47:12 +0900
-Message-Id: <20260610104713.591381-1-jjy600901@snu.ac.kr>
+Subject: dmaengine: plx_dma: KASAN null-ptr-deref in plx_dma_isr() on early IRQ
+Date: Wed, 10 Jun 2026 20:21:21 +0900
+Message-Id: <20260610112121.676561-1-jjy600901@snu.ac.kr>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -102,19 +103,19 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11404-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11405-lists,dmaengine=lfdr.de];
 	FREEMAIL_CC(0.00)[snu.ac.kr,vger.kernel.org,gmail.com];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FORGED_SENDER(0.00)[jjy600901@snu.ac.kr,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:jjy600901@snu.ac.kr,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:sangyun.kim@snu.ac.kr,m:bookyungwook@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:logang@deltatee.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:jjy600901@snu.ac.kr,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:sangyun.kim@snu.ac.kr,m:bookyungwook@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jjy600901@snu.ac.kr,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	DKIM_TRACE(0.00)[snu.ac.kr:+];
@@ -125,38 +126,34 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,snu.ac.kr:dkim,snu.ac.kr:email,snu.ac.kr:mid,snu.ac.kr:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 6EA9B6686FD
+X-Rspamd-Queue-Id: 136BF668B71
 
 Hi,
 
-k3_dma_probe() in drivers/dma/k3dma.c registers the interrupt handler
-with devm_request_irq() before it initializes d->phy. If an interrupt
-arrives before d->phy is initialized, k3_dma_int_handler() dereferences
-a NULL d->phy, causing a kernel panic.
+plx_dma_create() in drivers/dma/plx_dma.c registers the interrupt
+handler with request_irq() before it initializes plxdev->bar. If an
+interrupt arrives in that window, plx_dma_isr() dereferences a NULL
+bar, causing a kernel panic.
 
-The probe path, in k3_dma_probe():
+The probe path, in plx_dma_create():
 
-    d = devm_kzalloc(&op->dev, sizeof(*d), GFP_KERNEL); /* d->phy == NULL */
+    plxdev = kzalloc_obj(*plxdev);          /* plxdev->bar == NULL */
     ...
-    ret = devm_request_irq(&op->dev, irq,
-                           k3_dma_int_handler, 0, DRIVER_NAME, d); /* register handler */
+    rc = request_irq(pci_irq_vector(pdev, 0), plx_dma_isr, 0,
+                     KBUILD_MODNAME, plxdev); /* register interrupt handler */
     ...
-    d->phy = devm_kcalloc(&op->dev,
-                          d->dma_channels, sizeof(struct k3_dma_phy), GFP_KERNEL); /* initialize d->phy */
+    plxdev->bar = pcim_iomap_table(pdev)[0]; /* initialize BAR pointer */
 
-The interrupt handler, k3_dma_int_handler(), dereferences d->phy without
-check:
+The interrupt handler, plx_dma_isr(), dereferences bar without check:
 
-    p = &d->phy[i];
-    c = p->vchan;   /* NULL pointer dereference */
+    status = readw(plxdev->bar + PLX_REG_INTR_STATUS);
 
-If the device raises an interrupt before d->phy is initialized, the
-handler dereferences the NULL d->phy, triggering a KASAN
+If the device raises an interrupt before plxdev->bar is initialized,
+the handler dereferences the NULL bar, triggering a KASAN
 null-ptr-deref.
 
-Suggested fix: move the d->phy = devm_kcalloc() assignment above
-devm_request_irq(), so the d->phy array is valid before the
-handler can run.
+Suggested fix: move the plxdev->bar assignment above request_irq(),
+so the MMIO pointer is valid before the handler can run.
 
 Reported-by: Sangyun Kim <sangyun.kim@snu.ac.kr>
 Reported-by: Kyungwook Boo <bookyungwook@gmail.com>

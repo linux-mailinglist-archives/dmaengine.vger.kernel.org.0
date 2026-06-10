@@ -1,63 +1,57 @@
-Return-Path: <dmaengine+bounces-11400-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11398-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id q8B8ARU4KWo2SgMAu9opvQ
-	(envelope-from <dmaengine+bounces-11400-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 12:10:29 +0200
+	id y2aaD141KWqDSQMAu9opvQ
+	(envelope-from <dmaengine+bounces-11398-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 11:58:54 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 950C766823E
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 12:10:28 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 972DC668107
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 11:58:53 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
 	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=andestech.com (policy=reject);
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11400-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11400-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11398-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11398-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3F5ED32B85B0
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 10:03:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 20399304DAE8
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jun 2026 09:58:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D94E33E7BB1;
-	Wed, 10 Jun 2026 10:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61CE73B71D3;
+	Wed, 10 Jun 2026 09:58:13 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from Atcsqr.andestech.com (atcsqr.andestech.com [220.128.198.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CDF3E6DCE;
-	Wed, 10 Jun 2026 10:03:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FABA3E3C49;
+	Wed, 10 Jun 2026 09:58:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781085799; cv=none; b=lj/BVpYmnqs2+nM+5lB+DcpQYSo0nvrnUwENojNnzQ13YnQMYJDHPvM5/cX9lCMw4adn4m/Fdvr5xyjc0ittvZvY1npp+LtYY6hPMoXPbV7VefIaQ3SUvDRmgVwjp1u9ZrQ176s86gLevHz/z7Ouy87ZRlzrBd9h2QuCuyj0naQ=
+	t=1781085493; cv=none; b=l8nW3DgVeuYIv6DET0w68ecdjH0M2CUSyr6zJBRz7pgnXlyMlgh5EUByz4vWN4KM0nMwSs1C1lt/pKbInah3VBu7Rp4CgN1p0MM6dge0QYKCt+7ggyDeIv0F7vMKb1vouRZzhwcTA0LdCsCouFma9DFlLrQQittqnDCFhxTCLxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781085799; c=relaxed/simple;
-	bh=x1ntVEPXBZggV4PzToUxUW8i0TVdfMRXZZsNxGs65sM=;
+	s=arc-20240116; t=1781085493; c=relaxed/simple;
+	bh=Dnii55IHEDUB9fDgGWS4TN4fNzMZXvcxKp068pIP368=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tZ77Dw6GJwquEqpYEjQ5Lk8hKJLcQQV/QF/OuJAN/IDgOif4bC7haIpzRInRwFpj/5QyW/LcX7zlqZREipuI94Gfx5LMIX2BMdJU8ARC//W60wc9J3OvoaK1cT/G3ZZ0Av87qiJ7WaNXL2/Ta38sOJIAeC6a1hESpMPpAn0HRi8=
+	 MIME-Version:Content-Type; b=MprEvlwgYKB4Ow9M8D27xxKR1NrhAs10VxoLr+vzYLo3XLQC2XRlflegWRJQ3VwdiBsIrH33IA1tFPnEVBY/YNBcBBO7t/OX0TWpT60mFdcSKxDW8VW2RwRkACQFJqEEFz6TUuY6cjN4uF9aRtwzg8CaMn+LoEzq6XKlgHlUsdM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=220.128.198.184
-Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 65A9vxRs075640;
-	Wed, 10 Jun 2026 17:57:59 +0800 (+08)
-	(envelope-from cl634@andestech.com)
 Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
-	by Atcsqr.andestech.com with ESMTPS id 65A9vaER075387
+	by Atcsqr.andestech.com with ESMTPS id 65A9veO8075450
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
-	Wed, 10 Jun 2026 17:57:36 +0800 (+08)
+	Wed, 10 Jun 2026 17:57:40 +0800 (+08)
 	(envelope-from cl634@andestech.com)
 Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS34.andestech.com
  (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 10 Jun
- 2026 17:57:36 +0800
+ 2026 17:57:40 +0800
 From: CL Wang <cl634@andestech.com>
 To: <vkoul@kernel.org>, <Frank.Li@kernel.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
         <dmaengine@vger.kernel.org>
 CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <tim609@andestech.com>, <cl634@andestech.com>,
-        Conor Dooley
-	<conor.dooley@microchip.com>
-Subject: [PATCH v5 1/3] dt-bindings: dmaengine: Add support for ATCDMAC300 DMA engine
-Date: Wed, 10 Jun 2026 17:57:22 +0800
-Message-ID: <20260610095724.1980622-2-cl634@andestech.com>
+        <tim609@andestech.com>, <cl634@andestech.com>
+Subject: [PATCH v5 2/3] dmaengine: atcdmac300: Add driver for Andes ATCDMAC300 DMA controller
+Date: Wed, 10 Jun 2026 17:57:23 +0800
+Message-ID: <20260610095724.1980622-3-cl634@andestech.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260610095724.1980622-1-cl634@andestech.com>
 References: <20260610095724.1980622-1-cl634@andestech.com>
@@ -74,141 +68,1942 @@ X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
 X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
 X-DNSRBL: 
 X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 65A9vxRs075640
+X-MAIL:Atcsqr.andestech.com 65A9veO8075450
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [2.04 / 15.00];
 	DMARC_POLICY_REJECT(2.00)[andestech.com : SPF not aligned (relaxed), No valid DKIM,reject];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11400-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:tim609@andestech.com,m:cl634@andestech.com,m:conor.dooley@microchip.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FORGED_SENDER(0.00)[cl634@andestech.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:tim609@andestech.com,m:cl634@andestech.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_FROM(0.00)[bounces-11398-lists,dmaengine=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[cl634@andestech.com,dmaengine@vger.kernel.org];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cl634@andestech.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_SENDER_FORWARDING(0.00)[];
+	TO_DN_NONE(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	R_DKIM_NA(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	FROM_NEQ_ENVFROM(0.00)[cl634@andestech.com,dmaengine@vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,microchip.com:email,vger.kernel.org:from_smtp,andestech.com:email,andestech.com:mid,andestech.com:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,andestech.com:email,andestech.com:mid,andestech.com:from_mime,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,chan_regmap_config.name:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 950C766823E
+X-Rspamd-Queue-Id: 972DC668107
 
-Document devicetree bindings for Andes ATCDMAC300 DMA engine
+This patch adds support for the Andes ATCDMAC300 DMA controller.
 
-ATCDMAC300 is the IP name, which is embedded in AndesCore-based
-platforms or SoCs such as AE350 and Qilai.
+The ATCDMAC300 is a memory-to-memory and peripheral DMA controller
+that provides scatter-gather, cyclic, and slave transfer capabilities.
 
 Signed-off-by: CL Wang <cl634@andestech.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
 ---
   Changes for v5:
-    - No changes from v4
+    - Update copyright year to 2026
+    - Remove redundant headers (init.h, iopoll.h, mod_devicetable.h)
+    - Move atcdmac_init_iocp() before of_dma_controller_register() in probe
+    - Change builtin_platform_driver() to module_platform_driver()
+    - Implement .remove callback to support safe module unloading
+    - Update Kconfig entry from bool to tristate
+    - Add MODULE_AUTHOR, MODULE_DESCRIPTION, MODULE_LICENSE macros
 
   Changes for v4:
-    - Use items list format with descriptions for reg property
-      as suggested by Conor Dooley
+    - No changes from v3
 
   Changes for v3:
-    - Rename DT binding file from andestech,qilai-dma.yaml to
-      andestech,ae350-dma.yaml.
-    - Deprecate IP-core-based compatible usage and align with
-      SoC/platform-based strings.
-    - Dropped Acked-by tag from Conor Dooley due to the above change.
+    - Remove "andestech,atcdmac300" from of_device_id
+    - Replace deprecated tasklet with threaded IRQ using
+      devm_request_threaded_irq() and IRQF_ONESHOT to handle bottom-half
+      processing.
+    - Update locking mechanism from spin_lock_bh() to spin_lock_irqsave()
+    - Minor cleanups and correctness fixes
+        - Initialize descriptor pointers (first = NULL) explicitly
+        - Add missing headers (err.h, iopoll.h, log2.h, sprintf.h)
+        - Remove unused code paths related to tasklets
+        - Use builtin_platform_driver() instead of module_platform_driver()
+        - Remove "select DMATEST" from Kconfig
 ---
- .../bindings/dma/andestech,ae350-dma.yaml     | 67 +++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
+ drivers/dma/Kconfig      |   11 +
+ drivers/dma/Makefile     |    1 +
+ drivers/dma/atcdmac300.c | 1518 ++++++++++++++++++++++++++++++++++++++
+ drivers/dma/atcdmac300.h |  296 ++++++++
+ 4 files changed, 1826 insertions(+)
+ create mode 100644 drivers/dma/atcdmac300.c
+ create mode 100644 drivers/dma/atcdmac300.h
 
-diff --git a/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml b/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index ae6a682c9f76..dabd2c8cc94f 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -100,6 +100,17 @@ config ARM_DMA350
+ 	help
+ 	  Enable support for the Arm DMA-350 controller.
+ 
++config ATCDMAC300
++	tristate "Andes ATCDMAC300 DMA support"
++	depends on ARCH_ANDES
++	depends on OF
++	select DMA_ENGINE
++	help
++	  Enable support for the Andes ATCDMAC300 DMA controller.
++	  Select Y or M if your platform includes an ATCDMAC300 device that
++	  requires DMA engine support. This driver supports DMA_SLAVE,
++	  DMA_MEMCPY, and DMA_CYCLIC transfer modes.
++
+ config AT_HDMAC
+ 	tristate "Atmel AHB DMA support"
+ 	depends on ARCH_AT91 || COMPILE_TEST
+diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+index 14aa086629d5..c8fffb31efc4 100644
+--- a/drivers/dma/Makefile
++++ b/drivers/dma/Makefile
+@@ -18,6 +18,7 @@ obj-$(CONFIG_AMBA_PL08X) += amba-pl08x.o
+ obj-$(CONFIG_AMCC_PPC440SPE_ADMA) += ppc4xx/
+ obj-$(CONFIG_APPLE_ADMAC) += apple-admac.o
+ obj-$(CONFIG_ARM_DMA350) += arm-dma350.o
++obj-$(CONFIG_ATCDMAC300) += atcdmac300.o
+ obj-$(CONFIG_AT_HDMAC) += at_hdmac.o
+ obj-$(CONFIG_AT_XDMAC) += at_xdmac.o
+ obj-$(CONFIG_AXI_DMAC) += dma-axi-dmac.o
+diff --git a/drivers/dma/atcdmac300.c b/drivers/dma/atcdmac300.c
 new file mode 100644
-index 000000000000..f040a2bf7d4b
+index 000000000000..be3bb477bb3b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/andestech,ae350-dma.yaml
-@@ -0,0 +1,67 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/andestech,ae350-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/dma/atcdmac300.c
+@@ -0,0 +1,1518 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Andes ATCDMAC300 controller driver
++ *
++ * Copyright (C) 2026 Andes Technology Corporation
++ */
++#include <linux/bitfield.h>
++#include <linux/bits.h>
++#include <linux/dmaengine.h>
++#include <linux/dmapool.h>
++#include <linux/dma-mapping.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/interrupt.h>
++#include <linux/log2.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_dma.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/pm.h>
++#include <linux/slab.h>
++#include <linux/sprintf.h>
++#include <linux/regmap.h>
++#include "dmaengine.h"
++#include "atcdmac300.h"
 +
-+title: Andes ATCDMAC300 DMA Controller
++static int atcdmac_is_chan_enabled(struct atcdmac_chan *dmac_chan)
++{
++	struct atcdmac_dmac *dmac =
++		atcdmac_dev_to_dmac(dmac_chan->dma_chan.device);
 +
-+maintainers:
-+  - CL Wang <cl634@andestech.com>
++	return regmap_test_bits(dmac->regmap,
++				REG_CH_EN,
++				BIT(dmac_chan->chan_id));
++}
 +
-+allOf:
-+  - $ref: dma-controller.yaml#
++static void atcdmac_enable_chan(struct atcdmac_chan *dmac_chan, bool enable)
++{
++	regmap_update_bits(dmac_chan->regmap, REG_CH_CTL_OFF, CHEN, enable);
++}
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - andestech,qilai-dma
-+          - const: andestech,ae350-dma
-+      - const: andestech,ae350-dma
++static void atcdmac_abort_chan(struct atcdmac_chan *dmac_chan)
++{
++	regmap_write_bits(dmac_chan->dma_dev->regmap,
++			  REG_CH_ABT,
++			  BIT(dmac_chan->chan_id),
++			  BIT(dmac_chan->chan_id));
++}
 +
-+  reg:
-+    minItems: 1
-+    items:
-+      - description: DMA controller register range
-+      - description: cache control in IOCP controller
++static dma_cookie_t atcdmac_tx_submit(struct dma_async_tx_descriptor *tx)
++{
++	struct atcdmac_chan *dmac_chan = atcdmac_chan_to_dmac_chan(tx->chan);
++	struct atcdmac_desc *desc = atcdmac_txd_to_dma_desc(tx);
++	dma_cookie_t cookie;
++	unsigned long flags;
 +
-+  reg-names:
-+    minItems: 1
-+    items:
-+      - const: dma
-+      - const: iocp
++	spin_lock_irqsave(&dmac_chan->lock, flags);
++	cookie = dma_cookie_assign(tx);
++	list_add_tail(&desc->desc_node, &dmac_chan->queue_list);
++	spin_unlock_irqrestore(&dmac_chan->lock, flags);
 +
-+  interrupts:
-+    maxItems: 1
++	return cookie;
++}
 +
-+  "#dma-cells":
-+    const: 1
++static struct atcdmac_desc *
++atcdmac_get_active_head(struct atcdmac_chan *dmac_chan)
++{
++	return list_first_entry(&dmac_chan->active_list,
++				struct atcdmac_desc,
++				desc_node);
++}
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#dma-cells"
++static struct atcdmac_desc *atcdmac_alloc_desc(struct dma_chan *chan,
++					       gfp_t gfp_flags)
++{
++	struct atcdmac_dmac *dmac = atcdmac_dev_to_dmac(chan->device);
++	struct atcdmac_desc *desc;
++	dma_addr_t phys;
 +
-+additionalProperties: false
++	desc = dma_pool_zalloc(dmac->dma_desc_pool, gfp_flags, &phys);
++	if (desc) {
++		INIT_LIST_HEAD(&desc->tx_list);
++		dma_async_tx_descriptor_init(&desc->txd, chan);
++		desc->txd.flags = DMA_CTRL_ACK;
++		desc->txd.tx_submit = atcdmac_tx_submit;
++		desc->txd.phys = phys;
++	}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
++	return desc;
++}
 +
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
++static struct atcdmac_desc *atcdmac_get_desc(struct atcdmac_chan *dmac_chan)
++{
++	struct atcdmac_desc *ret = NULL;
++	struct atcdmac_desc *desc_next;
++	struct atcdmac_desc *desc;
++	unsigned long flags;
 +
-+        dma-controller@f0c00000 {
-+            compatible = "andestech,ae350-dma";
-+            reg = <0x0 0xf0c00000 0x0 0x1000>,
-+                  <0x0 0xe8000000 0x0 0x10>;
-+            reg-names = "dma", "iocp";
-+            interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-+            #dma-cells = <1>;
-+        };
-+    };
-+...
++	spin_lock_irqsave(&dmac_chan->lock, flags);
++	list_for_each_entry_safe(desc, desc_next,
++				 &dmac_chan->free_list,
++				 desc_node) {
++		if (async_tx_test_ack(&desc->txd)) {
++			list_del_init(&desc->desc_node);
++			ret = desc;
++			break;
++		}
++	}
++	spin_unlock_irqrestore(&dmac_chan->lock, flags);
++
++	if (!ret) {
++		ret = atcdmac_alloc_desc(&dmac_chan->dma_chan, GFP_ATOMIC);
++		if (ret) {
++			spin_lock_irqsave(&dmac_chan->lock, flags);
++			dmac_chan->descs_allocated++;
++			spin_unlock_irqrestore(&dmac_chan->lock, flags);
++		} else {
++			dev_warn(atcdmac_chan_to_dev(&dmac_chan->dma_chan),
++				 "not enough descriptors available\n");
++		}
++	}
++
++	return ret;
++}
++
++/**
++ * atcdmac_put_desc_nolock - move a descriptor to the free list
++ * @dmac_chan: DMA channel we work on
++ * @desc: Head of the descriptor chain to be added to the free list
++ *
++ * This function does not use a lock to protect any linked lists in
++ * 'struct atcdmac_chan', so please remember to add a proper lock when
++ * calling the function.
++ */
++static void atcdmac_put_desc_nolock(struct atcdmac_chan *dmac_chan,
++				    struct atcdmac_desc *desc)
++{
++	struct atcdmac_desc *child, *tmp;
++
++	if (desc) {
++		list_for_each_entry_safe(child,
++					 tmp,
++					 &desc->tx_list,
++					 desc_node) {
++			list_del_init(&child->desc_node);
++			child->at = NULL;
++			child->num_sg = 0;
++			INIT_LIST_HEAD(&child->tx_list);
++			list_add_tail(&child->desc_node,
++				      &dmac_chan->free_list);
++		}
++
++		list_del_init(&desc->desc_node);
++		desc->at = NULL;
++		desc->num_sg = 0;
++		INIT_LIST_HEAD(&desc->tx_list);
++		list_add_tail(&desc->desc_node, &dmac_chan->free_list);
++	}
++}
++
++static void atcdmac_put_desc(struct atcdmac_chan *dmac_chan,
++			     struct atcdmac_desc *desc)
++{
++	unsigned long flags;
++
++	if (!desc) {
++		dev_err(atcdmac_chan_to_dev(&dmac_chan->dma_chan),
++			"A NULL descriptor was found.\n");
++		return;
++	}
++
++	spin_lock_irqsave(&dmac_chan->lock, flags);
++	atcdmac_put_desc_nolock(dmac_chan, desc);
++	spin_unlock_irqrestore(&dmac_chan->lock, flags);
++}
++
++static void atcdmac_show_desc(struct atcdmac_chan *dmac_chan,
++			      struct atcdmac_desc *desc)
++{
++	struct device *dev = atcdmac_chan_to_dev(&dmac_chan->dma_chan);
++
++	dev_dbg(dev, "Dump desc info of chan: %u\n", dmac_chan->chan_id);
++	dev_dbg(dev, "chan ctrl: 0x%08x\n", desc->regs.ctrl);
++	dev_dbg(dev, "trans size: 0x%08x\n", desc->regs.trans_size);
++	dev_dbg(dev, "src addr: hi:0x%08x lo:0x%08x\n",
++		desc->regs.src_addr_hi,
++		desc->regs.src_addr_lo);
++	dev_dbg(dev, "dst addr: hi:0x%08x lo:0x%08x\n",
++		desc->regs.dst_addr_hi,
++		desc->regs.dst_addr_lo);
++	dev_dbg(dev, "link addr: hi:0x%08x lo:0x%08x\n",
++		desc->regs.ll_ptr_hi,
++		desc->regs.ll_ptr_lo);
++}
++
++/**
++ * atcdmac_chain_desc - Chain a DMA descriptor into a linked-list
++ * @first: Pointer to the first descriptor in the chain
++ * @prev: Pointer to the previous descriptor in the chain
++ * @desc: The descriptor to be added to the chain
++ * @cyclic: Indicates if the transfer operates in cyclic mode
++ *
++ * This function appends a DMA descriptor (desc) to a linked-list of
++ * descriptors. If this is the first descriptor being added, it initializes
++ * the list and sets *first to point to desc. Otherwise, it links the
++ * new descriptor to the end of the list managed by *first.
++ *
++ * For non-cyclic descriptors, it updates the hardware linked list pointers
++ * (ll_ptr_lo and ll_ptr_hi) of the previous descriptor (*prev) to point to
++ * the physical address of the new descriptor.
++ *
++ * Finally, it adds the new descriptor to the list and updates *prev to
++ * point to the current descriptor (desc).
++ */
++static void atcdmac_chain_desc(struct atcdmac_desc **first,
++			       struct atcdmac_desc **prev,
++			       struct atcdmac_desc *desc,
++			       bool cyclic)
++{
++	if (!(*first)) {
++		*first = desc;
++		desc->at = &desc->tx_list;
++	} else {
++		if (!cyclic) {
++			(*prev)->regs.ll_ptr_lo =
++				lower_32_bits(desc->txd.phys);
++			(*prev)->regs.ll_ptr_hi =
++				upper_32_bits(desc->txd.phys);
++		}
++		list_add_tail(&desc->desc_node, &(*first)->tx_list);
++	}
++	*prev = desc;
++
++	desc->regs.ll_ptr_hi = 0;
++	desc->regs.ll_ptr_lo = 0;
++}
++
++/**
++ * atcdmac_start_transfer - Start the DMA engine with the provided descriptor
++ * @dmac_chan: The DMA channel to be started
++ * @first_desc: The first descriptor in the list to begin the transfer
++ *
++ * This function configures the DMA engine by programming the hardware
++ * registers with the information from the provided descriptor (first_desc).
++ * It then starts the DMA transfer for the specified channel (dmac_chan).
++ *
++ * The first_desc contains the initial configuration for the transfer,
++ * including source and destination addresses, transfer size, and any linked
++ * list pointers for subsequent descriptors in the chain.
++ */
++static void atcdmac_start_transfer(struct atcdmac_chan *dmac_chan,
++				   struct atcdmac_desc *first_desc)
++{
++	struct atcdmac_dmac *dmac = dmac_chan->dma_dev;
++	struct regmap *reg = dmac_chan->regmap;
++	unsigned long flags;
++
++	spin_lock_irqsave(&dmac->lock, flags);
++	dmac->used_chan |= BIT(dmac_chan->chan_id);
++	spin_unlock_irqrestore(&dmac->lock, flags);
++
++	regmap_write(reg, REG_CH_CTL_OFF, first_desc->regs.ctrl);
++	regmap_write(reg, REG_CH_SIZE_OFF, first_desc->regs.trans_size);
++	regmap_write(reg, REG_CH_SRC_LOW_OFF, first_desc->regs.src_addr_lo);
++	regmap_write(reg, REG_CH_DST_LOW_OFF, first_desc->regs.dst_addr_lo);
++	regmap_write(reg, REG_CH_LLP_LOW_OFF, first_desc->regs.ll_ptr_lo);
++	regmap_write(reg, REG_CH_SRC_HIGH_OFF, first_desc->regs.src_addr_hi);
++	regmap_write(reg, REG_CH_DST_HIGH_OFF, first_desc->regs.dst_addr_hi);
++	regmap_write(reg, REG_CH_LLP_HIGH_OFF, first_desc->regs.ll_ptr_hi);
++	atcdmac_enable_chan(dmac_chan, 1);
++}
++
++/**
++ * atcdmac_start_next_trans - Retrieve and initiate the next DMA transfer
++ * @dmac_chan: Pointer to the DMA channel structure
++ *
++ * In non-cyclic mode, if active_list is empty, the function moves
++ * descriptors from queue_list (if available) to active_list and starts
++ * the transfer. If both lists are empty, it marks the channel as unused.
++ * If there are already active descriptors in active_list, the function
++ * retrieves the next DMA descriptor from it and starts the transfer.
++ *
++ * In cyclic mode, the function retrieves the next DMA descriptor
++ * from the linked list of tx_list to maintain continuous transfers.
++ */
++static void atcdmac_start_next_trans(struct atcdmac_chan *dmac_chan)
++{
++	struct atcdmac_desc *next_tx = NULL;
++	struct atcdmac_desc *dma_desc;
++
++	if (dmac_chan->cyclic) {
++		/* Get the next DMA descriptor from tx_list. */
++		dma_desc = atcdmac_get_active_head(dmac_chan);
++		dma_desc->at = dma_desc->at->next;
++		if ((uintptr_t)dma_desc->at == (uintptr_t)&dma_desc->tx_list)
++			next_tx = list_entry(dma_desc->at,
++					     struct atcdmac_desc,
++					     tx_list);
++		else
++			next_tx = list_entry(dma_desc->at,
++					     struct atcdmac_desc,
++					     desc_node);
++	} else {
++		if (list_empty(&dmac_chan->active_list)) {
++			if (!list_empty(&dmac_chan->queue_list)) {
++				list_splice_init(&dmac_chan->queue_list,
++						 &dmac_chan->active_list);
++				next_tx = atcdmac_get_active_head(dmac_chan);
++			}
++		} else {
++			next_tx = atcdmac_get_active_head(dmac_chan);
++		}
++	}
++
++	if (next_tx) {
++		dmac_chan->chan_used = 1;
++		atcdmac_start_transfer(dmac_chan, next_tx);
++	} else {
++		dmac_chan->chan_used = 0;
++	}
++}
++
++static void atcdmac_run_tx_complete_actions(struct atcdmac_desc *desc,
++					    enum dmaengine_tx_result result)
++{
++	struct dma_async_tx_descriptor *txd = &desc->txd;
++	struct dmaengine_result res;
++
++	res.result = result;
++	dma_cookie_complete(txd);
++	dma_descriptor_unmap(txd);
++	dmaengine_desc_get_callback_invoke(txd, &res);
++	dma_run_dependencies(txd);
++}
++
++/**
++ * atcdmac_advance_work - Process the completed transaction and move to the
++ *                        next descriptor
++ * @dmac_chan: DMA channel where the transaction has completed
++ *
++ * This function is responsible for performing necessary operations after
++ * a DMA transaction completes successfully. It retrieves the next descriptor
++ * from the active list, initiates its transfer, and communicates the result
++ * of the completed transaction to the DMA engine framework.
++ */
++static void atcdmac_advance_work(struct atcdmac_chan *dmac_chan)
++{
++	struct atcdmac_dmac *dmac =
++		atcdmac_dev_to_dmac(dmac_chan->dma_chan.device);
++	struct atcdmac_desc *desc_next, *dma_desc, *desc;
++	struct dmaengine_result res;
++	LIST_HEAD(completed);
++	unsigned long flags;
++	unsigned short stop;
++
++	spin_lock_irqsave(&dmac_chan->lock, flags);
++	if (list_empty(&dmac_chan->active_list)) {
++		spin_unlock_irqrestore(&dmac_chan->lock, flags);
++		return;
++	}
++
++	dma_desc = atcdmac_get_active_head(dmac_chan);
++	stop = READ_ONCE(dmac->stop_mask) & BIT(dmac_chan->chan_id);
++	if (dmac_chan->cyclic) {
++		if (!stop)
++			atcdmac_start_next_trans(dmac_chan);
++
++		spin_unlock_irqrestore(&dmac_chan->lock, flags);
++		res.result = DMA_TRANS_NOERROR;
++		dmaengine_desc_get_callback_invoke(&dma_desc->txd, &res);
++	} else {
++		if (list_is_singular(&dmac_chan->active_list)) {
++			list_splice_init(&dmac_chan->active_list, &completed);
++			list_splice_init(&dmac_chan->queue_list,
++					 &dmac_chan->active_list);
++		} else {
++			list_move_tail(&dma_desc->desc_node, &completed);
++		}
++
++		if (!stop)
++			atcdmac_start_next_trans(dmac_chan);
++
++		spin_unlock_irqrestore(&dmac_chan->lock, flags);
++
++		list_for_each_entry_safe(desc,
++					 desc_next,
++					 &completed,
++					 desc_node) {
++			atcdmac_run_tx_complete_actions(desc,
++							DMA_TRANS_NOERROR);
++			atcdmac_put_desc(dmac_chan, desc);
++		}
++	}
++}
++
++/**
++ * atcdmac_handle_error - Handle errors reported by the DMA controller
++ * @dmac_chan: DMA channel where the error occurred
++ *
++ * This function is invoked when the DMA controller detects an error during a
++ * transaction. This function ensures that the DMA channel can recover from
++ * errors while reporting issues to aid in debugging. It prevents the DMA
++ * controller from operating on potentially invalid memory regions and
++ * attempts to maintain system stability.
++ */
++static void atcdmac_handle_error(struct atcdmac_chan *dmac_chan)
++{
++	struct device *dev = atcdmac_chan_to_dev(&dmac_chan->dma_chan);
++	struct atcdmac_dmac *dmac =
++		atcdmac_dev_to_dmac(dmac_chan->dma_chan.device);
++	struct atcdmac_desc *bad_desc;
++	unsigned long flags;
++	unsigned short stop;
++
++	spin_lock_irqsave(&dmac_chan->lock, flags);
++
++	/*
++	 * If the active list is empty, the descriptor has already been
++	 * handled by another function (e.g., atcdmac_terminate_all()).
++	 * Therefore, no further action is needed.
++	 */
++	if (!list_empty(&dmac_chan->active_list)) {
++		/*
++		 * Identify the problematic descriptor at the head of the
++		 * active list and remove it from the list for further
++		 * processing.
++		 */
++		bad_desc = atcdmac_get_active_head(dmac_chan);
++		list_del_init(&bad_desc->desc_node);
++
++		/*
++		 * Transfer any pending descriptors from the queue list to the
++		 * active list, allowing them to be processed in subsequent
++		 * operations.
++		 */
++		list_splice_init(&dmac_chan->queue_list,
++				 dmac_chan->active_list.prev);
++
++		stop = READ_ONCE(dmac->stop_mask) & BIT(dmac_chan->chan_id);
++		if (!list_empty(&dmac_chan->active_list) && stop == 0)
++			atcdmac_start_transfer(dmac_chan, atcdmac_get_active_head(dmac_chan));
++		else
++			dmac_chan->chan_used = 0;
++
++		spin_unlock_irqrestore(&dmac_chan->lock, flags);
++
++		/*
++		 * Show the detailed information of the bad descriptor and
++		 * return "DMA_TRANS_ABORTED" to the DMA engine framework.
++		 */
++		dev_err(dev, "DMA transaction failed, possible DMA desc error\n");
++		atcdmac_show_desc(dmac_chan, bad_desc);
++		atcdmac_run_tx_complete_actions(bad_desc, DMA_TRANS_ABORTED);
++
++		atcdmac_put_desc(dmac_chan, bad_desc);
++
++		return;
++	}
++
++	spin_unlock_irqrestore(&dmac_chan->lock, flags);
++}
++
++static irqreturn_t atcdmac_irq_thread(int irq, void *dev_id)
++{
++	struct atcdmac_dmac *dmac = dev_id;
++	struct atcdmac_chan *dmac_chan;
++	int i;
++	bool handled = false;
++
++	for (i = 0; i < dmac->num_ch; i++) {
++		dmac_chan = &dmac->chan[i];
++
++		if (test_and_clear_bit(ATCDMAC_STA_TC, &dmac_chan->status)) {
++			atcdmac_advance_work(dmac_chan);
++			handled = true;
++		}
++
++		if (test_and_clear_bit(ATCDMAC_STA_ERR, &dmac_chan->status)) {
++			atcdmac_handle_error(dmac_chan);
++			handled = true;
++		}
++
++		/*
++		 * ATCDMAC_STA_ABORT only occurs when the DMA channel is
++		 * terminated or freed, and all descriptors and callbacks
++		 * have already been processed. Therefore, no additional
++		 * handling is required.
++		 */
++		if (test_and_clear_bit(ATCDMAC_STA_ABORT, &dmac_chan->status))
++			handled = true;
++	}
++
++	return handled ? IRQ_HANDLED : IRQ_NONE;
++}
++
++static irqreturn_t atcdmac_interrupt(int irq, void *dev_id)
++{
++	struct atcdmac_dmac *dmac = dev_id;
++	struct atcdmac_chan *dmac_chan;
++	unsigned int status;
++	unsigned int int_ch;
++	int ret = IRQ_NONE;
++	int i;
++
++	regmap_read(dmac->regmap, REG_INT_STA, &status);
++	int_ch = READ_ONCE(dmac->used_chan) & DMA_INT_ALL(status);
++
++	while (int_ch) {
++		spin_lock(&dmac->lock);
++		dmac->used_chan = READ_ONCE(dmac->used_chan) & ~int_ch;
++		spin_unlock(&dmac->lock);
++		regmap_write(dmac->regmap, REG_INT_STA, DMA_INT_CLR(int_ch));
++
++		for (i = 0; i < dmac->num_ch; i++) {
++			if (int_ch & BIT(i)) {
++				int_ch &= ~BIT(i);
++				dmac_chan = &dmac->chan[i];
++
++				if (status & DMA_TC(i))
++					set_bit(ATCDMAC_STA_TC,
++						&dmac_chan->status);
++
++				if (status & DMA_ERR(i))
++					set_bit(ATCDMAC_STA_ERR,
++						&dmac_chan->status);
++
++				if (status & DMA_ABT(i))
++					set_bit(ATCDMAC_STA_ABORT,
++						&dmac_chan->status);
++
++				ret = IRQ_WAKE_THREAD;
++			}
++			if (!int_ch)
++				break;
++		}
++
++		regmap_read(dmac->regmap, REG_INT_STA, &status);
++		int_ch = READ_ONCE(dmac->used_chan) & DMA_INT_ALL(status);
++	}
++
++	return ret;
++}
++
++/**
++ * atcdmac_issue_pending - Trigger the execution of queued DMA transactions
++ * @chan: DMA channel on which to issue pending transactions
++ *
++ * This function checks if the DMA channel is currently idle and if there are
++ * descriptors waiting in the queue_list. If the channel is idle and the
++ * queue_list is not empty, it moves the first queued descriptor to the active
++ * list and starts the DMA transfer by calling atcdmac_start_transfer().
++ */
++static void atcdmac_issue_pending(struct dma_chan *chan)
++{
++	struct atcdmac_chan *dmac_chan = atcdmac_chan_to_dmac_chan(chan);
++	struct atcdmac_dmac *dmac =
++		atcdmac_dev_to_dmac(dmac_chan->dma_chan.device);
++	unsigned long flags;
++	unsigned short stop;
++
++	spin_lock_irqsave(&dmac_chan->lock, flags);
++	stop = READ_ONCE(dmac->stop_mask) & BIT(dmac_chan->chan_id);
++	if (dmac_chan->chan_used == 0 && stop == 0 &&
++	    !list_empty(&dmac_chan->queue_list)) {
++		dmac_chan->chan_used = 1;
++		list_move(dmac_chan->queue_list.next, &dmac_chan->active_list);
++		atcdmac_start_transfer(dmac_chan,
++				       atcdmac_get_active_head(dmac_chan));
++	}
++
++	spin_unlock_irqrestore(&dmac_chan->lock, flags);
++}
++
++static unsigned char atcdmac_map_buswidth(enum dma_slave_buswidth addr_width)
++{
++	switch (addr_width) {
++	case DMA_SLAVE_BUSWIDTH_1_BYTE:
++		return 0;
++	case DMA_SLAVE_BUSWIDTH_2_BYTES:
++		return 1;
++	case DMA_SLAVE_BUSWIDTH_4_BYTES:
++		return 2;
++	case DMA_SLAVE_BUSWIDTH_8_BYTES:
++		return 3;
++	case DMA_SLAVE_BUSWIDTH_16_BYTES:
++		return 4;
++	case DMA_SLAVE_BUSWIDTH_32_BYTES:
++		return 5;
++	default:
++		return 0;
++	}
++}
++
++static unsigned int atcdmac_map_tran_width(dma_addr_t src,
++					   dma_addr_t dst,
++					   size_t len,
++					   unsigned int max_align_bytes)
++{
++	unsigned int align = src | dst | len | max_align_bytes;
++	unsigned int width;
++
++	if (!(align & 0x1F))
++		width = WIDTH_32_BYTES;
++	else if (!(align & 0xF))
++		width = WIDTH_16_BYTES;
++	else if (!(align & 0x7))
++		width = WIDTH_8_BYTES;
++	else if (!(align & 0x3))
++		width = WIDTH_4_BYTES;
++	else if (!(align & 0x1))
++		width = WIDTH_2_BYTES;
++	else
++		width = WIDTH_1_BYTE;
++
++	return width;
++}
++
++/**
++ * atcdmac_convert_burst - Convert burst size to a power of two index
++ * @burst_size: Actual burst size in bytes
++ *
++ * This function converts a burst size (e.g., 1, 2, 4, 8...) into the
++ * corresponding hardware-encoded value, which represents the index of
++ * the power of two.
++ *
++ * Return: The zero-based power-of-two index corresponding to @burst_size.
++ *
++ * Example:
++ * If burst_size is 8 (binary 1000), the most significant bit is at position
++ * 4, so the function returns 3 (i.e., 4 - 1).
++ */
++static unsigned char atcdmac_convert_burst(unsigned int burst_size)
++{
++	return fls(burst_size) - 1;
++}
++
++static struct atcdmac_desc *
++atcdmac_build_desc(struct atcdmac_chan *dmac_chan,
++		   dma_addr_t src,
++		   dma_addr_t dst,
++		   unsigned int ctrl,
++		   unsigned int trans_size,
++		   unsigned int num_sg)
++{
++	struct atcdmac_desc *desc;
++
++	desc = atcdmac_get_desc(dmac_chan);
++	if (!desc)
++		return NULL;
++
++	desc->regs.src_addr_lo = lower_32_bits(src);
++	desc->regs.src_addr_hi = upper_32_bits(src);
++	desc->regs.dst_addr_lo = lower_32_bits(dst);
++	desc->regs.dst_addr_hi = upper_32_bits(dst);
++	desc->regs.ctrl = ctrl;
++	desc->regs.trans_size = trans_size;
++	desc->num_sg = num_sg;
++
++	return desc;
++}
++
++/**
++ * atcdmac_prep_dma_memcpy - Prepare a DMA memcpy operation for the specified
++ *                           channel
++ * @chan: DMA channel to configure for the operation
++ * @dst: Physical destination address for the transfer
++ * @src: Physical source address for the transfer
++ * @len: Size of the data to transfer, in bytes
++ * @flags: Status flags for the transfer descriptor
++ *
++ * This function sets up a DMA memcpy operation to transfer data from the
++ * specified source address to the destination address. It returns a DMA
++ * descriptor that represents the configured transaction.
++ */
++static struct dma_async_tx_descriptor *
++atcdmac_prep_dma_memcpy(struct dma_chan *chan,
++			dma_addr_t dst,
++			dma_addr_t src,
++			size_t len,
++			unsigned long flags)
++{
++	struct atcdmac_chan *dmac_chan = atcdmac_chan_to_dmac_chan(chan);
++	struct atcdmac_dmac *dmac = atcdmac_dev_to_dmac(chan->device);
++	struct atcdmac_desc *desc;
++	unsigned int src_width;
++	unsigned int dst_width;
++	unsigned int ctrl;
++	unsigned char src_max_burst;
++
++	if (unlikely(!len)) {
++		dev_warn(atcdmac_chan_to_dev(chan),
++			 "Failed to prepare DMA operation: len is zero\n");
++		return NULL;
++	}
++
++	src_max_burst =
++		atcdmac_convert_burst((unsigned int)SRC_BURST_SIZE_1024);
++	src_width = atcdmac_map_tran_width(src,
++					   dst,
++					   len,
++					   1 << dmac->data_width);
++	dst_width = src_width;
++	ctrl = SRC_BURST_SIZE(src_max_burst) |
++	       SRC_ADDR_MODE_INCR |
++	       DST_ADDR_MODE_INCR |
++	       DST_WIDTH(dst_width) |
++	       SRC_WIDTH(src_width);
++
++	desc = atcdmac_build_desc(dmac_chan, src, dst, ctrl,
++				  len >> src_width, 1);
++	if (!desc)
++		goto err_desc_get;
++
++	return &desc->txd;
++
++err_desc_get:
++	dev_warn(atcdmac_chan_to_dev(chan), "Failed to allocate descriptor\n");
++	return NULL;
++}
++
++static int atcdmac_get_slave_cfg(struct dma_slave_config *sconfig,
++				 enum dma_transfer_direction dir,
++				 struct atcdmac_slave_cfg *cfg)
++{
++	if (dir == DMA_MEM_TO_DEV) {
++		cfg->reg         = sconfig->dst_addr;
++		cfg->burst_bytes = sconfig->dst_addr_width * sconfig->dst_maxburst;
++		cfg->dev_width   = sconfig->dst_addr_width;
++		cfg->width_src   = atcdmac_map_buswidth(sconfig->src_addr_width);
++		cfg->width_dst   = atcdmac_map_buswidth(sconfig->dst_addr_width);
++	} else if (dir == DMA_DEV_TO_MEM) {
++		cfg->reg         = sconfig->src_addr;
++		cfg->burst_bytes = sconfig->src_addr_width * sconfig->src_maxburst;
++		cfg->dev_width   = sconfig->src_addr_width;
++		cfg->width_src   = atcdmac_map_buswidth(sconfig->src_addr_width);
++		cfg->width_dst   = atcdmac_map_buswidth(sconfig->dst_addr_width);
++	} else {
++		return -EINVAL;
++	}
++	return 0;
++}
++
++static struct atcdmac_desc *
++atcdmac_build_slave_desc(struct atcdmac_chan *dmac_chan,
++			 const struct atcdmac_slave_cfg *cfg,
++			 dma_addr_t mem, unsigned int len,
++			 enum dma_transfer_direction dir,
++			 unsigned int data_width, unsigned int num_desc)
++{
++	unsigned int   width_cal;
++	unsigned short burst_size;
++	unsigned int   ctrl;
++	dma_addr_t     src, dst;
++
++	width_cal = atcdmac_map_tran_width(mem, cfg->reg, len,
++					   (1 << data_width) | cfg->burst_bytes);
++	if (dir == DMA_MEM_TO_DEV) {
++		if (cfg->burst_bytes < (1 << width_cal)) {
++			burst_size = cfg->burst_bytes;
++			width_cal  = WIDTH_1_BYTE;
++		} else {
++			burst_size = cfg->burst_bytes / (1 << width_cal);
++		}
++		ctrl = SRC_ADDR_MODE_INCR | DST_ADDR_MODE_FIXED |
++		       DST_HS | DST_REQ(dmac_chan->req_num) |
++		       SRC_WIDTH(width_cal) | DST_WIDTH(cfg->width_dst) |
++		       SRC_BURST_SIZE(ilog2(burst_size));
++		src = mem;
++		dst = cfg->reg;
++	} else {
++		burst_size = cfg->burst_bytes / cfg->dev_width;
++		ctrl = SRC_ADDR_MODE_FIXED | DST_ADDR_MODE_INCR |
++		       SRC_HS | SRC_REQ(dmac_chan->req_num) |
++		       SRC_WIDTH(cfg->width_src) | DST_WIDTH(width_cal) |
++		       SRC_BURST_SIZE(ilog2(burst_size));
++		src      = cfg->reg;
++		dst      = mem;
++		width_cal = cfg->width_src;
++	}
++	return atcdmac_build_desc(dmac_chan, src, dst, ctrl,
++				  len >> width_cal, num_desc);
++}
++
++/**
++ * atcdmac_prep_device_sg - Prepare descriptors for memory/device DMA
++ *                          transactions
++ * @chan: DMA channel to configure for the operation
++ * @sgl: Scatter-gather list representing the memory regions to transfer
++ * @sg_len: Number of entries in the scatter-gather list
++ * @direction: Direction of the DMA transfer
++ * @flags: Status flags for the transfer descriptor
++ * @context: transaction context (ignored)
++ *
++ * This function prepares a DMA transaction by setting up the required
++ * descriptors based on the provided scatter-gather list and parameters.
++ * It supports memory-to-device and device-to-memory DMA transfers.
++ */
++static struct dma_async_tx_descriptor *
++atcdmac_prep_device_sg(struct dma_chan *chan,
++		       struct scatterlist *sgl,
++		       unsigned int sg_len,
++		       enum dma_transfer_direction direction,
++		       unsigned long flags,
++		       void *context)
++{
++	struct atcdmac_chan *dmac_chan = atcdmac_chan_to_dmac_chan(chan);
++	struct atcdmac_dmac *dmac = atcdmac_dev_to_dmac(chan->device);
++	struct atcdmac_slave_cfg cfg;
++	struct atcdmac_desc *first = NULL;
++	struct atcdmac_desc *prev = NULL;
++	struct scatterlist *sg;
++	unsigned int i;
++
++	if (unlikely(!sg_len)) {
++		dev_warn(atcdmac_chan_to_dev(chan), "sg_len is zero\n");
++		return NULL;
++	}
++
++	if (atcdmac_get_slave_cfg(&dmac_chan->dma_sconfig, direction, &cfg)) {
++		dev_err(atcdmac_chan_to_dev(chan),
++			"Invalid transfer direction %d\n", direction);
++		return NULL;
++	}
++
++	for_each_sg(sgl, sg, sg_len, i) {
++		struct atcdmac_desc *desc;
++		dma_addr_t mem = sg_dma_address(sg);
++		unsigned int len = sg_dma_len(sg);
++
++		if (unlikely(!len)) {
++			dev_err(atcdmac_chan_to_dev(chan),
++				"sg(%u) data len is zero\n", i);
++			goto err;
++		}
++
++		desc = atcdmac_build_slave_desc(dmac_chan, &cfg, mem, len,
++						direction, dmac->data_width,
++						sg_len);
++		if (!desc)
++			goto err_desc_get;
++
++		atcdmac_chain_desc(&first, &prev, desc, false);
++	}
++
++	first->txd.cookie = -EBUSY;
++	first->txd.flags = flags;
++
++	return &first->txd;
++
++err_desc_get:
++	dev_warn(atcdmac_chan_to_dev(chan), "Failed to allocate descriptor\n");
++	if (first)
++		first->num_sg = i;
++
++err:
++	if (first)
++		atcdmac_put_desc(dmac_chan, first);
++	return NULL;
++}
++
++static struct dma_async_tx_descriptor *
++atcdmac_prep_dma_cyclic(struct dma_chan *chan,
++			dma_addr_t buf_addr,
++			size_t buf_len,
++			size_t period_len,
++			enum dma_transfer_direction direction,
++			unsigned long flags)
++{
++	struct atcdmac_chan *dmac_chan = atcdmac_chan_to_dmac_chan(chan);
++	struct atcdmac_dmac *dmac = atcdmac_dev_to_dmac(chan->device);
++	struct atcdmac_slave_cfg cfg;
++	struct atcdmac_desc *first = NULL;
++	struct atcdmac_desc *prev = NULL;
++	unsigned int num_periods;
++	unsigned int period;
++
++	if (period_len == 0 || buf_len == 0) {
++		dev_warn(atcdmac_chan_to_dev(chan),
++			 "invalid cyclic params buf_len=%zu period_len=%zu\n",
++			 buf_len, period_len);
++		return NULL;
++	}
++
++	if (atcdmac_get_slave_cfg(&dmac_chan->dma_sconfig, direction, &cfg)) {
++		dev_err(atcdmac_chan_to_dev(chan),
++			"Invalid transfer direction %d\n", direction);
++		return NULL;
++	}
++
++	num_periods = (buf_len + period_len - 1) / period_len;
++
++	for (period = 0; period < buf_len; period += period_len) {
++		struct atcdmac_desc *desc;
++		dma_addr_t mem = buf_addr + period;
++		unsigned int len = min_t(unsigned int, period_len,
++					 buf_len - period);
++
++		desc = atcdmac_build_slave_desc(dmac_chan, &cfg, mem, len,
++						direction, dmac->data_width,
++						num_periods);
++		if (!desc)
++			goto err_desc_get;
++		atcdmac_chain_desc(&first, &prev, desc, true);
++	}
++
++	first->txd.flags = flags;
++	dmac_chan->cyclic = true;
++
++	return &first->txd;
++
++err_desc_get:
++	dev_warn(atcdmac_chan_to_dev(chan), "Failed to allocate descriptor\n");
++	if (first)
++		atcdmac_put_desc(dmac_chan, first);
++
++	return NULL;
++}
++
++static int atcdmac_set_device_config(struct dma_chan *chan,
++				     struct dma_slave_config *sconfig)
++{
++	struct atcdmac_chan *dmac_chan = atcdmac_chan_to_dmac_chan(chan);
++
++	/* Check if this chan is configured for device transfers */
++	if (!dmac_chan->dev_chan)
++		return -EINVAL;
++
++	/* Must be powers of two according to ATCDMAC300 spec */
++	if (!is_power_of_2(sconfig->src_maxburst) ||
++	    !is_power_of_2(sconfig->dst_maxburst) ||
++	    !is_power_of_2(sconfig->src_addr_width) ||
++	    !is_power_of_2(sconfig->dst_addr_width))
++		return -EINVAL;
++
++	memcpy(&dmac_chan->dma_sconfig, sconfig, sizeof(*sconfig));
++
++	return 0;
++}
++
++static int atcdmac_terminate_all(struct dma_chan *chan)
++{
++	struct atcdmac_chan *dmac_chan = atcdmac_chan_to_dmac_chan(chan);
++	struct atcdmac_desc *desc_cur, *desc_next;
++	LIST_HEAD(list);
++	unsigned long flags;
++	unsigned int val;
++	int ret;
++
++	spin_lock_irqsave(&dmac_chan->lock, flags);
++	atcdmac_abort_chan(dmac_chan);
++	atcdmac_enable_chan(dmac_chan, 0);
++	ret = regmap_read_poll_timeout_atomic(dmac_chan->dma_dev->regmap,
++					      REG_CH_EN,
++					      val,
++					      !(val & BIT(dmac_chan->chan_id)),
++					      10,
++					      ATCDMAC_CHAN_TIMEOUT_US);
++	if (ret)
++		dev_err(atcdmac_chan_to_dev(chan),
++			"Timed out waiting for channel to disable\n");
++
++	list_splice_init(&dmac_chan->queue_list,  &list);
++	list_splice_init(&dmac_chan->active_list, &list);
++	dmac_chan->chan_used = 0;
++	spin_unlock_irqrestore(&dmac_chan->lock, flags);
++
++	list_for_each_entry_safe(desc_cur, desc_next, &list, desc_node) {
++		atcdmac_run_tx_complete_actions(desc_cur, DMA_TRANS_ABORTED);
++		atcdmac_put_desc(dmac_chan, desc_cur);
++	}
++
++	return ret;
++}
++
++static enum dma_status atcdmac_get_tx_status(struct dma_chan *chan,
++					     dma_cookie_t cookie,
++					     struct dma_tx_state *state)
++{
++	return dma_cookie_status(chan, cookie, state);
++}
++
++static int atcdmac_wait_chan_idle(struct atcdmac_dmac *dmac,
++				  unsigned short chan_mask,
++				  unsigned int timeout_us)
++{
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read_poll_timeout(dmac->regmap,
++				       REG_CH_EN,
++				       val,
++				       !(val & chan_mask),
++				       50,
++				       timeout_us);
++	if (ret)
++		dev_err(dmac->dma_device.dev,
++			"Timeout waiting for device ready %d\n", ret);
++
++	return ret;
++}
++
++/**
++ * atcdmac_alloc_chan_resources - Allocate resources for a DMA channel
++ * @chan: The DMA channel for which resources are being allocated
++ *
++ * This function sets up and allocates the necessary resources for the
++ * specified DMA channel (chan). It ensures the channel is prepared to
++ * handle DMA requests from clients by allocating descriptors and any other
++ * required resources.
++ *
++ * Return: The number of descriptors successfully allocated, or a negative
++ *         error code on failure.
++ */
++static int atcdmac_alloc_chan_resources(struct dma_chan *chan)
++{
++	struct atcdmac_chan *dmac_chan = atcdmac_chan_to_dmac_chan(chan);
++	struct atcdmac_dmac *dmac = atcdmac_dev_to_dmac(chan->device);
++	struct atcdmac_desc *desc;
++	int i;
++
++	if (atcdmac_is_chan_enabled(dmac_chan)) {
++		dev_err(atcdmac_chan_to_dev(chan),
++			"DMA channel is not in an idle state\n");
++		return -EBUSY;
++	}
++
++	if (!list_empty(&dmac_chan->free_list))
++		return dmac_chan->descs_allocated;
++
++	/*
++	 * Spin-lock protection is not necessary during DMA channel
++	 * initialization, as the channel is not yet in use at this stage,
++	 * and the shared resources are not accessed by other threads.
++	 */
++	for (i = 0; i < ATCDMAC_DESC_PER_CHAN; i++) {
++		desc = atcdmac_alloc_desc(chan, GFP_KERNEL);
++		if (!desc) {
++			dev_warn(dmac->dma_device.dev,
++				 "Insufficient descriptors: only %d descriptors available\n",
++				 i);
++			break;
++		}
++		list_add_tail(&desc->desc_node, &dmac_chan->free_list);
++	}
++	dmac_chan->descs_allocated = i;
++	dmac_chan->cyclic = false;
++	dma_cookie_init(chan);
++	spin_lock_irq(&dmac->lock);
++	dmac->stop_mask &= ~BIT(dmac_chan->chan_id);
++	spin_unlock_irq(&dmac->lock);
++
++	return dmac_chan->descs_allocated;
++}
++
++/**
++ * atcdmac_free_chan_resources - Release a DMA channel's resources
++ * @chan: The DMA channel to release
++ *
++ * This function ensures that any remaining DMA descriptors in the
++ * active_list and queue_list are properly reclaimed. It releases all
++ * resources associated with the specified DMA channel and resets the
++ * channel's management structures to their initial states.
++ */
++static void atcdmac_free_chan_resources(struct dma_chan *chan)
++{
++	struct atcdmac_chan *dmac_chan = atcdmac_chan_to_dmac_chan(chan);
++	struct atcdmac_dmac *dmac = atcdmac_dev_to_dmac(chan->device);
++	struct atcdmac_desc *desc_next, *desc;
++	unsigned long flags;
++
++	WARN_ON_ONCE(atcdmac_is_chan_enabled(dmac_chan));
++
++	spin_lock_irq(&dmac->lock);
++	dmac->stop_mask |= BIT(dmac_chan->chan_id);
++	spin_unlock_irq(&dmac->lock);
++
++	atcdmac_terminate_all(chan);
++
++	spin_lock_irqsave(&dmac_chan->lock, flags);
++	list_for_each_entry_safe(desc,
++				 desc_next,
++				 &dmac_chan->free_list,
++				 desc_node) {
++		list_del(&desc->desc_node);
++		dma_pool_free(dmac->dma_desc_pool, desc, desc->txd.phys);
++	}
++
++	INIT_LIST_HEAD(&dmac_chan->free_list);
++	dmac_chan->descs_allocated = 0;
++	dmac_chan->status = 0;
++	dmac_chan->chan_used = 0;
++	dmac_chan->dev_chan = 0;
++	spin_unlock_irqrestore(&dmac_chan->lock, flags);
++}
++
++static bool atcdmac_filter_chan(struct dma_chan *chan, void *dma_dev)
++{
++	if (dma_dev == chan->device->dev)
++		return true;
++
++	return false;
++}
++
++static struct dma_chan *atcdmac_dma_xlate_handler(struct of_phandle_args *dmac,
++						  struct of_dma *of_dma)
++{
++	struct platform_device *dmac_pdev;
++	struct atcdmac_chan *dmac_chan;
++	struct dma_chan *chan;
++	dma_cap_mask_t mask;
++
++	dmac_pdev = of_find_device_by_node(dmac->np);
++	if (!dmac_pdev)
++		return NULL;
++
++	dma_cap_zero(mask);
++	dma_cap_set(DMA_SLAVE, mask);
++	chan = dma_request_channel(mask, atcdmac_filter_chan, &dmac_pdev->dev);
++	put_device(&dmac_pdev->dev);
++
++	if (!chan)
++		return NULL;
++
++	dmac_chan = atcdmac_chan_to_dmac_chan(chan);
++	dmac_chan->dev_chan = true;
++	dmac_chan->req_num = dmac->args[0] & 0xff;
++
++	return chan;
++}
++
++/**
++ * atcdmac_reset_and_wait_chan_idle - Reset the DMA controller and wait for
++ *                                    all channels to become idle
++ * @dmac: Pointer to the DMA controller structure
++ *
++ * This function performs a reset of the DMA controller and ensures that all
++ * DMA channels are disabled.
++ */
++static int atcdmac_reset_and_wait_chan_idle(struct atcdmac_dmac *dmac)
++{
++	regmap_update_bits(dmac->regmap, REG_CTL, DMAC_RESET, 1);
++	msleep(20);
++	regmap_update_bits(dmac->regmap, REG_CTL, DMAC_RESET, 0);
++
++	return atcdmac_wait_chan_idle(dmac,
++				      BIT(dmac->num_ch) - 1,
++				      ATCDMAC_CHAN_TIMEOUT_US);
++}
++
++static int atcdmac_restore_iocp(struct atcdmac_dmac *dmac)
++{
++	if (!dmac->regmap_iocp)
++		return 0;
++
++	return regmap_write(dmac->regmap_iocp,
++			    0,
++			    IOCP_CACHE_DMAC0_AW |
++			    IOCP_CACHE_DMAC0_AR |
++			    IOCP_CACHE_DMAC1_AW |
++			    IOCP_CACHE_DMAC1_AR);
++}
++
++static int atcdmac_init_iocp(struct platform_device *pdev,
++			     struct atcdmac_dmac *dmac)
++{
++	const struct regmap_config iocp_regmap_config = {
++		.name = "iocp",
++		.reg_bits = 32,
++		.val_bits = 32,
++		.reg_stride = 4,
++		.pad_bits = 0,
++		.max_register = 0,
++		.cache_type = REGCACHE_NONE,
++	};
++	struct resource *res;
++	void __iomem *regs;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "iocp");
++	if (!res) {
++		dmac->regmap_iocp = NULL;
++		return 0;
++	}
++
++	regs = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(regs)) {
++		dmac->regmap_iocp = NULL;
++		return dev_err_probe(&pdev->dev, PTR_ERR(regs),
++				     "Failed to create ioremap for IOCP\n");
++	}
++
++	dmac->regmap_iocp = devm_regmap_init_mmio(&pdev->dev,
++						  regs,
++						  &iocp_regmap_config);
++	if (IS_ERR(dmac->regmap_iocp)) {
++		int ret = PTR_ERR(dmac->regmap_iocp);
++
++		dmac->regmap_iocp = NULL;
++		return dev_err_probe(&pdev->dev, ret,
++				     "Failed to create regmap for IOCP\n");
++	}
++
++	return atcdmac_restore_iocp(dmac);
++}
++
++static void atcdmac_init_dma_device(struct platform_device *pdev,
++				    struct atcdmac_dmac *dmac)
++{
++	struct dma_device *device = &dmac->dma_device;
++
++	device->device_alloc_chan_resources = atcdmac_alloc_chan_resources;
++	device->device_free_chan_resources = atcdmac_free_chan_resources;
++	device->device_tx_status = atcdmac_get_tx_status;
++	device->device_issue_pending = atcdmac_issue_pending;
++	device->device_prep_dma_memcpy = atcdmac_prep_dma_memcpy;
++	device->device_prep_slave_sg = atcdmac_prep_device_sg;
++	device->device_config = atcdmac_set_device_config;
++	device->device_terminate_all = atcdmac_terminate_all;
++	device->device_prep_dma_cyclic = atcdmac_prep_dma_cyclic;
++
++	device->dev = &pdev->dev;
++	device->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++				  BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++				  BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
++	device->dst_addr_widths = device->src_addr_widths;
++	device->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
++	device->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
++
++	dma_cap_set(DMA_SLAVE, device->cap_mask);
++	dma_cap_set(DMA_MEMCPY, device->cap_mask);
++	dma_cap_set(DMA_CYCLIC, device->cap_mask);
++}
++
++static int atcdmac_init_channels(struct platform_device *pdev,
++				 struct atcdmac_dmac *dmac)
++{
++	struct regmap_config chan_regmap_config = {
++		.reg_bits = 32,
++		.val_bits = 32,
++		.reg_stride = 4,
++		.pad_bits = 0,
++		.cache_type = REGCACHE_NONE,
++		.max_register = REG_CH_LLP_HIGH_OFF,
++	};
++	struct atcdmac_chan *dmac_chan;
++	int ret;
++	int i;
++
++	INIT_LIST_HEAD(&dmac->dma_device.channels);
++
++	for (i = 0; i < dmac->num_ch; i++) {
++		char *regmap_name = kasprintf(GFP_KERNEL, "chan%d", i);
++
++		if (!regmap_name)
++			return -ENOMEM;
++
++		dmac_chan = &dmac->chan[i];
++		chan_regmap_config.name = regmap_name;
++		dmac_chan->regmap =
++			devm_regmap_init_mmio(&pdev->dev,
++					      dmac->regs + REG_CH_OFF(i),
++					      &chan_regmap_config);
++		kfree(regmap_name);
++
++		if (IS_ERR(dmac_chan->regmap)) {
++			ret = PTR_ERR(dmac_chan->regmap);
++			dev_err_probe(&pdev->dev, ret,
++				      "Failed to create regmap for DMA chan%d\n",
++				      i);
++			return ret;
++		}
++
++		spin_lock_init(&dmac_chan->lock);
++		dmac_chan->dma_chan.device = &dmac->dma_device;
++		dmac_chan->dma_dev = dmac;
++		dmac_chan->chan_id = i;
++		dmac_chan->chan_used = 0;
++
++		INIT_LIST_HEAD(&dmac_chan->active_list);
++		INIT_LIST_HEAD(&dmac_chan->queue_list);
++		INIT_LIST_HEAD(&dmac_chan->free_list);
++
++		list_add_tail(&dmac_chan->dma_chan.device_node,
++			      &dmac->dma_device.channels);
++		dma_cookie_init(&dmac_chan->dma_chan);
++	}
++
++	return 0;
++}
++
++static int atcdmac_init_desc_pool(struct platform_device *pdev,
++				  struct atcdmac_dmac *dmac)
++{
++	dmac->dma_desc_pool = dmam_pool_create(dev_name(&pdev->dev),
++					       &pdev->dev,
++					       sizeof(struct atcdmac_desc),
++					       64,
++					       4096);
++	if (!dmac->dma_desc_pool)
++		return dev_err_probe(&pdev->dev, -ENOMEM,
++				     "Failed to create memory pool for DMA descriptors\n");
++	return 0;
++}
++
++static int atcdmac_init_irq(struct platform_device *pdev,
++			    struct atcdmac_dmac *dmac)
++{
++	int irq = platform_get_irq(pdev, 0);
++
++	if (irq < 0)
++		return irq;
++
++	return devm_request_threaded_irq(&pdev->dev,
++					 irq,
++					 atcdmac_interrupt,
++					 atcdmac_irq_thread,
++					 IRQF_SHARED | IRQF_ONESHOT,
++					 dev_name(&pdev->dev),
++					 dmac);
++}
++
++static int atcdmac_init_ioremap_and_regmap(struct platform_device *pdev,
++					   struct atcdmac_dmac **out_dmac)
++{
++	const struct regmap_config dmac_regmap_config = {
++		.name = dev_name(&pdev->dev),
++		.reg_bits = 32,
++		.val_bits = 32,
++		.reg_stride = 4,
++		.pad_bits = 0,
++		.cache_type = REGCACHE_NONE,
++		.max_register = REG_CH_EN,
++	};
++	struct atcdmac_dmac *dmac;
++	struct regmap *regmap;
++	void __iomem *regs;
++	size_t size;
++	unsigned int val;
++	int ret = 0;
++	unsigned char num_ch;
++
++	regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(regs))
++		return dev_err_probe(&pdev->dev, PTR_ERR(regs),
++				     "Failed to ioremap I/O resource\n");
++
++	regmap = devm_regmap_init_mmio(&pdev->dev, regs, &dmac_regmap_config);
++	if (IS_ERR(regmap))
++		return dev_err_probe(&pdev->dev, PTR_ERR(regmap),
++				     "Failed to create regmap for I/O\n");
++
++	regmap_read(regmap, REG_CFG, &val);
++	num_ch = val & CH_NUM;
++	size = sizeof(*dmac) + num_ch * sizeof(struct atcdmac_chan);
++	dmac = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
++	if (!dmac)
++		return -ENOMEM;
++
++	dmac->regmap = regmap;
++	dmac->num_ch = num_ch;
++	dmac->regs = regs;
++
++	/*
++	 * Adjust the AXI bus data width (from the DMAC Configuration
++	 * Register) to align with the transfer width encoding (in the
++	 * Channel n Control Register). For example, an AXI width of 0
++	 * (32-bit) corresponds to a transfer width of 2 (word transfer).
++	 */
++	dmac->data_width = FIELD_GET(DATA_WIDTH, val) + 2;
++	spin_lock_init(&dmac->lock);
++
++	platform_set_drvdata(pdev, dmac);
++	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)))
++		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "Failed to set DMA mask\n");
++
++	*out_dmac = dmac;
++
++	return ret;
++}
++
++static int atcdmac_probe(struct platform_device *pdev)
++{
++	struct atcdmac_dmac *dmac;
++	int ret;
++
++	ret = atcdmac_init_ioremap_and_regmap(pdev, &dmac);
++	if (ret)
++		return ret;
++
++	ret = atcdmac_reset_and_wait_chan_idle(dmac);
++	if (ret)
++		return ret;
++
++	ret = atcdmac_init_desc_pool(pdev, dmac);
++	if (ret)
++		return ret;
++
++	ret = atcdmac_init_channels(pdev, dmac);
++	if (ret)
++		return ret;
++
++	atcdmac_init_dma_device(pdev, dmac);
++
++	ret = dma_async_device_register(&dmac->dma_device);
++	if (ret)
++		return ret;
++
++	ret = atcdmac_init_irq(pdev, dmac);
++	if (ret)
++		goto err_dma_async_register;
++
++	ret = atcdmac_init_iocp(pdev, dmac);
++	if (ret)
++		goto err_dma_async_register;
++
++	ret = of_dma_controller_register(pdev->dev.of_node,
++					 atcdmac_dma_xlate_handler,
++					 dmac);
++	if (ret)
++		goto err_dma_async_register;
++
++	return 0;
++
++err_dma_async_register:
++	dma_async_device_unregister(&dmac->dma_device);
++
++	return ret;
++}
++
++static int atcdmac_resume(struct device *dev)
++{
++	struct dma_chan *chan;
++	struct dma_chan *chan_next;
++	struct atcdmac_dmac *dmac = dev_get_drvdata(dev);
++	struct atcdmac_chan *dmac_chan;
++	unsigned long flags;
++	int ret;
++
++	ret = atcdmac_reset_and_wait_chan_idle(dmac);
++	if (ret)
++		return ret;
++
++	ret = atcdmac_restore_iocp(dmac);
++	if (ret)
++		return ret;
++
++	spin_lock_irqsave(&dmac->lock, flags);
++	dmac->stop_mask = 0;
++	spin_unlock_irqrestore(&dmac->lock, flags);
++	list_for_each_entry_safe(chan,
++				 chan_next,
++				 &dmac->dma_device.channels,
++				 device_node) {
++		dmac_chan = atcdmac_chan_to_dmac_chan(chan);
++		spin_lock_irqsave(&dmac_chan->lock, flags);
++		atcdmac_start_next_trans(dmac_chan);
++		spin_unlock_irqrestore(&dmac_chan->lock, flags);
++	}
++
++	return 0;
++}
++
++static int atcdmac_suspend(struct device *dev)
++{
++	struct atcdmac_dmac *dmac = dev_get_drvdata(dev);
++	int ret;
++	unsigned long flags;
++
++	spin_lock_irqsave(&dmac->lock, flags);
++	dmac->stop_mask = BIT(dmac->num_ch) - 1;
++	spin_unlock_irqrestore(&dmac->lock, flags);
++	ret = atcdmac_wait_chan_idle(dmac,
++				     dmac->stop_mask,
++				     ATCDMAC_CHAN_TIMEOUT_US * dmac->num_ch);
++
++	return ret;
++}
++
++static DEFINE_SIMPLE_DEV_PM_OPS(atcdmac_pm_ops,
++				atcdmac_suspend,
++				atcdmac_resume);
++
++static void atcdmac_remove(struct platform_device *pdev)
++{
++	struct atcdmac_dmac *dmac = platform_get_drvdata(pdev);
++
++	/*
++	 * Quiesce the controller first so the devm-managed IRQ, which is
++	 * released only after remove() returns, has nothing left to service.
++	 */
++	atcdmac_reset_and_wait_chan_idle(dmac);
++	of_dma_controller_free(pdev->dev.of_node);
++	dma_async_device_unregister(&dmac->dma_device);
++}
++
++static const struct of_device_id atcdmac_dt_ids[] = {
++	{ .compatible = "andestech,ae350-dma", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, atcdmac_dt_ids);
++
++static struct platform_driver atcdmac_driver = {
++	.probe = atcdmac_probe,
++	.remove = atcdmac_remove,
++	.driver = {
++		.name = "atcdmac300",
++		.of_match_table = atcdmac_dt_ids,
++		.pm = pm_sleep_ptr(&atcdmac_pm_ops),
++	},
++};
++module_platform_driver(atcdmac_driver);
++
++MODULE_AUTHOR("CL Wang <cl634@andestech.com>");
++MODULE_DESCRIPTION("Andes ATCDMAC300 controller driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/dma/atcdmac300.h b/drivers/dma/atcdmac300.h
+new file mode 100644
+index 000000000000..3aee00e02130
+--- /dev/null
++++ b/drivers/dma/atcdmac300.h
+@@ -0,0 +1,296 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Header file for Andes ATCDMAC300 DMA controller driver
++ *
++ * Copyright (C) 2025 Andes Technology Corporation
++ */
++#ifndef ATCDMAC300_H
++#define ATCDMAC300_H
++
++#include <linux/bitfield.h>
++#include <linux/dmaengine.h>
++#include <linux/dmapool.h>
++#include <linux/interrupt.h>
++#include <linux/regmap.h>
++#include <linux/spinlock.h>
++
++/*
++ * Register Map Definitions for ATCDMAC300 DMA Controller
++ *
++ * These macros define the offsets and bit masks for various registers
++ * within the ATCDMAC300 DMA controller.
++ */
++
++/* Global DMAC Registers */
++#define REG_CFG			0x10
++#define CH_NUM			GENMASK(3, 0)
++#define DATA_WIDTH		GENMASK(25, 24)
++
++#define REG_CTL			0x20
++#define DMAC_RESET		BIT(0)
++
++#define REG_CH_ABT		0x24
++
++#define REG_INT_STA		0x30
++#define TC_OFFSET		16
++#define ABT_OFFSET		8
++#define ERR_OFFSET		0
++#define DMA_TC(val)		BIT(TC_OFFSET + (val))
++#define DMA_ABT(val)		BIT(ABT_OFFSET + (val))
++#define DMA_ERR(val)		BIT(ERR_OFFSET + (val))
++#define DMA_TC_FIELD		GENMASK(TC_OFFSET + 7, TC_OFFSET)
++#define DMA_ABT_FIELD		GENMASK(ABT_OFFSET + 7, ABT_OFFSET)
++#define DMA_ERR_FIELD		GENMASK(ERR_OFFSET + 7, ERR_OFFSET)
++#define DMA_INT_ALL(val)	(FIELD_GET(DMA_TC_FIELD, (val)) |	\
++				 FIELD_GET(DMA_ABT_FIELD, (val)) |	\
++				 FIELD_GET(DMA_ERR_FIELD, (val)))
++#define DMA_INT_CLR(val)	(FIELD_PREP(DMA_TC_FIELD, (val)) |	\
++				 FIELD_PREP(DMA_ABT_FIELD, (val)) |	\
++				 FIELD_PREP(DMA_ERR_FIELD, (val)))
++
++#define REG_CH_EN		0x34
++
++#define REG_CH_OFF(ch)		((ch) * 0x20 + 0x40)
++#define REG_CH_CTL_OFF		0x0
++#define REG_CH_SIZE_OFF		0x4
++#define REG_CH_SRC_LOW_OFF	0x8
++#define REG_CH_SRC_HIGH_OFF	0xC
++#define REG_CH_DST_LOW_OFF	0x10
++#define REG_CH_DST_HIGH_OFF	0x14
++#define REG_CH_LLP_LOW_OFF	0x18
++#define REG_CH_LLP_HIGH_OFF	0x1C
++
++#define SRC_BURST_SIZE_1	BIT(0)
++#define SRC_BURST_SIZE_2	BIT(1)
++#define SRC_BURST_SIZE_4	BIT(2)
++#define SRC_BURST_SIZE_8	BIT(3)
++#define SRC_BURST_SIZE_16	BIT(4)
++#define SRC_BURST_SIZE_32	BIT(5)
++#define SRC_BURST_SIZE_64	BIT(6)
++#define SRC_BURST_SIZE_128	BIT(7)
++#define SRC_BURST_SIZE_256	BIT(8)
++#define SRC_BURST_SIZE_512	BIT(9)
++#define SRC_BURST_SIZE_1024	BIT(10)
++#define SRC_BURST_SIZE_MASK	GENMASK(27, 24)
++#define SRC_BURST_SIZE(size)	FIELD_PREP(SRC_BURST_SIZE_MASK, size)
++
++#define WIDTH_1_BYTE		0x0
++#define WIDTH_2_BYTES		0x1
++#define WIDTH_4_BYTES		0x2
++#define WIDTH_8_BYTES		0x3
++#define WIDTH_16_BYTES		0x4
++#define WIDTH_32_BYTES		0x5
++#define SRC_WIDTH_MASK		GENMASK(23, 21)
++#define SRC_WIDTH(width)	FIELD_PREP(SRC_WIDTH_MASK, width)
++#define SRC_WIDTH_GET(val)	FIELD_GET(SRC_WIDTH_MASK, val)
++#define DST_WIDTH_MASK		GENMASK(20, 18)
++#define DST_WIDTH(width)	FIELD_PREP(DST_WIDTH_MASK, width)
++#define DST_WIDTH_GET(val)	FIELD_GET(DST_WIDTH_MASK, val)
++
++/* DMA handshake mode */
++#define SRC_HS			BIT(17)
++#define DST_HS			BIT(16)
++
++/* Address control */
++#define SRC_ADDR_CTRL_MASK	GENMASK(15, 14)
++#define SRC_ADDR_MODE_INCR	FIELD_PREP(SRC_ADDR_CTRL_MASK, 0x0)
++#define SRC_ADDR_MODE_DECR	FIELD_PREP(SRC_ADDR_CTRL_MASK, 0x1)
++#define SRC_ADDR_MODE_FIXED	FIELD_PREP(SRC_ADDR_CTRL_MASK, 0x2)
++#define DST_ADDR_CTRL_MASK	GENMASK(13, 12)
++#define DST_ADDR_MODE_INCR	FIELD_PREP(DST_ADDR_CTRL_MASK, 0x0)
++#define DST_ADDR_MODE_DECR	FIELD_PREP(DST_ADDR_CTRL_MASK, 0x1)
++#define DST_ADDR_MODE_FIXED	FIELD_PREP(DST_ADDR_CTRL_MASK, 0x2)
++
++/* DMA request select */
++#define SRC_REQ_SEL_MASK	GENMASK(11, 8)
++#define SRC_REQ(req_num)	FIELD_PREP(SRC_REQ_SEL_MASK, (req_num))
++#define DST_REQ_SEL_MASK	GENMASK(7, 4)
++#define DST_REQ(req_num)	FIELD_PREP(DST_REQ_SEL_MASK, (req_num))
++
++/* Channel abort interrupt mask */
++#define INT_ABT_MASK		BIT(3)
++/* Channel error interrupt mask */
++#define INT_ERR_MASK		BIT(2)
++/* Channel terminal count interrupt mask */
++#define INT_TC_MASK		BIT(1)
++
++/* Channel Enable */
++#define CHEN			BIT(0)
++
++#define IOCP_CACHE_DMAC0_AW	GENMASK(3, 0)
++#define IOCP_CACHE_DMAC0_AR	GENMASK(7, 4)
++#define IOCP_CACHE_DMAC1_AW	GENMASK(11, 8)
++#define IOCP_CACHE_DMAC1_AR	GENMASK(15, 12)
++
++#define ATCDMAC_DESC_PER_CHAN	64
++#define ATCDMAC_CHAN_TIMEOUT_US	100000
++/*
++ * Status for bottom-half processing.
++ */
++enum dma_sta {
++	ATCDMAC_STA_TC = 0,
++	ATCDMAC_STA_ERR,
++	ATCDMAC_STA_ABORT
++};
++
++/**
++ * struct atcdmac_regs - Hardware DMA descriptor registers.
++ *
++ * @ctrl: Channel Control Register.
++ * @trans_size: Transfer Size Register.
++ * @src_addr_lo: Source Address Register (low 32-bit).
++ * @src_addr_hi: Source Address Register (high 32-bit).
++ * @dst_addr_lo: Destination Address Register (low 32-bit).
++ * @dst_addr_hi: Destination Address Register (high 32-bit).
++ * @ll_ptr_lo: Linked List Pointer Register (low 32-bit).
++ * @ll_ptr_hi: Linked List Pointer Register (high 32-bit).
++ */
++struct atcdmac_regs {
++	unsigned int ctrl;
++	unsigned int trans_size;
++	unsigned int src_addr_lo;
++	unsigned int src_addr_hi;
++	unsigned int dst_addr_lo;
++	unsigned int dst_addr_hi;
++	unsigned int ll_ptr_lo;
++	unsigned int ll_ptr_hi;
++};
++
++/**
++ * struct atcdmac_desc - Internal representation of a DMA descriptor.
++ *
++ * @regs: Hardware registers for this descriptor.
++ * @txd: DMA transaction descriptor for dmaengine framework.
++ * @desc_node: Node for linking descriptors in software lists.
++ * @tx_list: List head for chaining multiple descriptors in a single transfer.
++ * @at: Next descriptor in a cyclic transfer (for internal use).
++ * @num_sg: Number of scatterlist entries this descriptor handles.
++ */
++struct atcdmac_desc {
++	struct atcdmac_regs		regs;
++	struct dma_async_tx_descriptor	txd;
++	struct list_head		desc_node;
++	struct list_head		tx_list;
++	struct list_head		*at;
++	unsigned short			num_sg;
++};
++
++/**
++ * struct atcdmac_chan - Private data for each DMA channel.
++ *
++ * @dma_chan: Common DMA engine channel object members
++ * @dma_dev: Pointer to the struct atcdmac_dmac
++ * @dma_sconfig: DMA transfer config for device-to-memory or memory-to-device
++ * @regmap: Regmap for the DMA channel register
++ * @active_list: List of descriptors being processed by the DMA engine
++ * @queue_list: List of descriptors ready to be submitted to the DMA engine
++ * @free_list: List of descriptors available for reuse by the channel
++ * @lock: Protects data access in atomic operations
++ * @status: Transmit status info, shared between top-half and threaded IRQ
++ * @descs_allocated: Number of descriptors currently allocated in the pool
++ * @chan_id: Channel ID number
++ * @req_num: Request number assigned to the channel
++ * @chan_used: Indicates whether the DMA channel is currently in use
++ * @cyclic: Indicates if the transfer operates in cyclic mode
++ * @dev_chan: Indicates if the DMA channel transfers data between device
++ *            and memory
++ */
++struct atcdmac_chan {
++	struct dma_chan		dma_chan;
++	struct atcdmac_dmac	*dma_dev;
++	struct dma_slave_config	dma_sconfig;
++	struct regmap		*regmap;
++
++	struct list_head	active_list;
++	struct list_head	queue_list;
++	struct list_head	free_list;
++
++	spinlock_t		lock;		/* protects active_list, queue_list, status */
++	unsigned long		status;
++	unsigned short		descs_allocated;
++	unsigned char		chan_id;
++	unsigned char		req_num;
++	bool			chan_used;
++	bool			cyclic;
++	bool			dev_chan;
++};
++
++/**
++ * struct atcdmac_dmac - Representation of the ATCDMAC300 DMA controller
++ * @dma_device: DMA device object for integration with DMA engine framework
++ * @regmap: Regmap for main DMA controller registers
++ * @regmap_iocp: Regmap for IOCP registers
++ * @dma_desc_pool: DMA descriptor pool for allocating and managing descriptors
++ * @regs: Memory-mapped base address of the main DMA controller registers
++ * @lock: Protects data access in atomic operations
++ * @used_chan: Bitmask of DMA channels actively issuing DMA descriptors
++ * @stop_mask: Stops the DMA channel after the current transaction completes
++ * @data_width: Max data bus width supported by the DMA controller
++ * @num_ch: Total number of DMA channels available in the controller
++ * @chan: Array of DMA channel structures, sized by the controller's channel
++ *        count
++ */
++struct atcdmac_dmac {
++	struct dma_device	dma_device;
++	struct regmap		*regmap;
++	struct regmap		*regmap_iocp;
++	struct dma_pool		*dma_desc_pool;
++	void __iomem		*regs;
++	spinlock_t		lock;		/* protects used_chan, stop_mask */
++	unsigned short		used_chan;
++	unsigned short		stop_mask;
++	unsigned char		data_width;
++	unsigned char		num_ch;
++	struct atcdmac_chan	chan[] __counted_by(num_ch);
++};
++
++/**
++ * struct atcdmac_slave_cfg - Pre-computed per-transfer slave DMA configuration
++ *
++ * @reg: Device-side register address (source for DEV_TO_MEM, destination
++ *       for MEM_TO_DEV).
++ * @burst_bytes: Burst size in bytes (addr_width * maxburst from
++ *               dma_slave_config). Used to derive the hardware burst-count
++ *               field and to select the optimal transfer width.
++ * @dev_width: Device-side bus width in bytes (src_addr_width for DEV_TO_MEM,
++ *             dst_addr_width for MEM_TO_DEV). Used to convert @burst_bytes
++ *             into a hardware burst-count for the device side.
++ * @width_src: Hardware-encoded source transfer width (output of
++ *             atcdmac_map_buswidth() on the source bus width).
++ * @width_dst: Hardware-encoded destination transfer width (output of
++ *             atcdmac_map_buswidth() on the destination bus width).
++ */
++struct atcdmac_slave_cfg {
++	dma_addr_t	reg;
++	unsigned int	burst_bytes;
++	unsigned int	dev_width;
++	unsigned int	width_src;
++	unsigned int	width_dst;
++};
++
++/*
++ * Helper functions to convert between dmaengine and internal structures.
++ */
++static inline struct atcdmac_desc *
++atcdmac_txd_to_dma_desc(struct dma_async_tx_descriptor *txd)
++{
++	return container_of(txd, struct atcdmac_desc, txd);
++}
++
++static inline struct atcdmac_chan *
++atcdmac_chan_to_dmac_chan(struct dma_chan *chan)
++{
++	return container_of(chan, struct atcdmac_chan, dma_chan);
++}
++
++static inline struct atcdmac_dmac *atcdmac_dev_to_dmac(struct dma_device *dev)
++{
++	return container_of(dev, struct atcdmac_dmac, dma_device);
++}
++
++static inline struct device *atcdmac_chan_to_dev(struct dma_chan *chan)
++{
++	return &chan->dev->device;
++}
++
++#endif
 -- 
 2.34.1
 

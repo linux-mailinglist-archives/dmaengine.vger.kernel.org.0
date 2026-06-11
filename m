@@ -1,232 +1,289 @@
-Return-Path: <dmaengine+bounces-11447-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11448-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id hoNVNWRTKmq3nQMAu9opvQ
-	(envelope-from <dmaengine+bounces-11447-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 08:19:16 +0200
+	id DUZiIu5WKmq2ngMAu9opvQ
+	(envelope-from <dmaengine+bounces-11448-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 08:34:22 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2669A66EF7C
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 08:19:16 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB98566F0DF
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 08:34:21 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=RFNrmYDF;
-	dkim=pass header.d=oss.qualcomm.com header.s=google header.b="OLOna7/q";
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11447-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11447-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=qualcomm.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=WN2Cd1cS;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11448-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11448-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 92341313FC49
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 06:17:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C865130D9658
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 06:28:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE5F418AE2;
-	Thu, 11 Jun 2026 06:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FCCC360EC9;
+	Thu, 11 Jun 2026 06:28:54 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F41935E1C8
-	for <dmaengine@vger.kernel.org>; Thu, 11 Jun 2026 06:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F08735F191
+	for <dmaengine@vger.kernel.org>; Thu, 11 Jun 2026 06:28:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781158659; cv=none; b=JRoYmzZrflIM5TdDwSxwL2iAOmuBJKdNytCIAGGjWysOKW4Ma86KjzEid8cmSzDbaNVsgBWK6usxwHj8T7jsJ1HcisOZNjaNoN2ERfkCNnihXuNvY0onqCjguefdSWtQSaRw6IeaIfKUaSrUmgD2m+XWl24tsSNAz3CxdGOR8AM=
+	t=1781159334; cv=none; b=iok3e/8eQhlaUBFTDryTS84GxBv6rOK4EVG/pSlowctlL9MJMoxCDweoo8pcDmWCLrgto3LrgfiwjMC2BrJVuQ0NzTY0fnfU4SpmbSJOAGi4d0ocXIZXrOEERb9CwTMNaONM6EkNKQtOW9GEqz5BTgCCpjH17oL73zydB5um1Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781158659; c=relaxed/simple;
-	bh=WhO7STJOA8D0l2Vuh6fV22xQKvjJKG7+GebXtkY8kOk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KVxG2FKQdeEZya4mIjZGBeo3At48OEPsLW9BvWUHgqFR0r7s00hZyit98ocpl8/L6azttl5Fd4g9WN/88cFw/zfv8/BhEqnIxEsTIOVYfDixQtxJuX/2m043jGbXX0dLmGOnITsBaljwLWZsPqH+9MbF7ntOXm81LdbFr0z5oOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RFNrmYDF; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=OLOna7/q; arc=none smtp.client-ip=205.220.180.131
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65B5GSaq3843874
-	for <dmaengine@vger.kernel.org>; Thu, 11 Jun 2026 06:17:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=o10CKq4aPa2DYF3tTfTo8W
-	R1LMgRsOFFz3wb2DwwM8o=; b=RFNrmYDFZPBXEhM6T2tkSwB2dfqP2DcwvDOjqY
-	giNOiD+rDsoMxIRp0QHxg/opNomlJZp6MX3Mf+rlqSfsjw78PlfwGk2g4NA0RMxq
-	EAJGgiSPSO1ATN+XRSnH78h1TlqQdpgb01Xsd0TEvZdH2qXS0UFNOOqa8AV1sqrR
-	B24A8ZMewoCvyQeNMgre5f7w31Z1Re5OtfSYeukAwEqhuXFU/HED/l8PcbYztXZB
-	aPXIisVjKlpK1sHyhs4/6pWzSQPpMT+fMABF40weZcHKIQIVMb8SV98KLlEQxm9X
-	PONp7iwZ2UQAM0LgP8dTq+FstAmwwqrltZiMCkSTIAdjCu2g==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4eqe701whj-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Thu, 11 Jun 2026 06:17:27 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2beff6b6e74so76938385ad.1
-        for <dmaengine@vger.kernel.org>; Wed, 10 Jun 2026 23:17:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1781158646; x=1781763446; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=o10CKq4aPa2DYF3tTfTo8WR1LMgRsOFFz3wb2DwwM8o=;
-        b=OLOna7/q4ihL8qoeaeDhXcEGeA1ak4YmBBpajavW/DUnKbB/pLqb3Dg/MQJsoGmHyD
-         /GxjmNlIitH0JGFc0mBpzbtWkIPHE8+DvS+1xLN5PWxcPzgegUU7/yLlKkzQjH0tYh4d
-         C/wKpH+ycGrKO5NadV2Rr/sa31RN5XCUNPRQghoHN0mCWOpcFi7QieS/tsGe5Y7TSz2s
-         T+tCnCy7Rp7V5Y2OBbdJxzbiGH2/9Nlpbr8yrSmd8s0/dzILMgMepPvLsWBymqrgN+wG
-         K0a2vogx+LSh5FJBdzfywjw+CVH/E6anqAortrXLSfSXsS8ZeeH5NPuQZNOxDDsj3PXk
-         18ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781158646; x=1781763446;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o10CKq4aPa2DYF3tTfTo8WR1LMgRsOFFz3wb2DwwM8o=;
-        b=OkilTnmGu47S4t+LL3yRoVOUyCcRHAwCclXCIGI4ft/Ci1khOBgTf6OyMwIm54GbeD
-         I6IqiVKBeg1NHUEk0N/FErx2cCHpPn5hPTl58OZOs9LgiwCr9Yl2dHgCAU0NjNjQ0N5S
-         aPHajg8VZlRtoJ7SLIywtrDUjqjsw/Vc4IpG7iPEpJCDNOI/D2/v5VkC5oT1pYg2TJ+q
-         9d3Mtq+gC4kqB3mVyuTgIYjrVYZhOVPnWJwYMDxusJ0gABnif2P9hlQXL4wy9jvGABFJ
-         +kAefMxHO0bXQrDLfo1UhluKUniscjUTD/zeDrDPS9IcNmKtQEs2IMNmG17pgMfjS5cu
-         GeNg==
-X-Forwarded-Encrypted: i=1; AFNElJ8MUQq2gzJven1BUAgFMDna85bPDuJx8dJkjoO0tnfKgV4T7ehl9M5pPYhQZ6VWaIm9eSUR7JYAwN4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzADuXk87Lr2xBKtcQFOKzElSZfb5CPE3Ykk5NXzMsUvlbxfR7k
-	D70MvQwOhRy5BBEcwTnZxVHZWFD/PVhLz8DXdXQiJzDYAyyuWWJXD9vaGu/ictHHFwvI3qm/js5
-	3gaa0iT54W1qorR9PXCe2yHbnldLQ6mgEQc1LafrZXD+8qe55KdVAMmjtHPsEcno=
-X-Gm-Gg: Acq92OF1l8SZkG8ZV8rcAFUk+gfzj7EZuysVWDdb9x/kxlX/TLcdDXrGcmHPKR94w39
-	CaCNIiHJkYl1IkBFMEThHFo5p61/wNpscysU32d/p4Zf5ySyYm9MlgHY8kDb9g7jDF5+mnEX64S
-	O9Tz1eWM44oJVUuxHC53bcoFTKQXkGXeQ3SyYzB0lyVvu3Z+ib3j7gYO2LBxwc1TXKBUD/KeYbn
-	9cjnT/sdZf6tgCJLjrrXp3XN2wczbZhkeKreAAq7xaQWCB19O6yhprc/TjjCacfbwxBIlGGnzFE
-	6Z299jMQSgys9RtZ6sy9wVNxryz2AV8OLVUXH5J0TZ1lwVzzawncHaj0HcLEZV6Z68WTTEfAY8+
-	6MhOxo+MVYZLE9VrJpnCOS/vCQcDiaDhPk+iXWFtLgn9wmUqPT84p16VNM5FSUQ3ZZvAf
-X-Received: by 2002:a17:902:cf11:b0:2c0:f807:a760 with SMTP id d9443c01a7336-2c2f14f6cc3mr18313725ad.13.1781158645813;
-        Wed, 10 Jun 2026 23:17:25 -0700 (PDT)
-X-Received: by 2002:a17:902:cf11:b0:2c0:f807:a760 with SMTP id d9443c01a7336-2c2f14f6cc3mr18313325ad.13.1781158645328;
-        Wed, 10 Jun 2026 23:17:25 -0700 (PDT)
-Received: from hu-vishsant-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c2d9bb2199sm17015365ad.77.2026.06.10.23.17.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 23:17:24 -0700 (PDT)
-From: Vishnu Santhosh <vishnu.santhosh@oss.qualcomm.com>
-Date: Thu, 11 Jun 2026 11:47:11 +0530
-Subject: [PATCH] dmaengine: qcom: bam_dma: Defer IRQ trigger type to device
- tree
+	s=arc-20240116; t=1781159334; c=relaxed/simple;
+	bh=bBmRBWvCbRQ5teMs75gwLMrUN2d7FWzI8oeYrxjhnR8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=MMzKiayWttWO9OjCHXxSdVFEsZOzZn3wyPSFokhAzSUhJMpLDkqNJGR/kWE3akqFaA7AibGJWt1iCCeK2A8CTBMW1VOmBmkQSlBewo2X69Fv2dMjC9OGKHJwvztvwcPtf67JHTk6kW4NHuRtGmu8npjiNsUz1XIPFhp9IZS9u7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WN2Cd1cS; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE8D01F00893;
+	Thu, 11 Jun 2026 06:28:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781159319;
+	bh=JaHcfjnG+w3u/f2v4LJhmN9eYCUnkWU7PvdAPDN1/co=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=WN2Cd1cSgUXixeZDTNX8xv7Rb5ljgApOdN7fac5qZnzwfZomMfnfwwNMXf65qTcg9
+	 sGw6XoabAol58dLRwbvNu+F/AybMc3wTBguaITM6KFmk8X2KoN0LQr++Vbl2i24P/B
+	 OLAaHsQd4nYw+HDPLKwu7HRArH+WmP03h3jrjHS8tv/YDexXfa5xEkWuqGz2sCLyMg
+	 yhEfeZ5WEh4YMtg8w25Mro1zdVKmRJa+sPcgEdx3Nx6A6r2lzkUL69nkJOF1k938Jg
+	 mosKSsdA5vbZg3Plne3cnO6O8X1YGgPQcqKNGLCraUWYwJY1LqUaTFxmHINKTb3LAW
+	 /JDQEnh1b3OxA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Defer IRQ trigger type to
+ device tree
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vishnu Santhosh" <vishnu.santhosh@oss.qualcomm.com>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260611-qcom-bam-dma-irq-trigger-v1-1-21c216e00b2a@oss.qualcomm.com>
+References: <20260611-qcom-bam-dma-irq-trigger-v1-1-21c216e00b2a@oss.qualcomm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 11 Jun 2026 06:28:38 +0000
+Message-Id: <20260611062838.CE8D01F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260611-qcom-bam-dma-irq-trigger-v1-1-21c216e00b2a@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAOZSKmoC/42NQQ6CMBBFr0K6dkiLWowr72FYDGWASSyVKTYaw
- t2tnMDNT95P3v+riiRMUV2LVQkljhymDOZQKDfiNBBwl1lVurLaagOzCx5a9NB5BJYZFuFhIAF
- 9tJZqutje1CrrT6Ge3/v0vck8clyCfPanZH7tH6PJgAG0Tvfnk9Mt4i3EWM4vfGTDlzlUs23bF
- 6T7qfvHAAAA
-X-Change-ID: 20260601-qcom-bam-dma-irq-trigger-0366e7e86f17
-To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-        Andy Gross <agross@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@oss.qualcomm.com,
-        chris.lew@oss.qualcomm.com,
-        Deepak Kumar Singh <deepak.singh@oss.qualcomm.com>,
-        Vishnu Santhosh <vishnu.santhosh@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781158641; l=1659;
- i=vishnu.santhosh@oss.qualcomm.com; s=20251203; h=from:subject:message-id;
- bh=WhO7STJOA8D0l2Vuh6fV22xQKvjJKG7+GebXtkY8kOk=;
- b=h2QQISbvLM5eEow5NQq5013lL1LiyZvy1/IV5jqHzr6Jdeq7AjdPvThChUCpNDQbOG7NljAfh
- zWff99S4FnoBOy3Do85tEPlD0fhG1J7Cgr334S33Kr17jDIKD4oJ/FP
-X-Developer-Key: i=vishnu.santhosh@oss.qualcomm.com; a=ed25519;
- pk=G8/AJPecB1feGI7wxArGWGN0PPGQS0GUaD4THQCbdis=
-X-Proofpoint-GUID: niZeSvU2OZTP-gZd17XFSsoRdoJODzfm
-X-Authority-Analysis: v=2.4 cv=B9eJFutM c=1 sm=1 tr=0 ts=6a2a52f7 cx=c_pps
- a=IZJwPbhc+fLeJZngyXXI0A==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22
- a=EUspDBNiAAAA:8 a=l1n8trSoVLBZuIMzfdEA:9 a=QEXdDO2ut3YA:10
- a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjExMDA1OSBTYWx0ZWRfX9Bs39pBINey8
- f0Rax3yaLS9wYlB15aHA8VjaFdyKrixbPVHecwlekZ7M1XNoRB4/H/ucJCY/kE55Bv5pr0wf2gS
- 5DUc6EzbIJ5UAo1WyXKSbYxPfHDqti/74ZlkNd/wR5L0jripUs7pJuFvaQljk7wEuseZABeIFpS
- 0qjZymR/zjlG59bfVYU57QPHT3QGqLX4kAZBZchIfU0S84m0a774A/bsfXYT+KR5jFU28JFK7LL
- 3nlamB2VD9ULsGkMzdJwmzZOKFql4REzatNU3sdwiUcMxklPvICJBEJrXelfEI2pLAoyXTei1YF
- RHJg5E6Eylsz8Sn/dY8kkZ5uFwaNZffLdCxfvOdKmTJmUkmuXdRuicLLBz6p7/qYwhsGeXL3gdY
- e+I9zWYRoipKGl3gT5v/isVHOLsxwnrFHGKNhHVzzH7n9cQ8A+rY5VSgCOwkUHWcMFCAbq+HUhP
- e41Gy6dDO8fu+Upkgng==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjExMDA1OSBTYWx0ZWRfX4+V9lrrhY1Ox
- pPYZCzMuGbvWycmFqSF/Dl8WlsZTW/+WxqAkb/TkuhIUTvyERJR7HvyO/cs2XGC1IKpOBikYeu/
- n/H/1XITKDMgafjW/t+zEqHGj2BQEjc=
-X-Proofpoint-ORIG-GUID: niZeSvU2OZTP-gZd17XFSsoRdoJODzfm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-11_01,2026-06-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 spamscore=0 bulkscore=0
- phishscore=0 suspectscore=0 clxscore=1011 priorityscore=1501 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606110059
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-11447-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[vishnu.santhosh@oss.qualcomm.com,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:agross@codeaurora.org,m:linux-arm-msm@vger.kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:bjorn.andersson@oss.qualcomm.com,m:chris.lew@oss.qualcomm.com,m:deepak.singh@oss.qualcomm.com,m:vishnu.santhosh@oss.qualcomm.com,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,qualcomm.com:dkim,qualcomm.com:email];
 	TO_DN_SOME(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11448-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:vishnu.santhosh@oss.qualcomm.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[vishnu.santhosh@oss.qualcomm.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,smtp.kernel.org:mid,lists.linux.dev:replyto,qualcomm.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2669A66EF7C
+X-Rspamd-Queue-Id: DB98566F0DF
 
-The driver hardcodes IRQF_TRIGGER_HIGH when registering the BAM
-interrupt, which overrides the trigger type specified in the device
-tree. On Qualcomm Shikra SoC, the A2 BAM signals an edge interrupt
-to the apps processor; registering it as level-high causes the
-interrupt to not fire, resulting in missed DMA completions.
+Thank you for your contribution! Sashiko AI review found 6 potential issue(=
+s) to consider:
 
-Use IRQF_TRIGGER_NONE instead, which causes the kernel to use the
-trigger type already configured by platform_get_irq() when it parsed
-the device tree interrupts property. This makes the driver
-platform-agnostic.
+New issues:
+- [High] Allowing edge-triggered interrupts without a polling loop in the h=
+andler introduces a race condition that permanently deadlocks the DMA contr=
+oller.
 
-Fixes: e7c0fe2a5c84 ("dmaengine: add Qualcomm BAM dma driver")
-Co-developed-by: Deepak Kumar Singh <deepak.singh@oss.qualcomm.com>
-Signed-off-by: Deepak Kumar Singh <deepak.singh@oss.qualcomm.com>
-Signed-off-by: Vishnu Santhosh <vishnu.santhosh@oss.qualcomm.com>
----
- drivers/dma/qcom/bam_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Pre-existing issues:
+- [High] bam_dma_remove accesses hardware registers after forcing PM runtim=
+e suspend, leading to unclocked register accesses and system crash.
+- [High] The probe error path cleans up tasklets and disables clocks before=
+ freeing the interrupt, leading to a use-after-free and unclocked access ra=
+ce condition.
+- [High] The interrupt is requested before PM runtime is fully enabled, cau=
+sing a permanent interrupt storm if an interrupt fires during probe.
+- [High] Failure paths after `pm_runtime_get_sync()` return without decreme=
+nting the PM usage counter, causing an unbalanced usage count and leaking D=
+MA resources.
+- [High] The interrupt handler unconditionally returns IRQ_HANDLED even for=
+ spurious interrupts, defeating the kernel's spurious interrupt detection.
+--
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index 19116295f8325767a0d97a7848077885b118241c..6c3e2ca8a572fd04c925de0adbd5cc0616b361ef 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -1303,7 +1303,7 @@ static int bam_dma_probe(struct platform_device *pdev)
- 		bam_channel_init(bdev, &bdev->channels[i], i);
- 
- 	ret = devm_request_irq(bdev->dev, bdev->irq, bam_dma_irq,
--			IRQF_TRIGGER_HIGH, "bam_dma", bdev);
-+			IRQF_TRIGGER_NONE, "bam_dma", bdev);
- 	if (ret)
- 		goto err_bam_channel_exit;
- 
+commit ee883954f4570a653a82ea860b70acc6baa4eada
+Author: Vishnu Santhosh <vishnu.santhosh@oss.qualcomm.com>
+Date:   Thu Jun 11 06:17:11 2026 +0000
 
----
-base-commit: 9716c086c8e8b141d35aa61f2e96a2e83de212a7
-change-id: 20260601-qcom-bam-dma-irq-trigger-0366e7e86f17
+dmaengine: qcom: bam_dma: Defer IRQ trigger type to device tree
 
-Best regards,
--- 
-Vishnu Santhosh <vishnu.santhosh@oss.qualcomm.com>
+This commit changes the hardcoded IRQF_TRIGGER_HIGH flag to=20
+IRQF_TRIGGER_NONE when registering the BAM interrupt. This delegates the
+trigger type configuration to the device tree, resolving missed DMA
+completions on platforms that use edge-triggered interrupts.
 
+> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+> index 19116295f8325..6c3e2ca8a572f 100644
+> --- a/drivers/dma/qcom/bam_dma.c
+> +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -1303,7 +1303,7 @@ static int bam_dma_probe(struct platform_device *pd=
+ev)
+>  		bam_channel_init(bdev, &bdev->channels[i], i);
+> =20
+>  	ret =3D devm_request_irq(bdev->dev, bdev->irq, bam_dma_irq,
+> -			IRQF_TRIGGER_HIGH, "bam_dma", bdev);
+> +			IRQF_TRIGGER_NONE, "bam_dma", bdev);
+
+[Severity: High]
+This delegates the trigger type to the device tree and allows edge-triggered
+interrupts.=20
+
+Does this regression introduce a potential deadlock if the hardware asserts
+a new completion before the previous interrupt is cleared?
+
+If bam_dma_irq() only reads the BAM status registers once per invocation,
+and a new completion arrives after the status register is read, the
+overall interrupt line might remain asserted.=20
+
+Because there is no new edge, the interrupt controller would never fire
+again.=20
+
+Should we add a loop to drain all pending events until the status register
+reads zero?
+
+[Severity: High]
+This is a pre-existing issue, but requesting the IRQ here before
+pm_runtime_enable() and pm_runtime_set_active() completes might cause an
+interrupt storm.
+
+If an early interrupt fires while the device's PM runtime status is still
+suspended:
+
+drivers/dma/qcom/bam_dma.c:bam_dma_irq() {
+    ...
+    ret =3D pm_runtime_get_sync(bdev->dev);
+    if (ret < 0)
+        return IRQ_NONE;
+    ...
+}
+
+Will pm_runtime_get_sync() fail and return IRQ_NONE without clearing the
+hardware interrupt, keeping the interrupt line asserted permanently?
+
+>  	if (ret)
+>  		goto err_bam_channel_exit;
+
+[Severity: High]
+This is a pre-existing issue, but does this error path create a
+use-after-free and unclocked access race condition?
+
+If a failure occurs later in probe, the error path manually kills tasklets
+and disables the clock:
+
+drivers/dma/qcom/bam_dma.c:bam_dma_probe() {
+    ...
+err_bam_channel_exit:
+    for (i =3D 0; i < bdev->num_channels; i++)
+        tasklet_kill(&bdev->channels[i].vc.task);
+err_tasklet_kill:
+    tasklet_kill(&bdev->task);
+err_disable_clk:
+    clk_disable_unprepare(bdev->bamclk);
+
+    return ret;
+}
+
+Since devm_request_irq() was used, the interrupt remains active until devres
+cleanup.=20
+
+If an interrupt fires in this window, will bam_dma_irq() access unclocked
+BAM registers and schedule a killed tasklet?
+
+[ ... ]
+
+[Severity: High]
+This is a pre-existing issue, but does bam_dma_remove() access hardware
+registers after they have been unclocked?
+
+During driver unbinding, pm_runtime_force_suspend() disables the BAM clock.
+
+Immediately after, the code writes to the registers:
+
+drivers/dma/qcom/bam_dma.c:bam_dma_remove() {
+    ...
+    pm_runtime_force_suspend(&pdev->dev);
+
+    of_dma_controller_free(pdev->dev.of_node);
+    dma_async_device_unregister(&bdev->common);
+
+    /* mask all interrupts for this execution environment */
+    writel_relaxed(0, bam_addr(bdev, 0,  BAM_IRQ_SRCS_MSK_EE));
+    ...
+}
+
+Will accessing these unclocked peripheral registers generate an asynchronous
+bus fault and crash the system?
+
+[Severity: High]
+This is a pre-existing issue, but does bam_free_chan() leak the PM usage
+counter and DMA resources on failure?
+
+When pm_runtime_get_sync() returns an error, it still increments the PM
+usage counter.=20
+
+The failure path returns immediately:
+
+drivers/dma/qcom/bam_dma.c:bam_free_chan() {
+    ...
+    ret =3D pm_runtime_get_sync(bdev->dev);
+    if (ret < 0)
+        return;
+
+    vchan_free_chan_resources(to_virt_chan(chan));
+    ...
+}
+
+Does returning here without calling pm_runtime_put_noidle() permanently
+prevent the device from suspending, and skip freeing the channel resources
+leading to a memory leak?
+
+[Severity: High]
+This is a pre-existing issue, but does bam_dma_irq() incorrectly return
+IRQ_HANDLED for spurious interrupts?
+
+If no channel interrupts are found and the global BAM interrupt is not set,
+the handler falls through:
+
+drivers/dma/qcom/bam_dma.c:bam_dma_irq() {
+    ...
+    pm_runtime_mark_last_busy(bdev->dev);
+    pm_runtime_put_autosuspend(bdev->dev);
+
+    return IRQ_HANDLED;
+}
+
+Does this unconditionally return IRQ_HANDLED even for spurious interrupts,
+defeating the kernel's spurious interrupt detection and potentially causing
+an infinite interrupt loop?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611-qcom-bam-d=
+ma-irq-trigger-v1-1-21c216e00b2a@oss.qualcomm.com?part=3D1
 

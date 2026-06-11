@@ -1,61 +1,71 @@
-Return-Path: <dmaengine+bounces-11445-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11446-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id r16ICghOKmrcmgMAu9opvQ
-	(envelope-from <dmaengine+bounces-11445-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 07:56:24 +0200
+	id 2L0VNEVNKmpImgMAu9opvQ
+	(envelope-from <dmaengine+bounces-11446-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 07:53:09 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA9AF66ED56
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 07:56:23 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E7B466ECED
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 07:53:09 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=V0RuXtNA;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11445-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11445-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=fV4a9xpb;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11446-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11446-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 48CB3320E190
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 05:51:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CDAE2304DA03
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 05:51:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84B673403E4;
-	Thu, 11 Jun 2026 05:51:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 491E2352FA5;
+	Thu, 11 Jun 2026 05:51:48 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4283446BE;
-	Thu, 11 Jun 2026 05:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465BA2248A8;
+	Thu, 11 Jun 2026 05:51:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781157103; cv=none; b=DR53ojq8ygnEBwuB/FlV01EF7k+nUQVXUMfhWDVTkrtea394yZ5WiOyPxplpRPrHevUyB0k7qLMOWQmKpTHs+UrDTpXbcwaMdi/+K7fy3qpydF9U+r5y5wDAKCw5iYGPm0sHeDuznbA+10P1dpLMVHqyj+/4424kmp80T9kcDh8=
+	t=1781157108; cv=none; b=WGW0RzDfYW4ocof+oi7tCfb1wcB/ItaOVw6P7nI2ODJbao0PKAniBZ9VMbBWd4SaGcol7uIIhYmCL9STZQ0yal5qAObJkzTzueOtjP16RifHhu0PrTvR95RbhaXWWDn/9HpI5a1wWpULF+Olp8lNfv5R+z44Z0mc9q1wtRy9qmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781157103; c=relaxed/simple;
-	bh=WtWsOGOJFlEJPDZmGqLmhdV6iGjUWqZDyqekQoF1VoA=;
+	s=arc-20240116; t=1781157108; c=relaxed/simple;
+	bh=V/WOfSU722F6t47akPL1ckwi/HgU5jrLfYuIBesT0cs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=dUOzLW/BCpbUGn3SkE032RiHxqFCkig4it6VFNzOnopJT+OcLFh+ZeH+1eJ903ISGN/3wr6xwkAejbfym368AmGvBia1Niu9RvW1R3kPLVhgcg5ZX3Ws4xJMsFZCIvlsRnW7Ms2XoPMJryM/RpwMS/mZJRp1GqOpDDRUGvIRBUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V0RuXtNA; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 554231F00898;
-	Thu, 11 Jun 2026 05:51:39 +0000 (UTC)
+	 MIME-Version:Content-Type; b=K0SeBVX41mzz3+GBuzlUnzyqg/HKwKiZdH0IA3D3rsOUqMcMJkr7w+tX18rh4RpBVGnZ2LFhNDlTYKb3mVY7skyg6pYG4XJLJ3qu9+xFo4TDx7jsfBgmvwsBvAZy1ZGAD4puW9XhMsNSPwboRgd8DtgYKYFRLDfKyF8HNbER8yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fV4a9xpb; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BAA1F00893;
+	Thu, 11 Jun 2026 05:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781157101;
-	bh=dO1hK3n2C4V3piQtMlFbU31mAhYV2p7vQwoh1h4KlX8=;
+	s=k20260515; t=1781157106;
+	bh=S23IQtI+0tBaqos80d73BR9DJks0cOyIqYTP5LT43OU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=V0RuXtNAyhhfRA+ALHWHTYh3oKJSuxDSFVhYoUrNiM+YDiR1HEC59EySkJjjDvwer
-	 b2znceOnzNgpBFvb5HdfN3WCwJEB8oRr5TFU1V+xfSMUFr7W5znYkN5ISM2NLZmNgI
-	 hju6KhzTkIpDCqSOJ7JTQFTscCXsfh6iIbIU9qAYVjoSdVZRBW3K/bqeqF0eZAXWBy
-	 wISVDUbOJPUhx3FDVJMrW/7/OeqK4amNiQcB3IGnbOa2Dm4EeCaooU2x/P2UF+gNhw
-	 AgxtxWGfiRLLGL4W5MNn+Uqt7fIswAbQZluSCCc9SmVPVHT9EKT8G8VokjxXFCmnWt
-	 QR73GWT3QMOSg==
+	b=fV4a9xpbGgjpXYucAriw0MR4zES15K73fOTJ7woaPNhczfKJF2/iCCbBualBPzIaQ
+	 YxJfyqhMhLqqORx5xpXnLYgvoxoAheqj3vWAGbpJsPyv5gAUzZuz3ilDRYF0UFQxg3
+	 Z/ouqYRohzFJj9n6WO8Lw2HtoKYtB8pGr/Ue1v+/gBQPVZnSwQgvxbtMXoTAgLck7K
+	 mfzrqsuLBzcubFYj4Pm19fbzaOcelXbiNOUXjBucRn2fD7UiehoXxfT27xFF9w/85U
+	 q1SQCW29f8JR7rWfCD93jKLYrPlikTv2By/KMf8Gw3uXi5pus6iTgMhxqyqov83K56
+	 /LfctOd12e2GQ==
 From: Vinod Koul <vkoul@kernel.org>
-To: vigneshr@ti.com, Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, nm@ti.com
-In-Reply-To: <20260505164605.15878-1-peter.ujfalusi@gmail.com>
-References: <20260505164605.15878-1-peter.ujfalusi@gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: dmaengine/ti: Remove myself and add
- Vignesh as maintainer
-Message-Id: <178115709896.468137.15382584057699409343.b4-ty@kernel.org>
-Date: Thu, 11 Jun 2026 11:21:38 +0530
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, 
+ Frank Li <Frank.Li@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+ Longbin Li <looong.bin@gmail.com>, Yixun Lan <dlan@kernel.org>, 
+ "Anton D. Stavinskii" <stavinsky@gmail.com>, 
+ Inochi Amaoto <inochiama@gmail.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, sophgo@lists.linux.dev, 
+ linux-riscv@lists.infradead.org, Yixun Lan <dlan@kernel.org>
+In-Reply-To: <20260511063818.463877-1-inochiama@gmail.com>
+References: <20260511063818.463877-1-inochiama@gmail.com>
+Subject: Re: (subset) [PATCH v6 0/2] riscv: sophgo: allow DMA multiplexer
+ set channel number for DMA controller
+Message-Id: <178115710130.468137.1246445545709441202.b4-ty@kernel.org>
+Date: Thu, 11 Jun 2026 11:21:41 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -66,54 +76,59 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.16 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_RECIPIENTS(0.00)[m:Eugeniy.Paltsev@synopsys.com,m:Frank.Li@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:unicorn_wang@outlook.com,m:pjw@kernel.org,m:palmer@dabbelt.com,m:aou@eecs.berkeley.edu,m:alex@ghiti.fr,m:alexander.sverdlin@gmail.com,m:looong.bin@gmail.com,m:dlan@kernel.org,m:stavinsky@gmail.com,m:inochiama@gmail.com,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:sophgo@lists.linux.dev,m:linux-riscv@lists.infradead.org,m:krzk@kernel.org,m:conor@kernel.org,m:alexandersverdlin@gmail.com,m:looongbin@gmail.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:vigneshr@ti.com,m:peter.ujfalusi@gmail.com,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:nm@ti.com,m:peterujfalusi@gmail.com,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[ti.com,gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	FREEMAIL_TO(0.00)[synopsys.com,kernel.org,outlook.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,gmail.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-11445-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11446-lists,dmaengine=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CA9AF66ED56
+X-Rspamd-Queue-Id: 4E7B466ECED
 
 
-On Tue, 05 May 2026 19:46:05 +0300, Peter Ujfalusi wrote:
-> As I cannot spend adequate time to fulfill my role as maintainer for the
-> TI DMA drivers, it is for the better if I resign and hand over the role
-> to Vignesh Raghavendra.
+On Mon, 11 May 2026 14:38:15 +0800, Inochi Amaoto wrote:
+> As the DMA controller on Sophgo CV1800 series SoC only has 8 channels,
+> the SoC provides a dma multiplexer to reuse the DMA channel. However,
+> the dma multiplexer also controlls the DMA interrupt multiplexer, which
+> means that the dma multiplexer needs to know the channel number.
 > 
+> Change the DMA phandle args parsing logic so it can use handshake
+> number as channel number if necessary.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] MAINTAINERS: dmaengine/ti: Remove myself and add Vignesh as maintainer
-      commit: 12933e2bc5e07e1500ee69821ab23ad443c3e649
+[1/2] dt-bindings: dma: snps,dw-axi-dmac: Add fallback compatible for CV1800B
+      commit: 7524fe142b5a772f8421aeee2132cf7e21a00103
 
 Best regards,
 -- 

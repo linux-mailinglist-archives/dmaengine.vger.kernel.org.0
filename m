@@ -1,62 +1,63 @@
-Return-Path: <dmaengine+bounces-11488-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11489-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id hyjsMhEnK2ox3QMAu9opvQ
-	(envelope-from <dmaengine+bounces-11488-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 23:22:25 +0200
+	id 7TQqErAnK2pM3QMAu9opvQ
+	(envelope-from <dmaengine+bounces-11489-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 23:25:04 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A3556756A6
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 23:22:25 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id D04BC6756E5
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 23:25:03 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="MeA2WIn/";
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11488-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11488-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=G3AZdCcn;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11489-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="dmaengine+bounces-11489-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 06AB0308B226
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 21:22:24 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 42F163030340
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 21:25:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF5182737F8;
-	Thu, 11 Jun 2026 21:22:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FD9236A022;
+	Thu, 11 Jun 2026 21:25:02 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5F9319601
-	for <dmaengine@vger.kernel.org>; Thu, 11 Jun 2026 21:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1690A366066
+	for <dmaengine@vger.kernel.org>; Thu, 11 Jun 2026 21:25:00 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781212943; cv=none; b=ZN5tmwml9n9Efi83ql6e+dDoP8YVFwa+AYdZROZfyCuZ3WYXpMvryE6H67aWi0izjrZ6I4+TqHRaS5Y8EqJqLpAqwL49hozrix0xiIk6Jmh8nMzn2UYEd1V1gFkl+V3Q8qgDcZYF816PgjRI8f6g2AopBbZAw8CKpZKwxNYwX9c=
+	t=1781213102; cv=none; b=jcjdEpM+jlnFWc5sjXYKJoPqZxSm6xpcjsQSuFZgcgj+wn04zSV/5ybWuhxEJ79PoWywov/7KKpyNbIkRPap0O/S5smiQerc93nptNk6AfckfbkwBFAt2uXt5PTdrVnOYm6noaM3JKbNNmdq25lzrDe7IgP+PlJHbYfUNCfsp/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781212943; c=relaxed/simple;
-	bh=t4EQwdjitey3qVCz6kFAztpuU+xp1LJAHE5rYnJ+tzs=;
+	s=arc-20240116; t=1781213102; c=relaxed/simple;
+	bh=emI4AVt1TFHRj76jZzOhp4VU+zQCV6nQWgg2QM6tKNE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Kjr5Nv1Ujih/RaNjw8XNPrY6IJvgWd19/RkUf11Y+9kCC7uRmbb2VCskqDCrf3EBZqVYSs2R1yTiB+E0/doS/H/ZD6Iek9t0MbFq8uqOOP1ilRa8ZQYH8ttjc46WaZ5aHhXVWvq9dr1MTcCeKZn90vcB3f+qgo5gT5xOKF73bUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MeA2WIn/; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32591F00A3D;
-	Thu, 11 Jun 2026 21:22:21 +0000 (UTC)
+	 Message-Id; b=hL0HJ5iK+jYle60V0MpRJ7AKkdU5cJvuYDjIgAxQNMyQ05yc8kGhto/oIF+u1UiYdMJca8pPl4FU5fWBayZZ+7W/DD+s6CTdrh4NPEEhXdj4q9ewGT+zeX62fofIrRLpkoKATZoHNH8+ER0X5TQT8FJAW688KtBgPnlZ7kjGi3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G3AZdCcn; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C511F000E9;
+	Thu, 11 Jun 2026 21:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781212942;
-	bh=niRmbtG2iU2I+/MwHEuRdAVA6M9BgcYVzZn2a/8ZIyI=;
+	s=k20260515; t=1781213100;
+	bh=ZUscYHXn1TjePUIFe4+LH/vOGtM7EcbuouHSueR6ug0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MeA2WIn/E5x3ZdlS7cp1Umn3GH9bJ12DMoy+lUkE3fp9U7XdFurJ4Ypzd8cHG9Kf1
-	 kINDkHjyxhBwBxRBHMf+3xSgrkSoq7kHCoMygzcstmkLcbTNTsnHpqI7ed4ztR6u67
-	 djANQ7IJbd7Ag2vXp9l5VIjyQxk7IJY8FY8Eapf94qR/NanxQg9mTfVYQNx/6AASnz
-	 nGMBsotKZzOm+lrtnAfOc1fuYbbc57hcOdfaQ98YaZxuvjGhRk9lt300nvz2QRDXB7
-	 tc4aGzBu2mVjy6YSkN0OGVxvk7qZCbzxKB7ztbfT6xlsZ87vhZhQOaQsLxGDSmEmk8
-	 faCK4JKXQK7tg==
+	b=G3AZdCcn0JwDLxO1mzZ6eJ+/8xHrMZdgTzlXE4PJsua3Q98ej5GdoF0/6dTPV9Pmb
+	 uSk/NSblO5vEfvsa7UdQKGVHyxNEFB+ZRfNQGsZ1SKN8aMdK/3gs6VEmjTmPuJVinq
+	 HcWEpPg5zRgBeL2/rhVOKgVx/ftTiTVyZ5o5LzfOe9UlFEiF5k8JSMpi3PfngJ937X
+	 AnHFUcmYzrs3xQYF/wVGhZ14Uy8EYzLQ7ZybnhKpYZXBwvqWDlKUMoh0C3rxgJrnI9
+	 mngjKnoX+kLax41FA3kLenfhFLfHbJ5/uOGSoqpXxSxezMCn5vkmE/nNCuf/4mITBt
+	 HL9HInt/ccX1Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCHv2 7/9] dmaengine: mv_xor: use devm for dma pool and irq
+Subject: Re: [PATCHv2 2/9] dmaengine: mv_xor: fix use-after-free in probe
+ error path
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Rosen Penev" <rosenp@gmail.com>
-Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260611210721.81979-8-rosenp@gmail.com>
-References: <20260611210721.81979-8-rosenp@gmail.com>
+Cc: dmaengine@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org
+In-Reply-To: <20260611210721.81979-3-rosenp@gmail.com>
+References: <20260611210721.81979-3-rosenp@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 21:22:21 +0000
-Message-Id: <20260611212221.F32591F00A3D@smtp.kernel.org>
+Date: Thu, 11 Jun 2026 21:24:59 +0000
+Message-Id: <20260611212500.74C511F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -69,7 +70,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -77,17 +78,17 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11488-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11489-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
 	ALIAS_RESOLVED(0.00)[];
@@ -97,120 +98,94 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,smtp.kernel.org:mid,lists.linux.dev:replyto,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,smtp.kernel.org:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5A3556756A6
+X-Rspamd-Queue-Id: D04BC6756E5
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 New issues:
-- [High] Resource lifecycle violation: calling irq_dispose_mapping() before=
- deferred devm_request_irq() cleanup leaks irqaction and risks interrupt st=
-orms.
+- [High] Calling `tasklet_kill()` before `free_irq()` in `mv_xor_channel_re=
+move()` leaves a race window where an already-executing interrupt handler c=
+an reschedule the tasklet, resulting in a use-after-free.
 
 Pre-existing issues:
-- [High] Missing tasklet_kill() during channel teardown leads to potential =
-Use-After-Free.
+- [High] Missing `tasklet_kill()` in the `mv_xor_channel_add()` error path =
+leaves a pending tasklet that can access freed memory if initialization fai=
+ls.
 --
 
-commit 0b6db2f64d537fd27d8bdc62bf8f9fac24eb05c8
+commit 79a37fa3f544ad8d57b96e286e15552cea6f20be
 Author: Rosen Penev <rosenp@gmail.com>
 
-dmaengine: mv_xor: use devm for dma pool and irq
-   =20
-Replace dma_alloc_wc() with dmam_alloc_attrs() and request_irq() with
-devm_request_irq(). This eliminates the need for manual cleanup of the dma
-pool and irq in both the channel remove function and the channel add
-error labels, removing the err_free_irq and err_free_dma labels entirely.
+dmaengine: mv_xor: fix use-after-free in probe error path
+
+This commit attempts to fix a use-after-free in the probe error path by
+masking hardware interrupts and calling tasklet_kill() at the start of
+mv_xor_channel_remove(). This is intended to ensure no new interrupts can
+schedule the tasklet during teardown.
 
 > diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-> index 25ed61f1b0899..2176be478c86b 100644
+> index 25ed61f1b0899..8e8902bbda9ac 100644
 > --- a/drivers/dma/mv_xor.c
 > +++ b/drivers/dma/mv_xor.c
-
 [ ... ]
-
-> @@ -1025,8 +1023,6 @@ static int mv_xor_channel_remove(struct mv_xor_chan=
+> @@ -1011,6 +1019,9 @@ static int mv_xor_channel_remove(struct mv_xor_chan=
  *mv_chan)
->  		list_del(&chan->device_node);
->  	}
+>  	struct dma_chan *chan, *_chan;
+>  	struct device *dev =3D mv_chan->dmadev.dev;
 > =20
-> -	free_irq(mv_chan->irq, mv_chan);
-> -
->  	return 0;
->  }
+> +	mv_chan_mask_interrupts(mv_chan);
+> +	tasklet_kill(&mv_chan->irq_tasklet);
 
 [Severity: High]
-This isn't a bug introduced by this patch, but the driver never calls
-tasklet_kill(&mv_chan->irq_tasklet) during device teardown here in
-mv_xor_channel_remove().
+Could calling tasklet_kill() here, before free_irq(), leave a race window?
 
-If an interrupt fires and schedules the tasklet during a probe failure,
-could the tasklet execute after devres has freed the mv_chan structure,
-resulting in a Use-After-Free?
+While mv_chan_mask_interrupts() prevents new interrupts from being raised by
+the hardware, it does not stop an interrupt handler that is already
+executing on another CPU.
 
-This risk might be exacerbated by removing the synchronous free_irq() call
-here, which previously helped silence interrupts earlier in the teardown
-process.
+If tasklet_kill() runs concurrently while the ISR is executing but before
+it calls tasklet_schedule(), tasklet_kill() will see the tasklet is neither
+scheduled nor running, and return immediately. The ISR will then schedule
+the tasklet.
 
-[ ... ]
+Later in mv_xor_channel_remove():
 
-> @@ -1138,14 +1134,14 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
->  		ret =3D mv_chan_memcpy_self_test(mv_chan);
->  		dev_dbg(&pdev->dev, "memcpy self test returned %d\n", ret);
->  		if (ret)
-> -			goto err_free_irq;
-> +			goto err_unmap_dst;
->  	}
+	free_irq(mv_chan->irq, mv_chan);
+
+free_irq() waits for the ISR to finish but does not cancel the newly
+scheduled tasklet. When the mv_chan structure is subsequently freed via
+devres, might the pending tasklet execute on freed memory?
+
+Should tasklet_kill() be called after free_irq() ensures no ISR is running?
+
+> +
+>  	dma_async_device_unregister(&mv_chan->dmadev);
+> =20
+>  	dma_free_wc(dev, MV_XOR_POOL_SIZE,
 
 [Severity: High]
-By deferring the interrupt teardown to devres, could this lead to an issue
-where the IRQ mapping is disposed before devm can execute free_irq()?
+This is a pre-existing issue, but does the mv_xor_channel_add() error path
+also need a tasklet_kill() call?
 
-Looking at mv_xor_probe() which calls mv_xor_channel_add(), if a channel
-fails to add, it explicitly calls irq_dispose_mapping() on the error path:
+During mv_xor_channel_add(), the self-test functions submit DMA transactions
+that trigger real hardware interrupts, scheduling mv_chan->irq_tasklet.
 
-drivers/dma/mv_xor.c:mv_xor_probe() {
-    ...
-    if (IS_ERR(chan)) {
-        ret =3D PTR_ERR(chan);
-        irq_dispose_mapping(irq);
-        goto err_channel_add;
-    }
-    ...
-}
+If a self-test times out or dma_async_device_register() fails, the code
+jumps to the err_free_irq label, which calls free_irq() but omits
+tasklet_kill().
 
-It also disposes the mapping for previously successful channels during clea=
-nup:
-
-drivers/dma/mv_xor.c:mv_xor_probe() {
-    ...
-err_channel_add:
-    for (i =3D 0; i < MV_XOR_MAX_CHANNELS; i++) {
-        if (xordev->channels[i]) {
-            mv_xor_channel_remove(xordev->channels[i]);
-            if (pdev->dev.of_node)
-                irq_dispose_mapping(xordev->channels[i]->irq);
-        }
-    }
-    ...
-}
-
-Since devres runs after probe() completes, this destroys the IRQ descriptor
-while the interrupt is still actively requested. When devres later invokes
-free_irq(), it might fail to find the descriptor, resulting in a leak of
-the irqaction structure.
-
-Additionally, since the error path no longer calls free_irq() synchronously,
-does this leave the interrupt unmasked during probe teardown, risking
-interrupt storms?
+Since the mv_chan structure is devm-allocated, it will be automatically
+freed when the probe function returns an error. Could the pending tasklet
+then execute on freed memory?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611210721.8197=
-9-8-rosenp@gmail.com?part=3D1
+9-3-rosenp@gmail.com?part=3D1
 

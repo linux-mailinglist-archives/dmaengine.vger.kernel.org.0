@@ -1,202 +1,272 @@
-Return-Path: <dmaengine+bounces-11427-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11429-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 1GWCEnExKmqAjwMAu9opvQ
-	(envelope-from <dmaengine+bounces-11427-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 05:54:25 +0200
+	id OuzbDWAzKmrjjwMAu9opvQ
+	(envelope-from <dmaengine+bounces-11429-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 06:02:40 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFCE866E106
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 05:54:24 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2633666E1C0
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 06:02:39 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=iTc9+OyB;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11427-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11427-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Ds0hNMCF;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11429-lists+dmaengine=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="dmaengine+bounces-11429-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 90154303E236
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 03:53:30 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1A9FB3006926
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jun 2026 04:02:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3B6233B970;
-	Thu, 11 Jun 2026 03:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9EB01D86FF;
+	Thu, 11 Jun 2026 04:02:33 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780D233ADB5
-	for <dmaengine@vger.kernel.org>; Thu, 11 Jun 2026 03:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06F640D573
+	for <dmaengine@vger.kernel.org>; Thu, 11 Jun 2026 04:02:32 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781150009; cv=none; b=KVo3V/MM2qMWNtjFJ81XCKXZrrKIytCCS5PkH3sqVTeM5B/LnEUC2QwfyGP3ArGONUgBINmkR46qLZXADQJqTUYc5pTJUZaNIIAhiq9nhCECbkAx0iKgP1kvb6/R34WegjPyF4KPiB/iQ4oSCEyZVIgrbNpgZudKUcbWLfQ4WU4=
+	t=1781150553; cv=none; b=bQOMPkEMLcwySR20cuh+RQryKk0uBjC1DWFWT7m357VOSV+2wTp0X8THW9h8QS5uaOoHOyyFh9El68ECBtq5AcUGyA8eY04Id2ahzT6pB4TOXTyr3ZfXw5cwwaeZPtZvcnOAeCqhAR2IwnT+da3bLgaqbjs/L1NhtPcev6VX9kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781150009; c=relaxed/simple;
-	bh=Yy/+xRHJiX/hDJ5xQsjisJqg3r4yly3VHd3NS0SNXAk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bhTDVILh955sXpox0fB9RlR/6EFAAAi/z+MqIhZCGryZicfaMsN3LEelXLMWqRtThABhR6Kt5YwXmuoz/c9RnR4dpL+6R88IMsf+grLfLVobZQG2s/MTTvXHmmeqq38NyL0he6oC5xAydirZE371y8LDm5XzVwKWRA4m0pTts48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iTc9+OyB; arc=none smtp.client-ip=209.85.216.44
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-36bdb11bf8bso4426765a91.0
-        for <dmaengine@vger.kernel.org>; Wed, 10 Jun 2026 20:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781150006; x=1781754806; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9N+wW4hckA7+pUN5DQbu3VTnKoKBAMqPRZDxheSBFcw=;
-        b=iTc9+OyB0Ta1O9T3y2riFYWqWEQPrAaZSZo2mHggfUU5NWaURzi/glz+Bo68MB96Av
-         1gChjETzOMjxyDVJV+XaVkJJM41qo0pmOfg6D869ZIs2qb1MoivXfEylxbo9nxyIsm1X
-         LrwNqXyiQru12IPic7eXppJF7UV+Q5TvuEAYN8U5GwiushSZPctxBfjflxIKWlP94KAT
-         pj2gknfJ7P+AB49H2udexJen3o658Jxp+X/aMQKjhoskGD5UtcgettEX3Tm+rVYMP7HM
-         K+jGP3glH8VysvLmFzj5G/5xv7LdWleNjI5A1Dp1VX9ZE2MrWdR1qM0ni9K6Pm9gEujh
-         XrCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781150006; x=1781754806;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9N+wW4hckA7+pUN5DQbu3VTnKoKBAMqPRZDxheSBFcw=;
-        b=ObivXsT1PXNGEDgZMIR6FWXSMJUThytdd/jjjFeWb26M4m2l7b2Qkiw72C1b6PDc6V
-         NK7Sh4DUlz8r6cURdViNtEOlWm+Wa14j1tzOx5kzRVzSAUhtZ2zcXRNNxpMz3iy3LeMN
-         F3H+WVM0Aqf27oKtK/93JFRglkJ/bvd2M7fb5w/t1iwONFi8YZN+oUnyRTcpPQJqIm0W
-         /41g0qeugVDVgr4C+21jk1WydY7M3ri7FZJB1Bw3Ct1ZnhfhfhBElgNE2C/6DZZJ9GHL
-         t22cjcisnRQmH9knH4nyNLvDxHWqz5Z6Urhfc/bQYkB2eQnABUdoB1s5vlozzKh4zSUu
-         k73Q==
-X-Gm-Message-State: AOJu0YyuaVCZqH3b3BDK9h5Ub29aPofVyb7DhB9+HwbVPuYFeA3E0ZiA
-	4L3ZyxkojWXcGR6JAxA7cczXt27TfKLy/g6GhgmZ0eDNmVHaqCQAKcwCzcO4fw==
-X-Gm-Gg: Acq92OGxjKAxz6eIT6Am6jtvaQoeVzhm809Qsu3dqyTBeHxFhG97KKZI9e6TIjq4sNI
-	cutRtB7NWLOcBYZ50rh/R1MyjhYQoNu4939uKRDfphXMFfvyJxakKp1ZobET1TH1dwVgTkrCch0
-	Nl7z24iht6cX5DkKLvLX23gS2I2wJ4RbDjUGBCINYrFJKjSqrsXkIgCTDZfLlCa0Ev6zpxYZDQX
-	JXRl28qbk+Iuyt7aLjtHDNG5MYH/Bq2CQFQi94HUTqp020j/20LyowoiE2kiNf/ph9dD2qw7IY/
-	TemCyhnsWZhrCshl2xedRJRio6lisQzdjzI8F3V3v5YcjKkvBb88rGfig8aoBmRm8l0IH3WpN/n
-	VM5dXTTEtXLBzRzgnMsgocoEA5G54p1CgtAJzpBCkc5NK0OW1tQmtk+doBugZeZfEmsw8hhE8U5
-	2gF99DMJgN98Zt/r/rOyOGDjA5dWJir+vxAQYF890bBmUIyULRnV7dAiyQBWy8tL9OEJztx9JoS
-	85XmYZx2wRQg39MIILrVsM9sLpYFKxhxO3KoAanYMcr2A==
-X-Received: by 2002:a17:90b:1a84:b0:369:f48a:f24b with SMTP id 98e67ed59e1d1-3778ebecbeemr1357925a91.0.1781150005805;
-        Wed, 10 Jun 2026 20:53:25 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:5b5d:7285:c2ff:fe45:8a32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-377522a188asm910131a91.3.2026.06.10.20.53.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 20:53:25 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Zhang Wei <zw@zh-kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org (open list),
-	linuxppc-dev@lists.ozlabs.org (open list:FREESCALE DMA DRIVER),
-	llvm@lists.linux.dev (open list:CLANG/LLVM BUILD SUPPORT:Keyword:\b(?i:clang|llvm)\b)
-Subject: [PATCHv4 15/15] dmaengine: fsldma: fix kernel-doc param names to match function signatures
-Date: Wed, 10 Jun 2026 20:52:45 -0700
-Message-ID: <20260611035245.13439-16-rosenp@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260611035245.13439-1-rosenp@gmail.com>
-References: <20260611035245.13439-1-rosenp@gmail.com>
+	s=arc-20240116; t=1781150553; c=relaxed/simple;
+	bh=AIeuXQNC//+bQzfQFKJukTn+ya4F452qxFtxSLU9w2c=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=X2WBIUXwpcA0zAfTxx+KvecVfqnc2vRG8AN2Ujli1lZWfDiPHi6iPnSJ+cz/6lkCNX1iLI8b0+6eUYlRjGpyBtAb4YQ76m0s3fJI+lpZuJYC7JSF5GAJ1gmSyE2Fblq1waY0ldUQmnEVKaXtJJEVLcoziAqfBRWh16hYvNSbWUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ds0hNMCF; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB23F1F00893;
+	Thu, 11 Jun 2026 04:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781150552;
+	bh=Gp2Ve/zH5iRiTDsJFqarGX8iFc3j5dst0PzcCEoqCGk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Ds0hNMCFA+0riSWauLuYIXIqdl7Z1oz2LVjcZeyESpaY7nbIFfva1UujH5YowuFGz
+	 eqLCuZ3jpjZZdcELcGh7ICUxkTZhMcP8VdrYw1vNvMigIEz1Cqrbwv9bdwkNAGsTkD
+	 aCGDQHl7+3kB5XILbppLNKmHpt9rIFgU2ur09AaIg/ZAP2PdfTRY0ZkSXucZlZVlZB
+	 fEXp0JTSZDKEopuyyMFmxHgQ20vvJrxVl4q/elYv7vlq24PJrzbj6g3GTso/sFNIc6
+	 bidFpaZAhlWpAYuNwQI/Yjo3L7Z+e0CNjLlV7RetKlcOz0zTPTdZHmF3hyYdHWutdT
+	 7nKFpjt5RwAmg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCHv4 04/15] dmaengine: fsldma: provide device_release
+ callback
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Rosen Penev" <rosenp@gmail.com>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260611035245.13439-5-rosenp@gmail.com>
+References: <20260611035245.13439-5-rosenp@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 11 Jun 2026 04:02:31 +0000
+Message-Id: <20260611040231.EB23F1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,zh-kernel.org,gmail.com,google.com,vger.kernel.org,lists.ozlabs.org,lists.linux.dev];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11427-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:zw@zh-kernel.org,m:nathan@kernel.org,m:nick.desaulniers+lkml@gmail.com,m:morbo@google.com,m:justinstitt@google.com,m:linux-kernel@vger.kernel.org,m:linuxppc-dev@lists.ozlabs.org,m:llvm@lists.linux.dev,m:nickdesaulniers@gmail.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_TLS_LAST(0.00)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11429-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,lkml];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,sashiko.dev:url,smtp.kernel.org:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EFCE866E106
+X-Rspamd-Queue-Id: 2633666E1C0
 
-Fix kernel-doc warnings where the documented parameter names
-(@chan) no longer match the actual function signatures (@dchan),
-and add the missing @cookie and @txstate parameters to
-fsl_tx_status.
+Thank you for your contribution! Sashiko AI review found 6 potential issue(=
+s) to consider:
 
-These are pre-existing mismatches that predate the recent
-devm conversion series.
+New issues:
+- [Critical] Use-After-Free (Read/Write) and Double-Free of `fdev` during d=
+evice removal.
+- [High] Teardown reordering causes a race condition leading to hung transf=
+ers.
 
-Assisted-by: opencode:big-pickle
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/dma/fsldma.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Pre-existing issues:
+- [Critical] Invoking client callbacks with the descriptor spinlock held ca=
+uses a recursive deadlock.
+- [High] DMA channels are unconditionally destroyed leading to potential Us=
+e-After-Free by active clients.
+- [High] Missing tasklet cancellation leads to a Use-After-Free of the chan=
+nel structure.
+- [High] The error rollback path in fsldma_suspend_late() double-unlocks sp=
+inlocks.
+--
 
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index 157db416eaaf..694c1b12bf2b 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -685,7 +685,7 @@ static void fsldma_cleanup_descriptors(struct fsldma_chan *chan)
- 
- /**
-  * fsl_dma_alloc_chan_resources - Allocate resources for DMA channel.
-- * @chan : Freescale DMA channel
-+ * @dchan : Freescale DMA channel
-  *
-  * This function will create a dma pool for descriptor allocation.
-  *
-@@ -742,7 +742,7 @@ static void fsldma_free_desc_list_reverse(struct fsldma_chan *chan,
- 
- /**
-  * fsl_dma_free_chan_resources - Free all resources of the channel.
-- * @chan : Freescale DMA channel
-+ * @dchan : Freescale DMA channel
-  */
- static void fsl_dma_free_chan_resources(struct dma_chan *dchan)
- {
-@@ -878,7 +878,7 @@ static int fsl_dma_device_config(struct dma_chan *dchan,
- 
- /**
-  * fsl_dma_memcpy_issue_pending - Issue the DMA start command
-- * @chan : Freescale DMA channel
-+ * @dchan : Freescale DMA channel
-  */
- static void fsl_dma_memcpy_issue_pending(struct dma_chan *dchan)
- {
-@@ -891,7 +891,9 @@ static void fsl_dma_memcpy_issue_pending(struct dma_chan *dchan)
- 
- /**
-  * fsl_tx_status - Determine the DMA status
-- * @chan : Freescale DMA channel
-+ * @dchan : Freescale DMA channel
-+ * @cookie : DMA transaction identifier
-+ * @txstate : DMA transaction state
-  */
- static enum dma_status fsl_tx_status(struct dma_chan *dchan,
- 					dma_cookie_t cookie,
--- 
-2.54.0
+commit dc56cbc463b043a9535d2906ead690c87f19ad18
+Author: Rosen Penev <rosenp@gmail.com>
 
+dmaengine: fsldma: provide device_release callback
+
+The DMA core requires drivers to set dma_device.device_release so that
+the container structure is only freed after all references to it have
+been dropped (see the comment above dma_async_device_register()).
+
+> diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+> index 22d62d958abd9..06a6996a53229 100644
+> --- a/drivers/dma/fsldma.c
+> +++ b/drivers/dma/fsldma.c
+> @@ -1211,6 +1211,8 @@ static void fsl_dma_chan_remove(struct fsldma_chan =
+*chan)
+>  	kfree(chan);
+>  }
+
+[Severity: High]
+This is a pre-existing issue, but does this unconditionally destroy the
+channel even if clients are still using it?
+
+Since dma_async_device_unregister() doesn't enforce that clients drop all
+channel references before it returns, clients might still hold pointers to
+the freed chan structure.=20
+
+If they try to use it later, couldn't this cause a use-after-free?
+
+[Severity: High]
+This is also a pre-existing issue, but is it safe to free the channel witho=
+ut
+killing the tasklet first?
+
+The code frees the IRQ but does not call tasklet_kill(&chan->tasklet).=20
+
+If an interrupt fires and schedules a tasklet just before the IRQ is
+disabled, the tasklet could execute concurrently or later and dereference
+the freed chan structure in dma_do_tasklet().
+
+> =20
+> +static void fsldma_device_release(struct dma_device *dma_dev);
+> +
+
+[ ... ]
+
+> @@ -1308,19 +1311,33 @@ static int fsldma_of_probe(struct platform_device=
+ *op)
+>  	return err;
+>  }
+> =20
+> +static void fsldma_device_release(struct dma_device *dma_dev)
+> +{
+> +	struct fsldma_device *fdev =3D container_of(dma_dev, struct fsldma_devi=
+ce,
+> +						  common);
+> +	kfree(fdev);
+> +}
+> +
+>  static void fsldma_of_remove(struct platform_device *op)
+>  {
+> -	struct fsldma_device *fdev;
+> +	struct fsldma_device *fdev =3D platform_get_drvdata(op);
+> +	struct fsldma_chan *chans[FSL_DMA_MAX_CHANS_PER_DEVICE];
+>  	unsigned int i;
+> =20
+> -	fdev =3D platform_get_drvdata(op);
+> -	dma_async_device_unregister(&fdev->common);
+> +	for (i =3D 0; i < FSL_DMA_MAX_CHANS_PER_DEVICE; i++)
+> +		chans[i] =3D fdev->chan[i];
+> =20
+>  	fsldma_free_irqs(fdev);
+
+[Severity: High]
+Does this reordering open a race condition that could hang transfers?
+
+By calling fsldma_free_irqs(fdev) before dma_async_device_unregister(),
+there is a window where the DMA device is still fully active and accepting
+new transfers, but its interrupts have been disabled and freed.=20
+
+If a transaction completes during this window, will the completion interrupt
+never fire?
+
+> =20
+> +	/*
+> +	 * fdev may be freed by fsldma_device_release inside this call;
+> +	 * use saved copies of the channel pointers afterwards.
+> +	 */
+> +	dma_async_device_unregister(&fdev->common);
+> +
+>  	for (i =3D 0; i < FSL_DMA_MAX_CHANS_PER_DEVICE; i++) {
+> -		if (fdev->chan[i])
+> -			fsl_dma_chan_remove(fdev->chan[i]);
+> +		if (chans[i])
+> +			fsl_dma_chan_remove(chans[i]);
+>  	}
+>  	irq_dispose_mapping(fdev->irq);
+> =20
+
+[Severity: Critical]
+Does this sequence result in a use-after-free and double-free of fdev?
+
+If dma_async_device_unregister() drops the final reference and triggers
+fsldma_device_release(), fdev is freed.=20
+
+However, the function then continues to access fdev indirectly by calling
+fsl_dma_chan_remove(chans[i]), which modifies the list. It also reads
+fdev->irq here to perform unmapping, and eventually explicitly calls
+kfree(fdev) at the end of the function.
+
+[Severity: High]
+This is a pre-existing issue, but does fsldma_suspend_late() double-unlock
+spinlocks in the error rollback path?
+
+In fsldma_suspend_late(), the forward iteration acquires the descriptor
+spinlock, updates the state, and then unlocks it on success. If it
+encounters a busy channel, it jumps to the out label to roll back.=20
+
+However, the rollback loop unconditionally calls
+spin_unlock_bh(&chan->desc_lock) for all previously processed channels,
+even though their locks had already been successfully released in the
+forward loop.
+
+[Severity: Critical]
+This is a pre-existing issue, but does invoking client callbacks with the
+descriptor spinlock held cause a recursive deadlock?
+
+fsldma_cleanup_descriptors() is called with chan->desc_lock held. It then
+calls fsldma_run_tx_complete_actions(), which synchronously invokes the
+client's completion callback.=20
+
+If the client submits a new DMA transaction from within this callback:
+
+fsldma_run_tx_complete_actions()
+   dmaengine_desc_get_callback_invoke()
+      client_callback()
+         fsl_dma_tx_submit()
+
+Will fsl_dma_tx_submit() attempt to acquire the exact same chan->desc_lock
+and result in an immediate deadlock?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611035245.1343=
+9-5-rosenp@gmail.com?part=3D1
 

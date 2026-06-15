@@ -1,187 +1,272 @@
-Return-Path: <dmaengine+bounces-11505-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11506-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id rB3JEp9jL2pW/gQAu9opvQ
-	(envelope-from <dmaengine+bounces-11505-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 04:29:51 +0200
+	id AepAIQBlL2q7/gQAu9opvQ
+	(envelope-from <dmaengine+bounces-11506-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 04:35:44 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A489F682DE7
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 04:29:50 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6ED1682E44
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 04:35:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=126.com header.s=s110527 header.b=Lvrh4HbF;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11505-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11505-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=126.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Q7VCK1wm;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11506-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11506-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 326E230087AE
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 02:28:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ECE5B300578B
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 02:35:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63E5C25228D;
-	Mon, 15 Jun 2026 02:28:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63EDA2459C5;
+	Mon, 15 Jun 2026 02:35:41 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AE4238C0A;
-	Mon, 15 Jun 2026 02:28:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EC62472B6;
+	Mon, 15 Jun 2026 02:35:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781490499; cv=none; b=a9Iy+gjRnbOjxZlfFiFH7fOKcudp2hyu9lfcmrR06be1O6iXhU7FPSGnqfADb3jzvvY3fFHxUYtYcblCepzDkP76C/CpW6yJPJ+i/05CLRirvsejN4BHs20k8xgy/qPfAHNwAO6k6Z2VzACwNAeQTYaIBMZPlT2udhJoYzfEM/U=
+	t=1781490941; cv=none; b=CPYavwmZGFfoldo94gxR/vR64t+3CDaBYoaUJhrP3xCgoByTGHiKrrSAHGLjjIFQTKyUQ+8aRqX4PX9WriO1CLJYDElnmAJl8Y9G8/bUodwzi+ddrfZpWug/3nU4Gdf2fQtFQNadj9/5n2Nt3y7P5eGqlGTTsS0PL8l+LdlAA+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781490499; c=relaxed/simple;
-	bh=m8jBWU15C9EHvw0zQZbvtcGi9Ysx4hcRbyls+8zIQyw=;
-	h=Message-ID:Date:From:MIME-Version:To:CC:Subject:References:
-	 In-Reply-To:Content-Type; b=moHtfJishe79dX6gW222EDChki7FbMVaNoKkdJO8rNVUDIV8R6aAtjSOLfhc/BpCVe06fRVCB8U4E2UBs/EQnQRPb/6hI1AJ2ybYg+XA5eDCN1psFLdsd4XNLQzI6rGnkrlmiTWWLP+g7hJyEDH5eX2+EIaJgk+0sHFflw3j/mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=Lvrh4HbF; arc=none smtp.client-ip=220.197.31.7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:From:MIME-Version:To:Subject:
-	Content-Type; bh=F+HNNdlyuRmjijcNZ9VuH9FOCs8YBSRZkVxVMqWsky8=;
-	b=Lvrh4HbF575bJUuKBCxdRbsAm9gfMUVXg9FsTxguQpFvjpNyLER9Eg4DGtvIDh
-	g0TMdLw/jVtDtyUq2zmoA7WtgdS8S/ORcXfwEDzddXuZF8uY6X4gpkKlhpbwSHEX
-	FXNRa9WO4PjGh4so3uo2RiE58uXtqsAPHKpKYZojS71C4=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCkvCgDHj7RqYi9qrvV3Aw--.16977S2;
-	Mon, 15 Jun 2026 10:24:43 +0800 (CST)
-Message-ID: <6A2F626A.1010508@126.com>
-Date: Mon, 15 Jun 2026 10:24:42 +0800
-From: Hongling Zeng <zhongling0719@126.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.2.0
+	s=arc-20240116; t=1781490941; c=relaxed/simple;
+	bh=V/g+P/fTydolpiKmdLIUeI/weZhzltUn+ycsw1YHt6Q=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=EkHpC+H89hfzmKAGWJCgHAzEudQSbcXBBrNo0UyBV9WJrzWNmm132OFrn0UeEU9S3ly8w1p5KgtVcLbHvsYkLZx3PhxABXrC0lELtQFHRd28eQkCEXO+3Tpbw5l78gkpx+7KRuN32ZcLlPz+aui5T7IC/4I6HfxSeIFe21/rKT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q7VCK1wm; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB211F000E9;
+	Mon, 15 Jun 2026 02:35:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781490939;
+	bh=jk3EYKdsJqglnPEO4r0CaWOPlZC2zPDGQfGdzMvJc9Q=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Q7VCK1wmyEtV2HWQdnKMsk7c89tjPE7koPApbBTmX1xAcAPkrlW0BEq1vNuImZ4g1
+	 VPModRwDDC630M7RWQRP9+yN4dZpisfaCFEj7FFyyvE6uJ3OHDgpS2u2QPZeke2gd7
+	 Hmi+Oee1vTt4lt1u/riorWt4XPytvKNetZQXVmoncEJN8N4kO+MPdtuFGzCI07epel
+	 dKSY0Hmw21iFhNX6v9DA6Dc4cBrOL3trXfFchx/5KE6cAjlyZ+hTA0hs7AlI7r/CEO
+	 aVOafzc+D3DsEbeDypihBNCWs1CxEx+vnY7M3HQlR6L94sM5GjbWxWN+inuvVT+35Z
+	 jHzjWDwUiu0Og==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] dmaengine: sun6i-dma: Fix use-after-free in error
+ handling paths
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Hongling Zeng" <zenghongling@kylinos.cn>
+Cc: linux-sunxi@lists.linux.dev, Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
+In-Reply-To: <20260615022400.13454-1-zenghongling@kylinos.cn>
+References: <20260615022400.13454-1-zenghongling@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 15 Jun 2026 02:35:38 +0000
+Message-Id: <20260615023539.4FB211F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-To: =?UTF-8?B?SmVybmVqIMWga3JhYmVj?= <jernej.skrabec@gmail.com>, 
- vkoul@kernel.org, Frank.Li@kernel.org, wens@kernel.org, 
- samuel@sholland.org, mripard@kernel.org, arnd@arndb.de, 
- Hongling Zeng <zenghongling@kylinos.cn>
-CC: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: sun6i-dma: Fix use-after-free in error handling
- paths
-References: <20260611063631.96566-1-zenghongling@kylinos.cn> <CyWPMXMZRBuYyL_Lpl2t_Q@gmail.com>
-In-Reply-To: <CyWPMXMZRBuYyL_Lpl2t_Q@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PCkvCgDHj7RqYi9qrvV3Aw--.16977S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAF1DtFW5CFyrCFW3CF1UGFg_yoW5Gw1fpr
-	WUCa1rWF4kJ3Wava13Ja4kur1Fgrs3JFy8CrW5C3Z8CFnFvF92va4xCa4rCrn0yrn8Gr4f
-	Zrn8K3W5ur17GaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jstxhUUUUU=
-X-CM-SenderInfo: x2kr0wpolqwiqxrzqiyswou0bp/xtbBoQsZ6WovYmsmKAAA3Y
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[126.com,none];
-	R_DKIM_ALLOW(-0.20)[126.com:s=s110527];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:jernej.skrabec@gmail.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:wens@kernel.org,m:samuel@sholland.org,m:mripard@kernel.org,m:arnd@arndb.de,m:zenghongling@kylinos.cn,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:jernejskrabec@gmail.com,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[zhongling0719@126.com,dmaengine@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[126.com];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org,sholland.org,arndb.de,kylinos.cn];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-11506-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[126.com:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,smtp.kernel.org:mid,kylinos.cn:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zhongling0719@126.com,dmaengine@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-11505-lists,dmaengine=lfdr.de];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:zenghongling@kylinos.cn,m:linux-sunxi@lists.linux.dev,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,kylinos.cn:email]
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A489F682DE7
+X-Rspamd-Queue-Id: D6ED1682E44
 
-   Hi Jernej,
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+s) to consider:
 
-   Thanks for the feedback. I've sent v2 implementing your suggestion - 
-refactored to use a helper function sun6i_dma_free_lli_list() that accepts
-   struct sun6i_desc * parameter, eliminating code duplication.
+Pre-existing issues:
+- [High] Missing validation for `sg_len =3D=3D 0` in `sun6i_dma_prep_slave_=
+sg()` allows the creation of an empty descriptor, leading to a NULL pointer=
+ dereference or wild DMA execution.
+- [High] Missing parameter validation in `sun6i_dma_prep_dma_cyclic()` allo=
+ws division-by-zero exceptions and NULL pointer dereferences.
+- [High] Unprotected access to `pchan->desc` in the interrupt handler can r=
+ace with `sun6i_dma_terminate_all()`, causing a NULL pointer dereference.
+- [High] Process-context use of plain `spin_lock()` on a lock shared with a=
+ tasklet causes softirq preemption deadlocks.
+- [Medium] Hardware race in `sun6i_get_chan_size()` inflates residue report=
+s due to unverified sequential register reads.
+--
 
-   Please help review.
+commit d4e1b819645de3459092e86e1c23dd821c23cfce
+Author: Hongling Zeng <zenghongling@kylinos.cn>
 
-   Best regards,
-   Hongling Zeng
+dmaengine: sun6i-dma: Fix use-after-free in error handling paths
 
+This commit addresses a use-after-free bug in the error handling paths of
+sun6i_dma_prep_slave_sg() and sun6i_dma_prep_dma_cyclic(). The variables
+v_lli and p_lli were accessed in the loop increment expression after the
+loop body freed them. A new helper function, sun6i_dma_free_lli_list(), is
+introduced to safely traverse and free the list.
 
-在 2026年06月13日 15:46, Jernej Škrabec 写道:
-> Dne četrtek, 11. junij 2026 ob 08:36:31 Srednjeevropski poletni čas je Hongling Zeng napisal(a):
->> In error handling paths, the for loop frees v_lli in the loop body,
->> then accesses v_lli->v_lli_next and v_lli->p_lli_next in the
->> increment expression, which is use-after-free.
->>
->> Fix by saving both the next virtual and physical pointers before
->> freeing the current node.
->>
->> Fixes: 555859308723 ("dmaengine: Add driver for Allwinner sun6i DMA")
->> Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
->> ---
->>   drivers/dma/sun6i-dma.c | 20 ++++++++++++++++----
->>   1 file changed, 16 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
->> index a9a254dbf8cb..eb9c4ae87ac8 100644
->> --- a/drivers/dma/sun6i-dma.c
->> +++ b/drivers/dma/sun6i-dma.c
->> @@ -788,9 +788,15 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
->>   	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
->>   
->>   err_lli_free:
->> -	for (p_lli = txd->p_lli, v_lli = txd->v_lli; v_lli;
->> -	     p_lli = v_lli->p_lli_next, v_lli = v_lli->v_lli_next)
->> +	p_lli = txd->p_lli;
->> +	v_lli = txd->v_lli;
->> +	while (v_lli) {
->> +		struct sun6i_dma_lli *next_v_lli = v_lli->v_lli_next;
->> +		dma_addr_t next_p_lli = v_lli->p_lli_next;
->>   		dma_pool_free(sdev->pool, v_lli, p_lli);
->> +		v_lli = next_v_lli;
->> +		p_lli = next_p_lli;
->> +	}
->>   	kfree(txd);
->>   	return NULL;
->>   }
->> @@ -869,9 +875,15 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
->>   	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
->>   
->>   err_lli_free:
->> -	for (p_lli = txd->p_lli, v_lli = txd->v_lli; v_lli;
->> -	     p_lli = v_lli->p_lli_next, v_lli = v_lli->v_lli_next)
->> +	p_lli = txd->p_lli;
->> +	v_lli = txd->v_lli;
->> +	while (v_lli) {
->> +		struct sun6i_dma_lli *next_v_lli = v_lli->v_lli_next;
->> +		dma_addr_t next_p_lli = v_lli->p_lli_next;
->>   		dma_pool_free(sdev->pool, v_lli, p_lli);
->> +		v_lli = next_v_lli;
->> +		p_lli = next_p_lli;
->> +	}
->>   	kfree(txd);
->>   	return NULL;
->>   }
->>
-> This is certainly a valid fix, but it's replicating what sun6i_dma_free_desc()
-> is already doing. It would be better to split code to accept struct sun6i_desc
-> *txd parameter and call that instead from all places.
->
-> Best regards,
-> Jernej
->
+> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> index a9a254dbf8cb9..02dd07001d5a9 100644
+> --- a/drivers/dma/sun6i-dma.c
+> +++ b/drivers/dma/sun6i-dma.c
 
+[ ... ]
+
+> @@ -788,9 +794,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep=
+_slave_sg(
+>  	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+> =20
+>  err_lli_free:
+> -	for (p_lli =3D txd->p_lli, v_lli =3D txd->v_lli; v_lli;
+> -	     p_lli =3D v_lli->p_lli_next, v_lli =3D v_lli->v_lli_next)
+> -		dma_pool_free(sdev->pool, v_lli, p_lli);
+> +	sun6i_dma_free_lli_list(sdev, txd);
+
+[Severity: High]
+This is a pre-existing issue, but I noticed a potential problem earlier
+in sun6i_dma_prep_slave_sg(). If the function is called with sg_len
+equal to 0, the for_each_sg() loop is bypassed entirely:
+
+	for_each_sg(sgl, sg, sg_len, i) {
+
+This allows the creation of an empty descriptor where txd->v_lli is NULL
+and txd->p_lli is 0. Does this lead to a NULL pointer dereference or wild
+DMA execution when the DMA engine starts the transaction via
+sun6i_dma_start_desc()?
+
+drivers/dma/sun6i-dma.c:sun6i_dma_start_desc() {
+	writel(pchan->desc->p_lli, pchan->base + DMA_CHAN_LLI_ADDR);
+	writel(DMA_CHAN_ENABLE_START, pchan->base + DMA_CHAN_ENABLE);
+}
+
+Additionally, if dynamic debug is enabled, would sun6i_dma_dump_lli()
+unconditionally dereference the NULL v_lli pointer before the function
+returns?
+
+>  	kfree(txd);
+>  	return NULL;
+>  }
+> @@ -869,9 +873,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep=
+_dma_cyclic(
+>  	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+> =20
+>  err_lli_free:
+> -	for (p_lli =3D txd->p_lli, v_lli =3D txd->v_lli; v_lli;
+> -	     p_lli =3D v_lli->p_lli_next, v_lli =3D v_lli->v_lli_next)
+> -		dma_pool_free(sdev->pool, v_lli, p_lli);
+> +	sun6i_dma_free_lli_list(sdev, txd);
+
+[Severity: High]
+This is a pre-existing issue, but I spotted a potential problem earlier in
+sun6i_dma_prep_dma_cyclic() where we calculate periods:
+
+	unsigned int i, periods =3D buf_len / period_len;
+
+Is validation missing for period_len here, potentially causing a
+division-by-zero exception if it is 0?
+
+Additionally, if buf_len < period_len, the calculated periods is 0,
+which bypasses the allocation loop. This leaves the prev pointer
+initialized as NULL, which then causes a NULL pointer dereference
+here:
+
+	prev->p_lli_next =3D txd->p_lli;		/* cyclic list */
+
+>  	kfree(txd);
+>  	return NULL;
+>  }
+
+[Severity: High]
+This is a pre-existing issue, but I noticed unprotected access to
+pchan->desc in the interrupt handler which might race with
+sun6i_dma_terminate_all():
+
+drivers/dma/sun6i-dma.c:sun6i_dma_interrupt() {
+			pchan =3D sdev->pchans + j;
+			vchan =3D pchan->vchan;
+			if (vchan && (status & vchan->irq_type)) {
+				if (vchan->cyclic) {
+					vchan_cyclic_callback(&pchan->desc->vd);
+				} else {
+					spin_lock(&vchan->vc.lock);
+					vchan_cookie_complete(&pchan->desc->vd);
+}
+
+Could the lockless read of vchan followed by dereferencing pchan->desc
+allow a NULL pointer dereference if sun6i_dma_terminate_all()
+concurrently runs on another CPU?
+
+drivers/dma/sun6i-dma.c:sun6i_dma_terminate_all() {
+		vchan->phy =3D NULL;
+		pchan->vchan =3D NULL;
+		pchan->desc =3D NULL;
+}
+
+[Severity: High]
+This is a pre-existing issue, but process-context use of plain spin_lock()
+on a lock shared with a tasklet seems to cause softirq preemption deadlocks.
+
+drivers/dma/sun6i-dma.c:sun6i_dma_pause() {
+		spin_lock(&sdev->lock);
+		list_del_init(&vchan->node);
+		spin_unlock(&sdev->lock);
+}
+
+Since sun6i_dma_tasklet() runs in softirq context and acquires sdev->lock
+using spin_lock_irq():
+
+drivers/dma/sun6i-dma.c:sun6i_dma_tasklet() {
+	spin_lock_irq(&sdev->lock);
+}
+
+If a hardware interrupt fires while the lock is held in process context,
+would the interrupt exit path execute pending softirqs on the same CPU,
+causing the tasklet to attempt to acquire sdev->lock and spin indefinitely?
+
+[Severity: Medium]
+This is a pre-existing issue, but unverified sequential register reads
+in sun6i_get_chan_size() might create a race condition.
+
+drivers/dma/sun6i-dma.c:sun6i_get_chan_size() {
+	pos =3D readl(pchan->base + DMA_CHAN_LLI_ADDR);
+	bytes =3D readl(pchan->base + DMA_CHAN_CUR_CNT);
+}
+
+If the DMA hardware advances to the next Linked List Item (LLI) exactly
+between these reads, can pos hold the old LLI address but bytes hold the
+new LLI's remaining byte count? This might double-count the new LLI's bytes
+when iterating through the software list, reporting an artificially inflated
+residue.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615022400.1345=
+4-1-zenghongling@kylinos.cn?part=3D1
 

@@ -1,226 +1,241 @@
-Return-Path: <dmaengine+bounces-11520-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11521-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id DnwjMNXbL2okIAUAu9opvQ
-	(envelope-from <dmaengine+bounces-11520-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 13:02:45 +0200
+	id Y9YzKMEXMGqFNQUAu9opvQ
+	(envelope-from <dmaengine+bounces-11521-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 17:18:25 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B71846858D0
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 13:02:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F39C368791C
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 17:18:24 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="fw/YoOUr";
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11520-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11520-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=CMBCE2AH;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11521-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11521-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9C5B13001841
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 11:02:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F13EA31815BB
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Jun 2026 15:13:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 152C4274658;
-	Mon, 15 Jun 2026 11:02:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C35B4014A9;
+	Mon, 15 Jun 2026 15:13:55 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB88184524
-	for <dmaengine@vger.kernel.org>; Mon, 15 Jun 2026 11:02:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0555E401495
+	for <dmaengine@vger.kernel.org>; Mon, 15 Jun 2026 15:13:53 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781521359; cv=none; b=PkK6rYb6Z7bnX/0J1L2DF0osayMb2oe/tc38/grtY7iZcp13giWLQNfENzluO7NB74DVpPNhGPHth0pEKEKySuEkHqYLumzggg/jY0+fQi6XCCisvleWJ4QDedZlQ+OtP32an/VyNMRQPPRXFRlQT2zPCmeRANP3j9DvLPk68KQ=
+	t=1781536435; cv=none; b=oclczxkJjMmg3zXxOFNHFMWVh40Ttyd9flccqh/0GQf2BCP28rkHeu0VeLx1aexps1qjQa63gJV55OH+K+fV0nPYLTrciT9y1VVmQ/6jDnRHj5Bn6VDdKaXIy9eRfWknxiI29y3x6xUCmP69H5EOPZgwDiLhKPadPUPEvD+Yk/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781521359; c=relaxed/simple;
-	bh=lFkoC0PsWyTwZmumbefQgbEcukiImgXlLvlu/wY8reU=;
-	h=From:Subject:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=maI+JmUly+JgNU1qJ9LyNGki+/2Q05FobNR5HVHYIx67VHWH64leHKzJw1+UemDk4k1LAzmZJ5eKnhiQ/3qR/VFKxRNUULf5PKiUIluM04+M55QcWv3QCarhNz/TbP3SryQczb3AsRC6mTFIOEVaX3hBnBaUW5H5unPkB6zb3EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fw/YoOUr; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66B301F000E9;
-	Mon, 15 Jun 2026 11:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781521357;
-	bh=3O8c5MGM9CPYzFb33YZB90vw/n+5RF+dB0l5nBBQX68=;
-	h=From:Subject:Reply-To:Cc:In-Reply-To:References:Date;
-	b=fw/YoOUrSu1GcRUjLMWElKfgf4vjFK4ZPnIseDZLqenFARFUH4lYtM+HEstNKWOAd
-	 TQnjob0skjMVChSHmzjNUNph8LZVh2P29Yb0AjaX3GrVCXovbJ7xObd7rgVw1hkhKH
-	 RrrJPCP/1jN++ba0QuBcV2eTjjCtAPz2buaP079J3BeZuZlWaD3auIy404N630BABf
-	 iGziekpIaZHnSFGSynCt8SFPlQ9QP0yqfNHGXC0rjR3qLL/oIOxksevJgmE111GUUa
-	 lwOL9A/t2pYrazYysEOqhcna4HpCF+YhxoVv559cqJECibxj+VdgW1dSwXq0fK7oHf
-	 JFXeEuthPEnEA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] dmaengine: idxd: fix use-after-free in idxd_free() and
- idxd_alloc() error paths
-Reply-To: sashiko-reviews@lists.linux.dev
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260615103932.61828-2-bogdan.codres@windriver.com>
-References: <20260615103932.61828-2-bogdan.codres@windriver.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 11:02:36 +0000
-Message-Id: <20260615110237.66B301F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1781536435; c=relaxed/simple;
+	bh=D4bpvPbdM+wRVQt1hbGIs82yUi2P+/2hMfI01v/vvlc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ixXlDhs/p7GDy1riiYSEwfxFLVK8BasmXV2drct9tCwCQB0AacSfcYk4xdt17DpEYl+Zu9JglPA9XPeE4Ml7QjguQLAnVXNt+2Dd4wYEONII1HBMs4PBdJ831+fqLUV0cEPGb76NG/WnnxtZodzPhQ+scZboZskLXHuzMHEz108=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CMBCE2AH; arc=none smtp.client-ip=209.85.128.46
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-490bc6a7958so36033175e9.1
+        for <dmaengine@vger.kernel.org>; Mon, 15 Jun 2026 08:13:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781536432; x=1782141232; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XOu5uWEEG32depN6lamngfrPC9NH0+eC4cO0/sZPFE0=;
+        b=CMBCE2AHpu3mvZyuyKOyUHaHAmZfs78bURmyFLUlctytfYI1iUUr3ucqLk09P8aWef
+         o0hqx88yJ0qqRlefzS+hCI6Ajcbk0UJ3IfATtw0EWf5BPLRuZ35iDK77DAHYtV8cQHoW
+         C4wXeuvj1DuOU+JRe0ZBux4JksmDT3BKqn/WdfMbJI9gj7PN2oAkfminPPUftVghC3rG
+         TgJUYXqhHd9qRj2g+7GKcsIZKcdpSx5Vjs5xlWl324kNxeJhkthKkxzxcJiq4ewrwt/I
+         YcmlR0ywRxnFD1fgqaEWSg2PfWyxBBUvOBKQ7pjjbEMhftpteKS+T7AiNLX670fle3aG
+         h74w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781536432; x=1782141232;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XOu5uWEEG32depN6lamngfrPC9NH0+eC4cO0/sZPFE0=;
+        b=cnHpma4JX508QCu+O9CyD3UrBaJpQZOOoD5fi7dI3S1UjFOR+CczZPD75c0eR0NBMj
+         1OGjSa4l/C9HcB9hPKTQRsNWw9byaCiJcxF1E/ZOT+ZzimPpyFz9Ju/edYcA5316QzwL
+         XlP0liQhhO42crgSDzEOCLL+HWW6HIZZcArFAFbNAxX2ZbMeOJqVJgrvAXWmlC01opBg
+         ETCPHkrmirycBd46s1938y9OEYyCMqDkRdVx1wiwC3j3bKb/M618qsW2MN+8Adg5YAuv
+         Vcda0U8oGU7y/B7eEyEpiirguIN8+SIMSd8z1XR3c/zR+5VKYc2mYrAKvCOfDOx/0Tzp
+         Gw3Q==
+X-Gm-Message-State: AOJu0YzNKxGGRDUik5WMtIVT4yrH4bA0z2slihGFi6VhescmdQjsQnyb
+	uobjEzsZWH3wm9XoGxK1brSi8O8MoNI0r+rx7AR+ms98v+2UxvSkEOO/
+X-Gm-Gg: Acq92OFgHqsI5uHQcBLIViEs+cVUykYtuX8eaUB4fx2Rka4H1QBQs9DJcKYUV0m34QK
+	uP41tuWibwFzFRb4zfho+RNO4t+e0bemHzPqVLyBITuIquavPv8Id03QzFj/QDVuCAa0EOou3iS
+	QnQj+84jIkJSAQysoDD+Pd36Y6Wca3sZm0o5p+fCL8LcEwS3Da+rebewsH4TaokCa9/EfClQB8u
+	gog5lzwVYM10CNrJyU143Dih8dBFGoy38oKZ0DDF1FjWnPEf5w+9meaX6AnS/melQ2urb/4RxMr
+	t2BIjLQ3A9vJVkiephmltPVmC9bLglmuwyGMtUD2HZCjFZculZvWjET7wABoPpbR7w5B0MANIg4
+	TZWmR8FzMd2M4iGyFDOxw6xSUfLSiO9jJ1rfPBVnbq5Dq+ky62Pnn8mWTP2ZjXWLkP8OeOsTuCZ
+	EAZLucIk5pzM0qP/y+gXULaOJ0Mx7AR2yzMEwnEzU6NTPz0OGBRaw9kVXAbsAUYmIpVLnRE6Q0Y
+	CQJME2uOrU9Ke08q3mQXkTO92r3DmklMC4m/g==
+X-Received: by 2002:a7b:c5cb:0:b0:490:5429:1515 with SMTP id 5b1f17b1804b1-490ea9721c9mr127671085e9.0.1781536431914;
+        Mon, 15 Jun 2026 08:13:51 -0700 (PDT)
+Received: from jernej-laptop.localnet (92-53-159-70.dynamic.telemach.net. [92.53.159.70])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f2b0d28sm36364453f8f.20.2026.06.15.08.13.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2026 08:13:51 -0700 (PDT)
+From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: vkoul@kernel.org, Frank.Li@kernel.org, wens@kernel.org,
+ samuel@sholland.org, mripard@kernel.org, arnd@arndb.de,
+ Hongling Zeng <zenghongling@kylinos.cn>
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ zhongling0719@126.com, Hongling Zeng <zenghongling@kylinos.cn>
+Subject:
+ Re: [PATCH v2] dmaengine: sun6i-dma: Fix use-after-free in error handling
+ paths
+Date: Mon, 15 Jun 2026 17:13:49 +0200
+Message-ID: <m3OXKiXNQhuGBq_OoFe6nQ@gmail.com>
+In-Reply-To: <20260615022400.13454-1-zenghongling@kylinos.cn>
+References: <20260615022400.13454-1-zenghongling@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
-	MISSING_TO(2.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-11521-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11520-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,126.com,kylinos.cn];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[jernejskrabec@gmail.com,dmaengine@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TO_DN_NONE(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:wens@kernel.org,m:samuel@sholland.org,m:mripard@kernel.org,m:arnd@arndb.de,m:zenghongling@kylinos.cn,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:zhongling0719@126.com,s:lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FORWARDED(0.00)[lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jernejskrabec@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,lists.linux.dev:replyto,windriver.com:email]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B71846858D0
+X-Rspamd-Queue-Id: F39C368791C
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-
-Pre-existing issues:
-- [High] Unconditional call to `destroy_workqueue(idxd->wq)` in `idxd_conf_=
-device_release()` causes a guaranteed kernel panic on early probe or alloca=
-tion failures.
-- [High] Late probe failures trigger sequential manual cleanup (`idxd_clean=
-up_internals`) and `idxd_conf_device_release()`, resulting in massive doubl=
-e-frees and a double-destroy of the workqueue.
-- [High] Sub-component configuration and cleanup functions (`idxd_clean_wqs=
-`, `idxd_clean_groups`, `idxd_clean_engines`) suffer from the exact same do=
-uble-free anti-pattern that the patch intended to fix in the main device.
---
-
-commit 14c25ba1a63a6d7ab71af3fd079660a9cd76f396
-Author: Bogdan Codres <bogdan.codres@windriver.com>
-
-dmaengine: idxd: fix use-after-free in idxd_free() and idxd_alloc() error p=
-aths
-
-This commit removes redundant cleanup calls in the error paths of idxd_alloc
-and idxd_free. By relying on put_device to synchronously trigger the release
-handler idxd_conf_device_release, which already frees these resources, it
-prevents double-free scenarios during initialization failures.
-
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index f1cfc7790d950..e2b5fe072d4ac 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-[ ... ]
-> @@ -601,15 +601,18 @@ static void idxd_read_caps(struct idxd_device *idxd)
-[ ... ]
-> +/*
-> + * Release an idxd device that was allocated (device_initialize() was ca=
-lled)
-> + * but never successfully registered. put_device() drops the last refere=
-nce and
-> + * triggers idxd_conf_device_release() which frees all resources includi=
-ng the
-> + * ida, opcap_bmap, and the idxd structure itself.
-> + */
->  static void idxd_free(struct idxd_device *idxd)
->  {
->  	if (!idxd)
->  		return;
-> =20
->  	put_device(idxd_confdev(idxd));
-> -	bitmap_free(idxd->opcap_bmap);
-> -	ida_free(&idxd_ida, idxd->id);
-> -	kfree(idxd);
+Dne ponedeljek, 15. junij 2026 ob 04:23:59 Srednjeevropski poletni =C4=8Das=
+ je Hongling Zeng napisal(a):
+> In error handling paths, the for loop frees v_lli in the loop body,
+> then accesses v_lli->v_lli_next and v_lli->p_lli_next in the
+> increment expression, which is use-after-free.
+>=20
+> Fix by saving both the next virtual and physical pointers before
+> freeing the current node.
+>=20
+> Fixes: 555859308723 ("dmaengine: Add driver for Allwinner sun6i DMA")
+> Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
+> Suggested-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+>=20
+> ---
+> Changes in v2:
+>  -Refactored the fix to avoid code duplication by creating a helper funct=
+ion
+>   sun6i_dma_free_lli_list() that handles LLI list cleanup
+>  -Add Suggested-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+> ---
+>  drivers/dma/sun6i-dma.c | 26 ++++++++++++++------------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> index a9a254dbf8cb..02dd07001d5a 100644
+> --- a/drivers/dma/sun6i-dma.c
+> +++ b/drivers/dma/sun6i-dma.c
+> @@ -406,16 +406,12 @@ static inline void sun6i_dma_dump_lli(struct sun6i_=
+vchan *vchan,
+>  		v_lli->len, v_lli->para, v_lli->p_lli_next);
 >  }
-
-[Severity: High]
-This is a pre-existing issue, but does this same double-free pattern still
-exist for late probe failures?
-
-If idxd_probe() fails late in the initialization sequence, the error path
-calls idxd_cleanup(), which delegates to idxd_cleanup_internals().
-
-In drivers/dma/idxd/init.c:idxd_cleanup_internals():
-    ...
-    destroy_workqueue(idxd->wq);
-
-The error path then falls through to idxd_free(), which calls put_device().
-This triggers idxd_conf_device_release() in drivers/dma/idxd/sysfs.c, which
-blindly executes destroy_workqueue(idxd->wq) and kfree() on internal arrays
-a second time. Can this cause a double-destroy and memory corruption?
-
-[Severity: High]
-This isn't a bug introduced by this patch, but do the sub-component cleanup
-functions suffer from the same double-free pattern?
-
-Looking at idxd_clean_wqs() in drivers/dma/idxd/init.c:
-    ...
-    put_device(conf_dev);
-    kfree(wq);
-
-The put_device() call drops the reference to zero and invokes the release
-handler idxd_conf_wq_release(), which already performs kfree(wq). Does
-calling kfree(wq) immediately after put_device() result in a double-free?
-Similar patterns appear to exist in idxd_clean_groups() and
-idxd_clean_engines().
-
-[ ... ]
-> @@ -649,13 +652,16 @@ static struct idxd_device *idxd_alloc(struct pci_de=
-v *pdev, struct idxd_driver_d
->  	return idxd;
 > =20
->  err_name:
-> +	/* device_initialize() was called, so put_device() will trigger
-> +	 * idxd_conf_device_release() which frees ida, opcap_bmap, and idxd.
-> +	 * Do not fall through to err_opcap/err_ida.
-> +	 */
->  	put_device(conf_dev);
-> -	bitmap_free(idxd->opcap_bmap);
-> +	return NULL;
+> -static void sun6i_dma_free_desc(struct virt_dma_desc *vd)
+> +static void sun6i_dma_free_lli_list(struct sun6i_dma_dev *sdev,
+> +					struct sun6i_desc *txd)
+>  {
+> -	struct sun6i_desc *txd =3D to_sun6i_desc(&vd->tx);
+> -	struct sun6i_dma_dev *sdev =3D to_sun6i_dma_dev(vd->tx.chan->device);
+>  	struct sun6i_dma_lli *v_lli, *v_next;
+>  	dma_addr_t p_lli, p_next;
+> =20
+> -	if (unlikely(!txd))
+> -		return;
+> -
+>  	p_lli =3D txd->p_lli;
+>  	v_lli =3D txd->v_lli;
+> =20
+> @@ -428,7 +424,17 @@ static void sun6i_dma_free_desc(struct virt_dma_desc=
+ *vd)
+>  		v_lli =3D v_next;
+>  		p_lli =3D p_next;
+>  	}
+> +}
+> =20
+> +static void sun6i_dma_free_desc(struct virt_dma_desc *vd)
+> +{
+> +	struct sun6i_desc *txd =3D to_sun6i_desc(&vd->tx);
+> +	struct sun6i_dma_dev *sdev =3D to_sun6i_dma_dev(vd->tx.chan->device);
+> +
+> +	if (unlikely(!txd))
+> +		return;
+> +
+> +	sun6i_dma_free_lli_list(sdev, txd);
+>  	kfree(txd);
 
-[Severity: High]
-This is a pre-existing issue, but will this cause a NULL pointer dereference
-during early failures?
+Why not also move txd handling? That way even more code can be put in one p=
+lace.
 
-If dev_set_name() fails, idxd->wq has not been allocated yet and remains NU=
-LL.
-The error path calls put_device(conf_dev) which invokes the release callbac=
-k:
+Best regards,
+Jernej
 
-drivers/dma/idxd/sysfs.c:idxd_conf_device_release() {
-    ...
-    destroy_workqueue(idxd->wq);
+>  }
+> =20
+> @@ -788,9 +794,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep=
+_slave_sg(
+>  	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+> =20
+>  err_lli_free:
+> -	for (p_lli =3D txd->p_lli, v_lli =3D txd->v_lli; v_lli;
+> -	     p_lli =3D v_lli->p_lli_next, v_lli =3D v_lli->v_lli_next)
+> -		dma_pool_free(sdev->pool, v_lli, p_lli);
+> +	sun6i_dma_free_lli_list(sdev, txd);
+>  	kfree(txd);
+>  	return NULL;
+>  }
+> @@ -869,9 +873,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep=
+_dma_cyclic(
+>  	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+> =20
+>  err_lli_free:
+> -	for (p_lli =3D txd->p_lli, v_lli =3D txd->v_lli; v_lli;
+> -	     p_lli =3D v_lli->p_lli_next, v_lli =3D v_lli->v_lli_next)
+> -		dma_pool_free(sdev->pool, v_lli, p_lli);
+> +	sun6i_dma_free_lli_list(sdev, txd);
+>  	kfree(txd);
+>  	return NULL;
+>  }
+>=20
 
-Since the upstream kernel's destroy_workqueue() does not safely handle NULL
-pointers, won't this unconditionally crash the system on early probe or
-allocation failures?
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615103932.6182=
-8-2-bogdan.codres@windriver.com?part=3D1
+
+
 

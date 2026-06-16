@@ -1,206 +1,238 @@
-Return-Path: <dmaengine+bounces-11565-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11566-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id N5cYFDKBMWp+lAUAu9opvQ
-	(envelope-from <dmaengine+bounces-11565-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Jun 2026 19:00:34 +0200
+	id qo36OYG2MWqYpQUAu9opvQ
+	(envelope-from <dmaengine+bounces-11566-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Jun 2026 22:48:01 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28B33692A6D
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Jun 2026 19:00:34 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AD5F69548C
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Jun 2026 22:48:01 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=YyJqEFza;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11565-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="dmaengine+bounces-11565-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=pm6Xjgjx;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11566-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11566-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=nxp.com (policy=none);
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6E4633040318
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Jun 2026 16:59:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 02207304705A
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Jun 2026 20:47:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7A19478E41;
-	Tue, 16 Jun 2026 16:59:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6062537DE8D;
+	Tue, 16 Jun 2026 20:47:55 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013034.outbound.protection.outlook.com [40.107.159.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C75F466B4B
-	for <dmaengine@vger.kernel.org>; Tue, 16 Jun 2026 16:59:29 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781629171; cv=none; b=uY5Y7hBwkC+qUNIQVTpdb4zvTIG2IRgQacqsH5YOBIkCDolpRmeeRIvvWSKJk5hLnhy5VWQ9iGzYte1jnIW9GuI8nek88vZVOu4zYrgMAiGL/zAVbXK6Z7V30yn/W8WC0/N0Kii8tb2KBWaBDv10R/DE0yplCAw0EOJb81XP5WU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781629171; c=relaxed/simple;
-	bh=RmlQGoLfci9osWvKrydhp2LNMfnznzpLPtUIkwc+vAg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EPpR8igMSYAY6lsZrN369OYSwCKlWI1k8NXZw+v6NrVBD1HR29yWmdREYdHDIfoVRD7QUel3T9pJ7803z2sQcJ0tcj8pI448iKvYeeLDsiGolBrYzJNxhK4ks+d9nZmzW2O5q+Ujrt4tBrz/LVHwXxCZlW/yckNlJCsZb00Yhu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YyJqEFza; arc=none smtp.client-ip=209.85.128.43
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-490acbb0f89so31528725e9.0
-        for <dmaengine@vger.kernel.org>; Tue, 16 Jun 2026 09:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781629168; x=1782233968; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F2MzvP3M/Lvdf+YQEoRrr/63qV3jwcTxyyvjTUVpfjs=;
-        b=YyJqEFzaO1Bd1JhN7ivVOdZWE6ev203ngAw7vIvDR8IRYxVs/48fynoN+FjcigD8kI
-         Ho2Bz1/Kvic4fJrqs7qAXu5Zd20NStzqfxiiK+0lzGXnYt8XD0g5sbfJV0WOHWP4zZEB
-         QScwKebx2RmkADzF6m/nVFfZ3VaSuMtKnzc7/VYWu26wzp5q8oaI8rVJs/unbRaa+fwZ
-         xQSxbt1J+M0egszmcXfj1XR4GXkh3E8tzypULDqqi1zNScHfqIifbB/goCao2fFCqy7D
-         Lhq+BuHVtkX4XRQWKqDthvtb4MrKEIztWqzUbdP0SNrkfavezCXBzIebqSDur25hPF4I
-         2+Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781629168; x=1782233968;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=F2MzvP3M/Lvdf+YQEoRrr/63qV3jwcTxyyvjTUVpfjs=;
-        b=NtNZRON6AUCBcUUM/2v8gpLRSLLEqRh/hx/t7Tns22ye3Z9y4kJU5rTopZF3oCJPrY
-         FI6iUaQlM0U9YfggDYQwxRyd3kUbsCXrlGSm+LwX9V1+0DAxoRe47Uij2encEBxxmewz
-         PhUUAxFC6LbM/0EPuMsHgdcDP+qeCiRzYb/DSWSgqTPfQXWwJd7Cxtjp7srTXX4C8wy6
-         5+dGrrubbB1ZA6XYnVhps77xFLJed97iOlzT4hyxNCY1I8ucs9yGKgSUtC7++kIyxsOU
-         gHsQGY0m+djUE7/ZBExtDwORUq2qAu+X88yC/dtsEzRaCMmUcc3mE5c+2LFE7fKzEC3g
-         52Lw==
-X-Gm-Message-State: AOJu0Ywimy3mEZCR7Nq6eJ4TDQ3ydpUtZUO1YtUuncWQZjZIz5P4DFvK
-	N0NnvzxximdRaWNxFutSffCNR9f4nH491gVjV31wJKz2ql5satF8cPNj
-X-Gm-Gg: Acq92OHZtC1y8ji+hnYYLfYs3IYSs+bTQD2zz/2in9GhlwEz+mVajLkvSyKugFl6VID
-	FfjvJER7Eu/AF1HsT2Ue8ktRHx3/Sd6iDYO37xioC4odht3XMUMeMs8V6rkCl3VX5HrCGcwdguc
-	94thHESh9ObneKYmQoBMt1ures2luZgYrf3Kr/GWqpIbrgdmkjnq/NFlxc2Nd9+aC05beMyxCv/
-	+IP0zGRSLNJGr9ILwAejr2vUMuZ4pF8nNa3dG/iTT6aUsw1Lw7Uuhlw8NuNz2o0bBt93CiX9Rwo
-	zwiaoiU/ytdlpS13bV8MUmeTDUVhVlXeTUpkqz8HivHSmfjazxEEYn0oYxbePw6kSbRI5LROI5C
-	33vq9xaFYoB+6yufWKdOvrmVkCEyLKPe098N5Jh7yVYysYtXtKjGveAqR54XCfK1kzlRZ/pcs2I
-	w+wZQH7lQW+sw2hCGO00anKsav7SErGZVxpsTSG5zOL6Fd5pVaH/ZYnSXDTQ7WVkzsVQRh0vgXS
-	6+ZT1/wQs+qKYHX4BtbWghbeRHnZiGRhVGC
-X-Received: by 2002:a05:600c:3b02:b0:490:6237:521d with SMTP id 5b1f17b1804b1-492333a8e2cmr6254255e9.13.1781629167571;
-        Tue, 16 Jun 2026 09:59:27 -0700 (PDT)
-Received: from jernej-laptop.localnet (APN-122-99-120-gprs.simobil.net. [46.122.99.120])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4922fa890d8sm103698875e9.10.2026.06.16.09.59.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2026 09:59:27 -0700 (PDT)
-From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: vkoul@kernel.org, Frank.Li@kernel.org, wens@kernel.org,
- samuel@sholland.org, mripard@kernel.org, arnd@arndb.de,
- Hongling Zeng <zenghongling@kylinos.cn>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- zhongling0719@126.com, Hongling Zeng <zenghongling@kylinos.cn>
-Subject:
- Re: [PATCH v2] dmaengine: sun6i-dma: Fix memory leak in
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76D935F197;
+	Tue, 16 Jun 2026 20:47:52 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781642875; cv=fail; b=KfJY5Fc5N6FQ9Rudds1vX8OdYrjLn+dCpRk9xbbYLpA2oZ/jmVZ22GNMjsuRqkH4wGhTrZD7WE3STuhMoQcvy3jheKGlravtLEIWIDntI8dXZfpkeRUO8p7CEtT9E+8+6XO842JGm6iT35VY+LXChnrQSjCfm4QQx1oadac1QHM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781642875; c=relaxed/simple;
+	bh=0iABAIadRbQ5l0fDyuUJiKj620CuuCT0ySEUXmYQUa4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=o1uSc9Ig1yNJtmHphceNZ2rAEAsdnHDdeeSl4dVbBWhtYNJvebtCEh+SPW1GbJSS4BpXtzoPoK5ugdpzMXSHMjD0mMgjxkbDmPTdUc2RYpsHPAs16eGlrSfMDYCaPBVOibtH5IOlheEsIiTaW5T+U0cnIVcOc/IF3GFuhzKJhaM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=pm6Xjgjx; arc=fail smtp.client-ip=40.107.159.34
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JoYryzMHt2AJPKJGrQLyzf3rATpaSuZRywpIxgxVjg5b5hwXTb4vtOyt2W0aPLyE42qZ++O1RbhSgRJvYyUnQ3oaHkXSGjBUlSTKU1uU7IUGws6yBHG6JhDSyL6wqcqvN8whMFC/pyHVDy6dZa0r0KpawAhd7mfGHGsV0Ylsb78T8B1Sno0FgJ+gTQ3NdknRxPxsF6MKdxwMHoKmiiWqxsclZ+opNR4OF9jiGQ2ZCZbH0FJaFwxo+5btHz3vG5I3OnuzEyNxWXrOqJKaj2fmpqQELTixPXRm3gbmsVe9uMRtSZppB80swULq1oxdfmCJsDjRps/WNXTsfJtHil9wDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aecnW+H0FeU6Q6eTzXEjo011zFDY2mL+wqX/rWLb9WA=;
+ b=xt1H86XuP4GuuqfhSDUceoiBZqr0TIrCBJdRj8xks9F9jL1wA72g2sd+jEofxSgPr8tNw9H7OPJ2nOgUPblUClnUQlPcCKypgDtZOuJt63vOElzMn8Yh47z6b/3YbO8JfO27oAArQtoszz6xVS4WBOR4pvPRfGrCHU1ZSLkZXJlbJjBvASZJNRuSxSU3sBDyVys3cIDAK0jJrGK0vcpXAl7NaipzFD7S0WHj6fTuPxvYi+/QchV2sGT6EgCzis5wp76opSwuIFpK2SFeLHPDEk5f7GVQmgrYiGuFJqu8ybsbNdJ2egeCbdn3Lg29tDWlLsygX5gNuQVE+0QiVIhBUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aecnW+H0FeU6Q6eTzXEjo011zFDY2mL+wqX/rWLb9WA=;
+ b=pm6XjgjxXU8bsH04b8HDn4H7alPzjIbtRer5IdNNFz70XjMCsber/ibgMbh+GroQahi15qoh4oyNeaqt/eX15q6Qt+7/a2CcmRm/3/NMyh4qEklYMYmWgGRW1gqOl7a5npLssnk6mFS8GMP4HDtNmODxPhTGreWK1Bhj5EMokJi3ZQR/F6gX+eRmB9VGn/YPDp2tV6bh/tx9EbwsVALsgBBJKGf4mvBk34ReQ+K9YC6noV8plmPVyIDxv+cxZm0LouVtxExSQjBwoGeIBMHCdgWqzYDsWgWp8UO/qeyEj90XFGXm3BYOLb/mgk7ltDG9NBicKRy8SkhNbJWHgG92AQ==
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
+ by GV2PR04MB11710.eurprd04.prod.outlook.com (2603:10a6:150:2d5::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.18; Tue, 16 Jun
+ 2026 20:47:47 +0000
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0113.015; Tue, 16 Jun 2026
+ 20:47:46 +0000
+Date: Tue, 16 Jun 2026 15:47:37 -0500
+From: Frank Li <Frank.li@oss.nxp.com>
+To: Hongling Zeng <zenghongling@kylinos.cn>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, wens@kernel.org,
+	jernej.skrabec@gmail.com, samuel@sholland.org, mripard@kernel.org,
+	arnd@arndb.de, dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, zhongling0719@126.com
+Subject: Re: [PATCH v2] dmaengine: sun6i-dma: Fix memory leak in
  sun6i_dma_terminate_all
-Date: Tue, 16 Jun 2026 18:59:24 +0200
-Message-ID: <9Stif-p9RWiht_4RVVcSpg@gmail.com>
-In-Reply-To: <20260616060449.42225-1-zenghongling@kylinos.cn>
+Message-ID: <ajG2aR70B4z6j1fd@SMW015318>
 References: <20260616060449.42225-1-zenghongling@kylinos.cn>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260616060449.42225-1-zenghongling@kylinos.cn>
+X-ClientProxiedBy: SA9PR13CA0085.namprd13.prod.outlook.com
+ (2603:10b6:806:23::30) To GV2PR04MB11799.eurprd04.prod.outlook.com
+ (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|GV2PR04MB11710:EE_
+X-MS-Office365-Filtering-Correlation-Id: aecf906f-6605-4f75-bacf-08decbe88577
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|19092799006|7416014|376014|23010399003|22082099003|18002099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	978hYwEd6conq4kbr+JWKOJGjoFSZ+ynZ/RVIInXcvqM1WoKsvfVGqp/devSYG/70v59dCBd/Xu/TkQCPdB6dd67ZZ0UL8VYeOQhY1sS2Rn80M7wQKSXBPTvl1kcM3pQKpAQ49e4+HOgY8qOAZjIylAAkJljb+L3r2uHUNTbd/y4ObDmpUdt13DH4/JWz2iabgqVBDeHsWhZNPkEbtmTGMOtlknN38mLtJpwuOXXsrqQXOT5IJhX8kzdIU8oJWx1+CPDmZfBUq1JvnJjS6lIQWZ+TtW7FgMz8EY8tqfLrL5HEaVjIzeW/QVQjG/3ylxfcxl/VGNGccXcy7nTpWT99C2iJbeE8fWFQXyiVcobymdvMTKPVsVR6LYaD3vm4Mfv9igV6ZKevNljpIlGcJ4040hS/O3JgA1dlitgPj/SMa7mxCe8yngieMOV4B7kBsszEzTnenibb9NeEtSWXqGHs/SY/nzUBd+ZvkmrMGtN13PlYFLpei8Cw4Do7UY1lA0BeAH1xY0jow4XH8FDz8m4ReS66Z2P95+lp0yat1fPGK3u1fZ4WOb8uFjBukoxa0uburS25DzUVxoLRVvQrUsHjDoK4FJqIIo3w3RMxhOOOXG+Tc7H69q1D1GdhvjRhlap+fiO0NAbSkgIhEnzXKwwCNgnLASEf1aP8lTjAW09vxtypJkZFnpOJhJdmPKab15RCE6+x5cJHL6p+JBUjFg1hg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(19092799006)(7416014)(376014)(23010399003)(22082099003)(18002099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?2VAFz3YBnaFffuB/6KyyOme4fAtFDiOYSN1Tp4WjfOCXrtO8Ae/xMIsAjpA0?=
+ =?us-ascii?Q?nKtEKh45Q2SiTP7dtnSuSUpegv0Lr4Rn9SJk+XSyydcJW6Zj1VwPa7M7QMpN?=
+ =?us-ascii?Q?R+WIG//tof4okNBPCpKXNLnozbuJExurbfDPNzuLQTN2TYM7pBU+/m6yEadN?=
+ =?us-ascii?Q?hv21c2pMUrUj+mk2aa338VrVB3Qc84dgW7XK38ywpXpF7xfCzDQK70KsBEm2?=
+ =?us-ascii?Q?L8Yw+PoutK+1MQAWXf+MFsqvsF7rbI8XHAuuKzL/p+QmU19pMOIAdcst9WJE?=
+ =?us-ascii?Q?RweqpQSCA7+qGrGQMxXU7HqYil7HzUU7Nxz7PSfosombIlXv/DQ+u8KTRw4v?=
+ =?us-ascii?Q?YSoIQurgV2THIUE5D7GX1Z/joRWrmG/2VT9i/6wMAWybHKSco6dntZcmh1aX?=
+ =?us-ascii?Q?Z+4U0jE/4dJ9UGzrgva+1p1+Nu2JdxcWbLbPn4wr0Sz2mDiVjPItnkmdzTru?=
+ =?us-ascii?Q?9GVMUN+A2J6FOF+9XG1E3OIW7acO9JUwbH4bhF15Z8YH5NI4/bcUd6VT6HZJ?=
+ =?us-ascii?Q?PqsMBPWDSuj8sOU7qvuNPdCHWK6MCGTGUQX4e2q2pbI9N4HUcucv6mM7xGJR?=
+ =?us-ascii?Q?fkh++HcMIJe9gY8Vjr+gQrnsp0uzJqZ8JYWow5GNDczff3+h7X+Wq/Oiw8p0?=
+ =?us-ascii?Q?YLETGXURZS+OaSvvTYIjVS09uaQmgAl1G+Co1qnBgzebfH15qy8DEvxW1wqJ?=
+ =?us-ascii?Q?lyewwPczydzp1Ocya27cMnDMJazJ9gguttFFRnDHDDvK4cmqGQut0EZUw7mY?=
+ =?us-ascii?Q?Q152mzB8zQJsxFU+aRTD4PHXblbT4IlaudeVfzCKY5I4OxQc3Mhx7s9Q+0/w?=
+ =?us-ascii?Q?HpxIkK/YGE62L5ZsEib04rWMGXEDQ7wawRHEt5tI8YsK/zPR+jxVtMDE5VIr?=
+ =?us-ascii?Q?F1U1pyoRhOtuHPO6dF8gaTrDFrjMLp+Wr4zHSE/TpgFOLTVNhwBEA8L7SD4G?=
+ =?us-ascii?Q?fbOD39NCgJcgmWqIJyEh0nXQqta9TZEPsnMZKmMi/z+vQV2QzUWtGPR72zFJ?=
+ =?us-ascii?Q?5qWC0KxUTo+4L2ktWyqndfoh0HzLVXIM8s1Y9Oo3noPG+FnkS3hP35+HiCHK?=
+ =?us-ascii?Q?JfriHcOon0wzEQsumWhpdHaLQMNJnYhoTpsnxvGw2FbsTrHf/QnLaFRYkSpP?=
+ =?us-ascii?Q?jLiqqvYF49dMutEyZrdIwWaK7P7mB5ale2I1NZ7qjBN6UjRP15Ci4FhcvRQh?=
+ =?us-ascii?Q?pcVa/vTs6nNhjoEMAhESP+pXqA21PXa6A/UWx7oDVOrGoBABNTCcxGbWaatu?=
+ =?us-ascii?Q?Rsy3u4N12M9QXR0HDxvV6q/7okL09dL/c1aJHHN1n5FHIUFSm6jXW+4198QH?=
+ =?us-ascii?Q?BRt7wkSUOqAhdX1pxNS6GPdWoShwKi2u5swijIlPXSkXmyyD0zZbqa0Z+N3g?=
+ =?us-ascii?Q?GqferCMuMGEes9fvGl5fol8pzyvJy/JiFUhCb7CM2+OAzsKhFX47F+PJwWu1?=
+ =?us-ascii?Q?XjtYiqc7Z13Zyjxn1gDKdnFBo434qdLnpg2Xx9Ynj2OG1koMhuWM0McFPKbR?=
+ =?us-ascii?Q?EoQvv/hFpBskiFO4YvzQ6pwJajQzBG5ZxwNsTuQhd3vnXKg1Xa5tXl3fN+HT?=
+ =?us-ascii?Q?7Xo+tk2K2msbcJSSUsDSFSyJ5AQ7sDbWJYfdjn+kk1PtuYIvi4AldrDqpQXJ?=
+ =?us-ascii?Q?B5YU+PZennhW8nq+SzseGPr/UMyzZroZTtOhCNvNb8ComNnjU6pPYrEVoZdZ?=
+ =?us-ascii?Q?V1mHMJcT3Q2TnZYX4gXMxJ4StqKl/ohV/NE9sItxtIQvqTUpEvjXKARXTFte?=
+ =?us-ascii?Q?qfN7rY1AFYPUqZCwI0oxCYWIUS2qEKckuXYG3P4ImHpQVOlFa/mA?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aecf906f-6605-4f75-bacf-08decbe88577
+X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2026 20:47:46.8269
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: T18Tvc5Cmif1CcPoH7SdsrLT+gdI4PL1DohKxvSx/bsLE82K2kc6MzSVB3Dr1EdTBAKpj4IlKJB/wyDCDanmlcEmhFJNe1WzZ0JGDk3YXW/DDsyWmDDytdrbNpfCZVwM
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR04MB11710
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-Spamd-Result: default: False [2.44 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11565-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,126.com,kylinos.cn];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[jernejskrabec@gmail.com,dmaengine@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:wens@kernel.org,m:samuel@sholland.org,m:mripard@kernel.org,m:arnd@arndb.de,m:zenghongling@kylinos.cn,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:zhongling0719@126.com,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11566-lists,dmaengine=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[13];
-	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:zenghongling@kylinos.cn,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:samuel@sholland.org,m:mripard@kernel.org,m:arnd@arndb.de,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:zhongling0719@126.com,m:jernejskrabec@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[Frank.li@oss.nxp.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jernejskrabec@gmail.com,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Frank.li@oss.nxp.com,dmaengine@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,sholland.org,arndb.de,vger.kernel.org,lists.infradead.org,lists.linux.dev,126.com];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,kylinos.cn:email,vger.kernel.org:from_smtp]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,SMW015318:mid,kylinos.cn:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 28B33692A6D
+X-Rspamd-Queue-Id: 5AD5F69548C
 
-Dne torek, 16. junij 2026 ob 08:04:49 Srednjeevropski poletni =C4=8Das je H=
-ongling Zeng napisal(a):
+On Tue, Jun 16, 2026 at 02:04:49PM +0800, Hongling Zeng wrote:
 > When terminating a non-cyclic DMA transfer, the active descriptor
 > is not properly reclaimed. The descriptor is removed from the
 > desc_issued list in sun6i_dma_start_desc(), but in
 > sun6i_dma_terminate_all(), only cyclic transfer descriptors are
 > added to the desc_completed list before cleanup.
->=20
+>
 > For non-cyclic transfers, pchan->desc is set to NULL without first
 > adding the descriptor back to a list that vchan_get_all_descriptors()
 > can collect. This causes the descriptor and its associated LLI chain
 > to be permanently leaked.
->=20
+>
 > Fix by ensuring both cyclic and non-cyclic active descriptors are
 > added to the desc_completed list before setting pchan->desc to NULL.
->=20
-> Fixes: 555859308723 ("dmaengine: sun6i: Add driver for the Allwinner A31 =
-DMA controller")
+>
+> Fixes: 555859308723 ("dmaengine: sun6i: Add driver for the Allwinner A31 DMA controller")
 > Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
-
-Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-
-Best regards,
-Jernej
-
->=20
+>
 > ---
 >  Change in v2;
->  -Add pchan->desc !=3D pchan->done check to prevent race condition
+>  -Add pchan->desc != pchan->done check to prevent race condition
 >   where completed descriptors could be double-added to desc_completed
 >   list, causing list corruption
 > ---
 >  drivers/dma/sun6i-dma.c | 12 +++++-------
 >  1 file changed, 5 insertions(+), 7 deletions(-)
->=20
+>
 > diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
 > index 7a79f346250a..12d038ef5f2e 100644
 > --- a/drivers/dma/sun6i-dma.c
 > +++ b/drivers/dma/sun6i-dma.c
-> @@ -946,16 +946,14 @@ static int sun6i_dma_terminate_all(struct dma_chan =
-*chan)
-> =20
+> @@ -946,16 +946,14 @@ static int sun6i_dma_terminate_all(struct dma_chan *chan)
+>
 >  	spin_lock_irqsave(&vchan->vc.lock, flags);
-> =20
+>
 > -	if (vchan->cyclic) {
-> -		vchan->cyclic =3D false;
+> -		vchan->cyclic = false;
 > -		if (pchan && pchan->desc) {
-> -			struct virt_dma_desc *vd =3D &pchan->desc->vd;
-> -			struct virt_dma_chan *vc =3D &vchan->vc;
-> +	if (pchan && pchan->desc && pchan->desc !=3D pchan->done) {
-> +		struct virt_dma_desc *vd =3D &pchan->desc->vd;
-> +		struct virt_dma_chan *vc =3D &vchan->vc;
-> =20
+> -			struct virt_dma_desc *vd = &pchan->desc->vd;
+> -			struct virt_dma_chan *vc = &vchan->vc;
+> +	if (pchan && pchan->desc && pchan->desc != pchan->done) {
+> +		struct virt_dma_desc *vd = &pchan->desc->vd;
+> +		struct virt_dma_chan *vc = &vchan->vc;
+>
 > -			list_add_tail(&vd->node, &vc->desc_completed);
 > -		}
 > +		list_add_tail(&vd->node, &vc->desc_completed);
+
+should It be in desc_terminated queue?
+
+ref: https://lore.kernel.org/dmaengine/ajETw7uwVx_U9o5F@ryzen/T/#m541c24b45fb425c6a8a81d800db225b58411447e
+
+Frank
 >  	}
-> =20
-> +	vchan->cyclic =3D false;
+>
+> +	vchan->cyclic = false;
 >  	vchan_get_all_descriptors(&vchan->vc, &head);
-> =20
+>
 >  	if (pchan) {
->=20
-
-
-
-
+> --
+> 2.25.1
+>
 

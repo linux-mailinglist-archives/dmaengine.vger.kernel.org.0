@@ -1,215 +1,223 @@
-Return-Path: <dmaengine+bounces-11582-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11583-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 7ie5JcWsMmoJ3gUAu9opvQ
-	(envelope-from <dmaengine+bounces-11582-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 16:18:45 +0200
+	id EI2hOAYJM2rn8gUAu9opvQ
+	(envelope-from <dmaengine+bounces-11583-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 22:52:22 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86B2369A7B5
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 16:18:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DF1269C6D8
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 22:52:22 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=nxJqk1gg;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11582-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11582-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=F85c1I6k;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11583-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11583-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=nxp.com (policy=none);
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id F22BF301D530
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 14:18:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F18CA303CC09
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 20:52:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC07A4418F0;
-	Wed, 17 Jun 2026 14:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2309E390231;
+	Wed, 17 Jun 2026 20:52:20 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013044.outbound.protection.outlook.com [52.101.83.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178A1449EA9
-	for <dmaengine@vger.kernel.org>; Wed, 17 Jun 2026 14:18:21 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781705903; cv=none; b=Idt9mLIeXRmdv25p0fsGRcgJFCYb41lBirX0vzLCNYytLgilDCd/OwCP8CnkD733euX7NslKVuDatMwggeFmI0Br6KMLlhFDJZHC8i61Eh9DbWQo92UJZmZ9SjeVB6o0RNIxmWKQZjhL+ktw3/LRFgCubcA+SMmstb/UfTtkV6o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781705903; c=relaxed/simple;
-	bh=sA+Tle1vs414zE4TCmYbF75Vdjowlx7Ma0delr9FXpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bHUNUqvm6R4WPck+H/TvfnhEEmdzAV56wiTSxgbabpikyAeYP3uf+FGEDuIhCc/TiQR7RknVij5HDEKsDCTlkYfxZ31jVIZnoBFtCifa0W5orDsEJGu/ZNeMBmgIi4bNldj7mtT6Z5mevB4Sp4nlv6SlrsqOpuIb6aPrtyiRlOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nxJqk1gg; arc=none smtp.client-ip=209.85.128.53
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4905529b933so58227295e9.0
-        for <dmaengine@vger.kernel.org>; Wed, 17 Jun 2026 07:18:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781705900; x=1782310700; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cQSROIE/nRw8mnMESq2FVi6xdwggcJcKAlPZBkdjBkU=;
-        b=nxJqk1gg1IBm8sEPQ7J9m232EoQryIGgOJlkmTp3wI5WUw3Hi0cQmRkGahVfT/aN4Y
-         WqEVyI3RFX1C3RFmEwmakQXt+lapvhpL31BZDMWrxwOFt9bD8O0bH3z29kAN9a9Gd+9X
-         NBLguU/UhPIA7EdzXqpLvQ2r+cgoSVTcB1WAzjeE5RAEbQedHusF9p8VzgEnA+z99ngH
-         x1YC06xaOM7nbaASwMov4HfQwrApmCBQl65gtfAe8DnZmwN1mCSxL6Zf2vwiAeuGo5zY
-         aKHsDk601OcwYJx0O42b/sF2D2j0bkDUpYqfJwREKKUDx5rFjXjjDmnnJGCkqdvd0uon
-         vMSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781705900; x=1782310700;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cQSROIE/nRw8mnMESq2FVi6xdwggcJcKAlPZBkdjBkU=;
-        b=Zlyrl2CgCF7jW+6LVBcDwieX8bc8njMWLQ0ddPU5pez/nyTQjhE3lEpDXOWTy86nJO
-         kPYKpEa4470bz3QXjPxEg2209IETbc8LWmaHmSNAtJBpL6jDOjE/i7oq//kdCBuIN7oB
-         qvQTw1FPZWGtEGo7ut+I1nwI2yu3BTCJqajaxCcogWTjf+qhFcD7NohI9lFpOppGFdgB
-         /1kjPt+401cGJpj71JYExm+WF7fqhoPY3SYnihihtrJsBYyPN85oqH4XeLhwzt6HxOOc
-         FzJnzgv5SLDXnmRj2RQxSm2uizFX657O6eT4qi7OE/ivxSiEFLTOh01SgwsMJFqdLaZV
-         9uQg==
-X-Forwarded-Encrypted: i=1; AFNElJ8nC3UYHo+3Pb0yIIteT4554kBaQn/QTAvTc0VVlqwaAZGhVcYlEJseJbHVcxmCWQg1vHwhg8JEVNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB3Zs8r6dMlLN4BVGqgiJLJrIKGIKUUA6+71owgrj19RQz0g9R
-	bqPGF0RIzKPqBfS6rnUDikXctiDsMPM1Khle1kcUqmeISlpX6eiTQKkc
-X-Gm-Gg: Acq92OHPrffizXiL0TDyMgfONN53l8Zyq8pml+SxdRzV4qWn967s7CKua6wpGOckTKm
-	+VC3k9ek0wCx1ZpfdbyBa+A8fy/uucTEP4Cfl+3Nb+axqi9wqeGuCbiotcvTfhubj4cm7Op3qwZ
-	+B/jjlxqM5q1TY+/GplsCwr5L41WQu17gyhpWH6o3/FgAjpjWB5OTfA+H0/bCm+XlRD6So7QZww
-	3QrLJIiY+44nNqLyAsVE11k/wAeW5TLxWTcQcZVyu6Ktr3VEscaIeWkr6/+w+OIQuXI+nD5C7wC
-	jmcixzhdK47KblzXYV4r60V6wRitPgB/HtyybKXwGmyQB0bDAxiKSJIsTLOUaB51NMPI4XEdmOu
-	RMUWkZCodF4MKZSZdkLgUj4+sYa8H1EoVfhWduiLq8K5eg7HxN0e2il0SAHsnd3/MsWiURYvTPV
-	1UxEO0
-X-Received: by 2002:a05:600c:4e02:b0:490:c2a3:1781 with SMTP id 5b1f17b1804b1-492333f7765mr73033755e9.34.1781705899755;
-        Wed, 17 Jun 2026 07:18:19 -0700 (PDT)
-Received: from nsa ([148.63.225.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4922fa97a07sm287081775e9.14.2026.06.17.07.18.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2026 07:18:19 -0700 (PDT)
-Date: Wed, 17 Jun 2026 15:19:20 +0100
-From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: nuno.sa@analog.com, dmaengine@vger.kernel.org, 
-	linux-iio@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH RFC 0/3] dmaengine: Support address bus widths of 32
- bytes and above
-Message-ID: <ajKqOaDcmGbSSap1@nsa>
-References: <20260616-dmaengine-support-wider-dma-masks-v1-0-da23a8dcb756@analog.com>
- <ajJvouBANqhVaHXJ@ashevche-desk.local>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C172935CBCB;
+	Wed, 17 Jun 2026 20:52:18 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781729540; cv=fail; b=L82I6Pdza0PpSyUe7Ppke+OT28f3TZLiWynEr8WOE7P04ymvBt6fwfk05F9prncFj2xTu1h7+Y5cqYzEzbyI8VoI7RuIZ3My1xxv8UmnIn4yl5cZ7rKaFif8wO5z8C/03NViOuGQC6+I/md1WP1E0iKXQO2glCKhDkCxQJlPtfE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781729540; c=relaxed/simple;
+	bh=big3Q0MWIFsdUWuBJ/U04kjuCwCXOMMyL94x/CnA4QY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=NwsQ/yGqVhHxwHzJEWFGWiwmpGG0SuTln/V/VsRHfT6bkJ3c7+LrlNqyONy/2qMLihRlR6expd+2KvrKKh+peV9VhntOJJ4CmJQ7kcWKB/vsafQ7rHMDKXCJbrQd6l3SxtIVXes0zRbSDbcqVg2nch3scce+4kYtDO2KnGP3cXU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=F85c1I6k; arc=fail smtp.client-ip=52.101.83.44
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FDyU+TkjD8TjFdmCEeOJ5hHXaUvK0vb6QVQduqgQVgzBN8BzwbOpTZlqDyyHWwMLLKeFMyXc2FwIODMgdolbQq4ieYWxOPSW7r927Ust80y04aHmx14VzTL9JNUx78ukYewPGOS+tysb6iJ+wlWRofaEgR7gJBplmZyQGWDJuaQPZ6p43fiGiLMB2jFDa2fPSgYTJE1h3Mvtp61Z4anc+n/Y7iWpdf7OBXSV8INERSubNVFp8cI3BnzZ6UK2Xbys5stpWQinBjCOspAHe+F+U/eLqpcJqRCZuG7JML17/acCZMFsH5s5GrQcbepJENJD0Nf59Z4IBa0kk6TfDdOWYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LCuLeNyFBRotQu1FGzsEGrk2GR4ypK9AM9dcg+e3EyQ=;
+ b=Y1qcg+t21tmK64NbGKr133qZZPiQAZyPNTIqbhqdzqc3RWFRFT9frLU2xSZgu3SM0k0NW1MRf7TjbtRGWKGKLj/tFwsaNtNIS1MVIjvoYWjdDtDkEtXMIr35XcwO+Y6Xid2eDKQPm4ZH3RKBA0FOxTbx9i8hblYAfC9pQFpVywEQbyL+MG1mpkjj/+VR7qwl5PnVfAgdrX12yHdw2YT1eJXUbmHyuj9CgjV9m0N0IoAmJkHlmMAJ68td6LOKwJkLNHvkmzc4Vb0lzYaFGnCYPB5t0olJIJCyyIkxZ3vf2A9D69Y23u3zRILEt48C3qY63+zw3EhNVHz4eLkmRQ0jQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LCuLeNyFBRotQu1FGzsEGrk2GR4ypK9AM9dcg+e3EyQ=;
+ b=F85c1I6kkYKOhrmOKMeoLctsc3dVLb7w+aOBivIIaz0AC7u0Lq1Nz9rE1SDmbwJrhRjcopib1Zvh4UDISupwRAQ65hCJ57ZdHzHsm9fgeQZrNRRYhBL88KBSoMdRXOmTwaKP3ucsnefUZkkeWy7vLg5CcaLpgOPhV7h8kDie4BIADXUAl5wWIZyPHiC45ic/ARdGRkczi+Ku2ZwyOFJ93MFVyFHoqm/EKwLWRineT5+CssR/cmBOtLJR6CbKh0xHptM2rO/3C1TEMweB714BPz6hqBf60mn3dvzJyfMuTVvT6V1GKIlHemfBXFBTFUXBinQXR2Qjco3KzbZ3GzQdeA==
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
+ by GV4PR04MB11402.eurprd04.prod.outlook.com (2603:10a6:150:295::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.11; Wed, 17 Jun
+ 2026 20:52:15 +0000
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0113.015; Wed, 17 Jun 2026
+ 20:52:15 +0000
+Date: Wed, 17 Jun 2026 16:52:09 -0400
+From: Frank Li <Frank.li@oss.nxp.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>
+Subject: Re: [PATCH v1 1/1] dmaengine: acpi: Free resource list at
+ appropriate time
+Message-ID: <ajMI-QgrEREC6OTD@lizhi-Precision-Tower-5810>
+References: <20260617091421.2649071-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260617091421.2649071-1-andriy.shevchenko@linux.intel.com>
+X-ClientProxiedBy: SA9PR10CA0014.namprd10.prod.outlook.com
+ (2603:10b6:806:a7::19) To GV2PR04MB11799.eurprd04.prod.outlook.com
+ (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ajJvouBANqhVaHXJ@ashevche-desk.local>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|GV4PR04MB11402:EE_
+X-MS-Office365-Filtering-Correlation-Id: f0783bd0-89b1-4033-9af0-08deccb2500b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|19092799006|23010399003|376014|56012099006|11063799006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	YMymNkBSxdDFayR7AzJtxFUON63+vQ/GBwRkJyy+xTOYIDSLgcU9LZuSNory+aJT86OIPGogNFOIrUBAV5Wi+g0nIzynSrRoonIfivbpXE4bLhboe7M+mX6/pMO2j327fW/Z7Ye4XtaWnQpVSsUFP3XNEQ8pvOiUNfKzacWUs6zwGNqWg1blFYYnDwWxyj1AqDHDfM8GVPRiZiU92JzEIFOu7GOAg6eIiEYjf4WW2BYKBoqgZRjuR8krQLVZYwAmhyJP3rmya0Pn+iQB/UoWrguhl/lGIAOzgiTjmkvwGk2wI376Ve9r9jPBd+jYLLQ6OPwDLbTSUsRC2E+58aBR29Lo3vtjRD/dtfWOq6UTo8dQaQspeASJABLARFMhs+Ngp4CciZYtjSeG/3q3+fm8LtB3DkBaABVL4wgvOA3TJ/cc4xwptYFVm4Pso6Vorcd8iH0yVryx/F2VfAAD/gJo8mJEnHaBODSznHHu7Jd4Jy0CyDpFSEXvP30DBkTi8vpI/Jko/VPlKFVxE6JUiMQzGQNkKFE9HOX0NhoCZuCaHuVOEiJoKSvo4fh+3zg2yoJtHkjvVMuwC8eJZe8p4oRsS21Fhkzp+5Hf6oCe+4ejEkCz1L0V93MU+ch4qRcRYmJy8ySS/fwTop6inJdc7i9g6Wfo8HaEhMCL6d0lHCIiTjpAkiXHh3f8/O80DWbCnMo0
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(19092799006)(23010399003)(376014)(56012099006)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?BPCie99rh0+qlbTfcnnUjQ2uC9DAYWYvbpCN6Z76ds2G3sUKWJUcWduVMLub?=
+ =?us-ascii?Q?uaRddHKGGju7SxZqkJkKzWYAnLZOG5aYIRlEu2dySYLgilNQi+4KWUQ82ZbI?=
+ =?us-ascii?Q?kXwiqAg2E2A7WS0De0dQjRt0QfXUmyd1mEUqINnSxfLOwpz8Q+BquSyTzBpx?=
+ =?us-ascii?Q?FymLGsbnSpR+5UNala2LwpPXOzfuaZGgcfvvu4M02fQ84n/ii7jM/1+KMUmT?=
+ =?us-ascii?Q?jgrKXrc4sVeirMPnWzcGoHXPYmXFObHzHnDmUsIyf7B+RWwnvmbCR5rJCqtY?=
+ =?us-ascii?Q?RDLIkjoIE7noOykaHk6VzlCRDrkno8A/x5D7VTC930QNaAEKiRodhXTv0jN1?=
+ =?us-ascii?Q?2yD+NdMFWiulp/K8vRk7aaChjyF9K/brfn1zlTq9oPj5IREi7LzM7FjHdj5Q?=
+ =?us-ascii?Q?kGLNcCTtxMPbgv/JWg1EOyfsTwgaT0wwuDsyGSbM0XdKFYSPfNuwOiT4v4Da?=
+ =?us-ascii?Q?hexiL3Z342Q/1unDowPHzhG/GC0TPXtaEeQNKYfxaAVYACzvt3bwF2hMxIUy?=
+ =?us-ascii?Q?nOyh1LaYz/ee/D+cOoQ668c0ZixZm277Ms2wc0+gmPNVR9KScVQgCl4IPWOO?=
+ =?us-ascii?Q?mwshP4x47ZNcClQzvFtu652+ifUjl+B6JY/aH+1aWW2lCQWvZ6C9wicN03ZL?=
+ =?us-ascii?Q?Ea1AbCQ13o296lNsN0ZZFY/fUasoRwjz0XhWv4kCmiJQamMLris24rjYxQgL?=
+ =?us-ascii?Q?7QHAqVigEsFkAMn8Un21kO+c84OrTuXWqMQwH2hmphzg1Z7wftcwwVuUoY8h?=
+ =?us-ascii?Q?uWUydRv81Wql2He3w3ipFhC4QJIAN3+lUd24yi5FLXPByk4O8HtNLdbGqJZa?=
+ =?us-ascii?Q?4s643GM3Ta+ir+KWB1fO1ogx5h5Ve4l92qvG1tA4yYdXXesjsqVz8cXYYSGo?=
+ =?us-ascii?Q?Y8uWkyWrmStEqAno9nGCHnsAlwd+iCxrZnOI33xL0UhkC3R9swntU5bglX8D?=
+ =?us-ascii?Q?djL0yJrPpOqYR9qT8QEqp5z9C0wBQmGdfPZ7YNgESe/2GB67y8FsZJGaRmgd?=
+ =?us-ascii?Q?wcmJeRFBbiyUh0rjpQ8/rLmeVrzy8JPwPG/WuUBWSsm7vbEIXgJI7dwIWZEA?=
+ =?us-ascii?Q?XG7BJQ2BHkytFVGxe/dmo7+IK5MRQ4x/VQpEgKS5VrG2sIIv1JsaKSMQ6JI5?=
+ =?us-ascii?Q?dpcnz1MIbUUsXiIrGJ0rXEZHXhYvvkGmUP/gkYMWrA4OLWv8XfS8VJxeU65L?=
+ =?us-ascii?Q?ZcD/+xtwU2b802lDFZWriTEbBkfyPVGsxCCLeXrDIj+/I72jZ+b5hDBjcHtS?=
+ =?us-ascii?Q?yo+CyaZa8yHL41nIZu9rNHiW//LFKXMocNe4EhSkjRRQRrWED37cbA7WmtDT?=
+ =?us-ascii?Q?vGsSkqR4n6GR8qCaToP3V43vMb9xuys/kfTH9HcqaVBASb35TJaaEqy7regf?=
+ =?us-ascii?Q?J9ttstsaK0u1Ux4YETEw5i5XgwvwjdKF/ir3WJkjjH+siZLc/Vl5+VPe7vMd?=
+ =?us-ascii?Q?+DAbLRuJ4st3WGojjN9nQhV7FL//II0Y8f3iq5V3jKgeWD5i4L+WyXfm0ijj?=
+ =?us-ascii?Q?2OFLJNMJPef1676QoL3FKJ38C7WRlaVMMaR/cLwFwjZZQ1wr9C39DFS2sWXz?=
+ =?us-ascii?Q?sHgA+RjMc0bJWYYiuxHAXdPP8CJPrwIt5SVOOn6HrF6pFJj3OHnA1uAGMvM4?=
+ =?us-ascii?Q?dQ0zHAYRq2R6lSDn4f3qejgRbPQsxQQw0+ys7ObDT/Ojs7SIMCWft1vLLAIk?=
+ =?us-ascii?Q?7AxEaToQkN/YiAaUtDSpWzI0C5tx8kVPVXa6n4BA3nkLeiNIKQ7X/mQnAlw+?=
+ =?us-ascii?Q?GY9HAVf5YRBS/gIkOcKeT+oH2sTF1oAdTsntFf/aS8mY5PXfJ5tc?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0783bd0-89b1-4033-9af0-08deccb2500b
+X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2026 20:52:15.3567
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: M+SdE30Rxayi6SljyEWR3CK8cq2cLM7517P6n4QDeHvGMERxzrccHtreWOhErM5UUV8P4HI+dQxiLUlsnniezxTBx7tu2wZ97ZFvdLqsjTWoJCOTAWOnkspk1atpMPpD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV4PR04MB11402
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+X-Spamd-Result: default: False [0.94 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11582-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[nonamenuno@gmail.com,dmaengine@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@intel.com,m:nuno.sa@analog.com,m:dmaengine@vger.kernel.org,m:linux-iio@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:lars@metafoo.de,m:jic23@kernel.org,m:dlechner@baylibre.com,m:andy@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:andriy.shevchenko@linux.intel.com,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11583-lists,dmaengine=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[Frank.li@oss.nxp.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nonamenuno@gmail.com,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Frank.li@oss.nxp.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.nxp.com:from_mime,NXP1.onmicrosoft.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 86B2369A7B5
+X-Rspamd-Queue-Id: 3DF1269C6D8
 
-On Wed, Jun 17, 2026 at 12:57:54PM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 16, 2026 at 04:40:51PM +0100, Nuno Sá via B4 Relay wrote:
-> > The DMA engine slave capabilities advertise the supported source and
-> > destination bus widths in src_addr_widths / dst_addr_widths. These are
-> > plain u32 bitmasks where a set bit's position equals the corresponding
-> > enum dma_slave_buswidth value, e.g. DMA_SLAVE_BUSWIDTH_4_BYTES sets
-> > bit 4.
-> > 
-> > The consequence is that widths of 32 bytes and above cannot be
-> > represented at all: DMA_SLAVE_BUSWIDTH_32/64/128_BYTES would need bits
-> > 32, 64 and 128, which simply do not fit in a u32. Hardware with wider
-> > data paths is becoming common, so we need a representation that can
-> > express these widths while still using enum dma_slave_buswidth.
-> > 
-> > This series switches the masks to bitmaps that span the full enum
-> > range. Because there are many producers (DMA controllers) and a number
-> > of consumers spread across the tree, converting everything in one go is
-> > not realistic. To allow an incremental migration, the legacy u32 fields
-> > are kept alongside the new bitmaps:
-> > 
-> > - producers set the bitmap via the new dma_set_{src,dst}_addr_mask()
-> > helpers, which also mirror the low 32 bits back into the legacy u32;
-> > - legacy producers that still assign the u32 directly keep working, and
-> > dma_get_slave_caps() folds such a u32 into the bitmap it returns, so
-> > new consumers always see a complete bitmap;
-> > - consumers can read either the legacy u32 or the new bitmap during the
-> > transition.
-> > 
-> > The axi-dmac controller and the IIO dmaengine buffer are converted as
-> > examples of a producer and a consumer. And this actually fixes a very
-> > open coded path to undefined behavior in the axi-dmac driver and
-> > possibly others.
-> > 
-> > The end goal is to convert every producer and consumer, then drop the
-> > legacy u32 src/dst_addr_widths fields and rename the *_mask members.
-> > I cannot commit to a timeline for that conversion (it touches a lot of
-> > drivers across several subsystems), but I do intend to see it through.
-> > 
-> > Sending as RFC mainly to agree on the approach!
-> 
-> I have another idea. Why not having 8-bit mask for power-of-two and 8-bit mask
-> for non-standard ones?
-> 
-> So, u8 power_of_2_mask represents the respective sizes directly as ORed values
-> and u8 non_standard_mask (only to cover 3, 5, 6, and 7) does the original
-> approach for it, id est ORed BIT():s of the sizes? And yes, I understand that
-> it's not so KISS as above from data type point of view, but I think wei should
-> never need to have a heavy bitmap() API calls just for them.
+On Wed, Jun 17, 2026 at 11:14:21AM +0200, Andy Shevchenko wrote:
+> In one case we don't free resources when formally should, and
+> in the other we do unneeded "double free" (emptying an empty
+> list).
+>
+> Both are not critical issues at all, they just make code robust
+> against any possible future changes in the flow.
 
-Well, that looks like much more disruptive than what we have now. Might
-also make the transition not so simple. I'm also not too worried about
-the heavy bitmap() as I don't think we need to handle this at any
-fastpath. I think this is handled either in probe or at some preparatory
-step, so not sure the churn of not doing it simpler is justifiable.
+what are you talking about, can use straight forward words.
 
-So personally, I'm not that keen in changing the approach unless Vinod
-or Frank really ask for it.
+You just move acpi_dev_free_resource_list() after check return value
+of acpi_dev_get_resources().
 
-- Nuno Sá
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/dma/acpi-dma.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/dma/acpi-dma.c b/drivers/dma/acpi-dma.c
+> index be73021ecbd6..b053a7f96f85 100644
+> --- a/drivers/dma/acpi-dma.c
+> +++ b/drivers/dma/acpi-dma.c
+> @@ -55,7 +55,7 @@ static int acpi_dma_parse_resource_group(const struct acpi_csrt_group *grp,
+>
+>  	INIT_LIST_HEAD(&resource_list);
+>  	ret = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
+> -	if (ret <= 0)
+> +	if (ret < 0)
+>  		return 0;
 
-> 
-> The whole exercise seems due to DMA_SLAVE_BUSWIDTH_3_BYTES. and we have less
-> than dozen drivers that use it.
-> 
-> > I'm also not sure if the dma_slave_caps_get_{src,dst}_width_min() accessors
-> > are worth having? Their purpose is purely to keep consumers from touching
-> > the representation directly, so that the eventual u32 removal + mask
-> > rename is a no-op for consumers. The alternative is to let consumers use
-> > the bitmap directly (find_first_bit()/test_bit()/etc.) and just delete the
-> > u32 members at the end. I mean, now we do have a bitmask so the _mask
-> > suffix can of makes sense.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Dose this change related with this patch?
+
+Frank
+>
+>  	list_for_each_entry(rentry, &resource_list, node) {
+> @@ -370,10 +370,11 @@ struct dma_chan *acpi_dma_request_slave_chan_by_index(struct device *dev,
+>  	INIT_LIST_HEAD(&resource_list);
+>  	ret = acpi_dev_get_resources(adev, &resource_list,
+>  				     acpi_dma_parse_fixed_dma, &pdata);
+> -	acpi_dev_free_resource_list(&resource_list);
+>  	if (ret < 0)
+>  		return ERR_PTR(ret);
+>
+> +	acpi_dev_free_resource_list(&resource_list);
+> +
+>  	if (dma_spec->slave_id < 0 || dma_spec->chan_id < 0)
+>  		return ERR_PTR(-ENODEV);
+>
+> --
+> 2.50.1
+>
 

@@ -1,200 +1,159 @@
-Return-Path: <dmaengine+bounces-11573-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11574-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id FOQ9D9xiMmpXzQUAu9opvQ
-	(envelope-from <dmaengine+bounces-11573-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 11:03:24 +0200
+	id Ch7AFDJoMmouzgUAu9opvQ
+	(envelope-from <dmaengine+bounces-11574-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 11:26:10 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7E6A697BE9
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 11:03:23 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53EB3697E2D
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 11:26:09 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=anSqZEBV;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11573-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11573-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=intel.com header.s=Intel header.b=Zoea+M7h;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11574-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11574-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9012E3035786
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 09:02:32 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8B3C7302C87D
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2026 09:14:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84C8B3955DC;
-	Wed, 17 Jun 2026 09:02:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6691538C2A7;
+	Wed, 17 Jun 2026 09:14:27 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C2E385D9D
-	for <dmaengine@vger.kernel.org>; Wed, 17 Jun 2026 09:02:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D27538F226;
+	Wed, 17 Jun 2026 09:14:25 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781686951; cv=none; b=p8OVoG912MPNJgGZegjHMBIglR2LnSAczor71MNbgJIJGdNUFG9LLCx0XBV5SQxFPUDKpXJZtHCOavB//jER6DHERY8meuYSaSuCtnRFgKqtUowZCzfQLJpiZrEdth8r/e4Bvh4ycLlLXWrmvntBe7p+d28w4bsRbx8bwT6q+vA=
+	t=1781687667; cv=none; b=Kmw1VaoAyN6A3RlUrUTfrkh0q7jnhzPEpJyYAP/gbD/5wm3J24knhADJOB/RXCTCpN/L0GtCVjyKeP0FelGohlO22WCN6Ufl6nMGPPRJCmpaGGYfSYPR8lmivA3tMExLHJoGfySpHM7ETgkclvXkLJn/iLU49E1EhE0PS6W4zkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781686951; c=relaxed/simple;
-	bh=LLFN13LicI9vlz+wYcGwFteqsUruSMCPIjA4jylG470=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ilgdLnLCUZzH4zEsRrtuVs0c9sHBaip932lOwSLy0nxKtwYAwLVULNxT4bYqteQXJwW4ASN+gkB2fY8M+F5bajTUrvf+p4qad4qKUG5HoI5Yi/L74d583V8GqeRoOf0JhfgfSktvSMEKv9f1/ICsIIhi5iZrHO755b+EeUDGq5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=anSqZEBV; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C51F91F000E9;
-	Wed, 17 Jun 2026 09:02:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781686950;
-	bh=c8kIXIT9k846pnm7dmlEJWF/wgPPvibSedPylf08n1w=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=anSqZEBVxAlwPnN0nKiRoPTvI7MzEsGX2S6KfEAeW+10RbuOkOPxIvUiy8YyppyIj
-	 c01htT6FzBEnlt6KrzVj9w11THJrb+4ZtUgBTv05GU3wmgAI+AtXuEGsyjMqD2wRsP
-	 1vPQfO228uPeE/nOVkQ+/rPrUBgQ3w4wdZnomWruiBPnjpnw1gW/ic3YlMq6UzTaJJ
-	 0FMWP2v2xBKprTISVwc4MTmGKFBGrLKBR7GdXAC1v0vb7mUzZ2PtLCiZTe83H0zylm
-	 WOZpCdKW7Cgqz5PmP6Glbci+vVIBD+YYl57Nz7ZEMxDKTpacLjECe/33rOZTIUqMfj
-	 NZwdYfV3lrQ5w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] dmaengine: dw-axi-dmac: fix __le32 on set of
- CH_CTL_H_LLI_VALID
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ben Dooks" <ben.dooks@codethink.co.uk>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260617084944.705266-1-ben.dooks@codethink.co.uk>
-References: <20260617084944.705266-1-ben.dooks@codethink.co.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 17 Jun 2026 09:02:29 +0000
-Message-Id: <20260617090229.C51F91F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1781687667; c=relaxed/simple;
+	bh=+RUAIhgia6OFFZ9imQ3xVP66TweH28z0PeEgcP3v8eE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G78RIW927GkHRvJH5ij3wuVVA4SerVbnAGbSWGdeBlJx7jtTvsL2A4oRjytJjAbz02U1yDfrACypDYOpfI4ujoTK7dYUywctZPzhTk0zhAde4H4itTQ8yTUfptXYdmQ8YT9uwspO30kGsy8jDPm15YMzHCoxVU5DILuMVoEyF/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zoea+M7h; arc=none smtp.client-ip=198.175.65.12
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781687665; x=1813223665;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+RUAIhgia6OFFZ9imQ3xVP66TweH28z0PeEgcP3v8eE=;
+  b=Zoea+M7hdeTcPFdP1y3UI3lTWJH47GYSSKTgD4i24DXyOJo5wFw6KmYe
+   d2BXfMJc+PZx8Y6AwCI1okXbTbGLmHeRiDO3w2tsxffXfOyNR8qxQk3Kx
+   CVM6z6+GBXyxK/JNvSkA/UjpyR/XznYnyCh70eukwoORiPLKy0yKDJOiN
+   BnrjygZxQurlKcBA3216pRwymRg9ZkvUKj6lGOGf7mwbtnm8SlftsIJMy
+   EFRk7bWdXvVMBcAblY8BjuvNABe5L3GLfkF3dR6GdC55Wkef2Kw3weYnu
+   aNKi1Y9JBzYwtRjeQeLCy0cyuhX2gkhxIfvgkbC3WSBKQfgEguYIF8e9M
+   w==;
+X-CSE-ConnectionGUID: XcgnvHDSQ5yNBwKpTy4z/A==
+X-CSE-MsgGUID: vtq4EAz5TDy4xD/3kR7lrw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11819"; a="93961435"
+X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
+   d="scan'208";a="93961435"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 02:14:25 -0700
+X-CSE-ConnectionGUID: 7+bt5+W6SFiW9iLXCcBxbg==
+X-CSE-MsgGUID: lCgVHjoRTACVoqyZD5Ufsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
+   d="scan'208";a="286130241"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa001.jf.intel.com with ESMTP; 17 Jun 2026 02:14:24 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id CDBEC95; Wed, 17 Jun 2026 11:14:22 +0200 (CEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] dmaengine: acpi: Free resource list at appropriate time
+Date: Wed, 17 Jun 2026 11:14:21 +0200
+Message-ID: <20260617091421.2649071-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-11574-lists,dmaengine=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11573-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:ben.dooks@codethink.co.uk,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:andriy.shevchenko@linux.intel.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[andriy.shevchenko@linux.intel.com,dmaengine@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	RCPT_COUNT_THREE(0.00)[4];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,codethink.co.uk:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,lists.linux.dev:replyto,sashiko.dev:url]
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,intel.com:dkim,intel.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C7E6A697BE9
+X-Rspamd-Queue-Id: 53EB3697E2D
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+In one case we don't free resources when formally should, and
+in the other we do unneeded "double free" (emptying an empty
+list).
 
-Pre-existing issues:
-- [High] The `status_lo` field of `struct axi_dma_lli` is a little-endian `=
-__le32` value, but it is passed directly without byte-swapping to `axi_chan=
-_irq_clear()`. Furthermore, `status_lo` contains block transfer status, not=
- an interrupt clear mask.
-- [High] `axi_chan_block_xfer_complete` uses the global channel-wide alloca=
-tion counter `chan->descs_allocated` to iterate over the local `desc->hw_de=
-sc` array, leading to a slab out-of-bounds access.
-- [High] `dw_axi_dma_chan_prep_cyclic` produces incorrect segment lengths i=
-f `period_len` is not evenly divisible by `num_segments`, causing cyclic bu=
-ffer overflows and missed callbacks.
---
+Both are not critical issues at all, they just make code robust
+against any possible future changes in the flow.
 
-commit 7955a4e962eae80371df48e83bbcd1b7445eaf76
-Author: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/dma/acpi-dma.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-dmaengine: dw-axi-dmac: fix __le32 on set of CH_CTL_H_LLI_VALID
+diff --git a/drivers/dma/acpi-dma.c b/drivers/dma/acpi-dma.c
+index be73021ecbd6..b053a7f96f85 100644
+--- a/drivers/dma/acpi-dma.c
++++ b/drivers/dma/acpi-dma.c
+@@ -55,7 +55,7 @@ static int acpi_dma_parse_resource_group(const struct acpi_csrt_group *grp,
+ 
+ 	INIT_LIST_HEAD(&resource_list);
+ 	ret = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
+-	if (ret <= 0)
++	if (ret < 0)
+ 		return 0;
+ 
+ 	list_for_each_entry(rentry, &resource_list, node) {
+@@ -370,10 +370,11 @@ struct dma_chan *acpi_dma_request_slave_chan_by_index(struct device *dev,
+ 	INIT_LIST_HEAD(&resource_list);
+ 	ret = acpi_dev_get_resources(adev, &resource_list,
+ 				     acpi_dma_parse_fixed_dma, &pdata);
+-	acpi_dev_free_resource_list(&resource_list);
+ 	if (ret < 0)
+ 		return ERR_PTR(ret);
+ 
++	acpi_dev_free_resource_list(&resource_list);
++
+ 	if (dma_spec->slave_id < 0 || dma_spec->chan_id < 0)
+ 		return ERR_PTR(-ENODEV);
+ 
+-- 
+2.50.1
 
-This patch fixes an endianness issue in the dw-axi-dmac driver by using
-cpu_to_le32() when setting the CH_CTL_H_LLI_VALID bit in the LLI control
-high register.
-
-> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma=
-/dw-axi-dmac/dw-axi-dmac-platform.c
-> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> @@ -1123,7 +1123,7 @@ static void axi_chan_block_xfer_complete(struct axi=
-_dma_chan *chan)
->  				hw_desc =3D &desc->hw_desc[i];
-
-[Severity: High]
-This is a pre-existing issue, but since we are indexing desc->hw_desc
-here, can this loop read out of bounds?
-
-The loop limit count is derived from the global channel-wide allocation:
-
-dw-axi-dmac-platform.c:axi_chan_block_xfer_complete()
-    int count =3D atomic_read(&chan->descs_allocated);
-
-However, the array desc->hw_desc is sized specifically for the current
-transaction (desc->nr_hw_descs). If multiple descriptors are prepared on
-the same channel, won't descs_allocated be larger than desc->nr_hw_descs
-and cause this loop to access memory past the end of the array?
-
->  				if (hw_desc->llp =3D=3D llp) {
->  					axi_chan_irq_clear(chan, hw_desc->lli->status_lo);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but addressing the question in
-the commit message about whether passing lli->status_lo is a bug: yes,
-is this writing garbage bits to the interrupt clear register?
-
-The status_lo field is an __le32 value being passed directly to
-axi_chan_irq_clear() which expects a CPU-endian u32. More importantly,
-status_lo contains the hardware status writeback of the LLI, not an IRQ
-bitmask.=20
-
-Writing this to CH_INTCLEAR could clear unrelated interrupts, such as
-critical error interrupts like DWAXIDMAC_IRQ_ALL_ERR, before they can
-be handled.
-
-> -					hw_desc->lli->ctl_hi |=3D CH_CTL_H_LLI_VALID;
-> +					hw_desc->lli->ctl_hi |=3D cpu_to_le32(CH_CTL_H_LLI_VALID);
->  					desc->completed_blocks =3D i;
-> =20
->  					if (((hw_desc->len * (i + 1)) % desc->period_len) =3D=3D 0)
-
-[Severity: High]
-This is a pre-existing issue, but does this modulo condition fail to trigger
-callbacks if the period length isn't evenly divisible?
-
-In dw_axi_dma_chan_prep_cyclic(), the segment length is calculated with
-DIV_ROUND_UP():
-
-dw-axi-dmac-platform.c:dw_axi_dma_chan_prep_cyclic()
-    segment_len =3D DIV_ROUND_UP(period_len, num_segments);
-
-If period_len is not a clean multiple of num_segments, the unconditionally
-padded segment lengths mean the mathematical condition here will never
-evaluate to 0, permanently breaking vchan_cyclic_callback() execution.
-
-Additionally, would the padded segment lengths cause an out-of-bounds DMA
-memory transfer exceeding the actual buffer length?
-
->  						vchan_cyclic_callback(vd);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260617084944.7052=
-66-1-ben.dooks@codethink.co.uk?part=3D1
 

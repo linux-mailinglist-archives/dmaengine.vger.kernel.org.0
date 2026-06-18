@@ -1,207 +1,200 @@
-Return-Path: <dmaengine+bounces-11614-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11615-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id IEyuNoSaM2p9EAYAu9opvQ
-	(envelope-from <dmaengine+bounces-11614-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 09:13:08 +0200
+	id S1c8HkicM2ryEAYAu9opvQ
+	(envelope-from <dmaengine+bounces-11615-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 09:20:40 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84AE769E022
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 09:13:08 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ADEF69E0A9
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 09:20:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=amd.com header.s=selector1 header.b=i7YMSOCn;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11614-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11614-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=amd.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=kZAjktbS;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11615-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="dmaengine+bounces-11615-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 61A723050A69
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 07:11:25 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8313F300788D
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 07:20:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30A1D38D40D;
-	Thu, 18 Jun 2026 07:11:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27CB33C456B;
+	Thu, 18 Jun 2026 07:20:36 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013055.outbound.protection.outlook.com [40.107.201.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EEF2877C3;
-	Thu, 18 Jun 2026 07:11:23 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781766685; cv=fail; b=q9QSuJz6B9vaygZFqKZ1lTPDBysTzLl4H0YfoW74BM2IiDU1hhU5zJQATgoQJK/N3WzfKlGOggucyarvjJGCVWxfcvBNNPNfFhWLdq0S7Agf77AJHSiEqrEbSytAmwRuxYPRk9V1icWNELM5vCXunc3tXFtRbHeB5d51l0rOGKo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781766685; c=relaxed/simple;
-	bh=kWvARxBXGK4c5SyrGGgtVwjhCeLC3DM0ZTRhwdXzzVc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r3yJjMz84Au6mBilfe7w3D7gArFdn64cOPIIcP8geT/XxoT174s7MecoDkURM2TtUb8cL5i/ieai9aD3lwhIdTg9MevfvKejFoWThNYbJvP0hRN6kWZqwDjpqRGYdwPUtEAuIH8EEx4yRljGB5rR82ms3lPkhPwNlF2olyXji94=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=i7YMSOCn; arc=fail smtp.client-ip=40.107.201.55
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VP6Eb1F+24F0Krfvi8gYi10avk/FEHdYX+hQoXzg2xWvyf3xX27W1KFJtL0Qj3OXRslze3bLIR9hYJSh1JQJZznAEJNNiEUGeMU3or21qzGIOf22stMk67DiNLm4w/7gqFOOk4fsy04+GA4aN/hKQ3xvbGH23aVJ2pDhqwoGx7VW8yL5vX/Oyyc3rEiP/x4PVy1Y3oKJTUYC9l/00nnuAGylOlHxqfYXqaOIlRfehYSUtrCtCTUwIEL+T6scHrq6nfN1QHFG0IVWmSImpEVWOyiy/Ji80g6/WxU6M7r6mLnFDF80wzwJHAROM78NgFkaYn86L6SelFX2QsrLEg2AgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sNdb9DXpcCoc1nA+Psqz7oGwRQ8AhMwKGeUPrchz6Pg=;
- b=iAVKD6sR/Ufp38S54VNythIR5xrAvP/GMM4AXpY93vzWOxJ3PE/DHQA0csw/P2t+ez9y8iQRDu0L5CUAJwvLAJNm4yDFZnwXVznfxNUOPMswzkGB1/bLW0hcCvg+ecNwWm6rnKRJyip30TQJIoQkusOQYlfxzYwaa3afC0QXgIkq61Pj8E5Dj227xQPnHpu7eihF4e+r4PIyHKnuw38rZJ5HgiBMQc0OrYdT8xxnjFvdVvz5Ys5uaTlCjwP2jDQmeUjlGcbwpUUp8FjpdLdbwTQ6adGSEHXLYmNvx2FlifYEMzwF6amJdRH0zmPUOqmOr4yq2bpvxTD9ETrJVtXJ0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sNdb9DXpcCoc1nA+Psqz7oGwRQ8AhMwKGeUPrchz6Pg=;
- b=i7YMSOCnUXU9KwLr9aSmCAEa/LmAm8PWowI3R7Xx3YjIYiadFi4OCdwAisNVDG4mcDmsK8/crs9tKd7RjeBXkXfWhbEWL9czkAgjV52Yq4Penl/3bPejkOshJRAma+xGEURIDpKuN/+HJudTijGNlzP4LaDOccCEJ9KoR6MYyAg=
-Received: from MN2PR16CA0056.namprd16.prod.outlook.com (2603:10b6:208:234::25)
- by PH0PR12MB7079.namprd12.prod.outlook.com (2603:10b6:510:21d::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.11; Thu, 18 Jun
- 2026 07:11:19 +0000
-Received: from MN1PEPF0000F0E3.namprd04.prod.outlook.com
- (2603:10b6:208:234:cafe::8) by MN2PR16CA0056.outlook.office365.com
- (2603:10b6:208:234::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.139.12 via Frontend Transport; Thu,
- 18 Jun 2026 07:11:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- MN1PEPF0000F0E3.mail.protection.outlook.com (10.167.242.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.139.8 via Frontend Transport; Thu, 18 Jun 2026 07:11:19 +0000
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 18 Jun
- 2026 02:11:15 -0500
-Received: from xhdappanad40.xilinx.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
- Transport; Thu, 18 Jun 2026 02:11:11 -0500
-From: Golla Nagendra <nagendra.golla@amd.com>
-To: <vkoul@kernel.org>, <Frank.Li@kernel.org>, <michal.simek@amd.com>,
-	<robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nagendra.golla@amd.com>, <jay.buddhabhatti@amd.com>,
-	<harini.katakam@amd.com>, <m.tretter@pengutronix.de>,
-	<radhey.shyam.pandey@amd.com>, <abin.joseph@amd.com>, <kees@kernel.org>,
-	<sakari.ailus@linux.intel.com>
-CC: <git@amd.com>, <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH V2 3/3] dmaengine: zynqmp_dma: Guard IRQ handler against spurious interrupts
-Date: Thu, 18 Jun 2026 12:40:56 +0530
-Message-ID: <20260618071056.2024286-4-nagendra.golla@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260618071056.2024286-1-nagendra.golla@amd.com>
-References: <20260618071056.2024286-1-nagendra.golla@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF893C4548;
+	Thu, 18 Jun 2026 07:20:34 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781767236; cv=none; b=nHYiEZGs61CRV4Y3SXInDZZLVbGQZECq3juWUclv9hBSPFuWwPFmCSn9JWTK7AchPKwKVQkH4xe+1cLaJ+Mi2QvOsdacVN53ZyapysZ/bOk8geAXrX2vD9TC2AAHNwmWu++Cod7zgSQPYmM0a8VKh9ZvE8PgsaHHrQP4pbD0F+o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781767236; c=relaxed/simple;
+	bh=Jxc1Xt87zK7PJTud6+AF4387hglSIhjNt2Aq/CyZxAc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=lNOn1UWrPFmHzL/G5+lvZoClmrtPJzkpMbUrm4UD/G+eMr9FLjVYP3XjUt44qBoG8zo46qP6dR+YNHLqBtkr3DCau+Rg1RHSBXcQSCZASI1JtNEaOYwMmgHT7U6TekG/8GrfPV1ghlOuL20c6HM7iK8Rt1DX9pdUiFuNHFaLuBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZAjktbS; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A481F000E9;
+	Thu, 18 Jun 2026 07:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781767234;
+	bh=As0/LnI6+OcaBsgMP7BjAXMFViZQzf0n7GoqXvf85vc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=kZAjktbSuXsFAOziR6q5OgbQNAz+l6OAWeWAhiA3bnRNJxiMKtTSm3vlevOVUPXHq
+	 /N750WW3zg5fPqnxPFwGysaEQkBsXTEbnNJnh2eGkaBsygZGhvYYT4OvIwivozM3Xr
+	 R72A+jeb/YU1bJL61RqNcbyQP8PA8RIGGV6jPQdfkUsgNawKqsot69kQ/jGObKkUFj
+	 JZ6G+n2AMTk+fd8Ory4dC65kODzv2bhrWCA3VQpwAKsK3Cu1FEYe/On2FM0w1izh+m
+	 +oLGUipZ7ViWIh+GqCYYsdgb1LWlJQe5F+xh1KEqxFrLeiJWgybc9zPhdiBropTkKk
+	 Uqy6PCnp9UxPQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 11/11] ARM: dts: ux500: Remove DB8500 EPOD regulators
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Linus Walleij" <linusw@kernel.org>
+Cc: dmaengine@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, vkoul@kernel.org, Frank.Li@kernel.org, conor+dt@kernel.org
+In-Reply-To: <20260618-ux500-power-domains-v7-1-v1-11-eb5e50b1a588@kernel.org>
+References: <20260618-ux500-power-domains-v7-1-v1-0-eb5e50b1a588@kernel.org>
+ <20260618-ux500-power-domains-v7-1-v1-11-eb5e50b1a588@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 18 Jun 2026 07:20:33 +0000
+Message-Id: <20260618072034.20A481F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E3:EE_|PH0PR12MB7079:EE_
-X-MS-Office365-Filtering-Correlation-Id: 72d4c295-f2c7-427c-f7d2-08decd08cb83
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|7416014|23010399003|36860700016|18002099003|22082099003|921020|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	UIdBq2VtI2DtE1v++eC82AhmSxsUYTtNIo/RcV89KsqrDG4vnx1uJQh39I3m9659wFUjfydkmuzGy8+v3Ri3GyKl1NQjfvz+IRve8EMuEBNMTU5eHgwVf1CLcWqg4u9d5IGA1sFDP1mPU5ZUTpg+HD5qDGPpRmXEmL1SEDbDKzrU2EJtfnpExDXX7uKVLy3ZqH89wCtPe+uPFXB76+cHpBA3LhfaXe+zLgVkXX31x2w2bDBqGNwND+yDZYIFVCdxzI7/q1UsNtElIRa4BKhbBsUfyeHWpPCTn3pFB19zNH6MxSmdzMa3Rniv95EcZJu4svLqgdVx2Gz9Nj9a2i3as4WVwZ7xtmTVxeAaRYI0asaWI0s+YcdDrQX3a5kzwLBsR+lsvWiW33JQviXWhUoFWWtFceE5fl+h+c6dE/5mX3SLsm/QPdDHSOnTV19HWyVvygoiB/NE75Mm92VYIUPzHq+P4Gse486oMjJn0y+acu5cx/t7xjWG3l2CfSd+NvzAyOdOwe0UCUNeqfntOgIFJcLvnINEb6xRC1mK5vGnWHM0o7MWSslC/P4J9zrEIA21v1VUd3JDboJS5uZNbk8Gjufj9Fz2ypAJxbAavhrtQYG4uSe3c13Ey4dpvoi0UcpCE8bS0Y+CPb790zw57dOToWvItovI8hiCQLX7jvWzvpIG/Wvz8+eRLx7WkxiTFvaFLK05etSgcacArUEnrEiQkkJQuZ87wfhWRTMZhcTNjmnjz5dFhqB5aLPtkF+hHCmRwsixgio2IVAbSydFdYAsYQ==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(7416014)(23010399003)(36860700016)(18002099003)(22082099003)(921020)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	Fegu17DNfmSbbpIdOWLCt+Px0OCmuSa8Cc+ZKw+kh94J5kyl+NJYmb4qfwoh3ILsXpyYEHryFIv8NyQl+kLyCKK9FOAaOOAY3/dHuu28jTvHDT3fzjRIXihVvHynYV0fpU+O8GRwBvu7264G/yOTLF8isKeMqw2QaBfSqs0cP1P0/a6oWXB7HVCCTeJhq2uE7dJyZsnxLF5Jc4IM7haCGA4/ZHgG7G/Biqy7tZg4PX5RA/jWjRB8BaNdPoRkrPgsdd1t6qlzYQur0TsqLfUiFzJb4aFbyEioSPA5F/bThq/D54BQnjDTGgbY27sXV0SvogamkBmde9MOu9cRJdnatB6TvadO7uItdOv9LUHV2mXfr0fcrhGMapm3pBIj+aX6Myb9MaAm7yKXysjYanu4It+9QAVjCGBRfUG1RjnBBYtwcnIwn5OmBBQ6PHQT8aoz
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2026 07:11:19.0615
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72d4c295-f2c7-427c-f7d2-08decd08cb83
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000F0E3.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7079
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [2.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-11615-lists,dmaengine=lfdr.de];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:dmaengine@vger.kernel.org,m:robh@kernel.org,m:devicetree@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:conor+dt@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[nagendra.golla@amd.com,dmaengine@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-11614-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:michal.simek@amd.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:nagendra.golla@amd.com,m:jay.buddhabhatti@amd.com,m:harini.katakam@amd.com,m:m.tretter@pengutronix.de,m:radhey.shyam.pandey@amd.com,m:abin.joseph@amd.com,m:kees@kernel.org,m:sakari.ailus@linux.intel.com,m:git@amd.com,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nagendra.golla@amd.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[amd.com:+];
-	TO_DN_NONE(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,amd.com:dkim,amd.com:email,amd.com:mid,amd.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[8]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,smtp.kernel.org:mid,sashiko.dev:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 84AE769E022
+X-Rspamd-Queue-Id: 1ADEF69E0A9
 
-Add pm_runtime_get_if_active() check in zynqmp_dma_irq_handler() to
-safely handle spurious interrupts that may arrive while the device is
-runtime-suspended. Without this guard, a spurious interrupt could cause
-the handler to access hardware registers (ISR, IMR) with clocks gated,
-potentially leading to a synchronous external abort and kernel crash.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Critical] Removing the EPOD regulator nodes and consumer supply properti=
+es breaks backwards compatibility with older kernels.
+- [Low] Removed EPOD regulators and `epod-supply` property are still marked=
+ as required in their respective YAML binding schemas, causing `make dtbs_c=
+heck` to fail.
+--
 
-When the device is not runtime-active, pm_runtime_get_if_active()
-returns false without incrementing the usage counter, and the handler
-returns IRQ_NONE immediately. When the device is active, it increments
-the usage counter to prevent a concurrent runtime suspend during
-register access, and pm_runtime_put() releases the reference afterward.
+commit cc40a973d5076813fb2d1de31c4ef7f4d0231e78
+Author: Linus Walleij <linusw@kernel.org>
 
-Signed-off-by: Golla Nagendra <nagendra.golla@amd.com>
----
- drivers/dma/xilinx/zynqmp_dma.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ARM: dts: ux500: Remove DB8500 EPOD regulators
 
-diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
-index a9dfec3c0ca3..ce9163138be7 100644
---- a/drivers/dma/xilinx/zynqmp_dma.c
-+++ b/drivers/dma/xilinx/zynqmp_dma.c
-@@ -730,6 +730,9 @@ static irqreturn_t zynqmp_dma_irq_handler(int irq, void *data)
- 	u32 isr, imr, status;
- 	irqreturn_t ret = IRQ_NONE;
- 
-+	if (pm_runtime_get_if_active(chan->dev) <= 0)
-+		return IRQ_NONE;
-+
- 	isr = readl(chan->regs + ZYNQMP_DMA_ISR);
- 	imr = readl(chan->regs + ZYNQMP_DMA_IMR);
- 	status = isr & ~imr;
-@@ -756,6 +759,8 @@ static irqreturn_t zynqmp_dma_irq_handler(int irq, void *data)
- 		ret = IRQ_HANDLED;
- 	}
- 
-+	pm_runtime_put(chan->dev);
-+
- 	return ret;
- }
- 
--- 
-2.34.1
+This commit deletes the obsolete DB8500 EPOD regulator nodes from the device
+tree. It retains only the VAPE and VSMPS2 compatibility regulators.
 
+> diff --git a/arch/arm/boot/dts/st/ste-dbx5x0.dtsi b/arch/arm/boot/dts/st/=
+ste-dbx5x0.dtsi
+> index fd6a075e4c93c..18727953a8630 100644
+> --- a/arch/arm/boot/dts/st/ste-dbx5x0.dtsi
+> +++ b/arch/arm/boot/dts/st/ste-dbx5x0.dtsi
+> @@ -663,97 +663,17 @@ thermal: thermal@801573c0 {
+>  				#thermal-sensor-cells =3D <0>;
+>  			};
+> =20
+> -			/*
+> -			 * TODO: Delete these bogus regulators and replace with power
+> -			 * domains.
+> -			 */
+>  			db8500-prcmu-regulators {
+>  				compatible =3D "stericsson,db8500-prcmu-regulator";
+
+[Severity: Low]
+Does this commit also need to update the YAML binding schemas?=20
+
+It appears that Documentation/devicetree/bindings/mfd/stericsson,db8500-prc=
+mu.yaml
+still mandates the presence of deleted EPOD nodes (e.g., db8500_varm, db850=
+0_sga)=20
+in its required: block, which could cause dtbs_check to fail.
+
+[ ... ]
+
+> @@ -1215,8 +1127,6 @@ gpu@a0300000 {
+>  			clocks =3D <&prcmu_clk PRCMU_ACLK>, <&prcmu_clk PRCMU_SGACLK>;
+>  			clock-names =3D "bus", "core";
+>  			power-domains =3D <&pm_domains DOMAIN_SGA>;
+> -			/* TODO: delete and replace with power-domain handling */
+> -			mali-supply =3D <&db8500_sga_reg>;
+>  		};
+
+[Severity: Critical]
+Does removing the mali-supply property and its target regulator break=20
+backwards compatibility with older kernels?=20
+
+Device trees are considered a stable ABI, and older kernels lacking the upd=
+ated
+ste-ux500-pm-domain driver might rely entirely on the legacy=20
+db8500-prcmu-regulator driver to power these components.=20
+
+By aggressively removing these regulators, older kernels might fall back to=
+ dummy
+regulators and leave the physical hardware unpowered, leading to crashes wh=
+en
+drivers attempt to access unclocked and unpowered hardware registers.
+
+> =20
+>  		mcde@a0350000 {
+> @@ -1224,8 +1134,6 @@ mcde@a0350000 {
+>  			reg =3D <0xa0350000 0x1000>;
+>  			interrupts =3D <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+>  			power-domains =3D <&pm_domains DOMAIN_B2R2_MCDE>;
+> -			/* TODO: delete and replace with power-domain handling */
+> -			epod-supply =3D <&db8500_b2r2_mcde_reg>;
+
+[Severity: Critical]
+Similar to the mali-supply removal above, does dropping the epod-supply=20
+property break the display subsystem power management on older kernels that=
+=20
+rely on it?
+
+[Severity: Low]
+Additionally, is epod-supply still required by the display subsystem bindin=
+g=20
+schema? Documentation/devicetree/bindings/display/ste,mcde.yaml seems to st=
+ill=20
+mandate epod-supply in its required: block.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260618-ux500-powe=
+r-domains-v7-1-v1-0-eb5e50b1a588@kernel.org?part=3D11
 

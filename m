@@ -1,94 +1,94 @@
-Return-Path: <dmaengine+bounces-11622-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11623-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id S6wuJRQoNGqfQAYAu9opvQ
-	(envelope-from <dmaengine+bounces-11622-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 19:17:08 +0200
+	id iUbXHDwoNGquQAYAu9opvQ
+	(envelope-from <dmaengine+bounces-11623-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 19:17:48 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB8AD6A1DF0
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 19:17:07 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD1B56A1DFB
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 19:17:47 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=DTF8u9QR;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11622-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11622-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=HsTR2mAJ;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11623-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11623-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5EA4230E2EAC
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 17:09:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 42B78305C5EF
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 17:12:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 073D431E820;
-	Thu, 18 Jun 2026 17:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86CF8258EDA;
+	Thu, 18 Jun 2026 17:12:48 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98ED83438BC
-	for <dmaengine@vger.kernel.org>; Thu, 18 Jun 2026 17:09:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6A72E091E
+	for <dmaengine@vger.kernel.org>; Thu, 18 Jun 2026 17:12:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781802593; cv=none; b=liGdRAyMTb2vCl0B3mAEXsEYFkG9eKAhVCCI18xGI2xCN+gzEWmgwcCmZFBi9/Yw74Kvf82OJRoMEHwwOhOlAGfsPjm0hktSNZpW2cmJB8vksQckZEkB0hbr4xwdmO4oIvlQ/QXkoVtJztMKtgeuEwa/1gohPf50r7How5BfrYg=
+	t=1781802768; cv=none; b=PJ0B5IH9BYsqo64fqpW22Hs6uPZtSiAxGwrH5o+bNJxOGAzJALAE1u3KoQto7izXWYaameebJtKahJjMYybjjZwE174uC1VNPwFGjB4/ULtDrFUOWS0V2xcYhETok3HNGwiRx8tvljyb8W02kqBnkOQSmlK+TG8tB0NLHJ8hP58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781802593; c=relaxed/simple;
-	bh=ek1Rt+RCKFx1ZAENatPdrTmZhOVWSxe+TUDrReqCslQ=;
+	s=arc-20240116; t=1781802768; c=relaxed/simple;
+	bh=XvyhWFfNg9ZTDu7ReKiTeTBhKhccySIyD/kmxK9wqcY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b5LH2m1werhlUKhVC7YPtWuRsNDQEOYkuI/SEl45lsetsnfbbrmbBxk2yr6rSpwPQJznG9/WGMDJMvSiFIhGB2kPad8CZbtCOcxEOXzQsCgIzdzr8DPJKrfApfTC9y9/84OznFs0uP/uY0Ju6LKngFfWdChnW6oeoIL5ukvZDWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DTF8u9QR; arc=none smtp.client-ip=209.85.128.51
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-490acbb0f89so7371055e9.0
-        for <dmaengine@vger.kernel.org>; Thu, 18 Jun 2026 10:09:52 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=I1wKnMS376F9rSFhQyzn1euXOKdWv4IgO22zlhTI7U2as40+WFwIDV3Tt206H0GJfqQT7Bc7Nv5Rus/Q2ZUQiHkDuYdzxCBoM19fpoA/YGYDBtwB49ed6UpyDCe+n+MVsSjqTnA44px5xUhyyqeThS8GGsWCgoRVnjQHVZYHwZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HsTR2mAJ; arc=none smtp.client-ip=209.85.221.42
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-462bb734793so974810f8f.1
+        for <dmaengine@vger.kernel.org>; Thu, 18 Jun 2026 10:12:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781802591; x=1782407391; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1781802766; x=1782407566; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=pb6ELezZamFIkjKnVRa59Yjxr/sCCIOAAtSuv8gn1wU=;
-        b=DTF8u9QRWt0bafU4I/kvxlEJn8P425OJmfYbnHsDt2e6rNF1FxFN/eFZojYeEU3Vwd
-         0kuRMoxT93tCujJBZgOYCi9pVii7NqtudAllomOuorGnvVVtVzYwcP++CVid0MEnhTcj
-         dMB+uLpEkH4Zlj1kBdUhGjkFWgZVCwsUgDLVPLnXPeDzS+l+zetkWHQnF0+9nyB9hCF5
-         FCNeD3tQidY3ICSdGrmpF2DeOuUDQ2bzfAF6fazb3n/IYX53I9X+lgsEXgHJkar0FLlA
-         tAgoHd2rK63HIp4sIUB8b6IVEqUGhKXaJLdijEpFgkyNo0MIOLyog2pdb2Q80ynNqP/J
-         D8Nw==
+        bh=OPYldehot7tz8RCFgz3HrFSaMMAMdN8VU5l6kfPYI9k=;
+        b=HsTR2mAJjm9QdlJPx39o94YTkPgkk9NUDyDdNzCgq5ct/UDj+Xu2fzAYas60+z+uhO
+         hGFNy4Pofz1w2wbVVfXuI1d5kfVzKTuo8jcz2TNxVfHOtxAPiH0auhz2xUXxHYDjVqsz
+         Y5WfNNaYrgeY7FZm6s/fbdSofNiPLj/BahOxGSfLBAgSUmmehJblTLJEDWco6+t/OTf+
+         2Q1Yh+wFIlvLgtYvXrESPIpqRJyVzGGbTfDFtrTwzQuzXvL16fvzaDSSN3puXL21k13J
+         fyjIgmNY3lpFUr8m1u3pVwEjzngGSkXGLYm6PdIyst48osDAI6XTfvTapKEtiEQCUFK8
+         SCiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781802591; x=1782407391;
+        d=1e100.net; s=20251104; t=1781802766; x=1782407566;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pb6ELezZamFIkjKnVRa59Yjxr/sCCIOAAtSuv8gn1wU=;
-        b=PJTnWXGUetR/ggLJwkE7uuw/kI6vb15chRM63DcAwiWleSwtBxI4zrV5quzWcQxXpx
-         NGRWxgAo49Pt/KINCzqXnQBg5Q227O5Dnj6O3p/AiU3fQdTW9YL8xkyXliO2znBvKkrD
-         +dV805MgTY86qvA86J8hCwnKHpRlTvwz9GAYoWn42MiVPf/Btu3/VCE9YnGbgkplm+GJ
-         U51VupDWE1J3TzLHMsnS7XljATMWqdy/WvCpe7ZK/JLdvsE01jrOwtmSHbLkHeH++2bc
-         hL+LX3+4cddLFyd2Qn4AwjmG02V4HeJwQ4xFlMSaAKqfk/7Gq2FUMQ15wjfOekoU1Z9O
-         mhrA==
-X-Forwarded-Encrypted: i=1; AFNElJ/ixOhyS4ZLXAI/ZpX+HgLR4WB1pM7Fxp83liMCv5YqIL1xXEm9oB1hKgx0A4xfvASQdrt+ztvj+ys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVp/pRzzddvSdKoDt+FwBYSFXSmLu78mF5THc1pqhzCvyo3GgC
-	sNyhSvU0KEfo59Dm0Q2zsCPmdbI6mLuWZAMK7BGtkJTlZdc6Z8J7ZHkM
-X-Gm-Gg: AfdE7clbIZByQ0Bes98VfrFmUhErKQYhF19PZqOtk8Hk1b4zHRDZGwzr5prZg+TgFvO
-	eAMH/RIuzZbPYTJomV7U0JScMc9HAltMwM9Ok9C8wc0UhNjiabaNNVMIUnDd4PAO1SJbMyr79qi
-	nVVFwIzYFbHUNHrCcHH63M8MvjvZAf45KUoWnOuI/EACwR6fFrBsJcuqDGckAATHN4SZUPOnAiG
-	8VQQScdMj+EGySnFMOSgYqipF0E40i1qA9DRRqiGg9wCMZAJ6tFmWgCyGo9Nh+mXErRKYKJw0t3
-	gvOBCctO5jNlP+gltaTFzG/nCDykHTXygzdpJCvYd5DPYHXfMU2u/KK7pvTkRRNS/iClTaurnlM
-	+Wg+IBN+4qgBNuMg3SQilScfd7raidnTv7SFZqVF14P1FFhs0l5ni8II9ksZwoRnNysYNu0KtKa
-	nmRT29
-X-Received: by 2002:a05:600c:828a:b0:490:b58a:e6ff with SMTP id 5b1f17b1804b1-4923f56c180mr7690965e9.22.1781802590913;
-        Thu, 18 Jun 2026 10:09:50 -0700 (PDT)
+        bh=OPYldehot7tz8RCFgz3HrFSaMMAMdN8VU5l6kfPYI9k=;
+        b=e71rAKRTnBvFQwLcX/Kk+xh0fk8ViQGQszwpeeuL+Y1xh458mVfKnI4qOkCTBeSqTy
+         b2SV65hZGOc41/6aTyffdmHAYCmwa5Z9Wv/W8KkkcE7Qea/BFmgHxXimCF5ekOgMFN3X
+         AejSF7p3J877tvITttckGFzU1JgFqqmARuEirWT7eDLqsVXlG8G8nkNW306NWfKAvniO
+         b+exC0Z7qBNB6piQfkz1xIbIthlA+BkRe6HIZe7hSu7SAIHmeZc0sANNDuV9CsqZ62ln
+         k1mgUd1DKT7tGI+rJqyxrFTT3l0HqEOu556BS4TF9nyHAJOPZsfJ72Sdd/2kywvNgrNM
+         x8Rw==
+X-Forwarded-Encrypted: i=1; AFNElJ9wsXTtX0ekIrdM/tnmmln0Z1x9l6LYRI80Ku18zy/Cm6mQ0P53UF39hLt6xQCCzARsNz8MybM3nMw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr9OCssozbUtVfkji4/0sf1/WqDK+SmJSs5t4nFOi7p1L38nm6
+	po9aGrggtQvFe0M1mhQRHor4dHTaoneXIV07HMsDF2Q8CbwfWVNTxXve
+X-Gm-Gg: AfdE7cm+kZy0AaRh/JqfXIsv80Lipzn17IkjDk8tpOGcK/7wUdDbAEMyZ0BR8sp8AYg
+	HYuLxZJFptZzbitLfAA4rhwnaP/etRDAHGO1UJaENXIc8MmXkPn7vPDyW5pXGMr2h3wnKcMli4X
+	EHp0V7w7dBK/10pFE2NIdJ/auxCjbpTkcUUpdEUU/hTUqxAWJdDWc52oW+R3GGJwSxp/JeQZGW2
+	u2XVh26zpeiigGdG4Z3CH/USgkN3n6+y9UelaKuSeqMbF2gE+MRMLmKss7jqtqub0TE0QPzgoD5
+	f36/WmYfs8PUJUnpRxt3UpDPYJfEoNqc9hnjH/ZWfUVY/2iyml/2LY7tFBX+T5GVT3mBT5xaDbE
+	IR/tuzrPKGaR1BnOENPhGOcvYH60+XXw3lZ9GZBwCEEiTTdBnPpBYwfq93gmdy056QfOpU2Np4w
+	sZs8e5
+X-Received: by 2002:a05:6000:46ce:b0:45e:f631:2c73 with SMTP id ffacd0b85a97d-464ffa952e2mr467310f8f.9.1781802765447;
+        Thu, 18 Jun 2026 10:12:45 -0700 (PDT)
 Received: from nsa ([148.63.225.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4650bc422c0sm233910f8f.26.2026.06.18.10.09.50
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4650b76e7c9sm293604f8f.21.2026.06.18.10.12.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2026 10:09:50 -0700 (PDT)
-Date: Thu, 18 Jun 2026 18:10:52 +0100
+        Thu, 18 Jun 2026 10:12:45 -0700 (PDT)
+Date: Thu, 18 Jun 2026 18:13:47 +0100
 From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
 To: Frank Li <Frank.li@oss.nxp.com>
 Cc: nuno.sa@analog.com, dmaengine@vger.kernel.org, 
 	linux-iio@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
 	Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, 
 	David Lechner <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH RFC 2/3] dmaengine: dma-axi-dmac: Switch to bitmap-based
- address width masks
-Message-ID: <ajQkupPzv8-GdEjv@nsa>
+Subject: Re: [PATCH RFC 1/3] dmaengine: Support address bus widths of 32
+ bytes and above
+Message-ID: <ajQnE0e5a1JS7IWU@nsa>
 References: <20260616-dmaengine-support-wider-dma-masks-v1-0-da23a8dcb756@analog.com>
- <20260616-dmaengine-support-wider-dma-masks-v1-2-da23a8dcb756@analog.com>
- <ajF4i3o0gNRtUelb@SMW015318>
+ <20260616-dmaengine-support-wider-dma-masks-v1-1-da23a8dcb756@analog.com>
+ <ajF3p3Vu_pOx9z_V@SMW015318>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -98,18 +98,18 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ajF4i3o0gNRtUelb@SMW015318>
+In-Reply-To: <ajF3p3Vu_pOx9z_V@SMW015318>
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11622-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11623-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:Frank.li@oss.nxp.com,m:nuno.sa@analog.com,m:dmaengine@vger.kernel.org,m:linux-iio@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:lars@metafoo.de,m:jic23@kernel.org,m:dlechner@baylibre.com,m:andy@kernel.org,s:lists@lfdr.de];
@@ -120,7 +120,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -133,81 +133,45 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	REDIRECTOR_URL(0.00)[aka.ms];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[aka.ms:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,nsa:mid,vger.kernel.org:from_smtp,bootlin.com:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp,analog.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EB8AD6A1DF0
+X-Rspamd-Queue-Id: DD1B56A1DFB
 
-On Tue, Jun 16, 2026 at 11:23:39AM -0500, Frank Li wrote:
-> On Tue, Jun 16, 2026 at 04:40:53PM +0100, Nuno Sá via B4 Relay wrote:
+On Tue, Jun 16, 2026 at 11:19:51AM -0500, Frank Li wrote:
+> On Tue, Jun 16, 2026 at 04:40:52PM +0100, Nuno Sá via B4 Relay wrote:
 > > [You don't often get email from devnull+nuno.sa.analog.com@kernel.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
 > >
 > > From: Nuno Sá <nuno.sa@analog.com>
 > >
-> > Advertise the source and destination bus widths through the new
-> > dma_set_{src,dst}_addr_mask() helpers instead of open-coding the legacy
-> > BIT() mask. This moves the driver onto the representation that can
-> > express widths of 32 bytes and above and allows the legacy u32 field to
-> > be removed once all users are converted.
-> >
-> > While at it, give the channel width members their proper
-> > enum dma_slave_buswidth type.
-> >
-> > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> > ---
-> >  drivers/dma/dma-axi-dmac.c | 12 ++++++++----
-> >  1 file changed, 8 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-> > index d47ff27e1408..19c258d511ca 100644
-> > --- a/drivers/dma/dma-axi-dmac.c
-> > +++ b/drivers/dma/dma-axi-dmac.c
-> > @@ -152,8 +152,8 @@ struct axi_dmac_chan {
-> >         struct list_head active_descs;
-> >         enum dma_transfer_direction direction;
-> >
-> > -       unsigned int src_width;
-> > -       unsigned int dest_width;
-> > +       enum dma_slave_buswidth src_width;
-> > +       enum dma_slave_buswidth dest_width;
-> >         unsigned int src_type;
-> >         unsigned int dest_type;
-> >
-> > @@ -1262,8 +1262,12 @@ static int axi_dmac_probe(struct platform_device *pdev)
-> >         dma_dev->device_terminate_all = axi_dmac_terminate_all;
-> >         dma_dev->device_synchronize = axi_dmac_synchronize;
-> >         dma_dev->dev = &pdev->dev;
-> > -       dma_dev->src_addr_widths = BIT(dmac->chan.src_width);
-> > -       dma_dev->dst_addr_widths = BIT(dmac->chan.dest_width);
-> > +       ret = dma_set_src_addr_mask(dma_dev, &dmac->chan.src_width, 1);
-> > +       if (ret)
-> > +               return ret;
-> > +       ret = dma_set_dst_addr_mask(dma_dev, &dmac->chan.dest_width, 1);
-> > +       if (ret)
-> > +               return ret;
+> > The src_addr_widths and dst_addr_widths capability masks encode each
+> > supported width as a bit whose position equals the corresponding
+> > enum dma_slave_buswidth value (e.g. DMA_SLAVE_BUSWIDTH_4_BYTES sets
+> > bit 4). As these masks are plain u32, widths of 32 bytes and above
+> > (DMA_SLAVE_BUSWIDTH_32/64/128_BYTES map to bits 32, 64 and 128) cannot
+> > be represented at all.
 > 
+> This is problem, which should be fixed.
 > 
-> This patch is okay.  I think most system only set one width once, do we
-> really need pass down arrary.
+> >
+> > Introduce bitmap-based masks that span the full enum range. To allow
+> > controllers and consumers to be converted incrementally, the legacy
+> > u32 fields are kept alongside the new bitmaps: producers populate the
+> > bitmap (mirroring the low 32 bits back into the legacy field) and
+> > dma_get_slave_caps() folds a legacy-only producer's u32 into the
+> > returned bitmap.
+> >
+> > Add dma_set_{src,dst}_addr_mask() for producers and
+> > dma_slave_caps_get_{src,dst}_width_min() for consumers so that, once
+> > every user is converted, the legacy u32 fields can be dropped and the
+> > bitmaps renamed without further churn.
+> 
+> Good mirgration plan.
 
-I think so. See:
-
-https://elixir.bootlin.com/linux/v7.1/source/drivers/dma/st_fdma.c#L723
-https://elixir.bootlin.com/linux/v7.1/source/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c#L1565
-https://elixir.bootlin.com/linux/v7.1/source/drivers/dma/hsu/hsu.c#L475
-
-And likely there are more. To fully support all widths I'm not seeing
-any other obvious way.
+Cool! I'll then wait some more days and if nothing pops up will drop the
+RFC and send a new series addressing some valid AI inputs and converting
+more drivers.
 
 - Nuno Sá
 > 
 > Frank
-> 
-> >         dma_dev->directions = BIT(dmac->chan.direction);
-> >         dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-> >         dma_dev->max_sg_burst = 31; /* 31 SGs maximum in one burst */
-> >
-> > --
-> > 2.54.0
-> >
-> >
 

@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-11606-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11607-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id CbDyF9B+M2pBCwYAu9opvQ
-	(envelope-from <dmaengine+bounces-11606-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 07:14:56 +0200
+	id O+pqEeR+M2pPCwYAu9opvQ
+	(envelope-from <dmaengine+bounces-11607-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 07:15:16 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C76C969DA78
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 07:14:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B553669DA7F
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 07:15:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=GvjZvsAD;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11606-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11606-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=G5XTgIxl;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11607-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11607-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D191E30588A4
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 05:14:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BF0E530588AD
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2026 05:15:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5194637EFFB;
-	Thu, 18 Jun 2026 05:14:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AD0737B407;
+	Thu, 18 Jun 2026 05:15:14 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1C11F30BB;
-	Thu, 18 Jun 2026 05:14:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA8B2FD1B3;
+	Thu, 18 Jun 2026 05:15:12 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781759693; cv=none; b=fbVK60n7u7JXrkrUgg2p8PHGTzdgZ5DY2RBCdt+h+p68dXjCFkMjuSYbS8U1yjZ2+mktNmWzQz6hXu/v3LaN/K4ia3SvzUyJI+KA2aQ8jN48zk13zdkcYxO0/EwMgvtsqVRS6UJvLnrvda0rVxYvOKN0PD+F78izMm1aVpIy5qE=
+	t=1781759714; cv=none; b=MWPbaIpZnIMAmVbgSrER7nV7mn0EJCztY+aBgRVlwadXJyxypRjiwKKspgWtyKDFA5RSlC6V79Bo+AbAt4/MoEOJ8LDnonxwnCuk/P9iAAl088Qeve6W5M57lCNceNW+TDf3IRHhHAXZIoiHibrFO4/iaDg8/pvY6Af6C41Rusg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781759693; c=relaxed/simple;
-	bh=9mfGawct8LLCFnZ6auyGFmN8+f4yLVMLFa+ZP5PN+u4=;
+	s=arc-20240116; t=1781759714; c=relaxed/simple;
+	bh=SFM4CPjUMqEaeHWAKLP1o4ygw69ktPqrP3naMidyZD4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=V4XDoOcqZg0ZltAnpg/tS2FgLzktIyuddvlmKlQ1VtETMpZNT1wRfYBF1de/FSA4gZrZBIj/4kU+UKi1NU5JzVqq8Sv4mmcX19+MBs2RqVZFlm/+Oya14X+uRzg2iAmZL8/aOrOClXXAB5cLbgVTOeH1tJ1r7iQtfZTFPwv/3Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GvjZvsAD; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F0AA1F000E9;
-	Thu, 18 Jun 2026 05:14:51 +0000 (UTC)
+	 Message-Id; b=JreX01CWS334zVA9M6RosFAnKr4JhPCcdfA/k7jlQk029Ca6LRhDXv6H8a9QduMeKRVSmCGltqGhslpz0c3ybe7HKvZp4oxv74zovNxs7r1j5XYwPjOxgbVsz8sQ6nSEdjBxgRImTTMrRlY4okGs4ioUKkpXPmhSoWeBio5OsaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5XTgIxl; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C78F1F000E9;
+	Thu, 18 Jun 2026 05:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781759691;
-	bh=RoglodZMn4outYdAyCSJRFXV2SdQJ5MaOF7RpmfT594=;
+	s=k20260515; t=1781759712;
+	bh=c89PiQ/mO1wb9bqJG3k4eZG9U3X0hkAsK484DLR/aMs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GvjZvsAD44HiM0MAaF1pe3unCaNdl+z9HpzHswHROeHDqk/qYghdpIuRHiQ/V4VH0
-	 sm059PvV4FrTyHn1UqtKe4UGQG8BFJN9oh9BHqjrsFx2oCHcIOHwRqJcM8y+uXZcIU
-	 PVKl2Q6HYSlUpfxlHABDSAYJfncG0jJy+DwOBYcJhXtFqZKfYnr+eojh5TjKKdPknT
-	 B0DXNEYYzipcSxx6Ug2n3HR0JU8WctUbIRUkWk5aaXJIm36f64iPWm/yCG2XtitPAH
-	 OSMemanmNJkZmjjV6fEEUzktA24T4ACWx+SJldq3zKlxxsi6g7lmZ6uc7LfRvYnJCe
-	 mOf+m2MFuf8HA==
+	b=G5XTgIxlAzZYX3ZfxGXNZ+3PYlxg5JrQ3kIcMvklkPnHPc7YQ/+wn19VqBMuTTNpe
+	 fD7FD2RZImkspX2Eq38YfVOzoSlkMVFPOc+Yods/046lk40lpMmJGpXN10WYTrh7WO
+	 OeB9hdpaP8dOJFr0HLcSjjSqJXyISlSaUW1iXytcLozfYd77OjNI6T9p+VfVxXOSh+
+	 aNujPAoj6MLcEbzmdWbTEyfLWSZNI0fa5azWmUGPgKitbqdHM+zfjorXv/rYafg4Cj
+	 WvDGgzTTk8z/w6BM50BeXu3OOPNg+L4loS2JbN4GxbTNTOOkAt6aIPOqcmb0tqPaIA
+	 OKJ3unfq9NcLg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 05/11] ARM: dts: ux500: Add power domains
+Subject: Re: [PATCH 09/11] regulator: db8500-prcmu: Remove EPOD regulators
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Linus Walleij" <linusw@kernel.org>
-Cc: robh@kernel.org, dri-devel@lists.freedesktop.org, conor+dt@kernel.org, devicetree@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260618-ux500-power-domains-v7-1-v1-5-eb5e50b1a588@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Frank.Li@kernel.org, robh@kernel.org, vkoul@kernel.org, conor+dt@kernel.org
+In-Reply-To: <20260618-ux500-power-domains-v7-1-v1-9-eb5e50b1a588@kernel.org>
 References: <20260618-ux500-power-domains-v7-1-v1-0-eb5e50b1a588@kernel.org>
- <20260618-ux500-power-domains-v7-1-v1-5-eb5e50b1a588@kernel.org>
+ <20260618-ux500-power-domains-v7-1-v1-9-eb5e50b1a588@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 18 Jun 2026 05:14:51 +0000
-Message-Id: <20260618051451.6F0AA1F000E9@smtp.kernel.org>
+Date: Thu, 18 Jun 2026 05:15:12 +0000
+Message-Id: <20260618051512.5C78F1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -75,13 +75,13 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-11606-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11607-lists,dmaengine=lfdr.de];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:robh@kernel.org,m:dri-devel@lists.freedesktop.org,m:conor+dt@kernel.org,m:devicetree@vger.kernel.org,m:Frank.Li@kernel.org,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:dri-devel@lists.freedesktop.org,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:Frank.Li@kernel.org,m:robh@kernel.org,m:vkoul@kernel.org,m:conor+dt@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -101,80 +101,65 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MISSING_XM_UA(0.00)[];
 	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sashiko.dev:url,vger.kernel.org:from_smtp,smtp.kernel.org:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,lists.linux.dev:replyto,sashiko.dev:url,smtp.kernel.org:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C76C969DA78
+X-Rspamd-Queue-Id: B553669DA7F
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] The `clocks` node is incorrectly assigned to `DOMAIN_VPLL` instead=
- of `DOMAIN_VAPE` and includes an unresolved `CHECKME` comment.
-- [Medium] Adding `power-domains` to nodes whose binding schemas do not all=
-ow it will cause `dtbs_check` validation errors.
+
+Pre-existing issues:
+- [High] Calling pm_runtime_get_sync() and pm_runtime_put_sync_suspend() on=
+ `lcla_dev` from the DMA hardirq handler causes a 'sleeping in atomic conte=
+xt' bug.
 --
 
-commit 57cdb12b349af07637860b10a8f8232b9e2930bc
+commit faf19ae1be6f68a94634761ce6a55206f7f124da
 Author: Linus Walleij <linusw@kernel.org>
 
-ARM: dts: ux500: Add power domains
+regulator: db8500-prcmu: Remove EPOD regulators
 
-Add the actual power domains to all the SoC peripherals.
+Remove the obsolete DB8500 PRCMU regulator drivers.
 
-> diff --git a/arch/arm/boot/dts/st/ste-dbx5x0.dtsi b/arch/arm/boot/dts/st/=
-ste-dbx5x0.dtsi
-> index d76a65da70111..a6fef302c994e 100644
-> --- a/arch/arm/boot/dts/st/ste-dbx5x0.dtsi
-> +++ b/arch/arm/boot/dts/st/ste-dbx5x0.dtsi
-
-[ ... ]
-
-> @@ -334,6 +340,7 @@ L2: cache-controller {
->  			compatible =3D "arm,pl310-cache";
->  			reg =3D <0xa0412000 0x1000>;
->  			interrupts =3D <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +			power-domains =3D <&pm_domains DOMAIN_VARM>;
-
-[Severity: Medium]
-Will adding power-domains here cause dtbs_check validation errors?
-
-The l2c2x0.yaml binding schema (along with others modified in this patch li=
-ke
-arm/pmu.yaml, stericsson,u8500-clks.yaml, arm,twd-timer.yaml,
-arm,twd-wdt.yaml, and ste,mcde.yaml) does not include power-domains in its
-list of allowed properties.
-
-Do these bindings need to be updated to document the power-domains capabili=
-ty
-before it can be used?
-
->  			cache-unified;
->  			cache-level =3D <2>;
->  		};
-
-[ ... ]
-
-> @@ -357,6 +365,7 @@ clocks {
->  			reg =3D <0x8012f000 0x1000>, <0x8011f000 0x1000>,
->  			    <0x8000f000 0x1000>, <0xa03ff000 0x1000>,
->  			    <0xa03cf000 0x1000>;
-> +			power-domains =3D <&pm_domains DOMAIN_VPLL>; /* CHECKME: correct doma=
-in? */
+> Drop the regulator build hooks now that EPODs are power domains.
 
 [Severity: High]
-Should this be DOMAIN_VAPE instead of DOMAIN_VPLL?
+This isn't a bug introduced by this patch, but since the EPODs are now power
+domains, is it safe to use them from atomic contexts?
 
-The PRCC registers mapped here for peripheral groups 1, 2, 3, 5, and 6 resi=
-de
-in the VAPE power domain alongside the peripherals they clock.
+An earlier patch in this series transitioned the LCLA SRAM to use power
+domains, but the DMA interrupt handler d40_handle_interrupt() acquires
+spinlocks (base->interrupt_lock and d40c->lock) before taking this path:
 
-If the clock controller is assigned to DOMAIN_VPLL, the power domain framew=
-ork
-won't guarantee DOMAIN_VAPE is powered on when accessing these registers,
-which could cause a synchronous external abort.
+d40_handle_interrupt()
+  dma_tc_handle()
+    d40_queue_start()
+      d40_transfer_runtime_get()
+        pm_runtime_get_sync(base->lcla_dev)
+     =20
+      d40_transfer_runtime_put()
+        pm_runtime_put_sync_suspend(base->lcla_dev)
 
-Also, is the CHECKME comment intended to be resolved before merging?
+Because base->lcla_dev is tied to the ESRAM34 generic PM domain and is not
+marked IRQ-safe (GENPD_FLAG_IRQ_SAFE), its callbacks are invoked, leading
+to sleeping operations while holding spinlocks:
+
+pd_power_off()
+  guard(mutex)(&ux500_pd_lock)
+  db8500_prcmu_set_epod()
+    mutex_lock(&mb2_transfer.lock)
+
+Could this lead to scheduling while atomic bugs and deadlocks?
+
+> Keep the MFD cell around because a later patch reuses it for a
+> small compatibility regulator driver.
+>=20
+> Assisted-by: Codex:gpt-5-5
+> Signed-off-by: Linus Walleij <linusw@kernel.org>
+
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260618-ux500-powe=
-r-domains-v7-1-v1-0-eb5e50b1a588@kernel.org?part=3D5
+r-domains-v7-1-v1-0-eb5e50b1a588@kernel.org?part=3D9
 

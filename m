@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-11639-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11640-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id nNtDDbtRNWpiswYAu9opvQ
-	(envelope-from <dmaengine+bounces-11639-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Jun 2026 16:27:07 +0200
+	id DuKrKV1lNWpnvAYAu9opvQ
+	(envelope-from <dmaengine+bounces-11640-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Jun 2026 17:50:53 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97E836A6680
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Jun 2026 16:27:06 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44FE06A6D7A
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Jun 2026 17:50:53 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b="aRqn/qpV";
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11639-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11639-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=Iw+k8E0+;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11640-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11640-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=nxp.com (policy=none);
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A196F300F176
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Jun 2026 14:27:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 62D7C301CDAD
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Jun 2026 15:46:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E15397338;
-	Fri, 19 Jun 2026 14:27:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17F5A3BA25F;
+	Fri, 19 Jun 2026 15:46:45 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013021.outbound.protection.outlook.com [40.107.162.21])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013040.outbound.protection.outlook.com [40.107.162.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E002D97B7;
-	Fri, 19 Jun 2026 14:27:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE99E3B9928;
+	Fri, 19 Jun 2026 15:46:40 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781879224; cv=fail; b=upZ0OLVvUIlCbx3lRvfDWjKUayX+rpiJJ/UiGtDov4Huwi48XbPsGeXltwU5SBEBJWYYSPd1djgW9PcH9S0WiMkHejEfraK8uBwSZmNWZG9PV0uOGQjvZWkRjWAslq5xvtbTFU4R1GqwLsvxRW+9hVyz/ynrioXkqe1CMRkGBzo=
+	t=1781884004; cv=fail; b=bLgk6t8LukZ6QIUIZQg0Qap8c0Ls61kjTrkdq//WUlTw6CF4B+sCd+v2bIwMzB97LXJQe1AYYOyeHYvFvBb3cOt+VQT5/IU+HQgMkT0IniWKP6QCwvmZ447H6Xymlv09+v6EuhZx21qEfZ8wBoKhtoAGc5qZ+P1t0sC604IGy0k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781879224; c=relaxed/simple;
-	bh=fXqwMbJAy07vIfv06Ytehu26Ma6Un4xRmlH5mniqzD8=;
+	s=arc-20240116; t=1781884004; c=relaxed/simple;
+	bh=tYph5Cz3EU9mMSmG0UqAXgxPUeIR+WwNi6JNItu/aVA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=S4iUvITfwO0pa1lBbdq1qY5dsBcZeeYp4NaQuYt5ls5dyL9wIivQciAjgHyElmkb1gA6Wm7nqmrZxR1c1rBvKOgIprFtGHxuZJ1Gybuf60UboEgUbgld6R6Ci4OvQRrq1oF8l95Xb8pAkECRlP8SUN/7mkEmpxlmCPtaM21Ihe8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=aRqn/qpV; arc=fail smtp.client-ip=40.107.162.21
+	 Content-Disposition:In-Reply-To:MIME-Version; b=uvwZer2kKmxG5lqFDF5MHCYhn2etNLd78w0wOlVNJbMGi5papjDtPmmNkIbNrbFIM7HPRGrFH1GtMezrrnF1WYv0uFmKNzyKeCc82EaGV54WQujpC7UJm4ATANd/U3dVLUnVlkhhjFVaRhkXUESDKPEp3mXo5P7WJHRV5rSPhsA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=Iw+k8E0+; arc=fail smtp.client-ip=40.107.162.40
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=L15iVxLsRg5U3tex5+5wULAz/0mvKrDNHH+1n9ZGwkMIEQwdn7+vL3yKqJxcpu2BtgxGziAmu1iHpc5JKDtEwzHd1/9+b9xMPve+e0wOp1jLIIkdIZqtUoX/ABYTCd0b4+C8wPgh9Si4Ujz0sFXTG+/3scIix3le9Pz3z3vLoFyR5i2E4xeUQF9cjvIePRyY+DK2c+gH8kn7g3Uy27BqklQAgJ5MOV4PonvTUGMIdtzbAyIFGRvlGKkoMYniu9u7WAOMys7TfeH1m5N6tfFCzEEZ0Ju7aWqxaJABRyxcao0PcB70B/gGPeqJw6up28j4CfxRxjICadUEaOVJ5Nbv+w==
+ b=HhRD4HVESE2GN8RAluNf9DVOoywgcuPFPnVTxIIhgic6V8dpklXpbMIpadtuozQqoT6flvZ/Za9//4Dpgm8eW8nQxlqefLbSNPhUcjvYo+0+tPydU0Ciedbl/35iWTwtp4J/ZlBetZHkuiH6etD894G9RGYHyc3/zJg1tuhR2COUmLGPV0Ro3S67DBTwAN3+n79mZ8bn44uA4Pv5lTN2ZGj8VgwvOGRoQrYJ/yQSmtQcO9gBZqw/cCjZ4znzqdP1zNqFnzrXcHoigw+VrVj9gxeptVZ/cb+AIgwZnX2VQtA9EFFnfmMJIsISLUWdqF4yzOdzONqxGUPO/9PdYjH/zg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PQRyQjm0eW95XTPGToyQC0pYI3S0wqpUQPOquz/b4aY=;
- b=B9dsgMrllF3AttpqyjGQlpN1c/i18XPlFMrbn20HxbyUkphQJSOZtq/MvYe+6v6zayd3Y2pg42zPhCbUaxy/xngAnyRU5AJlVObd+imAmu5wT35lxBzOjskp1b8ya3q6gbnnTHdJvMe83O/9QT8hxZGS01/ZwHnGeRB7fdCOjuP4P26De0xOGf57eVOXvPxwQsWLK3dE+7eJOVR+JavunaeCj2VsqYsJFEsuSTCDqRmmyYeknT99oDe0vrA4IcTfTFRoFO3QeJE+kwTRD6JQtiaM+GF7tRKURa8FcCf5WhUg05VtIog3DyKrlwhgI35CKreBW5F+50Y1O1xDs1aONQ==
+ bh=eaLLIDHuL5dAnerllBRi3Wz6jxiL5S9/m4cNTw2wvRU=;
+ b=AjBR05o1mGVUK7WoSXJ4uqQEkUmvH6PiJ9boMYdBec5aPQi0IXdjDI4CB4LxxKCdfAOZvBLkgVyeedFFzUyr57vWLSkhcL5/+Cks3Bg3AUrHmQpOnM34ZVQj+Oq6ZbRHOCeLI9vD0BOGj18QvdyMUvVcuXbw7NzJ0ZzADfrntGlxLQh6gIfh+8ANcYfwEHpmzS5/jTO5kiKDs8ShCb6ed6C9ZtWHR3krlZFGVXfBcc45PuJ3ipzt5mZPMQd48XVhjHm59RmYITTrYUn1g43k6MlBgQf7zA6w6/KsvcQOYayzGmiFIUGGUwWo85eiiA6VoEjZdzWUiDqeNJsBJVcQjA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PQRyQjm0eW95XTPGToyQC0pYI3S0wqpUQPOquz/b4aY=;
- b=aRqn/qpV12Y0wkpR0fr+XQVAGaoKjHZwabeZN2nR0dGXXe5Om/RBF+Pf9KyDR3Np77AAggmdP9DbILbmdWd2aALUYAIUjUB3L998QuPpbVr1zrKtNyhzOw7ivcBakw6NzIiYeqXECfU2lT+vIHlfhtA7V/YML6QT10cr89bDQbzgLVNmXGG9RkCQ1xG7aCXYyQE4mUPpmFQkbE3qmgXdKOR4AYOXMsKgYkqAkJKtCXGOb+PVRey5EGA4YlvpWlpIIOAp4bZ4Dw9aZESYSf8wqtVQv9512FrNKjeKQ1GcDjMOYFwRD2+LTQNjvTyZYjF/R9yDXkh6rz9PHsGH1Sx0Pw==
+ bh=eaLLIDHuL5dAnerllBRi3Wz6jxiL5S9/m4cNTw2wvRU=;
+ b=Iw+k8E0+2l6GKfMGJNIEhC8G8J6jfxE7MZk9DmbjSEmF48xEEXk2KBfluaIqxEmlCDxMSCYhtCaIvvzLVN4E03rY+wFInOUlVu3hBFt/KWKbzWAWen1dD7UuE6WN6tQ8YFVylTZW9oWLubdIQUqT4xyX3wyY8cSAs0bcJEFUOpVpOn0dUzsHkdspmgzOmdzBEuIm6NpFW/U8QcMm+Xvn6yQgQzWhL2goL9JlUIgcMPfDzg8jFedQ2Jr6PjCPl3cYnl5srXgHYFdMUjqTxIBw2/Z2JwYHWL1RmS+aKNJUUx6rq2Lo+wSyZutMdMrUQCFeJDkAryJyND1bsHEMtLqGoQ==
 Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by DU4PR04MB10337.eurprd04.prod.outlook.com (2603:10a6:10:562::11) with
+ by DB9PR04MB9792.eurprd04.prod.outlook.com (2603:10a6:10:4c2::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.18; Fri, 19 Jun
- 2026 14:26:58 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.11; Fri, 19 Jun
+ 2026 15:46:37 +0000
 Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
  ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
  ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0113.015; Fri, 19 Jun 2026
- 14:26:58 +0000
-Date: Fri, 19 Jun 2026 09:26:48 -0500
+ 15:46:37 +0000
+Date: Fri, 19 Jun 2026 10:46:27 -0500
 From: Frank Li <Frank.li@oss.nxp.com>
 To: Yuanshen Cao <alex.caoys@gmail.com>
 Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
@@ -70,16 +70,16 @@ Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
 	Maxime Ripard <mripard@kernel.org>, dmaengine@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/5] dmaengine: sun6i-dma: Refactor to support A733
- interrupt and register handling
-Message-ID: <ajVRqK2OlUPlOc1S@SMW015318>
+Subject: Re: [PATCH 3/5] dmaengine: sun6i-dma: Add num_channels_per_reg for
+ flexible interrupt mapping
+Message-ID: <ajVkUyWGmaUua9Zo@SMW015318>
 References: <20260619-sun60i-a733-dma-v1-0-da4b649fc72a@gmail.com>
- <20260619-sun60i-a733-dma-v1-1-da4b649fc72a@gmail.com>
+ <20260619-sun60i-a733-dma-v1-3-da4b649fc72a@gmail.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260619-sun60i-a733-dma-v1-1-da4b649fc72a@gmail.com>
-X-ClientProxiedBy: SN7PR04CA0014.namprd04.prod.outlook.com
- (2603:10b6:806:f2::19) To GV2PR04MB11799.eurprd04.prod.outlook.com
+In-Reply-To: <20260619-sun60i-a733-dma-v1-3-da4b649fc72a@gmail.com>
+X-ClientProxiedBy: SA0PR13CA0029.namprd13.prod.outlook.com
+ (2603:10b6:806:130::34) To GV2PR04MB11799.eurprd04.prod.outlook.com
  (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -88,72 +88,72 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|DU4PR04MB10337:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8bcb7700-0c32-4827-6a76-08dece0ed213
+X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|DB9PR04MB9792:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd403438-ccc2-4760-121d-08dece19f260
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|19092799006|1800799024|376014|23010399003|6133799003|56012099006|4143699003|11063799006|18002099003|22082099003;
+	BCL:0;ARA:13230040|366016|19092799006|1800799024|23010399003|7416014|376014|22082099003|18002099003|56012099006|11063799006|4143699003|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	VyyMy8f1i3crb1Z6+onODJ8kgqLi4qFolxqme9/Yv5lBtofL6X27Frlz948QqK+gh9jxaSsekLH2NTX+2Z+XdI/SX1R8JXIjCPFX1YZa+AS6HLUzSsHEiWXNXRsHmuK8/lqCCMBl+qT1g52INboXWJOW9PbhNZYv4Vep0FBj2iJEkXCrusV+DmipAAIeA7ze/SiLfKt9SRmxz6M8xZyqsPqspxA8ucW6m1i6z3RwcUZqJyrwP1jnk3H4OqI3hsnl4E/89cLtuV4NyJGyfNUWivU3omCqlctF3isDzVsqP3Y/tjNz8Tqa5xtqdoOgr/GVrJGGf/jQNog48CqQWd3nwDI0NVJMqW6ZcGjuGb10xKGe3E09i+HDsP+7y3HJBQdpyVY4Xo9XLDcyCzjiMkHKfkM/Pq6qWAN38fss0GMuhBNkQGqgith5RVapYv64TDu3LFt58H5EtWusjtMMmoTykApZyPrnq9CVtJFq0OGbOE4qui6z7KI7mKABFOP5VWXgBOtkQBrGUv24zm2cymuyt2upUeTrHlsf1KkGWSHswf0s7qmeCikZwE1GMfP2yvpwfNZRV5lkQE1JTWhDG6KSTr5MgEne2DR8ncCZCLT7PJlg4qMTkSyl5UVSM+UWemGUjOlBuvn9Uj/6t5KW01p+tv3eRjbqxHzS0IybRQlpgHg=
+	pliRJdDYrSiYGtonY/mOpiJKA4XXdoTFQTywqqwAio5mKUbP4c0QyVSzYLSt1aJE2OKoWDngyVjiZYUF+4GlX54/AryaQZneGVqWo6+DxoHDNOsFUfE0CP4FDIeyWGO90remevMp99QU64Q1jMiLLNVUS5G6rMtnCAXIkxJnPy91ntLV+kAML9ZRrIU/uGhb3p9LbMfETCkr3BO8yqELakQ1ZeuAiYmryw8AEt+Zlp1dt9m+F2O7PDPB4htEwUIZfW+BZfX5H1zjP437ypVG5aphzS+osbkYp8V3p212HZkJ63PAisANX7vmeB3jBzcyB6TSkyuO/JV16ICR4tZls7d5XSlMHmgXvZ71HrgVKIyU6xD6VJpojFMaBspfJr442Ld27NHNWxwC2zyQp30fvOZKY2IpLqfSVkzV/S5SiQYExP4TqGUM5BEPh5kB6ZgW45+90CGIXgrrbPo0JSBBVa5gzBtdg01Nr0SbS/JkKo6bfAeE3OmsLSaseNl6a9SZzIRBsSbDakhpLpky/ZPe33SJunT88vSTetRHS4hOIiMykHCGMtMbGRAtdKVGoLSnOBh5jBnEoYPaiEzBNDAv8X2d4Ajz2J9otYBudYgko6rMTWMZfo/s18XFGZeGn5fgPvm2W0/hy40HLQdA7pSjW/1JuYtwqFRQzY6ZLy7eV0o=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(19092799006)(1800799024)(376014)(23010399003)(6133799003)(56012099006)(4143699003)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(19092799006)(1800799024)(23010399003)(7416014)(376014)(22082099003)(18002099003)(56012099006)(11063799006)(4143699003)(6133799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?4iHg9tb0JqY0GdDIMwUTx+HAFIZ/yWxTFkkQzJ1kbc9yV/uHXjOBzdn4wvsy?=
- =?us-ascii?Q?xsrGhBGkQoxmtsTRqOWUZmp53oBqjpzfmFC3Jqsre3lqBxkRKaCPh/PcM5rJ?=
- =?us-ascii?Q?TI+PcINBzlERo3tEpP1Qi4SfTsse6NZZf3kQ6Q/hBiVIWPYwGw7Ll+S+KVAc?=
- =?us-ascii?Q?/nTLbGCcfvXT1Z0QCw0ys9XzaqUx25edFtHK70XOoCAE8dDXUR+uatZo2ejA?=
- =?us-ascii?Q?x/edjpJSdFZiIZ8sO0rkf7oU81t0ZE+VNj8wi8ygmNnkl+uHRkTKMhw6dhGp?=
- =?us-ascii?Q?SxjW0nptI1lOOGhw+S9cCV1/uCPJycPZNNlQYyhmp4FPhh9LEJmTUTjhjodj?=
- =?us-ascii?Q?PLkI6Dc5j6ObRvOpdS1L2+xqjivNXxSry4N3D94gUXTlrssFIVlBxMrVxE74?=
- =?us-ascii?Q?Xs9avbr8KMTnG12FDo9goneP1GG/H9ZyHqb4Adk3wmrRyOZ+L23E/v3QMpFq?=
- =?us-ascii?Q?asNsyblL9fu4CMdINJYYzUzjoLQU93WJZ7wyJhv5oyHhxXntFKZVk6GEaR6J?=
- =?us-ascii?Q?csCcaTqhSJh/N3Aysi8OfC/ogAUN5KY2q4HEFP0+edN/CwrEYzaK/ibgoINX?=
- =?us-ascii?Q?0dSPLyCEb2G6RbzRjatob1XQvM6ZEPQSp5SZY1vfYfoAdoi4uFX8QlsKd++j?=
- =?us-ascii?Q?kgl4ApBCLK9wXADoyLO0B3toHua5R2LyEyTLo4QSmR3fDpkF3Rz1uc/QgNIe?=
- =?us-ascii?Q?bgwBTgQHdxtmZ/w9rDyYFA6F28uNiEZwzl44oq8+d3i7Ifbs1zyjxQ/3T/aq?=
- =?us-ascii?Q?uNVgb1H5NY4BinkRWq2sy+vyzUwh0Po4K2R+eUeV+8+aRHSAqullj31ezXme?=
- =?us-ascii?Q?cWarhERUVuQ2a1T+Wk9initDzD1Mqhj8DZPW9wFcx4n9P3R1Tqj41L6g1Uma?=
- =?us-ascii?Q?uWmTpgoAMbtd6NdMcmbEo6HFI3S5cyjGiH65go0OHzN6AKPNwWuje0X0iK7F?=
- =?us-ascii?Q?9aHhLOyVL+Zht3tEYa0T2iH5gw5AsMhttzYQfqW8gE5P+WJP4SL81LTyHKYm?=
- =?us-ascii?Q?NMtMv0ZRjznFYfWUJUjlVtlXLIyPSPMzOmHpYbdkpibmrcscwKEi3qyhX9ki?=
- =?us-ascii?Q?KaJhJvAo4+CZPFPDb/iD3z3cAjU/1xm3T0Zsl+AWHpsHkKSlTuR3haq+D4YZ?=
- =?us-ascii?Q?O2zB57l0822Fm8k6w7y8sekfzC/f651B0u/izDtd3TW4LT0uAL25/Ymywr7q?=
- =?us-ascii?Q?0vh7QRPnjCGY7lwxJuYlz/7do+ivk+SpLm+KI1oplWYYKuqIG5RvYoSpbCvY?=
- =?us-ascii?Q?kc7XC1yYp6Sliye99Ne7NZgylCqiHf/M4dkBCtrhffRz+l5s1HEc+mm881AS?=
- =?us-ascii?Q?VNZL2kBFb+yus6vynXdx8kvXYnVfUWNaGO9ffmNp1rBCf7gTKR3OjWbkAoam?=
- =?us-ascii?Q?N6MBdet7g3/e4LdLhjA/r1Rnz9VTLz3+LoQWvaq6DIkkLiCh5ApiufpyBP+0?=
- =?us-ascii?Q?rFpFbEMstHB0xevfXNuCEYK0jTkXc73tyBKPCDKtWxoR/O+Sn/jxA47lKN7p?=
- =?us-ascii?Q?HFz3tGUduWzNjlJA+RgAczwfe8TOeyIUEUfGFRjiiGMv9H7V93FxjNitcVsm?=
- =?us-ascii?Q?CVCnXCjTgQvQrZV02a/YiqsIv62i1hqiX2HtrwIl43AVqlYXu0U9xS80WtOE?=
- =?us-ascii?Q?2gKyqMrPF2bzXkGAkI60qyQOgs1/RuZnbSJISW88qGUN4qQor1KeOSzcXugN?=
- =?us-ascii?Q?HkUoQT+NPYt3IRU8O5h3rMHZZB0RZIH/XjbR5XGqJLOLoF2VejBXQIHi2SoO?=
- =?us-ascii?Q?8ycLhLc8o8CUkLBG6sjk37/K/6T3n4rg00izzT7fUMBpajhEnzv6?=
+	=?us-ascii?Q?DRDnxQvh/M2ZOSPEFasADqzlYiK6PCotv7QZoIf2Q+pXCg7aEu7F6KEWwxVx?=
+ =?us-ascii?Q?y+jOVHsiXdyyKcyqbcBo4SZJNotpXJgtDB+ZhuXYlNcB2c4XSjzzK2y8gBWg?=
+ =?us-ascii?Q?n2mrwFDjxY6Np4dp3adVpWmi3a2Udn0q6D8J2gLvDybxkhj9iiXRcjgNUpyP?=
+ =?us-ascii?Q?ZjMeyriKtVUXJ6fj6qhu1z7c/J4X5FhjA5y4lLpFtHYoBCknbx6UUAPQu9i7?=
+ =?us-ascii?Q?9fbagAKpH53M78mxi+PKsZj25EQoeBl59flfdabBb4Q9JpjWNHRn+J0ZMiI8?=
+ =?us-ascii?Q?qdyRqQhmH56N+4zHhAj0JPs71sfYKdnNiJB6g7sGwIJTP6qbz5dHkrbpSFdH?=
+ =?us-ascii?Q?1Dc+oQfrFrUNG+k5WCHJ7qNs9cUUT2unmmqIWq+gVMRtTax6VlrOMGIkG8v7?=
+ =?us-ascii?Q?nDu3QjGWKsQeTTbxoWKjafZ6AGp+wgGwvqAnE61lALxc2oiE1qYgAdx89Nky?=
+ =?us-ascii?Q?qr46kSRLW/dtUungBUCbR+aoV5Bg5QQ5+Kzv8BRdYg57q5xg05ZT1PVdEmX3?=
+ =?us-ascii?Q?YBx6fJu05jRP6ZA4izSDrKomfc75EuN+TnfJBAx1akw2VIATc3r+Kk2tVymO?=
+ =?us-ascii?Q?ua5HKQxrWp3vwO89r6QaYHIqfEW/7Cv0prHkDy0RV7azvWtcPl7Tztgxr2A4?=
+ =?us-ascii?Q?6aAGh71jG7JHb1WZJDVrT42yi+oWXJMEOTQfb5kB0x0VZThrsc4h9PJT1s3H?=
+ =?us-ascii?Q?PrdAqa5IovG6K1lk8XMm2IR/JENoiHlPsQboc7k74Jy+dErocRZlPK9z5i34?=
+ =?us-ascii?Q?Hv9ZSCjEeTZQyA7CNQ7lsNdOb8l2lvJ9YH3OQxCeOj0H+8CmhLLpWGuVPUWE?=
+ =?us-ascii?Q?zsd9QLy1/FvkXqmTEbgZmuEkv62lOzeXIVBe7zPMi64zUjv1YXwQ092Himu+?=
+ =?us-ascii?Q?/WeqvqwWdp8OIwvw9dtkUVf0usr5W0bSos7K/glaBA4iNE4TQN2Gj/JS5cKS?=
+ =?us-ascii?Q?ah6y40pfU0lyFPIgIElyEU2aT/PLEQ1MuhkSNpuCMrnshw6MBU9pjuNK8VLS?=
+ =?us-ascii?Q?6Vh3+BQ7b4KJklrPMyEymuYg/rNaz4DIgoEMj3lTByCotME0jNYf9rB2SVh5?=
+ =?us-ascii?Q?UZPO9ufPm+H6lpYEwB7bQbOKAcLYe8ttWLCoa2N2Xh4bnpmNgcM0Efa7GVGg?=
+ =?us-ascii?Q?1JdeAEqxPp6/r+TxYrU+y2Y+E3ZA29TnhwvS4A06sQlnRYwmuzmxFinql8Xy?=
+ =?us-ascii?Q?8zo1KkVhum9jBkBjeLlffax26FMfeNEkAwibVl80kfRmq2944vF5Xw6fY2uY?=
+ =?us-ascii?Q?FDIcWtskPogcwob64qJtDwN7i7fNsmIiYhF53Jz3XWU4Q84/2V0W3zUlmMkz?=
+ =?us-ascii?Q?VEdhblb1cDz/BF5adjWuTUsP634CxXrS9hxNLZRH3w775FLv20WfS6w/l0H9?=
+ =?us-ascii?Q?jSGsMkcnrdPufs6Z0B65TBLc85jVu/CClPk/jQ4KxO5SWVmc5W8nfSGBiDEQ?=
+ =?us-ascii?Q?3l3x+H4l8o3GZauZm5COuMvBVgDe1InsnJmkJeIh4asSAvRuLLITMe/lng5K?=
+ =?us-ascii?Q?DDVs0w2CTIfsfzY/R+kGCTlYXpBDp8qkOzNsXLFURBtR5ZFUGbTJmgw+PRgs?=
+ =?us-ascii?Q?LsXAFjh5VqXLTVsRsO6ebpB5cHk1YrI0tXc2/8im2AGGwD0Y9yLi2JgfFPRF?=
+ =?us-ascii?Q?0IfHH+n/3QmGIeOIT+MmYz6gMdCto09md0/kVlIPxMgXL46Bae1lLOyEDAcM?=
+ =?us-ascii?Q?39YkvgSno2SAl+2bWjTRXI5pFPOLXfOyX5c+RBtG5xR4K6U1Byp8Xwg9ajzG?=
+ =?us-ascii?Q?N3eUWjFmFYnzGQU4/L4+cy4YMyGNm9kHhhFWyVPK2TnI1+BiH8sE?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bcb7700-0c32-4827-6a76-08dece0ed213
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd403438-ccc2-4760-121d-08dece19f260
 X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2026 14:26:58.6014
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2026 15:46:37.1749
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WzU2NunCEDPYCXDRB1xXYpv4NMOCAn54R1F9Uf+Ho1KUpvQtxmEM1p00mVDJvQDfQY7Eiq635j+F5sUpG7MDBLtkJMEpUOIaON1G2DRqMQuaOmzZEmxs1lvKn++fiqPQ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10337
+X-MS-Exchange-CrossTenant-UserPrincipalName: iJlo8+fsDNTH3+nuXNNdTkXxlYnJbxco+eaDWUJUrBb+X3yXswd3ymRahqgtXbulPNQOe4ys0X8rTzfbqihgL6cl8E5PZXcXT12tdy4ZjYoPchwQP94x/Tk/LuMYgbd1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9792
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [2.44 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS(0.00)[m:alex.caoys@gmail.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:samuel@sholland.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:mripard@kernel.org,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:alexcaoys@gmail.com,m:jernejskrabec@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-11639-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11640-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -174,231 +174,47 @@ X-Spamd-Result: default: False [2.44 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp,oss.nxp.com:from_mime,NXP1.onmicrosoft.com:dkim,SMW015318:mid]
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,oss.nxp.com:from_mime,vger.kernel.org:from_smtp,NXP1.onmicrosoft.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 97E836A6680
+X-Rspamd-Queue-Id: 44FE06A6D7A
 
-On Fri, Jun 19, 2026 at 04:53:30AM +0000, Yuanshen Cao wrote:
+On Fri, Jun 19, 2026 at 04:53:32AM +0000, Yuanshen Cao wrote:
 >
-> This patch is the first step in a refactoring effort to support the
-
-avoid use "this patch/commit", Just
-
-Refactor ... to support Allwinner A733 DMA controller.
-
-> Allwinner A733 DMA controller. Currently, the `sun6i-dma` driver has
-> several functions related to interrupt handling (reading/writing
-> interrupt enable and status registers) and register dumping that are
-> hardcoded.
+> The previous implementation of `sun6i-dma` had some implicit assumptions
+> about the number of channels per interrupt register. Specifically,
+> functions like `sun6i_kill_tasklet` were hardcoded to only disable
+> interrupts for IRQ 0 and 1. `DMA_MAX_CHANNELS` is also not in used in
+> the past, and the old SoCs never has more than 16 channels.
 >
-> To support the A733, which has different register layouts and interrupt
-> handling logic, these functions are being moved into the
-> `sun6i_dma_config` structure as function pointers. This allows the
-> driver to use a polymorphic approach where the specific implementation
-> is determined by the hardware configuration assigned during device
-> probing.
+> The A733 has a different interrupt structure where the number of
+> channels per register may differ. This patch introduces
+> `num_channels_per_reg` to the `sun6i_dma_config`, similar to BSP, to
+> make the interrupt handling logic hardware-agnostic. It also sets
+> `DMA_MAX_CHANNELS` to 16 to align with the new BSP code and ensure loops
+> over interrupts are correctly bounded.
 >
 > Changes:
-> - Added function pointers to `struct sun6i_dma_config` for:
->     - `dump_com_regs`
->     - `read_irq_en`
->     - `write_irq_en`
->     - `read_irq_stat`
->     - `write_irq_stat`
-> - Implemented generic `sun6i_read/write_irq_*` functions for existing
->   hardware.
-> - Updated existing `sun6i_dma_config` instances (A31, A23, H3, A64,
->   A100, H6, V3S) to use these new function pointers.
+> - Change `DMA_MAX_CHANNELS` definition to 16.
+> - Added `num_channels_per_reg` to `struct sun6i_dma_config`.
+> - Replaced hardcoded IRQ register calculations with values from
+>   `sdev->cfg->num_channels_per_reg`.
+> - Updated `sun6i_kill_tasklet` to loop through all possible interrupt
+>   registers based on `DMA_MAX_CHANNELS` and the configuration.
 >
 > Signed-off-by: Yuanshen Cao <alex.caoys@gmail.com>
 > ---
->  drivers/dma/sun6i-dma.c | 74 +++++++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 69 insertions(+), 5 deletions(-)
+>  drivers/dma/sun6i-dma.c | 25 ++++++++++++++++++-------
+>  1 file changed, 18 insertions(+), 7 deletions(-)
 >
-> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> index a9a254dbf8cb..d92e702320d9 100644
-> --- a/drivers/dma/sun6i-dma.c
-> +++ b/drivers/dma/sun6i-dma.c
-> @@ -138,6 +138,11 @@ struct sun6i_dma_config {
->         void (*set_burst_length)(u32 *p_cfg, s8 src_burst, s8 dst_burst);
->         void (*set_drq)(u32 *p_cfg, s8 src_drq, s8 dst_drq);
->         void (*set_mode)(u32 *p_cfg, s8 src_mode, s8 dst_mode);
-> +       void (*dump_com_regs)(struct sun6i_dma_dev *sdev);
-> +       u32 (*read_irq_en)(struct sun6i_dma_dev *sdev, u32 chan_num);
-> +       void (*write_irq_en)(struct sun6i_dma_dev *sdev, u32 chan_num, u32 irq_val);
-> +       u32 (*read_irq_stat)(struct sun6i_dma_dev *sdev, u32 chan_num);
-> +       void (*write_irq_stat)(struct sun6i_dma_dev *sdev, u32 chan_num, u32 status);
->         u32 src_burst_lengths;
->         u32 dst_burst_lengths;
->         u32 src_addr_widths;
-> @@ -347,6 +352,25 @@ static void sun6i_set_mode_h6(u32 *p_cfg, s8 src_mode, s8 dst_mode)
->                   DMA_CHAN_CFG_DST_MODE_H6(dst_mode);
->  }
->
-> +static u32 sun6i_read_irq_en(struct sun6i_dma_dev *sdev, u32 chan_num)
-> +{
-> +       return readl(sdev->base + DMA_IRQ_EN(chan_num));
-> +}
-> +
-> +static void sun6i_write_irq_en(struct sun6i_dma_dev *sdev, u32 chan_num, u32 irq_val)
-> +{
-> +       writel(irq_val, sdev->base + DMA_IRQ_EN(chan_num));
-> +}
-> +static u32 sun6i_read_irq_stat(struct sun6i_dma_dev *sdev, u32 chan_num)
-> +{
-> +       return readl(sdev->base + DMA_IRQ_STAT(chan_num));
-> +}
-> +
-> +static void sun6i_write_irq_stat(struct sun6i_dma_dev *sdev, u32 chan_num, u32 status)
-> +{
-> +       writel(status, sdev->base + DMA_IRQ_STAT(chan_num));
-> +}
-> +
->  static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
->  {
->         struct sun6i_desc *txd = pchan->desc;
-> @@ -460,16 +484,16 @@ static int sun6i_dma_start_desc(struct sun6i_vchan *vchan)
->
->         vchan->irq_type = vchan->cyclic ? DMA_IRQ_PKG : DMA_IRQ_QUEUE;
->
-> -       irq_val = readl(sdev->base + DMA_IRQ_EN(irq_reg));
-> +       irq_val = sdev->cfg->read_irq_en(sdev, irq_reg);
->         irq_val &= ~((DMA_IRQ_HALF | DMA_IRQ_PKG | DMA_IRQ_QUEUE) <<
->                         (irq_offset * DMA_IRQ_CHAN_WIDTH));
->         irq_val |= vchan->irq_type << (irq_offset * DMA_IRQ_CHAN_WIDTH);
-> -       writel(irq_val, sdev->base + DMA_IRQ_EN(irq_reg));
-> +       sdev->cfg->write_irq_en(sdev, irq_reg, irq_val);
->
->         writel(pchan->desc->p_lli, pchan->base + DMA_CHAN_LLI_ADDR);
->         writel(DMA_CHAN_ENABLE_START, pchan->base + DMA_CHAN_ENABLE);
->
-> -       sun6i_dma_dump_com_regs(sdev);
-> +       sdev->cfg->dump_com_regs(sdev);
->         sun6i_dma_dump_chan_regs(sdev, pchan);
->
->         return 0;
-> @@ -549,14 +573,14 @@ static irqreturn_t sun6i_dma_interrupt(int irq, void *dev_id)
->         u32 status;
->
->         for (i = 0; i < sdev->num_pchans / DMA_IRQ_CHAN_NR; i++) {
-> -               status = readl(sdev->base + DMA_IRQ_STAT(i));
-> +               status = sdev->cfg->read_irq_stat(sdev, i);
->                 if (!status)
->                         continue;
->
->                 dev_dbg(sdev->slave.dev, "DMA irq status %s: 0x%x\n",
->                         str_high_low(i), status);
->
-> -               writel(status, sdev->base + DMA_IRQ_STAT(i));
-> +               sdev->cfg->write_irq_stat(sdev, i, status);
->
->                 for (j = 0; (j < DMA_IRQ_CHAN_NR) && status; j++) {
->                         pchan = sdev->pchans + j;
-> @@ -1124,6 +1148,11 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg = {
->         .set_burst_length = sun6i_set_burst_length_a31,
->         .set_drq          = sun6i_set_drq_a31,
->         .set_mode         = sun6i_set_mode_a31,
-> +       .dump_com_regs    = sun6i_dma_dump_com_regs,
-> +       .read_irq_en      = sun6i_read_irq_en,
-> +       .write_irq_en     = sun6i_write_irq_en,
-> +       .read_irq_stat    = sun6i_read_irq_stat,
-> +       .write_irq_stat   = sun6i_write_irq_stat,
+...
+> @@ -1171,6 +1174,7 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg = {
+>         .dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+>                              BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+>                              BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
+> +       .num_channels_per_reg = DMA_IRQ_CHAN_NR,
 
-Can you define macro like to avoid duplicate these init code. Or set it at
-probe if it is NULL.
+if previous patch have MACRO, you can put it to there
 
 Frank
-
->         .src_burst_lengths = BIT(1) | BIT(8),
->         .dst_burst_lengths = BIT(1) | BIT(8),
->         .src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> @@ -1147,6 +1176,11 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg = {
->         .set_burst_length = sun6i_set_burst_length_a31,
->         .set_drq          = sun6i_set_drq_a31,
->         .set_mode         = sun6i_set_mode_a31,
-> +       .dump_com_regs    = sun6i_dma_dump_com_regs,
-> +       .read_irq_en      = sun6i_read_irq_en,
-> +       .write_irq_en     = sun6i_write_irq_en,
-> +       .read_irq_stat    = sun6i_read_irq_stat,
-> +       .write_irq_stat   = sun6i_write_irq_stat,
->         .src_burst_lengths = BIT(1) | BIT(8),
->         .dst_burst_lengths = BIT(1) | BIT(8),
->         .src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> @@ -1165,6 +1199,11 @@ static struct sun6i_dma_config sun8i_a83t_dma_cfg = {
->         .set_burst_length = sun6i_set_burst_length_a31,
->         .set_drq          = sun6i_set_drq_a31,
->         .set_mode         = sun6i_set_mode_a31,
-> +       .dump_com_regs    = sun6i_dma_dump_com_regs,
-> +       .read_irq_en      = sun6i_read_irq_en,
-> +       .write_irq_en     = sun6i_write_irq_en,
-> +       .read_irq_stat    = sun6i_read_irq_stat,
-> +       .write_irq_stat   = sun6i_write_irq_stat,
->         .src_burst_lengths = BIT(1) | BIT(8),
->         .dst_burst_lengths = BIT(1) | BIT(8),
->         .src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> @@ -1190,6 +1229,11 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg = {
->         .set_burst_length = sun6i_set_burst_length_h3,
->         .set_drq          = sun6i_set_drq_a31,
->         .set_mode         = sun6i_set_mode_a31,
-> +       .dump_com_regs    = sun6i_dma_dump_com_regs,
-> +       .read_irq_en      = sun6i_read_irq_en,
-> +       .write_irq_en     = sun6i_write_irq_en,
-> +       .read_irq_stat    = sun6i_read_irq_stat,
-> +       .write_irq_stat   = sun6i_write_irq_stat,
->         .src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
->         .dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
->         .src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> @@ -1211,6 +1255,11 @@ static struct sun6i_dma_config sun50i_a64_dma_cfg = {
->         .set_burst_length = sun6i_set_burst_length_h3,
->         .set_drq          = sun6i_set_drq_a31,
->         .set_mode         = sun6i_set_mode_a31,
-> +       .dump_com_regs    = sun6i_dma_dump_com_regs,
-> +       .read_irq_en      = sun6i_read_irq_en,
-> +       .write_irq_en     = sun6i_write_irq_en,
-> +       .read_irq_stat    = sun6i_read_irq_stat,
-> +       .write_irq_stat   = sun6i_write_irq_stat,
->         .src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
->         .dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
->         .src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> @@ -1232,6 +1281,11 @@ static struct sun6i_dma_config sun50i_a100_dma_cfg = {
->         .set_burst_length = sun6i_set_burst_length_h3,
->         .set_drq          = sun6i_set_drq_h6,
->         .set_mode         = sun6i_set_mode_h6,
-> +       .dump_com_regs    = sun6i_dma_dump_com_regs,
-> +       .read_irq_en      = sun6i_read_irq_en,
-> +       .write_irq_en     = sun6i_write_irq_en,
-> +       .read_irq_stat    = sun6i_read_irq_stat,
-> +       .write_irq_stat   = sun6i_write_irq_stat,
->         .src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
->         .dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
->         .src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> @@ -1255,6 +1309,11 @@ static struct sun6i_dma_config sun50i_h6_dma_cfg = {
->         .set_burst_length = sun6i_set_burst_length_h3,
->         .set_drq          = sun6i_set_drq_h6,
->         .set_mode         = sun6i_set_mode_h6,
-> +       .dump_com_regs    = sun6i_dma_dump_com_regs,
-> +       .read_irq_en      = sun6i_read_irq_en,
-> +       .write_irq_en     = sun6i_write_irq_en,
-> +       .read_irq_stat    = sun6i_read_irq_stat,
-> +       .write_irq_stat   = sun6i_write_irq_stat,
->         .src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
->         .dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
->         .src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> @@ -1281,6 +1340,11 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg = {
->         .set_burst_length = sun6i_set_burst_length_a31,
->         .set_drq          = sun6i_set_drq_a31,
->         .set_mode         = sun6i_set_mode_a31,
-> +       .dump_com_regs    = sun6i_dma_dump_com_regs,
-> +       .read_irq_en      = sun6i_read_irq_en,
-> +       .write_irq_en     = sun6i_write_irq_en,
-> +       .read_irq_stat    = sun6i_read_irq_stat,
-> +       .write_irq_stat   = sun6i_write_irq_stat,
->         .src_burst_lengths = BIT(1) | BIT(8),
->         .dst_burst_lengths = BIT(1) | BIT(8),
->         .src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
->
-> --
-> 2.54.0
->
 

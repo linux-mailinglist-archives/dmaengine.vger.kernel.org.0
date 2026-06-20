@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-11673-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11674-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id HPu6LtfKNmrWEwcAu9opvQ
-	(envelope-from <dmaengine+bounces-11673-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 19:16:07 +0200
+	id 01eDJOnKNmrYEwcAu9opvQ
+	(envelope-from <dmaengine+bounces-11674-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 19:16:25 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AC946A957B
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 19:16:07 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA6CC6A9580
+	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 19:16:24 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=fiKs+LqB;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11673-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11673-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=gYh5OeoK;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11674-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11674-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C518B3003336
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 17:16:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EB8353006524
+	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 17:16:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5618E2853F3;
-	Sat, 20 Jun 2026 17:16:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8732224E4C3;
+	Sat, 20 Jun 2026 17:16:22 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355D624E4C3
-	for <dmaengine@vger.kernel.org>; Sat, 20 Jun 2026 17:16:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFB8245012
+	for <dmaengine@vger.kernel.org>; Sat, 20 Jun 2026 17:16:20 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781975765; cv=none; b=bzEPN1/0DlEF7C+W15NNo64yNH8vEZPEGq0uVZnKamcGuJn4TKeJPaagayy73sBiztIVGE+GjGA5lZSzNH6n4eRKxFW+P19Kl2RM+vBonTaL2lNjkkRCpBYEiVtF/7Q5iwyf+aixguTVKrpJ4TWkHmyKSUMVfoiKUBXnm0XdcxA=
+	t=1781975782; cv=none; b=hhIDpqAbBLbjAZn4/zYOFjafz+dg9C5sYMa4kQIpBNr/Vh6Z0//iFIajiHKNevoN5tbDij0zcsQi3Wak3/h5N2pdD85L/G1zD6QySvewxmrB7fQQHlH1QheADmNuplWCQKwuXWmiLBtdVk03nlY8TtwMvxRSRGo472MJmLSwUAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781975765; c=relaxed/simple;
-	bh=5ThALS6BQ+2qRsyrmpR3WREjkH+jmRUGymEDg5QBx7M=;
+	s=arc-20240116; t=1781975782; c=relaxed/simple;
+	bh=T679RIwvr6+pNq7B6Kmtcj1U7hrJLkDUIGBq3abaJJY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=R/TNRbAvId3pWbQVa5UffojFWe005rKFzgcaMPtKNTqNhsYGtImOkBEsK3doz450UFrIU8ppufNgmM1faYYQz0gZR8B02pHKf0g+Efk8e87xZiD2zatRHMbAYgJcQtr4aCDaoihGvoFI0GdoO59CYD32twjbHdqiKAgzKeWcHFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fiKs+LqB; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA6211F000E9;
-	Sat, 20 Jun 2026 17:16:03 +0000 (UTC)
+	 Message-Id; b=bSLMJAVHGD2a7TrKt0mp6vEWXQWVlquXqepXgoeVr85qh6buM+7LnyfRBMjFaxxJckkBQk/bp8Hj/dGojbmsg/vnp0BT8MS83p7G/7IuC6RosUshXGhiJzt2WCIa1zLR46VSsCcl0QHv5+Iceprulle5RN9FYLMf1AARcfVMugE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYh5OeoK; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A90751F000E9;
+	Sat, 20 Jun 2026 17:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781975764;
-	bh=rplyo1ZYY/KCH89C4laPHNYYSr8nG7OXzE/BrHMv420=;
+	s=k20260515; t=1781975780;
+	bh=MO5N//2s25W6GXp/Z6lDi806onbDRvEJiMAC8M8WnVg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fiKs+LqBhjJqy6mBrtuCPivPZWF4wS+CTaIsR307vhFA7pHV3LI9NJ7npjuaR+RI8
-	 fLguPbWciiG2mpw7lVrxjGIyTQdavTirUvzomacesgekgWF8/fYWuid/i+lvM4K5Cc
-	 PuN74sB8Ol8W9K9yW9uV9rFqN3Ic/QSfI7H8oniLBu0Qk4syj9olHNkc6Spw5u7cFd
-	 jPywA2A7qqJ5fAUFJpdGDJs14hPWWP5nlkmSRTikZAYijFE8He+htbDKixtfAIzoOQ
-	 z0yp8Nygo85Xz5AMJT6JBNgq7wGbNZNzFJ15ydiu3SZx6Fdl4dygYoiWwWqx+60XMY
-	 bZTZ8jeID/Z0Q==
+	b=gYh5OeoKp1oJA05namsjYHifVtwXDZl7FdKSjOeaT+4C0M9wO0ZXdsHXmMid4xNnq
+	 dlyaIeR/aiP9x82sTfM4t7P1rW+LT9ZmnXydsNYaWLdexvV4BR2k0hsA6WtZdLg/dw
+	 rlete/blQbGVp0tOlGj2t9/H/IWcMSbmsUnUBpxW5SRfDh235IvHrPLE9lPM/EtuqO
+	 knCz0o6g7asOZdoQ5aiKc/1Q1RCnuMTJojjYkmuosXiCmkkWWR9AKSu2iW61hJgqxx
+	 2hSjYOmPumQQVRA+UEPu+r59hiVPmGRecig0lWgIMzrLIzAczu1xxlrAPVDR2iPKKZ
+	 Q1S/9svzT6QeA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 05/13] dmaengine: dw-edma: Add partial channel
- ownership mode
+Subject: Re: [PATCH v3 13/13] dmaengine: dw-edma-pcie: Add chip flags to
+ match data
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Koichiro Den" <den@valinux.co.jp>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260620170040.3756043-6-den@valinux.co.jp>
+Cc: Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260620170040.3756043-14-den@valinux.co.jp>
 References: <20260620170040.3756043-1-den@valinux.co.jp>
- <20260620170040.3756043-6-den@valinux.co.jp>
+ <20260620170040.3756043-14-den@valinux.co.jp>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 20 Jun 2026 17:16:03 +0000
-Message-Id: <20260620171603.DA6211F000E9@smtp.kernel.org>
+Date: Sat, 20 Jun 2026 17:16:20 +0000
+Message-Id: <20260620171620.A90751F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -71,7 +71,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -79,9 +79,9 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11673-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11674-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:den@valinux.co.jp,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:den@valinux.co.jp,m:Frank.Li@kernel.org,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -98,116 +98,70 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,lists.linux.dev:replyto,vger.kernel.org:from_smtp,valinux.co.jp:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[valinux.co.jp:email,sashiko.dev:url,lists.linux.dev:replyto,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1AC946A957B
+X-Rspamd-Queue-Id: EA6CC6A9580
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
-New issues:
-- [High] In partial ownership mode, `dw_edma_probe()` skips the global core=
- reset but fails to quiesce the DMA channels it owns, exposing the driver t=
-o fatal race conditions if the hardware is active from a prior state.
-
 Pre-existing issues:
-- [High] Teardown order in `dw_edma_remove()` disables hardware and frees I=
-RQs before unregistering the DMA device.
+- [High] Missing pci_free_irq_vectors() on error paths after successful pci=
+_alloc_irq_vectors() allocation.
 --
 
-commit b3810423aa75ab232c8bec54552ca8cb72acd420
+commit 47790820d57ed923e44318e08b431eee242c2796
 Author: Koichiro Den <den@valinux.co.jp>
 
-dmaengine: dw-edma: Add partial channel ownership mode
+dmaengine: dw-edma-pcie: Add chip flags to match data
 
-This commit adds a partial ownership flag to allow a dw-edma instance to
-represent a subset of a controller shared with another OS instance. It skips
-the initial core reset during probe and uses a limited quiesce path during
-remove, while enforcing ownership granularity for shared registers.
+This commit allows PCI ID match data to pass dw_edma_chip flags into
+dw_edma_probe(). It keeps per-device policy in the match data instead of
+open-coding it in the probe function.
 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-=
-edma-core.c
-> index c782eaa12021e..d87791205837b 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-=
+edma-pcie.c
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+
 [ ... ]
-> @@ -1128,8 +1156,10 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->  	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%s",
->  		 dev_name(chip->dev));
+
+> @@ -471,6 +472,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	chip->dev =3D dev;
 > =20
-> -	/* Disable eDMA, only to establish the ideal initial conditions */
-> -	dw_edma_core_off(dw);
-> +	if (!(chip->flags & DW_EDMA_CHIP_PARTIAL)) {
-> +		/* Disable eDMA only when this instance owns the controller. */
-> +		dw_edma_core_off(dw);
-> +	}
+>  	chip->mf =3D dma_data->mf;
+> +	chip->flags =3D match->chip_flags;
+>  	chip->irq_mode =3D DW_EDMA_CH_IRQ_REMOTE;
+>  	chip->nr_irqs =3D nr_irqs;
+>  	chip->ops =3D match->plat_ops;
 
 [Severity: High]
-If the instance is in partial ownership mode, could the hardware be
-active from a prior state (e.g. kexec or an endpoint driver)?
+This is a pre-existing issue, but does dw_edma_pcie_probe() leak IRQ
+resources on error paths?
 
-By skipping the global core reset without calling dw_edma_core_quiesce()
-in its place, the hardware remains active. The driver requests IRQs via
-dw_edma_irq_request() just below this, before calling
-dw_edma_channel_setup().
+Earlier in dw_edma_pcie_probe(), IRQ vectors are successfully allocated:
 
-If a pending interrupt fires during this window, the handler will invoke
-dw_edma_done_interrupt(), which locks and dereferences uninitialized
-vchan structures:
+    nr_irqs =3D pci_alloc_irq_vectors(pdev, 1, dma_data->irqs,
+                                    PCI_IRQ_MSI | PCI_IRQ_MSIX);
 
-dw_edma_interrupt_write()
-  dw_edma_done_interrupt()
-    spin_lock_irqsave(&chan->vc.lock, flags)
-    vchan_next_desc()
+However, multiple subsequent error paths return directly without calling
+pci_free_irq_vectors(), for instance when mapping fails:
 
-Since vchan_init() has not been called yet during dw_edma_channel_setup(),
-does this sequence lead to a kernel panic or NULL pointer dereference?
+    chip->reg_base =3D pcim_iomap_table(pdev)[dma_data->rg.bar];
+    if (!chip->reg_base)
+            return -ENOMEM;
 
-> =20
->  	/* Request IRQs */
->  	err =3D dw_edma_irq_request(dw, &wr_alloc, &rd_alloc);
-[ ... ]
-> @@ -1173,8 +1203,10 @@ int dw_edma_remove(struct dw_edma_chip *chip)
->  	if (!dw)
->  		return -ENODEV;
-> =20
-> -	/* Disable eDMA */
-> -	dw_edma_core_off(dw);
-> +	if (chip->flags & DW_EDMA_CHIP_PARTIAL)
-> +		dw_edma_core_quiesce(dw);
-> +	else
-> +		dw_edma_core_off(dw);
-> =20
->  	/* Free irqs */
->  	for (i =3D (dw->nr_irqs - 1); i >=3D 0; i--)
->  		free_irq(chip->ops->irq_vector(dev, i), &dw->irq[i]);
->  	dw_edma_emul_irq_free(dw);
-> =20
->  	/* Deregister eDMA device */
->  	dma_async_device_unregister(&dw->dma);
+Another instance occurs further down if dw_edma_probe() fails, returning
+the error without freeing the vectors.=20
 
-[Severity: High]
-This is a pre-existing issue, but does the teardown order in
-dw_edma_remove() expose the driver to a race condition?
-
-The hardware is disabled or quiesced and the IRQs are freed before
-dma_async_device_unregister() is called. By leaving the dmaengine device
-registered during this teardown, clients can still issue new transfers via
-vchan_issue_pending().
-
-This would invoke dw_edma_v0_core_start(), writing to registers of a
-disabled DMA engine, potentially racing with dw_edma_core_quiesce().
-Additionally, transfers submitted after free_irq() will hang indefinitely
-since completion interrupts are no longer available.
-
-Should dma_async_device_unregister() be called before tearing down the
-underlying hardware and interrupts?
+Should these error paths be updated to call pci_free_irq_vectors() before
+returning to prevent IRQ resource exhaustion?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260620170040.3756=
-043-1-den@valinux.co.jp?part=3D5
+043-1-den@valinux.co.jp?part=3D13
 

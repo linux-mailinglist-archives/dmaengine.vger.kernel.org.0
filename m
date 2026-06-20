@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-11684-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11683-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 4YsYAHD8NmqGHQcAu9opvQ
-	(envelope-from <dmaengine+bounces-11684-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 22:47:44 +0200
+	id 2WfMLW/8NmqFHQcAu9opvQ
+	(envelope-from <dmaengine+bounces-11683-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 22:47:43 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 453296A9B89
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F01C6A9B88
 	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 22:47:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=XAIRB+iQ;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11684-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11684-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=iniOQ94a;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11683-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11683-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F2A293017250
+	by sea.lore.kernel.org (Postfix) with ESMTP id D0E1E301348D
 	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 20:47:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5ACE1FBEBC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CD84346E7E;
 	Sat, 20 Jun 2026 20:47:40 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E008A18A92F
-	for <dmaengine@vger.kernel.org>; Sat, 20 Jun 2026 20:47:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630111FBEBC
+	for <dmaengine@vger.kernel.org>; Sat, 20 Jun 2026 20:47:39 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781988460; cv=none; b=rElmclHJbxNAYoR2mHDtqFk+2AvtWzee54Bxq56jyTjkIL/jktoilo556+q8Da7x1IAgvCdkkYa3DTH27GHkh1pPPbW28OkPCPhJw5ESsR9JwPVLKGO7+S+IQ7GJ6NPdbTbhjbUU8hpo1uLEGSCoJTEzOP9c3vwHTGHsRh6Ppbs=
+	t=1781988460; cv=none; b=eO8AmJkqEUJUWefaiAGgJjTsEPBvPsnTBR5800pFujehf8HLY62Co/n/0S/FkQBRgXdJgpMeX6Bv/q/GG3KGECl5wZFBJLJ75enTBa/l+G0ew7DLreV9QHFgarXIlVlMKXCDKDCW5j1dOosktSOMGQsBiVSXpARK6rRXGVJYUEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781988460; c=relaxed/simple;
-	bh=D2FazJvQ4DdaBbZqQE6QDyr4aIvd8PN8XprpZ2TE2y0=;
+	bh=4Fcqs4wVBBnLiGIla7alIA5DOoIIyslnZOS/afNPCK4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=aYq7g9Xfr4UEkO0JvG88so+ucTYEvHMBgvFeRa/1lK/BHm/s9/Hdge4ZUQi3ogmbm7MN9MuqAj7UhCgYtl7hUU6NSk+6QFmbRAxOn1qgv076tq+SWU7ba4JenXLIfTqyp3flPklardFHqGTVYxqvO9YpX9anZG5T17CLmx/J5ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAIRB+iQ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 462EE1F000E9;
+	 Message-Id; b=LvrcVzWxmkDj+j1qZE7aq2HZXHFhDryMc6xgTf9nX/KSeNfGnSiFiXMAYx6I5T4X1W76aK5XjRlxB13HYKD2K0HftXViwl9byCT2sianhWonB53NYNyeMyASN0dlw+UX9Qvt5qI8SJ1M322tt3G/ufsYQ4MYrJsZ0Z9fIBVaWSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iniOQ94a; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1BBA1F00A3A;
 	Sat, 20 Jun 2026 20:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781988458;
-	bh=1FFeNlvV9Fef8dVVOsJEUXpFjNZ+SoZvBk36H8T0zCw=;
+	s=k20260515; t=1781988459;
+	bh=w9tGeLqUPX1nri8TSjyc7zuv3YTDzgn9x/ECymKvNCY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XAIRB+iQ1cVcT7u9nU814s7rUaYD7Qe5ElwMGpz/tyVWKxZtbbEJ7MZjz1Uf4I8No
-	 /j1UYuwyZhz4edgzDssnT3FzA6c3SBl4/Z7K5IywwFpDqJNnhj9YUAuGlcpA+8SPTQ
-	 uUT9OhW8VuByQ9SlYv2ZYLgYxj1344kxVY7Vu+ue+HS9u8zCsInwCPD3SWxbl2n3vm
-	 X5Sotd7VbF0xQXTYJ0/QzGxojy7DG5bVpKNaGnj2ACJmFD5M8At84SxI2tqMhRGPF2
-	 qnTG/DgZVGvYmnNZPHNlQ456uo2XblBaREifi9AdTFzUPellN+BE7/cBSeg3wqDX1V
-	 Kpq4RRDLkvDBw==
+	b=iniOQ94ai2K0NyKDnj5rm7++0RQqMi9amI9AWctx2ehtoIN2uUq91SZE0L0mdnpR8
+	 4Pc2889Prg8xzGcmTKIx4LNuT6yKahwLxzvE0xpwZ26jSg5PlIrrGTSOydv3PPgpjZ
+	 lu6whnd8pLbXIuKgCST7wB9B99URrw+aCF1XHdxMMYoQy0UW+CruxMqa0epRhaoP/U
+	 YLI75mn9ts3b1X/myRTxO2EBYR2bnLOK3u67GmCIGz2BocRa+92qIN045Msh1W5iUE
+	 075JnGHYgLPSuXaBdSXwF/jxasqbFV8IMtfv20pKZhhJJp1FQILveb9/fzyMk8ZlMe
+	 czyiLxrmAzdGQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RESEND 2/3] dmaengine: xilinx_dma: Enable transfer
- chaining for AXIDMA and MCDMA by removing idle restriction
+Subject: Re: [PATCH RESEND 1/3] dmaengine: xilinx_dma: Fix channel idle
+ state management in AXIDMA and MCDMA interrupt handlers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Suraj Gupta" <suraj.gupta2@amd.com>
-Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260620203417.4000360-3-suraj.gupta2@amd.com>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260620203417.4000360-2-suraj.gupta2@amd.com>
 References: <20260620203417.4000360-1-suraj.gupta2@amd.com>
- <20260620203417.4000360-3-suraj.gupta2@amd.com>
+ <20260620203417.4000360-2-suraj.gupta2@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 20 Jun 2026 20:47:37 +0000
-Message-Id: <20260620204738.462EE1F000E9@smtp.kernel.org>
+Date: Sat, 20 Jun 2026 20:47:38 +0000
+Message-Id: <20260620204738.F1BBA1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -71,7 +71,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -79,9 +79,9 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11684-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11683-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:suraj.gupta2@amd.com,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:suraj.gupta2@amd.com,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -98,189 +98,167 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url,smtp.kernel.org:mid,lists.linux.dev:replyto,vger.kernel.org:from_smtp,amd.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 453296A9B89
+X-Rspamd-Queue-Id: 0F01C6A9B88
 
 Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Critical] Removing the channel idle check unconditionally overwrites har=
-dware registers in Direct (non-SG) mode, corrupting active transfers.
-- [Critical] Appending new transfers to a running Scatter-Gather chain brea=
-ks the hardware descriptor chain, as new descriptors are never physically l=
-inked in memory.
-- [High] Updating the interrupt coalesce threshold while the channel is act=
-ive uses a partial descriptor count, disrupting interrupt generation.
+
+Pre-existing issues:
+- [Critical] The patch's intended fix is completely ineffective for MCDMA a=
+nd CDMA channels due to a pre-existing bug where descriptors are unconditio=
+nally completed without checking hardware status.
+- [High] Cyclic DMA completion callbacks are permanently starved and will n=
+ever be executed because the cyclic descriptor is moved out of `done_list` =
+before the cleanup tasklet runs.
+- [High] The MCDMA IRQ handler fails to process descriptor completions when=
+ a delay interrupt occurs, leading to indefinite stalls.
 --
 
-commit 59ccde00ae0d672019658b79ee8d2055ebb8fa7a
+
+commit bb06990d374374bf16e72c807c81d0d1449ff514
 Author: Suraj Gupta <suraj.gupta2@amd.com>
 
-dmaengine: xilinx_dma: Enable transfer chaining for AXIDMA and MCDMA by rem=
-oving idle restriction
+dmaengine: xilinx_dma: Fix channel idle state management in AXIDMA and MCDM=
+A interrupt handlers
 
-This commit removes the idle check in xilinx_dma_start_transfer() and
-xilinx_mcdma_start_transfer() to allow queuing new transfers while the
-channel is busy. It also updates the CURDESC register only when the active
-list is empty in scatter-gather mode, relying on the hardware tail pointer
-extension mechanism to handle chaining.
+Fix a race condition in AXIDMA and MCDMA irq handlers where the channel
+could be incorrectly marked as idle and attempt spurious transfers when
+descriptors are still being processed.
 
 > diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_=
 dma.c
-> index ca396b7097427..35b553ee3205c 100644
+> index 404235c173538..ca396b7097427 100644
 > --- a/drivers/dma/xilinx/xilinx_dma.c
 > +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -1580,9 +1580,6 @@ static void xilinx_dma_start_transfer(struct xilinx=
-_dma_chan *chan)
->  		return;
->  	}
-> =20
-> -	if (!chan->idle)
-> -		return;
-> -
+> @@ -1893,8 +1893,10 @@ static irqreturn_t xilinx_mcdma_irq_handler(int ir=
+q, void *data)
+>  	if (status & XILINX_MCDMA_IRQ_IOC_MASK) {
+>  		spin_lock(&chan->lock);
+>  		xilinx_dma_complete_descriptor(chan);
+> -		chan->idle =3D true;
+> -		chan->start_transfer(chan);
+> +		if (list_empty(&chan->active_list)) {
+> +			chan->idle =3D true;
+> +			chan->start_transfer(chan);
+> +		}
 
 [Severity: Critical]
-Does removing this early return cause active transfers to be corrupted in
-Direct (non-SG) mode?
+This is a pre-existing issue, but does this list_empty() check actually
+prevent the race condition for MCDMA channels?
 
-Without the idle check, xilinx_dma_start_transfer() can proceed while a
-transfer is running. In Direct DMA mode (has_sg is false), the code falls
-through and executes:
+Looking at drivers/dma/xilinx/xilinx_dma.c in xilinx_dma_complete_descripto=
+r(),
+hardware completion status is only validated for AXIDMA:
 
-    xilinx_write(chan, XILINX_DMA_REG_SRCDSTADDR,
-                 xilinx_prep_dma_addr_t(hw->buf_addr));
+xilinx_dma_complete_descriptor() {
+	...
+	if (chan->xdev->dma_config->dmatype =3D=3D XDMA_TYPE_AXIDMA) {
+		struct xilinx_axidma_tx_segment *seg;
 
-    dma_ctrl_write(chan, XILINX_DMA_REG_BTT,
-                   hw->control & chan->xdev->max_buffer_len);
+		seg =3D list_last_entry(&desc->segments,
+				      struct xilinx_axidma_tx_segment, node);
+		if (!(seg->hw.status & XILINX_DMA_BD_COMP_MASK) && chan->has_sg)
+			break;
+	}
+	...
+}
 
-Could this unconditionally overwrite the active hardware registers if a
-transfer is already in progress?
+For MCDMA and CDMA channels, descriptors are unconditionally unlinked and
+moved to done_list. This means active_list is always emptied by
+xilinx_dma_complete_descriptor(), causing list_empty(&chan->active_list)
+to always evaluate to true.
 
-Additionally, moving the newly queued descriptor into active_list appears to
-cause xilinx_dma_complete_descriptor() to prematurely complete newly append=
-ed
-descriptors, because the loop break condition is skipped for non-SG mode:
+Doesn't this make the patch's fix ineffective for MCDMA, while also risking
+data corruption since clients might reuse memory before the hardware actual=
+ly
+completes the transfer?
 
-    if (!(seg->hw.status & XILINX_DMA_BD_COMP_MASK) && chan->has_sg)
-        break;
-
-[Severity: Critical]
-Can appending new transfers to a running Scatter-Gather chain break the
-hardware descriptor chain?
-
-When the idle check is removed, we update the TAILDESC register to append
-transfers on-the-fly. However, the Xilinx AXI DMA engine requires SG
-descriptors to be physically linked in memory via their next_desc pointers.
-
-In the driver, descriptor linking occurs in append_desc_queue():
-
-    if (list_empty(&chan->pending_list))
-        goto append;
-    ...
-    tail_desc =3D list_last_entry(&chan->pending_list, ...);
-
-Since start_transfer() moves all queued descriptors to chan->active_list and
-leaves pending_list empty, a subsequent submission will find an empty
-pending_list.
-
-Will this cause it to skip linking its next_desc pointer to the tail of the
-actively running descriptor chain in active_list?
-
-When the DMA engine reaches the end of the original active chain, it might
-follow a stale next_desc pointer instead of the physically unlinked new
-descriptors.
-
->  	head_desc =3D list_first_entry(&chan->pending_list,
->  				     struct xilinx_dma_tx_descriptor, node);
->  	tail_desc =3D list_last_entry(&chan->pending_list,
-> @@ -1599,7 +1596,7 @@ static void xilinx_dma_start_transfer(struct xilinx=
-_dma_chan *chan)
->  		dma_ctrl_write(chan, XILINX_DMA_REG_DMACR, reg);
->  	}
-> =20
-> -	if (chan->has_sg)
-> +	if (chan->has_sg && list_empty(&chan->active_list))
 
 [Severity: High]
-Does updating the interrupt coalesce threshold while the channel is active
-disrupt interrupt generation?
+This is a pre-existing issue, but does the MCDMA IRQ handler properly proce=
+ss
+descriptor completions when a delay interrupt occurs?
 
-The driver updates the hardware interrupt coalesce threshold using
-chan->desc_pendingcount before writing to the DMACR register:
+Unlike the AXIDMA handler which checks both FRM_CNT_IRQ and DLY_CNT_IRQ,
+if a delay interrupt fires for MCDMA in drivers/dma/xilinx/xilinx_dma.c,
+the handler only logs a message:
 
-    if (chan->desc_pendingcount <=3D XILINX_DMA_COALESCE_MAX) {
-        reg &=3D ~XILINX_DMA_CR_COALESCE_MAX;
-        reg |=3D chan->desc_pendingcount << XILINX_DMA_CR_COALESCE_SHIFT;
-    }
+xilinx_mcdma_irq_handler() {
+	...
+	if (status & XILINX_MCDMA_IRQ_DELAY_MASK) {
+		/*
+		 * Device takes too long to do the transfer when user requires
+		 * responsiveness.
+		 */
+		dev_dbg(chan->dev, "Inter-packet latency too long\n");
+	}
+	...
+}
 
-With the removal of the idle check, this function now executes while
-descriptors are actively running. Since desc_pendingcount is reset to 0 at
-the end of each start_transfer() call, it now only represents the number
-of newly submitted descriptors in the latest pending_list batch.
+If a delay interrupt occurs without an accompanying IOC interrupt, which
+happens when the transferred count hasn't reached the coalesce threshold but
+the timer expires, descriptor completions are never processed.
 
-Will overwriting the active coalesce threshold with this potentially much
-smaller partial count disrupt the DMA engine's interrupt generation and cau=
-se
-erratic coalescing behavior?
+Could this lead to indefinite stalls for the DMA client since the channel
+becomes unresponsive?
 
->  		xilinx_write(chan, XILINX_DMA_REG_CURDESC,
->  			     head_desc->async_tx.phys);
->  	reg  &=3D ~XILINX_DMA_CR_DELAY_MAX;
-
-[ ... ]
-
-> @@ -1660,9 +1657,6 @@ static void xilinx_mcdma_start_transfer(struct xili=
-nx_dma_chan *chan)
->  	if (chan->err)
->  		return;
+>  		spin_unlock(&chan->lock);
+>  	}
 > =20
-> -	if (!chan->idle)
-> -		return;
-> -
-
-[Severity: Critical]
-Does MCDMA suffer from the same unlinked descriptor chain vulnerability when
-TDESC is updated while active?
-
-Like xilinx_dma_start_transfer(), appending new transfers to a running
-Scatter-Gather chain might break the hardware descriptor chain because the
-new descriptors are not physically linked in memory to the active list.
-
->  	if (list_empty(&chan->pending_list))
->  		return;
-> =20
-> @@ -1685,8 +1679,9 @@ static void xilinx_mcdma_start_transfer(struct xili=
-nx_dma_chan *chan)
->  	dma_ctrl_write(chan, XILINX_MCDMA_CHAN_CR_OFFSET(chan->tdest), reg);
-> =20
->  	/* Program current descriptor */
-> -	xilinx_write(chan, XILINX_MCDMA_CHAN_CDESC_OFFSET(chan->tdest),
-> -		     head_desc->async_tx.phys);
-> +	if (chan->has_sg && list_empty(&chan->active_list))
+> @@ -1950,8 +1952,10 @@ static irqreturn_t xilinx_dma_irq_handler(int irq,=
+ void *data)
+>  		      XILINX_DMA_DMASR_DLY_CNT_IRQ)) {
+>  		spin_lock(&chan->lock);
+>  		xilinx_dma_complete_descriptor(chan);
+> -		chan->idle =3D true;
+> -		chan->start_transfer(chan);
+> +		if (list_empty(&chan->active_list)) {
+> +			chan->idle =3D true;
+> +			chan->start_transfer(chan);
+> +		}
 
 [Severity: High]
-Does this also overwrite the MCDMA CR coalesce field with a partial count
-while the engine may be active?
+This is a pre-existing issue, but will cyclic DMA completion callbacks ever
+be executed since start_transfer() is called here?
 
-    if (chan->desc_pendingcount <=3D XILINX_MCDMA_COALESCE_MAX) {
-        reg &=3D ~XILINX_MCDMA_COALESCE_MASK;
-        reg |=3D chan->desc_pendingcount << XILINX_MCDMA_COALESCE_SHIFT;
-    }
+When a cyclic transfer completes, xilinx_dma_complete_descriptor() moves
+the cyclic descriptor from active_list to done_list. When start_transfer()
+is invoked immediately after, it preemptively moves the descriptor back into
+active_list because pending_list is empty in cyclic mode:
 
-Similar to the AXIDMA case, using desc_pendingcount here while active might
-disrupt interrupt generation.
+drivers/dma/xilinx/xilinx_dma.c:xilinx_dma_start_transfer() {
+	...
+	list_splice_tail_init(&chan->done_list, &chan->active_list);
+	...
+}
 
-> +		xilinx_write(chan, XILINX_MCDMA_CHAN_CDESC_OFFSET(chan->tdest),
-> +			     head_desc->async_tx.phys);
-> =20
->  	/* Program channel enable register */
->  	reg =3D dma_ctrl_read(chan, XILINX_MCDMA_CHEN_OFFSET);
+After the IRQ handler returns, the cleanup tasklet executes to iterate over
+done_list and trigger the callback:
+
+drivers/dma/xilinx/xilinx_dma.c:xilinx_dma_chan_desc_cleanup() {
+	...
+	list_for_each_entry_safe(desc, next, &chan->done_list, node) {
+		struct dmaengine_result result;
+
+		if (desc->cyclic) {
+			xilinx_dma_chan_handle_cyclic(chan, desc, &flags);
+	...
+}
+
+Because done_list was already completely emptied by start_transfer(), won't
+this loop be bypassed entirely, causing the cyclic notification mechanism
+to fail and clients to stall?
+
+>  		spin_unlock(&chan->lock);
+>  	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260620203417.4000=
-360-1-suraj.gupta2@amd.com?part=3D2
+360-1-suraj.gupta2@amd.com?part=3D1
 

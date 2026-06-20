@@ -1,295 +1,180 @@
-Return-Path: <dmaengine+bounces-11677-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11678-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id XI/KIBzNNmpPFAcAu9opvQ
-	(envelope-from <dmaengine+bounces-11677-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 19:25:48 +0200
+	id dX/gD1f5Nmr8HAcAu9opvQ
+	(envelope-from <dmaengine+bounces-11678-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 22:34:31 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70C116A95DE
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 19:25:47 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 748456A9B25
+	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 22:34:30 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=kjQZtOwx;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11677-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11677-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=amd.com header.s=selector1 header.b=D1j2GU+n;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11678-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11678-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=amd.com;
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 58EC63001F81
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 17:25:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 161F2301779A
+	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2026 20:34:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1DC32E62B7;
-	Sat, 20 Jun 2026 17:25:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42247245012;
+	Sat, 20 Jun 2026 20:34:27 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010024.outbound.protection.outlook.com [52.101.61.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AFE2EC08C
-	for <dmaengine@vger.kernel.org>; Sat, 20 Jun 2026 17:25:40 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781976341; cv=none; b=CL7K5xZ2v+jgGCuk0+N3SFtZBGk4A6A8elrm2vs5d5AaPGnC9PkYi0e8IRoLuCsW7tjKG4IMbDF8tgs45v2Lj7jboYgLDfvhsgHt5zZbxQXQafDMEUjHw4r8F/qxtl1qVc3gMnWGUO8An5zdeanE8zPlUgyqWvy+ZVTJ6RVj4ek=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781976341; c=relaxed/simple;
-	bh=1hpMkfmqk/WpEGfwf6h5Pxgc9nnq5kaZ0y7q7/Wukvg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=qGul+3miHFCUh0i+f+jfu8ZzGgL7PhG1nmfEl+0qJRf0QQhqhuOZ8NykcRHp0J3OxbgbHfbgL1Tp2cZKSHjJLc9upPBsdBgxqRV5Y5N97i7z+K3X34Aeena26yjhXx1osQlcsQz6iDdWwyBYX5UOQ5Kh4DhicSz9qwEFWcOfVvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kjQZtOwx; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD20E1F000E9;
-	Sat, 20 Jun 2026 17:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781976340;
-	bh=BJlXFCbMZDOxEyQxINSI6ZPJZ6mbw2VLJhUvPfLzN20=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kjQZtOwxrBFvpJcl6OFx7HwqnQCijGrlsQEHJjsyDPdPjz864dd78x1uKdvaDIzfr
-	 XviUEduP7cprLNDi7HTdxd39r6511/GYfqPXTHWXQM6IB1J/RG569HrvBCl0P1oXcI
-	 U5OYU+Z5PBi6PuJl8Gr3TPC9PCzbDguAof7+2rXOokD5Nu+Hf9NRG3ZE9H2xXA/b3X
-	 ALxs4zKNuZDppEEk1zHG/mYU98r3F96OdhZamgRGXE3z7Mg1PFVo94s+MVC90Dta/O
-	 JFwX6vV2t5fnWbbIS1N0CX3BPqweVxfm3DFbU/sulxMBB0xXxTgxKGjQRq32QCsogn
-	 tmkDRIghXoYYw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 03/13] dmaengine: dw-edma: Add delegated channel
- request helpers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Koichiro Den" <den@valinux.co.jp>
-Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
-In-Reply-To: <20260620170040.3756043-4-den@valinux.co.jp>
-References: <20260620170040.3756043-1-den@valinux.co.jp>
- <20260620170040.3756043-4-den@valinux.co.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 20 Jun 2026 17:25:39 +0000
-Message-Id: <20260620172539.DD20E1F000E9@smtp.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED713B7A8;
+	Sat, 20 Jun 2026 20:34:25 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781987667; cv=fail; b=gBOspQHZN+IFlzczjaT5sPENOmiX1tMZVl94ApH3xlQkDk39vEmC/v14e5hZyzmgLoYtMAQr9MUqSVHmGCV97NdIBFgRxFEeIJrfIDJsaMg2Q40M4ELh9lL5YPKSdBUhd+4d+brv9HQ9/r37hJDZ4lNaIHBM+PQzihw+uCzo/3U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781987667; c=relaxed/simple;
+	bh=E+IvEeITYLr4q7zeZGsqEZre2zontyZ2v8RQevvuAYM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dtfGzeFXpK5BnbUGXohYR48qeay++hViJjDgb0S5i9PdLVhXYHTzLnv27humXwWZ8cDv6m7ijExYYSzL7L6UIOGfe6C4QDDSsqMKRD3eWER59GP+rrEUEymSBpTOOMfukV5iVYk2WC68lO9Vv+GkZtE2uV4VelX3AQNPa569hMY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D1j2GU+n; arc=fail smtp.client-ip=52.101.61.24
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LoNSVw39mRRWyEL+4Tod8HXepeiAdJ74LE9MsJxMIZR+c+YXoctLIVXblEMrD+q3m6P7TZVbjHmmlfn+GK6d6dLTs/9KXJkd7jJ33Ul2Q5n7k7sthkrn/ylEf8729cICtVuf3bDA8vKMUlAvnB+VF2z1vAnNgOFrIvvKm8pqLKtQGRH1cGGg4Lm6OEAUy+mNj8SRc1qzztmfcz6gGka6PnCxW4l6g/awcRUwHAYPWwjywyEWvEdKO+SZMwgpIRFMX1ye1ixL9oq8/J3sfW0I6l6BGVGQagdwuVXn5/o8PNJGoxwpoy3OCI1izD0kEWYswrPFahqT24G4HwV86r4B8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gYheX4moOhTQnQaollOkYdZ+dexVEJz0LGsTVIaj3dg=;
+ b=iTp8mISYnZz8uU3/DkDepBpAFNbLunVoK6WPLRo8JigZtEQQjGnw0ZPD0ttC0euVNfpikzQJc3mq5aI0YmiSA44oyDx1x46LXAtaMN53LHh1qgmrPRq/sCFYbNtr68LiiV4pgjmI2jX0pjOWRXvK9129oqOBF3V0ft9567110nvM1LW6IcZTU/NOXiaz8BRNdPkqUAY2iu3tqQPXRl/p9/Y2weCZ38I78X8rR1wU8Y/vRoiyVK3i31wH3tJS6RHiHUeQoJ+kMW9kpVv2MvBENHTajqkvBDIQY2BHvPAIqgpL/BdMBEdaBTAtVDhU9KlVAELeWrdIvLIcp+zG0dy4Xg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gYheX4moOhTQnQaollOkYdZ+dexVEJz0LGsTVIaj3dg=;
+ b=D1j2GU+nXywyDKCLYl/KJ6I/agYbOpzeF7+xWzhMhY3U0YShCES2pk/L+Fl8tePbGqZnc4lsyUDoEYvf05EospiWjumHXeATAVNDy3y8GwRMoOlyyKma4kVWqxKTMQOcLqVyM3NsMRIaxUqyBy3X6qvR15JhGc5a9DAAQt6IuYQ=
+Received: from CH2PR04CA0025.namprd04.prod.outlook.com (2603:10b6:610:52::35)
+ by DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.18; Sat, 20 Jun
+ 2026 20:34:20 +0000
+Received: from CH3PEPF00000013.namprd21.prod.outlook.com
+ (2603:10b6:610:52:cafe::7b) by CH2PR04CA0025.outlook.office365.com
+ (2603:10b6:610:52::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.139.18 via Frontend Transport; Sat,
+ 20 Jun 2026 20:34:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CH3PEPF00000013.mail.protection.outlook.com (10.167.244.118) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.0 via Frontend Transport; Sat, 20 Jun 2026 20:34:20 +0000
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Sat, 20 Jun
+ 2026 15:34:20 -0500
+Received: from xhdsuragupt40.xilinx.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
+ Transport; Sat, 20 Jun 2026 15:34:17 -0500
+From: Suraj Gupta <suraj.gupta2@amd.com>
+To: <vkoul@kernel.org>, <Frank.Li@kernel.org>, <michal.simek@amd.com>,
+	<linux-kernel@vger.kernel.org>
+CC: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<srinivas.neeli@amd.com>, <dev@folker-schwesinger.de>
+Subject: [PATCH RESEND 0/3] dmaengine: xilinx_dma: Fixes and optimizations for AXIDMA and MCDMA channel management
+Date: Sun, 21 Jun 2026 02:04:13 +0530
+Message-ID: <20260620203417.4000360-1-suraj.gupta2@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF00000013:EE_|DM4PR12MB6254:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3531ae58-d103-493b-2146-08decf0b4ec5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700016|23010399003|1800799024|376014|3023799007|18002099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	YpDAE90PWAalLanh1usa4XKzRE+ud+4jQCrOnYrncCdc0vJ1lP66U0347H6KlVA2AP8UjK9A1tGOLqLqvdQx6YrMGFnwK4AQAcULtYDU9/Cf5LPkpS7nlkOd/y2+TYwrBwLvHFvILX7v3rdNLBgqyfMtwWtgzzucNvO952Uxfb5RKjZhdCvlGNBo5pJyda6lYLa27L/BjtEFFkqDxNK805928xX6dSvcyY50dQPQTYCwY4QLKL0P9z0JR8XmpL5gsWV4qAfIUhNQnNiJq8iJ4yDoV5O7SmWAqDBPe6iDBfM8IlvtRHfp6GqB4wGMV5RenuUs2IuoIqaGmH14/iXj+OSu2ibzyqtPfGmDGSUA4iYxnKjc1gMNj5XsIj92RX9OEEcqNg3iI0vtfcatoHeZ3C4Zy9W96YL2asnDMUnk1VHBv6TO3/nN88y3o8DBHpAyPuCz02nEmBHHGwAvQ4sWt63zKxJcszwcfNtHR+t/PnLOjiGpVLoOA5QOaHdKQaNhblR12aLUOPH8cFXTjpTO29j3Gd5UCE+xNW+I14ghBUJztNPMP/Sl6UjdDOooRtxNtuG7R7oWzUuGvniZgW2+t9szWWdmybKKKLPoKd1+Ssp8ZbO6anWUGZfGqtFQdJnjtsTapA2b+UA9qBPygKxB19g72sBQxg11Q7OaOAFbPwejdSg/yl8Hxt4a5hluOJfX
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(23010399003)(1800799024)(376014)(3023799007)(18002099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	p9U2wnc/7L7aJLrZDM49DlJzttsYDYLoyISs6Bs9yBfHEh+HuoEuvPvoQB4ptqQFkyh2w0Fn99ry0FfQy5Vn1Ircr2LjE8LCVJH0eaEUhv335nIE3qlaUWktjHx8pRPgKy7UFpHQkFBhd9bpJdxdUvihm6Ozvn4iwxc+lQBTOXll/I3+LahAi7w8nef+lLkyW3Vu4BZZNPqsSilIURy0gLJW/Y0qFcZ9yVpxo4iXCCbTNWISkL78WiqraMOqByl9Ku9jiOgvoFcwnZOlE+dqB7wKWA976pgMNU0/c4LHR1hRKsNmGBfFAHcP4R2/seP+1m5hlzTFbYZ7HMooG7KS99p8ic7T0HHJna/LU87J9B5lcoRJIiPhK+E8PhfS65iihmK55Q3lxOPBqOjJ2owzqtXZoUvPRTppeGCKBZpDeuzF7YhHTnPTxJR02FcZ3cj3
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2026 20:34:20.5988
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3531ae58-d103-493b-2146-08decf0b4ec5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF00000013.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6254
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11677-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:den@valinux.co.jp,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ALIAS_RESOLVED(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11678-lists,dmaengine=lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[suraj.gupta2@amd.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:michal.simek@amd.com,m:linux-kernel@vger.kernel.org,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:srinivas.neeli@amd.com,m:dev@folker-schwesinger.de,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[suraj.gupta2@amd.com,dmaengine@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	RCPT_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[amd.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ALIAS_RESOLVED(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,amd.com:dkim,amd.com:mid,amd.com:from_mime];
+	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sashiko.dev:url,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,smtp.kernel.org:mid,valinux.co.jp:email]
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[8]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 70C116A95DE
+X-Rspamd-Queue-Id: 748456A9B25
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
+This patch series addresses issues and optimizations in the Xilinx
+AXI DMA and MCDMA drivers:
+1. Fix channel idle state management in the interrupt handlers.
+2. Enable transfer chaining by removing unnecessary idle restrictions.
+3. Optimize control register writes and channel start logic.
 
-New issues:
-- [Critical] Delegating a channel to a remote host fails to mask its hardwa=
-re interrupts locally, resulting in an unrecoverable infinite IRQ storm and=
- permanent IRQ disablement.
-- [High] Calling `dw_edma_release_delegated_chan` with `quiesce=3Dtrue` for=
-cefully disables the entire DMA direction on eDMA v0, disrupting all other =
-active channels.
-- [Medium] Lockless modification of shared hardware registers `int_mask`, `=
-int_clear`, and `engine_en` in `dw_edma_v0_core_dir_off()` races with chann=
-el start.
 
-Pre-existing issues:
-- [High] `dw_edma_device_terminate_all()` accesses and modifies channel sta=
-te locklessly, causing a TOCTOU data race with the interrupt handler.
---
+Changes in V2:
+- Apply similar fixes and optimizations to MCDMA as well.
+- Expand the 1/3 commit description with when the described issue occurs.
 
-commit e6b7ee23ebe516f403f0d3278b28713356c19ade
-Author: Koichiro Den <den@valinux.co.jp>
+Suraj Gupta (3):
+  dmaengine: xilinx_dma: Fix channel idle state management in AXIDMA and
+    MCDMA interrupt handlers
+  dmaengine: xilinx_dma: Enable transfer chaining for AXIDMA and MCDMA
+    by removing idle restriction
+  dmaengine: xilinx_dma: Optimize control register write and channel
+    start logic for AXIDMA and MCDMA in corresponding start_transfer()
 
-dmaengine: dw-edma: Add delegated channel request helpers
+ drivers/dma/xilinx/xilinx_dma.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-Endpoint functions that expose endpoint-local DesignWare eDMA channels
-to a remote host need to reserve exact hardware channels and hand
-interrupt ownership to the remote side before publishing the channels.
-This commit adds helpers to request hardware channels through DMAengine
-and switch the interrupt routing after reservation. It also adds a
-matching release helper that can optionally quiesce the channel.
-
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-=
-edma-core.c
-> index 7a24248b84e94..ca0504eac1fca 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-
-[ ... ]
-
-> @@ -1192,6 +1192,87 @@ int dw_edma_remove(struct dw_edma_chip *chip)
-> +static int dw_edma_delegate_chan(struct dma_chan *dchan)
-> +{
-> +	struct dw_edma_chan *chan =3D dchan2dw_edma_chan(dchan);
-> +
-> +	if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-> +		return -EINVAL;
-> +	if (chan->configured || chan->status !=3D EDMA_ST_IDLE ||
-> +	    chan->request !=3D EDMA_REQ_NONE)
-> +		return -EBUSY;
-> +
-> +	chan->irq_mode =3D DW_EDMA_CH_IRQ_REMOTE;
-
-[Severity: Critical]
-Does setting the software irq_mode to DW_EDMA_CH_IRQ_REMOTE without updating
-the hardware interrupt mask leave the local hardware interrupts enabled?
-
-If a channel was previously used locally, dw_edma_v0_core_start() clears its
-interrupt mask bit in the hardware int_mask register.
-
-When delegated to a remote host, the remote host programs and starts a
-transfer, eventually asserting the DONE or ABORT interrupt line.
-
-The local interrupt handler dw_edma_v0_core_handle_int() checks the channel:
-
-dw_edma_v0_core_handle_int() {
-        ...
-        if (unlikely(dw_edma_core_ch_ignore_irq(chan)))
-                continue;
-        ...
-}
-
-Because dw_edma_core_ch_ignore_irq() returns true for a remote-routed
-channel, the handler skips clearing the interrupt and returns IRQ_NONE.
-
-Can this result in an unrecoverable infinite IRQ storm and permanent IRQ
-disablement for all active local DMA channels?
-
-> +
-> +	return 0;
-> +}
-
-[ ... ]
-
-> +void dw_edma_release_delegated_chan(struct dma_chan *dchan, bool quiesce)
-> +{
-> +	struct dw_edma_chan *chan;
-> +
-> +	if (!dchan)
-> +		return;
-> +
-> +	chan =3D dchan2dw_edma_chan(dchan);
-> +	if (quiesce)
-> +		dw_edma_core_ch_quiesce(chan);
-
-[Severity: High]
-Does calling dw_edma_core_ch_quiesce() here destructively abort all other
-active channels in the same direction on eDMA v0 hardware?
-
-When dw_edma_core_ch_quiesce() is called on v0 hardware, it maps to
-dw_edma_v0_core_dir_off():
-
-dw_edma_v0_core_ch_quiesce() {
-        ...
-        dw_edma_v0_core_dir_off(chan->dw, chan->dir);
-        ...
-}
-
-Which then forcefully zeros out the global engine_en register and masks
-interrupts for the entire direction:
-
-dw_edma_v0_core_dir_off() {
-        ...
-        SET_RW_32(dw, dir, engine_en, 0);
-        ...
-}
-
-If other independent software clients are actively using different channels
-in the same direction, will they be disrupted?
-
-[Severity: Medium]
-Is it safe to call dw_edma_core_ch_quiesce() without acquiring the dw->lock
-spinlock?
-
-dw_edma_v0_core_dir_off() performs lockless writes to shared direction-wide
-registers like int_mask and engine_en:
-
-dw_edma_v0_core_dir_off() {
-        ...
-        SET_RW_32(dw, dir, int_mask,
-                  EDMA_V0_DONE_INT_MASK | EDMA_V0_ABORT_INT_MASK);
-        ...
-}
-
-Concurrently, another CPU could be running dw_edma_v0_core_start() for a
-different channel in the same direction, which performs a read-modify-write
-on the exact same int_mask register while holding dw->lock:
-
-dw_edma_v0_core_start() {
-        ...
-        raw_spin_lock_irqsave(&dw->lock, flags);
-        tmp =3D GET_RW_32(dw, chan->dir, int_mask);
-        ...
-        SET_RW_32(dw, chan->dir, int_mask, tmp);
-        ...
-}
-
-Could this data race result in lost updates to the interrupt mask?
-
-> +	chan->irq_mode =3D dw_edma_get_irq_mode(chan);
-> +	dma_release_channel(dchan);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_edma_release_delegated_chan);
-
-[ ... ]
-
-[Severity: High]
-This is a pre-existing issue, but does dw_edma_device_terminate_all()
-evaluate and manipulate channel state locklessly?
-
-dw_edma_device_terminate_all() {
-        ...
-        if (!chan->configured) {
-                /* Do nothing */
-        } else if (chan->status =3D=3D EDMA_ST_PAUSE) {
-        ...
-}
-
-Concurrently, dw_edma_done_interrupt() handles completed transfers and
-manipulates the exact same fields while holding the chan->vc.lock:
-
-dw_edma_done_interrupt() {
-        ...
-        spin_lock_irqsave(&chan->vc.lock, flags);
-        vd =3D vchan_next_desc(&chan->vc);
-        if (vd) {
-                switch (chan->request) {
-        ...
-}
-
-Can this lack of synchronization corrupt the DMA channel's state machine,
-leading to leaked descriptors or failures to properly abort ongoing
-transfers if terminate_all races with the interrupt handler?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260620170040.3756=
-043-1-den@valinux.co.jp?part=3D3
+-- 
+2.25.1
 

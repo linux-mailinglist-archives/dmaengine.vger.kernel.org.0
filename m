@@ -1,245 +1,221 @@
-Return-Path: <dmaengine+bounces-11685-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11686-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id RJq4JMX2N2rYWAcAu9opvQ
-	(envelope-from <dmaengine+bounces-11685-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 16:35:49 +0200
+	id eEBWOOhaOGqqbQcAu9opvQ
+	(envelope-from <dmaengine+bounces-11686-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 23:43:04 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76FD56AB15A
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 16:35:48 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BE576ABA11
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 23:43:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=fail ("body hash did not verify") header.d=valinux.co.jp header.s=selector1 header.b=hTfmCaXm;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11685-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11685-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=fail reason="SPF not aligned (relaxed)" header.from=valinux.co.jp (policy=none);
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=HnC3Vhkp;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11686-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11686-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 782FC3013B50
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 14:35:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 218BC3009152
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 21:41:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F2D136F429;
-	Sun, 21 Jun 2026 14:35:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B020B371880;
+	Sun, 21 Jun 2026 21:41:31 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11021126.outbound.protection.outlook.com [40.107.74.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F38F368D6F
-	for <dmaengine@vger.kernel.org>; Sun, 21 Jun 2026 14:35:41 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782052544; cv=fail; b=CVnBoUCShg/2dr+JuSoB8i2uKEiKdXAiYOrtoYB5dW32/591YxJi7wU/CtTXNKKuhm+cUeQO4B70vzS8zT6BlbdGEpD5vdhobk9c6qzbZ3S125ICj01itncE09pNIp/LNYeQa0SZO+ow0WozEYHCtLkIyfoweHL7zoy/4F8wh6w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782052544; c=relaxed/simple;
-	bh=ao1cMbF7isrVCp/TzGurklCyHAihXJVCcKjWXK9Bj9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dqCfJoKWAjk1kK3yadEFfWmemzhYtUboIZyhbE3I3nvBBfrGVhoLadxUM6VAqwJP+LYzO+w0thjqiXLCugwECPFlYq3o5UXgCUKRPPaMROjGXWkCESeot/VAWFShOw1QI5pzrnZEzuSysLABq/uXvq84/2Ds0Qaf2Pd2wP6uXCk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=fail (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=hTfmCaXm reason="signature verification failed"; arc=fail smtp.client-ip=40.107.74.126
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YjKHJR+cGteiLrSH7SkrI0DfgsEVr5o7GoWnKC9IosTt4FagxIrB/P9rh9AOiG85N6dsb3Ii/JtEJXSjeV0PDS1hH7b4PlUnm1jNsJWU15+QyO43G/rRXMYKqaFHHi3WjLrymdvLy7MvojU2oUVd+xzyWyI280VAPfjKCPgrYR0rYgYY7PsEK80vvnkD3BldcC7J5ISCfRXCzpgX33ZJNPwlTwxSkfflH1cYK/nQ32kk9ayykWn1yniBZhOwyFQCDjLF6e/u+xU3lJBzMLSwZicFIii0dkVzT89KMURC+bMSr8nRd3wSDhWhG1JAqZUUqKVpsDRK6/zqafh8oAG0nQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pMVcVKHqJkfI4vW666Rhv585VAoJitcO0Eq+zytx/9A=;
- b=R+lHZ1I2gTkXay2JHp6qIZQrlzg/yKKjwomcwIVSZCnDfBulgkP4gtCOXRNIhK7wGt1aNGDi5+G7fkqF6fHETYnfI7gZaQPDPgJQ6DAYYzPMbQ+Az2aPHTvuFjDbeohZgUdkZmwPQ99R17whdl4LE96B11JGHbeOPIr3plg75yv5bj3eV4nY5kQA82nM5di7oy45f0wZbCc87pOOsKw1ASCWyUeCB+3IaKi6bRLOZUrZ6e6jORr0oMqye3kilyvd2sPZF/P6HaGonXz3M3ibvsOUFlKBwPYoXX9TO2tT0uNcZoaiHiKG1eijoJv+1nCoTm0nPOxrCQHMKIKaiR4qvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
- header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pMVcVKHqJkfI4vW666Rhv585VAoJitcO0Eq+zytx/9A=;
- b=hTfmCaXmG+AlWNstfO2KYBRCyD2NnNNVWx6PrLh++Zaahadhn9+Ru6qySjjG1mAAiqUhGpwq5EgwkO9EDZq6OekaKY7JcwPDcT1Zqbxj92H+JRMZYphEHtRmfc3geEnTOQEXvWLyDEX20jwwh1DGgp0/r8HtCcwAInxJBy0ccgQ=
-Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
- by TY4P286MB5774.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:2c7::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.19; Sun, 21 Jun
- 2026 14:35:35 +0000
-Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.21.0139.018; Sun, 21 Jun 2026
- 14:35:35 +0000
-Date: Sun, 21 Jun 2026 23:35:33 +0900
-From: Koichiro Den <den@valinux.co.jp>
-To: sashiko-reviews@lists.linux.dev
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v3 01/13] dmaengine: dw-edma: Add per-channel interrupt
- routing control
-Message-ID: <srhpqgi4vitjhbehchlq7ri6yti6ghvlxjzszxad2lmfvr6vz4@aqfnmcew3zlu>
-References: <20260620170040.3756043-1-den@valinux.co.jp>
- <20260620170040.3756043-2-den@valinux.co.jp>
- <20260620171353.436AE1F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260620171353.436AE1F000E9@smtp.kernel.org>
-X-ClientProxiedBy: TYCP286CA0031.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:29d::6) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:405:38f::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F5C2D73B8
+	for <dmaengine@vger.kernel.org>; Sun, 21 Jun 2026 21:41:30 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782078091; cv=none; b=IwseV7tJaI1wkxqSfkpKuxKRU2LGDXb6pCuNzbNVgMZqg8GO7gFP5jdt+JAlD+LcEDuhHi8SLWlSz5d3LJ3Z5cd+13Q8KBw1amPq88Z8NcsGpVSdMdUqmjNwpXCEXzIBjLf/hXdzOTAF7B43CUDe59L2szCxSKP04nhDBXrm1vk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782078091; c=relaxed/simple;
+	bh=AaVqPSi3j+R9XLCyLLFs+E/l+JBQxT8UcVIvlLB1NRI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=V9sAHtUfu/Nxh1rVclAcCHKAnKSiV87QrXMWE11SZ2n2xQeguqdPh5odKChGaJ50xd6v3PNi6j2U/Ltn41qDr5M7k6LGRfxuflEtsEyZfJY9PgXFOQuLwOeoOA/ET3fmUa7aL4yvl7MYnbfvrC/ROzPFYrxGRAJOQegLkVkAGc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnC3Vhkp; arc=none smtp.client-ip=209.85.219.49
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-8df7a3a6fc3so27901526d6.0
+        for <dmaengine@vger.kernel.org>; Sun, 21 Jun 2026 14:41:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782078089; x=1782682889; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/15cxm0Pr8gCTXCRGF6ew4X49c7fRxCykvCsRiSVCxw=;
+        b=HnC3VhkpgPgaPK1PEVJZa39e3ETSbx3b1HIO4isI0deWEf/TAPiyP3pq5qJlyErn8X
+         amBobWDMM7ZYqfb04ItfXbQSIjiTxpP+vBH7CXC7/h5h7Kq/vILfTo9smHJmS3kofPlP
+         /h85AD+YlkD3xXMa3iX6Xzuzqjw0mjbiU7ZlJ8v9ldkhNpaBfWvqS5TdwsL4TzHp2+46
+         hmQn7rB4j9ZoLbZrh5DBQwINGnPC+tH9pC9bFaiLQ56igkv4dNKo7tti3K/Pc/uI5c3J
+         ybBdqQlx5W81GB9bFyFuMcN9T0DSrcVptAhvenK5PG73s+QDQXC46nhap8RS7Yr1UfK7
+         p5PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782078089; x=1782682889;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/15cxm0Pr8gCTXCRGF6ew4X49c7fRxCykvCsRiSVCxw=;
+        b=Ha+Rj+Z0ifnU6HTSpfteXTOLs4HlW1zC2FMK8Pkak+DGxcisFjuXSJv8UKqIXp2/J5
+         FKC5PBxbvZ+1dD+B0fdCT7a34E2L5Fiw+9T3IXqQNcxhg2sD1qj4hPlDYEJ3KS42PKpZ
+         h5MQva+78w9I/BzFfS4vVZcpXiSSBW90e1csoBVIPnvDag+cVRpvgB1XCDfUc0CALoRV
+         SJxlVtQGzMUJlGBNdAKYk6RJ4gfv5Tr/Waw+VB04j1BnoBD4/scOq57ldLngGVR8CUYX
+         vldN8ZRIxYflpJQBjx4uPkZ22CgHa1wn9Cmc+uKAB1pRyGR95VmvzbdsKI0oySQbDoMo
+         ijLg==
+X-Forwarded-Encrypted: i=1; AHgh+RqarpsCDCZn3v7QPRrImMXQauPIIFaq0dKdOnPxnpApTVTwffB49y9I4lS4ZlIC2cgLSdulhz2k5OA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytGw940Yrrir7ug2QhGgYEczdDDrpONKx99U0nGeynNzzpLiQL
+	NSmbME+PaefiqBdtfxNLUkyU+mKsCWLypwugUy8Vf5BlgFXxyn3UwheF
+X-Gm-Gg: AfdE7ckibkxR298rAjBNZ6F6ffyRZCoVQJ1HKKSm04J1YD9jEKGsbIq79P2P4jRzRnt
+	IHhpwXpHDZ/FW1OlLdgU7oR8ATNX3K6BV4NmJgpsMiJKkHOQYxyOChmC9JfVhFNfp6hz2n/2Nk8
+	eDmRAwK2fezhsk4XsJOI9lNGOLuvH5J2ZoelJxu7q4/GqufEx79RGiwyKovvBbGiihPvzgVyNfQ
+	ee7cnrDFSp8LBHQuqBfxpZ6UuCJzEVeNR8zepgymAim/MEUBwbsselYQuQMdxOhmaj0LGNkG8MW
+	x/pL+w3FwBbXRtbwUpknaVpqhW40pe0Oz4p/0nE9TJschY7bGfx+ugSeutoK0whlyvmnIK/CuyD
+	3lqZhrDjRi01AwFXEUeu4j2p9Gud8pHM32cyZLOfAAcO2RDqEzUxF5C/O9nH+d5RNGLVorCOgmj
+	9r+R+GD45XxceS2w==
+X-Received: by 2002:a05:6214:5182:b0:8ce:e29b:6a91 with SMTP id 6a1803df08f44-8df927c4decmr137731436d6.42.1782078089211;
+        Sun, 21 Jun 2026 14:41:29 -0700 (PDT)
+Received: from [172.17.0.2] ([138.28.231.64])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8df81cde9ecsm76274676d6.24.2026.06.21.14.41.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2026 14:41:28 -0700 (PDT)
+From: Yuanshen Cao <alex.caoys@gmail.com>
+Subject: [PATCH v2 0/5] dmaengine: sun6i-dma: Add support for Allwinner
+ A733 DMA controller
+Date: Sun, 21 Jun 2026 21:40:53 +0000
+Message-Id: <20260621-sun60i-a733-dma-v2-0-340f205891cc@gmail.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TY4P286MB5774:EE_
-X-MS-Office365-Filtering-Correlation-Id: b5434c95-93bf-418d-4eef-08decfa25ae1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|366016|376014|23010399003|1800799024|6133799003|3023799007|56012099006|4143699003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	/1aS6phgtEDY6veayhvrMrV0WFuknfolAtlJ7Q2eWQJ6A6AClHgQCXPVDNJ1oqleZM4dHsd0EN1XZkuNED9BSqMkYEhQcUWlgCSH3/pblAmA0aYW/Lcq1V1/KHS3kdlt5uEY9MbP3yGxRZXghGFSHkStTfV8oCUgq8fPdLjoPRy3oJ07WcWyd/a6tNdDKnqJg0tq77UI5ZfjXFVzGed2fPLSW4yu5+uadDPrXIpZ7G3UTL7aRHcu2ZKdLbl+DNx1M3NbaNk7qzppFf87MtzxWrrvxG/z7M0+AcxaVHLTQgjvTgYHw/PQQOJMJ85xJDpTL7zNNVnI1sl3lRtqw+6GmuGGEbUrpMvF5aAOJ9BPRBxQVgguk7+LzTm+bo/H3Ylu+gmmKyvqHfvkNj117bc8qLTfQkMrld98VhwTeBdK20/vCRIO8edtL9QVIKkNBw9TSCZZpgPFbFJHmU/Dx8PvvCdyTh5qzP2fA3PuPh1//XWAeDm7q/FFnmatq2g6cbFfagWfDGlw8iOIQoxR5wdcCqpta0gv1fPvMULokBQ0esYdrfF3MhzyYEwVz3ksf2aMmXeXIjmCOCmVMXjNIwPlPAeG2YDPZ0mGE7fJ4xLX6UI=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(376014)(23010399003)(1800799024)(6133799003)(3023799007)(56012099006)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?dEx++/QkoTtcsjxXpVEaLmhlU3QIpUrGIIxS5aOrnEyO1HHIIBcVsQ+/ZR?=
- =?iso-8859-1?Q?pK9j3IrpOjQQtMK5n5C32TtDloSS/sVb3Gyaqs8bHO8UaUN+MahaWEnJHI?=
- =?iso-8859-1?Q?C6MS0B1bW4LLV6an81+ZcPnoalbhqhbnWlRh6dPGhjxpF5bJf6Yr4CYrdY?=
- =?iso-8859-1?Q?si64tz2+/QsdCdLTjzW2KqQqva9t4hOqjIADJnU41QjTMrpJcXyFCq6+Js?=
- =?iso-8859-1?Q?3m0qgV+Tb6S6adJsM+cfo4uek+X8YGc0cEZRcnz6CC3jzsvSPDtNibU1Br?=
- =?iso-8859-1?Q?vOa2a1aw823hwVpIP/+NVUTNLHNZ0D1+7pHhTVaEzTxxrOO2dCg9Kd5a69?=
- =?iso-8859-1?Q?/X31Lf8YphYmUjxt3Vh4BOljr9sA4uQCgTttgC7uqAoaUPdyEj4v6fQv6t?=
- =?iso-8859-1?Q?DCRzRrkU5k2S55bW+r0L6Oz9Z+pl27puEuYtJw6HOcofqPWmJZHFKUH6IZ?=
- =?iso-8859-1?Q?FO6DApIRfDlFse3B3ln76BzBGlKbWs7/zkgi7Lub0LPqiS3czXTS51Ozcb?=
- =?iso-8859-1?Q?0dCM2QVnluFBJ9Hul4jbEGchX551FMd55YGD6xIibCSwvixv1FUPDF41Sr?=
- =?iso-8859-1?Q?a6pBPBtE58LW2rws4feOmBcuRYAdwkNcT41mB1KNVyW/lRyI1/IVQiUqDC?=
- =?iso-8859-1?Q?A0/wd9Qu9S9OZMDylpzosyjIgcBwvWpH+dBqPir72Y4U+C6+FYcu60bsOE?=
- =?iso-8859-1?Q?ILni0K8ix9d390Jj+vt1erlxO+jYdym6q5jrc7JwG+J8kwjJZ+Rlo1oSqT?=
- =?iso-8859-1?Q?1t9GO8FbhInqPaOZpuAWd2a8PdWMM8m0GPRQkLClzliF3C8tp8y3HO9Kxo?=
- =?iso-8859-1?Q?bL/uCdpNsHaFhz+cA3s0NrRRGpVOPmWy9B66aXIWpF/vP5MI3QVe/Lv3ye?=
- =?iso-8859-1?Q?SnFhcgHqRJ5gkmLo9y2ZUoOShcj/Kg1YPFKZfBOJBpq3YXRBw1tfM6Eyuv?=
- =?iso-8859-1?Q?NnBu3wrB8wvkDglcvJ2fzG7ShJaVDm9dsIsYSfcu8pVRUHyCp9xvC0xu8d?=
- =?iso-8859-1?Q?H0XJpO1oO93xZKkaURjr3ywMzYmZCKtA4wmpcEac7L+3Mc0u9ejiWyq7VU?=
- =?iso-8859-1?Q?VKe0WDEcUqL1w02UZLhNu7DsDc3el/tAOwnn0k5KV33qiYqQ/1nGnsLoEW?=
- =?iso-8859-1?Q?gl+D+5GmWfmXhrgSFvLHvu/3yNrbUxX3H7/3KZEKyINo7jXOd55o8a5RIL?=
- =?iso-8859-1?Q?c268TJmajJ9ye6bFYz4mQm0yZcsIZQBX8WuKW1qQYdNXMLoFJ0nDncw86i?=
- =?iso-8859-1?Q?A2xNeN3KXz1mtcWxOLfuVbNPOK9YfLcMmj3LYcQFJkc5v5CQsQWKC+DgnA?=
- =?iso-8859-1?Q?w12g+PvOmvVySmwFngY94B+rlceIGCxBDX2U0beaiozaf4lkbHdEIAwqb3?=
- =?iso-8859-1?Q?/vcGj6i7F9tAe+x9qiz2i3awItFqg5UY8X+PWTyKbSyPvbl2MJvTxXYbHD?=
- =?iso-8859-1?Q?ujCGOrntzYSTs7fv6fwNb8p2FCC/03BUJOF0NL0TQIDcbi4+pb/JzrSwBp?=
- =?iso-8859-1?Q?VwvFHpv7aNI93zDZweqEb3EneMgys7kyME6QwaN+02LfyFvtJrrlCHavYC?=
- =?iso-8859-1?Q?5pWZ/MMldhXwlyGiM2rcsX/D6D5JpB9KrRTukYQbzqxYEtVnWscMzlhp8Q?=
- =?iso-8859-1?Q?cfSFIPqN7TEjhQ3/S63uPkIy6Ur7FOaqsrm04XWLCGP3m1LyX4qMPpgU0E?=
- =?iso-8859-1?Q?qf4iw7WlJD3puFcfsSxj5TFT0LyPUJZKq3Msicr1Rs3FR7TTki5SaerrDn?=
- =?iso-8859-1?Q?QnfDspGfxVykIKzl3HAz4ICzlDp2kB1rd3OmOOT3KkCWvgDdxs+KD+0y6x?=
- =?iso-8859-1?Q?QBNDVnyLeGBirHnUBpO/HK4Q0FxemdBZYBXDA1lNdo0qIYxT/K52?=
-X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5434c95-93bf-418d-4eef-08decfa25ae1
-X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2026 14:35:35.0070
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Jg/Z2vS69GHPHrg+V+0yK570JRSvER446v66yNRA6TM5lwogKtpt4cAZxAGLG1CIPXaLf13z+BEVp8nCYJWWWA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY4P286MB5774
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3WNyw6DIBBFf8XMutMAAsau+h+NCwTUaeojoKaN8
+ d8rdt3lSc49d4PoA/kIt2yD4FeKNA4HiEsGtjND65HcwSCY0EzzEuMyaEZoijxH1xu0QirFZcm
+ 1cnCspuAbep/FR/XjuNRPb+eUSUZHcR7D57xcefL+11eODJ2RtZZlYwth7m1v6HW1Yw/Vvu9fr
+ Adhw8AAAAA=
+X-Change-ID: 20260619-sun60i-a733-dma-c2455149165d
+To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+ Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>
+Cc: Yuanshen Cao <alex.caoys@gmail.com>, dmaengine@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-Mailer: b4 0.15.2
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [2.14 / 15.00];
-	R_DKIM_REJECT(1.00)[valinux.co.jp:s=selector1];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[valinux.co.jp : SPF not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11685-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:sashiko-reviews@lists.linux.dev,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11686-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:samuel@sholland.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:mripard@kernel.org,m:alex.caoys@gmail.com,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:jernejskrabec@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:alexcaoys@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[alexcaoys@gmail.com,dmaengine@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[valinux.co.jp:-];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,sholland.org];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FORWARDED(0.00)[lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	TO_DN_NONE(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[alexcaoys@gmail.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,linux.dev:email,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 76FD56AB15A
+X-Rspamd-Queue-Id: 3BE576ABA11
 
-On Sat, Jun 20, 2026 at 05:13:52PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] V0 eDMA fails to set the Remote Interrupt Enable (RIE) bit for remote-routed channels on a local endpoint controller.
+Hi everyone,
 
-This is a false positive.
+This patch series introduces support for the Allwinner A733 DMA
+controller in the `sun6i-dma` driver.
 
-> --
-> 
-> commit df5a2947e52cc02cfc126b63bc365277ac3752fa
-> Author: Koichiro Den <den@valinux.co.jp>
-> dmaengine: dw-edma: Add per-channel interrupt routing control
-> 
-> This commit adds per-channel interrupt routing control to the DesignWare
-> eDMA driver, allowing channels to route completion signals locally or
-> remotely. It updates the v0 eDMA and HDMA paths to configure interrupt masks
-> and generation based on the selected mode.
-> 
-> > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> [ ... ]
-> > @@ -331,7 +335,8 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
-> >  		j--;
-> >  		if (!j) {
-> >  			control |= DW_EDMA_V0_LIE;
-> > -			if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-> > +			if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) &&
-> > +			    chan->irq_mode != DW_EDMA_CH_IRQ_LOCAL)
-> >  				control |= DW_EDMA_V0_RIE;
-> >  		}
-> 
-> [Severity: High]
-> When a local endpoint controller delegates a channel to a remote host, the
-> irq_mode is set to DW_EDMA_CH_IRQ_REMOTE, but DW_EDMA_CHIP_LOCAL is also
-> present in the chip flags.
-> 
-> Because the check in dw_edma_v0_core_write_chunk() explicitly requires that
-> DW_EDMA_CHIP_LOCAL is not present, the first condition evaluates to false
-> and DW_EDMA_V0_RIE is never set.
+The A733 DMA controller differs from previous generations in several key
+ways:
+1. It supports higher address (up to 32G).
+2. It uses a different interrupt register layout and mapping.
+3. It has a different number of channels per interrupt register.
 
-The key point is that a delegated channel is not driven by any EP-local
-consumer. The EP side calls dw_edma_request_delegated_chan() only to reserve the
-exact HW channel, so no local DMA engine client can take it while it is exposed
-to the host. pci-epf-dma itself never submits DMA transfers on that channel.
+To support these differences without introducing complex conditional
+logic throughout the driver, this series first refactors the
+`sun6i_dma_config` structure. By moving interrupt handling, register
+dumping, and address configuration into function pointers within the
+configuration structure. This allows the driver to support the A733
+and future hardware revisions. It also aligns with the DMA drivers in
+Radxa BSP Package[1].
 
-Transfers on delegated channels are programmed by the RC-side dw-edma-pcie [1],
-after the DMA register window and descriptor memory have been exposed through
-the BARs. On that RC-side instance, DW_EDMA_CHIP_LOCAL is not set, so the
-existing condition still sets DW_EDMA_V0_RIE.
+The series is organized as follows:
+- Refactors the configuration structure to include function pointers for
+  interrupt and register operations.
+- Moves address setting logic into the configuration structure to handle
+  varying address widths.
+- Adds support for variable channels per interrupt register.
+- Updates the device tree bindings documentation.
+- Implements the A733-specific configuration and register mappings.
 
-So the EP-local channel having irq_mode == DW_EDMA_CH_IRQ_REMOTE does not mean
-that the EP-local instance will call dw_edma_v0_core_write_chunk() for that
-channel. It only means that the EP-local instance must not consume the
-completion status if a local interrupt is unexpectedly observed.
+Tested on Radxa Cubie A7Z.
 
-[1] The protocol does not exclude other RC-side consumers for other vendors in
-    the future. dw-edma-pcie is just the first supported consumer for the
-    pci-ep-dma.h protocol.
+[1] https://github.com/radxa/allwinner-bsp/blob/cubie-aiot-v1.4.8/drivers/dma/sunxi-dma.c
+
+Thanks!
+
+Signed-off-by: Yuanshen Cao <alex.caoys@gmail.com>
+---
+Changes in v2:
+- Implement SUN6I_DMA_IRQ_A31_COMMON_OPS macro to avoid duplicate.
+- Move set_addr into helper function and revert back sun6i_dma_set_addr.
+- Rename chan_num to irq_req to avoid misleading name as suggested by
+  sashiko.
+- Reorder and reword the dtbinding patch for more clarity.
+- Link to v1: https://patch.msgid.link/20260619-sun60i-a733-dma-v1-0-da4b649fc72a@gmail.com
+
+To: Vinod Koul <vkoul@kernel.org>
+To: Frank Li <Frank.Li@kernel.org>
+To: Chen-Yu Tsai <wens@kernel.org>
+To: Jernej Skrabec <jernej.skrabec@gmail.com>
+To: Samuel Holland <samuel@sholland.org>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-sunxi@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+
+---
+Yuanshen Cao (5):
+      dmaengine: sun6i-dma: Refactor to support A733 interrupt and register handling
+      dmaengine: sun6i-dma: Add set_addr function pointer for variable address widths
+      dmaengine: sun6i-dma: Add num_channels_per_reg for flexible interrupt mapping
+      dt-bindings: dma: sun50i-a64-dma: Add allwinner,sun60i-a733-dma compatible string
+      dmaengine: sun6i-dma: Implement support for Allwinner A733 DMA controller
+
+ .../bindings/dma/allwinner,sun50i-a64-dma.yaml     |   2 +
+ drivers/dma/sun6i-dma.c                            | 197 +++++++++++++++++++--
+ 2 files changed, 181 insertions(+), 18 deletions(-)
+---
+base-commit: 8cd9520d35a6c38db6567e97dd93b1f11f185dc6
+change-id: 20260619-sun60i-a733-dma-c2455149165d
 
 Best regards,
-Koichiro
+--  
+Yuanshen Cao <alex.caoys@gmail.com>
 
-> 
-> According to the commit message, requesting a remote-only interrupt requires
-> setting both LIE and RIE while masking the local interrupt. Since
-> dw_edma_v0_core_start() correctly masks the local interrupt for these
-> channels, does this prevent the DMA completion event from being sent
-> entirely, potentially causing the remote host to wait forever?
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260620170040.3756043-1-den@valinux.co.jp?part=1
 

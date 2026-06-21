@@ -1,85 +1,85 @@
-Return-Path: <dmaengine+bounces-11687-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11688-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id cmvPJv5aOGqwbQcAu9opvQ
-	(envelope-from <dmaengine+bounces-11687-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 23:43:26 +0200
+	id ZJXKFhpbOGq6bQcAu9opvQ
+	(envelope-from <dmaengine+bounces-11688-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 23:43:54 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F23D96ABA1E
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 23:43:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99FB56ABA24
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 23:43:53 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=KsFfVJy1;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11687-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11687-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=GwPhXutF;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11688-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11688-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7D0A1302D96A
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 21:41:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 585E4303C031
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2026 21:41:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22D6E371D07;
-	Sun, 21 Jun 2026 21:41:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A38DA37104D;
+	Sun, 21 Jun 2026 21:41:34 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908B6371873
-	for <dmaengine@vger.kernel.org>; Sun, 21 Jun 2026 21:41:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E9237107F
+	for <dmaengine@vger.kernel.org>; Sun, 21 Jun 2026 21:41:32 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782078093; cv=none; b=n1vHDDlOo8tIGD8hXaOv56Ogi3iRLJBqg5wegObIu45jSiRSRlxHsvM7988LuXrSsfDsc5iV+A/kFHRqL4Mg6PMccoiHcJ5yj83DhIx75G34/r+QvFNTLtzkalgCD2MvmkoDTCbNORnI7eFrh8xjR8ntC4bNdUq5WEmjmeCDZzs=
+	t=1782078094; cv=none; b=uPE6zGEQv5RriPLvtWj4sT7X57hJV/qWrVVltynnReuKel5GjZvhwk8eUSSDM0uYpXGTWcnjPAW/pRTGcsSyTECUaO7bRnyAbUaOUwfmNWvlkrRRZrHJAC2lAZTxX1BSNiZB7qUJEqkvoZzUxYx7aw/6xKfyu6B8Wt6Jkd19LYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782078093; c=relaxed/simple;
-	bh=sQ1wAjFR9295YnMlB9Sz4W7s2bJ8gyMgINXaeA5IRQs=;
+	s=arc-20240116; t=1782078094; c=relaxed/simple;
+	bh=dQJRxOtJBIdsX16Td7qmdew1G14whihD+vf5uq3M+Yk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=geFBh8EcDoLWnIkqV0EOwz2jPFIKE+whe6HW1JjQCYKk3dHt2F7L0euaueTt9qFiLgXXJpq4sCLBIyJ2IbOXe4XmIPWXqEJPctxnZOMFu510q/g5WXBTt+25gmLrvXtneYKYOVQK7/kaS2t0D/ExdxEYlc8nTKIG0DgK90L9998=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KsFfVJy1; arc=none smtp.client-ip=209.85.219.50
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-8dd21386a9aso32411646d6.2
-        for <dmaengine@vger.kernel.org>; Sun, 21 Jun 2026 14:41:31 -0700 (PDT)
+	 In-Reply-To:To:Cc; b=oZObZPyTq9MMHn+NE1xlM6Neig4ZP//ThjMwrqEjKeYuM0SeeS3vZD62uDfUfyRXpjxXOg8EHflsRKVH2TqMaII4zeC7JgAlL2Jw3oFerxHZY8SEEcTbrVUr1pQz4oktXiaONi4eXSMt0BDy70WmPQv9i8Xb5e9Dp/en34EU7Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GwPhXutF; arc=none smtp.client-ip=209.85.219.54
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-8e066990ff9so14839886d6.0
+        for <dmaengine@vger.kernel.org>; Sun, 21 Jun 2026 14:41:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782078091; x=1782682891; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1782078092; x=1782682892; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XMh31ZzkY75rM1uCI6Py4J/7TBsM66ozEJNyE9b7Chg=;
-        b=KsFfVJy1DpOeoigKY98IPPOXhnwfW0r5NnCs4CNfHw8DJfM8WS35k6SdHFElnbieaD
-         x/ozn2YXulhv+aR0jlKYpXYZaMlXG3Xn4xdzWJGeu8Vt24vlF9QGR6pBizv7Yf//2NPG
-         6l2E8+vskx1QC4678+J7byeKlgPN2UF7AMBtjyn81UtgM4xfYBaUgsx+Wphx1X8N+ykU
-         kwnqpBz9+a4ZLePXFkEpEH5zWZGapfGBByWDePxMBBITu8YJxcxSUIl2+M9SknlCUzch
-         aGh6cwQeKtOAlzMrNhVUA74mTJb33opsBwVcs3fRDHWZWLgVRXLMOIYqW4Mb2V3iK4Wi
-         kVyg==
+        bh=gDRD6LBgJnjsi6QsqIJwMXkO05zRf+ayGk9t0C1JISo=;
+        b=GwPhXutFIb0Z8xEIkrT2W5QW+2Dh4H8Gh6AON0G4g8xVY2QXyiKxMZPWgQWg+WprrU
+         ZgaO7ZDVgJOJ5NINz6qHFLp+xQwTFxhHAB7Pu3Xy32YkMvjLcKOgDb9WIt9BX+dFe1Ym
+         q2z5zPQ1sz3xAdlt6OQ30bnTKNNZc2tujr/RzCx4Q6k/FsA3RbGl04dzBoo8yfO06TMY
+         v1qpFHT3G7sKtkCOY7s1v5qz37wDYYJT/9hCXRe+KrTnGVlgEMNhFJvEeDYmetTjsek2
+         gVz/FiRB9YscmRlzqrlL2tEYdzTbwXc21TbC75yKDOVbl+4Y6tEoOZtnfIyjbEofaeEz
+         5Lkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782078091; x=1782682891;
+        d=1e100.net; s=20251104; t=1782078092; x=1782682892;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=XMh31ZzkY75rM1uCI6Py4J/7TBsM66ozEJNyE9b7Chg=;
-        b=dXHLlnbrHOBlGR9/frjOBilwSPMUj7IFl3Ors1HYt0O2wyCHqoRsfgyHZcN4d7lWCo
-         cWJDmy/Yfy/lzyUOAFkkMh5zAD4k/yGO26I7VglswKACaI6b8If4xB9xq4PNeC2xbmbM
-         cFQPXnBiINC7oW0eCdcSbvPHrh1iMcj8jZGgJAUF1CfXEXBDkxRffcfCbLxHRZobaBgD
-         l5vZG1/Z8a1fLxejWw5f55PEyBxbw7BjdkQghzIG5Ft86rOa1DIJB3bqfcW72gZbO4vP
-         +uNyNO7FlnLslR/X4HogHJSotZM0arGdhAvcUu5R01ijGbd1fAZ/Vsh8lATujIhE6RV+
-         jXnA==
-X-Forwarded-Encrypted: i=1; AHgh+RqwiIMSrEiWhfGmZSF6gkzIw9qBCVr+Ons8Uh05SmHsQ6+ZmxgX2/HSHdfarq2HBa10q6IAOCDxwp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyji+WMqbvl0bA3JPq7uXLvFQX7n0SA+vCcp9FC5EpXl3/DR15F
-	fGKvD6fAmcL6CpMsuGZ+bQrKuu2LpE37Zy5r6KOqBIeVasxEwIjmu4Ty
-X-Gm-Gg: AfdE7ckhAY/Sdq91NiNq97mD4wM29nudJITvNZdaqo4U6zS5qo7JTiM9snW1jnfSGsB
-	vncbEc7X+iVDNVE8ovFNcLoeReD+nBbPjhpug/ovlfVtJ5WyD01sjqkOEE+BAQ0dIuw4u4+C4+p
-	xtXaUrC5y34/jRR0sYCFDT4gy8M1akrf1XllmVPoYndhQ4gtBZb3BXkwng/Nu/L04oYyBFiVprJ
-	D+eNTzZF92nie+gyOyD2dY1nymFpnANvTrtIIOJqHwJvUHEXKC5xSEYFd+jwiorW1QCkAgOausL
-	DKpM+T/fD1dp/Cbzc58Wx/yG4lEnLQAS7LsI/Rh9ofoh0X/boPkITH4KeB3aQ5CtpuFDy83x+sA
-	Z8v7uuDiqXMV6m6VVBOcmZvA50ebYzwPK2HjkS23Vws/xGTmrak91zJHc9TSH1srwFsgoB44c/d
-	BjVJYpt3oWqdD51A==
-X-Received: by 2002:a05:6214:1bc6:b0:8cc:ed49:bdc9 with SMTP id 6a1803df08f44-8de3b43e008mr217413546d6.5.1782078090586;
-        Sun, 21 Jun 2026 14:41:30 -0700 (PDT)
+        bh=gDRD6LBgJnjsi6QsqIJwMXkO05zRf+ayGk9t0C1JISo=;
+        b=HNyjEAop9tUriIrL4x6Jnsk5kA8HUx3Zw1+iJFxOPLfItj4gfvm7KudLuLpPF3ZB9A
+         En4ZbJ0u9utpc5oLc6pkqry6fME+gS38qshjezgDaZCwqIcz27q1Pyn36LPpFzTzRuSY
+         9yd4ioIfMT6e7pQyQ32yyy/Z1mUfcGgCbGRbRIkTaq9ih83ffEo70Kvv0zIAnX00hDG8
+         ml7kBD6J1gKCftsZpGXM9kmSPn835VDhlcEaxl3PkSjjj3T5susqeDtx7ApoDx84yTqJ
+         dueIeteZVil6ce+7RwrByDb08pe9Npeom3AXUX721+/wyUn3sWkEyWd3DdjFo/m0cB1A
+         kovA==
+X-Forwarded-Encrypted: i=1; AHgh+RqsMIu99avgh+Ht8Pan0qOMQDYFp1twprabHjH/WwLMxWyGOS/3Yam+EXPA8AZ1pWYSwIAv5MaTGIs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZPWlZ1kCQ8TPrCGhAbJOZNmFk8fKLD6z0zGtxymY2/5QhirfL
+	YHKle6X0gnIOqMyAuxSB4A/AYIwtOpVBtDSq3JOHMDl6RB9JjuCQh7+O
+X-Gm-Gg: AfdE7cnQMzgKaiN1SKjg9D01crsuIU9pHE+gp0l1G6ddEcCo1YJW9A+eowz1PtycBXw
+	Fo2QumLf7Kq+WOyZ38Lk/gyGblyhnSEPTJG+uKdjtyH93C3j3Z/YnOL0gEiuLWdC2g24DLjmcwW
+	EOAs3qORMFsg2xHkXprz71q3kdmayHGluGzFAPU2s4flqlTJ9v2MFVDkG9MugUh6WmLRxFTEpLe
+	vkpJCNVl12n1ROyeUOqAo0BXZQmvmHuS+toBHPoz0+XmowgM0fHGNalpcF9oAZ3r1z9sx/QAYZk
+	yAuIOuOKvIdoObdT2Eq/iGc5B2+kdOWqI64TTzKDWJDNNJmSUt6CLO9nmYTjAn/DbbobmH4gokl
+	nSE3bj9mmkCpZsXwytXTCq/tWm++IslBIu08xyiTMX8oVo8a7ZFzUYwqzbzGlj063EIHP/W8VqW
+	0hkPoSRLd5+fWx0Q==
+X-Received: by 2002:a0c:e004:0:b0:8cc:f3a0:20aa with SMTP id 6a1803df08f44-8de4c46b4admr132602906d6.20.1782078091871;
+        Sun, 21 Jun 2026 14:41:31 -0700 (PDT)
 Received: from [172.17.0.2] ([138.28.231.64])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8df81cde9ecsm76274676d6.24.2026.06.21.14.41.29
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8df81cde9ecsm76274676d6.24.2026.06.21.14.41.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2026 14:41:30 -0700 (PDT)
+        Sun, 21 Jun 2026 14:41:31 -0700 (PDT)
 From: Yuanshen Cao <alex.caoys@gmail.com>
-Date: Sun, 21 Jun 2026 21:40:54 +0000
-Subject: [PATCH v2 1/5] dmaengine: sun6i-dma: Refactor to support A733
- interrupt and register handling
+Date: Sun, 21 Jun 2026 21:40:55 +0000
+Subject: [PATCH v2 2/5] dmaengine: sun6i-dma: Add set_addr function pointer
+ for variable address widths
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -88,7 +88,7 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260621-sun60i-a733-dma-v2-1-340f205891cc@gmail.com>
+Message-Id: <20260621-sun60i-a733-dma-v2-2-340f205891cc@gmail.com>
 References: <20260621-sun60i-a733-dma-v2-0-340f205891cc@gmail.com>
 In-Reply-To: <20260621-sun60i-a733-dma-v2-0-340f205891cc@gmail.com>
 To: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
@@ -105,24 +105,25 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11687-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11688-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:samuel@sholland.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:mripard@kernel.org,m:alex.caoys@gmail.com,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:jernejskrabec@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,m:alexcaoys@gmail.com,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,sholland.org];
 	FORGED_SENDER(0.00)[alexcaoys@gmail.com,dmaengine@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.infradead.org,lists.linux.dev];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,sholland.org];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FORWARDED(0.00)[lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -134,197 +135,171 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
-	TO_DN_SOME(0.00)[]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: F23D96ABA1E
+X-Rspamd-Queue-Id: 99FB56ABA24
 
-Refactor to support the Allwinner A733 DMA controller. Currently, the
-`sun6i-dma` driver has several functions related to interrupt handling
-(reading/writing interrupt enable and status registers) and register
-dumping that are hardcoded.
+The A733 DMA controller supports higher address (up to 32G) compared to
+previous generations. The existing `sun6i_dma_set_addr` function uses a
+hardcoded logic for setting the high-address bits in the LLI parameters.
 
-To support the A733, which has different register layouts and interrupt
-handling logic, these functions are being moved into the
-`sun6i_dma_config` structure as function pointers. This allows the
-driver to use a polymorphic approach where the specific implementation
-is determined by the hardware configuration assigned during device
-probing.
+By moving `set_addr` into the `sun6i_dma_config` structure, we can
+provide specialized implementations for different hardware. This allows
+the A733 to use a version of `set_addr` that correctly handles its
+specific `SRC_HIGH_ADDR_32G` and `DST_HIGH_ADDR_32G` in the `set_addr`
+register later in the series.
 
 Changes:
-- Added function pointers to `struct sun6i_dma_config` for:
-    - `dump_com_regs`
-    - `read_irq_en`
-    - `write_irq_en`
-    - `read_irq_stat`
-    - `write_irq_stat`
-- Implemented generic `sun6i_read/write_irq_*` functions for existing
-  hardware.
-- Added a macro and updated existing `sun6i_dma_config` instances (A31,
-  A23, H3, A64, A100, H6, V3S) to use these new function pointers.
+- Added `set_addr` function pointer to `struct sun6i_dma_config`.
+- Refactored `sun6i_dma_set_addr` and introduced
+  `sun6i_dma_set_addr_a31/a100` (keeping the logic for previous
+  generations).
+- Updated all existing configuration structs to include the new
+  `set_addr` pointer.
+- Removed `has_high_addr` since the logic is replaced by
+  `sun6i_dma_set_addr_a100`.
 
 Signed-off-by: Yuanshen Cao <alex.caoys@gmail.com>
 ---
- drivers/dma/sun6i-dma.c | 50 ++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 45 insertions(+), 5 deletions(-)
+ drivers/dma/sun6i-dma.c | 35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index a9a254dbf8cb..ef3052c4ab36 100644
+index ef3052c4ab36..9984b9033cbb 100644
 --- a/drivers/dma/sun6i-dma.c
 +++ b/drivers/dma/sun6i-dma.c
-@@ -138,6 +138,11 @@ struct sun6i_dma_config {
+@@ -112,6 +112,7 @@
+ 
+ /* forward declaration */
+ struct sun6i_dma_dev;
++struct sun6i_dma_lli;
+ 
+ /*
+  * Hardware channels / ports representation
+@@ -138,6 +139,8 @@ struct sun6i_dma_config {
  	void (*set_burst_length)(u32 *p_cfg, s8 src_burst, s8 dst_burst);
  	void (*set_drq)(u32 *p_cfg, s8 src_drq, s8 dst_drq);
  	void (*set_mode)(u32 *p_cfg, s8 src_mode, s8 dst_mode);
-+	void (*dump_com_regs)(struct sun6i_dma_dev *sdev);
-+	u32 (*read_irq_en)(struct sun6i_dma_dev *sdev, u32 irq_reg);
-+	void (*write_irq_en)(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 irq_val);
-+	u32 (*read_irq_stat)(struct sun6i_dma_dev *sdev, u32 irq_reg);
-+	void (*write_irq_stat)(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 status);
- 	u32 src_burst_lengths;
++	void (*set_addr)(struct sun6i_dma_dev *sdev, struct sun6i_dma_lli *v_lli,
++		dma_addr_t src, dma_addr_t dst);
+ 	void (*dump_com_regs)(struct sun6i_dma_dev *sdev);
+ 	u32 (*read_irq_en)(struct sun6i_dma_dev *sdev, u32 irq_reg);
+ 	void (*write_irq_en)(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 irq_val);
+@@ -147,7 +150,6 @@ struct sun6i_dma_config {
  	u32 dst_burst_lengths;
  	u32 src_addr_widths;
-@@ -347,6 +352,26 @@ static void sun6i_set_mode_h6(u32 *p_cfg, s8 src_mode, s8 dst_mode)
- 		  DMA_CHAN_CFG_DST_MODE_H6(dst_mode);
- }
+ 	u32 dst_addr_widths;
+-	bool has_high_addr;
+ 	bool has_mbus_clk;
+ };
  
-+static u32 sun6i_read_irq_en(struct sun6i_dma_dev *sdev, u32 irq_reg)
-+{
-+	return readl(sdev->base + DMA_IRQ_EN(irq_reg));
-+}
-+
-+static void sun6i_write_irq_en(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 irq_val)
-+{
-+	writel(irq_val, sdev->base + DMA_IRQ_EN(irq_reg));
-+}
-+
-+static u32 sun6i_read_irq_stat(struct sun6i_dma_dev *sdev, u32 irq_reg)
-+{
-+	return readl(sdev->base + DMA_IRQ_STAT(irq_reg));
-+}
-+
-+static void sun6i_write_irq_stat(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 status)
-+{
-+	writel(status, sdev->base + DMA_IRQ_STAT(irq_reg));
-+}
-+
- static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
- {
- 	struct sun6i_desc *txd = pchan->desc;
-@@ -460,16 +485,16 @@ static int sun6i_dma_start_desc(struct sun6i_vchan *vchan)
- 
- 	vchan->irq_type = vchan->cyclic ? DMA_IRQ_PKG : DMA_IRQ_QUEUE;
- 
--	irq_val = readl(sdev->base + DMA_IRQ_EN(irq_reg));
-+	irq_val = sdev->cfg->read_irq_en(sdev, irq_reg);
- 	irq_val &= ~((DMA_IRQ_HALF | DMA_IRQ_PKG | DMA_IRQ_QUEUE) <<
- 			(irq_offset * DMA_IRQ_CHAN_WIDTH));
- 	irq_val |= vchan->irq_type << (irq_offset * DMA_IRQ_CHAN_WIDTH);
--	writel(irq_val, sdev->base + DMA_IRQ_EN(irq_reg));
-+	sdev->cfg->write_irq_en(sdev, irq_reg, irq_val);
- 
- 	writel(pchan->desc->p_lli, pchan->base + DMA_CHAN_LLI_ADDR);
- 	writel(DMA_CHAN_ENABLE_START, pchan->base + DMA_CHAN_ENABLE);
- 
--	sun6i_dma_dump_com_regs(sdev);
-+	sdev->cfg->dump_com_regs(sdev);
- 	sun6i_dma_dump_chan_regs(sdev, pchan);
- 
+@@ -673,16 +675,30 @@ static int set_config(struct sun6i_dma_dev *sdev,
  	return 0;
-@@ -549,14 +574,14 @@ static irqreturn_t sun6i_dma_interrupt(int irq, void *dev_id)
- 	u32 status;
- 
- 	for (i = 0; i < sdev->num_pchans / DMA_IRQ_CHAN_NR; i++) {
--		status = readl(sdev->base + DMA_IRQ_STAT(i));
-+		status = sdev->cfg->read_irq_stat(sdev, i);
- 		if (!status)
- 			continue;
- 
- 		dev_dbg(sdev->slave.dev, "DMA irq status %s: 0x%x\n",
- 			str_high_low(i), status);
- 
--		writel(status, sdev->base + DMA_IRQ_STAT(i));
-+		sdev->cfg->write_irq_stat(sdev, i, status);
- 
- 		for (j = 0; (j < DMA_IRQ_CHAN_NR) && status; j++) {
- 			pchan = sdev->pchans + j;
-@@ -1101,6 +1126,13 @@ static inline void sun6i_dma_free(struct sun6i_dma_dev *sdev)
- 	}
  }
  
-+#define SUN6I_DMA_IRQ_A31_COMMON_OPS	\
-+	.dump_com_regs    = sun6i_dma_dump_com_regs,	\
-+	.read_irq_en      = sun6i_read_irq_en,	\
-+	.write_irq_en     = sun6i_write_irq_en,	\
-+	.read_irq_stat    = sun6i_read_irq_stat,	\
-+	.write_irq_stat   = sun6i_write_irq_stat,
+-static inline void sun6i_dma_set_addr(struct sun6i_dma_dev *sdev,
++static void sun6i_dma_set_addr_a31(struct sun6i_dma_dev *sdev,
++				      struct sun6i_dma_lli *v_lli,
++				      dma_addr_t src, dma_addr_t dst)
++{
++	v_lli->src = lower_32_bits(src);
++	v_lli->dst = lower_32_bits(dst);
++}
 +
- /*
-  * For A31:
-  *
-@@ -1132,6 +1164,7 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg = {
- 	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
-+	SUN6I_DMA_IRQ_A31_COMMON_OPS
- };
++static void sun6i_dma_set_addr_a100(struct sun6i_dma_dev *sdev,
+ 				      struct sun6i_dma_lli *v_lli,
+ 				      dma_addr_t src, dma_addr_t dst)
+ {
+ 	v_lli->src = lower_32_bits(src);
+ 	v_lli->dst = lower_32_bits(dst);
  
- /*
-@@ -1155,6 +1188,7 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg = {
- 	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
-+	SUN6I_DMA_IRQ_A31_COMMON_OPS
- };
+-	if (sdev->cfg->has_high_addr)
+-		v_lli->para |= SRC_HIGH_ADDR(upper_32_bits(src)) |
+-			       DST_HIGH_ADDR(upper_32_bits(dst));
++	v_lli->para |= SRC_HIGH_ADDR(upper_32_bits(src)) |
++				DST_HIGH_ADDR(upper_32_bits(dst));
++}
++
++static inline void sun6i_dma_set_addr(struct sun6i_dma_dev *sdev,
++				      struct sun6i_dma_lli *v_lli,
++				      dma_addr_t src, dma_addr_t dst)
++{
++	sdev->cfg->set_addr(sdev, v_lli, src, dst);
+ }
  
- static struct sun6i_dma_config sun8i_a83t_dma_cfg = {
-@@ -1173,6 +1207,7 @@ static struct sun6i_dma_config sun8i_a83t_dma_cfg = {
- 	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
-+	SUN6I_DMA_IRQ_A31_COMMON_OPS
- };
- 
- /*
-@@ -1200,6 +1235,7 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg = {
+ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_memcpy(
+@@ -1156,6 +1172,7 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg = {
+ 	.set_burst_length = sun6i_set_burst_length_a31,
+ 	.set_drq          = sun6i_set_drq_a31,
+ 	.set_mode         = sun6i_set_mode_a31,
++	.set_addr         = sun6i_dma_set_addr_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(8),
+ 	.dst_burst_lengths = BIT(1) | BIT(8),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1180,6 +1197,7 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg = {
+ 	.set_burst_length = sun6i_set_burst_length_a31,
+ 	.set_drq          = sun6i_set_drq_a31,
+ 	.set_mode         = sun6i_set_mode_a31,
++	.set_addr         = sun6i_dma_set_addr_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(8),
+ 	.dst_burst_lengths = BIT(1) | BIT(8),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1199,6 +1217,7 @@ static struct sun6i_dma_config sun8i_a83t_dma_cfg = {
+ 	.set_burst_length = sun6i_set_burst_length_a31,
+ 	.set_drq          = sun6i_set_drq_a31,
+ 	.set_mode         = sun6i_set_mode_a31,
++	.set_addr         = sun6i_dma_set_addr_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(8),
+ 	.dst_burst_lengths = BIT(1) | BIT(8),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1225,6 +1244,7 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg = {
+ 	.set_burst_length = sun6i_set_burst_length_h3,
+ 	.set_drq          = sun6i_set_drq_a31,
+ 	.set_mode         = sun6i_set_mode_a31,
++	.set_addr         = sun6i_dma_set_addr_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1247,6 +1267,7 @@ static struct sun6i_dma_config sun50i_a64_dma_cfg = {
+ 	.set_burst_length = sun6i_set_burst_length_h3,
+ 	.set_drq          = sun6i_set_drq_a31,
+ 	.set_mode         = sun6i_set_mode_a31,
++	.set_addr         = sun6i_dma_set_addr_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1269,6 +1290,7 @@ static struct sun6i_dma_config sun50i_a100_dma_cfg = {
+ 	.set_burst_length = sun6i_set_burst_length_h3,
+ 	.set_drq          = sun6i_set_drq_h6,
+ 	.set_mode         = sun6i_set_mode_h6,
++	.set_addr         = sun6i_dma_set_addr_a100,
+ 	.src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1279,7 +1301,6 @@ static struct sun6i_dma_config sun50i_a100_dma_cfg = {
  			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
  			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
  			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-+	SUN6I_DMA_IRQ_A31_COMMON_OPS
- };
- 
- /*
-@@ -1221,6 +1257,7 @@ static struct sun6i_dma_config sun50i_a64_dma_cfg = {
- 			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-+	SUN6I_DMA_IRQ_A31_COMMON_OPS
- };
- 
- /*
-@@ -1244,6 +1281,7 @@ static struct sun6i_dma_config sun50i_a100_dma_cfg = {
- 			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
- 	.has_high_addr = true,
+-	.has_high_addr = true,
  	.has_mbus_clk = true,
-+	SUN6I_DMA_IRQ_A31_COMMON_OPS
+ 	SUN6I_DMA_IRQ_A31_COMMON_OPS
  };
- 
- /*
-@@ -1266,6 +1304,7 @@ static struct sun6i_dma_config sun50i_h6_dma_cfg = {
- 			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
- 	.has_mbus_clk = true,
-+	SUN6I_DMA_IRQ_A31_COMMON_OPS
- };
- 
- /*
-@@ -1289,6 +1328,7 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg = {
- 	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
-+	SUN6I_DMA_IRQ_A31_COMMON_OPS
- };
- 
- static const struct of_device_id sun6i_dma_match[] = {
+@@ -1293,6 +1314,7 @@ static struct sun6i_dma_config sun50i_h6_dma_cfg = {
+ 	.set_burst_length = sun6i_set_burst_length_h3,
+ 	.set_drq          = sun6i_set_drq_h6,
+ 	.set_mode         = sun6i_set_mode_h6,
++	.set_addr         = sun6i_dma_set_addr_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1320,6 +1342,7 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg = {
+ 	.set_burst_length = sun6i_set_burst_length_a31,
+ 	.set_drq          = sun6i_set_drq_a31,
+ 	.set_mode         = sun6i_set_mode_a31,
++	.set_addr         = sun6i_dma_set_addr_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(8),
+ 	.dst_burst_lengths = BIT(1) | BIT(8),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
 
 -- 
 2.54.0

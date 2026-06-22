@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-11711-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11712-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id fkV7NVaVOGpYeAcAu9opvQ
-	(envelope-from <dmaengine+bounces-11711-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 03:52:22 +0200
+	id IutHD9uVOGpteAcAu9opvQ
+	(envelope-from <dmaengine+bounces-11712-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 03:54:35 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 487CD6ABFCC
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 03:52:22 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D5516ABFE1
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 03:54:34 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dKWt1H57;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11711-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11711-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=bImxTYcW;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11712-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11712-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2630D300E255
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 01:52:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4651E300B444
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 01:54:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA4C9257845;
-	Mon, 22 Jun 2026 01:52:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4638257845;
+	Mon, 22 Jun 2026 01:54:32 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF021246BBA;
-	Mon, 22 Jun 2026 01:52:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918651A9FB7;
+	Mon, 22 Jun 2026 01:54:31 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782093139; cv=none; b=qsE0VLkmJHjiU8qdGdIRwoiSeXKQh4QIT+ipz+bjeOgPS4+AdYcMzjwy37Pqnp8+I/5yTxid32MO0TTM+2E+AGv89cAJoLzQvBAiq5eqZQJkppyXmMwZxJuwvhhCmr59M62qOdpHg71TwpigqrQ8YXCkgAWYUUUAqRPOSlpBsl8=
+	t=1782093272; cv=none; b=CdO0Om8IeaMuzd24FbNbtD/CcVRoPeX1U/wrgHMU/zXCEcPfv2g1BQ+EHwG0xPR6shVeMJaJ0FcrTQ5JlWoA2wbktAckD9xuvrWgQSfTvD1QV7JCV9JMwQGbXW9s6bQqyi8GZM/DVeTGEGyb4jNBPiK954TxTq4sdlBCkln4A9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782093139; c=relaxed/simple;
-	bh=NBZzbFF9DtAW3NETutZTLlsaQ6rX1hatIyiITnvA9W0=;
+	s=arc-20240116; t=1782093272; c=relaxed/simple;
+	bh=PlklY/IpzFyXfv37Sn9oCQbFJiSvX+lLW9uKUPZRQF4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=EAC9RXr7feJGJ2R4mlq0V0sS35NgMjBqAroyHYV/0Z4FKNR6Vs4DKcucNlsiDyYOlq45foP5L0MOsm7N3roWy+Y+u4hu1Gv2N6pjCaSKXwtYpeb2Cg8HO9OckeeqvZKHlHjaQuM4cIphyjsvCif1EiFK1GkFVghY+/wlmFGjBao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKWt1H57; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F911F000E9;
-	Mon, 22 Jun 2026 01:52:17 +0000 (UTC)
+	 Message-Id; b=I1Y7Wt/NZ3drioIYbu+mzL4HQpemXbaAQqKx2RHbd1ZxG40zZ/IILn4TRMm4MXch0Iqnb2lrC+XUtZIWVliLnIkslGQqFj/exMJrH3bCY7JS8OlZ4obFbOtacRmMJ6jSi5tcqVIrrNktNoqXgIjL7i6J3Hgp4EIxjDesNt6L+YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bImxTYcW; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C0091F000E9;
+	Mon, 22 Jun 2026 01:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782093138;
-	bh=imiBgz3OrgsjjlQrD+QZYa1RgDlvaxZkBKC8kGr5aJo=;
+	s=k20260515; t=1782093271;
+	bh=Ecfz4mA83WT7F/AZKptu6avpYNvT/o0NMdfAAmc8McM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dKWt1H57QsZJbDSKXWg1Ro17pWOC2XUFDGCqvNzEtWCY/UroSYB9oYyK8TLwYgMLD
-	 vq7QjTSwl7XSMEZMZX7E/OfyVpER6R56+HBH94M7oxIN1f0lsdMiEoRb36QJkFn1UK
-	 6ZLe8paYA/HnhWtOh7wa71enOKwGG2tlJ/5Up6DyUYAiIahOac42rQAijV+pYMiSZ/
-	 YxrIbg9FsDL9WKFxwItUm+Ed8Yl2tsDYaUAhRfSMtq4m9i8AjAHsoHFSjLP4PE6VXy
-	 bkObn6Z/eTKUtbRFDjL4R0cKxC5zxT4j7HXFsxmiEl5T+HYqqoSFwS5A05WxsQmewX
-	 GuwiaLTsnMvSA==
+	b=bImxTYcWIZss1dP+6Tj2+1zYyPPwFCmW8w2WF1Ee4VR4SuQiyyBg9CIgtFwea+Ern
+	 9d0pIFRsSglDGHvVdORTHLw7f+M3PANgm7YzGJXQKooqef10IS+O65VaqDmCEVsYS7
+	 8nDfJQMA+IWLef+4GsgwCF59mlyk7+vjukP87xSxQI4ULge3bxjeU06/PLq1BpOu4Q
+	 nNVDd2YilA5e6wnqGetB+PdxXcXKbPJILxxYCnJwk932ivyD8DK5Tz4yAoO+qkA6wy
+	 LDApwzOHd8b3DW8Xavaw0X5sRDM/uQhXQ/8fEYYau7G+3UPqzBIWuIsfdlPMYX/p5j
+	 0Zz6gy9rpBSvQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 5/5] dmaengine: sun6i-dma: Add support for Allwinner
- A733 DMA controller
+Subject: Re: [PATCH v3 1/5] dmaengine: sun6i-dma: Refactor to support A733
+ interrupt and register handling
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Yuanshen Cao" <alex.caoys@gmail.com>
-Cc: Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org, linux-sunxi@lists.linux.dev, robh@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20260622-sun60i-a733-dma-v3-5-f697ef296cbc@gmail.com>
+Cc: Frank.Li@kernel.org, vkoul@kernel.org, robh@kernel.org, dmaengine@vger.kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org, linux-sunxi@lists.linux.dev
+In-Reply-To: <20260622-sun60i-a733-dma-v3-1-f697ef296cbc@gmail.com>
 References: <20260622-sun60i-a733-dma-v3-0-f697ef296cbc@gmail.com>
- <20260622-sun60i-a733-dma-v3-5-f697ef296cbc@gmail.com>
+ <20260622-sun60i-a733-dma-v3-1-f697ef296cbc@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 22 Jun 2026 01:52:17 +0000
-Message-Id: <20260622015217.E7F911F000E9@smtp.kernel.org>
+Date: Mon, 22 Jun 2026 01:54:30 +0000
+Message-Id: <20260622015430.7C0091F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -71,13 +71,13 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-11711-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:alex.caoys@gmail.com,m:Frank.Li@kernel.org,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:linux-sunxi@lists.linux.dev,m:robh@kernel.org,m:conor+dt@kernel.org,m:devicetree@vger.kernel.org,m:alexcaoys@gmail.com,m:conor@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11712-lists,dmaengine=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:alex.caoys@gmail.com,m:Frank.Li@kernel.org,m:vkoul@kernel.org,m:robh@kernel.org,m:dmaengine@vger.kernel.org,m:conor+dt@kernel.org,m:devicetree@vger.kernel.org,m:linux-sunxi@lists.linux.dev,m:alexcaoys@gmail.com,m:conor@kernel.org,s:lists@lfdr.de];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
@@ -97,150 +97,126 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sashiko.dev:url,lists.linux.dev:replyto,smtp.kernel.org:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,smtp.kernel.org:mid,lists.linux.dev:replyto,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 487CD6ABFCC
+X-Rspamd-Queue-Id: 8D5516ABFE1
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
-New issues:
-- [High] Hardcoded loop bound in `sun6i_kill_tasklet` leads to out-of-bound=
-s MMIO register writes.
-
 Pre-existing issues:
-- [Critical] Incorrect physical channel indexing in `sun6i_dma_interrupt` m=
-isroutes hardware interrupts to the wrong software channels.
-- [High] Integer division truncation in IRQ register loops silently drops i=
-nterrupts for leftover channels.
-- [High] A TOCTOU race exists between `sun6i_dma_interrupt` and `sun6i_dma_=
-terminate_all`, leading to a NULL pointer dereference.
+- [High] Integer division truncates the channel check in the interrupt hand=
+ler, causing interrupts for channels >=3D 8 to be completely ignored on SoC=
+s where the number of channels is not a multiple of 8.
+- [High] Incorrect calculation of the physical channel pointer in the inter=
+rupt handler aliases upper hardware channels to lower software channels, ca=
+using Use-After-Free and data corruption.
+- [High] A Time-of-Check to Time-of-Use (TOCTOU) race condition in `sun6i_k=
+ill_tasklet` allows a concurrent tasklet to re-enable interrupts after they=
+ were intentionally disabled, causing an unhandled interrupt storm after th=
+e IRQ is freed.
 --
 
-commit 901a8f4f5bfa274478e14bdc97eb09faba518f9f
+commit 4e47cdc0e212cbdd5c17510fa923b572eb14fb54
 Author: Yuanshen Cao <alex.caoys@gmail.com>
 
-dmaengine: sun6i-dma: Add support for Allwinner A733 DMA controller
-   =20
-Support Allwinner A733 DMA controller. Define new register offsets,
-bitfield mappings and dma_config required for the A733, which slightly
-differs from the older sun6i DMA controllers.
+dmaengine: sun6i-dma: Refactor to support A733 interrupt and register handl=
+ing
+
+Refactor to support the Allwinner A733 DMA controller by moving interrupt
+handling and register dumping functions into the sun6i_dma_config structure.
+This allows a polymorphic approach determined by hardware configuration
+during device probing.
 
 > diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> index 196a0d73b2212..4808015934ccb 100644
+> index a9a254dbf8cb9..ef3052c4ab363 100644
 > --- a/drivers/dma/sun6i-dma.c
 > +++ b/drivers/dma/sun6i-dma.c
-> @@ -257,6 +268,23 @@ static inline void sun6i_dma_dump_com_regs(struct su=
-n6i_dma_dev *sdev)
+> @@ -347,6 +352,26 @@ static void sun6i_set_mode_h6(u32 *p_cfg, s8 src_mod=
+e, s8 dst_mode)
 [ ... ]
-> +static inline void sun6i_dma_dump_com_regs_a733(struct sun6i_dma_dev *sd=
-ev)
+> +static void sun6i_write_irq_en(struct sun6i_dma_dev *sdev, u32 irq_reg, =
+u32 irq_val)
 > +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < sdev->num_pchans / sdev->cfg->num_channels_per_reg; i=
-++) {
+> +	writel(irq_val, sdev->base + DMA_IRQ_EN(irq_reg));
+> +}
 
 [Severity: High]
-This is a pre-existing issue, but I noticed this loop limit might cause int=
-eger
-division truncation.
+This is a pre-existing issue, but does disabling interrupts leave a race
+condition?
 
-If the total number of channels is not an exact multiple of the channels
-per register, the fractional remainder is truncated. For example, if a
-platform has 12 channels and 8 per register, the loop only iterates once,
-completely ignoring the second register.=20
+In sun6i_kill_tasklet(), hardware interrupts are disabled via write_irq_en(=
+0)
+before tasklet_kill() is called:
 
-Does this mean interrupts for the leftover channels are never read or
-cleared, leading to an unhandled interrupt storm? Should this use=20
-DIV_ROUND_UP instead? This buggy logic also seems to be present in
-sun6i_dma_interrupt().
-
-> +		dev_dbg(sdev->slave.dev, "Common register:\n"
-[ ... ]
-> @@ -1339,6 +1398,33 @@ static struct sun6i_dma_config sun50i_h6_dma_cfg =
-=3D {
-[ ... ]
-> +static struct sun6i_dma_config sun60i_a733_dma_cfg =3D {
-> +	.clock_autogate_enable =3D sun6i_enable_clock_autogate_h3,
-[ ... ]
-> +	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-> +			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-> +			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
-> +	.num_channels_per_reg =3D DMA_IRQ_CHAN_NR_A733,
-
-[Severity: Critical]
-This is a pre-existing issue, but setting num_channels_per_reg to 1 for
-the A733 controller appears to completely break the DMA controller due
-to an issue in sun6i_dma_interrupt().
-
-In sun6i_dma_interrupt(), the physical channel is resolved as:
-
-    pchan =3D sdev->pchans + j;
-
-Since num_channels_per_reg is 1, j is always 0. Does this route every
-hardware interrupt to software channel 0, regardless of the actual
-triggering channel? Should the calculation instead be updated to properly
-account for the register index:
-
-    pchan =3D sdev->pchans + i * sdev->cfg->num_channels_per_reg + j;
-
-[Severity: High]
-I also noticed an issue in sun6i_kill_tasklet() that might be triggered
-by this configuration.
-
-sun6i_kill_tasklet() calculates its iteration bounds using:
-
-    for (i =3D 0; i < DMA_MAX_CHANNELS / sdev->cfg->num_channels_per_reg; i=
-++)
+sun6i_kill_tasklet()
+    for (i =3D 0; i < ...; i++)
         sdev->cfg->write_irq_en(sdev, i, 0);
+    atomic_inc(&sdev->tasklet_shutdown);
+    devm_free_irq(sdev->slave.dev, sdev->irq, sdev);
+    tasklet_kill(&sdev->task);
 
-With DMA_MAX_CHANNELS set to 16 and num_channels_per_reg set to 1, this
-loop will unconditionally execute 16 times. If the dynamically initialized
-channel count for the SoC is fewer than 16, will these writes target
-unmapped peripheral memory space and potentially trigger a synchronous
-external abort? Should the loop bound depend on the actual initialized
-channel count (sdev->num_pchans) instead?
+If sun6i_dma_tasklet() runs concurrently and calls sun6i_dma_start_desc(),
+could it perform a read-modify-write on the IRQ_EN register without a lock?
 
-> +	.has_mbus_clk =3D true,
-> +};
+This could re-enable the interrupt after sun6i_kill_tasklet() explicitly
+disabled it. When devm_free_irq() is called, an active DMA channel might
+then assert an unhandled IRQ, leading to an interrupt storm.
+
+[ ... ]
+> @@ -549,14 +574,14 @@ static irqreturn_t sun6i_dma_interrupt(int irq, voi=
+d *dev_id)
+>  	u32 status;
+> =20
+>  	for (i =3D 0; i < sdev->num_pchans / DMA_IRQ_CHAN_NR; i++) {
 
 [Severity: High]
-This is a pre-existing issue, but could there be a TOCTOU race condition
-between sun6i_dma_interrupt() and sun6i_dma_terminate_all() that leads to
-a NULL pointer dereference?
+This is a pre-existing issue, but does integer division truncate the channel
+check here?
 
-In sun6i_dma_terminate_all(), the channel is stopped and pointers are clear=
-ed:
+If num_pchans is not a multiple of 8 (like 12 on H3), dividing by 8 yields =
+1.
+This would mean the loop only checks channels 0-7 and ignores the second
+interrupt register for channels 8-11.
 
-    vchan->phy =3D NULL;
-    pchan->vchan =3D NULL;
-    pchan->desc =3D NULL;
-    pchan->done =3D NULL;
+Could this cause unacknowledged level-triggered interrupts from those upper
+channels, leading to an interrupt storm?
 
-However, in sun6i_dma_interrupt(), the pointers are accessed like this:
+> -		status =3D readl(sdev->base + DMA_IRQ_STAT(i));
+> +		status =3D sdev->cfg->read_irq_stat(sdev, i);
+>  		if (!status)
+>  			continue;
+> =20
+>  		dev_dbg(sdev->slave.dev, "DMA irq status %s: 0x%x\n",
+>  			str_high_low(i), status);
+> =20
+> -		writel(status, sdev->base + DMA_IRQ_STAT(i));
+> +		sdev->cfg->write_irq_stat(sdev, i, status);
+> =20
+>  		for (j =3D 0; (j < DMA_IRQ_CHAN_NR) && status; j++) {
+>  			pchan =3D sdev->pchans + j;
 
-    pchan =3D sdev->pchans + j;
-    vchan =3D pchan->vchan;
-    if (vchan && (status & vchan->irq_type)) {
-        if (vchan->cyclic) {
-            vchan_cyclic_callback(&pchan->desc->vd);
-        } else {
-            spin_lock(&vchan->vc.lock);
-            vchan_cookie_complete(&pchan->desc->vd);
+[Severity: High]
+This isn't a bug introduced by this patch, but does the physical channel
+pointer calculation alias upper hardware channels to lower software channel=
+s?
 
-Since the interrupt handler checks vchan =3D pchan->vchan outside the lock,
-could a concurrent call to sun6i_dma_terminate_all() clear pchan->desc
-before it is dereferenced inside the interrupt handler, resulting in a
-near-NULL pointer dereference?
+The calculation sdev->pchans + j ignores the register index i.
+
+For upper channels (where i =3D 1, meaning channels 8-15), would the handler
+map the active hardware interrupt back to software channels 0-7?
+
+It seems this might cause the driver to process and complete descriptors for
+the wrong channels while the hardware is still writing to them, potentially
+causing data corruption and use-after-free conditions.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260622-sun60i-a73=
-3-dma-v3-0-f697ef296cbc@gmail.com?part=3D5
+3-dma-v3-0-f697ef296cbc@gmail.com?part=3D1
 

@@ -1,318 +1,308 @@
-Return-Path: <dmaengine+bounces-11707-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11708-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id uD2WBq+SOGqzdwcAu9opvQ
-	(envelope-from <dmaengine+bounces-11707-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 03:41:03 +0200
+	id 2mV4N02TOGrWdwcAu9opvQ
+	(envelope-from <dmaengine+bounces-11708-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 03:43:41 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 661996ABF77
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 03:41:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D4D7F6ABF98
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 03:43:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=U5rzaYAO;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11707-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11707-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=fail ("body hash did not verify") header.d=valinux.co.jp header.s=selector1 header.b=Hbg9qyQr;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11708-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11708-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=fail reason="SPF not aligned (relaxed)" header.from=valinux.co.jp (policy=none);
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C8C60303F05B
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 01:38:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6755E30107EE
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 01:43:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37BB0253B58;
-	Mon, 22 Jun 2026 01:38:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DF4A253B58;
+	Mon, 22 Jun 2026 01:43:17 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11021077.outbound.protection.outlook.com [40.107.74.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128CF259C9C
-	for <dmaengine@vger.kernel.org>; Mon, 22 Jun 2026 01:38:44 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782092330; cv=none; b=dor4bSC4gcDyZI95uTGRbUJ2qlmB4tVIGB+8QNBt0IqjrwV4eM81k8QwfKvE/ufj1qR+eJkkSCSr10RPV6OdgJ5/wOiopEmTMfhDEQfx/RLaSjkyXqLh1fUjRLF3UhnAGDWnV4vj0lB7//TCCoXm4k3fswrRUFDHhwMP9HFyWpM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782092330; c=relaxed/simple;
-	bh=hOIAu9ZU7sDR6LHu1XxWL+8uH+7OBI7IStkTUGFa3j4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cBUQUI7Awu6cAhjK9nhN65/dISnQFVoTSrYJeTQQ36B5yBHZXlBJ66WO61rbVWwcGcSyqGJMEj4oN2oULUh4BwxQ9KzQZHHg3K6Zl1YwrWQynkEEOFCBd7dPoqMGYokkMJl5mUSqBYr4Ui9RHA5iGmDOlDvV4wjAQ1xCOMcRvG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U5rzaYAO; arc=none smtp.client-ip=209.85.160.178
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-517863a2edfso30256341cf.1
-        for <dmaengine@vger.kernel.org>; Sun, 21 Jun 2026 18:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782092324; x=1782697124; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y1foQu9ZR0ZkXVncJfdfO5ydJpyzZO7HD2rH+AoeqgA=;
-        b=U5rzaYAOrRYBQ0PNigsU8AFjWd3tSKfAArkkJ/DMtrBAjSKPXDWczupSciumGxk3SE
-         oDpqeMPvZYmyIxgw0dQtCbJO4bDG75O/Qa4m8dUNRcouEeCL1MoTYJCGLX8S+CswrEZu
-         utJeHImh1mnf89nU34FunjB6aPEj/E1Vb7I6+gildT+URGrlyOMqSYrhBziShQWeyfab
-         31IoRRDi1r1h9EezAfXhTHBdMy+eqRGi/6BFZLnAf4pJY2xqezy7e5gxVlT9fk+7wMAw
-         C2gvoQes9GmrMFX1cApdBxC26/EH/qWLT3/Wnhml4T1lmSimZSsRbx9R1HMfeoU0ckV9
-         vA3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782092324; x=1782697124;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=y1foQu9ZR0ZkXVncJfdfO5ydJpyzZO7HD2rH+AoeqgA=;
-        b=YNAypnszSTtACL8rVHRFKnpwzSPhzctvdPIh64nfcY9poLs6ITwqUfqZSmCaepkKeo
-         mW+WirhZi5o8AL5GzhNNEPZdVjnzfHcp7KTSccakAawNrzX1iG3Qwo7KkYNPf+zkct+T
-         qXWt0RJBpOL1PhvcZfCJo6ZPLkiSXKABCYzPmhAHQUlJc2X+5yE0JUHKNb7GMV/UPM8b
-         52iUKJMrfpxZhBteJ2Y1A5iQeXtMXrNdhFT7kimxfSdzSbzyEMEFrPIhrHHXzwO/S/EQ
-         SViw6B1izYMfyB2T320rNt3WNcB3vY332VB5LQwk47xCcXz6o4eXerP/kE+Kqy179S5R
-         LRyA==
-X-Forwarded-Encrypted: i=1; AFNElJ9nEDCRijHQQC3Q9rpP5IXLBn72miXqrnSV+o7cnFA/nhH1KefWl2pkLWnQnfU9Nfs7U9BCH34cR5s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWtcH3DxsnHTHFOWAkoSl9LscZ1X4OeWqi1WsDEAmjYg38DzWM
-	v0/rcWoqaJhf02/zna/mRhaGipIiK46aFwq1FOQwNDtpKVhoUornSYqa
-X-Gm-Gg: AfdE7cnR2C7G6WBoVdKoS1jX2dHVCnjXvsYz0il2GnJ25ECOnKZ4y9aUk11MYvX1r2k
-	nKxzO5kwTkJ2FYtbBus2AlSBibAz8DNIvxvaXwuD3VBRBgMhgm7LUxBnihrHe7QXwJYZxYP+dkV
-	9pNfAn3vmlgkEisQ98LthTKL+ANfpDDf0QS85bn/mbwijpNw1wFg6UySkyZlvqeEzdd0xrPTIBT
-	FdECDhe+mxfOErQkvnoTj+7NtmZSzTWZoHO/uGV5x3uUcPiJ+rpZCAt6/0ydWBgSaa+QilAeJzl
-	O3CKHswtL5FSL90V1L0h2wgkjnhLB0ppkGFN8WMPPS+bGuGWD6GdYe02FGbnJMHrPU/fqzQnFEG
-	sg9M+MmK3CIVgwYyV48k8ItGHa6QJReSHS/Sf/QI5syNqb76+gUzTRXrff+RuJ7MNGA1wmwkBu2
-	CFN2TtMjOX7i6oNQ==
-X-Received: by 2002:a05:622a:550a:b0:51a:348:87b9 with SMTP id d75a77b69052e-51a0693a1eamr125530191cf.29.1782092323963;
-        Sun, 21 Jun 2026 18:38:43 -0700 (PDT)
-Received: from [172.17.0.2] ([138.28.231.64])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51a098e287csm55778831cf.29.2026.06.21.18.38.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2026 18:38:43 -0700 (PDT)
-From: Yuanshen Cao <alex.caoys@gmail.com>
-Date: Mon, 22 Jun 2026 01:36:27 +0000
-Subject: [PATCH v3 5/5] dmaengine: sun6i-dma: Add support for Allwinner
- A733 DMA controller
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513B1259C9C
+	for <dmaengine@vger.kernel.org>; Mon, 22 Jun 2026 01:43:14 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782092597; cv=fail; b=tK0JinppDlN7d8cC+Qzq3Fd+b6QWY3tFDn3+VRywlS6CfzqauPtBYCTuelZuus2cHGZIaM/Wa4ocPsWKHQUu34nFwJfQcFgqgXjydOiACzjMJh5aQqF9E45QqM/SoOldv9dcCyXYmxz5MfNf4jLvoWkBwE89kEwTqxfe8y651Ig=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782092597; c=relaxed/simple;
+	bh=W29bydqCM/A0viCX63fqUTHFL59qQQ/YSjl2gAOb79U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bNOkO77urSfx9AtuFa4rXqWKt3V8Icqqu8sikgCzT3go3u2y20za8dL0pc5OXAlZir+BtLdbI8zbGIKSSgO0pkXOTL3adWOHl0SDmD0U4ZRVqvtPz8XK9hKqf6LtlIPd1WIpYlWLztsqZscCXyVMtVRBQZ6M9/u4vESDe5+z5Mk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=fail (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=Hbg9qyQr reason="signature verification failed"; arc=fail smtp.client-ip=40.107.74.77
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QqXU03RyuCe05FIjgsJ8LdhouLHy12vbmRoK+X/d6iJwYfYKwTOlX62NEx1fVWx+KAyt3PY1Q+hDsBBJHG4wmh3eIei1+p/HgaVc17f718MadVPLuaj9p+sqijfRsLniDJCxFzxsnnq+U7n5VJ4Q6VQjhzRFP53hDJQUX0W2aB+9h22j7jqVAylNHgZ1z1Vezb25yAPIDkQRByW55xdeK0+sy/AVt7GE0eTvb/09s059DQ9wr/JnZS+15mVVg6z5R4rmYuL05UvLptyr8N1tOYPQqoaqZklQ/tQH9qhjF6iah16feEPak5Oe1g338QCYO7HMXsdlBPquw0WWC3bQxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=93wn40yDKM+64uCjRiO/94bQ6jENMrSoScnwLZmt5C0=;
+ b=R+pN+fyoAr7BBrCUsF8rKjAmKfoVm8lcBxGjZGfRlorcZSL/zJc/bo2b9S8lmc1GUrydsORac5rPOmNu5qNFpv+6LHIxw2Zg+5xV/JEB5sj27heb1wPOXY7MR7IvsM7Y1udw1qdpI2WbI/5RcnCjkCJRXl3m1EfPvjCh122+dlOTIxFnNNdLovdDT21Yr0DebaZsV3bPGQb8UbeXtj7Vg4HrsYeA2/5/rwLilGjPyLCP1rWNmGFQfd7fnn3SOziSYvAgykk4WDrJRmB39g1gUfVzwtuwmzZ0jjG0kQsrsz/nVJS3BAajjHiMqe3feUaOBfzxF/fW6UxLXnQdcUI+Ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=93wn40yDKM+64uCjRiO/94bQ6jENMrSoScnwLZmt5C0=;
+ b=Hbg9qyQrpcffBLJQWywfsy1rViIxwrUEB1igbc+qtTrECES1gLfegpLk8jI5D7SMSafPmoh1t506SmqHgv/em21TcWDrGn08ywCs+jDmP931N/NpPCGB7AoEL/pV1XZEjhuqbInBHx5FESBa2JFHCHgKe8Yo1yrdtsx8hEo3Zlk=
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
+ by OS7P286MB6729.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:42d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.19; Mon, 22 Jun
+ 2026 01:43:11 +0000
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.21.0139.018; Mon, 22 Jun 2026
+ 01:43:11 +0000
+Date: Mon, 22 Jun 2026 10:43:10 +0900
+From: Koichiro Den <den@valinux.co.jp>
+To: sashiko-reviews@lists.linux.dev
+Cc: Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v3 02/13] dmaengine: dw-edma: Add core quiesce operations
+Message-ID: <pmxfqgsjposbv6zehrgitqwvbxppc7cfht4xsxw4l2lcjkojkw@ycqyo72w24ji>
+References: <20260620170040.3756043-1-den@valinux.co.jp>
+ <20260620170040.3756043-3-den@valinux.co.jp>
+ <20260620171536.0DE831F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260620171536.0DE831F000E9@smtp.kernel.org>
+X-ClientProxiedBy: TYCP286CA0125.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:2b6::7) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260622-sun60i-a733-dma-v3-5-f697ef296cbc@gmail.com>
-References: <20260622-sun60i-a733-dma-v3-0-f697ef296cbc@gmail.com>
-In-Reply-To: <20260622-sun60i-a733-dma-v3-0-f697ef296cbc@gmail.com>
-To: conor+dt@kernel.org, mripard@kernel.org, krzk+dt@kernel.org, 
- robh@kernel.org, samuel@sholland.org, wens@kernel.org, 
- jernej.skrabec@gmail.com, Frank.Li@kernel.org, vkoul@kernel.org
-Cc: Yuanshen Cao <alex.caoys@gmail.com>, dmaengine@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.15.2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|OS7P286MB6729:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed979cb1-d7c3-4e6a-9c5a-08decfff9e79
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|10070799003|1800799024|376014|366016|7136999003|6133799003|18002099003|22082099003|56012099006|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	9J6bd8b/Oa3tBFHruWY5YQqdliLEtNZfLTLafIX59gWWkFPqcnKmJbx2BRkpdUPUp9CjioaoOgMtQe1u/zeNUlIyRd+9q3uoAAii04xMUIdW6CvnuhyvsWIHK4lWwmkvx1aWpj5W6iCkrOPOr8/QpIgzRd7JNa1Io9lkApNszYepCLZjVd5RGyHsaMJEQorZsXaB3fg0astiaJ+W3Hma5HveSKc97o8ekgStI7C/FXQnXW7HzbqpHQmT8MNWamnutM6HRLjpJKhFlpW19elQ1tCmBvAkwx6dTl691fWUPTQBL+KvNKA3vT7dHVxA0/7gHur3VQ1oQHwD9UaE0y6o4RThpQpObTtGYrx8rXFNUuO/zeFgqOEcx4gDzek3Vqn9+d2CX2u/uFzNGzSZ4o9qGXwiaf1MV8oNSgDjrzwpFQgzSvo0DaWs3TSnPLIqP4HL0qSJOwTKs8UJ/YmZTuV3J62x3N1+hBrlWu/QfCSsbeyCvr5s8WRvS61AiMXy4mCB7/Bgfj4sjqIHc7aVL4AeFVjTwOyjn2pGQ66Barwif71SXX7Aq3ZV0Kv4YGSKW1DbZWswqyqq3Fr3kxIXECuBoji4ASSIohEw/B3XHU3f/rk=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(10070799003)(1800799024)(376014)(366016)(7136999003)(6133799003)(18002099003)(22082099003)(56012099006)(4143699003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?vGQCLgNJyr3AJgtvk8SneoqXO4sRv9e4zJoDWtXdPvHX1V7s2k+bVnuuI9?=
+ =?iso-8859-1?Q?k/ZwaHbT64SHXKG9icJzgqIKCAIK6W4u55+0BgpkiHR4PL376hM2GSVpvq?=
+ =?iso-8859-1?Q?C6VnjsQbML/pZVPAvX88SUCejOMeazWL0OVbdkxHjr77AYBQ4PezLlyY7r?=
+ =?iso-8859-1?Q?f3JPjFR3CnHDof72a1UrbaScBlqrRiaOp7FrYg+2f8nlwREFiMYzwz0If3?=
+ =?iso-8859-1?Q?1R+X007I6aJreENF/pZc4mmDbsDeBTyqr3y+P9Q7PbwuZgCfG4RQ2DFB32?=
+ =?iso-8859-1?Q?DWw6A2rXBIj6beR7l5JoyIKG6LfUxCnUt67IPGTnM1Dlo+ZrtfRlGOBDYA?=
+ =?iso-8859-1?Q?XjEvDzqLJUZca8TApzURDR3QN8F1EzgDUwrx+T9E1800t74N+eTe9HY4b9?=
+ =?iso-8859-1?Q?pCDX7cLF2pbALnukBD0gkEAcAhg+cjhJcHWJUD47eVbSM1/yGCJ+ouhRmf?=
+ =?iso-8859-1?Q?6bXF0vlKD4Tz41RcYxTzpBEJpj6TIlm9gPvjeZj+NNj9E0l8triP4A+yMC?=
+ =?iso-8859-1?Q?RDUbaUpfg6lK1O/WpZqEm3DDa8vxV5dM1R8hptPYjIuda9eiexQ0XT4v1H?=
+ =?iso-8859-1?Q?RwYROXDL3Py9PcH64fDldXkGxrIoIWSKMqw42i9vC1wsKx0HnLaw0MOH7h?=
+ =?iso-8859-1?Q?T/RXCgAlwssPfaFZxYI2k39w6guzRPhT3tfAioHsk7a/zd8mXjrldh0dSV?=
+ =?iso-8859-1?Q?3/8F+NCIu19zRm4cDi7WWKSkw/oHuLALNs9gh5gPaz1WqJNJboz65wqzNg?=
+ =?iso-8859-1?Q?0MhbPtJR7nC0gjnRas8RSDnGv257vDqzoXNmUGCz05Q+8QbkSpKer27XU8?=
+ =?iso-8859-1?Q?QANWq1Cb6on2RITUH4hNRyZXfdcIZR5riNHg9LVFmCND7n9+ACEUvjWlUN?=
+ =?iso-8859-1?Q?EXkuHJ9/J8vXRuzmvgIh13HG+z0+XxKqErS4VuUOFSRt+b7PwRmvO/9Iwr?=
+ =?iso-8859-1?Q?SLuZ3mOK/45J9TA4cOYH5DkB4qH5ALp5ymDj0GLbBnqblwEdMS4gtL2qSi?=
+ =?iso-8859-1?Q?1V+bkiGwqUe2b3YiV1X6dnP0nCYYqfgmXUTVvxv+Cz6lsSfu7wf4UD90kh?=
+ =?iso-8859-1?Q?Q8MFwAv46AWRKV76PxfVTVoroF+k1+XnO+BmP8prCgWhpQol6hmvrC0AYH?=
+ =?iso-8859-1?Q?vyiEYR2qBbqhIqQFoDl6KpubxaQdDpZwlCvUafxqD/zOTVLrWhtS82f6a9?=
+ =?iso-8859-1?Q?+FTgWFjRuZuM+FaRMPKVTCHS6RSDlsCqNtP6Oaw1y3wAnKZAoY5DpAj7JD?=
+ =?iso-8859-1?Q?glqbSnHIj2/5APoXSI012JSKviehBdbkt/0dOP8DzpCzLhmPlpzvCm97BF?=
+ =?iso-8859-1?Q?Huc/VRjiVvhqO44GXs5wuoANshdELOThf3hxOc3XA5HtBfTseK5/ecSwsU?=
+ =?iso-8859-1?Q?onGbKC6C8u8njFH0YFYG3rFtP8ZMxWKyoc3G7+JtdEyCFcxhxjbEuPvq6R?=
+ =?iso-8859-1?Q?ZR3wJV5z7XHnslgqh6Qyky7pGuQUu5pak1X10/yxhWz3dbJqjOTJojUwzk?=
+ =?iso-8859-1?Q?7Fb6emZCmRECb1YzbTHXtZ7C2507ZA1gPfJK7aBb8O0SBuheywo48INMzJ?=
+ =?iso-8859-1?Q?sAVqilVu5W/MCbFBtlbkV1CBySJinaSlN2Or0AwhBxKYJnla3draRVLo5g?=
+ =?iso-8859-1?Q?TycccGlR1KLN5U8k/jUDX1OWKfbkjRWQ+IHOlwLP6ZjNXR6DwuxMuBbZ7W?=
+ =?iso-8859-1?Q?b9uSQ61j7niHHpyNVrzJWfa4qm2GCQo7Iq4PfvVhtkUIScBeeUJR4OwJa+?=
+ =?iso-8859-1?Q?QgI01LVK7eE1CwfCNcgw9KlOCR2vfgSQMKbttQAdlIhWMlO79r2fGGBx2V?=
+ =?iso-8859-1?Q?lJIX+gFlXIPMb0XnXD9ksVk06YosD2jJmpi15OfwcC+ikyx0mKP0?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed979cb1-d7c3-4e6a-9c5a-08decfff9e79
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2026 01:43:11.6601
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0zzCDf8DG6MDAKBVBLP46hZ7VqcR7hYkM51Wt2XcF7yk20/gWwekld/Sa2dU2KvALhvBLZyqKfw9PHSTvPeJrg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7P286MB6729
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+X-Spamd-Result: default: False [2.14 / 15.00];
+	R_DKIM_REJECT(1.00)[valinux.co.jp:s=selector1];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[valinux.co.jp : SPF not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11707-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:conor+dt@kernel.org,m:mripard@kernel.org,m:krzk+dt@kernel.org,m:robh@kernel.org,m:samuel@sholland.org,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:Frank.Li@kernel.org,m:vkoul@kernel.org,m:alex.caoys@gmail.com,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:conor@kernel.org,m:krzk@kernel.org,m:jernejskrabec@gmail.com,m:alexcaoys@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[alexcaoys@gmail.com,dmaengine@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FREEMAIL_TO(0.00)[kernel.org,sholland.org,gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[15];
+	TAGGED_FROM(0.00)[bounces-11708-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:sashiko-reviews@lists.linux.dev,m:Frank.Li@kernel.org,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.infradead.org,lists.linux.dev];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[valinux.co.jp:-];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alexcaoys@gmail.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ALIAS_RESOLVED(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[dmaengine];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,ycqyo72w24ji:mid,sashiko.dev:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 661996ABF77
+X-Rspamd-Queue-Id: D4D7F6ABF98
 
-Support Allwinner A733 DMA controller. Define new register offsets,
-bitfield mappings and dma_config required for the A733, which slightly
-differs from the older `sun6i` DMA controllers.
+On Sat, Jun 20, 2026 at 05:15:35PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [High] The v0 eDMA `ch_quiesce` operation globally disables the DMA engine and clobbers interrupt states for all channels in the direction.
 
-Changes:
-- New register macros for A733 interrupt enable `DMA_IRQ_EN_A733`,
-  status `DMA_IRQ_STAT_A733`, and channel count `DMA_IRQ_CHAN_NR_A733`.
-- New `SRC_HIGH_ADDR_32G` and `DST_HIGH_ADDR_32G` macro to handle the
-  32G high-address field in the LLI.
-- Implemented `sun6i_dma_set_addr_a733` and A733-specific interrupt
-  register accessors.
-- Added `sun60i_a733_dma_cfg`, which ties all the refactored
-  functionality together for this specific hardware.
+This is a false positive under the ownership model enforced by this series.
 
-Signed-off-by: Yuanshen Cao <alex.caoys@gmail.com>
----
- drivers/dma/sun6i-dma.c | 87 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+Still, I should add a short source comment in v4. The v0 eDMA quiesce
+implementation is intentionally direction-granular because the relevant hardware
+controls are direction-granular, and that may be easy to miss from the callback
+name alone.
 
-diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index 196a0d73b221..4808015934cc 100644
---- a/drivers/dma/sun6i-dma.c
-+++ b/drivers/dma/sun6i-dma.c
-@@ -52,6 +52,15 @@
- #define SUNXI_H3_SECURE_REG		0x20
- #define SUNXI_H3_DMA_GATE		0x28
- #define SUNXI_H3_DMA_GATE_ENABLE	0x4
-+
-+/*
-+ * sun60i specific registers
-+ */
-+#define DMA_IRQ_EN_A733(x)		((x) * 0x40 + 0x134)
-+#define DMA_IRQ_STAT_A733(x)		((x) * 0x40 + 0x138)
-+
-+#define DMA_IRQ_CHAN_NR_A733		1
-+
- /*
-  * Channels specific registers
-  */
-@@ -100,6 +109,8 @@
-  */
- #define SRC_HIGH_ADDR(x)		(((x) & 0x3U) << 16)
- #define DST_HIGH_ADDR(x)		(((x) & 0x3U) << 18)
-+#define SRC_HIGH_ADDR_32G(x)	(((x) & 0x7U) << 11)
-+#define DST_HIGH_ADDR_32G(x)	(((x) & 0x7U) << 15)
- 
- /*
-  * Various hardware related defines
-@@ -257,6 +268,23 @@ static inline void sun6i_dma_dump_com_regs(struct sun6i_dma_dev *sdev)
- 		DMA_STAT, readl(sdev->base + DMA_STAT));
- }
- 
-+static inline void sun6i_dma_dump_com_regs_a733(struct sun6i_dma_dev *sdev)
-+{
-+	int i;
-+
-+	for (i = 0; i < sdev->num_pchans / sdev->cfg->num_channels_per_reg; i++) {
-+		dev_dbg(sdev->slave.dev, "Common register:\n"
-+			"chan num %d\n"
-+			"\tmask(%04x): 0x%08x\n"
-+			"\tpend(%04x): 0x%08x\n"
-+			"\tstats(%04x): 0x%08x\n",
-+			i,
-+			DMA_IRQ_EN_A733(i), readl(sdev->base + DMA_IRQ_EN_A733(i)),
-+			DMA_IRQ_STAT_A733(i), readl(sdev->base + DMA_IRQ_STAT_A733(i)),
-+			DMA_STAT, readl(sdev->base + DMA_STAT));
-+	}
-+}
-+
- static inline void sun6i_dma_dump_chan_regs(struct sun6i_dma_dev *sdev,
- 					    struct sun6i_pchan *pchan)
- {
-@@ -360,21 +388,41 @@ static u32 sun6i_read_irq_en(struct sun6i_dma_dev *sdev, u32 irq_reg)
- 	return readl(sdev->base + DMA_IRQ_EN(irq_reg));
- }
- 
-+static u32 sun6i_read_irq_en_a733(struct sun6i_dma_dev *sdev, u32 irq_reg)
-+{
-+	return readl(sdev->base + DMA_IRQ_EN_A733(irq_reg));
-+}
-+
- static void sun6i_write_irq_en(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 irq_val)
- {
- 	writel(irq_val, sdev->base + DMA_IRQ_EN(irq_reg));
- }
- 
-+static void sun6i_write_irq_en_a733(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 irq_val)
-+{
-+	writel(irq_val, sdev->base + DMA_IRQ_EN_A733(irq_reg));
-+}
-+
- static u32 sun6i_read_irq_stat(struct sun6i_dma_dev *sdev, u32 irq_reg)
- {
- 	return readl(sdev->base + DMA_IRQ_STAT(irq_reg));
- }
- 
-+static u32 sun6i_read_irq_stat_a733(struct sun6i_dma_dev *sdev, u32 irq_reg)
-+{
-+	return readl(sdev->base + DMA_IRQ_STAT_A733(irq_reg));
-+}
-+
- static void sun6i_write_irq_stat(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 status)
- {
- 	writel(status, sdev->base + DMA_IRQ_STAT(irq_reg));
- }
- 
-+static void sun6i_write_irq_stat_a733(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 status)
-+{
-+	writel(status, sdev->base + DMA_IRQ_STAT_A733(irq_reg));
-+}
-+
- static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
- {
- 	struct sun6i_desc *txd = pchan->desc;
-@@ -695,6 +743,17 @@ static void sun6i_dma_set_addr_a100(struct sun6i_dma_dev *sdev,
- 				DST_HIGH_ADDR(upper_32_bits(dst));
- }
- 
-+static void sun6i_dma_set_addr_a733(struct sun6i_dma_dev *sdev,
-+				      struct sun6i_dma_lli *v_lli,
-+				      dma_addr_t src, dma_addr_t dst)
-+{
-+	v_lli->src = lower_32_bits(src);
-+	v_lli->dst = lower_32_bits(dst);
-+
-+	v_lli->para |= SRC_HIGH_ADDR_32G(upper_32_bits(src)) |
-+				DST_HIGH_ADDR_32G(upper_32_bits(dst));
-+}
-+
- static inline void sun6i_dma_set_addr(struct sun6i_dma_dev *sdev,
- 				      struct sun6i_dma_lli *v_lli,
- 				      dma_addr_t src, dma_addr_t dst)
-@@ -1339,6 +1398,33 @@ static struct sun6i_dma_config sun50i_h6_dma_cfg = {
- 	SUN6I_DMA_IRQ_A31_COMMON_OPS
- };
- 
-+/*
-+ * The A733 binding uses the number of dma channels from the
-+ * device tree node.
-+ */
-+static struct sun6i_dma_config sun60i_a733_dma_cfg = {
-+	.clock_autogate_enable = sun6i_enable_clock_autogate_h3,
-+	.set_burst_length = sun6i_set_burst_length_h3,
-+	.set_drq          = sun6i_set_drq_h6,
-+	.set_mode         = sun6i_set_mode_h6,
-+	.set_addr         = sun6i_dma_set_addr_a733,
-+	.dump_com_regs    = sun6i_dma_dump_com_regs_a733,
-+	.read_irq_en      = sun6i_read_irq_en_a733,
-+	.write_irq_en     = sun6i_write_irq_en_a733,
-+	.read_irq_stat    = sun6i_read_irq_stat_a733,
-+	.write_irq_stat   = sun6i_write_irq_stat_a733,
-+	.src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
-+	.dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
-+	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
-+	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
-+	.num_channels_per_reg = DMA_IRQ_CHAN_NR_A733,
-+	.has_mbus_clk = true,
-+};
-+
- /*
-  * The V3s have only 8 physical channels, a maximum DRQ port id of 23,
-  * and a total of 24 usable source and destination endpoints.
-@@ -1375,6 +1461,7 @@ static const struct of_device_id sun6i_dma_match[] = {
- 	{ .compatible = "allwinner,sun50i-a64-dma", .data = &sun50i_a64_dma_cfg },
- 	{ .compatible = "allwinner,sun50i-a100-dma", .data = &sun50i_a100_dma_cfg },
- 	{ .compatible = "allwinner,sun50i-h6-dma", .data = &sun50i_h6_dma_cfg },
-+	{ .compatible = "allwinner,sun60i-a733-dma", .data = &sun60i_a733_dma_cfg },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, sun6i_dma_match);
+> - [High] `dw_edma_v0_core_dir_off` modifies the shared direction-wide `int_mask` register without holding `dw->lock`, causing a data race.
 
--- 
-2.54.0
+This points at a real teardown assumption, but adding the lock only to this new
+helper would fix the wrong layer. The same issue already exists in the
+pre-existing dw_edma_v0_core_off() path if the driver is unbound while local
+DMA engine clients are still programming the same instance. More below.
 
+> --
+> 
+> commit d7eb32d006bf71fa3372ef97f6fa793fa851c5c8
+> Author: Koichiro Den <den@valinux.co.jp>
+> 
+> dmaengine: dw-edma: Add core quiesce operations
+> 
+> This adds core operations to quiesce only the resources represented by a
+> dw-edma instance. It implements per-channel and per-direction quiesce
+> operations for v0 eDMA and HDMA compatible register layouts.
+> 
+> > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > index 1781ba4f022ec..316d8c94eff9c 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> 
+> [ ... ]
+> 
+> > @@ -160,6 +160,15 @@ static inline u32 readl_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  	readl_ch(dw, dir, ch, &(__dw_ch_regs(dw, dir, ch)->name))
+> >  
+> >  /* eDMA management callbacks */
+> > +static void dw_edma_v0_core_dir_off(struct dw_edma *dw, enum dw_edma_dir dir)
+> > +{
+> > +	SET_RW_32(dw, dir, int_mask,
+> > +		  EDMA_V0_DONE_INT_MASK | EDMA_V0_ABORT_INT_MASK);
+> 
+> [Severity: High]
+> Does this modification of the shared int_mask register need to be
+> protected by dw->lock?
+> 
+> In dw_edma_v0_core_start(), modifications to int_mask are protected by
+> raw_spin_lock_irqsave(&dw->lock, flags). However,
+> dw_edma_v0_core_dir_off() directly overwrites the entire int_mask
+> register without acquiring dw->lock.
+> 
+> Could this cause a data race where a concurrent read-modify-write cycle
+> in dw_edma_v0_core_start() clobbers the mask state configured here,
+> leaving the interrupt configuration inconsistent?
+
+To be fair, this patch just adds one more path that relies on the existing
+teardown assumption: the same dw-edma instance must not be torn down while local
+DMA engine clients are still actively programming it.
+
+Taking dw->lock here would not fix that fundamental problem. The existing
+core_off() path already writes these direction-wide registers locklessly. If
+dw_edma_v0_core_start() can run concurrently with core_off() or dir_off(), the
+problem is broader than this int_mask write.
+
+So in my opinion, the proper fix is outside this patch and should be one of the
+following:
+
+  (a) Do not allow the driver to be unbound, as Frank pointed out earlier:
+      https://lore.kernel.org/dmaengine/aiHe9UG3FwIACC8B@lizhi-Precision-Tower-5810/
+
+  (b) Harden the DMA engine termination and teardown path so remove waits until
+      existing channel users have stopped using all channels before turning the
+      hardware off.
+
+      Parts of that are covered by another series of mine, esp. patches 3/4/5 of:
+      https://lore.kernel.org/dmaengine/20260615154111.2174161-1-den@valinux.co.jp/
+
+      The remaining piece is the remove ordering itself: dw_edma_remove() should
+      not call dw_edma_core_quiesce() or dw_edma_core_off() until the instance
+      is no longer used nor usable by local DMAengine clients. Only after that
+      should it turn the core off, free IRQs, and unregister the DMA device.
+
+> 
+> > +	SET_RW_32(dw, dir, int_clear,
+> > +		  EDMA_V0_DONE_INT_MASK | EDMA_V0_ABORT_INT_MASK);
+> > +	SET_RW_32(dw, dir, engine_en, 0);
+> > +}
+> 
+> [ ... ]
+> 
+> > +static void dw_edma_v0_core_ch_quiesce(struct dw_edma_chan *chan)
+> > +{
+> > +	dw_edma_v0_core_dir_off(chan->dw, chan->dir);
+> > +}
+> 
+> [Severity: High]
+> Will this globally disable the DMA engine and clobber interrupt states
+> for all active channels in this direction?
+> 
+> The .ch_quiesce operation is intended as a per-channel action. However,
+> dw_edma_v0_core_ch_quiesce() wraps dw_edma_v0_core_dir_off(), which
+> writes 0 to engine_en and masks all interrupts for the entire direction.
+> 
+> If a device has multiple active channels in the same direction, would
+> releasing one delegated channel halt and silently drop pending interrupts
+> for all other active channels in that direction?
+
+At the register level, yes: for v0 eDMA this is direction-granular. The relevant
+control registers, including engine enable and interrupt mask/clear, are not
+per-channel.
+
+The important part is that this series does not allow arbitrary per-channel
+partial ownership for the v0 eDMA and HDMA-compatible layouts. Those layouts
+require ownership of the whole direction before channels in that direction can
+be delegated. So this helper is only used where quiescing the whole direction
+matches the ownership boundary.
+
+HDMA native is different and uses the per-channel quiesce path.
+
+In other words, releasing one delegated v0 eDMA channel is not meant to stop
+unrelated live channels owned by another local user in the same direction. That
+mixed-ownership case is rejected from the beginning.
+
+In short, .quiesce/.ch_quiesce implementations are intentional, but I should add
+source comments to make things clearer for future readers.
+
+Best regards,
+Koichiro
+
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260620170040.3756043-1-den@valinux.co.jp?part=2
 

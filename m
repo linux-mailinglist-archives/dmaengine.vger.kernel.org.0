@@ -1,129 +1,162 @@
-Return-Path: <dmaengine+bounces-11720-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11721-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id RhFIO28WOWqCmgcAu9opvQ
-	(envelope-from <dmaengine+bounces-11720-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 13:03:11 +0200
+	id H3EFECVEOWplpgcAu9opvQ
+	(envelope-from <dmaengine+bounces-11721-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 16:18:13 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id D835A6AEEEB
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 13:03:10 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30B296B0402
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 16:18:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=cUuWXWvv;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11720-lists+dmaengine=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="dmaengine+bounces-11720-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=EVLTbodT;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11721-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11721-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D573B3009388
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 11:03:07 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3A1873007B27
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 14:18:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AE75379C20;
-	Mon, 22 Jun 2026 11:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65D2A3B992E;
+	Mon, 22 Jun 2026 14:18:06 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388C13793A9;
-	Mon, 22 Jun 2026 11:03:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B373B3C1A;
+	Mon, 22 Jun 2026 14:18:05 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782126184; cv=none; b=TguU/ZOYzIAiDTGRMJEtv6E6yJUkwPXo7NUlOXCztLHSIRbVOkyPsGUti2f4KzaG3rHyoiR5uBhblAQdZuqYlHMURPQfiNJE453OrR6UCIDHgmmx8OXei4kMwQTae714Pi6KPXZ2/kHEmGPaiFmGkFEry64KiipPtdqdCbw2p5Y=
+	t=1782137886; cv=none; b=JXHgOfxqT5oWgREU4FZ+IBmtXyI7Jc/MwC5+kqts3vP0sHjzcosJLG1tdn5EHmtb9ziuDk0tJnJrkBFbEBBAadmb2Hc6Wzi/NNzAzwvXOEc4xV/JreESXV9lOB/2Qluln4Cwbj7qleEe0W+mAun4qO4r41bXP+NTRDKPpolwgOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782126184; c=relaxed/simple;
-	bh=soCCb/qqcor7YOsqcDgZpD4kqOQExcgQHIU/hxZoPnY=;
+	s=arc-20240116; t=1782137886; c=relaxed/simple;
+	bh=vVOJCSwU/AlhedmvgwGw2qqdbBdYbj30GIUA5SvAdF8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QMyXcg6IC/xvXxZhLHjdAhgqRsXTAjMnTP6YCtn5v1CtujqHe/kz4lU5SN08+RnXF/++EjOCi7LPApotJE7RvkOS3Hg5+6fbvDHT7svzGyu0rI5ZpToVZNOakcThitgDRiG6yQ1+/1npKJE134ChLE4M04OzyilPLmv3/qAIovU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUuWXWvv; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3BBF1F000E9;
-	Mon, 22 Jun 2026 11:03:01 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=RwZk9oTPukFD8C4D+ul61GsMXIQP+ht0k7jp4NrBRdocfGwg6SbHpMyoVnbv0eojfRZhImIm0YApKzvfQ008TpDOA5+uIqa8YzWcyIBkUMqqsEbwnov4f0eay/NtgcrFrKK/20SuTpLtCNxXJHObDOM/ZZ9OgVBVFl4nbuKAYyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVLTbodT; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C131F000E9;
+	Mon, 22 Jun 2026 14:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782126182;
-	bh=soCCb/qqcor7YOsqcDgZpD4kqOQExcgQHIU/hxZoPnY=;
+	s=k20260515; t=1782137884;
+	bh=0ox8zRkJx0LI6GwcR7V69/qg6tR/JvYMLzclarSfrHI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cUuWXWvvFScX3vy2Lk1wKqpow2Zs9ZYXoikPy5C6W5tbFCu2SRdG3YnaiOsAKg//4
-	 dFIXSXeDBzxwCXrwPWi3qwz6kSEubHpik5M5VKneb/zCcrPxN+TSkxFwQtyZDNKsm1
-	 BjDXupe4EH+0dGL16Uswz8RZEhLUykLy2DZfzM8GOGO1H6vKgjLoI7ZYmdWteS91wU
-	 ZMn+js6raYOT38MILewRnhqvRolEEx5pXyTFirmMo/7mz6q0BM7ozBTIfFSOvEjE2P
-	 2gykRRSsR53SGY2kuppFumaSUUwwgA4KjBULaOjWk8EDiswboRD83xZa9moml+6dzs
-	 NGtjRRVVjCyPA==
-Date: Mon, 22 Jun 2026 13:02:58 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Golla Nagendra <nagendra.golla@amd.com>
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, michal.simek@amd.com, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	jay.buddhabhatti@amd.com, harini.katakam@amd.com, m.tretter@pengutronix.de, 
-	radhey.shyam.pandey@amd.com, abin.joseph@amd.com, kees@kernel.org, 
-	sakari.ailus@linux.intel.com, git@amd.com, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/3] dt-bindings: dma: xilinx: Add optional resets
- property for ZDMA
-Message-ID: <20260622-ubiquitous-emerald-manul-daa5bb@quoll>
-References: <20260618071056.2024286-1-nagendra.golla@amd.com>
- <20260618071056.2024286-2-nagendra.golla@amd.com>
+	b=EVLTbodTk8ejKM86Nbx/4+i26Oph2bbTATtmSnKgbQPyhQSwiJnyefZh1tyGvODZU
+	 QdkTDGV4qW2YvI0SE2wmQlEDxkVc1VipHb/xcXthjiC7lqI9xbDJrtTITNoC+Qebqq
+	 ZwvBxgTMs2dnXBXYE2MBo6wAr8UPlaJLZzVtGA9AO2NRrikEadQNpygXZJLtreTwYK
+	 7R17rhtJ/n3RKYDucquA1dsFsFrcsDmovDdX1a29vKtxwOY1azbS848ZVptYdKgtSw
+	 KrAy8r07L1rkBWMiso5vqr7ES6mfNYLWxS5+M5cZtL+2tVqBd7+NBPeoUxNF96AWSm
+	 wpRNuK0+Zh+Hg==
+Date: Mon, 22 Jun 2026 16:18:01 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Koichiro Den <den@valinux.co.jp>
+Cc: Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Manivannan Sadhasivam <mani@kernel.org>
+Subject: Re: [PATCH 00/17] dmaengine: dw-edma: Support dynamic LL appends
+Message-ID: <ajlEGS99fQT5rGkf@ryzen>
+References: <20260615154111.2174161-1-den@valinux.co.jp>
+ <tau5svk3bcatzeapqeb6mun7dxi4ifk56g5ltkk366ljozjzit@vepneiac3f26>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20260618071056.2024286-2-nagendra.golla@amd.com>
+In-Reply-To: <tau5svk3bcatzeapqeb6mun7dxi4ifk56g5ltkk366ljozjzit@vepneiac3f26>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
+X-Spamd-Result: default: False [-4.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_RECIPIENTS(0.00)[m:den@valinux.co.jp,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:mani@kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11720-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:nagendra.golla@amd.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:michal.simek@amd.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:jay.buddhabhatti@amd.com,m:harini.katakam@amd.com,m:m.tretter@pengutronix.de,m:radhey.shyam.pandey@amd.com,m:abin.joseph@amd.com,m:kees@kernel.org,m:sakari.ailus@linux.intel.com,m:git@amd.com,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[krzk@kernel.org,dmaengine@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER(0.00)[cassel@kernel.org,dmaengine@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11721-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	RCPT_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[cassel@kernel.org,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	TAGGED_RCPT(0.00)[dmaengine];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	TO_DN_SOME(0.00)[]
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp,ryzen:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D835A6AEEEB
+X-Rspamd-Queue-Id: 30B296B0402
 
-On Thu, Jun 18, 2026 at 12:40:54PM +0530, Golla Nagendra wrote:
-> From: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
->=20
-> Newer SoCs such as Versal Gen2 and Versal=E2=80=91Net expose a reset line
-> for ZDMA. Older SoCs do not have this provision. Add an optional
-> resets property to describe this reset.
+On Mon, Jun 22, 2026 at 04:38:49PM +0900, Koichiro Den wrote:
+> On Tue, Jun 16, 2026 at 12:40:54AM +0900, Koichiro Den wrote:
+> 
+> Hi Frank, Niklas, all,
+> 
+> I am looking for a good way to stress PCIe controller DMA engines, such as
+> eDMA/HDMA, and measure their upper-bound throughput.
+> 
+> nvmet_pci_epf is useful since it is a real in-tree consumer, but it is not a
+> very direct benchmark for the DMA engine itself. So I wonder if
+> pci_endpoint_test would be a reasonable place to add an opt-in DMA performance
+> mode.
+> 
+> One possible option I have in mind is:
+> 
+>   - a new fixture, pci_ep_dma_perf
+>   - opt-in execution, for example with PCITEST_PERF=1 environment variable
+>   - a few variants such as single and sg, possibly with a few knobs:
+>      - PCITEST_PERF_NUM_WORKERS, to use multiple EP-side workers
+>      - PCITEST_PERF_NUM_CHANS, to use multiple DMA channels
+>      - perhaps other knobs for SG entry size, number of entries, etc.
+>   - the new tests: READ_PERF_TEST and WRITE_PERF_TEST
+> 
+> For the other possible places I could think of, this still seems to fit best in
+> pci_endpoint_test. For example, extending dmatest does not seem to fit well
+> because this needs both EP and RC side setup. A separate kselftest also feels
+> like it would duplicate a lot of pci_endpoint_test code. That said, I might be
+> missing something.
+> 
+> What do you think? Any thoughts or suggestions would be much appreciated.
 
-It should be then restricted further per each variant/device in
-allOf:if:then: (see example-schema for syntax - ": false").
+There are two existing (out-of-tree) tests for eDMA that I know of:
 
->=20
-> Signed-off-by: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
-> Co-developed-by: Golla Nagendra <nagendra.golla@amd.com>
-> Signed-off-by: Golla Nagendra <nagendra.golla@amd.com>
+1)
+https://patchwork.kernel.org/project/linux-pci/patch/cc195ac53839b318764c8f6502002cd6d933a923.1547230339.git.gustavo.pimentel@synopsys.com/
 
-Best regards,
-Krzysztof
+But as you can see, the comment was to use dmatest instead.
+AFAICT, dmatest currently only supports DMA_MEMCPY, which, by hardware design,
+cannot be supported by DWC eDMA HW (since it only allows remote to local, or
+local to remote, and remote has to be a PCI address, while local is local
+physical address).
 
+Perhaps it is possible to add DMA_SLAVE support to dmatest.
+
+
+2)
+https://github.com/rockchip-linux/kernel/blob/develop-6.1/drivers/pci/controller/dwc/pcie-dw-dmatest.c
+https://github.com/rockchip-linux/kernel/blob/develop-6.1/drivers/pci/controller/rockchip-pcie-dma.h
+
+
+Anyway, since Vinod is the maintainer, it is probably him you need to talk
+to come up with a way forward. To not waste your time, I would talk to him
+before you spend a lot of time implementing something :)
+
+
+Kind regards,
+Niklas
 

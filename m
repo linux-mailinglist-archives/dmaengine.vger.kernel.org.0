@@ -1,189 +1,257 @@
-Return-Path: <dmaengine+bounces-11745-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11746-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ofzaNKZfOmq77QcAu9opvQ
-	(envelope-from <dmaengine+bounces-11745-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 12:27:50 +0200
+	id 2IQJHK1gOmoS7gcAu9opvQ
+	(envelope-from <dmaengine+bounces-11746-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 12:32:13 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40D0E6B644D
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 12:27:50 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 050F96B64CB
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 12:32:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=intel.com header.s=Intel header.b=R8nq5Wd4;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11745-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11745-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=intel.com;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=OSm2MpRy;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11746-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11746-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4691D3013A59
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 10:27:49 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 75446300F47C
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 10:32:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14C5937AA79;
-	Tue, 23 Jun 2026 10:27:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4829129E10B;
+	Tue, 23 Jun 2026 10:32:10 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87453793AC;
-	Tue, 23 Jun 2026 10:27:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43B5377541
+	for <dmaengine@vger.kernel.org>; Tue, 23 Jun 2026 10:32:08 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782210467; cv=none; b=oBRU6DrKZJXsWClzFIlDSnlBORt4qky/9bVXdlz47HUIt+0VwfD7esEbZ2UucsgOv4Pvsic/hz9c4s+mKK7SPAG/LI4Low+O6SHNGZE9U21p/4zYIeo2TZO5NTrUxNgAnYl7PJ4drzHVCariztSCUQiP+7raphJtsLY5VhL3E9E=
+	t=1782210730; cv=none; b=iEVfATJjRmW6hHfrPT+HyIn6fSRUuHhwAOsA5+EkL4HR7LP7O7wh+OdgEN4TElg3xJdV3ei0K3bof86iW+EdhEs3nuxNrmRoSEDEqTpdUhfT+0FrAahPsNJeNiMGktgOY5MaCYh9sRvaKgbN16dL/9/r8i9s0d9vFiQeOc44I3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782210467; c=relaxed/simple;
-	bh=vHvqJcg/E2q6BP1y4YVLBpMV3jKGlMVMhSXGfLPFk3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dkMUQXy1tJWNb0PZVOx84382TUFMXZLhSeGYyxkMutf2sleQBX2IH6N8XvtbLysNNc7ILRcdGO8QDwMW/iqCEF1Ab1xS/2xuMoglhivuKTNXDWRGoLDlkPhVrgjbAdIAWoBeFiYdnlCBOB11AnprRxHb8ebQ/ekhQT065ujF+XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R8nq5Wd4; arc=none smtp.client-ip=198.175.65.20
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782210466; x=1813746466;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=vHvqJcg/E2q6BP1y4YVLBpMV3jKGlMVMhSXGfLPFk3Y=;
-  b=R8nq5Wd4S17X4cg9ZLrmc4bUEb9hnsJbVBUrwRAsWHxbl5Wmaek9KT+8
-   vt5QsNeFn5QUOm7Vymc4zvTCwXDqvTZZN35zj79J6DrK1XKdKnwqWZc+r
-   v5wG+S7AKCdRR9eyvffWaypIH55Fzc9eBQZ8ASrhurf+z5eLcdaZTWrui
-   uHatSzyfhmzb9CpiZniNjLBfR1rPV41vtoVEGF9hlE0mS2WCmTMbqi+pd
-   cINv3HR52sWS62Pu8oWJP+U6/UtF4VmAmEN20tXTq+4il/ZmucPcjfcpF
-   j+wCqd6UX27l1B6TWhwIlUKgPs2rkRRfe0vUggElWpuLyFCtVMjIVJou0
-   w==;
-X-CSE-ConnectionGUID: OanaHJtwT0CL5svtGVRX5Q==
-X-CSE-MsgGUID: S16mIpZLQfuXGveFZZ5Jkw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11825"; a="82718592"
-X-IronPort-AV: E=Sophos;i="6.24,220,1774335600"; 
-   d="scan'208";a="82718592"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2026 03:27:45 -0700
-X-CSE-ConnectionGUID: UgTo6Kh4TVC4cXe7Y0krvA==
-X-CSE-MsgGUID: QteRkIPSSse7ahlhOnon3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,220,1774335600"; 
-   d="scan'208";a="245342363"
-Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.7])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2026 03:27:39 -0700
-Date: Tue, 23 Jun 2026 13:27:37 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Cc: Frank Li <Frank.li@oss.nxp.com>, nuno.sa@analog.com,
-	dmaengine@vger.kernel.org, linux-iio@vger.kernel.org,
-	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH RFC 2/3] dmaengine: dma-axi-dmac: Switch to bitmap-based
- address width masks
-Message-ID: <ajpfmQ6JID5rHLMF@ashevche-desk.local>
-References: <20260616-dmaengine-support-wider-dma-masks-v1-2-da23a8dcb756@analog.com>
- <ajF4i3o0gNRtUelb@SMW015318>
- <ajQkupPzv8-GdEjv@nsa>
- <ajVs3jwoxq7Jhop1@SMW015318>
- <ajWSXeq6h_OjNNqh@lizhi-Precision-Tower-5810>
- <ajj8AhN1YC3uvuLb@nsa>
- <ajlMAijTUHsnOhEQ@SMW015318>
- <ajlR9QiXiBAH4mWH@nsa>
- <ajmAP2nKzi2dPEVx@SMW015318>
- <ajpYvzlHSPiJRvnX@nsa>
+	s=arc-20240116; t=1782210730; c=relaxed/simple;
+	bh=8XkBg4KlI7ww2gsGdguvjCOorhLfEdFr34GILBMg9Zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jBXJvGb+M5g/ZGPJh/T3sXSn6wM9heqmagarfq+8h8MWJ+YVtz2askK80l03VvBHMCA2T9aiPnyTXR63M1FyRxWtfLSFBGlCT4aZD4gE4eesYwJsT2TMGvz/DdUVWwa+rYgY9aJsEAziwtBfJymLIMOCAb2/0kwveQtuMhAb8TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSm2MpRy; arc=none smtp.client-ip=209.85.208.42
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-697d677fc3dso1274637a12.3
+        for <dmaengine@vger.kernel.org>; Tue, 23 Jun 2026 03:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782210727; x=1782815527; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qkh/VbDh+NKBBYckhxh/lBQ/z9Y9ZEIStugjeMtCnZI=;
+        b=OSm2MpRy9aCBb0c6Y1GfisoWUjlYfXxW04KE1BDHBJyXPjxp82XdJMBsumottPjqcm
+         onMuk5m1JZCT26IgV0iCKjQUM+BI9Mfb3nFI1Ja3YrNNw+fGdlKIIlqNzp9BWKXiLhG9
+         eyffKHhf0sfnvLNb73jBGN3wa0FjYs1uG2/vo0Q3TSPVdA/TDs8XpprqdXWkXNCQElDP
+         VnIX0OVKLJkcDrDtl5ycpG9wc+B2gKSWoAA/R59MlVeNIykb6KkIZJIM3UwmZ9AAYNqE
+         /9qXP+MaiT8ddj0W32CMBZAF7TcGh6Y2YlKlq6J6Mh2B0ouvIrf+gPVUNaAiU3Fjqwzi
+         Gw7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782210727; x=1782815527;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Qkh/VbDh+NKBBYckhxh/lBQ/z9Y9ZEIStugjeMtCnZI=;
+        b=gfbnGRKdvkSTmXGPWqzv79/w6mtVxS2vBA21KvXGHnml7nW7pWwEVzjYu4Z8AKWWnL
+         3E7VKm480wkLXkQ+TbB1N4/kQ+haxKPMQaN0ffs5espNuokSqIv2SpgHsIKZwncDIx1Q
+         vA+UiAIAbRyKOdnYTv8szB5hPklPYDPizgY4AwipfWXdboioB2TzOshlGiQa5xKokc1X
+         6ywKhXn0wzDu7GkvZs58FrCwq3LSk/AeY15Wv4sZeqR+Gix0EunXQ8E1XYv8tO+qAj77
+         UtovoiU8sA24rx0fQ7j7JNR1hmZz0D7iw8JujefF80hgx6MzlSnv05RfaJxI5b+SO8R6
+         NEUA==
+X-Forwarded-Encrypted: i=1; AFNElJ88rq3RQMq9ezNaprnDXnu/Nm2+uNv5AYa+qnd5JfuiIHpoc7EtemBeGW60GMKCeEtcjETE94bO+po=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8Lq+HYmC0MkIorSBPIbZt07Lh+yntjxa+y7chEy68Mj7eDsQq
+	AQ9/Bx8KzjypANsCgF9X/plfb4RZYy4873LwdhXYQ/sxCS/3VLM92NwL
+X-Gm-Gg: AfdE7ck1N+FBieaLiK9XIjTcwMgrcWhYdN0BLN5e28REHtEkciwTN043CBZ2Em6Iq0q
+	AZjrPhRk4v+BLumhCIJZN1cTcdlLU53uBZrtStULkiC1mhtxRNPmPuxcmcY0Q7yqa4Ib2t6TqAF
+	a1V+NUqnFnVpRi/8e0KDbGT6muBIK22ZnbW1h/qgMlbrWOCJI5trbMJuxuu+jvPwENt0Y4nFKUz
+	Eh1NrNvNKaDs9Rcy0Ietcne8wzm/DXlebMqPNYKAQsYOqh2DROfxoNbdDOnOnjHis9lfJjuCIDc
+	8e+Kh59UpyLAxGGly06/0rU/H3gGGR/AxwvSVwfDCns9YXsmfEEZ7HmoWZJRSxOBeY6agQONhwv
+	sDgWzC4Df4gYxBxMpt7ZtVcB5PXw1dHqxyN2y+x3jxAuWkihdSFqrCAK/164LEaVo0lX7mSl1I1
+	23vkNuHFokaPTQbaDRaubad3nAJ9yDQW+6PB7QVwZ+u9TBPb5sgl2ogE1tcaCMEgkfSNR3wUJBk
+	MOoPmPS
+X-Received: by 2002:a05:6402:2710:b0:697:d645:a9db with SMTP id 4fb4d7f45d1cf-697d645acfamr1626215a12.23.1782210727148;
+        Tue, 23 Jun 2026 03:32:07 -0700 (PDT)
+Received: from localhost (dhcp-91-156.inf.ed.ac.uk. [129.215.91.156])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6977be31c73sm4625527a12.17.2026.06.23.03.32.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2026 03:32:05 -0700 (PDT)
+Date: Tue, 23 Jun 2026 11:32:04 +0100
+From: Karim Manaouil <kmanaouil.dev@gmail.com>
+To: nathan.lynch@amd.com
+Cc: shivankg@amd.com, Stephen.Bates@amd.com,
+	PradeepVineshReddy.Kodamati@amd.com, dmaengine@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: SDXI on AMD EPYC (in relation to =?utf-8?B?TmF0aGFu4oCZ?=
+ =?utf-8?Q?s?= SDXI dmaengine patchset)
+Message-ID: <20260623103204.qvmd5luse4vmhwl3@wrangler>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ajpYvzlHSPiJRvnX@nsa>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.66 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11745-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:noname.nuno@gmail.com,m:Frank.li@oss.nxp.com,m:nuno.sa@analog.com,m:dmaengine@vger.kernel.org,m:linux-iio@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:lars@metafoo.de,m:jic23@kernel.org,m:dlechner@baylibre.com,m:andy@kernel.org,m:nonamenuno@gmail.com,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[andriy.shevchenko@intel.com,dmaengine@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-11746-lists,dmaengine=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[kmanaouildev@gmail.com,dmaengine@vger.kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_RECIPIENTS(0.00)[m:nathan.lynch@amd.com,m:shivankg@amd.com,m:Stephen.Bates@amd.com,m:PradeepVineshReddy.Kodamati@amd.com,m:dmaengine@vger.kernel.org,m:linux-pci@vger.kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ALIAS_RESOLVED(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kmanaouildev@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ALIAS_RESOLVED(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,vger.kernel.org:from_smtp,intel.com:dkim,intel.com:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 40D0E6B644D
+X-Rspamd-Queue-Id: 050F96B64CB
 
-On Tue, Jun 23, 2026 at 11:14:51AM +0100, Nuno Sá wrote:
-> On Mon, Jun 22, 2026 at 01:34:39PM -0500, Frank Li wrote:
-> > On Mon, Jun 22, 2026 at 05:09:10PM +0100, Nuno Sá wrote:
-> > > On Mon, Jun 22, 2026 at 09:51:46AM -0500, Frank Li wrote:
-> > > > On Mon, Jun 22, 2026 at 10:26:41AM +0100, Nuno Sá wrote:
+Hi Nathan and Shivank,
 
-...
+As Shivank already probably knows, I've been experimenting with kernel
+memory offloading lately, especially in the context of THP/compaction.
 
-> > If support 4Byte, it native supportted any N*4Byte.
-> > 
-> > So needn't bit mask to indicate all support bytes.
-> 
-> > > > each transfer, dma_slave_cfg should set specific bus width requirement.
-> > > >
-> > > > If memory have requirement for 32bytes, typical cache line length for
-> > > > hardwaer coherence transfer, it should use dmaengine_alignment.
-> > > >
-> > > > So I think only need set min value should be enough if fix pcm_dmaegine.c.
-> > >
-> > > What fix for pcm_dmaegine.c? Not sure there's anything to be fixed in
-> > > there... The code seems to use the dma bus width to match against PCM
-> > > formats supported and filter only the ones we can support (per dma cap).
-> > 
-> > if cap is one byte, it should support 8, 16, 24, 32, 64
-> > if cap is two byte, it should support 16, 32, 64
-> > if cap is 4 byte,  it only support 32 and 64.
-> 
-> Well, Now I see your point but not exactly. Because we do have
-> 
-> DMA_SLAVE_BUSWIDTH_3_BYTES
-> 
-> and it might be used by the pcm_dmaengine code,
-> 
-> There are also some controllers that set it. But it looks like all that
-> set it also set 1byte.
+I am in fact in the process of doing some experiments with Shivank's
+page acceleration series [1] on Intel Sapphire Rapids with Intel DSA.
+The major problem so far is that migrate_pages() is largely bottlenecked
+by rmap, not copy bandwidth. However, that's a different story for now.
 
-But this might be not true for all HW in the world. In previous reply I made
-a comparison with MMIO accesses where not all HW that needs 1-byte read can
-cope with that. If there is some proof that this is the case when 1-byte
-DMA bus implies 3-bytes (or other odd number), I would like to see it.
+I have a dual-socket AMD EPYC 9004 in the lab (I pasted /proc/cpuinfo at
+the end) and I wanted to see if I can get the SDXI series from Nathan [2]
+to work on them, as this will open the door for me to experiment more on
+AMD hardware.
 
-> So your suggestion might still hold and work but I'm not too convinced
-> that having the array complicates things that bad when compared with the
-> risk of breaking existing code.
+I don't know if these CPUs are equipped with these accelerators or not.
+lspci is showing these devices (four on each NUMA node):
 
-> > Needn't mask each bit.
+# lspci | grep SDXI
+06:00.1 System peripheral: Advanced Micro Devices, Inc. [AMD] SDXI
+21:00.1 System peripheral: Advanced Micro Devices, Inc. [AMD] SDXI
+41:00.1 System peripheral: Advanced Micro Devices, Inc. [AMD] SDXI
+64:00.1 System peripheral: Advanced Micro Devices, Inc. [AMD] SDXI
+81:00.1 System peripheral: Advanced Micro Devices, Inc. [AMD] SDXI
+a3:00.1 System peripheral: Advanced Micro Devices, Inc. [AMD] SDXI
+c1:00.1 System peripheral: Advanced Micro Devices, Inc. [AMD] SDXI
+e1:00.1 System peripheral: Advanced Micro Devices, Inc. [AMD] SDXI
 
--- 
-With Best Regards,
-Andy Shevchenko
+All of them have these PCI specs
 
+vendor=3D0x1022
+device=3D0x14dc
+class=3D0x088000
+subsystem_vendor=3D0x1458
+subsystem_device=3D0x1000
+BARs=3D 	BAR0/1 512 KiB prefetchable
+	BAR2/3 512 KiB prefetchable
 
+Class 0x088000 is:
+base class    0x08  System peripheral
+subclass      0x80  Other system peripheral
+
+However, the PCI device class does not actually match the class from
+Nathan's patchset [2]:
+
++#define PCI_CLASS_ACCELERATOR_SDXI		0x120100
+
++static const struct pci_device_id sdxi_id_table[] =3D {
++	{ PCI_DEVICE_CLASS(PCI_CLASS_ACCELERATOR_SDXI, 0xffffff) },
++	{ }
++};
+
+So these functions appear to be exposed as generic system peripherals
+(base class 0x08, subclass 0x80) rather than as SDXI processing
+accelerators (base class 0x12, subclass 0x01).
+
+Do you know whether these AMD 1022:14dc on this platform are actually
+SDXI accelerators? And if so, whether the class code 0x088000 is
+a firmware issue, or just the old (pre-standard) class used?
+
+I tried to force probe these devices by also matching against 1022:14dc,
+but the system resets after pcim_enable_device().
+
+So I would like to know if these devices are actually SDXI engines, and if
+so, whether Nathan's SDXI driver should bind to them at all, or whether
+additional enablement/firmware is required.
+
+Thank you
+
+[1] https://lore.kernel.org/all/20260428155043.39251-2-shivankg@amd.com/
+[2] https://lore.kernel.org/all/20260605-sdxi-base-v3-0-4d38ca2bdffe@amd.co=
+m/
+
+# cat /proc/cpuinfo
+processor       : 0
+vendor_id       : AuthenticAMD
+cpu family      : 25
+model           : 17
+model name      : AMD EPYC 9224 24-Core Processor
+stepping        : 1
+microcode       : 0xa101158
+cpu MHz         : 1500.000
+cache size      : 1024 KB
+physical id     : 0
+siblings        : 48
+core id         : 0
+cpu cores       : 24
+apicid          : 0
+initial apicid  : 0
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 16
+wp              : yes
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca =
+cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe=
+1gb rdtscp lm constant_tsc rep_good amd_lbr_v2 nopl xtopology nonstop_tsc c=
+puid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 pcid =
+sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_leg=
+acy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs ski=
+nit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpuid_=
+fault cpb cat_l3 cdp_l3 hw_pstate ssbd mba perfmon_v2 ibrs ibpb stibp ibrs_=
+enhanced vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512=
+f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx51=
+2bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_t=
+otal cqm_mbm_local user_shstk avx512_bf16 clzero irperf xsaveerptr rdpru wb=
+noinvd amd_ppin cppc arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean =
+flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif=
+ x2avic v_spec_ctrl vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes v=
+pclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid overflow_re=
+cov succor smca fsrm flush_l1d debug_swap
+bugs            : sysret_ss_attrs spectre_v1 spectre_v2 spec_store_bypass s=
+rso spectre_v2_user tsa vmscape
+bogomips        : 4999.84
+TLB size        : 3584 4K pages
+clflush size    : 64
+cache_alignment : 64
+address sizes   : 52 bits physical, 57 bits virtual
+power management: ts ttp tm hwpstate cpb eff_freq_ro [13] [14]
+
+--=20
+~karim
 

@@ -1,88 +1,88 @@
-Return-Path: <dmaengine+bounces-11747-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11748-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id U6PkF6xsOmr58gcAu9opvQ
-	(envelope-from <dmaengine+bounces-11747-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 13:23:24 +0200
+	id JINJB6RtOmpU8wcAu9opvQ
+	(envelope-from <dmaengine+bounces-11748-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 13:27:32 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAFCF6B6AA5
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 13:23:23 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B4B96B6B4B
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 13:27:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=amd.com header.s=selector1 header.b=BaOAl8ZV;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11747-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11747-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=amd.com header.s=selector1 header.b=iYsa0CCE;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11748-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11748-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=amd.com;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 40A2F303FAA9
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 11:23:22 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 132A23023305
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 11:27:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9DB137C0FE;
-	Tue, 23 Jun 2026 11:23:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F7A63D3D07;
+	Tue, 23 Jun 2026 11:26:58 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011065.outbound.protection.outlook.com [52.101.62.65])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011012.outbound.protection.outlook.com [40.93.194.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5F335201B;
-	Tue, 23 Jun 2026 11:23:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D632826AE5;
+	Tue, 23 Jun 2026 11:26:56 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782213801; cv=fail; b=BGppblFWWEWzwOQonw5uCSWBAnbGracHrp3njbo04kVnt/jwRulyb6Fv5toxfpGVC1O6i+v4nrw9vPlH09lR7kZzXc3FqvxP6YHw2RYrO9dSBkjOrQnuD8eBoK9pIStTwtwWy9NyYHW9JnqGsf9+cSGKvOizyLKeDAjYYTJOFVU=
+	t=1782214018; cv=fail; b=j+7O8zb9Cz5Pp6DDmpxHMNDFWHq9XT8ZhFb6Ham+z+apjGnoZ1964x3G5TJZPcQH3aLtJJyvKzjo1VjEyTfc2953u0otV6bgLYjKjO6BzlQQy32/dMJKknCYouLB3z6PBvk3V9cwlhtooE7id5TVaMhtd/+yuqhqo8jcbdns+2I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782213801; c=relaxed/simple;
-	bh=HpqTxWiv6yInQhxFh70jo8CHANJ735fw8ZBzMCcP2Hk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Wl3Lx97QxcIt1isU4dRMSSC8nG05F7kyOXDsJFZhSSObwNfT686AOhXn0rsS18Mzd8OuXVhp3mzCnP9b89XXR1iFOXpgUZ0AwR2k2Q/1YW90akILXfsrtTGJumTSpzzGxbCobFpTMQbLwIbwPSxvCV/tA9KrzGSyJVsab4VHYEs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BaOAl8ZV; arc=fail smtp.client-ip=52.101.62.65
+	s=arc-20240116; t=1782214018; c=relaxed/simple;
+	bh=S/1D4kUpyQXS/MrTcUOl43MDxHJ9X7jYHiiRKZzPjg4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j0fbkvIU5J+OM3I1Nfsy8JE4zqZDG/if5MifIHgrjIqjJKXEtU3i8JuQ0z/eglSv3R08tM602XTGyXsTqYCXFwBxcp4wOfKqhU4+QNXGIBdIM+komcFATKtrg+ZZbhwQNF+5nfkJuonm+/fU1uxMWjMeaMbZ4uLqOA+UgmniTgc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iYsa0CCE; arc=fail smtp.client-ip=40.93.194.12
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vcX9SyMLBofZLprKaL4OAXCbGEx6tzITIvCQuhQza1x7JYpFZaKc3JkDCF8dIRiOT5xrSX1ZcC2WUHgzTwd0MeDsHzQgPzXwUcn48IsOEWJKdOVWRrM8mlpndDbuGGXPIV69a7qlXI/uhxIS42IghPbGq1TgPNu7A/Afm1WSglF2Hu6QaXzf84LArWxbppzDUiwpkBD0Q8fBP4pm8oOh1etEuHJ5rIRSA/Vg0OWsyony7CubLQ3pQAPbYowXaFdC5zoGlPXxXkZeNxMMMWH74Da44l+IB9CWlA5EFt0swVqqYlzbsL9SeaY0/JDBmKI0BUBvEgsbeafSHkxAEAsSuA==
+ b=XW7YS4oH/CfwEOZ8UthORfAk2veYD7uW+IzzmrznaFqUIH0BGyq63SW8MZRY0mVFB+RgzW+zw2tWVdyKBfKF+yycpQ0KBQdzgVBr4E/vPgkaoIUk/QVxcyo70ec4IK/289jiL8nmLAMg3X8f132OxVtnyO+mvmrMlCoHR0ZtUench4YYDrZzV7dKpVMFJwFmwYyZ+oVVyLfB6PZquJ1WCveccwQ1ktVFFa5qIqdxqQpHcjdSr5Yw84T5VwdjYUesBQuOD7gZqSeFnsEIn10g1u3IiCO94ozTPTneQrbg82NllTtcDmLmb2fJUUbS0ZwgADtZETHap09KGx+a5Z3ZMA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4nN1bCksciro7JWVSrhAmOctTDvHltJgX+7NBPKRg1U=;
- b=sNYAdMimbSQ5OQf8THHAvd3BM7v1qFEslcSYJ0uKHU1Giba1eGYN1rR0+jUmabKSjfby8FoguhfPsvJftaRSNKf4GcYKpjSwEjVtNNno3RdduxTMRRw2HNoyJ6W2NjHLYOI97IELciRSTFsfRDmmpm0ormkJgH+JEsisewHCLW7P+ERiXUrQ6Ilty5igGVQWLAe0gLLBin0C3Gvyu7wlFCi6StjfGpGjFCh3sGB751eTTtge/KxlLknuqJ63IqyHYGPz0wM2i2zp2cc2hqiCUCLt8lPNo24/KNoqErWuTM97qay7r+eN+aVxCIHEPob5IyadLHkIdvOlsLQwxeEXFA==
+ bh=eN+gfJb0HYDB5MfIT29Tul5KgYx9ZqPoSEbbyXa5OaI=;
+ b=xn0XAlDwjnX0deJLwX+MG2hmXutRWcEB6dTRcMRwc6Ur2/iosK7ODc20Sudchtxz68jbXQLhwRs5b2uv3Rn4JniGYNHXBw4zOAXHMCd5dUk/66f323Dx2uyrBg9U606X3zxWKoEtTV3Be8Dy2b2f7Vy1Dn+39rs4zbUOlwxvgZBQlrVdldAFMfvvyIGuWEIZnBH9tD2Ff1GfYUmrlx4qnrXkrqQSKTZaMWbDCe4g2CRr3zOuTrBa6kHToaYveRP43Ve3dESGP8qxeQZFWdvUi1Hgb6YEWj7OcdiymeH3DPqjG6zn+ViUp6itnTxNrAUk5iLitBJYolIKnnUJJpdW+g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4nN1bCksciro7JWVSrhAmOctTDvHltJgX+7NBPKRg1U=;
- b=BaOAl8ZVgUQnzyRjcdDTbkyRIg9qCckE6Mgq6BeCT3U7/EuajtH3G2FY4+EaPr9rMguE4VcaB6Ko4IYf+x+qfFZa0Tl57JU14o+NMqzYgQl27ExK6Pj3ejmknQfp3mnOOfQIrfUQOBTtrUbhRwIJ1MsRaJBBcIfL0bLlerkzt/I=
-Received: from IA1P220CA0008.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:461::14)
- by SA1PR12MB9247.namprd12.prod.outlook.com (2603:10b6:806:3af::18) with
+ bh=eN+gfJb0HYDB5MfIT29Tul5KgYx9ZqPoSEbbyXa5OaI=;
+ b=iYsa0CCErqfe1RKJpc6CO0INXmsbo8l9DThv6AkuPWnsF2Xh/3+7QGTU/AbmSk3Jks+sjZdkUuKfA0DDJJpZPZOPAJL1GVWeCJqj2719xjQBLD8kurpeexCMbp7evJk9rdpzmmA6Tnv+x2jMQexHK/U4VLI+oKsmkPCGbpKyOeA=
+Received: from BN0PR04CA0062.namprd04.prod.outlook.com (2603:10b6:408:ea::7)
+ by MN2PR12MB4334.namprd12.prod.outlook.com (2603:10b6:208:1d1::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.20; Tue, 23 Jun
- 2026 11:23:13 +0000
-Received: from BN3PEPF0000B077.namprd04.prod.outlook.com
- (2603:10b6:208:461:cafe::ad) by IA1P220CA0008.outlook.office365.com
- (2603:10b6:208:461::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.13; Tue, 23 Jun
+ 2026 11:26:51 +0000
+Received: from BN3PEPF0000B071.namprd04.prod.outlook.com
+ (2603:10b6:408:ea:cafe::39) by BN0PR04CA0062.outlook.office365.com
+ (2603:10b6:408:ea::7) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.159.12 via Frontend Transport; Tue,
- 23 Jun 2026 11:23:13 +0000
+ 23 Jun 2026 11:26:51 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- BN3PEPF0000B077.mail.protection.outlook.com (10.167.243.122) with Microsoft
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BN3PEPF0000B071.mail.protection.outlook.com (10.167.243.116) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.159.10 via Frontend Transport; Tue, 23 Jun 2026 11:23:13 +0000
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ 15.21.159.10 via Frontend Transport; Tue, 23 Jun 2026 11:26:51 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Tue, 23 Jun
- 2026 06:23:11 -0500
+ 2026 06:26:50 -0500
 Received: from xhddevverma40x.xilinx.com (10.180.168.240) by
- satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.41
- via Frontend Transport; Tue, 23 Jun 2026 06:23:09 -0500
+ satlexmb08.amd.com (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.41
+ via Frontend Transport; Tue, 23 Jun 2026 06:26:48 -0500
 From: Devendra K Verma <devendra.verma@amd.com>
 To: <bhelgaas@google.com>, <mani@kernel.org>, <vkoul@kernel.org>,
 	<Frank.Li@kernel.org>
 CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<michal.simek@amd.com>, <devendra.verma@amd.com>
 Subject: [PATCH RESEND v4] dmaengine: dw-edma: Enable HDMA 64R/W Channels
-Date: Tue, 23 Jun 2026 16:53:08 +0530
-Message-ID: <20260623112308.3377168-1-devendra.verma@amd.com>
+Date: Tue, 23 Jun 2026 16:56:47 +0530
+Message-ID: <20260623112647.3379581-1-devendra.verma@amd.com>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -94,30 +94,30 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B077:EE_|SA1PR12MB9247:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b5d9d70-3bdb-4a37-7e8d-08ded119d081
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B071:EE_|MN2PR12MB4334:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7f1b50b4-b651-4e1b-1eab-08ded11a525c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|23010399003|82310400026|376014|1800799024|18002099003|11063799006|56012099006;
+	BCL:0;ARA:13230040|1800799024|82310400026|23010399003|36860700016|376014|11063799006|56012099006|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	otF6StaUtvmROYtPuSogHqVFvpeh9p+8aRbq/8kJCaKYYhAmHprSnpyY68KC7KATC+61UYnMpVNp3kW1nP2NjsVUAeYg6lmre4qPHqPhGN0YSvSLhl5eEf2qUE3n22MhNQtaLzGl4hF+e9C4WdqZTLVeDiBZAP274/9uLk+gZGe+PoYap1SUgAcnXaVAhSneVa2udByt7H4DbXt8HEUEKSHw3HdkIYGhUw/jEmzgjFom2S8hEDKLwxUu6EJ2PDGxAMpK8SBe2t8+nmZ3jo5rshYTV1BOFYe80sj39POvYAwkWC5pwuZ7fD002onmTKn1HchlCxFSbiAm2qmH9rfGzmTLRl3hXvFVk1bqGWQhknFARI25mQ0Vv4079vzmbjlOaWyl2rhnWY1IuYXvu3XkICibJlCLiI82nfdoL7ZV4EyCVGU0pIFc7pl7kYCQPWJp3frmcHXstrnUWN6DqQxwKlOfNnD+2CAyblVklS3Q0pJ9rGe6hnFTj5ZtEOuJ6Gvb7jhQ+KAb848PhLRreBpdSPmi1Vgr7B1X5jR0QwDtIxewzyEtH0sA6nEm/xsg5fA/ADbbng4vevmZtjIXGkz0VyXeAlM7hMiT3DmchC6EWDoeoMuY3d724n1p3ULhD3fhzKBpvbq//gcX6L5GrzLZxxOnA+r+PisWA2onc4IK5qoD3WWYcZ6h4XY84jlc0EDV7j3neiKQDpUCd9AziDVZLQ==
+	YLpcs3lKW8+yTr5KcfMxchcjT/3hKy5RGXELHYkyc9ewRXqk1Gg1HnLTlgwcigms5kQqZZWKAcOc3PewBJ1Au5R7HQO9DhZD4mJqCmK1IKkpmfnWd0bcUDPNpcG6gorz4lBZP93E0D1jh36KV0ECrIJsRdRlnzhecBhwm00FTH4X4E+t/wKicCbi8Ok1o+Uysa5fI6Vt8Ygcon0A6yBxES32BNrWdaU1l9FD5k3TEEG5WS9f2iNFOeovdc5iMs5sNx1MHGw280we8liTxmZYygu5PU39+orOshzCPnWh8IdCvW25BndTjdPbp7w4dr2EvVvGXMJeagQlW6xCCyVjkptRKGAs67kzcbu3+RenqJASmVOdbbz00ZCXnCM7kcAffn9KtOwiEYjh0wFPK5s0osNWnX9VZjDcYzEYLneZSRYLIjEeJjobeg6vgDTxG76myKgPI7t+IEIysOO+3jmLB2fVNulm3UR1tCvP37fFUYZbJ1bXbbG45DNsegK4sOII0mgrzsWK7Yzlw6ON/kM20laWxQzjvL72I6ZfpB+N6K43cpdYTTZAMuh3Ajl4bxe73WPAza1+JyAh9SKSTZMOmGcaU/nHgM0JmX7RapBlovi/dmRYpE9KGJET+J+ZxGN1RuUQYr3cJyBbb3ykwPiaKrCIJOp61N335pQgNVoef7ndg2pCRbSCmCT7THc1TNS0MM/CjbEv2+ZM15S7X3GMxw==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(23010399003)(82310400026)(376014)(1800799024)(18002099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(23010399003)(36860700016)(376014)(11063799006)(56012099006)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	PT30JPTG60AsXb6jQm7MXWVdhlfGIiM6uQziM2vAoHg3Iesp8jdkf1zCWY1aYl0yOAuQ7Ij3Lffs5RR83N32Tt8mU74r2GtjRXh/zV9x3nBGlZxfr1HIXl9QA7l/+GpkmSoCL+xqtN7eTykG5/Pv1+je+/HgmKoVdW1yFBq+2+che//abLDtirG6wlPjWIIuHk8ZYe6qT30Ho3I6BercFciS9j3jGQ0kjV7WJ+qSeKOENONZvMv66NSp+OR+QkF7PqK1OdSgz5RNAWhIHWFs2Yt1O6X6MReR0tRKnvwZ5qdk/UGlVPn1dvvPUpRagJMBWN31JPg7vBWG73Iavx5RzmF+K6M2DgvObVR/9XXGlh/6VfeX+CUV0PYx+CfR+z95viecwMjWs1QehvE/D0r84VjKqkr7JqGWeN2vFqkr2maaHlX3LIMp2BBpzhrHFb8k
+	1g82Ll6RqTTmDHCk7MeFa0kJ9jBxmJGGrNu4/qG/r5lHZKQVtXroCBZbZYwBFSktZ/J2jAb5xRTTitJIU8bxte7AdZotHqBRTLwHKOLFvuSgmS2j6kNN4BgIQnaoGIY55/u7EZkdLaNydUegHpnwUrM6bu9lTf4xQBVgn6OEhmKMmjgksiy7JVTKAij8AUABpJy1wwtvEMaxJcJGt06E+K/bdoAc20lpid0/rfGcxs9At8/GJUMu0MPwjsILm3m4K/y+jpWpjAwTEk4SmI2bP+xFo9KYIlfTMXlhPdWkrvKHjDS+Gos9+MTQLE1Yjy5ze1pme/7XmpDUPW+Sn1D/+QazZLyXWtCyuaGGbCrjMP+UW7VDhC9mQ3PD3apQAeCtRpW7oV/DvFuiNkdt1a6EHro7dwZ3dogkHhmq600kItyl634Yomq0ANlksttG6b6X
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2026 11:23:13.5310
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2026 11:26:51.3899
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b5d9d70-3bdb-4a37-7e8d-08ded119d081
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f1b50b4-b651-4e1b-1eab-08ded11a525c
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B077.namprd04.prod.outlook.com
+	BN3PEPF0000B071.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9247
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4334
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [1.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
@@ -125,12 +125,12 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11747-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11748-lists,dmaengine=lfdr.de];
 	FROM_NEQ_ENVFROM(0.00)[devendra.verma@amd.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:bhelgaas@google.com,m:mani@kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:michal.simek@amd.com,m:devendra.verma@amd.com,s:lists@lfdr.de];
@@ -143,15 +143,15 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,amd.com:dkim,amd.com:email,amd.com:mid,amd.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp];
 	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[8]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AAFCF6B6AA5
+X-Rspamd-Queue-Id: 0B4B96B6B4B
 
 As per 'Designware Cores PCI Express Controller Databook',
 Section 7.1 - Overview, HDMA supports 64 Read and 64 Write
@@ -171,6 +171,25 @@ channel support:
  o Changed mask types to u64 for higher channel counts.
 
 Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
+---
+Changes in v3:
+  o Reverted the FIX for AI reported GET_CH_32() issue, as
+    per the recommendation of reviewers, need to create
+    separate patch for it.
+
+Changes in v2:
+  o Fixed the pre-existing bug related to GET_CH_32
+    interchanging the channel direction and id.
+    This bug was not caused by any version of this patch.
+  o Fixed the issue when using for_each_set_bit() for mask
+    of u64 type.
+
+Changes in v1:
+  o On review recommendation of sashiko bot, in the function
+    dw_hdma_v0_core_off(), the loop iterates over registers
+    as per the number of channels enabled and not on total
+    number of channels supported.
+  o Changed mask types to u64 for higher channel counts.
 ---
  drivers/dma/dw-edma/dw-edma-core.c    | 19 ++++++++++-----
  drivers/dma/dw-edma/dw-edma-core.h    |  4 ++--

@@ -1,279 +1,172 @@
-Return-Path: <dmaengine+bounces-11738-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11739-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id /e94BRQgOmqO1wcAu9opvQ
-	(envelope-from <dmaengine+bounces-11738-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 07:56:36 +0200
+	id JkLlMFEiOmpk2AcAu9opvQ
+	(envelope-from <dmaengine+bounces-11739-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 08:06:09 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B1E96B44DB
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 07:56:35 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76CBF6B45A3
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 08:06:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=valinux.co.jp header.s=selector1 header.b=IVz9anhN;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11738-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11738-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=valinux.co.jp;
-	arc=reject ("cv is fail on i=2")
+	dkim=none;
+	dmarc=none;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11739-lists+dmaengine=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="dmaengine+bounces-11739-lists+dmaengine=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4871C3016BAB
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 05:56:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7C3C8300D7B8
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 06:06:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7271A3A9637;
-	Tue, 23 Jun 2026 05:56:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A00ED3AB292;
+	Tue, 23 Jun 2026 06:06:02 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11020101.outbound.protection.outlook.com [52.101.228.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABC0331EB8;
-	Tue, 23 Jun 2026 05:56:10 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782194175; cv=fail; b=rQcf1qlBqsnA65Y0VzE7YV92iNGSc7F/BgYX4M57MRnzji4kzqmfexRS6f5QAJnnTil69FRj6JxchdoKsUjdJdnoDdgT18/R8NPlM0kwoI6ZdNMfJUahUn65nDynUWQ/Ih4+a8diOJIrj29UZ0T7YkArLSEyTkibGVlAfHLKYCQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782194175; c=relaxed/simple;
-	bh=TBqd6ggXbwDZDHeGm80yDgGsZ6c029Ijh38+hecoGD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oFv+U9KNE+7AOeaVpeHmi0SdEgxO6PQQGgmKDejb8hyYpU8RfMBMV31N0x86PpZvVCEOguNI/k66Yjk3Pv/hdD/sPSvpKgL4afO+dYusW998J4s/CuCnRfNoI3sPcK2B+MhudeajeuhTwGtXZKv5sWlPmR3geHXJEWsa0WHEY5U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=IVz9anhN; arc=fail smtp.client-ip=52.101.228.101
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MQ/5oINryI6Qw6Xu2dYhPKCBDocOq9qzWH/RIGk4joLIsv691spVKQSZpjWdxWRYV+wZSQEUKQp9OMLHjoPMfnFarFz4wKz+Pq1WsHSSHBs4j4WrhMbZGLkwxJVA2xSI/P09PS6sJT5ty2dmmDeTMWvfKB1uoJXGJ0upUtidVzTmx2eHcJaA5OAs+v/6nfjMR5+wiqaz13ofoF13PzVzN5whdwudxwVuFpoMc/GsEqfgATfybvxwYxy1wMRIXOzfaHLT3V5ixPsMta30YG8cAsZOHzV5Vhwg8RevNiHbDDZmLUzNA5Dl4GhpJYTyEAsjPU0j5eD82+hgEAF8NKYLnA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NVm1l/rZjSgG0D1qkVKBhYLRhUNKYmkaYlb73Fyet+I=;
- b=J20tOkCwPnMY52nesRiDU4uTbVOgSwfk91Pzc4Jw+OFsvVIe/EdCB7Oj4hd+IVwAnEl2Ej6SewH964yl8vgKpDHmVqWvDZbZsoVRUbmi2w7yRqbxgyFkPd5KV6fO8p7OayT5oqaxVAAqAPhIVLDFztlW3KHAZG1yMDjQV75owQPfAq94gUtsXgdcf4QpiP8rlemx6o4zloSY/wKM1S5xgswzRH3p7IDg/CR5OKr9L60npPpDY/KzW2P7So9nuYFmBd0wWRE7yLFsXZ9sqdjU7Zbo0QGZuKj78YD18/9Af0HEJDrfTfG6gYHg8sasGb//aDwY6mKdmCv1IeJ2O3VyFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
- header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NVm1l/rZjSgG0D1qkVKBhYLRhUNKYmkaYlb73Fyet+I=;
- b=IVz9anhNtQFkhzF8RT6xGV+y98K56amJNEZxLWtddpwdySgq+9h/VQafoQkWXqGhhn5MI81et1RhLpOdYPKGCtI5Ad02tSGdTniZuCdYewqEtYY4pRhi3YNL8fiKfyqQLyeDh05vVrwfUoerBKW6lz5Qgln48oTBHfbezao58V8=
-Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
- by TYYP286MB4713.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:195::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.18; Tue, 23 Jun
- 2026 05:56:08 +0000
-Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.21.0139.018; Tue, 23 Jun 2026
- 05:56:08 +0000
-Date: Tue, 23 Jun 2026 14:56:06 +0900
-From: Koichiro Den <den@valinux.co.jp>
-To: Manivannan Sadhasivam <mani@kernel.org>, 
-	Niklas Cassel <cassel@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Manivannan Sadhasivam <mani@kernel.org>
-Subject: Re: [PATCH 00/17] dmaengine: dw-edma: Support dynamic LL appends
-Message-ID: <wmwhekjfeqomzehfyqczzxel3knkxlfgfyrifeqpcqpqq6viwq@abwyzxaibkio>
-References: <20260615154111.2174161-1-den@valinux.co.jp>
- <tau5svk3bcatzeapqeb6mun7dxi4ifk56g5ltkk366ljozjzit@vepneiac3f26>
- <ajlEGS99fQT5rGkf@ryzen>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ajlEGS99fQT5rGkf@ryzen>
-X-ClientProxiedBy: TY6P301CA0024.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:405:3bf::17) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:405:38f::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BD83AB466;
+	Tue, 23 Jun 2026 06:05:59 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782194762; cv=none; b=TdYUvCS4sjizy5eg7ls39nshwIiDx5oqIXmsLB6mUW3lbqPFMJbdbZnOpai2d2L6eYnbt3DrzeDj8VgK3ZoQxBsSiNwadrx+7RaGx3FA6XKE5SkxwzG61JbDwY8UAK/Iexj+lOYsuZmBQuOoep81lkrKRzM7la4nIAMP5mGLwPI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782194762; c=relaxed/simple;
+	bh=cn98g7V11zJrp3Rc1IvOQIJ4VnNNGkohcNr6rfwpkFM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cYnrt3dHVNderKR5lCCpFwhHdquI6Cs+j/B2HbbcyZ4nSbE15VgfLX3k+0F0aHwO7+fG5VmmIt4QhImL36rrbrlqq4BcU095bD792DxrnVtqPSBKbL6dPyabJ3IW8r7kJEwRuD/ImW+WbuJMM0r3F+XmX0EfZaJ1LAWFH8P8U3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.25
+Received: from localhost.localdomain (unknown [111.196.245.140])
+	by APP-05 (Coremail) with SMTP id zQCowAD3Z+tFIjpqg+PJFA--.29888S2;
+	Tue, 23 Jun 2026 14:05:57 +0800 (CST)
+From: Pengpeng Hou <pengpeng@iscas.ac.cn>
+To: Olivier Dautricourt <olivierdautricourt@gmail.com>,
+	Stefan Roese <sr@denx.de>,
+	Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Subject: [PATCH] dmaengine: altera-msgdma: fail probe when reset times out
+Date: Tue, 23 Jun 2026 14:05:54 +0800
+Message-ID: <20260623060554.13523-1-pengpeng@iscas.ac.cn>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|TYYP286MB4713:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7f1a3dff-926e-4417-c805-08ded0ec1ebf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|1800799024|366016|10070799003|22082099003|18002099003|4143699003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	f6Vl66PRx7ytxqMu56qg/8+xetL4ettYaeGV2/xPij1+7HCW0aad+Nv9jl9kkFgvtKW3WoZUzeIWniOfkrkLwFReDQIzeUMU1r8mFIPuS9IFdMiSyittBFbSYrzPOgBgfxmPr1R1vndTyimIxb/h+OMXnxc/ij3yPPTCDbDO+SZWriH9Wy8dX1GDFyO7eAyP83uiJSHoxd2tqAizg/f6FJTzWEvID+cANMQucEEhGwmVTCvukIjwltbE0jFX7oZcWpgi3HTw0hKnwxHCZDYkNBXwgCi5B2jWzANRl56Z4tkzGEPTZfMWW02RYjzGkeBkYkOhpOvpXYKejMBatlJKWFQZFd6Z3bsFjbQItd9cDnbYNOPQA5xkfO0XPLdA3PiLyRbeLcGe8TrczBA+OzeUxH7u+lYydDOfbw5hOHJAd5s9KmpgJi9/UnKGw6XJj9IFZlOddVNgXDLgAlSogizD9bte8XyQeKZ4GnQJ/vMBzjSuoJ7a0zRfs9kzXTJCFxyVWQkZcMC7PiHox+G0f3Qu40gTKwFj9Fe76rqojSlD348GwTFIHTXz1moAp4w/jh2RshahlC16YPsGuoFmbJePyZ9SN/6Sj2DPFugd9vhG0pdavBTuZIURQqhWq+nBKI58x8TLKNXpD6x1YQ/gbqY5ivv9HVsuEnWUSwO1/zWAkvw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(1800799024)(366016)(10070799003)(22082099003)(18002099003)(4143699003)(56012099006);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VlJf2ZIWLTS8gwEf3z9W8nLsFt2hPCDs7POvbaAVKQAK4zA91WOnoH5XUcfA?=
- =?us-ascii?Q?xq7D2FVVjD/G7QOHO0BuufR9GBNiaHhwB+EFeVlNr67qOXZi9iOvs7KXrs28?=
- =?us-ascii?Q?H6VnmQza/JqEVuQnnf9/KyFv4xWnmm3/Z2yvWQtAe6o+8d7UlQ6ziIU2zNUL?=
- =?us-ascii?Q?8y9tD+PlyvXyUFVeChCd5aeBn1mROVpl/aULzI3HjKXns5tLkV7pBl/oEFYy?=
- =?us-ascii?Q?5mm5a+bhl0BAihFHDBVQviby4W6EWD1iRnW5u9nGiu/0Wq6hPzFUc36L+GBk?=
- =?us-ascii?Q?yXnDhDrf/VzWRydLjt1mTW5Ozw8x7gSTYDg9zSc8v4YbGf8QCJ3e2eyVT6DG?=
- =?us-ascii?Q?GczGdIgkmgy6AFxfVcGU8pb8eMBCfCiVWkHS1/NncVGrljB8W4tIEcpZ366L?=
- =?us-ascii?Q?fib5BRkX1exqhHJ9pCgDBCy0dLQpKcpzQwVeGSZSaLw9Bm4ZXSQcwo/TnzIc?=
- =?us-ascii?Q?wM50TIoaTuyJphX3cAh6jg4WOVGYPGYA03XXbZr1wJOavewjiTHZhldAW/j8?=
- =?us-ascii?Q?QtRjuouxKG+V7wbyxWfPbQXsTzzL69cpaZ0NtsaMCAKiQrPSBkVWpT4Ck+pq?=
- =?us-ascii?Q?c/CDmQhIDIAC6HhE//r24C0+0eUasBRZ69blzZ5jLZNyjZalNSsD8tRpCNKu?=
- =?us-ascii?Q?k6OeJJrSCWsWRKg15MqA63jKsV2KU2mFQU/SBNwPFuff5q7YjgPwr4NXR7Dz?=
- =?us-ascii?Q?6dEDsaEmOtoU+6GxBNjXJEgX0Lboq1MLfgqCiUgP4YokN8ptgKgnTmiYOAJR?=
- =?us-ascii?Q?sXimdACecu5/gZECBKWuz/xZ/5LXXdDKKclgasGdT5yH9ZuHfICesaIMX2MU?=
- =?us-ascii?Q?YjbjZAyND3N6fAHvCMPm+SESH3DL1YdQcBQucylUYNsEWCQfWCMpeoUF7vx1?=
- =?us-ascii?Q?ULVWJWF/BvPE2dIlsNYyRkL9sLRi/dLlfG4Uv1gAHOp6aInmyZRvunXzIjc/?=
- =?us-ascii?Q?hzTxGwu3nfDcgA+gBQ3Q+29nEk5VESISoRci1rKyMFSJrKYx2gVhsMIFQ0Lj?=
- =?us-ascii?Q?zCSobkph4E1CLnPeEMTW7L3IQfLgq3ibUUBSBhb7hfw/86wmJnrwhhGIUPa1?=
- =?us-ascii?Q?XR5BpVWQwJwJmdVgSF2hetw0sGX0B5x6djRdykehelhNnQvJewQhbQ8/udsA?=
- =?us-ascii?Q?E9Zey2Agkbmri66QYKRsKKSW1sl+c5t0SfaImkrt/FHrwSI1A2d2HsjB6TAu?=
- =?us-ascii?Q?jhStjA4CIWC+u3tRGWui3+1H/rIeRSXCBhdsVfDlVwCZg++tGTHkKEVXrEMV?=
- =?us-ascii?Q?E9cqTshAhspxnt2iF//m+1QfOdxYyDlqUhCcxfcKP5ShRc3FRZI/W+UCd+Sx?=
- =?us-ascii?Q?GNri1Z3tOtrVURAeBKEnc3lxasMGnTWgVM4KyWk3FMo090H6G/pKlx6+QwZK?=
- =?us-ascii?Q?1DiDZy86U+/6FJmPkggBk1mtwFjd8l/BVO2jH0lK9p2JSYjYyumtx9ftl9T5?=
- =?us-ascii?Q?hh6s8sgyiQy2/rHnhFRh0I84tSFR0WwXONV46dsA9cdS4z5Ec1pwvtIu468P?=
- =?us-ascii?Q?TcU5Z9a5v48RP9vEjas6ERIAOAeQo8fyAFrNRZ9AM4oQu2MtlF4KA9rxX4Yt?=
- =?us-ascii?Q?AbcMSmDTd6mBPd3gh5OSaaLH8q1LhtnlGQtrVJc/1JzQuvpRzcxheHR1tK4K?=
- =?us-ascii?Q?GKvw1tSanwTv4nbmhmEbxv0cRAqDHj49AQ13XG3hMIUovLMB62wC+AueesMr?=
- =?us-ascii?Q?A1NPmy4gxAxGgN0SUIU0ulAIwhdy6d4l3RLJIqacAymeB4b6zDIHgiZSKu0A?=
- =?us-ascii?Q?GsBHpNho0MBcIAKOALa+rspna2CXsWzknB4cbp23QqSWjCy4x7Dq?=
-X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f1a3dff-926e-4417-c805-08ded0ec1ebf
-X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2026 05:56:08.1226
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TQ66S8fiFHrOkRtLWI0wcZjqzzGRVDuOwC5QJjxU6PD0YRm0IPZrprWfQwPl/25NTUWFu2DKMStn41sWFi1KUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYP286MB4713
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAD3Z+tFIjpqg+PJFA--.29888S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww48Cr15AF48Kw1fKrW5GFg_yoW8CF45pa
+	y7Wa45GrWjqan3tF40yFs8CFyYgF1ft3yxC3yDGw1I9wn8Xr98W3y8t3W8WF48Wry8tF1f
+	Aa17Ja4ruF1jqaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUr2-eDU
+	UUU
+X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.34 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
+X-Spamd-Result: default: False [0.04 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11738-lists,dmaengine=lfdr.de];
+	DMARC_NA(0.00)[iscas.ac.cn];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:mani@kernel.org,m:cassel@kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[valinux.co.jp:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS(0.00)[m:olivierdautricourt@gmail.com,m:sr@denx.de,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:pengpeng@iscas.ac.cn,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11739-lists,dmaengine=lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[pengpeng@iscas.ac.cn,dmaengine@vger.kernel.org];
+	FREEMAIL_TO(0.00)[gmail.com,denx.de,kernel.org,vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[pengpeng@iscas.ac.cn,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[7];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	R_DKIM_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,abwyzxaibkio:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,iscas.ac.cn:email,iscas.ac.cn:mid,iscas.ac.cn:from_mime,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3B1E96B44DB
+X-Rspamd-Queue-Id: 76CBF6B45A3
 
-Hi Niklas, Mani,
+msgdma_probe() resets the controller before publishing the DMA device
+and OF DMA provider, but msgdma_reset() only logs a timeout and then
+continues to enable the controller and mark it idle.
 
-On Mon, Jun 22, 2026 at 04:18:01PM +0200, Niklas Cassel wrote:
-> On Mon, Jun 22, 2026 at 04:38:49PM +0900, Koichiro Den wrote:
-> > On Tue, Jun 16, 2026 at 12:40:54AM +0900, Koichiro Den wrote:
-> > 
-> > Hi Frank, Niklas, all,
-> > 
-> > I am looking for a good way to stress PCIe controller DMA engines, such as
-> > eDMA/HDMA, and measure their upper-bound throughput.
-> > 
-> > nvmet_pci_epf is useful since it is a real in-tree consumer, but it is not a
-> > very direct benchmark for the DMA engine itself. So I wonder if
-> > pci_endpoint_test would be a reasonable place to add an opt-in DMA performance
-> > mode.
-> > 
-> > One possible option I have in mind is:
-> > 
-> >   - a new fixture, pci_ep_dma_perf
-> >   - opt-in execution, for example with PCITEST_PERF=1 environment variable
-> >   - a few variants such as single and sg, possibly with a few knobs:
-> >      - PCITEST_PERF_NUM_WORKERS, to use multiple EP-side workers
-> >      - PCITEST_PERF_NUM_CHANS, to use multiple DMA channels
-> >      - perhaps other knobs for SG entry size, number of entries, etc.
-> >   - the new tests: READ_PERF_TEST and WRITE_PERF_TEST
-       `--- (A)
+If the reset bit never clears, the driver can still register a DMA
+engine backed by a controller that did not leave reset. Return the
+readl_poll_timeout() error from msgdma_reset() and abort probe on reset
+failure.
 
-> > 
-> > For the other possible places I could think of, this still seems to fit best in
-> > pci_endpoint_test. For example, extending dmatest does not seem to fit well
-                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > because this needs both EP and RC side setup. A separate kselftest also feels
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                         `--- (B)
+Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
+---
+ drivers/dma/altera-msgdma.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-> > like it would duplicate a lot of pci_endpoint_test code. That said, I might be
-> > missing something.
-> > 
-> > What do you think? Any thoughts or suggestions would be much appreciated.
-> 
-> There are two existing (out-of-tree) tests for eDMA that I know of:
-> 
-> 1)
-> https://patchwork.kernel.org/project/linux-pci/patch/cc195ac53839b318764c8f6502002cd6d933a923.1547230339.git.gustavo.pimentel@synopsys.com/
-> 
-> But as you can see, the comment was to use dmatest instead.
-> AFAICT, dmatest currently only supports DMA_MEMCPY, which, by hardware design,
-> cannot be supported by DWC eDMA HW (since it only allows remote to local, or
-> local to remote, and remote has to be a PCI address, while local is local
-> physical address).
-> 
-> Perhaps it is possible to add DMA_SLAVE support to dmatest.
+diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
+index b46999c81df0..f60a4e86a246 100644
+--- a/drivers/dma/altera-msgdma.c
++++ b/drivers/dma/altera-msgdma.c
+@@ -466,7 +466,7 @@ static int msgdma_dma_config(struct dma_chan *dchan,
+ 	return 0;
+ }
+ 
+-static void msgdma_reset(struct msgdma_device *mdev)
++static int msgdma_reset(struct msgdma_device *mdev)
+ {
+ 	u32 val;
+ 	int ret;
+@@ -478,8 +478,10 @@ static void msgdma_reset(struct msgdma_device *mdev)
+ 	ret = readl_poll_timeout(mdev->csr + MSGDMA_CSR_STATUS, val,
+ 				 (val & MSGDMA_CSR_STAT_RESETTING) == 0,
+ 				 1, 10000);
+-	if (ret)
++	if (ret) {
+ 		dev_err(mdev->dev, "DMA channel did not reset\n");
++		return ret;
++	}
+ 
+ 	/* Clear all status bits */
+ 	iowrite32(MSGDMA_CSR_STAT_MASK, mdev->csr + MSGDMA_CSR_STATUS);
+@@ -489,6 +491,7 @@ static void msgdma_reset(struct msgdma_device *mdev)
+ 		  MSGDMA_CSR_CTL_GLOBAL_INTR, mdev->csr + MSGDMA_CSR_CONTROL);
+ 
+ 	mdev->idle = true;
++	return 0;
+ };
+ 
+ static void msgdma_copy_one(struct msgdma_device *mdev,
+@@ -896,7 +899,9 @@ static int msgdma_probe(struct platform_device *pdev)
+ 		goto fail;
+ 	}
+ 
+-	msgdma_reset(mdev);
++	ret = msgdma_reset(mdev);
++	if (ret)
++		goto fail;
+ 
+ 	ret = dma_async_device_register(dma_dev);
+ 	if (ret)
+-- 
+2.50.1 (Apple Git-155)
 
-Thanks for the pointers, Niklas.
-
-The first one looks like a host-side test on top of dw-edma-pcie, where the
-RC-side driver programs the eDMA through BARs. That is useful, but it is a bit
-different from what I had in mind here.
-
-What I am looking for is closer to pci_endpoint_test READ_TEST/WRITE_TEST, but
-with a perf/stress mode: the RC side provides the buffers, while EP Linux
-drives the EP-local DMA engine and reports the throughput.
-
-I agree that, if we extend dmatest with DMA_SLAVE support, then Vinod should be
-involved early. In theory that could cover this too, if dmatest also had a way
-to set up RC-side buffers and pass their PCI addresses to the EP side. That is
-the part that makes me unsure dmatest is the right fit here (see (B) above).
-Before going too far down that path, I wanted to check whether the PCI endpoint
-test stack would be an acceptable home for this EP-driven case.
-
-> 
-> 
-> 2)
-> https://github.com/rockchip-linux/kernel/blob/develop-6.1/drivers/pci/controller/dwc/pcie-dw-dmatest.c
-> https://github.com/rockchip-linux/kernel/blob/develop-6.1/drivers/pci/controller/rockchip-pcie-dma.h
-> 
-> 
-> Anyway, since Vinod is the maintainer, it is probably him you need to talk
-> to come up with a way forward. To not waste your time, I would talk to him
-> before you spend a lot of time implementing something :)
-
-Yes, that makes sense. I will keep Vinod in the loop. :)
-
-
-Mani, since this is about the PCI EP test stack, do you think an opt-in perf
-fixture in pci_endpoint_test/pci_epf_test would be acceptable, or would that be
-too much for the EP test driver?
-
-The rough shape is the one I described in (A) above:
-
-  - a new fixture, pci_ep_dma_perf
-  - opt-in execution, for example with PCITEST_PERF=1 environment variable
-  - a few variants such as single and sg, possibly with a few knobs:
-     - PCITEST_PERF_NUM_WORKERS, to use multiple EP-side workers
-     - PCITEST_PERF_NUM_CHANS, to use multiple DMA channels
-     - perhaps other knobs for SG entry size, number of entries, etc.
-  - the new tests: READ_PERF_TEST and WRITE_PERF_TEST
-
-Best regards,
-Koichiro
-
-> 
-> 
-> Kind regards,
-> Niklas
 

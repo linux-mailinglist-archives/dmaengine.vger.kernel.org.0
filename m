@@ -1,92 +1,81 @@
-Return-Path: <dmaengine+bounces-11734-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11735-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id vw5DKVOAOWotugcAu9opvQ
-	(envelope-from <dmaengine+bounces-11734-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 20:34:59 +0200
+	id OFGJHjv2OWrYzQcAu9opvQ
+	(envelope-from <dmaengine+bounces-11735-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 04:58:03 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA8616B1CE7
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 20:34:58 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2D4B6B3A7B
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 04:58:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=fail ("body hash did not verify") header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b="W7/czsOG";
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11734-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11734-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=fail reason="SPF not aligned (relaxed)" header.from=nxp.com (policy=none);
+	dkim=pass header.d=valinux.co.jp header.s=selector1 header.b=dzh+Blbo;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11735-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11735-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=valinux.co.jp;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4B3CE30166D4
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2026 18:34:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 5A6CC3027A68
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2026 02:58:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98F58316197;
-	Mon, 22 Jun 2026 18:34:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F935386571;
+	Tue, 23 Jun 2026 02:58:01 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011026.outbound.protection.outlook.com [40.107.130.26])
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11021097.outbound.protection.outlook.com [40.107.74.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0CA175A6E;
-	Mon, 22 Jun 2026 18:34:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEDE34AB01;
+	Tue, 23 Jun 2026 02:57:58 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782153296; cv=fail; b=GC0Gm2VpouDYApYZQ/oSFHls1MuI173mLWr7xdK2JHdhyXlZ3/3CzreT6lQVMoHod15o7fzsAhWwBMTvzjC3mNVrKC0GGdK1Dp8KZQ8VvEm2j5WJijXeao8Ny1bxhOGf0TxGSpF1PHx10zTVNduPCkRSk64gyWadWljpjSSe1No=
+	t=1782183481; cv=fail; b=rif/eWB5Df+z/N/T0v/1FrpGbA6D7Srdp5wb3ZYJfnUdDzIdQkJRjn5XfmwESMu/ZNWasOBr9wVaheleTeMho4ror6F7QQGiTF4S16Whjx4yP0mPLyEazup46nkM1vFDZyKXfTvjPYZxaIJRbIDsUlAaKwy1HaB6aWISIn1C6hg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782153296; c=relaxed/simple;
-	bh=Q/rGOYIAu8uKmoVEsMU38cA8fQYusmM74vVb/+sgY2c=;
+	s=arc-20240116; t=1782183481; c=relaxed/simple;
+	bh=MMZHKRHaKu74QwdPJu8JbLTiM2n2BSLdoC35i/73eEo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PpLoiykbukIwJ8GmwbwWA1uAdkAcrUn3hYFuHwQFtsDw77JyxeRQGpyP82dojuCK8AjccPyb2r/XJ9tQRPK4FLQLwshMvg+g6f4Pa2YBFcSsbFLv+OytLSSUmF9x/O35tQhBbam9H0glsL/ctHB1VJQGN3MiU8CKVteo3MyM7l4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=fail (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=W7/czsOG reason="signature verification failed"; arc=fail smtp.client-ip=40.107.130.26
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Qx9VRaRhyMBWyWlPG0fS5mAn5x8qWi2bSWIvymC1/vugN294MQ4I5QM5Mvb/MQoiOrxtpD3SSvshMBkMFfqvJ7dCvSmquOb8cw83eNUebdGtWIKzFGlx4IxRHbG2G8Djc3c9VmjO/0CgWcP7wfZ5ef2bvJ/CdpNuHYHLfVB649Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=dzh+Blbo; arc=fail smtp.client-ip=40.107.74.97
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=seXmIm3/oVusRiI9Di3Uy/s0Ma00QiH7anEc5daou5mTWdenpLqLnMrZyeymfjA8rhnsVZ3y6SLcGihGr9XjgD52HL8a9p9vfM1xL+ILmfEP7shDEvk7r5+SP7zksvDX7WsKbTgj6cQkjyKZj8h3zJCpoz/n7Z+xXgz7d7K8SedqqU4rxQNvMmfvM8kfJqTrpEBEQd7nFgPpcgO6N1x8sxUz/4gldX7S8onVKLjsQeN17HRzYlO8vDY+mrWm2+wwrxCYIo/PCHBgd7sKs9i1YG1nRIDPCP1rq/QkVFLreWkC2loYmhb6nhKV54Dnd9pwQMyey2lb7vO+k+KAP5N8fA==
+ b=D+wUXMbmh+u0mkshpibxlw+Ir0PhpJHizmkWX9YfyYmnwQ4JvOone3snGs0UfIH+JenuOm5Oycg/Fsy1OIff6H+9AYXg3ZKMjO38pxHDQW2zwpTu1p+F4eiQcGEZxOEkS4+yCsQkkSlFwCBhn+HfG7l9O+iVm/qNdfVdFG0aXxktVUeEt6/XDqMfHpuXM3+wZdhiF4yP/XQ5Yv7gF5hD9aVZJjIIwQgJNO15eUidW5OYT+ibcaJS3/Ib8dZdqoKzHW5E5GIcpzZltvPQ6yFAnXlM9TyAIgToMyNbYLIpfWAxaMocJxV4QUX+QNenyKUcRWtIf129NzDM+WsNhAxBew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cv53/7cEqgMb8+WnniIIXb07pxHxp32gloXOX5mDQGk=;
- b=fnXBnfeN0pcdeQKX0IuDulQoB3ngbuOCJ4qCd2cLbXqCeSGGt9Fyyzf4OOlaL93/SrYHiADv859b7eF1KbMfXvgNo/IR628wWYlYmSvjRmTxLh0HF70INt452a1BDDlHUqSU0tkD69Y8mpb+BBHt2DmPKHEGAtykJ75TZ7ZcppgX9pUezLsEWn5nxJRixFQFBqJA0iCmtRNG2rtsaOd7bOOm7cUKvQYayDM0G7EcgiFNw16wWjV0uIs5NEwuMrTNVnRL22bQqIc7nvg32uWmOZhRiTeE3VXMs22GvBdJRAB1jbIBLJiMcoAO7cbomJdSMotSzLtldBg55JPFxlVdvg==
+ bh=Yk7rIgLSGKrFw5hKw9Fbu66xIiKSGbFnLCo3eJtp2HQ=;
+ b=dzDSbPdYocFIi93HVF1BMW340eXBU8XzMYafAspxWTdojEUzqtyMjsPx3wvlsAEX9jgUdjFjos+tNIjZ0K0ONVOCdIcxSJ8TNpPaDfz2qYNQxlqT3h6vnNg9MNF7PziaqkwZvsD9Rk1nr1lr4m8wQLDAfe+9+CLMMy9xFdIPOmdfvNc6IogaXwVMDFKiA23h+hSRFaMh+3Sw0P0Zg7Tu9iH6E0B4S2b26FigLCdMyIukGqjJbKqVCSwRc6vHrjCGkVGDX0+hzk8Lo+zzBSdTXy7SDK8aeDkZGsi5vNhEiDHc7DkzjKjmOrlCG+DZ1BOS1MXWj7bNhbdklVms4rBKvw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cv53/7cEqgMb8+WnniIIXb07pxHxp32gloXOX5mDQGk=;
- b=W7/czsOG0i35s7Ko5BsPpGnFFubYTC7joYNmxT8XUafFEqpGVwvgxB0OWDLNuRdUIF9ObW8AbtmaL+u+mEaI77Ug2QZTEKw9SYiwuPMAE9VThnucfMFPZspuZ0Z9NE2eLG0cz70r5hsbtlEdAYBvPA4Yz37O6wKhEbAkhbs6OfNDrkyF7LzNsEgDmjKac/QdxsMx+vhWPO+OL0QU5GVOCLFPmp7On8dC/xOaB5V0Sx4+t1ia1w75VtoKXSFx6w82GwdqNEptJCxdDvkQyJSI09+LC08z4H/4t8hQoHNrdeBftazxXDzzsSSodBqCq11WbmLIH4cMjBITh9rsZQJlpA==
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by VI0PR04MB10094.eurprd04.prod.outlook.com (2603:10a6:800:247::5) with
+ bh=Yk7rIgLSGKrFw5hKw9Fbu66xIiKSGbFnLCo3eJtp2HQ=;
+ b=dzh+Blbo4qajIfY4ZpUdrrnbnykjyN0RVxg7FvA832RQ5lAjfT9+dTZfq/lh3H86SmoVLHPRaqmgk6uo67/A9A63NNXqBJR5msBTIPBPDzv/XMyJGVA86b1vpdP4hMvAkp8pHrDiAsBmC0fQcP3pIPA+72OfvCihG/+O66b9DB8=
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
+ by OS3P286MB3274.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:212::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.19; Mon, 22 Jun
- 2026 18:34:50 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0139.018; Mon, 22 Jun 2026
- 18:34:50 +0000
-Date: Mon, 22 Jun 2026 13:34:39 -0500
-From: Frank Li <Frank.li@oss.nxp.com>
-To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Cc: nuno.sa@analog.com, dmaengine@vger.kernel.org,
-	linux-iio@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH RFC 2/3] dmaengine: dma-axi-dmac: Switch to bitmap-based
- address width masks
-Message-ID: <ajmAP2nKzi2dPEVx@SMW015318>
-References: <20260616-dmaengine-support-wider-dma-masks-v1-0-da23a8dcb756@analog.com>
- <20260616-dmaengine-support-wider-dma-masks-v1-2-da23a8dcb756@analog.com>
- <ajF4i3o0gNRtUelb@SMW015318>
- <ajQkupPzv8-GdEjv@nsa>
- <ajVs3jwoxq7Jhop1@SMW015318>
- <ajWSXeq6h_OjNNqh@lizhi-Precision-Tower-5810>
- <ajj8AhN1YC3uvuLb@nsa>
- <ajlMAijTUHsnOhEQ@SMW015318>
- <ajlR9QiXiBAH4mWH@nsa>
-Content-Type: text/plain; charset=iso-8859-1
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.20; Tue, 23 Jun
+ 2026 02:57:55 +0000
+Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.21.0139.018; Tue, 23 Jun 2026
+ 02:57:55 +0000
+Date: Tue, 23 Jun 2026 11:57:53 +0900
+From: Koichiro Den <den@valinux.co.jp>
+To: Frank Li <Frank.li@oss.nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Marek Vasut <marek.vasut+renesas@mailbox.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/13] dmaengine: dw-edma: Add delegated channel
+ request helpers
+Message-ID: <g6urnk4zqgqoc6behtu6dwjo4j7rmxke46gldstdwpdqqnchxs@5qsr7aak46xy>
+References: <20260620170040.3756043-1-den@valinux.co.jp>
+ <20260620170040.3756043-4-den@valinux.co.jp>
+ <ajlda1gkqvXCPmrs@SMW015318>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ajlR9QiXiBAH4mWH@nsa>
-X-ClientProxiedBy: PH0PR07CA0070.namprd07.prod.outlook.com
- (2603:10b6:510:f::15) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+In-Reply-To: <ajlda1gkqvXCPmrs@SMW015318>
+X-ClientProxiedBy: TY6P301CA0028.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:405:3bf::18) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -94,273 +83,272 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|VI0PR04MB10094:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b1536db-fba0-4e4d-c39b-08ded08cf189
+X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|OS3P286MB3274:EE_
+X-MS-Office365-Filtering-Correlation-Id: 599bc701-1b29-4d6e-ebd8-08ded0d33926
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|23010399003|1800799024|19092799006|366016|13003099007|18002099003|22082099003|4143699003|11063799006|56012099006|6133799003;
+	BCL:0;ARA:13230040|366016|376014|1800799024|23010399003|10070799003|18002099003|22082099003|56012099006|4143699003|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	9o9h1h08p8VTVF6L59HoIilhbfJ3qLhN0LXPVv9T6UvQTC6HRghYqHfqQdyibN21zSQrckNNLoGFByThFYyQzs+GI77CjQnoixlJjALUpW/+S9vMc+hQ9z7/ps22KVUrf0+k13x4PG5crBYMKVEeT4jvuMsY6WqUh6EubMJlb47rYyqlR2p3Pbqi5nAlGtkgMOUf75HBYlDsP4xKiQ+UjsxPlw1+sHuzt0v1dWuFxO+mE3YP0yczAzFDrW8CSFyLt3un0PnMhGbiK3scOl4Q1vpidx8rmheoMl0AC7i3XHDy60HzCawpc0ef+RNLTIuuq9Em+o2ZdIAzmo3eSvpHeri+w9iqa36nnjqX6jsQtMsxSI1RjFFK69RDbXwmJHQH0UFNaJVXBQ714AtJTFmAd7Osd32XjGqYkeBRWx+psQv37wIkRHR2QeMkP8IwBGVuGOVZwd7LHJCjU9zuJgKa4UfzLnr+2O4hZku4EQg6ru9L7p/DVBh6Db5vwdx3a8HctDwmu+vrNolYaQ6S9ruhs6IZ8CU8Ty7zIUk+ps+q2zn1hfCmbqx5BoxeuYsBeFpgs8ZFl13Cx0jnKgFZMCWcU4iRAlAxp1phMx0Q5uDX08R081BPg7NLGRodv5eRSK7W
+	6mj61w7KPhK8MQdPo7c7HfiIp4pq9Y4h1kDP7qTpmJGViOfPcsGRFEGvmSzTrDkTNARji7D0XsZBhMe9Cmd3c276StU9llPIUEHFF77/2UCHhG2G2/E+UTzscCPoA4bpBpAmC4Igh2u8yVTAsWUM5PzrbEh/JZ7OXt3qhS8zcp1f1yQoXdptgx3s6Q+GfYDOW8KYLR/tmYF2cX9aLOQ5DVZlv60sVPWODAgutDwK0EQpttY9LQkrU+Lt8/bc1mi2LzvhH+eOPf2MAKBwkTcL4JSKp2u2aJPtH9Lkc+ljWE1dZJjTpirZJmiSWcl158i1zWpFP0E6idHwcHQD3zuAGg/VRUTvVUyCOAYSrZNmBeGORJmhZb6gxOrRMo4WAGNKXDHhUmjsnKYQbzp138h/IlbJba1j7ztDq1b/D99fkWDN1lXi4K6Gd3K48A7LyQWCiexty7katRdzV2gC7OdISkdCs9SjuVbb2ptRXGoblR8dsIWGTvii6ccozV0MFTBk1B2MLXtv54iKomotANIrgJ1nfi2CMZyc+RABY6oEBsQmZED/PRVsvQmZ9aTlTg2Bz2iMrPSNLRwU8ni2C0BzDiTLneJkvK1tmr0p2dtovDNDCJaGVpc+mD31es2i+q3C8U3oAbf+aIHWdUI0RXtmSzEb7sPu2Nzb51MXsspFR3c=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(1800799024)(19092799006)(366016)(13003099007)(18002099003)(22082099003)(4143699003)(11063799006)(56012099006)(6133799003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(23010399003)(10070799003)(18002099003)(22082099003)(56012099006)(4143699003)(6133799003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?TdTYPT+VbN6AqTRpB1QKqDaysG0753PBLkZWGZGz6R4xS6smLGjBVag1IB?=
- =?iso-8859-1?Q?WPTgQA5bgonlBnbcyF5XhMDBLDFB0Y+53Jh0Jebh4aaXq74PHTlHrscgKW?=
- =?iso-8859-1?Q?erAwUMV0VD1g/8x1r6h2xlDZpX05yBG6P8X4KHuiyXElvZ5CCMztSIVjFg?=
- =?iso-8859-1?Q?GRFOucposJsK7vEYJYQwNpQSNLefWJt1oWXdxIlp9hR33Rf5lAGM6B6rJ1?=
- =?iso-8859-1?Q?lf0q5aZWQZv3V4+S+evT28Ph2k/zzDASRbi1/Kr6Oc2TJ+KNBBKR+uhYSe?=
- =?iso-8859-1?Q?sGDpL9AUIobhG4WvUD1Vcbe5OL+R4XgXAJaFShOu5Eo84/klBAZK98XUOo?=
- =?iso-8859-1?Q?Gr5YuEKSail9u3IiuqRt/HgszdL9PTXK/2KClfeja2jZcTuGs4fTvzVpO8?=
- =?iso-8859-1?Q?oXmzIMW2DoydnOtqZLar6lcbSQRCn5kyLHACSzFvJue0hU37qzM1VHn8ye?=
- =?iso-8859-1?Q?Ti7wRbhKNtydcbnAO/zkhVIKNcd5OF3Awulu/bFd+bTQYy6edmaTVfakRK?=
- =?iso-8859-1?Q?a8wCv6Rv0oFQpdcUPx6AX39pit7JNwA94IdOSAhEmysOT1dgC/eMAxqFYm?=
- =?iso-8859-1?Q?8lfQ229PKHt86C4FetwmF8eadiKNjOuxVMgPxNjKbo19GTuDt8ZxUOIP6d?=
- =?iso-8859-1?Q?XGRAR9VmMYtWggkFfqnemotrSN+Yo/kvVEgXjBliiXlm7+nCo8BpMmqLCJ?=
- =?iso-8859-1?Q?wjqBc9zRdUbmYeyqw+hHy7R8Gv+WMLJ+/tstVANgvPVrRK12pAQOS6V4bp?=
- =?iso-8859-1?Q?iMdVKeQRFxDwlGF2yUr/JZVEdzYSkg8fZojHjrIHXQUeu49HgmGUG1lsEq?=
- =?iso-8859-1?Q?i+hd09dAUKIJaTBD/jzzPGsl4ua9eh5R44nQf2yo/yBjTB2x8bLRxxUesu?=
- =?iso-8859-1?Q?VApOVHF1rfSgpYXjPnj0EwKdgic9uxHshf3tkPXdbfAlZvWUD2p7hvhrA5?=
- =?iso-8859-1?Q?q/W7G01dqkMSI3W4s5k4pKLlKHDZInG/wYeqS55KJare/ymwSPTKpdbYy/?=
- =?iso-8859-1?Q?ezHjgblw7dfrCGaG5DYcfny4CIn0A0jb1ip25tGlwH92kuZBYbudGRkdlK?=
- =?iso-8859-1?Q?mFmBMuneTIjMCa5fXNnx9aD3/WARTBtU71p/nqQye3fQmauVJ9YOYx6lRK?=
- =?iso-8859-1?Q?4bOYH7F2DBwGB6yP9G54SPnuHV8C5yJlgGRBKlCrYFnvsjM9ZDcuRuBeln?=
- =?iso-8859-1?Q?/D8RvtuRpQMD/uDZgdQxzWUyYZyX1BShYbkBEZOuTi5Be9RKhMIQTucddO?=
- =?iso-8859-1?Q?5HCGLd8SKBxHJ5sEcs8Bpx6eiqRc0mUHh6pVTudonU3UyLJyWlyjgKdXGL?=
- =?iso-8859-1?Q?Bp7OYMkRUofuE2WNZFdipHh50j/x1kcotFu/xoUg1XY2EWujrfnVZYREhb?=
- =?iso-8859-1?Q?K6KJMZxJbH+V3++1Xx2uav4gJ60jyBgNjmIrA7evDoH0/vhY4X47/jt6+J?=
- =?iso-8859-1?Q?Kw1V2d7zumsOEorNyWn7STDT+rudVd16ICdLem6jJTjZgYAOGCC+pPTEDE?=
- =?iso-8859-1?Q?evOPmvsBxmshwLKXTqWDg0QWifN7dr4+aPy7HwUMJcJ8+DpLyvHMSX4wao?=
- =?iso-8859-1?Q?83EzW5Xi1Hveh872+3lPyOl4zE4Dr8N+st4Huc6ZqvDX9wfj21Dgc1qTEl?=
- =?iso-8859-1?Q?iy0xVkq6dBFidIf+gSC+fnjk3gGzKUazC77tCvGtwVdYcugEUo9Kc0lUHt?=
- =?iso-8859-1?Q?RhYxNoWdagMUVr0EnNg+drDsrKDd318Adqw5PAtnexolJ5PgfXOwE8Lp8E?=
- =?iso-8859-1?Q?0v9jB2kBYMgGAnMyA+AyXHcSjg/hWKvDZ8FaeZDkmcgNB+38fNS4tna4uF?=
- =?iso-8859-1?Q?U0+Fj8umHMfKsLG2Xn6kcHWEYUUBtNrvUiaSRPl1jpZFwDmRZX3w?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b1536db-fba0-4e4d-c39b-08ded08cf189
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
+	=?us-ascii?Q?1BYcxZfKcl7umT4hTGF5w4OV/cKEgfbzZhEfKd+kjwOBzA0LZYBdvt89p8VQ?=
+ =?us-ascii?Q?iVIj81dz0jAitTizR6rXwIj77B0q+SMZ3FGkF1YeJDwwJ0eO5lEC8DEXNyUC?=
+ =?us-ascii?Q?iYO7ucOVAbMj0fBd85Pr0C+q/I4YowxkFTvL6g3UF1oG8qynypxkcA1zlA81?=
+ =?us-ascii?Q?4pK8gRD/C1GiRtjhnQXNtZt2+SKTA2D5ijY7Vay5TIt9z3ZDgJ8G0ahzTCfb?=
+ =?us-ascii?Q?nKWAHb6IsaG/i0vyY9idzf4/7+E6YYl1Y4QCS48XTYSCDM5HwJIGZiGcssea?=
+ =?us-ascii?Q?0czXmjcvhNfp7RJQpW/ePmlkRgXpc2AvP0U0C+aGpyxxTKbDB3YWt8yM0JAL?=
+ =?us-ascii?Q?wQ2us/8Ykqt1UntvsJZHISXKU6nzi1foNR7eP4jGb+axPm839oUOeNZjzb0K?=
+ =?us-ascii?Q?qdoCq0z0BjAoUZyWiwmk1HQkmFuMQ2noG4vPHlazjq47lnzNp7K3lpOmInvU?=
+ =?us-ascii?Q?EdWpVt8ndhLs+sWiyTiysIfEYFZvA4GKLwXfQtMaiioTom+Fz+OS2jDmVfCJ?=
+ =?us-ascii?Q?CiTS8NlCTapb1kZIaIHPVUP4hNbF63uDvvvMw2XANNG2tlDIHkv0YLMwAPTZ?=
+ =?us-ascii?Q?rZrDjdEFcyPDYZPNbf98kf/5CSurdY1WXVEnrzQHwJRMoO6omV63OStVI8q9?=
+ =?us-ascii?Q?nLt+clRfVUCM9hL4yvRAdah9vq/NVhxW144kWseo51zd7MI12xucaEj8mCWu?=
+ =?us-ascii?Q?TlpD0GS15dxm1q01Vyc5qOitq+sWoklFUXJjBFHXnEUBhW6zlcx1MWKYrdpw?=
+ =?us-ascii?Q?t5GIb6S4cHCLS7WbUtlrjFe0aWUaXMFMPI2HHniM6U7yrz8R+C/XPBoEzdDd?=
+ =?us-ascii?Q?98dpXGddJ7juVB5vI475FhBAwYCLuTpqiyZWW/qclfrhj05/JhH2SCaEh4B0?=
+ =?us-ascii?Q?Ra4+sxmEEUr1lrwXg7YH2QVk7Vwx4c9XJ5uGNnpyjHkzhr9B5EgcW3Y/S9ZY?=
+ =?us-ascii?Q?YqQHdOcJ+5+5gF9/QMW69YJd+OYLQegLR9cy+uhg1noZ+z3eEX8NbWyACw0W?=
+ =?us-ascii?Q?eNFX1PlvZnY//zcrCBhTkmcugLmI2soMUcxzQMIZb1ckdX0bhytweiCR4VTu?=
+ =?us-ascii?Q?ufHBtMjzIvXwtBXEnf8UK1ROWEec2Q6/PGB+Wl1NbX11FRIPJbQ1MUu3zbb8?=
+ =?us-ascii?Q?q8JTcnuhJ9nwhoIUTaKH+MrGK1AQmiCN7JkcyACzushLm3OEuESXCkqQ/P2J?=
+ =?us-ascii?Q?RnSm/1h3SsOxLdweewoxhntgEO99Jklrl1hxrTGDfWDnQYgIfvZd40O3xGr2?=
+ =?us-ascii?Q?PCN2pf647vW1Q+E5e1b0FdEijOhjrbSLj11MaRpkd12W7AgxqDomATrSo5zI?=
+ =?us-ascii?Q?j2OlGBxPwOgcw5Wh5Ogv4+kAo8tFnJ8KsL7hQUg7q4ReKryHfWmJy/HP1eTK?=
+ =?us-ascii?Q?pKtD5/6f/+ihSgqX8pqTBKQvFOKTXyJUALQvhj26ukiPpQ0O+NJW4hUACxIR?=
+ =?us-ascii?Q?YJUOOoZCOCx2ONooG/Ej1wqE8NV4jfiyhz4rq+FH6vNtJUXlyrL/LKfwUbdb?=
+ =?us-ascii?Q?do7Tv3x7vY+zClIvkoRIZDS5UUkbTifT+BfBIKgY5QBZP2qCIoN8z6mn76nC?=
+ =?us-ascii?Q?2ixcwxHremjpkvj+d2+kNzWADJB3FyYA+SNFp50x0vxdaPX2+bdpafnaXOXj?=
+ =?us-ascii?Q?5V3hKr9XNFXUJjCuJx2gdZyZcaJ7IP70Gdre5tdQVAek58Qltx1pE78JZ/TW?=
+ =?us-ascii?Q?4sTdu+jkl6BgzkHesukFTSAleEg+IX4n0/YUJfbQNqKUsXgj6Kr9MvmcZQqK?=
+ =?us-ascii?Q?UE5OJXa52TP9VEfWosPj6KoYT1mlUljZ3sMLMSYGg+0JtVPTwzBq?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 599bc701-1b29-4d6e-ebd8-08ded0d33926
+X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2026 18:34:50.3108
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2026 02:57:55.1018
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9jg3epyRoloZFbQ9eC9Arp0z8K2csc4v1Vsf9Y4QavrWskzDN0b02zwdwMvnLm6hAQYW4NA/U12Uz1iC2A6TjEFH88B4WviSeyLkDJvBg42QX7inTuTc/DDyDA1gJ/OZ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10094
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7mV7p3/nBQXxkseECIAcaHo+UgoQc3lZkOxYeDHunwWIeOCEpYWEJBTYbQAyfMt3/tZ2uBOVj8VhgU01DqKoNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3P286MB3274
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [3.64 / 15.00];
+X-Spamd-Result: default: False [1.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_DKIM_REJECT(1.00)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
+	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:Frank.li@oss.nxp.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:mani@kernel.org,m:marek.vasut+renesas@mailbox.org,m:yoshihiro.shimoda.uh@renesas.com,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:marek.vasut@mailbox.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11735-lists,dmaengine=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11734-lists,dmaengine=lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[Frank.li@oss.nxp.com,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:noname.nuno@gmail.com,m:nuno.sa@analog.com,m:dmaengine@vger.kernel.org,m:linux-iio@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:lars@metafoo.de,m:jic23@kernel.org,m:dlechner@baylibre.com,m:andy@kernel.org,m:nonamenuno@gmail.com,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	ALIAS_RESOLVED(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Frank.li@oss.nxp.com,dmaengine@vger.kernel.org];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:-];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	TAGGED_RCPT(0.00)[dmaengine];
-	MISSING_XM_UA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[valinux.co.jp:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	REDIRECTOR_URL(0.00)[aka.ms];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,aka.ms:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,SMW015318:mid,analog.com:email,oss.nxp.com:from_mime]
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,5qsr7aak46xy:mid,synopsys.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EA8616B1CE7
+X-Rspamd-Queue-Id: E2D4B6B3A7B
 
-On Mon, Jun 22, 2026 at 05:09:10PM +0100, Nuno Sá wrote:
-> On Mon, Jun 22, 2026 at 09:51:46AM -0500, Frank Li wrote:
-> > On Mon, Jun 22, 2026 at 10:26:41AM +0100, Nuno Sá wrote:
-> > > On Fri, Jun 19, 2026 at 03:02:53PM -0400, Frank Li wrote:
-> > > > On Fri, Jun 19, 2026 at 11:22:54AM -0500, Frank Li wrote:
-> > > > > On Thu, Jun 18, 2026 at 06:10:52PM +0100, Nuno Sá wrote:
-> > > > > > [You don't often get email from noname.nuno@gmail.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> > > > > >
-> > > > > > On Tue, Jun 16, 2026 at 11:23:39AM -0500, Frank Li wrote:
-> > > > > > > On Tue, Jun 16, 2026 at 04:40:53PM +0100, Nuno Sá via B4 Relay wrote:
-> > > > > > > > [You don't often get email from devnull+nuno.sa.analog.com@kernel.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> > > > > > > >
-> > > > > > > > From: Nuno Sá <nuno.sa@analog.com>
-> > > > > > > >
-> > > > > > > > Advertise the source and destination bus widths through the new
-> > > > > > > > dma_set_{src,dst}_addr_mask() helpers instead of open-coding the legacy
-> > > > > > > > BIT() mask. This moves the driver onto the representation that can
-> > > > > > > > express widths of 32 bytes and above and allows the legacy u32 field to
-> > > > > > > > be removed once all users are converted.
-> > > > > > > >
-> > > > > > > > While at it, give the channel width members their proper
-> > > > > > > > enum dma_slave_buswidth type.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> > > > > > > > ---
-> > > > > > > >  drivers/dma/dma-axi-dmac.c | 12 ++++++++----
-> > > > > > > >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-> > > > > > > > index d47ff27e1408..19c258d511ca 100644
-> > > > > > > > --- a/drivers/dma/dma-axi-dmac.c
-> > > > > > > > +++ b/drivers/dma/dma-axi-dmac.c
-> > > > > > > > @@ -152,8 +152,8 @@ struct axi_dmac_chan {
-> > > > > > > >         struct list_head active_descs;
-> > > > > > > >         enum dma_transfer_direction direction;
-> > > > > > > >
-> > > > > > > > -       unsigned int src_width;
-> > > > > > > > -       unsigned int dest_width;
-> > > > > > > > +       enum dma_slave_buswidth src_width;
-> > > > > > > > +       enum dma_slave_buswidth dest_width;
-> > > > > > > >         unsigned int src_type;
-> > > > > > > >         unsigned int dest_type;
-> > > > > > > >
-> > > > > > > > @@ -1262,8 +1262,12 @@ static int axi_dmac_probe(struct platform_device *pdev)
-> > > > > > > >         dma_dev->device_terminate_all = axi_dmac_terminate_all;
-> > > > > > > >         dma_dev->device_synchronize = axi_dmac_synchronize;
-> > > > > > > >         dma_dev->dev = &pdev->dev;
-> > > > > > > > -       dma_dev->src_addr_widths = BIT(dmac->chan.src_width);
-> > > > > > > > -       dma_dev->dst_addr_widths = BIT(dmac->chan.dest_width);
-> > > > > > > > +       ret = dma_set_src_addr_mask(dma_dev, &dmac->chan.src_width, 1);
-> > > > > > > > +       if (ret)
-> > > > > > > > +               return ret;
-> > > > > > > > +       ret = dma_set_dst_addr_mask(dma_dev, &dmac->chan.dest_width, 1);
-> > > > > > > > +       if (ret)
-> > > > > > > > +               return ret;
-> > > > > > >
-> > > > > > >
-> > > > > > > This patch is okay.  I think most system only set one width once, do we
-> > > > > > > really need pass down arrary.
-> > > > > >
-> > > > > > I think so. See:
-> > > > > >
-> > > > > > https://elixir.bootlin.com/linux/v7.1/source/drivers/dma/st_fdma.c#L723
-> > > > > > https://elixir.bootlin.com/linux/v7.1/source/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c#L1565
-> > > > > > https://elixir.bootlin.com/linux/v7.1/source/drivers/dma/hsu/hsu.c#L475
-> > > > > >
-> > > > > > And likely there are more. To fully support all widths I'm not seeing
-> > > > > > any other obvious way.
-> > > > >
-> > > > > I need more time to understand why need src_addr_width, which looks like
-> > > > > address alignmenet requirment.
-> > > > >
-> > > > > If it is address alginment requirement, only need lowest one, like suport
-> > > > > byte, must be support other alignments.
-> > > > >
-> > > > > if it is total address space, which should be controller by dma-ranges.
-> > > >
-> > > > I grep kernel code, only sound/core/pcm_dmaegine.c check src/dst_addr_width.
-> > > > (I think src/dsk_bus_width is more reasonable). because the name is the
-> > > > same as dma_slave_cfg, it is easy to cause confuse.
-> > >
-> > > No complains for the new naming. If everyone agrees on that, I'm fine.
-> > >
-> > > >
-> > > > So far, still have not seen user case, which more than 8byte for cap.
-> > >
-> > > On the consumer side the IIO dmaengine will use more than that (we have
-> > > designs for that - that's how I found the issue). But yeah, it just uses the
-> > > min value (it is just that dma-axi-dmac only sets one).
-> > >
-> > > >
-> > > > Add it should only set min value should be enougth, if update only user
-> > > > sound/core/pcm_dmaegine.c
-> > > >
-> > >
-> > > Not sure how that works on the pcm_dmaegine.c. It sets more 'hw->formats' than the minimum.
-> > > And IIRC, this ends up being configurable from userspace so we might
-> > > really want all the available options.
-> > >
-> > > Hence, given that we do need more than 32bytes and some users (seems
-> > > like 1 only) do look for more than the minimum width,
+On Mon, Jun 22, 2026 at 11:06:03AM -0500, Frank Li wrote:
+> On Sun, Jun 21, 2026 at 02:00:30AM +0900, Koichiro Den wrote:
+> > Endpoint functions that expose endpoint-local DesignWare eDMA channels
+> > to a remote host need to reserve exact hardware channels and hand
+> > interrupt ownership to the remote side before publishing the channels.
 > >
-> > If FIFO space require 32bytes data bus width,  4Bytes DMA engine should be
-> > match requirmment, cap just help filter dma channel.
->
-> I'm not sure I'm getting your point but on dma caps, the src/dst addr
-> widths is a mask. So for 32bytes widths, we need to set bit 32 (which
-> currently is an open path for undefined behavior)
+> > Add DW eDMA-specific helpers that request a write/read hardware channel
+> > through DMAengine, keep the hardware-channel filter private to dw-edma,
+> > and switch the selected endpoint-local channel to remote interrupt
+> > routing after the channel has been successfully reserved. The matching
+> > release helper can quiesce the channel while it is still remote-routed,
+> > then restores the channel's default routing before releasing the
+> > DMAengine reservation. This lets callers skip quiesce when unwinding a
+> > reservation that was never exposed to host programming.
+> >
+> > Signed-off-by: Koichiro Den <den@valinux.co.jp>
+> > ---
+> 
+> I have not see any place to use this functions, can you move it patches
+> serise, which use it?
+> 
+> So get these patches land firstly.
 
-Bitmask does make sense, I don't think DMAEngine only support 32byte bus
-width for slave FIFO.
+Agreed. Part 2 uses these helpers:
+https://lore.kernel.org/linux-pci/20260620170438.3756593-1-den@valinux.co.jp/
 
-If support 4Byte, it native supportted any N*4Byte.
+so I will move this patch to part 2 in v4.
 
-So needn't bit mask to indicate all support bytes.
+Thanks for the suggestion.
 
-> >
-> > each transfer, dma_slave_cfg should set specific bus width requirement.
-> >
-> > If memory have requirement for 32bytes, typical cache line length for
-> > hardwaer coherence transfer, it should use dmaengine_alignment.
-> >
-> > So I think only need set min value should be enough if fix pcm_dmaegine.c.
-> >
->
-> What fix for pcm_dmaegine.c? Not sure there's anything to be fixed in
-> there... The code seems to use the dma bus width to match against PCM
-> formats supported and filter only the ones we can support (per dma cap).
+Best regards,
+Koichiro
 
-if cap is one byte, it should support 8, 16, 24, 32, 64
-if cap is two byte, it should support 16, 32, 64
-if cap is 4 byte,  it only support 32 and 64.
-
-Needn't mask each bit.
-
-Frank
-
-> If we only set the min, that means the PCM code all of the sudden only
-> supports one format and I'm not sure that should be always the case or
-> that we won't break any user.
->
-> I mean the dmaengine src/dst_addr_widths must be a mask for a reason,
-> no?
->
-> - Nuno Sá
->
-> > Frank
+> 
+> Frank
+> 
+> > Changes in v3:
+> >   - New patch. Replace the public hardware-channel filter API with
+> >     delegated channel request helpers so the filter stays private to
+> >     dw-edma and delegated IRQ handoff is handled by dw-edma.
+> >   - Hide the hardware-channel filter inside dw-edma instead of exposing
+> >     it through public headers (Frank); add delegated-channel helpers
+> >     instead.
+> >   - Set endpoint-local delegated channels to remote IRQ routing after
+> >     dma_request_channel().
+> >   - Allow delegated-channel release to skip quiesce for reservations
+> >     that were never exposed to host programming.
 > >
-> > > I would say the
-> > > array is fine. IMHO, it's also safer (from a "support all" point of view  and really not
-> > > complicated at all so I would just not risk it.
+> >  drivers/dma/dw-edma/dw-edma-core.c | 81 ++++++++++++++++++++++++++++++
+> >  include/linux/dma/edma.h           | 14 ++++++
+> >  2 files changed, 95 insertions(+)
 > >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index 7a24248b84e9..ca0504eac1fc 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -1192,6 +1192,87 @@ int dw_edma_remove(struct dw_edma_chip *chip)
+> >  }
+> >  EXPORT_SYMBOL_GPL(dw_edma_remove);
 > >
+> > +struct dw_edma_delegated_chan_filter {
+> > +	struct device *dma_dev;
+> > +	bool write;
+> > +	u16 id;
+> > +};
+> > +
+> > +static bool dw_edma_delegated_chan_filter(struct dma_chan *dchan, void *param)
+> > +{
+> > +	struct dw_edma_delegated_chan_filter *filter = param;
+> > +	struct dw_edma_chan *chan;
+> > +
+> > +	if (!filter || dchan->device->dev != filter->dma_dev)
+> > +		return false;
+> > +
+> > +	chan = dchan2dw_edma_chan(dchan);
+> > +
+> > +	return chan->dir == (filter->write ? EDMA_DIR_WRITE : EDMA_DIR_READ) &&
+> > +	       chan->id == filter->id;
+> > +}
+> > +
+> > +static int dw_edma_delegate_chan(struct dma_chan *dchan)
+> > +{
+> > +	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+> > +
+> > +	if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
+> > +		return -EINVAL;
+> > +	if (chan->configured || chan->status != EDMA_ST_IDLE ||
+> > +	    chan->request != EDMA_REQ_NONE)
+> > +		return -EBUSY;
+> > +
+> > +	chan->irq_mode = DW_EDMA_CH_IRQ_REMOTE;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +struct dma_chan *dw_edma_request_delegated_chan(struct device *dma_dev,
+> > +						bool write, u16 id)
+> > +{
+> > +	struct dw_edma_delegated_chan_filter filter = {
+> > +		.dma_dev = dma_dev,
+> > +		.write = write,
+> > +		.id = id,
+> > +	};
+> > +	struct dma_chan *dchan;
+> > +	dma_cap_mask_t mask;
+> > +
+> > +	if (!dma_dev)
+> > +		return NULL;
+> > +
+> > +	dma_cap_zero(mask);
+> > +	dma_cap_set(DMA_SLAVE, mask);
+> > +
+> > +	dchan = dma_request_channel(mask, dw_edma_delegated_chan_filter,
+> > +				    &filter);
+> > +	if (!dchan)
+> > +		return NULL;
+> > +
+> > +	if (dw_edma_delegate_chan(dchan)) {
+> > +		dma_release_channel(dchan);
+> > +		return NULL;
+> > +	}
+> > +
+> > +	return dchan;
+> > +}
+> > +EXPORT_SYMBOL_GPL(dw_edma_request_delegated_chan);
+> > +
+> > +void dw_edma_release_delegated_chan(struct dma_chan *dchan, bool quiesce)
+> > +{
+> > +	struct dw_edma_chan *chan;
+> > +
+> > +	if (!dchan)
+> > +		return;
+> > +
+> > +	chan = dchan2dw_edma_chan(dchan);
+> > +	if (quiesce)
+> > +		dw_edma_core_ch_quiesce(chan);
+> > +	chan->irq_mode = dw_edma_get_irq_mode(chan);
+> > +	dma_release_channel(dchan);
+> > +}
+> > +EXPORT_SYMBOL_GPL(dw_edma_release_delegated_chan);
+> > +
+> >  MODULE_LICENSE("GPL v2");
+> >  MODULE_DESCRIPTION("Synopsys DesignWare eDMA controller core driver");
+> >  MODULE_AUTHOR("Gustavo Pimentel <gustavo.pimentel@synopsys.com>");
+> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> > index c0906221a7c7..0ba8a1143fb2 100644
+> > --- a/include/linux/dma/edma.h
+> > +++ b/include/linux/dma/edma.h
+> > @@ -140,6 +140,9 @@ struct dw_edma_chip {
+> >  #if IS_REACHABLE(CONFIG_DW_EDMA)
+> >  int dw_edma_probe(struct dw_edma_chip *chip);
+> >  int dw_edma_remove(struct dw_edma_chip *chip);
+> > +struct dma_chan *dw_edma_request_delegated_chan(struct device *dma_dev,
+> > +						bool write, u16 id);
+> > +void dw_edma_release_delegated_chan(struct dma_chan *chan, bool quiesce);
+> >  #else
+> >  static inline int dw_edma_probe(struct dw_edma_chip *chip)
+> >  {
+> > @@ -150,6 +153,17 @@ static inline int dw_edma_remove(struct dw_edma_chip *chip)
+> >  {
+> >  	return 0;
+> >  }
+> > +
+> > +static inline struct dma_chan *
+> > +dw_edma_request_delegated_chan(struct device *dma_dev, bool write, u16 id)
+> > +{
+> > +	return NULL;
+> > +}
+> > +
+> > +static inline void dw_edma_release_delegated_chan(struct dma_chan *chan,
+> > +						  bool quiesce)
+> > +{
+> > +}
+> >  #endif /* CONFIG_DW_EDMA */
 > >
-> > >
-> > > (we can also have one liner helpers for the case where only width is
-> > > set).
-> > >
-> > > - Nuno Sá
-> > >
-> > > >
-> > > > >
-> > > > > Frank
-> > > > >
-> > > > > >
-> > > > > > - Nuno Sá
-> > > > > > >
-> > > > > > > Frank
-> > > > > > >
-> > > > > > > >         dma_dev->directions = BIT(dmac->chan.direction);
-> > > > > > > >         dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-> > > > > > > >         dma_dev->max_sg_burst = 31; /* 31 SGs maximum in one burst */
-> > > > > > > >
-> > > > > > > > --
-> > > > > > > > 2.54.0
-> > > > > > > >
-> > > > > > > >
+> >  #endif /* _DW_EDMA_H */
+> > --
+> > 2.51.0
+> >
 

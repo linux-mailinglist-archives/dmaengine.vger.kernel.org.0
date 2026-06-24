@@ -1,140 +1,129 @@
-Return-Path: <dmaengine+bounces-11764-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11765-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id gG2BN4uSO2qYZwgAu9opvQ
-	(envelope-from <dmaengine+bounces-11764-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2026 10:17:15 +0200
+	id P55jHJuVO2oSaAgAu9opvQ
+	(envelope-from <dmaengine+bounces-11765-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2026 10:30:19 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 328026BC825
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2026 10:17:15 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6686B6BC921
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2026 10:30:18 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=qFx8NW+k;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11764-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11764-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=CNIRkMfg;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11765-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11765-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E69AB30086EC
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2026 08:17:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7C8F8300808F
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2026 08:30:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04802391846;
-	Wed, 24 Jun 2026 08:17:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CCCF395AF1;
+	Wed, 24 Jun 2026 08:30:14 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2833812FB
-	for <dmaengine@vger.kernel.org>; Wed, 24 Jun 2026 08:17:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1CF3ABD88
+	for <dmaengine@vger.kernel.org>; Wed, 24 Jun 2026 08:30:13 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782289032; cv=none; b=W59eUOFHJpWBxzPeq9gtqdIvAxPEqI9B3ZYVFhscCYTaqTcsGis6gKlTu6IEhINZwypc0nM4o6o9DTWb5DhibTLAGMGGq7cI47d7xhamJ4E43clfkctUIBYu5dZoTOc0AKZwLoORi5ob4Cr/eDfvSnNFCA9G0gZ4Op8EpU+6FFc=
+	t=1782289814; cv=none; b=HMwm+Fx3aU757GnA92RrjpT7fo/hGJLwOFi5ftn+QXika7ff+6oJiaqfWm8EvoIDSxvNUMLkLVkEENdye+BBGKoiEluyizAyP68pI+F/fvG9gMTSdqAWYMY9iimSiqWoU0bztPG8D6aa0FT0Jl/I0x6+5aAOdsZfOc/ecCNYpVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782289032; c=relaxed/simple;
-	bh=jyz1DyVG7HpPxBEvVZr90DObGRcQES4BU+PqnBRSycA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UWFZWTErIyl+9GELV8igYf+q/htQhZjQRt+6MDND/MnbGSSuY07eW4YtYUQ7ft8yPVys5ZBNtcZvScTdlIx1ESya83UkpRDv00BXfscKB2SnkNBPcwKEhnZuqQL5i1kRv8nD2tv+cqKPVNPgMDPbHFhhP+fG6DzUL7G7K0AqRJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qFx8NW+k; arc=none smtp.client-ip=209.85.216.41
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-37c64d34032so932623a91.0
-        for <dmaengine@vger.kernel.org>; Wed, 24 Jun 2026 01:17:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782289031; x=1782893831; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=36jF0aae/2qf/mqPeDqHORRtGgqdr7FBWT7b1LCQhJc=;
-        b=qFx8NW+k9zLv5n+g7bFH840queuFNmLec8hTW4ji4fbyiD/w4kA8VaDw2lc3h/OlFr
-         meFVuOrPDJvINfrablxwZGe4tUHRi8+871zNLGI19xM3t8EbJX8SI6URxPJXD67LnwZL
-         mpyR1XdWC56/gM1+hcW4dwP55OBhqKscJjZYlkIzBdPFF0gEXnZQ6mX/PPbrdioQ5CIr
-         mWoKSzzIJUk9DVOJsFXxmD2ajNEjufhHdQibs40QE90Wq6EunsOMg+SChYC61fstcKab
-         Gk4/p6ugULmp3tkarjigmZEngiVnKNizdr6gJH20/g0doloJE7UwYLKUJmyWkvIFkl7P
-         SZHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782289031; x=1782893831;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=36jF0aae/2qf/mqPeDqHORRtGgqdr7FBWT7b1LCQhJc=;
-        b=KrwDB7jocu0j9Q0Pb5Ha4n/trWiREWuO+HJLSG82tlgdNEEnWA3AqZyAsOlnNwNWzl
-         qI3RMTNrXFc0b/pHoxFBjl6w93ttAf14wB7o9W5PttR3LXHE2wtuXSLSZxTNu6sjtLee
-         ifvqWyAiGDzIiHRS/SgfgK7PIIN2asmaHbIGUSy+DTtGAqyOxFnPrLJ8gywIMhxO8juy
-         YaUUKRaYJbcEPZCqBiXXSqUXwHWXtxs+T6GLvKj7BgVEH6BHDGW8I6DAEo/xlfZ5iSqB
-         9DXkE9JCowpfg4JkTjS7rvz8gKgLdVfUqM3HViPPEe/EM078WsKAVN7z6z3QtTgKLCE8
-         yNzQ==
-X-Gm-Message-State: AOJu0Yz1HXmByAPqRA6wvAqKn3iu8UH5GuQAOADQZGoR780FqkXqd8rH
-	G/sqkWDixr7i+a8lrGILMR6gOLO4xbAdadncxmL/V0/KfJ0cBN08+KU=
-X-Gm-Gg: AfdE7clMPD94einJ37IOOSwxJdmg0hZ8WhjusDnQnDKnFD6fRvX5/7OdBiM5vRXva3c
-	KgNopiAT/wsqP+4EeUB6utls8XtIjoFepLtMPPaL+safgAgvPJG9AW9Fo31nQ5jSdIWQ7CS2t30
-	8Aaa5CGsZ8SHuz5aembrabZDpgp/JBfAZTTJd6Y13J7Q+3X1hq+gZwIOeZexzjLw6sDrCnACT/2
-	sbs/9g+cBASLCzQBRO1RoGUWGrzsE8FDMN1j6Gis8xRA8Jz75tG1BEIUfyXr7F/K/x1+nksuZd2
-	DaG7gg1k/FeJTVuy07TlNrMb/Lpq5/ZawmTjRZqNKcWUl2kOe7iuP6VtXZtNkA5LOkAlfH3R2Qj
-	y3Wox831oAL2XJU+0sb4Q2OdX4VFY0aVmS5pG6b6tr7u6mOTZ93hkt1TNg/hdjFBUKKwCZqKh0P
-	zgq5E+okpcaEKuC4Kuvv9Nq7hFgVoHRRKdIYM1MEtULDyFD6UAuCPEiRO/aX+8odV2
-X-Received: by 2002:a17:903:8c5:b0:2bd:3c21:a053 with SMTP id d9443c01a7336-2c7c3ff8e32mr60401005ad.24.1782289030882;
-        Wed, 24 Jun 2026 01:17:10 -0700 (PDT)
-Received: from localhost.localdomain ([14.5.152.27])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c7436f7de7sm121836085ad.32.2026.06.24.01.17.07
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 24 Jun 2026 01:17:10 -0700 (PDT)
-From: Myeonghun Pak <mhun512@gmail.com>
-To: Sean Wang <sean.wang@mediatek.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Myeonghun Pak <mhun512@gmail.com>,
-	Ijae Kim <ae878000@gmail.com>
-Subject: [PATCH] dmaengine: mediatek: hsdma: fix runtime PM leak on init failure
-Date: Wed, 24 Jun 2026 17:16:38 +0900
-Message-ID: <20260624081701.19358-1-mhun512@gmail.com>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1782289814; c=relaxed/simple;
+	bh=tNBXnqjFTWGSkJOGfj6pLb2UPyEZQKMBv2/jRKCHxxk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=RvrkY62CM9bB4AryOlyn+iLwfT6rvetHrHkGBT9o1C3ZuXLt5Opnpb3UPn6Hpv0nOEW33WGc7N4SMGllBJJItHnQNJvGagrTLXlk55huOKwOKSD4DydW/Lg+F5s/3pko9dRT8ABbCZWUIHiCqj6z+fAoe+ByV7YNNdcdVDFuMvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNIRkMfg; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCC7C1F000E9;
+	Wed, 24 Jun 2026 08:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782289813;
+	bh=4Wc+X8Tola34kwUvA5Sl0W3nE/zAYM95BYAdJrZOahk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=CNIRkMfgy7sr6h2xM+dxfEgFCsG821f3u8P4eYv2C8blaRcXsX8Ht9XjwTEo9HDz5
+	 S2I6Njwslp4YhUc8vLffqXjg3cbbGAH8uvqapsiLGFUMseQP5n7hX4HAo/0RGfv4lK
+	 PAP9KnTloCW2F8WZOzy64cURSJd2KdCQDAxZCb4sSSbeqBbu8kDnIJaYz6q6QDcf7O
+	 qpmq2LLZuGy6Kz6Ohy+An9TtxfLkEwnYHgX06yUuxh4rexMoe/YgHooiAIyVOXCEEq
+	 73V4h8U6TklRDYZBD6+PeEmvH4wjmkfcQLopCjIotIqIODVkA+qiIA/utfUa0HtPcU
+	 IEyncIUodxjCQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] dmaengine: mediatek: hsdma: fix runtime PM leak on init
+ failure
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Myeonghun Pak" <mhun512@gmail.com>
+Cc: dmaengine@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org
+In-Reply-To: <20260624081701.19358-1-mhun512@gmail.com>
+References: <20260624081701.19358-1-mhun512@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 24 Jun 2026 08:30:12 +0000
+Message-Id: <20260624083012.BCC7C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-11764-lists,dmaengine=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:sean.wang@mediatek.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mediatek@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:mhun512@gmail.com,m:ae878000@gmail.com,m:matthiasbgg@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[mediatek.com,kernel.org,gmail.com,collabora.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[mhun512@gmail.com,dmaengine@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11765-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:mhun512@gmail.com,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhun512@gmail.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 328026BC825
+X-Rspamd-Queue-Id: 6686B6BC921
+
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
+
+Pre-existing issues:
+- [High] Premature DMA controller registration exposes uninitialized hardwa=
+re to consumers.
+- [High] Hardware and clocks are disabled before the DMA engine is unregist=
+ered during teardown, causing unclocked accesses.
+- [High] Unsafe `tasklet_kill()` ordering in `remove` allows tasklets to be=
+ rescheduled, leading to Use-After-Free.
+- [High] Manual channel list deletion subverts the DMA subsystem's cleanup,=
+ leaking sysfs entries.
+--
+
+commit a02c13cb6b6d7dd4b66478026a93c3fbb55427ef
+Author: Myeonghun Pak <mhun512@gmail.com>
+
+dmaengine: mediatek: hsdma: fix runtime PM leak on init failure
 
 mtk_hsdma_hw_init() enables runtime PM and gets a runtime PM reference
 before enabling the HSDMA clock. It currently ignores failures from
@@ -145,83 +134,136 @@ the usage count held.
 Use pm_runtime_resume_and_get() so resume failures do not leak the usage
 count, and unwind runtime PM when clk_prepare_enable() fails.
 
-The probe path also ignores the return value from mtk_hsdma_hw_init(), so a
-failed hardware init can continue as a successful probe. Propagate
-mtk_hsdma_hw_init() failures from probe, while keeping a separate unwind
-label so mtk_hsdma_hw_deinit() is only called after hardware init succeeds.
+> diff --git a/drivers/dma/mediatek/mtk-hsdma.c b/drivers/dma/mediatek/mtk-=
+hsdma.c
+> index a43412ff5eddc..31f05d5d04151 100644
+> --- a/drivers/dma/mediatek/mtk-hsdma.c
+> +++ b/drivers/dma/mediatek/mtk-hsdma.c
 
-Fixes: 548c4597e984 ("dmaengine: mediatek: Add MediaTek High-Speed DMA controller for MT7622 and MT7623 SoC")
-Co-developed-by: Ijae Kim <ae878000@gmail.com>
-Signed-off-by: Ijae Kim <ae878000@gmail.com>
-Signed-off-by: Myeonghun Pak <mhun512@gmail.com>
+[ ... ]
 
----
- drivers/dma/mediatek/mtk-hsdma.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+> @@ -983,7 +992,9 @@ static int mtk_hsdma_probe(struct platform_device *pd=
+ev)
+>  		goto err_unregister;
+>  	}
+> =20
+> -	mtk_hsdma_hw_init(hsdma);
+> +	err =3D mtk_hsdma_hw_init(hsdma);
+> +	if (err)
+> +		goto err_free;
 
-diff --git a/drivers/dma/mediatek/mtk-hsdma.c b/drivers/dma/mediatek/mtk-hsdma.c
-index a43412ff5e..987e5274fc 100644
---- a/drivers/dma/mediatek/mtk-hsdma.c
-+++ b/drivers/dma/mediatek/mtk-hsdma.c
-@@ -849,16 +849,25 @@ static int mtk_hsdma_hw_init(struct mtk_hsdma_device *hsdma)
- 	int err;
- 
- 	pm_runtime_enable(hsdma2dev(hsdma));
--	pm_runtime_get_sync(hsdma2dev(hsdma));
-+	err = pm_runtime_resume_and_get(hsdma2dev(hsdma));
-+	if (err < 0)
-+		goto err_disable_pm;
- 
- 	err = clk_prepare_enable(hsdma->clk);
- 	if (err)
--		return err;
-+		goto err_put_pm;
- 
- 	mtk_dma_write(hsdma, MTK_HSDMA_INT_ENABLE, 0);
- 	mtk_dma_write(hsdma, MTK_HSDMA_GLO, MTK_HSDMA_GLO_DEFAULT);
- 
- 	return 0;
-+
-+err_put_pm:
-+	pm_runtime_put_sync(hsdma2dev(hsdma));
-+err_disable_pm:
-+	pm_runtime_disable(hsdma2dev(hsdma));
-+
-+	return err;
- }
- 
- static int mtk_hsdma_hw_deinit(struct mtk_hsdma_device *hsdma)
-@@ -983,7 +992,9 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
- 		goto err_unregister;
- 	}
- 
--	mtk_hsdma_hw_init(hsdma);
-+	err = mtk_hsdma_hw_init(hsdma);
-+	if (err)
-+		goto err_free;
- 
- 	err = devm_request_irq(&pdev->dev, hsdma->irq,
- 			       mtk_hsdma_irq, 0,
-@@ -991,7 +1002,7 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
- 	if (err) {
- 		dev_err(&pdev->dev,
- 			"request_irq failed with err %d\n", err);
--		goto err_free;
-+		goto err_deinit;
- 	}
- 
- 	platform_set_drvdata(pdev, hsdma);
-@@ -1000,8 +1011,9 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
--err_free:
-+err_deinit:
- 	mtk_hsdma_hw_deinit(hsdma);
-+err_free:
- 	of_dma_controller_free(pdev->dev.of_node);
- err_unregister:
- 	dma_async_device_unregister(dd);
--- 
-2.47.1
+[Severity: High]
+This isn't a bug introduced by this patch, but I noticed that premature DMA
+controller registration exposes uninitialized hardware to consumers.
+
+In drivers/dma/mediatek/mtk-hsdma.c:mtk_hsdma_probe(),
+dma_async_device_register() and of_dma_controller_register() are invoked
+before mtk_hsdma_hw_init(). A consumer device probing concurrently can
+request a channel via the device tree.
+
+The consumer will then trigger mtk_hsdma_alloc_chan_resources(), which
+accesses MTK_HSDMA_GLO to configure the hardware. Because the clock is not
+yet enabled by mtk_hsdma_hw_init(), this unclocked access crashes the
+system.
+
+Could we initialize the hardware before registering the DMA controller to
+avoid this race condition?
+
+> =20
+>  	err =3D devm_request_irq(&pdev->dev, hsdma->irq,
+>  			       mtk_hsdma_irq, 0,
+> @@ -991,7 +1002,7 @@ static int mtk_hsdma_probe(struct platform_device *p=
+dev)
+>  	if (err) {
+>  		dev_err(&pdev->dev,
+>  			"request_irq failed with err %d\n", err);
+> -		goto err_free;
+> +		goto err_deinit;
+>  	}
+> =20
+>  	platform_set_drvdata(pdev, hsdma);
+> @@ -1000,8 +1011,9 @@ static int mtk_hsdma_probe(struct platform_device *=
+pdev)
+> =20
+>  	return 0;
+> =20
+> -err_free:
+> +err_deinit:
+>  	mtk_hsdma_hw_deinit(hsdma);
+> +err_free:
+>  	of_dma_controller_free(pdev->dev.of_node);
+>  err_unregister:
+>  	dma_async_device_unregister(dd);
+
+[Severity: High]
+This is a pre-existing issue, but hardware and clocks are disabled before
+the DMA engine is unregistered during teardown, which can cause unclocked
+accesses.
+
+In the probe error path (err_deinit) and in mtk_hsdma_remove(),
+mtk_hsdma_hw_deinit() is called before dma_async_device_unregister().
+mtk_hsdma_hw_deinit() disables the device clocks.
+
+Since the DMA controller is still registered and active, consumers might
+still attempt to use the channels or release them. Releasing a channel
+calls mtk_hsdma_free_chan_resources(), which accesses MTK_HSDMA_GLO. With
+the clock disabled, this results in an external abort.
+
+Should dma_async_device_unregister() be called before disabling the
+hardware?
+
+While reviewing this driver, I also noticed a couple of pre-existing issues
+in drivers/dma/mediatek/mtk-hsdma.c:mtk_hsdma_remove():
+
+mtk_hsdma_remove() {
+    ...
+    list_del(&vc->vc.chan.device_node);
+    tasklet_kill(&vc->vc.task);
+    ...
+    mtk_dma_write(hsdma, MTK_HSDMA_INT_ENABLE, 0);
+    synchronize_irq(hsdma->irq);
+    ...
+    dma_async_device_unregister(&hsdma->ddev);
+}
+
+[Severity: High]
+This is a pre-existing issue, but the unsafe tasklet_kill() ordering in
+mtk_hsdma_remove() allows tasklets to be rescheduled, leading to a potential
+use-after-free.
+
+tasklet_kill() is called to stop the tasklets for all virtual channels
+before disabling the DMA interrupt (MTK_HSDMA_INT_ENABLE) and synchronizing
+IRQs.
+
+If an interrupt fires after the tasklet is killed, the IRQ handler
+(mtk_hsdma_irq) will execute, calling vchan_cookie_complete(), which
+explicitly schedules the tasklet via tasklet_schedule().
+
+After mtk_hsdma_remove() returns, the device memory is freed by devres,
+but the tasklet remains queued and will execute on the freed memory.
+
+Can we disable and synchronize the interrupts before killing the tasklets?
+
+
+[Severity: High]
+This is another pre-existing issue in mtk_hsdma_remove(), but manual channel
+list deletion seems to subvert the DMA subsystem's cleanup, leaking sysfs
+entries.
+
+The driver manually loops over the channels and calls
+list_del(&vc->vc.chan.device_node).
+
+When it subsequently calls dma_async_device_unregister(), the DMA core
+subsystem loops over &device->channels to unregister each channel's sysfs
+devices (via __dma_async_device_channel_unregister()).
+
+Because the list was prematurely emptied by the driver, the core sees an
+empty list, skips the cleanup, and leaks the sysfs structures.
+
+Is it safe to remove the manual list_del() calls so the DMA core can
+properly clean up the channels?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260624081701.1935=
+8-1-mhun512@gmail.com?part=3D1
 

@@ -1,276 +1,204 @@
-Return-Path: <dmaengine+bounces-11792-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11793-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Mwl5BK9RPWr+1AgAu9opvQ
-	(envelope-from <dmaengine+bounces-11792-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 18:05:03 +0200
+	id 6KWID4RTPWqJ1QgAu9opvQ
+	(envelope-from <dmaengine+bounces-11793-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 18:12:52 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51D5C6C7487
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 18:05:02 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F3146C75E8
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 18:12:51 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=aM6m2Oy+;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11792-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11792-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=nxp.com (policy=none);
+	dkim=pass header.d=amd.com header.s=selector1 header.b=XUsReO7q;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11793-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11793-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=amd.com;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 46664306361F
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 16:03:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 860A6300CE5A
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 16:10:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C11A3DB62D;
-	Thu, 25 Jun 2026 16:03:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A27083DB964;
+	Thu, 25 Jun 2026 16:10:41 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013000.outbound.protection.outlook.com [40.107.159.0])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012060.outbound.protection.outlook.com [52.101.53.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC5F39B498;
-	Thu, 25 Jun 2026 16:03:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138AE3B100A;
+	Thu, 25 Jun 2026 16:10:39 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782403417; cv=fail; b=TrUWaN1fPGLGgl7k/WPSrSGtgSHXxx7taBhrPNWBfB9K4CPZHO4Gmm8c/LFJr3u8UfPUVuQxaJBcIu9uDYly4q6IdptU4Cbjx9uMvkqj1f7zMZzQNNXagHeLJ45KLWiI5bKp7InjaUfcN2poow6UJMp7lxmtNPMk35cLxAPRpQk=
+	t=1782403841; cv=fail; b=CSEufngEWNlUeikdtFSWRyfxOW+RhTwxyovO7v3tg4WlDoKZK248oKgjnBHB55i7KhYGEIfAFhhxv4qy3SewBNC00Reu7DVQT+Trs3rP9t+IRAOmJDT5IiStxsB0gAI7oz+m9KrkPMpKS6Ln2pIYkQYZ1F8eWr16pIFOmcjh2Ts=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782403417; c=relaxed/simple;
-	bh=t1RCsCsS3VRbcjDemhJT4gVV6IzXDbBXzTW6wzIU0qk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=uehPDM46ObBbg+jpPQO7AaEiUjLsOHDtQOLrpsfxcvM/PBx/N89+6SGxCuciS+izRR0mTa3Jqs5XxyvG81NhqVa8cqrSxXleb/zxneob5uN1sfCSqLtIoH2gF3knY8yEIhM4x6yoBZmKzHQSaGqN6/GR6quFZv8Dpn6HwVbXR00=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=aM6m2Oy+; arc=fail smtp.client-ip=40.107.159.0
+	s=arc-20240116; t=1782403841; c=relaxed/simple;
+	bh=7acK/Ch+ai3thJOCbKri4jcmbiqA/CClEBHRnDqIASw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K+9TfZ50S9sRpSARncy2ZzuBfcpDq1rb6menNSfwRgkv1NbPDNfb1XaA80dB4Jsj7703WlZ83WXgnrV13ZfUbjlv1IX/wR8bobRV7mII3X33BgHKTeKwYhhqgqWMpWxbkIip4o9/ZuAhanKmV94HGGRXORvHhX7Bgo4BRlgKMvA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XUsReO7q; arc=fail smtp.client-ip=52.101.53.60
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=H+TfrD9p2VEjgq/XHHE2lKQq9ozFcWKYTmLV/Z20H3nzCdqlTk+ikXcPCI9EA9s7qjEA5LZEJ8+4ofSskqhOb7zgp35CalYrEkHLhiluX0M4xBz5BSsRU1QNfiR0udVBSfcZoygKsSp3ZJMCJRQ/dF2vC6hRue0IuU1eB63B+hV2cfcYN+EubM/wyZu4qqKYBpq6d8QOwgnvTY6R4gGiO4y+pSAT+H5DcA2vkJhAdtupG7oeGgP8fhOsQnmoHRXGV6dOupL1t2FjU1ncltl55qFLGfQEr3y6JPpduhlA5AlguaoweFj/KUs3CZw1xbA8QB714hr+bbUBdVmnkyFtbg==
+ b=xq4aYZG0d/yjmwxVEaIPw00zwzLm4FIsEU0Si+wj6nkVtK4CS1NtMaGDS9SRuNGsryS23977aIv5epbDJVVnX1QyR6MmMTtq+hRykCg2H6utyPKhNQMKo1wUtlAimHNbJ+iL0xvymY2u/s6QBbwDooII16rOVPCmfiUm9vaFg2KMPhu1spVVRnDy6tjDh3yrE5G/YCPpsSvMufFDbYBaeRt3A9ylDNqt4yzuyrEvaZqXXpEBcsfWoaWExtpL11s9Mg7PTyol0Im52mFxRMMkN3Su9CilObfooMrZyP41db12HPOpGazwCqo9opzMe1/357IGeFxb3Dqxg/UYp+HXOg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sqZ2wO48UYLxlaNbThccYzBuNYAooHb+dh5RphM+d8Y=;
- b=rQMbW7iGxcs18cM/boTRkXoDs3LVcBcfsCY2boeUvrhbzdoDMitpcv0i2Oe2mjhmAG9pjfxN/Bo85y514oVi06EuaQKD7gP8BDdW28P7rAw4cDmlQaEQCirAUA+Cwagsjob7zosKLRaAQyFZrw1aiJLkCeswDBZqL7SnUoMYm2MZ9C5GsjcmNpU9q7oSIwfVd9/64rhb3uNxFaERQlCHJzH6KxXKBvqTo5LqNYAP9fXxhSzWUodk3SRcQH5wJgvpQ+ro7wWDEptdaLZfaApBwDd49/qpOJWwVHKoXxRa/H/bicdMzkRRRhWs9CTZ4wCfVvZuX1gdaG4Y1MHqs8ZN1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
+ bh=AvWrzenWitRXdBn/A6pWW8+BLrHtzKUzNX3DY23N3TA=;
+ b=PVuI8q6woKA7CDGVCNdLjAgh/5pApOkWDDb5UKb+k0IWONlXXJVp52fIF/vHWh5N5sk5YdJrKrimEVX/TEzdWnAAplCoFbykd41OEBVy3G5nn2qlRmf/YKtMVNbP1xIdE8cKaom/CzyVKYLBpd9wokMjBac9Rj5EonfZC+d0iL1+XPO8ElgBQC/8VNCB6ICWm8VZYx/aSYwDG39ItrcZrl89jCmcoYJLicr0o49mN3EQXnTqXXs4OMyPuIJudmB1tt1pNwAYoPahr9KC1mKXjAkKs3Y1Cj1bTc+2xxds8t3FcwaEw6FzbuJHVEsZdoIv+C9qE258bbd9nyu950QYsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sqZ2wO48UYLxlaNbThccYzBuNYAooHb+dh5RphM+d8Y=;
- b=aM6m2Oy+YfUquqo+pMN9TKH5dv9v601kk3a9Ir3CwR8ql0SCt537jhdI5eycPpbIvnIv0TKH3P3/6Dr3vmWzraFVxG68mP+XE6hwa5/ukj2o9XyF3zRWvfZi1yPgs8Exql7KbyHZp0GiDxjx4swo+Np2pa5WvETKZtMH+iFHA61NSrl/XBoqXwmbmFRU8g/qZfDuuuUH3E/CroXbblUbQKHXYR6Wqdc+KEQanW9juFpJdtxCYgyYXFN1Lif4/6ANv2ng1v+uBgZ3PXXdj22MNA9gt3jdZmH9hp286Nk+hBr5BBg8vaiBTrdYlOicWmdq97MR9uqPi7QMhZ4kmf8C0g==
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by DB9PR04MB9992.eurprd04.prod.outlook.com (2603:10a6:10:4c1::18) with
+ bh=AvWrzenWitRXdBn/A6pWW8+BLrHtzKUzNX3DY23N3TA=;
+ b=XUsReO7q6cnxdrXiLgTFVWKtbpfmpSWPRHpV5aFKsgr/CT6iAl0TSK0Y+FOg68ZBUgJfyzvkt+HV5q8BSwwX9k0TYhsNFhJ4o99turcMpmyxPUEwI6xPStXQua0H/2SGjNGS2ySQ7rdOkCYkT3emwitP4VgdhHPKTFrkDabqtno=
+Received: from SJ0PR05CA0073.namprd05.prod.outlook.com (2603:10b6:a03:332::18)
+ by SN7PR12MB6689.namprd12.prod.outlook.com (2603:10b6:806:273::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.15; Thu, 25 Jun
- 2026 16:03:30 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0159.007; Thu, 25 Jun 2026
- 16:03:30 +0000
-Date: Thu, 25 Jun 2026 12:03:22 -0400
-From: Frank Li <Frank.li@oss.nxp.com>
-To: Myeonghun Pak <mhun512@gmail.com>
-Cc: Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Ijae Kim <ae878000@gmail.com>
-Subject: Re: [PATCH] dmaengine: mediatek: hsdma: fix runtime PM leak on init
- failure
-Message-ID: <aj1RSj5ZXvc-9yu7@lizhi-Precision-Tower-5810>
-References: <20260624081701.19358-1-mhun512@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260624081701.19358-1-mhun512@gmail.com>
-X-ClientProxiedBy: PH3PEPF000040B0.namprd05.prod.outlook.com
- (2603:10b6:518:1::5c) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.14; Thu, 25 Jun
+ 2026 16:10:26 +0000
+Received: from BY1PEPF0001AE1A.namprd04.prod.outlook.com
+ (2603:10b6:a03:332:cafe::39) by SJ0PR05CA0073.outlook.office365.com
+ (2603:10b6:a03:332::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.181.5 via Frontend Transport; Thu, 25
+ Jun 2026 16:10:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ BY1PEPF0001AE1A.mail.protection.outlook.com (10.167.242.102) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.6 via Frontend Transport; Thu, 25 Jun 2026 16:10:20 +0000
+Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 25 Jun
+ 2026 11:10:19 -0500
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb09.amd.com
+ (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 25 Jun
+ 2026 09:10:19 -0700
+Received: from xhdsuragupt40.xilinx.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
+ Transport; Thu, 25 Jun 2026 11:10:16 -0500
+From: Suraj Gupta <suraj.gupta2@amd.com>
+To: <vkoul@kernel.org>, <Frank.Li@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <michal.simek@amd.com>,
+	<radhey.shyam.pandey@amd.com>
+CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dt-bindings: dma: xlnx,axi-dma: Restore xlnx,flush-fsync as u32
+Date: Thu, 25 Jun 2026 21:40:16 +0530
+Message-ID: <20260625161016.1249570-1-suraj.gupta2@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|DB9PR04MB9992:EE_
-X-MS-Office365-Filtering-Correlation-Id: 01e24da5-ce7a-44b7-eb96-08ded2d34c9f
+X-MS-TrafficTypeDiagnostic: BY1PEPF0001AE1A:EE_|SN7PR12MB6689:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54d21fed-fa47-454f-67c1-08ded2d44132
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|19092799006|1800799024|23010399003|56012099006|11063799006|18002099003|22082099003;
+	BCL:0;ARA:13230040|36860700016|1800799024|376014|82310400026|23010399003|3023799007|56012099006|11063799006|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	thkr5k3GyRThMpNt+9y9i2RaE93mW4ErqoTYDAVFh2B+Ye/NXpVAScxjs7yN/Ts3mRGt1M0JDdm+lKmmc8qD5ffGy6qu/MU8jEpKTE5zEeUo00uviZafHcLGu+cO8J3oE8MbZVrRGziKu8cG59CEfhJO4DMJ17nkzRMZk2jkXZtLmr6uEXYE1eTnX8MAfi5s915td9e1gd9Qmeer5ygrkvYzXM91e9AkgX4rtpWJxNC0Dqx7WQ5v9HVARPYDKiY+d5gE6tKsL27mqd1EuBAOSKFMkELYMi6YlhIRHUyfeGRyzkwckrvmYoiZW/aDHWK1bkR2sY2J6YIj+gSylel0QRywHXVGSK01OeI/VoghwyNtL6ZtcCUc1tUiMKdaOrkKNvrJwfZswyOUUKK2Z4H36eGMGntJlWnQNCIuoRH35zBQ9+x5aFQL+bqBK4wzvOZCwCQ2Ps7I5NIDBSMSWzGyCvDYGlI+TSfZOfEAOzUCzpjQT3i84vhEoG5O0juUUQAlXVvnQyokONtmyEHC8nXKNrpx9Axzv549y5yiRjFh5iOvR3CQNpb8j3fk2G9c5FDsUfdje8NUdXd15sMnBI1U7usoNaGr1u17kXQOKgqi8mqwdeq0rE5r5hPY9Djo0Yn4Bk0l4KygNz+1HXTmsa8tPEp/0IVUzyWcOBGoBCIsMYE=
+	t57jEPGVwgU6foGe1ES2kH6z2N+gcq335ImD+AZCzQpbpMdOa6zUS8yb6A1uc+EfCJ9z6DQ1yj+l38s/Mm/U18WBhjnjJnyZp5oQZHcWne7ZhFYggmpEF/uAoBCQw89fMiBIB6MGi8tNyNNtsr0douJLw5vajME8yS/xwlgnrdZHEbeJ3veG8oqMPTWnJ76iLvE94cgJfCKunzktSBpD19/72v/WpeAisrGC5dJtZRAM6WOnMNbFXPAj/HQ9yUhtU0dGEBG5s/xU1RJ9ee991SGign3eHGKz+yS4+PgWaMdx2MsojahTHrdbQ2q93YaX2OB5hMgkBntzTAnS5jRMq8ieCbCJxqYOLSFJ9xM/gjWSJuMd0BUQ1kWoeT6NvPgduUtArsCB39HOKcU39CxKmigajSgXmk4FiFBvr3u5ldGDSTHWXf99VffWr+NdKA6S1mDVUmhUrspPxu852ZfRYDv8YH9vDDdZ9dL1St6CeP/7cUGzSGdcPjqPPM+VivaHtH2WA1IMmo/b9ftkm23EqA+MAXv2AT5zzEWlxRYV+bjmx8V+u2G7/cyzrkRO9JrjOO+mlbsDIZq3yu92Q8zDQGK4p2vurb+fDfGoWjrKww+s+1gVxTf915WicdoRApRdx5TS4IvyebvqgRSuGxaL0H7NHmRE7LNNvOvLNxh3Kk5QwwRcnbh7IIEbG1llJwmGQS+i4INH4fFBrvOS0skpxQ==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(19092799006)(1800799024)(23010399003)(56012099006)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(1800799024)(376014)(82310400026)(23010399003)(3023799007)(56012099006)(11063799006)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?q2RmVqq4+pgTvL9VXgWrdPo7PGa6IQhREBx66SL2PZxP/fVhmexz9bvNbFQ2?=
- =?us-ascii?Q?DwEz9Zpk56r4DbPbziNHdw//lj4WdNfyA01IsbPKR2LXLGQE5ohlMlIUFZIV?=
- =?us-ascii?Q?Bui2Rn9zxKKQkKAl3pi7yjQdRJcT+M17nlXdwtOmoTpvvY/o9Ezh8cjTM9j4?=
- =?us-ascii?Q?XkRciO+PHr+iT7uvttqv6/a0x4uxZMB7DqZekvmVTZXRU/pALklDRJBzEmuI?=
- =?us-ascii?Q?ijuf6ZsC+qI3MZVY7wRrWRwdx5jt97g9hnIyfR9vqBrCyEWI3Ujya1TdLWAD?=
- =?us-ascii?Q?tzbzz7wuLjWIYPrxUbAYMn7J/wo2LWMSjMX3BSa/rxdPq7fbrgZr//C71kw7?=
- =?us-ascii?Q?YkTn2Pg3fGTmcRNGOxBdIYOu70J6zxqM1Ty9IrSc1XX78HCcmhAc6yqF1ltF?=
- =?us-ascii?Q?GQRqC/Lm0RKGLH2LTt8WrAWYpDZ8KMRj7Wu2KpCcEXCnOmHqaAl9z/P5jms+?=
- =?us-ascii?Q?50Am94JfjkiPj2XThiYdUTRHNm2Kuv5ZdW+z4c7OSy6YbjL+om4bG2DJ6VWV?=
- =?us-ascii?Q?OPDJR6SXkFdfla8km7BS30VUdxSvtstxBs/8b10OFtE8kGKueRzQK119YJiG?=
- =?us-ascii?Q?Ze4P6wBw55mg1ebYO+qmeH9rvzt9fv2th84DOeWsU7ZGOZ91P3iYhhGTaPUy?=
- =?us-ascii?Q?x49IG2Sq4Ic/sqhqskxEE5trikmPummQCTmDUC4AHudIJ7n4MjIlYc6HT7gv?=
- =?us-ascii?Q?pD0AS8EN5YqZTs7+yZJK44f43Ite0TkovacCnHywIzohcL7TnaoUHi0akZSp?=
- =?us-ascii?Q?199crC6VZrBz8XJdIONPG68W9LuSbzkIsmoz5pjdTHrohi16G7zzCxpk3e+S?=
- =?us-ascii?Q?/Jrl2WiFYq/o58O0mn6sagM0mZIKtt2kqB61PV/9eHBuxjJ9vMIIIANVhnbI?=
- =?us-ascii?Q?scvljEbHIq7MZ0DT6+CSoSFKszrCRl3/4HdniqePhtBKN8g9aEHE7CjTXApI?=
- =?us-ascii?Q?mxdo9Hg6+sLC7BjZz312agfqztCU7yezk/JUVoSBfoR6Yan0douTboab51HH?=
- =?us-ascii?Q?/Awt5OG8QLhgmFW7J7Zz6QIAvcNwcpUCAAxJDquZKVQ+FkCdEObijZ+AEX0C?=
- =?us-ascii?Q?Jjhl8MfROEvzb/0wB1jx1QNK9P1sYazocXARfbuOMtjVw0AMM4M4wf9u0Wh7?=
- =?us-ascii?Q?5dJ+nbnFEGkmtSM7o7UeweWoZ6/WLj+oqf4suiPm8MEYpI3XqPwgSft0bBee?=
- =?us-ascii?Q?5QknFiyB50HJ0/rRYlQ0aB83X+xt7onDDWjcfIhoaJ14K1ACxYD0pDn5dsv+?=
- =?us-ascii?Q?5LKmMTHh9vbgb3uUb2LTKmwewrer2TP/VPceYuz/zKScAeys7G08+2nVPQny?=
- =?us-ascii?Q?tpm+k7RI3LiEXA2Olbgx5WC3jrSJC+BNqfY9cBfe/dDvU3zcAgJ91Y6mXctz?=
- =?us-ascii?Q?TXKWYQ5aiIyImRKP5gqYoQ7msQRjdGEPbHX1MMZCay7oioKlx0ewCOlGOVQL?=
- =?us-ascii?Q?3xaPBT0wVu/zU2ds87wKBv9fRSHNUSm/pG9AbCuLqxKXLbpxuOAp6Pg0DdWv?=
- =?us-ascii?Q?8fePbHgSl4eZk/vWwC7XIQlTutegU0WU8RQ0ag0ZTAYy4kY2q0hCmx5nyu+i?=
- =?us-ascii?Q?4/YgIfdMMOwP5yM/D+6gAucdaqEpIDxMwEzTpqXnGvfAokmVblCpCOVse/ha?=
- =?us-ascii?Q?dxZjVpLtGSieI15WcEa0N5miOLb6NiKW4JqcqlWbnUAb/nbGM3ug2F+LAeXw?=
- =?us-ascii?Q?h/ziPhXvg9Z4DEoZHuuBWkhUajNq0Zlcaj8Z2GC4kctnmk1x0VDduqlMmjfY?=
- =?us-ascii?Q?1B8Nn64VpEQmey1ihT2VnRoTJcgGsDuv7EoKd/qpomN2vQ/VvlKP?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01e24da5-ce7a-44b7-eb96-08ded2d34c9f
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2026 16:03:30.0520
+	Gk8KoFgDeJnpXY41aem68Brp9jAXwM3pW5jxIKjVqrgTZRYr3rLIDDvE7HmOrbhPp8h3lQ3BcJKB5kulMjKBGJwfLj9DfQTIEUpvrEvHjZFPpjOsFpI8rDmmJW4FLHTqojmxVMlwdniVU4Ng0vPzZoEDG82JNqqA/NNcT2ckBcCxZKorMs7FDPLT2wXyqskyA0WtWGPL48ix7yGZjlKDKhfuBAWf1/L8KY6JZCuhRGeo/i1/BNFxzAFYDJ2kXbKIWFmuosWIC5/3bE5bpOH6o8+rAM8U5Ck1izND6Qyevs2aHsF3BBgRPaqLILEGmgpdt1cg/kC+QyBsRmk8IrfXtul2LTjViHzyZwUOC3f5XBVHjDYpYMuN/IDIbek4VBAgHl2oA04jGd5JwxOMKNdz+UezJBVBzTzCoUhLRYr0ZBowPGG9S3UZpV/47+ShHe1h
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2026 16:10:20.1242
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k7YJLh4OvMkPzLmacvu4eD2FgPzjBcuF2VauVa9IH4gu2N0zrTigenRHZL+GdpKEPOEBWBct7tQUKjkuLRt20hbWubpYZ94IMlayniHp3oox6FgNa9gSPW1KTNRA23VF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9992
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54d21fed-fa47-454f-67c1-08ded2d44132
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BY1PEPF0001AE1A.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6689
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [2.44 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [1.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11792-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:mhun512@gmail.com,m:sean.wang@mediatek.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mediatek@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:ae878000@gmail.com,m:matthiasbgg@gmail.com,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[Frank.li@oss.nxp.com,dmaengine@vger.kernel.org];
-	FREEMAIL_CC(0.00)[mediatek.com,kernel.org,gmail.com,collabora.com,vger.kernel.org,lists.infradead.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[suraj.gupta2@amd.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:michal.simek@amd.com,m:radhey.shyam.pandey@amd.com,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11793-lists,dmaengine=lfdr.de];
+	DKIM_TRACE(0.00)[amd.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Frank.li@oss.nxp.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[suraj.gupta2@amd.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_NONE(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[11];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine];
-	TO_DN_SOME(0.00)[]
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[9]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 51D5C6C7487
+X-Rspamd-Queue-Id: 8F3146C75E8
 
-On Wed, Jun 24, 2026 at 05:16:38PM +0900, Myeonghun Pak wrote:
-> mtk_hsdma_hw_init() enables runtime PM and gets a runtime PM reference
-> before enabling the HSDMA clock. It currently ignores failures from
-> pm_runtime_get_sync(); if runtime resume fails, the usage count remains
-> held. If clk_prepare_enable() then fails, runtime PM is left enabled with
-> the usage count held.
->
-> Use pm_runtime_resume_and_get() so resume failures do not leak the usage
-> count, and unwind runtime PM when clk_prepare_enable() fails.
->
-> The probe path also ignores the return value from mtk_hsdma_hw_init(), so a
-> failed hardware init can continue as a successful probe. Propagate
-> mtk_hsdma_hw_init() failures from probe, while keeping a separate unwind
-> label so mtk_hsdma_hw_deinit() is only called after hardware init succeeds.
->
-> Fixes: 548c4597e984 ("dmaengine: mediatek: Add MediaTek High-Speed DMA controller for MT7622 and MT7623 SoC")
-> Co-developed-by: Ijae Kim <ae878000@gmail.com>
-> Signed-off-by: Ijae Kim <ae878000@gmail.com>
-> Signed-off-by: Myeonghun Pak <mhun512@gmail.com>
->
-> ---
->  drivers/dma/mediatek/mtk-hsdma.c | 22 +++++++++++++++++-----
->  1 file changed, 17 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/dma/mediatek/mtk-hsdma.c b/drivers/dma/mediatek/mtk-hsdma.c
-> index a43412ff5e..987e5274fc 100644
-> --- a/drivers/dma/mediatek/mtk-hsdma.c
-> +++ b/drivers/dma/mediatek/mtk-hsdma.c
-> @@ -849,16 +849,25 @@ static int mtk_hsdma_hw_init(struct mtk_hsdma_device *hsdma)
->  	int err;
->
->  	pm_runtime_enable(hsdma2dev(hsdma));
+The DT schema conversion incorrectly changed xlnx,flush-fsync from a u32
+property to a boolean. The original binding documented values 1, 2, and 3
+to select which VDMA channel(s) flush on frame sync.
+Restore the uint32 type with the documented enum values and fix the
+example accordingly.
 
-use devm_pm_runtime_enable()
+Fixes: 2d5c2952b972 ("dt-bindings: dma: xlnx,axi-dma: Convert to DT schema")
+Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
+---
 
-> -	pm_runtime_get_sync(hsdma2dev(hsdma));
-> +	err = pm_runtime_resume_and_get(hsdma2dev(hsdma));
+ Documentation/devicetree/bindings/dma/xilinx/xlnx,axi-dma.yaml | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-It enable runtime pm and resume_get here. and suspend at driver remove,
-so whole life cycle, pm is enable, why need enable runtime pm management?
-
-Frank
-
-> +	if (err < 0)
-> +		goto err_disable_pm;
->
->  	err = clk_prepare_enable(hsdma->clk);
->  	if (err)
-> -		return err;
-> +		goto err_put_pm;
->
->  	mtk_dma_write(hsdma, MTK_HSDMA_INT_ENABLE, 0);
->  	mtk_dma_write(hsdma, MTK_HSDMA_GLO, MTK_HSDMA_GLO_DEFAULT);
->
->  	return 0;
-> +
-> +err_put_pm:
-> +	pm_runtime_put_sync(hsdma2dev(hsdma));
-> +err_disable_pm:
-> +	pm_runtime_disable(hsdma2dev(hsdma));
-> +
-> +	return err;
->  }
->
->  static int mtk_hsdma_hw_deinit(struct mtk_hsdma_device *hsdma)
-> @@ -983,7 +992,9 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
->  		goto err_unregister;
->  	}
->
-> -	mtk_hsdma_hw_init(hsdma);
-> +	err = mtk_hsdma_hw_init(hsdma);
-> +	if (err)
-> +		goto err_free;
->
->  	err = devm_request_irq(&pdev->dev, hsdma->irq,
->  			       mtk_hsdma_irq, 0,
-> @@ -991,7 +1002,7 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
->  	if (err) {
->  		dev_err(&pdev->dev,
->  			"request_irq failed with err %d\n", err);
-> -		goto err_free;
-> +		goto err_deinit;
->  	}
->
->  	platform_set_drvdata(pdev, hsdma);
-> @@ -1000,8 +1011,9 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
->
->  	return 0;
->
-> -err_free:
-> +err_deinit:
->  	mtk_hsdma_hw_deinit(hsdma);
-> +err_free:
->  	of_dma_controller_free(pdev->dev.of_node);
->  err_unregister:
->  	dma_async_device_unregister(dd);
-> --
-> 2.47.1
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,axi-dma.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,axi-dma.yaml
+index 340ae9e91cb0..95b951eea1b7 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/xlnx,axi-dma.yaml
++++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,axi-dma.yaml
+@@ -81,8 +81,13 @@ properties:
+     description: Should be the number of framebuffers as configured in h/w.
+ 
+   xlnx,flush-fsync:
+-    type: boolean
+-    description: Tells which channel to Flush on Frame sync.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [1, 2, 3]
++    description:
++      Tells which channel to flush on frame sync.
++      1 - flush both channels
++      2 - flush mm2s channel
++      3 - flush s2mm channel
+ 
+   xlnx,sg-length-width:
+     $ref: /schemas/types.yaml#/definitions/uint32
+@@ -251,7 +256,7 @@ examples:
+                       "m_axi_s2mm_aclk", "m_axis_mm2s_aclk",
+                       "s_axis_s2mm_aclk";
+         xlnx,num-fstores = <8>;
+-        xlnx,flush-fsync;
++        xlnx,flush-fsync = <1>;
+         xlnx,addrwidth = <32>;
+ 
+         dma-channel-mm2s {
+-- 
+2.43.0
 

@@ -1,227 +1,179 @@
-Return-Path: <dmaengine+bounces-11771-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11774-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id jsJNEJ7sPGr5uQgAu9opvQ
-	(envelope-from <dmaengine+bounces-11771-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 10:53:50 +0200
+	id MQnIFeTuPGp3uggAu9opvQ
+	(envelope-from <dmaengine+bounces-11774-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 11:03:32 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D52FF6C3FCF
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 10:53:49 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F0826C40D6
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 11:03:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=MdLasqpf;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11771-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11771-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=yoseli.org header.s=gm1 header.b=KncRG5Kf;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11774-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11774-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=yoseli.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4DC8C3006151
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 08:53:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2464430A1873
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2026 08:59:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB66438550E;
-	Thu, 25 Jun 2026 08:53:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A62B38B146;
+	Thu, 25 Jun 2026 08:59:44 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EEC385D99
-	for <dmaengine@vger.kernel.org>; Thu, 25 Jun 2026 08:53:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978EA384CEA;
+	Thu, 25 Jun 2026 08:59:41 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782377626; cv=none; b=iPeQ40Z+055VGIfzfMKk1E7/zYfhMDNTyk34+P7uAQ/CTRVWyqIGvIxPc5GryQzk2/ABtkmBWNx4BoPeo/QjbpK3Qiu0aGEiHYVilk2DHZX+0ORDsjotWaKbCVrQwmSXCWtRmuKEI5eQUlD7i7U7fzk7HoMVFf2WSne9m+t1Nx8=
+	t=1782377984; cv=none; b=FacRYKP0mErcDZ9VQNjRsQdyNOv/1gQlsS2grB+L6gbSQQswxxLD8Yq2EQarNRm1y234uZPt5S/y04t3M72Q/+D9/f85xO2ZhSzvr/ny4/VWAiA8cfbGY58jUw8kN0RZH+DDIqXCMKQZs2BDZqMHsE1dXuL6URnbxdwb6mCWGyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782377626; c=relaxed/simple;
-	bh=aG9UPb6X3t49TQGKWNh8CixzzbYHvf/dhqIW9MNKXCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvkacCifwjcwIxXiGSOtanroQDU2ATg9aHGzynKYC71bSBn0TaIyzzfX07EABdyXPgFdMWPHzpdA97RH4kmmT/cDIXSfnnEQ4gglG9dracqb7FBD6BmNY2WydOP1ahEOIHoE3m3VQ2dpBSq9uet+d7zHlKiqMGGd9q3CCllPfJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MdLasqpf; arc=none smtp.client-ip=209.85.128.51
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4923fb1f095so19615505e9.1
-        for <dmaengine@vger.kernel.org>; Thu, 25 Jun 2026 01:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782377624; x=1782982424; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rOgQcEJt6Q/UXFy+W00eved1xO9DzXrtsP5AvlpEQN4=;
-        b=MdLasqpfkOXRRB466ILiGSAwfihYqJyXKtgfkNP9i/GMOs6Xx374FGCX7/yMAPPHEw
-         n9XHR6qu7ob3UARi7qiX1eBctc6QHCbQPSDT+irE79FzKu9grfJbbsN5ojtTMWDI5cjt
-         axSLYMqdylwbaanqlIHYUY9dEKJOQcmHR1wTj7bAr/miJE6svZ88O0X7WQCBBNv6oBsx
-         P0jskw0Kht/LMv7fNnn5NOj5yPEaP0XZQ7YbcbnkD0XLanOU+mJjRHgz2aWQDiLJpmO1
-         RNM1FUOWe3WV554YXZ5Jwvyk65CWptz66eRDHZZCZ/k+SVqvUwwK0IQERfXWD6QgmGYi
-         ZUSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782377624; x=1782982424;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rOgQcEJt6Q/UXFy+W00eved1xO9DzXrtsP5AvlpEQN4=;
-        b=Pj4jbTSD5N4CChvGVgiLKfivynaODs5jrmKkqTajrl1lnU00DuML2ym0X/leUaYwGj
-         L7M0bxiytzmMwPg1l1wUPUNZ8tsVMoKkm14FzqhZENphknX4mXzOekzLB3uSIpoEW77e
-         N+U9I3kODExLgNhJ6tQVqRp4j3TmZiVveHcT4bQ20J33oAdIFhyE+dg2DaUQoESrnHNb
-         hCpMSybG4niShgb0pUQ0qkbPLe3+sZAfsiRR8ejx4hpu0Dz9NaEi7nf8C/Jo/RlgwjQW
-         A1ygi+taFLrWOre6CUXc47BYCFlwxD2hliXYwNj60iaFSvqAAjPgq/JeQ99zlYpEN21I
-         m/7w==
-X-Forwarded-Encrypted: i=1; AFNElJ84w7Mr1f607ncxygv4a2c3bsoOiqDmy6eS5WxMC9pc/jvHeWx9XPTa1GzTss9An13It2HSqO7KLLk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU5mx467aG7sXLy9WezJS8DU43TgdHufOZIImI9TNGdpf/SS0Q
-	2FcVM/WVLis2XO56ZwPkumr43GCTGjTEPHtR42tkoe/Cy9XoZ4CutYKF
-X-Gm-Gg: AfdE7clUVUWw7Xz1AdzAos7FEndpyuaW2G4FsJqT7Tyj6C99cKpFGJL8ptV3hY7/o8I
-	5R5rHV4gGOX69OeX/8LtHVfVwUSMeg0HVZFb44P5myXSPSPxB2PoVBhuoilhLUhVtwb4WhFTS04
-	fPFDOZamiDmAbExvqXCQccICPQCrmv+wSw0nhiWlITy97RA3a3YSERC1OLnGBT6N4JkUlVU7Ui5
-	pfRuQrZBiPxOAFdiB97HQCONOfsRdZ+nZV9nZ1WaRkzE0Qx9jQHwiI9WdfvRxhKr1c/eErSFNzX
-	1U/j5Xh+T07aEnaH+L5R7kFZulKxpADI1+WE9NMS9S/ANykOPonyjcCTDsy9t73Dj6fbS7O/SFP
-	J+wU7LFzAOVR2Ot0fd8jKCmdPhmTJqTvX/e8inOGs41d0X4GO1n3PXT+KKJz+vsX25U9TT2H7zA
-	4LXQ==
-X-Received: by 2002:a05:600c:c1d7:10b0:492:4667:8c40 with SMTP id 5b1f17b1804b1-492668638c1mr15548305e9.8.1782377623588;
-        Thu, 25 Jun 2026 01:53:43 -0700 (PDT)
-Received: from nsa ([45.94.208.61])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49264082426sm58844265e9.9.2026.06.25.01.53.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2026 01:53:43 -0700 (PDT)
-Date: Thu, 25 Jun 2026 09:54:46 +0100
-From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-To: Frank Li <Frank.li@oss.nxp.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, nuno.sa@analog.com, 
-	dmaengine@vger.kernel.org, linux-iio@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, 
-	Frank Li <Frank.Li@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH RFC 2/3] dmaengine: dma-axi-dmac: Switch to bitmap-based
- address width masks
-Message-ID: <ajzsjhXHzpV2phby@nsa>
-References: <ajVs3jwoxq7Jhop1@SMW015318>
- <ajWSXeq6h_OjNNqh@lizhi-Precision-Tower-5810>
- <ajj8AhN1YC3uvuLb@nsa>
- <ajlMAijTUHsnOhEQ@SMW015318>
- <ajlR9QiXiBAH4mWH@nsa>
- <ajmAP2nKzi2dPEVx@SMW015318>
- <ajpYvzlHSPiJRvnX@nsa>
- <ajpfmQ6JID5rHLMF@ashevche-desk.local>
- <ajv4NVSmSR_dn9CJ@nsa>
- <ajwKq0CB8sGdvvcO@SMW015318>
+	s=arc-20240116; t=1782377984; c=relaxed/simple;
+	bh=syIUdyu1xWcoWr0p4kpqxq+c6k9/6ho+XigYhdJfCPs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nxuhr5+bp6O9OShmwATC/8z0YeFmw7WFSBAhzpD++DPVnFt14t9atdznCdAU+YqU7Wya2bY/acMonkozTTQEj3zzPhijIlZpEXB6QrXUMOOpS7jgBv2zHHZLa3PMGmxCWsDaDGlglOgr7CfafMO1LeKeOqryYdEVrmKK6/RZkNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yoseli.org; spf=pass smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=KncRG5Kf; arc=none smtp.client-ip=217.70.183.197
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F3DF03EBC2;
+	Thu, 25 Jun 2026 08:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
+	t=1782377979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=XCzXft9NlsCoIM092yOw5c0isnDLHn+QcrWCYc/COcU=;
+	b=KncRG5KfwUQ4jMqbhzLkQLOl+wJ24IWHbBnyNhzocse/kjaLxhVvqkItRn2t7omBWRkqU7
+	pqUR/KHXNUip10AP0dWjqwqH/rdCbax/Cs60SYXuSKYNdpp4j1eCNm4vxrj2MErfdexGKx
+	D6DErm4wNnzK1Ajpc42K+HJjHKDG6lHUxDo75HZM32Ay/IFTFXtLJl1bad7s7SHfHcJXH1
+	6eKbl1PUSvpT7d/KLEXrYZx6OtO4KTcKNNe0agBVP1PjTcl9otGN2jIXiqlcXuFchAJeLZ
+	P8F0WvEYrkRZKCXxgnNsjV4nMc/y1c/Im3U/JL+Z890/JO4ED1YNjKvSuhkn7Q==
+From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+Subject: [PATCH v3 0/5] dmaengine: mcf-edma: fix 64-channel handling and
+ modernize IRQ setup
+Date: Thu, 25 Jun 2026 10:59:36 +0200
+Message-Id: <20260625-b4-edma-dmaengine-v3-0-44be00ace37d@yoseli.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ajwKq0CB8sGdvvcO@SMW015318>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPjtPGoC/yWNQQ7CIBREr2JY+w0gUHXlPUwXLfy231QwUBubp
+ ncX6mIWL5l5s7KEkTCx22FlEWdKFHyG8/HA7ND4HoFcZia5NNxIDa0CdK8GctD35BHkRdhKGKN
+ cU7G8e0fs6Ls7H/Wf06d9op2KqDQGSlOIy346y9Irfi2ENMULNoyuo4gwS+CgW4FKK+UMv96Xk
+ HCkU4g9q7dt+wGQplW0wAAAAA==
+X-Change-ID: 20260625-b4-edma-dmaengine-281c71664da7
+To: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>, 
+ Angelo Dureghello <angelo@sysam.it>
+Cc: Frank Li <Frank.Li@kernel.org>, imx@lists.linux.dev, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+X-Mailer: b4 0.15-dev-47773
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1782377978; l=2705;
+ i=jeanmichel.hautbois@yoseli.org; s=20240925; h=from:subject:message-id;
+ bh=syIUdyu1xWcoWr0p4kpqxq+c6k9/6ho+XigYhdJfCPs=;
+ b=lQdLUv1rlC5XNwxd3Yr3u8l1qOZP7cTW5Fr5peUYhmHUsl5v5i/36K43J3zxcXoRYpPoGHOgs
+ 3fgTbbKWL8VARKcnbhStheLeyrqjlD7AfSYpMMoCY7EXqKfBzLsUHaa
+X-Developer-Key: i=jeanmichel.hautbois@yoseli.org; a=ed25519;
+ pk=MsMTVmoV69wLIlSkHlFoACIMVNQFyvJzvsJSQsn/kq4=
+X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+X-GND-Score: -100
+X-GND-Cause: dmFkZTGiI+TjZcRXyPKYPtAGSjOk24JrOJJ3Wpg06hmACYTjlFfj4wkTxJPX6XapZsqD8kcxRRj3hkNHo1MKGvGHp2NrxiCHanobZBAHYY+Dbyux+59gP99JdqkpgPe+4xErjo4TwGYRMcjECQzR22Zbbo4opv9gmA6OHjTAGKG8lqrXmr1Hrorb+B7A0RNUy07S0QlIXIGURPO1v1qmCa0D/R4foDBWQ6axE75F+qzwNk0sOxyb6RSKqhnfSiWaxYq8vZSNxRa1E4hcbNLWru5PDh8jF2+rjOPF4WM28/XX+B99p3ZdDO2UJmCpJ0ZjoQ9b32eiC42FziKvTyFEHmHLCq2KGaA3vLQy7eHYXyvE+mrD74brPXmlQZ3LtaB4sa1jjp5uE3UV0fJaB8jj2TRFI0qJdKmZ8jvYSS/AUhmmQfPKZMVPCmX6vD1WefQvXD3OAvlrKjF+PgKbFZhD6adz8iN3iNze5UnX2bPcNALoBTNl+8/d0VTd0a5kjwRJcIcnkf3C23tgrAmD/4FBU03cBQVO3TX643RDqsq8UQ0zgymoIilBJT3MCqOpijiHr7r0yax4ZdrRR2EkHo3EERohb/D7IKoVbB5LnEQmEwRq0bFXKexpDArl15mPZU/R0v5PSPPNLi7nfgB1dCJ8YddHXmWwQZjt6tJdjAfYiqgjUYt1rw
+X-GND-State: clean
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[yoseli.org,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[yoseli.org:s=gm1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-11774-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11771-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[nonamenuno@gmail.com,dmaengine@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:Frank.li@oss.nxp.com,m:andriy.shevchenko@intel.com,m:nuno.sa@analog.com,m:dmaengine@vger.kernel.org,m:linux-iio@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:lars@metafoo.de,m:jic23@kernel.org,m:dlechner@baylibre.com,m:andy@kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[jeanmichel.hautbois@yoseli.org,dmaengine@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:Frank.Li@nxp.com,m:vkoul@kernel.org,m:angelo@sysam.it,m:Frank.Li@kernel.org,m:imx@lists.linux.dev,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:jeanmichel.hautbois@yoseli.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nonamenuno@gmail.com,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[yoseli.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jeanmichel.hautbois@yoseli.org,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,nsa:mid]
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,yoseli.org:dkim,yoseli.org:email,yoseli.org:mid,yoseli.org:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D52FF6C3FCF
+X-Rspamd-Queue-Id: 9F0826C40D6
 
-On Wed, Jun 24, 2026 at 11:49:47AM -0500, Frank Li wrote:
-> On Wed, Jun 24, 2026 at 04:33:53PM +0100, Nuno Sá wrote:
-> > On Tue, Jun 23, 2026 at 01:27:37PM +0300, Andy Shevchenko wrote:
-> > > On Tue, Jun 23, 2026 at 11:14:51AM +0100, Nuno Sá wrote:
-> > > > On Mon, Jun 22, 2026 at 01:34:39PM -0500, Frank Li wrote:
-> > > > > On Mon, Jun 22, 2026 at 05:09:10PM +0100, Nuno Sá wrote:
-> > > > > > On Mon, Jun 22, 2026 at 09:51:46AM -0500, Frank Li wrote:
-> > > > > > > On Mon, Jun 22, 2026 at 10:26:41AM +0100, Nuno Sá wrote:
-> > >
-> > > ...
-> > >
-> > > > > If support 4Byte, it native supportted any N*4Byte.
-> > > > >
-> > > > > So needn't bit mask to indicate all support bytes.
-> > > >
-> > > > > > > each transfer, dma_slave_cfg should set specific bus width requirement.
-> > > > > > >
-> > > > > > > If memory have requirement for 32bytes, typical cache line length for
-> > > > > > > hardwaer coherence transfer, it should use dmaengine_alignment.
-> > > > > > >
-> > > > > > > So I think only need set min value should be enough if fix pcm_dmaegine.c.
-> > > > > >
-> > > > > > What fix for pcm_dmaegine.c? Not sure there's anything to be fixed in
-> > > > > > there... The code seems to use the dma bus width to match against PCM
-> > > > > > formats supported and filter only the ones we can support (per dma cap).
-> > > > >
-> > > > > if cap is one byte, it should support 8, 16, 24, 32, 64
-> > > > > if cap is two byte, it should support 16, 32, 64
-> > > > > if cap is 4 byte,  it only support 32 and 64.
-> > > >
-> > > > Well, Now I see your point but not exactly. Because we do have
-> > > >
-> > > > DMA_SLAVE_BUSWIDTH_3_BYTES
-> > > >
-> > > > and it might be used by the pcm_dmaengine code,
-> > > >
-> > > > There are also some controllers that set it. But it looks like all that
-> > > > set it also set 1byte.
-> > >
-> > > But this might be not true for all HW in the world. In previous reply I made
-> > > a comparison with MMIO accesses where not all HW that needs 1-byte read can
-> > > cope with that. If there is some proof that this is the case when 1-byte
-> > > DMA bus implies 3-bytes (or other odd number), I would like to see it.
-> >
-> > True. I'm also not too keen in making the above assumption and have no
-> > proof that it will work for the controllers we support.
-> 
-> Okay, I think it is fine by use bitmask. suggest change name to
-> src_bus_widths,  addr_wdiths is quite confused.
+The MCF54418 ColdFire SoC integrates an enhanced DMA controller (eDMA)
+with 64 DMA channels. The current mcf-edma interrupt and error handlers
+only deal correctly with the first 32 channels: they test the status
+bits with BIT(ch) on an "unsigned long", which is 32-bit on ColdFire, so
+any access to a channel >= 32 is undefined behaviour and the
+corresponding completions/errors are mishandled.
 
-Ack
+This series fixes the 64-channel handling and tidies up the related
+code:
 
-> 
-> And since not much place use it. suggest change all consumers and cleanup
-> original u32 src_addr_widths in followup patches.
-> 
+ - move the shared eDMA error handler out of the header file so it can
+   be reused by the mcf-edma glue;
+ - add an FSL_EDMA_DRV_MCF driver flag to describe the ColdFire
+   specifics;
+ - fix the completion and error interrupt handlers to iterate over all
+   64 channels using a proper bitmap;
+ - register the per-channel interrupts with devm, which also fixes the
+   IRQ leak on the probe error path and quiesces the controller on
+   remove().
 
-Alright! Will include all consumers conversion in followups of the
-initial patchset!
+The two interrupt-handler fixes carry Fixes: tags and are candidates for
+stable.
 
-Thx!
-- Nuno Sá
+This work was previously posted as a single series together with the
+ColdFire/m68k platform enablement.  As the driver changes and the
+arch/m68k/ enablement are independent and target different trees, they
+are now sent separately.
 
-> 
-> 
-> >
-> > - Nuno Sá
-> >
-> > >
-> > > > So your suggestion might still hold and work but I'm not too convinced
-> > > > that having the array complicates things that bad when compared with the
-> > > > risk of breaking existing code.
-> > >
-> > > > > Needn't mask each bit.
-> > >
-> > > --
-> > > With Best Regards,
-> > > Andy Shevchenko
-> > >
-> > >
+Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+---
+Changes in v3:
+- Rename the patch subject prefix dma: -> dmaengine: (Vinod Koul).
+- Split the ColdFire/m68k enablement into its own series targeting the
+  m68k tree; this series now contains only the drivers/dma/ changes.
+- Add Fixes: tags to the two 64-channel interrupt-handler fixes.
+- Replace the "Add per-channel IRQ naming" change with a devm-based
+  per-channel IRQ registration that also fixes the probe-failure IRQ
+  leak and quiesces the controller on remove().
+- Link to v2: https://lore.kernel.org/dmaengine/20251126-dma-coldfire-v2-0-5b1e4544d609@yoseli.org
+
+---
+Jean-Michel Hautbois (5):
+      dmaengine: fsl-edma: Move error handler out of header file
+      dmaengine: fsl-edma: Add FSL_EDMA_DRV_MCF flag for ColdFire eDMA
+      dmaengine: mcf-edma: Fix interrupt handler for 64 DMA channels
+      dmaengine: mcf-edma: Fix error handler for all 64 DMA channels
+      dmaengine: mcf-edma: Use devm for per-channel IRQ registration
+
+ drivers/dma/fsl-edma-common.c |   5 ++
+ drivers/dma/fsl-edma-common.h |  11 ++--
+ drivers/dma/mcf-edma-main.c   | 133 ++++++++++++++++++++----------------------
+ 3 files changed, 72 insertions(+), 77 deletions(-)
+---
+base-commit: ab9de95c9cf952332ab79453b4b5d1bfca8e514f
+change-id: 20260625-b4-edma-dmaengine-281c71664da7
+
+Best regards,
+--  
+Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+
 

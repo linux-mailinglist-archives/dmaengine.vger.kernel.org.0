@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-11810-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11811-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id PkwuIMFKPmoVCwkAu9opvQ
-	(envelope-from <dmaengine+bounces-11810-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2026 11:47:45 +0200
+	id gP/RJO5KPmodCwkAu9opvQ
+	(envelope-from <dmaengine+bounces-11811-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2026 11:48:30 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBE7E6CBD08
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2026 11:47:44 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3E636CBD14
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2026 11:48:29 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LoD0cyIh;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11810-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11810-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=GIZPxOnL;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11811-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11811-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9A9EB3015C99
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2026 09:47:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B475E3014DA9
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2026 09:48:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C1D03BB681;
-	Fri, 26 Jun 2026 09:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2578826ED41;
+	Fri, 26 Jun 2026 09:48:28 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AA83BB677
-	for <dmaengine@vger.kernel.org>; Fri, 26 Jun 2026 09:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E842D4315F
+	for <dmaengine@vger.kernel.org>; Fri, 26 Jun 2026 09:48:26 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782467243; cv=none; b=XFfJp2wDP/T+NaALBfTA4GXSRog3MbaK0DA4U3Ir+TjotkKJJj28LSdhPollzQF1uwHL/5uuQxDoA1npBbI/Jf8087t9d7fyXbYQNGGg/7qpXxy++jZwsLoiq5CVj7/19zoZqi1QjIrkqqIvFb5RDvSlT/CnerRNCaZZHOuomZ0=
+	t=1782467308; cv=none; b=A+Z6rzuBs7aivq0wSdy4AEZrdNqJ3HHb5zTVBxBf3KXOeXvFDNbWYnNRL5Ni8TBj93PB+9/N6v1HONptF8px+SViFsDE8MKgsDQx5Xboh/9IW1PmTeC8g5fN9WeZhs3NL2DH9Q+CEpc1HGsUaYm7C334jpNu9qId3G7agrHprDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782467243; c=relaxed/simple;
-	bh=UKL3tnkBP9vAozt3awt2X0FMJYeHx0XkHnpwKoIlzbw=;
+	s=arc-20240116; t=1782467308; c=relaxed/simple;
+	bh=rseBiIRtpD22WsIiWHbvpbqGHlyuKJr04/P9SbjF9Ao=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=oLjEyuNoJtdAfLMSe0BUv0tV3wntZVzW2sHYHjIcqja+Rpaa+gATruwfcabP2ymyVk5J7uon2u629aYFfcnFy8KQ0TcPFJrZyKYrvNV+hIyYWhNQLOMe+PxLQC7keiClqQvxHr1qCPz3r8lWg/l3VpMv8FR0KZZ5q6NVopp+Q9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LoD0cyIh; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FC9B1F000E9;
-	Fri, 26 Jun 2026 09:47:21 +0000 (UTC)
+	 Message-Id; b=CqLkzZb+ewgJvvwhbDISlOWG2S5uQy3UxEIYzp4RjNwnRT+Yx5opGbWnAmXlVc8gfVR7lqci9s0xvaIz4c40BGerP0DTjrK/0mepQ49aaruks637dHjLB2YJyrwB5T4wuamKalrbBIMXrRsJrIbq65xvtDTjn8/brayzfvH9RtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GIZPxOnL; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CF8A1F000E9;
+	Fri, 26 Jun 2026 09:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782467241;
-	bh=9ZfyqbHQWJCNDjBskD6qRiZfKi1JjSnwl2Uwq2m1o/o=;
+	s=k20260515; t=1782467306;
+	bh=qovKJw9Z4J0HVxgmTkZb6FbpRGJk2rdGKEr10jHxLUk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LoD0cyIhzDZU+oC5teHybZdAjW7+hIcGJJP1tOLsz21T+hXNMJOy2jCVbWAGDmFZw
-	 aH7/l+nNkLrUIksNvhtn0cOP9PxCaxez8Or69KeUyp3uknwt+VwPGi6wfRtO6U8oWn
-	 5f0PhWgLnzvbRWc2aDWq9GAW8XJbCoIHRapmpD9krx+nl/+JzT9sY2sZ+zpSLv6U4L
-	 p/2IBIhd0YULowfDBEHZEzk6VV+52zpEwvlRJoVSKHZgg9V68x+Na85oibvH8aZKF7
-	 Yhz/QAT7DhhvDs8norF/bJ1W3nvfe46WPaV/WrCt2hh3xACtG59a1eqmMvbC5bOOMq
-	 UKSqaq4U3edQw==
+	b=GIZPxOnLV9UG8ZihbKRBjsbBSUUlKXM6/Pgz0a+oTKIRVEGQCnG8aRrneZLyDU8Pd
+	 XEnHn9o4OyVUXnieduIUyPEuwvGCOns+4IOvLBSi8H5IHQDDW9qS/kPyEi+7xX8KHn
+	 w11j8W2k8MbuiuTaBe1YPGJuaDJOAczv4wq1V5rANp0YhcioO4HEKCyS8YUrnBasTj
+	 H7WtspXZEa8+QxZ0dNUpA3k18++lIKeDGzndxHWzLBpGsgytskzwVfgCc0NEMmr9Rd
+	 X+IXu9+MaBdVMCfEXIPTn7WWH62zrCW0EXpLtzPl49gj5Yjp4cAFGnqZewwlW25IgZ
+	 rO46EzV9MT3eg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/3] dmaengine: xilinx_dma: Fix channel idle state
- management in AXIDMA and MCDMA interrupt handlers
+Subject: Re: [PATCH v3 2/3] dmaengine: xilinx_dma: Enable transfer chaining
+ for AXIDMA and MCDMA by removing idle restriction
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Suraj Gupta" <suraj.gupta2@amd.com>
-Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
-In-Reply-To: <20260626092656.1563871-2-suraj.gupta2@amd.com>
+Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260626092656.1563871-3-suraj.gupta2@amd.com>
 References: <20260626092656.1563871-1-suraj.gupta2@amd.com>
- <20260626092656.1563871-2-suraj.gupta2@amd.com>
+ <20260626092656.1563871-3-suraj.gupta2@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 26 Jun 2026 09:47:21 +0000
-Message-Id: <20260626094721.9FC9B1F000E9@smtp.kernel.org>
+Date: Fri, 26 Jun 2026 09:48:25 +0000
+Message-Id: <20260626094826.3CF8A1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,12 +70,12 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11810-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11811-lists,dmaengine=lfdr.de];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -83,7 +83,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:suraj.gupta2@amd.com,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:suraj.gupta2@amd.com,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
@@ -98,83 +98,158 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: CBE7E6CBD08
+X-Rspamd-Queue-Id: E3E636CBD14
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] The patch claims to fix a race condition for MCDMA channels by con=
-ditionally marking the channel as idle only when `active_list` is empty. Ho=
-wever, this fix is entirely ineffective because `xilinx_dma_complete_descri=
-ptor()` unconditionally empties `active_list` for MCDMA.
+- [Critical] Bypassing the idle check allows new descriptors to be appended=
+ to a running transfer, but the driver fails to link the active transfer's =
+hardware `next_desc` pointer to the newly appended descriptors, leading to =
+wild DMA fetches.
+- [High] Overwriting the DMA Coalesce Threshold register while a channel is=
+ running resets the hardware coalescing counter, causing the channel to sta=
+ll indefinitely.
 --
 
-commit fef85fe49f3788eecfb93a71efa6536e69b799c0
+commit 06494ab31953d1c39c050abca192d725ee06375d
 Author: Suraj Gupta <suraj.gupta2@amd.com>
 
-dmaengine: xilinx_dma: Fix channel idle state management in AXIDMA and MCDM=
-A interrupt handlers
+dmaengine: xilinx_dma: Enable transfer chaining for AXIDMA and MCDMA by rem=
+oving idle restriction
 
-This patch fixes a race condition in AXIDMA and MCDMA irq handlers by only
-marking the channel idle and starting a new transfer when the active list is
-empty.
+This commit relaxes the idle checks in xilinx_dma_start_transfer() and
+xilinx_mcdma_start_transfer() to allow scatter-gather transfers to be chain=
+ed
+onto an in-flight transfer. It relies on the hardware tail pointer extension
+mechanism to handle chaining automatically.
 
 > diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_=
 dma.c
-> index 404235c173538..ca396b7097427 100644
+> index ca396b7097427..6e7b183cb4994 100644
 > --- a/drivers/dma/xilinx/xilinx_dma.c
 > +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -1893,8 +1893,10 @@ static irqreturn_t xilinx_mcdma_irq_handler(int ir=
-q, void *data)
->  	if (status & XILINX_MCDMA_IRQ_IOC_MASK) {
->  		spin_lock(&chan->lock);
->  		xilinx_dma_complete_descriptor(chan);
-> -		chan->idle =3D true;
-> -		chan->start_transfer(chan);
-> +		if (list_empty(&chan->active_list)) {
+> @@ -1580,7 +1580,14 @@ static void xilinx_dma_start_transfer(struct xilin=
+x_dma_chan *chan)
+>  		return;
+>  	}
+> =20
+> -	if (!chan->idle)
+> +	/*
+> +	 * Direct (non-SG) mode has no descriptor queue: writing the BTT
+> +	 * register launches a transfer immediately, so a new transfer must
+> +	 * not be programmed while one is in flight. Keep such transfers
+> +	 * serialized. SG mode supports chaining onto a running transfer via
+> +	 * tail-pointer extension, so it is allowed to proceed when busy.
+> +	 */
+> +	if (!chan->has_sg && !chan->idle)
+>  		return;
 
-[Severity: High]
-This is a pre-existing issue, but does this check actually prevent the race
-condition for MCDMA channels?
+[Severity: Critical]
+Does bypassing this idle check for SG mode result in wild DMA fetches when =
+a new
+transfer is queued on a busy channel?
 
-Looking at xilinx_dma_complete_descriptor(), the hardware completion check
-is restricted to AXIDMA:
+If a new transfer is queued while the channel is busy, the pending_list will
+be empty when processed by append_desc_queue():
 
-drivers/dma/xilinx/xilinx_dma.c:xilinx_dma_complete_descriptor() {
-	list_for_each_entry_safe(desc, next, &chan->active_list, node) {
-		if (chan->xdev->dma_config->dmatype =3D=3D XDMA_TYPE_AXIDMA) {
-			...
-			if (!(seg->hw.status & XILINX_DMA_BD_COMP_MASK) && chan->has_sg)
-				break;
-		}
-		...
-		list_del(&desc->node);
-		...
-	}
+drivers/dma/xilinx/xilinx_dma.c:append_desc_queue() {
+    ...
+    if (list_empty(&chan->pending_list))
+        goto append;
+    ...
 }
 
-Because MCDMA descriptors are unconditionally unlinked from active_list
-regardless of their actual hardware completion status, active_list will
-always be empty after xilinx_dma_complete_descriptor() returns.=20
+Because of this, append_desc_queue() explicitly skips hardware chaining ent=
+irely
+and fails to link the active transfer's tail descriptor to the newly submit=
+ted
+descriptor.
 
-Will this cause the new idle check to always evaluate to true for MCDMA,
-leaving the race condition unaddressed for those channels?
-
-> +			chan->idle =3D true;
-> +			chan->start_transfer(chan);
-> +		}
->  		spin_unlock(&chan->lock);
->  	}
+Since out-of-order frees can scramble the ring at runtime, won't the hardwa=
+re
+finish the active transfer and follow a stale next_desc pointer to an unrel=
+ated,
+uninitialized, or freed descriptor segment?
 
 [ ... ]
+> @@ -1599,7 +1606,7 @@ static void xilinx_dma_start_transfer(struct xilinx=
+_dma_chan *chan)
+>  		dma_ctrl_write(chan, XILINX_DMA_REG_DMACR, reg);
+>  	}
+> =20
+> -	if (chan->has_sg)
+> +	if (chan->has_sg && list_empty(&chan->active_list))
+>  		xilinx_write(chan, XILINX_DMA_REG_CURDESC,
+>  			     head_desc->async_tx.phys);
+>  	reg  &=3D ~XILINX_DMA_CR_DELAY_MAX;
+
+[Severity: High]
+Does updating the Coalesce Threshold register while a channel is running st=
+all
+the channel indefinitely?
+
+Just before this CURDESC check in xilinx_dma_start_transfer(), the threshold
+is updated:
+
+    if (chan->desc_pendingcount <=3D XILINX_DMA_COALESCE_MAX) {
+        reg &=3D ~XILINX_DMA_CR_COALESCE_MAX;
+        reg |=3D chan->desc_pendingcount <<
+                  XILINX_DMA_CR_COALESCE_SHIFT;
+    }
+    ...
+    dma_ctrl_write(chan, XILINX_DMA_REG_DMACR, reg);
+   =20
+According to the Xilinx AXI DMA specification (PG021), writing this thresho=
+ld
+automatically resets the hardware coalescing counter to zero.
+
+If there are already active transfers running, writing the new threshold wi=
+ll
+reset the counter. As a result, the total number of remaining transfers
+(active + pending) will no longer align with the new threshold multiple. The
+hardware will finish the transfers and stop with a counter value strictly b=
+elow
+the threshold, never triggering the completion interrupt.
+
+[ ... ]
+> @@ -1685,8 +1689,9 @@ static void xilinx_mcdma_start_transfer(struct xili=
+nx_dma_chan *chan)
+>  	dma_ctrl_write(chan, XILINX_MCDMA_CHAN_CR_OFFSET(chan->tdest), reg);
+> =20
+>  	/* Program current descriptor */
+> -	xilinx_write(chan, XILINX_MCDMA_CHAN_CDESC_OFFSET(chan->tdest),
+> -		     head_desc->async_tx.phys);
+> +	if (chan->has_sg && list_empty(&chan->active_list))
+> +		xilinx_write(chan, XILINX_MCDMA_CHAN_CDESC_OFFSET(chan->tdest),
+> +			     head_desc->async_tx.phys);
+> =20
+>  	/* Program channel enable register */
+>  	reg =3D dma_ctrl_read(chan, XILINX_MCDMA_CHEN_OFFSET);
+
+[Severity: High]
+This appears to introduce the same coalescing regression as seen in
+xilinx_dma_start_transfer().
+
+Earlier in xilinx_mcdma_start_transfer(), the CR register is overwritten
+with the new pending count:
+
+    if (chan->desc_pendingcount <=3D XILINX_MCDMA_COALESCE_MAX) {
+        reg &=3D ~XILINX_MCDMA_COALESCE_MASK;
+        reg |=3D chan->desc_pendingcount <<
+            XILINX_MCDMA_COALESCE_SHIFT;
+    }
+    ...
+    dma_ctrl_write(chan, XILINX_MCDMA_CHAN_CR_OFFSET(chan->tdest), reg);
+   =20
+Won't this similarly reset the MCDMA hardware coalescing counter while the
+channel is active, causing it to stall indefinitely?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260626092656.1563=
-871-1-suraj.gupta2@amd.com?part=3D1
+871-1-suraj.gupta2@amd.com?part=3D2
 

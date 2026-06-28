@@ -1,237 +1,357 @@
-Return-Path: <dmaengine+bounces-11830-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11831-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id FtpIJ0D7P2rTawkAu9opvQ
-	(envelope-from <dmaengine+bounces-11830-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Sat, 27 Jun 2026 18:33:04 +0200
+	id OYaDFPuhQWqBswkAu9opvQ
+	(envelope-from <dmaengine+bounces-11831-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 00:36:43 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61BBB6D247A
-	for <lists+dmaengine@lfdr.de>; Sat, 27 Jun 2026 18:33:03 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 778EB6D52B0
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 00:36:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=amd.com header.s=selector1 header.b=egUN43pA;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11830-lists+dmaengine=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="dmaengine+bounces-11830-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=amd.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=arm.com header.s=foss header.b=XJ1E8+Pq;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11831-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11831-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=arm.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 5587C300721F
-	for <lists+dmaengine@lfdr.de>; Sat, 27 Jun 2026 16:33:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1FF09300D467
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Jun 2026 22:36:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CF9927E05F;
-	Sat, 27 Jun 2026 16:32:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3003E365A17;
+	Sun, 28 Jun 2026 22:36:40 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010016.outbound.protection.outlook.com [52.101.46.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CCE39FD9;
-	Sat, 27 Jun 2026 16:32:55 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782577977; cv=fail; b=XIRApFxPRFlMMJI4OHhEvJBxo8kBEeo7t8TdtexF1LM0hyVG5wDwExpTsvKZDQNbyEe6Xg/ciPnNcGq+SVwbBmbbOXI/MloULEN6+lCks7fHCit9NHtDqfG+sAwqwif2bwp2FmiNsx/DzgLSk5F/Pv/wNt5EpjYr96G7yewvAQk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782577977; c=relaxed/simple;
-	bh=MTgULftbmkDIqF1xLgr/6tKBOecBJmQZS3obL8Xqx+U=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=eBiqjGyp8z5FjTX0+1W5HUKzuXF/YhZxghW7+rSEi5gm3M/7kqv9D9/xdTBRibnzcrHI6+fa1EXUY3Jsr1AGe+1dgyz8xBNXxEWeqmawTj3ZhZqygoWGxSC5gS/rWNgKBlB2MkBDZw6iyXuHTigxosiUx8w5BEUI0pZ0l/YFqsk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=egUN43pA; arc=fail smtp.client-ip=52.101.46.16
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iMznaF90nt0oZp/V9pJLekwf7W9voPRIqCA6/HZsRolWljArIHOl9tpMv9qBKWzHsDSht91+DmVWOerlbBFhzo+Zh6WPwy1Hp7C6DqzItJGEHQWJeS2soIFZ+dQjvKNTlIxNTSnB3ML7TpQ0gHlodurh5+125b4J8nGTtg1ZtU61/WLcDWzs7xlFGS1vll6i+9G3xe3z2q6LpPnWRcI4gjt+25YqFlPnj5QbZI9MyFdksGE9jsrmwMSIGbdWnK//o93u6nF0Z8wYgvdSHXUKJ3Qvy8nOYJPyxO+Jb0yyKEQ2UyIhKx9Xco69ZOMmkBZpcsij/xatue9fZzitJauWhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VOAayk2JtGzDsrWrT2U9/vluHvKhL+xseLBbiGlAe+w=;
- b=XTmsaxTOYgjJK3b3P4SBt4ehwvWqt3pVUxFcO+w/KSC8K0SG1ymjwV5retH8oXhGE+enc0y1CI/LsvHQScN7UOYjfN1XEqoTfOjhHMTxlM6jv8PsOMaBK+2L+FgBelPQAaL9DRjXmb1dTxFwWjYKgFZ5EoutD27RSZHZ5iUjB8RgGgsvJtxsbYrfI0ssLopdBux9LVdNr5qyzTjjsSxoddy8YY06iVsofQO/T4a5IQi6xmDkTkZvrEf4ILi2BHMTYbs7ujUlTykHTku1df39qoLoCGo+ZFShJ2jT1/yl+S3rMKCxJL/dm9HCfdn6xV5Wsusc+bCLO3NuI6VEIBoCPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VOAayk2JtGzDsrWrT2U9/vluHvKhL+xseLBbiGlAe+w=;
- b=egUN43pANFh5O5/D5yeHnv0jfNqUA+LIWJlkw8SMsRVNjyq9fvr2d5j5akXwbaXZLezPbEEb9oSDL9kK48XC7CjsI1hD1Mr9/wZIiv0/EggyOWliVbDx39f4wBwsqoMJ5qfP8KFm6RUilwLHyB9Dk5J/x4Xg6vgf6SvKTS/CGLw=
-Received: from CY1PR12MB9697.namprd12.prod.outlook.com (2603:10b6:930:107::6)
- by DM6PR12MB4185.namprd12.prod.outlook.com (2603:10b6:5:216::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.18; Sat, 27 Jun
- 2026 16:32:53 +0000
-Received: from CY1PR12MB9697.namprd12.prod.outlook.com
- ([fe80::3a41:55a0:8203:596d]) by CY1PR12MB9697.namprd12.prod.outlook.com
- ([fe80::3a41:55a0:8203:596d%5]) with mapi id 15.21.0159.018; Sat, 27 Jun 2026
- 16:32:53 +0000
-Message-ID: <b2b9c582-68c9-4a2c-8c2a-b7e7ba7807dd@amd.com>
-Date: Sat, 27 Jun 2026 22:02:46 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] dmaengine: xilinx_dma: Optimize control register
- write and channel start logic for AXIDMA and MCDMA in corresponding
- start_transfer()
-To: Suraj Gupta <suraj.gupta2@amd.com>, vkoul@kernel.org,
- Frank.Li@kernel.org, michal.simek@amd.com, dev@folker-schwesinger.de
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20260626092656.1563871-1-suraj.gupta2@amd.com>
- <20260626092656.1563871-4-suraj.gupta2@amd.com>
-Content-Language: en-US
-From: "Pandey, Radhey Shyam" <radheys@amd.com>
-In-Reply-To: <20260626092656.1563871-4-suraj.gupta2@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA5PR01CA0076.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:1ad::17) To CY1PR12MB9697.namprd12.prod.outlook.com
- (2603:10b6:930:107::6)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8D79E555;
+	Sun, 28 Jun 2026 22:36:37 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782686200; cv=none; b=r4cBbSXtKJOGD0TTW81bPtJ2bTNvMcShIeKdhBzv8SGkgIdM0rzueiUFq0WW1ZV1uLNnD6vNglE5Y8IW9pk3ddUlFNRGLizUueSaDoAYJ1S8FK8FhOkLXPwPoquQOfhOG+2tL3+EYBRbPE+IkZp2N5b54f0shJBdPEiT2Jlkx+s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782686200; c=relaxed/simple;
+	bh=3EAEjMZAYVKXS5U6NlBIQHsW6fxxJrTWwM/ywyv/Oz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Mzk/mf7P//CKIxnSpNeYjxPOkpr3w+3PKmshixbe3Pr5/5MQpVS4CliE17Sdvih2GbIHA0uoK2lK5Pl765lW/FHCv4LpDvQBFaC5XumGNc+85SiWeMto5yvm1ei9F0ApAvPla6SxN1SXiPFMbCkHmhyU1D6heIeRTsgK3agfG7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=XJ1E8+Pq; arc=none smtp.client-ip=217.140.110.172
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 880941BB2;
+	Sun, 28 Jun 2026 15:36:26 -0700 (PDT)
+Received: from ryzen.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9AC53F905;
+	Sun, 28 Jun 2026 15:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1782686191; bh=3EAEjMZAYVKXS5U6NlBIQHsW6fxxJrTWwM/ywyv/Oz0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XJ1E8+PqcpU+O6RGcFveSMZoZlYEJ0OLd9ibnked9jm1zuH9G1JV4BTZMNdAW1ZbI
+	 FvdvsnwMDqb4a2jEor2sofpkf6GzZjlDCbO+W4ewVDijNiu5cbwQXO1OMODyV+pOVo
+	 TAXwJiAeEaE6vvojySxUKGxOKCIfBMe/zz3hjWZk=
+Date: Mon, 29 Jun 2026 00:35:05 +0200
+From: Andre Przywara <andre.przywara@arm.com>
+To: Yuanshen Cao <alex.caoys@gmail.com>
+Cc: conor+dt@kernel.org, mripard@kernel.org, krzk+dt@kernel.org,
+ robh@kernel.org, samuel@sholland.org, wens@kernel.org,
+ jernej.skrabec@gmail.com, Frank.Li@kernel.org, vkoul@kernel.org,
+ dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v3 1/5] dmaengine: sun6i-dma: Refactor to support A733
+ interrupt and register handling
+Message-ID: <20260629003505.18f0053d@ryzen.lan>
+In-Reply-To: <20260622-sun60i-a733-dma-v3-1-f697ef296cbc@gmail.com>
+References: <20260622-sun60i-a733-dma-v3-0-f697ef296cbc@gmail.com>
+	<20260622-sun60i-a733-dma-v3-1-f697ef296cbc@gmail.com>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY1PR12MB9697:EE_|DM6PR12MB4185:EE_
-X-MS-Office365-Filtering-Correlation-Id: 726de07a-b96e-49d5-5948-08ded469bc96
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|1800799024|366016|376014|22082099003|18002099003|4143699003|56012099006|11063799006|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	GXwst5X0ensPYxPPtHEL9Gce5GG+aKmRsfDe8bMcxVYwlNmNd3/D99v7GPMHvhDPjn2RLtrpgI1lVDly/1+A+ItbmQy111fU/2/KWNxF57SkOVKyflUbmCjp9lYXyTlQ5iHyB7+RB+Rt27sZbdr51oAxaeQsTG58FtnXlEPZ7uTeMCLsTU6emVeiJJd1M8jEn1epW6OmcUjrkQpEDSkb7D6gxKJ3LoNGsfLEwo94mTlcY7sd6J8CiNPLAEUiNB7pU3bC5z2m8tQZjw02SBblj45r/+oDyS6oSPswRV4bP8HjbYae1HOxkm9zKgL/y8YCIOtHRdn1neJsWsDdD5wknQR2tXngdTZXl76+Mid4MtSq1ymkmqHznXmkwGq7WtOKIZ0CxRKd52C0JzRC4cV6YkJCXuS1dTR7/3rcLuHXtMgs2fpfCKkbaohiir7poFQClMkxAdoxUEe3JVbdWF8JwgK92W6QhPMYx+IKaBpYNuoIrZDA/89f5EGfp2BWZtwce++3kmus+dk0GGsx8rQjijLHXwbxE21XeXwS1uyEo+/Kg0fv1ONozDEUqRXTvHXdaVDdZHwMSV5TzRi5QpPy3DUcEpnU0Ue3SEM2t5+Q2wR3ajo9ufxtfL3LXePsOBhqLa+QMoJIveQaW3oO+l2xMuzD8DMCaVDWFDOz4KAy+Vk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY1PR12MB9697.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(366016)(376014)(22082099003)(18002099003)(4143699003)(56012099006)(11063799006)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NFpFSDRUSDlyMnZwdXViUUY3d0JIQzNmbXZOUVJKdWVNRGJ6SExvdUUzSkJv?=
- =?utf-8?B?WlRiOWhLR2grNE94a1FsMnI1QTdRYUl4NGs1bDMyTms5bnF6RGFnMC9MbW8x?=
- =?utf-8?B?Qy8xOEZWUzRlSk9HekM2UUVVRnZzT01yeHFQdzVqRHJrR0dyc25ObitydmhS?=
- =?utf-8?B?YzBJTXJMT1JhSVlscFZPNTRKWVZxenVjZ3Z6cFRTL0M4S2YvYWxNYkNtdlZq?=
- =?utf-8?B?NWt6OXl4RjVYbFN4akZhWEdKMVRnSmcySXhxYkpYek1tU0RDSWEraTF3TTBD?=
- =?utf-8?B?UTRFTGl0ZkIrWlpmeUp4c2RmSWhlT2Vyd2tyNjdOeEpJWHV3NnEzcTk2bCtx?=
- =?utf-8?B?UzAycndKNmF3TklXQysvTFpkZUtsZkNqdnlrMk9tZ3BRV1U0a09rdmdnZVFL?=
- =?utf-8?B?LzhkUld1Nll0eEUvdGNUNThWM3VEeTh3TDJidXRkOFJIUG11TC9aeEdtVHl1?=
- =?utf-8?B?NWE4VzRZVzBZL2pkN3ZxRnpZR1NKbUk2cmh6cDNnYkVNRGJjYytZdG5vZzhG?=
- =?utf-8?B?OTRCbmwvSGRndDhEUFdCNXNBQUZzWGp2VWl3ZXNUcnI3R1VWZTBKc3hoZDZh?=
- =?utf-8?B?cWpYZSs0UWpzVjdHSkZ6clBRaEtBb2cyRWpEbVFvd281ck4wUG12K3RGdEhL?=
- =?utf-8?B?UDRwTjdDcFAvV3A3aXl2b0xXWEdkSW5QRUQycHhKejhJWFlZSTB0S0dPbkpp?=
- =?utf-8?B?SlM3NnFrbGtodk00OVkzMk1GcGFLb0ZYbHUyWTNEYXFhQUowOEtIeW41c0tl?=
- =?utf-8?B?d2ZmOENta0oxODgwTHhabjZYdnc0a2hzcmt0cnYrVFV1WngzR0VMaWFEbVE3?=
- =?utf-8?B?b1ZSS1dvZmxyR1Z2UEJwamtRN1ZqMDU0dm9OSjM5QTJpcGV3eWoxS1lXV0hk?=
- =?utf-8?B?MHNOZHcrL2N5MXBLUDNEbnJBc0dhUWhKWXBJUitXWGN4VkhRWnFaR2VSaytV?=
- =?utf-8?B?cDhOcjc0Y2hGVXRGaVZHZVNPc2FFb3ZvWmtWQkZKemVMYTJJQzFVQkY3dFZ5?=
- =?utf-8?B?b09Lc2VRcHJNUlhSMXBXalZUZGRieUNVK3NZNUNZUC9GajRlT3lXVG5OUjVa?=
- =?utf-8?B?WlF1bWJDM2lMSldjQ2tqZW5WVlFQbG9KWmVPNEdwcUlIN3RHYloyUU9pSDly?=
- =?utf-8?B?RWFPTzNZWlhybGhEOVlkOFplUE9TMDFtcWVGU2NmTy9qTW9lbW9PRExHbExi?=
- =?utf-8?B?OVd2OTQwWHFuSkxYSTJDSVhEYTdBSTdyckZsUm5icWhEemVMNWhJK3hPbHpG?=
- =?utf-8?B?QjVVb0ViZDg5blNRNGU3Z1ZKSFU2MEZHb1RzZUllRVlIbUp1aDZVQ0pzaXBv?=
- =?utf-8?B?YXFrdmpSYTJXLzZINEV6VHBtdlBKQ29MSkRjdVhxTjZYSTZLNEdzVDZQRXZo?=
- =?utf-8?B?N2JMd2g4R2paOFY1MHhjWVM5QUt1WkdBNXUzbUlKdGNVMDB5YUdEZlZKcVZK?=
- =?utf-8?B?bWM4ZFM5NjlkMTRKazdaamNGTFBCTHYydTdwNFl3NXJod2J5NTRvcFA1OVVv?=
- =?utf-8?B?dzdDYTBwN2xPaDVQZitQTGIwWXFSbnNNS3R0WEEwd1hyR2t3Z0hEcXZJYis0?=
- =?utf-8?B?V3pPMDdaNGxLRElBcU5Tdk5BVTE4K3FRSHVmS2NRWU8yQ1dqL3FTR1JHOHJo?=
- =?utf-8?B?cHNXTE9RaWNxUXQ1anZCRDBNNVdnZzNZVUxSTC9UeEU1QWlXNHFEajBBSVNa?=
- =?utf-8?B?NE1sUnpSTGV3VlF3OGVJcnl3VG5hdFpuajlYT1BNRjVHYmFYL1JGaUpkRFEx?=
- =?utf-8?B?UkZZZEpTbCswaEtGUmhIUFFsZjVuZ29qUmUxeEZ4ZkZYcEdGaDIwN0ExTkMz?=
- =?utf-8?B?NWIwV082UFBhQ2d6Z3pRZks5VTRnNzhwelF0RUxWWHBaTXViZmRuN3lKMkNH?=
- =?utf-8?B?M0NIeDQweXpWM1FMNHRPM250RHJ2VEJyV1VsYkRWQ3ZsK2J2SUVVbzhjRjhP?=
- =?utf-8?B?Qkw1M3RxdmNpT2tZa1JqY3lZWHd6MExLQnJGY01XTWlVeXYzM25pcVgzQnJt?=
- =?utf-8?B?S0RkcFVraTBzUi90MDhROWRLT2ZlazR3R2xEc1ZnYTh1WndiN2NXb1RRbXIr?=
- =?utf-8?B?Ymc1QjA2ZUFFVnJabHYvb0FFSy9zSkduMVhtVGRadUJYeGxJc2JlSFdCcXBF?=
- =?utf-8?B?SmRDaVlNaWpBQTZudjQyS3VYOG1hS3k5TGlWdk1qSk8rNTI1NHdhUTk3VU9L?=
- =?utf-8?B?dUIxR0FLSXBWSnFTZnQyN25ZSXVjOXRxb3VpUXVMRCszdkF5Q25LMk5xZHR4?=
- =?utf-8?B?OFpMVVNXSVhUdUFMY2FpaFNPZFJKZnBlR292K3Q5S0ppUTFNZlNzM28rMFpN?=
- =?utf-8?B?eVAyUDZJNEt0UHZXR2gyZmlLMk8vcUY0ekxyK05LeHF6UlRwS0tsUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 726de07a-b96e-49d5-5948-08ded469bc96
-X-MS-Exchange-CrossTenant-AuthSource: CY1PR12MB9697.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2026 16:32:53.5952
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pCJo6yNC5XZyNcbt9qIAix+dsVbSyOrlkaiJy0y4bsN5rh5sjvtunYiwdK1WtJ+p
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4185
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
+	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-11831-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11830-lists,dmaengine=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:suraj.gupta2@amd.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:michal.simek@amd.com,m:dev@folker-schwesinger.de,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[radheys@amd.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:alex.caoys@gmail.com,m:conor+dt@kernel.org,m:mripard@kernel.org,m:krzk+dt@kernel.org,m:robh@kernel.org,m:samuel@sholland.org,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:Frank.Li@kernel.org,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:Frank.Li@nxp.com,m:alexcaoys@gmail.com,m:conor@kernel.org,m:krzk@kernel.org,m:jernejskrabec@gmail.com,s:lists@lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,sholland.org,gmail.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,nxp.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[amd.com:+];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[radheys@amd.com,dmaengine@vger.kernel.org];
+	FORGED_SENDER(0.00)[andre.przywara@arm.com,dmaengine@vger.kernel.org];
+	HAS_ORG_HEADER(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andre.przywara@arm.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[arm.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,folker-schwesinger.de:email,vger.kernel.org:from_smtp,amd.com:dkim,amd.com:email,amd.com:mid,amd.com:from_mime]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 61BBB6D247A
+X-Rspamd-Queue-Id: 778EB6D52B0
 
-> Optimize AXI DMA control register programming by consolidating
-> coalesce count and delay configuration into a single register write.
-> Previously, the coalesce count was written separately from the delay
-> configuration, resulting in two register writes. Combine these into
-> one write operation to reduce bus overhead.
-> Additionally, avoid redundant channel starts in xilinx_dma_start_transfer()
-> and xilinx_mcdma_start_transfer() by only calling xilinx_dma_start() when
-> the channel is actually idle.
+On Mon, 22 Jun 2026 01:36:23 +0000
+Yuanshen Cao <alex.caoys@gmail.com> wrote:
+
+Hi,
+
+first, many thanks for sending this, also for structuring the changes
+nicely, so that they remain reviewable!
+
+> Refactor to support the Allwinner A733 DMA controller. Currently, the
+> `sun6i-dma` driver has several functions related to interrupt handling
+> (reading/writing interrupt enable and status registers) and register
+> dumping that are hardcoded.
 > 
-> Tested-by: Folker Schwesinger <dev@folker-schwesinger.de>
-> Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
-> Co-developed-by: Srinivas Neeli <srinivas.neeli@amd.com>
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@amd.com>
+> To support the A733, which has different register layouts and interrupt
+> handling logic, these functions are being moved into the
+> `sun6i_dma_config` structure as function pointers.
 
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Thanks!
+So I see that this driver already makes use of per-device function
+pointer, though personally I don't like this approach very much, as it
+decreases the readability, and suggests significant differences between
+the SoC generations that are not really there: each function just reads
+or write an MMIO register, it's just the offset that differs.
 
+So I think it's better to express the differences through data
+entries in the config struct, for the IRQ enable/stat functions I think
+this should be something like this:
+
+struct sun6i_dma_config {
+	...
+	u32	irq_stride;
+	u32	irq_en_offset;
+	u32	irq_stat_offset;
+	...
+};
+
+-	irq_val = readl(sdev->base + DMA_IRQ_EN(irq_reg));
++	irq_val = readl(sdev->base + sdev->cfg->irq_en_offset + irq_reg * sdev->cfg->irq_stride);
+
+the existing configs set .stride to 0x04, and .en_offset to 0x0, the
+A733 later uses .stride = 0x40 and .en_offset = 0x134.
+Maybe we still move that now longish line into a helper function, but
+not a config specific one. 
+
+I think that's more readable, and avoids unnecessary redirections and
+potential pipeline stalls.
+
+dump_com_regs is a different story, since the two instances of that
+function are significantly different.
+
+What do you think?
+
+> This allows the
+> driver to use a polymorphic approach where the specific implementation
+> is determined by the hardware configuration assigned during device
+> probing.
+> 
+> Changes:
+> - Added function pointers to `struct sun6i_dma_config` for:
+
+By the way: the preferred style to list changes in commit messages in
+imperative mood [1], not in past tense. Think about you ask the
+code base what to change:
+
+Add function pointers to ...
+Implement generic functions ...
+
+Cheers,
+Andre
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n94
+
+>     - `dump_com_regs`
+>     - `read_irq_en`
+>     - `write_irq_en`
+>     - `read_irq_stat`
+>     - `write_irq_stat`
+> - Implemented generic `sun6i_read/write_irq_*` functions for existing
+>   hardware.
+> - Added a macro and updated existing `sun6i_dma_config` instances (A31,
+>   A23, H3, A64, A100, H6, V3S) to use these new function pointers.
+> 
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Yuanshen Cao <alex.caoys@gmail.com>
 > ---
->   drivers/dma/xilinx/xilinx_dma.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
+>  drivers/dma/sun6i-dma.c | 50 ++++++++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 45 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-> index 6e7b183cb499..829601d8a16f 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -1603,7 +1603,6 @@ static void xilinx_dma_start_transfer(struct xilinx_dma_chan *chan)
->   		reg &= ~XILINX_DMA_CR_COALESCE_MAX;
->   		reg |= chan->desc_pendingcount <<
->   				  XILINX_DMA_CR_COALESCE_SHIFT;
-> -		dma_ctrl_write(chan, XILINX_DMA_REG_DMACR, reg);
->   	}
->   
->   	if (chan->has_sg && list_empty(&chan->active_list))
-> @@ -1614,7 +1613,8 @@ static void xilinx_dma_start_transfer(struct xilinx_dma_chan *chan)
->   	reg |= XILINX_DMA_DMAXR_ALL_IRQ_MASK;
->   	dma_ctrl_write(chan, XILINX_DMA_REG_DMACR, reg);
->   
-> -	xilinx_dma_start(chan);
-> +	if (chan->idle)
-> +		xilinx_dma_start(chan);
->   
->   	if (chan->err)
->   		return;
-> @@ -1703,7 +1703,8 @@ static void xilinx_mcdma_start_transfer(struct xilinx_dma_chan *chan)
->   	reg |= XILINX_MCDMA_CR_RUNSTOP_MASK;
->   	dma_ctrl_write(chan, XILINX_MCDMA_CHAN_CR_OFFSET(chan->tdest), reg);
->   
-> -	xilinx_dma_start(chan);
-> +	if (chan->idle)
-> +		xilinx_dma_start(chan);
->   
->   	if (chan->err)
->   		return;
+> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> index a9a254dbf8cb..ef3052c4ab36 100644
+> --- a/drivers/dma/sun6i-dma.c
+> +++ b/drivers/dma/sun6i-dma.c
+> @@ -138,6 +138,11 @@ struct sun6i_dma_config {
+>  	void (*set_burst_length)(u32 *p_cfg, s8 src_burst, s8 dst_burst);
+>  	void (*set_drq)(u32 *p_cfg, s8 src_drq, s8 dst_drq);
+>  	void (*set_mode)(u32 *p_cfg, s8 src_mode, s8 dst_mode);
+> +	void (*dump_com_regs)(struct sun6i_dma_dev *sdev);
+> +	u32 (*read_irq_en)(struct sun6i_dma_dev *sdev, u32 irq_reg);
+> +	void (*write_irq_en)(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 irq_val);
+> +	u32 (*read_irq_stat)(struct sun6i_dma_dev *sdev, u32 irq_reg);
+> +	void (*write_irq_stat)(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 status);
+>  	u32 src_burst_lengths;
+>  	u32 dst_burst_lengths;
+>  	u32 src_addr_widths;
+> @@ -347,6 +352,26 @@ static void sun6i_set_mode_h6(u32 *p_cfg, s8 src_mode, s8 dst_mode)
+>  		  DMA_CHAN_CFG_DST_MODE_H6(dst_mode);
+>  }
+>  
+> +static u32 sun6i_read_irq_en(struct sun6i_dma_dev *sdev, u32 irq_reg)
+> +{
+> +	return readl(sdev->base + DMA_IRQ_EN(irq_reg));
+> +}
+> +
+> +static void sun6i_write_irq_en(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 irq_val)
+> +{
+> +	writel(irq_val, sdev->base + DMA_IRQ_EN(irq_reg));
+> +}
+> +
+> +static u32 sun6i_read_irq_stat(struct sun6i_dma_dev *sdev, u32 irq_reg)
+> +{
+> +	return readl(sdev->base + DMA_IRQ_STAT(irq_reg));
+> +}
+> +
+> +static void sun6i_write_irq_stat(struct sun6i_dma_dev *sdev, u32 irq_reg, u32 status)
+> +{
+> +	writel(status, sdev->base + DMA_IRQ_STAT(irq_reg));
+> +}
+> +
+>  static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
+>  {
+>  	struct sun6i_desc *txd = pchan->desc;
+> @@ -460,16 +485,16 @@ static int sun6i_dma_start_desc(struct sun6i_vchan *vchan)
+>  
+>  	vchan->irq_type = vchan->cyclic ? DMA_IRQ_PKG : DMA_IRQ_QUEUE;
+>  
+> -	irq_val = readl(sdev->base + DMA_IRQ_EN(irq_reg));
+> +	irq_val = sdev->cfg->read_irq_en(sdev, irq_reg);
+>  	irq_val &= ~((DMA_IRQ_HALF | DMA_IRQ_PKG | DMA_IRQ_QUEUE) <<
+>  			(irq_offset * DMA_IRQ_CHAN_WIDTH));
+>  	irq_val |= vchan->irq_type << (irq_offset * DMA_IRQ_CHAN_WIDTH);
+> -	writel(irq_val, sdev->base + DMA_IRQ_EN(irq_reg));
+> +	sdev->cfg->write_irq_en(sdev, irq_reg, irq_val);
+>  
+>  	writel(pchan->desc->p_lli, pchan->base + DMA_CHAN_LLI_ADDR);
+>  	writel(DMA_CHAN_ENABLE_START, pchan->base + DMA_CHAN_ENABLE);
+>  
+> -	sun6i_dma_dump_com_regs(sdev);
+> +	sdev->cfg->dump_com_regs(sdev);
+>  	sun6i_dma_dump_chan_regs(sdev, pchan);
+>  
+>  	return 0;
+> @@ -549,14 +574,14 @@ static irqreturn_t sun6i_dma_interrupt(int irq, void *dev_id)
+>  	u32 status;
+>  
+>  	for (i = 0; i < sdev->num_pchans / DMA_IRQ_CHAN_NR; i++) {
+> -		status = readl(sdev->base + DMA_IRQ_STAT(i));
+> +		status = sdev->cfg->read_irq_stat(sdev, i);
+>  		if (!status)
+>  			continue;
+>  
+>  		dev_dbg(sdev->slave.dev, "DMA irq status %s: 0x%x\n",
+>  			str_high_low(i), status);
+>  
+> -		writel(status, sdev->base + DMA_IRQ_STAT(i));
+> +		sdev->cfg->write_irq_stat(sdev, i, status);
+>  
+>  		for (j = 0; (j < DMA_IRQ_CHAN_NR) && status; j++) {
+>  			pchan = sdev->pchans + j;
+> @@ -1101,6 +1126,13 @@ static inline void sun6i_dma_free(struct sun6i_dma_dev *sdev)
+>  	}
+>  }
+>  
+> +#define SUN6I_DMA_IRQ_A31_COMMON_OPS	\
+> +	.dump_com_regs    = sun6i_dma_dump_com_regs,	\
+> +	.read_irq_en      = sun6i_read_irq_en,	\
+> +	.write_irq_en     = sun6i_write_irq_en,	\
+> +	.read_irq_stat    = sun6i_read_irq_stat,	\
+> +	.write_irq_stat   = sun6i_write_irq_stat,
+> +
+>  /*
+>   * For A31:
+>   *
+> @@ -1132,6 +1164,7 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg = {
+>  	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
+> +	SUN6I_DMA_IRQ_A31_COMMON_OPS
+>  };
+>  
+>  /*
+> @@ -1155,6 +1188,7 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg = {
+>  	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
+> +	SUN6I_DMA_IRQ_A31_COMMON_OPS
+>  };
+>  
+>  static struct sun6i_dma_config sun8i_a83t_dma_cfg = {
+> @@ -1173,6 +1207,7 @@ static struct sun6i_dma_config sun8i_a83t_dma_cfg = {
+>  	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
+> +	SUN6I_DMA_IRQ_A31_COMMON_OPS
+>  };
+>  
+>  /*
+> @@ -1200,6 +1235,7 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg = {
+>  			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
+> +	SUN6I_DMA_IRQ_A31_COMMON_OPS
+>  };
+>  
+>  /*
+> @@ -1221,6 +1257,7 @@ static struct sun6i_dma_config sun50i_a64_dma_cfg = {
+>  			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
+> +	SUN6I_DMA_IRQ_A31_COMMON_OPS
+>  };
+>  
+>  /*
+> @@ -1244,6 +1281,7 @@ static struct sun6i_dma_config sun50i_a100_dma_cfg = {
+>  			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
+>  	.has_high_addr = true,
+>  	.has_mbus_clk = true,
+> +	SUN6I_DMA_IRQ_A31_COMMON_OPS
+>  };
+>  
+>  /*
+> @@ -1266,6 +1304,7 @@ static struct sun6i_dma_config sun50i_h6_dma_cfg = {
+>  			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
+>  	.has_mbus_clk = true,
+> +	SUN6I_DMA_IRQ_A31_COMMON_OPS
+>  };
+>  
+>  /*
+> @@ -1289,6 +1328,7 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg = {
+>  	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+>  			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
+> +	SUN6I_DMA_IRQ_A31_COMMON_OPS
+>  };
+>  
+>  static const struct of_device_id sun6i_dma_match[] = {
+> 
 
 

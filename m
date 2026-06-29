@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-11863-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11864-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 7KkAE4dHQmri3gkAu9opvQ
-	(envelope-from <dmaengine+bounces-11863-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 12:23:03 +0200
+	id 2XMvHAJIQmo23wkAu9opvQ
+	(envelope-from <dmaengine+bounces-11864-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 12:25:06 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3AC96D8DA9
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 12:23:02 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5DEF6D8DFF
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 12:25:05 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=KpKfOVog;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11863-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11863-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=m1XXQFHG;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11864-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11864-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9EF87300B872
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 10:22:33 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B4DCB30138BA
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 10:25:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D56AE3E2AD2;
-	Mon, 29 Jun 2026 10:22:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08B283B2FD4;
+	Mon, 29 Jun 2026 10:25:02 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4DB38F947
-	for <dmaengine@vger.kernel.org>; Mon, 29 Jun 2026 10:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E5933B961
+	for <dmaengine@vger.kernel.org>; Mon, 29 Jun 2026 10:25:00 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782728552; cv=none; b=F517lSPv1chAmyZaS3laLzL5RBxiLg6p0tfq441r02ATwgo+LLfXHz9ULIs07FndoRfVyf+aHZcGQf+JZxnT53xhvhdbCm9rkL2K5koAs3y8XdDT2eE4q/4bMpGsmYWah8VRcpATPdZh75GT6OK+Hef6frC5rXMMLWbsKFrAsA4=
+	t=1782728701; cv=none; b=SwI4Xe7f4N4t2futfwxu9UZlCPmUV2btCw8OgVzdEPaCSIvhl4fPO8Mbc4Mrfx2eq953FZ4dT1c8Q7K12lkI1HJFbvAkB+A8geTov8deGRKvn3eRc9a3+8tPLwPcOzNFrkTaKFnNbRJ891IVTE9d208/EhFXTFZ+reaISmGJi9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782728552; c=relaxed/simple;
-	bh=+Tf7HocFEpsSkY8gr6HLBQRhVD1ezieeq3V3CoaMohY=;
+	s=arc-20240116; t=1782728701; c=relaxed/simple;
+	bh=4aFCWE2pY7u8sT95TVO1lciPw7cFZX0Jx2eNnxM00lA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RlTPm5VAfTRWSFl9I4y47+FeXvtNxZVRqAjrnZm94+eBZ+1n9TSvxw5zsPdd2RCkOwZqr7ZGXMSKP8Ct9ywTmdiYwRCeehBCBcp3SU1L+moIUKf4fyrE4qsS7kQyCeH70nC0YRC5990AB+xDbAu+6teaBEAyZt/u/IqHdKDPYfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpKfOVog; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5C7F1F000E9;
-	Mon, 29 Jun 2026 10:22:30 +0000 (UTC)
+	 Message-Id; b=LZW7GIbZ/ZgvUMnHohV9C6FWoB1QTjBUl2vCMRjTP/CWyoMdA8heiT0GqUXuUblKrXhq30qswsFxn4HvdTZ/MXgkAxBfxPE8KdrDbiGk9bklXTEytg9M6fhPdga/mUQbiQ4HvSy+NAqFs5fXrMZLte6U3NSgJ4Yabk/b1pOvSi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1XXQFHG; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6377A1F000E9;
+	Mon, 29 Jun 2026 10:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782728551;
-	bh=td1serWI2vGx2LtmCh8cfwurzEmXr8gyufiwNdZnKzY=;
+	s=k20260515; t=1782728700;
+	bh=cY6xGBFvVZ2GxJXZuWFItHK9B9hNq1J7LXTamM2V2uQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KpKfOVogt8nmreaL2D3kB04e6UcK8/BOKcvYtNOBM/KvvDZ/zrrMquH70hcd8JbfS
-	 GNt64E9qb7scjyj5j6pWto7R8dZEGhU0sVUe3g4/MCLqzl2c6uUvO7uAdG5WbSOY/P
-	 2mBOgs82SPM+rz4v5LasbGlWu4cZsCg1kXbQ78FOoWbhmZPkpzv4LKnBlAebpgZvzV
-	 w2LqFzvZ0txVQmq3f4MsgiPZUOySQrP3rCVlIQ6OpA8QwHMj/qEgcKNLExtSHrZM0c
-	 GOnCk8v2ixWVVInNfSEMP8Ot6jPzCpApMfrP0KhOHakyQF3DQ+y2s8LZQ97XWUS9Vf
-	 u4LZjFQKf38Pg==
+	b=m1XXQFHGfneONKx/sBKAuhviRhdCTNmjcKS6KQRrsZAeGZrsRjZ05Dl8eyBoT5DxS
+	 aC9o09ks7ZC4p8cVYWWbavsJH+ni3SQcO9x3u+4m+pi52AqXjYiBleGaC++RK1DS+e
+	 R04iaQy1uqcg7xX4i2T+DOQX0/NWQ3mzHmkmLgk5HoC3J72R+O5oErqpxk9xTPT1JZ
+	 09w7iho/gliKFDqTUj8y40xUEaW8xm/y7OTapeB9uSJzT6xL6jQeQi3CCPU29sr3+j
+	 9PzSd96iCh24d+lTRQkDNsa3T0btcCRoI+z46WF1zCwm0VAkCr/qjiHwjtyTqTwoWr
+	 HeF7gJfskiiJQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v20 13/14] crypto: qce - Add BAM DMA support for crypto
- register I/O
+Subject: Re: [PATCH v20 14/14] crypto: qce - Communicate the base physical
+ address to the dmaengine
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260629-qcom-qce-cmd-descr-v20-13-56f67da84c05@oss.qualcomm.com>
+Cc: dmaengine@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org
+In-Reply-To: <20260629-qcom-qce-cmd-descr-v20-14-56f67da84c05@oss.qualcomm.com>
 References: <20260629-qcom-qce-cmd-descr-v20-0-56f67da84c05@oss.qualcomm.com>
- <20260629-qcom-qce-cmd-descr-v20-13-56f67da84c05@oss.qualcomm.com>
+ <20260629-qcom-qce-cmd-descr-v20-14-56f67da84c05@oss.qualcomm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 29 Jun 2026 10:22:30 +0000
-Message-Id: <20260629102230.E5C7F1F000E9@smtp.kernel.org>
+Date: Mon, 29 Jun 2026 10:24:59 +0000
+Message-Id: <20260629102500.6377A1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -71,7 +71,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -79,16 +79,16 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11863-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11864-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
 	ALIAS_RESOLVED(0.00)[];
@@ -98,120 +98,90 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sashiko.dev:url,lists.linux.dev:replyto,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,smtp.kernel.org:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,smtp.kernel.org:mid,lists.linux.dev:replyto,qualcomm.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B3AC96D8DA9
+X-Rspamd-Queue-Id: D5DEF6D8DFF
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Incorrect endianness conversion for BAM DMA register writes on big=
--endian architectures.
-- [Medium] DMA descriptor leak in qce_submit_cmd_desc() on error paths.
-
-Pre-existing issues:
-- [High] Memory allocated for rctx->adata is never freed.
-- [High] Incorrect dma_map_sg failure check for src_sg ignores mapping erro=
-rs.
+- [Medium] Ineffective descriptor cleanup on error paths leads to a memory =
+leak because `dmaengine_desc_free()` is called on a non-reusable descriptor.
 --
 
-commit bf3a155521eb3078dcc0111460444f36ebb69ebf
-Author: Bartosz Golaszewski <brgl@kernel.org>
+commit 7c11f5b2471b4e0caed5825bea7adc1ce06d76de
+Author: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-crypto: qce - Add BAM DMA support for crypto register I/O
+crypto: qce - Communicate the base physical address to the dmaengine
 
-Switch to using BAM DMA for register I/O in addition to passing data. To
-that end: provide the necessary infrastructure in the driver, modify the
-ordering of operations as required and replace all direct register writes
-with wrappers queueing DMA command descriptors.
-
-> diff --git a/drivers/crypto/qce/aead.c b/drivers/crypto/qce/aead.c
-> --- a/drivers/crypto/qce/aead.c
-> +++ b/drivers/crypto/qce/aead.c
-> @@ -463,17 +463,17 @@ qce_aead_async_req_handle(struct crypto_async_reque=
-st *async_req)
-
-[Severity: High]
-This is a pre-existing issue, but does this code leak the rctx->adata buffer
-allocated for AES-CCM operations? It looks like if memory is dynamically
-allocated for rctx->adata via kzalloc() during CCM processing, it is never
-freed in either the success completion path or error handling paths of
-qce_aead_async_req_handle(), which could lead to memory exhaustion when
-processing untrusted network traffic.
-
-[Severity: High]
-This is also a pre-existing issue, but does the error check for dma_map_sg()
-earlier in qce_aead_async_req_handle() correctly handle mapping failures?
-dma_map_sg() returns 0 on error, not a negative value. The check for
-(src_nents < 0) evaluates to false, which means a mapping failure could be
-ignored, causing the driver to proceed and later call dma_unmap_sg() with
-invalid parameters.
-
-[ ... ]
+This commit attaches metadata containing the base physical address to the
+DMA descriptor for the BAM DMA engine. It also adds error handling paths
+to free the descriptor and unmap the scatterlist if the metadata attachment
+or the DMA submission fails.
 
 > diff --git a/drivers/crypto/qce/dma.c b/drivers/crypto/qce/dma.c
+> index 1b43c56503334..6410f8dc5bcf5 100644
 > --- a/drivers/crypto/qce/dma.c
 > +++ b/drivers/crypto/qce/dma.c
 
 [ ... ]
 
-> +int qce_submit_cmd_desc(struct qce_device *qce)
-> +{
-[ ... ]
-> +	cookie =3D dmaengine_submit(qce_desc->dma_desc);
-> +
-> +	ret =3D dma_submit_error(cookie);
+> @@ -60,15 +65,21 @@ int qce_submit_cmd_desc(struct qce_device *qce)
+>  		goto err_unmap_sg;
+>  	}
+> =20
+> +	ret =3D dmaengine_desc_attach_metadata(dma_desc, &meta, sizeof(meta));
 > +	if (ret)
-> +		goto err_unmap_sg;
+> +		goto err_free_desc;
 > +
-> +	return 0;
-> +
-> +err_unmap_sg:
-> +	dma_unmap_sg(qce->dev, bam_txn->wr_sgl, bam_txn->wr_sgl_cnt, DMA_TO_DEV=
-ICE);
-> +	return ret;
-> +}
+>  	qce_desc->dma_desc =3D dma_desc;
+>  	cookie =3D dmaengine_submit(qce_desc->dma_desc);
+> =20
+>  	ret =3D dma_submit_error(cookie);
+>  	if (ret)
+> -		goto err_unmap_sg;
+> +		goto err_free_desc;
+> =20
+>  	return 0;
+> =20
+> +err_free_desc:
+> +	dmaengine_desc_free(dma_desc);
 
 [Severity: Medium]
-Does this error path leak the unsubmitted DMA descriptor? If the DMA
-submission fails and we go to err_unmap_sg, the rollback bypasses
-qce_dma_terminate_all() or any mechanism to flush the descriptor. Since the
-DMA_CTRL_REUSE flag was not passed during preparation, attempting to explic=
-itly
-free it later will return an error without freeing the descriptor.
+Does this error path successfully free the descriptor?
 
-[ ... ]
+Earlier in qce_submit_cmd_desc(), the descriptor attributes are defined
+without the reuse flag:
 
-> +static void qce_prep_dma_cmd_desc(struct qce_device *qce, struct qce_dma=
-_data *dma,
-> +				  unsigned int addr, void *buf)
-> +{
-[ ... ]
-> +	idx =3D bam_txn->bam_ce_idx;
-> +	bam_ce_buf =3D &bam_txn->bam_ce[idx];
-> +	bam_prep_ce_le32(bam_ce_buf, addr, BAM_WRITE_COMMAND, *((__le32 *)buf));
-[ ... ]
-> +void qce_write_dma(struct qce_device *qce, unsigned int offset, u32 val)
-> +{
-> +	unsigned int reg_addr =3D ((unsigned int)(qce->base_phys) + offset);
-> +
-> +	qce_prep_dma_cmd_desc(qce, &qce->dma, reg_addr, &val);
-> +}
+    unsigned long attrs =3D DMA_PREP_CMD;
+    ...
+    dma_desc =3D dmaengine_prep_slave_sg(chan, bam_txn->wr_sgl, mapped,
+                                       DMA_MEM_TO_DEV, attrs);
 
-[Severity: High]
-Is there an endianness mismatch here on big-endian architectures?
-In qce_write_dma(), a CPU-endian u32 stack address is passed to
-qce_prep_dma_cmd_desc(). That function then casts the pointer to __le32* and
-reads it directly into the BAM descriptor without byte swapping. Will this
-result in reversed bytes being written to the crypto hardware registers on
-big-endian CPUs?
+Since the descriptor is not prepared with the DMA_CTRL_REUSE flag,=20
+dmaengine_desc_free() will return an error instead of freeing the memory:
+
+include/linux/dmaengine.h:dmaengine_desc_free() {
+	/* this is supported for reusable desc, so check that */
+	if (!dmaengine_desc_test_reuse(desc))
+		return -EPERM;
+
+	return desc->desc_free(desc);
+}
+
+Could this cause a memory leak of the DMA descriptor if=20
+dmaengine_desc_attach_metadata() fails or dma_submit_error() returns an err=
+or?
+
+>  err_unmap_sg:
+>  	dma_unmap_sg(qce->dev, bam_txn->wr_sgl, bam_txn->wr_sgl_cnt, DMA_TO_DEV=
+ICE);
+>  	return ret;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260629-qcom-qce-c=
-md-descr-v20-0-56f67da84c05@oss.qualcomm.com?part=3D13
+md-descr-v20-0-56f67da84c05@oss.qualcomm.com?part=3D14
 

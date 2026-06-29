@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-11860-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11861-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wQRoBd1GQmp83gkAu9opvQ
-	(envelope-from <dmaengine+bounces-11860-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 12:20:13 +0200
+	id uQG8DOpGQmp+3gkAu9opvQ
+	(envelope-from <dmaengine+bounces-11861-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 12:20:26 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1842A6D8D4B
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 12:20:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F9AB6D8D54
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 12:20:25 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=YwIsdN9t;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11860-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11860-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=WkqwxJfV;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11861-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11861-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D41F9301C974
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 10:17:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A53A4300A12E
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 10:18:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DD303A2E00;
-	Mon, 29 Jun 2026 10:17:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 250153EB0F5;
+	Mon, 29 Jun 2026 10:18:18 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0183FA5EF
-	for <dmaengine@vger.kernel.org>; Mon, 29 Jun 2026 10:17:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8553BAD9B
+	for <dmaengine@vger.kernel.org>; Mon, 29 Jun 2026 10:18:16 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782728243; cv=none; b=eK2lhRKiWADoGh6f0USsKxgNqV3uSXqTUlpcGHrkwoL58HUZ+478REKHtANR3h3QlW2QXvjBlK2x9KlE7/q1BwQEZ6tz/hGCdQDZbyZuVFHiW5iyuzf2TIn8rXVH2aSLISTL9BoPk7Dg5VXSUhkm7iPiPNPyqoE7plxlLGn3T+c=
+	t=1782728298; cv=none; b=HMeqSkyWD75Zqm66GtlTot3nRl8jSSdMPMhoZdnO0A1nBfpgKNdb00vfYzV7QMyWIPfbxtWxPtRXeLgDtBwN73VpUn6Q3wFM7RzTxEhqQOqxhcrDss7m2FB1lzU6OSZNm0soL6HuXjS+TMJRbB6xL8zmyyDK/wuKx6CAKmlecho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782728243; c=relaxed/simple;
-	bh=LZk/t+FtfcQO8SO+JcNbwhOEnWvZxQktgLkFBQDVRp4=;
+	s=arc-20240116; t=1782728298; c=relaxed/simple;
+	bh=AgFAz7ThXX2o+ZIDMrht+FoMD9f/einV75ABiT4n3qU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ddB7i3vwh3/0MZrnOC/ohnrcOZZFQyDnJVj+r4S/BDq1M8Ds5YRIV+L9h5Ioh/P7Iy1wPvF6FpCm5inVqgOrRhaiO0sfohCudCGbJ5eEXg46dTa/2nO7SR/XTpQ2auOmjsSsWAsZ6X2sr+yVD5sM1sOoE3o/6qICblJFrOEFHE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YwIsdN9t; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A27B71F00A3A;
-	Mon, 29 Jun 2026 10:17:19 +0000 (UTC)
+	 Message-Id; b=tpJcIhrUL1iAOSQDclz4i4huoAi7Z0wO/tW+MBqW0nTLqqXwzIeT23RB+Iso9My4IOZn6y6KKYPwxjorxlQj8Yu5R5sNaHIfKj0pME6ocUsuXXa5WxcLEQpKxGReW4p0qqWQG9Nqr/dFI0kCG2tRWwoTnYZ+QplC/G5xS4mx0mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WkqwxJfV; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D0301F000E9;
+	Mon, 29 Jun 2026 10:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782728240;
-	bh=dt2Lmz3iblst9+wO2zO9tYRTIo5RGbMCi6ceO+LbJXs=;
+	s=k20260515; t=1782728296;
+	bh=Bnm47HYgXQHBJmO5oD8qNtxIIzMEYIQvWzk7aiGRlO8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YwIsdN9t4HwTEom+XwJJVZj+w1INwbwR8iD0v41c8DkKMT0xiE8GsMG4fT2t7Z7Ra
-	 s+Vj56eu7xNQhot0FTLT0kbAtvDn6jvnw0mX289sDGFxO7kqRh9tRSuQk5WtaIRY2x
-	 it5bR5sD2h8GWIcTJpUZUBC0PwooydKkDOOR80qTpYUdGlREEenSsqErTZgz6V35p0
-	 ai0YgPK73/gYx969VG357wb5ouP/76Qy3Grv3OzusQwN/fdjCr4hey2JQs+c/G9IoU
-	 ZuDI1CUD3gjhoNraNoeQuPxddggASv46p5KgkGyKVTBFIRXCmzTVmfmOK94yZf7XP/
-	 f01NK25CP30+g==
+	b=WkqwxJfVr3vrmGCKkZoAPjbt13wbt7nuty3TUqY4nOlf9wXCQ6SNX2i523BfdkbN2
+	 y9hgU0CE0vRsZHcv+16kCnY0s7bsy46+Iru9dInH18pJEDgY60niPgkfHlk1Y9Q4TU
+	 NsDywF6YyMvpUBKo8FatFYs+4AKL755AudMKdBImzZ/DFRu7aqaVyIW346WvQnu3mU
+	 Xdp0M6O12BCw1eTdKVjgGCuD+9RlnR3Vlkt6mKSpKxUBVZ0191g4p0HtYjFgjUTlJ2
+	 NcpECwZ05UUWBMi9skQbhDPQI2zSjzPFemUCYNk9IxNrglczKXS4V1PIY7vQIoxjqe
+	 gDfiQ7EMPOtDQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v20 03/14] dmaengine: qcom: bam_dma: convert tasklet to
- a BH workqueue
+Subject: Re: [PATCH v20 05/14] dmaengine: qcom: bam_dma: Add
+ pipe_lock_supported flag support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260629-qcom-qce-cmd-descr-v20-3-56f67da84c05@oss.qualcomm.com>
+Cc: dmaengine@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org
+In-Reply-To: <20260629-qcom-qce-cmd-descr-v20-5-56f67da84c05@oss.qualcomm.com>
 References: <20260629-qcom-qce-cmd-descr-v20-0-56f67da84c05@oss.qualcomm.com>
- <20260629-qcom-qce-cmd-descr-v20-3-56f67da84c05@oss.qualcomm.com>
+ <20260629-qcom-qce-cmd-descr-v20-5-56f67da84c05@oss.qualcomm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 29 Jun 2026 10:17:18 +0000
-Message-Id: <20260629101719.A27B71F00A3A@smtp.kernel.org>
+Date: Mon, 29 Jun 2026 10:18:16 +0000
+Message-Id: <20260629101816.7D0301F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -79,16 +79,16 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11860-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11861-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
 	ALIAS_RESOLVED(0.00)[];
@@ -102,122 +102,99 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,vger.kernel.org:from_smtp,sashiko.dev:url,lists.linux.dev:replyto,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,vger.kernel.org:from_smtp,sashiko.dev:url,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1842A6D8D4B
+X-Rspamd-Queue-Id: 8F9AB6D8D54
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
+New issues:
+- [High] Prematurely freeing the IRQ in `bam_dma_remove()` before unregiste=
+ring the DMA device.
+
 Pre-existing issues:
-- [Critical] A modulo math mismatch between the ring buffer size and the CI=
-RC_SPACE calculation allows the tail pointer to jump over the head pointer.
-- [High] Hardware registers are accessed after device clock is disabled dur=
-ing removal, due to pm_runtime_force_suspend() being called too early.
-- [High] Hardware registers accessed in IRQ handler before device is confir=
-med active, risking a bus fault.
-- [High] Missing usage counter decrement when pm_runtime_get_sync() fails, =
-leading to PM runtime refcount leak.
+- [High] Accessing hardware registers after the clock has been disabled in =
+`bam_dma_remove()`.
 --
 
-commit 0c2081a4425fb055ae1074f9c27f82d0875546e3
-Author: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: dmaengine: qcom: bam_dma: convert tasklet to a BH workqueue
+commit c3d67a708644d5b3039f73321dfd2a2034b5a7b2
+Author: Bartosz Golaszewski <brgl@kernel.org>
 
-This commit converts the BAM DMA driver to use the high-priority variant
-of the BH workqueue instead of legacy tasklets for starting DMA transaction=
-s.
+dmaengine: qcom: bam_dma: Add pipe_lock_supported flag support
+
+Extend the device match data with a flag indicating whether the IP
+supports the BAM lock/unlock feature. Set it to true on BAM IP versions
+1.4.0 and above.
 
 > diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index fc155e0d1870c..ea3df28e777f9 100644
+> index 8ce0fe085c5fe..f3e713a5259c2 100644
 > --- a/drivers/dma/qcom/bam_dma.c
 > +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -115,6 +115,7 @@ struct reg_offset_data {
+> =20
+>  struct bam_device_data {
+>  	const struct reg_offset_data *reg_info;
+> +	bool pipe_lock_supported;
+>  };
+> =20
+>  static const struct reg_offset_data bam_v1_3_reg_info[] =3D {
 
 [ ... ]
 
-> @@ -922,9 +923,9 @@ static irqreturn_t bam_dma_irq(int irq, void *data)
-> =20
->  	srcs |=3D process_channel_irqs(bdev);
+Looking at bam_dma_remove() in drivers/dma/qcom/bam_dma.c:
 
-[Severity: High]
-This is a pre-existing issue, but does process_channel_irqs() read from
-hardware registers before the device is confirmed active? If a spurious
-interrupt occurs while the device is suspended, could this unprotected
-hardware access trigger an unclocked access exception and crash the system?
-
-> =20
-> -	/* kick off tasklet to start next dma transfer */
-> +	/* kick off the work queue to start next dma transfer */
->  	if (srcs & P_IRQ)
-> -		tasklet_schedule(&bdev->task);
-> +		queue_work(system_bh_highpri_wq, &bdev->work);
-> =20
->  	ret =3D pm_runtime_get_sync(bdev->dev);
->  	if (ret < 0)
-
-[Severity: High]
-This isn't a bug introduced by this patch, but if pm_runtime_get_sync()
-fails here, should we call pm_runtime_put_noidle() before returning?
-Without it, the PM runtime usage counter might leak and prevent the device
-from entering runtime suspend again.
-
-[ ... ]
-
-> @@ -1120,14 +1121,14 @@ static void bam_start_dma(struct bam_chan *bchan)
->  }
-
-[Severity: Critical]
-This is a pre-existing issue, but there appears to be a modulo math mismatch
-in bam_start_dma() when evaluating available buffer space:
-
-avail =3D CIRC_SPACE(bchan->tail, bchan->head, MAX_DESCRIPTORS + 1);
+drivers/dma/qcom/bam_dma.c:bam_dma_remove() {
 ...
-bchan->tail +=3D async_desc->xfer_len;
-bchan->tail %=3D MAX_DESCRIPTORS;
+	free_irq(bdev->irq, bdev);
 
-Could this mismatch between CIRC_SPACE assuming a capacity of 4096 and the
-explicit modulo using 4095 allow the tail pointer to jump over the head
-pointer? When the buffer is full (tail reaches 4094 and wraps to 0), does
-CIRC_SPACE calculate the space as 4095, falsely indicating an empty buffer
-and allowing the hardware to overwrite active descriptors?
+	pm_runtime_force_suspend(&pdev->dev);
 
-[Severity: High]
-Also in bam_start_dma(), as a pre-existing issue, if pm_runtime_get_sync()
-fails:
-
-ret =3D pm_runtime_get_sync(bdev->dev);
-if (ret < 0)
-        return;
-
-Does this early return need a call to pm_runtime_put_noidle() to avoid
-leaking the PM runtime usage counter?
-
-[ ... ]
-
-> @@ -1424,7 +1424,7 @@ static void bam_dma_remove(struct platform_device *=
-pdev)
->  			    bdev->channels[i].fifo_phys);
->  	}
-> =20
-> -	tasklet_kill(&bdev->task);
-> +	cancel_work_sync(&bdev->work);
-> =20
->  	clk_disable_unprepare(bdev->bamclk);
->  }
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does bam_dma_remove()
-access hardware registers after the device clock is disabled?
-
-pm_runtime_force_suspend(&pdev->dev);
+	of_dma_controller_free(pdev->dev.of_node);
+	dma_async_device_unregister(&bdev->common);
 ...
-writel_relaxed(0, bam_addr(bdev, 0,  BAM_IRQ_SRCS_MSK_EE));
+}
 
-Since pm_runtime_force_suspend() disables the BAM clock, could accessing
-hardware registers immediately after trigger a bus fault and crash during
-driver unbind?
+[Severity: High]
+If a client has an active DMA transaction when the DMA engine is removed (e=
+.g.,
+via sysfs unbind or module unload), does freeing the interrupt early mean t=
+he
+completion interrupt will never be serviced?
+
+This could cause the client driver to wait indefinitely for the DMA transac=
+tion
+to finish, leading to unkillable tasks or system hangs. Should the DMA engi=
+ne
+be unregistered and channels properly quiesced before the IRQ is released?
+
+
+drivers/dma/qcom/bam_dma.c:bam_dma_remove() {
+...
+	pm_runtime_force_suspend(&pdev->dev);
+
+	of_dma_controller_free(pdev->dev.of_node);
+	dma_async_device_unregister(&bdev->common);
+
+	/* mask all interrupts for this execution environment */
+	writel_relaxed(0, bam_addr(bdev, 0,  BAM_IRQ_SRCS_MSK_EE));
+
+	for (i =3D 0; i < bdev->num_channels; i++) {
+		bam_dma_terminate_all(&bdev->channels[i].vc.chan);
+...
+}
+
+[Severity: High]
+This is a pre-existing issue, but can accessing hardware registers after the
+clock has been disabled here cause a system crash?
+
+The clock is disabled by pm_runtime_force_suspend(), making the subsequent
+writel_relaxed() and bam_dma_terminate_all() register accesses fatal. On
+Qualcomm SoCs, accessing BAM registers while the clock is gated triggers a
+synchronous external abort (NOC error), resulting in an immediate kernel pa=
+nic.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260629-qcom-qce-c=
-md-descr-v20-0-56f67da84c05@oss.qualcomm.com?part=3D3
+md-descr-v20-0-56f67da84c05@oss.qualcomm.com?part=3D5
 

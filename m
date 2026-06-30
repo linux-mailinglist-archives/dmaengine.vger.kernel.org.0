@@ -1,303 +1,209 @@
-Return-Path: <dmaengine+bounces-11873-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11874-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id BHadAsLEQmqeBAoAu9opvQ
-	(envelope-from <dmaengine+bounces-11873-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 21:17:22 +0200
+	id 0WJ8FIoOQ2oeOgoAu9opvQ
+	(envelope-from <dmaengine+bounces-11874-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jun 2026 02:32:10 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51C7E6DE3CF
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 21:17:21 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id B17C46DF643
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jun 2026 02:32:09 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=hpe.com header.s=pps0720 header.b=OiKap86K;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11873-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11873-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=hpe.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=ANGSNIVS;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11874-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="dmaengine+bounces-11874-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1FB6D3010C38
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2026 19:17:20 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2B55130099A1
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jun 2026 00:32:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE5232EFD95;
-	Mon, 29 Jun 2026 19:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB49E175A6D;
+	Tue, 30 Jun 2026 00:32:07 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344F34A33;
-	Mon, 29 Jun 2026 19:17:16 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782760638; cv=none; b=MpIOqwzzHZXUpCF45VwnfKchPDBb2RZvf/Lz/5RYhrdlv5dA4LgAhPCXAzvVvtPxz94MQQvtNyf0NO9eFdCzg22c4k/p8Dg4PWlf+NMG3t/YxxQKhkk2poD3L8m+IrESRuXSyp6Yktd2mDMZoJy3bySEtyLtUzxBNPqz/DvqHOc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782760638; c=relaxed/simple;
-	bh=RHxi4XbzWTmRlh22bjxv/t5f0pDwHTVlc6H1tcSTJcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ldylrl//n8Nifml0c9qcIlsU1Ag/2PXNH0MiB7fT84FQ1cZeJFEE/6ZSh/D99mHdbhiWeMaEoMSNqw1F98tXklAZwBBU4/Uw19Rvdac3BFhFT2Y0+FPEqN8YYBqmKdIyFuIuGmOd8Fs4tfTQSqmMM9DpvWWDtb7aQvqABO/msIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=OiKap86K; arc=none smtp.client-ip=148.163.143.35
-Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65TGKZQ6111612;
-	Mon, 29 Jun 2026 19:02:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pps0720; bh=eD
-	2DakoTxyVKKHw9I9W38m6B9VhqOZdc8yWpcg5Sp4g=; b=OiKap86KlaWNZcFdFj
-	bJRJXWWYl3GEzppz2YffEeoY2Scb+pz0DbScY5HmPoMQtHG/B4RNUOr6SwY1ybYf
-	1G+3ZB2/8ZrugwC6wEl4/0NezEEEALX7rQ0JHbDtOZWtfN9a6d/tOA+kXT++H/35
-	0ESDcuXf3JORqTVwJrWlQJGySBl6vTnUHjVG9ftYN71HFnQOm38kKZQd/xutnkUC
-	C7b7JG41AwaxxQ2GmVKHi1xrx4/HApsxRHV+5KisEOIiCSx3XVPUV+xY9ozCPHdB
-	Ojid9GR7g4NAnYjmdP66EYoY/D6J/nVbTuzchzVvkVzsMJuL75CEzhnR46JuUJQM
-	JX5g==
-Received: from p1lg14878.it.hpe.com (p1lg14878.it.hpe.com [16.230.97.204])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 4f3rv3xrs5-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 29 Jun 2026 19:02:14 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 7E36A12EB7;
-	Mon, 29 Jun 2026 19:02:13 +0000 (UTC)
-Received: from ilogsc-qemu.local (unknown [16.231.227.39])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id B8DF4805871;
-	Mon, 29 Jun 2026 19:02:10 +0000 (UTC)
-Date: Mon, 29 Jun 2026 14:02:07 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc: "Codres, Bogdan" <Bogdan.Codres@windriver.com>,
-        Steve Wahl <steve.wahl@hpe.com>, Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
-Subject: Re: [PATCH v2 2/2] dmaengine: idxd: fix duplicate memory frees on
- initialization error path.
-Message-ID: <akLBL7b2h73pK0AC@ilogsc-qemu.local>
-References: <20260522203414.336549-1-steve.wahl@hpe.com>
- <20260522203414.336549-2-steve.wahl@hpe.com>
- <87echsiyur.fsf@intel.com>
- <BYAPR11MB36069EC520DCB9DFD6A411EEF8E82@BYAPR11MB3606.namprd11.prod.outlook.com>
- <BYAPR11MB36068CF244AA0940E39D3B50F8E82@BYAPR11MB3606.namprd11.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB77CA6B
+	for <dmaengine@vger.kernel.org>; Tue, 30 Jun 2026 00:32:06 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782779527; cv=pass; b=CUkn7cUTgzapZIHW6FJBuUkDykIPELtR3YnClLLqXav3Y8GvXKO/usNrdZuj4U4WbVRzQQttdqJ7ztX6kzkHIxNnIr8+71ypjclsVVXQu9qFES+kqksFPoSngxpTRKycnhdHaCH52GAR+Hne9Beuk/XF6Z6781Yhee9/5SWIUXM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782779527; c=relaxed/simple;
+	bh=Stv/EoGdRG9ASHi/1ijqr+t9ypiADGTyswBNzui6cls=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k+3/bR0sW8UKAbNfAzCig/06b6uC/pdRNLJVFM23+zVedxskuWlfBNwgrdTL0+sf6lAgNQeNWwUVCkaYvMdVm2WILbhMsXdCoZ8Yo588sud0YwYzS5mw743UvGTh7qqgtIXv4mBLpFR8FJwfiKw2CoUDo44uC0C/IIjqv5DAXJg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ANGSNIVS; arc=pass smtp.client-ip=209.85.208.53
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-69531108f25so7620111a12.2
+        for <dmaengine@vger.kernel.org>; Mon, 29 Jun 2026 17:32:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782779525; cv=none;
+        d=google.com; s=arc-20260327;
+        b=EflLcXNvG67J4vMImHxemZvFE6wHsXdhocjbf4R5eQC1HL8fGxVLHqKOtYEecJPTIQ
+         1B+eIpImk9SwkJQyPRJQR5qcRM0pNIH5zt4fwQwvfCHoLLvlWz1b9cWBUwI0fD8bW86i
+         JfRtdAaV48b/HvgfioaVNAABoED3A941hXVmxg+NvKW1YNTOqjPRoxMaEFllbb5kUwjb
+         iPsTRq1yexnWwpvmTlo0y3TxGp1w2QifGoo/vjYRou8CyVbh+eY18UwoHqUYaNXnkvoX
+         mkLQ8By3704BcZ9f5V4aAQtTMvtqCwsFqWAGJ8QG723RmGRuFiZH8Az1Xq1bOq7pM1na
+         hMAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=wpFmbrfbWlP1ZXWzSm85Y63bTGD4RSCBbCB3/t7eeX8=;
+        fh=8ha++ZqJHgcqUHY5BFA5s/TGImAioVdBfepMyGV8Qh4=;
+        b=cwtkNV4W0Y9JCVDnc8fvYQ62SMmXgTpW3wOYkYOWJhnzGBuHQpsnpresePsr/MQLz6
+         CH7u5O4pqJ1uAz/fT35A6NvsoA64XAI89MB5o7wk5bXRBU5W7Kh9zYwgTAnq8lSr2DyD
+         BJA3rNpw1ePOevqQt0W6W/VnshAJ1g8IlKfqgfKDdoZLP59e8LwaY5pkepN/R0OpEMnT
+         b389T3dxmkxQ3vVd5LchjBDcGU35gKJybcWJH0tZjf0OdFngtbVX7fkqDluRBv4C0OVV
+         ImXFOcu6ZIbuu11UeWLyexJ6iU63VyHpBx3mgtbRU87x2f8n4FbL5hgE4CbNdBS+YOKJ
+         4hSA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782779525; x=1783384325; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wpFmbrfbWlP1ZXWzSm85Y63bTGD4RSCBbCB3/t7eeX8=;
+        b=ANGSNIVSWjrKq+Jarl8EklJk4ezQHFFL07EkuEBi7DSCBMr5JmtEQFaYJero7/qYwl
+         JOAERtn3DCEAtwKR/XMBO9d0pZmlDmehowl1VaKU2nqV5TUdxFGCbXs1A2sFAOZy144L
+         YpyEPr1S8IS5aUHphIMdSw7n0HAA0/mfuGMATdqkK13vnY61k7p6WP0xs8AvXsAXNCBx
+         iMwHqf/5b1SJqD3vpFFTo2Qs9w8CIoqfWkevV4asWmpR44jyt4Z4zAuT02qeyOp4rciH
+         OcSvJ6CKi3wBWcDshLYSXLUTRqYMRlQpItT8kbfDnWTk17ZjefUBoA9g0zXg+AfiaPny
+         VbaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782779525; x=1783384325;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wpFmbrfbWlP1ZXWzSm85Y63bTGD4RSCBbCB3/t7eeX8=;
+        b=X1Xkkt/8ONKlTJHKHynzkMENXjjJz5BvZ9dNI0BcN7OQHjALtFUw/5y9O5Yi6OQ9n3
+         ti3USkNpv+ZEXuMY8b/iJVpI27kGojdbSR+LA5xXDTggF5SN7rNXZeKCyVryXjHjmCMj
+         NpkFjAgppGChSn/tf9DteIu2LQ8H5QWXSs4hWE5aXQ6rZW0Vl4tVM/bjIP6n/AFH6CxP
+         jVTwLMN9pBsKlmVSBhCspDPxwMlmxjvY9ChZ7xuIAVBn30SVrdGRs5WYDhfwmMxLDHbq
+         GVjPCV6ms/OoV0RNIy6sZR0jh7D37YKVLvpW2Dwg69NcBKhAIjyoR7NRbAur6aBzgm91
+         bbdw==
+X-Gm-Message-State: AOJu0YxM2pwhS+RHRgTnBo7kCqlQmiiDv5xL0jZiTj41i67aWJhLAh6w
+	zj1shzEWherQWgHi4podSyxRDnarXRVjDCWBz9t+5UBFi2bc/Q6w6nrvPIJQR/SuNrIEiaSZYzi
+	rEFbJDcWC3SlRkiNVhf/MCDK8ur8xzGE=
+X-Gm-Gg: AfdE7ckRfx8IH1FeFgY2uYTLBcRm6S+up/Z8VJEnStN/Aut0a79+lJbYp6kqHOfZdii
+	/hP+qiCkVbrRVLf9dGWASoK5He5LzMuCr+kQPZ148wnN5fIij3aV18/Uq4VYj7AMXHknDkI5dsb
+	n0WsLhaBNThgEqIMEzYZ8O8/2gsZXQcjyWi/SrPoNTIyzZUe86kv5+/zfROOI/bHyI5voo1AMnW
+	eIc+QWzCK0MCN1mfYvdhcR9Fwy0vLybaEXHXTIccNjv8ORzoMOmmpL7tqvIgWRCA4qRL3nQVEyp
+	UcPp5nBI+2AHSIYYav0BmJHxj0U2Ft0CrXGIC3u0nvnEJIYKKTdtR2uPGSqSuIVm/BQ64POvcf8
+	xMketNFZGAyWAFCdLZAhVaRvHxGE=
+X-Received: by 2002:a05:6402:210b:b0:697:be0e:4b72 with SMTP id
+ 4fb4d7f45d1cf-69879dcd8c9mr529822a12.1.1782779524530; Mon, 29 Jun 2026
+ 17:32:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR11MB36068CF244AA0940E39D3B50F8E82@BYAPR11MB3606.namprd11.prod.outlook.com>
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI5MDE1OSBTYWx0ZWRfX6ey4f8bwjARw
- BGxeTXVmouzFpvQy1UaV4arn1y3GDpgkMHBEr6tXLsO72ZE+YzE9veSZPD5z9umTtFlHCRTtd5U
- XeTTFEm+Nhppq0Hsl40XsekK6Y0Qa/g=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI5MDE1OSBTYWx0ZWRfX9Ye5oSgEQne+
- CYA3pl+dzxglN2CpSPvY4yWeBgFxb8TJ1hVmvFF9M7AUHOXQ2EBX/YojbDYokS/BxYkQ5DE67Y1
- OHHeVm8AaFc/I1ACqI2ZfFOWCm87rGUkPUolrRkMe/UeqhkCPBSmkcxJZiT2r7yccErAQy80L78
- UMJKPk8IrcQvr7hgfn/GJ27V/hcxspMT25j2PYuhtOJkQPr+nAdsuxq+JH87QcHVzg8haSC3n81
- zxRowDRfowDDR/jXhtoFg6E4mbORX6ktSAWLkPJixTF8acwW6lxhkYLu4bsGQ7Vmm0NqBi0fK7P
- ITz6JeaxOTM4K97D5/ZKgilOyHLdaafQkuXigfQTyUndU/msTkxiBglDrJWiD0qkzeqKOTJT/Ei
- 6CfCESJaJkYxhsxRT/B8BHDYvo4QGzotFTlUCTd+/QZyO+CMF9ed7kOWXj2G+E4/+/f2K/9CdMs
- KPWr/dzq08VFImS0Lvw==
-X-Proofpoint-GUID: wjhrXeoV40X5zp4wznFl0GUOOC8LZqUI
-X-Authority-Analysis: v=2.4 cv=OOIXGyaB c=1 sm=1 tr=0 ts=6a42c136 cx=c_pps
- a=UObrlqRbTUrrdMEdGJ+KZA==:117 a=UObrlqRbTUrrdMEdGJ+KZA==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=gQcMVamqm3wCPoSYhaRC:22 a=g3u0LPWLDYfGfufhFw6-:22 a=t7CeM3EgAAAA:8
- a=QyXUC8HyAAAA:8 a=MvuuwTCpAAAA:8 a=VwQbUJbxAAAA:8 a=Wbo_-sQPbvIGc4i7mrQA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-ORIG-GUID: wjhrXeoV40X5zp4wznFl0GUOOC8LZqUI
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-29_04,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 phishscore=0 malwarescore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 spamscore=0 suspectscore=0 adultscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2606290159
+References: <20260609212531.22044-1-rosenp@gmail.com> <60410a5b-226b-44ee-93c1-d9cb3eedf01c@nvidia.com>
+In-Reply-To: <60410a5b-226b-44ee-93c1-d9cb3eedf01c@nvidia.com>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Mon, 29 Jun 2026 17:31:52 -0700
+X-Gm-Features: AVVi8Cd4Bft5b9XJ3dVIwMux45umBZiiJ9R_2r0zjmH4edtW8dHEPIxh6q8FZzE
+Message-ID: <CAKxU2N-DELS8D=ZFk++s-AW-uZv4gKvqmKM0gzDdbGy2zvrGKw@mail.gmail.com>
+Subject: Re: [PATCHv4] dmaengine: tegra210-adma: use platform to ioremap
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: dmaengine@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>, 
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
+	Thierry Reding <thierry.reding@kernel.org>, 
+	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-9.16 / 15.00];
-	WHITELIST_DMARC(-7.00)[hpe.com:D:+];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[hpe.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
-	R_DKIM_ALLOW(-0.20)[hpe.com:s=pps0720];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-11873-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,hpe.com:dkim,hpe.com:email,hpe.com:from_mime,windriver.com:email,ilogsc-qemu.local:mid];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:vinicius.gomes@intel.com,m:Bogdan.Codres@windriver.com,m:steve.wahl@hpe.com,m:dave.jiang@intel.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:rja@hpe.com,m:sivanich@hpe.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[steve.wahl@hpe.com,dmaengine@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[hpe.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[steve.wahl@hpe.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	TAGGED_FROM(0.00)[bounces-11874-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:jonathanh@nvidia.com,m:dmaengine@vger.kernel.org,m:ldewangan@nvidia.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:thierry.reding@kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp,nvidia.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 51C7E6DE3CF
+X-Rspamd-Queue-Id: B17C46DF643
 
-On Mon, Jun 29, 2026 at 11:44:36AM +0000, Codres, Bogdan wrote:
-> Hi Vinicius, Steve,
-> 
-> Thanks for the heads-up. I'm totally fine with being added as:
-> 
-> Reported-by: Bogdan Codres <bogdan.codres@windriver.com>
-> 
-> on Steve's patch — his fix addresses the same issue I was seeing.
-> You can use my splat as the reproducer.
-> 
-> Regarding the third patch for the dangling ->wq pointer — the proposed change looks reasonable to me.
-> 
-> Best regards,
-> Bogdan
-> 
-> Ph.D. eng. Bogdan Codres
-> Member of Technical Staff in Cloud Platform Engineering, Wind River
-> 
-
-Hello, everyone,
-
-As there's no code changes (and I even find it remarkable how similar
-the two were, I think only the comments differed), I am completely
-open to Vinicius just modifying the commit message to include the
-parts he wants to see.  It would take less time than another round of
-posting a patch.  But if you need more from me, let me know.
-
-Thanks,
-
---> Steve
-
-> ________________________________
-> From: Codres, Bogdan <Bogdan.Codres@windriver.com>
-> Sent: Monday, June 29, 2026 14:32
-> To: Vinicius Costa Gomes <vinicius.gomes@intel.com>; Steve Wahl <steve.wahl@hpe.com>; Steve Wahl <steve.wahl@hpe.com>; Dave Jiang <dave.jiang@intel.com>; Vinod Koul <vkoul@kernel.org>; Frank Li <Frank.Li@kernel.org>; dmaengine@vger.kernel.org <dmaengine@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
-> Cc: Russ Anderson <rja@hpe.com>; Dimitri Sivanich <sivanich@hpe.com>
-> Subject: Re: [PATCH v2 2/2] dmaengine: idxd: fix duplicate memory frees on initialization error path.
-> 
-> Hi Vinicius, Steve,
-> Thanks for the heads-up. I'm totally fine with being added as
-> Reported-by: Bogdan Codres <bogdan.codres@windriver.com>
-> on Steve's patch — his fix addresses the same issue I was seeing.
-> You can use my splat ad the reproducer.
-> Regarding the third patch for the dangling ->wq pointer — the idxd->wq = NULL after destroy_workqueue() looks reasonable to me
-> Best regards, Bogdan
-> 
-> 
-> Best Regards,
-> 
-> Ph.D. eng. Bogdan Codres
-> 
-> Member of Technical Staff in Cloud Platform Engineering, Wind River
-> 
-> ________________________________
-> From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> Sent: Saturday, June 27, 2026 3:57
-> To: Steve Wahl <steve.wahl@hpe.com>; Steve Wahl <steve.wahl@hpe.com>; Dave Jiang <dave.jiang@intel.com>; Vinod Koul <vkoul@kernel.org>; Frank Li <Frank.Li@kernel.org>; dmaengine@vger.kernel.org <dmaengine@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
-> Cc: Russ Anderson <rja@hpe.com>; Dimitri Sivanich <sivanich@hpe.com>; Codres, Bogdan <Bogdan.Codres@windriver.com>
-> Subject: Re: [PATCH v2 2/2] dmaengine: idxd: fix duplicate memory frees on initialization error path.
-> 
-> CAUTION: This email comes from a non Wind River email account!
-> Do not click links or open attachments unless you recognize the sender and know the content is safe.
-> 
-> Steve Wahl <steve.wahl@hpe.com> writes:
-> 
-> > Error paths within idxd_pci_probe_alloc and related functions end up
-> > attempting to free memory already freed from idxd_conf_device_release
-> > via put_device.
+On Wed, Jun 10, 2026 at 1:43=E2=80=AFAM Jon Hunter <jonathanh@nvidia.com> w=
+rote:
+>
+>
+> On 09/06/2026 22:25, Rosen Penev wrote:
+> > Simpler to call devm_platform_ioremap_resource() as it returns multiple
+> > error messages for whichever part fails.
 > >
-> > This was encountered running in a kexec'd kdump kernel with reduced
-> > resources, causing the "Device is HALTED!" branch in
-> > idxd_device_init_reset to be taken.
-> >
-> > In idxd_free and idxd_alloc, do not attempt to free allocations that
-> > will already have been freed.
-> >
-> > Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
 > > ---
-> 
-> Bogdan Codres series (but submitted a bit later), tries to fix this
-> issue, has a better splat and a reproducer, I think it makes sense to
-> add the splat and reproducer here, and add Bogdan as Reported-by (if
-> agreed, of course).
-> 
-> I am wondering about adding a third patch for the dangling ->wq pointer, as
-> reported by Sashiko would make sense.
-> 
-> Something like this might do the job (totally untested):
-> 
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index f1cfc7790d95..0a74018f31a8 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -415,6 +415,7 @@ static void idxd_cleanup_internals(struct idxd_device *idxd)
->         idxd_clean_engines(idxd);
->         idxd_clean_wqs(idxd);
->         destroy_workqueue(idxd->wq);
-> +       idxd->wq = NULL;
->  }
-> 
-> How does it sound?
-> 
-> > v2: split into two patches as requested by Vinicius Costa
+> >   v4: rebase and reword commit message
+> >   v3: change subject
+> >   v2: reword commit message
+> >   drivers/dma/tegra210-adma.c | 12 +++---------
+> >   1 file changed, 3 insertions(+), 9 deletions(-)
 > >
-> >  drivers/dma/idxd/init.c | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> > index f1cfc7790d95..227e323cc5a0 100644
-> > --- a/drivers/dma/idxd/init.c
-> > +++ b/drivers/dma/idxd/init.c
-> > @@ -607,9 +607,6 @@ static void idxd_free(struct idxd_device *idxd)
-> >               return;
-> >
-> >       put_device(idxd_confdev(idxd));
-> > -     bitmap_free(idxd->opcap_bmap);
-> > -     ida_free(&idxd_ida, idxd->id);
-> > -     kfree(idxd);
-> >  }
-> >
-> >  static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_data *data)
-> > @@ -649,8 +646,13 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
-> >       return idxd;
-> >
-> >  err_name:
-> > +     /*
-> > +      * once device_initialize(conf_dev) is called,
-> > +      * put_device(conf_dev) will end up calling
-> > +      * idxd_conf_device_release() which will free the rest.
-> > +      */
-> >       put_device(conf_dev);
-> > -     bitmap_free(idxd->opcap_bmap);
-> > +     return NULL;
-> >  err_opcap:
-> >       ida_free(&idxd_ida, idxd->id);
-> >  err_ida:
-> > --
-> > 2.51.0
-> >
-> 
-> --
-> Vinicius
+> > diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+> > index ceaee1e33e68..21a381d022cf 100644
+> > --- a/drivers/dma/tegra210-adma.c
+> > +++ b/drivers/dma/tegra210-adma.c
+> > @@ -1087,15 +1087,9 @@ static int tegra_adma_probe(struct platform_devi=
+ce *pdev)
+> >               }
+> >       } else {
+> >               /* If no 'page' property found, then reg DT binding would=
+ be legacy */
+> > -             res_base =3D platform_get_resource(pdev, IORESOURCE_MEM, =
+0);
+> > -             if (res_base) {
+> > -                     tdma->base_addr =3D devm_ioremap_resource(&pdev->=
+dev, res_base);
+> > -                     if (IS_ERR(tdma->base_addr))
+> > -                             return PTR_ERR(tdma->base_addr);
+> > -             } else {
+> > -                     return dev_err_probe(&pdev->dev, -ENODEV,
+> > -                                          "failed to get memory resour=
+ce\n");
+> > -             }
+> > +             tdma->base_addr =3D devm_platform_ioremap_resource(pdev, =
+0);
+> > +             if (IS_ERR(tdma->base_addr))
+> > +                     return PTR_ERR(tdma->base_addr);
+>
+> The dev_err_probe() was purposely added to assist debug. Please don't
+> drop this.
+If you're talking about the memory resource error,
+devm_platform_ioremap_resource() prints
 
--- 
-Steve Wahl, Hewlett Packard Enterprise
+ret =3D dev_err_probe(dev, -EINVAL, "invalid resource %pR\n", res);
+
+That's more descriptive, no?
+>
+> Jon
+>
+> --
+> nvpublic
+>
 

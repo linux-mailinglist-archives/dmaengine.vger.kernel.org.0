@@ -1,215 +1,178 @@
-Return-Path: <dmaengine+bounces-11883-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11884-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id bP9BN6ZwQ2rQYQoAu9opvQ
-	(envelope-from <dmaengine+bounces-11883-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Jun 2026 09:30:46 +0200
+	id LAqhFoSwQ2q+fAoAu9opvQ
+	(envelope-from <dmaengine+bounces-11884-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jun 2026 14:03:16 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58B766E129F
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Jun 2026 09:30:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F6FA6E3F1A
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jun 2026 14:03:12 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=amd.com header.s=selector1 header.b=E6jB4CgW;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11883-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-11883-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=amd.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=bP5lOibs;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11884-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-11884-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 69657302EEE5
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Jun 2026 07:28:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D17F531CCF3D
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jun 2026 11:34:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA8C539A048;
-	Tue, 30 Jun 2026 07:28:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AAFF3FB7F6;
+	Tue, 30 Jun 2026 11:34:18 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010028.outbound.protection.outlook.com [52.101.56.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5685C394797;
-	Tue, 30 Jun 2026 07:28:54 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782804535; cv=fail; b=N4VjMZrTyx93DGSJKaGIDdXJEgPzLSN/Jghi4p7ccPR8WT3R+lN69sJOfO2Ax5aas7Kpa4xqKafRxvSWBHQ4O18Q4QCPEXvGPmIlWxrnJlLJxVjEN+/zDrsEvVaPn2dwV5Gl9+Nm743fHdUxLbVrR28+YqxYWyiUtd2QgMQkoUk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782804535; c=relaxed/simple;
-	bh=vZc9QZezLBe4ofRFu2YUMNatj7XLPiAhn/V0eOj/Nx4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=c68e9+uhWBrJ7KYI2N8vPBO6zMb5Zjfs4d1QjJNxLshqLarOkmIkeW/6V5XJziFAi2QLOwquLTnWlCYWWnWlOyOEAC7mFFLJhW5YrJ2uJrCc+SfMi0AkgP86EK3j/XgnP+/v1lW2VzhGyYLvQHYpEy8nySJIxFpDX1lsSuXhyzg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E6jB4CgW; arc=fail smtp.client-ip=52.101.56.28
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U9zDriMOWBU+FgVAPOB/FScCaw/JbrdbXDe/AhEv92m29hrl41tXxxYBHd3w1YKsiGRane7cEoQudLKiw3GmDKjMYmP820pbb7MmHyDVhxYuI6A/ygjbKKvf1bJ/PR9XuF0bqzk+qUgGm/u0PyQ3qUhoDAI64E2AMOFc/S7niJt4ExaNdnv11ziCftibGpQDxqeneuiY+aFbOTRxwtNpZk36cBKCLueiCjz+GUFFJJO7ZAQlE+VcB/fQL2tzQAs9ymBq+sS2ZVtOR8NCMs9HhdQnQrRV7KuaOq342sEDYiQCgnx+ffF1+80ogrDzGXqgg4PhzhXCrAbds01xAunKxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sVMUpXXrRzZ4nFpENyTUFcUQRrUbM9ZVKruk5kuzPkU=;
- b=Cvcb2FAd+xizEwvIQCQo7ZO7ono95tQZ7a0CuwS1ZwIzB1QVzWsM/o78gP+blqM2dWuwxuHY87jFKwxizALYBGFhgHvXYAe/pASZSUUqM3e3Ka0ay9SgN2DOTKwgjCjIvu0GWqQtLBhnEixSwARUvT2COsS2rmJUZbnQN8Bm2NXr52URTTPCkp8N3RnWlf8Ng8FHqAMYCTBB/aSsha+xl+fLO18wxGvzXpu7GQ/cazwQ3kwtMqQDulzK2Ea8YQCaTuokM48nE+TRX/R4+d1GzPMek7R0P9QffFLulfqD9pwRgaT9L1eayPdtAP2hzLtJDGd5GLyMsvbCtb/LNckW9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sVMUpXXrRzZ4nFpENyTUFcUQRrUbM9ZVKruk5kuzPkU=;
- b=E6jB4CgWi6bmSovni9EBU9m42HDmfRMjSFStZruDubH6JPREEreKixq3/fORO4unRmrif7XNOyzQphbMGeEny8eS0XlZDOjXPvs8D/jYwXiVSlBcvhyMrkTQmAygvqSXItYBBBczMlohMdNsO5NvZXU058tOta6S8Iru43nPFzM=
-Received: from CY1PR12MB9697.namprd12.prod.outlook.com (2603:10b6:930:107::6)
- by SA1PR12MB6947.namprd12.prod.outlook.com (2603:10b6:806:24e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.16; Tue, 30 Jun
- 2026 07:28:47 +0000
-Received: from CY1PR12MB9697.namprd12.prod.outlook.com
- ([fe80::3a41:55a0:8203:596d]) by CY1PR12MB9697.namprd12.prod.outlook.com
- ([fe80::3a41:55a0:8203:596d%5]) with mapi id 15.21.0181.008; Tue, 30 Jun 2026
- 07:28:47 +0000
-Message-ID: <99d3ff5d-27d5-414c-b291-49426643e821@amd.com>
-Date: Tue, 30 Jun 2026 12:58:37 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dmaengine: zynqmp_dma: fix kernel doc for
- zynqmp_dma_remove()
-To: Golla Nagendra <nagendra.golla@amd.com>, vkoul@kernel.org,
- Frank.Li@kernel.org, michal.simek@amd.com, abin.joseph@amd.com,
- kees@kernel.org, ptsm@linux.microsoft.com, sakari.ailus@linux.intel.com,
- radhey.shyam.pandey@amd.com, u.kleine-koenig@pengutronix.de
-Cc: git@amd.com, dmaengine@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20260630064844.705173-1-nagendra.golla@amd.com>
- <20260630064844.705173-3-nagendra.golla@amd.com>
-Content-Language: en-US
-From: "Pandey, Radhey Shyam" <radheys@amd.com>
-In-Reply-To: <20260630064844.705173-3-nagendra.golla@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN5P287CA0036.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:263::10) To CY1PR12MB9697.namprd12.prod.outlook.com
- (2603:10b6:930:107::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BD73672B3;
+	Tue, 30 Jun 2026 11:34:17 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782819258; cv=none; b=Bhnir5Kf6BhCmIAGGT4l+t9GmKezj+IJfu1rtjfPoim2cL9rgGeR2TqFNwLrH+Ov7b2o9ISPGf23g9LPAYNJ2GBgYvgz7PoGjr/vGpHTYf2vgMeS8vMFJZEvXuXF25XWqSDkTVxe7mp0C2vw1xw31wWrzay2KqVzBifs0HvXkJU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782819258; c=relaxed/simple;
+	bh=QE+pM2IqrECD7KfCNKfPvP1EP2u2C0wIHXBqh1bX8Hs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N8GlO8g6JEQ+44+FaIBtFsNYuDDXivAoabGfyI7Y7FxfnJ3wn/G153MnEFGp8axyjDvOaSuymw/m6+KC0Z2+92n8j/xKkLhAbtO0tFcnJo/PxWS3G360ZZeIsWkDxeuUNWG0ks41XMEUX1oQ/xxqmg52vplPt8KGsrWo3rbI1Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bP5lOibs; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1070A1F000E9;
+	Tue, 30 Jun 2026 11:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782819256;
+	bh=9ewpUf4cNOvt9d0UUmC8hZbJDc1XmG2sBxDSs3hf5Ac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bP5lOibsywM0z0kYIuPgcMctuls7Wc8cuV6rpo6h9xoL/qFdCtDV0QEf4OnT3goU8
+	 aX1GV+F4rgt7BKiMrSznJXKmXepiYPjrpAhF46V1wBdIz5u1cdbj01xfVPSHTW+1Nk
+	 XCcIbBnYP/s4mPrXGyDuzsn8hNZc04w59T5aeLUHR7HEWZz+ABa8r+drFZMfkaEai1
+	 3UXRtAhHr1ecB8z4Tt4ikaS2ifKOua2ZDJugtltbh928rUgjA0H4nHDHr0h/Wu82gA
+	 exuVqh7N4OZlmPeWYJ9TjyH5pfBPJXesCzc3tDo09Ok4QlFkW+ny5/MZzL+uFGhy8m
+	 FLacHYjHZC+2w==
+Date: Tue, 30 Jun 2026 17:04:12 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Hongling Zeng <zenghongling@kylinos.cn>
+Cc: Frank.Li@kernel.org, wens@kernel.org, jernej.skrabec@gmail.com,
+	samuel@sholland.org, mripard@kernel.org, arnd@arndb.de,
+	dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	zhongling0719@126.com, Frank Li <Frank.li@oss.nxp.com>
+Subject: Re: [PATCH v4] dmaengine: sun6i-dma: Fix memory leak in
+ sun6i_dma_terminate_all
+Message-ID: <akOptOSkd7o0Vivk@vaman>
+References: <20260618020609.1155962-1-zenghongling@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY1PR12MB9697:EE_|SA1PR12MB6947:EE_
-X-MS-Office365-Filtering-Correlation-Id: c3b5061a-a829-41f4-eed7-08ded6793904
-X-LD-Processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|23010399003|4143699003|11063799006|56012099006|22082099003|18002099003|921020;
-X-Microsoft-Antispam-Message-Info:
-	UkzGurQHxM4hTgnjtySoohlcD3dkLcPqkw3Qp9DKMSo8YKcx3R/Z+Wd0DaW9DomuPvMwmRCAA5IoXqSy6Qt4YQ4Uq4IiGmqd3N49Bb89npVu/DQkl9JvTifLaVFDjcnbwtLwbyEcGTdpjr3uo2vs+oEnp/vu+ZcHcr1J+cEyX3v8qvE1rseSoMaV27C6qnUYbKVc2EPLUa7jyR7C5pCA1jt3sJN2U+jH0W2kvxVMXCqrS2WUiDeIfYqv/Thr2yGi7Z1KYIxkKfo6mEq93nJLU5bmSWL2sN/GiGXweBvpi8i3aO+sNl66eaW1HwCL69cwe9nPi6iEijnVsytTzF4f25M5H7kWfFnNKZS8WDndtyhBZ7qxGovBu2CtrVoOAFN8/cJCycNwilEbTM4tpPEcl92Q2uEG7VXQbF7dD3C08UBGU5inMntVIeskBfOLHMMlQK8SRBBfW6qLZHvpNhnPZ9NHelvMbBgMTWmlinhTBPWTPiNJWdGmNDo3DTELPEznCG21JgUdCNIx/0Vv4b6HVQkRzZrbFqWSpwtCIrJFN+s11qhml6hc1NaXLCA2T9jTCWL5kInCYb/bD3mxEPuV/ikMp4/zfPV25+IyB2gGlpU/1TsHMsyrIUghLs53kd39MP6SICvz1APU0+l3Vs+xLnUq252Z6cEDbJYiOSRQ3qZCm7WZV+LVqYYQAgh9XpbTq9zPYAITTVJOT8ltBuWtQQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY1PR12MB9697.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(23010399003)(4143699003)(11063799006)(56012099006)(22082099003)(18002099003)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cFhTTVdRQkNVbVlNK0lzb25GVHF6VXdUMVZlTDhiYkxQMmoxMWFPK1RFQjdF?=
- =?utf-8?B?eUtEQmxHanVDSkRlbDAzZ1FHL1hpejVYZ3pSUVlZUUJwcEs2ZC9XSml3OXk3?=
- =?utf-8?B?c25JWmorS0ZtRkdSWW1Sa0x6eTFsNDdNWG4waGVzOWNIM2Vvc3V2NW1ydTZR?=
- =?utf-8?B?RzRXWjdzT0xpL2ZFNCtGTEVoKzlGZEJ0OXFIV0xkSXdGTzFHelZiSEFFS281?=
- =?utf-8?B?VHVPYWQrUWQxUDNwOWtuOS9ONnJiWGlQcGVTN2RmcnYxeXEwTlgvSjdGbU9z?=
- =?utf-8?B?M3ZTbnpoYVliamhtTEZneU85OG01SXVtbjQ5V2xrcks3ZWtVYTBkdVZKdDYx?=
- =?utf-8?B?eHpwMGtBQ3NRV1BZanlRUDhOcGVRWTJRdlRkdjYzUU43d0lqblFDZFJZbi9o?=
- =?utf-8?B?QS9XVG1BNTdyV2phbTVhbnI3cWFWQUxCdXRla0ZYYzZwZ1hzV2QxZkZoWUdK?=
- =?utf-8?B?cGFsa3pMYlN6bXlKaHNjYkkxelgzenpXQ05OZThGRmNBV3dtakR6cXAreC9k?=
- =?utf-8?B?UlV2TFJJZE9UUUhNKy9aVHJDV0ZPL0ExbkM4WGQ4NEpLdk4yVzJEUnMzbHd4?=
- =?utf-8?B?WUpZUm1TaVNQVCs5R0N5a0w5K0FvVnRMZzJoY1B5U3BwRm03MElldDdSWnQz?=
- =?utf-8?B?VDAvYzM4T2M0Smp0aDZhOWVxK0l6RTIwMnk4WmpWSHltQWpoU2ZKOE1HeWF4?=
- =?utf-8?B?K2ZpMFQ0enVhQXNZNU54Q0ZnYXNZTWpkN2tDSHk2TWFGeFZrUG93a2F1ZHZE?=
- =?utf-8?B?dUNETzdZcTQ2alRDa1pONXZMUTlNc1BTLzdwTDNONTlzdkJBUTJ6RDVtLzIz?=
- =?utf-8?B?YlhDR2xJOU9lOXBGbmNSVnBKZkREMUdManpwWFMyWTZ0eDgvQTU3U2t1Z2pj?=
- =?utf-8?B?Q2ZDdnU4VGV0ZlZRNS9XazJhbFNLS2dZeUVQeDFSYXFuSUVJZ0lVWlRaN1RM?=
- =?utf-8?B?TWs1SEU5N3I1eTNkREhnaGdCNnJkOHFmTGN1TWJhR2taV3dXeTAyQXUwQmVC?=
- =?utf-8?B?dzB2VG1XOUpjclpzdWdPM01OSi9rNllIbFkyVU5qQlpueTVCcHUrY1R0QWNk?=
- =?utf-8?B?d1lMdFdybFBWVVEwWmlkR2loRHZ3OVF2WEhoZ20yWnZLc3JPeU85Zks5c2w5?=
- =?utf-8?B?SFF0SWs3WjkxallEem81elVBVlgydnQzTVVvQlVURUs2eGNBeVJDdWhIL25N?=
- =?utf-8?B?Um9PbzdERkpaMzV6V2NBNXZYSUsrV29BR0Q1Smx5ZFVZWEdRS0RVSnJTYi9y?=
- =?utf-8?B?MlhDdDRHdTRBZUZSSU5GT2RnYlZ5djlUb2FzUTlyaXQrSUxXeThBazFDdmw1?=
- =?utf-8?B?SHNCNm1ySHl3d1pOS1lzMHVoMHBLbGlHNG1RbEJ5WEdpUCtvNGZIRElpSFZW?=
- =?utf-8?B?NmdUTGRVZW9saGl1QmdwUG9PWE15UkZydTdjMGVKaXd3cXlPZVUva1BUa212?=
- =?utf-8?B?em04SWIwZ1ZLV3hLVi82b1lQWm1tMTlyN1l4bjVLZVZLdlpTZzRzOTJhQlJl?=
- =?utf-8?B?TUNLUTlZNEd2dmpnQ09KYkxnTlpLVm5uams5MWlLZGlSNUxMNDlIRUJSVnRB?=
- =?utf-8?B?Q21JOTlhWDczdjRYaXU3UENPeW5hOG56K25UR2QrWkdVQ2NaazViZzl3WGI1?=
- =?utf-8?B?YXJwaVVMd21YK1RtSFJ0dE1wamsyQi9CQlJVUk9vU2ZaRkVrWkxYRnB1bXV4?=
- =?utf-8?B?VjF2NXFuMGtUZGVQQTgwM0ZkWm9ocTBXN3dhUjcwZGFOSENiWXI3N0ZsWndv?=
- =?utf-8?B?RDNYN2F1NEVlbTRWQ2RSTkhFS2M1VjJyRmZzZk1SdXJteXFHQWNOK1B0VDJG?=
- =?utf-8?B?TU9oTnhCcUh0SkpJeXhQTllUVmpaaTd0d1h5dGNKWDVZdEZaSVlsU2piN2xF?=
- =?utf-8?B?NCs0ZEVMcHVNa016UXEzdU5hVUxMLzZsSStsalNEL3Y5bUNFcUJYTytRZmwz?=
- =?utf-8?B?U3hqdU1SUmRsN3dFQzhobHpnNFFhSXIvRUx5QkZQZk9XNlgzRE4vc1lKY0xW?=
- =?utf-8?B?Um80Y3ZmRnJsRnZ2MWUwMVZvQ3c0dEFtRVluS3lRblhLS1NsVnZGSEcvOHVy?=
- =?utf-8?B?c21NQlBLeUo1YW1NN0F3NGRvTTh2VytWM0pHTGxGbm1HbTcrZmVuU0Z2b2tP?=
- =?utf-8?B?bitmZnBwamhmRFRJNFpISEMzZFNwb0VoNFcvN1l3d1Fkc2R1cWV4RDR6YXdU?=
- =?utf-8?B?VjVlSUZITzVtUlpWNzNKMHl3RlNFUGdQcHhiQ2FubWtFRUxZOTRqc1laOTQr?=
- =?utf-8?B?R2JieFY1RGdOVnMzRVJuR01DTm9YeW9PaXZWWThMcnh5MEUrZzJvRFFPWXNw?=
- =?utf-8?B?aGZSNVBvUkJNcjYvd3FVTFZhaG5KTDB6SU5wZzFGM0lzUVlWRCs1Zz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3b5061a-a829-41f4-eed7-08ded6793904
-X-MS-Exchange-CrossTenant-AuthSource: CY1PR12MB9697.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2026 07:28:47.0089
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xIaVZTogzzfhCGjNJAbUCRZX5/3Bwd3UtOuc9jOzanXgKFxZr47TeML4a4zJ7eL8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6947
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260618020609.1155962-1-zenghongling@kylinos.cn>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11883-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:nagendra.golla@amd.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:michal.simek@amd.com,m:abin.joseph@amd.com,m:kees@kernel.org,m:ptsm@linux.microsoft.com,m:sakari.ailus@linux.intel.com,m:radhey.shyam.pandey@amd.com,m:u.kleine-koenig@pengutronix.de,m:git@amd.com,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[radheys@amd.com,dmaengine@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:zenghongling@kylinos.cn,m:Frank.Li@kernel.org,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:samuel@sholland.org,m:mripard@kernel.org,m:arnd@arndb.de,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:zhongling0719@126.com,m:Frank.li@oss.nxp.com,m:jernejskrabec@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11884-lists,dmaengine=lfdr.de];
+	FORGED_SENDER(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[radheys@amd.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[amd.com:+];
 	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,sholland.org,arndb.de,vger.kernel.org,lists.infradead.org,lists.linux.dev,126.com,oss.nxp.com];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:dkim,amd.com:email,amd.com:mid,amd.com:from_mime,vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,kylinos.cn:email,nxp.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 58B766E129F
+X-Rspamd-Queue-Id: 4F6FA6E3F1A
 
-On 6/30/2026 12:18 PM, Golla Nagendra wrote:
-> The zynqmp_dma_remove() function was converted from returning int to
-> void, but the kernel doc comment was not updated to reflect this change.
-> Remove the stale "Return: Always '0'" documentation that no longer
-> applies to the void function.
+On 18-06-26, 10:06, Hongling Zeng wrote:
+> When terminating DMA transfers, active descriptors are not properly
+> reclaimed. Only cyclic descriptors were handled, leaving non-cyclic
+> descriptors and their LLI chains to be permanently leaked.
 > 
-> Fixes: b1c50ac25425 ("dmaengine: xilinx: zynqmp_dma: Convert to platform remove callback returning void")
-> Signed-off-by: Golla Nagendra <nagendra.golla@amd.com>
+> Fix by using vchan_terminate_vdesc() which handles both cyclic and
+> non-cyclic descriptors by adding them to desc_terminated queue for
+> proper cleanup.
+> 
+> Add pchan->desc != pchan->done check to prevent double-adding completed
+> descriptors, which would corrupt the list.
+
+Thanks for the patch. Please consider revising the subject which should
+describe the changes in the patch and not the fix/issue.
+
+A better one would be "fix reclaim descriptors while terminating"
+
+> 
+> Fixes: 555859308723 ("dmaengine: sun6i: Add driver for the Allwinner A31 DMA controller")
+> Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
+> Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+> Suggested-by: Frank Li <Frank.li@oss.nxp.com>
+> 
 > ---
-
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Thanks!
-
->   drivers/dma/xilinx/zynqmp_dma.c | 2 --
->   1 file changed, 2 deletions(-)
+>  Change in v2;
+>  -Add pchan->desc != pchan->done check to prevent race condition
+>   where completed descriptors could be double-added to desc_completed
+>   list, causing list corruption
+> ---
+>  Change in v3:
+>  -Fix by using vchan_terminate_vdesc() as suggested by Frank Li
+> ---
+>  Change in v4:
+>  -Correct the commit message
+> ---
+>  drivers/dma/sun6i-dma.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
-> index 26f097db593d..ba6604dd7153 100644
-> --- a/drivers/dma/xilinx/zynqmp_dma.c
-> +++ b/drivers/dma/xilinx/zynqmp_dma.c
-> @@ -1177,8 +1177,6 @@ static int zynqmp_dma_probe(struct platform_device *pdev)
->   /**
->    * zynqmp_dma_remove - Driver remove function
->    * @pdev: Pointer to the platform_device structure
-> - *
-> - * Return: Always '0'
->    */
->   static void zynqmp_dma_remove(struct platform_device *pdev)
->   {
+> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> index 7a79f346250a..134ae840f176 100644
+> --- a/drivers/dma/sun6i-dma.c
+> +++ b/drivers/dma/sun6i-dma.c
+> @@ -946,16 +946,13 @@ static int sun6i_dma_terminate_all(struct dma_chan *chan)
+>  
+>  	spin_lock_irqsave(&vchan->vc.lock, flags);
+>  
+> -	if (vchan->cyclic) {
+> -		vchan->cyclic = false;
+> -		if (pchan && pchan->desc) {
+> -			struct virt_dma_desc *vd = &pchan->desc->vd;
+> -			struct virt_dma_chan *vc = &vchan->vc;
+> -
+> -			list_add_tail(&vd->node, &vc->desc_completed);
+> -		}
+> +	if (pchan && pchan->desc && pchan->desc != pchan->done) {
+> +		struct virt_dma_desc *vd = &pchan->desc->vd;
+> +		
+> +		vchan_terminate_vdesc(vd);
+>  	}
+>  
+> +	vchan->cyclic = false;
+>  	vchan_get_all_descriptors(&vchan->vc, &head);
+>  
+>  	if (pchan) {
+> -- 
+> 2.25.1
 
+-- 
+~Vinod
 

@@ -1,63 +1,64 @@
-Return-Path: <dmaengine+bounces-11976-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11977-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 3y1OBZiERmrnXgsAu9opvQ
-	(envelope-from <dmaengine+bounces-11976-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Jul 2026 17:32:40 +0200
+	id q8+OALOERmruXgsAu9opvQ
+	(envelope-from <dmaengine+bounces-11977-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Jul 2026 17:33:07 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 934486F9734
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Jul 2026 17:32:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A3606F9744
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Jul 2026 17:33:06 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="LALP5/0y";
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11976-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11976-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=XaW+qLOr;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11977-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11977-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B3FEE30088A0
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Jul 2026 15:32:04 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4F5D2305BE19
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Jul 2026 15:32:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01918348C44;
-	Thu,  2 Jul 2026 15:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1B05353A63;
+	Thu,  2 Jul 2026 15:32:06 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB5D37A84C;
-	Thu,  2 Jul 2026 15:32:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AD0353A6D;
+	Thu,  2 Jul 2026 15:32:04 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783006321; cv=none; b=ZLHA9t0crzH30DwdSQ/1vbuZh0QsAaMhkwMAGR+4dtn/MhkDbG/KpzA3Px6hw1AeCzcjXuhq0Gn08Hazexj+s9lVVHw50UIOvbeHZ5PeY7w/3v0OTDLgqipMGEsAbZOhRIDsfgmf9wpB7a5Vyyy+jlTkwkGRc7jPDgi2EQt1uDY=
+	t=1783006326; cv=none; b=SrAlhS+Mhq64SjPCOOhmDGys/YA/cN8K89lsiKGrOfqmifVFejX7xy66j3O4VS9d6KrGsUxtae+q4m+vzdzmtg9vdXmLHBWmbTZ18kkg/7hHPOAkewjMjql0aIE5DsS00APv4HKrxbnJPdxmpBlvP6zvJ/bq5udTqZ8CWGnOgIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783006321; c=relaxed/simple;
-	bh=ej5ffxlxmBX7k3eAVgmJjvMD8D7UBtwZKXKVYiOzrBQ=;
+	s=arc-20240116; t=1783006326; c=relaxed/simple;
+	bh=0Au11BzDoZ6WbYbD94/aWaC10QjLDWSQyE+SafPW5CM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=C3XqJ7Tb3n6c6bU5PSsDevsB67/kCSi/VLzHXFE1cQI8jHRM1/el3/9yiMLX7vh70RvMyM+TptqYK2h5nINj4ogmi5Sk7FlmioRm7SFA0sCSTWtGivVuD3rqqv3fBOtI/2bgHYVE2wT2IyfHMx91dNZ41qv5mQJx8o8dKdA6wRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LALP5/0y; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 304361F000E9;
-	Thu,  2 Jul 2026 15:31:56 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ETZRzb5dJcGI291IV9WweFS04GZBNRoZwXtJxhaiM2/QHhrdA4XF0KtwE+OM9IOVQ7pH1Vh6/h75uRD19Dz7mefrHag7YDASWtctkRVsjIJWx2+BEDzc0U5BOIl0plULOyMSe121HyVva+ZnNL8Ldw3rldQn9IBKURdWsWz0IEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XaW+qLOr; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F31601F00A3A;
+	Thu,  2 Jul 2026 15:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783006320;
-	bh=2D8xcIiL/B53PrISjZmLTQU4Q1DqEytDTcdKmGqFAkE=;
+	s=k20260515; t=1783006324;
+	bh=jJ3DLTIlknojKBYsHiBKYugHEIBfbYTLpD95P/rrvbo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=LALP5/0ywp3OC8ZL7OzXukibmCm0vLntQpem22wvj/qnLYFf/GhUyXMV4nbaXYbd6
-	 Nim+HFnm0LYLGKoD7mK7B7sdVx14DkNlXkS/ITlXGzV1BafeBM9z9MRJgznsOQcWZD
-	 OkwDiIvT6LTjfGzPnqAv8VihxbUuuJeBMqV53b9v35oJfZUppqcV93d9OTBBNe8F/C
-	 WjcEKsRl8B3DZqnwmpEfktPn5nn6UM9pb8BQcTNC3sVTkK3IaTwHmkFwa2E/JKvIRr
-	 7URRcB/IEdzoyrNB50sKZDdtZke8s5b4JJa3gNiGXrgpR3bjuw4pgyt551nhVXk4pb
-	 aDa/EIIwoLKmg==
+	b=XaW+qLOrHSkDMzJu6XPRHmFIpYJdsCBqaciYzbaiRU3sanrl2ntlnm2T+/tI1AoFj
+	 aKbaNqItCSLp/5eKIQFZPwUXULZaKvTrXGoEt9/ysUR0Fa4U8pyXL4opAQ/wDz/RgQ
+	 M80RX2y574G+0W0rM3bU2iTRK/f5nHFrdIXZe7ANyY/dBUiYdJUtP06KsVemLe70re
+	 TGQAofhFPRrV0Ujg+0ea6JIEr4yKBoMfE5NxvrjIxuugAo2iXgR3iPw+htBwvJJVou
+	 iJWz2VH97MY5Dztk9FsFQQcAfe34YqWW8WvX2ENNDeXTG5u7GhNS7T0g+bZ4Ck6vnS
+	 D5B60OSW/o/zg==
 From: Vinod Koul <vkoul@kernel.org>
-To: Frank.Li@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
- conor+dt@kernel.org, michal.simek@amd.com, radhey.shyam.pandey@amd.com, 
- Suraj Gupta <suraj.gupta2@amd.com>
+To: Frank Li <Frank.Li@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Michal Simek <michal.simek@amd.com>, 
+ Shyam Pandey <radhey.shyam.pandey@amd.com>, 
+ Abin Joseph <abin.joseph@amd.com>, "Rob Herring (Arm)" <robh@kernel.org>
 Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260625161016.1249570-1-suraj.gupta2@amd.com>
-References: <20260625161016.1249570-1-suraj.gupta2@amd.com>
-Subject: Re: [PATCH] dt-bindings: dma: xlnx,axi-dma: Restore
- xlnx,flush-fsync as u32
-Message-Id: <178300631680.735405.5286832164780431530.b4-ty@kernel.org>
-Date: Thu, 02 Jul 2026 21:01:56 +0530
+In-Reply-To: <20260612215226.1887726-1-robh@kernel.org>
+References: <20260612215226.1887726-1-robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: dma: xilinx: Fix "xlnx,irq-delay" type
+Message-Id: <178300632060.735405.1201510775186759971.b4-ty@kernel.org>
+Date: Thu, 02 Jul 2026 21:02:00 +0530
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -78,8 +79,8 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-11976-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:Frank.Li@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:michal.simek@amd.com,m:radhey.shyam.pandey@amd.com,m:suraj.gupta2@amd.com,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-11977-lists,dmaengine=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:Frank.Li@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:michal.simek@amd.com,m:radhey.shyam.pandey@amd.com,m:abin.joseph@amd.com,m:robh@kernel.org,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
@@ -101,23 +102,24 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 934486F9734
+X-Rspamd-Queue-Id: 5A3606F9744
 
 
-On Thu, 25 Jun 2026 21:40:16 +0530, Suraj Gupta wrote:
-> The DT schema conversion incorrectly changed xlnx,flush-fsync from a u32
-> property to a boolean. The original binding documented values 1, 2, and 3
-> to select which VDMA channel(s) flush on frame sync.
-> Restore the uint32 type with the documented enum values and fix the
-> example accordingly.
+On Fri, 12 Jun 2026 16:52:25 -0500, Rob Herring (Arm) wrote:
+> "xlnx,irq-delay" programs an 8-bit delay field in the DMA control
+> register, and the driver stores and reads it as a byte. The binding
+> described the property as a uint32 cell, which made the helper type
+> check report the driver as wrong.
 > 
+> Document "xlnx,irq-delay" as uint8 so the generated schema reflects
+> the hardware field width and the existing driver access.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: dma: xlnx,axi-dma: Restore xlnx,flush-fsync as u32
-      commit: 287bdea77529e6abac5fe15461d93c1acdcb07e9
+[1/1] dt-bindings: dma: xilinx: Fix "xlnx,irq-delay" type
+      commit: fa9cb11584851414b25fd8bf9f59518424b5917c
 
 Best regards,
 -- 

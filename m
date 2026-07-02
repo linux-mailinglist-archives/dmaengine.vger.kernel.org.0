@@ -1,58 +1,60 @@
-Return-Path: <dmaengine+bounces-11962-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-11963-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id y8erEA9eRmqERwsAu9opvQ
-	(envelope-from <dmaengine+bounces-11962-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Jul 2026 14:48:15 +0200
+	id kp1wK0tcRmqqRgsAu9opvQ
+	(envelope-from <dmaengine+bounces-11963-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Jul 2026 14:40:43 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 372A86F7DEA
-	for <lists+dmaengine@lfdr.de>; Thu, 02 Jul 2026 14:48:14 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22A3E6F7BF5
+	for <lists+dmaengine@lfdr.de>; Thu, 02 Jul 2026 14:40:43 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=bootlin.com header.s=dkim header.b=qTNwRlFm;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11962-lists+dmaengine=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="dmaengine+bounces-11962-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=bootlin.com header.s=dkim header.b="ttZeE/N1";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-11963-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-11963-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=bootlin.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 2A08830086BA
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Jul 2026 12:34:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 26C8F305CAD4
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Jul 2026 12:34:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2055647F2E8;
-	Thu,  2 Jul 2026 12:34:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDB3848097B;
+	Thu,  2 Jul 2026 12:34:39 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D24478E3A;
-	Thu,  2 Jul 2026 12:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804AA47DFB6;
+	Thu,  2 Jul 2026 12:34:36 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782995678; cv=none; b=a17ZfLbRYAQOF2747QLyz63TqzsItaXGAjQLfLtopQbVlu86/e6DoBq6YOUrh+UQNTobHVpR0I35s2v0qxcxwTHwiYnjGLCmLajkYWEZfQWzjA6uyVovpbN9aFjY7rUi2iNFN8BR5lwwOYEFCAtK+PcqOGgW6i2sUsa0LZzdAuU=
+	t=1782995679; cv=none; b=VxML7IOZVQ0rl12xWBintYffls5v7b+gcokPmIEXqb2lIANSTsJSVnaARWiSypMfSwgTPV3GE0182hIxIDtardT+npM4ZnDX4iAQAsPaKs3ZOO864hv0xCMKm8yLzNTOnttOu34U9LLNHaAGakrCtOKFrGpJtdo2NXbsd1eZPKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782995678; c=relaxed/simple;
-	bh=IrZoI8l6PHELBrFIdQHIKoYJz2yoNzWMOxsvBGnZMi4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=g2rv1uyTarrlqOk9LUD1/QMb05MQjLUXAJc2qPTxpz+Y6+orEF/XW4jILisfh0AQzSOziOjpyK04D7SGcfB3QX0lGkDSeEguHM5cARRERXm8Q4RD6i9Zn53VtEiJS7aWJh3wQj1Sib4bbr55h1y7ZpMsS+CX7Xu+oZ6YCR4W+QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=qTNwRlFm; arc=none smtp.client-ip=185.246.84.56
+	s=arc-20240116; t=1782995679; c=relaxed/simple;
+	bh=JBidQyToPgq/Heh6FBQEZB0gs8rurptz/JSX5ZuMLF0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=M16Log/OQyaWWULCt3oUfgeXp3Ak9HNhnAAYNSM20uySuc+U7QEFdE/8QnRoBJGn+1V+vO0VngvMUmBbQEkCkZDKSL0gbimOae6fWEvh0X1Ilh3CBTZ7fdqx2ODX7aVAywlNNZmppY7tFMud878+6Fth4yk+PWvIn8Du14AWR+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ttZeE/N1; arc=none smtp.client-ip=185.246.84.56
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 5CC511A0DEB;
-	Thu,  2 Jul 2026 12:34:34 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 43A051A0DF0;
+	Thu,  2 Jul 2026 12:34:35 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 318D45FF03;
-	Thu,  2 Jul 2026 12:34:34 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 29009104C954F;
-	Thu,  2 Jul 2026 14:34:31 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 11D915FF03;
+	Thu,  2 Jul 2026 12:34:35 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id EA7AD104C954E;
+	Thu,  2 Jul 2026 14:34:33 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1782995673; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=teUl6Jtux4B81cS2GHb5PuK8CaN/Gdn/KAMjiXmi1/0=;
-	b=qTNwRlFmGh3W3zsgCI/6bClyEDkChdUh2RQoWx5ks4EYTUAhvzYRI5ifJcwKB8QLb981Hr
-	nf4Xvfo3c1M6iD3aEDrFlERgwf0N3f53kji0vJ+FwnJPq1YPetzOYZ3VWC7+C3JFLZmrAA
-	MgZkOdWzTBRHRZQHUAYlgB/QaxCBvvQV04bbssjVT4TrWohkauhWMfacL2gqmzS1PdyDwT
-	okjiwrzoqs6D2ZvQHStzxavmVvNh5mKm7dkJjqPxMZt7+9IW5gcdn8BS5MT03UoSPm6uNQ
-	pwNkFm6KvbLsQU4pwe9MK9TR/xxm3n4x4OpkOCvqL/kAE3hrYHV3Fqz3FtSdaA==
+	t=1782995674; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=HUM3MhDA3LMO5Vhb5PmHnSmyWsfq2kjj/K5Qlgk4b2Q=;
+	b=ttZeE/N1iFd7R6B0FQMP8KW8Y3QE7FpIHfG4mOuFcOQYnYjAgUR8vNGLTAf5s2G95nrljI
+	OECkxnh2XyIsKLUvoXseagdsqlWNMQ2w1JIs3/+r6vEWFkOMmmzS2Rf4GMKYGACIFmuPbN
+	+KjakvuWq7YVDWjgLP1tnL+hL16OyPaeV89cSfWSU5+2D8YJcWxrAzCcfT5U5ZCioGSQqZ
+	YJeKFVmPD4j/HWxZdp3Rz6zjCsud0elgGT+S1NjrvhxRIoSjQNnH6ENmz0LPnTCEwVjVwz
+	/e5/1bNTWkLADwqMylVw4Bl75xTgmW97FP9ao+2C/GqP7y5xdmiGbrAV2E+9rw==
 From: =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
-Subject: [PATCH v5 0/2] dmaengine: fsl-edma: Scatter/gather improvements
-Date: Thu, 02 Jul 2026 14:34:23 +0200
-Message-Id: <20260702-fsl-edma-dyn-sg-v5-0-16787185be49@bootlin.com>
+Date: Thu, 02 Jul 2026 14:34:24 +0200
+Subject: [PATCH v5 1/2] dmaengine: fsl-edma: Implement
+ device_prep_peripheral_dma_vec
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -61,12 +63,9 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAM9aRmoC/23QQW7DIBAF0KtErEvFAAbTVe9RZYGZcUKVmMo4q
- FHkuxenlZqKLr/0531pbizTHCmzl92NzVRijmmqoXvasXD004F4xJqZFNIILXs+5hMnPHuO14n
- nA3dGWAWkLHrJ6tXHTGP8vItv+++cL8M7hWVjtsYx5iXN1/tkga33oyvR6AW44JoEhYEkjsa8D
- iktpzg9h3Rmm1/kr9AJ0wqyCsZo5QKiBk2toB4EgFZQVXC9hx6s7dD/I+hHof1R0VXoA1l03QC
- B3F9hXdcvkhg/rIgBAAA=
-X-Change-ID: 20260428-fsl-edma-dyn-sg-960731e37da2
+Message-Id: <20260702-fsl-edma-dyn-sg-v5-1-16787185be49@bootlin.com>
+References: <20260702-fsl-edma-dyn-sg-v5-0-16787185be49@bootlin.com>
+In-Reply-To: <20260702-fsl-edma-dyn-sg-v5-0-16787185be49@bootlin.com>
 To: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>
 Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Frank Li <Frank.Li@kernel.org>, imx@lists.linux.dev, 
@@ -78,109 +77,199 @@ X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-11962-lists,dmaengine=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[bootlin.com:+];
-	FORGED_SENDER(0.00)[benoit.monin@bootlin.com,dmaengine@vger.kernel.org];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-11963-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[benoit.monin@bootlin.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS(0.00)[m:Frank.Li@nxp.com,m:vkoul@kernel.org,m:thomas.petazzoni@bootlin.com,m:Frank.Li@kernel.org,m:imx@lists.linux.dev,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:benoit.monin@bootlin.com,s:lists@lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[benoit.monin@bootlin.com,dmaengine@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	ALIAS_RESOLVED(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[8];
-	RWL_MAILSPIKE_POSSIBLE(0.00)[104.64.211.4:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,bootlin.com:url,bootlin.com:from_mime,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,nxp.com:email,msgid.link:url,vger.kernel.org:from_smtp,linux.dev:email]
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 372A86F7DEA
+X-Rspamd-Queue-Id: 22A3E6F7BF5
 
-This series adds support for scatter/gather DMA transfers via dma_vec
-and dynamic descriptor chaining to the Freescale eDMA controller driver.
+Add implementation of .device_prep_peripheral_dma_vec() callback to setup
+a scatter/gather DMA transfer from an array of dma_vec structures. Setup
+a cyclic transfer if the DMA_PREP_REPEAT flag is set.
 
-The first patch implements the .device_prep_peripheral_dma_vec() callback,
-enabling the DMA engine to accept an array of dma_vec structures. This
-callback supports both regular and cyclic transfer modes.
-
-The second patch introduces dynamic scatter/gather chaining, which allows
-multiple DMA descriptors to be linked together without stopping the channel.
-This optimization eliminates idle periods when back-to-back transfers are
-submitted, improving throughput and reducing latency. The implementation
-carefully preserves cyclic transfer semantics and respects hardware
-constraints on platforms with split register layouts.
-
-I tested it on the i.MX93. The dynamic scatter/gather chaining should
-work with other eDMA controller with split register layout.
-
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
 ---
-Changes in v5:
-- Rebased on v7.2-rc1.
-- Add a call to dma_wmb() to ensure that dlast_sga is updated
-  before csr when linking scatter/gather transactions.
-- Don't update TCD registers if updating csr requires clearing the
-  channel DONE bit to avoid a status mismatch in fsl_edma_tx_chan_handler().
-- Link to v4: https://patch.msgid.link/20260518-fsl-edma-dyn-sg-v4-0-8ce7d95b1ce9@bootlin.com
-
-Changes in v4:
-- To keep transactions in order, link DMA transaction to the end of
-  submitted list first, only lookup the issued list is the submitted
-  list is empty.
-- Link to v3: https://patch.msgid.link/20260511-fsl-edma-dyn-sg-v3-0-98a181775dae@bootlin.com
-
-Changes in v3:
-- Fix formatting errors reported by Frank Li.
-- Add fsl_edma_tx_submit() to link the DMA transactions
-  when they are submitted, not when they are prepared.
-- Link to v2: https://patch.msgid.link/20260506-fsl-edma-dyn-sg-v2-0-66439cdd414e@bootlin.com
-
-Changes in v2:
-- Drop the RFC prefix, as asked by Frank Li
-- No code change
-- Link to v1: https://patch.msgid.link/20260430-fsl-edma-dyn-sg-v1-0-4e0ecbe2df66@bootlin.com
-
-To: Frank Li <Frank.Li@nxp.com>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Frank Li <Frank.Li@kernel.org>
-Cc: imx@lists.linux.dev
-Cc: dmaengine@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-
----
-Benoît Monin (2):
-      dmaengine: fsl-edma: Implement device_prep_peripheral_dma_vec
-      dmaengine: fsl-edma: Support dynamic scatter/gather chaining
-
- drivers/dma/fsl-edma-common.c | 197 ++++++++++++++++++++++++++++++++++++++++--
- drivers/dma/fsl-edma-common.h |   4 +
+ drivers/dma/fsl-edma-common.c | 109 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/dma/fsl-edma-common.h |   4 ++
  drivers/dma/fsl-edma-main.c   |   2 +
- drivers/dma/fsl-edma-trace.h  |   5 ++
- 4 files changed, 202 insertions(+), 6 deletions(-)
----
-base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
-change-id: 20260428-fsl-edma-dyn-sg-960731e37da2
+ 3 files changed, 115 insertions(+)
 
-Best regards,
---  
-Benoît Monin, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index bb7531c456df..c10190164926 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -673,6 +673,115 @@ struct dma_async_tx_descriptor *fsl_edma_prep_dma_cyclic(
+ 	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
+ }
+ 
++struct dma_async_tx_descriptor *
++fsl_edma_prep_peripheral_dma_vec(struct dma_chan *chan, const struct dma_vec *vecs,
++				 size_t nb, enum dma_transfer_direction direction,
++				 unsigned long flags)
++{
++	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
++	dma_addr_t src_addr, dst_addr, last_sg;
++	struct fsl_edma_desc *fsl_desc;
++	u16 soff, doff, iter;
++	u32 nbytes;
++	int i;
++
++	if (!is_slave_direction(direction))
++		return NULL;
++
++	if (!fsl_edma_prep_slave_dma(fsl_chan, direction))
++		return NULL;
++
++	fsl_desc = fsl_edma_alloc_desc(fsl_chan, nb);
++	if (!fsl_desc)
++		return NULL;
++	fsl_desc->iscyclic = flags & DMA_PREP_REPEAT;
++	fsl_desc->dirn = direction;
++
++	if (direction == DMA_MEM_TO_DEV) {
++		if (!fsl_chan->cfg.src_addr_width)
++			fsl_chan->cfg.src_addr_width = fsl_chan->cfg.dst_addr_width;
++		fsl_chan->attr =
++			fsl_edma_get_tcd_attr(fsl_chan->cfg.src_addr_width,
++					      fsl_chan->cfg.dst_addr_width);
++		nbytes = fsl_chan->cfg.dst_addr_width * fsl_chan->cfg.dst_maxburst;
++	} else {
++		if (!fsl_chan->cfg.dst_addr_width)
++			fsl_chan->cfg.dst_addr_width = fsl_chan->cfg.src_addr_width;
++		fsl_chan->attr =
++			fsl_edma_get_tcd_attr(fsl_chan->cfg.src_addr_width,
++					      fsl_chan->cfg.dst_addr_width);
++		nbytes = fsl_chan->cfg.src_addr_width * fsl_chan->cfg.src_maxburst;
++	}
++
++	for (i = 0; i < nb; i++) {
++		if (direction == DMA_MEM_TO_DEV) {
++			src_addr = vecs[i].addr;
++			dst_addr = fsl_chan->dma_dev_addr;
++			soff = fsl_chan->cfg.dst_addr_width;
++			doff = 0;
++		} else if (direction == DMA_DEV_TO_MEM) {
++			src_addr = fsl_chan->dma_dev_addr;
++			dst_addr = vecs[i].addr;
++			soff = 0;
++			doff = fsl_chan->cfg.src_addr_width;
++		} else {
++			/* DMA_DEV_TO_DEV */
++			src_addr = fsl_chan->cfg.src_addr;
++			dst_addr = fsl_chan->cfg.dst_addr;
++			soff = 0;
++			doff = 0;
++		}
++
++		/*
++		 * Choose the suitable burst length if dma_vec length is not
++		 * multiple of burst length so that the whole transfer length is
++		 * multiple of minor loop(burst length).
++		 */
++		if (vecs[i].len % nbytes) {
++			u32 width = (direction == DMA_DEV_TO_MEM) ? doff : soff;
++			u32 burst = (direction == DMA_DEV_TO_MEM) ?
++						fsl_chan->cfg.src_maxburst :
++						fsl_chan->cfg.dst_maxburst;
++			int j;
++
++			for (j = burst; j > 1; j--) {
++				if (!(vecs[i].len % (j * width))) {
++					nbytes = j * width;
++					break;
++				}
++			}
++			/* Set burst size as 1 if there's no suitable one */
++			if (j == 1)
++				nbytes = width;
++		}
++
++		iter = vecs[i].len / nbytes;
++		if (i < nb - 1) {
++			last_sg = fsl_desc->tcd[(i + 1)].ptcd;
++			fsl_edma_fill_tcd(fsl_chan, fsl_desc->tcd[i].vtcd, src_addr,
++					  dst_addr, fsl_chan->attr, soff,
++					  nbytes, 0, iter, iter, doff, last_sg,
++					  false, false, true);
++		} else {
++			if (fsl_desc->iscyclic) {
++				last_sg = fsl_desc->tcd[0].ptcd;
++				fsl_edma_fill_tcd(fsl_chan, fsl_desc->tcd[i].vtcd, src_addr,
++						  dst_addr, fsl_chan->attr, soff,
++						  nbytes, 0, iter, iter, doff, last_sg,
++						  true, false, true);
++			} else {
++				last_sg = 0;
++				fsl_edma_fill_tcd(fsl_chan, fsl_desc->tcd[i].vtcd, src_addr,
++						  dst_addr, fsl_chan->attr, soff,
++						  nbytes, 0, iter, iter, doff, last_sg,
++						  true, true, false);
++			}
++		}
++	}
++
++	return vchan_tx_prep(&fsl_chan->vchan, &fsl_desc->vdesc, flags);
++}
++
+ struct dma_async_tx_descriptor *fsl_edma_prep_slave_sg(
+ 		struct dma_chan *chan, struct scatterlist *sgl,
+ 		unsigned int sg_len, enum dma_transfer_direction direction,
+diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+index 205a96489094..0d028048701d 100644
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -496,6 +496,10 @@ struct dma_async_tx_descriptor *fsl_edma_prep_dma_cyclic(
+ 		struct dma_chan *chan, dma_addr_t dma_addr, size_t buf_len,
+ 		size_t period_len, enum dma_transfer_direction direction,
+ 		unsigned long flags);
++struct dma_async_tx_descriptor *fsl_edma_prep_peripheral_dma_vec(
++		struct dma_chan *chan, const struct dma_vec *vecs,
++		size_t nb, enum dma_transfer_direction direction,
++		unsigned long flags);
+ struct dma_async_tx_descriptor *fsl_edma_prep_slave_sg(
+ 		struct dma_chan *chan, struct scatterlist *sgl,
+ 		unsigned int sg_len, enum dma_transfer_direction direction,
+diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
+index 36155ab1602a..6693b4270a1a 100644
+--- a/drivers/dma/fsl-edma-main.c
++++ b/drivers/dma/fsl-edma-main.c
+@@ -841,6 +841,8 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 	fsl_edma->dma_dev.device_free_chan_resources
+ 		= fsl_edma_free_chan_resources;
+ 	fsl_edma->dma_dev.device_tx_status = fsl_edma_tx_status;
++	fsl_edma->dma_dev.device_prep_peripheral_dma_vec
++		= fsl_edma_prep_peripheral_dma_vec;
+ 	fsl_edma->dma_dev.device_prep_slave_sg = fsl_edma_prep_slave_sg;
+ 	fsl_edma->dma_dev.device_prep_dma_cyclic = fsl_edma_prep_dma_cyclic;
+ 	fsl_edma->dma_dev.device_prep_dma_memcpy = fsl_edma_prep_memcpy;
+
+-- 
+2.54.0
 
 

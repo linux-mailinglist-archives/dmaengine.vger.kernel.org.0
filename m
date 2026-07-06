@@ -1,227 +1,211 @@
-Return-Path: <dmaengine+bounces-12035-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12036-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id d3DzJAETS2qGLgEAu9opvQ
-	(envelope-from <dmaengine+bounces-12035-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 06 Jul 2026 04:29:21 +0200
+	id 0t2UDSMbS2r1LwEAu9opvQ
+	(envelope-from <dmaengine+bounces-12036-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 06 Jul 2026 05:04:03 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0DED70C1E8
-	for <lists+dmaengine@lfdr.de>; Mon, 06 Jul 2026 04:29:20 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B07670C40C
+	for <lists+dmaengine@lfdr.de>; Mon, 06 Jul 2026 05:04:02 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=altera.com header.s=selector2 header.b=Wfw7wJ0Y;
-	dmarc=pass (policy=reject) header.from=altera.com;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12035-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12035-lists+dmaengine=lfdr.de@vger.kernel.org";
-	arc=reject ("cv is fail on i=2")
+	dkim=none;
+	dmarc=none;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12036-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-12036-lists+dmaengine=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 798F430057B7
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Jul 2026 02:29:19 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7586630062E5
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Jul 2026 03:04:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0A7837D11F;
-	Mon,  6 Jul 2026 02:29:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E2AE3009E1;
+	Mon,  6 Jul 2026 03:04:00 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012021.outbound.protection.outlook.com [40.107.200.21])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D6A1A262D;
-	Mon,  6 Jul 2026 02:29:17 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783304958; cv=fail; b=gYEVQWBysAPh8p8631blBhpgTHoTCarBw+YyYfSZwmLUk217EVWVbS0glSrhVYdvpo2/N1ch70RzfzfXcX1xW8+W+agnyaRLpIGxWU3sGvsQIqbn6hWxNACESvaBZD8NdGC1P2Lhh406rw+fYZ7hIStBv4CAmMhrxMZ7hS6r9Vg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783304958; c=relaxed/simple;
-	bh=xEXoMog9vowiYOaTLJo3GCwlCHCRn6VlITMtX4avdC4=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=jF/tlB0MQiPmIu7SeRVqWL8oCPQPej117gNB9IGj6D33ktXLgaLsqlUF7b+s1uixaagL4yLG5avLLdwYKmbbFeTsO0AkCrjG4nb5cuDjO6GinjSBhajZnJmUgY8eZNc+ekN4MNJQCFWeIbTzgMOiFNftHJlWX3Tcm47k5QcVJ+0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=Wfw7wJ0Y; arc=fail smtp.client-ip=40.107.200.21
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=J5I/0vPHtQlBVH+PzZURip3WIkKgDjyg2zU80ZTibPmcVHDbUuZrBC1UR+epMmobwwRrnnpJCdHb6HeVuDmL8AaGMdVl7PvhZ2Jmd5bbzVLY6u77DoHkG0xasVN7QMYOyI9S66WgTVVYfdm+VUzSqOnWsUqFbLhHRlLmfS08TxYgdXXHIaPbkNzmY3G9gnEXnZi+UjcJr4chLxb7I+ojnliILfyPyVmy4i/N5nwfoeFJodJVR7Z8JtwEZhZ4iK0JnZLSpYmW0xIypDisOkESKcQ7UWGxvoWv5HZ0Nv+exweVebxtI+kmqQYPEKp+dBpEVpz73XBquEHoq32TWoNV0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9AKfjS3BNRocHTeNoBB73sKtai1Xdd6kP7O1yT/Jhss=;
- b=sKKSA42K8XMIeze5rXAAKe7wmmdgsXVOiqlFSrNT6dfnNt1mJa7A/o0mi82SO0GkHj9ZyyxILxzuF80R0rHf17zQQPd/h1Yf6rVGidR7aFiWRTYyvEdf+4mxnP8jDlqO4pvi1OFwmsgXVxyaC7u3lDv8CktH3g6j1cfGDBt1kYeLilgduWhKLOeVyqrAeItcg2byl9sscZ+SadBfLFLNO5F7E4UoH3xyv7IodlnOlJK1rKrHl8hAaT2/kFvwUhm3HIAqng3JmjdyLQu0S9XipEF4LaWklEBX/38Y+7VeV60eu5V2dJhxBIprqmQ/eeg97UoQthMXIId6MdPB3SDjrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9AKfjS3BNRocHTeNoBB73sKtai1Xdd6kP7O1yT/Jhss=;
- b=Wfw7wJ0YUYIOgNvE7waUNtvoxPwzriH5IvCXtRyskfrQqhk2K/6KrC5YcmR9CrqL5t1f3lBrR+jZotladKZJVBuhDmiTbMK0lvS6wsUmqG1kke6XpRKKxdeBirfCK0JIz5HST82zju9dD0wJFZCjtY8bmhIYh/SYyrDoLK2sU0lHCSJ4bqQQPKlECJu3lecAoa3dyGCkUthpyEE9OVoLHuzX06O/979jSg0y3V/O3+Zw3rZEBE4ucPh3Wi/LQD0BlGHb9hiASPbB34+b/XLAAiBVpQ79TyY9xF6kX+ZD4BtlayEAZIyh+pn6CohW4SR8TOP2tIiemqPnqVovcRnlpQ==
-Received: from DM8PR03MB6230.namprd03.prod.outlook.com (2603:10b6:8:3c::13) by
- MN2PR03MB5360.namprd03.prod.outlook.com (2603:10b6:208:1e9::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.13; Mon, 6 Jul
- 2026 02:29:13 +0000
-Received: from DM8PR03MB6230.namprd03.prod.outlook.com
- ([fe80::abad:9d80:7a13:9542]) by DM8PR03MB6230.namprd03.prod.outlook.com
- ([fe80::abad:9d80:7a13:9542%3]) with mapi id 15.21.0181.012; Mon, 6 Jul 2026
- 02:29:13 +0000
-From: Adrian Ng Ho Yin <adrian.ho.yin.ng@altera.com>
-To: Olivier Dautricourt <olivierdautricourt@gmail.com>,
-	Stefan Roese <sr@denx.de>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Adrian Ng Ho Yin <adrian.ho.yin.ng@altera.com>
-Subject: [PATCH v2] MAINTAINERS: replace maintainer for Altera mSGDMA driver
-Date: Mon,  6 Jul 2026 10:23:11 +0800
-Message-ID: <addaf51275355667045ec300fc8d725e2e273807.1782911845.git.adrian.ho.yin.ng@altera.com>
-X-Mailer: git-send-email 2.49.GIT
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0092.namprd03.prod.outlook.com
- (2603:10b6:a03:333::7) To DM8PR03MB6230.namprd03.prod.outlook.com
- (2603:10b6:8:3c::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120DE13E41A;
+	Mon,  6 Jul 2026 03:03:57 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783307040; cv=none; b=ugPNirj79jhy/9CdG/gt4aNwXFJ47Cfdf3bg4LGmU3/Ljd+rjqUkg81QkQKC5Sm4elDMM7a4/P41PKgJFzgyjpZWjfSFySSuUlSfc9Srw5tFNhtTAaqdrpy1oUPwyH1TyxUzODNCT1PZEhQK/VKtrwOYls14IWBwIrMjx4A9Vdo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783307040; c=relaxed/simple;
+	bh=Y4L5hmoSOf+8VeYtGQ1HCOmRi9A3f3riRL86mRsle7Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f8GzdZlIxRvw/0V/EmhMiOwb0Grduc/xwL9WI5CnjG4LDrrzZSJOgePZSbfZHkcLGqp55kOtX8Ixgch8Sa4abO14wXyookQkW5MuXUBVf4fxJ/oKz5j+AaKVJ1BBGHWo5o3Tfke/g0NV1BNEX980lUmz3sz+JdVUStELiH7e5YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+X-UUID: 5213dc4278e711f1aa26b74ffac11d73-20260706
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:9fc9bb35-8aa5-4db3-b7c1-9c1112277b5f,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:e7bac3a,CLOUDID:8be11dd4efe86fb9ab476a1e2276960f,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|865|898,TC:nil,Content:0|15|50,E
+	DM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA
+	:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 5213dc4278e711f1aa26b74ffac11d73-20260706
+X-User: zenghongling@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <zenghongling@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 674881238; Mon, 06 Jul 2026 11:03:53 +0800
+From: Hongling Zeng <zenghongling@kylinos.cn>
+To: vkoul@kernel.org,
+	Frank.Li@kernel.org,
+	wens@kernel.org,
+	jernej.skrabec@gmail.com,
+	samuel@sholland.org,
+	mripard@kernel.org,
+	arnd@arndb.de
+Cc: dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	zhongling0719@126.com,
+	Hongling Zeng <zenghongling@kylinos.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] dmaengine: sun6i: Fix potential deadlock on sdev->lock
+Date: Mon,  6 Jul 2026 11:03:47 +0800
+Message-Id: <20260706030347.22730-1-zenghongling@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM8PR03MB6230:EE_|MN2PR03MB5360:EE_
-X-MS-Office365-Filtering-Correlation-Id: e5c8b978-75f5-4cf7-6343-08dedb065e3f
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|7416014|921020|55112099003|3023799007|56012099006|11063799006|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	cMJd4X6BlUsjTaURVKK01z16OGbUtAG/LQZ7YoEXBJjCD19ZRMTEU8zHzVtu0BDmh+IxxMVW+gqkZ5/V0j8zNPlqEGILbr+F/+m2mScWEMNYB05z6qL10wNuQNqkhs3Ewn3g7bOR/81OOVscoNPhWIEJWcRor2zaSNnz8lHSyxCPlh35FZPqiMxql67eh9KwE7USBmMgYsDHT6iVW4BAVnVKTp3skvycULa6p+Lu9M2ZmC9fkAmr6/7aBecIvzU873b8NVtixInADzYc6/uiic0pv8QFcowSstlwIHMnxjFPcIJfemOhXqLYnMDK8fDVpVZB6GcCVORFTdHA9nghx8hzdtIeQVatVEdvssUdItWj25Sqq0uE8Xx51ssTgQVmde9W1VC4GbgpN6jVTzpmzcFzlcZboLoKGH6A5i2j4wGNbPD/E5vmW6a3Md0ByEqQjlF8PV8mkxxwVyEkQ0Cf0hSNdN01DAV4+seH4d5bcWef5+uB1g7vTHV4spZlZxKbjLrsOLNBXgp/aHg8LuHRnMQKyplQB0m5dN2yuT1/HMJ2r/C6D6TIeIAZX/E1uAicR9dR1L9f75eSWZWFslAJ1mHocxPs+kAlLzFZtc/tYlB/Rk9hGKkWbt8eTVAOXZn3fqsBa0rBtVWbTUecLsOF8blMELw/ul9F0AqAI83aaskYR+yk09RYsj5CEldUHBfCyWkVkubxPRYwUWnTDF1tmQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR03MB6230.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(7416014)(921020)(55112099003)(3023799007)(56012099006)(11063799006)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vudeVdsmUanyZQlwMYQOaSMKv4o+hI4XFE8IO9Bd9GHg6H0HKNNgpTz5yqkZ?=
- =?us-ascii?Q?bzPyQNQ3inO+qQ9VQIAVQyVDwdvn5BVjWHLWBdxQyKwvaxIeYZ4RiG4DouHC?=
- =?us-ascii?Q?FMtVhuvqpObjhHvbzQE0+rcQLfJ7KkeBsujHwI9NE7512JyXD0dm+VF2QvDp?=
- =?us-ascii?Q?KIeMAZClyvsvF6XB5BaaXwr6rhSxAVsxB9+oTCerp3BXjUCWgoAyMtLYkdEa?=
- =?us-ascii?Q?IPwNsq2VG8zKuVx4NUwG9Kg46JzV3CyPApl9LXGTjaS+/mXep/IkQa2GSJQV?=
- =?us-ascii?Q?iaaQgnRSo169RI0C56FdgoCVuC/p0a+26GZaHRZZ8YEkMjaYCjazojowWj4k?=
- =?us-ascii?Q?5bEHRkBqsGWhgVLYGTizL9gkW0TD7/SVdZasfu2TYTOj+FWP63jDy8Mhrt9N?=
- =?us-ascii?Q?h+3gEYJ4llW2ipiYIBQFAuYg7Gy+HJH6XvAdv8EdDzq76XLbqw7e3kK+WWWC?=
- =?us-ascii?Q?LmOGnEvagF5Gf95iXugGyoMkDVam9NFkthE+ch3AQA2fLxPfUf2zu953f5dY?=
- =?us-ascii?Q?9dJlyFK7fdWkdvd7cgX1JrogIxwhjm07TzqpQr1cm7YEz3u+R+3nDOAJgLK2?=
- =?us-ascii?Q?KUFqaNHtdws6ryVHZPhclKst3BZzjMDw4H6NVPySOfLLm1MVEdQKuQEsOsu4?=
- =?us-ascii?Q?PSKbVXEGKrKhjKZSmbxGJSb5ZDkDqR/FS1f7ZsJLAXyP6mSLKVI87x8BKaHz?=
- =?us-ascii?Q?mF3Fl/F8ihQBHl1pI7Vz0zcucSmsp06zPAvdRtI3JntHNovQME58bFg7Z74/?=
- =?us-ascii?Q?ID6jlrjOCU4oJJugY/1WuLJtJiLpqwjQPpEgg23+JPBSV7RiI8LRfyXiWG5c?=
- =?us-ascii?Q?0jXxfTZYhvEAEwaAymjXu55yZBKtEy2FetC0aKzVydU90qOd7volc7wDUpS+?=
- =?us-ascii?Q?y9bGjQqEGplresBoou4OwMbO1kcfHitMJaGVzU4Ti7stRtHIqdWlkyUtM+Wb?=
- =?us-ascii?Q?2FtX+E33I9De5v4Fb0Lnj91ohYyaO44mMJMh7ORccOHOelAOAlNZhj4R0zkH?=
- =?us-ascii?Q?FBtcDzpdOabU35Mp5jH7Kr8eS1EGVSYCPqTIJxlHRO+O74cu4OEorj+CtfLo?=
- =?us-ascii?Q?M3S9ZRM3jbaQBVsFwF8u7CIvKSVwR1ZACoIjZPt5+StBM25JQlvNVpeGxmEH?=
- =?us-ascii?Q?797Bd6Pgh/PgJ4DsfZ2nek4WetraB7zVEhYWitnIxYa49YFcpxU13SEZBJ0g?=
- =?us-ascii?Q?SJPFTeL5vKQeO9uST7wWYf8e/zrP+7m4O68gB0Jb0cbpQ/upi4jivtZZbR5G?=
- =?us-ascii?Q?zkqbW0H04q/nVsYA0igo5/p4Dt/U1I6OEqyObRbADdE6QNvBb8r7svW2ilKc?=
- =?us-ascii?Q?ONv0NMn5CBr4gfWN/lBEr77vUe0YSdpnjbrjdb3+WZbeuQoMqsHfRhUJsY02?=
- =?us-ascii?Q?W58dNQAY0bEBxQ1iP9iLc3stSddvLEDwS2PbT0+7ZiE6fV4hg4mmz9KQFT5Q?=
- =?us-ascii?Q?G4w557zqu4WzQxBYpdVd8y/kSZUhDWvMg72sipcwGw7Q91R+eRfhCMOWCF7x?=
- =?us-ascii?Q?mjoI4otB5Iw1nOG04ZJT1dXRbWi0NmbWij7kWFmo/sNCPHU7KwrQrB0Cj7Zq?=
- =?us-ascii?Q?9r7EqMkh3kIxpqY0GMkV2K41TdYY5Ba0fadqFroCElmjNCt6iIebDhKyg2RY?=
- =?us-ascii?Q?KxwW/V1K3oE2NbSOQlp66C40Y9HXabhJDgik9z+y4d0HXStCgYVKu2VDUa4H?=
- =?us-ascii?Q?QfJUabec8B7gNiHTRyuWeJIlPgVMebRG0JO2FHTL04hmWiTBcCeM8H4oWCRL?=
- =?us-ascii?Q?Y8NSTRMgdBZ8EPnHgdcyKoAjpTvABbk=3D?=
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5c8b978-75f5-4cf7-6343-08dedb065e3f
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR03MB6230.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2026 02:29:13.4143
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DepFDJIwcyZRr6bocvsS0b9MMcvxp6RdxEKJwj/RAa2h0dlHLwRkQhU3shDsL4mlouqlVknZi6QRKEk0s25wGusPckyqnektlazRAjukKVk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR03MB5360
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [2.84 / 15.00];
+X-Spamd-Result: default: False [1.54 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[altera.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[altera.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com,denx.de,kernel.org,vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	DMARC_NA(0.00)[kylinos.cn];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[adrian.ho.yin.ng@altera.com,dmaengine@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-12035-lists,dmaengine=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:samuel@sholland.org,m:mripard@kernel.org,m:arnd@arndb.de,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:zhongling0719@126.com,m:zenghongling@kylinos.cn,m:stable@vger.kernel.org,m:jernejskrabec@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[zenghongling@kylinos.cn,dmaengine@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,sholland.org,arndb.de];
+	TAGGED_FROM(0.00)[bounces-12036-lists,dmaengine=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:olivierdautricourt@gmail.com,m:sr@denx.de,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:adrian.ho.yin.ng@altera.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[adrian.ho.yin.ng@altera.com,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[zenghongling@kylinos.cn,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[altera.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,126.com,kylinos.cn];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
+	TAGGED_RCPT(0.00)[dmaengine];
+	R_DKIM_NA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,denx.de:email]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,kylinos.cn:from_mime,kylinos.cn:email,kylinos.cn:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C0DED70C1E8
+X-Rspamd-Queue-Id: 8B07670C40C
 
-Olivier Dautricourt has stepped down as maintainer of the Altera
-msgDMA driver as he no longer has access to the hardware. Replace him
-with Adrian Ng Ho Yin as the new maintainer and update the status
-from "Odd Fixes" to "Maintained".
+sun6i_dma_terminate_all() and sun6i_dma_pause() acquire sdev->lock
+with plain spin_lock() from process context. If a DMA interrupt fires
+on the same CPU while the lock is held, the interrupt handler schedules
+sun6i_dma_tasklet(), which runs in softirq context and attempts to
+acquire the same lock with spin_lock_irq(), causing a deadlock.
 
-Signed-off-by: Adrian Ng Ho Yin <adrian.ho.yin.ng@altera.com>
+Fix by using spin_lock_irq() to disable interrupts while holding
+sdev->lock, consistent with other call sites.
+
+Fixes: ba489fd46ab6 ("dmaengine: sun6i: Add support for Allwinner A31 DMA controller")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
+
 ---
-Changes in v2:
-- Rename subject to be more descriptive
-- Add MAINTAINERS file update (was missing in v1)
+Change in v2:
+ -Fix by using spin_lock_irqsave() and spin_unlock_irqrestore() to
+  disable interrupts while holding sdev->lock and properly save/restore
+  interrupt state.
+ -Fix inconsistent locking pattern in sun6i_dma_resume() and
+  sun6i_dma_issue_pending().
+---
+ drivers/dma/sun6i-dma.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
- Documentation/devicetree/bindings/dma/altr,msgdma.yaml | 2 +-
- MAINTAINERS                                            | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/altr,msgdma.yaml b/Documentation/devicetree/bindings/dma/altr,msgdma.yaml
-index 391bf5838602..bea302b89453 100644
---- a/Documentation/devicetree/bindings/dma/altr,msgdma.yaml
-+++ b/Documentation/devicetree/bindings/dma/altr,msgdma.yaml
-@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Altera mSGDMA IP core
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index a9a254dbf8cb..742a0822a8da 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -891,6 +891,7 @@ static int sun6i_dma_pause(struct dma_chan *chan)
+ 	struct sun6i_dma_dev *sdev = to_sun6i_dma_dev(chan->device);
+ 	struct sun6i_vchan *vchan = to_sun6i_vchan(chan);
+ 	struct sun6i_pchan *pchan = vchan->phy;
++	unsigned long flags;
  
- maintainers:
--  - Olivier Dautricourt <olivierdautricourt@gmail.com>
-+  - Adrian Ng Ho Yin <adrian.ho.yin.ng@altera.com>
+ 	dev_dbg(chan2dev(chan), "vchan %p: pause\n", &vchan->vc);
  
- description: |
-   Altera / Intel modular Scatter-Gather Direct Memory Access (mSGDMA)
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 15011f5752a9..4d294df29a0d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -952,10 +952,10 @@ S:	Maintained
- F:	drivers/mailbox/mailbox-altera.c
+@@ -898,9 +899,9 @@ static int sun6i_dma_pause(struct dma_chan *chan)
+ 		writel(DMA_CHAN_PAUSE_PAUSE,
+ 		       pchan->base + DMA_CHAN_PAUSE);
+ 	} else {
+-		spin_lock(&sdev->lock);
++		spin_lock_irqsave(&sdev->lock, flags);
+ 		list_del_init(&vchan->node);
+-		spin_unlock(&sdev->lock);
++		spin_unlock_irqrestore(&sdev->lock, flags);
+ 	}
  
- ALTERA MSGDMA IP CORE DRIVER
--M:	Olivier Dautricourt <olivierdautricourt@gmail.com>
-+M:	Adrian Ng Ho Yin <adrian.ho.yin.ng@altera.com>
- R:	Stefan Roese <sr@denx.de>
- L:	dmaengine@vger.kernel.org
--S:	Odd Fixes
-+S:	Maintained
- F:	Documentation/devicetree/bindings/dma/altr,msgdma.yaml
- F:	drivers/dma/altera-msgdma.c
+ 	return 0;
+@@ -921,9 +922,9 @@ static int sun6i_dma_resume(struct dma_chan *chan)
+ 		writel(DMA_CHAN_PAUSE_RESUME,
+ 		       pchan->base + DMA_CHAN_PAUSE);
+ 	} else if (!list_empty(&vchan->vc.desc_issued)) {
+-		spin_lock(&sdev->lock);
++		spin_lock_irq(&sdev->lock);
+ 		list_add_tail(&vchan->node, &sdev->pending);
+-		spin_unlock(&sdev->lock);
++		spin_unlock_irq(&sdev->lock);
+ 	}
  
+ 	spin_unlock_irqrestore(&vchan->vc.lock, flags);
+@@ -939,9 +940,9 @@ static int sun6i_dma_terminate_all(struct dma_chan *chan)
+ 	unsigned long flags;
+ 	LIST_HEAD(head);
+ 
+-	spin_lock(&sdev->lock);
++	spin_lock_irqsave(&sdev->lock, flags);
+ 	list_del_init(&vchan->node);
+-	spin_unlock(&sdev->lock);
++	spin_unlock_irqrestore(&sdev->lock, flags);
+ 
+ 	spin_lock_irqsave(&vchan->vc.lock, flags);
+ 
+@@ -1021,7 +1022,7 @@ static void sun6i_dma_issue_pending(struct dma_chan *chan)
+ 	spin_lock_irqsave(&vchan->vc.lock, flags);
+ 
+ 	if (vchan_issue_pending(&vchan->vc)) {
+-		spin_lock(&sdev->lock);
++		spin_lock_irq(&sdev->lock);
+ 
+ 		if (!vchan->phy && list_empty(&vchan->node)) {
+ 			list_add_tail(&vchan->node, &sdev->pending);
+@@ -1030,7 +1031,7 @@ static void sun6i_dma_issue_pending(struct dma_chan *chan)
+ 				&vchan->vc);
+ 		}
+ 
+-		spin_unlock(&sdev->lock);
++		spin_unlock_irq(&sdev->lock);
+ 	} else {
+ 		dev_dbg(chan2dev(chan), "vchan %p: nothing to issue\n",
+ 			&vchan->vc);
 -- 
-2.49.GIT
+2.25.1
 
 

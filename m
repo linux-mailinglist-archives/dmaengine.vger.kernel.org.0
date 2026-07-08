@@ -1,41 +1,42 @@
-Return-Path: <dmaengine+bounces-12086-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12087-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id UpnyKZq1TWpM9QEAu9opvQ
-	(envelope-from <dmaengine+bounces-12086-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 04:27:38 +0200
+	id u8CQHYS2TWp39QEAu9opvQ
+	(envelope-from <dmaengine+bounces-12087-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 04:31:32 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0461B72124B
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 04:27:38 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE16F7212B8
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 04:31:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
 	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12086-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12086-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12087-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12087-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7A49A3005765
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 02:24:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A40B630086C9
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 02:30:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A65CF3B71D8;
-	Wed,  8 Jul 2026 02:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9303AEF27;
+	Wed,  8 Jul 2026 02:30:49 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8242C3B71B9;
-	Wed,  8 Jul 2026 02:24:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A4EFBE1;
+	Wed,  8 Jul 2026 02:30:46 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783477457; cv=none; b=Xg2j9Xxy4OvGpex3r7OvTFluvnCNEEJ79mA9M9c/4fn8OSOCJwhcfHJNcYsQ7/aW+irryczePAHFP6ivUTXnGrHwFLUGVdXHdbiCtS27wROEJWPz2rvSUqR3Z9p5uhfMFJH4gWwmF9uQR9rNsdno5vo6aO3OpcO2McVQrEjZNjc=
+	t=1783477849; cv=none; b=djrw/uhnqARqAiMC3yAJVfu31Mxic37idnHn0MiO7qBTp9prvUom+MZuLm2lcsT5eWb6YXAUKSl0jNFKjzI4IHaeZgVvrSfjAGpZbXUvUUQKXYg5J667pgkVLsrXUovWgcHsbnEXYe/SBWFA4O/+7MnJL7UySUjLVHEr3aUnmEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783477457; c=relaxed/simple;
-	bh=wfVFv0bNzDblC3SMNUYlrzPJzSbbt33IPdLhPVpNZw0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MGn597PY6XbqjlldLfq1cZydFGD4a4RhjPAmVCPXuVFCS15tcR5mdb+UOJfX6E8zmBDTWcGSB7fyPVLW3KKYCTZRq616KjfWUM/zhJTv/kFy9WGDuzjUeyRHQVhbrZwyxaxSrAO3PJMUJ1HV1nSIzwIKC8eESU9WAGWHNWawo+U=
+	s=arc-20240116; t=1783477849; c=relaxed/simple;
+	bh=lVp4HAArxHxSzWhO9l5kt8p+axmt969YhwVfWgKBJ5Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=hfAxk5vZjFWdRAlRJVe6AvAb5L8AZHlOzsr6PrjYfPRpFSMUSNypc+8jzcj3dR/bdVRjSi20PgSPCJ2vOP6qLgyhKjKkxs+onNkAlDVEJQf9HN8xTxSeTfSs6vjDxUIwh0MIsptAPlXdK2hpPJN97pK8JEZBRogv+0cCU9iVxLM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-X-UUID: 1a11ce747a7411f1aa26b74ffac11d73-20260708
+X-UUID: 0339606c7a7511f1aa26b74ffac11d73-20260708
+X-CID-CACHE: Type:Local,Time:202607081024+08,HitQuantity:1
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:75f2159b-f1ed-4197-b1ed-9480fa961543,IP:0,U
+X-CID-O-INFO: VERSION:1.3.12,REQID:1131fd70-43aa-4918-b9a8-07342c716345,IP:0,U
 	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
 	N:release,TS:-25
 X-CID-META: VersionHash:e7bac3a,CLOUDID:7c4e6afa9f7765c382247de88d565009,BulkI
@@ -46,12 +47,12 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 1a11ce747a7411f1aa26b74ffac11d73-20260708
+X-UUID: 0339606c7a7511f1aa26b74ffac11d73-20260708
 X-User: zenghongling@kylinos.cn
 Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <zenghongling@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1093959199; Wed, 08 Jul 2026 10:24:09 +0800
+	with ESMTP id 398146661; Wed, 08 Jul 2026 10:30:40 +0800
 From: Hongling Zeng <zenghongling@kylinos.cn>
 To: ludovic.desroches@microchip.com,
 	vkoul@kernel.org,
@@ -65,8 +66,8 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	Hongling Zeng <zenghongling@kylinos.cn>,
 	sashiko-bot@kernel.org
 Subject: [PATCH v3] dma: at_hdmac: Fix use-after-free by proper tasklet  cleanup
-Date: Wed,  8 Jul 2026 10:24:05 +0800
-Message-Id: <20260708022405.24266-1-zenghongling@kylinos.cn>
+Date: Wed,  8 Jul 2026 10:30:35 +0800
+Message-Id: <20260708023035.27194-1-zenghongling@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -80,15 +81,15 @@ X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-0.46 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12086-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12087-lists,dmaengine=lfdr.de];
 	DMARC_NA(0.00)[kylinos.cn];
-	FORGED_RECIPIENTS(0.00)[m:ludovic.desroches@microchip.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:tudor.ambarus@linaro.org,m:nicolas.ferre@microchip.com,m:linux-arm-kernel@lists.infradead.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:zhongling0719@126.com,m:zenghongling@kylinos.cn,m:sashiko-bot@kernel.org,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:ludovic.desroches@microchip.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:tudor.ambarus@linaro.org,m:nicolas.ferre@microchip.com,m:linux-arm-kernel@lists.infradead.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:zhongling0719@126.com,m:zenghongling@kylinos.cn,m:sashiko-bot@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,126.com,kylinos.cn,kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -104,11 +105,11 @@ X-Spamd-Result: default: False [-0.46 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	R_DKIM_NA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,kylinos.cn:from_mime,kylinos.cn:email,kylinos.cn:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,channels.next:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0461B72124B
+X-Rspamd-Queue-Id: BE16F7212B8
 
 Current cleanup paths have a use-after-free vulnerability:
 - vchan_init() creates tasklets that access at_dma_chan memory
@@ -129,15 +130,18 @@ Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
 
 ---
 Change in v2:
-- Fix NULL pointer dereference in probe error path by checking if channels                                                                       list is initialized before cleanup
+- Fix NULL pointer dereference in probe error path by checking if channels
+  list is initialized before cleanup
 - Fix race condition by calling free_irq() before tasklet_kill() to ensure
   IRQ handlers cannot reschedule tasklets after cleanup
 ---
 Change in v3:
-- Reorder probe error path to match remove() cleanup order
-- Keep defensive NULL check for channels cleanup
-- Remove unused variables in at_dma_remove()
-- Ensure consistent order: free_irq → cleanup_channels → dma_pool_destroy
+- Fix double free_irq() in probe error path by using goto to skip
+  lower error labels after upper cleanup handles IRQ and channels
+- Fix double at_dma_cleanup_channels() call in probe error path
+- Replace incorrect channels.next != NULL check (always true after
+  INIT_LIST_HEAD) with proper list_empty() check
+- Consolidate at_dma_cleanup_channels() helper used by both probe
 ---
  drivers/dma/at_hdmac.c | 31 ++++++++++++++++++++++---------
  1 file changed, 22 insertions(+), 9 deletions(-)

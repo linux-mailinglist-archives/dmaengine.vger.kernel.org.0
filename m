@@ -1,86 +1,89 @@
-Return-Path: <dmaengine+bounces-12118-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12119-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Kb/BBIVtTmouMgIAu9opvQ
-	(envelope-from <dmaengine+bounces-12118-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 17:32:21 +0200
+	id V2mDF9N0TmqFNAIAu9opvQ
+	(envelope-from <dmaengine+bounces-12119-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 18:03:31 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 756FD72811B
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 17:32:20 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA46072868A
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 18:03:30 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=valinux.co.jp header.s=selector1 header.b=PmovbEYB;
-	dmarc=pass (policy=none) header.from=valinux.co.jp;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12118-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12118-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=amd.com header.s=selector1 header.b=y9rOZHPl;
+	dmarc=pass (policy=quarantine) header.from=amd.com;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12119-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12119-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4964530E5722
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 15:07:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3DCCC30D2490
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 15:32:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F9EA47AF57;
-	Wed,  8 Jul 2026 14:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF606373BE0;
+	Wed,  8 Jul 2026 15:32:38 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11021123.outbound.protection.outlook.com [52.101.125.123])
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010020.outbound.protection.outlook.com [52.101.46.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBC94C6F17;
-	Wed,  8 Jul 2026 14:59:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3794036F91B;
+	Wed,  8 Jul 2026 15:32:36 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783522768; cv=fail; b=g8PVmaztw0u7Jnjtn1702Hrfp9YVhGk8kvA5dHOAc4VlExyLO0GG7xSYLaBzlvpTdug4/gkTEMYEtaUHEyKbN8nh1BJMS/RzlW5nKMn9YODLuoQuRErecRgN5fl6yIWHItvG3pNJBQvaDrZAqs6u72RnSgr99Fm4hQJXETNNcBk=
+	t=1783524758; cv=fail; b=awYNCC55FnJSlvX5nPQEK6RIVDS/jSQ4u+r9UzccOvICGqfa3LtCJXMfomZ7E4cQ85lIgA0t979d3XKF+UtPs4PEkuCAvJ16JLjFABMgt6uskuaJgSVghOhhzMGZ29E//NrQm48g95VOE2dq0emQ8qOXWWcspuq7OmqC6PExIt4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783522768; c=relaxed/simple;
-	bh=eNIKwONsp71McZJNBY1dVB+jS1MbHIo8s1WDvgvYwjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LWAbuh2rTLqMTILyfowK/GfhaSoDxRrAIzhu95/DfFKCxhuPSzYxMF79CjkxSquVa/szkFPKIJZbdgG+4QG+DQukOmZ9+LB55qlpzf2vBVPjPrEqfUV7L1/nHUemPfoN7UKTL7326Kpy+Kh1BUC1qYM2zuLyNdwyjvsmLXwbqnI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=PmovbEYB; arc=fail smtp.client-ip=52.101.125.123
+	s=arc-20240116; t=1783524758; c=relaxed/simple;
+	bh=LzyCVUNfs9CXfZ6SWl9DWoic73HlvDomq4PLrxiZJV4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=c9iLR6oVT3STvikRohJyY3dp2F74AQ7yXV0EzuuI27fuVza2J0c15PkNCPgfK6aMK2TrjMGq5ef75dPXSLqomA4EYmnWNF9F1gnxSECYH1PbBiBPHg2IgXsdTXnjFtaIfy8jHJkYBxoYlu9YKyYCB6cDQJMT+o44u9Mlj5xSJ+w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=y9rOZHPl; arc=fail smtp.client-ip=52.101.46.20
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=d/ZHIak4yIFchA7PedijbD/XEoapTMETACyp9Nc8m7HUc/Cydg2c8XwMgTwYL5TT4m4LUSK+05PJRd+OvIgX5Bl17QDAe4pgmSbK4G7HzZX6aLrBQQvSjTXLXLxUu9eTqtzPBJBUF/J+sHdYe1TcHid1RU7AZlY5YILZF15CBO4L8xGUZphcznocX6gad78nyusjMfZWEJwIwJB3Xb0MEVqIHq2VmihD9vY6151gTKMpK8HgtuySGYQuZojFS0/BGR5WQp2T4IaoffEbDcsDZAaeaG7FIbqt+TT6h1zTtBsfqb4ANZJ5MtVmHzu3kkcXVNVaK8KRlXlBWrd8yQ7rew==
+ b=JEaOC5ryLrVVHv2vXftmj+8F1IqnWAqC5A6oICiljXFZic+xfn0VNkXggW2x+UzaGzQM2vRKpATDWpSNW8swmRN1u7KIhSNeTVl8u8oT4speEm5xNV5RjYQLDouYj1MDOY49rjmLA1zdM8kLIV2/bAEJBzP+/zA5G8TRYBIAQE350GW9BXrvn/cpxma+XtkcsEeRGBkzv4gool9gtktDdMXVL/VEqGyeHo5MahkFM0c8Bfoa8rkZiY32C/G7wcAzO/nV10Y8O/VpjuYMvKEC6URDSLhXU+diEnVOAQucbq6wGkU/UJzgw9GkSqQLGDNVHNr7xF6BE/sRYuURCHZF3Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iZ7gHoOpTW5FUvLG5q0wLKL/3AqrhvNpgjdxkKlT0w4=;
- b=r4z/yY3bEdh0Q7wJGc6EV0ec5Oagx9t+e0xSSJ8yC3A+mVwIe9CQDASBfwlNBOo47SmbIjGZEc+vNScnxYOkE1TBdzkadbYrQMNDNmA4VfuUI40+I/UApNxpBhiYd0FwoCnAjVSYjNRl6h8x6MsONQd6Yc3W+avwC2XA4MI8nH2S4QNHSkbsobfJP8tqhXfX53sSQx4AhwR4ZDbosO7Y5dpYIOHfa11OWpA9NQavwpw4ubB9ADANKOzFH1A576kchrUJJdha9uuLibUwS8OK+2yTbhlTRQEO+UPCb9d11/xI6Eg24TNiffLiXZjwSE/OfnRPiroATZ4wdS9cKXlEkw==
+ bh=YsASyIWmAtkxRgXRPjjruR2WEiGzZEDLIP6qCnvVRHU=;
+ b=FtNgwuIKJR+kBF8VXBIVr+OOe3NIUyqEYKUcu/Q4U9xICxslhZYEU5fr5sd6cdEtzULR9OVdbJ2mmx1+gjRPCXfIKUjUniIr77svczzXWs/gGmNZ7oE021aPuWZjEVhnT50wajnOmu0HHWFpQgP19U9vd6JpnJyEoLWQoOMl8BotrHvqnA+jpBrwb8ql7buuE5eLbnpp6LZfI1PQOIUDJSYtu18wxBI7WVHCkWaYPCP8os34Vef3RQUMMeDrRcGHwqti9UGxiwQSRBd7iWlMXntp2++wejqc1REDvjZyU1xlYOoP6fdW16JGRLFrL/cIV+o+9kZ3vylRmJg8AhvPXQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
- header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
- s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iZ7gHoOpTW5FUvLG5q0wLKL/3AqrhvNpgjdxkKlT0w4=;
- b=PmovbEYBn53MpL/7NWXsel4ac2QP8kujy/bc6/7hnz4B+ykqPnIXr02Qz0ndi57DM1tf6vuJs4skUhegvEuEzLdi/jQP3EcDhWMsp0gzR31Ij1csz4VUAk+86sKtBut0S+XPZsduUoZuURF/AKDtlz6IO5wTvNderAwZATdbHXU=
-Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
- by OS7P286MB5531.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:36e::7) with
+ bh=YsASyIWmAtkxRgXRPjjruR2WEiGzZEDLIP6qCnvVRHU=;
+ b=y9rOZHPlw73FwF+oxqgonXvZriLv6XyPg0YsqB7QPpz+hpntKsijxNcfTTPvDUtWsAZeqaKuw9THHn5RMeF2aswNBrZ+UVKxJ/mQCezPfV876ekxkgpvwD31iJ74Rt9kMlIIvAmf6Uhd4KEXPbJsUkR5nleaY+E4sTHYoLBHeko=
+Received: from CY1PR12MB9697.namprd12.prod.outlook.com (2603:10b6:930:107::6)
+ by CY5PR12MB6036.namprd12.prod.outlook.com (2603:10b6:930:2c::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.15; Wed, 8 Jul
- 2026 14:59:22 +0000
-Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.21.0181.009; Wed, 8 Jul 2026
- 14:59:22 +0000
-Date: Wed, 8 Jul 2026 23:59:21 +0900
-From: Koichiro Den <den@valinux.co.jp>
-To: Frank.Li@oss.nxp.com
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Christoph Hellwig <hch@lst.de>, Niklas Cassel <cassel@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, imx@lists.linux.dev, "Verma, Devendra" <devverma@amd.com>, 
-	Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v3 00/10] dmaengine: dw-edma: flatten desc structions and
- simple code
-Message-ID: <2z2ba5kwgtyjzipkhxqf2jxjscerbx35ep7jndedv5zk6l6xwk@esy2ayjyhcoo>
-References: <20260702-edma_ll-v3-0-877aa463740c@nxp.com>
- <gfylpnuieclkt52xzbcghzaza7oirunstgzfmru7aqpnapdlit@dpgmjrs6ww7u>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <gfylpnuieclkt52xzbcghzaza7oirunstgzfmru7aqpnapdlit@dpgmjrs6ww7u>
-X-ClientProxiedBy: TYCP286CA0086.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:2b3::12) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:405:38f::10)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Wed, 8 Jul
+ 2026 15:32:26 +0000
+Received: from CY1PR12MB9697.namprd12.prod.outlook.com
+ ([fe80::3a41:55a0:8203:596d]) by CY1PR12MB9697.namprd12.prod.outlook.com
+ ([fe80::3a41:55a0:8203:596d%5]) with mapi id 15.21.0181.010; Wed, 8 Jul 2026
+ 15:32:26 +0000
+Message-ID: <95fb4fa5-f5c0-47f0-99de-aaf4c440dd93@amd.com>
+Date: Wed, 8 Jul 2026 21:02:16 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 1/4] dmaengine: xilinx_dma: Fix MCDMA descriptor fields
+ based on DMA direction
+To: Srinivas Neeli <srinivas.neeli@amd.com>, Vinod Koul <vkoul@kernel.org>,
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Cc: Frank Li <Frank.Li@kernel.org>, Michal Simek <michal.simek@amd.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Suraj Gupta <suraj.gupta2@amd.com>, Marek Vasut <marex@nabladev.com>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Alex Bereza <alex@bereza.email>,
+ Folker Schwesinger <dev@folker-schwesinger.de>, dmaengine@vger.kernel.org,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, git@amd.com
+References: <20260708100652.603074-1-srinivas.neeli@amd.com>
+ <20260708100652.603074-2-srinivas.neeli@amd.com>
+Content-Language: en-US
+From: "Pandey, Radhey Shyam" <radheys@amd.com>
+In-Reply-To: <20260708100652.603074-2-srinivas.neeli@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5P287CA0131.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:1d2::19) To CY1PR12MB9697.namprd12.prod.outlook.com
+ (2603:10b6:930:107::6)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -88,86 +91,86 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|OS7P286MB5531:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3fc028d-2a98-433f-8318-08dedd017ed9
+X-MS-TrafficTypeDiagnostic: CY1PR12MB9697:EE_|CY5PR12MB6036:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7e086d78-bb3e-4e0d-357c-08dedd061d31
+X-LD-Processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|7416014|376014|366016|23010399003|1800799024|4143699003|56012099006|6133799003|22082099003|18002099003;
+	BCL:0;ARA:13230040|7416014|1800799024|366016|23010399003|376014|4143699003|11063799006|56012099006|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	jL9g+AQuXa85tCT02tZ3w5JApEPodmMPX/JhTQVY/O9pZCvysVcPyCWDrBrlaGQTOVydCvTFl7dyEaRlcqG96rXXBuXEAt2d+/eEhcrWlpGSFbNyZioFlSnxXJK2yHUyp0XdLKQ7nVpq9hYYp1fORvm4vAStWnFZEiOcHQreY59u7D5Jmyi0IWCgBVLXdCsyO+oD6BgPvkZWrfvEeeLwjuUovbMf1INZcI2vY8wGDhvtMkUtQyzk3fcnrNDBDB9h/FOy/yLWjgwDxINUwkylHttD4B7Ee9RNaLuDHg38NtUsBriFvM2CU2hdFGsw10eCIgSju+2LMM9K3S5QZ1kyLSLd9JCcKJGx19tB9VaI2SHYL+tHfzJTxaFxfHHBrDf0zUw7kxsleKy+B7KGQNi8o7AbeVtLaAhLsUF2Pz2OqzNRv7b4Ruy5wsUoqYWyPOROiXXPN/peMwSdDR4v1raDRFeLwZLd0S7/mDUKkwOH/1SxfU2MLc64qJyAnH9l2SBG+Ra12Tw/Wvuj2xsAxaanKcrVOiml2+blpxyooKrFaFWr+1XWbbrKbWBO89hCKji4CkeeDVnLc+DQed1DTevSvT2mMQ3VDouQR+hXeCXjZJPLcsYKsAm9qm0RV+121HXCR5GD3PKS8eR19lj4gVpiqB7bjacf4eTwxC6MeF4Nhjg=
+	YjFefU4s2X7PjUHv3ZQBIDKl4FyI5McTe7BPn4hXfRZftqD+4/0H+kGTbXb5dAYSihWoF8WDnfzEB5UqNQhT4S3ZbeGXTdQPYYkvm3FPCm9VAuV1hPHfUA+hW3MvRrWkf5Jmp3WvVFIJO4AyyrvyCYkCFXcaVvQFHtjsJ88HmsifPfiV3Wx6cm8g7ThhR8Io7/TwUAQLa+N+zBVABtzmv0+6Cd5mpU4oeNI23EzFGBBxz3v900LqYIU4Fw72iMNJgjEVOhaxUJpQj95G6yzxgNm4mMCCUHK2ZHWlcUpvlF+i8YmHTx7MlQtCaZZ5iU/VHctdxs6F4t8oOGdPRmWJbFsrcWl5Ao3jYxINHRM2IivBfnPDn+e6qtrJhtWIESEifb8UyAlKmeruZobA0Zk49Mdd48qhwsRl0REGK7uYsk/dDVOCP/WV7DjyiSANhwXiQuk4gOs5raK9Os6kWp+66p48YfsfafSGixO0bbhhzQNu8aaAG1x3rnRCbypsfNdnPWLbEboZTsXUUb7risSzLGxZhtA1Y6Z7KAI3VqYjezf82rRLg2CcnR9g6qK45jOFLx1oWYuBdWoEZM/jJSMz+UW/mQ5iYOWTTH2MJ1z91a3lGstoRjlmHJxh6PMsWdgy+vW+5nAqwpXIBgYgefMBq0r065i2evYGBjyHIAxd/VA=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(7416014)(376014)(366016)(23010399003)(1800799024)(4143699003)(56012099006)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY1PR12MB9697.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(23010399003)(376014)(4143699003)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TXpHMTNyaDlyK1Zlc2xHRkk5QUpvRkI3eHZBbmVwdnROTVpzTDB6Ty9SZXRt?=
- =?utf-8?B?cmxxcGV1ZnBsZXdNUGkxelJobHVaMnQ2RnNiZUtudldZUUNvWVlEVnc2aUdL?=
- =?utf-8?B?SXY1NHBCNlhENnh6bWx2WmtGQzBWK2ZtYW03OWp4TERIc0xWRzR4bS8zOS9O?=
- =?utf-8?B?dndMWVBuT012cXRUVUhXbFpEcXFaUEZTbWc2RFozY09uUmNSYmptT01keGYz?=
- =?utf-8?B?VVRid0w1YmxTaDQxdXdRTDV1NSs2U2Q3Ymd0ZUFzNHFOV24reDN5dVgrYUxL?=
- =?utf-8?B?QkF0blJ2NUJXT0llQ2VPRmhla0NBR3Q0aCtCcHdWWjFJL0E0dktaaVFlbjJl?=
- =?utf-8?B?SXdkak9aZkFWRjJ0VzRveDJ4OFhqNXIzNkloVWJuMTcrS2Qrb21qSU9iZlVq?=
- =?utf-8?B?UkhNbDE5WEtZcWhZTzN5SDREVjdiWnBNUU9sb25PVU9Lbm5nbU9aRnlqR0o3?=
- =?utf-8?B?U1A0bGhiUzhqdFVuUVUwNGhXWW1WWHVjQkpER3krRDNTTmhCRjhlUE9IQm1T?=
- =?utf-8?B?WU5jSHZ3WVVBVGRuWDdSV2JBc0RFUWNpSDA5TkIzaGpqRzA0SHN3VDIySE53?=
- =?utf-8?B?ai9HK0hiUnpwVE9MdUMvNlVTMnVKTnEzcm9lSllJb3luZHVWOGFhdlZaaFRa?=
- =?utf-8?B?RFlsajA5UWMzaGMwTEpUNXEwTGRjTzhOZm9BMGtnSDdUSVhCY1h5SnpqVVlI?=
- =?utf-8?B?WVlqWWJqUFc0OWcyNzdzbFFhTmFvaGtBb2hrYkZyeVBtZVREeG1DUDZ1VExm?=
- =?utf-8?B?d09CbzZnWERyNmp6aEFUMU96Qk9jNXgyMllTOTlkaCt6VVFIT3JLbUd5K3hE?=
- =?utf-8?B?ZU1WS1R4cE8yeFYrVlpxY3RaeTZNY0Q3c1V3bGNPL2dyVUtBVDlBTGIwSUNF?=
- =?utf-8?B?czBCdGhiU0x6c2hENVNhUWg4cUNhZlFYbUY0OFhMZzF6UmxEbXdZUjEwelRt?=
- =?utf-8?B?OGpnNGpLRGk4VDRLeXMwZmVtUTMxdWVkZ2E5Y0ZNRGlTUVlkdXJBcHpRZW95?=
- =?utf-8?B?QUtXTXA3Y25LaUN5bWptM2pvUkVzUWVLeFlvdU53bThPMXZaMTBENWppTkY4?=
- =?utf-8?B?c2FQWThPWEdLMklJR3BzRVNBazZsT3Iva2JHQXEzcHZiYlFlM1p4V2tWblFR?=
- =?utf-8?B?WkZGZmJHeXFOR2IrQjNZMWZxRWFpbVBjQlh5WVZsZmkxaUQwN0dRRnBKYm91?=
- =?utf-8?B?RUY2ZFgvY280cWdGMVNJaXJvTzJMNmRSWkFVUHRicmhyelArbXA4di9FOVJr?=
- =?utf-8?B?bUpCTVNWeGRsNXR5c2lxWEFPRXZMSkErbGRUeFZmL0tSaklvZlQ2L0pIWnlG?=
- =?utf-8?B?bFFZZXdXRTlLMHE5L0dDNkNnWXByRXlKaWNqY2FPSFJEaEZpL0FJUldURm1q?=
- =?utf-8?B?akhKNldlQTRKb1hUalByeXQva2Jyell6c0tIMGk5OThVZ2s0YVhMVGdhM2c2?=
- =?utf-8?B?RmVEZjdlUjVGbDVNNmFVdE84c1EzZlBTempPQThCUExFVjB6NFQ4K3ZJa0Z0?=
- =?utf-8?B?bkJSMno5QzNPU3JLOVA3NjJBWDV2UlRVSWlVcUtLZVFVblFEQWVxY3Z6dkx5?=
- =?utf-8?B?TVR2aWdxUDBWNFJRWmxBWnBtWktmSlg0dC9DVXVwWTJVWnl5aE1lNHZhMHNl?=
- =?utf-8?B?M0FEeDBkOFczbGVjaHZmdzgzQTFPMFNreWh6bkR5ZWZ6UXIzcVVYS3ZBdG5x?=
- =?utf-8?B?cnhRcjlTNk5sYjh0ankyeXhFMS84UngzekYrdHJKN2thNERqeEx2TnQ0R2d5?=
- =?utf-8?B?YlMrMXFBem1pVlZpTzZWZGJiSzkzRXJMcnRBODBmV2I3Qll1UWlaK0x4Z1Fq?=
- =?utf-8?B?UlVWOHR5MlJ3Um1rcnovY2crU04vNkpYTkVvZlpUMGFlcVMwUU9ZVTRIWisv?=
- =?utf-8?B?RHlaaEN5Q3VVWmhKV0NuOVhFa20xOEp4Wm5KR09tYkViZndEUmdkVHZXb3dZ?=
- =?utf-8?B?Z0dQeEdFUVR0TndsTzl5YzdVTTRYeGpUSkJNYmJyOTlUZWhXZDF4b2gwb1ZK?=
- =?utf-8?B?UnhMaFVncVJScUQzLzFaSFBRWHowaUVMamlqcTNtVFVXQkc0YkVrK1lJT1c4?=
- =?utf-8?B?UHIzVWQ5Y0Q3WUZ1cGpmS3pJd1Z2TmViM1RGN3VXZW42UzkvM1BkaUYrZ3V5?=
- =?utf-8?B?OHF0K0dIdFdBMDR3Y2xSOGVaZEFjeW1rNHZKaXNSWVJZcmpUWXpDZzhQQkRW?=
- =?utf-8?B?UWJxQS9MbXM5Uzc5aStoUUE5SWMzTm1BQmN1a09qUkJ6aUdpK1dlcUR1MHJU?=
- =?utf-8?B?Nkh1M2JQVXZjT2ZpaHlTYzQ0QlZxampIeS9HSlVJZTZBUHF1OGJuK0pqSkhJ?=
- =?utf-8?B?V0RtV1VNa3UvbGtPVnozM0F0VjljRnNpbHExa0sxSFVzY1RpVnZBbUZIU29a?=
- =?utf-8?Q?rOqA8oPhHK4YnNR89q29VQ9x5/K3gKPW3zJEO?=
-X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3fc028d-2a98-433f-8318-08dedd017ed9
-X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+	=?utf-8?B?Y3QvNXpTMFA2Vzllb1FnZFNIMnpuZnRhLzlsV1V6Yk05ZVA0WUx2NG5KYTVj?=
+ =?utf-8?B?VGl5RDcrNENZWmhXazBHazJneXhaZUdVL1FQdTJzWGtUbmhCLzgvblZnSTlz?=
+ =?utf-8?B?UG5ORWpkNkZtQzBKQmlvY1NQUjhqVkRtVXhTWnluTHhweXBScVdMTVVkaEIw?=
+ =?utf-8?B?OFloVzZGb3o4RGliYUQ4T3Jua2s5Q3JuMmovSWpZWmxqNTBvQzdlMjBQd0NZ?=
+ =?utf-8?B?MFJWdVV4eS9BNDI0Z3AvanVjY2kxOVIvMWRkUXlyYkl1MUwzZ1JCaWhKRWJD?=
+ =?utf-8?B?dTN6dHF0NGxZTUpFK3VIbU5UT2Z1MFl5dWIrcDYreGw4a1R0V0tuUXpabDg2?=
+ =?utf-8?B?dXB5T3dFV1dxazJzSm1Mb1dUbGhPL0NKbFZPNXhqU1RZZi9IYUJ2VGZGbTBF?=
+ =?utf-8?B?Q0JkeU9iS2FWWVA0cTQ2QmgxNmZFN3FHR2IvR3VYT3VrMHJqQTdRSERmcGgx?=
+ =?utf-8?B?cFFQdFczd3VKM21EbzJDKzFkZGtETDdxWEp3U0pKNW9peko0QklBRi9rdmx4?=
+ =?utf-8?B?K0hSUmtWUnVvVkFvM1hFU1ZaQzRUSG80ZHBBNE42bmswNnhyaitIS3Awb24v?=
+ =?utf-8?B?by9iZUM1K3JsWnNzL09UK1ZJUDlGTVdFTnFYUHJJY0FEMTBGWW51VDQ3dnRn?=
+ =?utf-8?B?UnlMRFM2bWhKWVcrRjVnMjk1OHZBZUdnL0QzSjQ5MTRKcWdIMmt6SExOTjlw?=
+ =?utf-8?B?V0RoK2hncXdjZ3BlbS82QWU3WDYyZG54S3pwYUEwUmQ3NDByU0U0RmdPbWRW?=
+ =?utf-8?B?dFVvdlkrNHFNZFNPWVZycU1lYWFIWXVWQ2RTTDJGRjh6VytKdE5hMWwwNnRJ?=
+ =?utf-8?B?WUZiMjgyWE1qeWNoMmt1ZnhMeFhFTGZiY1JxV1RMRm1GaWhNR1JvUVg2T0ZU?=
+ =?utf-8?B?MVFQaHowOWp0cUF1Q0hDNUVScG9BZHdMWHIxNEtmQ2VVVnA5YkNrRXZXUVMy?=
+ =?utf-8?B?MnpwWWhWckxLVnJPMGlkRXpYNk8rUXJZNDRHNUpwQ1o4ZnNVMUw2YTBwbzJr?=
+ =?utf-8?B?K3hUS3IvRzVFSERpdmZKdk1FRUZoNUtWNkFnSy9TdzVURUxkeUFpckhGdFF4?=
+ =?utf-8?B?K1JOZVFmT204WjNmbkZnM2FaSHA0NW45ZFRFVER4dmV0MlpYbWFoeHgvcjBx?=
+ =?utf-8?B?Z0w3Y0hobjlBZUJUME1Sa3BHaUhyVEpzT0hVSWEyOXk3YVNOVDd3Vm1WSFg5?=
+ =?utf-8?B?U0FnUkMwSzBRcEF3UjQ2UGx2S2xuWCtJM1JEYXNTckFxRzl4bFhOL2JyclNy?=
+ =?utf-8?B?TVJPZkdDMkN2UkZXVC9WK05JK0gzOSt0NFZFZXRFZnpVVmd4MTlMUUphZ2RM?=
+ =?utf-8?B?UmhTRUVJbHhzUktyU1dFL1J3K2tMdnJmNndQei85R1hmQTV2UnIyRytscE9t?=
+ =?utf-8?B?ZEFrSHpsbzU4TmdQYzB2eUk0WHRiTHlHL0tHajlHRWN2b0Z4MzB0ZzVFWFRs?=
+ =?utf-8?B?VmNFWlNWN0RIUVVIZDc0NldRM0pYTStpdWlaU1BYQkthVzI4U0xPamhBSHZF?=
+ =?utf-8?B?NDdSTVl1QWwrUWZGS1lCL3ZIN3FPVHhsRXVzRVBXRnZqaGNkTG1Xb0t4c2Uy?=
+ =?utf-8?B?VTViK2hxdGR3VkNQaU5jamxVWUwwY09LdGxVdTdWbTZ0RlFKTjZTWjVLbTJB?=
+ =?utf-8?B?OUdQN3ZwdmxtTHI4NUxCWGY2SHdSMGs2R3JwNFpkSzRKMzE2aWVmK1FsQ0ND?=
+ =?utf-8?B?ejlXRGVKTmJ5QlpLR0RrR1dZWWxBdDFyZGpBUGRlYVd3OG90WVJ3YlV4WDdm?=
+ =?utf-8?B?cnVoWnRNbVQyZlk3NzB0cFphTCtwdWJ5dGVwckRsbUN5YVFFVk5zT1g5SDda?=
+ =?utf-8?B?TGpoa05sQlpCMkFDb2pob2dhQ3JYaUdUUzJHSXRqZ2pkR0wxa25sNDhQclJW?=
+ =?utf-8?B?ZmkwYjlTUzBaNjc1eDNCNU9nVHJpa3BhT0hkUnRlK0NraFlRcWdjaGNqM3Vy?=
+ =?utf-8?B?N1p2cUpGbm4rR3pLMmxHVEI2RVFudjByd3BIcFk3K2VERzlFL0wwYWNGcDUy?=
+ =?utf-8?B?b1VkbXlNWTZzRVhtckNpNVl2bHU3N1BaM3RnMC93dEU1MkhEWjFEZy82T2kr?=
+ =?utf-8?B?M2s5UURyTDVJM0xwVytTZmVxQjFNNDNvenNpOXF3M1pzSW1HV3RBNzBHQit5?=
+ =?utf-8?B?R0lEclNZeTQvbnBwNkV3YitjbWtSSVZyaTloUlI5ZDIxeVBQQ2ZYYkxjOWZ0?=
+ =?utf-8?B?ZGFaOUZFbm5jUmNVNWFWenJ5M2tQTUhodXRvQUNsZUNGb25NYVVjTlRoYjlS?=
+ =?utf-8?B?VEFDZjdJZURFd3d6QTU1UFpmKzBHRUJVb2ZZZG4yTEtVZmN6c3NrWkZkT09N?=
+ =?utf-8?B?WlcrMi91RnA3c2ZYdVpJL1pjUy9TZ3JGTEdnZVYza1B6TU5DRGdVQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e086d78-bb3e-4e0d-357c-08dedd061d31
+X-MS-Exchange-CrossTenant-AuthSource: CY1PR12MB9697.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 14:59:22.6802
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 15:32:26.5774
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HHQmcly1LYJ7YJB7Lx4KuAX3ilWL5DXSM+kBfAHE+3THkUbZHkCW1UET295l4dL2WvAuGmXEf0wVZ5cTKOZ2jw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7P286MB5531
+X-MS-Exchange-CrossTenant-UserPrincipalName: OFR2AoPeChl7C1OASACfthTBnYXUzscnM0vZkRubeOmNJsBxqYXXjO/zQZjm9BUk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6036
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
-	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	TAGGED_FROM(0.00)[bounces-12118-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:Frank.Li@oss.nxp.com,m:mani@kernel.org,m:vkoul@kernel.org,m:Gustavo.Pimentel@synopsys.com,m:kees@kernel.org,m:gustavoars@kernel.org,m:kwilczynski@kernel.org,m:kishon@kernel.org,m:bhelgaas@google.com,m:hch@lst.de,m:cassel@kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-hardening@vger.kernel.org,m:linux-pci@vger.kernel.org,m:linux-nvme@lists.infradead.org,m:imx@lists.linux.dev,m:devverma@amd.com,m:Frank.Li@nxp.com,s:lists@lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	TAGGED_FROM(0.00)[bounces-12119-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:srinivas.neeli@amd.com,m:vkoul@kernel.org,m:radhey.shyam.pandey@amd.com,m:Frank.Li@kernel.org,m:michal.simek@amd.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:suraj.gupta2@amd.com,m:marex@nabladev.com,m:tomi.valkeinen@ideasonboard.com,m:alex@bereza.email,m:dev@folker-schwesinger.de,m:dmaengine@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:git@amd.com,m:andrew@lunn.ch,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
+	FORGED_SENDER(0.00)[radheys@amd.com,dmaengine@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -175,266 +178,108 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[valinux.co.jp:+];
+	FROM_NEQ_ENVFROM(0.00)[radheys@amd.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[amd.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,esy2ayjyhcoo:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine,netdev];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amd.com:from_mime,amd.com:email,amd.com:mid,amd.com:dkim,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 756FD72811B
+X-Rspamd-Queue-Id: AA46072868A
 
-On Mon, Jul 06, 2026 at 10:20:38PM +0900, Koichiro Den wrote:
-> On Thu, Jul 02, 2026 at 05:21:20PM -0400, Frank.Li@oss.nxp.com wrote:
-> > Koichiro Den:
-> > 	My hardware temperately is unavaible recently. Can you help test
-> > it.
+> The MCDMA BD format differs between memory-to-device (MM2S) and
+> device-to-memory (S2MM) directions, but the driver was using generic
+> 'status' and 'sideband_status' fields for both. This led to incorrect
+> residue calculations when the hardware updates direction-specific fields.
 > 
-> Sure, I can test it on my side. I'll report back once I have the results.
-
-Here are the results. For the series:
-
-Tested-by: Koichiro Den <den@valinux.co.jp>
-
-* I don't see a significant difference between Before and After, but I don't
-  think that is an issue at all. Most of the differences look like normal
-  run-to-run variation.
-* Each full fio test set was run three times in alternating order (B-A-B-A-B-A),
-  with runtime=30s and ramp_time=5s.
-
-eDMA:
-  - Testbed:
-    * Endpoint: RK3588 (Rock 5B)
-      controller IP version: v5.60a
-      ll_max: 170
-
-  - Summary by group (BW delta %)
-    all          n=26 mean=  -2.3 median=  +0.2 min= -28.0 max= +11.7
-    read         n=14 mean=  -3.2 median=  +0.2 min= -17.3 max=  +3.1
-    write        n=11 mean=  -1.5 median=  -0.2 min= -28.0 max= +11.7
-    qd32         n=16 mean=  +0.5 median=  +0.3 min=  -3.8 max=  +3.1
-    q1           n= 9 mean=  -7.6 median=  -6.7 min= -28.0 max= +11.7
-    small 4K     n= 6 mean=  -4.0 median=  +1.1 min= -28.0 max=  +3.1
-    large >=128K n=20 mean=  -1.8 median=  +0.1 min= -17.3 max= +11.7
-
-  - Before mean -> After mean (MiB/s)
-
-    Case                         Before             After              Delta
-    ---------------------------  -----------------  -----------------  ------
-    Rnd read     4KB q1  1j         33.4 (sd 10.1)     32.0 (sd 10.9)    -4.0%
-    Rnd read     4KB q32 1j        196.0 (sd 28.6)    202.0 (sd 29.5)    +3.1%
-    Rnd read     4KB q32 4j        196.7 (sd 29.2)    202.0 (sd 25.1)    +2.7%
-    Rnd read   128KB q1  1j        497.7 (sd 12.2)   420.7 (sd 181.3)   -15.5%
-    Rnd read   128KB q32 1j        2248.0 (sd 6.6)   2277.3 (sd 34.2)    +1.3%
-    Rnd read   128KB q32 4j        2381.3 (sd 2.5)   2386.3 (sd 17.9)    +0.2%
-    Rnd read   512KB q1  1j        627.3 (sd 15.2)    585.3 (sd 78.2)    -6.7%
-    Rnd read   512KB q32 1j        2376.0 (sd 5.2)   2381.3 (sd 21.4)    +0.2%
-    Rnd read   512KB q32 4j        2379.7 (sd 6.7)   2386.7 (sd 17.6)    +0.3%
-    Rnd write    4KB q1  1j          28.1 (sd 4.1)     20.2 (sd 10.1)   -28.0%
-    Rnd write    4KB q32 1j         120.3 (sd 6.1)     122.0 (sd 6.2)    +1.4%
-    Rnd write    4KB q32 4j         124.7 (sd 3.8)     125.7 (sd 4.6)    +0.8%
-    Rnd write  128KB q1  1j        318.7 (sd 44.7)     327.0 (sd 4.4)    +2.6%
-    Rnd write  128KB q32 1j       1080.0 (sd 20.2)   1077.3 (sd 37.6)    -0.2%
-    Rnd write  128KB q32 4j       1069.7 (sd 20.3)   1056.0 (sd 46.2)    -1.3%
-    Seq read   128KB q1  1j       486.3 (sd 138.3)    402.3 (sd 38.0)   -17.3%
-    Seq read   128KB q32 1j        2245.3 (sd 3.5)   2258.7 (sd 26.3)    +0.6%
-    Seq read   512KB q1  1j        662.0 (sd 29.2)    594.3 (sd 13.7)   -10.2%
-    Seq read   512KB q32 1j        2375.7 (sd 7.4)   2382.0 (sd 22.9)    +0.3%
-    Seq read     1MB q32 1j        2380.7 (sd 4.7)   2385.3 (sd 19.3)    +0.2%
-    Seq write  128KB q1  1j        342.0 (sd 58.9)   382.0 (sd 101.1)   +11.7%
-    Seq write  128KB q32 1j       1080.3 (sd 48.8)   1070.7 (sd 37.0)    -0.9%
-    Seq write  512KB q1  1j        509.7 (sd 35.4)    502.7 (sd 39.2)    -1.4%
-    Seq write  512KB q32 1j       1043.3 (sd 56.7)   1074.0 (sd 47.8)    +2.9%
-    Seq write    1MB q32 1j        989.3 (sd 23.0)    952.0 (sd 57.4)    -3.8%
-    Rnd rdwr  4K..1MB q8  4j       841.3 (sd 15.1)    841.7 (sd 12.9)    +0.0%
-
-HDMA:
-  - Testbed:
-    * Endpoint: SpacemiT K3
-      controller IP version: v6.30a
-      ll_max: 170
-
-  - Summary by group (BW delta %)
-
-    all          n=26 mean=  +1.1 median=  -0.6 min=  -4.4 max=  +9.5
-    read         n=14 mean=  +2.1 median=  +0.7 min=  -2.5 max=  +9.5
-    write        n=11 mean=  -0.1 median=  -0.8 min=  -4.4 max=  +4.7
-    qd32         n=16 mean=  +0.6 median=  -0.8 min=  -2.5 max=  +9.5
-    q1           n= 9 mean=  +2.0 median=  +4.4 min=  -4.4 max=  +7.9
-    small 4K     n= 6 mean=  +4.8 median=  +4.5 min=  +0.2 max=  +9.5
-    large >=128K n=20 mean=  -0.0 median=  -0.9 min=  -4.4 max=  +7.9
-
-  - Before mean -> After mean (MiB/s)
-
-    Case                         Before             After              Delta
-    ---------------------------  -----------------  -----------------  ------
-    Rnd read     4KB q1  1j          66.3 (sd 5.8)      69.4 (sd 7.0)    +4.6%
-    Rnd read     4KB q32 1j        300.3 (sd 45.5)    329.0 (sd 21.7)    +9.5%
-    Rnd read     4KB q32 4j        312.0 (sd 51.1)     341.7 (sd 3.1)    +9.5%
-    Rnd read   128KB q1  1j        705.7 (sd 34.8)    736.7 (sd 51.6)    +4.4%
-    Rnd read   128KB q32 1j       1507.7 (sd 25.6)    1486.3 (sd 5.9)    -1.4%
-    Rnd read   128KB q32 4j        1549.7 (sd 7.0)   1534.3 (sd 16.9)    -1.0%
-    Rnd read   512KB q1  1j         848.7 (sd 9.5)    858.0 (sd 15.5)    +1.1%
-    Rnd read   512KB q32 1j       1530.0 (sd 27.0)   1536.0 (sd 14.8)    +0.4%
-    Rnd read   512KB q32 4j       1519.0 (sd 66.7)   1544.3 (sd 15.0)    +1.7%
-    Rnd write    4KB q1  1j          64.0 (sd 6.2)      66.9 (sd 2.2)    +4.5%
-    Rnd write    4KB q32 1j         199.3 (sd 7.1)     199.7 (sd 2.9)    +0.2%
-    Rnd write    4KB q32 4j         199.7 (sd 7.6)     200.3 (sd 3.2)    +0.3%
-    Rnd write  128KB q1  1j        558.3 (sd 18.3)     533.7 (sd 5.0)    -4.4%
-    Rnd write  128KB q32 1j       1248.0 (sd 21.3)    1237.3 (sd 7.5)    -0.9%
-    Rnd write  128KB q32 4j       1248.7 (sd 23.0)    1238.0 (sd 6.1)    -0.9%
-    Seq read   128KB q1  1j        640.7 (sd 60.1)     691.3 (sd 9.0)    +7.9%
-    Seq read   128KB q32 1j       1507.7 (sd 24.2)    1488.3 (sd 5.1)    -1.3%
-    Seq read   512KB q1  1j        866.7 (sd 45.8)    847.0 (sd 32.2)    -2.3%
-    Seq read   512KB q32 1j       1532.3 (sd 31.7)   1516.7 (sd 40.3)    -1.0%
-    Seq read     1MB q32 1j        1550.7 (sd 7.2)   1512.0 (sd 32.9)    -2.5%
-    Seq write  128KB q1  1j        514.0 (sd 34.7)    538.0 (sd 15.1)    +4.7%
-    Seq write  128KB q32 1j       1248.0 (sd 22.1)    1237.0 (sd 7.8)    -0.9%
-    Seq write  512KB q1  1j        755.7 (sd 30.0)     739.3 (sd 2.1)    -2.2%
-    Seq write  512KB q32 1j       1248.7 (sd 22.6)    1238.3 (sd 6.7)    -0.8%
-    Seq write    1MB q32 1j       1248.0 (sd 22.5)    1238.3 (sd 7.6)    -0.8%
-    Rnd rdwr  4K..1MB q8  4j        869.0 (sd 8.9)     865.3 (sd 1.5)    -0.4%
-
-Best regards,
-Koichiro
-
+> Refactor the descriptor structure to use unions with direction-specific
+> field mappings, and update the residue calculation logic to select the
+> correct status field based on DMA direction.
 > 
-> Best regards,
-> Koichiro
+> This matches the hardware descriptor layout and fixes incorrect
+> residue reporting.
 > 
-> > 
-> > Rebase and compile test only now.
-> > 
-> > Verma, Devendra:
-> > 	Can you help check if block non-ll mode?
-> > 
-> > Frank
-> > 
-> > Basic change
-> > 
-> > struct dw_edma_desc *desc
-> >        └─ chunk list
-> >             └─ burst list
-> > 
-> > To
-> > 
-> > struct dw_edma_desc *desc
-> >             └─ burst[n]
-> > 
-> > And reduce at least 2 times kzalloc() for each dma descriptor create.
-> > 
-> > I only test eDMA part, not hardware test hdma part.
-> > 
-> > The finial goal is dymatic add DMA request when DMA running. So needn't
-> > wait for irq for fetch next round DMA request.
-> > 
-> > This work is neccesary to for dymatic DMA request appending.
-> > 
-> > The post this part first to review and test firstly during working dymatic
-> > DMA part.
-> > 
-> > performance is little bit better. Use NVME as EP function
-> > 
-> > Before
-> > 
-> >   Rnd read,    4KB,  QD=1, 1 job :  IOPS=6660, BW=26.0MiB/s (27.3MB/s)
-> >   Rnd read,    4KB, QD=32, 1 job :  IOPS=28.6k, BW=112MiB/s (117MB/s)
-> >   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=33.4k, BW=130MiB/s (137MB/s)
-> >   Rnd read,  128KB,  QD=1, 1 job :  IOPS=914, BW=114MiB/s (120MB/s)
-> >   Rnd read,  128KB, QD=32, 1 job :  IOPS=1204, BW=151MiB/s (158MB/s)
-> >   Rnd read,  128KB, QD=32, 4 jobs:  IOPS=1255, BW=157MiB/s (165MB/s)
-> >   Rnd read,  512KB,  QD=1, 1 job :  IOPS=248, BW=124MiB/s (131MB/s)
-> >   Rnd read,  512KB, QD=32, 1 job :  IOPS=353, BW=177MiB/s (185MB/s)
-> >   Rnd read,  512KB, QD=32, 4 jobs:  IOPS=388, BW=194MiB/s (204MB/s)
-> >   Rnd write,   4KB,  QD=1, 1 job :  IOPS=6241, BW=24.4MiB/s (25.6MB/s)
-> >   Rnd write,   4KB, QD=32, 1 job :  IOPS=24.7k, BW=96.5MiB/s (101MB/s)
-> >   Rnd write,   4KB, QD=32, 4 jobs:  IOPS=26.9k, BW=105MiB/s (110MB/s)
-> >   Rnd write, 128KB,  QD=1, 1 job :  IOPS=780, BW=97.5MiB/s (102MB/s)
-> >   Rnd write, 128KB, QD=32, 1 job :  IOPS=987, BW=123MiB/s (129MB/s)
-> >   Rnd write, 128KB, QD=32, 4 jobs:  IOPS=1021, BW=128MiB/s (134MB/s)
-> >   Seq read,  128KB,  QD=1, 1 job :  IOPS=1190, BW=149MiB/s (156MB/s)
-> >   Seq read,  128KB, QD=32, 1 job :  IOPS=1400, BW=175MiB/s (184MB/s)
-> >   Seq read,  512KB,  QD=1, 1 job :  IOPS=243, BW=122MiB/s (128MB/s)
-> >   Seq read,  512KB, QD=32, 1 job :  IOPS=355, BW=178MiB/s (186MB/s)
-> >   Seq read,    1MB, QD=32, 1 job :  IOPS=191, BW=192MiB/s (201MB/s)
-> >   Seq write, 128KB,  QD=1, 1 job :  IOPS=784, BW=98.1MiB/s (103MB/s)
-> >   Seq write, 128KB, QD=32, 1 job :  IOPS=1030, BW=129MiB/s (135MB/s)
-> >   Seq write, 512KB,  QD=1, 1 job :  IOPS=216, BW=108MiB/s (114MB/s)
-> >   Seq write, 512KB, QD=32, 1 job :  IOPS=295, BW=148MiB/s (155MB/s)
-> >   Seq write,   1MB, QD=32, 1 job :  IOPS=164, BW=165MiB/s (173MB/s)
-> >   Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=250, BW=126MiB/s (132MB/s)
-> >   IOPS=261, BW=132MiB/s (138MB/s
-> > 
-> > After
-> >   Rnd read,    4KB,  QD=1, 1 job :  IOPS=6780, BW=26.5MiB/s (27.8MB/s)
-> >   Rnd read,    4KB, QD=32, 1 job :  IOPS=28.6k, BW=112MiB/s (117MB/s)
-> >   Rnd read,    4KB, QD=32, 4 jobs:  IOPS=33.4k, BW=130MiB/s (137MB/s)
-> >   Rnd read,  128KB,  QD=1, 1 job :  IOPS=1188, BW=149MiB/s (156MB/s)
-> >   Rnd read,  128KB, QD=32, 1 job :  IOPS=1440, BW=180MiB/s (189MB/s)
-> >   Rnd read,  128KB, QD=32, 4 jobs:  IOPS=1282, BW=160MiB/s (168MB/s)
-> >   Rnd read,  512KB,  QD=1, 1 job :  IOPS=254, BW=127MiB/s (134MB/s)
-> >   Rnd read,  512KB, QD=32, 1 job :  IOPS=354, BW=177MiB/s (186MB/s)
-> >   Rnd read,  512KB, QD=32, 4 jobs:  IOPS=388, BW=194MiB/s (204MB/s)
-> >   Rnd write,   4KB,  QD=1, 1 job :  IOPS=6282, BW=24.5MiB/s (25.7MB/s)
-> >   Rnd write,   4KB, QD=32, 1 job :  IOPS=24.9k, BW=97.5MiB/s (102MB/s)
-> >   Rnd write,   4KB, QD=32, 4 jobs:  IOPS=27.4k, BW=107MiB/s (112MB/s)
-> >   Rnd write, 128KB,  QD=1, 1 job :  IOPS=1098, BW=137MiB/s (144MB/s)
-> >   Rnd write, 128KB, QD=32, 1 job :  IOPS=1195, BW=149MiB/s (157MB/s)
-> >   Rnd write, 128KB, QD=32, 4 jobs:  IOPS=1120, BW=140MiB/s (147MB/s)
-> >   Seq read,  128KB,  QD=1, 1 job :  IOPS=936, BW=117MiB/s (123MB/s)
-> >   Seq read,  128KB, QD=32, 1 job :  IOPS=1218, BW=152MiB/s (160MB/s)
-> >   Seq read,  512KB,  QD=1, 1 job :  IOPS=301, BW=151MiB/s (158MB/s)
-> >   Seq read,  512KB, QD=32, 1 job :  IOPS=360, BW=180MiB/s (189MB/s)
-> >   Seq read,    1MB, QD=32, 1 job :  IOPS=193, BW=194MiB/s (203MB/s)
-> >   Seq write, 128KB,  QD=1, 1 job :  IOPS=796, BW=99.5MiB/s (104MB/s)
-> >   Seq write, 128KB, QD=32, 1 job :  IOPS=1019, BW=127MiB/s (134MB/s)
-> >   Seq write, 512KB,  QD=1, 1 job :  IOPS=213, BW=107MiB/s (112MB/s)
-> >   Seq write, 512KB, QD=32, 1 job :  IOPS=273, BW=137MiB/s (143MB/s)
-> >   Seq write,   1MB, QD=32, 1 job :  IOPS=168, BW=168MiB/s (177MB/s)
-> >   Rnd rdwr, 4K..1MB, QD=8, 4 jobs:  IOPS=255, BW=128MiB/s (134MB/s)
-> >    IOPS=266, BW=135MiB/s (141MB/s)
-> > 
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > Changes in v3:
-> > - remove patch dmaengine: dw-edma: Remove ll_max = -1 in dw_edma_channel_setup()
-> > - rebase to vnod's dmaengine topic/config_prep_api
-> > - Add non-ll-start() callback to handle non-ll mode transfer
-> > - Link to v2: https://lore.kernel.org/r/20260109-edma_ll-v2-0-5c0b27b2c664@nxp.com
-> > 
-> > Changes in v2:
-> > - use 'eDMA' and 'HDMA' at commit message
-> > - remove debug code.
-> > - keep 'inline' to avoid build warning
-> > - Link to v1: https://lore.kernel.org/r/20251212-edma_ll-v1-0-fc863d9f5ca3@nxp.com
-> > 
-> > ---
-> > Frank Li (10):
-> >       dmaengine: dw-edma: Move control field update of DMA link to the last step
-> >       dmaengine: dw-edma: Add xfer_sz field to struct dw_edma_chunk
-> >       dmaengine: dw-edma: Move ll_region from struct dw_edma_chunk to struct dw_edma_chan
-> >       dmaengine: dw-edma: Pass down dw_edma_chan to reduce one level of indirection
-> >       dmaengine: dw-edma: Add helper dw_(edma|hdma)_v0_core_ch_enable()
-> >       dmaengine: dw-edma: Add callbacks to fill link list entries
-> >       dmaengine: dw-edma: Add non_ll_start() callback
-> >       dmaengine: dw-edma: Use common dw_edma_core_start() for both eDMA and HDMA
-> >       dmaengine: dw-edma: Use burst array instead of linked list
-> >       dmaengine: dw-edma: Remove struct dw_edma_chunk
-> > 
-> >  drivers/dma/dw-edma/dw-edma-core.c    | 216 ++++++++----------------------
-> >  drivers/dma/dw-edma/dw-edma-core.h    |  65 ++++++---
-> >  drivers/dma/dw-edma/dw-edma-v0-core.c | 240 +++++++++++++++++-----------------
-> >  drivers/dma/dw-edma/dw-hdma-v0-core.c | 169 ++++++++++++------------
-> >  4 files changed, 302 insertions(+), 388 deletions(-)
-> > ---
-> > base-commit: c9e9927c6d8346cdf6555a8f97da093980172e4b
-> > change-id: 20251211-edma_ll-0904ba089f01
-> > 
-> > Best regards,
-> > --  
-> > Frank Li <Frank.Li@nxp.com>
-> > 
+> Fixes: 6ccd692bfb7f ("dmaengine: xilinx_dma: Add Xilinx AXI MCDMA Engine driver support")
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@amd.com>
+
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Thanks!
+> ---
+> Changes in V3:
+>   - Renamed subject from "for MM2S vs S2MM" to "based on DMA direction".
+>   - Reworded commit message for clarity.
+>   - Added XILINX_MCDMA_BD_HW_SIZE macro and static_assert to verify
+>     descriptor size at compile time.
+>   - Refactored residue calculation to separate addition and subtraction
+>     operations for better readability.
 > 
+> Changes in V2:
+>   - No change.
+> ---
+>   drivers/dma/xilinx/xilinx_dma.c | 26 +++++++++++++++++++-------
+>   1 file changed, 19 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+> index 98b41b8f8915..ff5b29a808e9 100644
+> --- a/drivers/dma/xilinx/xilinx_dma.c
+> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> @@ -223,6 +223,7 @@
+>   #define XILINX_MCDMA_IRQ_ERR_MASK		BIT(7)
+>   #define XILINX_MCDMA_BD_EOP			BIT(30)
+>   #define XILINX_MCDMA_BD_SOP			BIT(31)
+> +#define XILINX_MCDMA_BD_HW_SIZE			64
+>   
+>   /**
+>    * struct xilinx_vdma_desc_hw - Hardware Descriptor
+> @@ -277,8 +278,10 @@ struct xilinx_axidma_desc_hw {
+>    * @buf_addr_msb: MSB of Buffer address @0x0C
+>    * @rsvd: Reserved field @0x10
+>    * @control: Control Information field @0x14
+> - * @status: Status field @0x18
+> - * @sideband_status: Status of sideband signals @0x1C
+> + * @mm2s_ctrl_sideband: Sideband control info for mm2s @0x18
+> + * @s2mm_status: Status field for s2mm @0x18
+> + * @mm2s_status: Status field for mm2s @0x1C
+> + * @s2mm_sideband_status: Sideband status for s2mm @0x1C
+>    * @app: APP Fields @0x20 - 0x30
+>    */
+>   struct xilinx_aximcdma_desc_hw {
+> @@ -288,10 +291,17 @@ struct xilinx_aximcdma_desc_hw {
+>   	u32 buf_addr_msb;
+>   	u32 rsvd;
+>   	u32 control;
+> -	u32 status;
+> -	u32 sideband_status;
+> +	union {
+> +		u32 mm2s_ctrl_sideband;
+> +		u32 s2mm_status;
+> +	};
+> +	union {
+> +		u32 mm2s_status;
+> +		u32 s2mm_sideband_status;
+> +	};
+>   	u32 app[XILINX_DMA_NUM_APP_WORDS];
+>   } __aligned(64);
+> +static_assert(sizeof(struct xilinx_aximcdma_desc_hw) == XILINX_MCDMA_BD_HW_SIZE);
+>   
+>   /**
+>    * struct xilinx_cdma_desc_hw - Hardware Descriptor
+> @@ -1015,9 +1025,11 @@ static u32 xilinx_dma_get_residue(struct xilinx_dma_chan *chan,
+>   					   struct xilinx_aximcdma_tx_segment,
+>   					   node);
+>   			aximcdma_hw = &aximcdma_seg->hw;
+> -			residue +=
+> -				(aximcdma_hw->control & chan->xdev->max_buffer_len) -
+> -				(aximcdma_hw->status & chan->xdev->max_buffer_len);
+> +			residue += aximcdma_hw->control & chan->xdev->max_buffer_len;
+> +			if (chan->direction == DMA_DEV_TO_MEM)
+> +				residue -= aximcdma_hw->s2mm_status & chan->xdev->max_buffer_len;
+> +			else
+> +				residue -= aximcdma_hw->mm2s_status & chan->xdev->max_buffer_len;
+>   		}
+>   	}
+>   
+
 

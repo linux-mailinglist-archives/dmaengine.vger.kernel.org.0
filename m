@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-12101-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12102-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 0y4ZON3fTWrA/QEAu9opvQ
-	(envelope-from <dmaengine+bounces-12101-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 07:27:57 +0200
+	id AbO6FdrgTWrt/QEAu9opvQ
+	(envelope-from <dmaengine+bounces-12102-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 07:32:10 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44B89721C96
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 07:27:57 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 546E1721D07
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 07:32:09 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="Jygx6Oe/";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ee8ZL9+N;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12101-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12101-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12102-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12102-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ABF613013279
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 05:25:54 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6E0C930069B0
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 05:32:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 353F93B9952;
-	Wed,  8 Jul 2026 05:25:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FAF4378D72;
+	Wed,  8 Jul 2026 05:32:03 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F983B8D7B;
-	Wed,  8 Jul 2026 05:25:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120C4298CA3;
+	Wed,  8 Jul 2026 05:32:01 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783488354; cv=none; b=l8TdQ2c926JTq2cEhGAKP6axdbR7cEkHDiBFtUwRZBSU/sdpNBuI5yTXzm1PhC8fUfInyPLIEmaZM1K3FAWFORHJQB4wekw2e07KVDj47PAjP3F8quBuz4B2e9rs1bgN/9wOrsYr2dkymppnjmOCIbR2Gk2sMvyFl2Vpa2jW5pA=
+	t=1783488723; cv=none; b=VkZO7pH8SrOVD4oqi1zoaVGALHuhO+Z/aKPRcHg0BRuoTheU459/FHrnRtig+t1v8p0DEkcOTCdfps+vHDtY9rxZAEP+A2NREp/2+6bhIF+D5Ya2+VkfDPlCfUMjzFJXqknFnVul6Z4IfYVn449YPuApqi0p5EXgXqkCZBfOQ3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783488354; c=relaxed/simple;
-	bh=uhKpp79vwvAAllwgsXuNKv44khURsPOZcZOWxtQy5aM=;
+	s=arc-20240116; t=1783488723; c=relaxed/simple;
+	bh=suCyaLNtkSkSj+wPF8kJXv2b1PBa0LEYs4oXRtgZuMA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Ft3Lv01zTK/Wmi2ZpdCGgv2j710MPSMr/I9LlEqipQX/G4Mge8PEf+aaa6p0xY0nyjIDx5PECAyvkZzh5luOL19RrIApWh198J8fpf22MKqxSaX3A/s/JmsQtizun2/yGOgqEm4hIFljWVQVzpBokGN7c88ZFpmNUe/SMd8+hCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jygx6Oe/; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 218351F000E9;
-	Wed,  8 Jul 2026 05:25:52 +0000 (UTC)
+	 Message-Id; b=tgMbb51eImSdk4zja5HPjo+0z7g/NDOgNzUg4B9eVXOPmvlEe3JuZCpht7lV+eZazQkXB8IIYBU/Ol1OilXSUv/S4t0ic/3lrO2hHZ1xzBx891Nf1zZ3vP8XOsD8VGDRQ62/lpSvli49/dIcH/6RpeeDa1BlKjnPv7J54eNT8CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ee8ZL9+N; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FAF41F000E9;
+	Wed,  8 Jul 2026 05:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783488352;
-	bh=7J5TFW61B6HwhQSF4ot+jdZRWpU5CkA0AKbFNP8Sq8s=;
+	s=k20260515; t=1783488721;
+	bh=HmHng1EUvQQbmmsFZMPVlT46VgCksNt2K4J1gg9ZxeM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Jygx6Oe/oBR+5l1smN78zyxvk8KNlqOLAyW9nytycX16WWC/8msQI8SbkiDw2FA5K
-	 K2ntiNj//7JWZpZ4QeEKJAoORWXmcsTh9qCqkKqgnkTshBZp9Tfiab1Yjmkzfqx7Jp
-	 0aLGfCVcxDoY6xUJ/UWZ2vsd7PSQ4hUc4X+No323TIvyntz7/K0/3S9CNkqCUchE+q
-	 Ibfd4pbKqW1yyFaBICOqBq1PT+Q44l5zhCpXUuXZivxNIOKeK65fPaoxDs/Tp6Y6FA
-	 e09lZdr4YS8GoKqu5koXt10IrCCphs8SWM1Vchbj6oilr2N4G6GJGc3zllxYVdRfj1
-	 slOID4H3dJndg==
+	b=ee8ZL9+N6dfuqqGQgUXcMz1Et52GVsoAL/+kSlqTw/MmgLFob/wdteUsQFoD6Bcha
+	 kg1R4VfWOe9l7J+SiFQslhqQpEv3z2l/NdbdZVafGGkGoT0on10ER58HufwB6dFOrQ
+	 jNU7azyWRI0EWcATBMZmrm/KLqAFEtUVRNH2OKnTXO0IolhU7oJhM2RrRM0BFvkJXu
+	 9Mpg7vWtLXxR7ucHCsgzFjYyAU4K8VYDE3Rn11dn0GFQPlwpQZGNhAGH63jt0NGqPY
+	 pttgOc7C7pxw2zEDRM3RUTVOTfuSF4wMOPBw6sMYz1LM2W70ltXs0gSuDAsacp8ixz
+	 gnKuGlMrTP29w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 3/4] soc: qcom: geni-se: Keep pinctrl active for
- multi-owner controllers
+Subject: Re: [PATCH v8 2/4] dmaengine: qcom: gpi: Add lock/unlock TREs for
+ multi-owner I2C transfers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Mukesh Kumar Savaliya" <mukesh.savaliya@oss.qualcomm.com>
-Cc: Frank.Li@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org, robh@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260708051023.2872304-4-mukesh.savaliya@oss.qualcomm.com>
+Cc: vkoul@kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org, conor+dt@kernel.org
+In-Reply-To: <20260708051023.2872304-3-mukesh.savaliya@oss.qualcomm.com>
 References: <20260708051023.2872304-1-mukesh.savaliya@oss.qualcomm.com>
- <20260708051023.2872304-4-mukesh.savaliya@oss.qualcomm.com>
+ <20260708051023.2872304-3-mukesh.savaliya@oss.qualcomm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Jul 2026 05:25:51 +0000
-Message-Id: <20260708052552.218351F000E9@smtp.kernel.org>
+Date: Wed, 08 Jul 2026 05:32:00 +0000
+Message-Id: <20260708053201.3FAF41F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,172 +70,187 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-12101-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12102-lists,dmaengine=lfdr.de];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:mukesh.savaliya@oss.qualcomm.com,m:Frank.Li@kernel.org,m:conor+dt@kernel.org,m:devicetree@vger.kernel.org,m:robh@kernel.org,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:mukesh.savaliya@oss.qualcomm.com,m:vkoul@kernel.org,m:robh@kernel.org,m:devicetree@vger.kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:conor+dt@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,lists.linux.dev:replyto,sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,smtp.kernel.org:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,sashiko.dev:url,vger.kernel.org:from_smtp,qualcomm.com:email,smtp.kernel.org:mid,lists.linux.dev:replyto]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 44B89721C96
+X-Rspamd-Queue-Id: 546E1721D07
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
-- [High] Missing Initialization / Dead Code
-- [High] Incomplete Fix
-- [High] Buffer Overflow / API Misuse
+- [Critical] Setting TRE_FLAGS_IEOB on Lock/Unlock TREs causes multiple com=
+pletion events per descriptor, corrupting the vchan queue.
+- [High] Dangling CHAIN flag on the final DMA TRE for I2C Read transfers.
+- [High] Asymmetric Lock/Unlock TRE generation causes the RX channel to per=
+manently lock.
+- [High] Insufficient DMA transfer ring space check leads to partial TRE en=
+queue and hardware lockup.
+- [High] Missing CHAIN bit on GO TRE before Unlock TRE.
 --
 
---- Patch [3]: [PATCH v8 3/4] soc: qcom: geni-se: Keep pinctrl active for m=
-ulti-owner controllers ---
-commit be30e0e06b9485a4fb9a672b4ecaed4d0dc8ff46
+--- Patch [2]: [PATCH v8 2/4] dmaengine: qcom: gpi: Add lock/unlock TREs fo=
+r multi-owner I2C transfers ---
+commit cc47faf2611d1c6105d08f28b502e364ce9bde15
 Author: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
+Subject: dmaengine: qcom: gpi: Add lock/unlock TREs for multi-owner I2C tra=
+nsfers
 
-soc: qcom: geni-se: Keep pinctrl active for multi-owner controllers
+This commit adds support for emitting GPI hardware lock and unlock TREs to
+serialize access to a shared QUP-based I2C controller. It simplifies the
+client interface with a lock_action selector and increases the maximum TRE
+count to accommodate the newly added elements.
 
-This patch updates the GENI Serial Engine driver to avoid selecting the
-"sleep" pinctrl state when the engine is shared with another processor. It
-introduces a multi_owner flag to conditionally skip the pinctrl state change
-during shutdown.
-
-> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni=
--se.c
-> index 15636a8dc907a..3441ae3431e6a 100644
-> --- a/drivers/soc/qcom/qcom-geni-se.c
-> +++ b/drivers/soc/qcom/qcom-geni-se.c
-> @@ -607,9 +607,17 @@ int geni_se_resources_off(struct geni_se *se)
->  	if (has_acpi_companion(se->dev))
->  		return 0;
-> =20
-> -	ret =3D pinctrl_pm_select_sleep_state(se->dev);
-> -	if (ret)
-> -		return ret;
-> +	/*
-> +	 * Select the "sleep" pinctrl state only when the serial engine is
-> +	 * exclusively owned by this system processor. For shared controller
-> +	 * configurations, another system processor may still be using the pins,
-> +	 * and switching them to "sleep" can disrupt ongoing transfers.
-> +	 */
-> +	if (!se->multi_owner) {
-> +		ret =3D pinctrl_pm_select_sleep_state(se->dev);
-> +		if (ret)
-> +			return ret;
-> +	}
-
-[Severity: High]
-Does this regression also affect geni_se_resources_deactivate()?
-
-Shared I2C and SPI buses use geni_se_resources_deactivate() as their active
-power management callback. If a shared I2C or SPI controller initiates runt=
-ime
-suspend, that function still unconditionally changes the pinctrl state:
-
-drivers/soc/qcom/qcom-geni-se.c:geni_se_resources_deactivate() {
-    ...
-    ret =3D pinctrl_pm_select_sleep_state(se->dev);
-    if (ret)
-        return ret;
-    ...
-}
-
-Could this leave the primary protocol drivers vulnerable to the exact
-disruption described in the commit message?
-
-> diff --git a/include/linux/soc/qcom/geni-se.h b/include/linux/soc/qcom/ge=
-ni-se.h
-> index c5e6ab85df099..9571da2c51a88 100644
-> --- a/include/linux/soc/qcom/geni-se.h
-> +++ b/include/linux/soc/qcom/geni-se.h
-> @@ -66,6 +66,7 @@ struct geni_icc_path {
->   * @icc_paths:		Array of ICC paths for SE
->   * @pd_list:		Power domain list for managing power domains
->   * @has_opp:		Indicates if OPP is supported
-> + * @multi_owner:	True if SE is shared between multiple owners.
->   */
->  struct geni_se {
->  	void __iomem *base;
-> @@ -78,6 +79,7 @@ struct geni_se {
->  	struct geni_icc_path icc_paths[3];
->  	struct dev_pm_domain_list *pd_list;
->  	bool has_opp;
-> +	bool multi_owner;
+> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+> index a5055a6273af6..1e70d2adfdff0 100644
+> --- a/drivers/dma/qcom/gpi.c
+> +++ b/drivers/dma/qcom/gpi.c
+> @@ -518,7 +527,7 @@ struct gpii {
+>  	bool ieob_set;
 >  };
+> =20
+> -#define MAX_TRE 3
+> +#define MAX_TRE 5
+> =20
+>  struct gpi_desc {
+>  	struct virt_dma_desc vd;
 
 [Severity: High]
-Does this missing initialization cause a regression where the fix fails to
-take effect?
+Since the maximum number of TREs has increased, does gpi_prep_slave_sg()
+also need to be updated to account for the new elements?
 
-The commit message mentions it is described via DeviceTree with
-qcom,qup-multi-owner, but it doesn't appear that of_property_read_bool()
-is called anywhere to populate multi_owner.
+It appears gpi_prep_slave_sg() still hardcodes the maximum required TRE
+slots to 3:
 
-Without this, will the flag always remain false, preventing the fix from
-taking effect for shared controllers?
+gpi_prep_slave_sg() {
+        ...
+        nr_tre =3D 3;
+        ...
+        nr =3D gpi_ring_num_elements_avail(ch_ring);
+        if (nr < nr_tre) {
+        ...
+}
+
+If the ring only has 3 slots available but 5 TREs are generated, could this
+cause gpi_queue_xfer() to silently drop the extra TREs and dispatch a
+truncated chain to the hardware?
+
+> [ ... ]
+> @@ -1625,12 +1634,27 @@ static int gpi_create_i2c_tre(struct gchan *chan,=
+ struct gpi_desc *desc,
+>  			      unsigned long flags)
+>  {
+>  	struct gpi_i2c_config *i2c =3D chan->config;
+> +	enum gpi_lock_action lock_action =3D i2c->lock_action;
+>  	struct device *dev =3D chan->gpii->gpi_dev->dev;
+>  	unsigned int tre_idx =3D 0;
+>  	dma_addr_t address;
+>  	struct gpi_tre *tre;
+>  	unsigned int i;
+> =20
+> +	/* Optional lock TRE before transfer */
+> +	if (lock_action =3D=3D GPI_LOCK_ACQUIRE) {
+> +		tre =3D &desc->tre[tre_idx];
+> +		tre_idx++;
+> +
+> +		tre->dword[0] =3D 0;
+> +		tre->dword[1] =3D 0;
+> +		tre->dword[2] =3D 0;
+> +		tre->dword[3] =3D u32_encode_bits(1, TRE_LOCK);
+> +		tre->dword[3] |=3D u32_encode_bits(1, TRE_FLAGS_IEOB);
+
+[Severity: Critical]
+Could setting the Interrupt on End of Block (IEOB) flag here on the LOCK
+TRE cause multiple completion events to fire for a single descriptor?
+
+The DMA TRE also sets the IEOT flag later in this function. If both events
+are generated, gpi_process_xfer_compl_event() might call vchan_next_desc()
+multiple times, popping unrelated descriptors from the queue and potentially
+causing premature completions or use-after-free conditions.
 
 [Severity: High]
-Can this regression cause the driver to queue a truncated or corrupted
-transfer chain to the DMA engine under heavy IO traffic?
+Will this logic cause the RX channel to acquire a lock that it never
+releases?
 
-In drivers/dma/qcom/gpi.c, gpi_prep_slave_sg() statically calculates the
-required number of TREs without accounting for lock_action, which can add up
-to 2 extra TREs (total 5):
+For an I2C read transfer, lock_action =3D=3D GPI_LOCK_ACQUIRE unconditional=
+ly
+appends a LOCK TRE to the descriptor for both the TX and RX channels.
+However, the logic later in this function explicitly suppresses the UNLOCK
+TRE when i2c->op !=3D I2C_READ. Is it possible the RX channel sequencer gets
+permanently locked this way?
 
-drivers/dma/qcom/gpi.c:gpi_prep_slave_sg() {
-    ...
-    nr_tre =3D 3;
-    set_config =3D *(u32 *)gchan->config;
-    if (!set_config)
-        nr_tre =3D 2;
-    ...
-}
+> +		tre->dword[3] |=3D u32_encode_bits(0, TRE_MINOR_TYPE);
+> +		tre->dword[3] |=3D u32_encode_bits(3, TRE_MAJOR_TYPE);
+> +	}
+> +
+> [ ... ]
+> @@ -1690,6 +1714,24 @@ static int gpi_create_i2c_tre(struct gchan *chan, =
+struct gpi_desc *desc,
+> =20
+>  		if (!(flags & DMA_PREP_INTERRUPT))
+>  			tre->dword[3] |=3D u32_encode_bits(1, TRE_FLAGS_BEI);
+> +
+> +		/* If multi-owner and this is the release boundary, chain it */
+> +		if (i2c->lock_action =3D=3D GPI_LOCK_RELEASE)
+> +			tre->dword[3] |=3D u32_encode_bits(1, TRE_FLAGS_CHAIN);
+> +	}
+> +
+> +	/* Optional unlock TRE after transfer */
+> +	if (lock_action =3D=3D GPI_LOCK_RELEASE && i2c->op !=3D I2C_READ) {
+> +		tre =3D &desc->tre[tre_idx];
+> +		tre_idx++;
 
-If the transfer ring has 3 or 4 slots available, validation passes against =
-the
-smaller bound. However, when ring space runs out, gpi_queue_xfer() silently
-drops the TRE:
+[Severity: High]
+Can this sequence leave a dangling CHAIN flag on the final DMA TRE?
 
-drivers/dma/qcom/gpi.c:gpi_queue_xfer() {
-    ...
-    ret =3D gpi_ring_add_element(&gchan->ch_ring, (void **)&ch_tre);
-    if (unlikely(ret)) {
-        dev_err(gpii->gpi_dev->dev, "Error adding ring element to xfer ring=
-\n");
-        return;
-    }
-    ...
-}
+When preparing an I2C read transfer with GPI_LOCK_RELEASE, the DMA block
+unconditionally sets the CHAIN flag on the DMA TRE. However, the UNLOCK TRE
+is explicitly skipped here because of the (i2c->op !=3D I2C_READ) condition.
 
-Will this cause the caller to submit a truncated chain, leading to hardware
-hangs or data corruption?
+Could this cause the hardware DMA sequencer to fetch an out-of-bounds or
+stale TRE since it expects another descriptor to follow?
+
+[Severity: High]
+When configuring the TX channel for a multi-message read transfer, does
+the GO TRE need the CHAIN bit instead of the LINK bit if an UNLOCK TRE
+is going to follow it?
+
+If multi_msg is true, earlier code in gpi_create_i2c_tre() sets
+TRE_FLAGS_LINK on the GO TRE. Since the DMA TRE is skipped for TX channels
+during reads, the next TRE appended will be this UNLOCK TRE. Without the
+CHAIN bit on the GO TRE, might the hardware sequencer halt before processing
+the UNLOCK TRE?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708051023.2872=
-304-1-mukesh.savaliya@oss.qualcomm.com?part=3D3
+304-1-mukesh.savaliya@oss.qualcomm.com?part=3D2
 

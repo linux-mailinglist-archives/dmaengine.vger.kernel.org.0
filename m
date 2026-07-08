@@ -1,223 +1,210 @@
-Return-Path: <dmaengine+bounces-12091-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12092-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id n5S8MS7DTWq49wEAu9opvQ
-	(envelope-from <dmaengine+bounces-12091-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 05:25:34 +0200
+	id WgNLCIPFTWoU+AEAu9opvQ
+	(envelope-from <dmaengine+bounces-12092-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 05:35:31 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BD737215EC
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 05:25:34 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7149F72164F
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 05:35:30 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12091-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12091-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=NmOKfR8E;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12092-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-12092-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CF1E4301AD27
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 03:25:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CCCBD301F155
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 03:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7519C36212C;
-	Wed,  8 Jul 2026 03:25:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A82723271FD;
+	Wed,  8 Jul 2026 03:35:08 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228452147F9;
-	Wed,  8 Jul 2026 03:25:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD6631352D;
+	Wed,  8 Jul 2026 03:35:07 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783481132; cv=none; b=QKrMT5nZRl9RGbUXXCAXSS5hXvFWqq4kL47fdufAnXBtAeLszBdyYwecKMU2slydlbr1g1gGj1xhygdwFroLIyPRELfgoUXlK+f6ctMXbB0Ml8h5ElJ97tp/28P8mwiym8h/CcZHF2Oks83fR+sL+AHyh+gAkinjEBhx/VGSDXU=
+	t=1783481708; cv=none; b=BMMDZFtUtRLZNz5fr2bTBXxMq+R2JwUJQvDcOM0/EH/dF+Ahlu0bS9WSWVw6TddUYDKmjYd5UwXaa3b+2VP8+RDLd2gewyN/gYRUEilRR1gVuU1qOXwRn9/E1nKeDRE78SyIAAsBIZ7lpEGh1i2SszWYVLXMzgs8P8+J+Beq8Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783481132; c=relaxed/simple;
-	bh=S/EDF6i4+4ttv2+aNfJOupl/XYk3+PNv+SiacfMdla4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LYsYbQG8xlK8pR07h0iBonCrIWIiFUt3ys6N4M4FI5kqtwchZdz7hwlITibDoTx71tA9KFPL3jJPgz4yuTN5FqDcr4B5pNzh8EohhIqOsjj4PHcuW9H/2NmzJiKWnxULg2qz4w7GEnms1VWOOGhK55XZCig7yhYxl4oxQ9X6k/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-X-UUID: a7e407fa7a7c11f1aa26b74ffac11d73-20260708
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:ae684cea-d52f-46d5-a2f7-460587711f77,IP:0,U
-	RL:0,TC:0,Content:0,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:e7bac3a,CLOUDID:164c4e05a8185255933934eb70240207,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|865|898,TC:nil,Content:0|15|50,E
-	DM:2,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:
-	0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: a7e407fa7a7c11f1aa26b74ffac11d73-20260708
-X-User: zenghongling@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <zenghongling@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1092104708; Wed, 08 Jul 2026 11:25:23 +0800
-From: Hongling Zeng <zenghongling@kylinos.cn>
-To: vkoul@kernel.org,
-	Frank.Li@kernel.org,
-	wens@kernel.org,
-	jernej.skrabec@gmail.com,
-	samuel@sholland.org,
-	mripard@kernel.org,
-	arnd@arndb.de
-Cc: dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	zhongling0719@126.com,
-	Hongling Zeng <zenghongling@kylinos.cn>
-Subject: [PATCH v4] dmaengine: sun6i-dma: Fix use-after-free in error handling paths
-Date: Wed,  8 Jul 2026 11:25:18 +0800
-Message-Id: <20260708032518.50886-1-zenghongling@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1783481708; c=relaxed/simple;
+	bh=Bd8XlKUwTt3BUhsvLG69h3UIokTAfX+gwpcMi+PWjSM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=lsY9wPiG6gjm2uAMK+1viIbxIzYtDc/3ZgFBW0240JXy1iD+EQbyHQWCjWiyIV+i8OhtqoxdnVukBGT1Piu0nRQ/X/3vKfIDHg8Jlvk9d/W1zBEgi07Xjeml0zeRghif9PO/2wzWOIZau6Pju9fwGwzkNFNriiS1zKqzq7l4+LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NmOKfR8E; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD02C1F000E9;
+	Wed,  8 Jul 2026 03:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783481707;
+	bh=iB7NhzEXBQXgyDgw0NREyuShHTwFJABRgSW/Abcweqk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=NmOKfR8Eon4O/uEheMAc/JCdqvesZmxLWKjXY1+jOZG/KjQj1a6aUF8Epd5IH/nBg
+	 wwZC78bmVOYJwWoTGTsittI0VEiG0cFcUXMvFT4gEeOTXC4JII005TNEN4pJBVFwdz
+	 DTx7YTm7KAg1fv8TI7u71jWW6rNNZmSHT//CJJ13X7dUeuaXx48GvCTJiErLQcI+xA
+	 +QwI3UEOouegqzPjxVZpCU7tSA2MWfrO0CVf60sVZjZccb1xHaraTyFuiFIh6rSPlN
+	 CBNm4E3Q6syzz5zETjxwWj2tsXdrbvsoGv6REKrMZdKAoOvaNRR9Vt6wESZzwVWfT3
+	 A8gsBs9qFZ26Q==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4] dmaengine: sun6i-dma: Fix use-after-free in error
+ handling paths
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Hongling Zeng" <zenghongling@kylinos.cn>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, linux-sunxi@lists.linux.dev, dmaengine@vger.kernel.org
+In-Reply-To: <20260708032518.50886-1-zenghongling@kylinos.cn>
+References: <20260708032518.50886-1-zenghongling@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 08 Jul 2026 03:35:06 +0000
+Message-Id: <20260708033506.CD02C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.54 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	DMARC_NA(0.00)[kylinos.cn];
+	TAGGED_FROM(0.00)[bounces-12092-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:samuel@sholland.org,m:mripard@kernel.org,m:arnd@arndb.de,m:dmaengine@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:zhongling0719@126.com,m:zenghongling@kylinos.cn,m:jernejskrabec@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[zenghongling@kylinos.cn,dmaengine@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,sholland.org,arndb.de];
-	TAGGED_FROM(0.00)[bounces-12091-lists,dmaengine=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[kylinos.cn:email,smtp.kernel.org:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,sashiko.dev:url,vger.kernel.org:from_smtp,lists.linux.dev:replyto];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zenghongling@kylinos.cn,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,lists.linux.dev,126.com,kylinos.cn];
+	FORGED_RECIPIENTS(0.00)[m:zenghongling@kylinos.cn,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:linux-sunxi@lists.linux.dev,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[dmaengine];
-	R_DKIM_NA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_NO_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[kylinos.cn:from_mime,kylinos.cn:email,kylinos.cn:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1BD737215EC
+X-Rspamd-Queue-Id: 7149F72164F
 
-In error handling paths, the for loop frees v_lli in the loop body,
-then accesses v_lli->v_lli_next and v_lli->p_lli_next in the
-increment expression, which is use-after-free.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Fix by saving both the next virtual and physical pointers before
-freeing the current node.
+Pre-existing issues:
+- [High] Race condition in IRQ handler leading to NULL pointer dereference
+- [High] Missing tasklet_schedule in sun6i_dma_resume causes stalled transf=
+ers
+--
 
-Fixes: 555859308723 ("dmaengine: Add driver for Allwinner sun6i DMA")
-Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
-Suggested-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+--- Patch [1]: [PATCH v4] dmaengine: sun6i-dma: Fix use-after-free in error=
+ handling paths ---
+commit ece21d8f10ca9ff0dd6adbfa89c44eada4329522
+Author: Hongling Zeng <zenghongling@kylinos.cn>
 
----
-Changes in v2:
- -Refactored the fix to avoid code duplication by creating a helper function
-  sun6i_dma_free_lli_list() that handles LLI list cleanup
- -Add Suggested-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+dmaengine: sun6i-dma: Fix use-after-free in error handling paths
 
----
-Change in v3:
- -Further refactoring to move txd handling into the helper function
-  as suggested by Jernej
----
-Change in v4:
- -Add reviewed-by
----
- drivers/dma/sun6i-dma.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+The commit refactors the error handling paths in the sun6i-dma driver by
+introducing the helper functions sun6i_dma_free_desc() and
+sun6i_dma_free_desc_virt(). This resolves a use-after-free issue when
+iterating and freeing a virtual LLI list in sun6i_dma_prep_slave_sg() and
+sun6i_dma_prep_dma_cyclic().
 
-diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index fcc88a74d821..e161fc298b86 100644
---- a/drivers/dma/sun6i-dma.c
-+++ b/drivers/dma/sun6i-dma.c
-@@ -406,16 +406,12 @@ static inline void sun6i_dma_dump_lli(struct sun6i_vchan *vchan,
- 		v_lli->len, v_lli->para, v_lli->p_lli_next);
- }
- 
--static void sun6i_dma_free_desc(struct virt_dma_desc *vd)
-+static void sun6i_dma_free_desc(struct sun6i_dma_dev *sdev,
-+				struct sun6i_desc *txd)
- {
--	struct sun6i_desc *txd = to_sun6i_desc(&vd->tx);
--	struct sun6i_dma_dev *sdev = to_sun6i_dma_dev(vd->tx.chan->device);
- 	struct sun6i_dma_lli *v_lli, *v_next;
- 	dma_addr_t p_lli, p_next;
- 
--	if (unlikely(!txd))
--		return;
--
- 	p_lli = txd->p_lli;
- 	v_lli = txd->v_lli;
- 
-@@ -432,6 +428,17 @@ static void sun6i_dma_free_desc(struct virt_dma_desc *vd)
- 	kfree(txd);
- }
- 
-+static void sun6i_dma_free_desc_virt(struct virt_dma_desc *vd)
-+{
-+	struct sun6i_desc *txd = to_sun6i_desc(&vd->tx);
-+	struct sun6i_dma_dev *sdev = to_sun6i_dma_dev(vd->tx.chan->device);
-+
-+	if (unlikely(!txd))
-+		return;
-+
-+	sun6i_dma_free_desc(sdev, txd);
-+}
-+
- static int sun6i_dma_start_desc(struct sun6i_vchan *vchan)
- {
- 	struct sun6i_dma_dev *sdev = to_sun6i_dma_dev(vchan->vc.chan.device);
-@@ -788,10 +795,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
- 	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
- 
- err_lli_free:
--	for (p_lli = txd->p_lli, v_lli = txd->v_lli; v_lli;
--	     p_lli = v_lli->p_lli_next, v_lli = v_lli->v_lli_next)
--		dma_pool_free(sdev->pool, v_lli, p_lli);
--	kfree(txd);
-+	sun6i_dma_free_desc(sdev, txd);
- 	return NULL;
- }
- 
-@@ -869,10 +873,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
- 	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
- 
- err_lli_free:
--	for (p_lli = txd->p_lli, v_lli = txd->v_lli; v_lli;
--	     p_lli = v_lli->p_lli_next, v_lli = v_lli->v_lli_next)
--		dma_pool_free(sdev->pool, v_lli, p_lli);
--	kfree(txd);
-+	sun6i_dma_free_desc(sdev, txd);
- 	return NULL;
- }
- 
-@@ -1432,7 +1433,7 @@ static int sun6i_dma_probe(struct platform_device *pdev)
- 		struct sun6i_vchan *vchan = &sdc->vchans[i];
- 
- 		INIT_LIST_HEAD(&vchan->node);
--		vchan->vc.desc_free = sun6i_dma_free_desc;
-+		vchan->vc.desc_free = sun6i_dma_free_desc_virt;
- 		vchan_init(&vchan->vc, &sdc->slave);
- 	}
- 
--- 
-2.25.1
+> drivers/dma/sun6i-dma.c:sun6i_dma_interrupt() {
+> ...
+> 			if (vchan && (status & vchan->irq_type)) {
+> 				if (vchan->cyclic) {
+> 					vchan_cyclic_callback(&pchan->desc->vd);
+> 				} else {
+> 					spin_lock(&vchan->vc.lock);
+> 					vchan_cookie_complete(&pchan->desc->vd);
+> 					pchan->done =3D pchan->desc;
+> 					spin_unlock(&vchan->vc.lock);
+> 				}
+> 			}
+> ...
+> }
 
+[Severity: High]
+This is a pre-existing issue, but could this cause a NULL pointer dereferen=
+ce?
+
+Looking at sun6i_dma_terminate_all(), it clears pchan->desc:
+
+> drivers/dma/sun6i-dma.c:sun6i_dma_terminate_all() {
+> ...
+> 	if (pchan) {
+> 		writel(DMA_CHAN_ENABLE_STOP, pchan->base + DMA_CHAN_ENABLE);
+> 		writel(DMA_CHAN_PAUSE_RESUME, pchan->base + DMA_CHAN_PAUSE);
+>=20
+> 		vchan->phy =3D NULL;
+> 		pchan->vchan =3D NULL;
+> 		pchan->desc =3D NULL;
+> 		pchan->done =3D NULL;
+> 	}
+> ...
+> }
+
+If sun6i_dma_terminate_all() runs concurrently with sun6i_dma_interrupt() on
+SMP systems, sun6i_dma_terminate_all() holds vchan->vc.lock, stops the
+hardware, and sets pchan->desc =3D NULL. Meanwhile, the IRQ handler reads
+pchan->vchan locklessly.
+
+If the IRQ handler evaluates this before it is cleared, it will proceed. For
+non-cyclic transfers, the IRQ handler blocks on vchan->vc.lock. When
+sun6i_dma_terminate_all() releases the lock, the IRQ handler continues and
+evaluates &pchan->desc->vd. Since pchan->desc is NULL, could this pass a NU=
+LL
+pointer to vchan_cookie_complete() and cause a kernel panic? For cyclic
+transfers, the race appears even wider since the handler evaluates
+&pchan->desc->vd completely locklessly.
+
+> drivers/dma/sun6i-dma.c:sun6i_dma_resume() {
+> ...
+> 	} else if (!list_empty(&vchan->vc.desc_issued)) {
+> 		spin_lock(&sdev->lock);
+> 		list_add_tail(&vchan->node, &sdev->pending);
+> 		spin_unlock(&sdev->lock);
+> 	}
+> ...
+> }
+
+[Severity: High]
+This is a pre-existing issue, but does this code leave transfers stalled
+indefinitely?
+
+If a DMA channel is paused (sun6i_dma_pause) while it has pending descripto=
+rs
+but is not yet assigned to a physical hardware channel (pchan =3D=3D NULL),=
+ it is
+removed from the sdev->pending list.
+
+When the channel is later resumed here in sun6i_dma_resume(), it is re-added
+to sdev->pending. However, sun6i_dma_resume() fails to call
+tasklet_schedule(&sdev->task). Since the tasklet is responsible for pulling
+virtual channels off the pending list and assigning them to physical channe=
+ls,
+will this channel sit in the pending queue indefinitely until an independent
+event schedules the tasklet?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708032518.5088=
+6-1-zenghongling@kylinos.cn?part=3D1
 

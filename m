@@ -1,500 +1,457 @@
-Return-Path: <dmaengine+bounces-12120-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12121-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 0HbnNgF3TmonNQIAu9opvQ
-	(envelope-from <dmaengine+bounces-12120-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 18:12:49 +0200
+	id YyE+I0B3TmpCNQIAu9opvQ
+	(envelope-from <dmaengine+bounces-12121-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 18:13:52 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3968B72881F
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 18:12:49 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C198728867
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 18:13:51 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=qualcomm.com header.s=qcppdkim1 header.b=Gpi7Z0iH;
-	dkim=pass header.d=oss.qualcomm.com header.s=google header.b=MOacMMU8;
-	dmarc=pass (policy=reject) header.from=qualcomm.com;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12120-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12120-lists+dmaengine=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=NXP1.onmicrosoft.com header.s=selector1-NXP1-onmicrosoft-com header.b=PBaoe+9i;
+	dmarc=fail reason="SPF not aligned (relaxed), DKIM not aligned (relaxed)" header.from=nxp.com (policy=none);
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12121-lists+dmaengine=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="dmaengine+bounces-12121-lists+dmaengine=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8A80F320544C
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 15:43:30 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 0EE12302E990
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 15:51:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3B5C32ED3A;
-	Wed,  8 Jul 2026 15:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D834C409268;
+	Wed,  8 Jul 2026 15:51:01 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013057.outbound.protection.outlook.com [40.107.159.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2995630D406
-	for <dmaengine@vger.kernel.org>; Wed,  8 Jul 2026 15:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8053783C3;
+	Wed,  8 Jul 2026 15:50:59 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783525409; cv=pass; b=mPKB4I3ThjBpC4DKtmzaG39PFXjkTiXhHOGL0t8lEUhMr5vdr89xXTt3+G0S/QtzAT30QTBrLj6iVoO5v/YgLpAGXoAuqt7uvY7N2Eogc9BLO+MnrDo7jb2pXa0UL9T1mwMVxnCj0wgdSRvbkhNz0KQ+hoPVjqy4dvWOJA+3a3s=
+	t=1783525861; cv=fail; b=F7j+K8diyKadsxl/qMwQwFZf4KpDz4ceB91Xfkm1A1jcNzH0MuNQS+FSYXt7M17y24IJqwz/6NzM4H6J99Zin5GMMDEFaogeQWl3/WxXn17QKUcKn4OZWa0kgZVo67kuGD5se4zMw6Ew2oalr0/M1toNpBQEsW6JPPw/a7PuoU0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783525409; c=relaxed/simple;
-	bh=V4fIwFsr0mLwchZrRcsUWwCmrPaULkaS8mPw6q6+HMQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mbP/yfQErxt/WRKATmBdK7nh1GZVom5nrV1rDR5pMZbRuazHCy6L9O8X2kgidSskAct+xVbrCprHthtjyxC2RPdEwQbRKxqIGt7b5XFMnOXZmdPobJgr7Wb0QxkHG6MCWW1LYPfpkFtunbQOG+K4+sHwdZhYlOJsqFWvroKHwpc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Gpi7Z0iH; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=MOacMMU8; arc=pass smtp.client-ip=205.220.168.131
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 668D7pih2677922
-	for <dmaengine@vger.kernel.org>; Wed, 8 Jul 2026 15:43:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	OW7Jo5BTMAK0p//WyaSFrL7dEi1HJV9QqxfZvItnF1A=; b=Gpi7Z0iHanVc4ewT
-	7FQ/iOmgIDYfQPNsLWBPahVUdstaYgfQlDtGjG8VdQQA7J4awDImmOUNWK7vXyEM
-	tSCOlLcy4XHryPydn5GaRVu0CuNO/LMFBPRrPiUtLOo8SoV/IcsywNpNveG3cn6g
-	VDgjqyDZIdd4vgQqIb9ZYLZc55+qR8tBPSNrjrvHWDGsX/3Tk3aD30L/o2F4t6w2
-	zphI+wMiWRJYxTClL0K5W1KWq+cUBGielBfTLp041HPpIH7eneORQez1UM2tN+J/
-	M9UK/hSLMSNSRYjxhJwXnpci8Kuk8ap5IbJmXjvS3+m3abiBsrAgD6FN7RfdohoZ
-	qd31EQ==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f9q5s8r8h-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <dmaengine@vger.kernel.org>; Wed, 08 Jul 2026 15:43:27 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-51c21c01cf3so17099321cf.2
-        for <dmaengine@vger.kernel.org>; Wed, 08 Jul 2026 08:43:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783525406; cv=none;
-        d=google.com; s=arc-20260327;
-        b=I5UWgI0qo+3NPzn0t0+fxcnwtmtnCpSgSz/vc0vB16lymq4WKd8wLDmTpf+5Jl6v9z
-         Zomy+un5pLkBJPm50K+BwGfffBoAq5UzsuYShIRy2YuOGl6GxbdwHIbZMq4x1GWz7SWg
-         BVXb+QMm+CGEwwGZehAbgPgwhCa6PY42IBFQrXTJNY7d+DR3gVl83JakTxG+vk3l87LR
-         VD8hJD10fLnrhOLJ5i01ROHJzdmE7JT8gogN+knSKCvNtgm6WmvohvU4Ja/zvYCgq5cj
-         dGiqxitRUZHntiP3lhJGM91hYHYPlb1xNtShCqHBpSMApTQLZIniRsWcIBjNJxXKp9Ew
-         ui6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=OW7Jo5BTMAK0p//WyaSFrL7dEi1HJV9QqxfZvItnF1A=;
-        fh=y/FIWtfBtnyJNQefoLnZFccFL7uPodEk4NHk6JyYfRs=;
-        b=ri2OIdswyodgPF3Gy8Tl0Yw8c5IksD4A17yuV1EkW/nwB95Tso6gd0Iu/D+/Yvmy8q
-         EnfE2v6qOpVZ5f5fXBb+zu7jbnz+LCakpvcgwESGit6L3D4GVUSy5CRZpjRRYP1o2vDM
-         8uPqTtQdi2byD7BBXGrLazw74EoM4ftHYWdiSlaqpwYL17xjIj8zq5VYIj/f96Q3Oofc
-         VvZf4om4SclqcwpHVOp0+QpZ0qby5ufHVLHPhGu7Ejm7d7Q/lXjVbzBhNKto2r1FhdqE
-         XG+TsK0ycJ9FFVimpWJN7YT54wibnsGaPfxB7XQq8O+VFCvrxa3Wo0hH8zSwowkh5cC3
-         Uz/g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1783525406; x=1784130206; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=OW7Jo5BTMAK0p//WyaSFrL7dEi1HJV9QqxfZvItnF1A=;
-        b=MOacMMU8HWj6thFPlNXD6/yKqt+zpiOy3WfdCpFPG8zc7MCxepTZVxE+GL5hn3917Z
-         Vn5YYOtqfhHA1L1lo6OIekPpHNxmNyykUTucgaqnzOQKaUnF5hCBFWjVJxX80U+u5qUb
-         8+LKrQY/7QrZm00APbVttvfUf8GjETFr73QJ47fjaU1GzguhlAf4FlylEmaB9umu0Mn1
-         gcY9DVkQJ3tF8YbQeZOGX4OTByvnma/CgFQ82eWM4jHJUs02c3dep2nEPSx7OqWnnw9D
-         z8Q+zbyTeqp0VO1kqcWv6w2ihFglfgFtE5gL7VsT9QuzR+bChZVoKtIuMLPv9ZeYfkg8
-         O+TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783525406; x=1784130206;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=OW7Jo5BTMAK0p//WyaSFrL7dEi1HJV9QqxfZvItnF1A=;
-        b=cCXZ4F6lKZZLVqPGt8ssTK6jZ5dMyhaQ2E7rWWaVAEhcWUac5Alu5vdlsipICI5Woc
-         hA1kq2GIVrlYDsIns1ll7/VXcjn1ZZPBNUBoB6JhoOlxJZ7ftY+vCeHOD/uOJsf8SZHp
-         2EnRUy1Dbxt9fM/G/qi1gGhDuO67dR/yu5mwjbVT4+Hd3YY6rn2Pd5UnbrHqOUwYtVkS
-         qvJPJ7oEwWVgnArJPLtXgH2f4DXYeGtrrHmSrGIf0Y42YtXpC/HcfxAH6MElkxxxbnnX
-         inhFKuw9RIg11dqJR1U8/59lAcWFlEdL46YP4/9M+UWB18nOyCRlZ4lsGBCeSIpHYLxw
-         Bg9A==
-X-Forwarded-Encrypted: i=1; AHgh+RrxVVlygnoTqo6Cqwexc2PLK/4j7ShREBTEcZtFaTPDlQstK3IzRj2hUrR95qucOglH0nZJBbDpDL0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzw8OadnfU9VZKy8x9Lqj/xjcQ7KKhNx4i3556OcW+HDsleHupZ
-	hhW3+8qZn6THISgaucEGjuKiCTrAHYwBWqJU860imtINv2piZBYxve4ocsEcab1iyKO/wOXX4XS
-	41SwA69B24jeegWE/9jGhNcNWM3Qk8qEd71I6eJ5KNDmut18nQnNId74ggpPNd8HH8InQNnsyqH
-	vYmIXeoKSne0EWoxI9wENldtnFC4Z67DSEGfNwMA==
-X-Gm-Gg: AfdE7cn313fGrD4tThhE2gI7JXXZ9oAJxC30tB3fq482nZu/tx/ftDoaCEtU98ZeT5Y
-	7lBFoJkC9AA2l/MY816mZsezt9FqTnv+XWb35UZ/zMwpvLUyBsVlDFYs7F5IsVVgqzw95O02adq
-	Lw29EKPXIS8IUGkPvsEFiwv8L262nS46HUFV2rbG5ambIiiGTLseJcEELQyLoQiBr3dI9k
-X-Received: by 2002:a05:622a:4c05:b0:51a:8b64:69e0 with SMTP id d75a77b69052e-51c8b398897mr31022761cf.11.1783525406143;
-        Wed, 08 Jul 2026 08:43:26 -0700 (PDT)
-X-Received: by 2002:a05:622a:4c05:b0:51a:8b64:69e0 with SMTP id
- d75a77b69052e-51c8b398897mr31022071cf.11.1783525405268; Wed, 08 Jul 2026
- 08:43:25 -0700 (PDT)
+	s=arc-20240116; t=1783525861; c=relaxed/simple;
+	bh=5YS8hPbSwCa61xJFrYH9sCw9/fgzdSZQeiQM44APL9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tJ5s1YhvbdzB8GHoTA4y0P7amAAUcX55mruDZ5vFQxsPrVoZ9m3rL2JibemahfpTLBRH2mm+yZhqqPEOp9Vjt98LIqeRrPsHeREnSBzwcOc+NusXiflwY94CxK9GRbwvGdJGThjjxbtWUgSxT/HN8v6yqkPZZ3mSq71+AC7Na2U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=PBaoe+9i; arc=fail smtp.client-ip=40.107.159.57
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ljLKMxy83HS7g5WIUxkepVrT2kuPzeNBMWtPkniZmjy1Rw5ytN/WM7jriZY72evzbRDTqpzr6oxDp3UB1V1UlMz6afYBUPztf9BJ9WQjHfZv8ZPMB3cl7q403t9/q5n/bo5LRTiXcVcGP0TQk/w6DVhT2OFPzJqmAIdjGKqTAIrPifvWx5U9fFRXjOIrwLUiWaHmjNG3PPUOPxccAtyZrKlug0MGgxh1+W01Taf1I2CimEqDXPeEkm9D1u9qsM/wWfKQTvfWfBF5tPiWAjTO8xIzF37dTyc3ktbB91s80Uud3x/2EDiwAjriDfqO2gHt5NqxrhNhwxAdHBHi6/xiBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=B9AsAfJ/15L6a2dM+4m1OFXGP7ystfy4wGzwCM6Gl6s=;
+ b=otJ8Vn+an/+VTlSYElNrKx9I4yvrXVLeYvg8OoTApod1hRa2OV74wweDhI7u4raB8mpa8OmmkpHsXLN8cKpVVUyI4Urh900bRiXudg0EWbRCIQ9d82EzVzNdzlqrfslz71PXbWYGv7jIcoT1uykc7ElvQmzeEFvuD7bsBRBx4neD63axmj0YL1fwrQ9XpJX/gRsXA5DrHnt/YPUcVJB3GfG++6kAKoKNw1vyLdK76RGpyfWAeBbph2FfvCJzHe9EppRhPuv8Hjj5nhPl+bVTDbnuDXKUST+IFn0+s4eGJpcPHnBY9GWx25W/C5hhX1O0C+zESu8Mv27/bFm9sSzWvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B9AsAfJ/15L6a2dM+4m1OFXGP7ystfy4wGzwCM6Gl6s=;
+ b=PBaoe+9i7b3xwLaNg+eTSP7cIpzS06Dz7ldg3SYMM9BUsP3XKUZdnqhj/5fGG0/6Ulmgi63+r9Gh3FmvOY+NkuQLjEBYNyIDT7BZOx/sG802LjXD7aiBBxkIL3aglp2ucqCl3OFx/Xcal2CI8lBX1u3WEQW3+sUe13dJoYhF7R8DiB4MAJyrBq0zu9kxmb4zIHDTki5/EE0vZ9hXJR1R3DTkI4ldBCz7QA4hV804tI7FavrIZEtSLQvz6DOxZRsMgCyUaE728XydaZS1OtySS+D2exI9n9UGTLV7Zb//fhW49k3rppOYzs9oK7OEBjl0PqXY5NkL46pdqbotwswxvg==
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
+ by GV1PR04MB10557.eurprd04.prod.outlook.com (2603:10a6:150:209::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Wed, 8 Jul 2026
+ 15:50:56 +0000
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0159.007; Wed, 8 Jul 2026
+ 15:50:56 +0000
+Date: Wed, 8 Jul 2026 11:50:49 -0400
+From: Frank Li <Frank.li@oss.nxp.com>
+To: Devendra K Verma <devendra.verma@amd.com>
+Cc: bhelgaas@google.com, mani@kernel.org, vkoul@kernel.org,
+	Frank.Li@kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, michal.simek@amd.com
+Subject: Re: [PATCH v7] dmaengine: dw-edma: Enable HDMA 64R/W Channels
+Message-ID: <ak5x2bk-ECXy9bbH@lizhi-Precision-Tower-5810>
+References: <20260708134343.3806759-1-devendra.verma@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260708134343.3806759-1-devendra.verma@amd.com>
+X-ClientProxiedBy: SA0PR11CA0197.namprd11.prod.outlook.com
+ (2603:10b6:806:1bc::22) To GV2PR04MB11799.eurprd04.prod.outlook.com
+ (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260618-ux500-power-domains-v7-1-v1-0-eb5e50b1a588@kernel.org> <20260618-ux500-power-domains-v7-1-v1-6-eb5e50b1a588@kernel.org>
-In-Reply-To: <20260618-ux500-power-domains-v7-1-v1-6-eb5e50b1a588@kernel.org>
-From: Ulf Hansson <ulf.hansson@oss.qualcomm.com>
-Date: Wed, 8 Jul 2026 17:43:14 +0200
-X-Gm-Features: AVVi8Cdq0rtjAP0YSg4WhxzCqmLPP1um1vAPUHWXvoo9MmpPquQaWcjqsUHRPk4
-Message-ID: <CAPx+jO-teiu9vQfw+MeTbixH4PnARaqSC+_7bvHUMAAEPqtDaQ@mail.gmail.com>
-Subject: Re: [PATCH 06/11] pmdomain: st: ux500: Control DB8500 EPODs
-To: Linus Walleij <linusw@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Ulf Hansson <ulfh@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
-        Lee Jones <lee@kernel.org>, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA4MDE1NSBTYWx0ZWRfXy5ATAgyYi/ao
- b417Fh84y70X6ATsRP9FAwyVY78POZhtcbpcjCBRMj8zEkLyoqWOQD29NPu3GZgy8vX1uKbIatQ
- DoU4KBB6rNAVf/z0cQuKrWfybcNjxN7eQkcA3jSFIKdFyuAYBh6bzU/uWnu01gZ+YJw7M2Dn0+s
- 2VmwzbXfSsnJVM+7KL6pYqWQetdiSZhNDtjqhqy11geXUhdNjkRbVJ4nYLHtthHpMCDkWe0LIOS
- AOXvAxTBm2wQpei0FfDAKMVJglh3YDue8DHVZV7ivnomos9fN+rJTwNnIcpRyCaK6e/hhWHiaCn
- PaOJuEkzYV+/D6qmqVmJbxa0enIaYUu+M7NPV3hjzuLUcu6CjVpeAfkOHLpnbBWXVJUHarBQPc9
- 60AODKZq8y8JqNyRr6+vxFQgazvm+Emjbm2l6WI/eRfoTIyT/HL569CqSNvVA03TPp6xXFyNgTA
- IMAbEexGUzW9Ab5uCMQ==
-X-Proofpoint-ORIG-GUID: sM5unAecM79N8zNM7NqUA-1DSx43AgeX
-X-Authority-Analysis: v=2.4 cv=NfTWEWD4 c=1 sm=1 tr=0 ts=6a4e701f cx=c_pps
- a=WeENfcodrlLV9YRTxbY/uA==:117 a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=DJpcGTmdVt4CTyJn9g5Z:22 a=VwQbUJbxAAAA:8 a=-O4hDVTBhx9-GJANRbkA:9
- a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA4MDE1NSBTYWx0ZWRfXyhfb/UIJXYjL
- hpUmqFvIi9fzd40p9jOPruKVvtNa0K/8zYZPSz5y5AHK7V7hQS7aj0GqrbT4V2+JjtBiadVcsky
- Te2nKepOAlSrIQpdoAoXBIpT3BEye6Y=
-X-Proofpoint-GUID: sM5unAecM79N8zNM7NqUA-1DSx43AgeX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-08_02,2026-07-08_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 suspectscore=0 phishscore=0 bulkscore=0 clxscore=1011
- priorityscore=1501 impostorscore=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607080155
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|GV1PR04MB10557:EE_
+X-MS-Office365-Filtering-Correlation-Id: de369ec5-8434-4d75-e740-08dedd08b2b5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|376014|366016|1800799024|19092799006|22082099003|18002099003|11063799006|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	etetDMBTHOnhJRqI+JF5kqSWOPsz8D3sXLeBAPVt9cAOZS7RXKJyFu28pznEB0B9rYedQpcfKzH1sp3MpNeVfbkCr2R+MAUGFKg2cRgQPgbIu/ID+NLDh8RbxARbLWyn7jAEPRDyzmWfL50KyQGYNSL9XvJbUR75hR1DKpqXj4PMhu4tIktIJsVHm1uUTBvc36LAAjZEcz0vHcGkJBPX5x19PfrVXotj7JAHVzeDw/umKckQNbplmirnPbBnp4olzCzVQXTqWc9OjhtmSrAgMk3elqomOFoU4+EUzuYmxb1vdfdsGdLljnpR8v4YzdsK1N1p1z5UarAbleFoEGFfSG5dtNEko/w9RUG1V6BsOCFciIIrNlAJgE1JXYQWrtt+tJDsg3nVNXG9CdV7yYFvmog4uLxrfJnF6WU+/EH2p7xicKUxgWqABYSRZhKJPougntxbFZXKTPnEIQ8mVN6Rs4+qSqikZmxo5g4/9+xh77TG2yOCYZ6M722Nyuwb2JRsw8dx9lOFTpBUd7KPS0DerJedW0FvMZtqq6Bu0i3n2i9iIGtMzPMI1t7xsM4AC/dIs0M0jHTSXZ1mya36xi/t27XO8ALp9yubBGKS2EH4XRU/24qoE7DNk2IEZQ+ruiFchJ3o7fEIddME+MC7aGGavKEjXrLNQtfocikr01YBZbc=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(366016)(1800799024)(19092799006)(22082099003)(18002099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?31nNu6X118vqIGnJTGAqAC7dMFzoD5nIQdVuf/gznNHRWZOw9inI1HOuD6JF?=
+ =?us-ascii?Q?eDlEHqfbt+ckI5rZtwsC5JIcEjelW8bIKEglYyKhJzlYbo8bMohYrr7wY5b1?=
+ =?us-ascii?Q?Zf2aJELgfcFTV7JmZdtkpWNtJZjj6NeLqqoxTsiVkblqGPskFsQvdpuv83BH?=
+ =?us-ascii?Q?pgBO/RhbhMiZ3/bfRAi4RwqGG2h5NKu0VWGZTu7Vx1ArbOLEEnF9CDx0AmCN?=
+ =?us-ascii?Q?NRNiTxAe1pXertATRUCamDBBCZSgaQpN/ECXRFBUAjCsplkIeRSnZpcOWbkC?=
+ =?us-ascii?Q?XAcuvnY6MvalGT5NhsI3CCPoolyJmhRxxYybwTjgw7+31zCAhl84696gkYZO?=
+ =?us-ascii?Q?CNAWU4YfarTVyEBf6NuPQ/qqx55HVgcEIVPoY+aZS1OuS554bfCFHX8oRIIH?=
+ =?us-ascii?Q?R/rur7kbSr4Y4mPwbtQkHF4i50XmoEMa8Bjd4fUMoDes/Gxj4xJe3JAmpIfp?=
+ =?us-ascii?Q?uKUuOcGLbEpFU3DfkP3pG85QcGtSg4yiC3PhGJZMCrqa+1g66f7zYaW2TNz/?=
+ =?us-ascii?Q?kRBA4cQQLTA7ogfqWl6MXTuRKYK7AmK8olLf9mWk3C1vInPUCIyt7TMz7POF?=
+ =?us-ascii?Q?8vKaQGGcUndaekb4XvR1bIGp9sjKIkNtQInENkOFu7aCAz3aGP24KchyDDQ2?=
+ =?us-ascii?Q?uYAoJLdSbjIsNSOdJ0TA22eTzKmvIINSpJLZOfbYoi5qYBKlWVsIKtaVOjPO?=
+ =?us-ascii?Q?5MpMsv9cz2oJQPSc8JcLEVT2lL5VAm90SPeig3hQV0uh3OxOJSFsJS8c0QuO?=
+ =?us-ascii?Q?KU/uUo9xnuCdk3g78Qh+0v7Rz0tDGf3VBGBgWH2w5NGvczOpgZe3XgJprcyY?=
+ =?us-ascii?Q?ckJV8bJ2TwD6TW9Vbs9hiXTNIYr/BE3Ljyiim9ExuRVBby3vSxJ6RV8JScX7?=
+ =?us-ascii?Q?LgNzCTOdPh48A/GL1bXgssg1MyW3ULpwj3u7uadRVLEbZDZz417dFWE7vJas?=
+ =?us-ascii?Q?gll5bor9AXPCNUrN13sCvLd7yiZ0oD57EE7JUcLFyh6kSGo/BADdeUu08WBt?=
+ =?us-ascii?Q?SUp973VT69+zu7bzKrhLibbv/F9JIA99oqkxJTXeeXXsmeDwMxk0vLBW65B2?=
+ =?us-ascii?Q?Dl6i9vcPztwEzJncNoDpZT9wOBme1j8jGbl7TrPcdquyOHwlSWdvvObTMA9x?=
+ =?us-ascii?Q?DqF6IPw9AIJIipVsAFQEIFfyG+dJnx7yhSd3VA/vialqboisvwtxy5LB7XXE?=
+ =?us-ascii?Q?DF9HUqMfJMvOuUV8m2xcqCsOdK+ccLt8ikh+mK2AcXGDdM+jZ1KWFrfmw/+j?=
+ =?us-ascii?Q?dgiqAVj6fYFm/b3xKNVhIb0QaWj5cqC2NPakpLgggCLIctIPD43trWZejx88?=
+ =?us-ascii?Q?EriZTyvzK6mPDLEo7PTK5AiXq+Ljm7VbiCXBU8YMoJ5p5LQ8RS9osRQTpDT6?=
+ =?us-ascii?Q?2VIlS4Y7Ym/7c57eV0TU8NxxHoqmXAp4TgTXMcseJUa+DVaBq6Y96S+R5PtO?=
+ =?us-ascii?Q?ZP8UH5lw34Go6NCQttSdhYj/qBw+Kk0UPTgJIut86NjWvdQTIbPsGzty9+zr?=
+ =?us-ascii?Q?K4lkoYJDCOKvZ80Kv532T4ywNC1nxNOcCgWMLPQ/LJeIeIc6XkCWIR5O9Ehw?=
+ =?us-ascii?Q?R/jwlsPjD5JEkqulE/6cDh2Sk1RI1VR+lbkCYJmZsEnKols7MDmrkZMm10Wu?=
+ =?us-ascii?Q?yexu/zHjvZsZnghXF5AGkl6M3Q8YDmA+t5koIXkR8cZn3b9DwfyKUxnz4KRD?=
+ =?us-ascii?Q?TmsbB0Ml7LNSK7QhMXPxfWWpVq7+MmYimP2EmnqcF/Q9z4TwDOEYUcycNfGO?=
+ =?us-ascii?Q?6OWHfPiWUxG1YQqQfsJAAT1SYMb35y1ewzJ+D4Ok1GmBBFyYsR9a?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: de369ec5-8434-4d75-e740-08dedd08b2b5
+X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 15:50:56.5784
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9nSq0+G4OyyQWntBoW3r+ypZ+haXr0pQAevdlSi7bQYW+ozQmZBAzEds7FUts8viVgh7zA9JMzWj8B4orPOVU3ttPsA3rYZ89sYFGnj1atGkM7DDeqWBUSw858IZRikU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10557
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+X-Spamd-Result: default: False [0.94 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[19];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12120-lists,dmaengine=lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:linusw@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:ulfh@kernel.org,m:broonie@kernel.org,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:lee@kernel.org,m:linux-arm-kernel@lists.infradead.org,m:devicetree@vger.kernel.org,m:linux-pm@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:dmaengine@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[ulf.hansson@oss.qualcomm.com,dmaengine@vger.kernel.org];
-	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,suse.de,gmail.com,ffwll.ch,lists.infradead.org,vger.kernel.org,lists.freedesktop.org];
+	TAGGED_FROM(0.00)[bounces-12121-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[Frank.li@oss.nxp.com,dmaengine@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:devendra.verma@amd.com,m:bhelgaas@google.com,m:mani@kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:michal.simek@amd.com,s:lists@lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ulf.hansson@oss.qualcomm.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	FROM_NEQ_ENVFROM(0.00)[Frank.li@oss.nxp.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:from_mime,oss.qualcomm.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:dkim,vger.kernel.org:from_smtp,mail.gmail.com:mid]
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,amd.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,lizhi-Precision-Tower-5810:mid,NXP1.onmicrosoft.com:dkim,oss.nxp.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3968B72881F
+X-Rspamd-Queue-Id: 7C198728867
 
-On Thu, Jun 18, 2026 at 7:01=E2=80=AFAM Linus Walleij <linusw@kernel.org> w=
-rote:
+On Wed, Jul 08, 2026 at 07:13:43PM +0530, Devendra K Verma wrote:
+> As per 'Designware Cores PCI Express Controller Databook',
+> Section 7.1 - Overview, HDMA supports 64 Read and 64 Write
+> channels. Current controller driver supports up to 8 read and
+> write channels only. In order to utilize all the channels the
+> controller driver need to have the channel related structs
+> and variables as per the number of channels supported by IP.
+> Following changes are made to enable 64 Read / 64 Write
+> channel support:
 >
-> Move the DB8500 EPOD state handling into the Ux500 power-domain driver.
+>  o Defined HDMA specific macros to reflect the channel count.
+>  o The count of ll_regions and dt_regions in dw_edma_chip and
+>    dw_edma_pcie_data shall be in accordance to number of read
+>    and write channels.
+>  o In dw_edma_probe() configure the channels as per the channels
+>    of the IP used.
+>  o Changed mask types to u64 for higher channel counts.
 >
-> Keep the old regulator driver mutually exclusive with the pmdomain driver=
-.
->
-> Assisted-by: Codex:gpt-5-5
-> Signed-off-by: Linus Walleij <linusw@kernel.org>
+> Signed-off-by: Devendra K Verma <devendra.verma@amd.com>
 > ---
->  arch/arm/mach-ux500/Kconfig               |   2 +-
->  drivers/pmdomain/st/ste-ux500-pm-domain.c | 380 ++++++++++++++++++++++--=
-------
->  drivers/regulator/Kconfig                 |   1 +
->  3 files changed, 282 insertions(+), 101 deletions(-)
+
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+
+> Changes in v6:
+>   o In declaring bitmap variables wr/rd_mask, replaced constants
+>     with the macros defined for max channel count.
 >
-> diff --git a/arch/arm/mach-ux500/Kconfig b/arch/arm/mach-ux500/Kconfig
-> index c18def269137..56636c993f49 100644
-> --- a/arch/arm/mach-ux500/Kconfig
-> +++ b/arch/arm/mach-ux500/Kconfig
-> @@ -26,7 +26,7 @@ menuconfig ARCH_U8500
->         select PL310_ERRATA_753970 if CACHE_L2X0
->         select PM_GENERIC_DOMAINS if PM
->         select REGULATOR
-> -       select REGULATOR_DB8500_PRCMU
-> +       select UX500_PM_DOMAIN
->         select REGULATOR_FIXED_VOLTAGE
->         select SOC_BUS
->         select RESET_CONTROLLER
-> diff --git a/drivers/pmdomain/st/ste-ux500-pm-domain.c b/drivers/pmdomain=
-/st/ste-ux500-pm-domain.c
-> index 723001004690..1cd5b4985db0 100644
-> --- a/drivers/pmdomain/st/ste-ux500-pm-domain.c
-> +++ b/drivers/pmdomain/st/ste-ux500-pm-domain.c
-> @@ -6,172 +6,315 @@
->   *
->   * Implements PM domains using the generic PM domain for ux500.
->   */
-> +#include <linux/cleanup.h>
->  #include <linux/device.h>
-> +#include <linux/err.h>
->  #include <linux/kernel.h>
-> +#include <linux/mfd/dbx500-prcmu.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
->  #include <linux/printk.h>
->  #include <linux/slab.h>
-> -#include <linux/err.h>
-> -#include <linux/of.h>
-> -#include <linux/pm_domain.h>
+> Changes in v5:
+>   o Changed the {wr,rd}_mask type to BITMAP type for eDMA/HDMA
+>     as per the review comment.
+>   o Changed the 'mask' var type to pointer to ul.
 >
->  #include <dt-bindings/arm/ux500_pm_domains.h>
+> Changes in v4:
+>   o Changed 'mask' variable to a bitmap type as per the
+>     review comment.
 >
-> -static int pd_power_off(struct generic_pm_domain *domain)
-> +#define UX500_EPOD_NONE                NUM_EPOD_ID
+> Changes in v3:
+>   o Reverted the FIX for AI reported GET_CH_32() issue, as
+>     per the recommendation of reviewers, need to create
+>     separate patch for it.
+>
+> Changes in v2:
+>   o Fixed the pre-existing bug related to GET_CH_32
+>     interchanging the channel direction and id.
+>     This bug was not caused by any version of this patch.
+>   o Fixed the issue when using for_each_set_bit() for mask
+>     of u64 type.
+>
+> Changes in v1:
+>   o On review recommendation of sashiko bot, in the function
+>     dw_hdma_v0_core_off(), the loop iterates over registers
+>     as per the number of channels enabled and not on total
+>     number of channels supported.
+>   o Changed mask types to u64 for higher channel counts.
+> ---
+>  drivers/dma/dw-edma/dw-edma-core.c    | 19 +++++++++++++------
+>  drivers/dma/dw-edma/dw-edma-core.h    |  5 +++--
+>  drivers/dma/dw-edma/dw-edma-pcie.c    |  8 ++++----
+>  drivers/dma/dw-edma/dw-edma-v0-core.c |  6 +++---
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 27 +++++++++++++++++++--------
+>  drivers/dma/dw-edma/dw-hdma-v0-regs.h |  2 +-
+>  include/linux/dma/edma.h              | 10 ++++++----
+>  7 files changed, 49 insertions(+), 28 deletions(-)
+>
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index c2feb3adc79f..0eb24e707c9c 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -925,9 +925,9 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
+>  		irq = &dw->irq[pos];
+>
+>  		if (chan->dir == EDMA_DIR_WRITE)
+> -			irq->wr_mask |= BIT(chan->id);
+> +			bitmap_set(irq->wr_mask, chan->id, 1);
+>  		else
+> -			irq->rd_mask |= BIT(chan->id);
+> +			bitmap_set(irq->rd_mask, chan->id, 1);
+>
+>  		irq->dw = dw;
+>  		memcpy(&chan->msi, &irq->msi, sizeof(chan->msi));
+> @@ -1079,6 +1079,8 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+>  	struct dw_edma *dw;
+>  	u32 wr_alloc = 0;
+>  	u32 rd_alloc = 0;
+> +	u16 max_wr_cnt;
+> +	u16 max_rd_cnt;
+>  	int i, err;
+>
+>  	if (!chip)
+> @@ -1094,20 +1096,25 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+>
+>  	dw->chip = chip;
+>
+> -	if (dw->chip->mf == EDMA_MF_HDMA_NATIVE)
+> +	if (dw->chip->mf == EDMA_MF_HDMA_NATIVE) {
+>  		dw_hdma_v0_core_register(dw);
+> -	else
+> +		max_wr_cnt = HDMA_MAX_WR_CH;
+> +		max_rd_cnt = HDMA_MAX_RD_CH;
+> +	} else {
+>  		dw_edma_v0_core_register(dw);
+> +		max_wr_cnt = EDMA_MAX_WR_CH;
+> +		max_rd_cnt = EDMA_MAX_RD_CH;
+> +	}
+>
+>  	raw_spin_lock_init(&dw->lock);
+>
+>  	dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
+>  			      dw_edma_core_ch_count(dw, EDMA_DIR_WRITE));
+> -	dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
+> +	dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, max_wr_cnt);
+>
+>  	dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
+>  			      dw_edma_core_ch_count(dw, EDMA_DIR_READ));
+> -	dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
+> +	dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, max_rd_cnt);
+>
+>  	if (!dw->wr_ch_cnt && !dw->rd_ch_cnt)
+>  		return -EINVAL;
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+> index 902574b1ba86..25a6e8a958ad 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.h
+> +++ b/drivers/dma/dw-edma/dw-edma-core.h
+> @@ -91,9 +91,10 @@ struct dw_edma_chan {
+>
+>  struct dw_edma_irq {
+>  	struct msi_msg                  msi;
+> -	u32				wr_mask;
+> -	u32				rd_mask;
+>  	struct dw_edma			*dw;
 > +
-> +/**
-> + * struct dbx500_powerdomain_info - dbx500 power domain information
-> + * @genpd: generic power domain
-> + * @epod_id: id for EPOD (power domain)
-> + * @is_ramret: RAM retention switch for EPOD (power domain)
-> + * @exclude_from_power_state: exclude domain from power state count
-> + */
-> +struct dbx500_powerdomain_info {
-> +       struct generic_pm_domain genpd;
-> +       u16 epod_id;
-> +       bool is_ramret;
-> +       bool exclude_from_power_state;
-> +};
-> +
-> +static DEFINE_MUTEX(ux500_pd_lock);
-> +static int power_state_active_cnt;
-> +static bool epod_on[NUM_EPOD_ID];
-> +static bool epod_ramret[NUM_EPOD_ID];
-> +
-> +static void power_state_active_enable(void)
-> +{
-> +       power_state_active_cnt++;
-> +}
-> +
-> +static int power_state_active_disable(void)
+> +	DECLARE_BITMAP(wr_mask, HDMA_MAX_WR_CH);
+> +	DECLARE_BITMAP(rd_mask, HDMA_MAX_RD_CH);
+>  };
+>
+>  struct dw_edma {
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> index 0b30ce138503..79f653da8e0f 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -61,11 +61,11 @@ struct dw_edma_pcie_data {
+>  	/* eDMA registers location */
+>  	struct dw_edma_block		rg;
+>  	/* eDMA memory linked list location */
+> -	struct dw_edma_block		ll_wr[EDMA_MAX_WR_CH];
+> -	struct dw_edma_block		ll_rd[EDMA_MAX_RD_CH];
+> +	struct dw_edma_block		ll_wr[HDMA_MAX_WR_CH];
+> +	struct dw_edma_block		ll_rd[HDMA_MAX_RD_CH];
+>  	/* eDMA memory data location */
+> -	struct dw_edma_block		dt_wr[EDMA_MAX_WR_CH];
+> -	struct dw_edma_block		dt_rd[EDMA_MAX_RD_CH];
+> +	struct dw_edma_block		dt_wr[HDMA_MAX_WR_CH];
+> +	struct dw_edma_block		dt_rd[HDMA_MAX_RD_CH];
+>  	/* Other */
+>  	enum dw_edma_map_format		mf;
+>  	u8				irqs;
+> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> index 69e8279adec8..3f4e82516d92 100644
+> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> @@ -239,7 +239,7 @@ dw_edma_v0_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
+>  	irqreturn_t ret = IRQ_NONE;
+>  	struct dw_edma_chan *chan;
+>  	unsigned long off;
+> -	u32 mask;
+> +	unsigned long *mask;
+>
+>  	if (dir == EDMA_DIR_WRITE) {
+>  		total = dw->wr_ch_cnt;
+> @@ -252,7 +252,7 @@ dw_edma_v0_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
+>  	}
+>
+>  	val = dw_edma_v0_core_status_done_int(dw, dir);
+> -	val &= mask;
+> +	val &= *mask;
+>  	for_each_set_bit(pos, &val, total) {
+>  		chan = &dw->chan[pos + off];
+>
+> @@ -263,7 +263,7 @@ dw_edma_v0_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
+>  	}
+>
+>  	val = dw_edma_v0_core_status_abort_int(dw, dir);
+> -	val &= mask;
+> +	val &= *mask;
+>  	for_each_set_bit(pos, &val, total) {
+>  		chan = &dw->chan[pos + off];
+>
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> index 632abb8b481c..0181bd276e22 100644
+> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> @@ -53,13 +53,24 @@ __dw_ch_regs(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch)
+>  static void dw_hdma_v0_core_off(struct dw_edma *dw)
 >  {
-> -       /*
-> -        * Handle the gating of the PM domain regulator here.
-> -        *
-> -        * Drivers/subsystems handling devices in the PM domain needs to =
-perform
-> -        * register context save/restore from their respective runtime PM
-> -        * callbacks, to be able to enable PM domain gating/ungating.
-> -        */
-> +       if (power_state_active_cnt <=3D 0) {
-> +               pr_err("power state: unbalanced enable/disable calls\n");
-> +               return -EINVAL;
-> +       }
+>  	int id;
+> +	enum dw_edma_dir dir;
 > +
-> +       power_state_active_cnt--;
-
-The whole power_state_active_cnt thing seems to be a leftover from
-debug exercise, no?
-
-At least, I can't see that it actually adds much - or maybe following
-patches makes use of it somehow?
-
->         return 0;
+> +	dir = EDMA_DIR_WRITE;
+> +	for (id = 0; id < dw->wr_ch_cnt; id++) {
+> +		SET_CH_32(dw, dir, id, int_setup,
+> +			  HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> +		SET_CH_32(dw, dir, id, int_clear,
+> +			  HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> +		SET_CH_32(dw, dir, id, ch_en, 0);
+> +	}
+>
+> -	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
+> -		SET_BOTH_CH_32(dw, id, int_setup,
+> -			       HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> -		SET_BOTH_CH_32(dw, id, int_clear,
+> -			       HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> -		SET_BOTH_CH_32(dw, id, ch_en, 0);
+> +	dir = EDMA_DIR_READ;
+> +	for (id = 0; id < dw->rd_ch_cnt; id++) {
+> +		SET_CH_32(dw, dir, id, int_setup,
+> +			  HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> +		SET_CH_32(dw, dir, id, int_clear,
+> +			  HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> +		SET_CH_32(dw, dir, id, ch_en, 0);
+>  	}
 >  }
 >
-> -static int pd_power_on(struct generic_pm_domain *domain)
-> +static int enable_epod(u16 epod_id, bool ramret)
->  {
-> -       /*
-> -        * Handle the ungating of the PM domain regulator here.
-> -        *
-> -        * Drivers/subsystems handling devices in the PM domain needs to =
-perform
-> -        * register context save/restore from their respective runtime PM
-> -        * callbacks, to be able to enable PM domain gating/ungating.
-> -        */
-> +       int ret;
-> +
-> +       if (ramret) {
-> +               if (!epod_on[epod_id]) {
-> +                       ret =3D prcmu_set_epod(epod_id, EPOD_STATE_RAMRET=
-);
-> +                       if (ret < 0)
-> +                               return ret;
-> +               }
-> +               epod_ramret[epod_id] =3D true;
-> +       } else {
-> +               ret =3D prcmu_set_epod(epod_id, EPOD_STATE_ON);
-> +               if (ret < 0)
-> +                       return ret;
-> +               epod_on[epod_id] =3D true;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int disable_epod(u16 epod_id, bool ramret)
-> +{
-> +       int ret;
-> +
-> +       if (ramret) {
-> +               if (!epod_on[epod_id]) {
-> +                       ret =3D prcmu_set_epod(epod_id, EPOD_STATE_OFF);
-> +                       if (ret < 0)
-> +                               return ret;
-> +               }
-> +               epod_ramret[epod_id] =3D false;
-> +       } else {
-> +               if (epod_ramret[epod_id]) {
-> +                       ret =3D prcmu_set_epod(epod_id, EPOD_STATE_RAMRET=
-);
-> +                       if (ret < 0)
-> +                               return ret;
-> +               } else {
-> +                       ret =3D prcmu_set_epod(epod_id, EPOD_STATE_OFF);
-> +                       if (ret < 0)
-> +                               return ret;
-> +               }
-> +               epod_on[epod_id] =3D false;
-> +       }
-> +
->         return 0;
->  }
+> @@ -118,7 +129,7 @@ dw_hdma_v0_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
+>  	unsigned long total, pos, val;
+>  	irqreturn_t ret = IRQ_NONE;
+>  	struct dw_edma_chan *chan;
+> -	unsigned long off, mask;
+> +	unsigned long off, *mask;
 >
-> +static int pd_power_off(struct generic_pm_domain *domain)
-> +{
-> +       struct dbx500_powerdomain_info *info =3D
-> +               container_of(domain, struct dbx500_powerdomain_info, genp=
-d);
-> +       int ret =3D 0;
-> +
-> +       guard(mutex)(&ux500_pd_lock);
-> +       if (info->epod_id < NUM_EPOD_ID)
-> +               ret =3D disable_epod(info->epod_id, info->is_ramret);
-> +       else if (!info->exclude_from_power_state)
-> +               ret =3D power_state_active_disable();
-> +
-> +       return ret;
-> +}
-> +
-> +static int pd_power_on(struct generic_pm_domain *domain)
-> +{
-> +       struct dbx500_powerdomain_info *info =3D
-> +               container_of(domain, struct dbx500_powerdomain_info, genp=
-d);
-> +       int ret =3D 0;
-> +
-> +       guard(mutex)(&ux500_pd_lock);
-> +       if (info->epod_id < NUM_EPOD_ID)
-> +               ret =3D enable_epod(info->epod_id, info->is_ramret);
-> +       else if (!info->exclude_from_power_state)
-> +               power_state_active_enable();
-> +
-> +       return ret;
-> +}
-
-[...]
-
+>  	if (dir == EDMA_DIR_WRITE) {
+>  		total = dw->wr_ch_cnt;
+> @@ -130,7 +141,7 @@ dw_hdma_v0_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
+>  		mask = dw_irq->rd_mask;
+>  	}
 >
-> +static int ux500_pm_domain_add_subdomain(struct generic_pm_domain *domai=
-n)
-> +{
-> +       return pm_genpd_add_subdomain(&ux500_pm_domain_vape.genpd, domain=
-);
-> +}
-> +
-> +static int ux500_pm_domains_add_subdomains(void)
-> +{
-> +       int ret;
-> +
-> +       ret =3D ux500_pm_domain_add_subdomain(&ux500_pm_domain_sva_mmdsp.=
-genpd);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D ux500_pm_domain_add_subdomain(&ux500_pm_domain_sva_pipe.g=
-enpd);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D ux500_pm_domain_add_subdomain(&ux500_pm_domain_sia_mmdsp.=
-genpd);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D ux500_pm_domain_add_subdomain(&ux500_pm_domain_sia_pipe.g=
-enpd);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D ux500_pm_domain_add_subdomain(&ux500_pm_domain_sga.genpd)=
-;
-> +       if (ret)
-> +               return ret;
-> +
-> +       return ux500_pm_domain_add_subdomain(&ux500_pm_domain_b2r2_mcde.g=
-enpd);
-> +}
-
-We recently added a generic "power-domains-child-ids" DT property,
-that allows us to describe child power-domains for these kinds of
-cases.
-
-Moreover, we have of_genpd_add|remove_child_ids() to easily hook them
-up when probing. I suggest we use that here as well.
-
-> +
->  static int ux500_pm_domains_probe(struct platform_device *pdev)
->  {
->         struct device_node *np =3D pdev->dev.of_node;
->         struct genpd_onecell_data *genpd_data;
->         int i;
-> +       int ret;
+> -	for_each_set_bit(pos, &mask, total) {
+> +	for_each_set_bit(pos, mask, total) {
+>  		chan = &dw->chan[pos + off];
 >
->         if (!np)
->                 return -ENODEV;
-> @@ -196,7 +372,11 @@ static int ux500_pm_domains_probe(struct platform_de=
-vice *pdev)
->         genpd_data->num_domains =3D ARRAY_SIZE(ux500_pm_domains);
+>  		val = dw_hdma_v0_core_status_int(chan);
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-regs.h b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> index 7759ba9b4850..48e40efceb2e 100644
+> --- a/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> @@ -11,7 +11,7 @@
 >
->         for (i =3D 0; i < ARRAY_SIZE(ux500_pm_domains); ++i)
-> -               pm_genpd_init(ux500_pm_domains[i], NULL, false);
-> +               pm_genpd_init(ux500_pm_domains[i], NULL, true);
-> +
-> +       ret =3D ux500_pm_domains_add_subdomains();
-> +       if (ret)
-> +               return ret;
+>  #include <linux/dmaengine.h>
 >
->         of_genpd_add_provider_onecell(np, genpd_data);
->         return 0;
-> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-> index 87554ab92801..35d1b191462c 100644
-> --- a/drivers/regulator/Kconfig
-> +++ b/drivers/regulator/Kconfig
-> @@ -414,6 +414,7 @@ config REGULATOR_DBX500_PRCMU
->  config REGULATOR_DB8500_PRCMU
->         bool "ST-Ericsson DB8500 Voltage Domain Regulators"
->         depends on MFD_DB8500_PRCMU
-> +       depends on !UX500_PM_DOMAIN
->         select REGULATOR_DBX500_PRCMU
->         help
->           This driver supports the voltage domain regulators controlled b=
-y the
+> -#define HDMA_V0_MAX_NR_CH			8
+> +#define HDMA_V0_MAX_NR_CH			64
+>  #define HDMA_V0_CH_EN				BIT(0)
+>  #define HDMA_V0_LOCAL_ABORT_INT_EN		BIT(6)
+>  #define HDMA_V0_REMOTE_ABORT_INT_EN		BIT(5)
+> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> index 1fafd5b0e315..da7a5cc93ad4 100644
+> --- a/include/linux/dma/edma.h
+> +++ b/include/linux/dma/edma.h
+> @@ -14,6 +14,8 @@
 >
+>  #define EDMA_MAX_WR_CH                                  8
+>  #define EDMA_MAX_RD_CH                                  8
+> +#define HDMA_MAX_WR_CH                                  64
+> +#define HDMA_MAX_RD_CH                                  64
+>
+>  struct dw_edma;
+>
+> @@ -89,12 +91,12 @@ struct dw_edma_chip {
+>  	u16			ll_wr_cnt;
+>  	u16			ll_rd_cnt;
+>  	/* link list address */
+> -	struct dw_edma_region	ll_region_wr[EDMA_MAX_WR_CH];
+> -	struct dw_edma_region	ll_region_rd[EDMA_MAX_RD_CH];
+> +	struct dw_edma_region	ll_region_wr[HDMA_MAX_WR_CH];
+> +	struct dw_edma_region	ll_region_rd[HDMA_MAX_RD_CH];
+>
+>  	/* data region */
+> -	struct dw_edma_region	dt_region_wr[EDMA_MAX_WR_CH];
+> -	struct dw_edma_region	dt_region_rd[EDMA_MAX_RD_CH];
+> +	struct dw_edma_region	dt_region_wr[HDMA_MAX_WR_CH];
+> +	struct dw_edma_region	dt_region_rd[HDMA_MAX_RD_CH];
+>
+>  	/* interrupt emulation */
+>  	int			db_irq;
 > --
-> 2.54.0
+> 2.43.0
 >
-
-Kind regards
-Uffe
 

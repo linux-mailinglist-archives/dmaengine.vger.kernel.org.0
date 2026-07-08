@@ -1,222 +1,162 @@
-Return-Path: <dmaengine+bounces-12087-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12088-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id u8CQHYS2TWp39QEAu9opvQ
-	(envelope-from <dmaengine+bounces-12087-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 04:31:32 +0200
+	id +XzPOQe4TWri9QEAu9opvQ
+	(envelope-from <dmaengine+bounces-12088-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 04:37:59 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE16F7212B8
-	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 04:31:31 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57FA372136B
+	for <lists+dmaengine@lfdr.de>; Wed, 08 Jul 2026 04:37:59 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12087-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12087-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="k5JrUB/h";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12088-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12088-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A40B630086C9
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 02:30:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 95B923019504
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2026 02:37:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9303AEF27;
-	Wed,  8 Jul 2026 02:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8AED390616;
+	Wed,  8 Jul 2026 02:37:32 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A4EFBE1;
-	Wed,  8 Jul 2026 02:30:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA53E420896
+	for <dmaengine@vger.kernel.org>; Wed,  8 Jul 2026 02:37:31 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783477849; cv=none; b=djrw/uhnqARqAiMC3yAJVfu31Mxic37idnHn0MiO7qBTp9prvUom+MZuLm2lcsT5eWb6YXAUKSl0jNFKjzI4IHaeZgVvrSfjAGpZbXUvUUQKXYg5J667pgkVLsrXUovWgcHsbnEXYe/SBWFA4O/+7MnJL7UySUjLVHEr3aUnmEs=
+	t=1783478252; cv=none; b=sBTS2VZ/bgM8M9RLqi19Xm4IYBrf5qD6jdMjHL/79MZ5kBROGghSNCimcv7xlDMdEEKuv9g3sv9ZzdUBhF/a6HCWlqqqp87u7Fl+Ykyi19sHtFGa2rD6n8o9J9NA9KqPJDo9fd6hWd9J84rdRy6MGcSE5xRAu3fJuuKDN/4r6mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783477849; c=relaxed/simple;
-	bh=lVp4HAArxHxSzWhO9l5kt8p+axmt969YhwVfWgKBJ5Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=hfAxk5vZjFWdRAlRJVe6AvAb5L8AZHlOzsr6PrjYfPRpFSMUSNypc+8jzcj3dR/bdVRjSi20PgSPCJ2vOP6qLgyhKjKkxs+onNkAlDVEJQf9HN8xTxSeTfSs6vjDxUIwh0MIsptAPlXdK2hpPJN97pK8JEZBRogv+0cCU9iVxLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-X-UUID: 0339606c7a7511f1aa26b74ffac11d73-20260708
-X-CID-CACHE: Type:Local,Time:202607081024+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:1131fd70-43aa-4918-b9a8-07342c716345,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:e7bac3a,CLOUDID:7c4e6afa9f7765c382247de88d565009,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|865|898,TC:nil,Content:0|15|50,E
-	DM:-3,IP:nil,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,
-	OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 0339606c7a7511f1aa26b74ffac11d73-20260708
-X-User: zenghongling@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <zenghongling@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 398146661; Wed, 08 Jul 2026 10:30:40 +0800
-From: Hongling Zeng <zenghongling@kylinos.cn>
-To: ludovic.desroches@microchip.com,
-	vkoul@kernel.org,
-	Frank.Li@kernel.org,
-	tudor.ambarus@linaro.org,
-	nicolas.ferre@microchip.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhongling0719@126.com,
-	Hongling Zeng <zenghongling@kylinos.cn>,
-	sashiko-bot@kernel.org
-Subject: [PATCH v3] dma: at_hdmac: Fix use-after-free by proper tasklet  cleanup
-Date: Wed,  8 Jul 2026 10:30:35 +0800
-Message-Id: <20260708023035.27194-1-zenghongling@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1783478252; c=relaxed/simple;
+	bh=9nJpcKklYoJL/l552EIDU42GV7oZbqWaLnIM4UCT/dY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=qSC2f9OC3s/QEzIfaTOSV6+L93vmv/3qTQNA2SlMgw9fPL+6tXfg2RmyXPm4owcSUWlAX+0/s3W9T+0M9MxTtWQIc/pOHCdjZ1qWUKT3j2k85x5UXuUfutEHXk5MpJUcc/RwFsjiFa7CLHdVYa1NLVGH8I9zjT7ix0XEEnNOh3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5JrUB/h; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 237E21F000E9;
+	Wed,  8 Jul 2026 02:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783478251;
+	bh=q+eT+5o9y4wFfs4nIF52o81Pf67ScMAaeb6+viMm33A=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=k5JrUB/h9L8StYuRvWUHj3x6a0qJJhcBUJ9okPU/cfLMM5kLOYB5pGY5Z0KmCLG2C
+	 couyAVN55/oShuFLnzDu0ASYaEihaxXZGyCsQg5lnmNL7YyTUx5vQeUYQZyIMkuNGS
+	 1isQ5OIsrt4p26Is3NtSlIydlsm3hw3XmNdeRgMEsRP1fwIMcaUAg0G98I8JzXeV2J
+	 Nxzyixqg6vFBlY5UGcS41DiVSTLadVwwnH9aMVcejOwukXh1Ob9pIioVF3RH91x6zh
+	 GfNCzdEh+HwA/bTB1Mf7ZomJy3qma0f4x9BAsVhwLEEQQezTuksYBd2A4OxTiB/JzR
+	 n5Zdcbnpr5/iA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3] dma: at_hdmac: Fix use-after-free by proper tasklet
+  cleanup
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Hongling Zeng" <zenghongling@kylinos.cn>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260708022405.24266-1-zenghongling@kylinos.cn>
+References: <20260708022405.24266-1-zenghongling@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 08 Jul 2026 02:37:30 +0000
+Message-Id: <20260708023731.237E21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.46 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12087-lists,dmaengine=lfdr.de];
-	DMARC_NA(0.00)[kylinos.cn];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:ludovic.desroches@microchip.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:tudor.ambarus@linaro.org,m:nicolas.ferre@microchip.com,m:linux-arm-kernel@lists.infradead.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:zhongling0719@126.com,m:zenghongling@kylinos.cn,m:sashiko-bot@kernel.org,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,126.com,kylinos.cn,kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[zenghongling@kylinos.cn,dmaengine@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zenghongling@kylinos.cn,dmaengine@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-12088-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:zenghongling@kylinos.cn,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	R_DKIM_NA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,kylinos.cn:from_mime,kylinos.cn:email,kylinos.cn:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,channels.next:url]
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,kylinos.cn:email,smtp.kernel.org:mid,sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lists.linux.dev:replyto]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BE16F7212B8
+X-Rspamd-Queue-Id: 57FA372136B
 
-Current cleanup paths have a use-after-free vulnerability:
-- vchan_init() creates tasklets that access at_dma_chan memory
-- free_irq() only waits for IRQ handler, NOT tasklets
-- atdma is devm-managed and freed after probe/remove
-- Running tasklets accessing freed memory → Use-After-Free!
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Meaningful code and commit message mismatch: The v3 changelog ex=
+plicitly claims to keep a defensive NULL check, but no such check exists in=
+ the code.
+--
 
-The fix requires careful ordering:
-- free_irq() FIRST to synchronize with running IRQ handlers and prevent
-  them from scheduling new tasklets
-- Then kill tasklets to wait for already-scheduled ones to complete
-- Only then free other resources
+--- Patch [1]: [PATCH v3] dma: at_hdmac: Fix use-after-free by proper taskl=
+et  cleanup ---
+commit e05118b092320af0ba75bbb64dc2f10dd2eff233
+Author: Hongling Zeng <zenghongling@kylinos.cn>
 
-Fixes: ac803b56860f ("dmaengine: at_hdmac: Convert driver to use virt-dma")
-Reported-by: sashiko-bot@kernel.org
-Closes: https://lore.kernel.org/all/20260604073945.54B311F00898@smtp.kernel.org/
-Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
+dma: at_hdmac: Fix use-after-free by proper tasklet cleanup
 
----
-Change in v2:
-- Fix NULL pointer dereference in probe error path by checking if channels
-  list is initialized before cleanup
-- Fix race condition by calling free_irq() before tasklet_kill() to ensure
-  IRQ handlers cannot reschedule tasklets after cleanup
----
-Change in v3:
-- Fix double free_irq() in probe error path by using goto to skip
-  lower error labels after upper cleanup handles IRQ and channels
-- Fix double at_dma_cleanup_channels() call in probe error path
-- Replace incorrect channels.next != NULL check (always true after
-  INIT_LIST_HEAD) with proper list_empty() check
-- Consolidate at_dma_cleanup_channels() helper used by both probe
----
- drivers/dma/at_hdmac.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+This commit fixes a use-after-free vulnerability by reordering the probe and
+remove cleanup paths. It ensures that free_irq is called before killing
+tasklets, preventing IRQ handlers from scheduling new tasklets on freed mem=
+ory.
 
-diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index e5b30a57c477..044a0fb38b7a 100644
---- a/drivers/dma/at_hdmac.c
-+++ b/drivers/dma/at_hdmac.c
-@@ -1940,6 +1940,20 @@ static void at_dma_off(struct at_dma *atdma)
- 		cpu_relax();
- }
- 
-+static void at_dma_cleanup_channels(struct at_dma *atdma)
-+{
-+	struct dma_chan *chan, *_chan;
-+	int i = 0;
-+
-+	list_for_each_entry_safe(chan, _chan, &atdma->dma_device.channels,
-+			device_node) {
-+		/* Disable interrupts */
-+		atc_disable_chan_irq(atdma, i++);
-+		tasklet_kill(&to_at_dma_chan(chan)->vc.task);
-+		list_del(&chan->device_node);
-+	}
-+}
-+
- static int __init at_dma_probe(struct platform_device *pdev)
- {
- 	struct at_dma		*atdma;
-@@ -2105,12 +2119,17 @@ static int __init at_dma_probe(struct platform_device *pdev)
- err_of_dma_controller_register:
- 	dma_async_device_unregister(&atdma->dma_device);
- err_dma_async_device_register:
-+	free_irq(platform_get_irq(pdev, 0), atdma);
-+	at_dma_cleanup_channels(atdma);
- 	dma_pool_destroy(atdma->memset_pool);
-+	dma_pool_destroy(atdma->lli_pool);
-+	goto err_clk;
- err_memset_pool_create:
- 	dma_pool_destroy(atdma->lli_pool);
- err_desc_pool_create:
- 	free_irq(platform_get_irq(pdev, 0), atdma);
- err_irq:
-+err_clk:
- 	clk_disable_unprepare(atdma->clk);
- 	return err;
- }
-@@ -2118,23 +2137,17 @@ static int __init at_dma_probe(struct platform_device *pdev)
- static void at_dma_remove(struct platform_device *pdev)
- {
- 	struct at_dma		*atdma = platform_get_drvdata(pdev);
--	struct dma_chan		*chan, *_chan;
- 
- 	at_dma_off(atdma);
- 	if (pdev->dev.of_node)
- 		of_dma_controller_free(pdev->dev.of_node);
- 	dma_async_device_unregister(&atdma->dma_device);
- 
--	dma_pool_destroy(atdma->memset_pool);
--	dma_pool_destroy(atdma->lli_pool);
- 	free_irq(platform_get_irq(pdev, 0), atdma);
- 
--	list_for_each_entry_safe(chan, _chan, &atdma->dma_device.channels,
--			device_node) {
--		/* Disable interrupts */
--		atc_disable_chan_irq(atdma, chan->chan_id);
--		list_del(&chan->device_node);
--	}
-+	at_dma_cleanup_channels(atdma);
-+	dma_pool_destroy(atdma->memset_pool);
-+	dma_pool_destroy(atdma->lli_pool);
- 
- 	clk_disable_unprepare(atdma->clk);
- }
--- 
-2.25.1
+Closes: https://lore.kernel.org/all/20260604073945.54B311F00898@smtp.kernel=
+.org/
 
+> Change in v3:
+> - Reorder probe error path to match remove() cleanup order
+> - Keep defensive NULL check for channels cleanup
+
+[Severity: Medium]
+This isn't a bug in the code, but the changelog states a defensive NULL
+check was kept for the channels cleanup.
+
+Looking at the newly added cleanup function in the diff:
+
+> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+> --- a/drivers/dma/at_hdmac.c
+> +++ b/drivers/dma/at_hdmac.c
+[ ... ]
+> +static void at_dma_cleanup_channels(struct at_dma *atdma)
+> +{
+> +	struct dma_chan *chan, *_chan;
+> +	int i =3D 0;
+> +
+> +	list_for_each_entry_safe(chan, _chan, &atdma->dma_device.channels,
+> +			device_node) {
+
+Was the defensive check accidentally dropped in at_dma_cleanup_channels,
+or does the commit message just need to be updated?
+
+While the code appears safe because the error paths were correctly reordered
+to avoid reaching this function with an uninitialized list, the changelog
+mismatch might cause confusion.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708022405.2426=
+6-1-zenghongling@kylinos.cn?part=3D1
 

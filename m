@@ -1,258 +1,211 @@
-Return-Path: <dmaengine+bounces-12154-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12155-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 5queBsP8TmrQYQIAu9opvQ
-	(envelope-from <dmaengine+bounces-12154-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 03:43:31 +0200
+	id VPjoJSQFT2rIZAIAu9opvQ
+	(envelope-from <dmaengine+bounces-12155-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 04:19:16 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F1F372BBA7
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 03:43:30 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5A5E72BE96
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 04:19:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="GWU2uo/m";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12154-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="dmaengine+bounces-12154-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=none;
+	dmarc=none;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12155-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12155-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 22D403016B7D
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 01:43:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8873E30210C3
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 02:19:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F552227BB9;
-	Thu,  9 Jul 2026 01:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFF862E92BA;
+	Thu,  9 Jul 2026 02:19:13 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F169C2E413;
-	Thu,  9 Jul 2026 01:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735B22DAFDE;
+	Thu,  9 Jul 2026 02:19:10 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783561407; cv=none; b=jqVbFkgP3Aef6nAmPzxZbmjeO4r+N5VqtKMeGFlPM8wRlXYOzWhOhXzz/6Y89r4znw52N4COM9wZ6PFmqKn9+oVxkWK8VOO0iJXxk9U341D83FQ4+CVPInqcjiQhqk+hCzhral1W7nb+nvp8xnLpcEmLZ1MRtgdrj6SAWHFcdQ8=
+	t=1783563553; cv=none; b=Pe3qndfTxcNwsobzWUvzdugOwADVHgYZPWgLqDi7QgYLMGGRf4gEkVbE1oy4GDssBTook8GZmpwL+kfacBVR0U8VOvv0jfHYUYJfUkgsZHl7wLvnYawvJr8TCNrPWL6K6yBiGOzcFbsfULQiioKx1bixOf+zGNvwSBswGTrgLcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783561407; c=relaxed/simple;
-	bh=QucKtjW5Es2Y6XWtiKnZTxDy5OsDpzR4eW2SF73IBYs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dr+mgfhzq5/5y+Jyz+Ok4xUjQrLY5gdzIe2NRhpviToxTCfhMLTQQGhzWPN+8D0SDwMe5nBZjx4v6Ul201uJekiVdK1ez1xYpNsRR7bLhungOIDK+wLYVpxPWaT9HfNpr2tzxeVfbC5Cdpmgo9nxNgHqJm8qhzl7ryja3GWUClA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GWU2uo/m; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40ACB1F00A3E;
-	Thu,  9 Jul 2026 01:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783561405;
-	bh=Sau3igwgMM10PDaSFaKsGh3W1fSSFijGO4LQJddaYe4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GWU2uo/mMoSrxybGCoqw5EeN71hmPXDmES+hpXfQujzG90GEDlIB4LHSvZw8uG2b1
-	 WlUF7a/qf26TnnYC3+Zo11VJ0S/8QXzCpBNarEBBzAJ1JqdNHswuL2+Q8LY1QTHYDC
-	 4HHA/zkOp96St+gaL3Ac1y0RXvD3D148QwS3oEXE5wI872qYZRG+mkr2NzpEOVnEky
-	 7bSO9mUPfa3Yr9DyRTi8tmSd2P81qUX85d3PA+fndW56UpTgNpi8n13TXdmQRq8+z5
-	 1o9LA8c/dtugWQXbIcsODN96wuXL+cb7FP05SZAKpIIDZPyDIQXvC4ZDtSGx450FSJ
-	 6KwU1e77HrwYg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5] dmaengine: sun6i-dma: Fix use-after-free in error
- handling paths
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Hongling Zeng" <zenghongling@kylinos.cn>
-Cc: Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org, linux-sunxi@lists.linux.dev
-In-Reply-To: <20260709013118.616467-1-zenghongling@kylinos.cn>
-References: <20260709013118.616467-1-zenghongling@kylinos.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 01:43:24 +0000
-Message-Id: <20260709014325.40ACB1F00A3E@smtp.kernel.org>
+	s=arc-20240116; t=1783563553; c=relaxed/simple;
+	bh=f8J62FaB27zhu+tnsQ/RS/o8lgBoY8yOQPxqdMmuHA0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=bmBnsggDWge7PtW/x2okPfl3NEyQ1KJUNd35o6f/u/2w8V/r8vvNLUfBKhpIAAsThn0yccPPdd8CT/Aa71mriJEmtKGpAVqfe2sMXdJGWUDHTFiN1TuZaW2yBKHXNxk/4stIbqWa3kA1ou1XfqbkIq6uVqEGgML1P1ejMeilq3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+X-UUID: 8f47f81c7b3c11f1aa26b74ffac11d73-20260709
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:c57baeac-f2ab-44e4-8eb7-ee6928fed805,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:e7bac3a,CLOUDID:516a64c969db28ca47ee881aa99538fe,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|865|898,TC:nil,Content:0|15|50,E
+	DM:-3,IP:nil,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,
+	OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 8f47f81c7b3c11f1aa26b74ffac11d73-20260709
+X-User: zenghongling@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <zenghongling@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1771754693; Thu, 09 Jul 2026 10:19:05 +0800
+From: Hongling Zeng <zenghongling@kylinos.cn>
+To: ludovic.desroches@microchip.com,
+	vkoul@kernel.org,
+	Frank.Li@kernel.org,
+	tudor.ambarus@linaro.org,
+	nicolas.ferre@microchip.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhongling0719@126.com,
+	Hongling Zeng <zenghongling@kylinos.cn>,
+	sashiko-bot@kernel.org,
+	Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v5] dma: at_hdmac: Fix use-after-free by proper tasklet  cleanup
+Date: Thu,  9 Jul 2026 10:18:59 +0800
+Message-Id: <20260709021859.636219-1-zenghongling@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-0.46 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-12154-lists,dmaengine=lfdr.de];
+	DMARC_NA(0.00)[kylinos.cn];
+	FORGED_RECIPIENTS(0.00)[m:ludovic.desroches@microchip.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:tudor.ambarus@linaro.org,m:nicolas.ferre@microchip.com,m:linux-arm-kernel@lists.infradead.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:zhongling0719@126.com,m:zenghongling@kylinos.cn,m:sashiko-bot@kernel.org,m:Frank.Li@nxp.com,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,lists.linux.dev:replyto,kylinos.cn:email,sashiko.dev:url,vger.kernel.org:from_smtp];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:zenghongling@kylinos.cn,m:Frank.Li@kernel.org,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:linux-sunxi@lists.linux.dev,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FORGED_SENDER(0.00)[zenghongling@kylinos.cn,dmaengine@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	TAGGED_FROM(0.00)[bounces-12155-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[zenghongling@kylinos.cn,dmaengine@vger.kernel.org];
+	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,126.com,kylinos.cn,kernel.org,nxp.com];
+	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
+	R_DKIM_NA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[kylinos.cn:from_mime,kylinos.cn:email,kylinos.cn:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9F1F372BBA7
+X-Rspamd-Queue-Id: D5A5E72BE96
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+Current cleanup paths have a use-after-free vulnerability:
+- vchan_init() creates tasklets that access at_dma_chan memory
+- free_irq() only waits for IRQ handler, NOT tasklets
+- atdma is devm-managed and freed after probe/remove
+- Running tasklets accessing freed memory → Use-After-Free!
 
-Pre-existing issues:
-- [High] Deadlock in sun6i_dma_terminate_all and sun6i_dma_pause due to uns=
-afe lock context.
-- [High] Race condition in sun6i_dma_terminate_all, sun6i_dma_pause, and su=
-n6i_dma_resume due to lockless read of vchan->phy, causing memory corruptio=
-n and state inconsistency.
-- [High] Race condition causing a NULL pointer dereference in sun6i_dma_int=
-errupt.
---
+The fix requires careful ordering:
+- free_irq() FIRST to synchronize with running IRQ handlers and prevent
+  them from scheduling new tasklets
+- Then kill tasklets to wait for already-scheduled ones to complete
+- Only then free other resources
 
---- Patch [1]: [PATCH v5] dmaengine: sun6i-dma: Fix use-after-free in error=
- handling paths ---
-commit 4eb50f2f9528d3f1d66f48feef49a56e2cf57490
-Author: Hongling Zeng <zenghongling@kylinos.cn>
+Fixes: ac803b56860f ("dmaengine: at_hdmac: Convert driver to use virt-dma")
+Reported-by: sashiko-bot@kernel.org
+Closes: https://lore.kernel.org/all/20260604073945.54B311F00898@smtp.kernel.org/
+Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
+Suggested-by: Frank Li <Frank.Li@nxp.com>
 
-dmaengine: sun6i-dma: Fix use-after-free in error handling paths
+---
+Change in v4:
+  - Fix error path fallthrough causing double-free_irq()
+  - Use channel iteration index (chan_id not initialized before registration)
+  - Remove unnecessary defensive checks
+---
+Change in v5:
+  - Replace free_irq() in error path with disable_irq() + synchronize_irq()
+    to allow natural fall-through without goto, per Frank's suggestion
+  - free_irq() now called only once, in err_desc_pool_create label
+---
+ drivers/dma/at_hdmac.c | 29 ++++++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
 
-In error handling paths, the for loop frees v_lli in the loop body,
-then accesses v_lli->v_lli_next and v_lli->p_lli_next in the
-increment expression, which is use-after-free.
+diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+index e5b30a57c477..046bc474d345 100644
+--- a/drivers/dma/at_hdmac.c
++++ b/drivers/dma/at_hdmac.c
+@@ -1940,6 +1940,20 @@ static void at_dma_off(struct at_dma *atdma)
+ 		cpu_relax();
+ }
+ 
++static void at_dma_cleanup_channels(struct at_dma *atdma)
++{
++	struct dma_chan *chan, *_chan;
++	int i = 0;
++
++	list_for_each_entry_safe(chan, _chan, &atdma->dma_device.channels,
++			device_node) {
++		/* Disable interrupts */
++		atc_disable_chan_irq(atdma, i++);
++		tasklet_kill(&to_at_dma_chan(chan)->vc.task);
++		list_del(&chan->device_node);
++	}
++}
++
+ static int __init at_dma_probe(struct platform_device *pdev)
+ {
+ 	struct at_dma		*atdma;
+@@ -2105,6 +2119,9 @@ static int __init at_dma_probe(struct platform_device *pdev)
+ err_of_dma_controller_register:
+ 	dma_async_device_unregister(&atdma->dma_device);
+ err_dma_async_device_register:
++	disable_irq(platform_get_irq(pdev, 0));
++	synchronize_irq(platform_get_irq(pdev, 0));
++	at_dma_cleanup_channels(atdma);
+ 	dma_pool_destroy(atdma->memset_pool);
+ err_memset_pool_create:
+ 	dma_pool_destroy(atdma->lli_pool);
+@@ -2118,23 +2135,17 @@ static int __init at_dma_probe(struct platform_device *pdev)
+ static void at_dma_remove(struct platform_device *pdev)
+ {
+ 	struct at_dma		*atdma = platform_get_drvdata(pdev);
+-	struct dma_chan		*chan, *_chan;
+ 
+ 	at_dma_off(atdma);
+ 	if (pdev->dev.of_node)
+ 		of_dma_controller_free(pdev->dev.of_node);
+ 	dma_async_device_unregister(&atdma->dma_device);
+ 
+-	dma_pool_destroy(atdma->memset_pool);
+-	dma_pool_destroy(atdma->lli_pool);
+ 	free_irq(platform_get_irq(pdev, 0), atdma);
+ 
+-	list_for_each_entry_safe(chan, _chan, &atdma->dma_device.channels,
+-			device_node) {
+-		/* Disable interrupts */
+-		atc_disable_chan_irq(atdma, chan->chan_id);
+-		list_del(&chan->device_node);
+-	}
++	at_dma_cleanup_channels(atdma);
++	dma_pool_destroy(atdma->memset_pool);
++	dma_pool_destroy(atdma->lli_pool);
+ 
+ 	clk_disable_unprepare(atdma->clk);
+ }
+-- 
+2.25.1
 
-Fix by refactoring the cleanup into a helper function sun6i_dma_free_desc()
-that saves both the next virtual and physical pointers before freeing the
-current node, preventing the use-after-free.
-
-> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> index a9a254dbf8cb9..7a79f346250a5 100644
-> --- a/drivers/dma/sun6i-dma.c
-> +++ b/drivers/dma/sun6i-dma.c
-> @@ -406,16 +406,12 @@ static inline void sun6i_dma_dump_lli(struct sun6i_=
-vchan *vchan,
->  		v_lli->len, v_lli->para, v_lli->p_lli_next);
->  }
-> =20
-> -static void sun6i_dma_free_desc(struct virt_dma_desc *vd)
-> +static void sun6i_dma_free_desc(struct sun6i_dma_dev *sdev,
-> +				struct sun6i_desc *txd)
->  {
-
-[ ... ]
-
-[Severity: High]
-This is a pre-existing issue, but can this cause a deadlock?
-
-In sun6i_dma_terminate_all() and sun6i_dma_pause(), we acquire the lock
-without disabling softirqs:
-
-drivers/dma/sun6i-dma.c:sun6i_dma_terminate_all() {
-    ...
-	spin_lock(&sdev->lock);
-	list_del_init(&vchan->node);
-	spin_unlock(&sdev->lock);
-    ...
-}
-
-If a hardware interrupt for the DMA controller fires on the same CPU while
-this lock is held, the hardirq handler will execute and schedule
-sun6i_dma_tasklet. Upon return from the hardware interrupt, softirqs are
-processed immediately on the same CPU, forcing the tasklet to execute.
-
-The tasklet unconditionally attempts to acquire sdev->lock using
-spin_lock_irq():
-
-drivers/dma/sun6i-dma.c:sun6i_dma_tasklet() {
-    ...
-	spin_lock_irq(&sdev->lock);
-    ...
-}
-
-Because the lock is already held by the interrupted process context on the
-same CPU, won't the tasklet spin forever and deadlock the CPU? Should these
-use spin_lock_bh() or spin_lock_irqsave()?
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does this lockless read of
-vchan->phy create a race condition?
-
-drivers/dma/sun6i-dma.c:sun6i_dma_terminate_all() {
-	struct sun6i_pchan *pchan =3D vchan->phy;
-    ...
-	spin_lock(&sdev->lock);
-	list_del_init(&vchan->node);
-	spin_unlock(&sdev->lock);
-
-	spin_lock_irqsave(&vchan->vc.lock, flags);
-    ...
-	if (pchan) {
-		writel(DMA_CHAN_ENABLE_STOP, pchan->base + DMA_CHAN_ENABLE);
-		writel(DMA_CHAN_PAUSE_RESUME, pchan->base + DMA_CHAN_PAUSE);
-		vchan->phy =3D NULL;
-	}
-    ...
-}
-
-pchan =3D vchan->phy is read at the very beginning of the function, outside
-of any locks.
-
-Concurrently, sun6i_dma_tasklet() can acquire sdev->lock, assign a physical
-channel to vchan->phy, and start the hardware transfer. If this race occurs,
-sun6i_dma_terminate_all() sees pchan as NULL.
-
-It subsequently acquires the necessary locks but skips the if (pchan) block,
-failing to write DMA_CHAN_ENABLE_STOP to the hardware.
-
-Will this function then return success, deceiving the caller into believing
-the channel is stopped and descriptors are freed, while the hardware contin=
-ues
-transferring data into freed memory?
-
-The same lockless read in sun6i_dma_resume() also seems to allow the virtual
-channel to be re-added to the pending list while already having an active
-physical channel.
-
-[Severity: High]
-This is a pre-existing issue, but can this sequence lead to a NULL pointer
-dereference?
-
-drivers/dma/sun6i-dma.c:sun6i_dma_interrupt() {
-    ...
-			if (vchan && (status & vchan->irq_type)) {
-				if (vchan->cyclic) {
-					vchan_cyclic_callback(&pchan->desc->vd);
-				} else {
-					spin_lock(&vchan->vc.lock);
-					vchan_cookie_complete(&pchan->desc->vd);
-    ...
-}
-
-In sun6i_dma_interrupt(), if the channel is not cyclic, the code blocks on
-spin_lock(&vchan->vc.lock).
-
-Concurrently, a process context thread running sun6i_dma_terminate_all()
-can acquire vchan->vc.lock, stop the channel, and set pchan->desc =3D NULL.
-
-Once sun6i_dma_terminate_all() releases the lock, the interrupt handler
-unblocks and immediately calls vchan_cookie_complete(&pchan->desc->vd).
-
-Since pchan->desc has just been nullified, won't dereferencing
-pchan->desc->vd cause a kernel oops?
-
-Additionally, if vchan->cyclic is true, the interrupt handler calls
-vchan_cyclic_callback(&pchan->desc->vd) without taking any locks, exposing
-pchan->desc to concurrent nullification.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709013118.6164=
-67-1-zenghongling@kylinos.cn?part=3D1
 

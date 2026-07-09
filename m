@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-12215-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12216-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id kgNUAiywT2oimwIAu9opvQ
-	(envelope-from <dmaengine+bounces-12215-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:29:00 +0200
+	id xLazAkmyT2qqmwIAu9opvQ
+	(envelope-from <dmaengine+bounces-12216-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:38:01 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 953247323D3
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:28:59 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64501732575
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:38:00 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Gw4L0+F+;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=aL9AwYxp;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12215-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12215-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12216-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12216-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0BD513006B74
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 14:16:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B67FC30D8B03
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 14:18:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A9D21E098;
-	Thu,  9 Jul 2026 14:16:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 518A62D060B;
+	Thu,  9 Jul 2026 14:18:22 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE55A1A0712
-	for <dmaengine@vger.kernel.org>; Thu,  9 Jul 2026 14:16:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BFD1E1A3D
+	for <dmaengine@vger.kernel.org>; Thu,  9 Jul 2026 14:18:20 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783606613; cv=none; b=Ocpthnj1Gnts6q8+oFIXtkBnLTftN5n4HncZJHu10Z8xrIUSKPD4CN3F6ENkr+7HaggVKph4PWJLgoDeWCui/q2WJkOtuXL1kpXtSofd7mDrtC73qq2jZRTE3A1ThMEAHC1I150EqFE9uj5Hk5dhuNy8qJv+4pejye6Z/52XXLw=
+	t=1783606702; cv=none; b=MoGkaudkvmbiroL8bxWU7GMQVNoYms/LmJJfGfPXYP7ei1Tkq6fxlb1WGIoOIcFC+UdAt6dSKTCSVKQAiInh+Ujw/RQ5tGWtxnu7WTSkDHKfjyf3fUQrK1I3wEhj6RjVKyG/w23H5SiAu3Vl2RDEJHUdcXBPRiuVQkOaqvxTzvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783606613; c=relaxed/simple;
-	bh=4CS9OqfWaehv+GcfuJieEPvy7eUgRV+hCARvel4RzaI=;
+	s=arc-20240116; t=1783606702; c=relaxed/simple;
+	bh=lOJPvyeP9jZRQIMFZfjHwJ7klB1pNCJFNO6dji/Q9p4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dYWyZdn4c9DF0Cxyeq5ZCWogG6cukURCEyVwUTutCtMCFPamp3lrl+mkMrqg7Ym3TW6wdyZ1f65beKLZzPKK5LRENCKM9HjWDedHKXUHlF7KlSbyPyJqNZa8ibId4FfO5augVebmGiP2KBagp7hi2X3bCo0RrW8Bec/s7bjTptM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gw4L0+F+; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35CDC1F00A3F;
-	Thu,  9 Jul 2026 14:16:52 +0000 (UTC)
+	 Message-Id; b=jfbCEmvAH8i2uHt+6gOsLvEO4PnMLIIK2/4gJXYtcFa8DE+utn/UmuF3VHcACTn59+atSc/2dJeCJrjDc4WBnH6ItRuA4Hjjv/dFwlj3QqsQ+G2+aEByVljnyCig1Zt5jgx/0x8HRwQTkAghXuIL0Rvm0U22sZwKZ8jWpofLsF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aL9AwYxp; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69AAE1F000E9;
+	Thu,  9 Jul 2026 14:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783606612;
-	bh=DlT5gF1eQvJ7O0ZrmgVU347xNWM9NAah5A/v7GEBHUg=;
+	s=k20260515; t=1783606700;
+	bh=gNeaUYZTQyGNaNyDAMN91yCPyNReOoDdNocXBKPLYOM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Gw4L0+F+XPRF7QbXaPmahelVVBQtbYUtffIG5eKQEPqg9Uyvso5+F/Ln0s0O0B7rC
-	 Nw90JlaN/GuL39D5xRE1QJPJS5QZRFOBWt/SKOew6LvsfYp6kngsde5R0T7BzHfvDy
-	 RA3xSKd6OFgOK6yxzDtbjFjFGbEDr6p/l+/VE0tBSO/QyGoaRqu2psN/1GBOPcTZx8
-	 Q1/AznjD7/GGIk2EA4FL/g1/XaTjZjTpoyD4EKia53uVlOTVi/RdFvonULNW0nZT08
-	 8JGCgHkEvuFVdoMrEZM0zPxT7o5wXG2V9uziGbiA8lXNK5rp8rt1Gt0DsEWl3nwOE8
-	 E2Gw5rZllpQQQ==
+	b=aL9AwYxpRexXZOTZ+1dRuyyHnoQSrk532Er6syoBN/mDHpUKkIPDXo74VlYuqIPI/
+	 Hn/hj1CT2L5abXsM6/YynwH9d8DdgoVFReLQzbU/JcOrAIzvXvweQLnBEMTLJRTGnc
+	 G3jZEhfxArlz9TOhKCZ8CDmASnzJiV/czTyjnUlqYsVhRuunNb1+yKb5+oj89YhYew
+	 /WHISuzZraGJ0vqCaOU5aaQJHUy2T7hEw3ypDLpdgRJVrs9FVmWuDjb+8HLZafMbk2
+	 wDwXgiMeMnLwrjPQbKKfc9TrkB9PPiH+i5h8hEa8/fcxnLlVK05hDDK7OAlla2eWq0
+	 3WYPtQ4sWPiVQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 07/26] dmaengine: moxart-dma: Remove redundant
+Subject: Re: [PATCH 11/26] dmaengine: sf-pdma-sf-pdma: Remove redundant
  dev_err()/dev_err_probe()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Pan Chuang" <panchuang@vivo.com>
 Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260709135846.97972-8-panchuang@vivo.com>
+In-Reply-To: <20260709135846.97972-12-panchuang@vivo.com>
 References: <20260709135846.97972-1-panchuang@vivo.com>
- <20260709135846.97972-8-panchuang@vivo.com>
+ <20260709135846.97972-12-panchuang@vivo.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 14:16:51 +0000
-Message-Id: <20260709141652.35CDC1F00A3F@smtp.kernel.org>
+Date: Thu, 09 Jul 2026 14:18:19 +0000
+Message-Id: <20260709141820.69AAE1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -71,7 +71,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -79,7 +79,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12215-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12216-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS(0.00)[m:panchuang@vivo.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -98,134 +98,159 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,smtp.kernel.org:mid,vger.kernel.org:from_smtp,sashiko.dev:url,vivo.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,smtp.kernel.org:mid,lists.linux.dev:replyto,vivo.com:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 953247323D3
+X-Rspamd-Queue-Id: 64501732575
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] This problem wasn't introduced by this patch, but there is a missi=
-ng NULL pointer check for `txstate` in `moxart_tx_status()`, which will cau=
-se a kernel panic if a caller passes a NULL state.
-- [High] This problem wasn't introduced by this patch, but there is a Time-=
-Of-Check to Time-Of-Use (TOCTOU) race condition in the interrupt handler `m=
-oxart_dma_interrupt()` accessing `ch->desc` outside of its spinlock, leadin=
-g to a NULL pointer dereference.
-- [High] This problem wasn't introduced by this patch, but there is a lifec=
-ycle mismatch where `dma_device` is allocated with `devm_kzalloc`, leading =
-to a Use-After-Free if the driver is unbound while clients hold channel ref=
-erences.
+- [High] The driver masks standard error codes with -EINVAL, permanently br=
+eaking probe deferral.
+- [High] Interrupt handlers are registered before channel structures are in=
+itialized, causing an immediate kernel panic on spurious interrupts.
+- [High] Tasklets are not killed on probe error paths, leading to use-after=
+-free list corruption.
+- [High] Tasklets access `chan->desc` without checking for NULL, leading to=
+ crashes when racing with channel termination.
 --
 
---- Patch [7]: [PATCH 07/26] dmaengine: moxart-dma: Remove redundant dev_er=
-r()/dev_err_probe() ---
-commit 9d354e585688446b04a5e03b938d46845d466dab
+--- Patch [11]: [PATCH 11/26] dmaengine: sf-pdma-sf-pdma: Remove redundant =
+dev_err()/dev_err_probe() ---
+commit 09662195d630e22b4643f58a4176a95df1d14255
 Author: Pan Chuang <panchuang@vivo.com>
 
-dmaengine: moxart-dma: Remove redundant dev_err()/dev_err_probe()
+dmaengine: sf-pdma-sf-pdma: Remove redundant dev_err()/dev_err_probe()
 
 The devm_request_irq() now automatically logs detailed error messages on
 failure. This eliminates the need for driver-specific dev_err() and
 dev_err_probe() calls that previously printed generic messages.
 
-> diff --git a/drivers/dma/moxart-dma.c b/drivers/dma/moxart-dma.c
-> index 442f5aa16031f..16a14a5179c17 100644
-> --- a/drivers/dma/moxart-dma.c
-> +++ b/drivers/dma/moxart-dma.c
-> @@ -600,10 +600,8 @@ static int moxart_probe(struct platform_device *pdev)
+> diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+> index b3cba11b62032..93611e335a075 100644
+> --- a/drivers/dma/sf-pdma/sf-pdma.c
+> +++ b/drivers/dma/sf-pdma/sf-pdma.c
+> @@ -412,10 +412,8 @@ static int sf_pdma_irq_init(struct platform_device *=
+pdev, struct sf_pdma *pdma)
 > =20
->  	ret =3D devm_request_irq(dev, irq, moxart_dma_interrupt, 0,
-                                         ^^^^^^^^^^^^^^^^^^^^
+>  		r =3D devm_request_irq(&pdev->dev, irq, sf_pdma_done_isr, 0,
+>  				     dev_name(&pdev->dev), (void *)chan);
+> -		if (r) {
+> -			dev_err(&pdev->dev, "Fail to attach done ISR: %d\n", r);
+> +		if (r)
+>  			return -EINVAL;
 
 [Severity: High]
-This isn't a bug introduced by this patch, but there is a Time-Of-Check to
-Time-Of-Use (TOCTOU) race condition in moxart_dma_interrupt() accessing
-ch->desc outside of its spinlock:
+This is a pre-existing issue, but does this mask standard error codes?
 
-drivers/dma/moxart-dma.c:moxart_dma_interrupt() {
-...
-		if (ctrl & APB_DMA_FIN_INT_STS) {
-			ctrl &=3D ~APB_DMA_FIN_INT_STS;
-			if (ch->desc) {
-				spin_lock(&ch->vc.lock);
-				if (++ch->sgidx < ch->desc->sglen) {
-...
-}
+If platform_get_irq() or devm_request_irq() returns -EPROBE_DEFER, returning
+-EINVAL will cause the driver core to treat the probe as a permanent failure
+instead of deferring it. Should the original error code be propagated inste=
+ad?
 
-If a concurrent call to moxart_terminate_all() on another CPU acquires the
-lock, frees ch->desc, sets it to NULL, and releases the lock between the if
-check and the spin_lock, the interrupt handler will unconditionally derefer=
-ence
-ch->desc via ch->desc->sglen.
-
-Does this race condition lead to a NULL pointer dereference?
-
->  			       "moxart-dma-engine", mdc);
-> -	if (ret) {
-> -		dev_err(dev, "devm_request_irq failed\n");
-> +	if (ret)
->  		return ret;
-> -	}
->  	mdc->irq =3D irq;
 > =20
->  	ret =3D dma_async_device_register(&mdc->dma_slave);
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  		chan->txirq =3D irq;
+> =20
+> @@ -425,10 +423,8 @@ static int sf_pdma_irq_init(struct platform_device *=
+pdev, struct sf_pdma *pdma)
+> =20
+>  		r =3D devm_request_irq(&pdev->dev, irq, sf_pdma_err_isr, 0,
+>  				     dev_name(&pdev->dev), (void *)chan);
+> -		if (r) {
+> -			dev_err(&pdev->dev, "Fail to attach err ISR: %d\n", r);
+> +		if (r)
+>  			return -EINVAL;
 
 [Severity: High]
-This isn't a bug introduced by this patch, but there is a lifecycle mismatch
-where dma_device is allocated with devm_kzalloc.
+This isn't a bug introduced by this patch, but does this also drop the
+actual error code returned by devm_request_irq()?
 
-Earlier in moxart_probe():
-	mdc =3D devm_kzalloc(dev, sizeof(*mdc), GFP_KERNEL);
+Propagating the original error code 'r' would ensure probe deferrals and
+other specific failure reasons are handled correctly by the driver core.
 
-And during unbind:
-drivers/dma/moxart-dma.c:moxart_remove() {
-...
-	dma_async_device_unregister(&m->dma_slave);
-...
-}
-
-The DMA engine subsystem independently refcounts the dma_device via kref_in=
-it().
-If the driver is unbound via sysfs while DMA clients hold references to the
-channels, moxart_remove() returns and devres frees the mdc structure memory
-immediately.
-
-When the clients later drop their references, does this trigger a
-Use-After-Free on the freed memory?
-
-While reviewing the driver, I also noticed an issue in moxart_tx_status():
-
-drivers/dma/moxart-dma.c:moxart_tx_status() {
-...
-	if (vd) {
-		d =3D to_moxart_dma_desc(&vd->tx);
-		txstate->residue =3D moxart_dma_desc_size(d, 0);
-...
-	} else if (ch->desc && ch->desc->vd.tx.cookie =3D=3D cookie) {
-		txstate->residue =3D moxart_dma_desc_size_in_flight(ch);
-...
-}
+[ ... ]
 
 [Severity: High]
-This isn't a bug introduced by this patch, but there is a missing NULL poin=
-ter
-check for txstate in moxart_tx_status().
+This is a pre-existing issue, but can spurious interrupts cause a panic
+during probe?
 
-The dmaengine API allows callers to pass a NULL state argument to
-dmaengine_tx_status() if they only want to query the completion status and
-do not need the residue. However, this function unconditionally dereferences
-txstate.
+In drivers/dma/sf-pdma/sf-pdma.c, sf_pdma_probe() calls sf_pdma_irq_init()
+before sf_pdma_setup_chans():
 
-Will this cause a kernel panic if a caller passes a NULL state?
+sf_pdma_probe() {
+    ...
+    ret =3D sf_pdma_irq_init(pdev, pdma);
+    if (ret)
+        return ret;
+
+    sf_pdma_setup_chans(pdma);
+    ...
+}
+
+If an interrupt fires immediately after devm_request_irq(),
+sf_pdma_done_isr() will read from the uninitialized chan->regs.ctrl:
+
+sf_pdma_done_isr() {
+    ...
+    writel((readl(regs->ctrl)) & ~PDMA_DONE_STATUS_MASK, regs->ctrl);
+    ...
+}
+
+Would it be safer to call sf_pdma_setup_chans() before requesting interrupt=
+s?
+
+[Severity: High]
+This is a pre-existing issue, but do we leave tasklets running if the probe
+fails later on?
+
+If an interrupt fires during probe and schedules done_tasklet, and a
+subsequent step like dma_async_device_register() fails:
+
+sf_pdma_probe() {
+    ...
+err_unregister:
+    dma_async_device_unregister(&pdma->dma_dev);
+
+    return ret;
+}
+
+The devres framework will free the device memory and IRQs, but
+devm_free_irq() does not kill pending tasklets. Could the scheduled tasklet
+execute later using freed memory?
+
+[Severity: High]
+This isn't a bug introduced by this patch, but is there a potential NULL
+pointer dereference if tasklets race with channel termination?
+
+sf_pdma_terminate_all() frees chan->desc and sets it to NULL without
+synchronizing with the tasklets:
+
+sf_pdma_terminate_all() {
+    ...
+    kfree(chan->desc);
+    chan->desc =3D NULL;
+    ...
+}
+
+If done_tasklet runs immediately after, it acquires the lock and blindly
+dereferences chan->desc:
+
+sf_pdma_donebh_tasklet() {
+    ...
+    spin_lock_irqsave(&chan->vchan.lock, flags);
+    list_del(&chan->desc->vdesc.node);
+    ...
+}
+
+Should chan->desc be checked for NULL, or should the tasklets be killed
+during termination?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709135846.9797=
-2-1-panchuang@vivo.com?part=3D7
+2-1-panchuang@vivo.com?part=3D11
 

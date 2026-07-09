@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-12205-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12206-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id paBPJyatT2pSmgIAu9opvQ
-	(envelope-from <dmaengine+bounces-12205-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:16:06 +0200
+	id 9Aa/GbC1T2punAIAu9opvQ
+	(envelope-from <dmaengine+bounces-12206-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:52:32 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6F5C732158
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:16:05 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5975D7327D8
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:52:31 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Ea30xJTp;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=daElpAbc;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12205-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12205-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12206-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12206-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B327431C90FF
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 14:06:58 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6131C3139EB6
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 14:08:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD5232FA30;
-	Thu,  9 Jul 2026 14:03:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 637ED27EFF7;
+	Thu,  9 Jul 2026 14:05:18 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5EA32694E
-	for <dmaengine@vger.kernel.org>; Thu,  9 Jul 2026 14:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3483C8472
+	for <dmaengine@vger.kernel.org>; Thu,  9 Jul 2026 14:05:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783605788; cv=none; b=PQvpPvkwm8LKTHNxGa6anKDZQcDOQfILLGFSuLzVevcmUn0UbsElvqQf88vGwWiNcJq+fucf1c6LUyI4fCkcQQ9dluajR8VfwLBvriSpQkA/s/Oe4a9nN/QkzMa+IK2HQ2KZjp8V5IniAo8ZfLlCp7EM9y+X7/bb3SnqzBes9pE=
+	t=1783605918; cv=none; b=dttU2ktNO6Gpsq8CCc6AUcTvCztKZcpe9PeyAsQiVyO9ptbQXtRZOof4W7YT6dK/6leFkux1pvv5KCyv+UBdL017DqDunyZki3UW7aCAm3sax1gPNvKqO8TVQgxUimOAIXkpCWDLSfL92Yy+kMUH+MvuqGMgUBtej17ie6HRw2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783605788; c=relaxed/simple;
-	bh=d62WO9UTYcPd2TL0LG/Bi6Xv4tLHh/YgpWmOEOnM00I=;
+	s=arc-20240116; t=1783605918; c=relaxed/simple;
+	bh=iJnBSmAnWQwwp5+kimECah0oJNANpC2vgQWWW5I9KAY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WX4MqMzYmWdXVT4H8JZoEO8pAuisPRCxckNnvpE3wiwn2qOqDqZpfMgm82sdihCTbVAd/bk6q4aaJ8QO0ESpd+EVieAYdnmgun/TCcCydpkAXMAhwj4YF8PnXnhImaPZDL2o16QebDgdt26WdSJhmHd8gYBAaaKZDZfgCtcpDSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ea30xJTp; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48DB61F000E9;
-	Thu,  9 Jul 2026 14:03:06 +0000 (UTC)
+	 Message-Id; b=KwwhJLX2DbuKSJXt3ifS1YoaAlebclAZ2BtSieEvk6Iq7O5oCEt3b2TNm4es1Y99p4pJW8leWb8CLb/06BoUQSAumDtXN30YfYhAdkl6QrBwrYMtH6soRnjsY87vqAaTA5bATTBxgnRXSfxKyxQe8qi21ZG4YIucfiKQROriqM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=daElpAbc; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C337E1F000E9;
+	Thu,  9 Jul 2026 14:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783605786;
-	bh=qa+ByBYEJSQ3kB0ojOwE9VS8JVTusSVrvSQBLBiuULw=;
+	s=k20260515; t=1783605917;
+	bh=/2B3TMPzBOCh/Pjm5f/dFGrNbhoc0OfsWj373UkUr4Q=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Ea30xJTpWLhbYGBHXe6vVTQ2TFlgAk6fUMYVKDwMWa+MKcwHxHwslyvHDlhM/u8dF
-	 G/Q6bVOhCfCbVetc4WP48MTeu6vHKCF4qLNkFpvUwsqJiFf7aq1IAe4vvwuzt0gkXe
-	 vtLVRajlck4N/yKPmNMnQ7qBeSY/IvYlkgIbILjJueXPiOYA2yq49quPkRRSEsdDW3
-	 CSW6JpIeKGkFnuAC9c/imZKGKliwfMkja1JPf+AOZWeRANOKGbDDyyGBxiemqaDr5L
-	 VbTxf5n+JprbrvKjZr8QQ1S2G4MNqTsrdulHeaMssgzlJ7kHvGiMYiqBufiX+sVOR/
-	 INiOoMC+mm9fg==
+	b=daElpAbc6SXRNLDq5b1lIIX4GnZ/heBFNariK8GNiI6mrdhJ4O/7M0su4/1dZmhm3
+	 5gjRYCQvrukLKZJ1hlFG8vtN9b7JxBUF1THYBhiNy/rMwZUSCn3TOJazqyuVk6Kosu
+	 tnVKzzHOlPuzTRePTHoSJ1ikXT2Nl+uTX4kWsr+UO0qfjDAwS4l96+80B8MvETtp4q
+	 yg3vWL05mhAznyb3yP9vsxzqyEi6Ihx/0NWxjlipNBfuMeg9MIi/pacXqOMt1+F/sm
+	 FHxCvwq7s8f/tZ3TYziIIRJkwwYMQMe5RWyUR/lWp008ccKX/FMYxv/PD//IhzMDh1
+	 AX7TVGm4ucG9w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 2/2] dmaengine: qcom-gpi: Keep GPI interrupt active
- during system resume
+Subject: Re: [PATCH v7 1/2] i2c: qcom-geni: Handle runtime PM disabled state
+ during early resume
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Mukesh Kumar Savaliya" <mukesh.savaliya@oss.qualcomm.com>
-Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260709134623.1724212-3-mukesh.savaliya@oss.qualcomm.com>
+Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
+In-Reply-To: <20260709134623.1724212-2-mukesh.savaliya@oss.qualcomm.com>
 References: <20260709134623.1724212-1-mukesh.savaliya@oss.qualcomm.com>
- <20260709134623.1724212-3-mukesh.savaliya@oss.qualcomm.com>
+ <20260709134623.1724212-2-mukesh.savaliya@oss.qualcomm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 14:03:05 +0000
-Message-Id: <20260709140306.48DB61F000E9@smtp.kernel.org>
+Date: Thu, 09 Jul 2026 14:05:16 +0000
+Message-Id: <20260709140516.C337E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -71,7 +71,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -79,9 +79,9 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12205-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12206-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:mukesh.savaliya@oss.qualcomm.com,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:mukesh.savaliya@oss.qualcomm.com,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -98,203 +98,88 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,sashiko.dev:url,lists.linux.dev:replyto,smtp.kernel.org:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,smtp.kernel.org:mid,qualcomm.com:email,lists.linux.dev:replyto,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E6F5C732158
+X-Rspamd-Queue-Id: 5975D7327D8
 
-Thank you for your contribution! Sashiko AI review found 7 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Adding IRQF_NO_SUSPEND leaves the interrupt unmasked during system=
- sleep, causing fatal unclocked register accesses.
-- [Low] The IRQF_EARLY_RESUME flag is functionally dead code and redundant =
-when combined with IRQF_NO_SUSPEND.
-
-Pre-existing issues:
-- [High] A 3-way AB-BA deadlock occurs because gpi_ev_tasklet() acquires a =
-read lock on pm_lock with local hardware interrupts enabled.
-- [High] The error cleanup paths in gpi_ch_init() operate on the wrong chan=
-nel pointer, causing leaks and multiple resets of the same channel.
-- [High] Unregistered DMA device on the probe error path leads to a Use-Aft=
-er-Free and global list corruption.
-- [High] tasklet_kill is called while the interrupt is still unmasked and e=
-nabled, risking a Use-After-Free on the event ring.
-- [High] The interrupt handler returns IRQ_HANDLED when bailing out due to =
-an invalid PM state, causing a permanent interrupt storm.
+- [High] Calling pm_runtime_enable() in the resume_noirq callback causes an=
+ unbalanced disable_depth, triggering a kernel warning during early resume.
+- [High] Treating -EACCES from pm_runtime_get_sync() as success allows uncl=
+ocked register accesses on powered-off hardware, risking fatal bus errors.
 --
 
---- Patch [2]: [PATCH v7 2/2] dmaengine: qcom-gpi: Keep GPI interrupt activ=
-e during system resume ---
-commit a7024226a78be6fe1a44f0ec7dd85e67623b43ab
+--- Patch [1]: [PATCH v7 1/2] i2c: qcom-geni: Handle runtime PM disabled st=
+ate during early resume ---
+commit 5b7e2f3ccf132073e5ef0e9e9ebe44fb7923a932
 Author: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
 
-dmaengine: qcom-gpi: Keep GPI interrupt active during system resume
+i2c: qcom-geni: Handle runtime PM disabled state during early resume
 
-GPI DMA clients may initiate transfers during the early stages of
-system resume before the normal IRQ resume phase has completed.
-Request the GPI interrupt with IRQF_NO_SUSPEND and IRQF_EARLY_RESUME
-to keep it available across suspend/resume transitions.
+During the noirq resume phase, the GENI I2C controller may receive transfer
+requests before runtime PM has been fully restored. This patch treats the
+resulting -EACCES error from pm_runtime_get_sync() as a transient condition
+and allows the transfer path to proceed. It also manually enables runtime
+PM in the resume_noirq callback.
 
-> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> index a5055a6273af6..29872b6cb2c75 100644
-> --- a/drivers/dma/qcom/gpi.c
-> +++ b/drivers/dma/qcom/gpi.c
-> @@ -615,7 +615,8 @@ static int gpi_config_interrupts(struct gpii *gpii, e=
-num gpii_irq_settings setti
-> =20
->  	if (!gpii->configured_irq) {
->  		ret =3D devm_request_irq(gpii->gpi_dev->dev, gpii->irq,
-> -				       gpi_handle_irq, IRQF_TRIGGER_HIGH,
-> +				       gpi_handle_irq,
-> +				       IRQF_TRIGGER_HIGH | IRQF_NO_SUSPEND | IRQF_EARLY_RESUME,
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-=
+qcom-geni.c
+> index 96dbf04138bee..4bc00922cd97b 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -917,6 +917,10 @@ static int geni_i2c_xfer(struct i2c_adapter *adap,
+>  	gi2c->err =3D 0;
+>  	reinit_completion(&gi2c->done);
+>  	ret =3D pm_runtime_get_sync(gi2c->se.dev);
+> +	if (ret =3D=3D -EACCES) {
+> +		dev_warn(gi2c->se.dev, "Runtime PM is disabled:%d\n", ret);
+> +		ret =3D 0;
+> +	}
 
 [Severity: High]
-Adding IRQF_NO_SUSPEND prevents the DMA interrupt from being masked by the
-core IRQ subsystem during system suspend. Does this allow spurious or
-delayed hardware interrupts to trigger while consumer driver hardware clocks
-are disabled via runtime PM?
+Does treating -EACCES as success risk causing fatal bus errors?
 
-Looking at gpi_handle_irq(), the pm_state check may remain in ACTIVE_STATE
-or PAUSE_STATE during suspend:
+If an I2C client device issues a transfer during the system suspend late
+or noirq phases before the controller's noirq resume callback runs,
+pm_runtime_get_sync() returns -EACCES because the hardware is in
+RPM_SUSPENDED (power domain and clocks are off).
 
-drivers/dma/qcom/gpi.c:gpi_handle_irq() {
-    if (!REG_ACCESS_VALID(gpii->pm_state)) {
-    ...
-}
-
-If this check passes while clocks are off, will the subsequent register
-reads cause a synchronous external abort and crash the kernel?
-
-[Severity: Low]
-Is IRQF_EARLY_RESUME redundant here? When combined with IRQF_NO_SUSPEND,
-IRQS_SUSPENDED is never set on the interrupt descriptor during
-suspend_device_irqs(). This means resume_irq() won't do anything for this
-interrupt during the early resume phase, making the flag functionally dead
-code.
-
->  				       "gpi-dma", gpii);
->  		if (ret < 0) {
+By overriding the error and forcing ret =3D 0, the synchronization barrier
+is bypassed. The driver will then proceed to write to unclocked hardware
+registers, which can trigger a synchronous external abort.
 
 [ ... ]
 
-[Severity: High]
-This is a pre-existing issue, but can a 3-way AB-BA deadlock occur with
-pm_lock?
-
-gpi_ev_tasklet() running in softirq acquires a read lock on pm_lock without
-disabling local hardware interrupts:
-
-drivers/dma/qcom/gpi.c:gpi_ev_tasklet() {
-    ...
-    read_lock(&gpii->pm_lock);
-    ...
-}
-
-A concurrent thread calls write_lock_irq():
-
-drivers/dma/qcom/gpi.c:gpi_resume() {
-    ...
-    write_lock_irq(&gpii->pm_lock);
-    ...
-}
-
-Due to fair rwlock semantics, the writer blocks new readers. If a hard
-interrupt then fires on the tasklet's CPU, gpi_handle_irq() preempts the
-tasklet and acquires the read lock:
-
-drivers/dma/qcom/gpi.c:gpi_handle_irq() {
-    ...
-    read_lock_irqsave(&gpii->pm_lock, flags);
-    ...
-}
-
-Will the hardirq reader spin waiting for the writer, while the writer spins
-waiting for the preempted tasklet, creating a fatal deadlock?
+> @@ -1223,7 +1228,12 @@ static int __maybe_unused geni_i2c_resume_noirq(st=
+ruct device *dev)
+>  	if (ret)
+>  		return ret;
+> =20
+> +	/* Enforced disable_depth =3D 0 to actually enable runtime PM during no=
+irq phase */
+> +	if (!pm_runtime_enabled(dev))
+> +		pm_runtime_enable(dev);
+> +
+>  	i2c_mark_adapter_resumed(&gi2c->adap);
 
 [Severity: High]
-This is a pre-existing issue, but do the error cleanup paths in
-gpi_ch_init() operate on the wrong channel pointer?
+Will this unbalance the disable_depth counter and trigger a kernel warning?
 
-If channel allocation fails, the error handlers iterate backwards but pass
-the function argument gchan instead of the iterated element &gpii->gchan[i]:
+The PM core's device_suspend_late() disables runtime PM, incrementing
+disable_depth. Calling pm_runtime_enable() here prematurely decrements
+the counter to 0.
 
-drivers/dma/qcom/gpi.c:gpi_ch_init() {
-    ...
-error_start_chan:
-    gpi_send_cmd(gpii, gchan, GPI_CH_CMD_RESET);
-    ...
-error_alloc_chan:
-    gpi_reset_chan(gchan, GPI_CH_CMD_DE_ALLOC);
-    ...
-}
-
-Does this repeatedly reset the same channel while failing to clean up the
-newly allocated channels, leaking hardware resources and memory?
-
-[Severity: High]
-This is a pre-existing issue, but does gpi_probe() leak the DMA device on
-failure?
-
-If of_dma_controller_register() fails, the function returns directly:
-
-drivers/dma/qcom/gpi.c:gpi_probe() {
-    ...
-    ret =3D of_dma_controller_register(...);
-    if (ret)
-        return ret;
-    ...
-}
-
-Since dma_async_device_register() was already called earlier in the probe,
-does this leave a dangling pointer in the global dma_device_list when
-devres frees the gpi_dev structure?
-
-[Severity: High]
-This is a pre-existing issue, but is there a race condition in
-gpi_free_chan_resources() that could cause a use-after-free?
-
-The function kills the tasklet before disabling interrupts:
-
-drivers/dma/qcom/gpi.c:gpi_free_chan_resources() {
-    ...
-    tasklet_kill(&gpii->ev_task);
-    ...
-    gpi_disable_interrupts(gpii);
-    ...
-}
-
-If a pending or spurious IEOB interrupt arrives immediately after
-tasklet_kill returns, could gpi_handle_irq() reschedule the tasklet,
-allowing it to execute concurrently with or after
-gpi_free_ring(&gpii->ev_ring, gpii), and access the freed event ring memory?
-
-[Severity: High]
-This is a pre-existing issue, but does returning IRQ_HANDLED when bailing
-out cause a permanent interrupt storm?
-
-If the pm_state check fails, gpi_handle_irq() jumps to exit_irq:
-
-drivers/dma/qcom/gpi.c:gpi_handle_irq() {
-    if (!REG_ACCESS_VALID(gpii->pm_state)) {
-        ...
-        goto exit_irq;
-    }
-    ...
-exit_irq:
-    return IRQ_HANDLED;
-}
-
-Since the interrupt is level-triggered, does falsely reporting IRQ_HANDLED
-without servicing and clearing the device hardware condition cause the
-interrupt controller to immediately re-assert the interrupt to the CPU,
-creating an infinite loop?
+When the PM core subsequently calls pm_runtime_enable() in
+device_resume_early(), it will detect an underflow and unconditionally
+print the "Unbalanced pm_runtime_enable!" warning on every system
+resume cycle.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709134623.1724=
-212-1-mukesh.savaliya@oss.qualcomm.com?part=3D2
+212-1-mukesh.savaliya@oss.qualcomm.com?part=3D1
 

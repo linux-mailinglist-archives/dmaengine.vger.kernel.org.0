@@ -1,201 +1,300 @@
-Return-Path: <dmaengine+bounces-12204-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12205-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id nRExDMGsT2o6mgIAu9opvQ
-	(envelope-from <dmaengine+bounces-12204-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:14:25 +0200
+	id paBPJyatT2pSmgIAu9opvQ
+	(envelope-from <dmaengine+bounces-12205-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:16:06 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCB56732117
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:14:24 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6F5C732158
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:16:05 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=vivo.com header.s=selector2 header.b=aeDvwi+L;
-	dmarc=pass (policy=quarantine) header.from=vivo.com;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12204-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12204-lists+dmaengine=lfdr.de@vger.kernel.org";
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Ea30xJTp;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12205-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12205-lists+dmaengine=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7E9F0306C483
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 14:05:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B327431C90FF
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 14:06:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C7E943DA3F;
-	Thu,  9 Jul 2026 13:59:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD5232FA30;
+	Thu,  9 Jul 2026 14:03:08 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11012064.outbound.protection.outlook.com [40.107.75.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1797743D4F4;
-	Thu,  9 Jul 2026 13:59:58 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783605599; cv=fail; b=AqimfIOat18HOrFpyaHZZLdUBo+5XcuPP4s/SY4bxKbfl2XDX+pKH+6YZlgcmruTQMkb1FyGNvxpLNO3lh/gnhR6DbMPE+FQrXW5WwvjnsDVA6wTDJzx5coTZYNwHfPVEi1HlL6Ml0WWCjSSgp6oLXG+3PLtkCumF2aJpnoisVY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783605599; c=relaxed/simple;
-	bh=nslHEg20kNHwqLXtK+ZGywajcK1/mqK3+JS9ykjPegE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FBqjY+d5/DENJNoWjlLK4T3IENAYynN3A9zuDGh4HMfoEFEe5RENIVcGiRlvNv0dbKLBLnK1iysvq07IMJY1OtIQj95YYkipbYTWsWr0V8DZDtKFoMshvST7hD4adcmbf9sEuSIq7luvrrFcuenCXmKJVENUvKLmdSE3NWoyTZY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=aeDvwi+L; arc=fail smtp.client-ip=40.107.75.64
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wqMcCsvOaJv+BUv5OrGuHTwXTXRzMEYdTys/iQfgEswjsVGNlLzM9nP+AODSJOdydmtJsdnK2CkDGJbQXDQTv/II8SWyDqd9F/LS4FY/9bcXBWed+EHQiQS5kkMEbL9HJGTHbtmdjN8CvXYmNxFUq8Y00gpp7jiEFmIzvAAuZwlD/7t8mY9oL1jr63knx9XFcY52+Diu/CZzuC7BGRphDshd8bZda+DAU2TJofMPEKssmjHnwGuPKdxSL6Wr0B/AcoIhv20p/SYKzD2AqdpKJm+s2+4UwzyT1LrwXdlgFZNjr55aIG9Py8V7qEInasTuQUWwknv2MF/Ebc/LP3T8vg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=K5W0lpRqgHxKmaFuM+fNdUsrPyf1z93QBqO3Xx+VNtg=;
- b=ZFqgoNZRi+gVcoRCMeagY0pU4+BNbVFSeGVfLbgeG7aNN1w4BOYzs0tV7w3VPQfolfc3T15ymY19sTHEOzY1Sn+aNxU4L79EnRrryixfaSHUti1xVAJ2KGvxySLMQ/9bnbSi6EA0j2U8tI8q1Uf+YMJiufABq/mvBUNlJLvYrQODQMXCRJcX9dspsse5CvpaWHm807bo6OJI51F39Gtum7Zm8uRRw2/s17VY4gncru8QFbCCBjNz2XsNWiKMoMwVWM4oCW0qyB2XI8U5icy9mUn1NjtSqEtcqHwaudGizyaITgcCyWMnUbfIJUmN8Zq5SPNb5FidyU/xh7d27O8kcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K5W0lpRqgHxKmaFuM+fNdUsrPyf1z93QBqO3Xx+VNtg=;
- b=aeDvwi+LUWCWbW8LWwHM5JAYqoU5OdTMzk1FdDi+/vmwdhRwt5urQDuPEyV/CXdLPE7FsoNu9jIWqdtd9lFIBtG1sBWI4DxQEWXj0LlPP6l8eJbPCPwj2MU2oQ634G2i+N3oZltXG4/HVkXTN7pF+GYKtre9PLqjTOkYrL9PosFAntlUPCY1YEXCLVozKY5up/gKD+5vpFzvQEEEMwe48mr7fZEyVdT+zYkB2xTe37LPHWRSWbZGwcZhs+gIOIE807vE/3HhBDPDt3z76PNBKGKE3IUbEQFEa6Xuer38wsNrwf+Ch55om2oak5qfKv+vjbCbLCJ3OJc7SNMqUmFtfA==
-Received: from SEZPR06MB5832.apcprd06.prod.outlook.com (2603:1096:101:c8::12)
- by SE2PPF271E4F3E3.apcprd06.prod.outlook.com (2603:1096:108:1::7c8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.9; Thu, 9 Jul 2026
- 13:59:51 +0000
-Received: from SEZPR06MB5832.apcprd06.prod.outlook.com
- ([fe80::f98:5e32:4ccb:d07b]) by SEZPR06MB5832.apcprd06.prod.outlook.com
- ([fe80::f98:5e32:4ccb:d07b%6]) with mapi id 15.21.0181.014; Thu, 9 Jul 2026
- 13:59:51 +0000
-From: Pan Chuang <panchuang@vivo.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Pan Chuang <panchuang@vivo.com>
-Subject: [PATCH 26/26] dmaengine: xgene-dma: Remove redundant dev_err()/dev_err_probe()
-Date: Thu,  9 Jul 2026 21:58:30 +0800
-Message-Id: <20260709135846.97972-27-panchuang@vivo.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260709135846.97972-1-panchuang@vivo.com>
-References: <20260709135846.97972-1-panchuang@vivo.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYCP301CA0073.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:405:7d::11) To SEZPR06MB5832.apcprd06.prod.outlook.com
- (2603:1096:101:c8::12)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5EA32694E
+	for <dmaengine@vger.kernel.org>; Thu,  9 Jul 2026 14:03:06 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783605788; cv=none; b=PQvpPvkwm8LKTHNxGa6anKDZQcDOQfILLGFSuLzVevcmUn0UbsElvqQf88vGwWiNcJq+fucf1c6LUyI4fCkcQQ9dluajR8VfwLBvriSpQkA/s/Oe4a9nN/QkzMa+IK2HQ2KZjp8V5IniAo8ZfLlCp7EM9y+X7/bb3SnqzBes9pE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783605788; c=relaxed/simple;
+	bh=d62WO9UTYcPd2TL0LG/Bi6Xv4tLHh/YgpWmOEOnM00I=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=WX4MqMzYmWdXVT4H8JZoEO8pAuisPRCxckNnvpE3wiwn2qOqDqZpfMgm82sdihCTbVAd/bk6q4aaJ8QO0ESpd+EVieAYdnmgun/TCcCydpkAXMAhwj4YF8PnXnhImaPZDL2o16QebDgdt26WdSJhmHd8gYBAaaKZDZfgCtcpDSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ea30xJTp; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48DB61F000E9;
+	Thu,  9 Jul 2026 14:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783605786;
+	bh=qa+ByBYEJSQ3kB0ojOwE9VS8JVTusSVrvSQBLBiuULw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Ea30xJTpWLhbYGBHXe6vVTQ2TFlgAk6fUMYVKDwMWa+MKcwHxHwslyvHDlhM/u8dF
+	 G/Q6bVOhCfCbVetc4WP48MTeu6vHKCF4qLNkFpvUwsqJiFf7aq1IAe4vvwuzt0gkXe
+	 vtLVRajlck4N/yKPmNMnQ7qBeSY/IvYlkgIbILjJueXPiOYA2yq49quPkRRSEsdDW3
+	 CSW6JpIeKGkFnuAC9c/imZKGKliwfMkja1JPf+AOZWeRANOKGbDDyyGBxiemqaDr5L
+	 VbTxf5n+JprbrvKjZr8QQ1S2G4MNqTsrdulHeaMssgzlJ7kHvGiMYiqBufiX+sVOR/
+	 INiOoMC+mm9fg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 2/2] dmaengine: qcom-gpi: Keep GPI interrupt active
+ during system resume
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Mukesh Kumar Savaliya" <mukesh.savaliya@oss.qualcomm.com>
+Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260709134623.1724212-3-mukesh.savaliya@oss.qualcomm.com>
+References: <20260709134623.1724212-1-mukesh.savaliya@oss.qualcomm.com>
+ <20260709134623.1724212-3-mukesh.savaliya@oss.qualcomm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 09 Jul 2026 14:03:05 +0000
+Message-Id: <20260709140306.48DB61F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5832:EE_|SE2PPF271E4F3E3:EE_
-X-MS-Office365-Filtering-Correlation-Id: 358ac8a4-778b-4188-929c-08deddc2589b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|1800799024|23010399003|52116014|38350700014|18002099003|11063799006|56012099006|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	9F/f/aLsmKoUSVGu/kBD8Ax2oMjhIfzEskSaeYmxJQ7/FKxywnBVcb5zIoI+gZaIrPo9po+8yjy8xGLf4spz9TwDpgcxwBKRY3C8tZxuE8NCe3V6eqGWZO4QpSVUX+a8EQ/k3FhofpfCxoPY4ajx2qngZ+HtJF131HKr4L2gJ6uEILGoNFK4ns3QbFIvrQCJ3fEG8lBVzYHjnbNBC/MPz363+9x5mUI8npuxKRcvYaNdZk6kCDiqHbv1Lr/4388NcplUUFVWofGVHb06PFqVJO6d+572p2xMgWqpiNm8uNVnBzMqLt7irVS/pEewjCr6tnlfXa7fyp+oyri3edhJzA5GIN5Gg0sv/3KBUrEEB5SeAUSZ38+kGzbV7yvlMqkpy94j102t+sLuEGewjA5sqe10LVKC/j7tkB/jDkDLZ7SOEUlemzZBvRE6Mon4ockBD+TRXkDXGAsOlNi4z0dNwldy5127v1FFaj75G2n03i0VUwPO2Yf79xAlwD7xQYd+r49uzLCQVkVPQzqC9IlFS1HWQxMnb9WzrZUCmCJBNalJTWHNZQy4ZjGa2aBslhoOUs+zCNDDKxMhBHA0oyQxbqY3AhyMkBNB3Vk8Ox3tlc646C/7PgbNX7fgUqmbxEBIkbaBNBZOp/VehcAut1+ZbKP0v+6GxbbiBim6kbZaS/wEKf+4n17rBdFyJpjFf+7gQhiKYwFACY0MCvhioOBR2lngXPxvqboLGXV3lW51E6A=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5832.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(23010399003)(52116014)(38350700014)(18002099003)(11063799006)(56012099006)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ClcZQ90/mmZ8C7U5IcRr51K5Q+LsrFTt3FVv9BgpmAfS/bxMn7/r6D21fyX7?=
- =?us-ascii?Q?NP1rOOidfPyGXADKAJ7mEKrFi4I5aTSz7YfEixw5A4d6T1HBUEK25/+ImiCu?=
- =?us-ascii?Q?1dlZ2UWJs/SgW2iooYw/AiCyB/sAhUQoBLTEt/bso5gNurjNGX4VmWVGpLzt?=
- =?us-ascii?Q?Ljxv/muxFpPvADEKC+xnmvde55JwEC8HyB9wj+bRG+T5nXE6i514LumpQbbP?=
- =?us-ascii?Q?P9MlwrHl4Z57WarqtUR9KllqQ8oeMYWVq0l6lif6+JRtoGrJ6tmcJZl0F7Yp?=
- =?us-ascii?Q?XVJ+nx29Q3DPZqHtEzkCGmtkGaDdWZ6/nkPcVJSov1lh8sWG/gbiIk9skFIU?=
- =?us-ascii?Q?HSQWRoZfsG6ppzvvxm3XxcAHGXWPxAaNWAUbaCh6NWaW4hfslLvcjf5vFLMn?=
- =?us-ascii?Q?AyFeoCoAWPX2ac5Z3NhhzK/EGrS/MJSAnRkKB836NrRkIDoSaDVvqtdpV3/D?=
- =?us-ascii?Q?h+iJ8J9arXu0JZviLEKLQnhELZvha/ZDiMWU0gwmIx7Z0DAiK4VO4SLM3zzU?=
- =?us-ascii?Q?FG5gpqj1kF/JtxUBx2M7KemWrUQSumBHKzMoCNjBnyQfYMEKwLxCE9mIGcnJ?=
- =?us-ascii?Q?eVLPs+FwN9va4cFbcI8QLvbHAQ1KlpQdQt26TFks8mu3i1HH8rAkZS+F+W1A?=
- =?us-ascii?Q?tIwO4DmDLmjjWBSlEWuUhVAo9epuIQSA5AL9tEqvJchVQ24ou8LC/pVR/r7O?=
- =?us-ascii?Q?EohXzuScyoSWApDwig+bGrGfhU0aTelgbIYukuZBBAe0OxCYhv6dYAAKKleS?=
- =?us-ascii?Q?hMMw5nJH4G5O99SFIMEuz7qwGWeGfl1Z7cOEGAs1+5oTD0Q6cLDU3GYevw+t?=
- =?us-ascii?Q?RLUjBr/4NDbRPtmuQXMZY8Od2Fog5ta6z5GpCsLdKVqrR0vx6uUnp72aTPH1?=
- =?us-ascii?Q?Pa7GdKoh0ONoBOidsdxndlRiGrcfEEMwaqYR9pp5TBA3Cd1apk7yqqgLzoEo?=
- =?us-ascii?Q?TCcbA7CM8lq4/OmFjJByLcEW4Ko5dpbbrbvBPdRZqqfrLZMNAP1JyVn0B6ZY?=
- =?us-ascii?Q?Qe7cBnYTG8omv36XaHMfyQ2GwiP3oanJijV6Zj5Wic3RZ1MkyKxiC/c3Gnz+?=
- =?us-ascii?Q?igc0HtcP3oyDrkfJb4TMVCiJkeajLsPD/YTVoyTGLM8pHpuiJHP3LNdxooPa?=
- =?us-ascii?Q?JWuIqqx5jy76fwHcv1H6sc/jKDe6iHJCEWi53omuUYovrztxODlZY+QZ0FfX?=
- =?us-ascii?Q?pFg5B971Q++L8qZy3mUHpIADyqMrwO4g1p+3MrBHKX+pU5/UnPYaKZt7ELCI?=
- =?us-ascii?Q?3tKIFYOEW01VITJvw7zJqviJkM9QZ/Sl32cHWsdXWi/xMpBZsmcxsYAErqRR?=
- =?us-ascii?Q?WC+SZCRj87EnMsnlRUldlaz5h0AFpYTK795bZxFEgVgi0EuFD/NH0vpZDcW2?=
- =?us-ascii?Q?COwdQX9AV8KlHqSjjr7oPiYVZtfFiT76h11iOoFvfPhsrtXjyLt0o8Z20JIC?=
- =?us-ascii?Q?j0qMhz19xUjUDPyyw0z8nAs7c0F/sxgKRxU67r0CwsMQ57cQNnZUIL3CDO8A?=
- =?us-ascii?Q?Kg/EmtDYsINnlXMiPnWQ2L+xhH0xVr0Tm+4Ye+BudVGtrMtlVDWZZ+6t4s1D?=
- =?us-ascii?Q?9+7fB6uqfM8nchF/zL0lvREr9qEH6gon5/ALo5X1zvl+lvLtJcUYNNw1+b7Y?=
- =?us-ascii?Q?cJZAl2jZ4l9+bIYbhQSSD1n+4D0dicmhe7MHMbtPoBgizWIMjL9GzTVv61I3?=
- =?us-ascii?Q?uZQYHxpWsOYlbcBIFwFqGuTbq7I0E8XjK6u9Q4+245RGh125yzKv/LPXKzBA?=
- =?us-ascii?Q?/ul88kQUWQ=3D=3D?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 358ac8a4-778b-4188-929c-08deddc2589b
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5832.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2026 13:59:51.4741
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UZDeNKP1rA+rb8NG62gEW/v15kDzwk8Yey3XWnXibfx3YrKtgnyWnhr+32Ayl+4hFe79AONhAVkLDUQ/k6pqEA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE2PPF271E4F3E3
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.34 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[vivo.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[vivo.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-12204-lists,dmaengine=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[panchuang@vivo.com,dmaengine@vger.kernel.org];
-	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:panchuang@vivo.com,s:lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-12205-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:mukesh.savaliya@oss.qualcomm.com,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[panchuang@vivo.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[vivo.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vivo.com:from_mime,vivo.com:email,vivo.com:mid,vivo.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,sashiko.dev:url,lists.linux.dev:replyto,smtp.kernel.org:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: BCB56732117
+X-Rspamd-Queue-Id: E6F5C732158
 
-The devm_request_irq() now automatically logs detailed error messages on
-failure. This eliminates the need for driver-specific dev_err() and
-dev_err_probe() calls that previously printed generic messages.
+Thank you for your contribution! Sashiko AI review found 7 potential issue(=
+s) to consider:
 
-Signed-off-by: Pan Chuang <panchuang@vivo.com>
----
- drivers/dma/xgene-dma.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+New issues:
+- [High] Adding IRQF_NO_SUSPEND leaves the interrupt unmasked during system=
+ sleep, causing fatal unclocked register accesses.
+- [Low] The IRQF_EARLY_RESUME flag is functionally dead code and redundant =
+when combined with IRQF_NO_SUSPEND.
 
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index fa1173e49900..6797a3b84f1b 100644
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -1435,11 +1435,8 @@ static int xgene_dma_request_irqs(struct xgene_dma *pdma)
- 	/* Register DMA error irq */
- 	ret = devm_request_irq(pdma->dev, pdma->err_irq, xgene_dma_err_isr,
- 			       0, "dma_error", pdma);
--	if (ret) {
--		dev_err(pdma->dev,
--			"Failed to register error IRQ %d\n", pdma->err_irq);
-+	if (ret)
- 		return ret;
--	}
- 
- 	/* Register DMA channel rx irq */
- 	for (i = 0; i < XGENE_DMA_MAX_CHANNEL; i++) {
--- 
-2.34.1
+Pre-existing issues:
+- [High] A 3-way AB-BA deadlock occurs because gpi_ev_tasklet() acquires a =
+read lock on pm_lock with local hardware interrupts enabled.
+- [High] The error cleanup paths in gpi_ch_init() operate on the wrong chan=
+nel pointer, causing leaks and multiple resets of the same channel.
+- [High] Unregistered DMA device on the probe error path leads to a Use-Aft=
+er-Free and global list corruption.
+- [High] tasklet_kill is called while the interrupt is still unmasked and e=
+nabled, risking a Use-After-Free on the event ring.
+- [High] The interrupt handler returns IRQ_HANDLED when bailing out due to =
+an invalid PM state, causing a permanent interrupt storm.
+--
 
+--- Patch [2]: [PATCH v7 2/2] dmaengine: qcom-gpi: Keep GPI interrupt activ=
+e during system resume ---
+commit a7024226a78be6fe1a44f0ec7dd85e67623b43ab
+Author: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
+
+dmaengine: qcom-gpi: Keep GPI interrupt active during system resume
+
+GPI DMA clients may initiate transfers during the early stages of
+system resume before the normal IRQ resume phase has completed.
+Request the GPI interrupt with IRQF_NO_SUSPEND and IRQF_EARLY_RESUME
+to keep it available across suspend/resume transitions.
+
+> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+> index a5055a6273af6..29872b6cb2c75 100644
+> --- a/drivers/dma/qcom/gpi.c
+> +++ b/drivers/dma/qcom/gpi.c
+> @@ -615,7 +615,8 @@ static int gpi_config_interrupts(struct gpii *gpii, e=
+num gpii_irq_settings setti
+> =20
+>  	if (!gpii->configured_irq) {
+>  		ret =3D devm_request_irq(gpii->gpi_dev->dev, gpii->irq,
+> -				       gpi_handle_irq, IRQF_TRIGGER_HIGH,
+> +				       gpi_handle_irq,
+> +				       IRQF_TRIGGER_HIGH | IRQF_NO_SUSPEND | IRQF_EARLY_RESUME,
+
+[Severity: High]
+Adding IRQF_NO_SUSPEND prevents the DMA interrupt from being masked by the
+core IRQ subsystem during system suspend. Does this allow spurious or
+delayed hardware interrupts to trigger while consumer driver hardware clocks
+are disabled via runtime PM?
+
+Looking at gpi_handle_irq(), the pm_state check may remain in ACTIVE_STATE
+or PAUSE_STATE during suspend:
+
+drivers/dma/qcom/gpi.c:gpi_handle_irq() {
+    if (!REG_ACCESS_VALID(gpii->pm_state)) {
+    ...
+}
+
+If this check passes while clocks are off, will the subsequent register
+reads cause a synchronous external abort and crash the kernel?
+
+[Severity: Low]
+Is IRQF_EARLY_RESUME redundant here? When combined with IRQF_NO_SUSPEND,
+IRQS_SUSPENDED is never set on the interrupt descriptor during
+suspend_device_irqs(). This means resume_irq() won't do anything for this
+interrupt during the early resume phase, making the flag functionally dead
+code.
+
+>  				       "gpi-dma", gpii);
+>  		if (ret < 0) {
+
+[ ... ]
+
+[Severity: High]
+This is a pre-existing issue, but can a 3-way AB-BA deadlock occur with
+pm_lock?
+
+gpi_ev_tasklet() running in softirq acquires a read lock on pm_lock without
+disabling local hardware interrupts:
+
+drivers/dma/qcom/gpi.c:gpi_ev_tasklet() {
+    ...
+    read_lock(&gpii->pm_lock);
+    ...
+}
+
+A concurrent thread calls write_lock_irq():
+
+drivers/dma/qcom/gpi.c:gpi_resume() {
+    ...
+    write_lock_irq(&gpii->pm_lock);
+    ...
+}
+
+Due to fair rwlock semantics, the writer blocks new readers. If a hard
+interrupt then fires on the tasklet's CPU, gpi_handle_irq() preempts the
+tasklet and acquires the read lock:
+
+drivers/dma/qcom/gpi.c:gpi_handle_irq() {
+    ...
+    read_lock_irqsave(&gpii->pm_lock, flags);
+    ...
+}
+
+Will the hardirq reader spin waiting for the writer, while the writer spins
+waiting for the preempted tasklet, creating a fatal deadlock?
+
+[Severity: High]
+This is a pre-existing issue, but do the error cleanup paths in
+gpi_ch_init() operate on the wrong channel pointer?
+
+If channel allocation fails, the error handlers iterate backwards but pass
+the function argument gchan instead of the iterated element &gpii->gchan[i]:
+
+drivers/dma/qcom/gpi.c:gpi_ch_init() {
+    ...
+error_start_chan:
+    gpi_send_cmd(gpii, gchan, GPI_CH_CMD_RESET);
+    ...
+error_alloc_chan:
+    gpi_reset_chan(gchan, GPI_CH_CMD_DE_ALLOC);
+    ...
+}
+
+Does this repeatedly reset the same channel while failing to clean up the
+newly allocated channels, leaking hardware resources and memory?
+
+[Severity: High]
+This is a pre-existing issue, but does gpi_probe() leak the DMA device on
+failure?
+
+If of_dma_controller_register() fails, the function returns directly:
+
+drivers/dma/qcom/gpi.c:gpi_probe() {
+    ...
+    ret =3D of_dma_controller_register(...);
+    if (ret)
+        return ret;
+    ...
+}
+
+Since dma_async_device_register() was already called earlier in the probe,
+does this leave a dangling pointer in the global dma_device_list when
+devres frees the gpi_dev structure?
+
+[Severity: High]
+This is a pre-existing issue, but is there a race condition in
+gpi_free_chan_resources() that could cause a use-after-free?
+
+The function kills the tasklet before disabling interrupts:
+
+drivers/dma/qcom/gpi.c:gpi_free_chan_resources() {
+    ...
+    tasklet_kill(&gpii->ev_task);
+    ...
+    gpi_disable_interrupts(gpii);
+    ...
+}
+
+If a pending or spurious IEOB interrupt arrives immediately after
+tasklet_kill returns, could gpi_handle_irq() reschedule the tasklet,
+allowing it to execute concurrently with or after
+gpi_free_ring(&gpii->ev_ring, gpii), and access the freed event ring memory?
+
+[Severity: High]
+This is a pre-existing issue, but does returning IRQ_HANDLED when bailing
+out cause a permanent interrupt storm?
+
+If the pm_state check fails, gpi_handle_irq() jumps to exit_irq:
+
+drivers/dma/qcom/gpi.c:gpi_handle_irq() {
+    if (!REG_ACCESS_VALID(gpii->pm_state)) {
+        ...
+        goto exit_irq;
+    }
+    ...
+exit_irq:
+    return IRQ_HANDLED;
+}
+
+Since the interrupt is level-triggered, does falsely reporting IRQ_HANDLED
+without servicing and clearing the device hardware condition cause the
+interrupt controller to immediately re-assert the interrupt to the CPU,
+creating an infinite loop?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709134623.1724=
+212-1-mukesh.savaliya@oss.qualcomm.com?part=3D2
 

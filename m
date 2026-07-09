@@ -1,253 +1,339 @@
-Return-Path: <dmaengine+bounces-12212-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12213-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id m7vXNMWvT2oJmwIAu9opvQ
-	(envelope-from <dmaengine+bounces-12212-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:27:17 +0200
+	id YP7cDsexT2qCmwIAu9opvQ
+	(envelope-from <dmaengine+bounces-12213-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:35:51 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D58C732379
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:27:17 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A548173250F
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:35:50 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=GbDbh82W;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12212-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-12212-lists+dmaengine=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=amd.com header.s=selector1 header.b=hDUXOKuS;
+	dmarc=pass (policy=quarantine) header.from=amd.com;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12213-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12213-lists+dmaengine=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6CCFE30EB5FF
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 14:12:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 51DB1319367C
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 14:14:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7388C32B139;
-	Thu,  9 Jul 2026 14:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CAC82BEFFE;
+	Thu,  9 Jul 2026 14:14:04 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012047.outbound.protection.outlook.com [52.101.53.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDF02FC89C;
-	Thu,  9 Jul 2026 14:12:14 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783606335; cv=none; b=f9VMhkZcnrMo4+urgQ0eFStmkZ/Ejmoa69tDhyDeQtPnmVyawZkynnThYtgkjzxru2OW5yVO5iFCIhmLO1AZ4xLGCvFpiElgIIaRkWsRAB0ajrrPmlEJuZ6Qq9Ki1SdvgeGtl5PZkDxl+ZyLlvTMYSNqe2R5d1NIIsnBnuYltEI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783606335; c=relaxed/simple;
-	bh=6gWMr/1ZotjeiZqUbt/nvdp1w4S57UxJqNrYvCTuT0A=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NYC6u/TFKjk+bjSAUg5nDpTGbeRQvYSI5E5pPnqbBcA98lTxu2GVosdqJRXMq1oCJ4H8gxnWuqwTGXyV1q7MUjT702YhjI82ufmsC+n2I2jI3D8ZnGGkJ4bdU+neDRjNI2LuWEZaUTTlabHymif+mtxiFg+nrK43HwwhwGE132Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GbDbh82W; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC2821F000E9;
-	Thu,  9 Jul 2026 14:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783606334;
-	bh=sPbttQasY5IyzO+TXfnvMFj9nk5fymvOX3UzqO3RvnU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GbDbh82Wr8Q2oXTpU+ZOlN6bw6x1COGvVIIKUg3YJud1rK0cvY4/h9RnQaLVhcT2s
-	 p3J4/EvYhmXwbG2fTa5Fxg0bulT+XI+gChvh0wG1Q/pPUYHBj2t66/1TalexJ9cy5V
-	 t9PCtzWrh4GrU97viRXQmox6GacbljfCyR5efZ2XOExBZXkTTElfjtf+/Q2jki3uXV
-	 Qhxkb8Xev2RXQu+1Srmi4mRK5AKh/ybXbqYfMzK04pq5qIuhQHtiFtZlhGSYfEz08l
-	 uGeVnhSLuAcFXxC2fOKw3Nd59MJS39PyBTyLfrXraZGyIO1S0sHNAaiacU+vjtOyPi
-	 pKGpvxy6+n6pg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/26] dmaengine: fsl-edma-main: Remove redundant
- dev_err()/dev_err_probe()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Pan Chuang" <panchuang@vivo.com>
-Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, imx@lists.linux.dev, Frank.Li@kernel.org
-In-Reply-To: <20260709135846.97972-2-panchuang@vivo.com>
-References: <20260709135846.97972-1-panchuang@vivo.com>
- <20260709135846.97972-2-panchuang@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 14:12:13 +0000
-Message-Id: <20260709141213.BC2821F000E9@smtp.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C99263F34;
+	Thu,  9 Jul 2026 14:14:02 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783606444; cv=fail; b=bq1rKG8ryaLKUKf3sc6mys+/aUowPKz/wG0VEZylwiE6rh8Yl5R8pYIGbc2SH0T7pVOMV0UQmt1/hU2/MHQxGOy0ekavQMotjf/s4V52uBu8JFCpXoWY2GEGQF8TqCYrBghKPHsUuPveyNxq0jFbkSY0VYnNdfqM9aUxAWZ52zQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783606444; c=relaxed/simple;
+	bh=zSg/zg9VbYmPql1I2EtH/j0ORBB+uf0otCQEaVpqPHk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=A9i4hGVINDHPXrF7W1k7RsU44PPB05HlhkFcfoh/abW3XUTFdRSEswdynD4vEmGxHl/P0jJAAki9imeqCIb4ADlOtH0jGPu7otvoaEw/cIiH5y109A1s6oJhPhUAoZbxLYUzH5NJX1VCOp3JE0XfHh/hv2XU7s3VyS/WcNTV5wM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hDUXOKuS; arc=fail smtp.client-ip=52.101.53.47
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hPH9Qg1LpZnFQo5Np2cmlMwEE/P4FsPw5EoK0C/MQW0Bm/TrOxye6HGiEsMw5EGGZlKbOJB6MvpHzWfDWjxHaC2jZN0nmccDRAwG+YnuwhGKcGtMCxNp5vml8t0uQrGU8sNUsVqVoGg4npZ8SYQiYAuv40H/nfRAYvxad2KOZitmMTUJT/C78aEAQJa9Hxy+67sNZNkQZ3PKAd7eOglrWMLhswlN+KjxP/j1rlyRwLcfDvj29K2A6tKg1vNAeLVr1+0yilJ9TnrTYILQTDrbHmwW4q1C4NgejA3CMBRnamE9jNEhZRv6fWXlNtWsFmpwy1FmIdjAgxFFwtCnQ2G73Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=B0ih7vNULsYP19N+jqpufFpInVKLoHWbksrWxmLOeL4=;
+ b=rNho6I0ksH/ULSSoCi1A3Y0ztk2YMr72ZlJO40xvAyDAsMyO7xMCQzRrMsW8Xfq+ZSLonJjpMHGdCcOLNdpb7Mnqfr8fOM6e66nHEz7JrE9ykxshjQ//K0qrq99QfL6OqD7OLNT4kPZaBpja0Kp6bxJOO0Zkob6y0o1ttB3EVgRVk9wS0Bc48kVAMLaosBx/rpWp9fghWvA4XFQNDUaxsbeDs4BoO436ump8pFP+jjiphRQw9f32MhvT6iV8gcHjOIaYBnaCaKZvL+byOz8/nR1zUzDtqT2HVQfbPuY8AbXOsyhEl48L8enrfp/NSpyaoKID1IX+/yeesIzQi8hKFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B0ih7vNULsYP19N+jqpufFpInVKLoHWbksrWxmLOeL4=;
+ b=hDUXOKuSSB0DFVra7pHP4ZxTK+5ZYJqo+7w69UwrYcvr+8kHBzf5pSqFl+Q4rb7oXegm2fmLnxu8vbUDZumS35wU5SHTsdH3kQJdyWbPOqIXwRQGJhgRDn+Fq48NO0Q4rDPBBFV2HE3p52a2FWn2BQve26hYDAZ9Zz65cnFD5Dw=
+Received: from CY1PR12MB9697.namprd12.prod.outlook.com (2603:10b6:930:107::6)
+ by IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.16; Thu, 9 Jul
+ 2026 14:13:55 +0000
+Received: from CY1PR12MB9697.namprd12.prod.outlook.com
+ ([fe80::3a41:55a0:8203:596d]) by CY1PR12MB9697.namprd12.prod.outlook.com
+ ([fe80::3a41:55a0:8203:596d%5]) with mapi id 15.21.0181.014; Thu, 9 Jul 2026
+ 14:13:53 +0000
+Message-ID: <b56ae718-1ee6-4d5d-9901-ae5a01d2f9f5@amd.com>
+Date: Thu, 9 Jul 2026 19:43:43 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 4/4] dmaengine: xilinx_dma: Extend metadata handling
+ for AXI DMA and MCDMA
+To: Srinivas Neeli <srinivas.neeli@amd.com>, Vinod Koul <vkoul@kernel.org>,
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Cc: Frank Li <Frank.Li@kernel.org>, Michal Simek <michal.simek@amd.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Suraj Gupta <suraj.gupta2@amd.com>, Marek Vasut <marex@nabladev.com>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Alex Bereza <alex@bereza.email>,
+ Folker Schwesinger <dev@folker-schwesinger.de>, dmaengine@vger.kernel.org,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, git@amd.com
+References: <20260708100652.603074-1-srinivas.neeli@amd.com>
+ <20260708100652.603074-5-srinivas.neeli@amd.com>
+Content-Language: en-US
+From: "Pandey, Radhey Shyam" <radheys@amd.com>
+In-Reply-To: <20260708100652.603074-5-srinivas.neeli@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0010.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:272::8) To CY1PR12MB9697.namprd12.prod.outlook.com
+ (2603:10b6:930:107::6)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY1PR12MB9697:EE_|IA0PR12MB8374:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2a621aa0-cf90-4702-b65f-08deddc44e8a
+X-LD-Processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|23010399003|7416014|376014|1800799024|22082099003|18002099003|4143699003|6133799003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	3UN4Yt+vYOjXVT1/Ql+0vpO9DdCjLv3jwmwkQ96SA6WHP++DUR77h135Dfsz3SD32Zk3rd1Spxk4zYr3ledtiYPsX1DFFfnfspmEcIzH9RNAcicSrw+uVQhcfopYJYJ8oSJz7YXL0S1erp9HF0BjXSqz50Cp38fuC0sjc7JwWFatKCfaU+RClb0/AxC//ricnAW3H/K0fcJjpbdQFNI/feiCpPhKtmaG26QjsqGT34wwyWHLkuCUH78yWk/NBYmXp4+ikltMEvhtmBDMgah/ltUx2EkhmdyWFSe6bDCyJqeKhFHGZcUawr6ziV30mKwuvwor3IJ0Pk+APCiqe/mWcwQ/4dfuvrns6SmDNF1Q31GMAVdr6svQUNM601AWengvBjeaLYJnKZ/v4bEC6SyRblDjQPVEp5I4h+ogxm0FZkXMtbyOhRfkj9RqqNb2HUWeOW1PPLVUJpuJXY6RbRqEEfTfgZC0KaZZtkVm5VgZecQd6WVV1W9eloxgrj/iXuQxamHToL4lYfghLacihuuCi7NjecvOeqkD8eR3eeJrddXnpzc0vx5b2l9FmNeXshGImdfGQ9kyMg8NXB56fX9cNRHwWC4lKcp+2ZRSpq5jTUsCzbhiCfIm2WrOYquB4NdcaYcQ40cMw+ZV8LfS3GPZe8k9CMTyAa9PIxKEqGYgaLc=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY1PR12MB9697.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(7416014)(376014)(1800799024)(22082099003)(18002099003)(4143699003)(6133799003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aWRoSHpiQWpDQWEvbGJvN0Z5V01LdUR0Z2JhUWUxN01LYjNyY3BKVllvYW5Q?=
+ =?utf-8?B?YnZUR2J6ME1HaEFodEF5elFTeTNZaTBPNnVVQjc5WXZwazJqMlM5NEk5ancx?=
+ =?utf-8?B?UTJkV3RRYWN4K3pIUjMxeHA2WG5Ca25RKzRJK0xtNEczQUhRNW1nZGN6K0RY?=
+ =?utf-8?B?TFNwaXM5cnM0UGJuNnFtVWNsRmFpNGxPczhieXFaZEJud1d6YUwyaXZRaWRy?=
+ =?utf-8?B?SVFVZkQxY3VGYzM4NjlTMlR6bnJQc0ZYUmJVUHZnOUVKclc0bUUvcmN6YUh3?=
+ =?utf-8?B?eExpcitzNUs3UTdmb3R4VFVTaHZ1U2JGcURtNlhFVFRWeXdvejdNbGx2VURF?=
+ =?utf-8?B?VFZGMmloMFZpTWFwZnE3VGtISW43bHZEdmNFejhML0tKazBiMXV2YjBPVmVI?=
+ =?utf-8?B?VGYzYWtBdVloMGp2OUZYdXZOWnF2NGdZN0FvbmRCVlFVUjFKNXpYV1Z5L3Nx?=
+ =?utf-8?B?YWhkZE9mRUJvbWpFdExXbmduNjFkVnM4NlE2bFB6NytTdk9pUlBVMlE3ZmNN?=
+ =?utf-8?B?a0N3WVA0cDR6V0pTa2lpeHNoYnhXcUYyL0FwR3hFVHNFcVJyQzlvc0lQUUZY?=
+ =?utf-8?B?WDJQUUxOTXErVDc0Z2tYekNtbWpqb0N3VHhleC8rY1JqSUw1T1JiekY5dDNB?=
+ =?utf-8?B?MUc3c1FzSmMxbXZjb0UzQVdXa1BrT2NESGpzMFdsVTlYSUZZVG9GVS9vT1pU?=
+ =?utf-8?B?a2tpSVhaL3ZhWjl6cm5BRUtaZDRTa0FEU1diN1IvendoYSt3VWdaNGZ4TXFN?=
+ =?utf-8?B?R1FXcmZiTy82dCt6RW5SS1VYK2U4WEZxWEZiWlZuZlMxaFRLU09EL2V2TW9Q?=
+ =?utf-8?B?eFRnaEJ0Z3NYM05sS1J0aEFPT00waGdYanZ2YjhJcWorZzdleWVYeXdPVEVJ?=
+ =?utf-8?B?YzQvWno2b0JzUjlQQk1rdWRrTG5kYkRmWDRMeEJOb3ZHWG1RTEdwZHNCUXla?=
+ =?utf-8?B?UE9NcmpJMFNVbUFTajUxK1hydmFmMytUL1dnc0k3Tm5vb0ZORGY3bGpCSlhK?=
+ =?utf-8?B?VmNGdU9UTnlVN2hHQ1JWNXQwM0tWUitpcEdrRm55K09seWx4UWZOWTlWdld6?=
+ =?utf-8?B?WFpUY09HcU02dHdXcGU1bjh0bG5rTEdJVWpDajhiNitIajdBVWMvTUlyNzhv?=
+ =?utf-8?B?N3RCV0ZnZ3B4VlpQR3lwd2RMQUpYZ3hjT2g2K25zSGRjRUNzdjNGRGw5dmlE?=
+ =?utf-8?B?Qi9TZlBBSjk4RFVzcTY4NjFwUzFBTWs2NERkbTBsY1JidXY3cXhFeXoxNkRw?=
+ =?utf-8?B?UVptWWYyR2duQkwxTnJKTUtqZ25Dd3VvamJweVR3d0dIVk9kMlpuUUE0VEpx?=
+ =?utf-8?B?K056Q0lQcDBpclNtajBGRDZsYmtnekVaVGlqREhXRVZ1aUZvTDZhTDJadWpI?=
+ =?utf-8?B?SjcrNzBYTUsrNHhaL3I1citmOHJBV2JyRnBJMU85K1VSWVhWOFVST01FRnVJ?=
+ =?utf-8?B?NytmTzR2bGNWK1B6dlkvWk1GekErZ3c0TVhTYXdCVHlPak9tbjhUbG82VzFZ?=
+ =?utf-8?B?TzNGWnNpemwwWDNJUVdYbjJkMlZJdnVNL29jSXFnSFFyQXFLdTljNml3R3lk?=
+ =?utf-8?B?YlBTYThxd0J5L3F1QjlzWHMycVl1bmNiTW84dW5FOFNMVU1EbEJtbVRGMnB4?=
+ =?utf-8?B?ekxZRlZGcG1ncjhqS3Ixdk9GVVlReTBCbE82QUtYQm5JTjEzbmRObXpUVExC?=
+ =?utf-8?B?MEJTb09waGxuUlBlRkp4TjBMU01LVXRoV20wMU02RWNuMmZ4KzhRbDZ4VFY5?=
+ =?utf-8?B?eEhVM0hibFhWdWF5TUhWeE1vWDl6eGJGOGR0Mk5HNkVZSmY2ZVI0SUZlYnBq?=
+ =?utf-8?B?R3h5SnMrUnNhUzBHQXYrMDByOEgybWt0SVZVYWxRdk81ZzBFWHNCSGw1UFJQ?=
+ =?utf-8?B?MHcyWFlETXU4S0trZ2lYYjBaUTd0bFpvTFlOUURUMlptUFE2TVdPQ20vekRD?=
+ =?utf-8?B?QU1ZaWdFdE1JcVZPZmxiVmsyWFVEMFMwa0IwS3JJWHVrTWE2YnVFSjk5TUFT?=
+ =?utf-8?B?RVRQeitNWDNKUzhkQ0luUUxNcTM1UDdhQ2s3RTBydExXUll1OUMxOGMyTDk0?=
+ =?utf-8?B?OFlCT3FIVDg5WGZqdVM2c0NEb3hGVlpNdyt1cUtMM25vMEllQlhoci9GdExE?=
+ =?utf-8?B?a21kdVFDdFR1bGFaMm9TSTZCSmhBYldMS3NFTFBIWjVVZkV1RUF4MEJoU1RE?=
+ =?utf-8?B?OG5rUmtoUWFkTDl4SXZkMlZ4YTRQSnE2M1N1bTFGdE5RRWFIM0dwNWp0UE4y?=
+ =?utf-8?B?VU5xVm0rVk9NV1lQNHhFZHhtVE9USStSYVBBNWFpSS9DeXhiQTVweEgySmpr?=
+ =?utf-8?Q?+BGerUQySvWHzoyUu7?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a621aa0-cf90-4702-b65f-08deddc44e8a
+X-MS-Exchange-CrossTenant-AuthSource: CY1PR12MB9697.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2026 14:13:53.8390
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: I6WZfETVtgp3uXxwV6vaPRhwTx2P7+ogR0cARZtNqn5zPcHVY3CIkWopPL1T67Iv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8374
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-12212-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.linux.dev:replyto,smtp.kernel.org:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vivo.com:email,sashiko.dev:url,vger.kernel.org:from_smtp];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:panchuang@vivo.com,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:imx@lists.linux.dev,m:Frank.Li@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	TAGGED_FROM(0.00)[bounces-12213-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:srinivas.neeli@amd.com,m:vkoul@kernel.org,m:radhey.shyam.pandey@amd.com,m:Frank.Li@kernel.org,m:michal.simek@amd.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:suraj.gupta2@amd.com,m:marex@nabladev.com,m:tomi.valkeinen@ideasonboard.com,m:alex@bereza.email,m:dev@folker-schwesinger.de,m:dmaengine@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:git@amd.com,m:andrew@lunn.ch,s:lists@lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	FORGED_SENDER(0.00)[radheys@amd.com,dmaengine@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_NO_DN(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[radheys@amd.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[amd.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine,netdev];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,amd.com:from_mime,amd.com:email,amd.com:mid,amd.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3D58C732379
+X-Rspamd-Queue-Id: A548173250F
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+> From: Suraj Gupta <suraj.gupta2@amd.com>
+> 
+> xilinx_dma_get_metadata_ptr() exposed only the descriptor APP fields. Both
+> AXI DMA and AXI MCDMA descriptors carry a status word with the transfer
+> status, and AXI MCDMA additionally carries an AXI4-Stream sideband status
+> word holding TID, TDEST and TUSER that clients may need. Extend the
+> metadata handling to expose these.
+> 
+> The returned pointer now starts at the descriptor status word for both AXI
+> DMA and AXI MCDMA. As the descriptor words are contiguous, the client sees
+> the status at index 0, followed for AXI MCDMA by the sideband status
+> (TID/TDEST/TUSER) at index 1 and the APP fields, or for AXI DMA by the APP
+> fields directly. The payload length is derived from the field sizes.
+> 
+> This changes the get_metadata_ptr() contract for AXI DMA. The pointer now
+> starts at the status word of the last (EOF) descriptor instead of the APP
+> fields of the first, and the payload grows from 20 to 24 bytes. A client
+> reading app[0] now reads the status word. No in-tree consumer is affected,
+> as the axienet driver reads the RX frame length from result->residue
+> rather than the APP fields. Reading the EOF descriptor is also correct, as
+> the hardware writes the status and APP fields there.
+> 
+> The index 0 and 1 layout described above is for the AXI MCDMA receive
+> (S2MM) direction, which is where metadata is consumed. On the transmit
+> (MM2S) direction the same descriptor words hold different fields.
+> 
+> The probe logic is extended to read xlnx,axistream-connected for MCDMA, and
+> xilinx_mcdma_prep_slave_sg() attaches metadata_ops when an AXI Stream
+> interface is present, so MCDMA clients can use the metadata API in the same
+> way as AXI DMA clients.
 
-Pre-existing issues:
-- [High] The txirq_16_31 interrupt is not freed before vchan cleanup, leadi=
-ng to a race condition and potential use-after-free on device unbind.
-- [High] Double disable/unprepare of devm-managed clocks during the probe f=
-ailure path.
-- [High] Probe deferral is permanently broken due to unconditionally overri=
-ding negative error codes from `platform_get_irq()` with `-EINVAL` or `-ENX=
-IO`.
---
+Nit - make the commit description precise.>
+> Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
+> Co-developed-by: Srinivas Neeli <srinivas.neeli@amd.com>
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@amd.com>
+> ---
+> Changes in V3:
+>   - Renamed subject to include "AXI DMA and MCDMA" (was "AXI MCDMA" only).
+>   - Complete rewrite of commit message and implementation.
+>   - Metadata pointer now returns status field at index 0 instead of APP
+>     fields, exposing status and sideband information to clients.
+>   - Changed from list_first_entry to list_last_entry to return the EOF
+>     descriptor where hardware writes status and APP fields.
+>   - Added explicit handling for both AXIDMA and MCDMA types with proper
+>     payload length calculation.
+>   - Added WARN_ON_ONCE for unsupported DMA types.
+>   - Removed the 'chan' field from struct xilinx_dma_tx_descriptor (was
+>     added in V2) as it's no longer needed; channel is obtained from
+>     tx->chan instead.
+>   - Dropped V2 patches 4/5 (dt-bindings xlnx,include-stscntrl-strm) and
+>     5/5 (xferred_bytes support) as the approach changed to use residue.
+> 
+> Changes in V2:
+>   - Added support for MCDMA metadata handling alongside AXIDMA.
+>   - Added 'chan' field to struct xilinx_dma_tx_descriptor.
+> ---
+>   drivers/dma/xilinx/xilinx_dma.c | 48 ++++++++++++++++++++++++++++-----
+>   1 file changed, 41 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+> index 1b5b00f08c5f..f5c4e0ca2cc4 100644
+> --- a/drivers/dma/xilinx/xilinx_dma.c
+> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> @@ -651,18 +651,48 @@ static inline void xilinx_aximcdma_buf(struct xilinx_dma_chan *chan,
+>    * @tx: async transaction descriptor
+>    * @payload_len: metadata payload length
+>    * @max_len: metadata max length
+> - * Return: The app field pointer.
+> + *
+> + * The returned pointer starts at the descriptor status word for both AXI DMA
+> + * and AXI MCDMA. As the descriptor words are contiguous, the client sees the
+> + * status at index 0, followed for AXI MCDMA by the sideband status
+> + * (TID/TDEST/TUSER) at index 1 and the APP fields from index 2, or for AXI DMA
+> + * by the APP fields from index 1. These fields are populated by the hardware on
+> + * the End-Of-Frame descriptor, so the pointer is taken from there.
+> + *
+> + * Return: Pointer to the descriptor status field.
+>    */
+>   static void *xilinx_dma_get_metadata_ptr(struct dma_async_tx_descriptor *tx,
+>   					 size_t *payload_len, size_t *max_len)
+>   {
+>   	struct xilinx_dma_tx_descriptor *desc = to_dma_tx_descriptor(tx);
+> -	struct xilinx_axidma_tx_segment *seg;
+> +	struct xilinx_dma_chan *chan = to_xilinx_chan(tx->chan);
+> +
+> +	if (chan->xdev->dma_config->dmatype == XDMA_TYPE_AXIMCDMA) {
+> +		struct xilinx_aximcdma_tx_segment *seg =
+> +			list_last_entry(&desc->segments,
+> +					struct xilinx_aximcdma_tx_segment, node);
+> +
 
---- Patch [1]: [PATCH 01/26] dmaengine: fsl-edma-main: Remove redundant dev=
-_err()/dev_err_probe() ---
-commit 0e4d4c4909fc6ed60a790a7b9fecb3bf5b716c3b
-Author: Pan Chuang <panchuang@vivo.com>
+This func is common for MCDMA s2mm and mm2s channel. Please make it 
+generic to address both.
 
-    dmaengine: fsl-edma-main: Remove redundant dev_err()/dev_err_probe()
-   =20
-    The devm_request_irq() now automatically logs detailed error messages on
-    failure. This eliminates the need for driver-specific dev_err() and
-    dev_err_probe() calls that previously printed generic messages.
+> +		/* [0] = status, [1] = sideband (TID/TDEST/TUSER), [2..] = app */
+> +		*max_len = *payload_len = sizeof(seg->hw.s2mm_status) +
+> +					 sizeof(seg->hw.s2mm_sideband_status) +
+> +					 sizeof(seg->hw.app);
+> +		return &seg->hw.s2mm_status;
+> +	}
+> +
+> +	if (chan->xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
+> +		struct xilinx_axidma_tx_segment *seg =
+> +			list_last_entry(&desc->segments,
+> +					struct xilinx_axidma_tx_segment, node);
+> +
+> +		/* [0] = status, [1..] = app */
+> +		*max_len = *payload_len = sizeof(seg->hw.status) +
+> +					 sizeof(seg->hw.app);
+> +		return &seg->hw.status;
+> +	}
+>   
+> -	*max_len = *payload_len = sizeof(u32) * XILINX_DMA_NUM_APP_WORDS;
+> -	seg = list_first_entry(&desc->segments,
+> -			       struct xilinx_axidma_tx_segment, node);
+> -	return seg->hw.app;
+> +	/* Only AXIDMA and MCDMA attach metadata_ops today. */
+> +	WARN_ON_ONCE(1);
+> +	return ERR_PTR(-EINVAL);
 
-> diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
-> index 36155ab1602a9..0881f4f36b3f4 100644
-> --- a/drivers/dma/fsl-edma-main.c
-> +++ b/drivers/dma/fsl-edma-main.c
-[ ... ]
-> @@ -418,7 +412,7 @@ static int fsl_edma3_irq_init(struct platform_device =
-*pdev, struct fsl_edma_engi
->  		ret =3D devm_request_irq(&pdev->dev, fsl_edma->errirq, fsl_edma3_err_h=
-andler_shared,
->  				       0, errirq_name, fsl_edma);
->  		if (ret)
-> -			return dev_err_probe(&pdev->dev, ret, "Can't register eDMA err IRQ.\n=
-");
-> +			return ret;
+We are registering metadata ops for MCDMA and AXI DMA so when is this 
+error condition going to happen?
 
-[Severity: High]
-This is a pre-existing issue, but probe deferral appears to be permanently
-broken for the interrupt requests in this function and fsl_edma2_irq_init().
+>   }
+>   
+>   static struct dma_descriptor_metadata_ops xilinx_dma_metadata_ops = {
+> @@ -2639,6 +2669,9 @@ xilinx_mcdma_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
+>   		segment->hw.control |= XILINX_MCDMA_BD_EOP;
+>   	}
+>   
+> +	if (chan->xdev->has_axistream_connected)
+> +		desc->async_tx.metadata_ops = &xilinx_dma_metadata_ops;
+> +
+>   	return &desc->async_tx;
+>   
+>   error:
+> @@ -3287,7 +3320,8 @@ static int xilinx_dma_probe(struct platform_device *pdev)
+>   
+>   	dma_set_max_seg_size(xdev->dev, xdev->max_buffer_len);
+>   
+> -	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
+> +	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA ||
+> +	    xdev->dma_config->dmatype == XDMA_TYPE_AXIMCDMA) {
+>   		xdev->has_axistream_connected =
+>   			of_property_read_bool(node, "xlnx,axistream-connected");
+>   	}
 
-In fsl_edma3_irq_init(), if platform_get_irq() returns -EPROBE_DEFER,
-the error code is discarded and replaced with -EINVAL:
-
-    fsl_chan->txirq =3D platform_get_irq(pdev, i);
-    if (fsl_chan->txirq < 0)
-        return -EINVAL;
-
-Similarly in fsl_edma2_irq_init(), it replaces the error with -ENXIO:
-
-    irq =3D platform_get_irq(pdev, i);
-    ret =3D 0;
-    if (irq < 0)
-        return -ENXIO;
-
-Could this prevent the DMA engine from probing on systems where the
-interrupt controller is not yet ready?
-
->  	}
-> =20
->  	return 0;
-> @@ -445,24 +439,21 @@ static int fsl_edma3_or_irq_init(struct platform_de=
-vice *pdev,
->  			       fsl_edma3_tx_0_15_handler, 0, "eDMA tx0_15",
->  			       fsl_edma);
->  	if (ret)
-> -		return dev_err_probe(&pdev->dev, ret,
-> -			       "Can't register eDMA tx0_15 IRQ.\n");
-> +		return ret;
-> =20
->  	if (fsl_edma->n_chans > 16) {
->  		ret =3D devm_request_irq(&pdev->dev, fsl_edma->txirq_16_31,
->  				       fsl_edma3_tx_16_31_handler, 0,
->  				       "eDMA tx16_31", fsl_edma);
->  		if (ret)
-> -			return dev_err_probe(&pdev->dev, ret,
-> -					"Can't register eDMA tx16_31 IRQ.\n");
-> +			return ret;
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does the handling of
-txirq_16_31 create a race condition leading to a potential use-after-free?
-
-When the driver is unbound, fsl_edma_remove() executes:
-
-    fsl_edma_irq_exit(pdev, fsl_edma);
-    fsl_edma_cleanup_vchan(&fsl_edma->dma_dev);
-
-However, fsl_edma_irq_exit() manually frees txirq and errirq to stop
-interrupts before vchan cleanup, but it misses txirq_16_31:
-
-    if (fsl_edma->txirq =3D=3D fsl_edma->errirq) {
-        if (fsl_edma->txirq >=3D 0)
-            devm_free_irq(&pdev->dev, fsl_edma->txirq, fsl_edma);
-    } else {
-        if (fsl_edma->txirq >=3D 0)
-            devm_free_irq(&pdev->dev, fsl_edma->txirq, fsl_edma);
-        if (fsl_edma->errirq >=3D 0)
-            devm_free_irq(&pdev->dev, fsl_edma->errirq, fsl_edma);
-    }
-
-Since txirq_16_31 is not freed, is it possible for the interrupt handler
-to still run during or after fsl_edma_cleanup_vchan() destroys the vchan
-tasklets?
-
->  	}
-> =20
->  	ret =3D devm_request_irq(&pdev->dev, fsl_edma->errirq,
->  			       fsl_edma3_or_err_handler, 0, "eDMA err",
->  			       fsl_edma);
->  	if (ret)
-> -		return dev_err_probe(&pdev->dev, ret,
-> -				     "Can't register eDMA err IRQ.\n");
-> +		return ret;
-> =20
->  	return 0;
->  }
-
-[Severity: High]
-This isn't a bug introduced by this patch, but is there a double disable of
-devm-managed clocks during the probe failure path?
-
-In fsl_edma_probe(), the mux clocks are acquired using the devm variant:
-
-    fsl_edma->muxclk[i] =3D devm_clk_get_enabled(&pdev->dev, clkname);
-
-If resource mapping fails for a subsequent mux base, the error path manually
-disables the clocks:
-
-    if (IS_ERR(fsl_edma->muxbase[i])) {
-        /* on error: disable all previously enabled clks */
-        fsl_disable_clocks(fsl_edma, i);
-        return PTR_ERR(fsl_edma->muxbase[i]);
-    }
-
-Because the clocks were acquired with devm_clk_get_enabled(), won't devres
-also try to disable them when cleaning up the probe failure, resulting in a
-double-disable?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709135846.9797=
-2-1-panchuang@vivo.com?part=3D1
 

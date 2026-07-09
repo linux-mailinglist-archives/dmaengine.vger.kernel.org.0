@@ -1,204 +1,157 @@
-Return-Path: <dmaengine+bounces-12236-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12237-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id SKXtKi24T2oSnQIAu9opvQ
-	(envelope-from <dmaengine+bounces-12236-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 17:03:09 +0200
+	id fZaLJeW/T2o0nwIAu9opvQ
+	(envelope-from <dmaengine+bounces-12237-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 17:36:05 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76E4173298B
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 17:03:08 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0068A732FAB
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 17:36:04 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=LMiNMNjL;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12236-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12236-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=intel.com header.s=Intel header.b=AoigiLgx;
+	dmarc=pass (policy=none) header.from=intel.com;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12237-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12237-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 54193317DE2E
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 14:41:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BDA3D30D46A3
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 15:30:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88DE037A4BA;
-	Thu,  9 Jul 2026 14:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D837B13A86C;
+	Thu,  9 Jul 2026 15:30:37 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F6B370AF6
-	for <dmaengine@vger.kernel.org>; Thu,  9 Jul 2026 14:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1ED5379C34;
+	Thu,  9 Jul 2026 15:30:34 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783608088; cv=none; b=enzyS4CghsPsxJ2F7zXUUinxgLQ/ZCVT2vdiKQ+idqU988TUQS+YwTpMEK/JaFIL1xYKeOJWefrjJLWBJmfuykyf4B+llNb4BW8qAmp/7KiusZOEhaUJIcOShG6zVMgoi2gurEDW369wQY/vRnbPT6DvnZKlEU7V8CeOuTFoZd4=
+	t=1783611037; cv=none; b=oI8adNeFq+r8NSFcThsDGjfU9i4UPNFk/1w/TocwZGeSRcyHMbE9mjwFNLUJAe6J5aZCsvNzM9DwXyHWgkjSdcq8zT0YtLfTSJ45tqi19MUObAfdx8DUN42DvTOYa1R8km8CtPLdVXXYd7CtYpAMZsz/3ZIENhGLqVORXHr66Fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783608088; c=relaxed/simple;
-	bh=iihl51QF8+AfXAraDj48kxgUDZcYcJ1lFPrrSc7oOCs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mIULjjN0v5Qlrl4TvsU3Wea0ANH6FPo7SsMki1fsrN2UI62vs7ufkIk6HU8cZd5409r3tfcjJsIInh7wNtloM5Gfzjw0phnosBtOU1W+PB2G4SGKDkD0Aq23A4HJykCE1HP/H8ppFkPuQQqNsLEYvmkVJn5+TrCTJbT63Wz+q8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMiNMNjL; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA0F11F000E9;
-	Thu,  9 Jul 2026 14:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783608087;
-	bh=9hqJT7RtWjVjlf5Bg8NR0FuO/8yQZjD6pXbzWh6KRiI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LMiNMNjLv/Ba4Urm1aOntjQIeMlxU1qyFDI6JN0QdzbzdvUZL8ldHOJ9ZH1EEdF1i
-	 lgvi9Zyq/vv8ibMBBPxhNwJxvceC/A0ZSNY0mxhrRE+fKYpqLFXmuHmwO15uU0Tvc8
-	 ROe6lM/VONI9lQHm/YYiGVERkRUisNU6PEiJyq+9LdL92zXchP9lX16ZqMySzM5yPW
-	 TSWfdZzEJ6z0Eh6l/wBww+DN9e4UScPfm89nRgnYZ2jM9ENVhB0PYdwMYQXuwaSrE+
-	 UL0F6FQ+Xp2o5XhSlU3pMlqKW5SNvACjSI4c/T8zCDCHhrjgaSWrHTcBs7iIJZb29m
-	 wGCmcjJ2BSWDA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 25/26] dmaengine: uniphier-xdmac: Remove redundant
- dev_err()/dev_err_probe()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Pan Chuang" <panchuang@vivo.com>
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260709135846.97972-26-panchuang@vivo.com>
-References: <20260709135846.97972-1-panchuang@vivo.com>
- <20260709135846.97972-26-panchuang@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 14:41:26 +0000
-Message-Id: <20260709144126.EA0F11F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1783611037; c=relaxed/simple;
+	bh=VPJXC8PlX+3g80UFKW55dUQBu5ucrvmJd2Q8qexzeMs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RU120y4+rFgAE3RW/WrGm7m2MSsUsJ3NRnfny3ctiOX2y4LueqKq4WJDAtP5ctQZxTbwdU7+aRAk6FdSZHExJv4Qe480Mq6X1n11ZYKiqnICD4nF5DOix9I5Cy5tfmY0wPmLEBmJzaHY4NQIhGGd0vl5uDAoU5r0L/kT9FGASpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AoigiLgx; arc=none smtp.client-ip=198.175.65.12
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783611035; x=1815147035;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VPJXC8PlX+3g80UFKW55dUQBu5ucrvmJd2Q8qexzeMs=;
+  b=AoigiLgxRkAecTITFi4DVEWU8bGfoANRR8y7ty/TbCX7XLyuqh8VB1NF
+   0JN4xg6yIz82Yh6HIKXS3x5ALuHg807pJF1lO80k8aRgXFQ40VCb8mL8m
+   PO/txKZNagw8+6B2oB5+soS9pud5B/eWJ7YGntHUx8yxkPXel4cTnVXny
+   swXD798h4pXBSRC2qN7qY/l60VdpxIBdnFuOC+ZBwOw00dvazzDVYELhH
+   LzEo02rawzClHhpBi31hhrd6+ocLMgrHpgM3RhA0xq0nrNS+4ZChktX6r
+   j+qxHqxPC4kT797EstJ2uXrhXFeWIEMMMspkfsvr0Sl9RRsIHta5GHfbG
+   w==;
+X-CSE-ConnectionGUID: 4hnUlQklSLimo3m8X3oCMA==
+X-CSE-MsgGUID: KiVDP0boRNuJ3GrAGEei3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="95810096"
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="95810096"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 08:30:26 -0700
+X-CSE-ConnectionGUID: qlINnsEJTwGOSP/wT4n9Kw==
+X-CSE-MsgGUID: Ay1mQhCFSg+cEjAddHug1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="254123962"
+Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.111.142]) ([10.125.111.142])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 08:30:25 -0700
+Message-ID: <097a48cd-7436-4499-886a-d8f313ec56f6@intel.com>
+Date: Thu, 9 Jul 2026 08:30:24 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: idxd: Remove channel from list on registration
+ failure
+To: Ruoyu Wang <ruoyuw560@gmail.com>, vkoul@kernel.org
+Cc: ashok.raj@intel.com, fenghua.yu@intel.com, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260709062303.4167624-1-ruoyuw560@gmail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260709062303.4167624-1-ruoyuw560@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[intel.com:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12236-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:panchuang@vivo.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:ruoyuw560@gmail.com,m:vkoul@kernel.org,m:ashok.raj@intel.com,m:fenghua.yu@intel.com,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
+	FORGED_SENDER(0.00)[dave.jiang@intel.com,dmaengine@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-12237-lists,dmaengine=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dave.jiang@intel.com,dmaengine@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lists.linux.dev:replyto,smtp.kernel.org:mid,vivo.com:email]
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,intel.com:from_mime,intel.com:email,intel.com:mid,intel.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 76E4173298B
+X-Rspamd-Queue-Id: 0068A732FAB
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] Returning early from uniphier_xdmac_remove() if a channel fails to=
- terminate leaves the device registered with the DMA engine while devres fr=
-ees its underlying memory, causing a Use-After-Free.
-- [Medium] The shared IRQ handler unconditionally returns IRQ_HANDLED, whic=
-h breaks the kernel's spurious interrupt detection.
---
 
---- Patch [25]: [PATCH 25/26] dmaengine: uniphier-xdmac: Remove redundant d=
-ev_err()/dev_err_probe() ---
-commit d83da39937d839c163b8d27546ec157138f20ec2
-Author: Pan Chuang <panchuang@vivo.com>
+On 7/8/26 11:23 PM, Ruoyu Wang wrote:
+> idxd_register_dma_channel() links the channel before registering it.
+> If dma_async_device_channel_register() fails after that, the error path
+> frees idxd_chan while chan->device_node remains on dma->channels.
+> 
+> The DMA device can therefore retain a channel list entry that points into
+> freed idxd_chan memory. Remove the channel from dma->channels before
+> freeing idxd_chan on the registration failure path, matching the driver's
+> normal unregister path.
+> 
+> A static analysis checker reported the stale list entry, and manual
+> source review confirmed the registration failure path.
+> 
+> Fixes: 397862855619 ("dmaengine: idxd: fix dma device lifetime")
+> Signed-off-by: Ruoyu Wang <ruoyuw560@gmail.com>
 
-dmaengine: uniphier-xdmac: Remove redundant dev_err()/dev_err_probe()
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-The devm_request_irq() now automatically logs detailed error messages on
-failure. This eliminates the need for driver-specific dev_err() and
-dev_err_probe() calls that previously printed generic messages.
+> ---
+>  drivers/dma/idxd/dma.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
+> index 9937b671f6376..f2c03f3cf1925 100644
+> --- a/drivers/dma/idxd/dma.c
+> +++ b/drivers/dma/idxd/dma.c
+> @@ -289,6 +289,7 @@ static int idxd_register_dma_channel(struct idxd_wq *wq)
+>  
+>  	rc = dma_async_device_channel_register(dma, chan, NULL);
+>  	if (rc < 0) {
+> +		list_del(&chan->device_node);
+>  		kfree(idxd_chan);
+>  		return rc;
+>  	}
 
-> diff --git a/drivers/dma/uniphier-xdmac.c b/drivers/dma/uniphier-xdmac.c
-> index 120c0d4f12dda..b23d61bf7fd5b 100644
-> --- a/drivers/dma/uniphier-xdmac.c
-> +++ b/drivers/dma/uniphier-xdmac.c
-> @@ -532,10 +532,8 @@ static int uniphier_xdmac_probe(struct platform_devi=
-ce *pdev)
-> =20
->  	ret =3D devm_request_irq(dev, irq, uniphier_xdmac_irq_handler,
->  			       IRQF_SHARED, "xdmac", xdev);
-
-[Severity: Medium]
-This is a pre-existing issue, but since we are registering this handler with
-IRQF_SHARED here, does unconditionally returning IRQ_HANDLED break the
-kernel's spurious interrupt detection?
-
-Looking at uniphier_xdmac_irq_handler():
-
-static irqreturn_t uniphier_xdmac_irq_handler(int irq, void *dev_id)
-{
-	struct uniphier_xdmac_device *xdev =3D dev_id;
-	int i;
-
-	for (i =3D 0; i < xdev->nr_chans; i++)
-		uniphier_xdmac_chan_irq(&xdev->channels[i]);
-
-	return IRQ_HANDLED;
-}
-
-If a shared interrupt line experiences an interrupt storm or unhandled
-interrupt from another device, and no channels here have pending interrupts
-(uniphier_xdmac_chan_irq does nothing), this driver will still claim to have
-handled it. Will this prevent the kernel from disabling the broken line,
-ultimately leading to a system hang?
-
-> -	if (ret) {
-> -		dev_err(dev, "Failed to request IRQ\n");
-> +	if (ret)
->  		return ret;
-> -	}
-> =20
->  	ret =3D dma_async_device_register(ddev);
-
-[Severity: High]
-This is a pre-existing issue, but concerning the device registration here,
-what happens during teardown if dmaengine_terminate_sync() fails?
-
-drivers/dma/uniphier-xdmac.c:uniphier_xdmac_remove() {
-	...
-	list_for_each_entry(chan, &ddev->channels, device_node) {
-		ret =3D dmaengine_terminate_sync(chan);
-		if (ret) {
-			dev_alert(&pdev->dev, "Failed to terminate...");
-			return;
-		}
-		...
-	}
-
-	of_dma_controller_free(pdev->dev.of_node);
-	dma_async_device_unregister(ddev);
-}
-
-If we return early because of a termination failure,
-dma_async_device_unregister() is skipped. Because the xdev structure is
-managed by devm_kzalloc, devres will automatically free the memory when the
-unbind completes. Will this leave a dangling pointer in the global DMA
-device list, leading to a use-after-free if the subsystem accesses the
-freed memory?
-
->  	if (ret) {
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709135846.9797=
-2-1-panchuang@vivo.com?part=3D25
 

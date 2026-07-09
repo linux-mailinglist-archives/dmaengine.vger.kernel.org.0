@@ -1,57 +1,57 @@
-Return-Path: <dmaengine+bounces-12155-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12156-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id VPjoJSQFT2rIZAIAu9opvQ
-	(envelope-from <dmaengine+bounces-12155-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 04:19:16 +0200
+	id VUlPMAsKT2o7ZgIAu9opvQ
+	(envelope-from <dmaengine+bounces-12156-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 04:40:11 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5A5E72BE96
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 04:19:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C0E372C0CA
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 04:40:11 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
 	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12155-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12155-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12156-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12156-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8873E30210C3
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 02:19:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AA6B6301F1A0
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 02:39:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFF862E92BA;
-	Thu,  9 Jul 2026 02:19:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 442F833D50F;
+	Thu,  9 Jul 2026 02:39:35 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735B22DAFDE;
-	Thu,  9 Jul 2026 02:19:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED08333BBBA;
+	Thu,  9 Jul 2026 02:39:31 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783563553; cv=none; b=Pe3qndfTxcNwsobzWUvzdugOwADVHgYZPWgLqDi7QgYLMGGRf4gEkVbE1oy4GDssBTook8GZmpwL+kfacBVR0U8VOvv0jfHYUYJfUkgsZHl7wLvnYawvJr8TCNrPWL6K6yBiGOzcFbsfULQiioKx1bixOf+zGNvwSBswGTrgLcE=
+	t=1783564775; cv=none; b=Khg/xl6zfRt90De+QqU7kX5V2n8d9LXUlYoL7QLgSsBczBM5s24NmKp+OjE8aqUqRRSvi8AhfZIRn0HCUgityXeTCN6UJqhN9FazvBk3pNfaFr6Iy+rmjYexR3mUHhBpPvP5VQHA9JnWHbKSRWwdLR8D+8jl9grhMR8TkqrnQuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783563553; c=relaxed/simple;
-	bh=f8J62FaB27zhu+tnsQ/RS/o8lgBoY8yOQPxqdMmuHA0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=bmBnsggDWge7PtW/x2okPfl3NEyQ1KJUNd35o6f/u/2w8V/r8vvNLUfBKhpIAAsThn0yccPPdd8CT/Aa71mriJEmtKGpAVqfe2sMXdJGWUDHTFiN1TuZaW2yBKHXNxk/4stIbqWa3kA1ou1XfqbkIq6uVqEGgML1P1ejMeilq3A=
+	s=arc-20240116; t=1783564775; c=relaxed/simple;
+	bh=5z2v1uGO/INC1Is3ir/wgc7xsRsq4bW5ZEsQ++cJuoU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MVgf6mSZ4Qe/w9tGKl6KH9CTcoRGSGTaDWmrA4qOk8zBokPH6+sZujuuztWbQLm8yx/0hE/HvPlZkMrLexcqKy1DPXxSA/2bmhlKdlQRu2CxlsPFsmDGQXgsAYlxkjRkUbbPjwLlNzFODWmfRoVfcBs1XX/Rd1L6hw+u5R1BnQE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-X-UUID: 8f47f81c7b3c11f1aa26b74ffac11d73-20260709
+X-UUID: 66cfd7bc7b3f11f1aa26b74ffac11d73-20260709
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:c57baeac-f2ab-44e4-8eb7-ee6928fed805,IP:0,U
+X-CID-O-INFO: VERSION:1.3.12,REQID:1a00e568-ab91-4baa-9e11-cd10ab01f59a,IP:0,U
 	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
 	N:release,TS:-25
-X-CID-META: VersionHash:e7bac3a,CLOUDID:516a64c969db28ca47ee881aa99538fe,BulkI
+X-CID-META: VersionHash:e7bac3a,CLOUDID:1916384cc01ba5efa0dbd20f345f8e72,BulkI
 	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|865|898,TC:nil,Content:0|15|50,E
 	DM:-3,IP:nil,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,
 	OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 8f47f81c7b3c11f1aa26b74ffac11d73-20260709
+X-UUID: 66cfd7bc7b3f11f1aa26b74ffac11d73-20260709
 X-User: zenghongling@kylinos.cn
 Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <zenghongling@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1771754693; Thu, 09 Jul 2026 10:19:05 +0800
+	with ESMTP id 1805109752; Thu, 09 Jul 2026 10:39:26 +0800
 From: Hongling Zeng <zenghongling@kylinos.cn>
 To: ludovic.desroches@microchip.com,
 	vkoul@kernel.org,
@@ -65,9 +65,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	Hongling Zeng <zenghongling@kylinos.cn>,
 	sashiko-bot@kernel.org,
 	Frank Li <Frank.Li@nxp.com>
-Subject: [PATCH v5] dma: at_hdmac: Fix use-after-free by proper tasklet  cleanup
-Date: Thu,  9 Jul 2026 10:18:59 +0800
-Message-Id: <20260709021859.636219-1-zenghongling@kylinos.cn>
+Subject: [PATCH v6] dma: at_hdmac: Fix use-after-free by proper tasklet  cleanup
+Date: Thu,  9 Jul 2026 10:39:22 +0800
+Message-Id: <20260709023922.645413-1-zenghongling@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -95,7 +95,7 @@ X-Spamd-Result: default: False [-0.46 / 15.00];
 	FORGED_SENDER(0.00)[zenghongling@kylinos.cn,dmaengine@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-12155-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12156-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -107,9 +107,9 @@ X-Spamd-Result: default: False [-0.46 / 15.00];
 	R_DKIM_NA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[kylinos.cn:from_mime,kylinos.cn:email,kylinos.cn:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,nxp.com:email,kylinos.cn:from_mime,kylinos.cn:email,kylinos.cn:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D5A5E72BE96
+X-Rspamd-Queue-Id: 1C0E372C0CA
 
 Current cleanup paths have a use-after-free vulnerability:
 - vchan_init() creates tasklets that access at_dma_chan memory
@@ -130,21 +130,16 @@ Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
 Suggested-by: Frank Li <Frank.Li@nxp.com>
 
 ---
-Change in v4:
-  - Fix error path fallthrough causing double-free_irq()
-  - Use channel iteration index (chan_id not initialized before registration)
-  - Remove unnecessary defensive checks
----
-Change in v5:
-  - Replace free_irq() in error path with disable_irq() + synchronize_irq()
-    to allow natural fall-through without goto, per Frank's suggestion
+ Change in v6:
+  - Replace free_irq() in error path with disable_irq()to allow natural
+    fall-through without goto, per Frank's suggestion
   - free_irq() now called only once, in err_desc_pool_create label
 ---
- drivers/dma/at_hdmac.c | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ drivers/dma/at_hdmac.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index e5b30a57c477..046bc474d345 100644
+index e5b30a57c477..09b1aedefb45 100644
 --- a/drivers/dma/at_hdmac.c
 +++ b/drivers/dma/at_hdmac.c
 @@ -1940,6 +1940,20 @@ static void at_dma_off(struct at_dma *atdma)
@@ -168,17 +163,16 @@ index e5b30a57c477..046bc474d345 100644
  static int __init at_dma_probe(struct platform_device *pdev)
  {
  	struct at_dma		*atdma;
-@@ -2105,6 +2119,9 @@ static int __init at_dma_probe(struct platform_device *pdev)
+@@ -2105,6 +2119,8 @@ static int __init at_dma_probe(struct platform_device *pdev)
  err_of_dma_controller_register:
  	dma_async_device_unregister(&atdma->dma_device);
  err_dma_async_device_register:
 +	disable_irq(platform_get_irq(pdev, 0));
-+	synchronize_irq(platform_get_irq(pdev, 0));
 +	at_dma_cleanup_channels(atdma);
  	dma_pool_destroy(atdma->memset_pool);
  err_memset_pool_create:
  	dma_pool_destroy(atdma->lli_pool);
-@@ -2118,23 +2135,17 @@ static int __init at_dma_probe(struct platform_device *pdev)
+@@ -2118,23 +2134,17 @@ static int __init at_dma_probe(struct platform_device *pdev)
  static void at_dma_remove(struct platform_device *pdev)
  {
  	struct at_dma		*atdma = platform_get_drvdata(pdev);

@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-12254-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12255-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wvnTIU7CT2rLnwIAu9opvQ
-	(envelope-from <dmaengine+bounces-12254-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 17:46:22 +0200
+	id YjlLIxjET2pDoAIAu9opvQ
+	(envelope-from <dmaengine+bounces-12255-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 17:54:00 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3895733117
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 17:46:21 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE5CF733273
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 17:53:59 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=hTMQKUyI;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=GgG2Ywof;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12254-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12254-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12255-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12255-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 476EF30250B3
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 15:46:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 30DCE3052886
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 15:46:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71CD7423A74;
-	Thu,  9 Jul 2026 15:46:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 068694252C6;
+	Thu,  9 Jul 2026 15:46:09 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60634423A9D;
-	Thu,  9 Jul 2026 15:46:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5064E423160;
+	Thu,  9 Jul 2026 15:46:07 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783611968; cv=none; b=mI8EkLAFz043yVVcQpzPpqWd+o6u4gYZ5dN2kcQvurOMrFand8ngGoeR1fgbo2Xjw7hvAJwPidFUWzeLV+hZt83qw/Wb19pI/QVXyuzl3tsDeEtEOPMwkwzOS+Tvp6SGiRnx9Yf9bNVcFt3LuedYyqxTkVleMUfDnyvbCs8UB+0=
+	t=1783611968; cv=none; b=FBah3BMPzOQ0PiunUFqH4LXSpOaEhFimV2HbD4BWeQ3cvtiOFJdarRShzpuG4v1StU6BpHnnTZ3BXD4KSPs38B9J6Cg6iTmf9CDE9F+CyMTaFjMGM8FneyAeLZ/HeA10Ak/fbjRuPUGdRBo2vvSbNLnIt+ucCfSBvjLuyaoMryE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783611968; c=relaxed/simple;
-	bh=6TrpzfXyoeXsmKixolpgCOJS5kgAJQgEFJ7Lp2UBYrE=;
+	bh=oQMUdIx0YmqMQIweDwnKj2uMCNGyw8rvkMax3H6ofA4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=LKFWOx4L4hlPCH+Ri5TetJanTmqpM1a8vRGcvrq5Trqs9MchrEuRdFSWEun1AYt3DnQJmT0yqMeALdNYpEI3TH2m28Key4ALhCJPm8ND+ZmqtUjXw7k2thlxpGuhFPLPcthG9OPbKD/rRe0tYfk8eXKgx3WTpvWlKwce5w8JmpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTMQKUyI; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89FDC1F000E9;
-	Thu,  9 Jul 2026 15:46:05 +0000 (UTC)
+	 Message-Id; b=J2j52yN7Drvnk0Cgc4Y4+nJefYoUsK2/oomuwCQGH6SyUYJCSOV13w2+wHXISisi36zCV8uVOjLYgHxCC1E89fIKwx2hVwDoRiqiWxSbS44TLY+Vm+kY43mMO86upoAZwzcoTLXZCSiEre8ZywJiKBI7SepxNuICBlSmRwtXwzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgG2Ywof; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 734B31F00A3A;
+	Thu,  9 Jul 2026 15:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783611965;
-	bh=Noa+5loFXBxWp9tNFxLP/47QfKU8SMpt6+g2znB+m4s=;
+	s=k20260515; t=1783611966;
+	bh=zbJyvyhyCBILPmwKJLpwL/c4fMHsJaCJ20hc0AOLdzk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hTMQKUyIvp1cnPUVwkNIIyLIeB0Ti+J5z5vjcxnkld/mHl8Z3KQZY5Lp0xKw959mv
-	 nHfVb0keDJ/YA3j49r6FandGabHc7Yfb4mzVV3JJUpCVEsbDwKktL8Tu7vM4nI/Zzv
-	 rT8mINq4+d6AJahlXAsW8LTU6PczG4qxsawgFnOzZoK7kXY6AVOaf19M+2V5MmBjaN
-	 QgTRpw2rei94DmynCiWZBYMsn7sNonsJXziRe7fWj46RIqJckmh6ESL827aqrM/+3q
-	 0J7ZX0CuPnKdl9r0SZykreuEq6Ce8x0PUQcT0f5wVi8C9k6TUCTehocSTM3VF+mhcW
-	 tv969ie80wIwg==
+	b=GgG2YwofmgiAjboDcCsn1xwebT9oV504lCZvkpyznXLZVLJgFC8FFBRHw09P7Gvgk
+	 /4XQTEZY9dzMKuKgxyvLFqV/CKg+fNCMcCh3c7CCQiF10fUV3lCEMG5EDeWHzSCSvs
+	 HQ2W8290Adm8aU1huaBLhm0UuU0r+XuwRWYzpc4wnmSmvdVuLUnLSVx89VHT86S7mx
+	 xF1Oh5+ceVPNfXXx4UizKA0AWQO9uwJFLjPlBFgnt/Jum/dxAh/WsuC1ddfESgBwtt
+	 rMcbZeQgVuZs1heW8eA5FYHqBfiWbUHCuQUWO60jBMc2m+Halxc5C02Ynv5SX9ylHv
+	 1mFFQQKTPPklQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 09/10] dmaengine: dw-edma: Use burst array instead of
- linked list
+Subject: Re: [PATCH v5 02/10] dmaengine: dw-edma: Add xfer_sz field to
+ struct dw_edma_chunk
 Reply-To: sashiko-reviews@lists.linux.dev
 To: Frank.Li@oss.nxp.com
-Cc: linux-pci@vger.kernel.org, Frank.Li@kernel.org, vkoul@kernel.org, imx@lists.linux.dev, dmaengine@vger.kernel.org
-In-Reply-To: <20260709-edma_ll-v5-9-e199053d4300@nxp.com>
+Cc: Frank.Li@kernel.org, imx@lists.linux.dev, vkoul@kernel.org, linux-pci@vger.kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260709-edma_ll-v5-2-e199053d4300@nxp.com>
 References: <20260709-edma_ll-v5-0-e199053d4300@nxp.com>
- <20260709-edma_ll-v5-9-e199053d4300@nxp.com>
+ <20260709-edma_ll-v5-2-e199053d4300@nxp.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 15:46:05 +0000
-Message-Id: <20260709154605.89FDC1F000E9@smtp.kernel.org>
+Date: Thu, 09 Jul 2026 15:46:06 +0000
+Message-Id: <20260709154606.734B31F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,16 +70,16 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-12254-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12255-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lists.linux.dev:replyto,sashiko.dev:url,smtp.kernel.org:mid,vger.kernel.org:from_smtp];
-	FORGED_RECIPIENTS(0.00)[m:Frank.Li@oss.nxp.com,m:linux-pci@vger.kernel.org,m:Frank.Li@kernel.org,m:vkoul@kernel.org,m:imx@lists.linux.dev,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ll_region.sz:url,sashiko.dev:url,valinux.co.jp:email,nxp.com:email,smtp.kernel.org:mid,lists.linux.dev:replyto];
+	FORGED_RECIPIENTS(0.00)[m:Frank.Li@oss.nxp.com,m:Frank.Li@kernel.org,m:imx@lists.linux.dev,m:vkoul@kernel.org,m:linux-pci@vger.kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -100,115 +100,82 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
 	TAGGED_RCPT(0.00)[dmaengine];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FROM_NO_DN(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E3895733117
+X-Rspamd-Queue-Id: CE5CF733273
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] The patch breaks DMA transfers in non-linked-list (`non_ll`) mode =
-for multi-burst transfers by ignoring `bursts_max` and erroneously grouping=
- multiple bursts into a single chunk.
-- [High] Premature scatter-gather loop termination leaves trailing zero-ini=
-tialized bursts that are blindly submitted to the DMA hardware.
+
+Pre-existing issues:
+- [High] DMA API callbacks (`dw_edma_device_resume`, `dw_edma_device_pause`=
+, `dw_edma_device_terminate_all`) execute without acquiring the virtual cha=
+nnel lock (`chan->vc.lock`), causing data races, lockdep assertions, and po=
+tential list corruption.
 --
 
---- Patch [9]: [PATCH v5 09/10] dmaengine: dw-edma: Use burst array instead=
- of linked list ---
-commit e4c02e28044af675e21dc05442589d1431ab18b6
+--- Patch [2]: [PATCH v5 02/10] dmaengine: dw-edma: Add xfer_sz field to st=
+ruct dw_edma_chunk ---
+commit b54484e8a9f1314d4de2bba9458c74895f047059
 Author: Frank Li <Frank.Li@nxp.com>
 
-dmaengine: dw-edma: Use burst array instead of linked list
+dmaengine: dw-edma: Add xfer_sz field to struct dw_edma_chunk
 
-The commit replaces the linked list used for DMA descriptor bursts with a
-pre-allocated burst array inside each chunk. This simplifies the descriptor
-layout and eliminates multiple kzalloc() calls.
+This commit adds a new xfer_sz field to explicitly indicate the total
+transfer size of a chunk, replacing the misleading use of ll_region.sz.
+
+Tested-by: Koichiro Den <den@valinux.co.jp>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
 > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-=
 edma-core.c
-> index f52d9fd18e573..01bee22fe3b3e 100644
+> index 1fec1b52e3d47..53469c8c8b82e 100644
 > --- a/drivers/dma/dw-edma/dw-edma-core.c
 > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -166,23 +103,17 @@ static void vchan_free_desc(struct virt_dma_desc *v=
-desc)
->  static void dw_edma_core_start(struct dw_edma_chunk *chunk, bool first)
->  {
->  	struct dw_edma_chan *chan =3D chunk->chan;
-> -	struct dw_edma_burst *child;
->  	u32 i =3D 0;
-> -	int j;
+> @@ -192,7 +192,7 @@ static int dw_edma_start_transfer(struct dw_edma_chan=
+ *chan)
+>  		return 0;
 > =20
->  	if (chan->non_ll) {
-> -		child =3D list_first_entry_or_null(&chunk->burst->list,
-> -						 struct dw_edma_burst, list);
-> -		if (child)
-> -			chan->dw->core->non_ll_start(chunk->chan, child);
-> +		if (chunk->nburst =3D=3D 1)
-> +			chan->dw->core->non_ll_start(chunk->chan, &chunk->burst[0]);
+>  	dw_edma_core_start(dw, child, !desc->xfer_sz);
+> -	desc->xfer_sz +=3D child->ll_region.sz;
+> +	desc->xfer_sz +=3D child->xfer_sz;
 
 [Severity: High]
-If a client submits a transfer with cnt > 1 on a non-LL channel, the alloca=
-tion
-logic below sets nburst > 1.
+This is a pre-existing issue, but does dw_edma_start_transfer() have a lock
+safety problem when called from dw_edma_device_resume()?
 
-When nburst > 1, this condition fails and the DMA hardware is never started.
+Looking at dw_edma_device_resume(), it modifies chan->status and calls
+dw_edma_start_transfer() locklessly:
 
-Does this silently drop non-linked-list multi-burst transfers?
+drivers/dma/dw-edma/dw-edma-core.c:dw_edma_device_resume() {
+    ...
+    } else {
+        chan->status =3D EDMA_ST_BUSY;
+        dw_edma_start_transfer(chan);
+    }
+    ...
+}
 
->  		return;
->  	}
-> =20
-> -	j =3D chunk->bursts_alloc;
-> -	list_for_each_entry(child, &chunk->burst->list, list) {
-> -		j--;
-> -		dw_edma_core_ll_data(chan, child, i++, chunk->cb, !j);
-> -	}
-> +	for (i =3D 0; i < chunk->nburst; i++)
-> +		dw_edma_core_ll_data(chan, &chunk->burst[i], i, chunk->cb,
-> +				     i =3D=3D chunk->nburst - 1);
+Since dw_edma_start_transfer() manipulates the virt-dma lists and eventually
+calls vchan_next_desc(&chan->vc) which has a lockdep_assert_held(&vc->lock),
+this would trigger a lockdep splat.
 
-[Severity: High]
-In dw_edma_device_transfer(), if the scatter-gather chain finishes early, t=
-he
-loop breaks.
+Additionally, is there a risk of list corruption or a double free here if
+this races with dw_edma_done_interrupt() or dw_edma_device_issue_pending()?
+If device_resume races with dw_edma_done_interrupt, both might acquire the
+same chunk and call kfree(child).
 
-However, chunk->nburst is not updated to reflect the actual populated count.
+There appear to be similar missing locks in dw_edma_device_pause() and
+dw_edma_device_terminate_all() when modifying shared internal state
+variables like chan->status and chan->request locklessly.
 
-This causes dw_edma_core_start() to iterate over and submit the trailing
-zero-initialized descriptors (sz 0, sar 0, dar 0).
-
-Could this loop submit uninitialized descriptors to the hardware?
-
-[ ... ]
-
-> @@ -530,15 +456,15 @@ dw_edma_device_transfer(struct dw_edma_transfer *xf=
-er,
->  		if (xfer->type =3D=3D EDMA_XFER_SCATTER_GATHER && !sg)
->  			break;
-> =20
-> -		if (chunk->bursts_alloc =3D=3D bursts_max) {
-> -			chunk =3D dw_edma_alloc_chunk(desc);
-> +		if (!(i % chan->ll_max)) {
-> +			u32 n =3D min(cnt - i, chan->ll_max);
-> +
-> +			chunk =3D dw_edma_alloc_chunk(desc, n);
-
-[Severity: High]
-For non-LL mode transfers, using chan->ll_max instead of bursts_max causes
-chunks to be allocated with a larger nburst than the expected bursts_max =
-=3D 1.
-
-This leads to the hardware start routine silently dropping the transfer.
-
-Is it intentional to use chan->ll_max here instead of bursts_max?
-
->  			if (unlikely(!chunk))
->  				goto err_alloc;
->  		}
+>  	dw_edma_free_burst(child);
+>  	list_del(&child->list);
+>  	kfree(child);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709-edma_ll-v5=
--0-e199053d4300@nxp.com?part=3D9
+-0-e199053d4300@nxp.com?part=3D2
 

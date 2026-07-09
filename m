@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-12234-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12235-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id M2wmAAG0T2oPnAIAu9opvQ
-	(envelope-from <dmaengine+bounces-12234-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:45:21 +0200
+	id HJC3Ftu3T2oHnQIAu9opvQ
+	(envelope-from <dmaengine+bounces-12235-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 17:01:47 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AB227326C5
-	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 16:45:20 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A153073296A
+	for <lists+dmaengine@lfdr.de>; Thu, 09 Jul 2026 17:01:44 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=exOhwayM;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=TzpVxyHu;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12234-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12234-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12235-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12235-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C65C030082A8
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 14:38:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0BE9E310A4EC
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2026 14:40:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3682E36DA1C;
-	Thu,  9 Jul 2026 14:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 889411A0BF1;
+	Thu,  9 Jul 2026 14:40:00 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA6A1C84CB
-	for <dmaengine@vger.kernel.org>; Thu,  9 Jul 2026 14:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C941374A13
+	for <dmaengine@vger.kernel.org>; Thu,  9 Jul 2026 14:39:58 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783607896; cv=none; b=M2tLxJU3ckvUS3xbSY7uEOnvMVjA0US9jyd5yWJ5iZx0nPq3ou2GutuvHb7SqdEeYKSawRfAFSooAJ93IC6LTeovwkfxHCisP/uDhLW4rDAhwv62Kc65VhLNNjkMkUDWaIav/NEnxlOzhqyCdubvnN3A11w3x3OC9Fvc5FSfEuM=
+	t=1783608000; cv=none; b=UvtvNXlBuxFoVzfQbAyKqiL1JUTUf1C6oi2k+BZOLXB4K6v20DuCu8wRDebNN2qPpRttJdg5Vh52uWfxHU/Ismx91L4RLM+DOXZxk0Dk1CHCybAuYL+a+PWXQ9hTyu09REsyA/aXrSUHftV3AtETzzOJ8fNpa/g43M/dgNKr7to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783607896; c=relaxed/simple;
-	bh=2ZMTssOBqnwOzne4MfHFVQkqDSyqO1osZtyE5nmCO8o=;
+	s=arc-20240116; t=1783608000; c=relaxed/simple;
+	bh=BgzufcxHPRrjI0cM38t3OqmEKf87MQHOZYJAm3YHIiY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FOvjxZvUNvJEknh62Zzp47/zde+F+3SII/OI+CLGX0nKpLe8aaGJI6etGM966D6tpSNc0fwuE4bPCS8b1LbxYdrn7d3OlgcXTfUD6mVN59NhtJExhSx/FvPYTB3lh2E8GFOJJBlSGzpH5r51ZzbOhhgnl6bRcMbiWjMFZ7gW7xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exOhwayM; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D5181F000E9;
-	Thu,  9 Jul 2026 14:38:14 +0000 (UTC)
+	 Message-Id; b=f5vhT++Fr1m85lJh14jPj7dm4N6R1yO5suEVJPS6ALQR1pGA4hF73GmGB/isbT+PCVeM+WSRICPrRLF4RRchBax6DbR/+i49IlMUs965Ujz5pV67pJiu3STJ1iIrOYGgpettMPt4bIzKToUfLAx1XHzhOBEAh8d0sM4Mq94XYW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TzpVxyHu; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D7991F000E9;
+	Thu,  9 Jul 2026 14:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783607894;
-	bh=/7FsAgaG74n+/wXOBZRi8XxzLTV4jzuURfa51p1j0xs=;
+	s=k20260515; t=1783607998;
+	bh=bXBtR9yCTHFzWIBVVnulUcahdVS++mr8VGqbE/qAgYY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=exOhwayMSET2dhE5t9Lou+N3ygPTOSSG2K7nakBiohPuyxteuaBqxeRdFqs8bPl96
-	 rzqvIVu0JQZij4TeBVXZpe2Cmrle0yZ5EIVXNmhLlcmaDl+BOqwPRSmlxIm93FUPpg
-	 uPn3fYTX4ECcHeiRr+ySvfpXi4jtqZcV4zsYY9uqlXvznScjo4ig29hak/DXKvX0dl
-	 FlkTjXOKAA1pNZ8glOkoVMIOwYQ1ZuR36nssgrm2LqwHvk6asmxpF9pr/pLJzzu+JG
-	 lDrJQCZrikKqXLjNDHvI5RABvlLutByQRpnRIWfoX6a4mENj//w44oXuvueO4dxmRe
-	 dFVsMwAIamilg==
+	b=TzpVxyHu3EmdvA2k+trI5WV0ZDPNqH6mDolsBMy4Pz0uPKAx5nJ5FdQ3HdGFPuWQy
+	 Y36TzmyE/fLoAW9kx25m2P7usJXv1iC0kJy/VqHOjd5ERRXXbtOQhLqU+dCG3atGM0
+	 rrYh+oz1T/8SLcCHYxnUKQt4j2Z2lshUCmew26u0pJeuVH6SGHpcgnc0jmyoa4etoS
+	 CE2NVpyNxzRJZ9tOWu/CKkjAKzu2rowo2GOvXew0qjqZrgQrY78WZUcvC0+9g71j4y
+	 kbGtAlwiqF4sXH4nGLbHHaFy2HyfoTy12nKjR+5dyR4aPtqiGIRWmBFeAi0cHA50f6
+	 +cIUa1VO4ljKQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 24/26] dmaengine: ti-edma: Remove redundant
+Subject: Re: [PATCH 26/26] dmaengine: xgene-dma: Remove redundant
  dev_err()/dev_err_probe()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Pan Chuang" <panchuang@vivo.com>
-Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
-In-Reply-To: <20260709135846.97972-25-panchuang@vivo.com>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260709135846.97972-27-panchuang@vivo.com>
 References: <20260709135846.97972-1-panchuang@vivo.com>
- <20260709135846.97972-25-panchuang@vivo.com>
+ <20260709135846.97972-27-panchuang@vivo.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 14:38:14 +0000
-Message-Id: <20260709143814.9D5181F000E9@smtp.kernel.org>
+Date: Thu, 09 Jul 2026 14:39:58 +0000
+Message-Id: <20260709143958.8D7991F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -71,7 +71,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -79,9 +79,9 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12234-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12235-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:panchuang@vivo.com,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:panchuang@vivo.com,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -98,108 +98,156 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,lists.linux.dev:replyto,smtp.kernel.org:mid,vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,vger.kernel.org:from_smtp,lists.linux.dev:replyto,sashiko.dev:url,vivo.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5AB227326C5
+X-Rspamd-Queue-Id: A153073296A
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
 
+New issues:
+- [Medium] Incomplete removal of redundant error messages for `devm_request=
+_irq()` failures.
+
 Pre-existing issues:
-- [High] Unhandled probe deferral from `platform_get_irq_byname` causes the=
- driver to silently probe without interrupts.
+- [High] Incorrect channel index used during IRQ rollback path in `xgene_dm=
+a_request_irqs()`, leading to multiple kernel warnings and failed rollback.
+- [High] Race condition in probe sequence causes NULL pointer dereference v=
+ia uninitialized tasklet.
+- [High] Probe error path fails to disable DMA hardware, leading to potenti=
+al memory corruption.
 --
 
---- Patch [24]: [PATCH 24/26] dmaengine: ti-edma: Remove redundant dev_err(=
-)/dev_err_probe() ---
-commit 3f067543fc6aa46c8b00f2557e8220b1465e86e3
+--- Patch [26]: [PATCH 26/26] dmaengine: xgene-dma: Remove redundant dev_er=
+r()/dev_err_probe() ---
+commit b27e7ae82dbb69011f33590c87faea09bb044017
 Author: Pan Chuang <panchuang@vivo.com>
 
-dmaengine: ti-edma: Remove redundant dev_err()/dev_err_probe()
+dmaengine: xgene-dma: Remove redundant dev_err()/dev_err_probe()
 
-The commit removes redundant dev_err() logging around devm_request_irq()
-calls. The devm_request_irq() function now automatically logs detailed error
-messages on failure, eliminating the need for driver-specific messages.
+The devm_request_irq() now automatically logs detailed error messages on
+failure. This eliminates the need for driver-specific dev_err() and
+dev_err_probe() calls that previously printed generic messages.
 
-> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-> index d97db5af35555..e023ca9640dec 100644
-> --- a/drivers/dma/ti/edma.c
-> +++ b/drivers/dma/ti/edma.c
-> @@ -2415,10 +2415,8 @@ static int edma_probe(struct platform_device *pdev)
+> diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+> --- a/drivers/dma/xgene-dma.c
+> +++ b/drivers/dma/xgene-dma.c
+> @@ -1436,11 +1436,8 @@ static int xgene_dma_request_irqs(struct xgene_dma=
+ *pdma)
+>  	/* Register DMA error irq */
+>  	ret =3D devm_request_irq(pdma->dev, pdma->err_irq, xgene_dma_err_isr,
+>  			       0, "dma_error", pdma);
+> -	if (ret) {
+> -		dev_err(pdma->dev,
+> -			"Failed to register error IRQ %d\n", pdma->err_irq);
+> +	if (ret)
+>  		return ret;
+> -	}
 > =20
->  	irq =3D platform_get_irq_byname(pdev, "edma3_ccint");
->  	if (irq < 0 && node)
->  		irq =3D irq_of_parse_and_map(node, 0);
+>  	/* Register DMA channel rx irq */
+>  	for (i =3D 0; i < XGENE_DMA_MAX_CHANNEL; i++) {
+>  		chan =3D &pdma->chan[i];
+>  		irq_set_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
+>  		ret =3D devm_request_irq(chan->dev, chan->rx_irq,
+>  				       xgene_dma_chan_ring_isr,
+>  				       0, chan->name, chan);
+>  		if (ret) {
+>  			chan_err(chan, "Failed to register Rx IRQ %d\n",
+>  				 chan->rx_irq);
+
+[Severity: Medium]
+The commit message states that the patch eliminates driver-specific error
+logs for devm_request_irq failures because the core now logs them
+automatically.
+
+While the patch removes the dev_err for the global error IRQ above, it
+appears to miss this chan_err macro for the Rx IRQ registration failure.
+
+Should this chan_err also be removed to fully align with the commit message?
+
+>  			devm_free_irq(pdma->dev, pdma->err_irq, pdma);
 > =20
->  	if (irq > 0) {
->  		irq_name =3D devm_kasprintf(dev, GFP_KERNEL, "%s_ccint",
->  					  dev_name(dev));
->  		if (!irq_name) {
->  			ret =3D -ENOMEM;
->  			goto err_disable_pm;
+>  			for (j =3D 0; j < i; j++) {
+>  				chan =3D &pdma->chan[i];
+
+[Severity: High]
+This is a pre-existing issue, but there appears to be a typo in the rollback
+loop in xgene_dma_request_irqs.
+
+It assigns chan using the outer loop index i instead of the inner loop
+index j. Will this cause devm_free_irq to be called multiple times on an
+unregistered IRQ and fail to clear the IRQ_DISABLE_UNLAZY flag for the
+successfully registered ones?
+
+>  				irq_clear_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
+>  				devm_free_irq(chan->dev, chan->rx_irq, chan);
+>  			}
+> =20
+>  			return ret;
 >  		}
-> =20
->  		ret =3D devm_request_irq(dev, irq, dma_irq_handler, 0, irq_name,
->  				       ecc);
-> -		if (ret) {
-> -			dev_err(dev, "CCINT (%d) failed --> %d\n", irq, ret);
-> +		if (ret)
->  			goto err_disable_pm;
-> -		}
->  		ecc->ccint =3D irq;
 >  	}
 
 [Severity: High]
-This is a pre-existing issue, but does this logic handle probe deferrals
-correctly?
+This isn't a bug introduced by this patch, but looking at the probe sequence
+in xgene_dma_probe:
 
-If platform_get_irq_byname() returns -EPROBE_DEFER, the irq value is
-either overwritten to 0 by irq_of_parse_and_map(), or remains -EPROBE_DEFER.
-In both scenarios, the if (irq > 0) check fails, causing the driver to
-silently skip interrupt setup and successfully complete the probe without
-interrupts.
+drivers/dma/xgene-dma.c:xgene_dma_probe() {
+    ...
+    ret =3D xgene_dma_request_irqs(pdma);
+    if (ret)
+        goto err_request_irq;
 
-Could this lead to dependent devices hanging or experiencing timeouts
-because DMA completions are never signaled?
+    /* Configure and enable DMA engine */
+    xgene_dma_init_hw(pdma);
 
-[ ... ]
+    /* Register DMA device with linux async framework */
+    ret =3D xgene_dma_init_async(pdma);
+    ...
+}
 
-> @@ -2436,10 +2434,8 @@ static int edma_probe(struct platform_device *pdev)
-> =20
->  	irq =3D platform_get_irq_byname(pdev, "edma3_ccerrint");
->  	if (irq < 0 && node)
->  		irq =3D irq_of_parse_and_map(node, 2);
-> =20
->  	if (irq > 0) {
->  		irq_name =3D devm_kasprintf(dev, GFP_KERNEL, "%s_ccerrint",
->  					  dev_name(dev));
->  		if (!irq_name) {
->  			ret =3D -ENOMEM;
->  			goto err_disable_pm;
->  		}
-> =20
->  		ret =3D devm_request_irq(dev, irq, dma_ccerr_handler, 0, irq_name,
->  				       ecc);
-> -		if (ret) {
-> -			dev_err(dev, "CCERRINT (%d) failed --> %d\n", irq, ret);
-> +		if (ret)
->  			goto err_disable_pm;
-> -		}
->  		ecc->ccerrint =3D irq;
->  	}
+The function xgene_dma_request_irqs is called before the hardware is unmask=
+ed
+in xgene_dma_init_hw. If a hardware interrupt fires immediately after
+xgene_dma_init_hw, xgene_dma_chan_ring_isr will execute and unconditionally
+schedule the tasklet:
+
+drivers/dma/xgene-dma.c:xgene_dma_chan_ring_isr() {
+    ...
+    tasklet_schedule(&chan->tasklet);
+}
+
+However, chan->tasklet is not set up until xgene_dma_init_async runs later
+in the probe sequence. Can this trigger a NULL pointer dereference by
+scheduling an uninitialized tasklet?
 
 [Severity: High]
-This isn't a bug introduced by this patch, but the error interrupt setup
-appears to suffer from the same problem.
+This is also a pre-existing issue, but looking at the error handling path
+in xgene_dma_probe:
 
-Would an unhandled probe deferral from platform_get_irq_byname() result
-in silently swallowed errors here as well?
+drivers/dma/xgene-dma.c:xgene_dma_probe() {
+    ...
+err_async_init:
+    xgene_dma_free_irqs(pdma);
+
+err_request_irq:
+    for (i =3D 0; i < XGENE_DMA_MAX_CHANNEL; i++)
+        xgene_dma_delete_chan_rings(&pdma->chan[i]);
+    ...
+}
+
+If xgene_dma_init_async fails, the code jumps to err_async_init and frees
+software resources and DMA descriptor ring buffers.
+
+This path does not appear to call xgene_dma_disable or
+xgene_dma_mask_interrupts. Could this leave the DMA controller actively
+running and pointing at freed memory, potentially causing memory corruption
+if the hardware continues to process descriptors?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709135846.9797=
-2-1-panchuang@vivo.com?part=3D24
+2-1-panchuang@vivo.com?part=3D26
 

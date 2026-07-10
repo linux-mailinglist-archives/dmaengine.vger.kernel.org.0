@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-12302-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12303-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id bwReEimtUGol3QIAu9opvQ
-	(envelope-from <dmaengine+bounces-12302-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:28:25 +0200
+	id o45iNrqtUGpZ3QIAu9opvQ
+	(envelope-from <dmaengine+bounces-12303-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:30:50 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AE5B738747
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:28:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 42FED7387E9
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:30:50 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=cDWBD+TC;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=fVr80+8K;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12302-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12302-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12303-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12303-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D7F673058511
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 08:24:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 795083087BA6
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 08:27:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EEA13EF642;
-	Fri, 10 Jul 2026 08:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 640353EFFB2;
+	Fri, 10 Jul 2026 08:26:54 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0053EFFC8
-	for <dmaengine@vger.kernel.org>; Fri, 10 Jul 2026 08:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0696A3EFD14
+	for <dmaengine@vger.kernel.org>; Fri, 10 Jul 2026 08:26:52 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783671877; cv=none; b=O8sXLKroJSooMRNR77MTMwbSSs+mykrVFuV3fN7vGYah9b1ZLHPt+4GGJEfClJbfN+PbxpDO4L7hFI6AuF6W6RlQLcgVjlpE0ANJE96lT2LENQDsI7DWDBVjHjAxEGxmNDaD/gjeHV7BCAtpIv+fc5i14dk9VL4SqMRcvUBgh1U=
+	t=1783672014; cv=none; b=ntu8mmzGI0UTY7ZRBltTNlHkQ1dxpfolJ8Or7DdA+KOzP6kn+l8arIXHBMedL5Wf30g0BGmeMFqNJrNX9q/CmqT/lslihh3JTqUReKYb1xCBUqNw6b47u73HYdWGMSZeyC4rX/+udUvxN3hYXslYuAREqAtT9X0IP2s39RET5rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783671877; c=relaxed/simple;
-	bh=6rJMblQ7XBJgBSsPRzq3f7XRy+deovC0WOnE+ceZaK4=;
+	s=arc-20240116; t=1783672014; c=relaxed/simple;
+	bh=3ZJlb3n0FHDsncSzBw8WBSNWiF98l9Jqs0uDzUd/z74=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NASeoljdD4h7DZqJKQ7rvyx9SyM9Kvq/f17X8HFv5RG2S6cZGIZUTlw1Acm4K4Cx2gL1WJJDpsirAiLlztD8Bw8MfcS5BbiPTBynvAJ4WBvG5492UXcu1nl3ceQ4Ycl4bB2CIyZFmytSgPMB8Zda+hSCrIrHHdU0cvgN+1ShdVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDWBD+TC; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FCAE1F000E9;
-	Fri, 10 Jul 2026 08:24:35 +0000 (UTC)
+	 Message-Id; b=EoxkfdEOQ+IUMY7ghHiYXidXzpcjeyz1HNtbXD4SVUw/BtAo8SnFweWWdc3jtNNfPsvrz/Fnv0fbwY70O1VGsUDC0ekO8eKbb5/NbPVR+LN3q4RCHlMgA8YptRlk4w8qVcQrNefw9EMzVIwftBwrs9wgbHQOM7kfyds+F/UYn80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVr80+8K; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 524491F00A3D;
+	Fri, 10 Jul 2026 08:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783671875;
-	bh=Gk4OKRymeNqXv7nN7QmZIsOXzelO1HgfI5A1hrLLb6c=;
+	s=k20260515; t=1783672012;
+	bh=82mUp+fAs7Jt0revhrC/1h+8/onNy0pn+fHJOaMcepY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cDWBD+TC9alG3uMxMRU89lyNZsDQyNNynQyzM4QPBfhJovG6qUu8pSgHkHsW6Vs+U
-	 NhbuL18UYjnp7XVWKL5vPdB9CyRtVgWMYAoXH9twUopeSj9qfr3mCXTfqzzCrr8Clp
-	 2e4oRT3r1NHhl2U6alETLm4B1tU3eUcBit39tHtyoJVlF2wBnQiZxO9aC4RWFGvnXg
-	 3rt9y2lz8DSy+VSXfadIGHxLw2ygtV+XkzG5f69E9L/jTSVfl7ew1mWISF1ullb3rU
-	 jSFaNcb7POYUgduKCPh0pe7pb9LrFuvQqhq4op9f0sX0v05WXhDvKekxHUpaLEda1Y
-	 /IFFqtmvYLAJQ==
+	b=fVr80+8KkuE0orokAT6Xi7HolBsVQ+z81kcds2xOZNvU8lIr1tKZOXEtcv8S73iV/
+	 o6gmnUkD/2GYvPltOdN6GaumZk8ukVxOpIrojRZswu1Wa9740jHjmgTMTqAV4IbIWS
+	 dILUYqs+oks/hky1fSo8QbkSoh9FnVYgi2BmoGRjJPBUSUMsgYV+J/RXyp/cKvemZc
+	 rDyVX4t3zdwIsq6YbE134+ntlc5JFH2HwBXWOURdbCjxO9lUE0Ts5FEBBl/CxeJAYh
+	 +zz0T37i/Z0I9gBNdpGw3uB/viUJ4+959ZKXAK55njb421NDHBKGEXVZMjBBA4yJv4
+	 xmfLpJ0Cy2PLg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 7/7] dmaengine: dw-edma: Defer channel IRQ handling to
- workqueue
+Subject: Re: [PATCH 2/7] dmaengine: dw-edma: Terminate STOP requests without
+ callbacks
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Koichiro Den" <den@valinux.co.jp>
-Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260710080903.2392888-8-den@valinux.co.jp>
+Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260710080903.2392888-3-den@valinux.co.jp>
 References: <20260710080903.2392888-1-den@valinux.co.jp>
- <20260710080903.2392888-8-den@valinux.co.jp>
+ <20260710080903.2392888-3-den@valinux.co.jp>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Jul 2026 08:24:34 +0000
-Message-Id: <20260710082435.1FCAE1F000E9@smtp.kernel.org>
+Date: Fri, 10 Jul 2026 08:26:51 +0000
+Message-Id: <20260710082652.524491F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -79,9 +79,9 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12302-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12303-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:den@valinux.co.jp,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:den@valinux.co.jp,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -102,157 +102,159 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lists.linux.dev:replyto,vger.kernel.org:from_smtp,valinux.co.jp:email,smtp.kernel.org:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp,sashiko.dev:url,valinux.co.jp:email,lists.linux.dev:replyto,smtp.kernel.org:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 9AE5B738747
+X-Rspamd-Queue-Id: 42FED7387E9
 
 Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
 New issues:
-- [High] chan->irq_pending is not cleared when deferred IRQ work is cancell=
-ed, leaving stale events that corrupt subsequent transfers.
+- [High] Incomplete synchronization in dw_edma_device_synchronize leads to =
+memory corruption and descriptor leaks.
 
 Pre-existing issues:
-- [High] The driver requests shared interrupts before initializing the per-=
-channel structures, causing a guaranteed NULL pointer dereference if an int=
-errupt fires early.
-- [High] The `dma_device` and `dw_edma_chan` structures are freed by devres=
- while DMA clients may still hold references to them.
+- [High] dw_edma_device_terminate_all fails to clean up pending virt-dma de=
+scriptors.
+- [High] Lockless state mutation in dw_edma_device_terminate_all causes per=
+manent channel deadlock.
 --
 
---- Patch [7]: [PATCH 7/7] dmaengine: dw-edma: Defer channel IRQ handling t=
-o workqueue ---
-commit 47745d1148d964a79c090cf3e2315c193e04da4d
+--- Patch [2]: [PATCH 2/7] dmaengine: dw-edma: Terminate STOP requests with=
+out callbacks ---
+commit 8726b379b2e15e03e4a564512f4646c2031734e5
 Author: Koichiro Den <den@valinux.co.jp>
-Subject: dmaengine: dw-edma: Defer channel IRQ handling to workqueue
 
-This commit defers channel IRQ handling to a workqueue to reduce
-contention on the hard IRQ handler. It introduces work items to process
-per-channel completion and abort events asynchronously.
+dmaengine: dw-edma: Terminate STOP requests without callbacks
+
+This commit fixes completion handling for stopped descriptors by moving
+them to the terminated list instead of scheduling callbacks, avoiding
+potential use-after-free bugs. It also introduces a synchronize callback
+to allow virt-dma to release the terminated descriptors.
 
 > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-=
 edma-core.c
-> index 5664421c6f15b..704d8f9746e8b 100644
 > --- a/drivers/dma/dw-edma/dw-edma-core.c
 > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-
 [ ... ]
-
-> @@ -930,6 +973,7 @@ static void dw_edma_device_synchronize(struct dma_cha=
-n *dchan)
->  	struct dw_edma_chan *chan =3D dchan2dw_edma_chan(dchan);
+> @@ -673,8 +680,7 @@ static void dw_edma_done_interrupt(struct dw_edma_cha=
+n *chan)
+>  			break;
 > =20
->  	dw_edma_wait_termination(dchan);
-> +	cancel_work_sync(&chan->irq_work);
+>  		case EDMA_REQ_STOP:
+> -			list_del(&vd->node);
+> -			vchan_cookie_complete(vd);
+> +			dw_edma_terminate_vdesc(vd);
+>  			chan->request =3D EDMA_REQ_NONE;
+>  			chan->status =3D EDMA_ST_IDLE;
+>  			break;
 
 [Severity: High]
-Does this code leave stale events in chan->irq_pending?
+This is a pre-existing issue, but does dw_edma_device_terminate_all() clean
+up pending virt-dma descriptors properly?
 
-When the work is cancelled here, the work item won't execute, but it looks
-like chan->irq_pending is never cleared.
+If a client queues multiple descriptors and terminates the channel before
+completion:
 
-If a hardware interrupt had set DW_EDMA_IRQ_ABORT in irq_pending just before
-the channel was stopped, won't that stale event remain in the atomic
-variable?
+drivers/dma/dw-edma/dw-edma-core.c:dw_edma_device_terminate_all() {
+    ...
+    } else {
+        chan->request =3D EDMA_REQ_STOP;
+    }
 
-When the client later configures the channel and starts a new transfer,
-wouldn't the next legitimate hardware interrupt cause dw_edma_irq_work() to
-see both events and erroneously abort the new active transfer?
+The driver sets chan->request =3D EDMA_REQ_STOP, but the interrupt handler
+processes EDMA_REQ_STOP for a single active descriptor via vchan_next_desc(=
+).
 
->  	vchan_synchronize(&chan->vc);
+This appears to leave the remaining pending descriptors untouched in the
+virt-dma queues, rather than clearing them out using
+vchan_get_all_descriptors(). When the client later issues a new transfer,
+won't these stale descriptors be executed unexpectedly and potentially
+corrupt data?
+
+[Severity: High]
+This is also a pre-existing issue, but does dw_edma_device_terminate_all()
+mutate channel state safely?
+
+dw_edma_device_terminate_all() reads chan->status and writes chan->request
+without holding chan->vc.lock:
+
+drivers/dma/dw-edma/dw-edma-core.c:dw_edma_device_terminate_all() {
+    ...
+    } else if (chan->status =3D=3D EDMA_ST_IDLE) {
+        chan->configured =3D false;
+    ...
+    } else {
+        chan->request =3D EDMA_REQ_STOP;
+    }
+
+If dw_edma_done_interrupt() concurrently finishes a transfer, acquires the
+lock, and sets chan->status =3D EDMA_ST_IDLE, could the following race occu=
+r:
+
+1. terminate_all reads chan->status as EDMA_ST_BUSY.
+2. done_interrupt finishes, setting chan->status =3D EDMA_ST_IDLE and relea=
+sing
+   the lock.
+3. terminate_all writes chan->request =3D EDMA_REQ_STOP.
+
+The channel is now left with status =3D=3D EDMA_ST_IDLE and
+request =3D=3D EDMA_REQ_STOP.
+
+Will subsequent calls to dw_edma_device_issue_pending() silently refuse
+to start new transfers because it requires chan->request =3D=3D EDMA_REQ_NO=
+NE?
+
+drivers/dma/dw-edma/dw-edma-core.c:dw_edma_device_issue_pending() {
+    ...
+    if (vchan_issue_pending(&chan->vc) && chan->request =3D=3D EDMA_REQ_NON=
+E &&
+        chan->status =3D=3D EDMA_ST_IDLE) {
+        chan->status =3D EDMA_ST_BUSY;
+        dw_edma_start_transfer(chan);
+    }
+    ...
+}
+
+[ ... ]
+> @@ -856,6 +862,13 @@ static int dw_edma_alloc_chan_resources(struct dma_c=
+han *dchan)
+>  	return 0;
 >  }
-
-[ ... ]
-
-> @@ -1185,10 +1231,21 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->  	/* Disable eDMA, only to establish the ideal initial conditions */
->  	dw_edma_core_off(dw);
 > =20
-> +	/*
-> +	 * Deferred IRQ works are queued from the hard IRQ handlers, so the
-> +	 * workqueue must exist before any IRQ is requested.
-> +	 */
-> +	dw->wq =3D alloc_workqueue("dw-edma:%s", WQ_UNBOUND | WQ_HIGHPRI, 0,
-> +				 dev_name(chip->dev));
-> +	if (!dw->wq)
-> +		return -ENOMEM;
+> +static void dw_edma_device_synchronize(struct dma_chan *dchan)
+> +{
+> +	struct dw_edma_chan *chan =3D dchan2dw_edma_chan(dchan);
 > +
->  	/* Request IRQs */
->  	err =3D dw_edma_irq_request(dw, &wr_alloc, &rd_alloc);
+> +	vchan_synchronize(&chan->vc);
+> +}
 
 [Severity: High]
-This is a pre-existing issue, but could this sequence cause a NULL pointer
-dereference if the shared interrupt fires early?
+Does vchan_synchronize() wait for the hardware transfer to actually stop?
 
-During probe, dw_edma_irq_request() requests the shared interrupt before
-dw_edma_channel_setup() completes:
+If a client calls dmaengine_terminate_sync(), the driver asynchronously
+requests a stop via chan->request =3D EDMA_REQ_STOP but doesn't halt the
+hardware.=20
 
-drivers/dma/dw-edma/dw-edma-core.c:dw_edma_irq_request() {
-    ...
-    err =3D request_irq(irq, dw_edma_interrupt_common,
-                      IRQF_SHARED, dw->name, &dw->irq[0]);
-    ...
-}
+If this function only calls vchan_synchronize(), it will return immediately
+because the descriptor is still running. The client might then free or reuse
+the DMA buffer while the hardware is still writing to it, which could corru=
+pt
+memory.
 
-At this point, dw->irq[i].dw is still NULL because it's only initialized
-later in dw_edma_channel_setup():
+Additionally, when the interrupt later fires, it will terminate the active
+descriptor and add it to the terminated list:
 
-drivers/dma/dw-edma/dw-edma-core.c:dw_edma_channel_setup() {
-    ...
-    irq->dw =3D dw;
-    ...
-}
+        case EDMA_REQ_STOP:
+            dw_edma_terminate_vdesc(vd);
 
-If the interrupt fires immediately after request_irq(), wouldn't the handler
-crash here when dereferencing dw_irq->dw?
+Since vchan_synchronize() has already returned, won't this descriptor be
+permanently leaked on the terminated list?
 
-drivers/dma/dw-edma/dw-edma-core.h:dw_edma_core_handle_int() {
-    return dw_irq->dw->core->handle_int(dw_irq, dir, done, abort);
-}
-
-> -	if (err)
-> +	if (err) {
-> +		destroy_workqueue(dw->wq);
->  		return err;
-> +	}
-> =20
->  	/* Allocate a dedicated virtual IRQ for interrupt-emulation doorbells */
->  	err =3D dw_edma_emul_irq_alloc(dw);
-
-[ ... ]
-
-> @@ -1235,6 +1293,11 @@ int dw_edma_remove(struct dw_edma_chip *chip)
->  		free_irq(chip->ops->irq_vector(dev, i), &dw->irq[i]);
->  	dw_edma_emul_irq_free(dw);
-> =20
-> +	for (i =3D 0; i < dw->wr_ch_cnt + dw->rd_ch_cnt; i++)
-> +		cancel_work_sync(&dw->chan[i].irq_work);
-> +
-> +	destroy_workqueue(dw->wq);
-> +
->  	/* Deregister eDMA device */
->  	dma_async_device_unregister(&dw->dma);
-
-[Severity: High]
-This is a pre-existing issue, but is there a risk of a Use-After-Free here
-during driver unbind?
-
-The dw->chan array and dw context are allocated using devres (devm_kcalloc
-and devm_kzalloc).
-
-When dma_async_device_unregister() is called, it removes the device from the
-DMA engine subsystem but doesn't block waiting for active clients to drop
-their channel references.
-
-Once remove() returns, the devres mechanism will automatically free the
-memory. If a client still holds a reference to a channel, won't subsequent
-use or a later call to dma_release_channel() dereference freed memory?
-
->  	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
->  				 vc.chan.device_node) {
+Should this wait until chan->status =3D=3D EDMA_ST_IDLE before calling
+vchan_synchronize()?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710080903.2392=
-888-1-den@valinux.co.jp?part=3D7
+888-1-den@valinux.co.jp?part=3D2
 

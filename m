@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-12335-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12336-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Mi96KHUlUWrz/wIAu9opvQ
-	(envelope-from <dmaengine+bounces-12335-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 19:01:41 +0200
+	id IUNZOWwmUWpFAAMAu9opvQ
+	(envelope-from <dmaengine+bounces-12336-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 19:05:48 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0701373CDA2
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 19:01:41 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8578B73CE58
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 19:05:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Sn5k84cO;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=dmofAJ68;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12335-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12335-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12336-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="dmaengine+bounces-12336-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D2ADF3019B83
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 16:56:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 31C0D303C792
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 16:56:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE557274FD1;
-	Fri, 10 Jul 2026 16:56:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B35274FD1;
+	Fri, 10 Jul 2026 16:56:48 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC0824E4C6;
-	Fri, 10 Jul 2026 16:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADBA153BE9;
+	Fri, 10 Jul 2026 16:56:47 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783702602; cv=none; b=ny6I/+kCVJfu1XHGtBwISqYbIm4FmPgB5KJCQ7gT6vCDqBLDMg54sVCZXMViuI0416S7rGxoPQ362cMfSvAkyJgXOUtQ0NW7ebRLixTf0wJ3rIje6shrP1KczNRc3Ac7VWBv9+LJzNj8ZEYmzCNnXmq1yUzd8LkGg7JXsX+x8OU=
+	t=1783702608; cv=none; b=grwYO6JSobCMorL4ik8guFufHLAZ/vNCu/SeEE0Xwc45l88R2lyua5nLvtjDVoX1M4K2LNXT/GSqd+/TVMzh0E+JHLlObCZ9TgXERbJ67wdyYvBzBtoHe06FEncn0rSo6Wx3ypDDEf2nmE22k3T3Ft9Qiyy8iXUemg3XK2fvxnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783702602; c=relaxed/simple;
-	bh=j4JN5Am7coga55SqxqlCCKOEZx7XHoaUJOlhVgUlaHw=;
+	s=arc-20240116; t=1783702608; c=relaxed/simple;
+	bh=2HTfP0sK3d3rKA3xYarhZYjpCPp/waa7ghFixUdcvGs=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gE5BJvkns7WS7/ti9ADBH2n2RQeQW4Ec/Q3sLcgCKzyruekHZb/srgWKAnKZLWc4d4jvqk2z0knQrNpM7VyJBO1wM6XvCBb6d5tJru6c+DewrazxviZlHqYE7pROGBocPawJjBfQoYPNqEbGozY9NAmiydnL8zyR8mY0Rj/yk8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sn5k84cO; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C58E61F000E9;
-	Fri, 10 Jul 2026 16:56:40 +0000 (UTC)
+	 Message-Id; b=ugJ6jAATYVWBXg5q4fAGPC6u9r5n1jqa8n0fKee/LQea4a/aMW7nsVqmxy4up/3+MIyhKyyAJ1KxCdYQa2CtXPNXL/bylfqzmI4Ecqz9ntnxRCFibnqz7doZ+iAgMNissy0RahRZL5ac15Oz4llYg8MzJAqgUdsoNzHAswCk3wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmofAJ68; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B160F1F000E9;
+	Fri, 10 Jul 2026 16:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783702601;
-	bh=YTVvV5NuZgF0/3N9MthDYQpRUf7t3lgUjDm5qEEd+98=;
+	s=k20260515; t=1783702607;
+	bh=2HTfP0sK3d3rKA3xYarhZYjpCPp/waa7ghFixUdcvGs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Sn5k84cOOMuBDAahJy+D+Pj5BGSou9D63WiptxHVJLKHy8RSiEikj7YWEOX5zZhFS
-	 vC4ioj4ButntwHplWR6RsrAZJ4CG7lPOYe+0iD/rCOFhaMzu7qyjcX7izwYc/+Xkm5
-	 JJgLYvWhzRV8cK+74SAwBtmTDWPFpnbUotP14LzOAnkbjeNI199YhQtSioKI4Elk13
-	 soQTVO8lBZ63osRip8YPjj5jYZxtExnp3u4BgsC86q7QBauJiu3gq+tnKMOjkHeJRu
-	 QYiWWGe6uRoxSc5WpuFu5Y+f1x27q1LpOc0XOQtMysQ8BIGyLjNZShJHS6GOkTAtOX
-	 wUw0q6LeW1ptw==
+	b=dmofAJ68qW1/S0QwR7HpqKaKJQ2Vp2iu8aSLw+FuoX4+c7UGKcBuixXx7t+aDF9QJ
+	 pAWMalXO1Vh5QiCbqgcfq/sfImm2OflHkAolXIk8+5Is7ZQg52TLb3Kd/0N9nIAHix
+	 V1Y2CjjH5Z6eg7q0naLPspf1Fhg6dECK+ip8AzHbAVa3blwGFFi8FdK9uW5hkeE0hI
+	 9M+fUikPzvMv9uDh6wbiK1j7UEVg+hj3ftQS3bZhOEOrAnN/cu0gDlH0dkj4G7diW4
+	 w+KxRDAOw3SzN5pDwCdYs+aJ4LZl6O6chl6qQgJGpWaxQuJAi1xxJhrZqX9L6/1GJG
+	 Byw1XCc8k2SUA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 04/10] dmaengine: dw-edma: Pass down dw_edma_chan to
- reduce one level of indirection
+Subject: Re: [PATCH v6 02/10] dmaengine: dw-edma: Add xfer_sz field to
+ struct dw_edma_chunk
 Reply-To: sashiko-reviews@lists.linux.dev
 To: Frank.Li@oss.nxp.com
-Cc: dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, Frank.Li@kernel.org, imx@lists.linux.dev, vkoul@kernel.org
-In-Reply-To: <20260710-edma_ll-v6-4-1471d278b73a@nxp.com>
+Cc: linux-pci@vger.kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org, imx@lists.linux.dev
+In-Reply-To: <20260710-edma_ll-v6-2-1471d278b73a@nxp.com>
 References: <20260710-edma_ll-v6-0-1471d278b73a@nxp.com>
- <20260710-edma_ll-v6-4-1471d278b73a@nxp.com>
+ <20260710-edma_ll-v6-2-1471d278b73a@nxp.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Jul 2026 16:56:40 +0000
-Message-Id: <20260710165640.C58E61F000E9@smtp.kernel.org>
+Date: Fri, 10 Jul 2026 16:56:46 +0000
+Message-Id: <20260710165646.B160F1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,23 +70,23 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-12335-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12336-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,vger.kernel.org:from_smtp,lists.linux.dev:replyto,nxp.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	FORGED_RECIPIENTS(0.00)[m:Frank.Li@oss.nxp.com,m:dmaengine@vger.kernel.org,m:linux-pci@vger.kernel.org,m:Frank.Li@kernel.org,m:imx@lists.linux.dev,m:vkoul@kernel.org,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,nxp.com:email,valinux.co.jp:email,sashiko.dev:url,vger.kernel.org:from_smtp,lists.linux.dev:replyto,ll_region.sz:url];
+	FORGED_RECIPIENTS(0.00)[m:Frank.Li@oss.nxp.com,m:linux-pci@vger.kernel.org,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:imx@lists.linux.dev,s:lists@lfdr.de];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_NONE(0.00)[];
@@ -94,95 +94,34 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	RCPT_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[dmaengine];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	FROM_NO_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6]
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0701373CDA2
+X-Rspamd-Queue-Id: 8578B73CE58
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+> From: Frank Li <Frank.Li@nxp.com>
+>=20
+> Reusing ll_region.sz as the transfer size is misleading because
+> ll_region.sz represents the memory size of the EDMA link list, not the
+> amount of data to be transferred.
+>=20
+> Add a new xfer_sz field to explicitly indicate the total transfer size
+> of a chunk.
+>=20
+> Tested-by: Koichiro Den <den@valinux.co.jp>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Pre-existing issues:
-- [High] This problem wasn't introduced by this patch, but there is a preex=
-isting endianness bug in local DMA descriptor initialization for big-endian=
- architectures, leading to memory corruption.
---
-
---- Patch [4]: [PATCH v6 04/10] dmaengine: dw-edma: Pass down dw_edma_chan =
-to reduce one level of indirection ---
-commit 8719a22bd4ff9eee44469b7d4192520551bd05a3
-Author: Frank Li <Frank.Li@nxp.com>
-
-    dmaengine: dw-edma: Pass down dw_edma_chan to reduce one level of indir=
-ection
-   =20
-    Some helper functions do not use any information from dw_edma_chunk, so
-    passing a dw_edma_chan pointer directly avoids an unnecessary level of
-    pointer dereferencing and simplifies data access.
-
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/=
-dw-edma-v0-core.c
-> index 51e50f1fdcac4..c341aa5343417 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> @@ -276,13 +276,12 @@ dw_edma_v0_core_handle_int(struct dw_edma_irq *dw_i=
-rq, enum dw_edma_dir dir,
->  	return ret;
->  }
-> =20
-> -static void dw_edma_v0_write_ll_data(struct dw_edma_chunk *chunk, int i,
-> +static void dw_edma_v0_write_ll_data(struct dw_edma_chan *chan, int i,
->  				     u32 control, u32 size, u64 sar, u64 dar)
->  {
->  	ptrdiff_t ofs =3D i * sizeof(struct dw_edma_v0_lli);
-> -	struct dw_edma_chan *chan =3D chunk->chan;
-> =20
-> -	if (chunk->chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
-> +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
->  		struct dw_edma_v0_lli *lli =3D chan->ll_region.vaddr.mem + ofs;
-> =20
->  		lli->transfer_size =3D size;
-
-[Severity: High]
-This problem wasn't introduced by this patch, but there is a preexisting
-endianness bug in local DMA descriptor initialization for big-endian
-architectures here.
-
-Since the hardware expects little-endian values, does assigning native CPU
-values directly to the memory-mapped descriptor structs in the local path
-corrupt the DMA layout on big-endian CPUs?
-
-The non-local path correctly uses writel() and writeq() which perform
-implicit CPU-to-LE conversions, but writing 64-bit values natively to the
-reg union member places the most-significant bits into the lsb field on
-big-endian systems:
-
-dw_edma_v0_write_ll_data() {
-    ...
-    if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
-        ...
-        lli->transfer_size =3D size;
-        lli->sar.reg =3D sar;
-        lli->dar.reg =3D dar;
-        dma_wmb();
-        lli->control =3D control;
-    ...
-}
-
-This could cause the DMA controller to read mangled addresses and swapped
-transfer sizes, potentially leading to memory corruption.
-
-The same pattern appears to be present in dw_edma_v0_write_ll_link(),
-dw_hdma_v0_write_ll_data(), and dw_hdma_v0_write_ll_link().
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710-edma_ll-v6=
--0-1471d278b73a@nxp.com?part=3D4
+-0-1471d278b73a@nxp.com?part=3D2
+
 

@@ -1,62 +1,63 @@
-Return-Path: <dmaengine+bounces-12278-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12277-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id oka9MG+rUGq43AIAu9opvQ
-	(envelope-from <dmaengine+bounces-12278-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:21:03 +0200
+	id QroUMmCrUGqz3AIAu9opvQ
+	(envelope-from <dmaengine+bounces-12277-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:20:48 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 178E5738613
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:21:03 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4284273860B
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:20:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=valinux.co.jp header.s=selector1 header.b=fIy0T+c4;
+	dkim=pass header.d=valinux.co.jp header.s=selector1 header.b=QdbAiDOe;
 	dmarc=pass (policy=none) header.from=valinux.co.jp;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12278-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12278-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12277-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12277-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E59443046D47
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 08:15:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 34E5D3009503
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 08:15:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C276B3EF0AA;
-	Fri, 10 Jul 2026 08:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D586E3D45F4;
+	Fri, 10 Jul 2026 08:15:25 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11020113.outbound.protection.outlook.com [52.101.229.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5873EEAFE;
-	Fri, 10 Jul 2026 08:15:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0B43EF0A4;
+	Fri, 10 Jul 2026 08:15:23 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783671327; cv=fail; b=rA7XxrSYODmDbPJ0bds2dsXDZ/cSFrZ78nq4NRgeAVcAmtVx/4KTHZYFsUT3AxqPzSVw7I/vsrx3rHaumZQy9CLbI1sNpP5px5vsEX/Xqqng/MYVhWrGaSDVZHPzD3L7m1DpxmTBqqQSPI35Nxp+m9A7ZN0RnF7D3Yy+8CqD2XM=
+	t=1783671325; cv=fail; b=k+peyVHG96unQ6VCHr3o4fdt10icdevj++0wDbxEuk+xSiVvzklBAf7gKRCC0G0MvAbcVcPP+Sa2mzCpvYTZfVO3kpxP1A+HYmWiTrXJEKoLiqwzSTAmBq8sylf4fTlvmVKN2Kk4aF5ahgA1b57MRNPnrW69DtsY7QcLANRMGM4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783671327; c=relaxed/simple;
-	bh=RbfAU2tEdo0ZG2SNRjNkvmw5cfwsd3MZiNSHfw5fiSM=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=T0HOHjDEoPDEeH9YjJNPqHBIrqMZ8TDYdcRY2RhARLELZOXL7URPL5iEOtHCOcEn3wWdWMIjpJdSfHmMpmx/+C57bUV5ytNgIvfHuJm6vQ0WFuLuW/rUMOeWPQY/8iBKAk8+yBxLb7HoWw7YdChK8dsR5Hr0jTdM+teXkbxZWM4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=fIy0T+c4; arc=fail smtp.client-ip=52.101.229.113
+	s=arc-20240116; t=1783671325; c=relaxed/simple;
+	bh=FXct80RiQtwmL69ryA3inHdFfh0FY5rJ5BbnMSKqfKY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eQqgjqnU8QIUu52NSv/0tm4BwDHfUY3PgsS2Z+bDD5sFHYv6QGRJp3GMHf7ZuQxDXocRhwEuuP1ChU2Ev10Jw5c4vMrwXc01Tk95QMQi5P3UH1MIG51jmfBNChmgzWW0yXJAu+L+aTb6QL7Errpsds2fYlVim1rGp9l1aeM+B24=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=QdbAiDOe; arc=fail smtp.client-ip=52.101.229.113
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QvaOxAsJR16ZyS4CsphyZIDl34mJbXcx/EtI5O75Vmn9Bd00rXIBJX3DwZTCsrczn9aPhACHNtn2k53lNfHCb1/BxueX91fxYtHv02CE/aGGD3rcIe+wt2UopHIu+2Ajq/G2rey3L2j0PsMq29ufM3RsJDokHRtWT+11hnd1Wj+M5Mdp4jZ7HD9vDFnBlzPco+zdcVAvOiuI15zXd5kBECvzdDIowNiEELHbWVUC/ENZSaBaHFRysOlFb6bhCahcTJuD2eGJEz+E4geaqYgkitIuPyKZXVx5/y4aJL8g7aaHbZRc6AYIGrAj/QqZkm5GX+P7l+QI//HN6wvi5USg0Q==
+ b=PAbkh2SiBFD/jhrPfyBMwrXg6a5/o+K7qJhocUC7GUaG/cUrnGS44RdTVCTrTcVgcysN1E1Gx35Z6BAyLjgIHyJRWqhca6a1Va7w4OWffesNiSOVAZXmai7btIAMwuI/72ptFgXljVl73P5mnzxP9Hv8ARtLj+5JQlCNImn1UWWfzFI1G8M/gsc3sQV1Y7Yky7u9/0o0fuEeY+2YiMbmV0x6wmVVNAKRv08KEblw+UI0n/D0lEwzCPknKMWCev2wfdaJ96PCodMGqNAB91WaRbTQQShgTK9GNsHH61Qq58uMOWmaCUqw1rcmUVZXwp/uvOI+Bt8PLDQghzmnvVN/sA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2a8wIr1hQ6f8z7+O1jcHsKBfMt/yP7CZCkABqT/Xsyk=;
- b=J2q4+HUP/NvOYR3iutYNY8DRlRhsXAuzGiypZ3x6GP7YhXBqq7sLvQotYlUwZn2kN8wWUXrVrlTifFi/S2Ubn/doPJXVewm2SIIJq0RApZESl6PoFsgicb1cB7+xTs/kc0cwp9CGVy+baZ7CjhzGy8fYPLFMveRsso1dgRoCn/m13/Or+aSKWVtsVqCIFsYLwP/h47aSvaRM3JDd8lwpmUMyL1RuWhm/i5150CoVgFKbBKSplHV7zjWrFNhA/dUWZQ+pP68+HVlgHyvma3Etal671/0WatEIOIhcSxi7CD6L/A5WLDVQPkRFvDufCkLMEDlfIphhcdXATjw7qGjtwQ==
+ bh=3gpRR6C4VAWl+e6BXnkSZz6l8XwK7W/6BOWR/jQIgsE=;
+ b=Ok2nyWgOGF8Eic/Fy1VinSea/Npz9cGMBY665CPm+M8Dy/hpxyOm9Cxl2XXQYEoSBQ05cgGBINxwNrqIGBbms6XpoHr7iN1l6znkH3tgV+BsdAK+WN0TP1HV8JYstzgaDYwWFdl3BxLhZd2lkICMlH2nYzHx6cyIotGSBt1XGfbiwlAdPfxum1CSAj2ftPkZnigST2m8VUJH9Ju01XWFWx+wP14hla9ZONQbQPjBS6hBEw0DA5lTR+w8urz2hvKg+BYc16uKna6MmCSlE6YH/afD0CJJkl+o7Ho5DlrqeF+Zk5EHkxm49iVkKieAqhZOAfSDCIlvumQ+CFMAtkRY3g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
  header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2a8wIr1hQ6f8z7+O1jcHsKBfMt/yP7CZCkABqT/Xsyk=;
- b=fIy0T+c4e/wMFkOErgOocp6LslIrQSL+33bgQNgauIQMx536+Z/PyKYSQQDIXkIOFvLbPgoeDW47mQGce/4pejHYoVnt2KppBCyp5fsdUFyiHhBiAHSEG1M/8kk26kovvKPsjXuR1sokDeBH7xBXpLll5jc3yeZr+Yut0SRUDV8=
+ bh=3gpRR6C4VAWl+e6BXnkSZz6l8XwK7W/6BOWR/jQIgsE=;
+ b=QdbAiDOeEMiGbqGtckQP69K7LZxJmclNlGQpgrIu0Hvbxry1K9tPICt5M9fFb8Gw6d79jt5EAbn5WWK5J5NI1POi+3pYq4Bxm/zhf09ARJvYdOdEQfn0hIiZ0Q06svm3LoWCSx1I0ku53GfzReMrucdDFF5m2uttgZ0hWmH1r8I=
 Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:38f::10)
  by OS9P286MB6307.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:409::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.15; Fri, 10 Jul
- 2026 08:15:20 +0000
+ 2026 08:15:21 +0000
 Received: from TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  ([fe80::2305:327c:28ec:9b32]) by TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  ([fe80::2305:327c:28ec:9b32%5]) with mapi id 15.21.0181.009; Fri, 10 Jul 2026
- 08:15:20 +0000
+ 08:15:21 +0000
 From: Koichiro Den <den@valinux.co.jp>
 To: Vinod Koul <vkoul@kernel.org>,
 	Frank Li <Frank.Li@kernel.org>,
@@ -65,14 +66,16 @@ Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
 	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
 	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 00/14] dmaengine: dw-edma: Prepare for PCI EP DMA (part 1/3)
-Date: Fri, 10 Jul 2026 17:15:04 +0900
-Message-ID: <20260710081518.2394357-1-den@valinux.co.jp>
+Subject: [PATCH v4 01/14] dmaengine: dw-edma: Factor out HDMA interrupt setup helper
+Date: Fri, 10 Jul 2026 17:15:05 +0900
+Message-ID: <20260710081518.2394357-2-den@valinux.co.jp>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260710081518.2394357-1-den@valinux.co.jp>
+References: <20260710081518.2394357-1-den@valinux.co.jp>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: TYCP301CA0015.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:400:386::17) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
+X-ClientProxiedBy: TY4PR01CA0090.jpnprd01.prod.outlook.com
+ (2603:1096:405:37d::8) To TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
  (2603:1096:405:38f::10)
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -82,57 +85,57 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: TY7P286MB7722:EE_|OS9P286MB6307:EE_
-X-MS-Office365-Filtering-Correlation-Id: e8bf8e53-41f4-4716-f9c9-08dede5b625b
+X-MS-Office365-Filtering-Correlation-Id: 33f6bf2c-31ee-44d9-11b8-08dede5b62d0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|10070799003|23010399003|376014|6133799003|18002099003|56012099006;
+	BCL:0;ARA:13230040|1800799024|366016|10070799003|23010399003|376014|18002099003|22082099003|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	/tf1abHGkNGnJBK1LhKlAOoMuC9jAvoL2uYm52UfZEB++fxs+SqwuiJOks1RyLncXqqIQwhsIgL3B/5+hFOrHA5X7m+RpiDgl/+zP5NjJZPFhw96A9rI+lW+aL7RP5oCYoGYPfsbZrIfaqGQA4Kn4AYLNVE332R0x1J1fcAOSbO36tfBOQHFNmPQP/RckMhV16wEUaifZJk7rA17sJYJFQmwOuzn/FPago5HqyMRmbb7lAuK1a9AIGNoZYbd/deJxAT4YUlOhL6TjSrXDXutjOthHTdEXJzawq+6bp1D6Vfihb2G335LV2Is5FFDh6yoNE1B/z7o9tktzIG8tLF7GFQdjbgVEBv6OOtD3cXSeMhOJkrwp9Aga0TyRWKrZRxZFQwiYRpyUjBkRTuVl/8GB2u1jRxdSugLBCXGGAY4QnnO882sdW9+dZm6UGcXj6kvCqmcQ0C6wtTsxvrBAp7yALHwoLJTfS0D2jZqlZllEhcRyBK2TY/PyR4YQwh/l1n1jpYZrZp0kDzhGyowTGHkE2dVWxXSf165j+V6/HIajGxBtEFgPogSM+yDXN6r1SPX0DWE2P8UFDhao5wIu1VJXvTN19UD+GbYFTj6M+a7pcO76ESICGXOHpNpXIGzvBBCGPj4+r/MD0U6FZs0ZXffMjPF4+KDpcxwbCUMKa+VzeI=
+	IG5vOWzcsEt2HTgoseVO3LIbx9/sccGysapfbzKINISCFxIbkh/37mOuE4Xd19v3zWT6kTc/2K0+gSO+01MyN8nICPVb0VJ9lBGp1zulz+ca0Hiqrmjm3tMTb7nWYSTbXk/6HYoNWK/XGWldTqYWtCoCZduE9+9tHsx4OIiXZ7LjZcdbo1uTtpS2cu4o1QWNAs+w0k2x+pIG1JfVH6gKNyfOjCm0gU2XCTRHeQae62CGm8AIFVRpxZS5gz24O4WAVWf1jnVEljfBFYKPnnAnZ4iZabBLNWPs3R2VhSwonrNwWFJH7hznFbqmbb6+s8IKh7OO3L/7852XMXBsxOHTAv6OEacT4UwyX3oZhnE4T/lGG6ZhraUwlpQ+zP+tcOBfNGgxXv53eMFDbZ2ZnKJ0HA0hn8YNI5z63K1rE1ufxbhlv+plgXe4bZ5Zf7YQ2S6aXqDDzs8ds8VUznaam/A/5/P0qqEGwNog4kPSbprc8EMaGKJAkx96fjPCF5QuI0sFJA6VPLNHndxpzCE0/Vo6+ZNIm3wfbbKyEJJtq+HccVMck7KIk/hnQIBHMW766aMO2Fu1dkrrXBZbN8xO5Vgnc4rNY7NBVvWR+p6tQ98TCzFsbJEbOW6lGAs7BTGvh0cT6Lj5kqUeQ3nH1BFDyAA98MWcH8N/+wBdYwcePFrNE7w=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(23010399003)(376014)(6133799003)(18002099003)(56012099006);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(23010399003)(376014)(18002099003)(22082099003)(56012099006);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qEx7BRYCFYb7T627IBllJ79Tj/4asWViru+970BaI0PeGX7uKCvwiVWtF3H/?=
- =?us-ascii?Q?2kdR2ZV1DzXlkNPnNE+N553Qaq+vA71WA5GBswgqTS7lRNLz2gw6FCkT+r7l?=
- =?us-ascii?Q?Kd2QXIvdT16ah7tXC4nE/EhNqEtebh5sPGxioqVq4J4W/8+P2N4Hgcvren/L?=
- =?us-ascii?Q?AnFPMSK0fyUUYClIqwYG2+rqIA2jdpfWTx394Oh7EsOL5WbWhqyhXKTicNft?=
- =?us-ascii?Q?yJPcN3fdPZpXx3vVWDGp8TFhzRpvZVs79kYxmcR0u1JQf2/oOD4kv0i7rgcL?=
- =?us-ascii?Q?3S+hfMev47nvBGzxz7vAkfoIqqPdGyHoXQj2dYRJ4/LzeA8+oohj9CYq4P3c?=
- =?us-ascii?Q?U2+0Hj+jAKey34+z0Ri53JFD6enwRvqeR/sywOr0yNDw2jHFuAQ3nVr1g7gE?=
- =?us-ascii?Q?NBsMlCgKsVEjMA4zPntXmOVXY8ZA1dahL1+KtcSAuLZvK8B6hBvNEeN5pThc?=
- =?us-ascii?Q?ONzrKV3cuSTZkloQ+DJLBuh/niaCv0Pst8FrYFnAk1tbKntypfL7W/gbeXhE?=
- =?us-ascii?Q?pjiDj/m6sz6dD2fDHIW6cATr1q0P+kemJkeZB1yaE4MOghnkJsRfxb1DT5FS?=
- =?us-ascii?Q?EcpfHFph/r4tRcqNHtoKSW4vA/k/PTfkQelad8VwitdawFf5hAB8Ni+0EoV+?=
- =?us-ascii?Q?iv6v3KTLhtx06mW+jgA3nLyrESSRRWuIEj79lPy0NeGHFHiQTGUbio9EVdau?=
- =?us-ascii?Q?5ZIwOPe+3N6wYNlaknYBFMMgWHY2ZBzJvfQKAA0LzOg6BRTpAalXTL5kN/g8?=
- =?us-ascii?Q?KZPM1v0u96GllW2kUJ5/djFjKOIKbWtjCnnH/7A/HYvqaTh2VVbfRnvsh9Lc?=
- =?us-ascii?Q?vGGZb0f4ip/zfAINeplYjD9uRvD6f/9aUq1dlpWeZbCbOq/RPu6/XIikUm2/?=
- =?us-ascii?Q?iZBlbQh3K5CAZO+DvWp9/ioSh22WdkEciUPVxWuMwuWLbvrJoMtC1Rv8R/xa?=
- =?us-ascii?Q?4bZn5LcUgnPTgVVsfxeL70LACXKUmpOuF21ipjS5CtsS97yR64gKP46h1q/O?=
- =?us-ascii?Q?R/ZSAKtnAP+1J2P5Y0P36DFb8FdyIt4nVBoMB/oiwtIHr4mg76du45Wkgo3M?=
- =?us-ascii?Q?VRsoC8K8EcnBRf0rs5mzUxx8u/BHvXnWUhZSnwxwf3jdi8+rToRfRDjqG46X?=
- =?us-ascii?Q?c/XLvgpGG44iQcr3aypPOXdS6n6nmaUr5LfkP9B8TxnTAendd3zIxKONx0G0?=
- =?us-ascii?Q?WUpeHMCdBIPLmMdVSssgUTuq/lKb9VJPxTD98kHpFQe5jiOR7SjUZIlbPThK?=
- =?us-ascii?Q?p/qF8YSDs8BjgEwimqCsCCMpw0RjPwC4D1S51VPGzosa/7vieoftHB4aUag3?=
- =?us-ascii?Q?h80u3G3+982TZNARChqnstzspTQUFUl1V8XLjzUW2qb7V7KR7ZK6IltStaz2?=
- =?us-ascii?Q?xPCp7wdL/O6+ZvsGfPOkAuAB6CCSREL2uFlohKQioi/FmgwJMe4ABNCisKYx?=
- =?us-ascii?Q?8OSRCwQ0Vu1ZJTRcX8qs5kwjXCRlKh5vsqiTQJFx37ZWFDYPQ+VlXfiPqpMo?=
- =?us-ascii?Q?rNhDNVvJKsvdZUCrKCSwxo/GgfDRJMv439sK6j4LQ22IvABSiWtjP4DV2ApW?=
- =?us-ascii?Q?TH1rngwGYvLyOV5nQEAr43bqiNuedRVJv2sYY8zb8JIIp3kG2/FhaQMXO6mR?=
- =?us-ascii?Q?B0di3n/CwERU9J2v3s3GT86xglp2n+jzZ6ISwHs5rcaKz3V6qrqcktdrBIKt?=
- =?us-ascii?Q?4qbIhcrq07CnUr7M7wy7VWpJw3ydyUCQMctKUEOiaXsfQDVByH5u+efMfVev?=
- =?us-ascii?Q?1n3qyFIxNXhlCo0WsS97Rc/GFVhYEu+nJm1b+67EFIEgJQLXpX5P?=
+	=?us-ascii?Q?ek229Gyryj07bRluMEMwMf7a4h07tBx3QFrTdXkkJ9O/M3Uzd8RXwINKLOhQ?=
+ =?us-ascii?Q?9nuIw+bNEwb+z88JwfXsiDQ6RSyL1M3KTmrwJLDNAmZsx1PnD3XBYSTgsDF8?=
+ =?us-ascii?Q?oNuq0KoJ/WYNtp4Q/1xub8L7rTDanN/Tr6zOuv/F8ABRdmBHaDX3+wibr2ak?=
+ =?us-ascii?Q?zfUMQiqpMRY0A98fWuahRnhxlVvPIuoksm4F1qxabFG3wkAVYVlFkThdNRb/?=
+ =?us-ascii?Q?XgPiSGIZw+pY5vhLFgLteFqtPsEps1rLWA0EtXA8z6/CuqEIH857VVpelfd5?=
+ =?us-ascii?Q?6JJrwxFV1aiyYW1aszNCYNM1sieS9DJt55f/YR/u+Sxexzgc5VN3vteaxZYb?=
+ =?us-ascii?Q?wwDkJj32v0f36h6gYNQCDHpjNKXQlnUZdXux6+nYsAFb3jTJUm6Pqcz4Yp+X?=
+ =?us-ascii?Q?wSqBt8MiFK47d6VNItGK2a11fukFkPC4PwaCF10dCUxVGtPMksYCMJyKTmoR?=
+ =?us-ascii?Q?eeFwFkTyc3GgJLC8Mej4Ab9sTgt4fQd1wMFK731uJ3n9ikXiS3mixGtOX2HK?=
+ =?us-ascii?Q?I99fz58SMEpJCja+TVlsbt8V0DizLPZGgv6xBibDIwMqKgpAzfiNS/0tYvr1?=
+ =?us-ascii?Q?q7KYIxkqW2PY80zHErl8AN32WbxTuWA3/B7jDuh/vzq4uGNryuyOTMYR5Wt1?=
+ =?us-ascii?Q?qH/rHiy3KAChe2QzqJ2W2+N0V5Xv2Ml2HhDQWen9SWgdEDfwWhkACLKIzUGd?=
+ =?us-ascii?Q?Lp9o4+AHkfJ801z7HhWx5Plhruk/pVMk91jkPgEML+yJjW2qp2vTpZQGJiWU?=
+ =?us-ascii?Q?kQ79cKbRbO30LNDo6hmJ2Z+fIYFSo/oGiz+xDWvYR3bURpEWPWPxGACR1dFb?=
+ =?us-ascii?Q?Mjfe5A/pCtAV61LGNFJ3Y/SgG/W3jtlLxXL0kpxvaFWKuqjTIzE5T4OKnCjE?=
+ =?us-ascii?Q?6uifZ4M23eXuMF15+w2VHXkwAT2s+NLWuPd9hZnBAUWKeVwcVO+RzM61mgIv?=
+ =?us-ascii?Q?s7fLR5FxaKgE0m2vrmUWZL5Llaw2SfUn5tvlra5FmV9HCr5EKDRNyyEcWd0e?=
+ =?us-ascii?Q?8Y3S9Mz/q7FPwSQ0kXv+awIp0zPkatx6Eeac3HTo5wOS1pdf8NK1FjEDDdAa?=
+ =?us-ascii?Q?uqnw+mVXrUKPTdVhDxDecbwHk8JrxRAWlHkIf6iPM7hkKST8by1F5+AKpbcT?=
+ =?us-ascii?Q?1mVbZaWt1lFrJmDRmEBTg9ViTbKxho4KrNvNXSspv4JHa3w0F2WXY9ipP1tz?=
+ =?us-ascii?Q?2ZvRFb8yaOSgxyM9RlLlx0IaUFyviFSO6uPgee8h/RQXTGaGlxOPHdwIHxC0?=
+ =?us-ascii?Q?3tcpL7ojEpqDE/XSgdikd6PfDeLeEWuAs12LJp35T4R54rGrVMraorZ2h79+?=
+ =?us-ascii?Q?DlIQBHJUVlGqqhUOqLI/zY03pqBLyuL7FDndbzAUMmUDKNLtH66aCPrDGidi?=
+ =?us-ascii?Q?DOC6+t7JbFmxmCQQ3anMCyLy8jqfHZ8It9XBp0PeGeFYd8yCscI5IH8lEXxL?=
+ =?us-ascii?Q?JnDJFeZt4PJw7VCmBGQQ1kP6My/7lPtEEXG+LQ46HA3F75PVSTfFxvbdqUJk?=
+ =?us-ascii?Q?KdWPQlSrSgrV/FFpip+vmZ2O88zHhAl4i83BgOlt8oGQrZ3oYMCJ1waS8KB3?=
+ =?us-ascii?Q?kGcQ+1vKfDnJCvYxtMNx5ed4nB1dJ0YqoKWxWPJtpd8jpQT2Ch3zTKQR1oLX?=
+ =?us-ascii?Q?XcUFwdjVPnlCnnwc9o4VOBkG+0G/Vo0K7DOSAGk2v2Zc/zADM9TRpsjTvBtI?=
+ =?us-ascii?Q?9GBlHar1sJXzFQzdhxYZpCJUAULm0Aj8uGrijygxeaKIuEDJCPBr9CyoLYNf?=
+ =?us-ascii?Q?Fz4hj1D7aPhJ+vcH/xgejtvKsO0liE447thXH971Mp2sgrnPSmjS?=
 X-OriginatorOrg: valinux.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8bf8e53-41f4-4716-f9c9-08dede5b625b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33f6bf2c-31ee-44d9-11b8-08dede5b62d0
 X-MS-Exchange-CrossTenant-AuthSource: TY7P286MB7722.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2026 08:15:20.7507
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2026 08:15:21.5053
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: POn5oGZ9mqQWCcxhsspOFBJH3pC8PIyU8mE0PL8ieke9esWTEaVRXiF/LIPXBtP+rXrBi4/ZL1BJ+iZ1LTh0Dg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: U6zLJsHORn22aSI8aWLRS9YoMIlkeWZ8DAwVHh26aqV3ehsiRaHf8RgbIHWELnoUpdjc3mMGMp30OL+wM+DMPQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9P286MB6307
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [1.34 / 15.00];
@@ -140,7 +143,7 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[valinux.co.jp,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[valinux.co.jp:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -148,12 +151,12 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12278-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12277-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:mani@kernel.org,m:marek.vasut+renesas@mailbox.org,m:yoshihiro.shimoda.uh@renesas.com,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:marek.vasut@mailbox.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[den@valinux.co.jp,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[valinux.co.jp:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -165,145 +168,86 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine,renesas];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,valinux.co.jp:from_mime,valinux.co.jp:email,valinux.co.jp:mid,valinux.co.jp:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,valinux.co.jp:from_mime,valinux.co.jp:email,valinux.co.jp:mid,valinux.co.jp:dkim,nxp.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 178E5738613
+X-Rspamd-Queue-Id: 4284273860B
 
-Hi,
+The HDMA linked-list and non-linked-list start paths both program the
+stop/abort interrupt setup register using the same local/remote enable
+policy. Only the interrupt-mask handling differs by transfer mode.
 
-This is v4, part 1 of three series for PCI endpoint DMA.
+Factor the common setup into dw_hdma_v0_core_int_setup() before adding
+per-channel interrupt routing support. No functional change intended.
 
-The three series are:
-
-  * part 1: dmaengine: dw-edma: Prepare for PCI EP DMA
-  * part 2: PCI: endpoint: Expose endpoint DMA resources
-  * part 3: PCI: endpoint: Add PCI DMA endpoint function
-
-Most v4 changes come from Frank's review of v3 and from the rebase
-onto v7.2-rc1 plus the dw-edma groundwork series (v3 was based on
-Frank's edma_ll, which this revision no longer depends on); the
-delegated channel request helpers moved to part 2, next to their only
-users, and a new patch programs the endpoint function number into
-each channel.
-
-This series is (re-)based on v7.2-rc1 + my dw-edma groundwork:
-
-  [PATCH 0/7] dmaengine: dw-edma: Fixes and interrupt-path groundwork
-  https://lore.kernel.org/dmaengine/20260710080903.2392888-1-den@valinux.co.jp/
-
-and parts 2 and 3 depend on this series. It is independent of Frank's
-edma_ll work; the combination of both (edma_ll v5 applied on top) has
-been tested on an R-Car S4 endpoint/host pair.
-
-Scope
-=====
-
-This series prepares dw-edma and dw-edma-pcie for endpoint-local DMA
-channels that are delegated to a PCI host. It does not add the endpoint
-metadata format, DesignWare endpoint resource exposure, or the endpoint
-function driver; those are added by parts 2 and 3.
-
-This part is the DesignWare dmaengine backend work. The endpoint resource
-and endpoint function pieces in parts 2 and 3 keep the generic PCI endpoint
-interfaces separate from the DesignWare implementation.
-
-In summary, this series:
-
-  * adds per-channel interrupt routing so a channel can report completion
-    either to the local endpoint side or to the remote host side,
-  * adds quiesce operations for the resources represented by a dw-edma
-    instance,
-  * programs the endpoint function number into each channel so DMA
-    requests are attributed to the function that owns them,
-  * adds partial channel ownership mode for dw-edma instances that share a
-    controller with another OS instance, and
-  * prepares dw-edma-pcie to describe device-specific DMA layouts through
-    match data.
-
+Suggested-by: Frank Li <Frank.Li@nxp.com>
+Signed-off-by: Koichiro Den <den@valinux.co.jp>
 ---
-Changelog
-=========
-
 Changes in v4:
-  - Rebase onto v7.2-rc1 plus the dw-edma fixes/groundwork series:
-    20260710080903.2392888-1-den@valinux.co.jp.
-  - Split the HDMA interrupt setup helper out as a new first patch.
-    (Frank)
-  - Rework the routing patch per review: default-irq-mode naming and
-    call sites simplified, chip->irq_mode dropped. (Frank)
-  - Revise the partial-ownership patch: message fixed, validation moved
-    into dw_edma_check_partial(). (Frank)
-  - Move "dmaengine: dw-edma: Add delegated channel request helpers"
-    into part 2, next to its only users.
-  - New patch "dmaengine: dw-edma: Program endpoint function numbers",
-    so channels delegated to PF1+ issue TLPs attributed to their
-    function; this also lifts part 2's v3 PF0-only restriction.
+  - New patch. Factor out the HDMA interrupt setup helper before adding
+    per-channel interrupt routing. (Frank)
 
-Changes in v3:
-  - Replace the public dw-edma hardware-channel filter API with delegated
-    channel request/release helpers, keeping the DMAengine filter private
-    to dw-edma. (Frank)
-  - Rework IRQ routing so local routing is the zero value, existing
-    dw-edma-pcie instances stay remote-routed, and delegated endpoint-local
-    channels are handed to the remote side explicitly. (Frank/Sashiko)
-  - Add HDMA native interrupt routing and allow channel-granular partial
-    ownership for HDMA native.
-  - Add quiesce operations and use them for delegated-channel reclaim and
-    partial-owned remove paths.
-  - Reintroduce the IRQ data initialization fix because partial-owned probe
-    skips the core_off() reset that previously made the early-IRQ window
-    unlikely.
-  - Adjust dw-edma-pcie match-data preparation for the CPM6 entry present
-    in the new base, and reject dynamic PCI IDs without match data.
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 34 ++++++++++++++-------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
-Changes in v2:
-  - Move non-LL state and platform ops into match data. (Frank)
-  - Use a named .driver_data initializer for the Xilinx MDB ID entry and
-    fix the vsec_data rename patch title. (Frank)
-  - Replace the dma_get_slave_channel() export with a dw-edma channel
-    filter for dma_request_channel(). (Sashiko)
-  - Rework the IRQ-routing config as dw_edma_irq_config, keep HDMA native
-    int config separate, and reject remote IRQ mode on local instances.
-    (Sashiko)
-  - Report IRQ_HANDLED only for status that was actually serviced and drop
-    the lockless free_chan_resources() reset. (Sashiko)
-  - Tighten partial ownership: reject unsupported map formats early and
-    require direction-wide ownership for supported shared-register
-    layouts. (Sashiko)
-
-v3: https://lore.kernel.org/dmaengine/20260620170040.3756043-1-den@valinux.co.jp/
-v2: https://lore.kernel.org/dmaengine/20260525062420.3315904-1-den@valinux.co.jp/
-v1: https://lore.kernel.org/dmaengine/20260521063115.2842238-1-den@valinux.co.jp/
-
-Best regards,
-Koichiro
-
-
-Koichiro Den (14):
-  dmaengine: dw-edma: Factor out HDMA interrupt setup helper
-  dmaengine: dw-edma: Add per-channel interrupt routing control
-  dmaengine: dw-edma: Add core quiesce operations
-  dmaengine: dw-edma: Initialize IRQ data before requesting IRQs
-  dmaengine: dw-edma: Add partial channel ownership mode
-  dmaengine: dw-edma-pcie: Track non-LL mode in DMA data
-  dmaengine: dw-edma-pcie: Add capability match data
-  dmaengine: dw-edma-pcie: Rename vsec_data to dma_data
-  dmaengine: dw-edma-pcie: Add platform ops to match data
-  dmaengine: dw-edma-pcie: Add register offset match flag
-  dmaengine: dw-edma-pcie: Factor out descriptor block address lookup
-  dmaengine: dw-edma-pcie: Handle optional data blocks
-  dmaengine: dw-edma-pcie: Add chip flags to match data
-  dmaengine: dw-edma: Program endpoint function numbers
-
- drivers/dma/dw-edma/dw-edma-core.c    |  89 +++++++--
- drivers/dma/dw-edma/dw-edma-core.h    |  28 +++
- drivers/dma/dw-edma/dw-edma-pcie.c    | 253 +++++++++++++++++---------
- drivers/dma/dw-edma/dw-edma-v0-core.c |  72 +++++++-
- drivers/dma/dw-edma/dw-hdma-v0-core.c |  75 ++++++--
- drivers/dma/dw-edma/dw-hdma-v0-regs.h |   1 +
- include/linux/dma/edma.h              |  42 +++++
- 7 files changed, 445 insertions(+), 115 deletions(-)
-
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+index 2beec876b184..44e7b6c1263c 100644
+--- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
++++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+@@ -50,6 +50,21 @@ __dw_ch_regs(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch)
+ 	} while (0)
+ 
+ /* HDMA management callbacks */
++static u32 dw_hdma_v0_core_int_setup(struct dw_edma_chan *chan, u32 val)
++{
++	if (chan->non_ll)
++		val |= HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK;
++	else
++		val &= ~(HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
++
++	val |= HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
++	if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
++		val |= HDMA_V0_REMOTE_STOP_INT_EN |
++		       HDMA_V0_REMOTE_ABORT_INT_EN;
++
++	return val;
++}
++
+ static void dw_hdma_v0_core_off(struct dw_edma *dw)
+ {
+ 	int id;
+@@ -238,11 +253,7 @@ static void dw_hdma_v0_core_ll_start(struct dw_edma_chunk *chunk, bool first)
+ 		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
+ 		/* Interrupt unmask - stop, abort */
+ 		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup);
+-		tmp &= ~(HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+-		/* Interrupt enable - stop, abort */
+-		tmp |= HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
+-		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
+-			tmp |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
++		tmp = dw_hdma_v0_core_int_setup(chan, tmp);
+ 		SET_CH_32(dw, chan->dir, chan->id, int_setup, tmp);
+ 		/* Channel control */
+ 		SET_CH_32(dw, chan->dir, chan->id, control1, HDMA_V0_LINKLIST_EN);
+@@ -293,17 +304,8 @@ static void dw_hdma_v0_core_non_ll_start(struct dw_edma_chunk *chunk)
+ 	SET_CH_32(dw, chan->dir, chan->id, transfer_size, child->sz);
+ 
+ 	/* Interrupt setup */
+-	val = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
+-			HDMA_V0_STOP_INT_MASK |
+-			HDMA_V0_ABORT_INT_MASK |
+-			HDMA_V0_LOCAL_STOP_INT_EN |
+-			HDMA_V0_LOCAL_ABORT_INT_EN;
+-
+-	if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL)) {
+-		val |= HDMA_V0_REMOTE_STOP_INT_EN |
+-		       HDMA_V0_REMOTE_ABORT_INT_EN;
+-	}
+-
++	val = GET_CH_32(dw, chan->dir, chan->id, int_setup);
++	val = dw_hdma_v0_core_int_setup(chan, val);
+ 	SET_CH_32(dw, chan->dir, chan->id, int_setup, val);
+ 
+ 	/* Channel control setup */
 -- 
 2.51.0
 

@@ -1,63 +1,64 @@
-Return-Path: <dmaengine+bounces-12310-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12311-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id yAkqBBWvUGqt3QIAu9opvQ
-	(envelope-from <dmaengine+bounces-12310-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:36:37 +0200
+	id tQYWNCOvUGqz3QIAu9opvQ
+	(envelope-from <dmaengine+bounces-12311-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:36:51 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57B6E7388C3
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:36:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2026F7388CE
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 10:36:51 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ml1XVnXe;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=NAsfeke8;
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12310-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12310-lists+dmaengine=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12311-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12311-lists+dmaengine=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 855763044C3A
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 08:29:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A50CA3007373
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2026 08:31:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E18F3EEAE7;
-	Fri, 10 Jul 2026 08:29:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C79453F0A88;
+	Fri, 10 Jul 2026 08:31:00 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161DD3E0255;
-	Fri, 10 Jul 2026 08:29:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3443F0765;
+	Fri, 10 Jul 2026 08:30:59 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783672173; cv=none; b=ME4/V9iHTtVkFva2dH6PXneNOVIZI+yOzSROu2kQIJH6lfzC64C2T4rpbJvisRo+WqSmmvLIX0VrR3w/UkdvyzGP1eCV/3qfTMj3Vsgl+9ul/rAh0YibX+jjFCn7YZHP8/rq5LBss7rTppFx7ml9d6QtqJkXA8eJxYZ877k1zIQ=
+	t=1783672260; cv=none; b=lqLPM8gJzm31kXsBM/8hH54mOBe07OgmDsWtll4CCW2ZdNZk4gfgL5pomKxdOf0UB2d+VzIoqraakpCzH5rf+mEhK7d361VAfBW7Xr5e7/qS94F+f2eY9EguNjDRl175KmR6g4z/mbnvu8RmEwximSUu8eiHNqIdcILz31zCCx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783672173; c=relaxed/simple;
-	bh=iT8xMWwHvgzRujoLuaEWU4s8yh5aAK5NmggJsd1NJF0=;
+	s=arc-20240116; t=1783672260; c=relaxed/simple;
+	bh=dioQ1WHGq2NW3krVf4xyXr9Dyl7orouWW8+1/yC/rBM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nODvZ4sRRHvhexEedXarq25z0vIh+T/DXhQ1XEuUEPUWiHLKARWl9hwesK6oH8S5t1l8FpEjV1hPvv97Aq5P33wJ2DDJSlUau5eQnYZKm7sGfsHlrdqUvg8E9L8KEEZWF3m1aVpMDEnNEE0j78zxuOWfmFlQQ5aZLAYTqNBTxsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ml1XVnXe; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E7161F000E9;
-	Fri, 10 Jul 2026 08:29:31 +0000 (UTC)
+	 Message-Id; b=GAhb6fNMOMK5Yq3XrpXV7ZmAQvkE0xVsGSocXxlcJLBQYgUekCaBpzkHXBohGotQbFp47nY7kKem/auqkg/W8jerxxJ0gkBpA+tONPzsydagW4YwgvthjGQmQX5yW1vFi1ht7SM9nZTpDs6Y5xyxHldtnju/t2IxknnzAiaOovo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAsfeke8; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DCB01F000E9;
+	Fri, 10 Jul 2026 08:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783672171;
-	bh=qCRlnMCaLc7Fw9gWpQoyxlKA/AM49TaQZl8wZmT+oRM=;
+	s=k20260515; t=1783672259;
+	bh=dioQ1WHGq2NW3krVf4xyXr9Dyl7orouWW8+1/yC/rBM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ml1XVnXedJLC/JBjsx85Ets5qYNVq3uRkHUxZGSCAbynivBK05kq4okwxljCFLW0+
-	 3tx+JAY9IlYIgMBySED1Diy7jgpe2/3v6EUs23SKlb/EFHEuRzr3+vh6APm9RZdXqM
-	 Ikwht8ga75kn5EprLmtZvwrEJ3kV3LCVXCvbACEeHG50DECa0xjsokKNARQFzfp0t/
-	 1bwrq3GpbfSZQYfDwTpgREl7dFk23E9my93p6lqA8YNVv6aTZnV3G2Oy+GpAXQ+HLI
-	 pAFahRXoRSlmhcIJEkhu0UDLiiJzVP2HXseJmgK4Hhkhp3ustxm2NjNX0vbNco4W7/
-	 TlTV8dlrBjIpQ==
+	b=NAsfeke8fCcxltDQFaF2VupdBZsiw+ONAEG1UG1GZ8HezjAYneh02Wy3Sfn60mG0W
+	 t4+am814sdrNReMNc2gqfBQCvXjHOs5JRAvKys6tvSjC8T+TTvgaE1RXDS4I1eaS0z
+	 h04q4aUur+JETJRXfI49LVjjo2Q18Tu3ZNohdNJcoBC7svaNQlwGpmANbotdyBiVRF
+	 6hf/os02Q7Xa+gkD8PS7ZVFPD2cM1X0n/U5KOKcMB4H3ixwNn0W9A/sx3nt3iv/1mg
+	 UusMTHTr9hvznLNL4Sl+5GhoEJAKo6OJh/628uDaXGj9UiOWo/B3hBM1rUN25OOQPV
+	 kIG9Uhp1Eyjyg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 4/6] PCI: dwc: Expose endpoint DMA resources
+Subject: Re: [PATCH v4 6/6] PCI: dwc: Implement endpoint DMA channel
+ delegation
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Koichiro Den" <den@valinux.co.jp>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260710082156.2395844-5-den@valinux.co.jp>
+Cc: linux-pci@vger.kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260710082156.2395844-7-den@valinux.co.jp>
 References: <20260710082156.2395844-1-den@valinux.co.jp>
- <20260710082156.2395844-5-den@valinux.co.jp>
+ <20260710082156.2395844-7-den@valinux.co.jp>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Jul 2026 08:29:30 +0000
-Message-Id: <20260710082931.5E7161F000E9@smtp.kernel.org>
+Date: Fri, 10 Jul 2026 08:30:58 +0000
+Message-Id: <20260710083059.4DCB01F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -74,14 +75,14 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-12310-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12311-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,valinux.co.jp:email,smtp.kernel.org:mid,vger.kernel.org:from_smtp,lists.linux.dev:replyto,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:den@valinux.co.jp,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,m:linux-pci@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:den@valinux.co.jp,m:linux-pci@vger.kernel.org,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
@@ -103,80 +104,36 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 57B6E7388C3
+X-Rspamd-Queue-Id: 2026F7388CE
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] The doorbell resource is incorrectly hidden and auxiliary resource=
- queries fail entirely when the eDMA provider is registered in non-LL mode,=
- contradicting the commit intent.
---
+> Implement the EPC DMA channel delegation operations for DesignWare
+> endpoint controllers. The DWC backend uses the local DesignWare eDMA
+> provider to reserve the requested hardware channel and returns it as an
+> opaque EPC DMA channel handle to generic endpoint functions.
+>=20
+> Validate the requested direction and hardware channel against the
+> linked-list channel counts before delegation.
+>=20
+> DWC eDMA/HDMA generates DMA requests with a programmable requester
+> function number. For delegated channels, the host-side dw-edma-pcie
+> instance bound to the exposed DMA function reserves the channel and
+> programs its own PCI_FUNC() into the per-channel requester field; the
+> endpoint-side chip func_no does not participate in that handoff.
+>=20
+> Reject VF requests because the RC-programmable DWC eDMA/HDMA register
+> window is assigned to a PF BAR only.
+>=20
+> Reclaim releases the delegated local channel through the DesignWare eDMA
+> provider, which returns it to endpoint ownership. Propagate the EPC
+> quiesce request so bind failure paths can release unexposed reservations
+> without touching DMA engine state.
+>=20
+> Signed-off-by: Koichiro Den <den@valinux.co.jp>
 
---- Patch [4]: [PATCH v4 4/6] PCI: dwc: Expose endpoint DMA resources ---
-commit 14327ef69239f572929efa8665a21b5950efac88
-Author: Koichiro Den <den@valinux.co.jp>
-
-PCI: dwc: Expose endpoint DMA resources
-
-This patch exposes the DesignWare endpoint-integrated eDMA register window,
-logical DMA channels, and linked-list descriptor memories through the EPC
-auxiliary resource API. It also handles the interrupt-emulation doorbell
-when its register offset is valid.
-
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pc=
-i/controller/dwc/pcie-designware-ep.c
-> index 7d2794945704e..dd47537f390e5 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -865,14 +897,34 @@ dw_pcie_ep_get_aux_resources_count(struct pci_epc *=
-epc, u8 func_no,
->  	struct dw_pcie_ep *ep =3D epc_get_drvdata(epc);
->  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
->  	struct dw_edma_chip *edma =3D &pci->edma;
-> +	int ret;
-> +	int count =3D 0;
-> =20
->  	if (!pci->edma_reg_size)
->  		return 0;
-> =20
-> -	if (edma->db_offset =3D=3D ~0)
-> -		return 0;
-> +	ret =3D dw_pcie_ep_check_edma_vfunc(vfunc_no);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (edma->dw) {
-> +		ret =3D dw_pcie_ep_check_edma_ll_regions(edma->ll_region_wr,
-> +						       edma->ll_wr_cnt);
-> +		if (ret)
-> +			return ret;
-
-[Severity: High]
-The commit message states the doorbell remains reported, but if eDMA lacks
-linked-list memory, dw_pcie_ep_check_edma_ll_regions() returns -EOPNOTSUPP,
-which causes this function to return an error. Does this inadvertently hide
-the doorbell resource and cause the entire query to fail in non-LL mode?
-
-[ ... ]
-
-> @@ -909,6 +962,76 @@ dw_pcie_ep_get_aux_resources(struct pci_epc *epc, u8=
- func_no, u8 vfunc_no,
->  	if (rsvd && rsvd->size < dma_reg_size)
->  		dma_reg_size =3D rsvd->size;
-> =20
-> +	count =3D 0;
-> +	if (edma->dw) {
-> +		resources[count++] =3D (struct pci_epc_aux_resource) {
-> +			.type =3D PCI_EPC_AUX_DMA_CTRL_MMIO,
-
-[Severity: High]
-If dw_pcie_ep_get_aux_resources_count() is updated to ignore the eDMA
-channels instead of returning an error, this unconditionally populates the
-eDMA resources when edma->dw is true. Could this cause an out-of-bounds
-write to the resources array since the array would have been allocated
-based on the smaller count?
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710082156.2395=
-844-1-den@valinux.co.jp?part=3D4
+844-1-den@valinux.co.jp?part=3D6
+
 

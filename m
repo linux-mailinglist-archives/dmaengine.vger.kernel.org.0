@@ -1,255 +1,227 @@
-Return-Path: <dmaengine+bounces-12365-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12366-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id X5R9CkePVGpAnQMAu9opvQ
-	(envelope-from <dmaengine+bounces-12365-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 09:09:59 +0200
+	id 23HlAGCTVGrengMAu9opvQ
+	(envelope-from <dmaengine+bounces-12366-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 09:27:28 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D810747CFD
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 09:09:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BF8974821C
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 09:27:27 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=RkbZegGe;
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12365-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12365-lists+dmaengine=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=amd.com header.s=selector1 header.b=1RJ5TP3b;
+	dmarc=pass (policy=quarantine) header.from=amd.com;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12366-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12366-lists+dmaengine=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F34563020A76
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 07:07:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 83A5C304139D
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 07:22:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B7E3546C9;
-	Mon, 13 Jul 2026 07:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E64368D4A;
+	Mon, 13 Jul 2026 07:22:00 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010048.outbound.protection.outlook.com [52.101.46.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741B535F170
-	for <dmaengine@vger.kernel.org>; Mon, 13 Jul 2026 07:07:51 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783926472; cv=none; b=aYrE0MxPkh6k62+xkREogjc6C74kG3tMFpeLnqHz50hVaJWP6uy4D8Oas+RL8og4D8rGSuIjxVahjfZihGoVgZfrOYuMRWJeg8Yd4wto4MhwDYBVIQl22BvHkLLezBCm7Gvg0WK36oj0+lO8oyEQsNonN9Bfa0uC+WDfTian77c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783926472; c=relaxed/simple;
-	bh=3oNqO/SbayrPL9YVI3QxD9UPfK8GIMj2NbXDoEOSCwM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=h5vqpZH++tSqOcWS8vHs9I40xAa8IA0Hg+Pi8wCelBMyhosuYZTUbGwopKCQXIO/tPni3v1fG465u5ykrb442IKiMG1PBTJinzFY3dr4kP0t7UQOAEsi0cVVDdLC2ixe5JdJI6uFgX0E3R0Gu+1nHYzpkgQCYndBD9Aucjbx4jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkbZegGe; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D13091F000E9;
-	Mon, 13 Jul 2026 07:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783926471;
-	bh=E8cGtnklDcLDr0BDquFG3OWODmYgCmEwjbtwI430QIU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RkbZegGe6rBCUMRFhjDZubpHaLo7Qmgw78SWdziDYF8bNNqo411HMZr/yx/lxR0M6
-	 1wH1Sc8nwn2Q1DpQ6HMzxU9nbiWTyESmSA/r59Ccuvy/GdJK7RSmI8Ag1U1KU/CJbx
-	 5f0nrx4TB77kY5e23LMcf6VLqBDKMbmcD3EPdUs2LZ2KHiUSQ9Gq0iyM79haQIqIVD
-	 VmnhVhbiOAsYbviQbdoBu+ejCKjJ1+zYOkAGhc+BEdPj1UO7HcE9z8za+e9lCmrYCk
-	 1JXCOIngifF9ym1ilfXel/NqXaR4fuurPXI5wAVY0ewxzSUnLWGklR6lwdbicaVLV9
-	 x2dI97zVi28Kw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8] dmaengine: dw-edma: Enable HDMA 64R/W Channels
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Devendra K Verma" <devverma@amd.com>
-Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
-In-Reply-To: <20260713064854.4065262-1-devverma@amd.com>
-References: <20260713064854.4065262-1-devverma@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Jul 2026 07:07:50 +0000
-Message-Id: <20260713070750.D13091F000E9@smtp.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701E9369D4A;
+	Mon, 13 Jul 2026 07:21:58 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783927319; cv=fail; b=BlPX4RYjOnTyD6rMJeVyz8xgyp2NIfrgDQ2NEl6md0OJbvP4IogBQKYTskRe/O/1A1YXLbi3T7CEdakmzirVXveHWhCz7qEf3R+mVVQcdxXi/VSnlLsTZH2ZVkwhZ5bOz18q6rmMgr0nnz31EIxNRL1PkMaq9ZdB4245ynX+FYM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783927319; c=relaxed/simple;
+	bh=OPC3aAipatCarvCLPDEVcQ9SHz9NVb1aLZWe7MnrWFU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pGsFgfR1kreRmM9J/7fE3aBomzKdghDiKV3lSouUBZeGVea/Jine8Fi+nt0l+6bQAooq5Y9dtlbPrj2ElFCvm2x8QXJDDgidnQx+7QLh9eDe7FeM+wcC/1cFuygjMt8bAaEHx1tBYDst4Cqp6GuWY1kgTla99DQ28StQUc8A9Bo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1RJ5TP3b; arc=fail smtp.client-ip=52.101.46.48
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qLYTFVZ/s8SKK9oNHZlvIMFc2C6/BbC+PCpGJyd2FC52qLzx6Akh4p9x0GjDrOH46ByknJA8NCY8CGjwSDwc77Xe6tr+fD/8OQ7mAdQO3OiWpDGY5KTlRkE3B0fmgxG5RXk+UG133W8zrVfWzx+k+ZGp8VdSUvdlp/QAX8C1rW4kwolRcpaEU6f4rMOcWyyGyUnAlA0lmsXJPjDv+qTN5Evik39Ocw9HSKeeY1qgKYdoDditUnSTBs5MDF2KpnLDlBydJq/4NwDINTYeL5l6PQTXzQkaItUiIF0FSZ6Xp6obRJbKefoWIkbiydpnc3Nb0os9soHrB5aAPi+zY69qAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ccqm1Zg21zwvevfQkhyiS+L0f0kfAMvK93WrHurzL5c=;
+ b=ZSZJER1Ly0SMWCDDUCmWSC6NHaEz8HRxBq2bQcDsapY+Pmi4BKghFcrDDjtNo+cS8Defua2uqtDjF+kCJ9vskAJslfHWb6aY9Gk0Tj8IHRqCW6EVQ+BiANxitdZuySSH3WNx5wC4UaMGXLkket9Z6PqRuhZGPsojMHhPbaLyBk+FEVYJOpyzPYtIefGt0eyaQpQJwHyZfc5rOPhuMRBFfLHNr195bSYM2S4fz2e9nKO5Po/a3vtsovQX/3MTtMqYqxr49MTuUDdnDvNxuOd37tPK2fBsS0lVm9WLdtriktbOmWqFCKOma5tLJkXAwnDPv2EnoBwU8dhLBL/Kma5/4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ccqm1Zg21zwvevfQkhyiS+L0f0kfAMvK93WrHurzL5c=;
+ b=1RJ5TP3bTC8gusJGTy7q9LjIJuAOKctU0PeYMelFjSoX8VA8ZOJbIzx/O1jJ6N5HMtk7FZpwkdsAHs8ZLf2wtnIxBNB0Me/BETmOCEg8YELa9yeQmyWKoQnpvsKa/kJKkuOXNT4A0DJV4t9tOfPMsKB0bwedYnf5Oie5FcaOfw8=
+Received: from BY3PR10CA0023.namprd10.prod.outlook.com (2603:10b6:a03:255::28)
+ by LVUPR12MB999185.namprd12.prod.outlook.com (2603:10b6:408:3a3::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Mon, 13 Jul
+ 2026 07:21:54 +0000
+Received: from SJ1PEPF000026C6.namprd04.prod.outlook.com
+ (2603:10b6:a03:255:cafe::45) by BY3PR10CA0023.outlook.office365.com
+ (2603:10b6:a03:255::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.19 via Frontend Transport; Mon,
+ 13 Jul 2026 07:21:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ SJ1PEPF000026C6.mail.protection.outlook.com (10.167.244.103) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.223.9 via Frontend Transport; Mon, 13 Jul 2026 07:21:54 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 13 Jul
+ 2026 02:21:53 -0500
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 13 Jul
+ 2026 02:21:52 -0500
+Received: from xhdsneeli41.xilinx.com (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
+ Transport; Mon, 13 Jul 2026 02:21:47 -0500
+From: Srinivas Neeli <srinivas.neeli@amd.com>
+To: Vinod Koul <vkoul@kernel.org>, Radhey Shyam Pandey
+	<radhey.shyam.pandey@amd.com>
+CC: Frank Li <Frank.Li@kernel.org>, Michal Simek <michal.simek@amd.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Suraj Gupta
+	<suraj.gupta2@amd.com>, Marek Vasut <marex@nabladev.com>, Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>, Alex Bereza <alex@bereza.email>, "Folker
+ Schwesinger" <dev@folker-schwesinger.de>, <dmaengine@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <git@amd.com>
+Subject: [PATCH v4 0/4] dmaengine: xilinx_dma: MCDMA descriptor and metadata handling improvements
+Date: Mon, 13 Jul 2026 12:51:42 +0530
+Message-ID: <20260713072146.45269-1-srinivas.neeli@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C6:EE_|LVUPR12MB999185:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0e5e2f79-9fb4-4cff-0b31-08dee0af6aa1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700016|82310400026|23010399003|7416014|376014|6133799003|18002099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	2nLCjbwxDgP+gx3/o4glbZAxLWb5yVpv8KPPDIB0zhCX4wf8l8N+S/1fGngYPjwDCh3/qm0IDW7Ya+WAtOfiFyY40/7olucwEM8hIA84nMDjRqhZYnNwG/O+USq4HoX/Jd+xhKCuoLeU+nRIrYjIG7OkjWiDJwimvBLT8v1MRjcEKWIcUpbXDY9v2DJsjaxCh8Yt+ql3bVGY3tlh+uo/bfSRh4B9QfsrQyh3Zc6tKYmBeQW+aLQkpsPKzLK2+mcBOmb34GNLbcvGovVwt5tzh6YBvYt9VggonMzifi+geanmb1KwWj1Jj8AQHC3wcVpcB//Ob4IrZbruYpe9/kgSGF78blMnfnqbFg+eF3crz+JnGCtEbTjU+HMv3+xTIppSie0bwUh3nHNJwR8/n1pTY2AfUVkOaNozDh5rk6M1rpWjaUT+uTYbS1ew89Hu5IwJL6YNFKTs62WCGUzfmoahbfAj7woLLJsYYNDIJeSU9ADi0ND50VZfEJ93uqd3PGVaT+Npbmq8dsODwaVGsIO3TOzfWLqS0euvo5KSWbk/YiMXQCgAIpHZfx9SSP7Iy1tNyvfOtYCrZd4eX+pMVHdlJ4ANWJdLqwlmYGtbo7xDn6p8c6hK802ceChsk7FK+EzSKNFz8Z6jawvfL0p7/7VBu11Jq1776ex35lTSlpbUNTsuHLP0AkZdx+40R0yNENgWv5OhabR61mXSQ4ACXumXug==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(82310400026)(23010399003)(7416014)(376014)(6133799003)(18002099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	yWy/Jd7D/2TjhIDHY/V0nRjswF8nQdpLGpVPDW26fMIzstbG/v7ACCt1rRiR0JUokUD50TyKxeGEeQL0GCuxsuq43b2Xp1XWOY1/WciZzURZXelCvinQ4qfZKr5c/IqIXQW0ceNwU9327FmxrMrbqZkJhkO824JbmwSBH4+m9iVA4MXpHOcZsaMCGEEiPFbEJJac3dwysi3D3GOghf16Q/awkbpi9wwbjC4WXUjMKyXktSds91OGMYWnRp9VuEODthTmLgcqi7SHbF6j2jxtCD3LyepcQ49RcnRf76RXdKE5+j5fTVXdIhg4QCsPM/dx6AkZioXOX5oZFQMDZSSEBV63j0SmF7vAu9LhjXVhXsFA43xkVm8gXgoeX2P4jbxU2UEa/F+IYVlqGnkgdwmfcLDcf/wmrzU1Kg/gU+tAcQ0fKRgz5Grlzoz4FS54wp6C
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2026 07:21:54.4751
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e5e2f79-9fb4-4cff-0b31-08dee0af6aa1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000026C6.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LVUPR12MB999185
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	MISSING_MIME_VERSION(2.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+X-Spamd-Result: default: False [2.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12365-lists,dmaengine=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:devverma@amd.com,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[srinivas.neeli@amd.com,dmaengine@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	TAGGED_FROM(0.00)[bounces-12366-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	ALIAS_RESOLVED(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:radhey.shyam.pandey@amd.com,m:Frank.Li@kernel.org,m:michal.simek@amd.com,m:andrew+netdev@lunn.ch,m:davem@davemloft.net,m:edumazet@google.com,m:kuba@kernel.org,m:pabeni@redhat.com,m:suraj.gupta2@amd.com,m:marex@nabladev.com,m:tomi.valkeinen@ideasonboard.com,m:alex@bereza.email,m:dev@folker-schwesinger.de,m:dmaengine@vger.kernel.org,m:netdev@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:git@amd.com,m:andrew@lunn.ch,s:lists@lfdr.de];
+	DKIM_TRACE(0.00)[amd.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_NO_DN(0.00)[];
-	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_THREE(0.00)[4];
+	FROM_NEQ_ENVFROM(0.00)[srinivas.neeli@amd.com,dmaengine@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,amd.com:from_mime,amd.com:dkim,amd.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,smtp.kernel.org:mid,sashiko.dev:url,lists.linux.dev:replyto]
+	ALIAS_RESOLVED(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[dmaengine,netdev];
+	RCVD_COUNT_SEVEN(0.00)[9]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 7D810747CFD
+X-Rspamd-Queue-Id: 7BF8974821C
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
+This series improves the Xilinx AXI DMA and MCDMA driver's descriptor
+handling and metadata reporting. It fixes direction-specific descriptor
+field usage, ensures completion is based on the hardware completion bit
+(important with interrupt coalescing), and extends metadata handling to
+expose status and sideband fields alongside APP fields.
 
-New issues:
-- [High] The DesignWare PCIe controller frontend fails initialization for p=
-latforms attempting to use 64 HDMA channels due to hardcoded legacy channel=
- limits.
-- [Medium] The dw-edma-pcie endpoint driver silently caps dynamically detec=
-ted channel counts to 8.
+The axienet driver is updated to derive RX frame length from the standard
+dmaengine residue mechanism rather than descriptor APP fields, making it
+work on designs where the AXI4-Stream status/control interface is not
+present.
 
-Pre-existing issues:
-- [High] A race condition during initialization causes a guaranteed NULL po=
-inter dereference if a shared or spurious interrupt occurs early.
-- [High] Incorrect argument order in dw_hdma_v0_core_ch_status leads to inv=
-alid register reads, breaking DMA status reporting.
+Changes in V4:
+ - Patch 1: Added Reviewed-by: Radhey Shyam Pandey.
+ - Patch 2: Reworded commit message to reference the AXIDMA fix it mirrors;
+   added Reviewed-by: Radhey Shyam Pandey.
+ - Patch 3: Renamed subject to "...from residue in dmaengine path";
+   condensed commit message; dropped Fixes tag.
+ - Patch 4: Restructured get_metadata_ptr() so AXIDMA is the fall-through
+   path (no WARN_ON_ONCE); rewrote the kernel-doc as an index table
+   covering AXI DMA, MCDMA S2MM and MCDMA MM2S; condensed commit message.
+
+Changes in V3:
+ - Patch 1: Renamed subject, added static_assert for descriptor size,
+   refactored residue calculation for clarity.
+ - Patch 2: Added Fixes tag, expanded commit message explaining interrupt
+   coalescing scenario, simplified completion check logic.
+ - Patch 3: New patch - axienet now uses result->residue for RX length
+   instead of APP metadata, removing dependency on status/control stream.
+ - Patch 4: Complete rewrite - metadata pointer now starts at status field
+   (index 0) exposing status/sideband to clients; uses EOF descriptor;
+   removed 'chan' field from descriptor struct.
+ - Dropped V2 patches 4/5 (dt-bindings) and 5/5 (xferred_bytes) as the
+   approach changed to use standard residue mechanism.
+
+Changes in V2:
+ - Rebased on the AXI DMA binding YAML conversion.
+ - Added xlnx,include-stscntrl-strm in the YAML binding.
+ - Clarified cover letter to reflect metadata behavior with and without
+   APP fields.
+https://lore.kernel.org/all/20260309033444.3472359-1-abin.joseph@amd.com/
+
+Srinivas Neeli (3):
+  dmaengine: xilinx_dma: Fix MCDMA descriptor fields based on DMA
+    direction
+  dmaengine: xilinx_dma: Move descriptors to done list based on
+    completion bit
+  net: xilinx: axienet: Derive RX frame length from residue in dmaengine
+    path
+
+Suraj Gupta (1):
+  dmaengine: xilinx_dma: Extend metadata handling for AXI DMA and MCDMA
+
+ drivers/dma/xilinx/xilinx_dma.c               | 86 ++++++++++++++++---
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 14 ++-
+ 2 files changed, 77 insertions(+), 23 deletions(-)
+
 --
+2.25.1
 
---- Patch [1]: [PATCH v8] dmaengine: dw-edma: Enable HDMA 64R/W Channels ---
-commit 639271379db4829feeac5972fb5074c44780d440
-Author: Devendra K Verma <devendra.verma@amd.com>
-
-dmaengine: dw-edma: Enable HDMA 64R/W Channels
-
-This patch introduces support for up to 64 read and write channels in the=20
-DesignWare HDMA controller. It defines new macros for HDMA maximum channel=
-=20
-counts, updates data structures, and transitions bitmasks to 64-bit bitmaps=
-=20
-to accommodate the expanded channel limits.
-
-> Changes in v3:
->   o Reverted the FIX for AI reported GET_CH_32() issue, as
->     per the recommendation of reviewers, need to create
->     separate patch for it.
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does the incorrect argument=
-=20
-order in dw_hdma_v0_core_ch_status() still lead to invalid register reads?
-
-When the DMA status is checked, dw_hdma_v0_core_ch_status() calls GET_CH_32=
-()=20
-with the channel ID and direction swapped:
-
-    tmp =3D FIELD_GET(HDMA_V0_CH_STATUS_MASK,
-            GET_CH_32(dw, chan->id, chan->dir, ch_stat));
-
-The macro evaluates the numeric channel ID as the direction and uses the=20
-direction as the channel index, which breaks DMA status reporting.
-
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-=
-edma-core.c
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-[ ... ]
-> @@ -925,9 +925,9 @@ static int dw_edma_channel_setup(struct dw_edma *dw, =
-u32 wr_alloc, u32 rd_alloc)
->  		irq =3D &dw->irq[pos];
-> =20
->  		if (chan->dir =3D=3D EDMA_DIR_WRITE)
-> -			irq->wr_mask |=3D BIT(chan->id);
-> +			bitmap_set(irq->wr_mask, chan->id, 1);
->  		else
-> -			irq->rd_mask |=3D BIT(chan->id);
-> +			bitmap_set(irq->rd_mask, chan->id, 1);
-> =20
->  		irq->dw =3D dw;
-
-[Severity: High]
-This is a pre-existing issue, but does this initialization sequence leave a=
-=20
-race condition that causes a NULL pointer dereference if a shared interrupt=
-=20
-fires early?
-
-In dw_edma_probe(), dw_edma_irq_request() calls request_irq() with IRQF_SHA=
-RED=20
-while dw->irq[i].dw is still NULL.
-
-If an interrupt fires immediately after registration,=20
-dw_edma_interrupt_common() executes and dereferences dw_irq->dw to call=20
-dw->core->handle_int. This will dereference the NULL pointer before=20
-dw_edma_channel_setup() finishes initialization here.
-
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-=
-edma-pcie.c
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -62,11 +62,11 @@ struct dw_edma_pcie_data {
->  	/* eDMA registers location */
->  	struct dw_edma_block		rg;
->  	/* eDMA memory linked list location */
-> -	struct dw_edma_block		ll_wr[EDMA_MAX_WR_CH];
-> -	struct dw_edma_block		ll_rd[EDMA_MAX_RD_CH];
-> +	struct dw_edma_block		ll_wr[HDMA_MAX_WR_CH];
-> +	struct dw_edma_block		ll_rd[HDMA_MAX_RD_CH];
-
-[Severity: Medium]
-Does the dw-edma-pcie endpoint driver silently cap dynamically detected=20
-channel counts to 8, defeating the purpose of the 64-channel support?
-
-During probe, dw_edma_pcie_get_xilinx_dma_data() reads the channel count fr=
-om=20
-the hardware VSEC but caps it using the static template limit:
-
-    pdata->wr_ch_cnt =3D min(pdata->wr_ch_cnt,
-                       FIELD_GET(DW_PCIE_XILINX_MDB_VSEC_DMA_WR_CH, val));
-
-Since pdata is initialized from xilinx_mdb_data which statically defines a=
-=20
-maximum of 8 channels, the dynamically read channel count is bounded and=20
-will never exceed 8.
-
-> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> --- a/include/linux/dma/edma.h
-> +++ b/include/linux/dma/edma.h
-> @@ -14,6 +14,8 @@
-> =20
->  #define EDMA_MAX_WR_CH                                  8
->  #define EDMA_MAX_RD_CH                                  8
-> +#define HDMA_MAX_WR_CH                                  64
-> +#define HDMA_MAX_RD_CH                                  64
-
-[Severity: High]
-Will the DesignWare PCIe controller frontend fail initialization with -EINV=
-AL=20
-for platforms attempting to use 64 HDMA channels?
-
-When an HDMA platform is probed, dw_pcie_edma_find_channels() in=20
-drivers/pci/controller/dwc/pcie-designware.c still uses the legacy=20
-EDMA_MAX_WR_CH limit:
-
-    if (!pci->edma.ll_wr_cnt || pci->edma.ll_wr_cnt > EDMA_MAX_WR_CH ||
-        !pci->edma.ll_rd_cnt || pci->edma.ll_rd_cnt > EDMA_MAX_RD_CH)
-        return -EINVAL;
-
-Additionally, dw_pcie_edma_irq_vector() rejects requested IRQ numbers=20
-that are greater than the legacy maximums:
-
-    if (nr >=3D EDMA_MAX_WR_CH + EDMA_MAX_RD_CH)
-        return -EINVAL;
-
-This artificial cap at 16 seems insufficient for platforms using the new=20
-64-channel support.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260713064854.4065=
-262-1-devverma@amd.com?part=3D1
 

@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-12392-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12393-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id X5VYJIfmVGojgwAAu9opvQ
-	(envelope-from <dmaengine+bounces-12392-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 15:22:15 +0200
+	id RZhlG9fmVGpRgwAAu9opvQ
+	(envelope-from <dmaengine+bounces-12393-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 15:23:35 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B81474B82D
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 15:22:15 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAF0774B870
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 15:23:34 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=cK7wM9X9;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12392-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="dmaengine+bounces-12392-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=oUiiLc+X;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12393-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12393-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1135F30C7455
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 13:15:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B5D5030ACC9A
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 13:15:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AD9D420E61;
-	Mon, 13 Jul 2026 13:14:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A92341C30A;
+	Mon, 13 Jul 2026 13:15:18 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B11C41C2F2
-	for <dmaengine@vger.kernel.org>; Mon, 13 Jul 2026 13:14:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3745241C2E8
+	for <dmaengine@vger.kernel.org>; Mon, 13 Jul 2026 13:15:17 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783948491; cv=none; b=sZx8zd63I190hs38/fk+hehE+PsEC8li4QgQvEuEBrJ6slwv6BKNALrHoQZJz3hgOp3kfQhiVd8P//27kquQpDGoQx9oQF38iqUIBD2hTA573ycqIbq77cJDJDIyMyH0bEWlvVsFjYBF9GZZFrXDod65Vez8dhswQOwx78pbbJw=
+	t=1783948518; cv=none; b=uBUecW7p9hjFBRwmC+mMS7iba6COInFVYkiN0prOPVT1WjA12dbAqOwf/4JHfwPCbT86BPL/OPlgD/2y1X96/1CHxZkATXLd8uYxItGMNKKY+LDhI6ixM8V3sQZr7nNh6Go6pg2zF3+xEdxSm345g+s/L9pcbXOj50vAR2WFgNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783948491; c=relaxed/simple;
-	bh=1tWu0KQWbwbph6LljN7rPz1XWX/Vk43rUjVUgaYOyHk=;
+	s=arc-20240116; t=1783948518; c=relaxed/simple;
+	bh=21Hu/gpd6TFUb6itatnCWnRTVF/3SiTMng95i3hjDg0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=U19EUE5GxRatdCNKomO1IHTVrd7E5uT3moTaTpZIae1YDnzFOKdC0aHWIdGhW5piP4lf6nbcHPHG5hBhfdt7RI+Mwm1gZvbIfA2inEQPQUC8mHb/86dM6IBdfhVKhmDyJPY1OKCrmNUFai+3aLFlD7fJsipC2HqGeuSP12puycg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cK7wM9X9; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C70A01F000E9;
-	Mon, 13 Jul 2026 13:14:49 +0000 (UTC)
+	 Message-Id; b=jDb0ST5tSH8sc//zHN6wNbJzgM31j6WOoUxiw/wt3qB0rj+K8GnAFRMjDn6Iz3ppPCVXfyichzGTFNqDEwtvtotywb8IrrMvgbd7n72ToxrvRKo3Vnw90hR9gh5L2CLNDPhWZj1NpXQ8Y4/VsCRmE2pGws1EfQlj5mWQArBVJT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUiiLc+X; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D03C91F000E9;
+	Mon, 13 Jul 2026 13:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783948490;
-	bh=UnfMn/t6APs33Xf6KptP0TcehOf99PEEWmEOJdMAoIk=;
+	s=k20260515; t=1783948517;
+	bh=yIPm54EsmtgAE3C+2a8VTxMb/7ex2kTS+BsrtJpy0BQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cK7wM9X951XDEGifXQ2uAFyYv2cBP4gnajtz4xMwdVlxblj8izvxOn+KX0OcIMlGC
-	 qE8BJ3cIRefKWYTJKT5vTAqUTGscLBIY/Op4M4V+a5ANuoA0PtiRjXyZt7CeSRFGHZ
-	 ucwy77k0eqzOcy+19xm9U/fQTYuCeZyqoeLev967OdV18NC/TFT1hfKnfhf+5Bm2Cu
-	 MPiveEG3cWwa1Jg8/ba3Yu4EHsjVS70uq1uzJG0d64laoaE5iSmBZd4cCva3Vkilrj
-	 Bp7cszu15QCLHeojN5ErSChWhlXg2kCd/+FtlNdfrxyoC9P3vREDrsUhYNwnxi9Ohr
-	 Ck77vP/6CO3HA==
+	b=oUiiLc+XIc/opS4AVbJlrq8p16Fq1F0PuvDWpJ9O8wCvBvZdnp99HmjmW0OTNPMhK
+	 AWYfUmQ3R5zsZ3V09e9tgn8TwnncNpSIqU3rxeAwneqQ6fll3f2/TH5bXI6GTQdGKv
+	 hF2lySXyVi1ZrcGQeOAMhGfUjqA2hHyiV6s1IWBCRALbvJeDqao0FXuC7VaUkeiDf8
+	 duq6VHQ13t6aRBg3eVah8/mm8kJ2LHjPtgbZ51iRQQA+vsqyZfOPYaXjpDT84TGX6i
+	 KvjUTyc9deCoL/eoypnr067euUHUaVdVKeLNbGv/Njzn1onZZbSVa0D8b1O0BMAtL5
+	 8sPiCCr6QoRyA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v21 09/14] crypto: qce - Remove unused ignore_buf
+Subject: Re: [PATCH v21 07/14] crypto: qce - Cancel work on device detach
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
 Cc: Frank.Li@kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org
-In-Reply-To: <20260713-qcom-qce-cmd-descr-v21-9-bc2583e18475@oss.qualcomm.com>
+In-Reply-To: <20260713-qcom-qce-cmd-descr-v21-7-bc2583e18475@oss.qualcomm.com>
 References: <20260713-qcom-qce-cmd-descr-v21-0-bc2583e18475@oss.qualcomm.com>
- <20260713-qcom-qce-cmd-descr-v21-9-bc2583e18475@oss.qualcomm.com>
+ <20260713-qcom-qce-cmd-descr-v21-7-bc2583e18475@oss.qualcomm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Jul 2026 13:14:49 +0000
-Message-Id: <20260713131449.C70A01F000E9@smtp.kernel.org>
+Date: Mon, 13 Jul 2026 13:15:16 +0000
+Message-Id: <20260713131516.D03C91F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,7 +70,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -78,7 +78,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12392-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12393-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS(0.00)[m:bartosz.golaszewski@oss.qualcomm.com,m:Frank.Li@kernel.org,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -97,76 +97,96 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,smtp.kernel.org:mid,sashiko.dev:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lists.linux.dev:replyto,sashiko.dev:url,qualcomm.com:email,vger.kernel.org:from_smtp,smtp.kernel.org:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2B81474B82D
+X-Rspamd-Queue-Id: DAF0774B870
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Use-After-Free of DMA resources during device teardown due to inco=
-rrect devres ordering.
+- [High] Devres ordering introduces Use-After-Free and Mutex Use-After-Dest=
+roy vulnerabilities because the workqueue is canceled after its required re=
+sources (mutex and DMA channels) are freed.
+- [High] Terminating DMA and cancelling the workqueue during unbind without=
+ explicitly completing pending crypto requests causes callers to hang indef=
+initely.
 --
 
---- Patch [9]: [PATCH v21 09/14] crypto: qce - Remove unused ignore_buf ---
-commit 65a70a3ae148fcccff0fe900df224577ddcc1190
-Author: Bartosz Golaszewski <brgl@kernel.org>
+--- Patch [7]: [PATCH v21 07/14] crypto: qce - Cancel work on device detach=
+ ---
+commit 4cbda8145d4c325fc75ff4841164bf36bd06014c
+Author: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-crypto: qce - Remove unused ignore_buf
+crypto: qce - Cancel work on device detach
 
-This commit removes the unused ignore_buf field from qce_dma_data and
-relocates the QCE_IGNORE_BUF_SZ macro since it is only used within a
-single compilation unit.
+This commit introduces a devres action to clean up the workqueue on
+device detach. It moves the initialization earlier to ensure outstanding
+DMA transfers are terminated before the work is canceled.
 
-> diff --git a/drivers/crypto/qce/dma.c b/drivers/crypto/qce/dma.c
-> index 7ec9d72fd690f..d1daa229361aa 100644
-> --- a/drivers/crypto/qce/dma.c
-> +++ b/drivers/crypto/qce/dma.c
+Closes: https://sashiko.dev/#/patchset/20260427-qcom-qce-cmd-descr-v16-0-94=
+5fd1cafbbc%40oss.qualcomm.com?part=3D7
+
+> diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
+> index ac74f69914d61..b52a26ffff5ee 100644
+> --- a/drivers/crypto/qce/core.c
+> +++ b/drivers/crypto/qce/core.c
 [ ... ]
-> @@ -43,8 +45,6 @@ int devm_qce_dma_request(struct device *dev, struct qce=
-_dma_data *dma)
->  		goto error_nomem;
->  	}
+> @@ -226,6 +233,11 @@ static int qce_crypto_probe(struct platform_device *=
+pdev)
+>  	if (ret)
+>  		return ret;
 > =20
-> -	dma->ignore_buf =3D dma->result_buf + QCE_RESULT_BUF_SZ;
-> -
->  	return devm_add_action_or_reset(dev, qce_dma_release, dma);
+> +	INIT_WORK(&qce->done_work, qce_req_done_work);
+> +	ret =3D devm_add_action_or_reset(dev, qce_cancel_work, &qce->done_work);
 
 [Severity: High]
-Does this devres registration order create a use-after-free risk for
-dma->result_buf and the DMA channels during device unbind?
+Could this devres ordering introduce a use-after-free and mutex
+use-after-destroy during driver unbind?
 
-In drivers/crypto/qce/core.c:qce_crypto_probe(), the devres action to cancel
-the background workqueue (qce_cancel_work) is registered before the DMA
-resources are requested here.
+Because devres cleanup executes in LIFO order, registering qce_cancel_work()
+here before mutex and DMA initialization means it will execute last during
+cleanup.=20
 
-Because devres executes actions in reverse order, qce_dma_release() will run
-before the workqueue is actually canceled.
+When the driver unbinds, qce_dma_release() and mutex destruction will occur
+before cancel_work_sync() runs. If the worker thread qce_req_done_work() is
+scheduled concurrently, could it attempt to lock the destroyed mutex and use
+the already freed DMA channels and result buffers?
 
-During device unbind, qce_dma_release() frees the DMA resources:
-
-drivers/crypto/qce/dma.c:qce_dma_release() {
-	...
-	dma_release_channel(dma->txchan);
-	dma_release_channel(dma->rxchan);
-	kfree(dma->result_buf);
-}
-
-If the workqueue is actively processing requests or starts running before
-qce_cancel_work() executes, it will process the next crypto request in the
-queue and call qce_skcipher_async_req_handle().
-
-This function will then map the freed result_buf and attempt to use the alr=
-eady
-released DMA channels, which can lead to memory corruption or a crash.
-
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret =3D devm_qce_dma_request(qce->dev, &qce->dma);
+[ ... ]
+> diff --git a/drivers/crypto/qce/dma.c b/drivers/crypto/qce/dma.c
+> index 68cafd4741ad3..7ec9d72fd690f 100644
+> --- a/drivers/crypto/qce/dma.c
+> +++ b/drivers/crypto/qce/dma.c
+> @@ -13,6 +13,8 @@ static void qce_dma_release(void *data)
+>  {
+>  	struct qce_dma_data *dma =3D data;
 > =20
->  error_nomem:
+> +	dmaengine_terminate_sync(dma->txchan);
+> +	dmaengine_terminate_sync(dma->rxchan);
+
+[Severity: High]
+Will terminating the DMA transfers here cause callers to hang indefinitely?
+
+By aborting the active DMA transfer during unbind, the normal completion
+callback won't fire, so qce->done_work is not scheduled. The driver then
+cancels the workqueue via qce_cancel_work(), but it does not appear to
+explicitly complete the active request (qce->req) or drain qce->queue.
+
+Will callers waiting on these requests block forever when the device is
+unbound?
+
+>  	dma_release_channel(dma->txchan);
+>  	dma_release_channel(dma->rxchan);
+>  	kfree(dma->result_buf);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260713-qcom-qce-c=
-md-descr-v21-0-bc2583e18475@oss.qualcomm.com?part=3D9
+md-descr-v21-0-bc2583e18475@oss.qualcomm.com?part=3D7
 

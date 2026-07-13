@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-12412-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12413-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id dpKABfYcVWpbkAAAu9opvQ
-	(envelope-from <dmaengine+bounces-12412-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 19:14:30 +0200
+	id ZSmKEv4cVWpdkAAAu9opvQ
+	(envelope-from <dmaengine+bounces-12413-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 19:14:38 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEDE274DE90
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 19:14:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E9C5C74DE96
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 19:14:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=lW5FgOOZ;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12412-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12412-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=IwtdO9Bs;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12413-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12413-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A81553036386
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 17:09:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 46BEA30CC197
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Jul 2026 17:10:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22F41342539;
-	Mon, 13 Jul 2026 17:09:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD1BE343893;
+	Mon, 13 Jul 2026 17:10:17 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FC9340281;
-	Mon, 13 Jul 2026 17:09:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B6E340281;
+	Mon, 13 Jul 2026 17:10:16 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783962581; cv=none; b=Tum+8XIaitvD8BNVG2x6qjbkLqhfv/qlirtA8rxfn0nEWb6VNuywVkycTUr4TY8AT8XpfYU++52DQduQPdtyX/WVI2u/8CvJc0DyAJG2GqDtCqielHgY/gKbyrGvw4YwDM+dumzMmOFkEfer6uuYBPR+Ye4Bq/yp/84sczb5Te0=
+	t=1783962617; cv=none; b=oMc6LYm7PM4VGIxQt7mcuZi9w5J8922wbUYSrQmOGp2LgEQ0aKTGgUBuesIxD6lXf/p7u/dDx27HrFxWAOP183NVEkY1t/N425UGs12gOrJQFmkrpVBGxxKax4K53cA66tULknr9h3XlB9GCIhZAmdZkZx6nsrIE/bwOY3D0AJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783962581; c=relaxed/simple;
-	bh=hcOlYgicv5iaaTCZdSXw4LLy6DafP7i3HBBJ+Bul9bo=;
+	s=arc-20240116; t=1783962617; c=relaxed/simple;
+	bh=TVbMNwW7iJfNjR9gOJQk5nDFVvJswloSv+iZEN9uFtE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=iK4i4xArE2ted7v0b0CwihRjpkNxUHLlLlv24d+7ImpmW93sqgt5T5UBw7cg36H2H/fZOiyq/o3W/KiXjTl4nMelO9P69JQ2cQWEXB+l1sjsuhP3PSZ5UnpO2JqKfLPXu3TZk3XtiiJ26y6I3uL63KS0f3+ZFSSXlEd4tF5SO9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lW5FgOOZ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A44A1F000E9;
-	Mon, 13 Jul 2026 17:09:39 +0000 (UTC)
+	 Message-Id; b=ju/uhlUYgpm2rlS0/ltpAMHUdlwOATn4BDsqXH3z3SfLZcKiEQhmgWJu8eOmprFFFUdODRLgDNxI15wBXLzORQ4fdetm7mi2AhCpMXWQGoDuMFzEzKuG9qk5u/oQ0Zq/tHb3BlsjuTLoqbjxa7Rf525VGEtjUZ3SNo4YPyqknN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IwtdO9Bs; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7FB31F000E9;
+	Mon, 13 Jul 2026 17:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783962579;
-	bh=hcOlYgicv5iaaTCZdSXw4LLy6DafP7i3HBBJ+Bul9bo=;
+	s=k20260515; t=1783962616;
+	bh=TVbMNwW7iJfNjR9gOJQk5nDFVvJswloSv+iZEN9uFtE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lW5FgOOZSFpvOgGBXTZBO0JHQQWAlFI3fqhXWPAGDD5VcofBa/mGWeG5DOzv32DFX
-	 wHgyV5VG+867mDBEoFmUtt+3B8xgKN3JwyZzalYB07rjsKhF3Xz3yRQRMfOvJG/27P
-	 NRaBwo01bRJqhijKwQ7LzpPYDZzhw9KAyPUExtmEDD/BYfrE2QVVUqmTpjnIP8Sxsi
-	 4jKk6ObFWtGaXujyQKtVkB8Jf/KRszuznvguephBOky83f07+slOVR8MMLFQnTW9UQ
-	 9+FaNT35SXyoVseGjPRUL22kYTGwCtp80q3nbobPBbQGGuJxwHThEVNJmWAAu+6oh3
-	 a5nJU7zWOU9kw==
+	b=IwtdO9Bs2PsJ+JUf9nvmqcigP90Qk68oQUsacn2i3Lp4UpJB6/yd+P0TeIl4/ocA3
+	 dE1p381UKkiKbin+t4AjzSKhbtv/rDV2qgPsl3SAgztZykL1ZNVv3JLOclZNqNr2p5
+	 J9YAlwDoLywkYDuoRZUvrtLEoyCCtQmojXvTiamFEEv9Z+vPBoLDIEq6EtWqkrvUt/
+	 usUpx0oiIgYiGOEXS9P7ST20K7l/bkfYNus5cIhy2Rc7S8UILWc5g4CGvzssHGQHhs
+	 4Bcevg0sTRLZo4d+uKEptRwhzAB9X4fFoQiKkNuIFJDDFWoUGICfJspPiMzek4purj
+	 dLhBOuN4NdNwQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 05/10] dmaengine: dw-edma: Add helper
- dw_(edma|hdma)_v0_core_ch_enable()
+Subject: Re: [PATCH v7 04/10] dmaengine: dw-edma: Pass down dw_edma_chan to
+ reduce one level of indirection
 Reply-To: sashiko-reviews@lists.linux.dev
 To: Frank.Li@oss.nxp.com
-Cc: Frank.Li@kernel.org, linux-pci@vger.kernel.org, vkoul@kernel.org, imx@lists.linux.dev, dmaengine@vger.kernel.org
-In-Reply-To: <20260713-edma_ll-v7-5-6fb7498c901e@nxp.com>
+Cc: Frank.Li@kernel.org, imx@lists.linux.dev, linux-pci@vger.kernel.org, vkoul@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260713-edma_ll-v7-4-6fb7498c901e@nxp.com>
 References: <20260713-edma_ll-v7-0-6fb7498c901e@nxp.com>
- <20260713-edma_ll-v7-5-6fb7498c901e@nxp.com>
+ <20260713-edma_ll-v7-4-6fb7498c901e@nxp.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Jul 2026 17:09:39 +0000
-Message-Id: <20260713170939.8A44A1F000E9@smtp.kernel.org>
+Date: Mon, 13 Jul 2026 17:10:15 +0000
+Message-Id: <20260713171015.C7FB31F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -75,11 +75,11 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-12412-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12413-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,valinux.co.jp:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:email,amd.com:email];
-	FORGED_RECIPIENTS(0.00)[m:Frank.Li@oss.nxp.com,m:Frank.Li@kernel.org,m:linux-pci@vger.kernel.org,m:vkoul@kernel.org,m:imx@lists.linux.dev,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,vger.kernel.org:from_smtp,valinux.co.jp:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amd.com:email,smtp.kernel.org:mid];
+	FORGED_RECIPIENTS(0.00)[m:Frank.Li@oss.nxp.com,m:Frank.Li@kernel.org,m:imx@lists.linux.dev,m:linux-pci@vger.kernel.org,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -104,15 +104,13 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FROM_NO_DN(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AEDE274DE90
+X-Rspamd-Queue-Id: E9C5C74DE96
 
 > From: Frank Li <Frank.Li@nxp.com>
 >=20
-> Move the channel-enable logic into a new helper function,
-> dw_(edma|hdma)_v0_core_ch_enable(), in preparation for supporting dynamic
-> link entry additions.
->=20
-> No functional changes.
+> Some helper functions do not use any information from dw_edma_chunk, so
+> passing a dw_edma_chan pointer directly avoids an unnecessary level of
+> pointer dereferencing and simplifies data access.
 >=20
 > Tested-by: Koichiro Den <den@valinux.co.jp>
 > Tested-By: Devendra Verma <devendra.verma@amd.com>
@@ -122,6 +120,6 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260713-edma_ll-v7=
--0-6fb7498c901e@nxp.com?part=3D5
+-0-6fb7498c901e@nxp.com?part=3D4
 
 

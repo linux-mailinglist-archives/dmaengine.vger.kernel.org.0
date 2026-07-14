@@ -1,64 +1,64 @@
-Return-Path: <dmaengine+bounces-12451-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12452-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id IjyfKGC5VWoOsAAAu9opvQ
-	(envelope-from <dmaengine+bounces-12451-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 06:21:52 +0200
+	id twiBEGG5VWoPsAAAu9opvQ
+	(envelope-from <dmaengine+bounces-12452-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 06:21:53 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 054CF750CBB
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 911D1750CBC
 	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 06:21:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=TJgue70K;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12451-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12451-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=XsAXIDb8;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12452-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12452-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C4D233040DA3
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 04:21:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3D2783041795
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 04:21:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D0612848BE;
-	Tue, 14 Jul 2026 04:21:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F8932C375A;
+	Tue, 14 Jul 2026 04:21:51 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B7C26FD97
-	for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2026 04:21:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1411277007
+	for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2026 04:21:49 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784002910; cv=none; b=cCt1l99+1EiVm1/kUR6i8HyOaDaBakfEKqJW7hV5jq3Oo43asMD17elbTkEd12u8Q3DMDoJQyuMUZyDKTyOmwbjsoWfFRekK4J3fMrbpA0o3RK2GOov0vBaim3d9XSK+PSxYcxh5MVpwP1lj7edsLGqjeJG1qx8Wan2wr2u6fw4=
+	t=1784002910; cv=none; b=PGzsz4P0to83f7unQ25TxTwWC8DnUZxnXljrYfw/CO1h+Ir6eK4KnaaHnfhDLe7zwKPbTK5UTdg4lfyqBuPNb5yo1DyBEqcknIhdOgjzS6NmJTJH+TgE8nN3MUVD8BGAC8AQXp3kSch6R2YYdw2O9Ct+Ubb+Ca7NGEniOZSV2Ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1784002910; c=relaxed/simple;
-	bh=ZvI0MIGmDJbwgSRQLjXRlS53mk33v3+KpXL7Ap98yhY=;
+	bh=sva238LVPDhSVQznaD+l+V/lLqTr1lYOnfNe/H7RDlI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NtIjZU8SSU2sBjBzUmf80U/0wrxmk49YPmPCKCi1+lc2Xd1Aul6HpN4Sj+Ww5Fh+PSP3dfSdU7oneK8woqNA8Kz/rZ1KXLwZsAEZMONVHI8Bq128VZSNuk7vZJFVZQCPuboHkr8ePtwvHcaeKmrcfZq8jlIevefkH3lnfZmVq0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJgue70K; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7484D1F000E9;
-	Tue, 14 Jul 2026 04:21:48 +0000 (UTC)
+	 Message-Id; b=l1ZDwcCLz3qPrVsE4iVplmS8ffH1SwP62QQPAgaOy4hBnfpNtTgVNqTaLIEbQAOoDViAqq1umFhXB5uorqmfEbQFu+rmJMF/muqyYYgp02iw21iSRzYXRjfETW8OTECIzfDmWjPKYfxhsaBAphI5P2WGRU1VGNVkawitGknnPi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XsAXIDb8; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F3091F00A3A;
+	Tue, 14 Jul 2026 04:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784002908;
-	bh=ZKagY4kpE58TAR8jWzDctMXII9x0SCAf95rVIWGuiXs=;
+	s=k20260515; t=1784002909;
+	bh=3Tf91fXPLKeJF9t4862QXhQAk5jhgSbE4kqnk8evttw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TJgue70K/Pop+iASjuT/ebuiR55JqHFWdsNNACwkr2xPG0UlTcdoZ5cOsJbrZ0SxZ
-	 RYv2WdjytNCNt9S1aRdnQqp3KlbYFds0gxDM3VMrEapb/rC8v1ZCf+ddVex1/Xyo1T
-	 uXI5hFICeff6WxeShoDTFSTo3WbNUYX3MGGHD5be0c8zEq+xoJwIK3naHke0g1S9cB
-	 pPYLIVGbgFogiGDuC3+NA8FwtUTvbGs0A1yVmkakVk3AyTdiNbxpGaNPRVKUGSAtRr
-	 y0i+wqGo8JRwJ+y5KuvXRyG0xKn9FVc3G0QaT11XMI+M8meMXOVPqVphUkfhNmpq95
-	 XhikGaDkcPEgw==
+	b=XsAXIDb80+sSxS9liiKUVHbsEYXu5n5cq1ds1sa5aJpuV/GI2AlWr8sVG52dnjBqx
+	 gS+ojvfB2sji/Gxb/4AO9tJPa5ZVmsl3TQn2hdsObT/sLlw106dEQ78VUs7Sk1kMmM
+	 crOQ5ctcHW7t9SYyQbOChHhZZkSaHkMy9osrrouP0wrwgRA2jQN9DWcLrXI+FAAN9M
+	 fH6DEj1hzd/Zi92nt8uFQGLr+MC+E9N5UnpitckmNF0BaveDj+oBWRv9jeWoZ9Lxxp
+	 nIFL+DpM39wXaNVpl4Y9zHXPYdBC7lK/tpfpvLZLSlyinwxmbHvgnndabbuQ6lpMGX
+	 WKTMvP/pfY2Pw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/4] dmaengine: idxd: assign all engines to group 0 in
- IAA defaults
+Subject: Re: [PATCH 3/4] crypto: iaa - avoid counting fallback decompression
+ bytes
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vinicius Costa Gomes" <vinicius.gomes@intel.com>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260713-iaa-crypto-fixes-zswap-v1-1-65cac23c684d@intel.com>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260713-iaa-crypto-fixes-zswap-v1-3-65cac23c684d@intel.com>
 References: <20260713-iaa-crypto-fixes-zswap-v1-0-65cac23c684d@intel.com>
- <20260713-iaa-crypto-fixes-zswap-v1-1-65cac23c684d@intel.com>
+ <20260713-iaa-crypto-fixes-zswap-v1-3-65cac23c684d@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Tue, 14 Jul 2026 04:21:48 +0000
-Message-Id: <20260714042148.7484D1F000E9@smtp.kernel.org>
+Message-Id: <20260714042149.5F3091F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -71,7 +71,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -79,9 +79,9 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12451-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12452-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:vinicius.gomes@intel.com,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:vinicius.gomes@intel.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -98,188 +98,109 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,vger.kernel.org:from_smtp,lists.linux.dev:replyto,intel.com:email,smtp.kernel.org:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url,lists.linux.dev:replyto,intel.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 054CF750CBB
+X-Rspamd-Queue-Id: 911D1750CBC
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] After a device FLR (Function Level Reset), group->num_engines and =
-group->num_wqs are not correctly restored, leading to sysfs breakage.
-- [High] Double free of `engine`, `wq`, and related structures in initializ=
-ation error paths and internal cleanup.
-- [High] Lockless modifications to engine and wq groups via sysfs expose a =
-TOCTOU NULL pointer dereference in sysfs show functions and cause race cond=
-itions on configuration state.
-- [High] Unchecked array accesses to `idxd->wqs[0]` and `idxd->groups[0]` w=
-hen capability registers report 0 for `max_wqs` or `max_groups`.
+- [High] Pre-existing DMA API violation: software fallback (`deflate_generi=
+c_decompress`) writes to the destination scatterlist while it is still mapp=
+ed for DMA (`DMA_FROM_DEVICE`), leading to silent data corruption when unma=
+pped if SWIOTLB or confidential computing is active.
 --
 
---- Patch [1]: [PATCH 1/4] dmaengine: idxd: assign all engines to group 0 i=
-n IAA defaults ---
-commit 62dd36d5ea20980d4a54ca9e9b685288c6ec2b65
+--- Patch [3]: [PATCH 3/4] crypto: iaa - avoid counting fallback decompress=
+ion bytes ---
+commit 589e7e250edf8839b3b071db5475eb3581825d01
 Author: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Subject: dmaengine: idxd: assign all engines to group 0 in IAA defaults
 
-The IAA device defaults only assigned engine 0 to group 0, leaving engines 1
-through max_engines-1 unassigned. This commit assigns all available engines
-to group 0 so that the full hardware parallelism is used out of the box
-without requiring manual setup.
+crypto: iaa - avoid counting fallback decompression bytes
 
-> diff --git a/drivers/dma/idxd/defaults.c b/drivers/dma/idxd/defaults.c
-> index 2bbbcd02a0dac..26ebfa2ca1448 100644
-> --- a/drivers/dma/idxd/defaults.c
-> +++ b/drivers/dma/idxd/defaults.c
-> @@ -8,6 +8,7 @@ int idxd_load_iaa_device_defaults(struct idxd_device *idx=
-d)
->  	struct idxd_engine *engine;
->  	struct idxd_group *group;
->  	struct idxd_wq *wq;
-> +	int i;
-> =20
->  	if (!test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
->  		return 0;
+When decompression falls back to deflate-generic after an analytics
+error, the request no longer completes through IAA. Move decompression
+byte accounting into the successful IAA completion path in both the
+synchronous and asynchronous flows so decomp_bytes only reflects bytes
+actually processed by IAA.
+
+> diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/=
+intel/iaa/iaa_crypto_main.c
+> index fb154959c2aa8..8f68b1478476e 100644
+> --- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
+> +++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+> @@ -1084,15 +1084,17 @@ static void iaa_desc_complete(struct idxd_desc *i=
+dxd_desc,
+>  		}
+>  	} else {
 
 [Severity: High]
-This is a pre-existing issue, but can this function blindly access idxd->wq=
-s[0]
-and idxd->groups[0] if the hardware capability registers report 0 for max_w=
-qs
-or max_groups?
+This is a pre-existing issue, but does calling deflate_generic_decompress()
+in the error path just above this block violate the DMA API?
 
-If an emulated or malfunctioning device reports num_wqs =3D=3D 0, the arrays
-might be allocated with 0 bytes, returning the ZERO_SIZE_PTR.
+In iaa_desc_complete(), if check_completion() fails with IAA_ANALYTICS_ERRO=
+R,
+the driver falls back to software decompression:
 
-drivers/dma/idxd/defaults.c:idxd_load_iaa_device_defaults() {
+drivers/crypto/intel/iaa/iaa_crypto_main.c:iaa_desc_complete() {
     ...
-    if (!test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
-        return 0;
-
-    wq =3D idxd->wqs[0];
+    ret =3D deflate_generic_decompress(ctx->req);
+    ...
+err:
+    dma_unmap_sg(dev, ctx->req->dst, sg_nents(ctx->req->dst), DMA_FROM_DEVI=
+CE);
     ...
 }
 
-Could this dereference the ZERO_SIZE_PTR and cause an out-of-bounds page fa=
-ult?
+Because the scatterlist is still mapped for DMA, won't dma_unmap_sg()
+overwrite the CPU's decompression work with the bounce buffer contents
+if SWIOTLB or confidential computing is active?
+
+>  		ctx->req->dlen =3D idxd_desc->iax_completion->output_size;
+> +
+> +		if (!ctx->compress) {
+> +			update_total_decomp_bytes_in(ctx->req->slen);
+> +			update_wq_decomp_bytes(iaa_wq->wq, ctx->req->slen);
+> +		}
+>  	}
 
 [ ... ]
 
-> -	engine =3D idxd->engines[0];
-> -
-> -	/* set engine group to 0 */
-> -	engine->group =3D idxd->groups[0];
-> -	engine->group->num_engines++;
-> +	/* assign all engines to group 0 */
-> +	for (i =3D 0; i < idxd->max_engines; i++) {
-> +		engine =3D idxd->engines[i];
-> +		engine->group =3D group;
-> +		group->num_engines++;
-> +	}
-> =20
->  	return 0;
->  }
+> @@ -1475,16 +1477,16 @@ static int iaa_decompress(struct crypto_tfm *tfm,=
+ struct acomp_req *req,
+>  		}
+>  	} else {
 
 [Severity: High]
-This is a pre-existing issue, but does a function level reset fail to prope=
-rly
-restore group->num_engines and group->num_wqs?
+This is a pre-existing issue, but is there a similar DMA API violation here?
 
-When a reset occurs, the state is cleared and the counters are zeroed:
+In iaa_decompress(), the synchronous path executes the software fallback
+and returns to the caller:
 
-drivers/dma/idxd/device.c:idxd_groups_clear_state() {
-    for (i =3D 0; i < idxd->max_groups; i++) {
-        group =3D idxd->groups[i];
-        memset(&group->grpcfg, 0, sizeof(group->grpcfg));
-        group->num_engines =3D 0;
-        group->num_wqs =3D 0;
-        ...
-    }
+drivers/crypto/intel/iaa/iaa_crypto_main.c:iaa_decompress() {
+    ...
+    ret =3D deflate_generic_decompress(req);
+    ...
+out:
+    return ret;
 }
 
-However, when restoring the configuration, the pointers are restored but the
-counters are not updated:
+Does this mean the caller will subsequently unmap the scatterlist and
+unknowingly overwrite the fallback's data when SWIOTLB is active?
 
-drivers/dma/idxd/init.c:idxd_device_config_restore() {
-    for (i =3D 0; i < idxd->max_engines; i++) {
-        struct idxd_engine *saved_engine, *engine;
-
-        saved_engine =3D idxd_saved->saved_engines[i];
-        engine =3D idxd->engines[i];
-
-        engine->group =3D saved_engine->group;
-
-        kfree(saved_engine);
-    }
-}
-
-If an administrator subsequently unassigns an engine via sysfs, could
-engine->group->num_engines decrement below zero, resulting in -1 and causing
-permanent -EINVAL for future configuration?
-
-[Severity: High]
-This is a pre-existing issue, but does this cleanup path double-free the
-engine structures?
-
-When initialization fails, put_device() is called which triggers the release
-callback:
-
-drivers/dma/idxd/sysfs.c:idxd_conf_engine_release() {
-    struct idxd_engine *engine =3D confdev_to_engine(dev);
-
-    kfree(engine);
-}
-
-Immediately after this returns, the cleanup function also frees the engine:
-
-drivers/dma/idxd/init.c:idxd_clean_engines() {
-    ...
-        conf_dev =3D engine_confdev(engine);
-        put_device(conf_dev);
-        kfree(engine);
-    ...
-}
-
-Can this lead to a use-after-free or double-free corruption?
-
-[Severity: High]
-This is a pre-existing issue, but is there a time-of-check to time-of-use r=
-ace
-condition when reading engine groups via sysfs?
-
-The sysfs show function iterates through the engines and performs a lockless
-check followed by a dereference:
-
-drivers/dma/idxd/sysfs.c:group_engines_show() {
-    ...
-        if (!engine->group)
-            continue;
-
-        if (engine->group->id =3D=3D group->id)
-    ...
-}
-
-Concurrently, the store function modifies this state locklessly:
-
-drivers/dma/idxd/sysfs.c:engine_group_id_store() {
-    ...
-        if (engine->group) {
-            engine->group->num_engines--;
-            engine->group =3D NULL;
-        }
-    ...
-}
-
-If a user writes -1 to unassign an engine while another thread is reading,
-could engine->group become NULL after the check but before the dereference,
-causing a NULL pointer dereference?
+>  		req->dlen =3D idxd_desc->iax_completion->output_size;
+> +
+> +		/* Update stats */
+> +		update_total_decomp_bytes_in(slen);
+> +		update_wq_decomp_bytes(wq, slen);
+>  	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260713-iaa-crypto=
--fixes-zswap-v1-0-65cac23c684d@intel.com?part=3D1
+-fixes-zswap-v1-0-65cac23c684d@intel.com?part=3D3
 

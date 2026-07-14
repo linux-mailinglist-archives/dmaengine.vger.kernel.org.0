@@ -1,56 +1,57 @@
-Return-Path: <dmaengine+bounces-12513-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12510-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id IdO5CWWoVmpH/wAAu9opvQ
-	(envelope-from <dmaengine+bounces-12513-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 23:21:41 +0200
+	id mfxEDhyoVmov/wAAu9opvQ
+	(envelope-from <dmaengine+bounces-12510-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 23:20:28 +0200
 X-Original-To: lists+dmaengine@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80091758F2E
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 23:21:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E6E7758EFD
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 23:20:27 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=deltatee.com header.s=20200525 header.b=YbVMRSmn;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12513-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12513-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=deltatee.com header.s=20200525 header.b=tPOku6m9;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12510-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12510-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=deltatee.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D67273170244
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 21:20:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6D97B301FF9A
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 21:20:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D04B142BE99;
-	Tue, 14 Jul 2026 21:20:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF8063F5BD8;
+	Tue, 14 Jul 2026 21:20:23 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F96C429CF2;
-	Tue, 14 Jul 2026 21:20:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4022EB5B8;
+	Tue, 14 Jul 2026 21:20:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784064026; cv=none; b=f7lcn4XEufCS+HRy6LluF4irai7zhzRsyXihbxmlFiMU8XzNw8MdGEbHUF083FmFUerQqz3sK1ZsXvUjUvwPDJyAmkPLD4Z0z+M0UZpO1NxkWVNkA77m8sVz88sSfZU7K9b8Q9q7f5Ol95GEWnI0lOb6BeP/Y339ckyhkcZV2z0=
+	t=1784064023; cv=none; b=Cvh/yQ0gk6nVO/JHOQg4D8rrBq0IYoKPOZYmt0ZX1M2iqwdBESvVoAWolLUOlOgdo0eFke7qdXhtrG2tI4xsBlvMm06CcFq7P8sOrG3VPXJWGNIEp+Ms7sGsRidu9Gr/wDV5eonqFH4msrgiSdaXg88cV9LScMy6BVFgLTiIZks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784064026; c=relaxed/simple;
-	bh=/X1H+k2YxZZWlyV3x4QI4UZPgomuKoqSmyFjtJcNupk=;
-	h=From:To:Cc:Date:Message-ID:MIME-Version:Subject; b=W+fj5cR+ckDcwLXRZYl9RIAqwd08YbZlZ95NnJbzyPTQd3cu8Isdskdo+P7Lwuz9GQpwM2CTrtZprUKh54nJx6prCJi29OGW8eSXs74U5hnPVgsUhU/+6bWS/zBPB94W6sDVIFoOorIYw2tkCm/TebajNuEEROJtZdqv7ydoBuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=YbVMRSmn; arc=none smtp.client-ip=204.191.154.188
+	s=arc-20240116; t=1784064023; c=relaxed/simple;
+	bh=kNS6zKA1ZHEOs+HPsSz0FF+VoL2iShCxzmgKSvSke9A=;
+	h=From:To:Cc:Date:Message-ID:In-Reply-To:References:MIME-Version:
+	 Subject; b=ixFPnMsvkkpKMqmQHco27EuSrnSl5zLhcGilc3GSTHbp3FYYh2y9tnRF3g7JubLBECUthsSRzTCCR79lEAO8GMPe540OUO5fSdS+DjePcrB3ZE3+Dm+/mNINlnqceHGKy6NXYOs6GxabbEbq4b+peD17dvP8qHUvChWvPZGfrXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=tPOku6m9; arc=none smtp.client-ip=204.191.154.188
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-ID:Date:Cc:To:From
-	:references:content-disposition:in-reply-to;
-	bh=rFUhiFfx0i2Cwm3JEEH4ABXaQvgSg13H3UWRN2dUQvQ=; b=YbVMRSmn97vwCjVrjQceuKrIox
-	KVd+4ZzawoIe+Gv8msfE0q72zgHLkyW+qH8olbsDqeZzfMgR+U32EshiQird6ZSZl848LlRbMKTIl
-	LD91t6KKcSWRCyaKck2HlbhNtBludVSw8WNJzgk8/VUjhBtfxAtI1e86lJvNTrp1ir9aMTwGk7VJl
-	i2DH/MxsrvPtcERmKn3x/xcbHXLOO7sVG2ecSTPNu75kbuhOEFaJA18piVEIF6aTdruQWS4mAzrqA
-	74RxJKcgSjjhcE7RgRHt3aCZfk1PCj93QCEq83ICuaytU+7xZuq9aKK9pNR7v0/OiXTd0I7+g3Sqn
-	0I4GSvKA==;
+	d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Cc:To:From:content-disposition;
+	bh=toZEwMfCDeyvIyQAWQUFhvL7a4ZEaRICIBYlWYODutU=; b=tPOku6m9k6oK9wKQ4f2YvISvkj
+	XOzxCxJmcsjAr5lGCStHdG9wRj36hPVgphTCNmDInxkNic2sjRNZYc6yFh3j0LYzZ23G25G6TjXc1
+	/K7MzNrnIJcGc0ZavEVlkX0YjkVTgdoM6bDThn5C3WK9o5IVChL354yJUz8IDN+voW1WdBsxPj9ja
+	kJfxUGvQay/bquOLj9uzfTXuhUiLkXe7DK/hD4bKlFnqf3xueiGJo3x8iTBRBL/LCkIG4H7gciPtV
+	HiqFIFlTO2r8q34HIAPwjUzqJzSDUca2OROQtD7JI51sefp0z79pQ9HgqL58jK7uSOnxv21gONU6Z
+	8RfCENQQ==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
 	by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.98.2)
 	(envelope-from <gunthorp@deltatee.com>)
-	id 1wjkY3-00000006f2P-14u5;
-	Tue, 14 Jul 2026 15:20:18 -0600
+	id 1wjkY3-00000006f2Q-14ho;
+	Tue, 14 Jul 2026 15:20:15 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.98.2)
 	(envelope-from <gunthorp@deltatee.com>)
-	id 1wjkY1-00000000xzl-2uU9;
+	id 1wjkY1-00000000xzo-3erv;
 	Tue, 14 Jul 2026 15:20:13 -0600
 From: Logan Gunthorpe <logang@deltatee.com>
 To: linux-kernel@vger.kernel.org,
@@ -61,9 +62,11 @@ To: linux-kernel@vger.kernel.org,
 Cc: Frank Li <Frank.li@nxp.com>,
 	Kelvin Cao <kelvin.cao@microchip.com>,
 	Logan Gunthorpe <logang@deltatee.com>
-Date: Tue, 14 Jul 2026 15:20:07 -0600
-Message-ID: <20260714212010.230606-1-logang@deltatee.com>
+Date: Tue, 14 Jul 2026 15:20:08 -0600
+Message-ID: <20260714212010.230606-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260714212010.230606-1-logang@deltatee.com>
+References: <20260714212010.230606-1-logang@deltatee.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -75,7 +78,7 @@ X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, bhelgaas@google.com, Frank.li@nxp.com, kelvin.cao@microchip.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Level: 
-Subject: [PATCH v1 0/3] switchtec: add new device IDs
+Subject: [PATCH v1 1/3] dmaengine: switchtec-dma: Add PCI1008 device ID
 X-SA-Exim-Version: 4.2.1 (built Sun, 23 Feb 2025 07:57:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 X-Rspamd-Action: no action
@@ -91,7 +94,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12513-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12510-lists,dmaengine=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:bhelgaas@google.com,m:Frank.li@nxp.com,m:kelvin.cao@microchip.com,m:logang@deltatee.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[logang@deltatee.com,dmaengine@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -109,39 +112,29 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,deltatee.com:from_mime,deltatee.com:dkim,deltatee.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 80091758F2E
+X-Rspamd-Queue-Id: 7E6E7758EFD
 
-This little patch set adds some new device IDs for switchtec hardware
-to the PCI driver, the DMA driver and the PCI quirk needed for NTB.
+Add the PCI1008 device ID for switchtec-dma.
 
-I originally included this in a patchset I'm working on for
-switchtec-dma but the Sashiko bot reminded me I need to add it to the
-PCI management device and the quirk used for NTB. So I've respun three
-patches here.
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/dma/switchtec_dma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'm open to options, but I might suggest if everyone is okay with it
-these three patches could just go through the PCI tree together.
-
-These three patches are based on v7.2-rc3.
-
-Thanks,
-
-Logan
-
-Logan Gunthorpe (3):
-  dmaengine: switchtec-dma: Add PCI1008 device ID
-  PCI/switch: switchtec: Add PCI1008 device ID
-  PCI: Add PCI1008 to switchtec NTB DMA alias quirk
-
- drivers/dma/switchtec_dma.c    | 1 +
- drivers/pci/quirks.c           | 1 +
- drivers/pci/switch/switchtec.c | 1 +
- 3 files changed, 3 insertions(+)
-
-
-base-commit: a13c140cc289c0b7b3770bce5b3ad42ab35074aa
+diff --git a/drivers/dma/switchtec_dma.c b/drivers/dma/switchtec_dma.c
+index 3ef928640615..02083e3f6ebe 100644
+--- a/drivers/dma/switchtec_dma.c
++++ b/drivers/dma/switchtec_dma.c
+@@ -1424,6 +1424,7 @@ static const struct pci_device_id switchtec_dma_pci_tbl[] = {
+ 	SW_ID(PCI_VENDOR_ID_EFAR,      0x1004), /* PCI1004 16XG4 */
+ 	SW_ID(PCI_VENDOR_ID_EFAR,      0x1005), /* PCI1005 16XG4 */
+ 	SW_ID(PCI_VENDOR_ID_EFAR,      0x1006), /* PCI1006 16XG4 */
++	SW_ID(PCI_VENDOR_ID_EFAR,      0x1008), /* PCI1008 16XG4 */
+ 	{0}
+ };
+ MODULE_DEVICE_TABLE(pci, switchtec_dma_pci_tbl);
 -- 
 2.47.3
 

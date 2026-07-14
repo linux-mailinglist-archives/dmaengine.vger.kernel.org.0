@@ -1,248 +1,209 @@
-Return-Path: <dmaengine+bounces-12466-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12468-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id zlSmOhvtVWqswAAAu9opvQ
-	(envelope-from <dmaengine+bounces-12466-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 10:02:35 +0200
+	id N0szFIDuVWodwQAAu9opvQ
+	(envelope-from <dmaengine+bounces-12468-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 10:08:32 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0F5B75225B
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 10:02:30 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33DD775230B
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 10:08:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Vd3Tpbkr;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12466-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-12466-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20201202 header.b=c+dX6Hqh;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12468-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12468-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0979430160E8
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 08:02:22 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2DEFB301F6CC
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 08:08:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D91F13B8922;
-	Tue, 14 Jul 2026 08:02:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B9283F6C24;
+	Tue, 14 Jul 2026 08:08:27 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8387D372B45;
-	Tue, 14 Jul 2026 08:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5923F0AA0;
+	Tue, 14 Jul 2026 08:08:26 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784016138; cv=none; b=Dn+StMtKXsWUaTmW6w479qmUhP1KrRuemTX0NHfoTq6Z646oym2gBn1YoNvxjPqWrL3V+AgsCS3Rydr9jFkmDSWAu4qbLN9TGeoUEbabY/ICTPQi+6gWLBtCyv9lPvBJ3FJYizNUeuybBxrAXwmupAZx+HFGjEri7s/K4AZyWAA=
+	t=1784016507; cv=none; b=porR1LlZSZIcQ8eQuar2spy31tUQfmFO2UHQ/A3IOFRdKSQqU2aZO8oZULf1LsSg7j1Ur3aQPghlgK5AlNTBXeuE2vxJwbUcOBAa+BYlkiJ7sskobxMqLWzCGgUt5PIFKcugOTBFXhgwvpBsYWCaE3V72FaTfoEHLhEHlmKoBio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784016138; c=relaxed/simple;
-	bh=Lcf4nKR26voolH2pfIkoDtL1N08ZRtyep7I475jkkXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X1ulCl74wvOALz39PwDbgmC/yKVPCfVCSk9v3vhge/0Vk9FywcQgzd++E5PJ56KzEoHje49p+EBVgzaPMQPnoKPfQh0ArzkzORszSknm/xPRzAZn64I/kS1EmfRCG6TOWjUt1deH4SIC5cc+KHBuaFSVeaGvc+LCFDCH6g83/Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vd3Tpbkr; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED48E1F000E9;
-	Tue, 14 Jul 2026 08:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784016137;
-	bh=TrIeJmVXMyc9vJtT76XLafOEKO7HH8hJhTX0Einc3GE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Vd3Tpbkrp7xoeJE2wnGMrsPG9DytBnCImQpTEpa970Cm09wK91/Z0Li+4MEj5twyV
-	 GfxLsdjO9wMaMlGVpMNVPrO4INwH9uX5v+tD4cYdJfFeRtwUmPbEXL0F1QIa1umcWt
-	 gHX9JG39Kj8Y8DBeOEeGsu2Kso5XUuoPRekl6XT65PxeqNCMlrccIW5D7up7GVAmp6
-	 O7BE7m8NPhOu0iV7d9K8TnKjjRHMT0mPD7GDhMLLt2K2JGlSX8D+VpkxQhz97OU6BY
-	 04aztGwuA+g223Auj/938ojj64nat8n74JwevXf9EtIylorkVtEi2e4x4hViiM22G1
-	 2xKELEYO414Pw==
-Date: Tue, 14 Jul 2026 10:02:10 +0200
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: 
-	Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org>, vkoul@kernel.org, linux-pci@vger.kernel.org, 
-	dmaengine@vger.kernel.org, Frank.Li@kernel.org
-Subject: Re: [PATCH 2/3] bus: mhi: ep: Add mhi_cntrl->flush_async() callback
- to flush the async read/write
-Message-ID: <dbjdfjrpci2wwpf7lcyqhwbkm6amdsxfbirrb5metqau4keui6@o33fswugtxjp>
-References: <20260629-mhi-ep-flush-v1-0-714e0d56e87c@oss.qualcomm.com>
- <20260629-mhi-ep-flush-v1-2-714e0d56e87c@oss.qualcomm.com>
- <20260629085917.350211F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1784016507; c=relaxed/simple;
+	bh=0kjoSrXOirxQ0MVKjWZxUdN6zn6jSvd2UsDyLLOSTKY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cCn1cdAh+FyF1cDQOX7/DLO1OODzu2H6a0cKzhKSju7TCWxbEjj/xmU0Tkked0qf+nm24vhvQ9eITRjRJJJ3X1jsOhA1S7PyqsoZhaT9/vBfUMx1eBig1rioV6cykKt85KmLoKTJnsHc9LZh69t6lF4ZBTEj1DIXceGI6pwpbAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+dX6Hqh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81F2EC2BCB8;
+	Tue, 14 Jul 2026 08:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1784016506;
+	bh=0kjoSrXOirxQ0MVKjWZxUdN6zn6jSvd2UsDyLLOSTKY=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=c+dX6HqhUwhngfZ4+sMn7dVXK1FHgUFGUQ0CStdLJ03U1c/3lXKo3ZkyB2/jLQ0Ly
+	 mbZIDyRdBiEiZZAq3efkyYgvhck0WMx9GxC0TcnQmXw+YmGITZAePUkt16ipkkyUR8
+	 JdpaleeEB37af24RWBCpI3N1G7KflSWddQkvZJlwLAveeRcJcpQDDW5ZnwsToJGV3b
+	 45dEl7kjIeXq5hYEwOch6Xtrdn0OmRY6bH+O47T7j7DRN9icVmrSpTOZpFR5D6Nl8i
+	 Velo7ehpcf6dNH2zv/bZvn4TSdkdBsso1rZkKRzh/H2NlK+fqKCgEWhGPlGlUSighi
+	 wlfRFKvaY4CEg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE3CC43458;
+	Tue, 14 Jul 2026 08:08:26 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Subject: [PATCH v11 0/3] Add Amlogic general DMA
+Date: Tue, 14 Jul 2026 08:08:21 +0000
+Message-Id: <20260714-amlogic-dma-v11-0-de79c2394282@amlogic.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260629085917.350211F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHXuVWoC/23SwWrDMAwG4FcpPi/DkiU73mnvMXZwbKU1rE1JR
+ tgoffc5ZSVN0qNkvl9C+KIG6bMM6m13Ub2MecjdqRQALzsVD+G0lyqn0lCokQGBq3D86vY5Vuk
+ YKufJucQxoSVVxLmXNv/c4j4+S33Iw3fX/97SR5i69xy7yBmh0pVg7YWdeBvc+//ra+yOakoa8
+ a6tBnRLjUUTIyeDLjlKW21mjXo12xTNtm18y14S4lbTg17PpqJbZCELJL55sjnP2mhaai46BGK
+ TgNpEZqvto/ZLbYu2xpBPaJpEzVa7B42r2W7avG48iIDHCFtdz5oRlrouurYxYhRPQE+u5mdtc
+ XVzP92c62QdRgqetxr0zB3o1XfR0+4tJQlSGyerq1+v1z9EjZRL2QIAAA==
+X-Change-ID: 20251215-amlogic-dma-79477d5cd264
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Frank Li <Frank.Li@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784016504; l=3316;
+ i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
+ bh=0kjoSrXOirxQ0MVKjWZxUdN6zn6jSvd2UsDyLLOSTKY=;
+ b=Xld4fv2TycWoKv/SsuPG0Ut3FXf8fJv2FfpxgqVXdvbeyTw/TAH5FQDe3cg2VdNpFn11ZsqZi
+ go72iYBVPvgATwpeO2j4eGxfMLhZ5nC/xIrB4W9uDliPQmI72WZcpQM
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
+ auth_id=578
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.66 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-12468-lists,dmaengine=lfdr.de,xianwei.zhao.amlogic.com];
+	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:kees@kernel.org,m:gustavoars@kernel.org,m:Frank.Li@kernel.org,m:linux-amlogic@lists.infradead.org,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-hardening@vger.kernel.org,m:xianwei.zhao@amlogic.com,m:krzysztof.kozlowski@oss.qualcomm.com,m:Frank.Li@nxp.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:sashiko-reviews@lists.linux.dev,m:devnull+manivannan.sadhasivam.oss.qualcomm.com@kernel.org,m:vkoul@kernel.org,m:linux-pci@vger.kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,m:devnull@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[devnull@kernel.org,dmaengine@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[mani@kernel.org,dmaengine@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-12466-lists,dmaengine=lfdr.de];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	SEM_URIBL_FRESH15_UNKNOWN_FAIL(0.00)[vger.kernel.org:query timed out];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mani@kernel.org,dmaengine@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	HAS_REPLYTO(0.00)[xianwei.zhao@amlogic.com];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,manivannan.sadhasivam.oss.qualcomm.com];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,qualcomm.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A0F5B75225B
+X-Rspamd-Queue-Id: 33DD775230B
 
-On Mon, Jun 29, 2026 at 08:59:16AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 5 potential issue(s) to consider:
-> 
-> New issues:
-> - [High] Incorrect ordering of channel teardown, disconnect notification, and DMA flushing in mhi_ep_remove() causes data delivery after disconnect.
-> - [High] The newly introduced flush_async() callback lacks channel context, forcing a controller-wide flush that aborts DMA operations for all active channels.
-> - [High] Dropping the channel lock during flush_async exposes a window for worker threads to process disconnected channels, defeating the fix and re-introducing the UAF.
-> 
-> Pre-existing issues:
-> - [Critical] In-flight asynchronous DMA operations are not flushed before mhi_ep_ring_reset() frees ring->ring_cache.
-> - [High] Lockless access to mhi_chan->xfer_cb in completion handlers causes a TOCTOU data race with mhi_ep_remove().
-> --
-> 
-> commit 191c1d6e4eab8c4a6ee949c2b5b9499a56060800
-> Author: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-> 
-> bus: mhi: ep: Add mhi_cntrl->flush_async() callback to flush the async read/write
-> 
-> This commit introduces a flush_async() callback in the MHI endpoint
-> controller. It is called during device removal to ensure any in-flight
-> asynchronous DMA operations are completed before continuing teardown.
-> This aims to prevent use-after-free issues caused by delayed DMA callbacks.
-> 
-> > diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
-> > --- a/drivers/bus/mhi/ep/main.c
-> > +++ b/drivers/bus/mhi/ep/main.c
-> [ ... ]
-> > @@ -1636,6 +1637,12 @@ static void mhi_ep_remove(struct device *dev)
-> >  		}
-> >  
-> >  		mhi_chan->state = MHI_CH_STATE_DISABLED;
-> > +		mutex_unlock(&mhi_chan->lock);
-> 
-> [Severity: High]
-> Does dropping the channel lock here leave a window for worker threads to
-> process disconnected channels?
-> 
-> If mhi_ep_ch_ring_worker wakes up while the lock is dropped, it sees
-> ring->started is still true. For Downlink channels, mhi_ep_process_ch_ring()
-> skips the state check and fires xfer_cb() directly:
-> 
-> drivers/bus/mhi/ep/main.c:mhi_ep_process_ch_ring() {
->     if (ring->ch_id % 2) {
->         /* DL channel */
->         result.dir = mhi_chan->dir;
->         mhi_chan->xfer_cb(mhi_chan->mhi_dev, &result);
->     } else {
->     ...
-> }
-> 
-> Could this execute xfer_cb() mid-teardown and cause a use-after-free?
-> 
+Add DMA driver and bindigns for the Amlogic SoCs.
 
-AI slop:
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+Changes in v11:
+- MAX_DMA_LEN 4-byte align, and return real status when get, and lockless error print.
+- Link to v10: https://lore.kernel.org/r/20260710-amlogic-dma-v10-0-ff4deae837e7@amlogic.com
 
-Even if xfer_cb() is fired, it won't cause any UAF as all the resources are
-freed in the client driver remove() callback which gets called last.
+Changes in v10:
+- Free dma memory in workqueue.
+- Deal with zero len sg (not consume sg_link),and reset status to DMA_COMPLETE when terminal channel.
+- Add desc for #dma-cells in dt-bindings.
+- Link to v9: https://lore.kernel.org/r/20260626-amlogic-dma-v9-0-558d672c4a95@amlogic.com
 
-> > +
-> > +		if (mhi_cntrl->flush_async)
-> > +			mhi_cntrl->flush_async(mhi_cntrl);
-> 
-> [Severity: High]
-> Does this order of operations allow successful data delivery callbacks after
-> disconnecting the client?
-> 
-> Since the channel lock is dropped, completing in-flight DMA operations during
-> flush_async() will invoke their completion handlers. Those handlers find
-> xfer_cb still populated and call it with a success status.
-> 
-> Should flush_async() be called before sending the -ENOTCONN disconnect
-> status to avoid notifying the client after it may have freed its contexts?
-> 
+Changes in v9:
+- Use each transmission request sg_link mem instead of the loop mem get.
+- Fix some hidden issues which reviewed by ai robot.
+- Link to v8: https://lore.kernel.org/r/20260521-amlogic-dma-v8-0-86cc2ce94142@amlogic.com
 
-Not strictly required. Client drivers won't free the context until their
-remove() callbacks are called.
+Changes in v8:
+- Use kzalloc instead of kmalloc.
+- Initialize the temporary variable and fix a spelling mistake.
+- Link to v7: https://lore.kernel.org/r/20260324-amlogic-dma-v7-0-f8b91ee192c1@amlogic.com
 
+Changes in v7:
+- Take use vchan to support mltiple txns.
+- Link to v6: https://lore.kernel.org/r/20260309-amlogic-dma-v6-0-63349d23bd4b@amlogic.com
 
-> > +
-> > +		mutex_lock(&mhi_chan->lock);
-> >  		mhi_chan->xfer_cb = NULL;
-> 
-> [Severity: High]
-> This is a pre-existing issue, but is there a data race when clearing xfer_cb
-> concurrently with completion handlers?
-> 
-> In mhi_ep_read_completion(), the callback is checked locklessly:
-> 
-> drivers/bus/mhi/ep/main.c:mhi_ep_read_completion() {
->     if (mhi_chan->xfer_cb) {
->         ...
->         mhi_chan->xfer_cb(mhi_dev, &result);
->     }
-> }
-> 
-> If mhi_ep_remove() clears mhi_chan->xfer_cb to NULL after the lockless check
-> but before execution, could this result in a NULL pointer dereference or
-> execution of freed memory?
-> 
-> >  		mutex_unlock(&mhi_chan->lock);
-> >  	}
-> > diff --git a/include/linux/mhi_ep.h b/include/linux/mhi_ep.h
-> > --- a/include/linux/mhi_ep.h
-> > +++ b/include/linux/mhi_ep.h
-> [ ... ]
-> > @@ -164,6 +165,7 @@ struct mhi_ep_cntrl {
-> >  	int (*write_sync)(struct mhi_ep_cntrl *mhi_cntrl, struct mhi_ep_buf_info *buf_info);
-> >  	int (*read_async)(struct mhi_ep_cntrl *mhi_cntrl, struct mhi_ep_buf_info *buf_info);
-> >  	int (*write_async)(struct mhi_ep_cntrl *mhi_cntrl, struct mhi_ep_buf_info *buf_info);
-> > +	void (*flush_async)(struct mhi_ep_cntrl *mhi_cntrl);
-> 
-> [Severity: High]
-> Does the flush_async callback need a channel argument to avoid flushing
-> all channels on the controller?
-> 
-> When mhi_ep_remove() calls this without specifying a channel, an
-> implementation like pci_epf_mhi_edma_flush_async() terminates the shared
-> DMA channels indiscriminately:
-> 
-> drivers/pci/endpoint/functions/pci-epf-mhi.c:pci_epf_mhi_edma_flush_async() {
->     dmaengine_terminate_sync(epf_mhi->dma_chan_rx);
->     dmaengine_terminate_sync(epf_mhi->dma_chan_tx);
-> }
-> 
-> Will this abruptly discard in-flight operations and cause data loss for all
-> other active MHI clients sharing the controller?
-> 
+Changes in v6:
+- Some minor modifications according to Frank's suggestion.
+- Link to v5: https://lore.kernel.org/r/20260304-amlogic-dma-v5-0-aa453d14fd43@amlogic.com
 
-While it is true that flush_async() implementation will affect shared channels
-also, there is no use in passing the channel argument to it. Because, there is
-no way we can selectively flush DMA for a single MHI channel. If multiple MHI
-channels are sharing the same DMA channels, and a single client is going away,
-then there is not much to do. But this is not very common or may not happen at
-all.
+Changes in v5:
+- Rename head file and rename macro definition.
+- Rename the subject in [2/3] from "dma" to "dmaengine".
+- Link to v4: https://lore.kernel.org/r/20260227-amlogic-dma-v4-0-f25e4614e9b7@amlogic.com
 
-- Mani
+Changes in v4:
+- Support split transfer when data len > MAX_LEN.
+- When a module fails or exits, perform de-initialization.
+- Some other minor modifications.
+- Link to v3: https://lore.kernel.org/r/20260206-amlogic-dma-v3-0-56fb9f59ed22@amlogic.com
 
+Changes in v3:
+- Adjust the format of binding according to Frank's suggestion.
+- Some code format modified according to Frank's suggestion.
+- Support one prep_sg and one submit, drop multi prep_sg and one submit.
+- Keep pre state when resume from pause status.
+- Link to v2: https://lore.kernel.org/r/20260127-amlogic-dma-v2-0-4525d327d74d@amlogic.com
+
+Changes in v2:
+- Introduce what the DMA is used for in the A9 SoC.
+- Some minor modifications were made according to Krzysztof's suggestions.
+- Some modifications were made according to Neil's suggestions.
+- Fix a build error.
+- Link to v1: https://lore.kernel.org/r/20251216-amlogic-dma-v1-0-e289e57e96a7@amlogic.com
+
+---
+Xianwei Zhao (3):
+      dt-bindings: dma: Add Amlogic A9 SoC DMA
+      dmaengine: amlogic: Add general DMA driver for A9
+      MAINTAINERS: Add an entry for Amlogic DMA driver
+
+ .../devicetree/bindings/dma/amlogic,a9-dma.yaml    |  68 ++
+ MAINTAINERS                                        |   7 +
+ drivers/dma/Kconfig                                |  10 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/amlogic-dma.c                          | 726 +++++++++++++++++++++
+ include/dt-bindings/dma/amlogic,a9-dma.h           |   8 +
+ 6 files changed, 820 insertions(+)
+---
+base-commit: f53b2c30a192b35064be2584df7a800a8e6ac710
+change-id: 20251215-amlogic-dma-79477d5cd264
+
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Xianwei Zhao <xianwei.zhao@amlogic.com>
+
+
 

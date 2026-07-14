@@ -1,68 +1,68 @@
-Return-Path: <dmaengine+bounces-12522-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12523-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id Gw18CJiwVmqiAAEAu9opvQ
-	(envelope-from <dmaengine+bounces-12522-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 23:56:40 +0200
+	id TEBcILqxVmrzAAEAu9opvQ
+	(envelope-from <dmaengine+bounces-12523-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 00:01:30 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id B80C6759154
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 23:56:39 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBCE2759196
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 00:01:29 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=intel.com header.s=Intel header.b=oEHcraLz;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12522-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="dmaengine+bounces-12522-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=intel.com header.s=Intel header.b=hfLlHv4o;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12523-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12523-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=intel.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C8A8F302FEA4
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 21:56:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C22F3303B4D0
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 22:01:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01CB942BE95;
-	Tue, 14 Jul 2026 21:56:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A515642BC54;
+	Tue, 14 Jul 2026 22:01:25 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAA0418A2C;
-	Tue, 14 Jul 2026 21:56:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DFD42BC3F;
+	Tue, 14 Jul 2026 22:01:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784066186; cv=none; b=LqUYqoGe799brGGIxeufMhaLORWp9BXgCl4gk9BtBa0nBVe+HfFfIBUqB6YuMEAbDobVQJVRxCGBG8q+hGiCzPAFV81yVEFuCAzgvfuTzZBrMAyCEHRbke31znZEdksMohOC00p8V6dP9GRDBjvxycipSOSWnAel4tWxRb7IRBc=
+	t=1784066485; cv=none; b=LAnffZ33mAps2gcJ0gBXDpuildbUdOLByVR+MpNwpJGMIocdbWDNPwpqfi4cqV5clA+S5InS6MjDE7T0Hpccw/Cd3ITNVFWgdG3zsMAK9KVHFPxo+TkI7V3UmoxfRhyhgnSxZsszqIFNkOedTXPycKVE1GB6D/AnTOSJ0IVrlJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784066186; c=relaxed/simple;
-	bh=lRmb6HCU9B+bp6w1hqqymNpMjfL4vxsnsvabcJ0elbk=;
+	s=arc-20240116; t=1784066485; c=relaxed/simple;
+	bh=SnSkmDLYfD7apWJ8KolJaftdfEUAEg5DejJ2hINRvyk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TWai/zgUUL7sEi5r65D/oipj8i1oiNNp8KqDR47fxjYbRvAZjxgUB9khAbmODInDJOpgacVKvCufiNxdBDCc8u8rIh120n+wrPOmeYBankYJ2o8YOxg/Tcqbl+BX2op+ATYpuvhK13DuXj0+jradSyaW/eYaIg4rF+6dYrs2yqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oEHcraLz; arc=none smtp.client-ip=192.198.163.16
+	 In-Reply-To:Content-Type; b=LEWcXvkvB2PGCBWHzNZYUbuoWsK0jEZK4mgcBGKahYNGDnxhy3pIA3MjvVwAsNKDaYRph9LlLiNUR0smNK7Mj4m+OUb733v3XeDnnLz/uDuT5mp2KlYDFoLH0Ckwl3nJ0Z8tE9cQcfiCIAMEf+64ooSv6ZD9NCHjd0spn3SzZQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hfLlHv4o; arc=none smtp.client-ip=192.198.163.16
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784066185; x=1815602185;
+  t=1784066483; x=1815602483;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=lRmb6HCU9B+bp6w1hqqymNpMjfL4vxsnsvabcJ0elbk=;
-  b=oEHcraLzR5WADudjhUiOdHdlc8/ntpPYhbaOiroLU+CrU978p2F5K62y
-   jh/XYcGx2d6s6/xd6EGlmZHw+E8Wfh2vHLVZYCIu0Ui5A4MYjaDMu7gEK
-   IKHM+9bv/KT+KORIPcowZygk+lXB6ktX/ZWThtiux4R3zEpcMkTBAjK8f
-   Y/bd50d9HmIjqu3DME7IN8D7j9E1KQOfYf4pS+E//QWZT99cFXuHwlkjK
-   b94LYkkj2NWJr5x/HXtYVs77wx5xt8uCoO6R+w7s/B8yhOH75KS+oayHv
-   6aJLgyGCA/vP5Hp+vQIhrwa8lJ43z56hDZeKZRi7gGrRuVvYSXtYn31xC
+  bh=SnSkmDLYfD7apWJ8KolJaftdfEUAEg5DejJ2hINRvyk=;
+  b=hfLlHv4oxyfSyV9o0N6OfdcG5c8GwFQa6OFqw/B7uTIRD/OV0Q86ML9/
+   NuMqk8s/mnQx+LC521nxcyHO4inrx68XlFGtl40qAB1K03thZvTmQ6jh/
+   g8HLSb73zZ0y8HcsTPkm2M39i1QKRRbfIITxOghKeCHpu+CSn4PN0BXMh
+   TPwEF2T0lI558gpx25tWzwBjE/bCRG4twiD189zT5CD5woU/9It4kznrO
+   J9w+bh74LVNBtioTgKtFuPNS9nA0PesA8koH4sHdespA68Lw7uM040ai0
+   eSPCgGBJn+URTrJ331Xp3TNE6cQ7hHHyBpwzPVSHpnSLk6k/k+CrwddFt
    A==;
-X-CSE-ConnectionGUID: cuwNwwDhQJKVPvOcQQUU2w==
-X-CSE-MsgGUID: Gb9tqQgKQAm/E5KRZ9RXiQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="72223479"
+X-CSE-ConnectionGUID: x3017A+BRkWANSd1jwHKkw==
+X-CSE-MsgGUID: 5jb7h6vdQRu9thfP36QJxQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="72224037"
 X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
-   d="scan'208";a="72223479"
+   d="scan'208";a="72224037"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 14:56:25 -0700
-X-CSE-ConnectionGUID: +wuyvbA9TQGVlkH5cElinA==
-X-CSE-MsgGUID: 7zMPcqLoQKCUqrKmOkj3+A==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 15:01:23 -0700
+X-CSE-ConnectionGUID: 58jrvM1aT8a9ZHXFkwZHew==
+X-CSE-MsgGUID: HBQPG6RcToSYDBXFmpRSlg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
-   d="scan'208";a="251561223"
+   d="scan'208";a="251562166"
 Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.108.131]) ([10.125.108.131])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 14:56:23 -0700
-Message-ID: <fa0a99aa-6bef-4ca2-93d8-f475b5f9ca1f@intel.com>
-Date: Tue, 14 Jul 2026 14:56:22 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 15:01:21 -0700
+Message-ID: <d6b9b2e8-691b-4ccc-8000-ad2388994724@intel.com>
+Date: Tue, 14 Jul 2026 15:01:20 -0700
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,8 +70,8 @@ List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] crypto: iaa - avoid counting fallback decompression
- bytes
+Subject: Re: [PATCH 4/4] crypto: iaa - use bounce buffer for multi-sg
+ decompress input
 To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
  Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>,
  Kristen Accardi <kristen.c.accardi@intel.com>,
@@ -82,10 +82,10 @@ To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-crypto@vger.kernel.org, Giovanni Cabiddu <giovanni.cabiddu@intel.com>
 References: <20260713-iaa-crypto-fixes-zswap-v1-0-65cac23c684d@intel.com>
- <20260713-iaa-crypto-fixes-zswap-v1-3-65cac23c684d@intel.com>
+ <20260713-iaa-crypto-fixes-zswap-v1-4-65cac23c684d@intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260713-iaa-crypto-fixes-zswap-v1-3-65cac23c684d@intel.com>
+In-Reply-To: <20260713-iaa-crypto-fixes-zswap-v1-4-65cac23c684d@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
@@ -94,7 +94,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -106,7 +106,7 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[intel.com,kernel.org,gondor.apana.org.au,davemloft.net,linux-foundation.org,gmail.com];
 	FORGED_SENDER(0.00)[dave.jiang@intel.com,dmaengine@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-12522-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12523-lists,dmaengine=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -118,81 +118,320 @@ X-Spamd-Result: default: False [-5.16 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,intel.com:from_mime,intel.com:mid,intel.com:email,intel.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:from_mime,intel.com:mid,intel.com:email,intel.com:dkim,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: B80C6759154
+X-Rspamd-Queue-Id: DBCE2759196
 
 
 
 On 7/13/26 9:10 PM, Vinicius Costa Gomes wrote:
 > From: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
 > 
-> When decompression falls back to deflate-generic after an analytics
-> error, the request no longer completes through IAA.
+> Since commit e2c3b6b21c77 ("mm: zswap: use SG list decompression APIs
+> from zsmalloc"), zswap passes the raw zsmalloc SG list directly to
+> crypto drivers, so a compressed object spanning multiple pages reaches
+> IAA as a multi-entry source. Such requests currently fall back to
+> software decompression.
 > 
-> Move decompression byte accounting into the successful IAA completion
-> path in both the synchronous and asynchronous flows so decomp_bytes only
-> reflects bytes actually processed by IAA.
+> As IAA hardware requires a single DMA source buffer, linearize small
+> multi-entry sources into a pre-allocated bounce page and submit that to
+> the hardware instead of falling back to software. Keep the software
+> fallback only for multi-entry destinations. This recovers most of the
+> performance lost by using the software fallback.
+> 
+> Store the bounce-page state in the acomp request context alongside the
+> existing compression CRC, free it through a shared source-unmap helper,
+> and back the pages with a small module-wide mempool so the path remains
+> available in reclaim-driven callers.
 > 
 > Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
 
 Missing Vinicius sign-off.
 
+
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 
 > ---
->  drivers/crypto/intel/iaa/iaa_crypto_main.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
+>  drivers/crypto/intel/iaa/iaa_crypto_main.c | 110 ++++++++++++++++++++++++-----
+>  1 file changed, 92 insertions(+), 18 deletions(-)
 > 
 > diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-> index fb154959c2aa..8f68b1478476 100644
+> index 8f68b1478476..54bde11c454c 100644
 > --- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
 > +++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-> @@ -1084,15 +1084,17 @@ static void iaa_desc_complete(struct idxd_desc *idxd_desc,
->  		}
->  	} else {
->  		ctx->req->dlen = idxd_desc->iax_completion->output_size;
-> +
-> +		if (!ctx->compress) {
-> +			update_total_decomp_bytes_in(ctx->req->slen);
-> +			update_wq_decomp_bytes(iaa_wq->wq, ctx->req->slen);
-> +		}
->  	}
+> @@ -9,6 +9,7 @@
+>  #include <linux/sysfs.h>
+>  #include <linux/device.h>
+>  #include <linux/iommu.h>
+> +#include <linux/mempool.h>
+>  #include <uapi/linux/idxd.h>
+>  #include <linux/highmem.h>
+>  #include <linux/sched/smt.h>
+> @@ -157,6 +158,15 @@ static bool async_mode;
+>  /* Use interrupts */
+>  static bool use_irq;
 >  
->  	/* Update stats */
->  	if (ctx->compress) {
->  		update_total_comp_bytes_out(ctx->req->dlen);
->  		update_wq_comp_bytes(iaa_wq->wq, ctx->req->dlen);
-> -	} else {
-> -		update_total_decomp_bytes_in(ctx->req->slen);
-> -		update_wq_decomp_bytes(iaa_wq->wq, ctx->req->slen);
+> +struct iaa_req_ctx {
+> +	u32 compression_crc;
+> +	struct page *bounce_src;
+> +	struct scatterlist bounce_sg;
+> +};
+> +
+> +static mempool_t *iaa_bounce_pool;
+> +#define IAA_BOUNCE_POOL_SIZE	128
+> +
+>  /**
+>   * set_iaa_sync_mode - Set IAA sync mode
+>   * @name: The name of the sync mode
+> @@ -984,6 +994,19 @@ static inline int check_completion(struct device *dev,
+>  	return ret;
+>  }
+>  
+> +static void iaa_unmap_src(struct device *dev, struct acomp_req *req)
+> +{
+> +	struct iaa_req_ctx *req_ctx = acomp_request_ctx(req);
+> +	struct scatterlist *src = req_ctx->bounce_src ? &req_ctx->bounce_sg : req->src;
+> +
+> +	dma_unmap_sg(dev, src, 1, DMA_TO_DEVICE);
+> +
+> +	if (req_ctx->bounce_src) {
+> +		mempool_free(req_ctx->bounce_src, iaa_bounce_pool);
+> +		req_ctx->bounce_src = NULL;
+> +	}
+> +}
+> +
+>  static int deflate_fallback(struct acomp_req *req, bool compress)
+>  {
+>  	ACOMP_FBREQ_ON_STACK(fbreq, req);
+> @@ -1040,6 +1063,7 @@ static void iaa_desc_complete(struct idxd_desc *idxd_desc,
+>  	struct iaa_device_compression_mode *active_compression_mode;
+>  	struct iaa_compression_ctx *compression_ctx;
+>  	struct crypto_ctx *ctx = __ctx;
+> +	struct iaa_req_ctx *req_ctx = acomp_request_ctx(ctx->req);
+>  	struct iaa_device *iaa_device;
+>  	struct idxd_device *idxd;
+>  	struct iaa_wq *iaa_wq;
+> @@ -1098,10 +1122,9 @@ static void iaa_desc_complete(struct idxd_desc *idxd_desc,
 >  	}
 >  
 >  	if (ctx->compress && compression_ctx->verify_compress) {
-> @@ -1475,16 +1477,16 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
->  		}
->  	} else {
->  		req->dlen = idxd_desc->iax_completion->output_size;
-> +
-> +		/* Update stats */
-> +		update_total_decomp_bytes_in(slen);
-> +		update_wq_decomp_bytes(wq, slen);
->  	}
+> -		u32 *compression_crc = acomp_request_ctx(ctx->req);
+>  		dma_addr_t src_addr, dst_addr;
 >  
->  	*dlen = req->dlen;
+> -		*compression_crc = idxd_desc->iax_completion->crc;
+> +		req_ctx->compression_crc = idxd_desc->iax_completion->crc;
+>  
+>  		ret = iaa_remap_for_verify(dev, iaa_wq, ctx->req, &src_addr, &dst_addr);
+>  		if (ret) {
+> @@ -1124,7 +1147,7 @@ static void iaa_desc_complete(struct idxd_desc *idxd_desc,
+>  	}
+>  err:
+>  	dma_unmap_sg(dev, ctx->req->dst, sg_nents(ctx->req->dst), DMA_FROM_DEVICE);
+> -	dma_unmap_sg(dev, ctx->req->src, sg_nents(ctx->req->src), DMA_TO_DEVICE);
+> +	iaa_unmap_src(dev, ctx->req);
+>  out:
+>  	if (ret != 0)
+>  		dev_dbg(dev, "asynchronous compress failed ret=%d\n", ret);
+> @@ -1144,7 +1167,7 @@ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
+>  {
+>  	struct iaa_device_compression_mode *active_compression_mode;
+>  	struct iaa_compression_ctx *ctx = crypto_tfm_ctx(tfm);
+> -	u32 *compression_crc = acomp_request_ctx(req);
+> +	struct iaa_req_ctx *req_ctx = acomp_request_ctx(req);
+>  	struct iaa_device *iaa_device;
+>  	struct idxd_desc *idxd_desc;
+>  	struct iax_hw_desc *desc;
+> @@ -1235,7 +1258,7 @@ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
+>  	update_total_comp_bytes_out(*dlen);
+>  	update_wq_comp_bytes(wq, *dlen);
+>  
+> -	*compression_crc = idxd_desc->iax_completion->crc;
+> +	req_ctx->compression_crc = idxd_desc->iax_completion->crc;
 >  
 >  	if (!ctx->async_mode)
 >  		idxd_free_desc(wq, idxd_desc);
-> -
-> -	/* Update stats */
-> -	update_total_decomp_bytes_in(slen);
-> -	update_wq_decomp_bytes(wq, slen);
->  out:
+> @@ -1295,7 +1318,7 @@ static int iaa_compress_verify(struct crypto_tfm *tfm, struct acomp_req *req,
+>  {
+>  	struct iaa_device_compression_mode *active_compression_mode;
+>  	struct iaa_compression_ctx *ctx = crypto_tfm_ctx(tfm);
+> -	u32 *compression_crc = acomp_request_ctx(req);
+> +	struct iaa_req_ctx *req_ctx = acomp_request_ctx(req);
+>  	struct iaa_device *iaa_device;
+>  	struct idxd_desc *idxd_desc;
+>  	struct iax_hw_desc *desc;
+> @@ -1355,10 +1378,10 @@ static int iaa_compress_verify(struct crypto_tfm *tfm, struct acomp_req *req,
+>  		goto err;
+>  	}
+>  
+> -	if (*compression_crc != idxd_desc->iax_completion->crc) {
+> +	if (req_ctx->compression_crc != idxd_desc->iax_completion->crc) {
+>  		ret = -EINVAL;
+> -		dev_dbg(dev, "(verify) iaa comp/decomp crc mismatch:"
+> -			" comp=0x%x, decomp=0x%x\n", *compression_crc,
+> +		dev_dbg(dev, "(verify) iaa comp/decomp crc mismatch: comp=0x%x, decomp=0x%x\n",
+> +			req_ctx->compression_crc,
+>  			idxd_desc->iax_completion->crc);
+>  		print_hex_dump(KERN_INFO, "cmp-rec: ", DUMP_PREFIX_OFFSET,
+>  			       8, 1, idxd_desc->iax_completion, 64, 0);
+> @@ -1498,6 +1521,7 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
+>  
+>  static int iaa_comp_acompress(struct acomp_req *req)
+>  {
+> +	struct iaa_req_ctx *req_ctx = acomp_request_ctx(req);
+>  	struct iaa_compression_ctx *compression_ctx;
+>  	struct crypto_tfm *tfm = req->base.tfm;
+>  	dma_addr_t src_addr, dst_addr;
+> @@ -1506,6 +1530,8 @@ static int iaa_comp_acompress(struct acomp_req *req)
+>  	struct idxd_wq *wq;
+>  	struct device *dev;
+>  
+> +	req_ctx->bounce_src = NULL;
+> +
+>  	compression_ctx = crypto_tfm_ctx(tfm);
+>  
+>  	if (!iaa_crypto_enabled) {
+> @@ -1597,12 +1623,18 @@ static int iaa_comp_acompress(struct acomp_req *req)
+>  
+>  static int iaa_comp_adecompress(struct acomp_req *req)
+>  {
+> +	struct iaa_req_ctx *req_ctx = acomp_request_ctx(req);
+>  	struct crypto_tfm *tfm = req->base.tfm;
+> +	struct scatterlist *src = req->src;
+>  	dma_addr_t src_addr, dst_addr;
+> +	bool use_bounce_src = false;
+>  	int cpu, ret = 0;
+>  	struct iaa_wq *iaa_wq;
+>  	struct device *dev;
+>  	struct idxd_wq *wq;
+> +	struct page *page;
+> +
+> +	req_ctx->bounce_src = NULL;
+>  
+>  	if (!iaa_crypto_enabled) {
+>  		pr_debug("iaa_crypto disabled, not decompressing\n");
+> @@ -1614,10 +1646,16 @@ static int iaa_comp_adecompress(struct acomp_req *req)
+>  		return -EINVAL;
+>  	}
+>  
+> -	/* Fall back to software if src or dst has multiple sg entries */
+> -	if (sg_nents(req->src) > 1 || sg_nents(req->dst) > 1)
+> +	/* Fall back to software if dst has multiple sg entries */
+> +	if (sg_nents(req->dst) > 1)
+>  		return deflate_generic_decompress(req);
+>  
+> +	if (sg_nents(req->src) > 1) {
+> +		if (req->slen > PAGE_SIZE)
+> +			return deflate_generic_decompress(req);
+> +		use_bounce_src = true;
+> +	}
+> +
+>  	cpu = get_cpu();
+>  	wq = wq_table_next_wq(cpu);
+>  	put_cpu();
+> @@ -1636,20 +1674,45 @@ static int iaa_comp_adecompress(struct acomp_req *req)
+>  
+>  	dev = &wq->idxd->pdev->dev;
+>  
+> -	if (!dma_map_sg(dev, req->src, 1, DMA_TO_DEVICE)) {
+> +	if (unlikely(use_bounce_src)) {
+> +		page = mempool_alloc(iaa_bounce_pool, GFP_ATOMIC);
+> +		if (!page) {
+> +			iaa_wq_put(wq);
+> +			return deflate_generic_decompress(req);
+> +		}
+> +
+> +		if (sg_copy_to_buffer(req->src, sg_nents(req->src),
+> +				      page_address(page), req->slen) != req->slen) {
+> +			mempool_free(page, iaa_bounce_pool);
+> +			iaa_wq_put(wq);
+> +			return deflate_generic_decompress(req);
+> +		}
+> +
+> +		sg_init_table(&req_ctx->bounce_sg, 1);
+> +		sg_set_page(&req_ctx->bounce_sg, page, req->slen, 0);
+> +		req_ctx->bounce_src = page;
+> +		src = &req_ctx->bounce_sg;
+> +	}
+> +
+> +	if (!dma_map_sg(dev, src, 1, DMA_TO_DEVICE)) {
+>  		dev_dbg(dev, "couldn't map src sg for iaa device %d, wq %d\n",
+>  			iaa_wq->iaa_device->idxd->id, iaa_wq->wq->id);
+> +		if (req_ctx->bounce_src) {
+> +			mempool_free(req_ctx->bounce_src, iaa_bounce_pool);
+> +			req_ctx->bounce_src = NULL;
+> +		}
+>  		iaa_wq_put(wq);
+>  		return deflate_generic_decompress(req);
+>  	}
+> -	src_addr = sg_dma_address(req->src);
+> -	dev_dbg(dev, "map src %llx req->src %p slen %d sg_len %d\n", src_addr,
+> -		req->src, req->slen, sg_dma_len(req->src));
+> +	src_addr = sg_dma_address(src);
+> +	dev_dbg(dev, "dma_map_sg, src_addr %llx, src %p,"
+> +		" req->slen %d, sg_dma_len(sg) %d\n", src_addr,
+> +		src, req->slen, sg_dma_len(src));
+>  
+>  	if (!dma_map_sg(dev, req->dst, 1, DMA_FROM_DEVICE)) {
+>  		dev_dbg(dev, "couldn't map dst sg for iaa device %d, wq %d\n",
+>  			iaa_wq->iaa_device->idxd->id, iaa_wq->wq->id);
+> -		dma_unmap_sg(dev, req->src, 1, DMA_TO_DEVICE);
+> +		iaa_unmap_src(dev, req);
+>  		iaa_wq_put(wq);
+>  		return deflate_generic_decompress(req);
+>  	}
+> @@ -1666,7 +1729,7 @@ static int iaa_comp_adecompress(struct acomp_req *req)
+>  		dev_dbg(dev, "asynchronous decompress failed ret=%d\n", ret);
+>  
+>  	dma_unmap_sg(dev, req->dst, 1, DMA_FROM_DEVICE);
+> -	dma_unmap_sg(dev, req->src, 1, DMA_TO_DEVICE);
+> +	iaa_unmap_src(dev, req);
+>  	iaa_wq_put(wq);
+>  
 >  	return ret;
->  err:
+> @@ -1700,7 +1763,7 @@ static struct acomp_alg iaa_acomp_fixed_deflate = {
+>  		.cra_driver_name	= "deflate-iaa",
+>  		.cra_flags		= CRYPTO_ALG_ASYNC,
+>  		.cra_ctxsize		= sizeof(struct iaa_compression_ctx),
+> -		.cra_reqsize		= sizeof(u32),
+> +		.cra_reqsize		= sizeof(struct iaa_req_ctx),
+>  		.cra_module		= THIS_MODULE,
+>  		.cra_priority		= IAA_ALG_PRIORITY,
+>  	}
+> @@ -1899,6 +1962,12 @@ static int __init iaa_crypto_init_module(void)
+>  		goto err_aecs_init;
+>  	}
+>  
+> +	iaa_bounce_pool = mempool_create_page_pool(IAA_BOUNCE_POOL_SIZE, 0);
+> +	if (!iaa_bounce_pool) {
+> +		ret = -ENOMEM;
+> +		goto err_bounce_pool;
+> +	}
+> +
+>  	ret = idxd_driver_register(&iaa_crypto_driver);
+>  	if (ret) {
+>  		pr_debug("IAA wq sub-driver registration failed\n");
+> @@ -1932,6 +2001,9 @@ static int __init iaa_crypto_init_module(void)
+>  err_verify_attr_create:
+>  	idxd_driver_unregister(&iaa_crypto_driver);
+>  err_driver_reg:
+> +	mempool_destroy(iaa_bounce_pool);
+> +	iaa_bounce_pool = NULL;
+> +err_bounce_pool:
+>  	iaa_aecs_cleanup_fixed();
+>  err_aecs_init:
+>  
+> @@ -1948,6 +2020,8 @@ static void __exit iaa_crypto_cleanup_module(void)
+>  	driver_remove_file(&iaa_crypto_driver.drv,
+>  			   &driver_attr_verify_compress);
+>  	idxd_driver_unregister(&iaa_crypto_driver);
+> +	mempool_destroy(iaa_bounce_pool);
+> +	iaa_bounce_pool = NULL;
+>  	iaa_aecs_cleanup_fixed();
+>  
+>  	pr_debug("cleaned up\n");
 > 
 
 

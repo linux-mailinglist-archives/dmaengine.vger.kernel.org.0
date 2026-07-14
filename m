@@ -1,111 +1,94 @@
-Return-Path: <dmaengine+bounces-12487-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12488-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id sZpzLpkmVmp80AAAu9opvQ
-	(envelope-from <dmaengine+bounces-12487-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 14:07:53 +0200
+	id EqAeB1QoVmos0QAAu9opvQ
+	(envelope-from <dmaengine+bounces-12488-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 14:15:16 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67380754485
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 14:07:53 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F6427545F4
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 14:15:14 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=JALI0fxf;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12487-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="dmaengine+bounces-12487-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=Ym1S2jkQ;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12488-lists+dmaengine=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="dmaengine+bounces-12488-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 77BE93036FD6
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 12:06:23 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id DA0EE302047D
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 12:07:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BE7B3914FE;
-	Tue, 14 Jul 2026 12:06:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11953914FE;
+	Tue, 14 Jul 2026 12:07:56 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD33C2737E3;
-	Tue, 14 Jul 2026 12:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA1C379EC6
+	for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2026 12:07:54 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784030779; cv=none; b=sdwE+TdHv6PZ7awKPja9Q85MMPdeXIBU4Vc0+hBVPNbjoxF4OVUUfG4jBO/dOKGn4qCp2HbxPxk+5fHp85XzT4vST/vuw4wtYAKfx22WzcFF/KqXgCs6edXsq9bqgwNrCMAb1OBg9rZ6I7T1sZkFgrTf4sdHvPbEd9gN7PUhF2c=
+	t=1784030876; cv=none; b=LZ7SoqKZ4WRQ/VGPwh6S10oG1rYIz6kvCS8SN5V6CtarMjUGxpk+FTWz8EClWz3vSx+Ag+Bf6F4mQuEu+Fpcb7TkvpYeVqpszkVq3hOLg/gu0BCSRb+nXIO4CH2E5IsotTll4PZjvaqVToCtLFPpkvxceWL4cLIERgeSkKfLSIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784030779; c=relaxed/simple;
-	bh=E+0jPhHMLYioaY9UG1rBQAy+IKtgN/+gffJXLYn4+4A=;
+	s=arc-20240116; t=1784030876; c=relaxed/simple;
+	bh=OMgrFuAHO48rjnve0IC7BkW6T1cWgVV5IqCaIa4ACps=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I5FAT5ecyBZbaNdZ7p73h8Vftq+64oFuwVuhphToM1AZbSIXy2/jg41o2Ca9kx23uqKwEIiMeyLzE90D051K/m0P0vCqYvl3kdBImrSmwLyKuXi0UNXoyI6Zyw1xl3gSEg5JXMNNrQ0a43prYC3/XMFmG/FyNjTVwwqwl0FKCcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JALI0fxf; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985521F000E9;
-	Tue, 14 Jul 2026 12:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784030778;
-	bh=zXjAh2537yo9G5vWAgQyYke6ki6Lnw1UTZmZWsxbjhc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=JALI0fxfqvUbwOcumUkWMdf9+m8l9v/z9X4lZj/ehsLJwp7ooqiwniR8gwMwjlGX4
-	 KQm5hPhANenPfd2Bwl7Lw10CTxhcLtoJlVyhmsg2A4CH0cM2OlgloQDORZXOtineLC
-	 LSXy7jBY23Sl0ZuCS3XZeGNWqADdOIypDvJINA7+5rlsAPvHLK4n6INGqXPYHq43z0
-	 TChJyIoFjVyZF6bcTAaSLXrQYMnVCU5gag1jLCsHntMDSLG6NIQt9Oy31Q263sVXSw
-	 1vNiRk46Ol5RAtKDAakIkefOUYXtHCPa0UXek/BlAs8NXTFuLNcB3vZN6MkZkKKMuD
-	 FpfTkmjJaiaEg==
-Date: Tue, 14 Jul 2026 17:36:14 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Pan Chuang <panchuang@vivo.com>, Frank Li <Frank.Li@nxp.com>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Paul Walmsley <pjw@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	=?iso-8859-1?Q?Am=E9lie?= Delaunay <amelie.delaunay@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Chen-Yu Tsai <wens@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Thierry Reding <thierry.reding@kernel.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Icenowy Zheng <zhengxingda@iscas.ac.cn>,
-	Kees Cook <kees@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-	Miaoqian Lin <linmq006@gmail.com>,
-	Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>,
-	John Madieu <john.madieu.xa@bp.renesas.com>,
-	Thomas Andreatta <thomasandreatta2000@gmail.com>,
-	"open list:FREESCALE eDMA DRIVER" <imx@lists.linux.dev>,
-	"open list:FREESCALE eDMA DRIVER" <dmaengine@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:MIPS/LOONGSON1 ARCHITECTURE" <linux-mips@vger.kernel.org>,
-	"moderated list:MEDIATEK DMA DRIVER" <linux-arm-kernel@lists.infradead.org>,
-	"moderated list:MEDIATEK DMA DRIVER" <linux-mediatek@lists.infradead.org>,
-	"moderated list:ARM/ACTIONS SEMI ARCHITECTURE" <linux-actions@lists.infradead.org>,
-	"open list:ARM/QUALCOMM MAILING LIST" <linux-arm-msm@vger.kernel.org>,
-	"open list:SIFIVE DRIVERS" <linux-riscv@lists.infradead.org>,
-	"open list:ARM/RISC-V/RENESAS ARCHITECTURE" <linux-renesas-soc@vger.kernel.org>,
-	"moderated list:STM32 DMA DRIVERS" <linux-stm32@st-md-mailman.stormreply.com>,
-	"open list:ARM/Allwinner sunXi SoC support" <linux-sunxi@lists.linux.dev>,
-	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 00/26] dmaengine: Remove redundant error messages on IRQ
- request failure
-Message-ID: <alYmNl--mxMK1-86@vaman>
-References: <20260709135846.97972-1-panchuang@vivo.com>
- <ak-vkQ8g_ePdY15f@shikoro>
+	 Content-Type:Content-Disposition:In-Reply-To; b=K3eV4D3jgz43f+dJVjUjxvAtu2JJStfOLy7pWfyW+rTTKkw9pQJ88YsgywDpS3cSZw/4mJWjyuNFihCfKo9fRP8uzi7I0CA0CL9LgK9Vcm4jrSuwdNB8X+K6si6EtXhhg3sQzlX7Q6e3vsmxw+KIOSljrBwqUtEL0Bk5DM13gRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ym1S2jkQ; arc=none smtp.client-ip=209.85.161.47
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-6a30bcadd95so428621eaf.1
+        for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2026 05:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784030874; x=1784635674; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=rBtlx7iHFHOhX9UuDDBDnXkrtPmiJE4QMJttkANYWxs=;
+        b=Ym1S2jkQ3rodfkYBfpZ076IJbKQQVkMe5Kuqr6FjFVopmfSS9VRACdnAm+a/fgjFis
+         eVzx/bCmqjtZ+PiHUAbkkFGlBZqbYaaIvA6xG1XLruvJZc8i1J1F8e4Kao9o1H00s3iV
+         R1v0RaSyFmtaLJGZCczITdVJCDWLUWu5IOaCOk4BOsZTcLiCa+gYX32nF5TLtexkyJFH
+         EwWtT/up56cBmdp+kvtlpqt5i6d03i/uO6Jci9S/0d5LPHcr5vEs4zwG/VbVM7hoQREb
+         nt3TlX+M5YJZ9YThD3PTwsss2ph/hVVkkLymsSH46u3+LLFm14gJkxhYZQ1tyjgXu/xc
+         2mJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784030874; x=1784635674;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rBtlx7iHFHOhX9UuDDBDnXkrtPmiJE4QMJttkANYWxs=;
+        b=Lz6AI4DD1cTQFiAhbK/EDJvHH2V86cAs99y4YNNHIouKKFmVzYhoPcoOeBpqkQGL9e
+         2VvsC6Fbuu+7iaIJymCS7sz/qY6laI7KjT4aEh5JJG7Gd7tQHKZMNUYfvo+TN/fvVaeV
+         QY21s4zYiXk8hD2RujSvkeHs89yJZ3cKLprMPNNj4Qq6nIgiQBoAAUvleDPAgeLy8iot
+         hZtfQocMgCFnjmUvrU99mW4EeI+528pjCzCZqrY4fqFDv4bLH26HB6Ue/HIfKzTGLKgy
+         BuJhYsZtTWCNOl/8Py4xC5Pb0qfm74cTJXt3tfgeAsZVL9CArgOSAl8zTLDxREu/6NUk
+         aWGA==
+X-Forwarded-Encrypted: i=1; AFNElJ+PGXM7CMCHVKr1Lot10DUdWEnoVBxjBbvWzFge1cPsSkiolRL2bvJq1xSn5mtT7xx3fGauIfZpdG8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/qewN5zwlJF4CkwzwMGMmFTwjkMURyxvqXZQRfW5F2GolFNU4
+	9N/qiphhkyEMExfUjLHYS+vct4WI4ZFCIoQDdpkI45GekeLrHM1j4etI
+X-Gm-Gg: AfdE7cnoOeLH5HJsQi2fbfJxo1B8pZT/H3nlp+nMcRPBh95QSTRrjsjjyvUEF2gljSo
+	Bs4Dab2gbUdiEMNVFhEgtnDp+dUjSsCslkORk3rrXTw0895TA2Lm7kPIh+S83xLfa8VddzGvZrI
+	eGIrQT6/DPt7o4j8Uby1+EnlFgWWX0tVZWspo1Ff1RAvHqVr6S+2k3PtR5PCC+DrfofgpXABkFK
+	B+rGLc38ZQWxnsX9tAHwKZKtIcugiPOPL0ibfEGZ2t1f3DI4c/87XmjpWMYXhmwSpowRyezQ3Pg
+	C+/ZPyfcviEwts3cDX3GwZ4rbcGVB1wnG0SA2xtDhzZHAT/9M9B62UKekB0CAbGksV2jkTZCq4A
+	Jaac+dAvxkf99EzUm4H4GDmOFiHq4671vkRv1QZUQTH7ItStIJ4cWjNMkG72v2W+mb6AErBCbUL
+	NF3CsvRQp8rXj+n+9ZS2IIyJjGHQ==
+X-Received: by 2002:a05:6820:1627:b0:6a1:50f8:abb5 with SMTP id 006d021491bc7-6a39bee703cmr6227343eaf.32.1784030873900;
+        Tue, 14 Jul 2026 05:07:53 -0700 (PDT)
+Received: from localhost ([74.80.182.78])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ebcb3f2b86sm14964026a34.26.2026.07.14.05.07.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2026 05:07:51 -0700 (PDT)
+Date: Tue, 14 Jul 2026 15:07:46 +0300
+From: Dan Carpenter <error27@gmail.com>
+To: "Taedcke, Christian" <christian.taedcke-oss@weidmueller.com>
+Cc: christian.taedcke@weidmueller.com, Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3] dmaengine: nbpfaxi: Fix setting channel irqs in
+ probe()
+Message-ID: <alYmkuGtjGRvMqup@stanley.mountain>
+References: <20260703-upstreaming-nbpfaxi-v1-v3-1-24f7f9aa102f@weidmueller.com>
+ <ak96OkpYvJrK1Vbt@stanley.mountain>
+ <84676bd8-3815-433b-b531-2715b8e8693f@weidmueller.com>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -114,100 +97,120 @@ List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ak-vkQ8g_ePdY15f@shikoro>
+In-Reply-To: <84676bd8-3815-433b-b531-2715b8e8693f@weidmueller.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_ALL(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12487-lists,dmaengine=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-12488-lists,dmaengine=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:wsa+renesas@sang-engineering.com,m:panchuang@vivo.com,m:Frank.Li@nxp.com,m:keguang.zhang@gmail.com,m:sean.wang@mediatek.com,m:matthias.bgg@gmail.com,m:angelogioacchino.delregno@collabora.com,m:afaerber@suse.de,m:mani@kernel.org,m:daniel@zonque.org,m:haojian.zhuang@gmail.com,m:robert.jarzmik@free.fr,m:pjw@kernel.org,m:samuel.holland@sifive.com,m:geert+renesas@glider.be,m:magnus.damm@gmail.com,m:orsonzhai@gmail.com,m:baolin.wang@linux.alibaba.com,m:zhang.lyra@gmail.com,m:patrice.chotard@foss.st.com,m:amelie.delaunay@foss.st.com,m:mcoquelin.stm32@gmail.com,m:alexandre.torgue@foss.st.com,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:ldewangan@nvidia.com,m:jonathanh@nvidia.com,m:thierry.reding@kernel.org,m:vigneshr@ti.com,m:hayashi.kunihiko@socionext.com,m:mhiramat@kernel.org,m:dmitry.baryshkov@oss.qualcomm.com,m:zhengxingda@iscas.ac.cn,m:kees@kernel.org,m:andersson@kernel.org,m:linmq006@gmail.com,m:quic_jseerapu@quicinc.com,m:claudiu.beznea.uj@bp.renesas.com,m
- :biju.das.jz@bp.renesas.com,m:cosmin-gabriel.tanislav.xa@renesas.com,m:john.madieu.xa@bp.renesas.com,m:thomasandreatta2000@gmail.com,m:imx@lists.linux.dev,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-mips@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-mediatek@lists.infradead.org,m:linux-actions@lists.infradead.org,m:linux-arm-msm@vger.kernel.org,m:linux-riscv@lists.infradead.org,m:linux-renesas-soc@vger.kernel.org,m:linux-stm32@st-md-mailman.stormreply.com,m:linux-sunxi@lists.linux.dev,m:linux-tegra@vger.kernel.org,m:wsa@sang-engineering.com,m:keguangzhang@gmail.com,m:matthiasbgg@gmail.com,m:haojianzhuang@gmail.com,m:geert@glider.be,m:magnusdamm@gmail.com,m:zhanglyra@gmail.com,m:mcoquelinstm32@gmail.com,m:jernejskrabec@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vivo.com,nxp.com,gmail.com,mediatek.com,collabora.com,suse.de,kernel.org,zonque.org,free.fr,sifive.com,glider.be,linux.alibaba.com,foss.st.com,nvidia.com,ti.com,socionext.com,oss.qualcomm.com,iscas.ac.cn,quicinc.com,bp.renesas.com,renesas.com,lists.linux.dev,vger.kernel.org,lists.infradead.org,st-md-mailman.stormreply.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[error27@gmail.com,dmaengine@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:christian.taedcke-oss@weidmueller.com,m:christian.taedcke@weidmueller.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:stable@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[55];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[vkoul@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[error27@gmail.com,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	TAGGED_RCPT(0.00)[dmaengine];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,stanley.mountain:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,weidmueller.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 67380754485
+X-Rspamd-Queue-Id: 9F6427545F4
 
-On 09-07-26, 16:26, Wolfram Sang wrote:
-> On Thu, Jul 09, 2026 at 09:58:04PM +0800, Pan Chuang wrote:
-> > Commit 55b48e23f5c4b6f5ca9b7ab09599b17dcf501c10 ("genirq/devres: Add
-> > error handling in devm_request_*_irq()") added automatic error logging
-> > to devm_request_threaded_irq() and devm_request_any_context_irq() via
-> > the new devm_request_result() helper. The helper prints device name,
-> > IRQ number, handler functions, and error code on failure.
-> > 
-> > Since devm_request_irq() is a static inline wrapper around
-> > devm_request_threaded_irq(), it also benefits from this automatic
-> > logging.
-> > 
-> > This series removes the now-redundant dev_err() and dev_err_probe() calls
-> > in dmaengine drivers that follow these devm_request_*_irq() functions,
-> > as the core now provides more detailed diagnostic information on failure.
-> > 
-> > Pan Chuang (26):
-> >   dmaengine: fsl-edma-main: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: fsl-qdma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: loongson-loongson1-apb-dma: Remove redundant
-> >     dev_err()/dev_err_probe()
-> >   dmaengine: mediatek-mtk-cqdma: Remove redundant
-> >     dev_err()/dev_err_probe()
-> >   dmaengine: mediatek-mtk-hsdma: Remove redundant
-> >     dev_err()/dev_err_probe()
-> >   dmaengine: mmp_pdma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: moxart-dma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: owl-dma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: pxa_dma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: qcom-gpi: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: sf-pdma-sf-pdma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: sh-rcar-dmac: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: sh-rz-dmac: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: sh-shdmac: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: sh-usb-dmac: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: sprd-dma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: st_fdma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: stm32-stm32-dma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: stm32-stm32-dma3: Remove redundant
-> >     dev_err()/dev_err_probe()
-> >   dmaengine: stm32-stm32-mdma: Remove redundant
-> >     dev_err()/dev_err_probe()
-> >   dmaengine: sun4i-dma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: sun6i-dma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: tegra20-apb-dma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: ti-edma: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: uniphier-xdmac: Remove redundant dev_err()/dev_err_probe()
-> >   dmaengine: xgene-dma: Remove redundant dev_err()/dev_err_probe()
+On Tue, Jul 14, 2026 at 01:58:53PM +0200, Taedcke, Christian wrote:
 > 
-> One patch per subsystem for such trivial changes, please.
+> 
+> On 7/9/2026 12:38 PM, Dan Carpenter wrote:
+> > On Fri, Jul 03, 2026 at 09:56:12AM +0200, Christian Taedcke via B4 Relay wrote:
+> >> From: Christian Taedcke <christian.taedcke@weidmueller.com>
+> >>
+> >> When one irq is used for errors and each channel gets a dedicated irq,
+> >> the total number of irqs is num_channels + 1. If the error irq is not
+> >> the last entry in irqbuf[] but an earlier one, the loop assigning
+> >> per-channel irqs terminates one iteration too early and the last
+> >> channel is left without an irq.
+> >>
+> >> Iterate over all collected irqs instead of num_channels so the
+> >> error-irq skip does not shorten the effective channel count.
+> >>
+> >> Fixes: 188c6ba1dd92 ("dmaengine: nbpfaxi: Fix memory corruption in probe()")
+> >> Cc: stable@vger.kernel.org
+> >> Signed-off-by: Christian Taedcke <christian.taedcke@weidmueller.com>
+> >> ---
+> >> Changes in v3:
+> >> - Guard against out-of-bound writes to chan in case of an invalid eirq.
+> >> - Link to v2: https://patch.msgid.link/20260702-upstreaming-nbpfaxi-v1-v2-1-e6d6b178a278@weidmueller.com
+> >>
+> >> Changes in v2:
+> >> - Advance chan only when assigning a real irq to fix out-of-bounds
+> >>   memory access.
+> >> - Remove now redundant ARRAY_SIZE(irqbuf) check.
+> >> - Link to v1: https://patch.msgid.link/20260702-upstreaming-nbpfaxi-v1-v1-1-fd8ea8830cea@weidmueller.com
+> >>
+> >> To: christian.taedcke-oss@weidmueller.com
+> >> To: Vinod Koul <vkoul@kernel.org>
+> >> To: Frank Li <Frank.Li@kernel.org>
+> >> To: Dan Carpenter <error27@gmail.com>
+> >> Cc: dmaengine@vger.kernel.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> ---
+> >>  drivers/dma/nbpfaxi.c | 8 ++++----
+> >>  1 file changed, 4 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/dma/nbpfaxi.c b/drivers/dma/nbpfaxi.c
+> >> index 05d7321629cc..b1f06f0bd0d5 100644
+> >> --- a/drivers/dma/nbpfaxi.c
+> >> +++ b/drivers/dma/nbpfaxi.c
+> >> @@ -1374,14 +1374,14 @@ static int nbpf_probe(struct platform_device *pdev)
+> >>  		if (irqs == num_channels + 1) {
+> >>  			struct nbpf_channel *chan;
+> >>  
+> >> -			for (i = 0, chan = nbpf->chan; i < num_channels;
+> >> -			     i++, chan++) {
+> >> +			for (i = 0, chan = nbpf->chan; i < irqs; i++) {
+> >>  				/* Skip the error IRQ */
+> >>  				if (irqbuf[i] == eirq)
+> >> -					i++;
+> >> -				if (i >= ARRAY_SIZE(irqbuf))
+> >> +					continue;
+> >> +				if (chan >= nbpf->chan + num_channels)
+> > 
+> > Prefer my check, but sure...
+> 
+> I tested changing the condition back to check for i. But after a few different approaches, i think the check in v3 (chan >= nbpf->chan + num_channels) is more robust.
+> 
+> It handles the following cases well:
+> 1. eirq is the last entry in irqbuf[]
+> 2. eirq is not in irqbuf[] (which is not expected)
+> 
+> This check also makes it clear that the write destination is verified.
+> 
+> -> i would prefer to keep the v3 patch as is.
+> 
 
-Yes pretty please
+Ah, yeah.  You're right.  v3 is good.
 
--- 
-~Vinod
+Reviewed-by: Dan Carpenter <error27@gmail.com>
+
+regards,
+dan carpenter
+
 

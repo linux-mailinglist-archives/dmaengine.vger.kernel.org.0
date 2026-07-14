@@ -1,188 +1,308 @@
-Return-Path: <dmaengine+bounces-12529-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12530-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id lf5gMabKVmrtBAEAu9opvQ
-	(envelope-from <dmaengine+bounces-12529-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 01:47:50 +0200
+	id irRLORTLVmoBBQEAu9opvQ
+	(envelope-from <dmaengine+bounces-12530-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 01:49:40 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5329C75980D
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 01:47:50 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CAF575982E
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 01:49:40 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=NfhXU226;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12529-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="dmaengine+bounces-12529-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nv8tPZj2;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12530-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12530-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B5E38301FF3D
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 23:47:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 03185302FB66
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 23:49:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8711C3E3165;
-	Tue, 14 Jul 2026 23:47:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC18370ADA;
+	Tue, 14 Jul 2026 23:49:38 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3987D42BC50
-	for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2026 23:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28864367F59
+	for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2026 23:49:36 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784072867; cv=none; b=h+NeqwwRiNPhpJIV3+JrKzynTcu8rPGWUEfyuWTfbFhYWedzXGcCQAjIKeSF9kHg0Ue3Qo/o7DV/2Gd1O182uBtFLnjh8KCSd+cBeuidSy8u5HdcJhld6aL5qIL/AxUZ3UmM0SF6UTBxaI/pAi1LjivUjMI5zq+QOcLpOFMIIU8=
+	t=1784072978; cv=none; b=DBI72Yl1EigAtiu6/G2Ve2E44XOE0n7IbvbGEH43elx5G/qcribqNAEzng8EuxbWJR/iIZstDtgilI/VR1vA5TDaGjhKDY3IMA9Fjo4vnUVNaiArMQAKowT0OLr8YXxRPUzpTlX+T2JCHJSHWA8yVi0NEDep902wa2+h4jAhnJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784072867; c=relaxed/simple;
-	bh=j7A3pcuv3jfcB1SCiN4d6mbm3zZfaJLcFrPpk+oB9T4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NooNLduHwzHS/vVncUHuaXhu6f+nfazw3rnH1Ng0I0/Ze8kUvxM+ghFxiMJ2KxasuLKWxDAWyOQpIskZ2xy+/LO4Fn2yxWp4CGqxxlPbMwXJCN4/QTtrr+ZZPB/saX6t/C44bUl3oF4CA50pZQTlYauEnkxIHLXJLH4WtJHsLpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NfhXU226; arc=none smtp.client-ip=209.85.210.179
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-84862b0d5f8so1394539b3a.3
-        for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2026 16:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784072866; x=1784677666; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=evgtESGRHB6CFpaYMcRbPRnjXl+LyEJwwEDrH4fU+3c=;
-        b=NfhXU2266bDS7bm1azdgiX+3ef5Oe5rSklozhBTMKHbT7EieUOj+/+j5t/g84WbD2H
-         g+VoBnJrqcLuJwNRGWuogLkg4AC7oiyLqlncrXOB8a59cYiGofMhQZuAYG4fmBr9lB6z
-         o9F90rXhCYjrOHbEJertlwuuBGIr6etDh014jWGQWHbGkZ/V8rpj6V7Y5XhiPvr6GeNH
-         7p7qiSVLQ6XoxQjxrcL1c0t43xDIie5xjCunctIMN4B0vtUdmRZJpne36lNCXcRl3ToG
-         aeurCzitoKKFZOyuYCGE3MH5MQW4Yt3j6O67oDg8NEUwVLQIB1B+owPtfDt5+ejAuWFA
-         +Quw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784072866; x=1784677666;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=evgtESGRHB6CFpaYMcRbPRnjXl+LyEJwwEDrH4fU+3c=;
-        b=cfESO4UYSYM9r2tcu2YzED+OC7HLAdU7zDzlyRg0I9nUCIaINO8ZmIA+YbUqbXpSZ2
-         4FxWR+wjW/unQojhGLsfNq332pADP1TDBwU9xk/xtsH1+vUUQTnZW+LxOypv7hhaVnkq
-         KcqwRTww0StqtX7GNaVo4+YIxUA5DxjNlmrO6gXlmhrZrRGLyyuFe957GKI/ZhUoHKqr
-         TE4q43YZhtwVcFM8He3k6vdqykq3iwCY5/MPTWJtXK7DcvZVEexmxE2mS0EHVH4iwDxw
-         86QER3P9BGVNQwXlGgHYimgJfA3W1RWHH1cu/hKdhwVHj0iKcnrEPfsiF+La+qMJ3KYP
-         YTMw==
-X-Gm-Message-State: AOJu0Yx9s3HDGC1F8rFDxlloonhpNYzud+XtX2dRIzVbwMsrU9qdHIzp
-	+QrvksUV/m78avJ8U/8CL2VtZX9kHQHxOq6fc1LswdJT8H7Vhi8eLO7IndBZfQ==
-X-Gm-Gg: AfdE7clZuP4lnh8OBpzg3682pYRcKY57c/R3zB4TAWhMJW0uFubg/O8SZr1dErgbLmB
-	Fb8Ge+79Sl0jOF9+zmfdAbhYQYy/X+4/7Jh5M3MI33tfOJ4eCkdqmZeujGXt3pLWdYKK9pSSMen
-	mmZekIFJzBNLcVj2VxT8cusCmGIAfmu8/RWRCo/TwEvAtlQGZxt2+mHV+NOBKcKuvPuZQjwDgPz
-	LABKwo1fXqvZ77YT4iZJhFbkAJlRwaGX8RcE9+T7tcXM92QHHYQfaEMZe0nE/lvWWCcbuogcqtC
-	I1kAtNm93t5OG2gzqRJokf+fVIwZOdVWX+FgWpv2Pqk1RlKDjnzoWRfMvdKKopZuB7mJtZprYbn
-	KN1q4XC0OQFWCmdgXBUWPpp/Asc+GIvCOdHVQfJH49tOEzHAALfSEwTPrW7T21SUVCcPB74WQNN
-	aFPTo3lRBUqF8uzgKqQPFN6AKyVBtRPlF8onuDAcG9mTqCJU3iqylPaVSWcA0B0uAN33xW8I8KD
-	nfMoJin16xRIGA7KTwMzvVefKMnj+3rB/TxPAK4AscngYlEt8riTk+4tSawRKa1SA==
-X-Received: by 2002:a05:6a00:1a8c:b0:848:5476:330a with SMTP id d2e1a72fcca58-84889625e42mr13796411b3a.32.1784072865600;
-        Tue, 14 Jul 2026 16:47:45 -0700 (PDT)
-Received: from ryzen.lan ([2601:644:8000:7a86::e34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84a4f242999sm2140674b3a.1.2026.07.14.16.47.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2026 16:47:44 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: dmaengine@vger.kernel.org
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] dmaengine: txx9dmac: use devm_platform_ioremap_resource()
-Date: Tue, 14 Jul 2026 16:47:42 -0700
-Message-ID: <20260714234742.908956-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	s=arc-20240116; t=1784072978; c=relaxed/simple;
+	bh=TygWU3hyhR6KCtxrJUPU4XJAsZT2rEb3BCPFvCciYSA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Li8q14es6xkVShM3JdAOt3Dxz05kZO0YrNBb/IXCuNElF6VkvxX5jULV19q/5Nu2Ha6vZkGqsPI/qq3hwGWAtwwLMTpBuCaNH9l4o7hOJl+my49ASHQaH8QSe/rrT6kgkx5RumIJgor+oojJL7aw/eGNQwAmomNliS1RnRchChE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nv8tPZj2; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E74D1F000E9;
+	Tue, 14 Jul 2026 23:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784072976;
+	bh=60JKL6NtVicb2QvY+GPcb6/SWsR0xNmE2sUZGhQTEG8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=nv8tPZj2FOD7XnJvSs6ntjen2G1vYsbQ1puIqsPFyiGQ1inI1RfYj4+/m9A8uQ11x
+	 Op+h6TD1f0FdE1jY5Nb9KYkuOvZX/FKHqPrlUUYP47BrbCDLaA8rPerpmSDC80KSb0
+	 ujmrAEsoqAj+8J/EaSGmnpi6sEGKQgt+G4O2smivcjqbLog/jJ2QcgrirEeWgwt8YZ
+	 TOXWloItiOTS5VL3j87lGMxCq6EP5TrPUyuEOxucAG3B60Y6/iGqVMd20WSaUNfIuL
+	 m/tbriX/IROl6gIg/TUEnZph4b2ycTsG+v8+b5p/5V/LKUzfOf3TOY09IyKagBgaZj
+	 yyrWdopLJ+rOg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/3] dma: fsl_raid: keep MMIO bases as void __iomem and
+ cast at access
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Rosen Penev" <rosenp@gmail.com>
+Cc: vkoul@kernel.org, Frank.Li@kernel.org, dmaengine@vger.kernel.org
+In-Reply-To: <20260714233855.870797-3-rosenp@gmail.com>
+References: <20260714233855.870797-1-rosenp@gmail.com>
+ <20260714233855.870797-3-rosenp@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Jul 2026 23:49:36 +0000
+Message-Id: <20260714234936.8E74D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-12529-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-12530-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
+	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,dmaengine@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	ALIAS_RESOLVED(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,smtp.kernel.org:mid,lists.linux.dev:replyto]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5329C75980D
+X-Rspamd-Queue-Id: 3CAF575982E
 
-Replace the open-coded platform_get_resource() plus devm_request_mem_region()
-and devm_ioremap() sequence with a single devm_platform_ioremap_resource()
-call, which folds the resource lookup, region reservation and mapping into
-one step and returns an ERR_PTR on failure, checked with IS_ERR() and
-propagated via PTR_ERR().
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+s) to consider:
 
-This is behaviorally equivalent: the driver already reserved the region
-with devm_request_mem_region(), so the non-overlapping reg requirement of
-devm_platform_ioremap_resource() was already satisfied. The txx9dmac
-platform device (arch/mips/txx9/generic/setup.c) provides a single
-IORESOURCE_MEM window per DMAC instance, and the child txx9dmac-chan
-devices carry only IRQ resources, so no region conflict is introduced.
+Pre-existing issues:
+- [High] Missing return value check for `fsl_re_chan_probe()` causes NULL p=
+ointer dereference.
+- [High] Race condition during probe causes NULL pointer dereference in the=
+ ISR.
+- [High] Missing `free_irq()` causes Use-After-Free of the interrupt handle=
+r.
+- [High] DMA channels are never added to the DMA device's channel list.
+- [High] The driver invokes the client callback while holding the channel's=
+ spinlock, risking an ABBA deadlock.
+--
 
-Assisted-by: opencode:hy3-free
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/dma/txx9dmac.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+--- Patch [2]: [PATCH 2/3] dma: fsl_raid: keep MMIO bases as void __iomem a=
+nd cast at access ---
+commit efbae01ecec4b10e7d40ae8af0275362e4f9669a
+Author: Rosen Penev <rosenp@gmail.com>
 
-diff --git a/drivers/dma/txx9dmac.c b/drivers/dma/txx9dmac.c
-index 05622b68a936..6595a54a4b97 100644
---- a/drivers/dma/txx9dmac.c
-+++ b/drivers/dma/txx9dmac.c
-@@ -1167,26 +1167,20 @@ static void txx9dmac_chan_remove(struct platform_device *pdev)
- static int __init txx9dmac_probe(struct platform_device *pdev)
- {
- 	struct txx9dmac_platform_data *pdata = dev_get_platdata(&pdev->dev);
--	struct resource *io;
- 	struct txx9dmac_dev *ddev;
-+	void __iomem *regs;
- 	u32 mcr;
- 	int err;
- 
--	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!io)
--		return -EINVAL;
-+	regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
- 
- 	ddev = devm_kzalloc(&pdev->dev, sizeof(*ddev), GFP_KERNEL);
- 	if (!ddev)
- 		return -ENOMEM;
- 
--	if (!devm_request_mem_region(&pdev->dev, io->start, resource_size(io),
--				     dev_name(&pdev->dev)))
--		return -EBUSY;
--
--	ddev->regs = devm_ioremap(&pdev->dev, io->start, resource_size(io));
--	if (!ddev->regs)
--		return -ENOMEM;
-+	ddev->regs = regs;
- 	ddev->have_64bit_regs = pdata->have_64bit_regs;
- 	if (__is_dmac64(ddev))
- 		ddev->descsize = sizeof(struct txx9dmac_hwdesc);
--- 
-2.55.0
+dma: fsl_raid: keep MMIO bases as void __iomem and cast at access
 
+This patch updates the driver to store MMIO bases as void __iomem pointers
+and uses typed local pointers to access fields. This resolves sparse warnin=
+gs
+about different address spaces when using ioread32be() and iowrite32be().
+
+Link: https://lore.kernel.org/oe-kbuild-all/202008111749.yy85rFMD%25lkp@int=
+el.com/
+
+> diff --git a/drivers/dma/fsl_raid.c b/drivers/dma/fsl_raid.c
+> index 888f55b672a58..47ebdf2743310 100644
+> --- a/drivers/dma/fsl_raid.c
+> +++ b/drivers/dma/fsl_raid.c
+[ ... ]
+> @@ -167,7 +170,7 @@ static void fsl_re_dequeue(struct tasklet_struct *t)
+>  	fsl_re_cleanup_descs(re_chan);
+> =20
+>  	spin_lock_irqsave(&re_chan->desc_lock, flags);
+> -	count =3D	FSL_RE_SLOT_FULL(in_be32(&re_chan->jrregs->oubring_slot_full)=
+);
+> +	count =3D	FSL_RE_SLOT_FULL(in_be32(&jr->oubring_slot_full));
+
+[Severity: High]
+This is a pre-existing issue, but can this lock handling cause a recursive
+deadlock?
+
+In fsl_re_dequeue(), desc_lock is acquired via spin_lock_irqsave(). While
+iterating through completed descriptors, fsl_re_desc_done() is called:
+
+    while (count--) {
+        ...
+        if (found) {
+            fsl_re_desc_done(desc);
+            list_move_tail(&desc->node, &re_chan->ack_q);
+        }
+    ...
+    }
+
+fsl_re_desc_done() invokes the client callback inline. If the client attemp=
+ts
+to submit new work from its callback, fsl_re_tx_submit() will attempt to
+acquire the exact same desc_lock, resulting in a deadlock.
+
+>  	while (count--) {
+>  		found =3D 0;
+>  		hwdesc =3D &re_chan->oub_ring_virt_addr[re_chan->oub_count];
+[ ... ]
+> @@ -201,12 +203,12 @@ static void fsl_re_dequeue(struct tasklet_struct *t)
+>  /* Per Job Ring interrupt handler */
+>  static irqreturn_t fsl_re_isr(int irq, void *data)
+>  {
+> -	struct fsl_re_chan *re_chan;
+> +	struct device *dev =3D data;
+> +	struct fsl_re_chan *re_chan =3D dev_get_drvdata(dev);
+> +	struct fsl_re_chan_cfg __iomem *jr =3D re_chan->jrregs;
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does this assume drvdata is
+already set when the interrupt fires?
+
+In fsl_re_chan_probe(), request_irq() is called to register this handler
+before dev_set_drvdata(chandev, chan) sets the driver data.
+
+If an interrupt fires immediately after registration, dev_get_drvdata(dev)
+will return NULL, leading to a crash when dereferencing re_chan->jrregs.
+
+>  	u32 irqstate, status;
+> =20
+> -	re_chan =3D dev_get_drvdata((struct device *)data);
+> -
+> -	irqstate =3D in_be32(&re_chan->jrregs->jr_interrupt_status);
+> +	irqstate =3D in_be32(&jr->jr_interrupt_status);
+>  	if (!irqstate)
+>  		return IRQ_NONE;
+> =20
+[ ... ]
+> @@ -709,30 +712,23 @@ static int fsl_re_chan_probe(struct platform_device=
+ *ofdev,
+>  	}
+> =20
+>  	/* Program the Inbound/Outbound ring base addresses and size */
+> -	out_be32(&chan->jrregs->inbring_base_h,
+> -		 chan->inb_phys_addr & FSL_RE_ADDR_BIT_MASK);
+> -	out_be32(&chan->jrregs->oubring_base_h,
+> -		 chan->oub_phys_addr & FSL_RE_ADDR_BIT_MASK);
+> -	out_be32(&chan->jrregs->inbring_base_l,
+> -		 chan->inb_phys_addr >> FSL_RE_ADDR_BIT_SHIFT);
+> -	out_be32(&chan->jrregs->oubring_base_l,
+> -		 chan->oub_phys_addr >> FSL_RE_ADDR_BIT_SHIFT);
+> -	out_be32(&chan->jrregs->inbring_size,
+> -		 FSL_RE_RING_SIZE << FSL_RE_RING_SIZE_SHIFT);
+> -	out_be32(&chan->jrregs->oubring_size,
+> -		 FSL_RE_RING_SIZE << FSL_RE_RING_SIZE_SHIFT);
+> +	out_be32(&jr->inbring_base_h, chan->inb_phys_addr & FSL_RE_ADDR_BIT_MAS=
+K);
+> +	out_be32(&jr->oubring_base_h, chan->oub_phys_addr & FSL_RE_ADDR_BIT_MAS=
+K);
+> +	out_be32(&jr->inbring_base_l, chan->inb_phys_addr >> FSL_RE_ADDR_BIT_SH=
+IFT);
+> +	out_be32(&jr->oubring_base_l, chan->oub_phys_addr >> FSL_RE_ADDR_BIT_SH=
+IFT);
+> +	out_be32(&jr->inbring_size, FSL_RE_RING_SIZE << FSL_RE_RING_SIZE_SHIFT);
+> +	out_be32(&jr->oubring_size, FSL_RE_RING_SIZE << FSL_RE_RING_SIZE_SHIFT);
+> =20
+>  	/* Read LIODN value from u-boot */
+> -	status =3D in_be32(&chan->jrregs->jr_config_1) & FSL_RE_REG_LIODN_MASK;
+> +	status =3D in_be32(&jr->jr_config_1) & FSL_RE_REG_LIODN_MASK;
+> =20
+>  	/* Program the CFG reg */
+> -	out_be32(&chan->jrregs->jr_config_1,
+> -		 FSL_RE_CFG1_CBSI | FSL_RE_CFG1_CBS0 | status);
+> +	out_be32(&jr->jr_config_1, FSL_RE_CFG1_CBSI | FSL_RE_CFG1_CBS0 | status=
+);
+> =20
+>  	dev_set_drvdata(chandev, chan);
+
+[Severity: High]
+This is a pre-existing issue, but are we leaking the registered IRQ?
+
+Neither the error path of fsl_re_chan_probe() nor the teardown function
+fsl_re_remove_chan() appears to call free_irq().
+
+If fsl_re_chan_probe() fails after request_irq(), or if the module is
+unloaded, the ISR remains registered. This could lead to a use-after-free
+if an interrupt fires and attempts to execute unmapped memory.
+
+[Severity: High]
+This is another pre-existing issue, but is it intentional that the
+initialized DMA channel is not added to the DMA device's channel list?
+
+Earlier in fsl_re_chan_probe(), the channel is initialized:
+
+    re_priv->re_jrs[q] =3D chan;
+    chan->chan.device =3D dma_dev;
+    ...
+
+However, list_add_tail(&chan->chan.device_node, &dma_dev->channels) is never
+called. When dma_async_device_register() is executed, it might find the list
+empty and register 0 channels, making them unavailable to clients.
+
+> =20
+>  	/* Enable RE/CHAN */
+> -	out_be32(&chan->jrregs->jr_command, FSL_RE_ENABLE);
+> +	out_be32(&jr->jr_command, FSL_RE_ENABLE);
+> =20
+>  	return 0;
+> =20
+[ ... ]
+> @@ -752,6 +748,7 @@ static int fsl_re_probe(struct platform_device *ofdev)
+>  	u8 ridx =3D 0;
+>  	struct dma_device *dma_dev;
+>  	struct resource *res;
+> +	struct fsl_re_ctrl __iomem *re_regs;
+>  	int rc;
+>  	struct device *dev =3D &ofdev->dev;
+
+[Severity: High]
+This is a pre-existing issue, but is it safe to ignore the return value of
+fsl_re_chan_probe() later in this function?
+
+If the probe fails (e.g. out of memory), total_chans is still incremented:
+
+    for_each_child_of_node(np, child) {
+        rc =3D of_device_is_compatible(child, "fsl,raideng-v1.0-job-ring");
+        if (rc) {
+            fsl_re_chan_probe(ofdev, child, ridx++, off);
+            re_priv->total_chans++;
+        }
+    }
+
+This leaves an uninitialized pointer in the re_jrs array, which might be
+dereferenced as a NULL pointer during driver unbind in fsl_re_remove_chan()
+when it calls tasklet_kill(&chan->irqtask).
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714233855.8707=
+97-1-rosenp@gmail.com?part=3D2
 

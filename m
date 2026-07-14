@@ -1,217 +1,232 @@
-Return-Path: <dmaengine+bounces-12443-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12444-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id un1UKHatVWqErgAAu9opvQ
-	(envelope-from <dmaengine+bounces-12443-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 05:31:02 +0200
+	id nMouEn2wVWrnrgAAu9opvQ
+	(envelope-from <dmaengine+bounces-12444-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 05:43:57 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F246F750A5E
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 05:31:01 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 803AC750B22
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 05:43:56 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12443-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12443-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=none;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=oGgcDQJs;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12444-lists+dmaengine=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="dmaengine+bounces-12444-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BFCCF302C6FD
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 03:31:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D26A2304606C
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 03:43:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D45F2C11FE;
-	Tue, 14 Jul 2026 03:31:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64BAB368D73;
+	Tue, 14 Jul 2026 03:43:28 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD35B13D886;
-	Tue, 14 Jul 2026 03:30:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E0935B63B
+	for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2026 03:43:26 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783999860; cv=none; b=h49EzvHtUo4j1W57/eK22/wpmJmFoNX2X+wI8ZHhUY5ijyU5JjyBH6Mn4W3vOr0PS6WKKGjZ01BhrXIfHj9rlqJo87csNBW7Tx8d9BCaij0D76YKO1FwW3ejuNaaUC39FQyCA+Xb2Ko++CgRPX+eymZcA0zc8xCtSWG8hCUqBaM=
+	t=1784000608; cv=none; b=gOC0HYnqKkoUsu4H4hwmPBYuy4dGT4jNEWvEt9OKsNnix+0S+6bKXve5oyqY2jPSCKmP7lJ3wTFWROhw/XWYbBJM1tJDFf3g7xWBZilH6I7zGw7y4A9saE+EYbWJWJ34XrjTgx4XQWeJAMWTFReGmNgSPeFuT1dXxKa6W4U1RfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783999860; c=relaxed/simple;
-	bh=6TesKtS8aX+cKqBJvBoHE55K5LdLPD24p+gAmYAX+ks=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=M3NUTWQuni9Lw6wKfgwXjb7q2MqOncMCX79yg7TUN3rFtNkMd9qc72HIjsXil3lkk1FqPiiDa0wgS6vQysFitdt8uWGU4DI+wwgg/nd8En4Oh0P+ilaAr0dyoz/I/oQieGXcrqkDPSQ7AYHRIlvMsFciyh1KSEFPSmfMkGpK694=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-X-UUID: 68fc48247f3411f1aa26b74ffac11d73-20260714
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:49dc99e2-bc32-4451-92b9-6f185baa9866,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:e7bac3a,CLOUDID:d085e429446b2b9a9044084871bdeac6,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|865|898,TC:nil,Content:0|15|50,E
-	DM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA
-	:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 68fc48247f3411f1aa26b74ffac11d73-20260714
-X-User: zenghongling@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <zenghongling@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 2049219937; Tue, 14 Jul 2026 11:30:50 +0800
-From: Hongling Zeng <zenghongling@kylinos.cn>
-To: vkoul@kernel.org,
-	Frank.Li@kernel.org,
-	arnd@arndb.de,
-	jonas.jensen@gmail.com
-Cc: dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhongling0719@126.com,
-	Hongling Zeng <zenghongling@kylinos.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] dmaengine: moxart: Fix use-after-free by proper tasklet cleanup
-Date: Tue, 14 Jul 2026 11:30:46 +0800
-Message-Id: <20260714033046.673677-1-zenghongling@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1784000608; c=relaxed/simple;
+	bh=pyLdLwoPiUcRVYjuBWuJQhLnKMnjs//jqknBZiGZdY0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=P9BIYn/IMTvGoLkcyBewdZexXZER7am5Y+oSDZ8wiNFSGu2og6GzfDcMeT18Bq6wVKFy1Zb5Ft9H3zMPKfyeUKIKrG8jjKejlsey7grPWnEcGapIr2m52KXF27FVgn7J/gXmbdRKuHaSKCrLXve+tb4jnGnG2Nc2BK1VHUm/4Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGgcDQJs; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93D521F000E9;
+	Tue, 14 Jul 2026 03:43:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784000606;
+	bh=xu0XxwDQEHT/pWIFZeqV+upjICugftzL802KveMsXw0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=oGgcDQJsOliEFDQ+qROBRZcSviHGKQ5pj6ZQkmsznNs6G+lUTqz8jhE4jE2d2H3vo
+	 BCW8CtCC+ffIaFkYTygG3dC/6k+T+R9Fp6DNdm4Ci+r5LyyXPx7DSV331eA793+1Qu
+	 CyYJEIABTg+LxnUtIHekZ8EUdM/zeV/d4oixQ5oGp7Jkk3Q1WXIuUFI8SMmlzVgW/8
+	 cPdFkalWneIzHZwVnXKF7fmH2Q2WvuNd60bVgoQZJoVMCLmPq0/MTy9keyxSd5UrI5
+	 e0N79IWuAWbNaktw8S1eDSBnWMIDUeOajGh+5HFmvN+msWe0+HObv5Fkzzxnj45Ot+
+	 l7zEyiudQFPpw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] dmaengine: moxart: Fix use-after-free by proper
+ tasklet cleanup
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Hongling Zeng" <zenghongling@kylinos.cn>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Frank.Li@kernel.org
+In-Reply-To: <20260714033046.673677-1-zenghongling@kylinos.cn>
+References: <20260714033046.673677-1-zenghongling@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Jul 2026 03:43:26 +0000
+Message-Id: <20260714034326.93D521F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.04 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MISSING_MIME_VERSION(2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DMARC_NA(0.00)[kylinos.cn];
-	TAGGED_FROM(0.00)[bounces-12443-lists,dmaengine=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@kernel.org,m:arnd@arndb.de,m:jonas.jensen@gmail.com,m:dmaengine@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:zhongling0719@126.com,m:zenghongling@kylinos.cn,m:stable@vger.kernel.org,m:jonasjensen@gmail.com,s:lists@lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[zenghongling@kylinos.cn,dmaengine@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[kernel.org,arndb.de,gmail.com];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	REPLYTO_DN_EQ_FROM_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-12444-lists,dmaengine=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:zenghongling@kylinos.cn,m:vkoul@kernel.org,m:dmaengine@vger.kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zenghongling@kylinos.cn,dmaengine@vger.kernel.org];
-	FREEMAIL_CC(0.00)[vger.kernel.org,126.com,kylinos.cn];
-	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[dmaengine];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NO_DN(0.00)[];
+	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,smtp.kernel.org:mid,kylinos.cn:email,lists.linux.dev:replyto,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: F246F750A5E
+X-Rspamd-Queue-Id: 803AC750B22
+
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
+
+Pre-existing issues:
+- [High] Use-After-Free of DMA device structure (`mdc`) on driver unbind du=
+e to `devm_kzalloc`.
+- [High] Interrupt storm and system lockup due to unacknowledged pending in=
+terrupts on unallocated channels.
+- [High] NULL pointer dereference due to a Time-of-Check to Time-of-Use (TO=
+CTOU) race condition in the interrupt handler.
+- [High] Hardware DMA channels are not disabled during driver removal, risk=
+ing silent memory corruption.
+--
+
+--- Patch [1]: [PATCH v2] dmaengine: moxart: Fix use-after-free by proper t=
+asklet cleanup ---
+commit 003a30b8eb52a034d5c70894b10d67c96c037dbb
+Author: Hongling Zeng <zenghongling@kylinos.cn>
+
+dmaengine: moxart: Fix use-after-free by proper tasklet cleanup
 
 The moxart DMA driver has a use-after-free vulnerability:
 - vchan_init() creates tasklets that access moxart_chan memory
 - Neither probe error paths nor remove() call tasklet_kill()
-- devm_free_irq() only waits for IRQ handler, NOT tasklets
-- mdc is devm-managed and freed after probe/remove
-- Running tasklets accessing freed memory → Use-After-Free!
 
-Fix by adding moxart_dma_free_channels() helper that calls
-tasklet_kill() for each channel, and ensuring proper teardown order:
+> diff --git a/drivers/dma/moxart-dma.c b/drivers/dma/moxart-dma.c
+> index 442f5aa16031f..a2481960e8700 100644
+> --- a/drivers/dma/moxart-dma.c
+> +++ b/drivers/dma/moxart-dma.c
+> @@ -553,6 +553,21 @@ static irqreturn_t moxart_dma_interrupt(int irq, voi=
+d *devid)
+>  	return IRQ_HANDLED;
+>  }
 
-In remove():
-- devm_free_irq() FIRST to stop the IRQ handler (implies
-  synchronize_irq(), preventing new tasklets from being scheduled)
-- moxart_dma_free_channels() to kill already-scheduled tasklets
-- Then of_dma_controller_free() and dma_async_device_unregister()
-  to safely unregister the device
+[Severity: High]
+This isn't a bug introduced by this patch, but does the interrupt handler
+potentially cause an interrupt storm?
 
-In probe error path:
-- moxart_dma_free_channels() to kill tasklets created by vchan_init()
-- devm_request_irq() is automatically released by devres, so no
-  explicit devm_free_irq() is needed
+If a hardware interrupt asserts on an unallocated channel, the handler skips
+reading the control register and fails to clear the interrupt:
 
-Fixes: 5f9e685a0d46 ("dmaengine: Add MOXA ART DMA engine driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
+drivers/dma/moxart-dma.c:moxart_dma_interrupt() {
+    ...
+	for (i =3D 0; i < APB_DMA_MAX_CHANNEL; i++, ch++) {
+		if (!ch->allocated)
+			continue;
+    ...
+}
 
----
- Change in v2:
- - The DMA core's dma_async_device_unregister() handles all channel
-   cleanup including sysfs entries, IDA tags, and per-cpu memory, so
-   we don't call list_del() on the channel nodes.
----
- drivers/dma/moxart-dma.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+Since the handler unconditionally returns IRQ_HANDLED at the end, could this
+cause the kernel to re-enter the interrupt handler immediately and
+indefinitely?
 
-diff --git a/drivers/dma/moxart-dma.c b/drivers/dma/moxart-dma.c
-index 442f5aa16031..a2481960e870 100644
---- a/drivers/dma/moxart-dma.c
-+++ b/drivers/dma/moxart-dma.c
-@@ -553,6 +553,21 @@ static irqreturn_t moxart_dma_interrupt(int irq, void *devid)
- 	return IRQ_HANDLED;
- }
- 
-+static void moxart_dma_free_channels(struct moxart_dmadev *mdc)
-+{
-+	struct moxart_chan *ch;
-+	int i;
-+
-+	for (i = 0; i < APB_DMA_MAX_CHANNEL; i++) {
-+		ch = &mdc->slave_chans[i];
-+		/*
-+		 * Wait for any scheduled tasklet to complete before channel
-+		 * memory is freed by devres.
-+		 */
-+		tasklet_kill(&ch->vc.task);
-+	}
-+}
-+
- static int moxart_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -609,19 +624,23 @@ static int moxart_probe(struct platform_device *pdev)
- 	ret = dma_async_device_register(&mdc->dma_slave);
- 	if (ret) {
- 		dev_err(dev, "dma_async_device_register failed\n");
--		return ret;
-+		goto err_dma_register;
- 	}
- 
- 	ret = of_dma_controller_register(node, moxart_of_xlate, mdc);
- 	if (ret) {
- 		dev_err(dev, "of_dma_controller_register failed\n");
- 		dma_async_device_unregister(&mdc->dma_slave);
--		return ret;
-+		goto err_dma_register;
- 	}
- 
- 	dev_dbg(dev, "%s: IRQ=%u\n", __func__, irq);
- 
- 	return 0;
-+
-+err_dma_register:
-+	moxart_dma_free_channels(mdc);
-+	return ret;
- }
- 
- static void moxart_remove(struct platform_device *pdev)
-@@ -630,10 +649,12 @@ static void moxart_remove(struct platform_device *pdev)
- 
- 	devm_free_irq(&pdev->dev, m->irq, m);
- 
--	dma_async_device_unregister(&m->dma_slave);
-+	moxart_dma_free_channels(m);
- 
- 	if (pdev->dev.of_node)
- 		of_dma_controller_free(pdev->dev.of_node);
-+
-+	dma_async_device_unregister(&m->dma_slave);
- }
- 
- static const struct of_device_id moxart_dma_match[] = {
--- 
-2.25.1
+[Severity: High]
+This is a pre-existing issue, but is there a Time-of-Check to Time-of-Use
+(TOCTOU) race condition in the interrupt handler?
 
+The descriptor is checked locklessly before acquiring the spinlock:
+
+drivers/dma/moxart-dma.c:moxart_dma_interrupt() {
+    ...
+			if (ch->desc) {
+				spin_lock(&ch->vc.lock);
+				if (++ch->sgidx < ch->desc->sglen) {
+    ...
+}
+
+If a client driver concurrently terminates the channel and sets ch->desc to
+NULL, could this result in a NULL pointer dereference when accessing
+ch->desc->sglen inside the locked section?
+
+[ ... ]
+
+> @@ -609,19 +624,23 @@ static int moxart_probe(struct platform_device *pde=
+v)
+>  	ret =3D dma_async_device_register(&mdc->dma_slave);
+>  	if (ret) {
+
+[Severity: High]
+This is a pre-existing issue, but does using devm_kzalloc() for the DMA
+device structure cause a use-after-free on driver unbind?
+
+drivers/dma/moxart-dma.c:moxart_probe() {
+    ...
+	mdc =3D devm_kzalloc(dev, sizeof(*mdc), GFP_KERNEL);
+    ...
+}
+
+If the driver is unbound via sysfs while a client holds a reference to a
+DMA channel, devres will immediately free mdc.  When the client later drops
+its reference, will the dmaengine core access the freed memory?
+
+[ ... ]
+
+> @@ -630,10 +649,12 @@ static void moxart_remove(struct platform_device *p=
+dev)
+>  {
+>  	struct moxart_dmadev *m =3D platform_get_drvdata(pdev);
+> =20
+>  	devm_free_irq(&pdev->dev, m->irq, m);
+> =20
+> -	dma_async_device_unregister(&m->dma_slave);
+> +	moxart_dma_free_channels(m);
+> =20
+>  	if (pdev->dev.of_node)
+>  		of_dma_controller_free(pdev->dev.of_node);
+> +
+> +	dma_async_device_unregister(&m->dma_slave);
+>  }
+
+[Severity: High]
+This isn't a bug introduced by this patch, but are the hardware DMA channels
+left enabled during driver removal?
+
+If the driver is unbound while a DMA transfer is actively running, the
+software resources are freed, but the hardware control registers are never
+updated to stop the transfers.
+
+If the client driver subsequently frees its DMA buffers, could the
+continuing hardware transfer corrupt memory?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714033046.6736=
+77-1-zenghongling@kylinos.cn?part=3D1
 

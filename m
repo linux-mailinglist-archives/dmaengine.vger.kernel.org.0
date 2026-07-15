@@ -1,63 +1,63 @@
-Return-Path: <dmaengine+bounces-12531-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12532-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id AZZ+AELLVmoEBQEAu9opvQ
-	(envelope-from <dmaengine+bounces-12531-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 01:50:26 +0200
+	id wpriGy3OVmqRBQEAu9opvQ
+	(envelope-from <dmaengine+bounces-12532-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 02:02:53 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44750759834
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 01:50:25 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D09ED7598C6
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 02:02:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=GBZm7RpJ;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12531-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12531-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b="Wb499/S1";
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12532-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-12532-lists+dmaengine=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 07221305F6DC
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2026 23:50:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 27ADC3028E86
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 00:02:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEBE1367F59;
-	Tue, 14 Jul 2026 23:50:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEFAA45039;
+	Wed, 15 Jul 2026 00:02:44 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A27027587D
-	for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2026 23:50:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF9C42BC47
+	for <dmaengine@vger.kernel.org>; Wed, 15 Jul 2026 00:02:43 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784073023; cv=none; b=R0Igz706qlSywwD83wquOJa1q9J5SEDMTL1JYwhX137xPGbyPbM6FWWoENp12WAJPKXSdBK+HkFAjp3qiziZimjLDBozAI+LmQcKMzjEjCk/X2e+PHwUzPQPSOKmziZwA6Qam8t4y1725cFdexHb+l5DbQkNeC9bwHRVb3JvTfc=
+	t=1784073764; cv=none; b=BEa9HdSK+LhnnevOcUWQ4Bd8B2ob9GeIMK/zs2DoPCcIbMd7DOpCiibbCELxSqbn1V0l/MWJxB3PILn8JqQZ8omSIPycLkfJemMnbID6clLWmLGBH+ldUCDcglp9ivnSr5S4Q1sus+g43KTp+m5uKrnW0MFaUMzg9/a6DgZ2pxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784073023; c=relaxed/simple;
-	bh=in+wB3g1DOHXXDgvUTL4vAEJvS9xVJ6+1M23184KsNg=;
+	s=arc-20240116; t=1784073764; c=relaxed/simple;
+	bh=3zS0whs2AgKFWBYqusvjPgLaOESQJTZSbxgV/zauoWA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=AyeYvLRM2WrO25EiqoNbfagrBFbKipofzEQqcCaIlaAp9yMIUZmtYBgcjS0mMXvM3Rl36p3xWVt/j107S+vqBDCG5SKe6zMJI87dsdnoYaq1+NUGTh+ZkwtvwiUFu4evZSSJI1Z42FKyvqKiczzg2Jh3ce926ZpwPsWVsYXaL8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GBZm7RpJ; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D244A1F00A3A;
-	Tue, 14 Jul 2026 23:50:21 +0000 (UTC)
+	 Message-Id; b=mM7lRcMG9E1BrIMEukP9kdT0FclurgoZjmsmXjy4tirS8uc+oXqkb/ahYFtoIofxUdnWGV72H2RVDL7pf6D4PjCTWjVZ3JKBh2MNKB8OE8dj4Hbd3StiHNUmExJJZm79JZ+kdWiUvItGMxmW3I8HPvdbwonFj9N+qKxkPWKSt9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wb499/S1; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E3AC1F000E9;
+	Wed, 15 Jul 2026 00:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784073022;
-	bh=in+wB3g1DOHXXDgvUTL4vAEJvS9xVJ6+1M23184KsNg=;
+	s=k20260515; t=1784073763;
+	bh=8DhD/t4FKzNPUEo95TbklvRvnhaoudWqGlIyYqx2df0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GBZm7RpJwWc+tXVxEcnLqQyun0GqFTrXL4U/hpLAcGRj7GaT1j5lnlSabLU0Zc4AB
-	 ASigB/4V/cCvktemOSw27MpPu3w8kQ+RhP4eSGOaRJd8be9pQ0hfouL6QIo9+6nkvU
-	 r5hFcbztGpEXy73bllxz2dNhBN0h+72MBb1apaKfekAvlJinf17noswiRWLPQyelVv
-	 eREmJFVpRrtUNL9FfOziE6lD/lcH25d6W1wyEINZ7Kgx4ES8ONf9/8k0hTn2yTtEPz
-	 th/2b/kIIysU/QQp7BEDMzzE3TxL7iuLnsQr0eEY8FCTxRwo+LIaRsk4t10z6R5LXr
-	 qXb8dxCfgr0Rw==
+	b=Wb499/S1N7DXghlgmSkzHm+VHnoD+QzJHzTNGpPtWlUI46IRlFgwJuQrnf3aRfmqa
+	 19Ex65GjNS4XVjHtsj8qS7SGS+5wuUrf99CBad60f7cIynl+JBhB+UwDKrlE+q9lxp
+	 UbzAvuZl8lbklkJWjvCqaiGnN1ygQllumdEyhV+Jxz4Rvy0aHGwkM29qWPT+QaxCrf
+	 PClMOv6trXb3fUaX0UFsUn4VncbbVgvREj3eygXyoqw2MvSvF95txWy/Dr7oSn9RHv
+	 X5jvR3Ly40yXXWi/U47aPborJKlskxHUa09PgV+nwx4sbjnwza6NXrk3abOZwC2yZx
+	 1l/usa1OL7V9Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/3] dma: fsl_raid: use devm_platform_ioremap_resource
+Subject: Re: [PATCH] dmaengine: txx9dmac: use
+ devm_platform_ioremap_resource()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Rosen Penev" <rosenp@gmail.com>
-Cc: dmaengine@vger.kernel.org, vkoul@kernel.org, Frank.Li@kernel.org
-In-Reply-To: <20260714233855.870797-4-rosenp@gmail.com>
-References: <20260714233855.870797-1-rosenp@gmail.com>
- <20260714233855.870797-4-rosenp@gmail.com>
+Cc: Frank.Li@kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org
+In-Reply-To: <20260714234742.908956-1-rosenp@gmail.com>
+References: <20260714234742.908956-1-rosenp@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 14 Jul 2026 23:50:20 +0000
-Message-Id: <20260714235021.D244A1F00A3A@smtp.kernel.org>
+Date: Wed, 15 Jul 2026 00:02:42 +0000
+Message-Id: <20260715000243.1E3AC1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
@@ -70,7 +70,7 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -78,17 +78,17 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-12531-lists,dmaengine=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-12532-lists,dmaengine=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,m:Frank.Li@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:rosenp@gmail.com,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:vkoul@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashiko-bot@kernel.org,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[dmaengine];
 	ALIAS_RESOLVED(0.00)[];
@@ -98,130 +98,129 @@ X-Spamd-Result: default: False [-3.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_NO_DN(0.00)[];
 	HAS_REPLYTO(0.00)[sashiko-reviews@lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smtp.kernel.org:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,sashiko.dev:url,lists.linux.dev:replyto]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lists.linux.dev:replyto]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 44750759834
+X-Rspamd-Queue-Id: D09ED7598C6
 
-Thank you for your contribution! Sashiko AI review found 7 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Unchecked return value from `fsl_re_chan_probe()` leads to double-=
-free and NULL pointer dereference in `fsl_re_remove_chan()`.
-- [High] The driver requests IRQs but never frees them, leading to a perman=
-ent leak and Use-After-Free crashes.
-- [High] The return value of `dma_async_device_register()` is completely ig=
-nored.
-- [High] System-wide device tree traversal for child nodes instead of scope=
-d child node search.
-- [High] Missing cleanup of tasklet, IRQ, and platform device on error path=
-s in `fsl_re_chan_probe`.
-- [High] Failure during parent probe loop does not tear down already initia=
-lized channels.
-- [Medium] Platform devices dynamically created for job rings via `of_platf=
-orm_device_create` are never unregistered.
+- [High] The error path in `txx9dmac_chan_probe` fails to kill `dc->tasklet=
+` and leaves a dangling pointer in `dc->ddev->chan`, leading to Use-After-F=
+ree.
+- [High] Missing `dma_mapping_error()` check after mapping memory with `dma=
+_map_single()` in `txx9dmac_desc_alloc`.
 --
 
---- Patch [3]: [PATCH 3/3] dma: fsl_raid: use devm_platform_ioremap_resourc=
-e ---
-Note: The format of this review has been altered to provide a free-form
-summary of the findings without quoting the original patch, to adhere to
-system recitation restrictions.
-
-Commit df861cda9af0548c1bb12583b9a2c34f69725af1
+--- Patch [1]: [PATCH] dmaengine: txx9dmac: use devm_platform_ioremap_resou=
+rce() ---
+commit bc23f2a8099e4ec156f46c83d8a2cae426f12327
 Author: Rosen Penev <rosenp@gmail.com>
-Subject: dma: fsl_raid: use devm_platform_ioremap_resource
 
-This patch replaces the open-coded platform_get_resource() and devm_ioremap=
+dmaengine: txx9dmac: use devm_platform_ioremap_resource()
+
+Replace the open-coded platform_get_resource() plus devm_request_mem_region=
 ()
-sequence with devm_platform_ioremap_resource(). It simplifies the probe rou=
-tine
-by fetching the resource and mapping it in one call. The error check is also
-updated to use IS_ERR/PTR_ERR.
+and devm_ioremap() sequence with a single devm_platform_ioremap_resource()
+call. This folds the resource lookup, region reservation and mapping into
+one step and returns an ERR_PTR on failure. This is behaviorally equivalent
+as the driver already reserved the region.
 
-While reviewing the driver code around these changes, I noticed a few
-pre-existing issues in the driver that might need attention. These are not
-bugs introduced by this patch, but they could cause problems during operati=
-on
-or driver unbind.
+> diff --git a/drivers/dma/txx9dmac.c b/drivers/dma/txx9dmac.c
+> index 05622b68a9363..6595a54a4b97f 100644
+> --- a/drivers/dma/txx9dmac.c
+> +++ b/drivers/dma/txx9dmac.c
+> @@ -1167,26 +1167,20 @@ static void txx9dmac_chan_remove(struct platform_=
+device *pdev)
+>  static int __init txx9dmac_probe(struct platform_device *pdev)
+>  {
+>  	struct txx9dmac_platform_data *pdata =3D dev_get_platdata(&pdev->dev);
+> -	struct resource *io;
+>  	struct txx9dmac_dev *ddev;
+> +	void __iomem *regs;
+>  	u32 mcr;
+>  	int err;
+> =20
+> -	io =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!io)
+> -		return -EINVAL;
+> +	regs =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(regs))
+> +		return PTR_ERR(regs);
+> =20
+>  	ddev =3D devm_kzalloc(&pdev->dev, sizeof(*ddev), GFP_KERNEL);
+>  	if (!ddev)
+>  		return -ENOMEM;
+> =20
+> -	if (!devm_request_mem_region(&pdev->dev, io->start, resource_size(io),
+> -				     dev_name(&pdev->dev)))
+> -		return -EBUSY;
+> -
+> -	ddev->regs =3D devm_ioremap(&pdev->dev, io->start, resource_size(io));
+> -	if (!ddev->regs)
+> -		return -ENOMEM;
+> +	ddev->regs =3D regs;
+>  	ddev->have_64bit_regs =3D pdata->have_64bit_regs;
+>  	if (__is_dmac64(ddev))
+>  		ddev->descsize =3D sizeof(struct txx9dmac_hwdesc);
 
-[Severity: High]
-This is a pre-existing issue, but does fsl_re_probe() handle failures from
-fsl_re_chan_probe() correctly? If fsl_re_chan_probe() fails before fully
-initializing the channel, it returns an error. However, fsl_re_probe() igno=
-res
-this return value and unconditionally increments re_priv->total_chans. This
-leaves a NULL pointer in the re_priv->re_jrs array for that channel index.
-Later, when fsl_re_remove() is called, it iterates up to total_chans and pa=
-sses
-these NULL pointers to fsl_re_remove_chan(), which will result in a NULL
-pointer dereference when calling tasklet_kill() on the irqtask.
+While reviewing this file, I noticed a couple of pre-existing issues.
 
-[Severity: High]
-This isn't a bug introduced by this patch, but is there a missing free_irq()
-in the teardown path? In fsl_re_chan_probe(), the driver uses request_irq()
-to register an interrupt handler for each channel. However,
-fsl_re_remove_chan() does not appear to call free_irq(). Since the channel
-structure is allocated with devm_kzalloc, its memory is freed automatically
-by devres when the driver is unbound. If an interrupt fires after the driver
-is removed, could the kernel execute fsl_re_isr and dereference the freed
-chan pointer?
-
-[Severity: Medium]
-This is a pre-existing issue, but are the platform devices created for job
-rings properly unregistered? fsl_re_chan_probe() calls
-of_platform_device_create() to create platform devices for the child nodes.
-However, neither the error handling path nor the driver's teardown function
-(fsl_re_remove_chan) calls of_platform_device_destroy() or
-platform_device_unregister(). Could this cause a memory and sysfs leak, and
-prevent the driver from successfully rebinding later?
-
-[Severity: High]
-This isn't a bug introduced by this patch, but is it intentional to ignore =
-the
-return value of dma_async_device_register() in fsl_re_probe()? The function
-is called just before returning 0. If registration fails, the driver might
-falsely indicate success to the driver core, which could lead to inconsiste=
-nt
-state or oopses if clients attempt to use the unregistered DMA device.
-
-[Severity: High]
-This is a pre-existing issue, but does the device tree traversal in
-fsl_re_probe() search too broadly? The loop uses
-for_each_compatible_node_scoped() with a NULL starting node. This instructs
-the macro to traverse the entire system's device tree rather than just the
-children of the current RAID engine instance. If multiple RAID engines are
-present, could each instance mistakenly parse and attempt to bind to all
-job queues on the system?
+drivers/dma/txx9dmac.c:txx9dmac_chan_probe() {
+    ...
+	dc->ddev->chan[ch] =3D dc;
+	dc->chan.device =3D &dc->dma;
+	list_add_tail(&dc->chan.device_node, &dc->chan.device->channels);
+	dma_cookie_init(&dc->chan);
+    ...
+	err =3D dma_async_device_register(&dc->dma);
+	if (err)
+		return err;
+    ...
+}
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does the error path in
-fsl_re_chan_probe() clean up all resources? If an error occurs after the IRQ
-is successfully requested (for example, if dma_pool_alloc() fails for
-inb_ring_virt_addr), the code jumps to the err_free label. This label retur=
-ns
-the error code but does not kill the tasklet, free the IRQ, or unregister t=
-he
-platform device. Could this lead to a crash if the dangling IRQ fires?
+This is a pre-existing issue, but does this error path lead to a
+Use-After-Free?
 
-[Severity: High]
-This is a pre-existing issue, but does fsl_re_probe() clean up successfully
-initialized channels if a subsequent loop iteration fails? If
-of_property_read_u32() fails to read the reg property for any job-queue node
-after some channels have already been probed, the function immediately retu=
-rns
-an error. It doesn't appear to tear down the previously probed channels usi=
+If dma_async_device_register() fails, the function returns without performi=
 ng
-fsl_re_remove_chan(). Since the parent device's managed memory will be freed
-by devres, could the dangling IRQs, tasklets, and DMA pools from the orphan=
-ed
-channels cause a crash?
+cleanup. It leaves a dangling pointer in dc->ddev->chan[ch] and fails to ca=
+ll
+tasklet_kill(&dc->tasklet), unlike the cleanup in txx9dmac_chan_remove().
+
+Because the devres framework will free the dc structure, a previously sched=
+uled
+tasklet or an interrupt handler referencing ddev->chan[0] could dereference=
+ the
+freed dc structure.
+
+
+drivers/dma/txx9dmac.c:txx9dmac_desc_alloc() {
+    ...
+	desc->txd.phys =3D dma_map_single(chan2parent(&dc->chan), &desc->hwdesc,
+					ddev->descsize, DMA_TO_DEVICE);
+	return desc;
+}
+
+[Severity: High]
+This is a pre-existing issue, but does this code need to check for DMA mapp=
+ing
+errors?
+
+The physical address returned by dma_map_single() is assigned and returned
+without being validated with dma_mapping_error().
+
+If the mapping fails, it returns a bad DMA address, and the hardware will
+subsequently attempt to access this invalid address during descriptor fetch=
+ing.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714233855.8707=
-97-1-rosenp@gmail.com?part=3D3
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714234742.9089=
+56-1-rosenp@gmail.com?part=3D1
 

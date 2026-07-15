@@ -1,284 +1,223 @@
-Return-Path: <dmaengine+bounces-12543-lists+dmaengine=lfdr.de@vger.kernel.org>
+Return-Path: <dmaengine+bounces-12544-lists+dmaengine=lfdr.de@vger.kernel.org>
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id f5PpLuMsV2rWGwEAu9opvQ
-	(envelope-from <dmaengine+bounces-12543-lists+dmaengine=lfdr.de@vger.kernel.org>)
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 08:46:59 +0200
+	id SkWeGVc6V2rrHgEAu9opvQ
+	(envelope-from <dmaengine+bounces-12544-lists+dmaengine=lfdr.de@vger.kernel.org>)
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 09:44:23 +0200
 X-Original-To: lists+dmaengine@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35DC375B360
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 08:46:59 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAF9075B8D8
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 09:44:22 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=vivo.com header.s=selector2 header.b=h34pInHa;
-	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12543-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="dmaengine+bounces-12543-lists+dmaengine=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=vivo.com;
+	dkim=none;
+	spf=pass (mail.lfdr.de: domain of "dmaengine+bounces-12544-lists+dmaengine=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="dmaengine+bounces-12544-lists+dmaengine=lfdr.de@vger.kernel.org";
+	dmarc=none;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4DE723026F34
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 06:45:07 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C07DC307EAE3
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2026 07:43:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93290320A14;
-	Wed, 15 Jul 2026 06:45:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F2163C3C11;
+	Wed, 15 Jul 2026 07:43:09 +0000 (UTC)
 X-Original-To: dmaengine@vger.kernel.org
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11012042.outbound.protection.outlook.com [52.101.126.42])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022110.outbound.protection.outlook.com [40.107.75.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2973731F9AC;
-	Wed, 15 Jul 2026 06:45:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA94A3C5550;
+	Wed, 15 Jul 2026 07:43:05 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784097905; cv=fail; b=uIwIsKoEsU2uPOU2Y5mh1GQGapXTSvf5sib5dKR3og4WrmXcYh4VuaSNvxG61vn+sEj7PG2OcyzKH3iOI4ztzuEB8s/GBr5+XfgL6R0oYCHjmRUWBTSGxz81jWnbN2l/fGk9JOzrMMkzbaLaSTbPgTJ3RmFVRxkDIUdxjowMAh8=
+	t=1784101389; cv=fail; b=Qm9QN4typy3QIiTPgiWvnf1qwy1zGXjGN5Fd1b10d9gXTAe6/av+jOfUG8haYfeVPXVTV3BQ8YgSoV1hEfOrddTFpxj2TxfrZ02EBs6uqE8MVlUtJVv0qoHTmrO5nZC5oZy6et2ityN6pQ/5FR9cYmDdCMTgePGI/9ff4IX9h/s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784097905; c=relaxed/simple;
-	bh=kBjjXjZzvYzWVHq3xKFZ1zlWEHUpHQhz5n6ZXXnf1j0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nqhj4+KHYWr5q8EBoJOZcRxWSXC8VyaCFAJ4IssxAuRXtLFRMYpgVBXkvD4EofBEg9R17GFVHYidaZvYavj6gNxITiYh97R6K9DHh/rvjHiVNSyXe/FuRqSew06rO2aTP7WS0zI/jnDhGevtGqzaUs5vBoPCOd2i1d9ZhmqKFd8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=h34pInHa; arc=fail smtp.client-ip=52.101.126.42
+	s=arc-20240116; t=1784101389; c=relaxed/simple;
+	bh=q3DtGQYqkiey59cQIxu42dejQfZvh322+5KSj1+cmVA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W3BCvmEw9zY4aQcM6zlMjTVu3lZZbocr47Ni8CkL3zyLv03t3PWHzsRgOXH3A07hOKxeXE5lRR7+SZXCJzutry6Wau6RRHMCl5JwjGljczhPNu4zES9BE9o4w1c2r7zM2s1J3qXorVw1cp8NVW34x5tTPixyrbzc+eUFPX+gWHQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.110
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n1/6Z3VoJIXc/UuF229/0tDEru66wok/Fr/6Q2rXXK4pBiOaoBKfBMqyLUTvQ5j0g8+HRXsM34lOfUAZ/9KOhgBo+YvNRrq2PEI72XSu5kwo1DYNYo2VLxMTMQYEAUjHzn/X2+uWASk0vtADuoOsUoGoNxCJSuI+5qvm5mSZ3e4FnLQX3fU4ds7LLXx+M3o/3Uxsc0htT9mxvsM2rxd0EZtx8uoXkR93EBYHLbty0Cs4A5DrcrX9PBlJyxFg+6B05BefFr4vzYvfEmd305VDBBBBQKm+QIqWZApgdzB++dj5r106rt8Cof20Cpz7FcwJupQGpH6Rs03x0ty3szrMJA==
+ b=FCm7c4bhCTPWHZ/C4mKDUzU7Pu6i/EQaQsuWgZtglljmSG3q322A8V9Hf9y/XY2fnVUZVy9Y4PHUm7Plc8PlVobCHOQLFOU2E4NmIu8bSeNYeGs1YWY99dFpny3xG+/MOHv7o51lQIBwjhPFtQMrJEEbuoqOfCVohGomRYBlRLFCwKj1oaPV/rRKRdzMBmpQkeHVE3S2dwn8WYERME81XNNQsNi98WmHp6rTd7dBoV8a9WUKmYun94YQTnSL4OTw9zqHEOzFvbrxkhk8Mbcs7a/kmm2GA0rXYgyU8orWNUlebWQgIg+AfCM9MIBg5jhAQqHwkIyjlWmL6xtui72GJw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/YFeYk5xw3Boy/uxWkTtMdNPJjZVZwbmeuLoGuj3ujw=;
- b=L9+LsQFgZ8u0XGwgOlt6saJwJQFM5aLMgY0Hk8XlrQWNV2Ce/1bfwXRD0xuGO1A2OXLSilAsIRSIrPhdnDvX37Y9DJSw2NsJ7a+dLhK2nnJ7Xt+vqBaNEFK6OPw/4pSAHzg88FVXs5JOKnWiwemJEZqghfXu07GhtrrBScLvA4wmT3hG8Uq94MoZtJzpYRZMiR0Q3cGngHcicH7Y+MkE91Tww62rZAl2tdybG2+2DJ3r8eFJMk5oCtTE6jcTIn07+6qQi56A0UZtoUmgbHHYDzGlcXTz38DZpw9HCXMeW9s4m0nqI4F0sUSlb2QokyLWf3LYaSkAQwX1VfEwwT68ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/YFeYk5xw3Boy/uxWkTtMdNPJjZVZwbmeuLoGuj3ujw=;
- b=h34pInHaiepLDLqZECA43/EhYdisi8vD/eFRPLK5buu6hFdhlR0GZ6++DYoCSokJalHJZeGJqLlek0f/J7m7CYnlJT5tDG5XgubvFGQ//Q6tL4kB3dMHZOH3/GOrfAoXFi4gy41sYI1QEEMoACM7tjG0caDFw7eFdHD/qMcsAMbZ65x64MG1KqhmciPibRinXIyxuvxI6yEazaQI1coQrPvuMuoCFgaKg5+4PfBWHKrU81Vt+ELdOVewv064uDpPOs0EDvqlQMqeNdSXwHWum1eORpDq9AcU2oLpudfi6NcdAmFQg+e01MHUh4yykWX7Wrz/Hxvs4yvn3NlSKh51HA==
-Received: from SEZPR06MB5832.apcprd06.prod.outlook.com (2603:1096:101:c8::12)
- by KUZPR06MB8991.apcprd06.prod.outlook.com (2603:1096:d10:88::8) with
+ bh=d8zshZZgMrng5PlukhIlocEzscHjzcZmsn8ImjX9AqE=;
+ b=XYfaenZ4wzHERQChouqQ1aLlA1NSOGcbet8pCtfiOLzjtUQ4eHJU+iNUVG7WCfb1rqwLjT2qXNH6Rkcs9slN4Qn5ttUvY7JvYVfb9tB2T9QSbDrX36HHnoeTwNGwItzQ9Fu3LoiDE0b+VOU4R7Xp+Vp+Y7xbShAsj6r0NRkaf/C9l9YzrSLSK4olQu5wo3k/GlMmJsYdb3VjfXiyMGVWqlzDLDu+VV6YfPngMPUxC+7UHNoqe+X0Shw0K5G3K6BeZdznTJwxeDmm2N2mqnPLRiLzSonQ4WgPv6bOnk7YLXbPbi++gsbddt41DALOLetEtLxyY3BCDNB0g/xqDrbZUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SI2PR02CA0044.apcprd02.prod.outlook.com (2603:1096:4:196::17)
+ by KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.11; Wed, 15 Jul
- 2026 06:44:58 +0000
-Received: from SEZPR06MB5832.apcprd06.prod.outlook.com
- ([fe80::f98:5e32:4ccb:d07b]) by SEZPR06MB5832.apcprd06.prod.outlook.com
- ([fe80::f98:5e32:4ccb:d07b%6]) with mapi id 15.21.0223.008; Wed, 15 Jul 2026
- 06:44:58 +0000
-From: Pan Chuang <panchuang@vivo.com>
-To: vkoul@kernel.org
-Cc: Frank.Li@nxp.com,
-	afaerber@suse.de,
-	alexandre.torgue@foss.st.com,
-	amelie.delaunay@foss.st.com,
-	andersson@kernel.org,
-	angelogioacchino.delregno@collabora.com,
-	baolin.wang@linux.alibaba.com,
-	biju.das.jz@bp.renesas.com,
-	claudiu.beznea.uj@bp.renesas.com,
-	cosmin-gabriel.tanislav.xa@renesas.com,
-	daniel@zonque.org,
-	dmaengine@vger.kernel.org,
-	dmitry.baryshkov@oss.qualcomm.com,
-	geert+renesas@glider.be,
-	haojian.zhuang@gmail.com,
-	hayashi.kunihiko@socionext.com,
-	imx@lists.linux.dev,
-	jernej.skrabec@gmail.com,
-	john.madieu.xa@bp.renesas.com,
-	jonathanh@nvidia.com,
-	kees@kernel.org,
-	keguang.zhang@gmail.com,
-	ldewangan@nvidia.com,
-	linmq006@gmail.com,
-	linux-actions@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org,
-	magnus.damm@gmail.com,
-	mani@kernel.org,
-	matthias.bgg@gmail.com,
-	mcoquelin.stm32@gmail.com,
-	mhiramat@kernel.org,
-	orsonzhai@gmail.com,
-	panchuang@vivo.com,
-	patrice.chotard@foss.st.com,
-	pjw@kernel.org,
-	quic_jseerapu@quicinc.com,
-	robert.jarzmik@free.fr,
-	samuel.holland@sifive.com,
-	sean.wang@mediatek.com,
-	thierry.reding@kernel.org,
-	thomasandreatta2000@gmail.com,
-	vigneshr@ti.com,
-	wens@kernel.org,
-	wsa+renesas@sang-engineering.com,
-	zhang.lyra@gmail.com,
-	zhengxingda@iscas.ac.cn
-Subject: Re: [PATCH 00/26] dmaengine: Remove redundant dev_err()/dev_err_probe() calls
-Date: Wed, 15 Jul 2026 14:44:43 +0800
-Message-Id: <20260715064443.525836-1-panchuang@vivo.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <alYmNl--mxMK1-86@vaman>
-References: <alYmNl--mxMK1-86@vaman>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TPYP295CA0042.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:7d0:7::20) To SEZPR06MB5832.apcprd06.prod.outlook.com
- (2603:1096:101:c8::12)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.19; Wed, 15 Jul
+ 2026 07:43:01 +0000
+Received: from SG2PEPF000B66CB.apcprd03.prod.outlook.com
+ (2603:1096:4:196:cafe::33) by SI2PR02CA0044.outlook.office365.com
+ (2603:1096:4:196::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.223.11 via Frontend Transport; Wed,
+ 15 Jul 2026 07:43:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG2PEPF000B66CB.mail.protection.outlook.com (10.167.240.24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.223.9 via Frontend Transport; Wed, 15 Jul 2026 07:43:01 +0000
+Received: from [172.20.96.76] (unknown [172.20.96.76])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id B0E9E427CEE6;
+	Wed, 15 Jul 2026 15:42:58 +0800 (CST)
+Message-ID: <d7f0fa37-50f2-4c71-8004-2b85e45171f4@cixtech.com>
+Date: Wed, 15 Jul 2026 15:42:58 +0800
 Precedence: bulk
 X-Mailing-List: dmaengine@vger.kernel.org
 List-Id: <dmaengine.vger.kernel.org>
 List-Subscribe: <mailto:dmaengine+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:dmaengine+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 0/2] dmaengine: arm-dma350: handle shared channel IRQ
+ wiring on sky1
+To: fugang.duan@cixtech.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, vkoul@kernel.org, ychuang3@nuvoton.com,
+ schung@nuvoton.com, robin.murphy@arm.com, Frank.Li@kernel.org
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20260521072924.3000282-1-jun.guo@cixtech.com>
+Content-Language: en-US
+From: Jun Guo <jun.guo@cixtech.com>
+In-Reply-To: <20260521072924.3000282-1-jun.guo@cixtech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5832:EE_|KUZPR06MB8991:EE_
-X-MS-Office365-Filtering-Correlation-Id: fbc5fe82-180b-4eea-939c-08dee23c9625
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CB:EE_|KL1PR06MB6395:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8df89c79-7b6b-40bf-6d86-08dee244b26f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|7416014|376014|52116014|1800799024|366016|38350700014|6133799003|56012099006|11063799006|22082099003|18002099003|41080700001;
+	BCL:0;ARA:13230040|23010399003|36860700016|376014|7416014|1800799024|82310400026|3023799007|5023799004|56012099006|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	WYVFUGViK+AT6BFkkPqTRL8TgunUVYUvcmKa9R1UGcC8OuYQ/2Z1OdZS+tH9DVdv/a489oc9t9gx65if2FHp03cWAZWw6BgDnsMdMCGbi03vIU4bbFDzGktwFv0U6q5If/nmQUTBLlMpavxqgpfZ6bX6Z0KIQqiLTsCsioATcQ0Yp5v4M0iTRggz/jlGgvV4OPdfkVXnxbw3lEuwCHHU1J+1GN0Rg2zRslEqQeC0mwKNYv/fuqgKWOcVy4Dvkgrv5R0Xsfa9d6bPlT85TGm0WEvUQCKCbPgwwXRVT3EKjP6svoLlIDIGkISK5h2g9JZ8xzMOP74uSElmvkS/r+6HRqgceVTg8E5bC2S7z2fRdp41vX9eCYBPZh2slybArkvO8Bn0YQxraCSO+HwpQVPhVBQzmh4OF87dCV8pJKyvARhQCzKtUKjx5lkZE/cK8lpxDNzWsX0Gq0H6+nguZlZx1IMJb/OYLMFBoVDmSR1zf1GhCC2G3eRYxIW3VsSf6yZps7evsXVnywmBercgifvUK42Jd8GlrjZo1E89+BDf3/VP//HEV5w/K1BEtvaI9MKMQ6pPzd2c9Fsd6wHbZFFEDOHzSYG3Fgf/zihBT3qAaWtFGp6kfBEbTeUcVFq63EnqlkQCkGFm37Xq6AcQW9TuHvPRyHzjOQUNKFj3XHtpBIWndx9N6m/laiDR6mhg4R1XXj8WFSZHFnKTFUozQ/rpy/48o0ivaSmOItRC/9KvN//HnB2OSOpsJfRUGn7AQeTN
+	ARf45caTIGuydVjMiT7LtH377DkhPF+DmfHJZsxT9f7s5xOT5X2pag5th1v2MbA61K+DZJuM7lqqhtBkPKy2oO41qWJ96skoxYdu1hnqphKSnxy+p7vntL38js5ptYM3C/CBpXEbFSyovfb2a6l1+LtBWTFRN5KwvuGs72kdH/+7rqzTpDipDOXXa+zzjR4Jv8yvHjKuCxSsqjlLgAxRgCGiSoshh/US1tjIL5HpcqQo6YI3HoRROl5nqX5i609nBHuCkeMZ/3b4KcBoyUZBZWE0inSbPsD6J+GrBnszh8ebqnDV+DzF2xcxvyiuiDcuLU/SwIho0IQqA61cb9E0/cAbbztMzfdAE+KuPjSntjxLnr3UtzwOFCzVqAWXIDkf8xp56e3MKUzZXOJLRs+Y4u1UTW4sTMN+fY5iLqkYbTbGJzx4boQQUoKYMV96jmEGj9GGW7ztAB0KPkO/mI6VQBGv1Umq5r/MXK0Ec43EQcBQgcioJH06ARqExERM3nEM/d2BW99m2A+GN17EyH3KWLxV9enpp657y50nnwU4Y5a94Bww0gO0VEsr463ivZtnHlyWO8p2E5XaQijzPCXGrMfS7ePeUJNzCwoXthFBX0RJKo7lSpkYiegv5L+0XhGfxDE/liFz06vDQgsccpZE47n92serSiCgmA94Nape7D6MK3TmNjG5KKw82/YHIK2yBNfk2xOnjl4suaW6WeBT5A==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5832.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(52116014)(1800799024)(366016)(38350700014)(6133799003)(56012099006)(11063799006)(22082099003)(18002099003)(41080700001);DIR:OUT;SFP:1101;
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(36860700016)(376014)(7416014)(1800799024)(82310400026)(3023799007)(5023799004)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XX7d341lm0+hgQrKIp9/x9htYftyMTv5vZIOSom1XPuqtAw0vS6LILbpzaoV?=
- =?us-ascii?Q?j4In7qk7HasidjUHtvwZo/Ou8ZzMM7ibeXM8U5Lyv2GmrSEFNF6wZjgFRinj?=
- =?us-ascii?Q?xHPoJn/EenXJ4TmqsjmDPje4Vu3Es3Nv4HlYoTZ7UH0JyddTqx7aKjnGN9iR?=
- =?us-ascii?Q?Od8XCMoxR8/m7X/jTSf49L1j6lO/RBGPVRLNNWWJ57HWcYS6u8DO+71KXeoS?=
- =?us-ascii?Q?Kxchz1CEvP1f3qP+EMHVpzutKIkk1AVcXoqSy6+yG8sNl+GInBheb0xQhoL/?=
- =?us-ascii?Q?FXTl0BGHVTpjgpK2WyllcJIyC4yhw6ArgW+g6c7rkN3UgGaGxuBn3N/wThvO?=
- =?us-ascii?Q?JMTK3mIB11/Stjs2tswxFIAApbHKHZkAoLV4e39FJSxiCf5Y2fvkvmEhXmLG?=
- =?us-ascii?Q?MNnOAJd/DLT2B7QpvGETM6T9YtHTWgTP4tKLNKvlfR4/rPcL8lsZoA3RgFWI?=
- =?us-ascii?Q?70mg1q8ZEjoCQmn4ub5lalvXtSKiRtHAR5CQmGb9mqJ6tVvGOG+APEh/fETn?=
- =?us-ascii?Q?vlFAk2Y2tdDrm4zw0xtYgDOZuaq1M3Dw6BayVQ2w4AF7JFay6gdhAv7PsiT7?=
- =?us-ascii?Q?rkz+gWgSLaLvX9El3bSiQKdNoCTqVkU8ZQIO2Z1Po5fHZ6yzE0MTGgyNpgq8?=
- =?us-ascii?Q?FHyerwpCCE9KafITNVU8BE+xVceZ+bF1wFbBHmshWBKqfMm2GwhDiRXrN+nw?=
- =?us-ascii?Q?rLPcK8aM5MzwJoFeti17wXxwsgl0QmQt3sYaK/kaYu2N0dXNJ9fYZQRHYwF4?=
- =?us-ascii?Q?nfIhVT+0xyvvwUEQYc/WCavQnIEDX7h4kTuOV4UKQQrC04qvvsgY+/VP49bT?=
- =?us-ascii?Q?cEyy0s55/xt79oU2QWrind8HNcMd54szhis+YJh2vwhnsd2eTMDnUfG18MUN?=
- =?us-ascii?Q?oP6kBCDBk4E+v/+5v2p3w1SGCu2G0DF5JEXP1X02oCyDw0DBvqO6aZXakU6V?=
- =?us-ascii?Q?fJTkAqXI1Irh/ZMK80CIY1zHQRuxZHc2xNvMZ4MNJFXLFZnPqUmypaSboPfj?=
- =?us-ascii?Q?6ln0a4ZXeewlC5ZJtpvJ49WDCQ/sBZz9cLlPWl6Yjwu0ULUMjv2UlZHaBfCu?=
- =?us-ascii?Q?HrFcdl/4bQLSLB+A8BXLPYUGAKPamCctDPHG4UhtRA1FYtaO13V/kzDQfJkn?=
- =?us-ascii?Q?842rolaL/OSM7d6GrKHXPSyTgTBWbQgt11rlMba75ZXLACmoWnfrDuSKKUZE?=
- =?us-ascii?Q?VG0lBxMwRwnNNi6/5pVTsb5YGhbEx3cycv3S4W/boQeI1TZgReKWzZwFPzeD?=
- =?us-ascii?Q?G96r4CYgl1NMzoIBfc7ybzMGUuEbOmyslbcH1sofvF51jgV7R11DGCjK/zz1?=
- =?us-ascii?Q?3ve6NtsfCceGHs9FogujGBu7OLt7MLx33CeNA/U0OgTA4KAMDRR37zSJJaY4?=
- =?us-ascii?Q?7keYajo57njgq2VmXLWiz+DnJBrFgyFABSOVMpWzIXmrrSf3jvH19eu3UXzS?=
- =?us-ascii?Q?ul70UHnw9GA22eduMlZUsjB5W3qUU8/6rKupBQqGQzqz3po53sfw9Bais+/u?=
- =?us-ascii?Q?5fn9TGd437kGQmR5bi+RDtOZ+5aJyDCCjYCRQcS1O9rmJxtNuxFxY9yFjvTX?=
- =?us-ascii?Q?C0M3Fja+a6Nd3iMNUOikfV+lRrXxwtb4hGtJL6npZEtD81JwPLcJItYgxOj8?=
- =?us-ascii?Q?lM/8sTUpGnj/agT6ggU2XliFj419UFcRsM45JYAp7YZ9XSurQb6eiTZAlduM?=
- =?us-ascii?Q?AguyDZePmuxAG/z35nfDTGiXW5hTvQI2jMErqDU87ux9aOEiSs5D5iPtJaV+?=
- =?us-ascii?Q?UsvLz0J13g=3D=3D?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbc5fe82-180b-4eea-939c-08dee23c9625
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5832.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2026 06:44:58.0134
+	TkpIvUY6LcaYe3q5X28T3b2QdX7zdtt9CCbOs1bPp18vYvuwKJVMtwpZMjccFaHpbsWc+F3Ce0wvbY3+vrGzlAQMrFfjyA9lbYx82bq4UY7ya5zFpJeePpBHMAF+PzMV3/iHzSJ9c/ECYSua19zVa4gJzx5f1QBnXxRqZL6u+RbJz2LqPDp/gNNGMSjJUE47WUBNru4cSF7yYAjHvgprmH/pMxYS1WESpPmq5LyazWYRU7hZQTLek3Pdq9mw/UIodhAor/zNgcZfLsF2YgSQga+TxyHinOSqTkFvHLYJgtYB8fekFu7G720uTNS7yl/1/ePhiBPII9bKQCrx5cdyKbk/Ko4kaXGkeLB/wn9OR6+fgA4daRUWM7mWCeoWNPTIErud/CaDxG/sGj8s5Up6DJgNMXPOJAKMP4HEqy9eK/vldm9wWQoDLM15upHcUFqI
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2026 07:43:01.0744
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IV1eCzCAFMOqLCkkSyOqdg4aBiGm3bqN16cYaZK3pY2/atV4o+JJKB2hQqnKR7xOETHjwRL0kbbzqvHpOlo6yw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KUZPR06MB8991
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8df89c79-7b6b-40bf-6d86-08dee244b26f
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG2PEPF000B66CB.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6395
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [2.84 / 15.00];
+X-Spamd-Result: default: False [2.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[vivo.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[vivo.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[nxp.com,suse.de,foss.st.com,kernel.org,collabora.com,linux.alibaba.com,bp.renesas.com,renesas.com,zonque.org,vger.kernel.org,oss.qualcomm.com,glider.be,gmail.com,socionext.com,lists.linux.dev,nvidia.com,lists.infradead.org,st-md-mailman.stormreply.com,vivo.com,quicinc.com,free.fr,sifive.com,mediatek.com,ti.com,sang-engineering.com,iscas.ac.cn];
-	TAGGED_FROM(0.00)[bounces-12543-lists,dmaengine=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:vkoul@kernel.org,m:Frank.Li@nxp.com,m:afaerber@suse.de,m:alexandre.torgue@foss.st.com,m:amelie.delaunay@foss.st.com,m:andersson@kernel.org,m:angelogioacchino.delregno@collabora.com,m:baolin.wang@linux.alibaba.com,m:biju.das.jz@bp.renesas.com,m:claudiu.beznea.uj@bp.renesas.com,m:cosmin-gabriel.tanislav.xa@renesas.com,m:daniel@zonque.org,m:dmaengine@vger.kernel.org,m:dmitry.baryshkov@oss.qualcomm.com,m:geert+renesas@glider.be,m:haojian.zhuang@gmail.com,m:hayashi.kunihiko@socionext.com,m:imx@lists.linux.dev,m:jernej.skrabec@gmail.com,m:john.madieu.xa@bp.renesas.com,m:jonathanh@nvidia.com,m:kees@kernel.org,m:keguang.zhang@gmail.com,m:ldewangan@nvidia.com,m:linmq006@gmail.com,m:linux-actions@lists.infradead.org,m:linux-arm-kernel@lists.infradead.org,m:linux-arm-msm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-mediatek@lists.infradead.org,m:linux-mips@vger.kernel.org,m:linux-renesas-soc@vger.kernel.org,m:linux-riscv@lists.infradead.org,m:linux-stm32@st-
- md-mailman.stormreply.com,m:linux-sunxi@lists.linux.dev,m:linux-tegra@vger.kernel.org,m:magnus.damm@gmail.com,m:mani@kernel.org,m:matthias.bgg@gmail.com,m:mcoquelin.stm32@gmail.com,m:mhiramat@kernel.org,m:orsonzhai@gmail.com,m:panchuang@vivo.com,m:patrice.chotard@foss.st.com,m:pjw@kernel.org,m:quic_jseerapu@quicinc.com,m:robert.jarzmik@free.fr,m:samuel.holland@sifive.com,m:sean.wang@mediatek.com,m:thierry.reding@kernel.org,m:thomasandreatta2000@gmail.com,m:vigneshr@ti.com,m:wens@kernel.org,m:wsa+renesas@sang-engineering.com,m:zhang.lyra@gmail.com,m:zhengxingda@iscas.ac.cn,m:geert@glider.be,m:haojianzhuang@gmail.com,m:jernejskrabec@gmail.com,m:keguangzhang@gmail.com,m:magnusdamm@gmail.com,m:matthiasbgg@gmail.com,m:mcoquelinstm32@gmail.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[panchuang@vivo.com,dmaengine@vger.kernel.org];
-	DKIM_TRACE(0.00)[vivo.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MIME_TRACE(0.00)[0:+];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[panchuang@vivo.com,dmaengine@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-12544-lists,dmaengine=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:fugang.duan@cixtech.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:vkoul@kernel.org,m:ychuang3@nuvoton.com,m:schung@nuvoton.com,m:robin.murphy@arm.com,m:Frank.Li@kernel.org,m:dmaengine@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:cix-kernel-upstream@cixtech.com,m:linux-arm-kernel@lists.infradead.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[jun.guo@cixtech.com,dmaengine@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_NA(0.00)[cixtech.com];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_GT_50(0.00)[56];
-	TAGGED_RCPT(0.00)[dmaengine,renesas];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	TO_DN_NONE(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jun.guo@cixtech.com,dmaengine@vger.kernel.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vivo.com:from_mime,vivo.com:dkim,vivo.com:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dmaengine,dt];
+	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 35DC375B360
+X-Rspamd-Queue-Id: CAF9075B8D8
 
-On 2026-07-14 20:06, Vinod Koul wrote:
-> On 09-07-26, 16:26, Wolfram Sang wrote:
->> On Thu, Jul 09, 2026 at 09:58:04PM +0800, Pan Chuang wrote:
->>> Commit 55b48e23f5c4b6f5ca9b7ab09599b17dcf501c10 ("genirq/devres: Add
->>> error handling in devm_request_*_irq()") added automatic error logging
->>> to devm_request_threaded_irq() and devm_request_any_context_irq() via
->>> the new devm_request_result() helper. The helper prints device name,
->>> IRQ number, handler functions, and error code on failure.
->>>
->>> Since devm_request_irq() is a static inline wrapper around
->>> devm_request_threaded_irq(), it also benefits from this automatic
->>> logging.
->>>
->>> This series removes the now-redundant dev_err() and dev_err_probe() calls
->>> in dmaengine drivers that follow these devm_request_*_irq() functions,
->>> as the core now provides more detailed diagnostic information on failure.
->>>
->>> Pan Chuang (26):
->>>   dmaengine: fsl-edma-main: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: fsl-qdma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: loongson-loongson1-apb-dma: Remove redundant
->>>     dev_err()/dev_err_probe()
->>>   dmaengine: mediatek-mtk-cqdma: Remove redundant
->>>     dev_err()/dev_err_probe()
->>>   dmaengine: mediatek-mtk-hsdma: Remove redundant
->>>     dev_err()/dev_err_probe()
->>>   dmaengine: mmp_pdma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: moxart-dma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: owl-dma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: pxa_dma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: qcom-gpi: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: sf-pdma-sf-pdma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: sh-rcar-dmac: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: sh-rz-dmac: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: sh-shdmac: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: sh-usb-dmac: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: sprd-dma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: st_fdma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: stm32-stm32-dma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: stm32-stm32-dma3: Remove redundant
->>>     dev_err()/dev_err_probe()
->>>   dmaengine: stm32-stm32-mdma: Remove redundant
->>>     dev_err()/dev_err_probe()
->>>   dmaengine: sun4i-dma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: sun6i-dma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: tegra20-apb-dma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: ti-edma: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: uniphier-xdmac: Remove redundant dev_err()/dev_err_probe()
->>>   dmaengine: xgene-dma: Remove redundant dev_err()/dev_err_probe()
->>
->> One patch per subsystem for such trivial changes, please.
->
-> Yes pretty please
->
-Thanks, I'll merge them in v2.
+Hi all,
 
-Best Regards,
-PanChuang
+Gentle ping on this patch series.
+
+I understand everyone is busy, but would appreciate any feedback or
+review comments when you have a moment.
+
+On 5/21/2026 3:29 PM, Jun Guo wrote:
+> This series updates DMA-350 support for the SKY1 integration where all
+> DMA
+> channel interrupt outputs are wired to the same GIC SPI.
+> 
+> Patch 1 enables DMANSECCTRL.INTREN_ANYCHINTR in the driver so
+> per-channel
+> interrupt status is propagated even when channels share one parent IRQ
+> line.
+> 
+> Patch 2 adds the SKY1 DMA-350 DT node and describes the channel
+> interrupt
+> sources using 8 channel entries, while all entries map to the same SPI.
+> 
+> Tested on CIX SKY1 with dmatest:
+>    % echo 2000 > /sys/module/dmatest/parameters/timeout
+>    % echo 1 > /sys/module/dmatest/parameters/iterations
+>    % echo "" > /sys/module/dmatest/parameters/channel
+>    % echo 1 > /sys/module/dmatest/parameters/run
+> 
+> Changes in v7:
+> - Modify the commit log format for the driver patch.
+> 
+> Changes in v6:
+> - Drop the dt-binding update and keep the existing 8-channel interrupt
+>   schema.
+> - Simplify driver change to a minimal fix:
+>   enable DMANSECCTRL.INTREN_ANYCHINTR.
+> - Update SKY1 DT node to describe 8 channel interrupt entries mapped
+>   to one SPI.
+> 
+> Changes in v5:
+> - Fix the formatting issue in the AI tag.
+> - Remove the unnecessary "cix,sky1-dma-350".
+> 
+> Changes in v4:
+> - Reword binding text to align with kernel style.
+> - Revise the AI attribution to the standard format.
+> - Remove redundant links from the commit log.
+> 
+> Changes in v3:
+> - Rework binding compatible description to match generic-first model.
+> - Keep interrupts schema support for both 1-IRQ and 8-IRQ topologies.
+> - Drop SoC match-data dependency for IRQ mode selection.
+> - Detect IRQ topology via platform_irq_count() in probe path.
+> - Refactor IRQ handling into a shared channel handler.
+> - Enable DMANSECCTRL.INTREN_ANYCHINTR only in combined IRQ mode.
+> 
+> Changes in v2:
+> - Update to kernel standards, enhance patch description, and refactor
+>   driver to use match data for hardware differentiation instead of
+>   compatible strings.
+> 
+> Jun Guo (2):
+>    dmaengine: arm-dma350: enable ANYCH interrupt for shared IRQ wiring
+>    arm64: dts: cix: add sky1 DMA-350 node with channel IRQ entries
+> 
+>   arch/arm64/boot/dts/cix/sky1.dtsi | 14 ++++++++++++++
+>   drivers/dma/arm-dma350.c          |  9 +++++++++
+>   2 files changed, 23 insertions(+)
+> 
+
 
